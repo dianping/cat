@@ -1,0 +1,29 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.transport.Transport</role>
+			<role-hint>in-memory</role-hint>
+			<implementation>com.dianping.cat.transport.InMemoryTransport</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.transport.Transport</role>
+			<role-hint>tcp-socket</role-hint>
+			<implementation>com.dianping.cat.transport.TcpSocketTransport</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.transport.Transport</role>
+			<role-hint>udp-multicast</role-hint>
+			<implementation>com.dianping.cat.transport.UdpMulticastTransport</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.transport.TransportManager</role>
+			<implementation>com.dianping.cat.transport.TransportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.transport.Transport</role>
+					<role-hint>im-memory</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+	</components>
+</plexus>
