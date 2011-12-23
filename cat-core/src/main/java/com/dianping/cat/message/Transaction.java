@@ -34,5 +34,5 @@ package com.dianping.cat.message;
  * @author Frankie Wu
  */
 public interface Transaction extends Message {
-	public void setStatus(Throwable e);
+   public long getDuration();
 }

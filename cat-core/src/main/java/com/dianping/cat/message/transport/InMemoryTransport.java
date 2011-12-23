@@ -1,10 +1,11 @@
-package com.dianping.cat.transport;
+package com.dianping.cat.message.transport;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.handler.MessageHandler;
 
 public class InMemoryTransport implements Transport {
 	private BlockingQueue<Message> m_queue;

@@ -1,4 +1,4 @@
-package com.dianping.cat.transport;
+package com.dianping.cat.message.transport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.handler.MessageHandler;
 
 public class InMemoryTransportTest {
 	@Test
@@ -53,10 +54,6 @@ public class InMemoryTransportTest {
 	static class MockMessage implements Message {
 		private String m_name;
 
-		public void setName(String name) {
-			m_name = name;
-		}
-
 		@Override
 		public void addData(String keyValuePairs) {
 		}
@@ -89,9 +86,17 @@ public class InMemoryTransportTest {
 			return null;
 		}
 
+		public void setName(String name) {
+			m_name = name;
+		}
+
 		@Override
 		public void setStatus(String status) {
 		}
+
+      @Override
+      public void setStatus(Throwable e) {
+      }
 	}
 
 	static class MockMessageHandler implements MessageHandler {

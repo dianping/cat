@@ -1,6 +1,7 @@
-package com.dianping.cat.transport;
+package com.dianping.cat.message.transport;
 
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.handler.MessageHandler;
 
 public class TcpSocketTransport implements Transport {
 	@Override

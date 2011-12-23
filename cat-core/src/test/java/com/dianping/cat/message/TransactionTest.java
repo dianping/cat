@@ -18,7 +18,7 @@ public class TransactionTest {
 			t.addData("k3", "v3");
 			Thread.sleep(30);
 
-			t.setStatus("0");
+			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
 			t.setStatus(e);
 		} finally {

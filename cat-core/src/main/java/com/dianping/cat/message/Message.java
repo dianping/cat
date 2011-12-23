@@ -15,60 +15,70 @@ package com.dianping.cat.message;
  * @author Frankie Wu
  */
 public interface Message {
-	/**
-	 * add one or multiple key-value pairs to the message.
-	 * 
-	 * @param keyValuePairs
-	 *           key-value pairs like 'a=1&b=2&...'
-	 */
-	public void addData(String keyValuePairs);
+   public static final String SUCCESS = "0";
 
-	/**
-	 * add one key-value pair to the message.
-	 * 
-	 * @param key
-	 * @param value
-	 */
-	public void addData(String key, Object value);
+   /**
+    * add one or multiple key-value pairs to the message.
+    * 
+    * @param keyValuePairs
+    *           key-value pairs like 'a=1&b=2&...'
+    */
+   public void addData(String keyValuePairs);
 
-	/**
-	 * Complete the message construction.
-	 */
-	public void complete();
+   /**
+    * add one key-value pair to the message.
+    * 
+    * @param key
+    * @param value
+    */
+   public void addData(String key, Object value);
 
-	/**
-	 * Message name.
-	 * 
-	 * @return message name
-	 */
-	public String getName();
+   /**
+    * Complete the message construction.
+    */
+   public void complete();
 
-	/**
-	 * Get the message status.
-	 * 
-	 * @return message status. "0" means success, otherwise error code.
-	 */
-	public String getStatus();
+   /**
+    * Message name.
+    * 
+    * @return message name
+    */
+   public String getName();
 
-	/**
-	 * The time stamp the message was created.
-	 * 
-	 * @return message creation time stamp in milliseconds
-	 */
-	public long getTimestamp();
+   /**
+    * Get the message status.
+    * 
+    * @return message status. "0" means success, otherwise error code.
+    */
+   public String getStatus();
 
-	/**
-	 * Message type.
-	 * 
-	 * @return message type
-	 */
-	public String getType();
+   /**
+    * The time stamp the message was created.
+    * 
+    * @return message creation time stamp in milliseconds
+    */
+   public long getTimestamp();
 
-	/**
-	 * Set the message status.
-	 * 
-	 * @param status
-	 *           message status. "0" means success, otherwise error code.
-	 */
-	public void setStatus(String status);
+   /**
+    * Message type.
+    * 
+    * @return message type
+    */
+   public String getType();
+
+   /**
+    * Set the message status.
+    * 
+    * @param status
+    *           message status. "0" means success, otherwise error code.
+    */
+   public void setStatus(String status);
+
+   /**
+    * Set the message status with exception class name.
+    * 
+    * @param e
+    *           exception.
+    */
+   public void setStatus(Throwable e);
 }
