@@ -117,7 +117,7 @@ package com.dianping.cat.message;
  * 
  * @author Frankie Wu
  */
-public interface MessageFactory {
+public interface MessageProducer {
 	/**
 	 * Log an event in one shot.
 	 * 

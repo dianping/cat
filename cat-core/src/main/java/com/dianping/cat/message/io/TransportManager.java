@@ -1,4 +1,4 @@
-package com.dianping.cat.message.transport;
+package com.dianping.cat.message.io;
 
 public class TransportManager {
    private static TransportManager s_instance;

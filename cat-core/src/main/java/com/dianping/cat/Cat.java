@@ -1,6 +1,6 @@
 package com.dianping.cat;
 
-import com.dianping.cat.message.MessageFactory;
+import com.dianping.cat.message.MessageProducer;
 
 
 /**
@@ -9,7 +9,7 @@ import com.dianping.cat.message.MessageFactory;
  * @author Frankie Wu
  */
 public class Cat {
-	public static MessageFactory getFactory() {
+	public static MessageProducer getProducer() {
 		return null;
 	}
 }

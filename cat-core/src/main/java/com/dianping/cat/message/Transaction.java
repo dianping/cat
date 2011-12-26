@@ -34,5 +34,5 @@ package com.dianping.cat.message;
  * @author Frankie Wu
  */
 public interface Transaction extends Message {
-   public long getDuration();
+	public long getDuration();
 }

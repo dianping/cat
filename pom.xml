@@ -16,16 +16,6 @@
    <dependencyManagement>
       <dependencies>
          <dependency>
-            <groupId>org.codehaus.plexus</groupId>
-            <artifactId>plexus-container-default</artifactId>
-            <version>1.0-alpha-47</version>
-         </dependency>
-         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.8.1</version>
-         </dependency>
-         <dependency>
             <groupId>com.site.common</groupId>
             <artifactId>lookup</artifactId>
             <version>1.0.0</version>
@@ -34,6 +24,21 @@
             <groupId>com.site.common</groupId>
             <artifactId>test-framework</artifactId>
             <version>1.0.0</version>
+         </dependency>
+         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.8.1</version>
+         </dependency>
+         <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-container-default</artifactId>
+            <version>1.0-alpha-47</version>
+         </dependency>
+         <dependency>
+            <groupId>org.jboss.netty</groupId>
+            <artifactId>netty</artifactId>
+            <version>3.2.7.Final</version>
          </dependency>
       </dependencies>
    </dependencyManagement>

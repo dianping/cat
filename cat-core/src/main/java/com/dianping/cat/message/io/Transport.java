@@ -1,4 +1,4 @@
-package com.dianping.cat.message.transport;
+package com.dianping.cat.message.io;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.handler.MessageHandler;

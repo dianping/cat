@@ -1,4 +1,4 @@
-package com.dianping.cat.message.transport;
+package com.dianping.cat.message.io;
 
 import junit.framework.Assert;
 
@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.handler.MessageHandler;
+import com.dianping.cat.message.io.Transport;
+import com.dianping.cat.message.io.TransportManager;
 
 public class TransportManagerTest {
    @Test

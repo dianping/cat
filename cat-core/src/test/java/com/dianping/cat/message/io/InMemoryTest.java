@@ -1,8 +1,7 @@
-package com.dianping.cat.message.transport;
+package com.dianping.cat.message.io;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -10,45 +9,49 @@ import java.util.concurrent.Future;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.handler.MessageHandler;
+import com.site.lookup.ComponentTestCase;
 
-public class InMemoryTransportTest {
+@RunWith(JUnit4.class)
+public class InMemoryTest extends ComponentTestCase {
 	@Test
-	public void test() throws InterruptedException, ExecutionException {
-		final Transport transport = new InMemoryTransport();
+	public void test() throws Exception {
+		final MessageSender sender = lookup(MessageSender.class, "in-memory");
+		final MessageReceiver receiver = lookup(MessageReceiver.class, "in-memory");
 		final int len = 1000;
-		final StringBuilder sb = new StringBuilder(len * 4);
+		final StringBuilder sb = new StringBuilder(len);
 		ExecutorService pool = Executors.newFixedThreadPool(3);
 		List<Future<?>> futures = new ArrayList<Future<?>>();
 
 		futures.add(pool.submit(new Runnable() {
 			@Override
 			public void run() {
-				transport.onMessage(new MockMessageHandler(sb));
+				receiver.onMessage(new MockMessageHandler(sb));
 			}
 		}));
 		futures.add(pool.submit(new Runnable() {
 			@Override
 			public void run() {
 				for (int i = 0; i < len; i++) {
-					MockMessage m = new MockMessage();
-
-					m.setName(String.valueOf(i));
-					transport.send(m);
+					sender.send(new MockMessage());
 				}
 
-				transport.shutdown();
+				sender.shutdown();
+				receiver.shutdown();
 			}
 		}));
 
 		for (Future<?> future : futures) {
 			future.get();
 		}
+
 		pool.shutdown();
 
-		Assert.assertEquals(2890, sb.length());
+		Assert.assertEquals(len, sb.length());
 	}
 
 	static class MockMessage implements Message {
@@ -94,9 +97,9 @@ public class InMemoryTransportTest {
 		public void setStatus(String status) {
 		}
 
-      @Override
-      public void setStatus(Throwable e) {
-      }
+		@Override
+		public void setStatus(Throwable e) {
+		}
 	}
 
 	static class MockMessageHandler implements MessageHandler {
@@ -108,7 +111,7 @@ public class InMemoryTransportTest {
 
 		@Override
 		public void handle(Message message) {
-			m_sb.append(message.getName());
+			m_sb.append('.');
 		}
 	}
 }

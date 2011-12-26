@@ -5,7 +5,7 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 
 public class HeartbeatTest {
-	public static MessageFactory CAT = Cat.getFactory();
+	public static MessageProducer CAT = Cat.getProducer();
 
 	@Test
 	public void testStatus() {
