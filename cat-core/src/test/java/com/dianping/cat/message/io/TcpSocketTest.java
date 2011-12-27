@@ -13,15 +13,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.codec.MessageCodec;
 import com.dianping.cat.message.handler.MessageHandler;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
-public class InMemoryTest extends ComponentTestCase {
+public class TcpSocketTest extends ComponentTestCase {
 	@Test
-	public void test() throws Exception {
-		final MessageSender sender = lookup(MessageSender.class, "in-memory");
-		final MessageReceiver receiver = lookup(MessageReceiver.class, "in-memory");
+	public void testOneToOne() throws Exception {
+		final MessageSender sender = lookup(MessageSender.class, "tcp-socket");
+		final MessageReceiver receiver = lookup(MessageReceiver.class, "tcp-socket");
 		final int len = 1000;
 		final StringBuilder sb = new StringBuilder(len);
 		ExecutorService pool = Executors.newFixedThreadPool(3);
@@ -42,9 +43,6 @@ public class InMemoryTest extends ComponentTestCase {
 				for (int i = 0; i < len; i++) {
 					sender.send(new MockMessage());
 				}
-
-				sender.shutdown();
-				receiver.shutdown();
 			}
 		}));
 
@@ -52,7 +50,11 @@ public class InMemoryTest extends ComponentTestCase {
 			future.get();
 		}
 
+		Thread.sleep(100);
+
 		pool.shutdown();
+		receiver.shutdown();
+		sender.shutdown();
 
 		Assert.assertEquals(len, sb.length());
 	}
@@ -102,6 +104,18 @@ public class InMemoryTest extends ComponentTestCase {
 
 		@Override
 		public void setStatus(Throwable e) {
+		}
+	}
+
+	public static class MockMessageCodec implements MessageCodec {
+		@Override
+		public Message decode(byte[] bytes) {
+			return new MockMessage();
+		}
+
+		@Override
+		public byte[] encode(Message message) {
+			return "mock".getBytes();
 		}
 	}
 

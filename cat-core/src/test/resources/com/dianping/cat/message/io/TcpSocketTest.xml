@@ -1,0 +1,37 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.message.codec.MessageCodec</role>
+			<role-hint>tcp-socket</role-hint>
+			<implementation>com.dianping.cat.message.io.TcpSocketTest$MockMessageCodec</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.io.MessageSender</role>
+			<role-hint>tcp-socket</role-hint>
+			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
+			<configuration>
+				<host>localhost</host>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.codec.MessageCodec</role>
+					<role-hint>tcp-socket</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.io.MessageReceiver</role>
+			<role-hint>tcp-socket</role-hint>
+			<implementation>com.dianping.cat.message.io.TcpSocketReceiver</implementation>
+			<configuration>
+				<host>localhost</host>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.codec.MessageCodec</role>
+					<role-hint>tcp-socket</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+	</components>
+</plexus>
