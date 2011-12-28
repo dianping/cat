@@ -1,16 +1,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.message.io.Transport</role>
-			<role-hint>tcp-socket</role-hint>
-			<implementation>com.dianping.cat.message.io.TcpSocketTransport</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.io.Transport</role>
-			<role-hint>udp-multicast</role-hint>
-			<implementation>com.dianping.cat.message.io.UdpMulticastTransport</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.io.InMemoryQueue</role>
 			<implementation>com.dianping.cat.message.io.InMemoryQueue</implementation>
 		</component>
@@ -33,6 +23,10 @@
 					<role>com.dianping.cat.message.io.InMemoryQueue</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.MessageProducer</role>
+			<implementation>com.dianping.cat.message.internal.DefaultMessageProducer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.handler.MessageHandler</role>

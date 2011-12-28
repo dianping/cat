@@ -15,6 +15,7 @@ import org.junit.runners.JUnit4;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.codec.MessageCodec;
 import com.dianping.cat.message.handler.MessageHandler;
+import com.dianping.cat.message.internal.AbstractMessage;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -59,51 +60,13 @@ public class TcpSocketTest extends ComponentTestCase {
 		Assert.assertEquals(len, sb.length());
 	}
 
-	static class MockMessage implements Message {
-		private String m_name;
-
-		@Override
-		public void addData(String keyValuePairs) {
-		}
-
-		@Override
-		public void addData(String key, Object value) {
+	static class MockMessage extends AbstractMessage {
+		public MockMessage() {
+			super(null, null);
 		}
 
 		@Override
 		public void complete() {
-		}
-
-		@Override
-		public String getName() {
-			return m_name;
-		}
-
-		@Override
-		public String getStatus() {
-			return null;
-		}
-
-		@Override
-		public long getTimestamp() {
-			return 0;
-		}
-
-		@Override
-		public String getType() {
-			return null;
-		}
-
-		public void setName(String name) {
-			m_name = name;
-		}
-
-		@Override
-		public void setStatus(String status) {
-		}
-
-		@Override
-		public void setStatus(Throwable e) {
 		}
 	}
 

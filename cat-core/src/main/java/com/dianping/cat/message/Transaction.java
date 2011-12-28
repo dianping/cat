@@ -1,5 +1,7 @@
 package com.dianping.cat.message;
 
+import java.util.List;
+
 /**
  * <p>
  * <code>Transaction</code> is any interesting unit of work that takes time to
@@ -34,5 +36,33 @@ package com.dianping.cat.message;
  * @author Frankie Wu
  */
 public interface Transaction extends Message {
+	/**
+	 * Add one nested child message to current transaction.
+	 * 
+	 * @param message
+	 *           to be added
+	 */
+	public void addChild(Message message);
+
+	/**
+	 * Get all children message within current transaction.
+	 * 
+	 * <p>
+	 * Typically, a <code>Transaction</code> can nest other
+	 * <code>Transaction</code>s, <code>Event</code>s and <code>Heartbeat</code>
+	 * s, while an <code>Event</code> or <code>Heartbeat</code> can't nest other
+	 * messages.
+	 * </p>
+	 * 
+	 * @return all children messages, empty if there is no nested children.
+	 */
+	public List<Message> getChildren();
+
+	/**
+	 * How long the transaction took from construction to complete. Time unit is
+	 * millisecond.
+	 * 
+	 * @return duration time in millisecond
+	 */
 	public long getDuration();
 }

@@ -3,10 +3,12 @@ package com.dianping.cat.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.broker.DefaultMessageBroker;
 import com.dianping.cat.message.broker.MessageBroker;
 import com.dianping.cat.message.handler.MessageDispatcher;
 import com.dianping.cat.message.handler.MessageHandler;
+import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.dianping.cat.message.io.InMemoryQueue;
 import com.dianping.cat.message.io.InMemoryReceiver;
 import com.dianping.cat.message.io.InMemorySender;
@@ -28,6 +30,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageReceiver.class, inMemory, InMemoryReceiver.class) //
 		      .req(InMemoryQueue.class));
 
+		all.add(C(MessageProducer.class, DefaultMessageProducer.class));
+
+		// the following are not used right now
 		all.add(C(MessageHandler.class, MessageDispatcher.class) //
 		      .req(MessageReceiver.class, inMemory));
 

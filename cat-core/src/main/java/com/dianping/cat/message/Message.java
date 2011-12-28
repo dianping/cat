@@ -80,6 +80,13 @@ public interface Message {
 	public String getType();
 
 	/**
+	 * If the complete() method was called or not.
+	 * 
+	 * @return true means the complete() method was called, false otherwise.
+	 */
+	public boolean isCompleted();
+
+	/**
 	 * Set the message status.
 	 * 
 	 * @param status
