@@ -1,11 +1,11 @@
-package com.dianping.cat.message.handler;
+package com.dianping.cat.message.spi.internal;
 
-import java.util.List;
+import java.util.Collection;
 
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.consumer.MessageConsumer;
-import com.dianping.cat.message.consumer.MessageConsumerRegistry;
 import com.dianping.cat.message.io.MessageReceiver;
+import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.message.spi.MessageHandler;
+import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class MessageDispatcher implements MessageHandler, Runnable {
@@ -13,15 +13,15 @@ public class MessageDispatcher implements MessageHandler, Runnable {
 	private MessageReceiver m_receiver;
 
 	@Inject
-	private MessageConsumerRegistry m_registry;
+	private DefaultMessageConsumerRegistry m_registry;
 
 	@Override
-	public void handle(Message message) {
-		List<MessageConsumer> comsumers = m_registry.getConsumers();
+	public void handle(MessageTree tree) {
+		Collection<MessageConsumer> comsumers = m_registry.getConsumers().values();
 
 		for (MessageConsumer consumer : comsumers) {
 			try {
-				consumer.consume(message);
+				consumer.consume(tree);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -37,7 +37,7 @@ public class MessageDispatcher implements MessageHandler, Runnable {
 		m_receiver = receiver;
 	}
 
-	public void setRegistry(MessageConsumerRegistry registry) {
+	public void setRegistry(DefaultMessageConsumerRegistry registry) {
 		m_registry = registry;
 	}
 }

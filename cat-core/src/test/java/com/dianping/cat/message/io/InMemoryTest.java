@@ -12,9 +12,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.handler.MessageHandler;
-import com.dianping.cat.message.internal.AbstractMessage;
+import com.dianping.cat.message.spi.MessageHandler;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -41,7 +41,7 @@ public class InMemoryTest extends ComponentTestCase {
 				sender.initialize();
 
 				for (int i = 0; i < len; i++) {
-					sender.send(new MockMessage());
+					sender.send(new DefaultMessageTree());
 				}
 
 				sender.shutdown();
@@ -58,16 +58,6 @@ public class InMemoryTest extends ComponentTestCase {
 		Assert.assertEquals(len, sb.length());
 	}
 
-	static class MockMessage extends AbstractMessage {
-		public MockMessage() {
-			super(null, null);
-		}
-
-		@Override
-		public void complete() {
-		}
-	}
-
 	static class MockMessageHandler implements MessageHandler {
 		private StringBuilder m_sb;
 
@@ -76,7 +66,7 @@ public class InMemoryTest extends ComponentTestCase {
 		}
 
 		@Override
-		public void handle(Message message) {
+		public void handle(MessageTree tree) {
 			m_sb.append('.');
 		}
 	}

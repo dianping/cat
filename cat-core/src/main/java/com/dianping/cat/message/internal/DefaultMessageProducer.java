@@ -1,12 +1,25 @@
 package com.dianping.cat.message.internal;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.io.MessageSender;
+import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageProducer implements MessageProducer {
+public class DefaultMessageProducer implements MessageProducer, Initializable {
+	@Inject
+	private MessageSender m_sender;
+
+	@Override
+	public void initialize() throws InitializationException {
+		MessageManager.INSTANCE.initialize(m_sender);
+	}
+
 	@Override
 	public void logEvent(String type, String name, String status, String nameValuePairs) {
 		Event event = newEvent(type, name);

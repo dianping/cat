@@ -1,7 +1,7 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.message.codec.MessageCodec</role>
+			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>tcp-socket</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketTest$MockMessageCodec</implementation>
 		</component>
@@ -14,7 +14,7 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.codec.MessageCodec</role>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>tcp-socket</role-hint>
 				</requirement>
 			</requirements>
@@ -28,7 +28,7 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.codec.MessageCodec</role>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>tcp-socket</role-hint>
 				</requirement>
 			</requirements>

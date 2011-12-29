@@ -9,10 +9,10 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.message.Message;
+import com.dianping.cat.message.spi.MessageTree;
 
 public class InMemoryQueue implements LogEnabled, Initializable {
-	private BlockingQueue<Message> m_queue;
+	private BlockingQueue<MessageTree> m_queue;
 
 	private int m_queueSize;
 
@@ -26,30 +26,42 @@ public class InMemoryQueue implements LogEnabled, Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_queueSize <= 0) {
-			m_queue = new LinkedBlockingQueue<Message>();
+			m_queue = new LinkedBlockingQueue<MessageTree>();
 		} else {
-			m_queue = new LinkedBlockingQueue<Message>(m_queueSize);
+			m_queue = new LinkedBlockingQueue<MessageTree>(m_queueSize);
 		}
 	}
 
-	public void offer(Message message) {
-		while (!m_queue.offer(message)) {
-			// throw away the message at the tail
-			Message m = m_queue.poll();
+	public void offer(MessageTree tree) {
+		while (!m_queue.offer(tree)) {
+			// throw away the tree at the tail
+			MessageTree m = m_queue.poll();
 
 			if (m == null) {
 				break;
 			} else {
-				m_logger.warn(message + " was thrown away due to queue is full!");
+				m_logger.warn(tree + " was thrown away due to queue is full!");
 			}
 		}
 	}
 
-	public Message poll(long timeout) throws InterruptedException {
-		return m_queue.poll(timeout, TimeUnit.MILLISECONDS);
+	public MessageTree peek() {
+	   return m_queue.peek();
+   }
+
+	public MessageTree poll(long timeout) throws InterruptedException {
+		if (timeout <= 0) {
+			return m_queue.poll();
+		} else {
+			return m_queue.poll(timeout, TimeUnit.MILLISECONDS);
+		}
 	}
 
 	public void setQueueSize(int queueSize) {
 		m_queueSize = queueSize;
+	}
+
+	public int size() {
+		return m_queue.size();
 	}
 }

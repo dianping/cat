@@ -6,6 +6,10 @@ import java.util.Stack;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.io.MessageSender;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.site.lookup.annotation.Inject;
 
 public enum MessageManager {
 	INSTANCE;
@@ -17,42 +21,55 @@ public enum MessageManager {
 		}
 	};
 
+	@Inject
+	private MessageSender m_sender;
+
+	private boolean m_initialized;
+
 	public void add(Message message) {
-		s_context.get().add(message);
+		s_context.get().add(this, message);
 	}
 
 	public void end(Transaction transaction) {
-		s_context.get().end(transaction);
+		s_context.get().end(this, transaction);
+	}
+
+	void flush(MessageTree tree) {
+		if (m_sender != null) {
+			m_sender.send(tree);
+			
+			// destroy current thread data
+			s_context.remove();
+		} else if (!m_initialized) {
+			throw new IllegalStateException("MessageManager is not initialized yet!");
+		}
+	}
+
+	public void initialize(MessageSender sender) {
+		m_sender = sender;
+		m_initialized = true;
 	}
 
 	public void start(Transaction transaction) {
 		s_context.get().start(transaction);
 	}
 
-	void handle(Transaction transaction) {
-		// TODO
-		System.out.println(transaction);
-	}
-
 	static class Context {
+		private DefaultMessageTree m_tree = new DefaultMessageTree();
+
 		private Stack<Transaction> m_stack = new Stack<Transaction>();
 
-		public void add(Message message) {
-			if (!m_stack.isEmpty()) {
+		public void add(MessageManager manager, Message message) {
+			if (m_stack.isEmpty()) {
+				m_tree.setMessage(message);
+			} else {
 				Transaction entry = m_stack.peek();
 
 				entry.addChild(message);
-			} else {
-				// add a mock transaction as its parent
-				Transaction t = new FakeTransaction();
-
-				start(t);
-				t.addChild(message);
-				end(t);
 			}
 		}
 
-		public void end(Transaction transaction) {
+		public void end(MessageManager manager, Transaction transaction) {
 			if (!m_stack.isEmpty()) {
 				Transaction current = m_stack.peek();
 
@@ -65,7 +82,7 @@ public enum MessageManager {
 				m_stack.pop();
 
 				if (m_stack.isEmpty()) {
-					INSTANCE.handle(transaction);
+					manager.flush(m_tree);
 				}
 			}
 		}
@@ -111,12 +128,11 @@ public enum MessageManager {
 		}
 
 		@Override
-		public void complete() {
+		public void addChild(Message message) {
 		}
 
 		@Override
-		public long getDuration() {
-			return -1;
+		public void complete() {
 		}
 
 		@Override
@@ -125,7 +141,8 @@ public enum MessageManager {
 		}
 
 		@Override
-		public void addChild(Message message) {
+		public long getDuration() {
+			return -1;
 		}
 	}
 }

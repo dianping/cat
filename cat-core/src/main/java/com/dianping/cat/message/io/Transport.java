@@ -1,7 +1,7 @@
 package com.dianping.cat.message.io;
 
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.handler.MessageHandler;
+import com.dianping.cat.message.spi.MessageHandler;
 
 /**
  * <p>

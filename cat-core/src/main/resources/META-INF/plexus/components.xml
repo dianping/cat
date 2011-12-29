@@ -29,8 +29,13 @@
 			<implementation>com.dianping.cat.message.internal.DefaultMessageProducer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.handler.MessageHandler</role>
-			<implementation>com.dianping.cat.message.handler.MessageDispatcher</implementation>
+			<role>com.dianping.cat.message.spi.MessageCodec</role>
+			<role-hint>plain-text</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.PlainTextMessageCodec</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageHandler</role>
+			<implementation>com.dianping.cat.message.spi.internal.MessageDispatcher</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.io.MessageReceiver</role>

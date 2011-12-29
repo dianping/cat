@@ -1,7 +1,7 @@
 package com.dianping.cat.message.io;
 
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.handler.MessageHandler;
+import com.dianping.cat.message.spi.MessageHandler;
+import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class InMemoryReceiver implements MessageReceiver {
@@ -24,10 +24,10 @@ public class InMemoryReceiver implements MessageReceiver {
 	public void onMessage(MessageHandler handler) {
 		try {
 			while (true) {
-				Message m = m_queue.poll(1);
+				MessageTree tree = m_queue.poll(1);
 
-				if (m != null) {
-					handler.handle(m);
+				if (tree != null) {
+					handler.handle(tree);
 				} else if (!isActive()) {
 					break;
 				}

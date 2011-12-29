@@ -21,9 +21,9 @@ import org.jboss.netty.channel.group.DefaultChannelGroup;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.codec.MessageCodec;
-import com.dianping.cat.message.handler.MessageHandler;
+import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageHandler;
+import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class TcpSocketReceiver implements MessageReceiver {
@@ -43,9 +43,9 @@ public class TcpSocketReceiver implements MessageReceiver {
 	private MessageHandler m_messageHandler;
 
 	void handleMessage(byte[] data) {
-		Message message = m_codec.decode(data);
+		MessageTree tree = m_codec.decode(data);
 
-		m_messageHandler.handle(message);
+		m_messageHandler.handle(tree);
 	}
 
 	@Override

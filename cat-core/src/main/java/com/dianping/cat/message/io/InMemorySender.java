@@ -1,6 +1,6 @@
 package com.dianping.cat.message.io;
 
-import com.dianping.cat.message.Message;
+import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class InMemorySender implements MessageSender {
@@ -20,9 +20,9 @@ public class InMemorySender implements MessageSender {
 	}
 
 	@Override
-	public void send(Message message) {
+	public void send(MessageTree tree) {
 		if (isActive()) {
-			m_queue.offer(message);
+			m_queue.offer(tree);
 		}
 	}
 

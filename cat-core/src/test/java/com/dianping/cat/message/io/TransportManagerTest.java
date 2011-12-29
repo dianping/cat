@@ -5,9 +5,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.handler.MessageHandler;
 import com.dianping.cat.message.io.Transport;
 import com.dianping.cat.message.io.TransportManager;
+import com.dianping.cat.message.spi.MessageHandler;
 
 public class TransportManagerTest {
    @Test

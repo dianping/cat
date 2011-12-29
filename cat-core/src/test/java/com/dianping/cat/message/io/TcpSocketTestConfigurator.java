@@ -4,8 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.message.codec.MessageCodec;
 import com.dianping.cat.message.io.TcpSocketTest.MockMessageCodec;
+import com.dianping.cat.message.spi.MessageCodec;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 

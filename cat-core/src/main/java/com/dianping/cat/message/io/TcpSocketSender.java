@@ -18,8 +18,8 @@ import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.codec.MessageCodec;
+import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class TcpSocketSender implements MessageSender {
@@ -69,14 +69,15 @@ public class TcpSocketSender implements MessageSender {
 	}
 
 	@Override
-	public void send(Message message) {
-		byte[] data = m_codec.encode(message);
+	public void send(MessageTree tree) {
+		byte[] data = m_codec.encode(tree);
 		Channel channel = m_future.getChannel();
 		ChannelBufferFactory factory = channel.getConfig().getBufferFactory();
 		ChannelBuffer buf = factory.getBuffer(data.length + 4);
 
 		buf.writeInt(data.length);
 		buf.writeBytes(data);
+		
 		channel.write(buf);
 	}
 
