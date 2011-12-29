@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.broker.DefaultMessageBroker;
-import com.dianping.cat.message.broker.MessageBroker;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.dianping.cat.message.io.InMemoryQueue;
 import com.dianping.cat.message.io.InMemoryReceiver;
@@ -13,9 +11,11 @@ import com.dianping.cat.message.io.InMemorySender;
 import com.dianping.cat.message.io.MessageReceiver;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.spi.internal.MessageDispatcher;
+import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
+import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -32,15 +32,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(InMemoryQueue.class));
 
 		all.add(C(MessageProducer.class, DefaultMessageProducer.class));
+		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class));
 
 		all.add(C(MessageCodec.class, "plain-text", PlainTextMessageCodec.class));
 
 		// the following are not used right now
-		all.add(C(MessageHandler.class, MessageDispatcher.class) //
-		      .req(MessageReceiver.class, inMemory));
-
-		all.add(C(MessageBroker.class, inMemory, DefaultMessageBroker.class) //
-		      .req(MessageSender.class, inMemory) //
+		all.add(C(MessageHandler.class, DefaultMessageHandler.class) //
+		      .req(MessageConsumerRegistry.class) //
 		      .req(MessageReceiver.class, inMemory));
 
 		return all;

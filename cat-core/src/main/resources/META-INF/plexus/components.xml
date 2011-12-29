@@ -29,28 +29,20 @@
 			<implementation>com.dianping.cat.message.internal.DefaultMessageProducer</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
+			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>plain-text</role-hint>
 			<implementation>com.dianping.cat.message.spi.codec.PlainTextMessageCodec</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageHandler</role>
-			<implementation>com.dianping.cat.message.spi.internal.MessageDispatcher</implementation>
+			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageHandler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.io.MessageReceiver</role>
-					<role-hint>in-memory</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.broker.MessageBroker</role>
-			<role-hint>in-memory</role-hint>
-			<implementation>com.dianping.cat.message.broker.DefaultMessageBroker</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.io.MessageSender</role>
-					<role-hint>in-memory</role-hint>
+					<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.io.MessageReceiver</role>

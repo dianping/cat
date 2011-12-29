@@ -29,10 +29,18 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	@Override
 	public void complete() {
-		m_duration = (long) (System.nanoTime() / 1e6) - getTimestamp();
+		if (isCompleted()) {
+			// complete() was called more than once
+			DefaultEvent event = new DefaultEvent("CAT", "BadInstrument");
 
-		setCompleted(true);
-		MessageManager.INSTANCE.end(this);
+			event.setStatus("TransactionAlreadyCompleted");
+			event.complete();
+		} else {
+			m_duration = (long) (System.nanoTime() / 1e6) - getTimestamp();
+
+			setCompleted(true);
+			MessageManager.INSTANCE.end(this);
+		}
 	}
 
 	@Override

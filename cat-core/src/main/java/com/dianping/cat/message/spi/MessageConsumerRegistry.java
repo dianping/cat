@@ -1,11 +1,9 @@
 package com.dianping.cat.message.spi;
 
-import java.util.Map;
+import java.util.List;
 
 public interface MessageConsumerRegistry {
-	public void registerFilter(MessageFilter filter);
-
 	public void registerConsumer(MessageConsumer consumer);
 
-	public Map<String, MessageConsumer> getConsumers();
+	public List<MessageConsumer> getConsumers();
 }

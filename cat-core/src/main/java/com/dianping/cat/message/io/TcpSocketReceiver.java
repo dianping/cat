@@ -112,6 +112,7 @@ public class TcpSocketReceiver implements MessageReceiver {
 				return null;
 			}
 
+			// TODO filter
 			return buffer.readBytes(length);
 		}
 	}
