@@ -1,0 +1,4 @@
+<manifest>
+   <file path="failure-report-codegen.xml"/>
+   <file path="failure-report.xml"/>
+</manifest>

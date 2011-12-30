@@ -8,6 +8,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-core</artifactId>
+	<version>1.0.0</version>
 	<name>CAT Core</name>
 	<dependencies>
 		<dependency>
@@ -23,4 +24,25 @@
 			<artifactId>netty</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.site.maven.plugins</groupId>
+				<artifactId>maven-codegen-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/failure-report-manifest.xml</manifest>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
