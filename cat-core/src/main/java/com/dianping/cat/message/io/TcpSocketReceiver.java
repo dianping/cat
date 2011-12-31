@@ -24,6 +24,7 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class TcpSocketReceiver implements MessageReceiver {
@@ -41,12 +42,6 @@ public class TcpSocketReceiver implements MessageReceiver {
 	private ChannelGroup m_channelGroup = new DefaultChannelGroup();
 
 	private MessageHandler m_messageHandler;
-
-	void handleMessage(byte[] data) {
-		MessageTree tree = m_codec.decode(data);
-
-		m_messageHandler.handle(tree);
-	}
 
 	@Override
 	public void initialize() {
@@ -98,6 +93,9 @@ public class TcpSocketReceiver implements MessageReceiver {
 
 	public class MyDecoder extends FrameDecoder {
 		@Override
+		/**
+		 * return null means not all data is ready, so waiting for next network package.
+		 */
 		protected Object decode(ChannelHandlerContext ctx, Channel channel, ChannelBuffer buffer) {
 			if (buffer.readableBytes() < 4) {
 				return null;
@@ -107,37 +105,38 @@ public class TcpSocketReceiver implements MessageReceiver {
 
 			int length = buffer.readInt();
 
+			buffer.resetReaderIndex();
+
 			if (buffer.readableBytes() < length) {
-				buffer.resetReaderIndex();
 				return null;
 			}
 
 			// TODO filter
-			return buffer.readBytes(length);
+
+			return buffer.readBytes(length + 4);
 		}
 	}
 
 	class MyHandler extends SimpleChannelHandler {
 		@Override
-		public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent e) throws Exception {
-			m_channelGroup.add(e.getChannel());
+		public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent event) throws Exception {
+			m_channelGroup.add(event.getChannel());
 		}
 
 		@Override
-		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
-			e.getCause().printStackTrace();
+		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent event) {
+			event.getCause().printStackTrace();
 
-			e.getChannel().close();
+			event.getChannel().close();
 		}
 
 		@Override
-		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-			ChannelBuffer buf = (ChannelBuffer) e.getMessage();
-			int length = buf.readableBytes();
-			byte[] data = new byte[length];
+		public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
+			ChannelBuffer buf = (ChannelBuffer) event.getMessage();
+			MessageTree tree = new DefaultMessageTree();
 
-			buf.readBytes(data);
-			handleMessage(data);
+			m_codec.decode(buf, tree);
+			m_messageHandler.handle(tree);
 		}
 	}
 }

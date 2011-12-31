@@ -1,5 +1,7 @@
 package com.dianping.cat.message.spi;
 
+import com.dianping.cat.message.Message;
+
 public interface MessageTree {
 	public String getDomain();
 
@@ -7,7 +9,7 @@ public interface MessageTree {
 
 	public String getIpAddress();
 
-	public MessageTree getMessage();
+	public Message getMessage();
 
 	public String getMessageId();
 

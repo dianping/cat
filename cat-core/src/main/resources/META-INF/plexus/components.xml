@@ -29,13 +29,39 @@
 			<implementation>com.dianping.cat.message.internal.DefaultMessageProducer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
-			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>plain-text</role-hint>
 			<implementation>com.dianping.cat.message.spi.codec.PlainTextMessageCodec</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageConsumer</role>
+			<role-hint>dummy</role-hint>
+			<implementation>com.dianping.cat.message.spi.consumer.DummyConsumer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageConsumer</role>
+			<role-hint>dummy2</role-hint>
+			<implementation>com.dianping.cat.message.spi.consumer.DummyConsumer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageConsumer</role>
+			<role-hint>dummy3</role-hint>
+			<implementation>com.dianping.cat.message.spi.consumer.DummyConsumer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
+			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hints>
+						<role-hint>dummy</role-hint>
+						<role-hint>dummy2</role-hint>
+						<role-hint>dummy3</role-hint>
+					</role-hints>
+					<field-name>m_consumers</field-name>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageHandler</role>

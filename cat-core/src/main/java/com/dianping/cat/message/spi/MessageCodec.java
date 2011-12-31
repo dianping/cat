@@ -1,7 +1,9 @@
 package com.dianping.cat.message.spi;
 
-public interface MessageCodec {
-	public byte[] encode(MessageTree tree);
+import org.jboss.netty.buffer.ChannelBuffer;
 
-	public MessageTree decode(byte[] data);
+public interface MessageCodec {
+	public void decode(ChannelBuffer buf, MessageTree tree);
+
+	public void encode(MessageTree tree, ChannelBuffer buf);
 }

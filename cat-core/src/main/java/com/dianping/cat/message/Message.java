@@ -39,6 +39,11 @@ public interface Message {
 	public void complete();
 
 	/**
+	 * @return key value pairs data
+	 */
+	public Object getData();
+	
+	/**
 	 * Message name.
 	 * 
 	 * @return message name

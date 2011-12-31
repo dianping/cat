@@ -5,8 +5,7 @@ import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBufferFactory;
-import org.jboss.netty.channel.Channel;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.ChannelHandlerContext;
@@ -70,15 +69,10 @@ public class TcpSocketSender implements MessageSender {
 
 	@Override
 	public void send(MessageTree tree) {
-		byte[] data = m_codec.encode(tree);
-		Channel channel = m_future.getChannel();
-		ChannelBufferFactory factory = channel.getConfig().getBufferFactory();
-		ChannelBuffer buf = factory.getBuffer(data.length + 4);
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(20 * 1024); // 20K
 
-		buf.writeInt(data.length);
-		buf.writeBytes(data);
-		
-		channel.write(buf);
+		m_codec.encode(tree, buf);
+		m_future.getChannel().write(buf);
 	}
 
 	public void setHost(String host) {

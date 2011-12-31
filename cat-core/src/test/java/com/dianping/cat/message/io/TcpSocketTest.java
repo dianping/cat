@@ -8,6 +8,7 @@ import java.util.concurrent.Future;
 
 import junit.framework.Assert;
 
+import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -73,13 +74,14 @@ public class TcpSocketTest extends ComponentTestCase {
 
 	public static class MockMessageCodec implements MessageCodec {
 		@Override
-		public MessageTree decode(byte[] bytes) {
-			return new DefaultMessageTree();
+		public void decode(ChannelBuffer buf, MessageTree tree) {
+			// do nothing here
 		}
 
 		@Override
-		public byte[] encode(MessageTree message) {
-			return "mock".getBytes();
+		public void encode(MessageTree tree, ChannelBuffer buf) {
+			buf.writeInt(4);
+			buf.writeBytes("mock".getBytes());
 		}
 	}
 

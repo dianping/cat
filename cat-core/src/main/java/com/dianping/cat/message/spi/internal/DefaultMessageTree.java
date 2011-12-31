@@ -20,7 +20,7 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
-	public MessageTree getMessage() {
+	public Message getMessage() {
 		return null;
 	}
 
@@ -50,6 +50,6 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	public void setMessage(Message message) {
-	   
-   }
+
+	}
 }

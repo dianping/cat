@@ -14,7 +14,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.StringRope;
 
-public class PlainTextMessageCodec implements MessageCodec {
+public class CopyOfPlainTextMessageCodec implements MessageCodec {
 	private static final String ID = "PT1"; // plain text version 1
 
 	private static final String TAB = "\t";
@@ -36,15 +36,6 @@ public class PlainTextMessageCodec implements MessageCodec {
 		encodeMessage(rope, tree.getMessage());
 		return rope;
 	}
-
-	@Override
-	public void encode(MessageTree tree, ChannelBuffer buf) {
-		encodeHeader(tree, buf);
-	}
-
-	private void encodeHeader(MessageTree tree, ChannelBuffer buf) {
-	   
-   }
 
 	protected void encodeHeader(StringRope rope, MessageTree tree) {
 		rope.add(ID);
@@ -117,5 +108,10 @@ public class PlainTextMessageCodec implements MessageCodec {
 		WITHOUT_STATUS,
 
 		WITH_DURATION;
+	}
+
+	@Override
+	public void encode(MessageTree tree, ChannelBuffer buf) {
+
 	}
 }

@@ -1,7 +1,11 @@
 package com.dianping.cat.message.internal;
 
+import java.nio.charset.Charset;
+
 import junit.framework.Assert;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,7 +45,9 @@ public class MessageProducerTest extends ComponentTestCase {
 		Assert.assertEquals("One message should be in the queue.", 1, queue.size());
 
 		MessageTree tree = queue.peek();
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
-		Assert.assertEquals("...", codec.encode(tree));
+		codec.encode(tree, buf);
+		Assert.assertEquals("...", buf.toString(Charset.forName("utf-8")));
 	}
 }

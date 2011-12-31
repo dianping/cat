@@ -1,6 +1,7 @@
 package com.dianping.cat.message.internal;
 
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.spi.StringRope;
 
 public abstract class AbstractMessage implements Message {
 	private String m_type;
@@ -24,18 +25,19 @@ public abstract class AbstractMessage implements Message {
 
 	@Override
 	public void addData(String keyValuePairs) {
-		m_data.append(keyValuePairs);
+		m_data.add(keyValuePairs, true);
 	}
 
 	@Override
 	public void addData(String key, Object value) {
 		if (m_data.isEmpty()) {
-			m_data.append("&");
+			m_data.add("&");
 		}
 
-		m_data.append(key).append("=").append(String.valueOf(value));
+		m_data.add(key).add("=").add(String.valueOf(value), true);
 	}
 
+	@Override
 	public StringRope getData() {
 		return m_data;
 	}
