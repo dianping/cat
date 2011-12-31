@@ -1,0 +1,9 @@
+<model model-package="com.dianping.cat.consumer.failurereport"
+	enable-merger="true" enable-json-builder="true" enable-xml-parser="true" enable-base-visitor="true">
+  <entity name="failure-report" root="true">
+    <entity-ref name="segment" map="true" map-name="segments" />
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="String" key="true" />
+  </entity>
+</model>

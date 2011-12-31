@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<failure-report domain="review" startTime="2011-12-27 14:00:00" endTime="2011-12-27 14:44:59">
+   <machines>
+   	  <machine>127.0.0.1</machine>
+   	  <machine>127.0.0.1</machine>
+   </machines>
+   <segment timestamp="2011-12-27 14:42:00">
+   	  <entry type="exception" messageId="12345" threadId="12365">java.lang.NullPointerExcepiton</entry>
+   	  <entry type="error" messageId="12345">java.lang.OutOfMemoryError</entry>
+   	  <entry type="exception" messageId="234567">java.lang.RuntimeExcepiton</entry>
+   	  <entry type="longUrl" messageId="234567">http://www.dianping.com/a/b/c?x=y</entry>
+   </segment>
+   <segment/>
+</failure-report>

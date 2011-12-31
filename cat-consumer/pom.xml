@@ -11,6 +11,11 @@
 	<name>CAT Consumer</name>
 	<dependencies>
 		<dependency>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-core</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
@@ -19,4 +24,25 @@
 			<artifactId>lookup</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.site.maven.plugins</groupId>
+				<artifactId>maven-codegen-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/failure-report-manifest.xml</manifest>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
 </project>

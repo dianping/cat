@@ -1,0 +1,25 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageQueue</role>
+			<implementation>com.dianping.cat.message.consumer.impl.DefaultMessageQueue</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageConsumer</role>
+			<role-hint>realtime</role-hint>
+			<implementation>com.dianping.cat.consumer.impl2.RealtimeConsumer</implementation>
+			<configuration>
+				<consumerId>realtime</consumerId>
+				<domain>Review</domain>
+				<analyzerNames>failure-report</analyzerNames>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
+			<role-hint>failure-report</role-hint>
+			<implementation>com.dianping.cat.consumer.impl2.FailureReportAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+	</components>
+</plexus>

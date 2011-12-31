@@ -8,6 +8,7 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-core</artifactId>
+	<version>1.0.0</version>
 	<name>CAT Core</name>
 	<dependencies>
 		<dependency>
@@ -23,4 +24,8 @@
 			<artifactId>netty</artifactId>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+		</plugins>
+	</build>
 </project>
