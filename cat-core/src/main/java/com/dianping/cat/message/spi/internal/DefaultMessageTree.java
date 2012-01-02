@@ -4,52 +4,111 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.spi.MessageTree;
 
 public class DefaultMessageTree implements MessageTree {
+	private String m_domain;
+
+	private String m_hostName;
+
+	private String m_ipAddress;
+
+	private String m_messageId;
+
+	private int m_port;
+
+	private String m_requestToken;
+
+	private String m_sessionToken;
+
+	private String m_threadId;
+
+	private Message m_message;
+
 	@Override
 	public String getDomain() {
-		return null;
+		return m_domain;
 	}
 
 	@Override
 	public String getHostName() {
-		return null;
+		return m_hostName;
 	}
 
 	@Override
 	public String getIpAddress() {
-		return null;
+		return m_ipAddress;
 	}
 
 	@Override
 	public Message getMessage() {
-		return null;
+		return m_message;
 	}
 
 	@Override
 	public String getMessageId() {
-		return null;
+		return m_messageId;
 	}
 
 	@Override
 	public int getPort() {
-		return 0;
+		return m_port;
 	}
 
 	@Override
 	public String getRequestToken() {
-		return null;
+		return m_requestToken;
 	}
 
 	@Override
 	public String getSessionToken() {
-		return null;
+		return m_sessionToken;
 	}
 
 	@Override
 	public String getThreadId() {
-		return null;
+		return m_threadId;
 	}
 
-	public void setMessage(Message message) {
+	@Override
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
 
+	@Override
+	public void setHostName(String hostName) {
+		m_hostName = hostName;
+	}
+
+	@Override
+	public void setIpAddress(String ipAddress) {
+		m_ipAddress = ipAddress;
+	}
+
+	@Override
+	public void setMessage(Message message) {
+		m_message = message;
+	}
+
+	@Override
+	public void setMessageId(String messageId) {
+		m_messageId = messageId;
+	}
+
+	@Override
+	public void setPort(int port) {
+		m_port = port;
+	}
+
+	@Override
+	public void setRequestToken(String requestToken) {
+		m_requestToken = requestToken;
+	}
+
+	@Override
+	public void setSessionToken(String sessionToken) {
+		m_sessionToken = sessionToken;
+	}
+
+	@Override
+	public void setThreadId(String threadId) {
+		m_threadId = threadId;
 	}
 }

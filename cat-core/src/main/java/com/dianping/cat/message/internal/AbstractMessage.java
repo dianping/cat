@@ -79,4 +79,8 @@ public abstract class AbstractMessage implements Message {
 	public void setStatus(Throwable e) {
 		m_status = e.getClass().getName();
 	}
+
+	public void setTimestamp(long timestamp) {
+   	m_timestamp = timestamp;
+   }
 }

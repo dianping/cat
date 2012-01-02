@@ -20,4 +20,22 @@ public interface MessageTree {
 	public String getSessionToken();
 
 	public String getThreadId();
+
+	public void setDomain(String domain);
+
+	public void setHostName(String hostName);
+
+	public void setIpAddress(String ipAddress);
+
+	public void setMessage(Message message);
+
+	public void setMessageId(String messageId);
+
+	public void setPort(int port);
+
+	public void setRequestToken(String requestToken);
+
+	public void setSessionToken(String sessionToken);
+
+	public void setThreadId(String threadId);
 }

@@ -43,12 +43,9 @@ public class StringRope {
 		return m_parts.isEmpty();
 	}
 
-	public void writeTo(ChannelBuffer buffer) {
+	public int writeTo(ChannelBuffer buffer) {
 		int size = m_parts.size();
-		int writeIndex = buffer.writerIndex();
-		int total = 0;
-
-		buffer.writeInt(0); // place-holder
+		int count = 0;
 
 		for (int i = 0; i < size; i++) {
 			String part = m_parts.get(i);
@@ -65,10 +62,10 @@ public class StringRope {
 			}
 
 			buffer.writeBytes(data);
-			total += data.length;
+			count += data.length;
 		}
 
-		buffer.setInt(writeIndex, total);
+		return count;
 	}
 
 	public StringRope add(StringRope rope) {

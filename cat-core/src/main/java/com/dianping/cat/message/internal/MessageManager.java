@@ -55,7 +55,7 @@ public enum MessageManager {
 	}
 
 	static class Context {
-		private DefaultMessageTree m_tree = new DefaultMessageTree();
+		private MessageTree m_tree = new DefaultMessageTree();
 
 		private Stack<Transaction> m_stack = new Stack<Transaction>();
 
