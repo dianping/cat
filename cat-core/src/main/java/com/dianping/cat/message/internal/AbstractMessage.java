@@ -1,7 +1,13 @@
 package com.dianping.cat.message.internal;
 
+import java.nio.charset.Charset;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.spi.StringRope;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public abstract class AbstractMessage implements Message {
 	private String m_type;
@@ -25,16 +31,16 @@ public abstract class AbstractMessage implements Message {
 
 	@Override
 	public void addData(String keyValuePairs) {
-		m_data.add(keyValuePairs, true);
+		m_data.addRaw(keyValuePairs);
 	}
 
 	@Override
 	public void addData(String key, Object value) {
-		if (m_data.isEmpty()) {
+		if (!m_data.isEmpty()) {
 			m_data.add("&");
 		}
 
-		m_data.add(key).add("=").add(String.valueOf(value), true);
+		m_data.add(key).add("=").addRaw(String.valueOf(value));
 	}
 
 	@Override
@@ -81,6 +87,15 @@ public abstract class AbstractMessage implements Message {
 	}
 
 	public void setTimestamp(long timestamp) {
-   	m_timestamp = timestamp;
-   }
+		m_timestamp = timestamp;
+	}
+
+	@Override
+	public String toString() {
+		PlainTextMessageCodec codec = new PlainTextMessageCodec();
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+
+		codec.encodeMessage(this, buf);
+		return buf.toString(Charset.forName("utf-8"));
+	}
 }

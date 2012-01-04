@@ -1,7 +1,13 @@
 package com.dianping.cat.message.spi.internal;
 
+import java.nio.charset.Charset;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public class DefaultMessageTree implements MessageTree {
 	private String m_domain;
@@ -110,5 +116,15 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
+	}
+
+	@Override
+	public String toString() {
+		PlainTextMessageCodec codec = new PlainTextMessageCodec();
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+
+		codec.encode(this, buf);
+		buf.readInt(); // get rid of length
+		return buf.toString(Charset.forName("utf-8"));
 	}
 }

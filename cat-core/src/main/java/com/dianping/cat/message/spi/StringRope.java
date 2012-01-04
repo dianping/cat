@@ -22,25 +22,80 @@ public class StringRope {
 	}
 
 	public StringRope add(String str) {
-		return add(str, false);
+		return addObject(str, false);
 	}
 
-	public StringRope add(String str, boolean utf8) {
-		return add(str, utf8);
+	public StringRope add(StringRope rope) {
+		int size = rope.size();
+
+		for (int i = 0; i < size; i++) {
+			addObject(rope.m_parts.get(i), rope.m_flags.get(i));
+		}
+
+		return this;
 	}
 
-	protected StringRope add(Object obj, boolean utf8) {
-		m_flags.set(m_parts.size(), utf8);
+	protected StringRope addObject(Object obj, boolean isRaw) {
+		m_flags.set(m_parts.size(), isRaw);
 		m_parts.add(String.valueOf(obj));
 		return this;
+	}
+
+	public StringRope addRaw(String str) {
+		return addObject(str, true);
+	}
+
+	public boolean isEmpty() {
+		return m_parts.isEmpty();
 	}
 
 	public int size() {
 		return m_parts.size();
 	}
 
-	public boolean isEmpty() {
-		return m_parts.isEmpty();
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(256);
+
+		for (String part : m_parts) {
+			sb.append(part);
+		}
+
+		return sb.toString();
+	}
+
+	private int writeRaw(ChannelBuffer buffer, byte[] data) {
+		int len = data.length;
+		int count = len;
+		int offset = 0;
+
+		for (int i = 0; i < len; i++) {
+			byte b = data[i];
+
+			if (b == '\t' || b == '\r' || b == '\n' || b == '\\') {
+				buffer.writeBytes(data, offset, i - offset);
+				buffer.writeByte('\\');
+
+				if (b == '\t') {
+					buffer.writeByte('t');
+				} else if (b == '\r') {
+					buffer.writeByte('r');
+				} else if (b == '\n') {
+					buffer.writeByte('n');
+				} else {
+					buffer.writeByte(b);
+				}
+
+				count++;
+				offset = i + 1;
+			}
+		}
+
+		if (len > offset) {
+			buffer.writeBytes(data, offset, len - offset);
+		}
+
+		return count;
 	}
 
 	public int writeTo(ChannelBuffer buffer) {
@@ -51,7 +106,7 @@ public class StringRope {
 			String part = m_parts.get(i);
 			byte[] data;
 
-			if (!m_flags.get(i)) { // no need to encode
+			if (!m_flags.get(i)) { // no need to escape
 				data = part.getBytes();
 			} else {
 				try {
@@ -61,20 +116,9 @@ public class StringRope {
 				}
 			}
 
-			buffer.writeBytes(data);
-			count += data.length;
+			count += writeRaw(buffer, data);
 		}
 
 		return count;
-	}
-
-	public StringRope add(StringRope rope) {
-		int size = rope.size();
-
-		for (int i = 0; i < size; i++) {
-			add(rope.m_parts.get(i), rope.m_flags.get(i));
-		}
-
-		return this;
 	}
 }

@@ -1,7 +1,5 @@
 package com.dianping.cat.message.internal;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Stack;
 
 import com.dianping.cat.message.Message;
@@ -11,10 +9,9 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
-public enum MessageManager {
-	INSTANCE;
-
-	private static final ThreadLocal<Context> s_context = new ThreadLocal<Context>() {
+public class MessageManager {
+	// we don't use static modifier since MessageManager is actual a singleton
+	private ThreadLocal<Context> m_context = new ThreadLocal<Context>() {
 		@Override
 		protected Context initialValue() {
 			return new Context();
@@ -24,34 +21,29 @@ public enum MessageManager {
 	@Inject
 	private MessageSender m_sender;
 
-	private boolean m_initialized;
-
 	public void add(Message message) {
-		s_context.get().add(this, message);
+		m_context.get().add(this, message);
 	}
 
 	public void end(Transaction transaction) {
-		s_context.get().end(this, transaction);
+		m_context.get().end(this, transaction);
 	}
 
 	void flush(MessageTree tree) {
 		if (m_sender != null) {
 			m_sender.send(tree);
-			
+
 			// destroy current thread data
-			s_context.remove();
-		} else if (!m_initialized) {
-			throw new IllegalStateException("MessageManager is not initialized yet!");
+			m_context.remove();
 		}
 	}
 
-	public void initialize(MessageSender sender) {
+	public void setSender(MessageSender sender) {
 		m_sender = sender;
-		m_initialized = true;
 	}
 
 	public void start(Transaction transaction) {
-		s_context.get().start(transaction);
+		m_context.get().start(transaction);
 	}
 
 	static class Context {
@@ -62,6 +54,7 @@ public enum MessageManager {
 		public void add(MessageManager manager, Message message) {
 			if (m_stack.isEmpty()) {
 				m_tree.setMessage(message);
+				manager.flush(m_tree);
 			} else {
 				Transaction entry = m_stack.peek();
 
@@ -92,6 +85,8 @@ public enum MessageManager {
 				Transaction entry = m_stack.peek();
 
 				entry.addChild(transaction);
+			} else {
+				m_tree.setMessage(transaction);
 			}
 
 			m_stack.push(transaction);
@@ -115,34 +110,9 @@ public enum MessageManager {
 					notCompleteEvent.setStatus("TransactionNotCompleted");
 					notCompleteEvent.setCompleted(true);
 					transaction.addChild(notCompleteEvent);
-
 					t.setCompleted(true);
 				}
 			}
-		}
-	}
-
-	static class FakeTransaction extends AbstractMessage implements Transaction {
-		public FakeTransaction() {
-			super(null, null);
-		}
-
-		@Override
-		public void addChild(Message message) {
-		}
-
-		@Override
-		public void complete() {
-		}
-
-		@Override
-		public List<Message> getChildren() {
-			return Collections.emptyList();
-		}
-
-		@Override
-		public long getDuration() {
-			return -1;
 		}
 	}
 }

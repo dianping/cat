@@ -1,23 +1,26 @@
 package com.dianping.cat.message.internal;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.io.MessageSender;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageProducer implements MessageProducer, Initializable {
+public class DefaultMessageProducer implements MessageProducer {
 	@Inject
-	private MessageSender m_sender;
+	private MessageManager m_manager;
 
 	@Override
-	public void initialize() throws InitializationException {
-		MessageManager.INSTANCE.initialize(m_sender);
+	public void logError(Throwable cause) {
+		StringWriter writer = new StringWriter(2048);
+
+		cause.printStackTrace(new PrintWriter(writer));
+
+		logEvent("Error", cause.getClass().getName(), cause.getClass().getSimpleName(), writer.toString());
 	}
 
 	@Override
@@ -40,16 +43,25 @@ public class DefaultMessageProducer implements MessageProducer, Initializable {
 
 	@Override
 	public Event newEvent(String type, String name) {
-		return new DefaultEvent(type, name);
+		DefaultEvent event = new DefaultEvent(type, name);
+
+		m_manager.add(event);
+		return event;
 	}
 
 	@Override
 	public Heartbeat newHeartbeat(String type, String name) {
-		return new DefaultHeartbeat(type, name);
+		DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
+
+		m_manager.add(heartbeat);
+		return heartbeat;
 	}
 
 	@Override
 	public Transaction newTransaction(String type, String name) {
-		return new DefaultTransaction(type, name);
+		DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
+
+		m_manager.start(transaction);
+		return transaction;
 	}
 }

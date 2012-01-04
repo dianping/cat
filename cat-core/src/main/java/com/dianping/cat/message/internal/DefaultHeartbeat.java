@@ -10,6 +10,5 @@ public class DefaultHeartbeat extends AbstractMessage implements Heartbeat {
 	@Override
 	public void complete() {
 		setCompleted(true);
-		MessageManager.INSTANCE.add(this);
 	}
 }

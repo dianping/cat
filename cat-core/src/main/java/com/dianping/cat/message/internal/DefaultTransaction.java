@@ -12,19 +12,22 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	private List<Message> m_children;
 
-	public DefaultTransaction(String type, String name) {
+	private MessageManager m_manager;
+
+	public DefaultTransaction(String type, String name, MessageManager manager) {
 		super(type, name);
 
-		MessageManager.INSTANCE.start(this);
+		m_manager = manager;
 	}
 
 	@Override
-	public void addChild(Message message) {
+	public DefaultTransaction addChild(Message message) {
 		if (m_children == null) {
 			m_children = new ArrayList<Message>();
 		}
 
 		m_children.add(message);
+		return this;
 	}
 
 	@Override
@@ -35,11 +38,15 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 			event.setStatus("TransactionAlreadyCompleted");
 			event.complete();
+			addChild(event);
 		} else {
 			m_duration = (long) (System.nanoTime() / 1e6) - getTimestamp();
 
 			setCompleted(true);
-			MessageManager.INSTANCE.end(this);
+
+			if (m_manager != null) {
+				m_manager.end(this);
+			}
 		}
 	}
 

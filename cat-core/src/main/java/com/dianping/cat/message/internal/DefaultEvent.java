@@ -10,6 +10,5 @@ public class DefaultEvent extends AbstractMessage implements Event {
 	@Override
 	public void complete() {
 		setCompleted(true);
-		MessageManager.INSTANCE.add(this);
 	}
 }

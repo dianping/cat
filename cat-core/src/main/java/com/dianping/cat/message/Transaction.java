@@ -42,7 +42,7 @@ public interface Transaction extends Message {
 	 * @param message
 	 *           to be added
 	 */
-	public void addChild(Message message);
+	public Transaction addChild(Message message);
 
 	/**
 	 * Get all children message within current transaction.

@@ -4,7 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.io.InMemoryQueue;
+import com.dianping.cat.message.io.InMemorySender;
 import com.dianping.cat.message.io.MessageSender;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
@@ -17,10 +18,12 @@ public class MessageProducerTestConfigurator extends AbstractResourceConfigurato
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-		String inMemory = "in-memory";
 
-		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
-		      .req(MessageSender.class, inMemory));
+		all.add(C(InMemoryQueue.class, "mock", InMemoryQueue.class));
+		all.add(C(MessageSender.class, "mock", InMemorySender.class) //
+		      .req(InMemoryQueue.class, "mock"));
+		all.add(C(MessageManager.class) //
+		      .req(MessageSender.class, "mock"));
 
 		return all;
 	}

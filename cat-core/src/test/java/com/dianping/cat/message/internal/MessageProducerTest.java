@@ -1,11 +1,7 @@
 package com.dianping.cat.message.internal;
 
-import java.nio.charset.Charset;
-
 import junit.framework.Assert;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -14,7 +10,6 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.InMemoryQueue;
-import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.ComponentTestCase;
 
@@ -23,8 +18,7 @@ public class MessageProducerTest extends ComponentTestCase {
 	@Test
 	public void testNormal() throws Exception {
 		MessageProducer producer = lookup(MessageProducer.class);
-		InMemoryQueue queue = lookup(InMemoryQueue.class);
-		MessageCodec codec = lookup(MessageCodec.class, "plain-text");
+		InMemoryQueue queue = lookup(InMemoryQueue.class, "mock");
 		Transaction t = producer.newTransaction("URL", "MyPage");
 
 		try {
@@ -32,7 +26,8 @@ public class MessageProducerTest extends ComponentTestCase {
 			t.addData("k1", "v1");
 			t.addData("k2", "v2");
 			t.addData("k3", "v3");
-			Thread.sleep(30);
+
+			Thread.sleep(20);
 
 			producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
 			t.setStatus(Message.SUCCESS);
@@ -45,9 +40,25 @@ public class MessageProducerTest extends ComponentTestCase {
 		Assert.assertEquals("One message should be in the queue.", 1, queue.size());
 
 		MessageTree tree = queue.peek();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
+		Message m = tree.getMessage();
 
-		codec.encode(tree, buf);
-		Assert.assertEquals("...", buf.toString(Charset.forName("utf-8")));
+		Assert.assertTrue(Transaction.class.isAssignableFrom(m.getClass()));
+
+		Transaction trans = (Transaction) m;
+
+		Assert.assertEquals("URL", trans.getType());
+		Assert.assertEquals("MyPage", trans.getName());
+		Assert.assertEquals("0", trans.getStatus());
+		Assert.assertTrue(trans.getDuration() > 0);
+		Assert.assertEquals("k1=v1&k2=v2&k3=v3", trans.getData().toString());
+
+		Assert.assertEquals(1, trans.getChildren().size());
+
+		Message c = trans.getChildren().get(0);
+
+		Assert.assertEquals("URL", c.getType());
+		Assert.assertEquals("Payload", c.getName());
+		Assert.assertEquals("0", c.getStatus());
+		Assert.assertEquals("host=my-host&ip=127.0.0.1&agent=...", c.getData().toString());
 	}
 }

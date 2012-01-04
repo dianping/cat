@@ -5,20 +5,12 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 
 public class HeartbeatTest {
-	public static MessageProducer CAT = Cat.getProducer();
+	private static final MessageProducer CAT = Cat.getProducer();
 
 	@Test
-	public void testStatus() {
-		Heartbeat heartbeat = CAT.newHeartbeat("System", "Status");
-
-		heartbeat.addData("ip", "192.168.10.111");
-		heartbeat.addData("host", "host-1");
-		heartbeat.addData("load", "2.1");
-		heartbeat.addData("cpu", "0.12,0.10");
-		heartbeat.addData("memory.total", "2G");
-		heartbeat.addData("memory.free", "456M");
-		heartbeat.setStatus(Message.SUCCESS);
-		heartbeat.complete();
+	public void testInOneShot() {
+		CAT.logHeartbeat("System", "Status", "0",
+		      "ip=192.168.10.111&host=host-1&load=2.1&cpu=0.12,0.10&memory.total=2G&memory.free=456M");
 	}
 
 	@Test
@@ -35,8 +27,16 @@ public class HeartbeatTest {
 	}
 
 	@Test
-	public void testInOneShot() {
-		CAT.logHeartbeat("System", "Status", "0",
-		      "ip=192.168.10.111&host=host-1&load=2.1&cpu=0.12,0.10&memory.total=2G&memory.free=456M");
+	public void testStatus() {
+		Heartbeat heartbeat = CAT.newHeartbeat("System", "Status");
+
+		heartbeat.addData("ip", "192.168.10.111");
+		heartbeat.addData("host", "host-1");
+		heartbeat.addData("load", "2.1");
+		heartbeat.addData("cpu", "0.12,0.10");
+		heartbeat.addData("memory.total", "2G");
+		heartbeat.addData("memory.free", "456M");
+		heartbeat.setStatus(Message.SUCCESS);
+		heartbeat.complete();
 	}
 }

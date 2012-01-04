@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
+import com.dianping.cat.message.internal.MessageManager;
 import com.dianping.cat.message.io.InMemoryQueue;
 import com.dianping.cat.message.io.InMemoryReceiver;
 import com.dianping.cat.message.io.InMemorySender;
@@ -33,7 +34,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageReceiver.class, inMemory, InMemoryReceiver.class) //
 		      .req(InMemoryQueue.class));
 
-		all.add(C(MessageProducer.class, DefaultMessageProducer.class));
+		all.add(C(MessageManager.class) //
+		      .req(MessageSender.class, inMemory));
+		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
+		      .req(MessageManager.class));
 
 		all.add(C(MessageCodec.class, "plain-text", PlainTextMessageCodec.class));
 

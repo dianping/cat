@@ -75,7 +75,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 		if (identifier == 'E') {
 			DefaultEvent event = new DefaultEvent(type, name);
 			String status = helper.read(buf, TAB);
-			String data = helper.readUtf8(buf, TAB);
+			String data = helper.readRaw(buf, TAB);
 
 			event.setTimestamp(m_dateHelper.parse(timestamp));
 			event.setStatus(status);
@@ -84,23 +84,23 @@ public class PlainTextMessageCodec implements MessageCodec {
 		} else if (identifier == 'H') {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 			String status = helper.read(buf, TAB);
-			String data = helper.readUtf8(buf, TAB);
+			String data = helper.readRaw(buf, TAB);
 
 			heartbeat.setTimestamp(m_dateHelper.parse(timestamp));
 			heartbeat.setStatus(status);
 			heartbeat.addData(data);
 			return heartbeat;
 		} else if (identifier == 't') {
-			DefaultTransaction transaction = new DefaultTransaction(type, name);
+			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
 
 			helper.read(buf, LF); // get rid of line feed
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
 			return transaction;
 		} else if (identifier == 'A') {
-			DefaultTransaction transaction = new DefaultTransaction(type, name);
+			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
 			String status = helper.read(buf, TAB);
 			String duration = helper.read(buf, TAB);
-			String data = helper.readUtf8(buf, TAB);
+			String data = helper.readRaw(buf, TAB);
 
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
 			transaction.setStatus(status);
@@ -110,7 +110,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 		} else if (identifier == 'T') {
 			String status = helper.read(buf, TAB);
 			String duration = helper.read(buf, TAB);
-			String data = helper.readUtf8(buf, TAB);
+			String data = helper.readRaw(buf, TAB);
 
 			parent.setStatus(status);
 			parent.setDuration(Long.parseLong(duration.substring(0, duration.length() - 2)));
@@ -161,7 +161,10 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 		buf.writeInt(0); // place-holder
 		count += encodeHeader(tree, buf);
-		count += encodeMessage(tree.getMessage(), buf);
+
+		if (tree.getMessage() != null) {
+			count += encodeMessage(tree.getMessage(), buf);
+		}
 
 		buf.setInt(index, count);
 	}
@@ -171,6 +174,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 		int count = 0;
 
 		count += helper.write(buf, ID);
+		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getDomain());
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getHostName());
@@ -196,7 +200,15 @@ public class PlainTextMessageCodec implements MessageCodec {
 		int count = 0;
 
 		count += helper.write(buf, (byte) type);
-		count += helper.write(buf, m_dateHelper.format(message.getTimestamp()));
+
+		if (type == 'T' && message instanceof Transaction) {
+			long duration = ((Transaction) message).getDuration();
+
+			count += helper.write(buf, m_dateHelper.format(message.getTimestamp() + duration));
+		} else {
+			count += helper.write(buf, m_dateHelper.format(message.getTimestamp()));
+		}
+
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, message.getType());
 		count += helper.write(buf, TAB);
@@ -223,7 +235,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 				count += rope.writeTo(buf);
 				count += helper.write(buf, TAB);
 			} else {
-				count += helper.writeUtf8(buf, String.valueOf(data));
+				count += helper.writeRaw(buf, String.valueOf(data));
 				count += helper.write(buf, TAB);
 			}
 		}
@@ -233,7 +245,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 		return count;
 	}
 
-	protected int encodeMessage(Message message, ChannelBuffer buf) {
+	public int encodeMessage(Message message, ChannelBuffer buf) {
 		if (message instanceof Event) {
 			return encodeLine(message, buf, 'E', Policy.DEFAULT);
 		} else if (message instanceof Transaction) {
@@ -277,20 +289,47 @@ public class PlainTextMessageCodec implements MessageCodec {
 			}
 		}
 
-		public String readUtf8(ChannelBuffer buf, byte separator) {
+		public String readRaw(ChannelBuffer buf, byte separator) {
 			int count = buf.bytesBefore(separator);
 
 			if (count < 0) {
 				return null;
 			} else {
 				byte[] data = new byte[count];
+				String str;
 
 				buf.readBytes(data);
-				try {
-					return new String(data, "utf-8");
-				} catch (UnsupportedEncodingException e) {
-					return new String(data);
+
+				int length = data.length;
+
+				for (int i = 0; i < length; i++) {
+					if (data[i] == '\\') {
+						if (i + 1 < length) {
+							byte b = data[i + 1];
+
+							if (b == 't') {
+								data[i] = '\t';
+							} else if (b == 'r') {
+								data[i] = '\r';
+							} else if (b == 'n') {
+								data[i] = '\n';
+							} else {
+								data[i] = b;
+							}
+
+							System.arraycopy(data, i + 2, data, i + 1, length - i - 2);
+							length--;
+						}
+					}
 				}
+
+				try {
+					str = new String(data, 0, length, "utf-8");
+				} catch (UnsupportedEncodingException e) {
+					str = new String(data, 0, length);
+				}
+
+				return str;
 			}
 		}
 
@@ -300,13 +339,52 @@ public class PlainTextMessageCodec implements MessageCodec {
 		}
 
 		public int write(ChannelBuffer buf, String str) {
+			if (str == null) {
+				str = "null";
+			}
+
 			byte[] data = str.getBytes();
 
 			buf.writeBytes(data);
 			return data.length;
 		}
 
-		public int writeUtf8(ChannelBuffer buf, String str) {
+		private int writeRaw(ChannelBuffer buffer, byte[] data) {
+			int len = data.length;
+			int count = len;
+			int offset = 0;
+
+			for (int i = 0; i < len; i++) {
+				byte b = data[i];
+
+				if (b == '\t' || b == '\r' || b == '\n' || b == '\\') {
+					buffer.writeBytes(data, offset, i - offset);
+					buffer.writeByte('\\');
+
+					if (b == '\t') {
+						buffer.writeByte('t');
+					} else if (b == '\r') {
+						buffer.writeByte('r');
+					} else if (b == '\n') {
+						buffer.writeByte('n');
+					} else {
+						buffer.writeByte(b);
+					}
+
+					count++;
+					offset = i + 1;
+				}
+			}
+
+			buffer.writeBytes(data, offset, len - offset);
+			return count;
+		}
+
+		public int writeRaw(ChannelBuffer buf, String str) {
+			if (str == null) {
+				str = "null";
+			}
+
 			byte[] data;
 
 			try {
@@ -315,8 +393,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 				data = str.getBytes();
 			}
 
-			buf.writeBytes(data);
-			return data.length;
+			return writeRaw(buf, data);
 		}
 	}
 
@@ -330,7 +407,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			SimpleDateFormat format = m_queue.poll();
 
 			if (format == null) {
-				format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.sss");
+				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 			}
 
 			try {
@@ -346,7 +423,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			SimpleDateFormat format = m_queue.poll();
 
 			if (format == null) {
-				format = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.sss");
+				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
 			}
 
 			try {

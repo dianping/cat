@@ -75,8 +75,7 @@ public interface Message {
 	 * <li>Search: maps to one method of search call</li>
 	 * <li>SQL: maps to one SQL statement</li>
 	 * <li>Cache: maps to one cache access</li>
-	 * <li>Exception: maps to java.lang.Exception</li>
-	 * <li>Error: maps to java.lang.Error</li>
+	 * <li>Error: maps to java.lang.Throwable (java.lang.Exception and java.lang.Error)</li>
 	 * </ul>
 	 * </p>
 	 * 

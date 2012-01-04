@@ -5,7 +5,7 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 
 public class TransactionTest {
-	public static MessageProducer CAT = Cat.getProducer();
+	private static final MessageProducer CAT = Cat.getProducer();
 
 	@Test
 	public void testNormal() {

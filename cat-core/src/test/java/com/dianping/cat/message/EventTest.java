@@ -1,8 +1,5 @@
 package com.dianping.cat.message;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
@@ -22,12 +19,7 @@ public class EventTest {
 
 	@Test
 	public void testException() {
-		Exception e = new RuntimeException();
-		Event event = CAT.newEvent("ERROR", e.getClass().getName());
-
-		event.addData(toString(e));
-		event.setStatus("-1");
-		event.complete();
+		CAT.logError(new RuntimeException());
 	}
 
 	@Test
@@ -36,15 +28,6 @@ public class EventTest {
 		CAT.logEvent("Review", "New", Message.SUCCESS, "id=12345&user=john");
 
 		// Exception case
-		Exception e = new RuntimeException();
-
-		CAT.logEvent("Exception", e.getClass().getName(), Message.SUCCESS, toString(e));
-	}
-
-	private String toString(Exception e) {
-		StringWriter writer = new StringWriter(2048);
-
-		e.printStackTrace(new PrintWriter(writer));
-		return writer.toString();
+		CAT.logError(new RuntimeException());
 	}
 }

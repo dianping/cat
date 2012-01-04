@@ -1,6 +1,5 @@
 package com.dianping.cat.message;
 
-
 /**
  * <p>
  * Message factory is used to create new transaction,event and/or heartbeat.
@@ -131,6 +130,14 @@ public interface MessageProducer {
 	 *           name value pairs in the format of "a=1&b=2&..."
 	 */
 	public void logEvent(String type, String name, String status, String nameValuePairs);
+
+	/**
+	 * Log an error.
+	 * 
+	 * @param cause
+	 *           root cause exception
+	 */
+	public void logError(Throwable cause);
 
 	/**
 	 * Log a heartbeat in one shot.
