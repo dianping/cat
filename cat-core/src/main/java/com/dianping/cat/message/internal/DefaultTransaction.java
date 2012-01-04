@@ -8,7 +8,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
-	private long m_duration;
+	private long m_duration = -1;
 
 	private List<Message> m_children;
 

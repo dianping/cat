@@ -77,6 +77,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			String status = helper.read(buf, TAB);
 			String data = helper.readRaw(buf, TAB);
 
+			helper.read(buf, LF); // get rid of line feed
 			event.setTimestamp(m_dateHelper.parse(timestamp));
 			event.setStatus(status);
 			event.addData(data);
@@ -86,6 +87,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			String status = helper.read(buf, TAB);
 			String data = helper.readRaw(buf, TAB);
 
+			helper.read(buf, LF); // get rid of line feed
 			heartbeat.setTimestamp(m_dateHelper.parse(timestamp));
 			heartbeat.setStatus(status);
 			heartbeat.addData(data);
@@ -102,6 +104,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			String duration = helper.read(buf, TAB);
 			String data = helper.readRaw(buf, TAB);
 
+			helper.read(buf, LF); // get rid of line feed
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
 			transaction.setStatus(status);
 			transaction.setDuration(Long.parseLong(duration.substring(0, duration.length() - 2)));
@@ -112,6 +115,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			String duration = helper.read(buf, TAB);
 			String data = helper.readRaw(buf, TAB);
 
+			helper.read(buf, LF); // get rid of line feed
 			parent.setStatus(status);
 			parent.setDuration(Long.parseLong(duration.substring(0, duration.length() - 2)));
 			parent.addData(data);
@@ -133,18 +137,34 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 			stack.push(parent);
 
-			while (!stack.isEmpty()) {
+			while (!stack.isEmpty() && buf.readableBytes() > 0) {
 				Message message = decodeLine(buf, parent);
 
-				if (message == parent) {
-					parent = stack.pop();
-				} else if (message != null) {
+				if (message instanceof DefaultTransaction) {
+					int index = stack.lastIndexOf(message);
+
+					if (index >= 0) {
+						for (int i = stack.size() - 1; i >= index; i--) {
+							stack.pop();
+						}
+
+						if (!stack.isEmpty()) {
+							parent = stack.peek();
+						} else {
+							break;
+						}
+
+						continue;
+					}
+				}
+
+				if (message != null) {
 					parent.addChild(message);
 
 					if (message instanceof DefaultTransaction) {
 						DefaultTransaction child = (DefaultTransaction) message;
 
-						if (child.getStatus() == null) { // 't'
+						if (child.getDuration() < 0) { // 't'
 							stack.push(child);
 							parent = child;
 						}
@@ -253,17 +273,21 @@ public class PlainTextMessageCodec implements MessageCodec {
 			List<Message> children = transaction.getChildren();
 
 			if (children.isEmpty()) {
-				return encodeLine(message, buf, 'A', Policy.WITH_DURATION);
+				if (transaction.getDuration() < 0) {
+					return encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS);
+				} else {
+					return encodeLine(transaction, buf, 'A', Policy.WITH_DURATION);
+				}
 			} else {
 				int count = 0;
 
-				count += encodeLine(message, buf, 't', Policy.WITHOUT_STATUS);
+				count += encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS);
 
 				for (Message child : children) {
 					count += encodeMessage(child, buf);
 				}
 
-				count += encodeLine(message, buf, 'T', Policy.WITH_DURATION);
+				count += encodeLine(transaction, buf, 'T', Policy.WITH_DURATION);
 
 				return count;
 			}
@@ -299,6 +323,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 				String str;
 
 				buf.readBytes(data);
+				buf.readByte(); // get rid of separator
 
 				int length = data.length;
 
