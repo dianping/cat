@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.model.transaction" enable-merger="true" enable-json-builder="true"
+	enable-xml-parser="true" enable-base-visitor="true">
+	<entity name="transaction-report" root="true">
+		<attribute name="domain" key="true" />
+		<entity-ref name="type" map="true" map-name="types" />
+	</entity>
+	<entity name="type" class-name="TransactionType">
+		<attribute name="id" key="true" />
+		<entity-ref name="name" map="true" map-name="names" />
+	</entity>
+	<entity name="name" class-name="TransactionName">
+		<attribute name="id" key="true" />
+	</entity>
+</model>
+

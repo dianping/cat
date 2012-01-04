@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="transaction-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <entity-ref name="type" list="true" list-name="types" />
+  </entity>
+  <entity name="type">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="name" list="true" list-name="names" />
+  </entity>
+  <entity name="name">
+    <attribute name="id" value-type="String" />
+    <attribute name="count" value-type="int" />
+    <attribute name="fails" value-type="int" />
+    <attribute name="min" value-type="double" />
+    <attribute name="max" value-type="double" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="sum2" value-type="double" />
+    <attribute name="std" value-type="double" />
+    <element name="sample-message-id" value-type="String" />
+  </entity>
+</model>
+

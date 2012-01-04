@@ -32,13 +32,23 @@
 				<version>1.0.0</version>
 				<executions>
 					<execution>
-						<id>default-cli</id>
+						<id>generate failure report</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>dal-model</goal>
 						</goals>
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/model/failure-report-manifest.xml</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-cli</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/transaction-report-manifest.xml</manifest>
 						</configuration>
 					</execution>
 				</executions>
