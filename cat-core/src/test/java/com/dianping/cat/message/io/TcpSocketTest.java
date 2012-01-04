@@ -23,6 +23,60 @@ import com.site.lookup.ComponentTestCase;
 @RunWith(JUnit4.class)
 public class TcpSocketTest extends ComponentTestCase {
 	@Test
+	public void testOneToMany() throws Exception {
+		final MessageReceiver receiver = lookup(MessageReceiver.class, "tcp-socket");
+		int numSenders = 10;
+		final int len = 1000;
+		final StringBuilder sb = new StringBuilder(len);
+		ExecutorService pool = Executors.newFixedThreadPool(3);
+		List<Future<?>> futures = new ArrayList<Future<?>>();
+
+		futures.add(pool.submit(new Runnable() {
+			@Override
+			public void run() {
+				receiver.initialize();
+				receiver.onMessage(new MockMessageHandler(sb));
+			}
+		}));
+
+		final MessageSender[] senders = new MessageSender[numSenders];
+
+		for (int i = 0; i < senders.length; i++) {
+			senders[i] = lookup(MessageSender.class, "tcp-socket");
+		}
+
+		for (int i = 0; i < senders.length; i++) {
+			final MessageSender sender = senders[i];
+
+			futures.add(pool.submit(new Runnable() {
+				@Override
+				public void run() {
+					sender.initialize();
+
+					for (int i = 0; i < len; i++) {
+						sender.send(new DefaultMessageTree());
+					}
+				}
+			}));
+		}
+
+		for (Future<?> future : futures) {
+			future.get();
+		}
+
+		Thread.sleep(50 * numSenders);
+
+		pool.shutdown();
+		receiver.shutdown();
+
+		for (int i = 0; i < senders.length; i++) {
+			senders[i].shutdown();
+		}
+
+		Assert.assertEquals(numSenders * len, sb.length());
+	}
+
+	@Test
 	public void testOneToOne() throws Exception {
 		final MessageSender sender = lookup(MessageSender.class, "tcp-socket");
 		final MessageReceiver receiver = lookup(MessageReceiver.class, "tcp-socket");
@@ -94,7 +148,9 @@ public class TcpSocketTest extends ComponentTestCase {
 
 		@Override
 		public void handle(MessageTree tree) {
-			m_sb.append('.');
+			synchronized (m_sb) {
+				m_sb.append('.');
+			}
 		}
 	}
 }

@@ -21,10 +21,10 @@ public class TcpSocketTestConfigurator extends AbstractResourceConfigurator {
 		String tcpSocket = "tcp-socket";
 
 		all.add(C(MessageCodec.class, tcpSocket, MockMessageCodec.class));
-		all.add(C(MessageSender.class, tcpSocket, TcpSocketSender.class) //
+		all.add(C(MessageSender.class, tcpSocket, TcpSocketSender.class).is(PER_LOOKUP) //
 		      .req(MessageCodec.class, tcpSocket) //
 		      .config(E("host").value("localhost")));
-		all.add(C(MessageReceiver.class, tcpSocket, TcpSocketReceiver.class) //
+		all.add(C(MessageReceiver.class, tcpSocket, TcpSocketReceiver.class).is(PER_LOOKUP) //
 				.req(MessageCodec.class, tcpSocket) //
 		      .config(E("host").value("localhost")));
 

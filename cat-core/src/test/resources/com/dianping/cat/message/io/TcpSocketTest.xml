@@ -9,6 +9,7 @@
 			<role>com.dianping.cat.message.io.MessageSender</role>
 			<role-hint>tcp-socket</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<host>localhost</host>
 			</configuration>
@@ -23,6 +24,7 @@
 			<role>com.dianping.cat.message.io.MessageReceiver</role>
 			<role-hint>tcp-socket</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketReceiver</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<host>localhost</host>
 			</configuration>

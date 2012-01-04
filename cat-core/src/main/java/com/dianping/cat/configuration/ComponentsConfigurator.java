@@ -34,8 +34,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageReceiver.class, inMemory, InMemoryReceiver.class) //
 		      .req(InMemoryQueue.class));
 
-		all.add(C(MessageManager.class) //
-		      .req(MessageSender.class, inMemory));
+		// MessageSender of MessageManager should be provided by application
+		all.add(C(MessageManager.class));
 		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
 		      .req(MessageManager.class));
 

@@ -27,12 +27,6 @@
 		<component>
 			<role>com.dianping.cat.message.internal.MessageManager</role>
 			<implementation>com.dianping.cat.message.internal.MessageManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.io.MessageSender</role>
-					<role-hint>in-memory</role-hint>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.MessageProducer</role>
