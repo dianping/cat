@@ -1,0 +1,13 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzerConfig</role>
+			<role-hint>failure-analyzer-config</role-hint>
+			<implementation>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzerConfig</implementation>
+			<configuration>
+				<handlers>failure,long-url</handlers>
+				<machines>192.168.1.1,192.168.1.2,192.168.1.3</machines>
+			</configuration>
+		</component>
+	</components>
+</plexus>

@@ -27,5 +27,9 @@
 			<implementation>com.dianping.cat.consumer.impl.ManyAnalyzerTest$MockAnalyzer3</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
+		<component>
+			<role>com.dianping.cat.message.consumer.impl.AnalyzerFactory</role>
+			<implementation>com.dianping.cat.consumer.impl.ManyAnalyerMockFactory</implementation>
+		</component>
 	</components>
 </plexus>

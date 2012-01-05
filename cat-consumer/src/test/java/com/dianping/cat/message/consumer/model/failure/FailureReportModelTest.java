@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.failurereport;
+package com.dianping.cat.message.consumer.model.failure;
 
 import java.io.IOException;
 
@@ -13,8 +13,7 @@ import com.site.helper.Files;
 public class FailureReportModelTest {
 	@Test
 	public void test() throws SAXException, IOException {
-		String xml = Files.forIO().readFrom(
-				getClass().getResourceAsStream("/logView.xml"), "utf-8");
+		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("/logView.xml"), "utf-8");
 		FailureReport report = new DefaultParser().parse(xml);
 
 		System.out.println(report);

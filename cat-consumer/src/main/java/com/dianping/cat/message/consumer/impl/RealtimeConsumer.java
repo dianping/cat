@@ -35,6 +35,8 @@ public class RealtimeConsumer extends ContainerHolder implements
 	private static final String DOMAIN_ALL = "all";
 
 	private static final int PROCESS_PERIOD = 3;
+
+	private static final long DEFAULT_EXTRA = 5*60*1000;
 	@Inject
 	private String m_consumerId;
 
@@ -43,6 +45,9 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 	@Inject
 	private long m_duration = 1 * HOUR;
+	
+	@Inject
+	private long m_extraTime = DEFAULT_EXTRA;
 
 	@Inject
 	private List<String> m_analyzerNames;
@@ -54,14 +59,14 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 	private List<Period> m_periods = new ArrayList<Period>(PROCESS_PERIOD);
 
-	private void cleanupQueue(List<MessageQueue> queues) {
+	/*private void cleanupQueue(List<MessageQueue> queues) {
 		for (int i = queues.size() - 1; i >= 0; i--) {
 			MessageQueue queue = queues.get(i);
 			if (!queue.isActive()) {
 				queues.remove(i);
 			}
 		}
-	}
+	}*/
 
 	private boolean isInDomain(MessageTree tree) {
 		if (m_domain == null || m_domain.length() == 0
@@ -75,7 +80,7 @@ public class RealtimeConsumer extends ContainerHolder implements
 	}
 
 	@Override
-	public  void  consume(MessageTree tree) {
+	public void consume(MessageTree tree) {
 		if (!isInDomain(tree))
 			return;
 
@@ -91,44 +96,42 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 		if (current != null) {
 			List<MessageQueue> queues = current.getQueues();
-			boolean dirty = distributeMessage(tree, queues);
+			distributeMessage(tree, queues);
+			//TODO
+			/*boolean dirty = distributeMessage(tree, queues);
 			// do clean up
 			if (dirty) {
 				cleanupQueue(queues);
-			}
+			}*/
 		} else {
-			synchronized (this) {
-				// TODO 创建任务是否需要加锁
-			}
-			// check the message is in the next duration
 			// if not we will add many tasks
 			long systemTime = System.currentTimeMillis();
 			long nextStart = systemTime - systemTime % m_duration - 3
 					* m_duration;
 			if (timestamp < systemTime + MINUTE * 3 && timestamp >= nextStart) {
-				// TODO
 				startTasks(tree);
 			} else {
-				// TODO 建议新增接口 toString
 				LOG.warn("The message is not excepceted!" + tree);
 			}
 		}
 	}
 
-	private boolean distributeMessage(MessageTree tree,
+	//TODO
+	private void distributeMessage(MessageTree tree,
 			List<MessageQueue> queues) {
 		int size = queues.size();
-		boolean dirty = false;
+		//boolean dirty = false;
 		// distribute to all queues
 		for (int i = 0; i < size; i++) {
 			MessageQueue queue = queues.get(i);
-			if (queue.isActive()) {
+			queue.offer(tree);
+			/*if (queue.isActive()) {
 				queue.offer(tree);
 			} else {
 				dirty = true;
-			}
+			}*/
 		}
-		return dirty;
+		//return dirty;
 	}
 
 	@Override
@@ -167,6 +170,10 @@ public class RealtimeConsumer extends ContainerHolder implements
 		m_threads = threads;
 	}
 
+	public void setExtraTime(long time){
+		m_extraTime =time;
+	}
+	
 	private void startTasks(MessageTree tree) {
 		long time = tree.getMessage().getTimestamp();
 		long start = time - time % m_duration;
@@ -175,24 +182,17 @@ public class RealtimeConsumer extends ContainerHolder implements
 		Period current = new Period(start, start + m_duration, queues);
 
 		for (String name : m_analyzerNames) {
-			MessageAnalyzer analyzer = lookup(MessageAnalyzer.class, name);
-			//设置构造函数参数 TODO
+			AnalyzerFactory factory = lookup(AnalyzerFactory.class);
+			MessageAnalyzer analyzer = factory.create(name, start, m_duration,
+					m_domain,m_extraTime);
 			MessageQueue queue = lookup(MessageQueue.class);
-			queue.offer(tree);
-			// TODO
-			queues.add(queue);
 			Task task = new Task(analyzer, queue);
+
+			queue.offer(tree);
+			queues.add(queue);
 			m_executor.submit(task);
 		}
-
 		int len = m_periods.size();
-		/*
-		 * for (int i = len - 1; i >= 0; i--) { Period period =
-		 * m_periods.get(i);
-		 * 
-		 * if (period.isIn(start - 2 * m_duration)) { m_periods.remove(i); } }
-		 */
-		// TODO
 		if (len >= PROCESS_PERIOD)
 			m_periods.remove(0);
 		m_periods.add(current);

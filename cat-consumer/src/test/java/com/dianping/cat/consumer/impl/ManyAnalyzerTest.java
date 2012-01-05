@@ -53,6 +53,14 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		protected void process(MessageTree tree) {
 			++s_count1;
 		}
+
+		
+
+		@Override
+		protected boolean isTimeEnd() {
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 
 	public static class MockAnalyzer2 extends
@@ -71,6 +79,13 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		protected void process(MessageTree tree) {
 			s_count2 = s_count2 + 2;
 		}
+
+
+		@Override
+		protected boolean isTimeEnd() {
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 
 	public static class MockAnalyzer3 extends
@@ -88,6 +103,12 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		@Override
 		protected void process(MessageTree tree) {
 			s_count3 = s_count3 + 3;
+		}
+		
+		@Override
+		protected boolean isTimeEnd() {
+			// TODO Auto-generated method stub
+			return false;
 		}
 	}
 

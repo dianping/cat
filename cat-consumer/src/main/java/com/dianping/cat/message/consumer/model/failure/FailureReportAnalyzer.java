@@ -1,0 +1,241 @@
+package com.dianping.cat.message.consumer.model.failure;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.dianping.cat.consumer.model.failure.entity.Entry;
+import com.dianping.cat.consumer.model.failure.entity.FailureReport;
+import com.dianping.cat.consumer.model.failure.entity.Machines;
+import com.dianping.cat.consumer.model.failure.entity.Segment;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.site.helper.Files;
+import com.site.helper.Splitters;
+import com.site.lookup.annotation.Inject;
+
+public class FailureReportAnalyzer extends
+		AbstractMessageAnalyzer<FailureReport> {
+	@Inject
+	private File m_reportFile;
+
+	@Inject
+	private List<Handler> m_handlers;
+
+	private FailureReport m_report;
+	
+	private long m_extraTime;
+	
+	private static final long MINUTE = 60 * 1000;
+	
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+	
+	private static String getDateFormat(long time){
+		String result = "2012-01-01 00:00";
+		try {
+			Date date=new Date(time);
+			result = sdf.format(date);
+		} catch (Exception e) {
+			
+		}
+		return result;
+	}
+	public FailureReportAnalyzer(long startTime,long duration,String domain,long extraTime){
+		m_report = new FailureReport();
+		m_report.setStartTime(new Date(startTime));
+		m_report.setEndTime(new Date(startTime+duration-MINUTE));
+		m_report.setDomain(domain);
+		m_extraTime=extraTime;
+	}
+	
+	public void setMachines(String machines){
+		List<String> str =Splitters.by(',').noEmptyItem().split(machines);
+		for(String machine:str){
+			Machines temp = m_report.getMachines();
+			if(temp==null){
+				temp = new Machines();
+				m_report.setMachines(temp);
+			}
+			temp.addMachine(machine);
+		}
+	}
+	
+	public void addHandlers(Handler handler) {
+		if (m_handlers == null) {
+			m_handlers = new ArrayList<FailureReportAnalyzer.Handler>();
+		}
+		m_handlers.add(handler);
+	}
+	
+	@Override
+	public FailureReport generate() {
+		return m_report;
+	}
+
+	@Override
+	protected void process(MessageTree tree) {
+		if(m_handlers ==null){
+			throw new RuntimeException();
+		}
+		for (Handler handler : m_handlers) {
+			handler.handle(m_report, tree);
+		}
+	}
+
+	public void setFailureReport(FailureReport report) {
+		m_report = report;
+	}
+
+	public void setReportFile(File reportFile) {
+		m_reportFile = reportFile;
+	}
+
+	@Override
+	protected void store(FailureReport report) {
+		String content = report.toString();
+
+		try {
+			Files.forIO().writeTo(m_reportFile, content);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	protected boolean isTimeEnd() {
+		long endTime = m_report.getEndTime().getTime();
+		long currentTime = System.currentTimeMillis();
+		
+		if(currentTime>endTime+m_extraTime){
+			return true;
+		}
+		return false;
+	}
+
+	public static abstract class Handler {
+		
+		public abstract void handle(FailureReport report, MessageTree tree);
+		
+		private Segment findOrCreateSegment(Message message,
+				FailureReport report) {
+			long time = message.getTimestamp();
+			long segmentId = time - time % MINUTE;
+			String segmentStr = getDateFormat(segmentId);
+			
+			Map<String, Segment> segments = report.getSegments();
+			Segment segment = segments.get(segmentStr);
+			if(segment ==null){
+				segment = new Segment(segmentStr);
+				segments.put(segmentStr, segment);
+			}
+			return segment;
+		}
+	}
+	
+	public static class FailureHandler extends Handler {
+		@Inject
+		private Set<String> m_failureTypes;
+
+		private void addEntry(FailureReport report, Message message,
+				MessageTree tree) {
+			
+			String messageId = tree.getMessageId();
+			String threadId = tree.getThreadId();
+			Entry entry = new Entry();
+
+			entry.setMessageId(messageId);
+			entry.setThreadId(threadId);
+			entry.setText(message.getName());
+			entry.setType(message.getType());
+			
+			Segment segment =super.findOrCreateSegment(message,report);			
+			segment.addEntry(entry);
+		}
+
+		@Override
+		public void handle(FailureReport report, MessageTree tree) {
+			Message message = tree.getMessage();
+
+			if (message instanceof Transaction) {
+				Transaction transaction = (Transaction) message;
+
+				processTransaction(report, transaction, tree);
+			} else if (message instanceof Event) {
+				processEvent(report, message, tree);
+			}
+		}
+
+		private void processEvent(FailureReport report, Message message,
+				MessageTree tree) {
+			if (m_failureTypes.contains(message.getType())) {
+				addEntry(report, message, tree);
+			}
+		}
+
+		private void processTransaction(FailureReport report,
+				Transaction transaction, MessageTree tree) {
+			// process myself
+			if (m_failureTypes.contains(transaction.getType())) {
+				addEntry(report, transaction, tree);
+			}
+
+			List<Message> messageList = transaction.getChildren();
+			for (Message message : messageList) {
+				if (message instanceof Transaction) {
+					Transaction temp = (Transaction) message;
+
+					processTransaction(report, temp, tree);
+				} else if (message instanceof Event) {
+					processEvent(report, message, tree);
+				}
+			}
+		}
+		
+		public void setFailureType(String type) {
+			m_failureTypes = new HashSet<String>(Splitters.by(',')
+					.noEmptyItem().split(type));
+		}
+	}
+
+	public static class LongUrlHandler extends Handler {
+		@Inject
+		private long m_threshold;
+
+		@Override
+		public void handle(FailureReport report, MessageTree tree) {
+			Message message = tree.getMessage();
+
+			if (message instanceof Transaction) {
+				String messageId = ((DefaultMessageTree) tree).getMessageId();
+				String threadId = ((DefaultMessageTree) tree).getThreadId();
+				Transaction t = (Transaction) message;
+				
+				if (t.getDuration() > m_threshold) {
+					Entry entry = new Entry();
+					
+					entry.setMessageId(messageId);
+					entry.setThreadId(threadId);
+					entry.setText(message.getName());
+					entry.setType(message.getType());
+					
+					Segment segment =super.findOrCreateSegment(message,report);
+					segment.addEntry(entry);
+				}
+			}
+		}
+
+		public void setThreshold(long threshold) {
+			m_threshold = threshold;
+		}
+	}
+}

@@ -7,6 +7,7 @@ import java.util.List;
 import com.dianping.cat.consumer.impl.ManyAnalyzerTest.MockAnalyzer1;
 import com.dianping.cat.consumer.impl.ManyAnalyzerTest.MockAnalyzer2;
 import com.dianping.cat.consumer.impl.ManyAnalyzerTest.MockAnalyzer3;
+import com.dianping.cat.message.consumer.impl.AnalyzerFactory;
 import com.dianping.cat.message.consumer.impl.RealtimeConsumer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -35,6 +36,7 @@ public class ManyAnalyzerTestConfigurator extends
 		all.add(C(MessageAnalyzer.class, "mock3", MockAnalyzer3.class) //
 				.is(PER_LOOKUP));
 
+		all.add(C(AnalyzerFactory.class,ManyAnalyerMockFactory.class));
 		return all;
 	}
 

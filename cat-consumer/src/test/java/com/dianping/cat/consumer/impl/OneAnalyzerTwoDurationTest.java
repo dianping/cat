@@ -73,6 +73,12 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 			else
 				s_count2 = s_count2 + 2;
 		}
+
+		@Override
+		protected boolean isTimeEnd() {
+			// TODO Auto-generated method stub
+			return false;
+		}
 	}
 
 	public static class AnalyzerResult {
