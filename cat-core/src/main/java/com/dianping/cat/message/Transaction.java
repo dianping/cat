@@ -57,6 +57,13 @@ public interface Transaction extends Message {
 	 * @return all children messages, empty if there is no nested children.
 	 */
 	public List<Message> getChildren();
+	
+	/**
+	 * Has children.
+	 * 
+	 * @return true if child exists, else false.
+	 */
+	public boolean hasChildren();
 
 	/**
 	 * How long the transaction took from construction to complete. Time unit is
@@ -65,4 +72,5 @@ public interface Transaction extends Message {
 	 * @return duration time in millisecond
 	 */
 	public long getDuration();
+
 }
