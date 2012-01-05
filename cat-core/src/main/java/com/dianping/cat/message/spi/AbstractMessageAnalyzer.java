@@ -5,17 +5,20 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 	public void analyze(MessageQueue queue) {
 		while (queue.isActive()) {
 			MessageTree tree = queue.poll();
+
 			if (tree != null) {
 				process(tree);
 			} else {
 				try {
-					Thread.sleep(3 * 1000);
+					Thread.sleep(10);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
 		}
+
 		R result = generate();
+
 		store(result);
 	}
 

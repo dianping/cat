@@ -1,6 +1,6 @@
 package com.dianping.cat.message.consumer.failure;
 
-import com.dianping.cat.consumer.failurereport.entity.FailureReport;
+import com.dianping.cat.consumer.model.failure.entity.FailureReport;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 

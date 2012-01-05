@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration PUBLIC "-//log4j/log4j Configuration//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">	
+	<appender name="CONSOLE_FILE" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="/data/applogs/middleware/console.log"/>
+		<param name="Append" value="true"/>
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />
+		</layout>
+	</appender>
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+	    <layout class="org.apache.log4j.PatternLayout"> 
+	       <param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />
+	    </layout> 
+	</appender>
+	<logger name="com.opensymphony.xwork2.ognl.OgnlValueStack">
+		<level value="ERROR"/>
+		<appender-ref ref="CONSOLE_FILE" />
+	</logger> 
+	<logger name="com.dianping.codereview.ibatis.IbatisReviewer">
+		<level value="ERROR"/>
+		<appender-ref ref="CONSOLE" /> 
+	</logger><!-- 
+	<logger name="java.sql">  
+        <level value="debug" />  
+    </logger>  -->     
+   <root>
+		<level value="info" />
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="CONSOLE_FILE"/>
+	</root>	
+</log4j:configuration>

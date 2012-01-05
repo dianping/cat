@@ -1,7 +1,7 @@
 package com.dianping.cat.message.consumer.failure;
 
-import com.dianping.cat.consumer.failurereport.entity.FailureReport;
-import com.dianping.cat.consumer.failurereport.transform.DefaultJsonBuilder;
+import com.dianping.cat.consumer.model.failure.entity.FailureReport;
+import com.dianping.cat.consumer.model.failure.transform.DefaultJsonBuilder;
 
 public class FailJSONReportStore implements FailReportStore{
 

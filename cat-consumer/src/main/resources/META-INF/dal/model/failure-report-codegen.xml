@@ -15,8 +15,8 @@
   </entity>
   <entity name="entry">
     <attribute name="type" value-type="String" />
-    <attribute name="messageId" value-type="int" />
-    <attribute name="threadId" value-type="int" />
+    <attribute name="messageId" value-type="String" />
+    <attribute name="threadId" value-type="String" />
     <element name="text" value-type="String" text="true" />
   </entity>
 </model>

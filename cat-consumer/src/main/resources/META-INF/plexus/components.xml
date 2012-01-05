@@ -8,7 +8,7 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>realtime</role-hint>
-			<implementation>com.dianping.cat.consumer.impl2.RealtimeConsumer</implementation>
+			<implementation>com.dianping.cat.message.consumer.impl.RealtimeConsumer</implementation>
 			<configuration>
 				<consumerId>realtime</consumerId>
 				<domain>Review</domain>
@@ -18,7 +18,7 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
 			<role-hint>failure-report</role-hint>
-			<implementation>com.dianping.cat.consumer.impl2.FailureReportAnalyzer</implementation>
+			<implementation>com.dianping.cat.message.consumer.failure.FailureReportAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 	</components>

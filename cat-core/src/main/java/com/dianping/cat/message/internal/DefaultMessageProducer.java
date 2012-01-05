@@ -20,7 +20,13 @@ public class DefaultMessageProducer implements MessageProducer {
 
 		cause.printStackTrace(new PrintWriter(writer));
 
-		logEvent("Error", cause.getClass().getName(), cause.getClass().getSimpleName(), writer.toString());
+		if (cause instanceof Error) {
+			logEvent("Error", cause.getClass().getName(), "ERROR", writer.toString());
+		} else if (cause instanceof RuntimeException){
+			logEvent("RuntimeException", cause.getClass().getName(), "ERROR", writer.toString());
+		} else {
+			logEvent("Exception", cause.getClass().getName(),"ERROR", writer.toString());
+		}
 	}
 
 	@Override

@@ -5,9 +5,9 @@ import java.io.IOException;
 import org.junit.Test;
 import org.xml.sax.SAXException;
 
-import com.dianping.cat.consumer.failurereport.entity.FailureReport;
-import com.dianping.cat.consumer.failurereport.transform.DefaultJsonBuilder;
-import com.dianping.cat.consumer.failurereport.transform.DefaultParser;
+import com.dianping.cat.consumer.model.failure.entity.FailureReport;
+import com.dianping.cat.consumer.model.failure.transform.DefaultJsonBuilder;
+import com.dianping.cat.consumer.model.failure.transform.DefaultParser;
 import com.site.helper.Files;
 
 public class FailureReportModelTest {
