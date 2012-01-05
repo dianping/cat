@@ -75,6 +75,11 @@ public abstract class AbstractMessage implements Message {
 	protected void setCompleted(boolean completed) {
 		m_completed = completed;
 	}
+	
+	@Override
+	public boolean isSuccess() {
+		return Message.SUCCESS.equals(m_status);
+	}
 
 	@Override
 	public void setStatus(String status) {

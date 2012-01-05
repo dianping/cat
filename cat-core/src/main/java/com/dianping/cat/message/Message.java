@@ -89,6 +89,11 @@ public interface Message {
 	 * @return true means the complete() method was called, false otherwise.
 	 */
 	public boolean isCompleted();
+	
+	/**
+	 * @return
+	 */
+	public boolean isSuccess();
 
 	/**
 	 * Set the message status.
