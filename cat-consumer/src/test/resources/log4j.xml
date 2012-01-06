@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration PUBLIC "-//log4j/log4j Configuration//EN" "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">	
+	<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+	    <layout class="org.apache.log4j.PatternLayout"> 
+	       <param name="ConversionPattern" value="%d - %c -%-4r [%t] %-5p %x - %m%n" />
+	    </layout> 
+	</appender>
+	<root>
+		<level value="info" />
+		<appender-ref ref="CONSOLE"/>
+	</root>	
+</log4j:configuration>

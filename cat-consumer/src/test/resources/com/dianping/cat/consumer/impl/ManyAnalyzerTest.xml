@@ -8,6 +8,11 @@
 				<consumerId>analyzers</consumerId>
 				<analyzerNames>mock1,mock2,mock3</analyzerNames>
 			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.consumer.impl.AnalyzerFactory</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>

@@ -25,7 +25,8 @@ public class OneAnalyzerTwoDurationTestConfigurator extends
 		all.add(C(MessageConsumer.class, "mock", RealtimeConsumer.class) //
 				.config(E("consumerId").value("mock") //
 						, E("analyzerNames").value("mock") //
-				));
+				).req(AnalyzerFactory.class)//
+				);
 
 		all.add(C(MessageAnalyzer.class, "mock", MockAnalyzer.class) //
 				.is(PER_LOOKUP));
