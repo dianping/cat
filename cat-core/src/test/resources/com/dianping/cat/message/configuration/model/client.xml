@@ -1,0 +1,8 @@
+<config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+	<app domain="Review" ip="192.168.8.1" />
+	<servers>
+		<server ip="192.168.8.21" port="2280" />
+		<server ip="192.168.8.22" port="2281" enabled="false" />
+		<server ip="192.168.8.23" />
+	</servers>
+</config>

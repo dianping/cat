@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.configuration.model" enable-xml-parser="true" enable-validator="true"
+	enable-xml-schema="true" enable-xml-sample="true">
+	<entity name="config" root="true">
+		<attribute name="mode" required="true" />
+	</entity>
+	<entity name="app">
+		<attribute name="domain" required="true" />
+	</entity>
+	<entity name="server">
+		<attribute name="ip" required="true" />
+		<attribute name="port" default-value="2280" />
+		<attribute name="enabled" default-value="true" />
+	</entity>
+	<entity name="bind">
+		<attribute name="port" default-value="2280" />
+	</entity>
+</model>

@@ -18,8 +18,6 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_messageId;
 
-	private int m_port;
-
 	private String m_requestToken;
 
 	private String m_sessionToken;
@@ -51,11 +49,6 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public String getMessageId() {
 		return m_messageId;
-	}
-
-	@Override
-	public int getPort() {
-		return m_port;
 	}
 
 	@Override
@@ -96,11 +89,6 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public void setMessageId(String messageId) {
 		m_messageId = messageId;
-	}
-
-	@Override
-	public void setPort(int port) {
-		m_port = port;
 	}
 
 	@Override

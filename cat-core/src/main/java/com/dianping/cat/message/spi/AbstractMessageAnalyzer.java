@@ -15,6 +15,7 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 				}
 			}
 		}
+
 		R result = generate();
 		store(result);
 	}

@@ -60,7 +60,6 @@ public class PlainTextMessageCodecTest {
 		tree.setHostName("hostName");
 		tree.setIpAddress("ipAddress");
 		tree.setMessageId("messageId");
-		tree.setPort(1234);
 		tree.setRequestToken("requestToken");
 		tree.setSessionToken("sessionToken");
 		tree.setThreadId("threadId");
@@ -116,12 +115,12 @@ public class PlainTextMessageCodecTest {
 		DefaultMessageTree tree = newMessageTree();
 		long timestamp = 1325489621987L;
 
-		Assert.assertEquals("PT1\tdomain\thostName\t1234\tipAddress\tthreadId\tmessageId\trequestToken\tsessionToken\n",
+		Assert.assertEquals("PT1\tdomain\thostName\tipAddress\tthreadId\tmessageId\trequestToken\tsessionToken\n",
 		      tree.toString());
 
 		tree.setMessage(newEvent("type", "name", timestamp, "0", "here is the data."));
 
-		Assert.assertEquals("PT1\tdomain\thostName\t1234\tipAddress\tthreadId\tmessageId\trequestToken\tsessionToken\n" + //
+		Assert.assertEquals("PT1\tdomain\thostName\tipAddress\tthreadId\tmessageId\trequestToken\tsessionToken\n" + //
 		      "E2012-01-02 15:33:41.987\ttype\tname\t0\there is the data.\t\n", tree.toString());
 	}
 

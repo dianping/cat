@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
 	private long m_duration = -1;

@@ -1,11 +1,23 @@
 package com.dianping.cat.message;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
 
 public class TransactionTest {
 	private static final MessageProducer CAT = Cat.getProducer();
+
+	@Before
+	public void before() {
+		Cat.setup(null, null);
+	}
+
+	@After
+	public void after() {
+		Cat.reset();
+	}
 
 	@Test
 	public void testNormal() {
