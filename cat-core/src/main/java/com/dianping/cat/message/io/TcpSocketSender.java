@@ -75,6 +75,10 @@ public class TcpSocketSender implements MessageSender {
 		m_future.getChannel().write(buf);
 	}
 
+	public void setCodec(MessageCodec codec) {
+		m_codec = codec;
+	}
+
 	public void setHost(String host) {
 		m_host = host;
 	}

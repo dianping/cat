@@ -11,7 +11,6 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 			}
 		}
 
-		// 已经过期了，但是任务队列还有任务处理。
 		while (true) {
 			MessageTree tree = queue.poll();
 

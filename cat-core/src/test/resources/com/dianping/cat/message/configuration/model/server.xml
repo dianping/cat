@@ -1,0 +1,7 @@
+<config mode="server" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+	<bind ip="192.168.8.21" />
+	<filter>
+		<domain>Review</domain>
+		<domain>Group</domain>
+	</filter>
+</config>

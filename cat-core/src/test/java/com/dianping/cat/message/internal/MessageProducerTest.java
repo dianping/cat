@@ -2,6 +2,8 @@ package com.dianping.cat.message.internal;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -10,15 +12,31 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.InMemoryQueue;
+import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class MessageProducerTest extends ComponentTestCase {
+	@Before
+	public void before() throws Exception {
+		MessageManager manager = lookup(MessageManager.class);
+
+		manager.initialize(null);
+		manager.setup(null, null);
+	}
+
+	@After
+	public void after() throws Exception {
+		MessageManager manager = lookup(MessageManager.class);
+
+		manager.reset();
+	}
+
 	@Test
 	public void testNormal() throws Exception {
 		MessageProducer producer = lookup(MessageProducer.class);
-		InMemoryQueue queue = lookup(InMemoryQueue.class, "mock");
+		InMemoryQueue queue = lookup(InMemoryQueue.class);
 		Transaction t = producer.newTransaction("URL", "MyPage");
 
 		try {

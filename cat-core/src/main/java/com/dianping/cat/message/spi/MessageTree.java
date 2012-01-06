@@ -13,8 +13,6 @@ public interface MessageTree {
 
 	public String getMessageId();
 
-	public int getPort();
-
 	public String getRequestToken();
 
 	public String getSessionToken();
@@ -30,8 +28,6 @@ public interface MessageTree {
 	public void setMessage(Message message);
 
 	public void setMessageId(String messageId);
-
-	public void setPort(int port);
 
 	public void setRequestToken(String requestToken);
 

@@ -1,1 +1,0 @@
-mvn -s /Users/alin/workspace/trunk/tracking/settings.xml $1 $2 $3 $4 $5

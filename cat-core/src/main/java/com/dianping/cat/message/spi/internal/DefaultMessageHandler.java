@@ -3,6 +3,7 @@ package com.dianping.cat.message.spi.internal;
 import java.util.List;
 
 import com.dianping.cat.message.io.MessageReceiver;
+import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
@@ -11,7 +12,7 @@ import com.site.lookup.annotation.Inject;
 
 public class DefaultMessageHandler implements MessageHandler, Runnable {
 	@Inject
-	private MessageReceiver m_receiver;
+	private TransportManager m_manager;
 
 	@Inject
 	private MessageConsumerRegistry m_registry;
@@ -34,14 +35,16 @@ public class DefaultMessageHandler implements MessageHandler, Runnable {
 
 	@Override
 	public void run() {
-		m_receiver.onMessage(this);
-	}
+		MessageReceiver receiver = m_manager.getReceiver();
 
-	public void setReceiver(MessageReceiver receiver) {
-		m_receiver = receiver;
+		receiver.onMessage(this);
 	}
 
 	public void setRegistry(MessageConsumerRegistry registry) {
 		m_registry = registry;
+	}
+
+	public void setTransportManager(TransportManager manager) {
+		m_manager = manager;
 	}
 }
