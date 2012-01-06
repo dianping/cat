@@ -32,7 +32,7 @@ InMemoryTest.class,
 TcpSocketTest.class,
 
 /* .spi.codec */
-PlainTextMessageCodecTest.class,
+PlainTextMessageCodecTest.class
 
 })
 public class AllTests {
