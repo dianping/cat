@@ -39,6 +39,8 @@ public class TcpSocketTest extends ComponentTestCase {
 			}
 		}));
 
+		Thread.sleep(10);
+
 		final MessageSender[] senders = new MessageSender[numSenders];
 
 		for (int i = 0; i < senders.length; i++) {
@@ -92,6 +94,9 @@ public class TcpSocketTest extends ComponentTestCase {
 				receiver.onMessage(new MockMessageHandler(sb));
 			}
 		}));
+
+		Thread.sleep(10);
+
 		futures.add(pool.submit(new Runnable() {
 			@Override
 			public void run() {
