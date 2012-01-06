@@ -16,13 +16,13 @@ public class FailureAnalyzerTestConfigurator extends
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-		String handlers = "failure,long-url";
+		/*String handlers = "failure,long-url";
 		
 		all.add(C(FailureReportAnalyzerConfig.class, "failure-analyzer-config",//
 				FailureReportAnalyzerConfig.class)//
 				.config(E("handlers").value(handlers)//
 						, E("machines").value("192.168.1.1,192.168.1.2,192.168.1.3")));
-		
+		*/
 		return all;
 	}
 

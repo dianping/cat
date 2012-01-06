@@ -1,18 +1,22 @@
 package com.dianping.cat.message.consumer.impl;
 
-import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 
 public class DefaultMessageQueue implements MessageQueue {
-	
-	private Queue<MessageTree> queue = new LinkedBlockingQueue<MessageTree>();
-	
+	private BlockingQueue<MessageTree> queue = new LinkedBlockingQueue<MessageTree>();
+
 	@Override
 	public MessageTree poll() {
-		return queue.poll();
+		try {
+			return queue.poll(1, TimeUnit.MILLISECONDS);
+		} catch (InterruptedException e) {
+			return null;
+		}
 	}
 
 	@Override

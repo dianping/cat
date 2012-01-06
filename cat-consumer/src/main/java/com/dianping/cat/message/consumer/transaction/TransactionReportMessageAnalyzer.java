@@ -121,4 +121,10 @@ public class TransactionReportMessageAnalyzer extends AbstractMessageAnalyzer<Tr
 	public void setReportFile(File reportFile) {
 		this.reportFile = reportFile;
 	}
+
+	@Override
+	protected boolean isTimeout() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 }

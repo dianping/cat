@@ -75,7 +75,7 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		}
 
 		@Override
-		protected boolean isTimeEnd() {
+		protected boolean isTimeout() {
 			// TODO Auto-generated method stub
 			return false;
 		}

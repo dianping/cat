@@ -20,7 +20,7 @@ import com.site.lookup.annotation.Inject;
 
 /**
  * This is the real time consumer process framework. The config of the consumer
- * contains name,domain,analyers.
+ * contains name,domain,analyzers.
  * 
  * 
  */
@@ -36,7 +36,7 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 	private static final int PROCESS_PERIOD = 3;
 
-	private static final long DEFAULT_EXTRA = 5*60*1000;
+	private static final long FIVE_MINUTES = 5 * 60 * 1000L;
 	@Inject
 	private String m_consumerId;
 
@@ -45,28 +45,21 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 	@Inject
 	private long m_duration = 1 * HOUR;
-	
+
 	@Inject
-	private long m_extraTime = DEFAULT_EXTRA;
+	private long m_extraTime = FIVE_MINUTES;
 
 	@Inject
 	private List<String> m_analyzerNames;
-
+	
 	@Inject
+	private AnalyzerFactory m_factory;
+
 	private int m_threads = 10;
 
 	private ExecutorService m_executor;
 
 	private List<Period> m_periods = new ArrayList<Period>(PROCESS_PERIOD);
-
-	/*private void cleanupQueue(List<MessageQueue> queues) {
-		for (int i = queues.size() - 1; i >= 0; i--) {
-			MessageQueue queue = queues.get(i);
-			if (!queue.isActive()) {
-				queues.remove(i);
-			}
-		}
-	}*/
 
 	private boolean isInDomain(MessageTree tree) {
 		if (m_domain == null || m_domain.length() == 0
@@ -96,18 +89,13 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 		if (current != null) {
 			List<MessageQueue> queues = current.getQueues();
+	
 			distributeMessage(tree, queues);
-			//TODO
-			/*boolean dirty = distributeMessage(tree, queues);
-			// do clean up
-			if (dirty) {
-				cleanupQueue(queues);
-			}*/
 		} else {
-			// if not we will add many tasks
 			long systemTime = System.currentTimeMillis();
 			long nextStart = systemTime - systemTime % m_duration - 3
 					* m_duration;
+			
 			if (timestamp < systemTime + MINUTE * 3 && timestamp >= nextStart) {
 				startTasks(tree);
 			} else {
@@ -116,22 +104,14 @@ public class RealtimeConsumer extends ContainerHolder implements
 		}
 	}
 
-	//TODO
-	private void distributeMessage(MessageTree tree,
-			List<MessageQueue> queues) {
+	private void distributeMessage(MessageTree tree, List<MessageQueue> queues) {
 		int size = queues.size();
-		//boolean dirty = false;
-		// distribute to all queues
+		
 		for (int i = 0; i < size; i++) {
 			MessageQueue queue = queues.get(i);
+		
 			queue.offer(tree);
-			/*if (queue.isActive()) {
-				queue.offer(tree);
-			} else {
-				dirty = true;
-			}*/
 		}
-		//return dirty;
 	}
 
 	@Override
@@ -170,23 +150,26 @@ public class RealtimeConsumer extends ContainerHolder implements
 		m_threads = threads;
 	}
 
-	public void setExtraTime(long time){
-		m_extraTime =time;
+	public void setExtraTime(long time) {
+		m_extraTime = time;
 	}
 	
+	public void setFactory(AnalyzerFactory factory) {
+		this.m_factory = factory;
+	}
+
 	private void startTasks(MessageTree tree) {
 		long time = tree.getMessage().getTimestamp();
 		long start = time - time % m_duration;
 		LOG.info("Start Tasks At " + new Date(start));
 		List<MessageQueue> queues = new ArrayList<MessageQueue>();
 		Period current = new Period(start, start + m_duration, queues);
-
+		
 		for (String name : m_analyzerNames) {
-			AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-			MessageAnalyzer analyzer = factory.create(name, start, m_duration,
-					m_domain,m_extraTime);
+			MessageAnalyzer analyzer = m_factory.create(name, start, m_duration,
+					m_domain, m_extraTime);
 			MessageQueue queue = lookup(MessageQueue.class);
-			Task task = new Task(analyzer, queue);
+			Task task = new Task(m_factory, analyzer, queue);
 
 			queue.offer(tree);
 			queues.add(queue);
@@ -221,11 +204,15 @@ public class RealtimeConsumer extends ContainerHolder implements
 	}
 
 	static class Task implements Runnable {
+		private AnalyzerFactory m_factory;
+
 		private MessageAnalyzer m_analyzer;
 
 		private MessageQueue m_queue;
 
-		public Task(MessageAnalyzer analyzer, MessageQueue queue) {
+		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer,
+				MessageQueue queue) {
+			m_factory = factory;
 			m_analyzer = analyzer;
 			m_queue = queue;
 		}
@@ -236,6 +223,8 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 		public void run() {
 			m_analyzer.analyze(m_queue);
+			m_factory.release(m_analyzer);
+			m_factory.release(m_queue);
 		}
 	}
 }
