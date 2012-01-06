@@ -22,7 +22,6 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class FailureAnalyzerTest extends ComponentTestCase {
-	
 	@Test
 	public void testFailureHandler() throws Exception {
 		long current = System.currentTimeMillis();
@@ -31,17 +30,15 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		long start = current - current % (60 * 60 * 1000);
 
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory
-				.create("failure", start, duration, "domain1", extraTime);
-		int number = 30000*10;
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
+		      extraTime);
+		int number = 300 * 10;
 
 		DefaultEvent e11 = new DefaultEvent("Error", "testError");
 		DefaultEvent e21 = new DefaultEvent("Exception", "testException1");
-		DefaultEvent e31 = new DefaultEvent("RuntimeException",
-				"testRuntimeException1");
+		DefaultEvent e31 = new DefaultEvent("RuntimeException", "testRuntimeException1");
 		DefaultEvent e22 = new DefaultEvent("Exception", "testException2");
-		DefaultEvent e32 = new DefaultEvent("RuntimeException",
-				"testRuntimeException2");
+		DefaultEvent e32 = new DefaultEvent("RuntimeException", "testRuntimeException2");
 		MessageTree tree = new DefaultMessageTree();
 		tree.setMessageId("xx0001");
 		tree.setDomain("group");
@@ -61,17 +58,16 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		t1.addChild(t2);
 		t1.addChild(e11);
 		tree.setMessage(t1);
-		System.out.println(tree.toString());
-		
+
 		long ct = System.nanoTime();
 		for (int i = 0; i < number; i++) {
 			if (i == 1) {
 				ct = System.nanoTime();
 			}
-			long addTime = 6* 1000* i;
+			long addTime = 6 * 1000 * i;
 			long timestamp = start + addTime;
 
-			tree.setIpAddress("192.168.1."+i);
+			tree.setIpAddress("192.168.1." + i);
 			t1.setTimestamp(timestamp);
 			t2.setTimestamp(timestamp);
 			t3.setTimestamp(timestamp);
@@ -85,15 +81,14 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		}
 
 		long time = System.nanoTime() - ct;
-		System.out.println("time: " + time / 1e6 + " ms,"
-				+ (time / 1e6 / number) + " ms each");
+
+		System.out.println("time: " + time / 1e6 + " ms," + (time / 1e6 / number) + " ms each");
 
 		FailureReport report = analyzer.generate();
-		
-		//System.out.println(report.toString());
-		
-		assertEquals("Check the Machines",number, report.getMachines().getMachines()
-				.size());
+
+		// System.out.println(report.toString());
+
+		assertEquals("Check the Machines", number, report.getMachines().getMachines().size());
 		assertEquals("Check the domain", report.getDomain(), "domain1");
 
 		Date startDate = report.getStartTime();
@@ -105,26 +100,24 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		Date realStartDate = new Date(start);
 		Date realEndDate = new Date(start + duration - 60 * 1000);
 
-		assertEquals("Check the report start time", sdf.format(realStartDate),
-				startStr);
-		assertEquals("Check the report end time", sdf.format(realEndDate),
-				endStr);
+		assertEquals("Check the report start time", sdf.format(realStartDate), startStr);
+		assertEquals("Check the report end time", sdf.format(realEndDate), endStr);
 
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		Map<String, Segment> segments = report.getSegments();
-		for (int i = 0; i < number/10; i++) {
+		for (int i = 0; i < number / 10; i++) {
 			String minuteStr = sdf2.format(startDate);
 			Segment temp = segments.get(minuteStr);
 			List<Entry> entries = temp.getEntries();
-			if(entries==null){
+
+			if (entries == null) {
 				System.out.println(minuteStr);
 			}
+
 			assertEquals("Check the segment size ", 50, entries.size());
 			startDate.setTime(startDate.getTime() + 1000 * 60);
 		}
-		System.out.println(report.toString());
-		
 	}
 
 	@Test
@@ -135,8 +128,8 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000);
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory
-				.create("failure", start, duration, "domain1", extraTime);
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
+		      extraTime);
 		int number = 60;
 		for (int i = 0; i < number; i++) {
 			DefaultTransaction t = new DefaultTransaction("A1", "B1", null);
@@ -144,7 +137,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 			tree.setMessageId("thread0001");
 			tree.setDomain("middleware");
 			tree.setHostName("middleware");
-			tree.setIpAddress("127.0.0."+i);
+			tree.setIpAddress("127.0.0." + i);
 			tree.setMessage(t);
 			t.setDuration(3 * 1000);
 			t.setTimestamp(start + 1000 * 60 * i);
@@ -153,8 +146,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		}
 		FailureReport report = analyzer.generate();
 
-		assertEquals("Check the Machines", number,report.getMachines().getMachines()
-				.size());
+		assertEquals("Check the Machines", number, report.getMachines().getMachines().size());
 		assertEquals("Check the domain", report.getDomain(), "domain1");
 
 		Date startDate = report.getStartTime();
@@ -166,18 +158,16 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		Date realStartDate = new Date(start);
 		Date realEndDate = new Date(start + duration - 60 * 1000);
 
-		assertEquals("Check the report start time", sdf.format(realStartDate),
-				startStr);
-		assertEquals("Check the report end time", sdf.format(realEndDate),
-				endStr);
+		assertEquals("Check the report start time", sdf.format(realStartDate), startStr);
+		assertEquals("Check the report end time", sdf.format(realEndDate), endStr);
 
 		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-		//System.out.println(report.toString());
 		Map<String, Segment> segments = report.getSegments();
 		for (int i = 0; i < 60; i++) {
 			String minuteStr = sdf2.format(startDate);
 			Segment temp = segments.get(minuteStr);
+
 			assertEquals("Check the segment size ", temp.getEntries().size(), 1);
 			startDate.setTime(startDate.getTime() + 1000 * 60);
 		}
