@@ -123,7 +123,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 			assertEquals("Check the segment size ", 50, entries.size());
 			startDate.setTime(startDate.getTime() + 1000 * 60);
 		}
-	//	System.out.println(report.toString());
+		System.out.println(report.toString());
 		
 	}
 

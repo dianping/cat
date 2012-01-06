@@ -12,10 +12,8 @@ public class DefaultAnalyzerFactoryImpl extends ContainerHolder implements
 			String domain, long extraTime) {
 		if (name.equals("failure")) {
 			FailureReportAnalyzer analyzer = lookup(FailureReportAnalyzer.class);
+			
 			analyzer.setAnalyzerInfo(start, duration, domain, extraTime);
-			// TODO
-			// start,
-			// duration, domain, extraTime
 			return analyzer;
 		} else if (name.equals("transaction")) {
 
