@@ -28,14 +28,12 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		MessageConsumer consumer = lookup(MessageConsumer.class, "mock");
-		// 一个小时前的Message
 		for (int i = 0; i < 100; i++) {
 			DefaultMessageTree tree = new DefaultMessageTree();
 			tree.setMessage(new MockMessage(-1));
 			consumer.consume(tree);
 		}
 		
-		// 当前一个小时的Message
 		for (int i = 0; i < 100; i++) {
 			DefaultMessageTree tree = new DefaultMessageTree();
 			tree.setMessage(new MockMessage(1));
