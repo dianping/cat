@@ -25,6 +25,7 @@ public class ManyAnalyzerTestConfigurator extends
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(MessageConsumer.class, "mockManyAnalyzers", RealtimeConsumer.class) //
+				.req(AnalyzerFactory.class)//
 				.config(E("consumerId").value("analyzers") //
 						, E("analyzerNames").value("mock1,mock2,mock3") //
 				));
