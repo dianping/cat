@@ -41,8 +41,6 @@ public class FailureReportAnalyzer extends
 	private static final SimpleDateFormat sdf = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm");
 
-	
-
 	public FailureReportAnalyzer() {
 
 	}
@@ -56,18 +54,6 @@ public class FailureReportAnalyzer extends
 		m_extraTime = extraTime;
 		m_report.setMachines(new Machines());
 	}
-
-	/*public void setMachines(String machines) {
-		List<String> str = Splitters.by(',').noEmptyItem().split(machines);
-		for (String machine : str) {
-			Machines temp = m_report.getMachines();
-			if (temp == null) {
-				temp = new Machines();
-				m_report.setMachines(temp);
-			}
-			temp.addMachine(machine);
-		}
-	}*/
 
 	public void addHandlers(Handler handler) {
 		if (m_handlers == null) {
@@ -86,9 +72,9 @@ public class FailureReportAnalyzer extends
 		if (m_handlers == null) {
 			throw new RuntimeException();
 		}
-		
+
 		m_report.getMachines().addMachine(tree.getIpAddress());
-		
+
 		for (Handler handler : m_handlers) {
 			handler.handle(m_report, tree);
 		}
@@ -134,24 +120,24 @@ public class FailureReportAnalyzer extends
 			long time = message.getTimestamp();
 			long segmentId = time - time % MINUTE;
 			String segmentStr = getDateFormat(segmentId);
-			
+
 			Map<String, Segment> segments = report.getSegments();
 			Segment segment = segments.get(segmentStr);
 			if (segment == null) {
 				segment = new Segment(segmentStr);
 				segments.put(segmentStr, segment);
 			}
-			
+
 			return segment;
 		}
-		
+
 		private String getDateFormat(long time) {
 			String result = "2012-01-01 00:00";
 			try {
 				Date date = new Date(time);
 				result = sdf.format(date);
 			} catch (Exception e) {
-				
+
 			}
 			return result;
 		}
@@ -199,7 +185,6 @@ public class FailureReportAnalyzer extends
 
 		private void processTransaction(FailureReport report,
 				Transaction transaction, MessageTree tree) {
-			// process myself
 			if (m_failureTypes.contains(transaction.getType())) {
 				addEntry(report, transaction, tree);
 			}
