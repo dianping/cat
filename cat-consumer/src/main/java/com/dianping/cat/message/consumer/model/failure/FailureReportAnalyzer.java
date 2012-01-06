@@ -33,50 +33,49 @@ public class FailureReportAnalyzer extends
 	private List<Handler> m_handlers;
 
 	private FailureReport m_report;
-	
+
 	private long m_extraTime;
-	
+
 	private static final long MINUTE = 60 * 1000;
+
+	private static final SimpleDateFormat sdf = new SimpleDateFormat(
+			"yyyy-MM-dd HH:mm");
+
 	
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-	
-	private static String getDateFormat(long time){
-		String result = "2012-01-01 00:00";
-		try {
-			Date date=new Date(time);
-			result = sdf.format(date);
-		} catch (Exception e) {
-			
-		}
-		return result;
+
+	public FailureReportAnalyzer() {
+
 	}
-	public FailureReportAnalyzer(long startTime,long duration,String domain,long extraTime){
+
+	public void setAnalyzerInfo(long startTime, long duration, String domain,
+			long extraTime) {
 		m_report = new FailureReport();
 		m_report.setStartTime(new Date(startTime));
-		m_report.setEndTime(new Date(startTime+duration-MINUTE));
+		m_report.setEndTime(new Date(startTime + duration - MINUTE));
 		m_report.setDomain(domain);
-		m_extraTime=extraTime;
+		m_extraTime = extraTime;
+		m_report.setMachines(new Machines());
 	}
-	
-	public void setMachines(String machines){
-		List<String> str =Splitters.by(',').noEmptyItem().split(machines);
-		for(String machine:str){
+
+	/*public void setMachines(String machines) {
+		List<String> str = Splitters.by(',').noEmptyItem().split(machines);
+		for (String machine : str) {
 			Machines temp = m_report.getMachines();
-			if(temp==null){
+			if (temp == null) {
 				temp = new Machines();
 				m_report.setMachines(temp);
 			}
 			temp.addMachine(machine);
 		}
-	}
-	
+	}*/
+
 	public void addHandlers(Handler handler) {
 		if (m_handlers == null) {
 			m_handlers = new ArrayList<FailureReportAnalyzer.Handler>();
 		}
 		m_handlers.add(handler);
 	}
-	
+
 	@Override
 	public FailureReport generate() {
 		return m_report;
@@ -84,9 +83,12 @@ public class FailureReportAnalyzer extends
 
 	@Override
 	protected void process(MessageTree tree) {
-		if(m_handlers ==null){
+		if (m_handlers == null) {
 			throw new RuntimeException();
 		}
+		
+		m_report.getMachines().addMachine(tree.getIpAddress());
+		
 		for (Handler handler : m_handlers) {
 			handler.handle(m_report, tree);
 		}
@@ -112,21 +114,22 @@ public class FailureReportAnalyzer extends
 	}
 
 	@Override
-	protected boolean isTimeEnd() {
+	protected boolean isTimeout() {
 		long endTime = m_report.getEndTime().getTime();
 		long currentTime = System.currentTimeMillis();
-		
-		if(currentTime>endTime+m_extraTime){
+
+		if (currentTime > endTime + m_extraTime) {
 			return true;
 		}
 		return false;
 	}
 
-	public static abstract class Handler {
-		
-		public abstract void handle(FailureReport report, MessageTree tree);
-		
-		private Segment findOrCreateSegment(Message message,
+	public static interface Handler {
+		public void handle(FailureReport report, MessageTree tree);
+	}
+
+	public static abstract class AbstractHandler implements Handler {
+		protected Segment findOrCreateSegment(Message message,
 				FailureReport report) {
 			long time = message.getTimestamp();
 			long segmentId = time - time % MINUTE;
@@ -134,21 +137,33 @@ public class FailureReportAnalyzer extends
 			
 			Map<String, Segment> segments = report.getSegments();
 			Segment segment = segments.get(segmentStr);
-			if(segment ==null){
+			if (segment == null) {
 				segment = new Segment(segmentStr);
 				segments.put(segmentStr, segment);
 			}
+			
 			return segment;
 		}
+		
+		private String getDateFormat(long time) {
+			String result = "2012-01-01 00:00";
+			try {
+				Date date = new Date(time);
+				result = sdf.format(date);
+			} catch (Exception e) {
+				
+			}
+			return result;
+		}
 	}
-	
-	public static class FailureHandler extends Handler {
+
+	public static class FailureHandler extends AbstractHandler {
 		@Inject
 		private Set<String> m_failureTypes;
 
 		private void addEntry(FailureReport report, Message message,
 				MessageTree tree) {
-			
+
 			String messageId = tree.getMessageId();
 			String threadId = tree.getThreadId();
 			Entry entry = new Entry();
@@ -157,8 +172,8 @@ public class FailureReportAnalyzer extends
 			entry.setThreadId(threadId);
 			entry.setText(message.getName());
 			entry.setType(message.getType());
-			
-			Segment segment =super.findOrCreateSegment(message,report);			
+
+			Segment segment = super.findOrCreateSegment(message, report);
 			segment.addEntry(entry);
 		}
 
@@ -200,14 +215,14 @@ public class FailureReportAnalyzer extends
 				}
 			}
 		}
-		
+
 		public void setFailureType(String type) {
 			m_failureTypes = new HashSet<String>(Splitters.by(',')
 					.noEmptyItem().split(type));
 		}
 	}
 
-	public static class LongUrlHandler extends Handler {
+	public static class LongUrlHandler extends AbstractHandler {
 		@Inject
 		private long m_threshold;
 
@@ -219,16 +234,17 @@ public class FailureReportAnalyzer extends
 				String messageId = ((DefaultMessageTree) tree).getMessageId();
 				String threadId = ((DefaultMessageTree) tree).getThreadId();
 				Transaction t = (Transaction) message;
-				
+
 				if (t.getDuration() > m_threshold) {
 					Entry entry = new Entry();
-					
+
 					entry.setMessageId(messageId);
 					entry.setThreadId(threadId);
 					entry.setText(message.getName());
 					entry.setType(message.getType());
-					
-					Segment segment =super.findOrCreateSegment(message,report);
+
+					Segment segment = super
+							.findOrCreateSegment(message, report);
 					segment.addEntry(entry);
 				}
 			}

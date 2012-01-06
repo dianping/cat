@@ -4,7 +4,9 @@ import com.dianping.cat.message.spi.MessageAnalyzer;
 
 public interface AnalyzerFactory {
 
-	public abstract MessageAnalyzer create(String name, long start,
-			long duration, String domain, long extraTime);
+	public MessageAnalyzer create(String name, long start, long duration,
+			String domain, long extraTime);
+
+	public void release(Object component);
 
 }

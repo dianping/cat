@@ -6,6 +6,10 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.consumer.impl.AnalyzerFactory</role>
+			<implementation>com.dianping.cat.message.consumer.impl.DefaultAnalyzerFactoryImpl</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>realtime</role-hint>
 			<implementation>com.dianping.cat.message.consumer.impl.RealtimeConsumer</implementation>
@@ -15,16 +19,16 @@
 				<extraTime>300000</extraTime>
 				<analyzerNames>failure-report</analyzerNames>
 			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.consumer.impl.AnalyzerFactory</role>
-			<implementation>com.dianping.cat.message.consumer.impl.DefaultAnalyzerFactoryImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.consumer.impl.AnalyzerFactory</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$Handler</role>
 			<role-hint>failure</role-hint>
 			<implementation>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$FailureHandler</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<failureType>Error,RuntimeException,Exception</failureType>
 			</configuration>
@@ -33,19 +37,24 @@
 			<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$Handler</role>
 			<role-hint>long-url</role-hint>
 			<implementation>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$LongUrlHandler</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<threshold>2000</threshold>
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzerConfig</role>
-			<role-hint>failure-analyzer-config</role-hint>
-			<implementation>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzerConfig</implementation>
-			<configuration>
-				<handlers>failure,long-url</handlers>
-				<machines>All</machines>
-			</configuration>
+			<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer</role>
+			<implementation>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$Handler</role>
+					<role-hints>
+						<role-hint>failure</role-hint>
+						<role-hint>long-url</role-hint>
+					</role-hints>
+					<field-name>m_handlers</field-name>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>

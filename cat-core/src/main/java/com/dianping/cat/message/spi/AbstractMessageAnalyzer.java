@@ -3,11 +3,21 @@ package com.dianping.cat.message.spi;
 public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 	@Override
 	public void analyze(MessageQueue queue) {
-		while (queue.size() > 0) {
+		while (!isTimeout()) {
 			MessageTree tree = queue.poll();
 
 			if (tree != null) {
 				process(tree);
+			}
+		}
+
+		while (true) {
+			MessageTree tree = queue.poll();
+
+			if (tree != null) {
+				process(tree);
+			} else {
+				break;
 			}
 		}
 
@@ -22,5 +32,5 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 
 	protected abstract void process(MessageTree tree);
 
-	protected abstract boolean isTimeEnd();
+	protected abstract boolean isTimeout();
 }

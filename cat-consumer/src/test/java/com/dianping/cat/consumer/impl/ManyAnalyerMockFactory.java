@@ -21,4 +21,9 @@ public class ManyAnalyerMockFactory implements AnalyzerFactory{
 		}
 		return null;
 	}
+
+	@Override
+	public void release(Object component) {
+		
+	}
 }

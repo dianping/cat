@@ -12,4 +12,9 @@ public class OneAnalyzerMockFactory implements AnalyzerFactory{
 		} 
 		return null;
 	}
+
+	@Override
+	public void release(Object component) {
+		
+	}
 }
