@@ -8,18 +8,44 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>realtime</role-hint>
-			<implementation>com.dianping.cat.consumer.impl2.RealtimeConsumer</implementation>
+			<implementation>com.dianping.cat.message.consumer.impl.RealtimeConsumer</implementation>
 			<configuration>
 				<consumerId>realtime</consumerId>
 				<domain>Review</domain>
+				<extraTime>300000</extraTime>
 				<analyzerNames>failure-report</analyzerNames>
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
-			<role-hint>failure-report</role-hint>
-			<implementation>com.dianping.cat.consumer.impl2.FailureReportAnalyzer</implementation>
+			<role>com.dianping.cat.message.consumer.impl.AnalyzerFactory</role>
+			<implementation>com.dianping.cat.message.consumer.impl.DefaultAnalyzerFactoryImpl</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$Handler</role>
+			<role-hint>failure</role-hint>
+			<implementation>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$FailureHandler</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<configuration>
+				<failureType>Error,RuntimeException,Exception</failureType>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$Handler</role>
+			<role-hint>long-url</role-hint>
+			<implementation>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer$LongUrlHandler</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<configuration>
+				<threshold>2000</threshold>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzerConfig</role>
+			<role-hint>failure-analyzer-config</role-hint>
+			<implementation>com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzerConfig</implementation>
+			<configuration>
+				<handlers>failure,long-url</handlers>
+				<machines>All</machines>
+			</configuration>
 		</component>
 	</components>
 </plexus>

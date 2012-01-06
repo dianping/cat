@@ -68,4 +68,10 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	public void setDuration(long duration) {
 		m_duration = duration;
 	}
+
+	@Override
+	public boolean hasChildren() {
+		return m_children != null && m_children.size() > 0;
+	}
+
 }
