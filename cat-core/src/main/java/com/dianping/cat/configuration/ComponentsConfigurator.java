@@ -20,11 +20,14 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessagePathBuilder;
+import com.dianping.cat.message.spi.codec.HtmlMessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.consumer.DummyConsumer;
-import com.dianping.cat.message.spi.consumer.DumpToFileConsumer;
+import com.dianping.cat.message.spi.consumer.DumpToHtmlConsumer;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
+import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -42,11 +45,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageManager.class, DefaultMessageManager.class));
 		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
 		      .req(MessageManager.class));
+		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
+		      .req(MessageManager.class));
 
 		all.add(C(MessageCodec.class, "plain-text", PlainTextMessageCodec.class));
+		all.add(C(MessageCodec.class, "html", HtmlMessageCodec.class));
 
 		all.add(C(MessageConsumer.class, "dummy", DummyConsumer.class));
-		all.add(C(MessageConsumer.class, "dump-to-file", DumpToFileConsumer.class));
+		all.add(C(MessageConsumer.class, "dump-to-html", DumpToHtmlConsumer.class) //
+		      .req(MessageCodec.class, "html") //
+		      .req(MessagePathBuilder.class));
 		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
 		      .req(MessageConsumer.class, new String[] { "dummy" }, "m_consumers"));
 

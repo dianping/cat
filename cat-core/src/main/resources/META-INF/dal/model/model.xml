@@ -3,6 +3,7 @@
 	enable-xml-schema="true" enable-xml-sample="true">
 	<entity name="config" root="true">
 		<attribute name="mode" required="true" />
+		<attribute name="base-log-dir" default-value="./catlog" />
 	</entity>
 	<entity name="app">
 		<attribute name="domain" required="true" />
