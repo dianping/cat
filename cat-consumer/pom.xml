@@ -32,7 +32,10 @@
 				<version>1.0.0-a1</version>
 				<executions>
 					<execution>
-						<id>generate failure report</id>
+						<!-- 
+						<id>generate failure report model</id>
+						 -->
+						<id>default-cli</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>dal-model</goal>
@@ -42,7 +45,7 @@
 						</configuration>
 					</execution>
 					<execution>
-						<id>default-cli</id>
+						<id>generate transaction report model</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>dal-model</goal>

@@ -7,7 +7,7 @@
     <entity-ref name="segment" map="true" map-name="segments" />
   </entity>
   <entity name="machines">
-    <element name="machine" value-type="String" list="true" list-name="machines" />
+    <element name="machine" value-type="String" type="list" names="machines" />
   </entity>
   <entity name="segment">
     <attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />

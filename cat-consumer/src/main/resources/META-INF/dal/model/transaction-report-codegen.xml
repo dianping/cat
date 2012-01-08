@@ -10,15 +10,15 @@
   </entity>
   <entity name="name">
     <attribute name="id" value-type="String" />
-    <attribute name="totalCount" value-type="int" default-value="0"/>
-    <attribute name="failCount" value-type="int" default-value="0"/>
-    <attribute name="failPercent" value-type="double" default-value="0.0"/>
-    <attribute name="min" value-type="double" default-value="Double.MAX_VALUE"/>
-    <attribute name="max" value-type="double" default-value="Double.MIN_VALUE"/>
-    <attribute name="avg" value-type="double" default-value="0.0"/>
-    <attribute name="sum" value-type="double" default-value="0.0"/>
-    <attribute name="sum2" value-type="double" default-value="0.0"/>
-    <attribute name="std" value-type="double" default-value="0.0"/>
+    <attribute name="totalCount" value-type="int" />
+    <attribute name="failCount" value-type="int" />
+    <attribute name="failPercent" value-type="double" />
+    <attribute name="min" value-type="double" />
+    <attribute name="max" value-type="double" />
+    <attribute name="avg" value-type="double" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="sum2" value-type="double" />
+    <attribute name="std" value-type="double" />
     <element name="sample-success-message-id" value-type="String" />
     <element name="sample-fail-message-id" value-type="String" />
   </entity>
