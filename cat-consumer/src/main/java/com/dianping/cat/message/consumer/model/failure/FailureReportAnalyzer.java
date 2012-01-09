@@ -89,8 +89,6 @@ public class FailureReportAnalyzer extends
 
 	public void setReportPath(String configPath) {
 		m_reportPath = configPath;
-		File parentFile = new File(m_reportPath);
-		parentFile.mkdirs();
 	}
 
 	public String getReportPath(){
@@ -110,16 +108,15 @@ public class FailureReportAnalyzer extends
 	protected void store(FailureReport report) {
 		String path = m_reportPath + getFailureFileName(report);
 		File file = new File(path);
-		try {
-			file.createNewFile();
-		} catch (IOException e1) {
-			throw new RuntimeException(e1);
-		}
+		
+		file.getParentFile().mkdirs();
+		
 		String content = report.toString();
+		
 		try {
 			Files.forIO().writeTo(file, content);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(String.format("Unable to create file %s!", file), e);
 		}
 	}
 
