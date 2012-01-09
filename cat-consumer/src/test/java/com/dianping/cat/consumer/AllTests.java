@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.impl.ManyAnalyzerTest;
 import com.dianping.cat.consumer.impl.OneAnalyzerTwoDurationTest;
+import com.dianping.cat.message.consumer.model.failure.FailureAnalyzerStoreTest;
 import com.dianping.cat.message.consumer.model.failure.FailureAnalyzerTest;
 import com.dianping.cat.message.consumer.transaction.TransactionReportMessageAnalyzerTest;
 
@@ -19,6 +20,7 @@ OneAnalyzerTwoDurationTest.class,
 
 /* .model.failure */
 FailureAnalyzerTest.class,
+FailureAnalyzerStoreTest.class,
 
 /* .transaction */
 TransactionReportMessageAnalyzerTest.class
