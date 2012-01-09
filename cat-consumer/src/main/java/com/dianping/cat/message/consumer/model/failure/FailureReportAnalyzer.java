@@ -1,7 +1,6 @@
 package com.dianping.cat.message.consumer.model.failure;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +19,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.helper.Files;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
@@ -77,7 +75,6 @@ public class FailureReportAnalyzer extends
 		}
 
 		m_report.getMachines().addMachine(tree.getIpAddress());
-
 		for (Handler handler : m_handlers) {
 			handler.handle(m_report, tree);
 		}
@@ -91,33 +88,29 @@ public class FailureReportAnalyzer extends
 		m_reportPath = configPath;
 	}
 
-	public String getReportPath(){
+	public String getReportPath() {
 		return m_reportPath;
 	}
-	
+
 	public String getFailureFileName(FailureReport report) {
 		StringBuffer result = new StringBuffer();
 		String start = FILE_SDF.format(report.getStartTime());
 		String end = FILE_SDF.format(report.getEndTime());
+
 		result.append(report.getDomain()).append("-").append(start).append("-")
-				.append(end).append(".xml");
+				.append(end);
 		return result.toString();
 	}
 
 	@Override
 	protected void store(FailureReport report) {
-		String path = m_reportPath + getFailureFileName(report);
-		File file = new File(path);
+		String failureFileName = getFailureFileName(report);
+		String htmlPath = new StringBuilder().append(m_reportPath)
+				.append(failureFileName).append(".html").toString();
+		File file = new File(htmlPath);
 		
 		file.getParentFile().mkdirs();
-		
-		String content = report.toString();
-		
-		try {
-			Files.forIO().writeTo(file, content);
-		} catch (IOException e) {
-			throw new RuntimeException(String.format("Unable to create file %s!", file), e);
-		}
+		FailureReportStore.storeToHtml(file, report);
 	}
 
 	@Override

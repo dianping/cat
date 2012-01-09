@@ -45,9 +45,10 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		
 		String parentPath = analyzer.getReportPath();
 		String pathname = parentPath+analyzer.getFailureFileName(report);
-		File storeFile = new File(pathname);
+		File storeFile = new File(pathname+".html");
 		Assert.assertEquals("Check file is exist!",true, storeFile.exists());
 		String realResult=Files.forIO().readFrom(storeFile, "utf-8");
-		Assert.assertEquals("Check file content!", report.toString(),realResult);
+		String exceptedResult = FailureReportStore.getStoreString(report);
+		Assert.assertEquals("Check file content!", exceptedResult ,realResult);
 	}
 }
