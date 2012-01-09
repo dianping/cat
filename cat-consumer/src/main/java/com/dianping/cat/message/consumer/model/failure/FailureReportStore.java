@@ -13,6 +13,8 @@ public class FailureReportStore {
 	private static final SimpleDateFormat SDF = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm");
 
+	private static final String END = "\n";
+
 	public static void storeToHtml(File file, FailureReport report) {
 		try {
 			Files.forIO().writeTo(file, getStoreString(report));
@@ -30,12 +32,13 @@ public class FailureReportStore {
 
 		String jsonString = jsonBuilder.getString();
 
-		result.append("<html><head>").append("<title>")
-				.append("Failure Report ").append("From ")
-				.append(SDF.format(report.getStartTime())).append(" To ")
-				.append(SDF.format(report.getEndTime())).append("</title>")
-				.append("<body>").append(jsonString).append("</body>")
-				.append("</html>");
+		result.append("<html>").append(END).append("<head>").append(END)
+				.append("<title>").append(END).append("Failure Report ")
+				.append("From ").append(SDF.format(report.getStartTime()))
+				.append(" To ").append(SDF.format(report.getEndTime()))
+				.append(END).append("</title>").append(END).append("<body>")
+				.append(END).append(jsonString).append("</body>").append(END)
+				.append("</html>").append(END);
 		return result.toString();
 	}
 }
