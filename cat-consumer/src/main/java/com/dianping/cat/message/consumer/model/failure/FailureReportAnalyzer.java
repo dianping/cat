@@ -20,7 +20,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.tools.SystemUtil;
 import com.site.helper.Files;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
@@ -89,24 +88,15 @@ public class FailureReportAnalyzer extends
 	}
 
 	public void setReportPath(String configPath) {
-		m_reportPath = getSystemPath()+configPath;
+		m_reportPath = configPath;
 		File parentFile = new File(m_reportPath);
-		if (!parentFile.exists()) {
-			try {
-				parentFile.createNewFile();
-			} catch (IOException e) {
-				throw new RuntimeException("Can't creat the parent file", e);
-			}
-		}
+		parentFile.mkdirs();
 	}
 
 	public String getReportPath(){
 		return m_reportPath;
 	}
-	private String getSystemPath() {
-		return SystemUtil.isWindows() ? "d:" : "";
-	}
-
+	
 	public String getFailureFileName(FailureReport report) {
 		StringBuffer result = new StringBuffer();
 		String start = FILE_SDF.format(report.getStartTime());
