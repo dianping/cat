@@ -20,17 +20,22 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.tools.SystemUtil;
 import com.site.helper.Files;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
+/**
+ * @author yong.you
+ * @since Jan 5, 2012
+ */
 public class FailureReportAnalyzer extends
 		AbstractMessageAnalyzer<FailureReport> {
 	@Inject
-	private File m_reportFile;
+	private List<Handler> m_handlers;
 
 	@Inject
-	private List<Handler> m_handlers;
+	private String m_reportPath;
 
 	private FailureReport m_report;
 
@@ -38,12 +43,11 @@ public class FailureReportAnalyzer extends
 
 	private static final long MINUTE = 60 * 1000;
 
-	private static final SimpleDateFormat sdf = new SimpleDateFormat(
+	private static final SimpleDateFormat SDF = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm");
 
-	public FailureReportAnalyzer() {
-
-	}
+	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat(
+			"yyyyMMddHHmm");
 
 	public void setAnalyzerInfo(long startTime, long duration, String domain,
 			long extraTime) {
@@ -84,16 +88,46 @@ public class FailureReportAnalyzer extends
 		m_report = report;
 	}
 
-	public void setReportFile(File reportFile) {
-		m_reportFile = reportFile;
+	public void setReportPath(String configPath) {
+		m_reportPath = getSystemPath()+configPath;
+		File parentFile = new File(m_reportPath);
+		if (!parentFile.exists()) {
+			try {
+				parentFile.createNewFile();
+			} catch (IOException e) {
+				throw new RuntimeException("Can't creat the parent file", e);
+			}
+		}
+	}
+
+	public String getReportPath(){
+		return m_reportPath;
+	}
+	private String getSystemPath() {
+		return SystemUtil.isWindows() ? "d:" : "";
+	}
+
+	public String getFailureFileName(FailureReport report) {
+		StringBuffer result = new StringBuffer();
+		String start = FILE_SDF.format(report.getStartTime());
+		String end = FILE_SDF.format(report.getEndTime());
+		result.append(report.getDomain()).append("-").append(start).append("-")
+				.append(end).append(".xml");
+		return result.toString();
 	}
 
 	@Override
 	protected void store(FailureReport report) {
-		String content = report.toString();
-
+		String path = m_reportPath + getFailureFileName(report);
+		File file = new File(path);
 		try {
-			Files.forIO().writeTo(m_reportFile, content);
+			file.createNewFile();
+		} catch (IOException e1) {
+			throw new RuntimeException(e1);
+		}
+		String content = report.toString();
+		try {
+			Files.forIO().writeTo(file, content);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -135,7 +169,7 @@ public class FailureReportAnalyzer extends
 			String result = "2012-01-01 00:00";
 			try {
 				Date date = new Date(time);
-				result = sdf.format(date);
+				result = SDF.format(date);
 			} catch (Exception e) {
 
 			}
