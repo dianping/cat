@@ -1,12 +1,12 @@
-<model model-package="com.dianping.cat.consumer.model.failure"
-	enable-merger="true" enable-json-builder="true" enable-xml-parser="true" enable-base-visitor="true">
-  <entity name="failure-report" root="true">
-    <entity-ref name="segment" map="true" map-name="segments" />
-  </entity>
-  <entity name="machines">
-    <element name="machine" value-type="String" type="set" />
-  </entity>
-  <entity name="segment">
-    <attribute name="id" value-type="String" key="true" />
-  </entity>
+<model model-package="com.dianping.cat.consumer.model.failure" enable-merger="true" enable-json-builder="true"
+	enable-xml-parser="true" enable-base-visitor="true">
+	<entity name="failure-report" root="true">
+		<entity-ref name="segment" type="map" />
+	</entity>
+	<entity name="machines">
+		<element name="machine" type="set" />
+	</entity>
+	<entity name="segment">
+		<attribute name="id" key="true" />
+	</entity>
 </model>

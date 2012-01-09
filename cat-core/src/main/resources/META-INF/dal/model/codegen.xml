@@ -5,7 +5,7 @@
 		<attribute name="base-log-dir" value-type="String" />
 		<attribute name="base-log-url" value-type="String" />
 		<entity-ref name="app" />
-		<entity-ref name="server" list="true" list-name="servers" xml-indent="true" />
+		<entity-ref name="server" type="list" names="servers" xml-indent="true" />
 		<entity-ref name="bind" />
 		<entity-ref name="filter" />
 	</entity>
@@ -23,7 +23,6 @@
 		<attribute name="port" value-type="int" />
 	</entity>
 	<entity name="filter">
-		<element name="domain" value-type="String" list="true" list-name="domains" />
+		<element name="domain" value-type="String" type="list" names="domains" />
 	</entity>
 </model>
-

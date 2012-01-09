@@ -29,7 +29,7 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.0-a1</version>
+				<version>1.0.0-a2</version>
 				<executions>
 					<execution>
 						<!-- 

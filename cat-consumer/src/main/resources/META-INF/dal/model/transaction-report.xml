@@ -3,11 +3,11 @@
 	enable-xml-parser="true" enable-base-visitor="true">
 	<entity name="transaction-report" root="true">
 		<attribute name="domain" key="true" />
-		<entity-ref name="type" map="true" map-name="types" />
+		<entity-ref name="type" type="map" />
 	</entity>
 	<entity name="type" class-name="TransactionType">
 		<attribute name="id" key="true" />
-		<entity-ref name="name" map="true" map-name="names" />
+		<entity-ref name="name" type="map" />
 	</entity>
 	<entity name="name" class-name="TransactionName">
 		<attribute name="id" key="true" />

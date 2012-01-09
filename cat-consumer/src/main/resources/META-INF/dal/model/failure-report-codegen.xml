@@ -4,14 +4,15 @@
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <entity-ref name="machines" />
-    <entity-ref name="segment" map="true" map-name="segments" />
+    <entity-ref name="segment" type="list" names="segments" />
   </entity>
   <entity name="machines">
     <element name="machine" value-type="String" type="list" names="machines" />
   </entity>
   <entity name="segment">
+	<attribute name="id" value-type="String" />
     <attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <entity-ref name="entry" list="true" list-name="entries" />
+    <entity-ref name="entry" type="list" names="entries" />
   </entity>
   <entity name="entry">
     <attribute name="type" value-type="String" />
