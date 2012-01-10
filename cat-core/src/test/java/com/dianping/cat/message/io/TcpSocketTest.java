@@ -2,6 +2,7 @@ package com.dianping.cat.message.io;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -30,16 +31,11 @@ public class TcpSocketTest extends ComponentTestCase {
 		final StringBuilder sb = new StringBuilder(len);
 		ExecutorService pool = Executors.newFixedThreadPool(3);
 		List<Future<?>> futures = new ArrayList<Future<?>>();
+		final CountDownLatch forSender = new CountDownLatch(numSenders);
+		final CountDownLatch forReceiver = new CountDownLatch(numSenders * len);
 
-		futures.add(pool.submit(new Runnable() {
-			@Override
-			public void run() {
-				receiver.initialize();
-				receiver.onMessage(new MockMessageHandler(sb));
-			}
-		}));
-
-		Thread.sleep(10);
+		receiver.initialize();
+		receiver.onMessage(new MockMessageHandler(sb, forReceiver));
 
 		final MessageSender[] senders = new MessageSender[numSenders];
 
@@ -58,18 +54,17 @@ public class TcpSocketTest extends ComponentTestCase {
 					for (int i = 0; i < len; i++) {
 						sender.send(new DefaultMessageTree());
 					}
+
+					forSender.countDown();
 				}
 			}));
 		}
 
-		for (Future<?> future : futures) {
-			future.get();
-		}
+		forSender.await();
+		forReceiver.await();
 
-		Thread.sleep(50 * numSenders);
-
-		pool.shutdown();
 		receiver.shutdown();
+		pool.shutdown();
 
 		for (int i = 0; i < senders.length; i++) {
 			senders[i].shutdown();
@@ -86,16 +81,10 @@ public class TcpSocketTest extends ComponentTestCase {
 		final StringBuilder sb = new StringBuilder(len);
 		ExecutorService pool = Executors.newFixedThreadPool(3);
 		List<Future<?>> futures = new ArrayList<Future<?>>();
+		final CountDownLatch forReceiver = new CountDownLatch(len);
 
-		futures.add(pool.submit(new Runnable() {
-			@Override
-			public void run() {
-				receiver.initialize();
-				receiver.onMessage(new MockMessageHandler(sb));
-			}
-		}));
-
-		Thread.sleep(10);
+		receiver.initialize();
+		receiver.onMessage(new MockMessageHandler(sb, forReceiver));
 
 		futures.add(pool.submit(new Runnable() {
 			@Override
@@ -112,7 +101,7 @@ public class TcpSocketTest extends ComponentTestCase {
 			future.get();
 		}
 
-		Thread.sleep(100);
+		forReceiver.await();
 
 		pool.shutdown();
 		receiver.shutdown();
@@ -147,14 +136,18 @@ public class TcpSocketTest extends ComponentTestCase {
 	static class MockMessageHandler implements MessageHandler {
 		private StringBuilder m_sb;
 
-		public MockMessageHandler(StringBuilder sb) {
+		private CountDownLatch m_forReceiver;
+
+		public MockMessageHandler(StringBuilder sb, CountDownLatch forReceiver) {
 			m_sb = sb;
+			m_forReceiver = forReceiver;
 		}
 
 		@Override
 		public void handle(MessageTree tree) {
-			synchronized (m_sb) {
+			synchronized (this) {
 				m_sb.append('.');
+				m_forReceiver.countDown();
 			}
 		}
 	}

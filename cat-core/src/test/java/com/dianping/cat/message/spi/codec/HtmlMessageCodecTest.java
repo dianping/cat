@@ -18,39 +18,26 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class PlainTextMessageCodecTest {
+public class HtmlMessageCodecTest {
 	private void check(Message message, String expected) {
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
+		HtmlMessageCodec codec = new HtmlMessageCodec();
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
-		codec.setBufferWriter(new EscapingBufferWriter());
-		codec.encodeMessage(message, buf);
-
+		codec.encodeMessage(message, buf, 0);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
 		Assert.assertEquals(expected, actual);
-
-		MessageTree tree = new DefaultMessageTree();
-
-		codec.decodeMessage(buf, tree);
-		Assert.assertEquals(expected, tree.getMessage().toString());
 	}
 
 	private void checkTree(MessageTree tree, String expected) {
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
+		HtmlMessageCodec codec = new HtmlMessageCodec();
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
 		codec.encode(tree, buf);
 		buf.readInt(); // get rid of length
-
 		String actual = buf.toString(Charset.forName("utf-8"));
 
 		Assert.assertEquals(expected, actual);
-
-		MessageTree t = new DefaultMessageTree();
-
-		codec.decode(buf, t);
-		Assert.assertEquals(expected, t.toString());
 	}
 
 	private Event newEvent(String type, String name, long timestamp, String status, String data) {
@@ -101,18 +88,23 @@ public class PlainTextMessageCodecTest {
 		long timestamp = 1325489621987L;
 		Event event = newEvent("type", "name", timestamp, "0", "here is the data.");
 
-		check(event, "E2012-01-02 15:33:41.987\ttype\tname\t0\there is the data.\t\n");
+		check(event,
+		      "<tr><td>E2012-01-02 15:33:41.987</td><td>type</td><td>name</td><td>0</td><td>here is the data.</td></tr>\r\n");
 	}
 
 	@Test
 	public void testEventForRawData() {
 		long timestamp = 1325489621987L;
-		String trace = "java.lang.Exception\n\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\n";
+		String trace = "java.lang.Exception\n"
+		      + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\n"
+		      + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:108)\n";
 		Event event = newEvent("Exception", Exception.class.getName(), timestamp, "ERROR", trace);
 
 		check(event,
-		      "E2012-01-02 15:33:41.987\tException\tjava.lang.Exception\tERROR\t" + //
-		            "java.lang.Exception\\n\\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\\n\t\n");
+		      "<tr><td>E2012-01-02 15:33:41.987</td><td>Exception</td><td>java.lang.Exception</td><td>ERROR</td><td>java.lang.Exception\n<br>"
+		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\n<br>"
+		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:108)\n<br>"
+		            + "</td></tr>\r\n");
 	}
 
 	@Test
@@ -120,21 +112,27 @@ public class PlainTextMessageCodecTest {
 		long timestamp = 1325489621987L;
 		Heartbeat heartbeat = newHeartbeat("type", "name", timestamp, "0", "here is the data.");
 
-		check(heartbeat, "H2012-01-02 15:33:41.987\ttype\tname\t0\there is the data.\t\n");
+		check(heartbeat,
+		      "<tr><td>H2012-01-02 15:33:41.987</td><td>type</td><td>name</td><td>0</td><td>here is the data.</td></tr>\r\n");
 	}
 
 	@Test
 	public void testMessageTree() {
 		DefaultMessageTree tree = newMessageTree();
 		long timestamp = 1325489621987L;
-		String expected = "PT1\tdomain\thostName\tipAddress\tthreadId\tmessageId\trequestToken\tsessionToken\n";
+		String expected1 = "<table>\r\n"
+		      + "<tr><td>HT1</td><td>domain</td><td>hostName</td><td>ipAddress</td><td>threadId</td><td>messageId</td><td>requestToken</td><td>sessionToken</td></tr>\r\n"
+		      + "</table>";
 
-		checkTree(tree, expected);
+		checkTree(tree, expected1);
 
-		expected += "E2012-01-02 15:33:41.987\ttype\tname\t0\there is the data.\t\n";
+		String expected2 = "<table>\r\n"
+		      + "<tr><td>HT1</td><td>domain</td><td>hostName</td><td>ipAddress</td><td>threadId</td><td>messageId</td><td>requestToken</td><td>sessionToken</td></tr>\r\n"
+		      + "<tr><td>E2012-01-02 15:33:41.987</td><td>type</td><td>name</td><td>0</td><td>here is the data.</td></tr>\r\n"
+		      + "</table>";
 
 		tree.setMessage(newEvent("type", "name", timestamp, "0", "here is the data."));
-		checkTree(tree, expected);
+		checkTree(tree, expected2);
 	}
 
 	@Test
@@ -150,15 +148,16 @@ public class PlainTextMessageCodecTest {
 		      "select title,content from Review where id = ?"));
 		root.addChild(newEvent("URL", "View", timestamp + 40, "0", "view=HTML"));
 
-		check(root, "t2012-01-02 15:33:41.987\tURL\tReview\t\n" + //
-		      "E2012-01-02 15:33:41.987\tURL\tPayload\t0\tip=127.0.0.1&ua=Mozilla 5.0...&refer=...&...\t\n" + //
-		      "A2012-01-02 15:33:41.987\tService\tAuth\t0\t20ms\tuserId=1357&token=...\t\n" + //
-		      "t2012-01-02 15:33:42.009\tCache\tfindReviewByPK\t\n" + //
-		      "E2012-01-02 15:33:42.009\tCacheHost\thost-1\t0\tip=192.168.8.123\t\n" + //
-		      "T2012-01-02 15:33:42.010\tCache\tfindReviewByPK\tMissing\t1ms\t2468\t\n" + //
-		      "A2012-01-02 15:33:42.012\tDAL\tfindReviewByPK\t0\t5ms\tselect title,content from Review where id = ?\t\n" + //
-		      "E2012-01-02 15:33:42.027\tURL\tView\t0\tview=HTML\t\n" + //
-		      "T2012-01-02 15:33:42.087\tURL\tReview\t0\t100ms\t/review/2468\t\n");
+		check(root,
+		      "<tr><td>t2012-01-02 15:33:41.987</td><td>URL</td><td>Review</td><td></td><td></td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;E2012-01-02 15:33:41.987</td><td>URL</td><td>Payload</td><td>0</td><td>ip=127.0.0.1&amp;ua=Mozilla 5.0...&amp;refer=...&amp;...</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;A2012-01-02 15:33:41.987</td><td>Service</td><td>Auth</td><td>0</td><td>20ms userId=1357&amp;token=...</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;t2012-01-02 15:33:42.009</td><td>Cache</td><td>findReviewByPK</td><td></td><td></td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;E2012-01-02 15:33:42.009</td><td>CacheHost</td><td>host-1</td><td>0</td><td>ip=192.168.8.123</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;T2012-01-02 15:33:42.010</td><td>Cache</td><td>findReviewByPK</td><td>Missing</td><td>1ms 2468</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;A2012-01-02 15:33:42.012</td><td>DAL</td><td>findReviewByPK</td><td>0</td><td>5ms select title,content from Review where id = ?</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;E2012-01-02 15:33:42.027</td><td>URL</td><td>View</td><td>0</td><td>view=HTML</td></tr>\r\n"
+		            + "<tr><td>T2012-01-02 15:33:42.087</td><td>URL</td><td>Review</td><td>0</td><td>100ms /review/2468</td></tr>\r\n");
 	}
 
 	@Test
@@ -166,6 +165,7 @@ public class PlainTextMessageCodecTest {
 		long timestamp = 1325489621987L;
 		Transaction transaction = newTransaction("type", "name", timestamp, "0", 10, "here is the data.");
 
-		check(transaction, "A2012-01-02 15:33:41.987\ttype\tname\t0\t10ms\there is the data.\t\n");
+		check(transaction,
+		      "<tr><td>A2012-01-02 15:33:41.987</td><td>type</td><td>name</td><td>0</td><td>10ms here is the data.</td></tr>\r\n");
 	}
 }

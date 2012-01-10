@@ -8,6 +8,7 @@ import com.dianping.cat.message.configuration.model.ConfigTest;
 import com.dianping.cat.message.internal.MessageProducerTest;
 import com.dianping.cat.message.io.InMemoryTest;
 import com.dianping.cat.message.io.TcpSocketTest;
+import com.dianping.cat.message.spi.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
 
 @RunWith(Suite.class)
@@ -32,7 +33,9 @@ InMemoryTest.class,
 TcpSocketTest.class,
 
 /* .spi.codec */
-PlainTextMessageCodecTest.class
+PlainTextMessageCodecTest.class,
+
+HtmlMessageCodecTest.class
 
 })
 public class AllTests {
