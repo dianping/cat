@@ -97,6 +97,15 @@ org.eclipse.jdt.core.compiler.source=1.6
 org.eclipse.jdt.core.compiler.compliance=1.6
                         ]]></content>
                      </file>
+                     <file>
+                            <name>.settings/org.eclipse.core.resources.prefs</name>
+                            <content>
+                                <![CDATA[
+                                eclipse.preferences.version=1
+                                encoding/<project>=UTF-8
+                                ]]>
+                            </content>
+                     </file>
                   </additionalConfig>
                </configuration>
             </plugin>

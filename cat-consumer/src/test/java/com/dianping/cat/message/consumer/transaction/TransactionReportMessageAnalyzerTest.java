@@ -14,6 +14,7 @@ import org.junit.Test;
 import com.dianping.cat.consumer.model.transaction.entity.TransactionName;
 import com.dianping.cat.consumer.model.transaction.entity.TransactionReport;
 import com.dianping.cat.consumer.model.transaction.entity.TransactionType;
+import com.dianping.cat.consumer.model.transaction.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -116,6 +117,9 @@ public class TransactionReportMessageAnalyzerTest {
 		assertEquals(500500.0, n2.getSum());
 		assertEquals(null, n2.getSampleSuccessMessageId());
 		assertEquals(null, n2.getSampleFailMessageId());
+		DefaultJsonBuilder builder = new DefaultJsonBuilder();
+		report.accept( builder);
+		System.out.println(builder.getString());
 		System.out.println(report.toString());
 	}
 

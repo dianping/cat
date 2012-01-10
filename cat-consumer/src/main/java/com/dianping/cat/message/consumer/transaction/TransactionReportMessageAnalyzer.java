@@ -14,6 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import com.dianping.cat.consumer.model.transaction.entity.TransactionName;
 import com.dianping.cat.consumer.model.transaction.entity.TransactionReport;
 import com.dianping.cat.consumer.model.transaction.entity.TransactionType;
+import com.dianping.cat.consumer.model.transaction.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
@@ -33,8 +34,10 @@ public class TransactionReportMessageAnalyzer extends AbstractMessageAnalyzer<Tr
 
 	@Override
 	protected void store(TransactionReport result) {
+		DefaultJsonBuilder builder = new DefaultJsonBuilder();
+		report.accept(builder);
 		try {
-			Files.forIO().writeTo(reportFile, report.toString());
+			Files.forIO().writeTo(reportFile, builder.getString());
 		} catch (IOException e) {
 			logger.error("", e);
 		}
@@ -124,7 +127,6 @@ public class TransactionReportMessageAnalyzer extends AbstractMessageAnalyzer<Tr
 
 	@Override
 	protected boolean isTimeout() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 }
