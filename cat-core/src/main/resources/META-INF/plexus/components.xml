@@ -38,9 +38,45 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+			<implementation>com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+			<role-hint>escape</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.EscapingBufferWriter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+			<role-hint>html-encode</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.MessageCodec</role>
 			<role-hint>plain-text</role-hint>
 			<implementation>com.dianping.cat.message.spi.codec.PlainTextMessageCodec</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+					<role-hint>escape</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageCodec</role>
+			<role-hint>html</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.HtmlMessageCodec</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+					<role-hint>html-encode</role-hint>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -49,8 +85,17 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
-			<role-hint>dump-to-file</role-hint>
-			<implementation>com.dianping.cat.message.spi.consumer.DumpToFileConsumer</implementation>
+			<role-hint>dump-to-html</role-hint>
+			<implementation>com.dianping.cat.message.spi.consumer.DumpToHtmlConsumer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>html</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>

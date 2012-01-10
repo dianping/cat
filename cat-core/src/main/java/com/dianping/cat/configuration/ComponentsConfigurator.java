@@ -21,6 +21,9 @@ import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
+import com.dianping.cat.message.spi.codec.BufferWriter;
+import com.dianping.cat.message.spi.codec.EscapingBufferWriter;
+import com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter;
 import com.dianping.cat.message.spi.codec.HtmlMessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.consumer.DummyConsumer;
@@ -48,8 +51,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
 		      .req(MessageManager.class));
 
-		all.add(C(MessageCodec.class, "plain-text", PlainTextMessageCodec.class));
-		all.add(C(MessageCodec.class, "html", HtmlMessageCodec.class));
+		all.add(C(BufferWriter.class, "escape", EscapingBufferWriter.class));
+		all.add(C(BufferWriter.class, "html-encode", HtmlEncodingBufferWriter.class));
+
+		all.add(C(MessageCodec.class, "plain-text", PlainTextMessageCodec.class) //
+		      .req(BufferWriter.class, "escape"));
+		all.add(C(MessageCodec.class, "html", HtmlMessageCodec.class) //
+		      .req(BufferWriter.class, "html-encode"));
 
 		all.add(C(MessageConsumer.class, "dummy", DummyConsumer.class));
 		all.add(C(MessageConsumer.class, "dump-to-html", DumpToHtmlConsumer.class) //

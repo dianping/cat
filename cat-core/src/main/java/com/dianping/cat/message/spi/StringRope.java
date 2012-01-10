@@ -7,6 +7,8 @@ import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
+import com.dianping.cat.message.spi.codec.BufferWriter;
+
 public class StringRope {
 	private List<String> m_parts;
 
@@ -64,41 +66,7 @@ public class StringRope {
 		return sb.toString();
 	}
 
-	private int writeRaw(ChannelBuffer buffer, byte[] data) {
-		int len = data.length;
-		int count = len;
-		int offset = 0;
-
-		for (int i = 0; i < len; i++) {
-			byte b = data[i];
-
-			if (b == '\t' || b == '\r' || b == '\n' || b == '\\') {
-				buffer.writeBytes(data, offset, i - offset);
-				buffer.writeByte('\\');
-
-				if (b == '\t') {
-					buffer.writeByte('t');
-				} else if (b == '\r') {
-					buffer.writeByte('r');
-				} else if (b == '\n') {
-					buffer.writeByte('n');
-				} else {
-					buffer.writeByte(b);
-				}
-
-				count++;
-				offset = i + 1;
-			}
-		}
-
-		if (len > offset) {
-			buffer.writeBytes(data, offset, len - offset);
-		}
-
-		return count;
-	}
-
-	public int writeTo(ChannelBuffer buffer) {
+	public int writeTo(ChannelBuffer buffer, BufferWriter writer) {
 		int size = m_parts.size();
 		int count = 0;
 
@@ -116,7 +84,7 @@ public class StringRope {
 				}
 			}
 
-			count += writeRaw(buffer, data);
+			count += writer.writeTo(buffer, data);
 		}
 
 		return count;

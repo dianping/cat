@@ -21,6 +21,7 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.StringRope;
+import com.site.lookup.annotation.Inject;
 
 public class PlainTextMessageCodec implements MessageCodec {
 	private static final String ID = "PT1"; // plain text version 1
@@ -29,14 +30,20 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 	private static final byte LF = '\n'; // line feed character
 
-	private final BufferHelper m_bufferHelper = new BufferHelper();
+	@Inject
+	private BufferWriter m_writer = new EscapingBufferWriter();
 
-	private final DateHelper m_dateHelper = new DateHelper();
+	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
+
+	private DateHelper m_dateHelper = new DateHelper();
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
 		decodeHeader(buf, tree);
-		decodeMessage(buf, tree);
+
+		if (buf.readableBytes() > 0) {
+			decodeMessage(buf, tree);
+		}
 	}
 
 	protected void decodeHeader(ChannelBuffer buf, MessageTree tree) {
@@ -248,7 +255,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			if (data instanceof StringRope) {
 				StringRope rope = (StringRope) data;
 
-				count += rope.writeTo(buf);
+				count += rope.writeTo(buf, m_writer);
 				count += helper.write(buf, TAB);
 			} else {
 				count += helper.writeRaw(buf, String.valueOf(data));
@@ -294,7 +301,18 @@ public class PlainTextMessageCodec implements MessageCodec {
 		}
 	}
 
+	public void setBufferWriter(BufferWriter writer) {
+		m_writer = writer;
+		m_bufferHelper = new BufferHelper(m_writer);
+	}
+
 	protected static class BufferHelper {
+		private BufferWriter m_writer;
+
+		public BufferHelper(BufferWriter writer) {
+			m_writer = writer;
+		}
+
 		public String read(ChannelBuffer buf, byte separator) {
 			int count = buf.bytesBefore(separator);
 
@@ -370,37 +388,6 @@ public class PlainTextMessageCodec implements MessageCodec {
 			return data.length;
 		}
 
-		private int writeRaw(ChannelBuffer buffer, byte[] data) {
-			int len = data.length;
-			int count = len;
-			int offset = 0;
-
-			for (int i = 0; i < len; i++) {
-				byte b = data[i];
-
-				if (b == '\t' || b == '\r' || b == '\n' || b == '\\') {
-					buffer.writeBytes(data, offset, i - offset);
-					buffer.writeByte('\\');
-
-					if (b == '\t') {
-						buffer.writeByte('t');
-					} else if (b == '\r') {
-						buffer.writeByte('r');
-					} else if (b == '\n') {
-						buffer.writeByte('n');
-					} else {
-						buffer.writeByte(b);
-					}
-
-					count++;
-					offset = i + 1;
-				}
-			}
-
-			buffer.writeBytes(data, offset, len - offset);
-			return count;
-		}
-
 		public int writeRaw(ChannelBuffer buf, String str) {
 			if (str == null) {
 				str = "null";
@@ -414,7 +401,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 				data = str.getBytes();
 			}
 
-			return writeRaw(buf, data);
+			return m_writer.writeTo(buf, data);
 		}
 	}
 
