@@ -23,6 +23,11 @@
 			<groupId>com.site.common</groupId>
 			<artifactId>lookup</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.6</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -32,9 +37,7 @@
 				<version>1.0.0-a2</version>
 				<executions>
 					<execution>
-						<!-- 
-						<id>generate failure report model</id>
-						 -->
+						<!-- <id>generate failure report model</id> -->
 						<id>default-cli</id>
 						<phase>generate-sources</phase>
 						<goals>

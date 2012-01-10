@@ -45,6 +45,11 @@
             <artifactId>netty</artifactId>
             <version>3.2.7.Final</version>
          </dependency>
+         <dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
+			<version>1.6</version>
+		</dependency>
       </dependencies>
    </dependencyManagement>
    <build>
