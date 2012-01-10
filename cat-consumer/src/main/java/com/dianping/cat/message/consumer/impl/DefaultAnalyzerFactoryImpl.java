@@ -4,6 +4,10 @@ import com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.site.lookup.ContainerHolder;
 
+/**
+ * @author yong.you
+ * @since Jan 5, 2012
+ */
 public class DefaultAnalyzerFactoryImpl extends ContainerHolder implements
 		AnalyzerFactory {
 

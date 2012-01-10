@@ -22,7 +22,8 @@ import com.site.lookup.annotation.Inject;
  * This is the real time consumer process framework. The config of the consumer
  * contains name,domain,analyzers.
  * 
- * 
+ * @author yong.you
+ * @since Jan 5, 2012
  */
 public class RealtimeConsumer extends ContainerHolder implements
 		MessageConsumer, Initializable {

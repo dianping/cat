@@ -40,6 +40,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Handler.class, "long-url", LongUrlHandler.class) //
 				.config(E("threshold").value("2000")));
 		all.add(C(FailureReportAnalyzer.class) //
+				.config(E("reportPath").value("/data/appdatas/cat/report/failure/"))
 				.is(PER_LOOKUP)//
 				.req(Handler.class, new String[] { "failure", "long-url" },
 						"m_handlers"));

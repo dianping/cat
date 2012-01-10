@@ -1,7 +1,6 @@
 package com.dianping.cat.message.consumer.model.failure;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,17 +19,20 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.helper.Files;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
+/**
+ * @author yong.you
+ * @since Jan 5, 2012
+ */
 public class FailureReportAnalyzer extends
 		AbstractMessageAnalyzer<FailureReport> {
 	@Inject
-	private File m_reportFile;
+	private List<Handler> m_handlers;
 
 	@Inject
-	private List<Handler> m_handlers;
+	private String m_reportPath;
 
 	private FailureReport m_report;
 
@@ -38,12 +40,11 @@ public class FailureReportAnalyzer extends
 
 	private static final long MINUTE = 60 * 1000;
 
-	private static final SimpleDateFormat sdf = new SimpleDateFormat(
+	private static final SimpleDateFormat SDF = new SimpleDateFormat(
 			"yyyy-MM-dd HH:mm");
 
-	public FailureReportAnalyzer() {
-
-	}
+	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat(
+			"yyyyMMddHHmm");
 
 	public void setAnalyzerInfo(long startTime, long duration, String domain,
 			long extraTime) {
@@ -74,7 +75,6 @@ public class FailureReportAnalyzer extends
 		}
 
 		m_report.getMachines().addMachine(tree.getIpAddress());
-
 		for (Handler handler : m_handlers) {
 			handler.handle(m_report, tree);
 		}
@@ -84,19 +84,33 @@ public class FailureReportAnalyzer extends
 		m_report = report;
 	}
 
-	public void setReportFile(File reportFile) {
-		m_reportFile = reportFile;
+	public void setReportPath(String configPath) {
+		m_reportPath = configPath;
+	}
+
+	public String getReportPath() {
+		return m_reportPath;
+	}
+
+	public String getFailureFileName(FailureReport report) {
+		StringBuffer result = new StringBuffer();
+		String start = FILE_SDF.format(report.getStartTime());
+		String end = FILE_SDF.format(report.getEndTime());
+
+		result.append(report.getDomain()).append("-").append(start).append("-")
+				.append(end);
+		return result.toString();
 	}
 
 	@Override
 	protected void store(FailureReport report) {
-		String content = report.toString();
-
-		try {
-			Files.forIO().writeTo(m_reportFile, content);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		String failureFileName = getFailureFileName(report);
+		String htmlPath = new StringBuilder().append(m_reportPath)
+				.append(failureFileName).append(".html").toString();
+		File file = new File(htmlPath);
+		
+		file.getParentFile().mkdirs();
+		FailureReportStore.storeToHtml(file, report);
 	}
 
 	@Override
@@ -135,7 +149,7 @@ public class FailureReportAnalyzer extends
 			String result = "2012-01-01 00:00";
 			try {
 				Date date = new Date(time);
-				result = sdf.format(date);
+				result = SDF.format(date);
 			} catch (Exception e) {
 
 			}

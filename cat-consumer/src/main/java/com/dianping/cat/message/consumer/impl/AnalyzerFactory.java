@@ -2,6 +2,10 @@ package com.dianping.cat.message.consumer.impl;
 
 import com.dianping.cat.message.spi.MessageAnalyzer;
 
+/**
+ * @author yong.you
+ * @since Jan 5, 2012
+ */
 public interface AnalyzerFactory {
 
 	public MessageAnalyzer create(String name, long start, long duration,
