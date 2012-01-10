@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.model.failure;
+package com.dianping.cat.message.consumer.failure;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.model.failure.entity.Entry;
 import com.dianping.cat.consumer.model.failure.entity.FailureReport;
 import com.dianping.cat.consumer.model.failure.entity.Segment;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer;
 import com.dianping.cat.message.consumer.impl.AnalyzerFactory;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;

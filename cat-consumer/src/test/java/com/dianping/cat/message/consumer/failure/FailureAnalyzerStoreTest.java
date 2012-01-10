@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.model.failure;
+package com.dianping.cat.message.consumer.failure;
 
 import java.io.File;
 
@@ -10,6 +10,8 @@ import org.junit.runners.JUnit4;
 
 import com.dianping.cat.consumer.model.failure.entity.FailureReport;
 import com.dianping.cat.consumer.model.failure.transform.DefaultJsonBuilder;
+import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer;
+import com.dianping.cat.message.consumer.failure.FailureReportStore;
 import com.dianping.cat.message.consumer.impl.AnalyzerFactory;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -31,15 +33,16 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory
 				.create("failure", start, duration, "domain1", extraTime);
-		int number = 4;
+		int number = 5;
 		for (int i = 0; i < number; i++) {
 			DefaultTransaction t = new DefaultTransaction("A1", "B1", null);
 			MessageTree tree = new DefaultMessageTree();
-			tree.setMessageId("thread0001");
+			tree.setMessageId("MessageId"+ i);
+			tree.setThreadId("Thread" + i);
 			tree.setDomain("middleware");
 			tree.setHostName("middleware");
 			tree.setMessage(t);
-			tree.setIpAddress("192.168.8.1");
+			tree.setIpAddress("192.168.8."+i%4);
 			t.setDuration(3 * 1000);
 			t.setTimestamp(start + 1000 * 60 * i);
 			analyzer.process(tree);
@@ -52,6 +55,7 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 
 		DefaultJsonBuilder jsonBuilder = new DefaultJsonBuilder();
 		jsonBuilder.visitFailureReport(report);
+		
 		String realResult = jsonBuilder.getString();
 
 		Gson gson = new Gson();

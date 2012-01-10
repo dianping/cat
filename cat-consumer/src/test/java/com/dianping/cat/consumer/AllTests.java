@@ -6,8 +6,8 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.impl.ManyAnalyzerTest;
 import com.dianping.cat.consumer.impl.OneAnalyzerTwoDurationTest;
-import com.dianping.cat.message.consumer.model.failure.FailureAnalyzerStoreTest;
-import com.dianping.cat.message.consumer.model.failure.FailureAnalyzerTest;
+import com.dianping.cat.message.consumer.failure.FailureAnalyzerStoreTest;
+import com.dianping.cat.message.consumer.failure.FailureAnalyzerTest;
 import com.dianping.cat.message.consumer.transaction.TransactionReportMessageAnalyzerTest;
 
 @RunWith(Suite.class)

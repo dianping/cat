@@ -3,14 +3,14 @@ package com.dianping.cat.consumer.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer;
+import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer.FailureHandler;
+import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer.Handler;
+import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer.LongUrlHandler;
 import com.dianping.cat.message.consumer.impl.AnalyzerFactory;
 import com.dianping.cat.message.consumer.impl.DefaultAnalyzerFactoryImpl;
 import com.dianping.cat.message.consumer.impl.DefaultMessageQueue;
 import com.dianping.cat.message.consumer.impl.RealtimeConsumer;
-import com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer;
-import com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer.FailureHandler;
-import com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer.Handler;
-import com.dianping.cat.message.consumer.model.failure.FailureReportAnalyzer.LongUrlHandler;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.site.lookup.configuration.AbstractResourceConfigurator;

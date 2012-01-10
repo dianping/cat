@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.model.failure;
+package com.dianping.cat.message.consumer.failure;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
