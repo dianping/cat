@@ -11,11 +11,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.dianping.cat.consumer.model.transaction.entity.TransactionName;
-import com.dianping.cat.consumer.model.transaction.entity.TransactionReport;
-import com.dianping.cat.consumer.model.transaction.entity.TransactionType;
-import com.dianping.cat.consumer.model.transaction.transform.DefaultJsonBuilder;
-import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;

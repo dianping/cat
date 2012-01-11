@@ -10,9 +10,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.consumer.AnalyzerFactory;
-import com.dianping.cat.consumer.model.failure.entity.Entry;
-import com.dianping.cat.consumer.model.failure.entity.FailureReport;
-import com.dianping.cat.consumer.model.failure.entity.Segment;
+import com.dianping.cat.consumer.failure.model.entity.Entry;
+import com.dianping.cat.consumer.failure.model.entity.FailureReport;
+import com.dianping.cat.consumer.failure.model.entity.Segment;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;

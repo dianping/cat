@@ -3,38 +3,38 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>mockManyAnalyzers</role-hint>
-			<implementation>com.dianping.cat.consumer.impl.RealtimeConsumer</implementation>
+			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<consumerId>analyzers</consumerId>
 				<analyzerNames>mock1,mock2,mock3</analyzerNames>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.impl.AnalyzerFactory</role>
+					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
 			<role-hint>mock1</role-hint>
-			<implementation>com.dianping.cat.consumer.impl.ManyAnalyzerTest$MockAnalyzer1</implementation>
+			<implementation>com.dianping.cat.consumer.ManyAnalyzerTest$MockAnalyzer1</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
 			<role-hint>mock2</role-hint>
-			<implementation>com.dianping.cat.consumer.impl.ManyAnalyzerTest$MockAnalyzer2</implementation>
+			<implementation>com.dianping.cat.consumer.ManyAnalyzerTest$MockAnalyzer2</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
 			<role-hint>mock3</role-hint>
-			<implementation>com.dianping.cat.consumer.impl.ManyAnalyzerTest$MockAnalyzer3</implementation>
+			<implementation>com.dianping.cat.consumer.ManyAnalyzerTest$MockAnalyzer3</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.impl.AnalyzerFactory</role>
-			<implementation>com.dianping.cat.consumer.impl.ManyAnalyerMockFactory</implementation>
+			<role>com.dianping.cat.consumer.AnalyzerFactory</role>
+			<implementation>com.dianping.cat.consumer.ManyAnalyerMockFactory</implementation>
 		</component>
 	</components>
 </plexus>

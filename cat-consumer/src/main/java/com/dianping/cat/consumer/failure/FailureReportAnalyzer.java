@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dianping.cat.consumer.model.failure.entity.Entry;
-import com.dianping.cat.consumer.model.failure.entity.FailureReport;
-import com.dianping.cat.consumer.model.failure.entity.Machines;
-import com.dianping.cat.consumer.model.failure.entity.Segment;
-import com.dianping.cat.consumer.model.failure.entity.Threads;
+import com.dianping.cat.consumer.failure.model.entity.Entry;
+import com.dianping.cat.consumer.failure.model.entity.FailureReport;
+import com.dianping.cat.consumer.failure.model.entity.Machines;
+import com.dianping.cat.consumer.failure.model.entity.Segment;
+import com.dianping.cat.consumer.failure.model.entity.Threads;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;

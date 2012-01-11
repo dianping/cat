@@ -2,17 +2,17 @@
 	<components>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageQueue</role>
-			<implementation>com.dianping.cat.consumer.impl.DefaultMessageQueue</implementation>
+			<implementation>com.dianping.cat.consumer.DefaultMessageQueue</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.impl.AnalyzerFactory</role>
-			<implementation>com.dianping.cat.consumer.impl.DefaultAnalyzerFactoryImpl</implementation>
+			<role>com.dianping.cat.consumer.AnalyzerFactory</role>
+			<implementation>com.dianping.cat.consumer.DefaultAnalyzerFactory</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>realtime</role-hint>
-			<implementation>com.dianping.cat.consumer.impl.RealtimeConsumer</implementation>
+			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<consumerId>realtime</consumerId>
 				<domain>Review</domain>
@@ -21,7 +21,7 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.impl.AnalyzerFactory</role>
+					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
 			</requirements>
 		</component>
