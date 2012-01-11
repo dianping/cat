@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.consumer.impl.AnalyzerFactory;
+import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.model.failure.entity.FailureReport;
 import com.dianping.cat.consumer.model.failure.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.internal.DefaultTransaction;

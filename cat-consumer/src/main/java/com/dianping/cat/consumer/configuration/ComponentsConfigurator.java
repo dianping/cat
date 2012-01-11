@@ -3,14 +3,14 @@ package com.dianping.cat.consumer.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.consumer.AnalyzerFactory;
+import com.dianping.cat.consumer.DefaultAnalyzerFactory;
+import com.dianping.cat.consumer.DefaultMessageQueue;
+import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.FailureHandler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.LongUrlHandler;
-import com.dianping.cat.consumer.impl.AnalyzerFactory;
-import com.dianping.cat.consumer.impl.DefaultAnalyzerFactoryImpl;
-import com.dianping.cat.consumer.impl.DefaultMessageQueue;
-import com.dianping.cat.consumer.impl.RealtimeConsumer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
@@ -23,7 +23,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageQueue.class, DefaultMessageQueue.class).is(PER_LOOKUP));
 		
-		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactoryImpl.class));
+		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 				.req(AnalyzerFactory.class)

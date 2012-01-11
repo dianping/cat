@@ -1,7 +1,7 @@
-package com.dianping.cat.consumer.impl;
+package com.dianping.cat.consumer;
 
-import com.dianping.cat.consumer.impl.AnalyzerFactory;
-import com.dianping.cat.consumer.impl.OneAnalyzerTwoDurationTest.MockAnalyzer;
+import com.dianping.cat.consumer.AnalyzerFactory;
+import com.dianping.cat.consumer.OneAnalyzerTwoDurationTest.MockAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 
 public class OneAnalyzerMockFactory implements AnalyzerFactory{

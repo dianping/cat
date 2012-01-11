@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.impl;
+package com.dianping.cat.consumer;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,14 +1,14 @@
-package com.dianping.cat.consumer.impl;
+package com.dianping.cat.consumer;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.consumer.impl.AnalyzerFactory;
-import com.dianping.cat.consumer.impl.RealtimeConsumer;
-import com.dianping.cat.consumer.impl.ManyAnalyzerTest.MockAnalyzer1;
-import com.dianping.cat.consumer.impl.ManyAnalyzerTest.MockAnalyzer2;
-import com.dianping.cat.consumer.impl.ManyAnalyzerTest.MockAnalyzer3;
+import com.dianping.cat.consumer.AnalyzerFactory;
+import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer1;
+import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer2;
+import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer3;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
