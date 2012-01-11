@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.impl;
+package com.dianping.cat.consumer;
 
 import junit.framework.Assert;
 
@@ -58,7 +58,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 
 		@Override
 		protected boolean isTimeout() {
-			// TODO Auto-generated method stub
 			return false;
 		}
 	}
@@ -83,7 +82,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 
 		@Override
 		protected boolean isTimeout() {
-			// TODO Auto-generated method stub
 			return false;
 		}
 	}
@@ -107,7 +105,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		
 		@Override
 		protected boolean isTimeout() {
-			// TODO Auto-generated method stub
 			return false;
 		}
 	}

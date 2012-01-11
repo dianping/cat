@@ -1,6 +1,6 @@
-package com.dianping.cat.message.consumer.impl;
+package com.dianping.cat.consumer;
 
-import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer;
+import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.site.lookup.ContainerHolder;
 
@@ -8,7 +8,7 @@ import com.site.lookup.ContainerHolder;
  * @author yong.you
  * @since Jan 5, 2012
  */
-public class DefaultAnalyzerFactoryImpl extends ContainerHolder implements
+public class DefaultAnalyzerFactory extends ContainerHolder implements
 		AnalyzerFactory {
 
 	@Override

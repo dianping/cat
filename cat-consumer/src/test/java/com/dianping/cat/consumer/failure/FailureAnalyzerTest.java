@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.failure;
+package com.dianping.cat.consumer.failure;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,12 +9,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.consumer.model.failure.entity.Entry;
-import com.dianping.cat.consumer.model.failure.entity.FailureReport;
-import com.dianping.cat.consumer.model.failure.entity.Segment;
+import com.dianping.cat.consumer.AnalyzerFactory;
+import com.dianping.cat.consumer.failure.model.entity.Entry;
+import com.dianping.cat.consumer.failure.model.entity.FailureReport;
+import com.dianping.cat.consumer.failure.model.entity.Segment;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer;
-import com.dianping.cat.message.consumer.impl.AnalyzerFactory;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -34,7 +33,8 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
 		      extraTime);
 		int number = 30000 * 10;
-
+		int threadNumber = 10;
+		
 		DefaultEvent e11 = new DefaultEvent("Error", "testError");
 		DefaultEvent e21 = new DefaultEvent("Exception", "testException1");
 		DefaultEvent e31 = new DefaultEvent("RuntimeException", "testRuntimeException1");
@@ -42,8 +42,6 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		DefaultEvent e32 = new DefaultEvent("RuntimeException", "testRuntimeException2");
 		MessageTree tree = new DefaultMessageTree();
 		tree.setMessageId("xx0001");
-		tree.setDomain("group");
-		tree.setHostName("group001");
 		DefaultTransaction t1 = new DefaultTransaction("T1", "N1", null);
 		DefaultTransaction t2 = new DefaultTransaction("T2", "N2", null);
 		DefaultTransaction t3 = new DefaultTransaction("T3", "N3", null);
@@ -60,6 +58,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		t1.addChild(e11);
 		tree.setMessage(t1);
 
+		
 		long ct = System.nanoTime();
 		for (int i = 0; i < number; i++) {
 			if (i == 1) {
@@ -77,7 +76,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 			e22.setTimestamp(timestamp);
 			e31.setTimestamp(timestamp);
 			e32.setTimestamp(timestamp);
-
+			tree.setThreadId("thread"+i%threadNumber);
 			analyzer.process(tree);
 		}
 
@@ -87,11 +86,10 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 
 		FailureReport report = analyzer.generate();
 
-		// System.out.println(report.toString());
-
-		assertEquals("Check the Machines", number, report.getMachines().getMachines().size());
 		assertEquals("Check the domain", report.getDomain(), "domain1");
-
+		assertEquals("Check the machines", number, report.getMachines().getMachines().size());
+		assertEquals("Check the threads",threadNumber, report.getThreads().getThreads().size());
+		
 		Date startDate = report.getStartTime();
 		Date endDate = report.getEndTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

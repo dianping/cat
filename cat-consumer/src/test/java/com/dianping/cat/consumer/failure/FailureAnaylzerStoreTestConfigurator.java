@@ -1,11 +1,10 @@
-package com.dianping.cat.message.consumer.failure;
+package com.dianping.cat.consumer.failure;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer;
-import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer.Handler;
+import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 

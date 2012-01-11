@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.message.consumer.transaction;
+package com.dianping.cat.consumer.transaction;
 
 import static junit.framework.Assert.assertEquals;
 
@@ -11,10 +11,10 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.dianping.cat.consumer.model.transaction.entity.TransactionName;
-import com.dianping.cat.consumer.model.transaction.entity.TransactionReport;
-import com.dianping.cat.consumer.model.transaction.entity.TransactionType;
-import com.dianping.cat.consumer.model.transaction.transform.DefaultJsonBuilder;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -55,7 +55,7 @@ public class TransactionReportMessageAnalyzerTest {
 	}
 
 	/**
-	 * Test method for {@link com.dianping.cat.message.consumer.transaction.TransactionReportMessageAnalyzer#process(com.dianping.cat.message.spi.MessageTree)}.
+	 * Test method for {@link com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer#process(com.dianping.cat.message.spi.MessageTree)}.
 	 * 
 	 * @throws InterruptedException
 	 */

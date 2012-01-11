@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.impl;
+package com.dianping.cat.consumer;
 
 import com.dianping.cat.message.spi.MessageAnalyzer;
 

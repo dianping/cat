@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.failure;
+package com.dianping.cat.consumer.failure;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -9,10 +9,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.dianping.cat.consumer.model.failure.entity.Entry;
-import com.dianping.cat.consumer.model.failure.entity.FailureReport;
-import com.dianping.cat.consumer.model.failure.entity.Machines;
-import com.dianping.cat.consumer.model.failure.entity.Segment;
+import com.dianping.cat.consumer.failure.model.entity.Entry;
+import com.dianping.cat.consumer.failure.model.entity.FailureReport;
+import com.dianping.cat.consumer.failure.model.entity.Machines;
+import com.dianping.cat.consumer.failure.model.entity.Segment;
+import com.dianping.cat.consumer.failure.model.entity.Threads;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -54,6 +55,7 @@ public class FailureReportAnalyzer extends
 		m_report.setDomain(domain);
 		m_extraTime = extraTime;
 		m_report.setMachines(new Machines());
+		m_report.setThreads(new Threads());
 	}
 
 	public void addHandlers(Handler handler) {
@@ -75,6 +77,8 @@ public class FailureReportAnalyzer extends
 		}
 
 		m_report.getMachines().addMachine(tree.getIpAddress());
+		m_report.getThreads().addThread(tree.getThreadId());
+		
 		for (Handler handler : m_handlers) {
 			handler.handle(m_report, tree);
 		}
@@ -224,6 +228,8 @@ public class FailureReportAnalyzer extends
 	public static class LongUrlHandler extends AbstractHandler {
 		@Inject
 		private long m_threshold;
+		
+		private static final String LONG_URL = "LongUrl";
 
 		@Override
 		public void handle(FailureReport report, MessageTree tree) {
@@ -239,8 +245,8 @@ public class FailureReportAnalyzer extends
 
 					entry.setMessageId(messageId);
 					entry.setThreadId(threadId);
-					entry.setText(message.getName());
-					entry.setType(message.getType());
+					entry.setText(message.getType()+message.getName());
+					entry.setType(LONG_URL);
 
 					Segment segment = super
 							.findOrCreateSegment(message, report);

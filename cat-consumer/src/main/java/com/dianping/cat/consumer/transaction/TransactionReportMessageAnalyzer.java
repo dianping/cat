@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.message.consumer.transaction;
+package com.dianping.cat.consumer.transaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,10 +11,10 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import com.dianping.cat.consumer.model.transaction.entity.TransactionName;
-import com.dianping.cat.consumer.model.transaction.entity.TransactionReport;
-import com.dianping.cat.consumer.model.transaction.entity.TransactionType;
-import com.dianping.cat.consumer.model.transaction.transform.DefaultJsonBuilder;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;

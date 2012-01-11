@@ -1,11 +1,11 @@
-package com.dianping.cat.message.consumer.failure;
+package com.dianping.cat.consumer.failure;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
-import com.dianping.cat.consumer.model.failure.entity.FailureReport;
-import com.dianping.cat.consumer.model.failure.transform.DefaultJsonBuilder;
+import com.dianping.cat.consumer.failure.model.entity.FailureReport;
+import com.dianping.cat.consumer.failure.model.transform.DefaultJsonBuilder;
 import com.site.helper.Files;
 
 public class FailureReportStore {

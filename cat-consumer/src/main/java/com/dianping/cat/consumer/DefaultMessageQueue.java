@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.impl;
+package com.dianping.cat.consumer;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
