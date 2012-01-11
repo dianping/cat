@@ -15,7 +15,16 @@
 </head>
 <body>
 	<script type="text/javascript">
-	var jsonDate = {
+	
+		var test = {
+			"Minute" : "2012-01-10 13:00",
+			"Thread0" : "<a target='_blank' href='http://www.dianping.com/messageId=MessageId0'> E</a>",
+			"Thread1" : "<a target='_blank' href='http://www.dianping.com/messageId=MessageId0'> R</a>",
+			"Thread2" : "<a target='_blank' href='http://www.dianping.com/messageId=MessageId0'> L</a>",
+			"Thread3" : "",
+			"Thread4" : ""
+		}
+		var jsonDate = {
 			"domain" : "domain1",
 			"startTime" : "2012-1-10 13:00:00",
 			"endTime" : "2012-1-10 13:59:00",
@@ -24,236 +33,213 @@
 						"192.168.8.3" ]
 			},
 			"threads" : {
-				"threads" : [ "Thread0", "Thread1", "Thread2",
-						"Thread3" ,"Thread4" ]
+				"threads" : [ "Thread0", "Thread1", "Thread2", "Thread3",
+						"Thread4" ]
 			},
-			"segments" : [{
+			"segments" : [ {
 				"2012-01-10 13:00" : {
 					"id" : "2012-01-10 13:00",
 					"entries" : [ {
-						"type" : "A1",
+						"type" : "Exception",
 						"messageId" : "MessageId0",
 						"threadId" : "Thread0",
-						"text" : "B1"
+						"text" : "java.lang.NullPointException"
 					}, {
-						"type" : "A1",
+						"type" : "Error",
 						"messageId" : "MessageId0",
-						"threadId" : "Thread0",
-						"text" : "B1"
+						"threadId" : "Thread1",
+						"text" : "java.lang.RuntimeError"
 					}, {
-						"type" : "A1",
+						"type" : "LongUrl",
 						"messageId" : "MessageId0",
-						"threadId" : "Thread0",
-						"text" : "B1"
+						"threadId" : "Thread2",
+						"text" : "AAA:BBBB"
 					} ]
 				},
 				"2012-01-10 13:01" : {
 					"id" : "2012-01-10 13:01",
 					"entries" : [ {
-						"type" : "A1",
+						"type" : "Error",
 						"messageId" : "MessageId1",
 						"threadId" : "Thread1",
-						"text" : "B1"
+						"text" : "java.lang.RuntimeError"
 					}, {
-						"type" : "A1",
+						"type" : "RuntimeException",
 						"messageId" : "MessageId1",
 						"threadId" : "Thread1",
-						"text" : "B1"
+						"text" : "java.lang.RuntimeException"
 					}, {
-						"type" : "A1",
+						"type" : "Error",
 						"messageId" : "MessageId1",
 						"threadId" : "Thread1",
-						"text" : "B1"
+						"text" : "java.lang.RuntimeError"
 					} ]
 				},
 				"2012-01-10 13:02" : {
 					"id" : "2012-01-10 13:02",
 					"entries" : [ {
-						"type" : "A1",
+						"type" : "Error",
 						"messageId" : "MessageId2",
 						"threadId" : "Thread2",
-						"text" : "B1"
+						"text" : "java.lang.RuntimeError"
 					}, {
-						"type" : "A1",
+						"type" : "Error",
 						"messageId" : "MessageId2",
 						"threadId" : "Thread2",
-						"text" : "B1"
+						"text" : "java.lang.RuntimeError"
 					}, {
-						"type" : "A1",
+						"type" : "Error",
 						"messageId" : "MessageId2",
-						"threadId" : "Thread2",
-						"text" : "B1"
+						"threadId" : "Thread4",
+						"text" : "java.lang.RuntimeError"
 					} ]
 				},
 				"2012-01-10 13:03" : {
 					"id" : "2012-01-10 13:03",
 					"entries" : [ {
-						"type" : "A1",
+						"type" : "Exception",
 						"messageId" : "MessageId3",
 						"threadId" : "Thread3",
-						"text" : "B1"
+						"text" : "java.lang.Exception"
 					}, {
-						"type" : "A1",
+						"type" : "Exception",
 						"messageId" : "MessageId3",
-						"threadId" : "Thread3",
-						"text" : "B1"
+						"threadId" : "Thread4",
+						"text" : "java.lang.Exception"
 					}, {
-						"type" : "A1",
+						"type" : "Exception",
 						"messageId" : "MessageId3",
-						"threadId" : "Thread3",
-						"text" : "B1"
+						"threadId" : "Thread1",
+						"text" : "java.lang.Exception"
 					} ]
 				},
 				"2012-01-10 13:04" : {
 					"id" : "2012-01-10 13:04",
 					"entries" : [ {
-						"type" : "A1",
+						"type" : "RuntimeException",
 						"messageId" : "MessageId4",
 						"threadId" : "Thread4",
-						"text" : "B1"
+						"text" : "java.lang.RuntimeException"
 					}, {
-						"type" : "A1",
+						"type" : "Error",
 						"messageId" : "MessageId4",
-						"threadId" : "Thread4",
-						"text" : "B1"
+						"threadId" : "Thread1",
+						"text" : "java.lang.RuntimeError"
 					}, {
-						"type" : "A1",
+						"type" : "Exception",
 						"messageId" : "MessageId4",
-						"threadId" : "Thread4",
-						"text" : "B1"
+						"threadId" : "Thread2",
+						"text" : "java.lang.RuntimeException"
 					} ]
 				}
-			}]
+			} ]
 		};
-
-		var jsObject = eval(jsonDate); 
-		var threadArray =new Array();
+		var jsObject = eval(jsonDate);
+		var threadArray = new Array();
 		threadArray.push('Minute');
-		var muniteArray =new Array();
-		
-		for(var key in jsObject.segments){
-			var segment = jsObject.segments[key];
-			muniteArray.push(segment.id);
-			for(var i=0;i<segment.entries.length;i++){
-				var toAddThead = segment.entries[i].threadId;
-				var result = 0;
-				for(var j=0;j<threadArray.length;j++){
-					if(threadArray[j]==toAddThead){
-						result = 1;
-						break;
+
+		for (i = 0; i < jsObject.threads.threads.length; i++) {
+			threadArray.push(jsObject.threads.threads[i]);
+		}
+
+		var colModelArray = new Array();
+
+		for (i = 0; i < threadArray.length; i++) {
+			var object = {
+				"name" : threadArray[i],
+				"index" : threadArray[i],
+				"sorttype" : "string"
+			};
+			colModelArray.push(object);
+		}
+
+		$(function() {
+			$("#failureTable").jqGrid({
+				datatype : "local",
+				colNames : threadArray,
+				colModel : colModelArray,
+				viewrecords : true,
+				caption : "Failure Report",
+				height : 250,
+				loadComplete : function() {
+					var grid = $("#failureTable");
+					var ids = grid.getDataIDs();
+					for ( var i = 0; i < ids.length; i++) {
+						grid.setRowData(ids[i], false, {
+							height : 25
+						});
 					}
+					grid.setGridHeight('auto');
 				}
-				if(result == 0){
-					threadArray.push(toAddThead);
-				}				
+			}).navGrid('#pager2', {
+				edit : false,
+				add : false,
+				del : false
+			});
+			
+			jQuery("#failureTable").jqGrid('setGridWidth','1500');
+			for ( var i = 0; i < jsObject.segments.length; i++) {
+				var segments = jsObject.segments[i];
+
+				for ( var minute in segments) {
+					var threadResult = creatNewArray(threadArray.length);
+					threadResult[0] = minute;
+					var segment = segments[minute];
+					for ( var j = 0; j < segment.entries.length; j++) {
+						var entry = segment.entries[j];
+						var threadId = entry.threadId;
+						var type = entry.type;
+						var messageId = entry.messageId;
+						var text = entry.text;
+						
+						var index = getIndex(threadId, threadArray);
+						var url = getUrl(type,text, messageId);
+						if(threadResult[index]==""){
+						threadResult[index] = threadResult[index] + url;
+						}
+						else{
+							threadResult[index] = threadResult[index] +'</br>'+ url;
+						}
+					}
+					var minuteData = {};
+					for ( var i = 0; i < threadArray.length; i++) {
+						minuteData[threadArray[i]] =  threadResult[i];
+					}
+					jQuery("#failureTable").jqGrid('addRowData', i + 1,
+							minuteData);
+				}
+			}
+		});
+		function creatNewArray(length) {
+			var array = new Array();
+			for ( var i = 0; i < length; i++) {
+				array.push("");
+			}
+			return array;
+		}
+
+		function getIndex(object, array) {
+			for ( var i = 0; i < array.length; i++) {
+				if (array[i] == object)
+					return i;
 			}
 		}
-		var i = 0;
-		var colNameStr="[";
-		for(i = 0;i<threadArray.length;i++ ){
-			if(i>0){
-				colNameStr = colNameStr+',';
+
+		function getUrl(type, text ,messageId) {
+			if (type == 'RuntimeException') {
+				return '<a target=\'_blank\' style=\'background:red;\' href=\'www.dianping.com/messageId=' + messageId + '\'>' + text + '</a>';
+			} else if (type == 'Exception') {
+				return '<a target=\'_blank\' style=\'background:#FFFF00;\' href=\'www.dianping.com/messageId=' + messageId + '\'>' + text + '</a>';
+			} else if (type == 'Error') {
+				return '<a target=\'_blank\' style=\'background:#FF00FF;\' href=\'www.dianping.com/messageId=' + messageId + '\'>' + text + '</a>';
+			} else {
+				return '<a target=\'_blank\' style=\'background:#CC99FF;\' href=\'www.dianping.com/messageId=' + messageId + '\'>' + text + '</a>';
 			}
-			colNameStr = colNameStr+'\''+threadArray[i]+'\'';
 		}
-		colNameStr=colNameStr+']';
-		
-		i= 0;
-		var colModelStr = '['
-		for(i = 0;i<threadArray.length;i++){
-			if(i>0){
-				colModelStr = colModelStr+',';
-			}
-			colModelStr = colModelStr + '{name:\'' +threadArray[i]+'\',index:\''+threadArray[i]+'\'}';
-		}
-		colModelStr =colModelStr +']';
-		
-		alert(colNameStr);
-		alert(colModelStr);
-	//	alert(threadArray);
-	//	alert(muniteArray);		
-		
-		$(function()
-			    {
-			        $("#gridTable").jqGrid({
-			                datatype: "local",
-			                colNames:['id','username', 'gender', 'mail', 'QQ','mobile','birthday'],
-			                colModel:[
-			                        {name:'id',index:'id', sorttype:"int"},
-			                        {name:'userName',index:'userName'},
-			                        {name:'gender',index:'gender'},
-			                        {name:'email',index:'email', sorttype:"string"},
-			                        {name:'QQ',index:'QQ'},                
-			                        {name:'mobilePhone',index:'mobilePhone'},                
-			                        {name:'birthday',index:'birthday', sorttype:"date"}                
-			                ],
-			                sortname:'type',
-			                sortorder:'asc',
-			                viewrecords:true,
-			                caption: "Transaction Report",
-			                height: 250,
-			                loadComplete: function() {
-			                    var grid = $("#gridTable");
-			                    var ids = grid.getDataIDs();
-			                    for (var i = 0; i < ids.length; i++) {
-			                        grid.setRowData( ids[i], false, {height: 20} );
-			                    }
-			                    grid.setGridHeight('auto');
-			                }
-			        }).navGrid('#pager2',{edit:false,add:false,del:false});
-			        var mydata = [
-			                {id:"1",userName:"polaris",gender:"男",email:"fef@163.com",QQ:"33334444",mobilePhone:"13223423424",birthday:"1985-10-01"},
-			                {id:"2",userName:"<a href='http://www.sina.com'>李四</a>",gender:"女",email:"faf@gmail.com",QQ:"222222222",mobilePhone:"13223423",birthday:"1986-07-01"},
-			                {id:"3",userName:"王五",gender:"男",email:"fae@163.com",QQ:"99999999",mobilePhone:"1322342342",birthday:"1985-10-01"},
-			                {id:"4",userName:"马六",gender:"女",email:"aaaa@gmail.com",QQ:"23333333",mobilePhone:"132234662",birthday:"1987-05-01"},
-			                {id:"5",userName:"赵钱",gender:"男",email:"4fja@gmail.com",QQ:"22222222",mobilePhone:"1343434662",birthday:"1982-10-01"},
-			                {id:"6",userName:"小毛",gender:"男",email:"ahfi@yahoo.com",QQ:"4333333",mobilePhone:"1328884662",birthday:"1987-12-01"},
-			                {id:"7",userName:"小李",gender:"女",email:"note@sina.com",QQ:"21122323",mobilePhone:"13220046620",birthday:"1985-10-01"},
-			                {id:"8",userName:"小三",gender:"男",email:"oefh@sohu.com",QQ:"242424366",mobilePhone:"1327734662",birthday:"1988-12-01"},
-			                {id:"9",userName:"孙先",gender:"男",email:"76454533@qq.com",QQ:"76454533",mobilePhone:"132290062",birthday:"1989-11-21"}
-			                ];
-			        for(var i=0;i<=mydata.length;i++)
-			                jQuery("#gridTable").jqGrid('addRowData',i+1,mydata[i]);
-			        });
-		
-		
-		
-		
-		$(function()
-			    {
-			        $("#failureTable").jqGrid({
-			                datatype: "local",
-			                colNames: colNameStr,
-			                colModel: colModelStr,
-			                sortname:'type',
-			                sortorder:'asc',
-			                viewrecords:true,
-			                caption: "Failure Report",
-			                height: 250,
-			                loadComplete: function() {
-			                    var grid = $("#failureTable");
-			                    var ids = grid.getDataIDs();
-			                    for (var i = 0; i < ids.length; i++) {
-			                        grid.setRowData( ids[i], false, {height: 20} );
-			                    }
-			                    grid.setGridHeight('auto');
-			                }
-			        }).navGrid('#pager2',{edit:false,add:false,del:false});
-			        
-			        var mydata = [
-			                {Minute:"1",Thread0:"polaris",Thread1:"男",Thread2:"fef@163.com",Thread3:"33334444"},
-			                {Minute:"2",Thread0:"李四",Thread1:"女",Thread2:"faf@gmail.com",Thread3:"222222222"},
-			                {Minute:"3",Thread0:"王五",Thread1:"男",Thread2:"fae@163.com",Thread3:"99999999"},
-			                {Minute:"4",Thread0:"马六",Thread1:"女",Thread2:"aaaa@gmail.com",Thread3:"23333333"},
-			                {Minute:"5",Thread0:"赵钱",Thread1:"男",Thread2:"4fja@gmail.com",Thread3:"22222222"}
-			                ];
-			        for(var i=0;i<=mydata.length;i++)
-			                jQuery("#failureTable").jqGrid('addRowData',i+1,mydata[i]);
-			        });
 	</script>
 
 	
-	<div style="align:center;width:100%;text-align:center">
+	<div style="align:center;width:90%;text-align:center">
 		<table id="gridTable"></table>
 		<table id="failureTable"></table>
 	</div>

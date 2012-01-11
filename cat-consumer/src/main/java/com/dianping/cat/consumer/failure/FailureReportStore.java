@@ -1,4 +1,4 @@
-package com.dianping.cat.message.consumer.failure;
+package com.dianping.cat.consumer.failure;
 
 import java.io.File;
 import java.io.IOException;

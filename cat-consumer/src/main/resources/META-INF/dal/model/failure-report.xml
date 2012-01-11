@@ -6,6 +6,9 @@
 	<entity name="machines">
 		<element name="machine" type="set" />
 	</entity>
+	<entity name="threads">
+		<element name="thread" type="set" />
+	</entity>
 	<entity name="segment">
 		<attribute name="id" key="true" />
 	</entity>

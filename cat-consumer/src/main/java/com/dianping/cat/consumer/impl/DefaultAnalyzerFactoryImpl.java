@@ -1,6 +1,6 @@
-package com.dianping.cat.message.consumer.impl;
+package com.dianping.cat.consumer.impl;
 
-import com.dianping.cat.message.consumer.failure.FailureReportAnalyzer;
+import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.site.lookup.ContainerHolder;
 

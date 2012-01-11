@@ -4,9 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.consumer.impl.AnalyzerFactory;
+import com.dianping.cat.consumer.impl.RealtimeConsumer;
 import com.dianping.cat.consumer.impl.OneAnalyzerTwoDurationTest.MockAnalyzer;
-import com.dianping.cat.message.consumer.impl.AnalyzerFactory;
-import com.dianping.cat.message.consumer.impl.RealtimeConsumer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.site.lookup.configuration.AbstractResourceConfigurator;

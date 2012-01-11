@@ -7,18 +7,16 @@
 		<machine>127.0.0.1</machine>
 	</machines>
 	<threads>
-		<thread>t12341</thread>
-		<thread>t12342</thread>
-		<thread>t12343</thread>
-		<thread>t12344</thread>
+		<thread>t1111</thread>
+		<thread>t2222</thread>
 	</threads>
 	<segment timestamp="2011-12-27 14:42:00">
-		<entry type="exception" messageId="12345" threadId="t12342">java.lang.NullPointerExcepiton
+		<entry type="Exception" messageId="12345" threadId="t1111">java.lang.NullPointerExcepiton
 		</entry>
-		<entry type="error" messageId="12345" threadId="t12344">java.lang.OutOfMemoryError</entry>
-		<entry type="exception" messageId="234567" threadId="t12343">java.lang.RuntimeExcepiton
+		<entry type="Error" messageId="12345" threadId="t1111">java.lang.OutOfMemoryError</entry>
+		<entry type="Exception" messageId="234567" threadId="t2222">java.lang.RuntimeExcepiton
 		</entry>
-		<entry type="longUrl" messageId="234567" threadId="t12341">http://www.dianping.com/a/b/c?x=y
+		<entry type="LongUrl" messageId="234567" threadId="t2222">http://www.dianping.com/a/b/c?x=y
 		</entry>
 	</segment>
 	<segment />
