@@ -12,6 +12,7 @@ import java.util.Set;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.entity.Property;
 import com.dianping.cat.consumer.failure.model.entity.Entry;
 import com.dianping.cat.consumer.failure.model.entity.FailureReport;
@@ -258,10 +259,14 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 
 	@Override
 	public void initialize() throws InitializationException {
-		Property property = m_manager.getConfig().findProperty("failure-base-dir");
+		Config config = m_manager.getConfig();
 
-		if (property != null) {
-			m_reportPath = property.getValue();
+		if (config != null) {
+			Property property = config.findProperty("failure-base-dir");
+
+			if (property != null) {
+				m_reportPath = property.getValue();
+			}
 		}
 	}
 }

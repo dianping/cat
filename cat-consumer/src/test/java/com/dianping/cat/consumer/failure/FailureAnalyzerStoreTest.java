@@ -31,6 +31,7 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory
 				.create("failure", start, duration, "domain1", extraTime);
 		int number = 5;
+		
 		for (int i = 0; i < number; i++) {
 			DefaultTransaction t = new DefaultTransaction("A1", "B1", null);
 			MessageTree tree = new DefaultMessageTree();

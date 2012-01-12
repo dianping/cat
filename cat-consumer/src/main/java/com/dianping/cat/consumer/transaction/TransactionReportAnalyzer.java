@@ -15,6 +15,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.entity.Property;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -32,8 +33,8 @@ import com.site.lookup.annotation.Inject;
  * @author sean.wang
  * @since Jan 5, 2012
  */
-public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements
-      Initializable, LogEnabled {
+public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable,
+      LogEnabled {
 	private final static long MINUTE = 60 * 1000L;
 
 	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
@@ -89,10 +90,14 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 	@Override
 	public void initialize() throws InitializationException {
-		Property property = m_manager.getConfig().findProperty("transaction-base-dir");
+		Config config = m_manager.getConfig();
 
-		if (property != null) {
-			m_reportPath = property.getValue();
+		if (config != null) {
+			Property property = config.findProperty("transaction-base-dir");
+
+			if (property != null) {
+				m_reportPath = property.getValue();
+			}
 		}
 	}
 

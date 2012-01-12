@@ -32,11 +32,6 @@
 			<artifactId>WebResServer</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.site.wdbc</groupId>
-			<artifactId>wdbc-http-client</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
