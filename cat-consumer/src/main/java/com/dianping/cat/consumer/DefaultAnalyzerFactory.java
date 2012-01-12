@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer;
 
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.site.lookup.ContainerHolder;
 
@@ -20,7 +21,9 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements
 			analyzer.setAnalyzerInfo(start, duration, domain, extraTime);
 			return analyzer;
 		} else if (name.equals("transaction")) {
-
+			TransactionReportMessageAnalyzer analyzer= lookup(TransactionReportMessageAnalyzer.class);
+			analyzer.setAnalyzerInfo(start, duration, domain, extraTime);
+			return analyzer;
 		}
 
 		return null;

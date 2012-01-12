@@ -11,6 +11,7 @@ import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.FailureHandler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.LongUrlHandler;
+import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
@@ -30,20 +31,24 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 				.config(E("consumerId").value("realtime") //
 						, E("domain").value("Review") //
 						, E("extraTime").value("300000")//
-						, E("analyzerNames").value("failure-report") 						
+						, E("analyzerNames").value("failure,transaction") 						
 						));
 
 		String failureTypes = "Error,RuntimeException,Exception";
 		
-		all.add(C(Handler.class, "failure", FailureHandler.class)//
+		all.add(C(Handler.class, "failure-handler", FailureHandler.class)//
 				.config(E("failureType").value(failureTypes)));
-		all.add(C(Handler.class, "long-url", LongUrlHandler.class) //
+		all.add(C(Handler.class, "long-url-handler", LongUrlHandler.class) //
 				.config(E("threshold").value("2000")));
 		all.add(C(FailureReportAnalyzer.class) //
 				.config(E("reportPath").value("/data/appdatas/cat/report/failure/"))
 				.is(PER_LOOKUP)//
-				.req(Handler.class, new String[] { "failure", "long-url" },
+				.req(Handler.class, new String[] { "failure-handler", "long-url-handler" },
 						"m_handlers"));
+		
+		all.add(C(TransactionReportMessageAnalyzer.class) //
+				.config(E("reportPath").value("/data/appdatas/cat/report/transaction/"))
+				.is(PER_LOOKUP));
 		
 		return all;
 	}

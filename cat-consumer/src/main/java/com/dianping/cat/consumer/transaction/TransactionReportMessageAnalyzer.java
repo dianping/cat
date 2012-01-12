@@ -5,7 +5,9 @@ package com.dianping.cat.consumer.transaction;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -25,24 +27,59 @@ import com.site.helper.Files;
  * @author sean.wang
  * @since Jan 5, 2012
  */
-public class TransactionReportMessageAnalyzer extends AbstractMessageAnalyzer<TransactionReport> {
-	private static final Log logger = LogFactory.getLog(TransactionReportMessageAnalyzer.class);
+public class TransactionReportMessageAnalyzer extends
+		AbstractMessageAnalyzer<TransactionReport> {
+	private static final Log logger = LogFactory
+			.getLog(TransactionReportMessageAnalyzer.class);
+	private final static long MINUTE = 60 * 1000L;
+	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat(
+	"yyyyMMddHHmm");
 
 	private TransactionReport report;
+	private long m_extraTime;
+	private String m_reportPath;
 
-	private File reportFile;
+	public void setAnalyzerInfo(long startTime, long duration, String domain,
+			long extraTime) {
+		report = new TransactionReport(domain);
+		report.setStartTime(new Date(startTime));
+		report.setEndTime(new Date(startTime + duration - MINUTE));
+		m_extraTime = extraTime;
+	}
 
 	@Override
 	protected void store(TransactionReport result) {
+		
+		String failureFileName = getTransactionFileName(report);
+		String htmlPath = new StringBuilder().append(m_reportPath)
+				.append(failureFileName).append(".html").toString();
+		File file = new File(htmlPath);
+		
+		file.getParentFile().mkdirs();
+		//TODO
 		DefaultJsonBuilder builder = new DefaultJsonBuilder();
 		report.accept(builder);
 		try {
-			Files.forIO().writeTo(reportFile, builder.getString());
+			Files.forIO().writeTo(file, builder.getString());
 		} catch (IOException e) {
 			logger.error("", e);
 		}
 	}
+	//TODO
+	private String getTransactionFileName(TransactionReport report) {
+		StringBuffer result = new StringBuffer();
+		String start = FILE_SDF.format(report.getStartTime());
+		String end = FILE_SDF.format(report.getEndTime());
 
+		result.append(report.getDomain()).append("-").append(start).append("-")
+				.append(end);
+		return result.toString();
+	}
+
+	public void setReportPath(String configPath) {
+		m_reportPath = configPath;
+	}
+	
 	@Override
 	public TransactionReport generate() {
 		computeMeanSquareDeviation();
@@ -62,11 +99,13 @@ public class TransactionReportMessageAnalyzer extends AbstractMessageAnalyzer<Tr
 		Collection<TransactionType> types = report.getTypes().values();
 
 		for (TransactionType transactionType : types) {
-			Collection<TransactionName> names = transactionType.getNames().values();
+			Collection<TransactionName> names = transactionType.getNames()
+					.values();
 			for (TransactionName name : names) {
 				Integer count = name.getTotalCount();
 				double ave = name.getSum() / count;
-				double std = Math.sqrt(name.getSum2() / count - 2 * ave * ave + ave * ave);
+				double std = Math.sqrt(name.getSum2() / count - 2 * ave * ave
+						+ ave * ave);
 				double failPercent = 100.0 * name.getFailCount() / count;
 				name.setFailPercent(failPercent);
 				name.setAvg(ave);
@@ -96,9 +135,9 @@ public class TransactionReportMessageAnalyzer extends AbstractMessageAnalyzer<Tr
 			}
 			if (messageId != null) {
 				if (t.isSuccess()) {
-					name.setSampleSuccessMessageId(messageId);
+					name.setSuccessMessageId(messageId);
 				} else {
-					name.setSampleFailMessageId(messageId);
+					name.setFailMessageId(messageId);
 				}
 			}
 			long duration = t.getDuration();
@@ -114,19 +153,17 @@ public class TransactionReportMessageAnalyzer extends AbstractMessageAnalyzer<Tr
 				process(child, null);
 			}
 		}
-
 	}
 
-	public File getReportFile() {
-		return reportFile;
-	}
-
-	public void setReportFile(File reportFile) {
-		this.reportFile = reportFile;
-	}
 
 	@Override
 	protected boolean isTimeout() {
+		long endTime = report.getEndTime().getTime();
+		long currentTime = System.currentTimeMillis();
+
+		if (currentTime > endTime + m_extraTime) {
+			return true;
+		}
 		return false;
 	}
 }
