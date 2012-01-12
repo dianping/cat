@@ -11,7 +11,7 @@ com.dianping.cat.report.page.home.Handler.class,
 
 com.dianping.cat.report.page.transaction.Handler.class,
 
-com.dianping.cat.report.page.failure.Handler.class,
+com.dianping.cat.report.page.failure.Handler.class
 
 })
 public class ReportModule extends AbstractModule {
