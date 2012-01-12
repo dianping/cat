@@ -24,10 +24,6 @@
 			<artifactId>web-framework</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.ebay.webres</groupId>
-			<artifactId>WebResServer</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.site.wdbc</groupId>
 			<artifactId>wdbc-http-client</artifactId>
 			<version>1.0.0</version>
