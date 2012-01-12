@@ -96,9 +96,9 @@ public class TransactionReportMessageAnalyzer extends AbstractMessageAnalyzer<Tr
 			}
 			if (messageId != null) {
 				if (t.isSuccess()) {
-					name.setSampleSuccessMessageId(messageId);
+					name.setSuccessMessageId(messageId);
 				} else {
-					name.setSampleFailMessageId(messageId);
+					name.setFailMessageId(messageId);
 				}
 			}
 			long duration = t.getDuration();

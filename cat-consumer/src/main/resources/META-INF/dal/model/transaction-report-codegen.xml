@@ -19,8 +19,8 @@
     <attribute name="sum" value-type="double" />
     <attribute name="sum2" value-type="double" />
     <attribute name="std" value-type="double" />
-    <element name="sample-success-message-id" value-type="String" />
-    <element name="sample-fail-message-id" value-type="String" />
+    <element name="success-message-id" value-type="String" />
+    <element name="fail-message-id" value-type="String" />
   </entity>
 </model>
 

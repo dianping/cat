@@ -103,8 +103,8 @@ public class TransactionReportMessageAnalyzerTest {
 		assertEquals(2000.0, n1.getMax());
 		assertEquals(1001.0, n1.getAvg());
 		assertEquals(1001000.0, n1.getSum());
-		assertEquals("999", n1.getSampleSuccessMessageId());
-		assertEquals("1000", n1.getSampleFailMessageId());
+		assertEquals("999", n1.getSuccessMessageId());
+		assertEquals("1000", n1.getFailMessageId());
 
 		TransactionType typeA1 = report.getTypes().get("A-1");
 		TransactionName n2 = typeA1.getNames().get("n2");
@@ -115,8 +115,8 @@ public class TransactionReportMessageAnalyzerTest {
 		assertEquals(1000.0, n2.getMax());
 		assertEquals(500.5, n2.getAvg());
 		assertEquals(500500.0, n2.getSum());
-		assertEquals(null, n2.getSampleSuccessMessageId());
-		assertEquals(null, n2.getSampleFailMessageId());
+		assertEquals(null, n2.getSuccessMessageId());
+		assertEquals(null, n2.getFailMessageId());
 		DefaultJsonBuilder builder = new DefaultJsonBuilder();
 		report.accept( builder);
 		System.out.println(builder.getString());
