@@ -17,7 +17,7 @@
 				<consumerId>realtime</consumerId>
 				<domain>Review</domain>
 				<extraTime>300000</extraTime>
-				<analyzerNames>failure-report</analyzerNames>
+				<analyzerNames>failure,transaction</analyzerNames>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -27,7 +27,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer$Handler</role>
-			<role-hint>failure</role-hint>
+			<role-hint>failure-handler</role-hint>
 			<implementation>com.dianping.cat.consumer.failure.FailureReportAnalyzer$FailureHandler</implementation>
 			<configuration>
 				<failureType>Error,RuntimeException,Exception</failureType>
@@ -35,7 +35,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer$Handler</role>
-			<role-hint>long-url</role-hint>
+			<role-hint>long-url-handler</role-hint>
 			<implementation>com.dianping.cat.consumer.failure.FailureReportAnalyzer$LongUrlHandler</implementation>
 			<configuration>
 				<threshold>2000</threshold>
@@ -52,12 +52,20 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer$Handler</role>
 					<role-hints>
-						<role-hint>failure</role-hint>
-						<role-hint>long-url</role-hint>
+						<role-hint>failure-handler</role-hint>
+						<role-hint>long-url-handler</role-hint>
 					</role-hints>
 					<field-name>m_handlers</field-name>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<configuration>
+				<reportPath>/data/appdatas/cat/report/transaction/</reportPath>
+			</configuration>
 		</component>
 	</components>
 </plexus>

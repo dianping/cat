@@ -32,7 +32,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
 		      extraTime);
-		int number = 30000 * 10;
+		int number = 300 * 10;
 		int threadNumber = 10;
 		
 		DefaultEvent e11 = new DefaultEvent("Error", "testError");
