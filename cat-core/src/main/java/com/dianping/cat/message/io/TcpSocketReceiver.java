@@ -119,15 +119,14 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 			int length = buffer.readInt();
 
-			buffer.resetReaderIndex();
-
 			if (buffer.readableBytes() < length) {
+				buffer.resetReaderIndex();
 				return null;
 			}
 
 			// TODO filter
 
-			return buffer.readBytes(length + 4);
+			return buffer.readBytes(length);
 		}
 	}
 

@@ -5,7 +5,6 @@ import java.io.StringWriter;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
@@ -23,10 +22,10 @@ public class DefaultMessageProducer implements MessageProducer {
 
 		if (cause instanceof Error) {
 			logEvent("Error", cause.getClass().getName(), "ERROR", writer.toString());
-		} else if (cause instanceof RuntimeException){
+		} else if (cause instanceof RuntimeException) {
 			logEvent("RuntimeException", cause.getClass().getName(), "ERROR", writer.toString());
 		} else {
-			logEvent("Exception", cause.getClass().getName(),"ERROR", writer.toString());
+			logEvent("Exception", cause.getClass().getName(), "ERROR", writer.toString());
 		}
 	}
 
@@ -34,8 +33,11 @@ public class DefaultMessageProducer implements MessageProducer {
 	public void logEvent(String type, String name, String status, String nameValuePairs) {
 		Event event = newEvent(type, name);
 
-		event.addData(nameValuePairs);
-		event.setStatus(Message.SUCCESS);
+		if (nameValuePairs != null && nameValuePairs.length() > 0) {
+			event.addData(nameValuePairs);
+		}
+
+		event.setStatus(status);
 		event.complete();
 	}
 
@@ -44,7 +46,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		Heartbeat heartbeat = newHeartbeat(type, name);
 
 		heartbeat.addData(nameValuePairs);
-		heartbeat.setStatus(Message.SUCCESS);
+		heartbeat.setStatus(status);
 		heartbeat.complete();
 	}
 

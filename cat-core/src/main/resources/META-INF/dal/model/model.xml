@@ -4,6 +4,7 @@
 	<entity name="config" root="true">
 		<attribute name="mode" required="true" />
 		<attribute name="base-log-dir" default-value="./catlog" />
+		<entity-ref name="property" type="map" />
 	</entity>
 	<entity name="app">
 		<attribute name="domain" required="true" />

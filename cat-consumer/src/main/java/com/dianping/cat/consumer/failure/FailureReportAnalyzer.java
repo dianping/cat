@@ -9,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+
+import com.dianping.cat.configuration.model.entity.Property;
 import com.dianping.cat.consumer.failure.model.entity.Entry;
 import com.dianping.cat.consumer.failure.model.entity.FailureReport;
 import com.dianping.cat.consumer.failure.model.entity.Machines;
@@ -18,6 +22,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
+import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.helper.Splitters;
@@ -27,13 +32,15 @@ import com.site.lookup.annotation.Inject;
  * @author yong.you
  * @since Jan 5, 2012
  */
-public class FailureReportAnalyzer extends
-		AbstractMessageAnalyzer<FailureReport> {
+public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport> implements Initializable {
 	@Inject
 	private List<Handler> m_handlers;
 
 	@Inject
 	private String m_reportPath;
+
+	@Inject
+	private MessageManager m_manager;
 
 	private FailureReport m_report;
 
@@ -41,14 +48,11 @@ public class FailureReportAnalyzer extends
 
 	private static final long MINUTE = 60 * 1000;
 
-	private static final SimpleDateFormat SDF = new SimpleDateFormat(
-			"yyyy-MM-dd HH:mm");
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
-	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat(
-			"yyyyMMddHHmm");
+	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
 
-	public void setAnalyzerInfo(long startTime, long duration, String domain,
-			long extraTime) {
+	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
 		m_report = new FailureReport();
 		m_report.setStartTime(new Date(startTime));
 		m_report.setEndTime(new Date(startTime + duration - MINUTE));
@@ -78,7 +82,7 @@ public class FailureReportAnalyzer extends
 
 		m_report.getMachines().addMachine(tree.getIpAddress());
 		m_report.getThreads().addThread(tree.getThreadId());
-		
+
 		for (Handler handler : m_handlers) {
 			handler.handle(m_report, tree);
 		}
@@ -101,18 +105,16 @@ public class FailureReportAnalyzer extends
 		String start = FILE_SDF.format(report.getStartTime());
 		String end = FILE_SDF.format(report.getEndTime());
 
-		result.append(report.getDomain()).append("-").append(start).append("-")
-				.append(end);
+		result.append(report.getDomain()).append("-").append(start).append("-").append(end);
 		return result.toString();
 	}
 
 	@Override
 	protected void store(FailureReport report) {
 		String failureFileName = getFailureFileName(report);
-		String htmlPath = new StringBuilder().append(m_reportPath)
-				.append(failureFileName).append(".html").toString();
+		String htmlPath = new StringBuilder().append(m_reportPath).append(failureFileName).append(".html").toString();
 		File file = new File(htmlPath);
-		
+
 		file.getParentFile().mkdirs();
 		FailureReportStore.storeToHtml(file, report);
 	}
@@ -133,8 +135,7 @@ public class FailureReportAnalyzer extends
 	}
 
 	public static abstract class AbstractHandler implements Handler {
-		protected Segment findOrCreateSegment(Message message,
-				FailureReport report) {
+		protected Segment findOrCreateSegment(Message message, FailureReport report) {
 			long time = message.getTimestamp();
 			long segmentId = time - time % MINUTE;
 			String segmentStr = getDateFormat(segmentId);
@@ -165,8 +166,7 @@ public class FailureReportAnalyzer extends
 		@Inject
 		private Set<String> m_failureTypes;
 
-		private void addEntry(FailureReport report, Message message,
-				MessageTree tree) {
+		private void addEntry(FailureReport report, Message message, MessageTree tree) {
 
 			String messageId = tree.getMessageId();
 			String threadId = tree.getThreadId();
@@ -194,15 +194,13 @@ public class FailureReportAnalyzer extends
 			}
 		}
 
-		private void processEvent(FailureReport report, Message message,
-				MessageTree tree) {
+		private void processEvent(FailureReport report, Message message, MessageTree tree) {
 			if (m_failureTypes.contains(message.getType())) {
 				addEntry(report, message, tree);
 			}
 		}
 
-		private void processTransaction(FailureReport report,
-				Transaction transaction, MessageTree tree) {
+		private void processTransaction(FailureReport report, Transaction transaction, MessageTree tree) {
 			if (m_failureTypes.contains(transaction.getType())) {
 				addEntry(report, transaction, tree);
 			}
@@ -220,15 +218,14 @@ public class FailureReportAnalyzer extends
 		}
 
 		public void setFailureType(String type) {
-			m_failureTypes = new HashSet<String>(Splitters.by(',')
-					.noEmptyItem().split(type));
+			m_failureTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
 		}
 	}
 
 	public static class LongUrlHandler extends AbstractHandler {
 		@Inject
 		private long m_threshold;
-		
+
 		private static final String LONG_URL = "LongUrl";
 
 		@Override
@@ -245,11 +242,10 @@ public class FailureReportAnalyzer extends
 
 					entry.setMessageId(messageId);
 					entry.setThreadId(threadId);
-					entry.setText(message.getType()+message.getName());
+					entry.setText(message.getType() + message.getName());
 					entry.setType(LONG_URL);
 
-					Segment segment = super
-							.findOrCreateSegment(message, report);
+					Segment segment = super.findOrCreateSegment(message, report);
 					segment.addEntry(entry);
 				}
 			}
@@ -257,6 +253,15 @@ public class FailureReportAnalyzer extends
 
 		public void setThreshold(long threshold) {
 			m_threshold = threshold;
+		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		Property property = m_manager.getConfig().findProperty("failure-base-dir");
+
+		if (property != null) {
+			m_reportPath = property.getValue();
 		}
 	}
 }

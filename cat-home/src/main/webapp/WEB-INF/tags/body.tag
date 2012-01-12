@@ -24,5 +24,7 @@
 		</ul>
 
 		<jsp:doBody />
+		
+		<res:jsSlot id="bottom-js"/>
 	</body>
 </html>

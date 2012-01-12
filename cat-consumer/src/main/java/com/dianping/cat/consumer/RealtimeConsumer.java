@@ -2,7 +2,9 @@ package com.dianping.cat.consumer;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -25,8 +27,7 @@ import com.site.lookup.annotation.Inject;
  * @author yong.you
  * @since Jan 5, 2012
  */
-public class RealtimeConsumer extends ContainerHolder implements
-		MessageConsumer, Initializable {
+public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable {
 	private static final Logger LOG = Logger.getLogger(RealtimeConsumer.class);
 
 	private static final long HOUR = 60 * 60 * 1000L;
@@ -38,6 +39,7 @@ public class RealtimeConsumer extends ContainerHolder implements
 	private static final int PROCESS_PERIOD = 3;
 
 	private static final long FIVE_MINUTES = 5 * 60 * 1000L;
+
 	@Inject
 	private String m_consumerId;
 
@@ -52,7 +54,7 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 	@Inject
 	private List<String> m_analyzerNames;
-	
+
 	@Inject
 	private AnalyzerFactory m_factory;
 
@@ -62,16 +64,9 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 	private List<Period> m_periods = new ArrayList<Period>(PROCESS_PERIOD);
 
-	private boolean isInDomain(MessageTree tree) {
-		if (m_domain == null || m_domain.length() == 0
-				|| m_domain.equalsIgnoreCase(DOMAIN_ALL)) {
-			return true;
-		}
-		if (m_domain.indexOf(tree.getDomain()) > -1) {
-			return true;
-		}
-		return false;
-	}
+	private Map<String, MessageAnalyzer> m_lastAnalyzers = new HashMap<String, MessageAnalyzer>();
+
+	private Map<String, MessageAnalyzer> m_currentAnalyzers = new HashMap<String, MessageAnalyzer>();
 
 	@Override
 	public void consume(MessageTree tree) {
@@ -90,14 +85,13 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 		if (current != null) {
 			List<MessageQueue> queues = current.getQueues();
-	
+
 			distributeMessage(tree, queues);
 		} else {
-			long systemTime = System.currentTimeMillis();
-			long nextStart = systemTime - systemTime % m_duration - 3
-					* m_duration;
-			
-			if (timestamp < systemTime + MINUTE * 3 && timestamp >= nextStart) {
+			long now = System.currentTimeMillis();
+			long nextStart = now - now % m_duration - 3 * m_duration;
+
+			if (timestamp < now + MINUTE * 3 && timestamp >= nextStart) {
 				startTasks(tree);
 			} else {
 				LOG.warn("The message is not excepceted!" + tree);
@@ -107,10 +101,10 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 	private void distributeMessage(MessageTree tree, List<MessageQueue> queues) {
 		int size = queues.size();
-		
+
 		for (int i = 0; i < size; i++) {
 			MessageQueue queue = queues.get(i);
-		
+
 			queue.offer(tree);
 		}
 	}
@@ -120,9 +114,17 @@ public class RealtimeConsumer extends ContainerHolder implements
 		return m_consumerId;
 	}
 
+	public MessageAnalyzer getCurrentAnalyzer(String name) {
+		return m_currentAnalyzers.get(name);
+	}
+
 	@Override
 	public String getDomain() {
 		return m_domain;
+	}
+	
+	public MessageAnalyzer getLastAnalyzer(String name) {
+		return m_lastAnalyzers.get(name);
 	}
 
 	@Override
@@ -130,9 +132,18 @@ public class RealtimeConsumer extends ContainerHolder implements
 		m_executor = Executors.newFixedThreadPool(m_threads);
 	}
 
+	private boolean isInDomain(MessageTree tree) {
+		if (m_domain == null || m_domain.length() == 0 || m_domain.equalsIgnoreCase(DOMAIN_ALL)) {
+			return true;
+		}
+		if (m_domain.indexOf(tree.getDomain()) > -1) {
+			return true;
+		}
+		return false;
+	}
+
 	public void setAnalyzerNames(String analyzerNames) {
-		m_analyzerNames = Splitters.by(',').noEmptyItem().trim()
-				.split(analyzerNames);
+		m_analyzerNames = Splitters.by(',').noEmptyItem().trim().split(analyzerNames);
 	}
 
 	public void setConsumerId(String consumerId) {
@@ -147,16 +158,16 @@ public class RealtimeConsumer extends ContainerHolder implements
 		m_duration = duration;
 	}
 
-	public void setThreads(int threads) {
-		m_threads = threads;
-	}
-
 	public void setExtraTime(long time) {
 		m_extraTime = time;
 	}
-	
+
 	public void setFactory(AnalyzerFactory factory) {
-		this.m_factory = factory;
+		m_factory = factory;
+	}
+
+	public void setThreads(int threads) {
+		m_threads = threads;
 	}
 
 	private void startTasks(MessageTree tree) {
@@ -165,20 +176,28 @@ public class RealtimeConsumer extends ContainerHolder implements
 		LOG.info("Start Tasks At " + new Date(start));
 		List<MessageQueue> queues = new ArrayList<MessageQueue>();
 		Period current = new Period(start, start + m_duration, queues);
-		
+
+		m_lastAnalyzers.clear();
+		m_lastAnalyzers.putAll(m_currentAnalyzers);
+		m_currentAnalyzers.clear();
+
 		for (String name : m_analyzerNames) {
-			MessageAnalyzer analyzer = m_factory.create(name, start, m_duration,
-					m_domain, m_extraTime);
+			MessageAnalyzer analyzer = m_factory.create(name, start, m_duration, m_domain, m_extraTime);
 			MessageQueue queue = lookup(MessageQueue.class);
 			Task task = new Task(m_factory, analyzer, queue);
 
 			queue.offer(tree);
 			queues.add(queue);
 			m_executor.submit(task);
+			m_currentAnalyzers.put(name, analyzer);
 		}
+
 		int len = m_periods.size();
-		if (len >= PROCESS_PERIOD)
+
+		if (len >= PROCESS_PERIOD) {
 			m_periods.remove(0);
+		}
+
 		m_periods.add(current);
 	}
 
@@ -211,8 +230,7 @@ public class RealtimeConsumer extends ContainerHolder implements
 
 		private MessageQueue m_queue;
 
-		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer,
-				MessageQueue queue) {
+		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue) {
 			m_factory = factory;
 			m_analyzer = analyzer;
 			m_queue = queue;

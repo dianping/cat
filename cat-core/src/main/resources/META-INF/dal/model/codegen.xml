@@ -8,6 +8,7 @@
 		<entity-ref name="server" type="list" names="servers" xml-indent="true" />
 		<entity-ref name="bind" />
 		<entity-ref name="filter" />
+		<entity-ref name="property" type="list" names="properties" xml-indent="true" />
 	</entity>
 	<entity name="app">
 		<attribute name="domain" value-type="String" />
@@ -24,5 +25,9 @@
 	</entity>
 	<entity name="filter">
 		<element name="domain" value-type="String" type="list" names="domains" />
+	</entity>
+	<entity name="property">
+		<attribute name="name" value-type="String" key="true"/>
+		<attribute name="value" value-type="String" text="true"/>
 	</entity>
 </model>

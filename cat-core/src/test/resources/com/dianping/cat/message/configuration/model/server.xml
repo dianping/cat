@@ -4,4 +4,8 @@
 		<domain>Review</domain>
 		<domain>Group</domain>
 	</filter>
+	<properties>
+		<property name="failure-base-dir">/data/appdatas/cat/report/failure/</property>
+		<property name="transaction-base-dir">/data/appdatas/cat/report/transaction/</property>
+	</properties>
 </config>

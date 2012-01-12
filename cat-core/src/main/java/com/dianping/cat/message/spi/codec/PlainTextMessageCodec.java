@@ -431,7 +431,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			SimpleDateFormat format = m_queue.poll();
 
 			if (format == null) {
-				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
+				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 			}
 
 			try {

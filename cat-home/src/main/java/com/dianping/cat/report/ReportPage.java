@@ -7,7 +7,9 @@ public enum ReportPage implements Page {
 
    HOME("home", "Home", true),
 
-   TRANSACTION("transaction", "Transaction", true),
+   TRANSACTION("t", "Transaction", true),
+
+   FAILURE("f", "Failure", true),
 
 	;
 

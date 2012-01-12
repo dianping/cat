@@ -55,13 +55,13 @@ public class TransactionReportMessageAnalyzerTest {
 	}
 
 	/**
-	 * Test method for {@link com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer#process(com.dianping.cat.message.spi.MessageTree)}.
+	 * Test method for {@link com.dianping.cat.consumer.transaction.TransactionReportAnalyzer#process(com.dianping.cat.message.spi.MessageTree)}.
 	 * 
 	 * @throws InterruptedException
 	 */
 	@Test
 	public void testCommonGenerate() throws InterruptedException {
-		TransactionReportMessageAnalyzer analyzer = new TransactionReportMessageAnalyzer();
+		TransactionReportAnalyzer analyzer = new TransactionReportAnalyzer();
 
 		for (int i = 1; i <= 1000; i++) {
 			MessageTree tree = new DefaultMessageTree();

@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer;
-import com.dianping.cat.message.spi.MessageAnalyzer;
+import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.ReportPage;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
@@ -17,8 +19,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject(type = MessageAnalyzer.class, value = "transaction")
-	private TransactionReportMessageAnalyzer m_analyzer;
+	@Inject(type = MessageConsumer.class, value = "realtime")
+	private RealtimeConsumer m_consumer;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -34,7 +36,15 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.TRANSACTION);
-		model.setReport(m_analyzer.generate());
+
+		TransactionReportAnalyzer analyzer = (TransactionReportAnalyzer) m_consumer
+		      .getCurrentAnalyzer("transaction");
+
+		if (analyzer != null) {
+			model.setReport(analyzer.generate());
+		} else {
+			model.setReport(new TransactionReport("none"));
+		}
 
 		m_jspViewer.view(ctx, model);
 	}

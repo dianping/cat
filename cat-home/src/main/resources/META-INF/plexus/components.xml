@@ -1,6 +1,19 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
+			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hints>
+						<role-hint>realtime</role-hint>
+					</role-hints>
+					<field-name>m_consumers</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.site.web.mvc.model.ModuleRegistry</role>
 			<implementation>com.site.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
@@ -34,9 +47,9 @@
 					<role>com.dianping.cat.report.page.transaction.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_analyzer</field-name>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -45,8 +58,46 @@
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer</role>
-			<implementation>com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer</implementation>
+			<role>com.dianping.cat.consumer.RealtimeConsumer</role>
+			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
+			<requirements>
+				<requirement>
+					<role>java.lang.String</role>
+				</requirement>
+				<requirement>
+					<role>java.lang.String</role>
+				</requirement>
+				<requirement>
+					<role>long</role>
+				</requirement>
+				<requirement>
+					<role>long</role>
+				</requirement>
+				<requirement>
+					<role>java.util.List</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.failure.Handler</role>
+			<implementation>com.dianping.cat.report.page.failure.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.failure.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.failure.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.failure.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>

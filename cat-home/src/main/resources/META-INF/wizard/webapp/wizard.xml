@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wizard package="com.dianping.cat" webres="false">
+<wizard package="com.dianping.cat" webres="true">
   <module name="report" path="r">
     <page name="home" description="Home" default="true" />
     <page name="transaction" description="Transaction" />
+    <page name="failure" description="Failure" />
   </module>
 </wizard>
 
