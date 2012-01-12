@@ -12,6 +12,10 @@
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-consumer</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.site.app</groupId>
 			<artifactId>app-core</artifactId>
 		</dependency>

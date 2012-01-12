@@ -21,43 +21,42 @@ import com.site.helper.Files;
  * @author Frankie Wu
  */
 public class Cat {
-	public static final String CAT_CONFIG_XML = "/META-INF/cat/config.xml";
+	public static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
 
-	private static PlexusContainer s_container;
+	private static Cat s_instance = new Cat();
 
-	private static MessageProducer s_producer;
+	private volatile boolean m_initialized;
 
-	private static MessageManager s_manager;
+	private MessageProducer m_producer;
 
-	static {
-		try {
-			s_container = new DefaultPlexusContainer();
-		} catch (PlexusContainerException e) {
-			throw new RuntimeException("Error when creating Plexus container, "
-			      + "please make sure the environment was setup correctly!", e);
+	private MessageManager m_manager;
+
+	private Cat() {
+	}
+
+	static Cat getInstance() {
+		if (!s_instance.m_initialized) {
+			try {
+				s_instance.setContainer(new DefaultPlexusContainer());
+			} catch (PlexusContainerException e) {
+				throw new RuntimeException("Error when creating Plexus container, "
+				      + "please make sure the environment was setup correctly!", e);
+			}
 		}
 
-		try {
-			s_manager = (MessageManager) s_container.lookup(MessageManager.class);
-		} catch (ComponentLookupException e) {
-			throw new RuntimeException("Unable to get instance of MessageManager, "
-			      + "please make sure the environment was setup correctly!", e);
-		}
-
-		try {
-			s_producer = (MessageProducer) s_container.lookup(MessageProducer.class);
-		} catch (ComponentLookupException e) {
-			throw new RuntimeException("Unable to get instance of MessageProducer, "
-			      + "please make sure the environment was setup correctly!", e);
-		}
+		return s_instance;
 	}
 
 	public static MessageProducer getProducer() {
-		return s_producer;
+		return getInstance().m_producer;
 	}
 
 	// this should be called during application initialization time
 	public static void initialize(File configFile) {
+		initialize(null, configFile);
+	}
+
+	public static void initialize(PlexusContainer container, File configFile) {
 		Config config = null;
 
 		// read config from local file system
@@ -69,10 +68,10 @@ public class Cat {
 			}
 
 			if (config == null) {
-				InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CONFIG_XML);
+				InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CLIENT_XML);
 
 				if (in == null) {
-					in = Cat.class.getResourceAsStream(CAT_CONFIG_XML);
+					in = Cat.class.getResourceAsStream(CAT_CLIENT_XML);
 				}
 
 				if (in != null) {
@@ -85,22 +84,50 @@ public class Cat {
 			throw new RuntimeException(String.format("Error when loading configuration file: %s!", configFile), e);
 		}
 
+		if (container != null) {
+			if (!s_instance.m_initialized) {
+				s_instance.setContainer(container);
+			} else {
+				throw new RuntimeException("Cat has already been initialized before!");
+			}
+		}
+
 		if (config != null) {
 			ClientConfigValidator validator = new ClientConfigValidator();
 
 			config.accept(validator);
-			s_manager.initialize(config);
+			getInstance().m_manager.initialize(config);
+		} else {
+			System.out.println("[WARN] Cat is disabled!");
 		}
 	}
 
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
-		s_manager.reset();
+		getInstance().m_manager.reset();
 	}
 
 	// this should be called when a thread starts to create some thread local
 	// data
 	public static void setup(String sessionToken, String requestToken) {
-		s_manager.setup(sessionToken, requestToken);
+		getInstance().m_manager.setup(sessionToken, requestToken);
+	}
+
+	void setContainer(PlexusContainer container) {
+		m_initialized = true;
+
+		try {
+			m_manager = (MessageManager) container.lookup(MessageManager.class);
+		} catch (ComponentLookupException e) {
+			throw new RuntimeException("Unable to get instance of MessageManager, "
+			      + "please make sure the environment was setup correctly!", e);
+		}
+
+		try {
+			m_producer = (MessageProducer) container.lookup(MessageProducer.class);
+		} catch (ComponentLookupException e) {
+			throw new RuntimeException("Unable to get instance of MessageProducer, "
+			      + "please make sure the environment was setup correctly!", e);
+		}
 	}
 }

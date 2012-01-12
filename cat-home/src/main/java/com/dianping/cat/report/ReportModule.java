@@ -9,6 +9,8 @@ import com.site.web.mvc.annotation.ModulePagesMeta;
 
 com.dianping.cat.report.page.home.Handler.class,
 
+com.dianping.cat.report.page.transaction.Handler.class,
+
 })
 public class ReportModule extends AbstractModule {
 

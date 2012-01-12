@@ -26,5 +26,27 @@
 			<role>com.dianping.cat.report.page.home.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.home.JspViewer</implementation>
 		</component>
+		<component>
+			<role>com.dianping.cat.report.page.transaction.Handler</role>
+			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
+					<role-hint>transaction</role-hint>
+					<field-name>m_analyzer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.transaction.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzer</implementation>
+		</component>
 	</components>
 </plexus>

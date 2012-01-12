@@ -3,6 +3,8 @@ package com.dianping.cat.message.io;
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.channel.Channel;
@@ -27,7 +29,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class TcpSocketReceiver implements MessageReceiver {
+public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 	@Inject
 	private String m_host;
 
@@ -42,6 +44,13 @@ public class TcpSocketReceiver implements MessageReceiver {
 	private ChannelGroup m_channelGroup = new DefaultChannelGroup();
 
 	private MessageHandler m_messageHandler;
+
+	private Logger m_logger;
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
 
 	@Override
 	public void initialize() {
@@ -67,6 +76,7 @@ public class TcpSocketReceiver implements MessageReceiver {
 		bootstrap.setOption("child.keepAlive", true);
 		bootstrap.bind(address);
 
+		m_logger.info("CAT server started at " + address);
 		m_factory = factory;
 	}
 

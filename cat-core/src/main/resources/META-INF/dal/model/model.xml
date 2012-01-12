@@ -9,7 +9,6 @@
 		<attribute name="domain" required="true" />
 	</entity>
 	<entity name="server">
-		<attribute name="ip" required="true" />
 		<attribute name="port" default-value="2280" />
 		<attribute name="enabled" default-value="true" />
 	</entity>

@@ -13,7 +13,6 @@
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
 			<artifactId>cat-core</artifactId>
-			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

@@ -2,6 +2,7 @@
 <wizard package="com.dianping.cat" webres="false">
   <module name="report" path="r">
     <page name="home" description="Home" default="true" />
+    <page name="transaction" description="Transaction" />
   </module>
 </wizard>
 

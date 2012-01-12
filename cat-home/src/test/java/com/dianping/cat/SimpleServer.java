@@ -12,6 +12,7 @@ import org.mortbay.jetty.servlet.Context;
 import org.mortbay.jetty.servlet.ServletHolder;
 import org.mortbay.servlet.GzipFilter;
 
+import com.dianping.cat.servlet.CatServlet;
 import com.ebay.webres.server.support.SimpleServerSupport;
 import com.ebay.webres.taglib.support.JettyTestSupport;
 import com.site.lookup.ComponentTestCase;
@@ -22,6 +23,8 @@ public class SimpleServer extends SimpleServerSupport {
 	private static ComponentAdaptor s_adaptor = new ComponentAdaptor();
 
 	private static MVC s_mvc = new MVC();
+	
+	private static CatServlet s_cat = new CatServlet();
 
 	@AfterClass
 	public static void afterClass() throws Exception {
@@ -69,6 +72,7 @@ public class SimpleServer extends SimpleServerSupport {
 	@Override
 	protected void postConfigure(Context ctx) {
 		ctx.addServlet(new ServletHolder(s_mvc), "/r/*");
+		ctx.addServlet(new ServletHolder(s_cat), "/s/*");
 		ctx.addFilter(GzipFilter.class, "/r/*", Handler.ALL);
 		super.postConfigure(ctx);
 	}

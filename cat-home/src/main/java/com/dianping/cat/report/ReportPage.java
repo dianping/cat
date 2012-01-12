@@ -7,6 +7,8 @@ public enum ReportPage implements Page {
 
    HOME("home", "Home", true),
 
+   TRANSACTION("transaction", "Transaction", true),
+
 	;
 
 	private String m_name;
