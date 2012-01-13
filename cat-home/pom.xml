@@ -37,6 +37,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>javax.servlet.jsp</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jsp-2.1</artifactId>
 			<scope>runtime</scope>
