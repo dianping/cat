@@ -86,7 +86,7 @@ function getIndex(object, array) {
 
 function getUrl(type, text, messageId) {
 	if (type == 'RuntimeException') {
-		return '<a target=\'_blank\' style=\'background:red;\' href=\'www.dianping.com/messageId='
+		return '<a target=\'_blank\' style=\'background:red;\' href=\'w/messageId='
 				+ messageId + '\'>' + text + '</a>';
 	} else if (type == 'Exception') {
 		return '<a target=\'_blank\' style=\'background:#FFFF00;\' href=\'www.dianping.com/messageId='

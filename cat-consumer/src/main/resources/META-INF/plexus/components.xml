@@ -32,6 +32,12 @@
 			<configuration>
 				<failureType>Error,RuntimeException,Exception</failureType>
 			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStorage</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer$Handler</role>
@@ -40,6 +46,12 @@
 			<configuration>
 				<threshold>2000</threshold>
 			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStorage</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer</role>

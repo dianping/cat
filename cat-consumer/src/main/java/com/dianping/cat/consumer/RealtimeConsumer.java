@@ -8,7 +8,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.log4j.Logger;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -27,8 +28,52 @@ import com.site.lookup.annotation.Inject;
  * @author yong.you
  * @since Jan 5, 2012
  */
-public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable {
-	private static final Logger LOG = Logger.getLogger(RealtimeConsumer.class);
+public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
+	static class Period {
+		private long m_startTime;
+
+		private long m_endTime;
+
+		private List<MessageQueue> m_queues;
+
+		public Period(long startTime, long endTime, List<MessageQueue> queues) {
+			m_startTime = startTime;
+			m_endTime = endTime;
+			m_queues = queues;
+		}
+
+		public List<MessageQueue> getQueues() {
+			return m_queues;
+		}
+
+		public boolean isIn(long timestamp) {
+			return timestamp >= m_startTime && timestamp < m_endTime;
+		}
+	}
+
+	static class Task implements Runnable {
+		private AnalyzerFactory m_factory;
+
+		private MessageAnalyzer m_analyzer;
+
+		private MessageQueue m_queue;
+
+		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue) {
+			m_factory = factory;
+			m_analyzer = analyzer;
+			m_queue = queue;
+		}
+
+		public MessageQueue getQueue() {
+			return m_queue;
+		}
+
+		public void run() {
+			m_analyzer.analyze(m_queue);
+			m_factory.release(m_analyzer);
+			m_factory.release(m_queue);
+		}
+	}
 
 	private static final long HOUR = 60 * 60 * 1000L;
 
@@ -39,6 +84,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private static final int PROCESS_PERIOD = 3;
 
 	private static final long FIVE_MINUTES = 5 * 60 * 1000L;
+
+	@Inject
+	private Logger m_logger;
 
 	@Inject
 	private String m_consumerId;
@@ -94,7 +142,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			if (timestamp < now + MINUTE * 3 && timestamp >= nextStart) {
 				startTasks(tree);
 			} else {
-				LOG.warn("The message is not excepceted!" + tree);
+				m_logger.warn("The message is not excepceted!" + tree);
 			}
 		}
 	}
@@ -110,6 +158,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	}
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public String getConsumerId() {
 		return m_consumerId;
 	}
@@ -122,7 +175,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	public String getDomain() {
 		return m_domain;
 	}
-	
+
 	public MessageAnalyzer getLastAnalyzer(String name) {
 		return m_lastAnalyzers.get(name);
 	}
@@ -173,7 +226,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private void startTasks(MessageTree tree) {
 		long time = tree.getMessage().getTimestamp();
 		long start = time - time % m_duration;
-		LOG.info("Start Tasks At " + new Date(start));
+		m_logger.info("Start Tasks At " + new Date(start));
 		List<MessageQueue> queues = new ArrayList<MessageQueue>();
 		Period current = new Period(start, start + m_duration, queues);
 
@@ -199,51 +252,5 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		m_periods.add(current);
-	}
-
-	static class Period {
-		private long m_startTime;
-
-		private long m_endTime;
-
-		private List<MessageQueue> m_queues;
-
-		public Period(long startTime, long endTime, List<MessageQueue> queues) {
-			m_startTime = startTime;
-			m_endTime = endTime;
-			m_queues = queues;
-		}
-
-		public List<MessageQueue> getQueues() {
-			return m_queues;
-		}
-
-		public boolean isIn(long timestamp) {
-			return timestamp >= m_startTime && timestamp < m_endTime;
-		}
-	}
-
-	static class Task implements Runnable {
-		private AnalyzerFactory m_factory;
-
-		private MessageAnalyzer m_analyzer;
-
-		private MessageQueue m_queue;
-
-		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue) {
-			m_factory = factory;
-			m_analyzer = analyzer;
-			m_queue = queue;
-		}
-
-		public MessageQueue getQueue() {
-			return m_queue;
-		}
-
-		public void run() {
-			m_analyzer.analyze(m_queue);
-			m_factory.release(m_analyzer);
-			m_factory.release(m_queue);
-		}
 	}
 }

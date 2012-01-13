@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageStorage;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -34,11 +35,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		            , E("analyzerNames").value("failure,transaction")));
 
 		String failureTypes = "Error,RuntimeException,Exception";
-
+		
 		all.add(C(Handler.class, "failure-handler", FailureHandler.class)//
-		      .config(E("failureType").value(failureTypes)));
+		      .config(E("failureType").value(failureTypes))//
+		      .req(MessageStorage.class,"html"));
+		
 		all.add(C(Handler.class, "long-url-handler", LongUrlHandler.class) //
-		      .config(E("threshold").value("2000")));
+		      .config(E("threshold").value("2000"))//
+		      .req(MessageStorage.class,"html"));
 
 		all.add(C(FailureReportAnalyzer.class).is(PER_LOOKUP) //
 		      .config(E("reportPath").value("target/report/failure")) //
