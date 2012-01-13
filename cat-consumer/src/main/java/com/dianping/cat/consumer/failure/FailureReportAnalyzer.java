@@ -24,8 +24,8 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
@@ -136,6 +136,14 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 	}
 
 	public static abstract class AbstractHandler implements Handler {
+
+		@Inject
+		private MessageStorage m_storage;
+
+		public void setMessageStorage(MessageStorage storage) {
+			m_storage = storage;
+		}
+
 		protected Segment findOrCreateSegment(Message message, FailureReport report) {
 			long time = message.getTimestamp();
 			long segmentId = time - time % MINUTE;
@@ -161,6 +169,16 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 			}
 			return result;
 		}
+
+		private Entry getEntry(MessageTree tree) {
+			String base = m_storage.getBaseUrl().toString();
+			String url = m_storage.store(tree);
+
+			Entry entry = new Entry();
+			entry.setPath(base + url);
+			entry.setThreadId(tree.getThreadId());
+			return entry;
+		}
 	}
 
 	public static class FailureHandler extends AbstractHandler {
@@ -168,13 +186,8 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		private Set<String> m_failureTypes;
 
 		private void addEntry(FailureReport report, Message message, MessageTree tree) {
+			Entry entry = super.getEntry(tree);
 
-			String messageId = tree.getMessageId();
-			String threadId = tree.getThreadId();
-			Entry entry = new Entry();
-
-			entry.setMessageId(messageId);
-			entry.setThreadId(threadId);
 			entry.setText(message.getName());
 			entry.setType(message.getType());
 
@@ -234,15 +247,11 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 			Message message = tree.getMessage();
 
 			if (message instanceof Transaction) {
-				String messageId = ((DefaultMessageTree) tree).getMessageId();
-				String threadId = ((DefaultMessageTree) tree).getThreadId();
 				Transaction t = (Transaction) message;
 
 				if (t.getDuration() > m_threshold) {
-					Entry entry = new Entry();
+					Entry entry = super.getEntry(tree);
 
-					entry.setMessageId(messageId);
-					entry.setThreadId(threadId);
 					entry.setText(message.getType() + message.getName());
 					entry.setType(LONG_URL);
 
