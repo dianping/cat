@@ -98,8 +98,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public void reset() {
+		System.out.println(m_context);
 		// destroy current thread local data
 		m_context.remove();
+		System.out.println(m_context.get());
 	}
 
 	@Override

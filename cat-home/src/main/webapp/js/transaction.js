@@ -1,6 +1,6 @@
 var tabledata = [];
 $(function(){
-	var types = data["transaction-report"]["type"];
+	var types = data["types"];
 	for (i in types) {
 		var type = types[i];
 		var sampleid = type.failid == null ? type.successid : type.failid;	

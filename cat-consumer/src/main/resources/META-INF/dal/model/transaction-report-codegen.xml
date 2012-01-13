@@ -12,8 +12,8 @@
   </entity>
   <entity name="name">
     <attribute name="id" value-type="String" />
-    <attribute name="totalCount" value-type="int" />
-    <attribute name="failCount" value-type="int" />
+    <attribute name="totalCount" value-type="long" />
+    <attribute name="failCount" value-type="long" />
     <attribute name="failPercent" value-type="double" />
     <attribute name="min" value-type="double" />
     <attribute name="max" value-type="double" />

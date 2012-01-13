@@ -33,8 +33,7 @@ import com.site.lookup.annotation.Inject;
  * @author sean.wang
  * @since Jan 5, 2012
  */
-public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable,
-      LogEnabled {
+public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable, LogEnabled {
 	private final static long MINUTE = 60 * 1000L;
 
 	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
@@ -53,18 +52,55 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 	private void computeMeanSquareDeviation() {
 		Collection<TransactionType> types = report.getTypes().values();
 
-		for (TransactionType transactionType : types) {
-			Collection<TransactionName> names = transactionType.getNames().values();
+		for (TransactionType type : types) {
+			long typeCount = 0;
+			long typeFailCount = 0;
+			double typeSum = 0;
+			double typeSum2 = 0;
+			Collection<TransactionName> names = type.getNames().values();
 			for (TransactionName name : names) {
-				Integer count = name.getTotalCount();
-				double ave = name.getSum() / count;
-				double std = Math.sqrt(name.getSum2() / count - 2 * ave * ave + ave * ave);
-				double failPercent = 100.0 * name.getFailCount() / count;
+				long count = name.getTotalCount();
+				double sum = name.getSum();
+				double ave = sum / count;
+				double sum2 = name.getSum2();
+				double std = std(count, ave, sum2);
+				long failCount = name.getFailCount();
+				double failPercent = 100.0 * failCount / count;
 				name.setFailPercent(failPercent);
 				name.setAvg(ave);
 				name.setStd(std);
+				typeCount += count;
+				typeSum += sum;
+				typeSum2 += sum2;
+				typeFailCount += failCount;
+				if (name.getSuccessMessageId() != null) {
+					type.setSuccessMessageId(name.getSuccessMessageId());
+				}
+				if (name.getFailMessageId() != null) {
+					type.setFailMessageId(name.getFailMessageId());
+				}
+				type.setMax(Math.max(name.getMax(), type.getMax()));
+				type.setMin(Math.min(name.getMin(), type.getMin()));
 			}
+			type.setTotalCount(typeCount);
+			type.setFailCount(typeFailCount);
+			type.setSum(typeSum);
+			type.setSum2(typeSum2);
+			double typeAvg = typeSum / typeCount;
+			type.setAvg(typeAvg);
+			type.setFailPercent(100.0 * typeFailCount / typeCount);
+			type.setStd(std(typeCount, typeAvg, typeSum2));
 		}
+	}
+
+	/**
+	 * @param count
+	 * @param ave
+	 * @param sum2
+	 * @return
+	 */
+	public double std(long count, double ave, double sum2) {
+		return Math.sqrt(sum2 / count - 2 * ave * ave + ave * ave);
 	}
 
 	@Override

@@ -17,10 +17,7 @@
 <res:useJs value='${res.js.local.jqgrid_min_js}' target="head-js"/>
 
 <script type="text/javascript">
-var data =
-{
-   "transaction-report": ${model.reportInJson}
-};
+var data = ${model.reportInJson};
 </script>
 
 <table id="gridTable"></table>
