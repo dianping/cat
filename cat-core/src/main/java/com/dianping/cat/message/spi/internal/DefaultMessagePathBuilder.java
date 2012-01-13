@@ -24,28 +24,17 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	private URL m_baseLogUrl;
 
 	@Override
-	public File getLogViewFile(MessageTree tree) {
-		String relativePath = getRelativePath(tree);
-		File file = new File(m_baseLogDir, relativePath);
-
-		return file;
+	public File getLogViewBaseDir() {
+		return m_baseLogDir;
 	}
 
 	@Override
-	public URL getLogViewUrl(MessageTree tree) {
-		String relativePath = getRelativePath(tree);
-
-		try {
-			URL url = new URL(m_baseLogUrl, relativePath);
-
-			return url;
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(String.format("Unable to construct message URL(%s, %s)!", m_baseLogUrl,
-			      relativePath), e);
-		}
+	public URL getLogViewBaseUrl() {
+		return m_baseLogUrl;
 	}
 
-	private String getRelativePath(MessageTree tree) {
+	@Override
+	public String getLogViewPath(MessageTree tree) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{1}/{2}");
 		Date date = new Date(tree.getMessage().getTimestamp());
 		String path = format.format(new Object[] { date, tree.getDomain(), tree.getMessageId() });

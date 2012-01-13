@@ -4,7 +4,9 @@ import java.io.File;
 import java.net.URL;
 
 public interface MessagePathBuilder {
-	public URL getLogViewUrl(MessageTree tree);
+	public File getLogViewBaseDir();
 
-	public File getLogViewFile(MessageTree tree);
+	public URL getLogViewBaseUrl();
+
+	public String getLogViewPath(MessageTree tree);
 }

@@ -3,6 +3,7 @@ package com.dianping.cat.message.internal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Stack;
+import java.util.UUID;
 
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.message.Message;
@@ -128,7 +129,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setThreadId(Long.toHexString(Thread.currentThread().getId()));
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
-			m_tree.setMessageId("?"); // TODO
+			m_tree.setMessageId(UUID.randomUUID().toString()); // TODO optimize it to shorter UUID
 		}
 
 		public void add(DefaultMessageManager manager, Message message) {

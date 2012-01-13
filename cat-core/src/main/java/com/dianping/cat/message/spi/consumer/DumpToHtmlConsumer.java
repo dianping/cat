@@ -18,15 +18,16 @@ public class DumpToHtmlConsumer implements MessageConsumer {
 	private MessageCodec m_codec;
 
 	@Inject
-	private MessagePathBuilder m_pathBuilder;
+	private MessagePathBuilder m_builder;
 
 	@Override
 	public void consume(MessageTree tree) {
-		File file = m_pathBuilder.getLogViewFile(tree);
+		File baseDir = m_builder.getLogViewBaseDir();
+		File file = new File(baseDir, m_builder.getLogViewPath(tree));
 		FileOutputStream fos = null;
 
 		try {
-			ChannelBuffer buf = ChannelBuffers.buffer(8192);
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 			m_codec.encode(tree, buf);
 			fos = new FileOutputStream(file);
@@ -42,7 +43,6 @@ public class DumpToHtmlConsumer implements MessageConsumer {
 				}
 			}
 		}
-
 	}
 
 	@Override
