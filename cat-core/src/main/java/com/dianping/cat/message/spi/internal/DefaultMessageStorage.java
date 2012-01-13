@@ -44,23 +44,26 @@ public class DefaultMessageStorage implements MessageStorage, LogEnabled {
 	public String store(MessageTree tree) {
 		String path = m_builder.getLogViewPath(tree);
 		File file = new File(m_builder.getLogViewBaseDir(), path);
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-		FileOutputStream fos = null;
 
-		file.getParentFile().mkdirs();
+		if (!file.exists()) {
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
+			FileOutputStream fos = null;
 
-		try {
-			m_codec.encode(tree, buf); 
-			fos = new FileOutputStream(file);
-			buf.getBytes(buf.readerIndex(), fos, buf.readableBytes());
-		} catch (IOException e) {
-			m_logger.error(String.format("Error when writing to file(%s)!", file), e);
-		} finally {
-			if (fos != null) {
-				try {
-					fos.close();
-				} catch (IOException e) {
-					// ignore it
+			file.getParentFile().mkdirs();
+
+			try {
+				m_codec.encode(tree, buf);
+				fos = new FileOutputStream(file);
+				buf.getBytes(buf.readerIndex(), fos, buf.readableBytes());
+			} catch (IOException e) {
+				m_logger.error(String.format("Error when writing to file(%s)!", file), e);
+			} finally {
+				if (fos != null) {
+					try {
+						fos.close();
+					} catch (IOException e) {
+						// ignore it
+					}
 				}
 			}
 		}

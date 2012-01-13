@@ -11,7 +11,9 @@ public class NavigationBar {
 
 		ReportPage.FAILURE,
 
-		ReportPage.TRANSACTION
+		ReportPage.TRANSACTION,
+		
+		ReportPage.LOGVIEW
 
 		};
 	}

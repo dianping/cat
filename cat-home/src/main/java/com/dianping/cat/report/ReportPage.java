@@ -11,6 +11,8 @@ public enum ReportPage implements Page {
 
    FAILURE("f", "Failure", true),
 
+   LOGVIEW("m", "Logview", true),
+
 	;
 
 	private String m_name;

@@ -4,6 +4,7 @@
     <page name="home" description="Home" default="true" />
     <page name="transaction" description="Transaction" />
     <page name="failure" description="Failure" />
+    <page name="logview" description="Logview" />
   </module>
 </wizard>
 

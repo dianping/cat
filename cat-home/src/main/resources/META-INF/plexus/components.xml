@@ -99,5 +99,18 @@
 			<role>com.dianping.cat.report.page.failure.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.failure.JspViewer</implementation>
 		</component>
+		<component>
+			<role>com.dianping.cat.report.page.logview.Handler</role>
+			<implementation>com.dianping.cat.report.page.logview.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.logview.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.logview.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.logview.JspViewer</implementation>
+		</component>
 	</components>
 </plexus>
