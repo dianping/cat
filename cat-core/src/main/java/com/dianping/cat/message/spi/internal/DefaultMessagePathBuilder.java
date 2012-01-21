@@ -10,6 +10,7 @@ import java.util.Date;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -44,8 +45,10 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 	@Override
 	public void initialize() throws InitializationException {
-		String baseLogDir = m_manager.getConfig().getBaseLogDir();
-		String baseLogUrl = m_manager.getConfig().getBaseLogUrl();
+		Config config = m_manager.getConfig();
+		
+		String baseLogDir = config.getBaseLogDir();
+		String baseLogUrl = config.getBaseLogUrl();
 
 		try {
 			m_baseLogDir = new File(baseLogDir).getCanonicalFile();

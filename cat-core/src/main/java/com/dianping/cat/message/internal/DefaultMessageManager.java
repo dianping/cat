@@ -27,7 +27,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	};
 
-	private Config m_config;
+	private Config m_config = new Config();
 
 	private String m_domain;
 
@@ -80,7 +80,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	public void initialize(Config config) {
 		m_config = config;
 
-		if (m_config != null && m_config.getApp() != null) {
+		if (m_config.getApp() != null) {
 			m_domain = m_config.getApp().getDomain();
 		}
 
@@ -131,7 +131,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setThreadId(Long.toHexString(Thread.currentThread().getId()));
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
-			m_tree.setMessageId(UUID.randomUUID().toString()); // TODO optimize it to shorter UUID
+			m_tree.setMessageId(UUID.randomUUID().toString()); // TODO optimize it
+			                                                   // to shorter UUID
 		}
 
 		public void add(DefaultMessageManager manager, Message message) {

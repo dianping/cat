@@ -1,0 +1,139 @@
+{
+   "domain": "domain1",
+   "startTime": "2012-01-21 21:00:00",
+   "endTime": "2012-01-21 21:59:00",
+   "machines": {
+      "machines": [
+         "192.168.8.0",
+         "192.168.8.1",
+         "192.168.8.2",
+         "192.168.8.3"
+      ]
+   },
+   "threads": {
+      "threads": [
+         "Thread0",
+         "Thread1",
+         "Thread2",
+         "Thread3",
+         "Thread4"
+      ]
+   },
+   "segments": {
+      "2012-01-21 21:00": {
+         "id": "2012-01-21 21:00",
+         "entries": [
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId0",
+               "threadId": "Thread0",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId0",
+               "threadId": "Thread0",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId0",
+               "threadId": "Thread0",
+               "text": "A1B1"
+            }
+         ]
+      },
+      "2012-01-21 21:01": {
+         "id": "2012-01-21 21:01",
+         "entries": [
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId1",
+               "threadId": "Thread1",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId1",
+               "threadId": "Thread1",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId1",
+               "threadId": "Thread1",
+               "text": "A1B1"
+            }
+         ]
+      },
+      "2012-01-21 21:02": {
+         "id": "2012-01-21 21:02",
+         "entries": [
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId2",
+               "threadId": "Thread2",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId2",
+               "threadId": "Thread2",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId2",
+               "threadId": "Thread2",
+               "text": "A1B1"
+            }
+         ]
+      },
+      "2012-01-21 21:03": {
+         "id": "2012-01-21 21:03",
+         "entries": [
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId3",
+               "threadId": "Thread3",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId3",
+               "threadId": "Thread3",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId3",
+               "threadId": "Thread3",
+               "text": "A1B1"
+            }
+         ]
+      },
+      "2012-01-21 21:04": {
+         "id": "2012-01-21 21:04",
+         "entries": [
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId4",
+               "threadId": "Thread4",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId4",
+               "threadId": "Thread4",
+               "text": "A1B1"
+            },
+            {
+               "type": "LongUrl",
+               "path": "file:/Users/qmwu/project/tracking/cat-consumer/target/catlog/20120121/middleware/MessageId4",
+               "threadId": "Thread4",
+               "text": "A1B1"
+            }
+         ]
+      }
+   }
+}

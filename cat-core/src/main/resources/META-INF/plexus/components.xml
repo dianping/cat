@@ -56,7 +56,7 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html-encode</role-hint>
+					<role-hint>html</role-hint>
 				</requirement>
 			</requirements>
 		</component>

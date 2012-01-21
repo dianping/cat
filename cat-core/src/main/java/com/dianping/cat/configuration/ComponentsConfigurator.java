@@ -54,7 +54,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageManager.class));
 		all.add(C(MessageStorage.class, "html", DefaultMessageStorage.class) //
 		      .req(MessagePathBuilder.class) //
-		      .req(MessageCodec.class, "html-encode"));
+		      .req(MessageCodec.class, "html"));
 
 		all.add(C(BufferWriter.class, "escape", EscapingBufferWriter.class));
 		all.add(C(BufferWriter.class, "html-encode", HtmlEncodingBufferWriter.class));

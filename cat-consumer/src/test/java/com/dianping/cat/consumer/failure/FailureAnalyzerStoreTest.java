@@ -19,28 +19,27 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class FailureAnalyzerStoreTest extends ComponentTestCase {
-
-	@Test 
-	public void testJson()throws Exception{
+	@Test
+	public void testJson() throws Exception {
 		long current = System.currentTimeMillis();
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000);
 
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory
-				.create("failure", start, duration, "domain1", extraTime);
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
+		      extraTime);
 		int number = 5;
-		
+
 		for (int i = 0; i < number; i++) {
 			DefaultTransaction t = new DefaultTransaction("A1", "B1", null);
 			MessageTree tree = new DefaultMessageTree();
-			tree.setMessageId("MessageId"+ i);
+			tree.setMessageId("MessageId" + i);
 			tree.setThreadId("Thread" + i);
 			tree.setDomain("middleware");
 			tree.setHostName("middleware");
 			tree.setMessage(t);
-			tree.setIpAddress("192.168.8."+i%4);
+			tree.setIpAddress("192.168.8." + i % 4);
 			t.setDuration(3 * 1000);
 			t.setTimestamp(start + 1000 * 60 * i);
 			analyzer.process(tree);
@@ -51,19 +50,15 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		FailureReport report = analyzer.generate();
 		analyzer.store(report);
 
-		DefaultJsonBuilder jsonBuilder = new DefaultJsonBuilder();
-		jsonBuilder.visitFailureReport(report);
-		
-		/*String realResult = jsonBuilder.getString();
+		DefaultJsonBuilder builder = new DefaultJsonBuilder();
+		builder.visitFailureReport(report);
 
-		Gson gson = new Gson();
-		String exceptedResult = gson.toJson(report,FailureReport.class);
-		
-		Assert.assertEquals("Check json content!", exceptedResult, realResult);
-		 */	
-		}
-	
-	
+		String json = builder.getString();
+		String expected = Files.forIO().readFrom(getResourceFile("failure.json"), "utf-8");
+
+		Assert.assertEquals("Check json content!", expected, json);
+	}
+
 	@Test
 	public void testStore() throws Exception {
 		long current = System.currentTimeMillis();
@@ -72,8 +67,8 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		long start = current - current % (60 * 60 * 1000);
 
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory
-				.create("failure", start, duration, "domain1", extraTime);
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
+		      extraTime);
 		int number = 20;
 		for (int i = 0; i < number; i++) {
 			DefaultTransaction t = new DefaultTransaction("A1", "B1", null);
