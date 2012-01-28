@@ -5,7 +5,6 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.configuration.model.entity.Bind;
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.message.spi.MessageManager;
@@ -18,17 +17,6 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 
 	private MessageSender m_sender;
 
-	private MessageReceiver m_receiver;
-
-	@Override
-	public MessageReceiver getReceiver() {
-		if (m_receiver == null) {
-			throw new RuntimeException("Client mode only, no receiver is provided!");
-		}
-
-		return m_receiver;
-	}
-
 	@Override
 	public MessageSender getSender() {
 		if (m_sender == null) {
@@ -40,19 +28,19 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 
 	@Override
 	public void initialize() throws InitializationException {
-		Config config = m_manager.getConfig();
+		Config config = m_manager.getClientConfig();
 
 		if (config == null) {
 			// by default, no configuration needed in develop mode, all in memory
 			m_sender = lookup(MessageSender.class, "in-memory");
-			m_receiver = lookup(MessageReceiver.class, "in-memory");
 		} else {
 			String mode = config.getMode();
 
 			if ("client".equals(mode)) {
 				List<Server> servers = config.getServers();
+				int size = servers.size();
 
-				if (servers.size() == 1) {
+				if (size == 1) {
 					TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, "tcp-socket");
 					Server server = servers.get(0);
 
@@ -61,22 +49,14 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 					sender.initialize();
 
 					m_sender = sender;
+				} else if (size == 0) {
+					m_sender = lookup(MessageSender.class, "in-memory");
 				} else {
 					throw new UnsupportedOperationException("Not implemented yet");
 				}
-			} else if ("server".equals(mode)) {
-				TcpSocketReceiver receiver = (TcpSocketReceiver) lookup(MessageReceiver.class, "tcp-socket");
-				Bind bind = config.getBind();
-
-				receiver.setHost(bind.getIp());
-				receiver.setPort(bind.getPort());
-				receiver.initialize();
-
-				m_receiver = receiver;
-			} else if ("broker".equals(mode)) {
-				throw new UnsupportedOperationException("Not implemented yet");
 			} else {
-				throw new IllegalArgumentException(String.format("Unsupported mode(%s)!", mode));
+				throw new IllegalArgumentException(String.format(
+				      "Only mode(client) was supported in transport manager, but was mode(%s)!", mode));
 			}
 		}
 	}

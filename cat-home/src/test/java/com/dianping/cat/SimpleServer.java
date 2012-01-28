@@ -73,9 +73,9 @@ public class SimpleServer extends SimpleServerSupport {
 	protected void postConfigure(Context ctx) {
 		ServletHolder holder = new ServletHolder(s_mvc);
 		
+		ctx.addServlet(new ServletHolder(s_cat), "/s/*");
 		ctx.addServlet(holder, "/");
 		ctx.addServlet(holder, "/r/*");
-		ctx.addServlet(new ServletHolder(s_cat), "/s/*");
 		ctx.addFilter(GzipFilter.class, "/r/*", Handler.ALL);
 		super.postConfigure(ctx);
 	}

@@ -126,7 +126,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 	@Override
 	public void initialize() throws InitializationException {
-		Config config = m_manager.getConfig();
+		Config config = m_manager.getClientConfig();
 
 		if (config != null) {
 			Property property = config.findProperty("transaction-base-dir");

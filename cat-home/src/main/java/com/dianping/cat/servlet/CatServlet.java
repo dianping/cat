@@ -34,7 +34,7 @@ public class CatServlet extends AbstractContainerServlet {
 		try {
 			MessageManager manager = lookup(MessageManager.class);
 
-			manager.initialize(config);
+			manager.initializeServer(config);
 
 			DefaultMessageHandler handler = (DefaultMessageHandler) lookup(MessageHandler.class);
 

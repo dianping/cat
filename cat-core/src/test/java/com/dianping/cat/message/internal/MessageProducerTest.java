@@ -22,7 +22,7 @@ public class MessageProducerTest extends ComponentTestCase {
 	public void before() throws Exception {
 		MessageManager manager = lookup(MessageManager.class);
 
-		manager.initialize(null);
+		manager.initializeClient(null);
 		manager.setup(null, null);
 	}
 

@@ -27,7 +27,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	};
 
-	private Config m_config = new Config();
+	private Config m_clientConfig;
+
+	private Config m_serverConfig;
 
 	private String m_domain;
 
@@ -61,8 +63,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public Config getConfig() {
-		return m_config;
+	public Config getClientConfig() {
+		return m_clientConfig;
+	}
+
+	@Override
+	public Config getServerConfig() {
+		return m_serverConfig;
 	}
 
 	Context getContext() {
@@ -77,11 +84,16 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public void initialize(Config config) {
-		m_config = config;
+	public void initializeClient(Config clientConfig) {
+		if (clientConfig != null) {
+			m_clientConfig = clientConfig;
+		} else {
+			m_clientConfig = new Config();
+			m_clientConfig.setMode("client");
+		}
 
-		if (m_config.getApp() != null) {
-			m_domain = m_config.getApp().getDomain();
+		if (m_clientConfig.getApp() != null) {
+			m_domain = m_clientConfig.getApp().getDomain();
 		}
 
 		try {
@@ -97,11 +109,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
+	public void initializeServer(Config serverConfig) {
+		m_serverConfig = serverConfig;
+	}
+
+	@Override
 	public void reset() {
-		System.out.println(m_context);
 		// destroy current thread local data
 		m_context.remove();
-		System.out.println(m_context.get());
 	}
 
 	@Override

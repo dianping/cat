@@ -7,13 +7,11 @@ public enum ReportPage implements Page {
 
    HOME("home", "Home", true),
 
-   TRANSACTION("t", "Transaction", true),
+   TRANSACTION("transaction", "Transaction", true),
 
-   FAILURE("f", "Failure", true),
+   FAILURE("failure", "Failure", true),
 
-   LOGVIEW("m", "Logview", true),
-
-	;
+   LOGVIEW("logview", "Logview", true);
 
 	private String m_name;
 

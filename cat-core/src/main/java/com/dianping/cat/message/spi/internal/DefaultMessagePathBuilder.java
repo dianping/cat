@@ -45,7 +45,7 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 	@Override
 	public void initialize() throws InitializationException {
-		Config config = m_manager.getConfig();
+		Config config = m_manager.getClientConfig();
 		
 		String baseLogDir = config.getBaseLogDir();
 		String baseLogUrl = config.getBaseLogUrl();

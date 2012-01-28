@@ -268,7 +268,7 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 
 	@Override
 	public void initialize() throws InitializationException {
-		Config config = m_manager.getConfig();
+		Config config = m_manager.getClientConfig();
 
 		if (config != null) {
 			Property property = config.findProperty("failure-base-dir");

@@ -106,6 +106,7 @@ public class TcpSocketSender implements MessageSender {
 			ChannelBuffer buf = (ChannelBuffer) e.getMessage();
 
 			while (buf.readable()) {
+				// TODO do something here
 				System.out.println((char) buf.readByte());
 				System.out.flush();
 			}

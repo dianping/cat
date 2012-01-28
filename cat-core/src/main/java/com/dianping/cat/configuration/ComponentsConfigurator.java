@@ -81,8 +81,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageManager.class));
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class) //
-		      .req(MessageConsumerRegistry.class) //
-		      .req(TransportManager.class));
+		      .req(MessageManager.class, MessageConsumerRegistry.class));
 
 		return all;
 	}

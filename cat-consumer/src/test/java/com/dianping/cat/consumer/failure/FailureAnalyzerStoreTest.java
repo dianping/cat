@@ -21,7 +21,7 @@ import com.site.lookup.ComponentTestCase;
 public class FailureAnalyzerStoreTest extends ComponentTestCase {
 	@Test
 	public void testJson() throws Exception {
-		long current = System.currentTimeMillis();
+		long current = 1327470645035L;
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000);
@@ -56,7 +56,7 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		String json = builder.getString();
 		String expected = Files.forIO().readFrom(getResourceFile("failure.json"), "utf-8");
 
-		Assert.assertEquals("Check json content!", expected, json);
+		Assert.assertEquals("Check json content!", expected.replace("\r", ""), json.replace("\r", ""));
 	}
 
 	@Test

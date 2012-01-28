@@ -9,9 +9,13 @@ public interface MessageManager {
 
 	public void end(Transaction transaction);
 
-	public Config getConfig();
+	public Config getClientConfig();
 
-	public void initialize(Config config);
+	public Config getServerConfig();
+
+	public void initializeClient(Config config);
+
+	public void initializeServer(Config config);
 
 	public void reset();
 

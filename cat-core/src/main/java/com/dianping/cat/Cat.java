@@ -96,7 +96,7 @@ public class Cat {
 			ClientConfigValidator validator = new ClientConfigValidator();
 
 			config.accept(validator);
-			getInstance().m_manager.initialize(config);
+			getInstance().m_manager.initializeClient(config);
 		} else {
 			System.out.println("[WARN] Cat client is disabled due to no config file found!");
 		}
