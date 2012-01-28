@@ -67,6 +67,7 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		if (m_handlers == null) {
 			m_handlers = new ArrayList<FailureReportAnalyzer.Handler>();
 		}
+
 		m_handlers.add(handler);
 	}
 

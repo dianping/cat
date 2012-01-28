@@ -48,11 +48,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	void flush(MessageTree tree) {
-		// if (m_manager == null) {
-		// throw new
-		// RuntimeException("Cat has not been initialized successfully, please call Cat.initialize() first!");
-		// }
-
 		if (m_manager != null) {
 			MessageSender sender = m_manager.getSender();
 
@@ -76,8 +71,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx = m_context.get();
 
 		if (ctx == null) {
-			throw new RuntimeException(
-			      "Cat has not been initialized successfully, please call Cal.setup(...) first for each thread.");
+			throw new RuntimeException("Cat has not been initialized successfully, "
+			      + "please call Cal.setup(...) first for each thread.");
 		} else {
 			return ctx;
 		}

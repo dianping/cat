@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer.failure;
 
 import java.io.File;
+import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -9,9 +10,11 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.consumer.AnalyzerFactory;
+import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
 import com.dianping.cat.consumer.failure.model.entity.FailureReport;
 import com.dianping.cat.consumer.failure.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.helper.Files;
@@ -20,12 +23,23 @@ import com.site.lookup.ComponentTestCase;
 @RunWith(JUnit4.class)
 public class FailureAnalyzerStoreTest extends ComponentTestCase {
 	@Test
+	public void testLookup() throws Exception {
+		Handler failure = lookup(Handler.class, "failure-handler");
+		Handler longUrl = lookup(Handler.class, "long-url-handler");
+
+		// make sure all handlers could be looked up successfully
+		Assert.assertNotNull(failure);
+		Assert.assertNotNull(longUrl);
+	}
+
+	@Test
 	public void testJson() throws Exception {
 		long current = 1327470645035L;
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000);
 
+		MessagePathBuilder pathBuilder = lookup(MessagePathBuilder.class);
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
 		      extraTime);
@@ -55,6 +69,9 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 
 		String json = builder.getString();
 		String expected = Files.forIO().readFrom(getResourceFile("failure.json"), "utf-8");
+		String baseDir = pathBuilder.getLogViewBaseDir().toString();
+
+		json = json.replaceAll(Pattern.quote(baseDir), "./target/catlog");
 
 		Assert.assertEquals("Check json content!", expected.replace("\r", ""), json.replace("\r", ""));
 	}
