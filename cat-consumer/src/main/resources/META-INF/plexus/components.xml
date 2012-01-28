@@ -15,7 +15,6 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<consumerId>realtime</consumerId>
-				<domain>Review</domain>
 				<extraTime>300000</extraTime>
 				<analyzerNames>failure,transaction</analyzerNames>
 			</configuration>

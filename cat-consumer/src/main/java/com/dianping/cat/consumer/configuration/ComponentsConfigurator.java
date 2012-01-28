@@ -30,7 +30,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class).config(E("consumerId").value("realtime") //
-		            , E("domain").value("Review") //
 		            , E("extraTime").value("300000")//
 		            , E("analyzerNames").value("failure,transaction")));
 

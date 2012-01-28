@@ -20,7 +20,7 @@ import com.site.lookup.annotation.Inject;
 public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, Initializable, Runnable {
 	@Inject
 	private MessageManager m_manager;
-	
+
 	@Inject
 	private MessageConsumerRegistry m_registry;
 
@@ -76,5 +76,9 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 
 	public void setRegistry(MessageConsumerRegistry registry) {
 		m_registry = registry;
+	}
+
+	public void shutdown() {
+		m_receiver.shutdown();
 	}
 }

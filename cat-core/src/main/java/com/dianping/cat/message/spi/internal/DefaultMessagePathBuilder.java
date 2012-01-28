@@ -36,7 +36,7 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 	@Override
 	public String getLogViewPath(MessageTree tree) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{1}/{2}");
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{2}.html");
 		Date date = new Date(tree.getMessage().getTimestamp());
 		String path = format.format(new Object[] { date, tree.getDomain(), tree.getMessageId() });
 

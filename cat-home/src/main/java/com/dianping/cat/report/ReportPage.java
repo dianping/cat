@@ -5,59 +5,68 @@ import com.site.web.mvc.annotation.ModuleMeta;
 
 public enum ReportPage implements Page {
 
-   HOME("home", "Home", true),
+   HOME("home", "home", "Home", true),
 
-   TRANSACTION("transaction", "Transaction", true),
+   TRANSACTION("transaction", "t", "Transaction", true),
 
-   FAILURE("failure", "Failure", true),
+   FAILURE("failure", "f", "Failure", true),
 
-   LOGVIEW("logview", "Logview", true);
+   LOGVIEW("logview", "m", "Logview", true);
 
-	private String m_name;
+   private String m_name;
 
-	private String m_description;
+   private String m_path;
 
-	private boolean m_realPage;
+   private String m_description;
 
-	private ReportPage(String name, String description, boolean realPage) {
-		m_name = name;
-		m_description = description;
-		m_realPage = realPage;
-	}
+   private boolean m_realPage;
 
-	public static ReportPage getByName(String name, ReportPage defaultPage) {
-		for (ReportPage action : ReportPage.values()) {
-			if (action.getName().equals(name)) {
-				return action;
-			}
-		}
+   private ReportPage(String name, String path, String description, boolean realPage) {
+      m_name = name;
+      m_path = path;
+      m_description = description;
+      m_realPage = realPage;
+   }
 
-		return defaultPage;
-	}
+   public static ReportPage getByName(String name, ReportPage defaultPage) {
+      for (ReportPage action : ReportPage.values()) {
+         if (action.getName().equals(name)) {
+            return action;
+         }
+      }
 
-	public String getName() {
-		return m_name;
-	}
+      return defaultPage;
+   }
 
-	public String getDescription() {
-		return m_description;
-	}
+   public String getDescription() {
+      return m_description;
+   }
 
-	public String getModuleName() {
-		ModuleMeta meta = ReportModule.class.getAnnotation(ModuleMeta.class);
+   public String getModuleName() {
+      ModuleMeta meta = ReportModule.class.getAnnotation(ModuleMeta.class);
 
-		if (meta != null) {
-			return meta.name();
-		} else {
-			return null;
-		}
-	}
+      if (meta != null) {
+         return meta.name();
+      } else {
+         return null;
+      }
+   }
 
-	public boolean isRealPage() {
-		return m_realPage;
-	}
+   @Override
+   public String getName() {
+      return m_name;
+   }
 
-	public ReportPage[] getValues() {
-		return ReportPage.values();
-	}
+   @Override
+   public String getPath() {
+      return m_path;
+   }
+
+   public boolean isRealPage() {
+      return m_realPage;
+   }
+
+   public ReportPage[] getValues() {
+      return ReportPage.values();
+   }
 }

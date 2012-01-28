@@ -2,9 +2,9 @@
 <wizard package="com.dianping.cat" webres="true">
   <module name="report" path="r">
     <page name="home" description="Home" default="true" />
-    <page name="transaction" description="Transaction" />
-    <page name="failure" description="Failure" />
-    <page name="logview" description="Logview" />
+    <page name="transaction" path="t" description="Transaction" />
+    <page name="failure" path="f" description="Failure" />
+    <page name="logview" path="m" description="Logview" />
   </module>
 </wizard>
 

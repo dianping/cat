@@ -18,7 +18,7 @@
 		<ul class="tabs">
 			<c:forEach var="page" items="${navBar.visiblePages}">
 				<c:if test="${page.realPage}">
-					<li ${model.page.name == page.name ? 'class="selected"' : ''}><a href="${model.webapp}/${page.moduleName}/${page.name}">${page.description}</a></li>
+					<li ${model.page.name == page.name ? 'class="selected"' : ''}><a href="${model.webapp}/${page.moduleName}/${page.path}">${page.description}</a></li>
 				</c:if>
 			</c:forEach>
 		</ul>
