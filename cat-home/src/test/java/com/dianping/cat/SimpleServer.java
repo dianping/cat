@@ -23,7 +23,7 @@ public class SimpleServer extends SimpleServerSupport {
 	private static ComponentAdaptor s_adaptor = new ComponentAdaptor();
 
 	private static MVC s_mvc = new MVC();
-	
+
 	private static CatServlet s_cat = new CatServlet();
 
 	@AfterClass
@@ -72,7 +72,7 @@ public class SimpleServer extends SimpleServerSupport {
 	@Override
 	protected void postConfigure(Context ctx) {
 		ServletHolder holder = new ServletHolder(s_mvc);
-		
+
 		ctx.addServlet(new ServletHolder(s_cat), "/s/*");
 		ctx.addServlet(holder, "/");
 		ctx.addServlet(holder, "/r/*");
@@ -92,7 +92,9 @@ public class SimpleServer extends SimpleServerSupport {
 
 	@Test
 	public void startServer() throws Exception {
-		// s_adaptor.display("/cat/r");
+		// open the page in the default browser
+		s_adaptor.display("/cat/r");
+
 		System.out.println(String.format("[%s] Press any key to stop server ... ", getTimestamp()));
 		System.in.read();
 	}
