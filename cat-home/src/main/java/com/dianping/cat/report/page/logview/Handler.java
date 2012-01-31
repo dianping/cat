@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.ReportPage;
@@ -48,24 +46,12 @@ public class Handler implements PageHandler<Context> {
 			File file = new File(baseDir, relativePath);
 
 			if (file.exists()) {
-				byte[] content = Files.forIO().readFrom(file);
+				String content = Files.forIO().readFrom(file, "utf-8");
 
-				showHtml(ctx, content);
-				return;
+				model.setTable(content);
 			}
 		}
 
 		m_jspViewer.view(ctx, model);
-	}
-
-	private void showHtml(Context ctx, byte[] content) throws IOException {
-		HttpServletResponse response = ctx.getHttpServletResponse();
-		ServletOutputStream out = response.getOutputStream();
-
-		response.setContentLength(content.length);
-		response.setContentType("text/html");
-		response.setCharacterEncoding("utf-8");
-		
-		out.write(content);
 	}
 }

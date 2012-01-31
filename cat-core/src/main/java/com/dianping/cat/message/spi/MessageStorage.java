@@ -1,13 +1,6 @@
 package com.dianping.cat.message.spi;
 
-import java.io.File;
-import java.net.URL;
-
 public interface MessageStorage {
-	public File getBaseDir();
-
-	public URL getBaseUrl();
-
 	/**
 	 * Store a message tree to the storage.
 	 * 

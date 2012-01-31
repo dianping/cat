@@ -14,30 +14,34 @@ $(function()
     {
         $("#gridTable").jqGrid({
                 datatype: "local",
-                colNames:['Type','TotalCount', 'FailCount', 'Fail%', 'Sample Link', 'M/M/A/µ'],
+                colNames:['Type', 'Total Count', 'Fail Count', 'Failure%', 'Sample Link', 'Min/Max/Avg/Std(ms)'],
                 colModel:[
-                        {name:'type', index:'type'},
-                        {name:'total', index:'total', sorttype:"int"},
-                        {name:'fail', index:'fail', sorttype:"int"},
-                        {name:'failPercent', index:'failPercent', sorttype:"float"},
-                        {name:'sample', index:'sample'},                
-                        {name:'stat'}                
+                        {name:'type', index:'type', width:200},
+                        {name:'total', index:'total', width:100, sorttype:"int", align:'right'},
+                        {name:'fail', index:'fail', width:100, sorttype:"int", align:'right'},
+                        {name:'failPercent', index:'failPercent', width:100, sorttype:"float", align:'center'},
+                        {name:'sample', index:'sample', width:200, sortable:false},                
+                        {name:'stat', width:200, sortable:false}                
                 ],
                 sortname:'type',
                 sortorder:'asc',
-                caption: "Transaction Report",
-                height: 250,
+                caption: "Transaction Summary",
+                height: '100%',
+                autowidth: true,
                 loadComplete: function() {
-                    var grid = $("#gridTable");
-                    var ids = grid.getDataIDs();
-                    for (var i = 0; i < ids.length; i++) {
-                        grid.setRowData( ids[i], false, {height: 20} );
-                    }
-                    grid.setGridHeight('auto');
+                    $("#gridTable").setGridHeight('auto');
                 }
         }).navGrid('#pager2',{edit:false,add:false,del:false});
+        
+        var grid = $("#gridTable");
         for(var i=0;i<=tabledata.length;i++) {
-                jQuery("#gridTable").jqGrid('addRowData',i+1,tabledata[i]);
+        	grid.jqGrid('addRowData',i+1,tabledata[i]);
         }
+        
+        $(function(){
+            $(window).resize(function(){  
+                  $("#gridTable").setGridWidth($(window).width()*0.99);
+            });
+        });
 	}
 );

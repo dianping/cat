@@ -172,11 +172,10 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		}
 
 		private Entry getEntry(MessageTree tree) {
-			String base = m_storage.getBaseUrl().toString();
 			String url = m_storage.store(tree);
 
 			Entry entry = new Entry();
-			entry.setPath(base + url);
+			entry.setPath(url);
 			entry.setThreadId(tree.getThreadId());
 			return entry;
 		}

@@ -44,10 +44,10 @@ public class HtmlMessageCodec implements MessageCodec {
 
 		count += helper.table1(buf);
 		count += helper.crlf(buf);
-		count += encodeHeader(tree, buf);
+		// count += encodeHeader(tree, buf);
 
 		if (tree.getMessage() != null) {
-			count += encodeMessage(tree.getMessage(), buf, 0);
+			count += encodeMessage(tree.getMessage(), buf, 0, new LineCounter());
 		}
 
 		count += helper.table2(buf);
@@ -58,7 +58,7 @@ public class HtmlMessageCodec implements MessageCodec {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
-		count += helper.tr1(buf);
+		count += helper.tr1(buf, null);
 		count += helper.td(buf, ID);
 		count += helper.td(buf, tree.getDomain());
 		count += helper.td(buf, tree.getHostName());
@@ -73,11 +73,18 @@ public class HtmlMessageCodec implements MessageCodec {
 		return count;
 	}
 
-	protected int encodeLine(Message message, ChannelBuffer buf, char type, Policy policy, int level) {
+	protected int encodeLine(Message message, ChannelBuffer buf, char type, Policy policy, int level, LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
-		count += helper.tr1(buf);
+		if (counter != null) {
+			counter.inc();
+
+			count += helper.tr1(buf, counter.getCount() % 2 == 1 ? "odd" : "even");
+		} else {
+			count += helper.tr1(buf, null);
+		}
+
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
@@ -97,7 +104,11 @@ public class HtmlMessageCodec implements MessageCodec {
 		count += helper.td(buf, message.getName());
 
 		if (policy != Policy.WITHOUT_STATUS) {
-			count += helper.td(buf, message.getStatus());
+			if (Message.SUCCESS.equals(message.getStatus())) {
+				count += helper.td(buf, message.getStatus());
+			} else {
+				count += helper.td(buf, message.getStatus(), "error");
+			}
 
 			Object data = message.getData();
 
@@ -130,34 +141,34 @@ public class HtmlMessageCodec implements MessageCodec {
 		return count;
 	}
 
-	public int encodeMessage(Message message, ChannelBuffer buf, int level) {
+	public int encodeMessage(Message message, ChannelBuffer buf, int level, LineCounter counter) {
 		if (message instanceof Event) {
-			return encodeLine(message, buf, 'E', Policy.DEFAULT, level);
+			return encodeLine(message, buf, 'E', Policy.DEFAULT, level, counter);
 		} else if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 			List<Message> children = transaction.getChildren();
 
 			if (children.isEmpty()) {
 				if (transaction.getDuration() < 0) {
-					return encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS, level);
+					return encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS, level, counter);
 				} else {
-					return encodeLine(transaction, buf, 'A', Policy.WITH_DURATION, level);
+					return encodeLine(transaction, buf, 'A', Policy.WITH_DURATION, level, counter);
 				}
 			} else {
 				int count = 0;
 
-				count += encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS, level);
+				count += encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS, level, counter);
 
 				for (Message child : children) {
-					count += encodeMessage(child, buf, level + 1);
+					count += encodeMessage(child, buf, level + 1, counter);
 				}
 
-				count += encodeLine(transaction, buf, 'T', Policy.WITH_DURATION, level);
+				count += encodeLine(transaction, buf, 'T', Policy.WITH_DURATION, level, counter);
 
 				return count;
 			}
 		} else if (message instanceof Heartbeat) {
-			return encodeLine(message, buf, 'H', Policy.DEFAULT, level);
+			return encodeLine(message, buf, 'H', Policy.DEFAULT, level, counter);
 		} else {
 			throw new RuntimeException(String.format("Unsupported message type: %s.", message.getClass()));
 		}
@@ -169,7 +180,7 @@ public class HtmlMessageCodec implements MessageCodec {
 	}
 
 	protected static class BufferHelper {
-		private static byte[] TABLE1 = "<table>".getBytes();
+		private static byte[] TABLE1 = "<table class=\"logview\">".getBytes();
 
 		private static byte[] TABLE2 = "</table>".getBytes();
 
@@ -215,6 +226,10 @@ public class HtmlMessageCodec implements MessageCodec {
 		}
 
 		public int td(ChannelBuffer buf, String str) {
+			return td(buf, str, null);
+		}
+
+		public int td(ChannelBuffer buf, String str, String styleClass) {
 			if (str == null) {
 				str = "null";
 			}
@@ -222,8 +237,15 @@ public class HtmlMessageCodec implements MessageCodec {
 			byte[] data = str.getBytes();
 			int count = 0;
 
-			buf.writeBytes(TD1);
-			count += TD1.length;
+			if (styleClass == null) {
+				buf.writeBytes(TD1);
+				count += TD1.length;
+			} else {
+				String tag = "<td class=\"" + styleClass + "\">";
+
+				buf.writeBytes(tag.getBytes());
+				count += tag.length();
+			}
 
 			buf.writeBytes(data);
 			count += data.length;
@@ -244,9 +266,16 @@ public class HtmlMessageCodec implements MessageCodec {
 			return TD2.length;
 		}
 
-		public int tr1(ChannelBuffer buf) {
-			buf.writeBytes(TR1);
-			return TR1.length;
+		public int tr1(ChannelBuffer buf, String styleClass) {
+			if (styleClass == null) {
+				buf.writeBytes(TR1);
+				return TR1.length;
+			} else {
+				String tag = "<tr class=\"" + styleClass + "\">";
+
+				buf.writeBytes(tag.getBytes());
+				return tag.length();
+			}
 		}
 
 		public int tr2(ChannelBuffer buf) {
@@ -325,6 +354,18 @@ public class HtmlMessageCodec implements MessageCodec {
 					m_queue.offer(format);
 				}
 			}
+		}
+	}
+
+	protected static class LineCounter {
+		private int m_count;
+
+		public int getCount() {
+			return m_count;
+		}
+
+		public void inc() {
+			m_count++;
 		}
 	}
 

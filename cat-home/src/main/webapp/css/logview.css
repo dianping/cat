@@ -1,0 +1,21 @@
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+.warn {
+	color: yellow;
+}
+
+.error {
+	color: red;
+}

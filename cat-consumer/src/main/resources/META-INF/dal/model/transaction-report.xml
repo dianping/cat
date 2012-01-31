@@ -11,13 +11,13 @@
 		<attribute name="id" key="true" />
 		<attribute name="totalCount" value-type="long" primitive="true" />
 		<attribute name="failCount" value-type="long" primitive="true" />
-		<attribute name="failPercent" value-type="double" primitive="true" format="0.#%" />
+		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
 		<attribute name="min" value-type="double" primitive="true" default-value="Double.MAX_VALUE" />
 		<attribute name="max" value-type="double" primitive="true" default-value="Double.MIN_VALUE" />
-		<attribute name="avg" value-type="double" primitive="true" format="0.#" />
+		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum" value-type="double" primitive="true" />
 		<attribute name="sum2" value-type="double" primitive="true" />
-		<attribute name="std" value-type="double" primitive="true" format="0.#" />
+		<attribute name="std" value-type="double" primitive="true" format="0.0" />
 		<element name="success-message-id" value-type="String" />
 		<element name="fail-message-id" value-type="String" />
 		<entity-ref name="name" type="map" />
@@ -26,13 +26,13 @@
 		<attribute name="id" key="true" />
 		<attribute name="totalCount" value-type="long" primitive="true" />
 		<attribute name="failCount" value-type="long" primitive="true" />
-		<attribute name="failPercent" value-type="double" primitive="true" format="0.#%" />
+		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
 		<attribute name="min" value-type="double" primitive="true" default-value="Double.MAX_VALUE" />
 		<attribute name="max" value-type="double" primitive="true" default-value="Double.MIN_VALUE" />
-		<attribute name="avg" value-type="double" primitive="true" format="0.#" />
+		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum" value-type="double" primitive="true" />
 		<attribute name="sum2" value-type="double" primitive="true" />
-		<attribute name="std" value-type="double" primitive="true" format="0.#" />
+		<attribute name="std" value-type="double" primitive="true" format="0.0" />
 		<element name="success-message-id" value-type="String" />
 		<element name="fail-message-id" value-type="String" />
 	</entity>

@@ -18,43 +18,38 @@ for (i = 0; i < threadArray.length; i++) {
 }
 
 $(function() {
-	$("#failureTable").jqGrid( {
-		datatype : "local",
-		colNames : threadArray,
-		colModel : colModelArray,
-		viewrecords : true,
-		caption :"From "+jsObject.startTime+" To "+jsObject.endTime + "   Failure Report " +" Domain:" + jsObject.domain,
-		height : 500,
-		loadComplete : function() {
-			var grid = $("#failureTable");
-			var ids = grid.getDataIDs();
-			for ( var i = 0; i < ids.length; i++) {
-				grid.setRowData(ids[i], false, {
-					height : 25
-				});
-			}
-			grid.setGridHeight('auto');
-		}
-	}).navGrid('#pager2', {
-		edit : false,
-		add : false,
-		del : false
-	});
+	$("#failureTable").jqGrid(
+			{
+				datatype : "local",
+				colNames : threadArray,
+				colModel : colModelArray,
+				caption : "From " + jsObject.startTime + " To "
+						+ jsObject.endTime + "   Failure Report " + " Domain:"
+						+ jsObject.domain,
+				height : "100%",
+				autowidth: true,
+				loadComplete : function() {
+					$("#failureTable").setGridHeight('auto');
+				}
+			}).navGrid('#pager2', {edit:false,add:false,del:false});
 
-	jQuery("#failureTable").jqGrid('setGridWidth', '90%');
-	for (var i = 0; i < jsObject.segments.length; i++) {
-		var segment = jsObject.segments[i];
+	$("#failureTable").jqGrid('setGridWidth', '100%');
+	
+	var segments = jsObject.segments;
+	for (var key in segments) {
+		var segment = segments[key];
 		var threadResult = creatNewArray(threadArray.length);
-		threadResult[0] = jsObject.segments[i].id;
+		
+		threadResult[0] = segment.id;
 		for ( var j = 0; j < segment.entries.length; j++) {
 			var entry = segment.entries[j];
 			var threadId = entry.threadId;
 			var type = entry.type;
-			var messageId = entry.messageId;
+			var path = entry.path;
 			var text = entry.text;
-
 			var index = getIndex(threadId, threadArray);
-			var url = getUrl(type, text, messageId);
+			var url = getUrl(type, text, path);
+			
 			if (threadResult[index] == "") {
 				threadResult[index] = threadResult[index] + url;
 			} else {
@@ -65,7 +60,14 @@ $(function() {
 		for ( var m = 0; m < threadArray.length; m++) {
 			minuteData[threadArray[m]] = threadResult[m];
 		}
-		jQuery("#failureTable").jqGrid('addRowData', m + 1, minuteData);
+		$("#failureTable").jqGrid('addRowData', m + 1, minuteData);
+		
+        
+        $(function(){
+            $(window).resize(function(){  
+                  $("#failureTable").setGridWidth($(window).width()*0.99);
+            });
+        });
 	}
 });
 
@@ -84,18 +86,14 @@ function getIndex(object, array) {
 	}
 }
 
-function getUrl(type, text, messageId) {
+function getUrl(type, text, path) {
 	if (type == 'RuntimeException') {
-		return '<a target=\'_blank\' style=\'background:red;\' href=\'w/messageId='
-				+ messageId + '\'>' + text + '</a>';
+		return '<a target=\'_blank\' style=\'background:red;\' href=\'m/' + path + '\'>' + text + '</a>';
 	} else if (type == 'Exception') {
-		return '<a target=\'_blank\' style=\'background:#FFFF00;\' href=\'www.dianping.com/messageId='
-				+ messageId + '\'>' + text + '</a>';
+		return '<a target=\'_blank\' style=\'background:#FFFF00;\' href=\'m/' + path + '\'>' + text + '</a>';
 	} else if (type == 'Error') {
-		return '<a target=\'_blank\' style=\'background:#FF00FF;\' href=\'www.dianping.com/messageId='
-				+ messageId + '\'>' + text + '</a>';
+		return '<a target=\'_blank\' style=\'background:#FF00FF;\' href=\'m/' + path + '\'>' + text + '</a>';
 	} else {
-		return '<a target=\'_blank\' style=\'background:#CC99FF;\' href=\'www.dianping.com/messageId='
-				+ messageId + '\'>' + text + '</a>';
+		return '<a target=\'_blank\' style=\'background:#CC99FF;\' href=\'m/' + path + '\'>' + text + '</a>';
 	}
 }

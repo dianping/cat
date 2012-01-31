@@ -142,7 +142,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			if (timestamp < now + MINUTE * 3 && timestamp >= nextStart) {
 				startTasks(tree);
 			} else {
-				m_logger.warn("The message is not excepceted!" + tree);
+				m_logger.warn("The timestamp of message is out of range, IGNORED! \r\n" + tree);
 			}
 		}
 	}

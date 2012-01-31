@@ -3,7 +3,6 @@ package com.dianping.cat.message.spi.internal;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -28,16 +27,6 @@ public class DefaultMessageStorage implements MessageStorage, LogEnabled {
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public File getBaseDir() {
-		return m_builder.getLogViewBaseDir();
-	}
-
-	@Override
-	public URL getBaseUrl() {
-		return m_builder.getLogViewBaseUrl();
 	}
 
 	@Override
