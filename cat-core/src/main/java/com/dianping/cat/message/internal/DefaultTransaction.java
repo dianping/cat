@@ -41,7 +41,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 			event.complete();
 			addChild(event);
 		} else {
-			m_duration = (long) (System.nanoTime() / 1e6) - getTimestamp();
+			m_duration = MilliSecondTimer.currentTimeMillis() - getTimestamp();
 
 			setCompleted(true);
 

@@ -11,14 +11,14 @@ public class MillisSecondTimerTest {
 	public void test() {
 		MilliSecondTimer.initialize();
 
-		for (int i = 1; i <= 100; i++) {
-			LockSupport.parkNanos(1000 * 1000); // 1 ms
+		long t1 = MilliSecondTimer.currentTimeMillis();
 
-			long t1 = System.currentTimeMillis();
+		for (int i = 1; i <= 100; i++) {
+			LockSupport.parkUntil(t1 + i);
+
 			long t2 = MilliSecondTimer.currentTimeMillis();
 
-			// 15~16 ms is one tick in Windows system
-			Assert.assertTrue("failed on loop " + i + ": " + (t2 - t1), t2 - t1 <= 16);
+			Assert.assertTrue("failed on loop " + i + ": " + (t2 - t1), t2 - t1 <= i + 1);
 		}
 	}
 }

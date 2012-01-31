@@ -25,7 +25,7 @@ public abstract class AbstractMessage implements Message {
 	public AbstractMessage(String type, String name) {
 		m_type = type;
 		m_name = name;
-		m_timestamp = (long) (System.nanoTime() / 1e6);
+		m_timestamp = MilliSecondTimer.currentTimeMillis();
 		m_data = new StringRope();
 	}
 
