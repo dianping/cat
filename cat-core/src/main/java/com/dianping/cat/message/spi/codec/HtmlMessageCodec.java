@@ -80,7 +80,7 @@ public class HtmlMessageCodec implements MessageCodec {
 		if (counter != null) {
 			counter.inc();
 
-			count += helper.tr1(buf, counter.getCount() % 2 == 1 ? "odd" : "even");
+			count += helper.tr1(buf, counter.getCount() % 2 != 0 ? "odd" : "even");
 		} else {
 			count += helper.tr1(buf, null);
 		}

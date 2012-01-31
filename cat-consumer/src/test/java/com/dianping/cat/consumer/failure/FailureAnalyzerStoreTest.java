@@ -55,7 +55,7 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 			tree.setMessage(t);
 			tree.setIpAddress("192.168.8." + i % 4);
 			t.setDuration(3 * 1000);
-			t.setTimestamp(start + 1000 * 60 * i);
+			t.setTimestamp(start + 1000L * 60 * i);
 			analyzer.process(tree);
 			analyzer.process(tree);
 			analyzer.process(tree);
@@ -95,7 +95,7 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 			tree.setHostName("middleware");
 			tree.setMessage(t);
 			t.setDuration(3 * 1000);
-			t.setTimestamp(start + 1000 * 60 * i);
+			t.setTimestamp(start + 1000L * 60 * i);
 			analyzer.process(tree);
 		}
 

@@ -29,6 +29,6 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 
 	@Override
 	public void release(Object component) {
-		release(component);
+		super.release(component);
 	}
 }

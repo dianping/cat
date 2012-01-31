@@ -1,6 +1,7 @@
 package com.dianping.cat.demo;
 
 import java.io.File;
+import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
@@ -44,16 +45,16 @@ public class Demo extends ComponentTestCase {
 		cat.logEvent("RuntimeException", RuntimeException.class.getName(), "ERROR", null);
 		cat.logEvent("Exception", Exception.class.getName(), "ERROR", null);
 		cat.logEvent("RuntimeException", NullPointerException.class.getName(), "ERROR", null);
-
-		t.setStatus("0");
+		Thread.sleep(new Random().nextInt(10) * new Random().nextInt(3));
+		t.setStatus("error");
 		t.complete();
 	}
 
 	@Test
 	public void demo2() throws Exception {
 		MessageProducer cat = lookup(MessageProducer.class);
-		Transaction t = cat.newTransaction("SQL", "update-user");
-
+		Transaction t = cat.newTransaction("SQL3", "update-user");
+		Thread.sleep(10);
 		t.setStatus("error");
 		t.complete();
 	}
