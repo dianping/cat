@@ -24,6 +24,7 @@ public class MilliSecondTimer {
 				if (millis != m_baseTime) {
 					m_baseTime = millis;
 					m_startNanoTime = System.nanoTime();
+					break;
 				}
 			}
 		} else {
