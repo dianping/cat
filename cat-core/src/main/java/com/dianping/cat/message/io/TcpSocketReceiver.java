@@ -105,7 +105,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 		m_factory.releaseExternalResources();
 	}
 
-	public class MyDecoder extends FrameDecoder {
+	public static class MyDecoder extends FrameDecoder {
 		@Override
 		/**
 		 * return null means not all data is ready, so waiting for next network package.

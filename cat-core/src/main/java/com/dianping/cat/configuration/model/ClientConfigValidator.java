@@ -7,7 +7,7 @@ public class ClientConfigValidator extends DefaultValidator {
 	@Override
 	public void visitConfig(Config config) {
 		if (!"client".equals(config.getMode())) {
-			throw new RuntimeException(String.format("Attribute(%)s at path(%s) is required!", "mode", "/config"));
+			throw new RuntimeException(String.format("Attribute(%s) at path(%s) is required!", "mode", "/config"));
 		} else if (config.getApp() == null) {
 			throw new RuntimeException(String.format("Element(%s) at path(%s) is required!", "app", "/config"));
 		} else if (config.getServers().size() == 0) {

@@ -112,9 +112,10 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 
 			if (entries == null) {
 				System.out.println(minuteStr);
+			} else {
+				assertEquals("Check the segment size ", 50, entries.size());
 			}
-
-			assertEquals("Check the segment size ", 50, entries.size());
+			
 			startDate.setTime(startDate.getTime() + 1000 * 60);
 		}
 	}
@@ -139,7 +140,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 			tree.setIpAddress("127.0.0." + i);
 			tree.setMessage(t);
 			t.setDuration(3 * 1000);
-			t.setTimestamp(start + 1000 * 60 * i);
+			t.setTimestamp(start + 1000L * 60 * i);
 			analyzer.process(tree);
 			// analyzer.process(tree);
 		}
