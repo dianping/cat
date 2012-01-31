@@ -12,8 +12,10 @@ for (i = 0; i < threadArray.length; i++) {
 	var object = {
 		"name" : threadArray[i],
 		"index" : threadArray[i],
-		"sorttype" : "string"
+		"sorttype" : "string",
+		width:100
 	};
+	
 	colModelArray.push(object);
 }
 
@@ -88,12 +90,12 @@ function getIndex(object, array) {
 
 function getUrl(type, text, path) {
 	if (type == 'RuntimeException') {
-		return '<a target=\'_blank\' style=\'background:red;\' href=\'m/' + path + '\'>' + text + '</a>';
+		return '<a style=\'background:red;\' href=\'m/' + path + '\'>' + text + '</a>';
 	} else if (type == 'Exception') {
-		return '<a target=\'_blank\' style=\'background:#FFFF00;\' href=\'m/' + path + '\'>' + text + '</a>';
+		return '<a style=\'background:#FFFF00;\' href=\'m/' + path + '\'>' + text + '</a>';
 	} else if (type == 'Error') {
-		return '<a target=\'_blank\' style=\'background:#FF00FF;\' href=\'m/' + path + '\'>' + text + '</a>';
+		return '<a style=\'background:#FF00FF;\' href=\'m/' + path + '\'>' + text + '</a>';
 	} else {
-		return '<a target=\'_blank\' style=\'background:#CC99FF;\' href=\'m/' + path + '\'>' + text + '</a>';
+		return '<a style=\'background:#CC99FF;\' href=\'m/' + path + '\'>' + text + '</a>';
 	}
 }

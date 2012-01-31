@@ -252,7 +252,7 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 				if (t.getDuration() > m_threshold) {
 					Entry entry = super.getEntry(tree);
 
-					entry.setText(message.getType() + message.getName());
+					entry.setText(message.getType() + "." + message.getName());
 					entry.setType(LONG_URL);
 
 					Segment segment = super.findOrCreateSegment(message, report);

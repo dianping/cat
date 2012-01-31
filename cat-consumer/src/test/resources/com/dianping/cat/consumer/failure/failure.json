@@ -25,21 +25,21 @@
          "entries": [
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId0.html",
+               "path": "20120125/13/middleware/MessageId0.html",
                "threadId": "Thread0",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId0.html",
+               "path": "20120125/13/middleware/MessageId0.html",
                "threadId": "Thread0",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId0.html",
+               "path": "20120125/13/middleware/MessageId0.html",
                "threadId": "Thread0",
-               "text": "A1B1"
+               "text": "A1.B1"
             }
          ]
       },
@@ -48,21 +48,21 @@
          "entries": [
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId1.html",
+               "path": "20120125/13/middleware/MessageId1.html",
                "threadId": "Thread1",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId1.html",
+               "path": "20120125/13/middleware/MessageId1.html",
                "threadId": "Thread1",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId1.html",
+               "path": "20120125/13/middleware/MessageId1.html",
                "threadId": "Thread1",
-               "text": "A1B1"
+               "text": "A1.B1"
             }
          ]
       },
@@ -71,21 +71,21 @@
          "entries": [
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId2.html",
+               "path": "20120125/13/middleware/MessageId2.html",
                "threadId": "Thread2",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId2.html",
+               "path": "20120125/13/middleware/MessageId2.html",
                "threadId": "Thread2",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId2.html",
+               "path": "20120125/13/middleware/MessageId2.html",
                "threadId": "Thread2",
-               "text": "A1B1"
+               "text": "A1.B1"
             }
          ]
       },
@@ -94,21 +94,21 @@
          "entries": [
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId3.html",
+               "path": "20120125/13/middleware/MessageId3.html",
                "threadId": "Thread3",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId3.html",
+               "path": "20120125/13/middleware/MessageId3.html",
                "threadId": "Thread3",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId3.html",
+               "path": "20120125/13/middleware/MessageId3.html",
                "threadId": "Thread3",
-               "text": "A1B1"
+               "text": "A1.B1"
             }
          ]
       },
@@ -117,21 +117,21 @@
          "entries": [
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId4.html",
+               "path": "20120125/13/middleware/MessageId4.html",
                "threadId": "Thread4",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId4.html",
+               "path": "20120125/13/middleware/MessageId4.html",
                "threadId": "Thread4",
-               "text": "A1B1"
+               "text": "A1.B1"
             },
             {
                "type": "LongUrl",
-               "path": "file:./target/catlog/20120125/13/middleware/MessageId4.html",
+               "path": "20120125/13/middleware/MessageId4.html",
                "threadId": "Thread4",
-               "text": "A1B1"
+               "text": "A1.B1"
             }
          ]
       }

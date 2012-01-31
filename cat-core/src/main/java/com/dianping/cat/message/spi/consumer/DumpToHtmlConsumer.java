@@ -38,10 +38,11 @@ public class DumpToHtmlConsumer implements MessageConsumer, Initializable, LogEn
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 			m_codec.encode(tree, buf);
-			fos = new FileOutputStream(file);
 
-			buf.readInt(); // get rid of count
-			buf.getBytes(buf.readerIndex(), fos, buf.readableBytes());
+			int length = buf.readInt();
+
+			fos = new FileOutputStream(file);
+			buf.getBytes(buf.readerIndex(), fos, length);
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("Error when dumping to HTML file(%s)!", file), e);
 		} finally {

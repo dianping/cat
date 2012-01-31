@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer.failure;
 
 import java.io.File;
-import java.util.regex.Pattern;
 
 import junit.framework.Assert;
 
@@ -14,7 +13,6 @@ import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
 import com.dianping.cat.consumer.failure.model.entity.FailureReport;
 import com.dianping.cat.consumer.failure.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.helper.Files;
@@ -39,7 +37,6 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000);
 
-		MessagePathBuilder pathBuilder = lookup(MessagePathBuilder.class);
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
 		      extraTime);
@@ -69,9 +66,6 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 
 		String json = builder.getString();
 		String expected = Files.forIO().readFrom(getResourceFile("failure.json"), "utf-8");
-		String baseDir = pathBuilder.getLogViewBaseDir().toString();
-
-		json = json.replaceAll(Pattern.quote(baseDir), "./target/catlog");
 
 		Assert.assertEquals("Check json content!", expected.replace("\r", ""), json.replace("\r", ""));
 	}
