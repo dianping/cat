@@ -25,7 +25,7 @@ $(function()
                 ],
                 sortname:'type',
                 sortorder:'asc',
-                caption: "Transaction Summary",
+                caption: "Domain " + data["domain"] + " Transaction Summary",
                 height: '100%',
                 autowidth: true,
                 loadComplete: function() {
