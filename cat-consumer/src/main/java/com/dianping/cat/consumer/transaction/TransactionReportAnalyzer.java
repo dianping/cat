@@ -6,9 +6,12 @@ package com.dianping.cat.consumer.transaction;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -17,6 +20,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.entity.Property;
+import com.dianping.cat.consumer.failure.model.entity.FailureReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -36,10 +40,12 @@ import com.site.lookup.annotation.Inject;
 public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable, LogEnabled {
 	private final static long MINUTE = 60 * 1000L;
 
-	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
+	private final static SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
 
 	@Inject
 	private MessageManager m_manager;
+	
+	private Map<String, FailureReport> m_reports = new HashMap<String, FailureReport>();
 
 	private TransactionReport report;
 
@@ -49,7 +55,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 	private Logger m_logger;
 
-	private void computeMeanSquareDeviation() {
+	private void computeMeanSquareDeviation(String domain) {
 		Collection<TransactionType> types = report.getTypes().values();
 
 		for (TransactionType type : types) {
@@ -109,12 +115,14 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 	}
 
 	@Override
-	public TransactionReport generate() {
-		computeMeanSquareDeviation();
-		return report;
+	public List<TransactionReport> generate() {
+		List<TransactionReport> reports = new ArrayList<TransactionReport>();
+		for (String domain : m_reports.keySet()) {
+			computeMeanSquareDeviation(domain);
+		}
+		return reports;
 	}
 
-	// TODO
 	private String getTransactionFileName(TransactionReport report) {
 		StringBuffer result = new StringBuffer();
 		String start = FILE_SDF.format(report.getStartTime());
@@ -210,7 +218,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 	}
 
 	@Override
-	protected void store(TransactionReport result) {
+	protected void store(List<TransactionReport> result) {
 		String failureFileName = getTransactionFileName(report);
 		String htmlPath = new StringBuilder().append(m_reportPath).append(failureFileName).append(".html").toString();
 		File file = new File(htmlPath);
@@ -227,4 +235,11 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 			m_logger.error(String.format("Error when writing to file(%s)!", file), e);
 		}
 	}
+
+	@Override
+	public TransactionReport generate(String domain) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

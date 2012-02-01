@@ -2,6 +2,7 @@ package com.dianping.cat.message.spi;
 
 import java.util.List;
 
+
 public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 	@Override
 	public void analyze(MessageQueue queue) {
@@ -31,6 +32,8 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 	protected abstract void store(List<R> result);
 
 	public abstract List<R> generate();
+	
+	public abstract R generate(String domain);
 
 	protected abstract void process(MessageTree tree);
 

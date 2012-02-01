@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 		      .getCurrentAnalyzer("transaction");
 
 		if (analyzer != null) {
-			model.setReport(analyzer.generate());
+			model.setReport(analyzer.generate(ctx.getRequestContext().getParameterProvider().getParameter("domain")));
 		} else {
 			model.setReport(new TransactionReport("none"));
 		}
