@@ -1,101 +1,61 @@
-var jsObject = eval(jsonDate);
-var threadArray = new Array();
-threadArray.push('Minute');
+function generateTable(wrap, json) {
+	var table = $('<table />').addClass('report-table'), caption = $('<caption />'), thead = $('<thead />'), thr = $(
+			'<tr />').appendTo(thead), threads = json.threads.threads, ths = [ "Minute" ]
+			.concat(threads);
+	if(threads==null){
+		threads =[];
+	}
+	if(json.machines.machines==null){
+		json.machines.machines=[];
+	}
+	caption.html(
+			"From " + json.startTime + " To " + json.endTime
+					+ " Failure Report Domain:" + json.domain).appendTo(table);
 
-for (i = 0; i < jsObject.threads.threads.length; i++) {
-	threadArray.push(jsObject.threads.threads[i]);
-}
+	thead.appendTo(table);
 
-var colModelArray = new Array();
+	ths.forEach(function(th) {
+		var temp = 	$('<th />').html(th);
+		if(temp!="")
+			temp.appendTo(thr);
+	});
 
-for (i = 0; i < threadArray.length; i++) {
-	var object = {
-		"name" : threadArray[i],
-		"index" : threadArray[i],
-		"sorttype" : "string",
-		width:100
-	};
-	
-	colModelArray.push(object);
-}
-
-$(function() {
-	$("#failureTable").jqGrid(
-			{
-				datatype : "local",
-				colNames : threadArray,
-				colModel : colModelArray,
-				caption : "From " + jsObject.startTime + " To "
-						+ jsObject.endTime + "   Failure Report " + " Domain:"
-						+ jsObject.domain,
-				height : "100%",
-				autowidth: true,
-				loadComplete : function() {
-					$("#failureTable").setGridHeight('auto');
-				}
-			}).navGrid('#pager2', {edit:false,add:false,del:false});
-
-	$("#failureTable").jqGrid('setGridWidth', '100%');
-	
-	var segments = jsObject.segments;
-	for (var key in segments) {
-		var segment = segments[key];
-		var threadResult = creatNewArray(threadArray.length);
-		
-		threadResult[0] = segment.id;
-		for ( var j = 0; j < segment.entries.length; j++) {
-			var entry = segment.entries[j];
-			var threadId = entry.threadId;
-			var type = entry.type;
-			var path = entry.path;
-			var text = entry.text;
-			var index = getIndex(threadId, threadArray);
-			var url = getUrl(type, text, path);
-			
-			if (threadResult[index] == "") {
-				threadResult[index] = threadResult[index] + url;
-			} else {
-				threadResult[index] = threadResult[index] + '</br>' + url;
-			}
+	$('<tr />').append(
+			$('<td />').attr('colspan', threads.length + 1).html(
+					"machines:" + json.machines.machines.join(','))).appendTo(
+			table);
+	for ( var key in json.segments) {
+		var seg = json.segments[key];
+		var tr = $('<tr />'), tds = [];
+		$('<td />').html(seg.id).appendTo(tr);
+		threads.forEach(function() {
+			var td = $('<td />');
+			td.appendTo(tr);
+			tds.push(td);
+		});
+		if (seg.entries == null) {
+			seg.entries = [];
 		}
-		var minuteData = {};
-		for ( var m = 0; m < threadArray.length; m++) {
-			minuteData[threadArray[m]] = threadResult[m];
-		}
-		$("#failureTable").jqGrid('addRowData', m + 1, minuteData);
+			seg.entries
+					.forEach(function(entry) {
+						var index = threads.indexOf(entry.threadId), td = tds[index], type = entry.type, anchor = $(
+								'<a />').attr("href",
+								"/m/path" + entry.path).attr("target",
+								"_blank").addClass(type).html(entry.text);
+
+						if (td.html()) {
+							td.append($('<br />'));
+						}
+
+						if (!type) {
+							type = "Other";
+						}
+						td.append(anchor);
+					});
+			tr.appendTo(table);
 		
-        
-        $(function(){
-            $(window).resize(function(){  
-                  $("#failureTable").setGridWidth($(window).width()*0.99);
-            });
-        });
 	}
-});
-
-function creatNewArray(length) {
-	var array = new Array();
-	for ( var i = 0; i < length; i++) {
-		array.push("");
-	}
-	return array;
+	$(wrap).append(table);
 }
 
-function getIndex(object, array) {
-	for ( var i = 0; i < array.length; i++) {
-		if (array[i] == object)
-			return i;
-	}
-}
-
-function getUrl(type, text, path) {
-	if (type == 'RuntimeException') {
-		return '<a style=\'background:red;\' href=\'m/' + path + '\'>' + text + '</a>';
-	} else if (type == 'Exception') {
-		return '<a style=\'background:#FFFF00;\' href=\'m/' + path + '\'>' + text + '</a>';
-	} else if (type == 'Error') {
-		return '<a style=\'background:#FF00FF;\' href=\'m/' + path + '\'>' + text + '</a>';
-	} else {
-		return '<a style=\'background:#CC99FF;\' href=\'m/' + path + '\'>' + text + '</a>';
-	}
-}
+generateTable('#failureTable', jsonData);

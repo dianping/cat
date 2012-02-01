@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -54,15 +56,6 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		}
 
 		@Override
-		protected void store(AnalyzerResult result) {
-		}
-
-		@Override
-		public AnalyzerResult generate() {
-			return null;
-		}
-
-		@Override
 		protected void process(MessageTree tree) {
 			long time = tree.getMessage().getTimestamp();
 			long systemTime = System.currentTimeMillis();
@@ -76,6 +69,15 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		protected boolean isTimeout() {
 			return false;
 		}
+
+		@Override
+      public List<AnalyzerResult> generate() {
+	      return null;
+      }
+
+		@Override
+      protected void store(List<AnalyzerResult> result) {
+      }
 	}
 
 	public static class AnalyzerResult {

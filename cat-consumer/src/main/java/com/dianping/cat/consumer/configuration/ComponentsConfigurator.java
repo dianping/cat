@@ -44,13 +44,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageStorage.class,"html"));
 
 		all.add(C(FailureReportAnalyzer.class).is(PER_LOOKUP) //
-		      .config(E("reportPath").value("target/report/failure")) //
+		      .config(E("reportPath").value("target/report/failure/")) //
 		      .req(MessageManager.class) //
 		      .req(Handler.class, new String[] { "failure-handler", "long-url-handler" }, "m_handlers"));
 
 		all.add(C(TransactionReportAnalyzer.class).is(PER_LOOKUP) //
 		      .req(MessageManager.class) //
-		      .config(E("reportPath").value("target/report/transaction")));
+		      .config(E("reportPath").value("target/report/transaction/")));
 
 		return all;
 	}

@@ -4,7 +4,9 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -43,9 +45,13 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 	@Inject
 	private MessageManager m_manager;
 
-	private FailureReport m_report;
+	private Map<String, FailureReport> m_reports = new HashMap<String, FailureReport>();
+
+	private long m_startTime;
 
 	private long m_extraTime;
+
+	private long m_duration;
 
 	private static final long MINUTE = 60 * 1000;
 
@@ -54,13 +60,25 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
 
 	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
-		m_report = new FailureReport();
-		m_report.setStartTime(new Date(startTime));
-		m_report.setEndTime(new Date(startTime + duration - MINUTE));
-		m_report.setDomain(domain);
 		m_extraTime = extraTime;
-		m_report.setMachines(new Machines());
-		m_report.setThreads(new Threads());
+		m_startTime = startTime;
+		m_duration = duration;
+	}
+
+	private FailureReport getReportByDomain(String domain) {
+		FailureReport report = m_reports.get(domain);
+		if (report != null) {
+			return report;
+		}
+
+		FailureReport addedReport = new FailureReport();
+		addedReport.setStartTime(new Date(m_startTime));
+		addedReport.setEndTime(new Date(m_startTime + m_duration - MINUTE));
+		addedReport.setDomain(domain);
+		addedReport.setMachines(new Machines());
+		addedReport.setThreads(new Threads());
+		m_reports.put(domain, addedReport);
+		return addedReport;
 	}
 
 	public void addHandlers(Handler handler) {
@@ -72,7 +90,54 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 	}
 
 	@Override
-	public FailureReport generate() {
+	public List<FailureReport> generate() {
+		List<FailureReport> reports = new ArrayList<FailureReport>();
+		for (String domain : m_reports.keySet()) {
+			reports.add(generateByDomain(domain));
+		}
+		return reports;
+	}
+
+	@Override
+	protected void store(List<FailureReport> reports) {
+		if (reports != null) {
+			for (FailureReport report : reports) {
+				String failureFileName = getFailureFileName(report);
+				String htmlPath = new StringBuilder().append(m_reportPath).append(failureFileName).append(".html")
+				      .toString();
+				File file = new File(htmlPath);
+
+				file.getParentFile().mkdirs();
+				FailureReportStore.storeToHtml(file, report);
+			}
+		}
+	}
+
+	public FailureReport generateByDomain(String domain) {
+		FailureReport m_report = getReportByDomain(domain);
+		long time = System.currentTimeMillis();
+		long endTime = time - time % (60 * 1000);
+		long start = m_report.getStartTime().getTime();
+
+		long reportEndTime = m_report.getEndTime().getTime();
+		if (reportEndTime < endTime)
+			endTime = reportEndTime;
+		Map<String, Segment> oldSegments = m_report.getSegments();
+		Map<String, Segment> newSegments = new LinkedHashMap<String, Segment>();
+
+		for (; start <= endTime; start = start + 60 * 1000) {
+			String minute = SDF.format(new Date(start));
+			Segment segment = oldSegments.get(minute);
+			if (segment != null) {
+				newSegments.put(minute, segment);
+			} else {
+				newSegments.put(minute, new Segment(minute));
+			}
+		}
+		oldSegments.clear();
+		for (String key : newSegments.keySet()) {
+			oldSegments.put(key, newSegments.get(key));
+		}
 		return m_report;
 	}
 
@@ -81,17 +146,15 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		if (m_handlers == null) {
 			throw new RuntimeException();
 		}
+		String domain = tree.getDomain();
+		FailureReport report = getReportByDomain(domain);
 
-		m_report.getMachines().addMachine(tree.getIpAddress());
-		m_report.getThreads().addThread(tree.getThreadId());
+		report.getMachines().addMachine(tree.getIpAddress());
+		report.getThreads().addThread(tree.getThreadId());
 
 		for (Handler handler : m_handlers) {
-			handler.handle(m_report, tree);
+			handler.handle(report, tree);
 		}
-	}
-
-	public void setFailureReport(FailureReport report) {
-		m_report = report;
 	}
 
 	public void setReportPath(String configPath) {
@@ -112,18 +175,8 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 	}
 
 	@Override
-	protected void store(FailureReport report) {
-		String failureFileName = getFailureFileName(report);
-		String htmlPath = new StringBuilder().append(m_reportPath).append(failureFileName).append(".html").toString();
-		File file = new File(htmlPath);
-
-		file.getParentFile().mkdirs();
-		FailureReportStore.storeToHtml(file, report);
-	}
-
-	@Override
 	protected boolean isTimeout() {
-		long endTime = m_report.getEndTime().getTime();
+		long endTime = m_startTime + m_duration + m_extraTime;
 		long currentTime = System.currentTimeMillis();
 
 		if (currentTime > endTime + m_extraTime) {
