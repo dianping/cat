@@ -12,8 +12,7 @@ for (i = 0; i < threadArray.length; i++) {
 	var object = {
 		"name" : threadArray[i],
 		"index" : threadArray[i],
-		"sorttype" : "string",
-		width:100
+		"width": (i==0?"50":"200") // can width be "auto" for thread column?
 	};
 	
 	colModelArray.push(object);
@@ -42,7 +41,7 @@ $(function() {
 		var segment = segments[key];
 		var threadResult = creatNewArray(threadArray.length);
 		
-		threadResult[0] = segment.id;
+		threadResult[0] = segment.id.substring(11);
 		for ( var j = 0; j < segment.entries.length; j++) {
 			var entry = segment.entries[j];
 			var threadId = entry.threadId;
@@ -88,6 +87,7 @@ function getIndex(object, array) {
 	}
 }
 
+// should all legend be provided by data model?
 function getUrl(type, text, path) {
 	if (type == 'RuntimeException') {
 		return '<a style=\'background:red;\' href=\'m/' + path + '\'>' + text + '</a>';

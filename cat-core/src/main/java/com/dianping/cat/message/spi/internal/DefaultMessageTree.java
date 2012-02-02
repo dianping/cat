@@ -24,6 +24,8 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_threadId;
 
+	private String m_threadName;
+
 	private Message m_message;
 
 	@Override
@@ -66,6 +68,10 @@ public class DefaultMessageTree implements MessageTree {
 		return m_threadId;
 	}
 
+	public String getThreadName() {
+		return m_threadName;
+	}
+
 	@Override
 	public void setDomain(String domain) {
 		m_domain = domain;
@@ -104,6 +110,10 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
+	}
+
+	public void setThreadName(String threadName) {
+		m_threadName = threadName;
 	}
 
 	@Override

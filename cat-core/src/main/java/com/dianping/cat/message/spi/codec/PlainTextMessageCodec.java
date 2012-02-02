@@ -53,6 +53,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 		String hostName = helper.read(buf, TAB);
 		String ipAddress = helper.read(buf, TAB);
 		String threadId = helper.read(buf, TAB);
+		String threadName = helper.read(buf, TAB);
 		String messageId = helper.read(buf, TAB);
 		String requestToken = helper.read(buf, TAB);
 		String sessionToken = helper.read(buf, LF);
@@ -62,6 +63,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			tree.setHostName(hostName);
 			tree.setIpAddress(ipAddress);
 			tree.setThreadId(threadId);
+			tree.setThreadName(threadName);
 			tree.setMessageId(messageId);
 			tree.setRequestToken(requestToken);
 			tree.setSessionToken(sessionToken);
@@ -207,6 +209,8 @@ public class PlainTextMessageCodec implements MessageCodec {
 		count += helper.write(buf, tree.getIpAddress());
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getThreadId());
+		count += helper.write(buf, TAB);
+		count += helper.write(buf, tree.getThreadName());
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getMessageId());
 		count += helper.write(buf, TAB);
