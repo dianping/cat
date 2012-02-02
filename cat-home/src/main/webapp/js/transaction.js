@@ -12,6 +12,9 @@ $(function(){
 
 $(function()
     {
+        domainlinks = 'Domains ';
+        $.each(data.domainSet, function(i, t){domainlinks += "[ <a href=\"/cat/r/t?domain="+t+"\">"+t+"</a> ]"});
+        $("#domainlist").html(domainlinks);
         $("#gridTable").jqGrid({
                 datatype: "local",
                 colNames:['Type', 'Total Count', 'Fail Count', 'Failure%', 'Sample Link', 'Min/Max/Avg/Std(ms)'],

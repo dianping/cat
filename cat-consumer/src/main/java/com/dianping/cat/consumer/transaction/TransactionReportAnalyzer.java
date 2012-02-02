@@ -59,9 +59,8 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 		if (report == null) {
 			return report;
 		}
-		Collection<TransactionType> types = report.getTypes().values();
 
-		for (TransactionType type : types) {
+		for (TransactionType type : report.getTypes().values()) {
 			long typeCount = 0;
 			long typeFailCount = 0;
 			double typeSum = 0;
@@ -119,10 +118,15 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 	@Override
 	public TransactionReport generate(String domain) {
-		if(domain == null) {
-			domain = (String)this.m_reports.keySet().toArray()[0];
+		ArrayList<String> domains = new ArrayList<String>(this.m_reports.keySet());
+		if (domain == null) {
+			domain = domains.get(0);
 		}
-		return computeMeanSquareDeviation(domain);
+		TransactionReport report = computeMeanSquareDeviation(domain);
+		for (String ele : domains) {
+			report.addDomain(ele);
+		}
+		return report;
 	}
 
 	private String getTransactionFileName(TransactionReport report) {
