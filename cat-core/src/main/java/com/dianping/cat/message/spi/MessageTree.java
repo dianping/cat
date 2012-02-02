@@ -19,6 +19,8 @@ public interface MessageTree {
 
 	public String getThreadId();
 
+	public String getThreadName();
+
 	public void setDomain(String domain);
 
 	public void setHostName(String hostName);
@@ -34,4 +36,6 @@ public interface MessageTree {
 	public void setSessionToken(String sessionToken);
 
 	public void setThreadId(String threadId);
+
+	public void setThreadName(String threadName);
 }

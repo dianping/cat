@@ -64,6 +64,7 @@ public class HtmlMessageCodec implements MessageCodec {
 		count += helper.td(buf, tree.getHostName());
 		count += helper.td(buf, tree.getIpAddress());
 		count += helper.td(buf, tree.getThreadId());
+		count += helper.td(buf, tree.getThreadName());
 		count += helper.td(buf, tree.getMessageId());
 		count += helper.td(buf, tree.getRequestToken());
 		count += helper.td(buf, tree.getSessionToken());
@@ -320,13 +321,15 @@ public class HtmlMessageCodec implements MessageCodec {
 	 * Thread safe date helper class. DateFormat is NOT thread safe.
 	 */
 	protected static class DateHelper {
+		private static final String DATE_PATTERN = "HH:mm:ss.SSS";
+
 		private BlockingQueue<SimpleDateFormat> m_queue = new ArrayBlockingQueue<SimpleDateFormat>(20);
 
 		public String format(long timestamp) {
 			SimpleDateFormat format = m_queue.poll();
 
 			if (format == null) {
-				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+				format = new SimpleDateFormat(DATE_PATTERN);
 			}
 
 			try {
@@ -342,7 +345,7 @@ public class HtmlMessageCodec implements MessageCodec {
 			SimpleDateFormat format = m_queue.poll();
 
 			if (format == null) {
-				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss");
+				format = new SimpleDateFormat(DATE_PATTERN);
 			}
 
 			try {

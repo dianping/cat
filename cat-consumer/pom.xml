@@ -34,11 +34,10 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.0-a5</version>
+				<version>1.0.3</version>
 				<executions>
 					<execution>
-						<!-- <id>generate failure report model</id> -->
-						<id>default-cli</id>
+						<id>generate failure report model</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>dal-model</goal>
@@ -55,6 +54,17 @@
 						</goals>
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/model/transaction-report-manifest.xml</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<!-- <id>generate IP report model</id>  -->
+						<id>default-cli</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/ip-manifest.xml</manifest>
 						</configuration>
 					</execution>
 				</executions>

@@ -138,7 +138,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setDomain(domain);
 			m_tree.setSessionToken(sessionToken);
 			m_tree.setRequestToken(requestToken);
-			m_tree.setThreadId(Long.toHexString(Thread.currentThread().getId()));
+			
+			Thread thread = Thread.currentThread();
+			
+			m_tree.setThreadId(Long.toHexString(thread.getId()));
+			m_tree.setThreadId(thread.getName());
+			
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
 			m_tree.setMessageId(UUID.randomUUID().toString()); // TODO optimize it

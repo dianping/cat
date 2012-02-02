@@ -93,7 +93,7 @@ public class TransactionReportMessageAnalyzerTest {
 			analyzer.process(tree);
 		}
 
-		TransactionReport report = analyzer.generate();
+		TransactionReport report = analyzer.generate("group");
 		TransactionType typeA = report.getTypes().get("A");
 		TransactionName n1 = typeA.getNames().get("n1");
 		assertEquals(1000, n1.getTotalCount());

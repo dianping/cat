@@ -6,9 +6,11 @@ package com.dianping.cat.consumer.transaction;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -34,14 +36,13 @@ import com.site.lookup.annotation.Inject;
  * @since Jan 5, 2012
  */
 public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable, LogEnabled {
-	private final static long MINUTE = 60 * 1000L;
 
-	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
+	private final static SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
 
 	@Inject
 	private MessageManager m_manager;
 
-	private TransactionReport report;
+	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
 	private long m_extraTime;
 
@@ -49,10 +50,17 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 	private Logger m_logger;
 
-	private void computeMeanSquareDeviation() {
-		Collection<TransactionType> types = report.getTypes().values();
+	private long m_startTime;
 
-		for (TransactionType type : types) {
+	private long m_duration;
+
+	private TransactionReport computeMeanSquareDeviation(String domain) {
+		TransactionReport report = m_reports.get(domain);
+		if (report == null) {
+			return report;
+		}
+
+		for (TransactionType type : report.getTypes().values()) {
 			long typeCount = 0;
 			long typeFailCount = 0;
 			double typeSum = 0;
@@ -91,16 +99,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 			type.setFailPercent(100.0 * typeFailCount / typeCount);
 			type.setStd(std(typeCount, typeAvg, typeSum2));
 		}
-	}
-
-	/**
-	 * @param count
-	 * @param ave
-	 * @param sum2
-	 * @return
-	 */
-	public double std(long count, double ave, double sum2) {
-		return Math.sqrt(sum2 / count - 2 * ave * ave + ave * ave);
+		return report;
 	}
 
 	@Override
@@ -109,12 +108,27 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 	}
 
 	@Override
-	public TransactionReport generate() {
-		computeMeanSquareDeviation();
+	public List<TransactionReport> generate() {
+		List<TransactionReport> reports = new ArrayList<TransactionReport>();
+		for (String domain : m_reports.keySet()) {
+			reports.add(generate(domain));
+		}
+		return reports;
+	}
+
+	@Override
+	public TransactionReport generate(String domain) {
+		ArrayList<String> domains = new ArrayList<String>(this.m_reports.keySet());
+		if (domain == null) {
+			domain = domains.get(0);
+		}
+		TransactionReport report = computeMeanSquareDeviation(domain);
+		for (String ele : domains) {
+			report.addDomain(ele);
+		}
 		return report;
 	}
 
-	// TODO
 	private String getTransactionFileName(TransactionReport report) {
 		StringBuffer result = new StringBuffer();
 		String start = FILE_SDF.format(report.getStartTime());
@@ -139,7 +153,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 	@Override
 	protected boolean isTimeout() {
-		long endTime = report.getEndTime().getTime();
+		long endTime = m_startTime + m_duration + m_extraTime;
 		long currentTime = System.currentTimeMillis();
 
 		if (currentTime > endTime + m_extraTime) {
@@ -148,7 +162,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 		return false;
 	}
 
-	private void process(Message message, String messageId) {
+	private void process(TransactionReport report, Message message, String messageId) {
 		if (message instanceof Transaction) {
 			Transaction t = (Transaction) message;
 			String tType = t.getType();
@@ -184,47 +198,65 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 			}
 			List<Message> children = t.getChildren();
 			for (Message child : children) {
-				process(child, null);
+				process(report, child, null);
 			}
 		}
 	}
 
 	@Override
 	protected void process(MessageTree tree) {
+		String domain = tree.getDomain();
+		TransactionReport report = this.m_reports.get(domain);
 		if (report == null) {
-			this.report = new TransactionReport(tree.getDomain());
+			report = new TransactionReport(domain);
+			this.m_reports.put(domain, report);
 		}
 		Message message = tree.getMessage();
-		process(message, tree.getMessageId());
+		process(report, message, tree.getMessageId());
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
-		report = new TransactionReport(domain);
-		report.setStartTime(new Date(startTime));
-		report.setEndTime(new Date(startTime + duration - MINUTE));
 		m_extraTime = extraTime;
+		m_startTime = startTime;
+		m_duration = duration;
 	}
 
 	public void setReportPath(String configPath) {
 		m_reportPath = configPath;
 	}
 
+	/**
+	 * @param count
+	 * @param ave
+	 * @param sum2
+	 * @return
+	 */
+	public double std(long count, double ave, double sum2) {
+		return Math.sqrt(sum2 / count - 2 * ave * ave + ave * ave);
+	}
+
 	@Override
-	protected void store(TransactionReport result) {
-		String failureFileName = getTransactionFileName(report);
-		String htmlPath = new StringBuilder().append(m_reportPath).append(failureFileName).append(".html").toString();
-		File file = new File(htmlPath);
+	protected void store(List<TransactionReport> reports) {
+		if (reports == null || reports.size() == 0) {
+			return;
+		}
+		for (TransactionReport report : reports) {
+			String failureFileName = getTransactionFileName(report);
+			String htmlPath = new StringBuilder().append(m_reportPath).append(failureFileName).append(".html").toString();
+			File file = new File(htmlPath);
 
-		file.getParentFile().mkdirs();
+			file.getParentFile().mkdirs();
 
-		DefaultJsonBuilder builder = new DefaultJsonBuilder();
+			DefaultJsonBuilder builder = new DefaultJsonBuilder();
 
-		report.accept(builder);
+			report.accept(builder);
 
-		try {
-			Files.forIO().writeTo(file, builder.getString());
-		} catch (IOException e) {
-			m_logger.error(String.format("Error when writing to file(%s)!", file), e);
+			try {
+				Files.forIO().writeTo(file, builder.getString());
+			} catch (IOException e) {
+				m_logger.error(String.format("Error when writing to file(%s)!", file), e);
+			}
 		}
 	}
+
 }

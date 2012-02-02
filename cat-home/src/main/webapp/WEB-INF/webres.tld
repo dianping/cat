@@ -51,6 +51,13 @@
 <tag-class>com.ebay.webres.taglib.basic.UseCssTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
+<description><![CDATA[Set the css value with EL or a css ref.]]></description>
+<name>value</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.Object</type>
+</attribute>
+<attribute>
 <description><![CDATA[Identify whether the link URL is secure or not.]]></description>
 <name>secure</name>
 <required>false</required>
@@ -70,13 +77,6 @@
 <required>false</required>
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.String</type>
-</attribute>
-<attribute>
-<description><![CDATA[Set the css value with EL or a css ref.]]></description>
-<name>value</name>
-<required>false</required>
-<rtexprvalue>true</rtexprvalue>
-<type>java.lang.Object</type>
 </attribute>
 <attribute>
 <description><![CDATA[Target placement for this css resource to render]]></description>
@@ -114,18 +114,18 @@
 <tag-class>com.ebay.webres.taglib.basic.SetTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
-<description><![CDATA[The name.]]></description>
-<name>id</name>
-<required>true</required>
-<rtexprvalue>true</rtexprvalue>
-<type>java.lang.String</type>
-</attribute>
-<attribute>
 <description><![CDATA[The value]]></description>
 <name>value</name>
 <required>true</required>
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.Object</type>
+</attribute>
+<attribute>
+<description><![CDATA[The name.]]></description>
+<name>id</name>
+<required>true</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.String</type>
 </attribute>
 <dynamic-attributes>false</dynamic-attributes>
 </tag>
@@ -134,6 +134,13 @@
 <name>useJs</name>
 <tag-class>com.ebay.webres.taglib.basic.UseJsTagHandler</tag-class>
 <body-content>JSP</body-content>
+<attribute>
+<description><![CDATA[Set the js value with EL or a js ref.]]></description>
+<name>value</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.Object</type>
+</attribute>
 <attribute>
 <description><![CDATA[Identify whether the link URL is secure or not.]]></description>
 <name>secure</name>
@@ -156,13 +163,6 @@
 <type>java.lang.String</type>
 </attribute>
 <attribute>
-<description><![CDATA[Set the js value with EL or a js ref.]]></description>
-<name>value</name>
-<required>false</required>
-<rtexprvalue>true</rtexprvalue>
-<type>java.lang.Object</type>
-</attribute>
-<attribute>
 <description><![CDATA[Target placement for this js resource to render]]></description>
 <name>target</name>
 <required>false</required>
@@ -177,6 +177,13 @@
 <tag-class>com.ebay.webres.taglib.basic.LinkTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
+<description><![CDATA[The value for link, could be a expression or a link ref.]]></description>
+<name>value</name>
+<required>true</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.Object</type>
+</attribute>
+<attribute>
 <description><![CDATA[Identify whether the link URL is secure or not.]]></description>
 <name>secure</name>
 <required>false</required>
@@ -190,13 +197,6 @@
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.String</type>
 </attribute>
-<attribute>
-<description><![CDATA[The value for link, could be a expression or a link ref.]]></description>
-<name>value</name>
-<required>true</required>
-<rtexprvalue>true</rtexprvalue>
-<type>java.lang.Object</type>
-</attribute>
 <dynamic-attributes>true</dynamic-attributes>
 </tag>
 <tag>
@@ -204,6 +204,13 @@
 <name>img</name>
 <tag-class>com.ebay.webres.taglib.basic.ImageTagHandler</tag-class>
 <body-content>JSP</body-content>
+<attribute>
+<description><![CDATA[The value for image, could be a expression or a image path.]]></description>
+<name>value</name>
+<required>true</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.Object</type>
+</attribute>
 <attribute>
 <description><![CDATA[Identify whether the image URL is secure or not.]]></description>
 <name>secure</name>
@@ -224,13 +231,6 @@
 <required>false</required>
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.String</type>
-</attribute>
-<attribute>
-<description><![CDATA[The value for image, could be a expression or a image path.]]></description>
-<name>value</name>
-<required>true</required>
-<rtexprvalue>true</rtexprvalue>
-<type>java.lang.Object</type>
 </attribute>
 <dynamic-attributes>true</dynamic-attributes>
 </tag>
