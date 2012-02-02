@@ -116,7 +116,6 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 		return reports;
 	}
 
-	@Override
 	public TransactionReport generate(String domain) {
 		ArrayList<String> domains = new ArrayList<String>(this.m_reports.keySet());
 		if (domain == null) {

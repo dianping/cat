@@ -61,11 +61,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
       protected void store(List<AnalyzerResult> result) {
       }
 
-		@Override
-		public AnalyzerResult generate(String domain) {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 
 	public static class MockAnalyzer2 extends
@@ -89,11 +84,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
       protected void store(List<AnalyzerResult> result) {
       }
 
-		@Override
-		public AnalyzerResult generate(String domain) {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 
 	public static class MockAnalyzer3 extends
@@ -117,11 +107,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
       protected void store(List<AnalyzerResult> result) {
       }
 
-		@Override
-		public AnalyzerResult generate(String domain) {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 
 	public static class AnalyzerResult {

@@ -79,11 +79,6 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
       protected void store(List<AnalyzerResult> result) {
       }
 
-		@Override
-		public AnalyzerResult generate(String domain) {
-			// TODO Auto-generated method stub
-			return null;
-		}
 	}
 
 	public static class AnalyzerResult {

@@ -125,12 +125,6 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		return reports;
 	}
 	
-
-	@Override
-	public FailureReport generate(String domain) {
-		return generateByDomain(domain);
-	}
-
 	@Override
 	protected void store(List<FailureReport> reports) {
 		if (reports != null) {
