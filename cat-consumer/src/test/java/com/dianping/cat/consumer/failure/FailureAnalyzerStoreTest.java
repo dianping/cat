@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer.failure;
 
 import java.io.File;
+import java.util.List;
 
 import junit.framework.Assert;
 
@@ -20,6 +21,7 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class FailureAnalyzerStoreTest extends ComponentTestCase {
+	private String m_domain="middleware";
 	@Test
 	public void testLookup() throws Exception {
 		Handler failure = lookup(Handler.class, "failure-handler");
@@ -36,9 +38,10 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000);
+		
 
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, m_domain,
 		      extraTime);
 		int number = 5;
 
@@ -47,7 +50,7 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 			MessageTree tree = new DefaultMessageTree();
 			tree.setMessageId("MessageId" + i);
 			tree.setThreadId("Thread" + i);
-			tree.setDomain("middleware");
+			tree.setDomain(m_domain);
 			tree.setHostName("middleware");
 			tree.setMessage(t);
 			tree.setIpAddress("192.168.8." + i % 4);
@@ -57,12 +60,13 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 			analyzer.process(tree);
 			analyzer.process(tree);
 		}
-
-		FailureReport report = analyzer.generate();
+		
+		List<FailureReport> report = analyzer.generate();
 		analyzer.store(report);
-
+		
+		FailureReport targetReport = analyzer.generateByDomain(m_domain);
 		DefaultJsonBuilder builder = new DefaultJsonBuilder();
-		builder.visitFailureReport(report);
+		builder.visitFailureReport(targetReport);
 
 		String json = builder.getString();
 		String expected = Files.forIO().readFrom(getResourceFile("failure.json"), "utf-8");
@@ -78,14 +82,14 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		long start = current - current % (60 * 60 * 1000);
 
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, m_domain,
 		      extraTime);
 		int number = 20;
 		for (int i = 0; i < number; i++) {
 			DefaultTransaction t = new DefaultTransaction("A1", "B1", null);
 			MessageTree tree = new DefaultMessageTree();
 			tree.setMessageId("thread0001");
-			tree.setDomain("middleware");
+			tree.setDomain(m_domain);
 			tree.setHostName("middleware");
 			tree.setMessage(t);
 			t.setDuration(3 * 1000);
@@ -93,15 +97,17 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 			analyzer.process(tree);
 		}
 
-		FailureReport report = analyzer.generate();
+		List<FailureReport> report = analyzer.generate();
 		analyzer.store(report);
-
+		
+		FailureReport targetReport = analyzer.generateByDomain(m_domain);
+		
 		String parentPath = analyzer.getReportPath();
-		String pathname = parentPath + analyzer.getFailureFileName(report);
+		String pathname = parentPath + analyzer.getFailureFileName(targetReport);
 		File storeFile = new File(pathname + ".html");
 		Assert.assertEquals("Check file is exist!", true, storeFile.exists());
 		String realResult = Files.forIO().readFrom(storeFile, "utf-8");
-		String exceptedResult = FailureReportStore.getStoreString(report);
+		String exceptedResult = FailureReportStore.getStoreString(targetReport);
 		Assert.assertEquals("Check file content!", exceptedResult, realResult);
 	}
 }

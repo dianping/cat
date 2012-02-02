@@ -7,6 +7,10 @@ import com.site.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 	private FailureReport m_report;
+	
+	private String m_current;
+	
+	private String m_domain;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -23,7 +27,7 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	public String getReportInJson() {
 		DefaultJsonBuilder builder = new DefaultJsonBuilder();
-
+	
 		m_report.accept(builder);
 		return builder.getString();
 	}
@@ -31,4 +35,20 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public void setReport(FailureReport report) {
 		m_report = report;
 	}
+
+	public String getCurrent() {
+   	return m_current;
+   }
+
+	public void setCurrent(String current) {
+   	this.m_current = current;
+   }
+
+	public String getDomain() {
+   	return m_domain;
+   }
+
+	public void setDomain(String domain) {
+   	this.m_domain = domain;
+   }
 }

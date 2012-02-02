@@ -57,7 +57,7 @@
 			<implementation>com.dianping.cat.consumer.failure.FailureReportAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
-				<reportPath>target/report/failure</reportPath>
+				<reportPath>target/report/failure/</reportPath>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -78,7 +78,7 @@
 			<implementation>com.dianping.cat.consumer.transaction.TransactionReportAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
-				<reportPath>target/report/transaction</reportPath>
+				<reportPath>target/report/transaction/</reportPath>
 			</configuration>
 			<requirements>
 				<requirement>

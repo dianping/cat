@@ -1,0 +1,265 @@
+code {	font-size:	1em; }
+/* extra rules for even and odd rows */
+.even {	background:	#eee; }
+.odd { }
+
+body            {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; background: white; margin: 0; font: Message-Box;  }
+table           {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px}
+batch_table     {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px;  cellspacing=5; border: true}
+td              {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px}
+p               {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px}
+
+.fancy-header   { background: orange; color: white; font-weight: bold; border-bottom: solid black 1px }
+.fancy-footer   { background: orange; color: white; font-weight: bold; border-top: solid black 1px; border-bottom: solid black 1px  }
+
+.navbar                 { background: lightblue; font-weight: bold; border-bottom: solid black 1px }
+
+.navbar A               { text-decoration: none; color: blue }
+.navbar A:hover { color: yellow }
+
+.seealso                        {  }
+.seealso A                      { text-decoration: none; color: blue }
+.seealso A:hover        { color: yellow }
+
+.sql                    { font-family: Courier; font-size: 12px; }
+.heading-1              { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 18px; font-weight: bold}
+.heading-2              { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+
+.table-header           { font-size: 12px; font-weight: bold; vertical-align: top; }
+.table-header-em        { font-size: 12px; font-weight: bold; vertical-align: top; }
+
+.thread_table { border-right: solid black 1px; border-bottom: solid black 1px; border-top: solid black 1px }
+.thread_table td { border-left: solid black 1px } 
+.table-header-em td { border-bottom: solid black 1px }
+
+.sectionCtl                     { text-decoration: none; color: blue }
+.sectionCtl:hover       { background: blue; color: white }
+
+.page_body                      { margin: 10 }
+.url_sql                        { display: none }
+
+.category {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: normal}
+.clip_name {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+.clip_name_x {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 18px}
+.category_sel {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+.block_label {  font-family: Verdana, Arial, Helvetica, sans-serif; font-weight: bold; font-size: 12px}
+.heading-1 { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 18px; font-weight: bold}
+.heading-2 {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+.navbar-1 {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+.navbar-2 {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+pre {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px}
+.normal {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px}
+
+
+CAPTION
+{
+        font-weight: bold;
+}
+
+.HLITE
+{
+        font-weight: bold;
+        margin-top: 6pt
+}
+
+.batch
+{
+        font-weight: bold;
+}
+
+.error
+{
+        font-weight: bold;
+        color: red;
+}
+
+.evt-error
+{
+        color: red;
+}
+
+.evt-warning
+{
+        color: orange
+}
+
+.evt-connect
+{
+        color: green
+}
+
+.evt-constr
+{
+        color: blue
+}
+
+.evt-disconn
+{
+        color: purple
+}
+
+.evt-cache_i
+{
+        color: #aaaa00
+}
+
+.evt-cache_r
+{
+        color: #aa3faa
+}
+
+.evt-down
+{
+        color: #009933
+}
+
+.evt-up
+{
+        color: #ffaaaa
+}
+
+.evt-unf_url
+{
+        color: #9966ff
+}
+
+.batch-start
+{
+        color: #AAAA00
+}
+
+.batch-term-success
+{
+        color: #0000ff
+}
+
+.batch-term-fail
+{
+        color: #ff7f00
+}
+
+.batch-item-process
+{
+        color: #000000
+}
+
+.batch-item-success
+{
+        color: #009933
+}
+
+.batch-item-fail
+{
+        color: #ff0000
+}
+
+.batch-item-search-start
+{
+        color: #871F78
+}
+
+.batch-item-search-end
+{
+        color: #9966ff
+}
+
+.batch-item-retrieve-item-start
+{
+        color: #982E51
+}
+
+.batch-item-retrieve-item-end
+{
+        color: #982E74
+}
+
+.batch-item-update-item-start
+{
+        color: #982E94
+}
+
+.batch-item-update-item-end
+{
+        color: #7E2E98
+}
+
+.batch-item-send-mail-start
+{
+        color: #622E98
+}
+
+.batch-item-send-mail-end
+{
+        color: #2E6798
+}
+
+.batch-item-add-fvf-start
+{
+        color: #2EAF98
+}
+
+.batch-item-add-fvf-end
+{
+        color: #2E987E
+}
+
+.batch-item-prep-mail-start
+{
+        color: #E74F05
+}
+
+.batch-item-prep-mail-end
+{
+        color: #E72505
+}
+
+.batch-item-send-msnalert-start
+{
+        color: #988F2E
+}
+
+.batch-item-send-msnalert-end
+{
+        color: #987E2E
+}
+
+.batch-item-dblookup-start
+{
+        color: #98742E
+}
+
+.batch-item-dblookup-end
+{
+        color: #985D2E
+}
+
+h1 { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 18px; font-weight: normal}
+h2 {  font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold}
+
+.tr0    {       }
+.tr1    {       background: #e0e0e0     }
+
+.emph
+{
+        font-weight: bold;
+        color: red;
+}
+
+.und
+{
+        border-bottom: solid black 1px
+}
+
+
+.date_select	{
+
+	background: #f0f0f0;
+	border: solid black 1px; float: left;
+	padding: 3 5 3 7;
+}
+
+.message
+{
+	font-weight: bold;
+	color: blue;
+}

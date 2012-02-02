@@ -22,15 +22,17 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class FailureAnalyzerTest extends ComponentTestCase {
+	private String m_domain="domain1";
+
 	@Test
 	public void testFailureHandler() throws Exception {
 		long current = System.currentTimeMillis();
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000);
-
+		
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, m_domain,
 		      extraTime);
 		int number = 300 * 10;
 		int threadNumber = 10;
@@ -42,6 +44,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		DefaultEvent e32 = new DefaultEvent("RuntimeException", "testRuntimeException2");
 		MessageTree tree = new DefaultMessageTree();
 		tree.setMessageId("xx0001");
+		tree.setDomain(m_domain);
 		DefaultTransaction t1 = new DefaultTransaction("T1", "N1", null);
 		DefaultTransaction t2 = new DefaultTransaction("T2", "N2", null);
 		DefaultTransaction t3 = new DefaultTransaction("T3", "N3", null);
@@ -84,7 +87,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 
 		System.out.println("time: " + time / 1e6 + " ms," + (time / 1e6 / number) + " ms each");
 
-		FailureReport report = analyzer.generate();
+		FailureReport report = analyzer.generateByDomain(m_domain);
 
 		assertEquals("Check the domain", report.getDomain(), "domain1");
 		assertEquals("Check the machines", number, report.getMachines().getMachines().size());
@@ -122,20 +125,21 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 
 	@Test
 	public void testLongUrlHander() throws Exception {
-
 		long current = System.currentTimeMillis();
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000);
+		String domain="domain1";
+		
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, "domain1",
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, domain,
 		      extraTime);
 		int number = 60;
 		for (int i = 0; i < number; i++) {
 			DefaultTransaction t = new DefaultTransaction("A1", "B1", null);
 			MessageTree tree = new DefaultMessageTree();
 			tree.setMessageId("thread0001");
-			tree.setDomain("middleware");
+			tree.setDomain(m_domain);
 			tree.setHostName("middleware");
 			tree.setIpAddress("127.0.0." + i);
 			tree.setMessage(t);
@@ -144,7 +148,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 			analyzer.process(tree);
 			// analyzer.process(tree);
 		}
-		FailureReport report = analyzer.generate();
+		FailureReport report = analyzer.generateByDomain(domain);
 
 		assertEquals("Check the Machines", number, report.getMachines().getMachines().size());
 		assertEquals("Check the domain", report.getDomain(), "domain1");

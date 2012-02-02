@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -41,63 +43,61 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 			AbstractMessageAnalyzer<AnalyzerResult> {
 
 		@Override
-		protected void store(AnalyzerResult result) {
-		}
-
-		@Override
-		public AnalyzerResult generate() {
-			return null;
-		}
-
-		@Override
 		protected void process(MessageTree tree) {
 			++s_count1;
 		}
 
-		
-
 		@Override
 		protected boolean isTimeout() {
 			return false;
+		}
+
+		@Override
+      public List<AnalyzerResult> generate() {
+	      return null;
+      }
+
+		@Override
+      protected void store(List<AnalyzerResult> result) {
+      }
+
+		@Override
+		public AnalyzerResult generate(String domain) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 
 	public static class MockAnalyzer2 extends
 			AbstractMessageAnalyzer<AnalyzerResult> {
-
-		@Override
-		protected void store(AnalyzerResult result) {
-		}
-
-		@Override
-		public AnalyzerResult generate() {
-			return null;
-		}
-
-		@Override
+@Override
 		protected void process(MessageTree tree) {
 			s_count2 = s_count2 + 2;
 		}
-
 
 		@Override
 		protected boolean isTimeout() {
 			return false;
 		}
+
+		@Override
+      public List<AnalyzerResult> generate() {
+	      return null;
+      }
+
+		@Override
+      protected void store(List<AnalyzerResult> result) {
+      }
+
+		@Override
+		public AnalyzerResult generate(String domain) {
+			// TODO Auto-generated method stub
+			return null;
+		}
 	}
 
 	public static class MockAnalyzer3 extends
 			AbstractMessageAnalyzer<AnalyzerResult> {
-
-		@Override
-		protected void store(AnalyzerResult result) {
-		}
-
-		@Override
-		public AnalyzerResult generate() {
-			return null;
-		}
-
 		@Override
 		protected void process(MessageTree tree) {
 			s_count3 = s_count3 + 3;
@@ -106,6 +106,21 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		@Override
 		protected boolean isTimeout() {
 			return false;
+		}
+
+		@Override
+      public List<AnalyzerResult> generate() {
+	      return null;
+      }
+
+		@Override
+      protected void store(List<AnalyzerResult> result) {
+      }
+
+		@Override
+		public AnalyzerResult generate(String domain) {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 
