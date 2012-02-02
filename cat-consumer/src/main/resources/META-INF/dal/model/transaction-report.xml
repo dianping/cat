@@ -18,8 +18,6 @@
 		<attribute name="sum" value-type="double" primitive="true" />
 		<attribute name="sum2" value-type="double" primitive="true" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
-		<element name="success-message-id" value-type="String" />
-		<element name="fail-message-id" value-type="String" />
 		<entity-ref name="name" type="map" />
 	</entity>
 	<entity name="name" class-name="TransactionName">
@@ -33,8 +31,6 @@
 		<attribute name="sum" value-type="double" primitive="true" />
 		<attribute name="sum2" value-type="double" primitive="true" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
-		<element name="success-message-id" value-type="String" />
-		<element name="fail-message-id" value-type="String" />
 	</entity>
 </model>
 

@@ -1,29 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
-  <entity name="transaction-report" root="true">
-    <attribute name="domain" value-type="String" />
-    <element name="domain" value-type="String" type="set" names="domains"/>
-    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-  	<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <entity-ref name="type" type="list" names="types" />
-  </entity>
-  <entity name="type">
-    <attribute name="id" value-type="String" />
-    <entity-ref name="name" type="list" names="names" />
-  </entity>
-  <entity name="name">
-    <attribute name="id" value-type="String" />
-    <attribute name="totalCount" value-type="long" />
-    <attribute name="failCount" value-type="long" />
-    <attribute name="failPercent" value-type="double" />
-    <attribute name="min" value-type="double" />
-    <attribute name="max" value-type="double" />
-    <attribute name="avg" value-type="double" />
-    <attribute name="sum" value-type="double" />
-    <attribute name="sum2" value-type="double" />
-    <attribute name="std" value-type="double" />
-    <element name="success-message-id" value-type="String" />
-    <element name="fail-message-id" value-type="String" />
-  </entity>
+	<entity name="transaction-report" root="true">
+		<attribute name="domain" value-type="String" />
+		<element name="domain" value-type="String" type="set" names="domains" />
+		<attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+		<entity-ref name="type" type="list" names="types" />
+	</entity>
+	<entity name="type">
+		<attribute name="id" value-type="String" />
+		<entity-ref name="name" type="list" names="names" />
+		<element name="successMessageUrl" value-type="String" />
+		<element name="failMessageUrl" value-type="String" />
+	</entity>
+	<entity name="name">
+		<attribute name="id" value-type="String" />
+		<attribute name="totalCount" value-type="long" />
+		<attribute name="failCount" value-type="long" />
+		<attribute name="failPercent" value-type="double" />
+		<attribute name="min" value-type="double" />
+		<attribute name="max" value-type="double" />
+		<attribute name="avg" value-type="double" />
+		<attribute name="sum" value-type="double" />
+		<attribute name="sum2" value-type="double" />
+		<attribute name="std" value-type="double" />
+		<element name="successMessageUrl" value-type="String" />
+		<element name="failMessageUrl" value-type="String" />
+	</entity>
 </model>
 

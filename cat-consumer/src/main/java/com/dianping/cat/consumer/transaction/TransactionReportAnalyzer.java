@@ -27,6 +27,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Files;
 import com.site.lookup.annotation.Inject;
@@ -40,7 +41,10 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 	private final static SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
 
 	@Inject
-	private MessageManager m_manager;
+	private MessageManager messageManager;
+
+	@Inject
+	private MessageStorage messageStorage;
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
@@ -81,11 +85,11 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 				typeSum += sum;
 				typeSum2 += sum2;
 				typeFailCount += failCount;
-				if (name.getSuccessMessageId() != null) {
-					type.setSuccessMessageId(name.getSuccessMessageId());
+				if (type.getSuccessMessageUrl() == null && name.getSuccessMessageUrl() != null) {
+					type.setSuccessMessageUrl(name.getSuccessMessageUrl());
 				}
-				if (name.getFailMessageId() != null) {
-					type.setFailMessageId(name.getFailMessageId());
+				if (type.getFailMessageUrl() == null && name.getFailMessageUrl() != null) {
+					type.setFailMessageUrl(name.getFailMessageUrl());
 				}
 				type.setMax(Math.max(name.getMax(), type.getMax()));
 				type.setMin(Math.min(name.getMin(), type.getMin()));
@@ -139,7 +143,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 	@Override
 	public void initialize() throws InitializationException {
-		Config config = m_manager.getClientConfig();
+		Config config = messageManager.getClientConfig();
 
 		if (config != null) {
 			Property property = config.findProperty("transaction-base-dir");
@@ -161,7 +165,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 		return false;
 	}
 
-	private void process(TransactionReport report, Message message, String messageId) {
+	private void process(TransactionReport report, MessageTree tree, Message message) {
 		if (message instanceof Transaction) {
 			Transaction t = (Transaction) message;
 			String tType = t.getType();
@@ -180,11 +184,17 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 			if (!t.isSuccess()) {
 				name.setFailCount(name.getFailCount() + 1);
 			}
-			if (messageId != null) {
+			if (tree != null) {
 				if (t.isSuccess()) {
-					name.setSuccessMessageId(messageId);
+					if (name.getSuccessMessageUrl() == null) {
+						String url = this.messageStorage.store(tree);
+						name.setSuccessMessageUrl(url);
+					}
 				} else {
-					name.setFailMessageId(messageId);
+					if (name.getFailMessageUrl() == null) {
+						String url = this.messageStorage.store(tree);
+						name.setFailMessageUrl(url);
+					}
 				}
 			}
 			long duration = t.getDuration();
@@ -197,7 +207,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 			}
 			List<Message> children = t.getChildren();
 			for (Message child : children) {
-				process(report, child, null);
+				process(report, tree, child);
 			}
 		}
 	}
@@ -211,7 +221,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 			this.m_reports.put(domain, report);
 		}
 		Message message = tree.getMessage();
-		process(report, message, tree.getMessageId());
+		process(report, tree, message);
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {

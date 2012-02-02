@@ -3,9 +3,9 @@ $(function(){
 	var types = data["types"];
 	for (i in types) {
 		var type = types[i];
-		var sampleid = type.failid == null ? type.successid : type.failid;	
+		var sampleid = type.successMessageUrl != null ? type.successMessageUrl : type.failMessageUrl;	
 		var stat = "" + type.min + "/" + type.max + "/" + type.avg + "/" + type.std;
-		tabledata.push({"type":type.id, "total":type.totalCount, "fail":type.failCount, "failPercent":type.failPercent, "sample":sampleid, "stat":stat});
+		tabledata.push({"type":type.id, "total":type.totalCount, "fail":type.failCount, "failPercent":type.failPercent, "sample":"<a href=\"/cat/r/m/"+sampleid+"\" target=\"_blank\">link</a>", "stat":stat});
 	}
  }
 );
