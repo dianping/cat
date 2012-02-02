@@ -1,15 +1,8 @@
 {
    "domain": "middleware",
+   "machine": "127.0.0.1",
    "startTime": "2012-01-25 13:00:00",
    "endTime": "2012-01-25 13:59:00",
-   "machines": {
-      "machines": [
-         "192.168.8.0",
-         "192.168.8.1",
-         "192.168.8.2",
-         "192.168.8.3"
-      ]
-   },
    "threads": {
       "threads": [
          "Thread0",

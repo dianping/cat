@@ -13,6 +13,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("domain")
 	private String m_domain;
+	
+	@FieldMeta("ip")
+	private String m_ip;
 
 	@FieldMeta("start")
 	private String m_current;
@@ -71,4 +74,11 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_page = page;
 	}
 
+	public String getIp() {
+   	return m_ip;
+   }
+
+	public void setIp(String ip) {
+   	m_ip = ip;
+   }
 }

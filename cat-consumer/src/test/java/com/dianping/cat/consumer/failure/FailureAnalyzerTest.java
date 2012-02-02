@@ -22,21 +22,26 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class FailureAnalyzerTest extends ComponentTestCase {
-	private String m_domain="domain1";
+	private String m_domain = "domain1";
+
+	private String m_host = "127.0.0.1";
+
+	private static final long HOUR = 1000L * 60 * 60;
 
 	@Test
 	public void testFailureHandler() throws Exception {
 		long current = System.currentTimeMillis();
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
-		long start = current - current % (60 * 60 * 1000);
-		
+		long start = current - current % (60 * 60 * 1000) -HOUR;
+
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, m_domain,
 		      extraTime);
-		int number = 300 * 10;
+		// Just for one hour
+		int number = 60 * 10;
 		int threadNumber = 10;
-		
+
 		DefaultEvent e11 = new DefaultEvent("Error", "testError");
 		DefaultEvent e21 = new DefaultEvent("Exception", "testException1");
 		DefaultEvent e31 = new DefaultEvent("RuntimeException", "testRuntimeException1");
@@ -45,6 +50,8 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		MessageTree tree = new DefaultMessageTree();
 		tree.setMessageId("xx0001");
 		tree.setDomain(m_domain);
+		tree.setHostName(m_host);
+		tree.setIpAddress(m_host);
 		DefaultTransaction t1 = new DefaultTransaction("T1", "N1", null);
 		DefaultTransaction t2 = new DefaultTransaction("T2", "N2", null);
 		DefaultTransaction t3 = new DefaultTransaction("T3", "N3", null);
@@ -61,7 +68,6 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		t1.addChild(e11);
 		tree.setMessage(t1);
 
-		
 		long ct = System.nanoTime();
 		for (int i = 0; i < number; i++) {
 			if (i == 1) {
@@ -69,8 +75,6 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 			}
 			long addTime = 6 * 1000 * i;
 			long timestamp = start + addTime;
-
-			tree.setIpAddress("192.168.1." + i);
 			t1.setTimestamp(timestamp);
 			t2.setTimestamp(timestamp);
 			t3.setTimestamp(timestamp);
@@ -79,7 +83,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 			e22.setTimestamp(timestamp);
 			e31.setTimestamp(timestamp);
 			e32.setTimestamp(timestamp);
-			tree.setThreadId("thread"+i%threadNumber);
+			tree.setThreadId("thread" + i % threadNumber);
 			analyzer.process(tree);
 		}
 
@@ -87,12 +91,12 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 
 		System.out.println("time: " + time / 1e6 + " ms," + (time / 1e6 / number) + " ms each");
 
-		FailureReport report = analyzer.generateByDomain(m_domain);
+		FailureReport report = analyzer.generateByDomainAndIp(m_domain, m_host);
 
 		assertEquals("Check the domain", report.getDomain(), "domain1");
-		assertEquals("Check the machines", number, report.getMachines().getMachines().size());
-		assertEquals("Check the threads",threadNumber, report.getThreads().getThreads().size());
-		
+		assertEquals("Check the machines", m_host,report.getMachine());
+		assertEquals("Check the threads", threadNumber, report.getThreads().getThreads().size());
+
 		Date startDate = report.getStartTime();
 		Date endDate = report.getEndTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -111,14 +115,15 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		for (int i = 0; i < number / 10; i++) {
 			String minuteStr = sdf2.format(startDate);
 			Segment temp = segments.get(minuteStr);
+			
 			List<Entry> entries = temp.getEntries();
-
+			
 			if (entries == null) {
 				System.out.println(minuteStr);
 			} else {
 				assertEquals("Check the segment size ", 50, entries.size());
 			}
-			
+
 			startDate.setTime(startDate.getTime() + 1000 * 60);
 		}
 	}
@@ -128,9 +133,9 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		long current = System.currentTimeMillis();
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
-		long start = current - current % (60 * 60 * 1000);
-		String domain="domain1";
-		
+		long start = current - current % (60 * 60 * 1000) - HOUR;
+		String domain = "domain1";
+
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, domain,
 		      extraTime);
@@ -141,16 +146,16 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 			tree.setMessageId("thread0001");
 			tree.setDomain(m_domain);
 			tree.setHostName("middleware");
-			tree.setIpAddress("127.0.0." + i);
+			tree.setIpAddress(m_host);
 			tree.setMessage(t);
 			t.setDuration(3 * 1000);
 			t.setTimestamp(start + 1000L * 60 * i);
 			analyzer.process(tree);
 			// analyzer.process(tree);
 		}
-		FailureReport report = analyzer.generateByDomain(domain);
+		FailureReport report = analyzer.generateByDomainAndIp(domain, m_host);
 
-		assertEquals("Check the Machines", number, report.getMachines().getMachines().size());
+		assertEquals("Check the machines", m_host,report.getMachine());
 		assertEquals("Check the domain", report.getDomain(), "domain1");
 
 		Date startDate = report.getStartTime();

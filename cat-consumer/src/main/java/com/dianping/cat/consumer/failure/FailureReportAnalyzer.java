@@ -18,7 +18,6 @@ import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.entity.Property;
 import com.dianping.cat.consumer.failure.model.entity.Entry;
 import com.dianping.cat.consumer.failure.model.entity.FailureReport;
-import com.dianping.cat.consumer.failure.model.entity.Machines;
 import com.dianping.cat.consumer.failure.model.entity.Segment;
 import com.dianping.cat.consumer.failure.model.entity.Threads;
 import com.dianping.cat.message.Event;
@@ -45,6 +44,7 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 	@Inject
 	private MessageManager m_manager;
 
+	// Key: the domain:host of the message. Sample: Review:192.168.1.1
 	private Map<String, FailureReport> m_reports = new HashMap<String, FailureReport>();
 
 	private long m_startTime;
@@ -65,8 +65,35 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		m_duration = duration;
 	}
 
-	private FailureReport getReportByDomain(String domain) {
-		FailureReport report = m_reports.get(domain);
+	public List<String> getAllDomains() {
+		Set<String> domainAndIps = m_reports.keySet();
+		Set<String> result = new HashSet<String>();
+		if (domainAndIps != null) {
+			for (String domainAndIp : domainAndIps) {
+				result.add(domainAndIp.substring(0, domainAndIp.lastIndexOf(":")));
+			}
+		}
+		return new ArrayList<String>(result);
+	}
+
+	public List<String> getHostIpByDomain(String domain) {
+		Set<String> domainAndIps = m_reports.keySet();
+		Set<String> result = new HashSet<String>();
+		if (domainAndIps != null) {
+			for (String domainAndIp : domainAndIps) {
+				int index = domainAndIp.lastIndexOf(":");
+				if (domainAndIp.substring(0, index).equals(domain)) {
+					String ip = domainAndIp.substring(index + 1);
+					result.add(ip);
+				}
+			}
+		}
+		return new ArrayList<String>(result);
+	}
+
+	private FailureReport getReportByDomainAndIp(String domain, String ip) {
+		String domainAndIp = new StringBuffer().append(domain).append(":").append(ip).toString();
+		FailureReport report = m_reports.get(domainAndIp);
 		if (report != null) {
 			return report;
 		}
@@ -75,9 +102,8 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		addedReport.setStartTime(new Date(m_startTime));
 		addedReport.setEndTime(new Date(m_startTime + m_duration - MINUTE));
 		addedReport.setDomain(domain);
-		addedReport.setMachines(new Machines());
 		addedReport.setThreads(new Threads());
-		m_reports.put(domain, addedReport);
+		m_reports.put(domainAndIp, addedReport);
 		return addedReport;
 	}
 
@@ -92,8 +118,9 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 	@Override
 	public List<FailureReport> generate() {
 		List<FailureReport> reports = new ArrayList<FailureReport>();
-		for (String domain : m_reports.keySet()) {
-			reports.add(generateByDomain(domain));
+		for (String domainAndIp : m_reports.keySet()) {
+			String[] temp = domainAndIp.split(":");
+			reports.add(generateByDomainAndIp(temp[0], temp[1]));
 		}
 		return reports;
 	}
@@ -102,10 +129,7 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 	protected void store(List<FailureReport> reports) {
 		if (reports != null) {
 			for (FailureReport report : reports) {
-				String failureFileName = getFailureFileName(report);
-				String htmlPath = new StringBuilder().append(m_reportPath).append(failureFileName).append(".html")
-				      .toString();
-				File file = new File(htmlPath);
+				File file = new File(getFailureFilePath(report));
 
 				file.getParentFile().mkdirs();
 				FailureReportStore.storeToHtml(file, report);
@@ -113,8 +137,8 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		}
 	}
 
-	public FailureReport generateByDomain(String domain) {
-		FailureReport m_report = getReportByDomain(domain);
+	public FailureReport generateByDomainAndIp(String domain, String ip) {
+		FailureReport m_report = getReportByDomainAndIp(domain, ip);
 		long time = System.currentTimeMillis();
 		long endTime = time - time % (60 * 1000);
 		long start = m_report.getStartTime().getTime();
@@ -147,11 +171,13 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 			throw new RuntimeException();
 		}
 		String domain = tree.getDomain();
-		FailureReport report = getReportByDomain(domain);
+		String ip = tree.getIpAddress();
+		FailureReport report = getReportByDomainAndIp(domain, ip);
 
-		report.getMachines().addMachine(tree.getIpAddress());
 		report.getThreads().addThread(tree.getThreadId());
-
+		if (null == report.getMachine()) {
+			report.setMachine(tree.getIpAddress());
+		}
 		for (Handler handler : m_handlers) {
 			handler.handle(report, tree);
 		}
@@ -165,12 +191,12 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		return m_reportPath;
 	}
 
-	public String getFailureFileName(FailureReport report) {
+	public String getFailureFilePath(FailureReport report) {
 		StringBuffer result = new StringBuffer();
 		String start = FILE_SDF.format(report.getStartTime());
 		String end = FILE_SDF.format(report.getEndTime());
-
-		result.append(report.getDomain()).append("-").append(start).append("-").append(end);
+		result.append(m_reportPath).append(report.getDomain()).append(report.getMachine()).append("-").append(start)
+		      .append("-").append(end).append(".html");
 		return result.toString();
 	}
 
