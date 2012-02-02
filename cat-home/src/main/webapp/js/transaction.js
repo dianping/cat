@@ -13,7 +13,7 @@ $(function(){
 $(function()
     {
         domainlinks = 'Domains ';
-        $.each(data.domainSet, function(i, t){domainlinks += "[ <a href=\"/cat/r/t?domain="+t+"\">"+t+"</a> ]"});
+        $.each(data.domains, function(i, t){domainlinks += "[ <a href=\"/cat/r/t?domain="+t+"\">"+t+"</a> ]"});
         $("#domainlist").html(domainlinks);
         $("#gridTable").jqGrid({
                 datatype: "local",

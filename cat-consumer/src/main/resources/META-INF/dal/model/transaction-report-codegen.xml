@@ -2,7 +2,7 @@
 <model>
   <entity name="transaction-report" root="true">
     <attribute name="domain" value-type="String" />
-    <element name="domain" value-type="String" type="set"/>
+    <element name="domain" value-type="String" type="set" names="domains"/>
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
   	<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <entity-ref name="type" type="list" names="types" />

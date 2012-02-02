@@ -16,14 +16,14 @@
    <dependencyManagement>
       <dependencies>
      	<dependency>
-			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-core</artifactId>
-            <version>0.1.0</version>
+        	<groupId>com.dianping.cat</groupId>
+		<artifactId>cat-core</artifactId>
+                <version>0.1.0</version>
 		</dependency>
      	<dependency>
-			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-consumer</artifactId>
-            <version>0.1.0</version>
+		<groupId>com.dianping.cat</groupId>
+		<artifactId>cat-consumer</artifactId>
+                <version>0.1.0</version>
 		</dependency>
          <dependency>
             <groupId>com.site.common</groupId>
@@ -90,11 +90,11 @@
             <artifactId>jsp-api</artifactId>
             <version>2.1</version>
          </dependency>
-		 <dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.12</version>
-		 </dependency>
+         <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.12</version>
+         </dependency>
          <dependency>
             <groupId>org.jboss.netty</groupId>
             <artifactId>netty</artifactId>
