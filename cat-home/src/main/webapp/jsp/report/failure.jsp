@@ -2,20 +2,16 @@
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.ebay.com/webres"%>
-<jsp:useBean id="ctx"
-	type="com.dianping.cat.report.page.failure.Context" scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.failure.Payload" scope="request" />
-<jsp:useBean id="model"
-	type="com.dianping.cat.report.page.failure.Model" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.failure.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.failure.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.failure.Model" scope="request" />
 
 <a:body>
 
-	<res:useCss value='${res.css.local.default_css}' target="head-css" />
 	<res:useCss value='${res.css.local.style_css}' target="head-css" />
+	<res:useCss value='${res.css.local.default_css}' target="head-css" />
 	<res:useCss value='${res.css.local.failure_css}' target="head-css" />
 
-	<res:useJs value='${res.js.local.mootools_js}' target="head-js" />
 	<res:useJs value='${res.js.local.jquery_min_js}' target="head-js" />
 	<res:useJs value='${res.js.local.sql_scripts_js}' target="head-js" />
 

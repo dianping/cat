@@ -5,7 +5,10 @@ body {
 	color: black;
 	margin: 4px;
 	padding: 0;
+	font: Message-Box; 
 }
+
+h1 { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 18px; font-weight: bold}
 
 html { margin: 0 }
 
