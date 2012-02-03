@@ -10,12 +10,23 @@ $(function(){
  }
 );
 
+domainLink = function(domain, now){
+    if(domain == now) {
+        return "[ <a style=\"background-color: rgb(255, 204, 0);\" href=\"/cat/r/t?domain="+domain+"\">"+domain+"</a> ]";
+    } else {
+        return "[ <a href=\"/cat/r/t?domain="+domain+"\">"+domain+"</a> ]";
+    }
+};
+
 $(function()
     {
-        domainlinks = 'Domains ';
-        $.each(data.domains, function(i, t){domainlinks += "[ <a href=\"/cat/r/t?domain="+t+"\">"+t+"</a> ]"});
+        domainlinks = 'Domains: ';
+        nowdomain = data["domain"];
+        $.each(data.domains, function(i, t){domainlinks += domainLink(t, nowdomain)});
         $("#domainlist").html(domainlinks);
-        $("#gridTable").jqGrid({
+        $("#reporttitle").html("Transaction Report - Domain:" + nowdomain);
+        var grid = $("#gridtable");
+        grid.jqGrid({
                 defaults : {
                     //shrinkToFit:true,
                     //forceFit:true,
@@ -27,23 +38,26 @@ $(function()
                         {name:'total', index:'total', sorttype:"int", align:'center'},
                         {name:'fail', index:'fail', sorttype:"int", align:'center'},
                         {name:'failPercent', index:'failPercent', sorttype:"float", align:'center'},
-                        {name:'sample', index:'sample', sortable:false, align:'center', width:100},                
+                        {name:'sample', index:'sample', sortable:false, align:'center'},                
                         {name:'stat', sortable:false, align:'center',width:200}                
                 ],
                 sortname:'type',
                 sortorder:'asc',
-                caption: "Domain " + data["domain"] + " Transaction Summary",
+                caption: "",
                 height: '100%',
-                //autowidth: true,
+                autowidth: true,
                 loadComplete: function() {
-                    $("#gridTable").setGridHeight('auto');
+                    grid.setGridHeight('auto');
+                    //grid.setGridWidth('auto');
                 }
         }).navGrid('#pager2',{edit:false,add:false,del:false});
         
-        var grid = $("#gridTable");
+        
         for(var i=0;i<=tabledata.length;i++) {
         	grid.jqGrid('addRowData',i+1,tabledata[i]);
         }
+        
+        $("#gview_gridtable > .ui-jqgrid-titlebar").hide()
         
         //$(function(){
         //    $(window).resize(function(){  
