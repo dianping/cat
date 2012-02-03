@@ -20,11 +20,6 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 	   return null;
    }
 
-	@Override
-   public IpReport generate(String domain) {
-	   // TODO Auto-generated method stub
-	   return null;
-   }
 
 	@Override
    protected void process(MessageTree tree) {

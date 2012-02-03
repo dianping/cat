@@ -84,6 +84,10 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStorage</role>
+					<role-hint>html</role-hint>
+				</requirement>
 			</requirements>
 		</component>
 	</components>

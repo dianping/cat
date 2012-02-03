@@ -50,7 +50,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TransactionReportAnalyzer.class).is(PER_LOOKUP) //
 		      .req(MessageManager.class) //
-		      .config(E("reportPath").value("target/report/transaction/")));
+		      .config(E("reportPath").value("target/report/transaction/"))
+		      .req(MessageStorage.class, "html"));
 
 		return all;
 	}
