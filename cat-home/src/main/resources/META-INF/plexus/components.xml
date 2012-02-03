@@ -119,5 +119,23 @@
 			<role>com.dianping.cat.report.page.logview.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.logview.JspViewer</implementation>
 		</component>
+		<component>
+			<role>com.dianping.cat.report.page.ip.Handler</role>
+			<implementation>com.dianping.cat.report.page.ip.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.ip.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.ip.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.ip.JspViewer</implementation>
+		</component>
 	</components>
 </plexus>

@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer;
 
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
+import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.site.lookup.ContainerHolder;
@@ -20,7 +21,12 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			return analyzer;
 		} else if (name.equals("transaction")) {
 			TransactionReportAnalyzer analyzer = lookup(TransactionReportAnalyzer.class);
+
 			analyzer.setAnalyzerInfo(start, duration, domain, extraTime);
+			return analyzer;
+		} else if (name.equals("ip")) {
+			IpAnalyzer analyzer = lookup(IpAnalyzer.class);
+
 			return analyzer;
 		}
 

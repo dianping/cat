@@ -38,7 +38,6 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 	@Override
 	public List<IpReport> generate() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
