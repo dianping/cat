@@ -19,11 +19,14 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.StringRope;
 import com.site.lookup.annotation.Inject;
 
+/**
+ * Local use only, do not use it over network since it only supports one-way encoding
+ */
 public class HtmlMessageCodec implements MessageCodec {
 	private static final String ID = "HT1"; // HTML version 1
 
 	@Inject
-	private BufferWriter m_writer = new HtmlEncodingBufferWriter();
+	private BufferWriter m_writer;
 
 	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
 
@@ -243,9 +246,10 @@ public class HtmlMessageCodec implements MessageCodec {
 				count += TD1.length;
 			} else {
 				String tag = "<td class=\"" + styleClass + "\">";
+				byte[] bytes = tag.getBytes();
 
-				buf.writeBytes(tag.getBytes());
-				count += tag.length();
+				buf.writeBytes(bytes);
+				count += bytes.length;
 			}
 
 			buf.writeBytes(data);
@@ -273,9 +277,10 @@ public class HtmlMessageCodec implements MessageCodec {
 				return TR1.length;
 			} else {
 				String tag = "<tr class=\"" + styleClass + "\">";
+				byte[] bytes = tag.getBytes();
 
-				buf.writeBytes(tag.getBytes());
-				return tag.length();
+				buf.writeBytes(bytes);
+				return bytes.length;
 			}
 		}
 

@@ -8,6 +8,7 @@ import java.util.Map;
 import com.dianping.cat.consumer.ip.model.entity.Ip;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.entity.Segment;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
@@ -15,6 +16,8 @@ import com.dianping.cat.message.spi.MessageTree;
 
 public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 	private Map<String, IpReport> m_reports = new HashMap<String, IpReport>();
+
+	private static final String TOKEN = "RemoteIP=";
 
 	private IpReport findOrCreateReport(String domain) {
 		IpReport report = m_reports.get(domain);
@@ -58,12 +61,28 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 	private String getIpAddress(Transaction root) {
 		List<Message> children = ((Transaction) root).getChildren();
 
+		for (Message child : children) {
+			if (child instanceof Event && child.getType().equals("URL") && child.getName().equals("ClientInfo")) {
+				String data = child.getData().toString();
+				int off = data.indexOf(TOKEN);
+
+				if (off >= 0) {
+					int pos = data.indexOf('&', off + TOKEN.length());
+
+					if (pos > 0) {
+						return data.substring(off + TOKEN.length(), pos);
+					}
+				}
+
+				break;
+			}
+		}
+
 		return null;
 	}
 
 	@Override
 	protected boolean isTimeout() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -97,5 +116,4 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 		// TODO Auto-generated method stub
 
 	}
-
 }

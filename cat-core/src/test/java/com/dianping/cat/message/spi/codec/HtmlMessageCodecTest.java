@@ -24,6 +24,7 @@ public class HtmlMessageCodecTest {
 		HtmlMessageCodec codec = new HtmlMessageCodec();
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
+		codec.setBufferWriter(new HtmlEncodingBufferWriter());
 		codec.encodeMessage(message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
@@ -34,6 +35,7 @@ public class HtmlMessageCodecTest {
 		HtmlMessageCodec codec = new HtmlMessageCodec();
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
+		codec.setBufferWriter(new HtmlEncodingBufferWriter());
 		codec.encode(tree, buf);
 		buf.readInt(); // get rid of length
 		String actual = buf.toString(Charset.forName("utf-8"));
@@ -90,8 +92,7 @@ public class HtmlMessageCodecTest {
 		long timestamp = 1325489621987L;
 		Event event = newEvent("type", "name", timestamp, "0", "here is the data.");
 
-		check(event,
-		      "<tr><td>E15:33:41.987</td><td>type</td><td>name</td><td>0</td><td>here is the data.</td></tr>\r\n");
+		check(event, "<tr><td>E15:33:41.987</td><td>type</td><td>name</td><td>0</td><td>here is the data.</td></tr>\r\n");
 	}
 
 	@Test

@@ -57,13 +57,19 @@ public class StringRope {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(256);
+		if (m_parts.isEmpty()) {
+			return "";
+		} else if (m_parts.size() == 1) {
+			return m_parts.get(0);
+		} else {
+			StringBuilder sb = new StringBuilder(256);
 
-		for (String part : m_parts) {
-			sb.append(part);
+			for (String part : m_parts) {
+				sb.append(part);
+			}
+
+			return sb.toString();
 		}
-
-		return sb.toString();
 	}
 
 	public int writeTo(ChannelBuffer buffer, BufferWriter writer) {
