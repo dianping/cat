@@ -3,18 +3,18 @@ $(function(){
 	var types = data["types"];
 	for (i in types) {
 		var type = types[i];
-		var sampleid = type.failMessageUrl != null ? type.failMessageUrl : type.successMessageUrl;	
+		var sampleurl = type.failMessageUrl != null ? "<a href=\"m/"+type.failMessageUrl+"\">fail</a>" : "<a href=\"m/"+type.successMessageUrl+"\">success</a>";	
 		var stat = "" + type.min + "/" + type.max + "/" + type.avg + "/" + type.std;
-		tabledata.push({"type":type.id, "total":type.totalCount, "fail":type.failCount, "failPercent":type.failPercent, "sample":"<a href=\"/cat/r/m/"+sampleid+"\" target=\"_blank\">link</a>", "stat":stat});
+		tabledata.push({"type":type.id, "total":type.totalCount, "fail":type.failCount, "failPercent":type.failPercent, "sample":sampleurl, "stat":stat});
 	}
  }
 );
 
 domainLink = function(domain, now){
     if(domain == now) {
-        return "[ <a style=\"background-color: rgb(255, 204, 0);\" href=\"/cat/r/t?domain="+domain+"\">"+domain+"</a> ]";
+        return "[ <a style=\"background-color: rgb(255, 204, 0);\" href=\"t?domain="+domain+"\">"+domain+"</a> ]";
     } else {
-        return "[ <a href=\"/cat/r/t?domain="+domain+"\">"+domain+"</a> ]";
+        return "[ <a href=\"t?domain="+domain+"\">"+domain+"</a> ]";
     }
 };
 
