@@ -1,9 +1,16 @@
 .report-table {
 	border-spacing: 0;
-	width:100%;
 }
 
-.report-table th,.report-table td {
+.report-table th {
+	padding: 3px;
+	background-color: #f5f5f5;
+	border-right: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	border-top: 1px solid #ccc;
+}
+
+.report-table td {
 	padding: 3px;
 	background-color: #f5f5f5;
 	border-right: 1px solid #ccc;

@@ -5,12 +5,9 @@ function generateTable(wrap, json) {
 	if(threads==null){
 		threads =[];
 	}
-	if(json.machines.machines==null){
-		json.machines.machines=[];
-	}
-	caption.html(
+	/*caption.html(
 			"From " + json.startTime + " To " + json.endTime
-					+ " Failure Report Domain:" + json.domain).appendTo(table);
+					+ " Failure Report Domain:" + json.domain).appendTo(table);*/
 
 	thead.appendTo(table);
 
@@ -20,14 +17,14 @@ function generateTable(wrap, json) {
 			temp.appendTo(thr);
 	});
 
-	$('<tr />').append(
+	/*$('<tr />').append(
 			$('<td />').attr('colspan', threads.length + 1).html(
 					"machines:" + json.machines.machines.join(','))).appendTo(
-			table);
+			table);*/
 	for ( var key in json.segments) {
 		var seg = json.segments[key];
 		var tr = $('<tr />'), tds = [];
-		$('<td />').html(seg.id).appendTo(tr);
+		$('<td />').html(seg.id.substring(11)).appendTo(tr);
 		threads.forEach(function() {
 			var td = $('<td />');
 			td.appendTo(tr);
@@ -40,8 +37,7 @@ function generateTable(wrap, json) {
 					.forEach(function(entry) {
 						var index = threads.indexOf(entry.threadId), td = tds[index], type = entry.type, anchor = $(
 								'<a />').attr("href",
-								"/m/path" + entry.path).attr("target",
-								"_blank").addClass(type).html(entry.text);
+								"m/" + entry.path).addClass(type).html(entry.text);
 
 						if (td.html()) {
 							td.append($('<br />'));
@@ -59,3 +55,10 @@ function generateTable(wrap, json) {
 }
 
 generateTable('#failureTable', jsonData);
+
+var currentDomain = $("#currentDomain").val();
+$("#domain-"+currentDomain).css("background", "#FFCC00");
+
+var currentIp = $("#currentIp").val();
+$("a[data-id='ip-"+currentIp+"']").css("background", "#FFCC00");
+

@@ -3,9 +3,6 @@
 	<entity name="failure-report" root="true">
 		<entity-ref name="segment" type="map" />
 	</entity>
-	<entity name="machines">
-		<element name="machine" type="set" />
-	</entity>
 	<entity name="threads">
 		<element name="thread" type="set" />
 	</entity>

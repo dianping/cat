@@ -39,7 +39,6 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 		return null;
 	}
 
-	@Override
 	public IpReport generate(String domain) {
 		IpReport report = null;
 

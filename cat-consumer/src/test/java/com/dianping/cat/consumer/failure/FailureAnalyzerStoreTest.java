@@ -22,6 +22,8 @@ import com.site.lookup.ComponentTestCase;
 @RunWith(JUnit4.class)
 public class FailureAnalyzerStoreTest extends ComponentTestCase {
 	private String m_domain="middleware";
+	
+	private String m_host="127.0.0.1";
 	@Test
 	public void testLookup() throws Exception {
 		Handler failure = lookup(Handler.class, "failure-handler");
@@ -51,9 +53,9 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 			tree.setMessageId("MessageId" + i);
 			tree.setThreadId("Thread" + i);
 			tree.setDomain(m_domain);
-			tree.setHostName("middleware");
+			tree.setHostName(m_host);
+			tree.setIpAddress(m_host);
 			tree.setMessage(t);
-			tree.setIpAddress("192.168.8." + i % 4);
 			t.setDuration(3 * 1000);
 			t.setTimestamp(start + 1000L * 60 * i);
 			analyzer.process(tree);
@@ -64,7 +66,7 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		List<FailureReport> report = analyzer.generate();
 		analyzer.store(report);
 		
-		FailureReport targetReport = analyzer.generateByDomain(m_domain);
+		FailureReport targetReport = analyzer.generateByDomainAndIp(m_domain,m_host);
 		DefaultJsonBuilder builder = new DefaultJsonBuilder();
 		builder.visitFailureReport(targetReport);
 
@@ -91,6 +93,8 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 			tree.setMessageId("thread0001");
 			tree.setDomain(m_domain);
 			tree.setHostName("middleware");
+			tree.setIpAddress(m_host);
+			tree.setThreadId("Thread" + i%5);
 			tree.setMessage(t);
 			t.setDuration(3 * 1000);
 			t.setTimestamp(start + 1000L * 60 * i);
@@ -100,11 +104,10 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		List<FailureReport> report = analyzer.generate();
 		analyzer.store(report);
 		
-		FailureReport targetReport = analyzer.generateByDomain(m_domain);
+		FailureReport targetReport = analyzer.generateByDomainAndIp(m_domain,m_host);
 		
-		String parentPath = analyzer.getReportPath();
-		String pathname = parentPath + analyzer.getFailureFileName(targetReport);
-		File storeFile = new File(pathname + ".html");
+		String pathname = analyzer.getFailureFilePath(targetReport);
+		File storeFile = new File(pathname);
 		Assert.assertEquals("Check file is exist!", true, storeFile.exists());
 		String realResult = Files.forIO().readFrom(storeFile, "utf-8");
 		String exceptedResult = FailureReportStore.getStoreString(targetReport);

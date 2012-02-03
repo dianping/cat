@@ -3,14 +3,11 @@
  */
 package com.dianping.cat.consumer.transaction;
 
-import static junit.framework.Assert.assertEquals;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
+import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -19,40 +16,15 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.site.lookup.ComponentTestCase;
 
 /**
  * @author sean.wang
  * @since Jan 5, 2012
  */
-public class TransactionReportMessageAnalyzerTest {
+@RunWith(JUnit4.class)
+public class TransactionReportMessageAnalyzerTest extends ComponentTestCase{
 
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@Before
-	public void setUp() throws Exception {
-	}
-
-	/**
-	 * @throws java.lang.Exception
-	 */
-	@After
-	public void tearDown() throws Exception {
-	}
 
 	/**
 	 * Test method for {@link com.dianping.cat.consumer.transaction.TransactionReportAnalyzer#process(com.dianping.cat.message.spi.MessageTree)}.
@@ -60,8 +32,15 @@ public class TransactionReportMessageAnalyzerTest {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testCommonGenerate() throws InterruptedException {
-		TransactionReportAnalyzer analyzer = new TransactionReportAnalyzer();
+	public void testCommonGenerate() throws Exception {
+		long current = System.currentTimeMillis();
+		long duration = 60 * 60 * 1000;
+		long extraTime = 5 * 60 * 1000;
+		long start = current - current % (60 * 60 * 1000) -1000L*60*60;
+
+		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
+		TransactionReportAnalyzer analyzer = (TransactionReportAnalyzer) factory.create("transaction", start, duration, "testDomain",
+		      extraTime);
 
 		for (int i = 1; i <= 1000; i++) {
 			MessageTree tree = new DefaultMessageTree();
@@ -103,8 +82,6 @@ public class TransactionReportMessageAnalyzerTest {
 		assertEquals(2000.0, n1.getMax());
 		assertEquals(1001.0, n1.getAvg());
 		assertEquals(1001000.0, n1.getSum());
-		assertEquals("999", n1.getSuccessMessageId());
-		assertEquals("1000", n1.getFailMessageId());
 
 		TransactionType typeA1 = report.getTypes().get("A-1");
 		TransactionName n2 = typeA1.getNames().get("n2");
@@ -115,8 +92,6 @@ public class TransactionReportMessageAnalyzerTest {
 		assertEquals(1000.0, n2.getMax());
 		assertEquals(500.5, n2.getAvg());
 		assertEquals(500500.0, n2.getSum());
-		assertEquals(null, n2.getSuccessMessageId());
-		assertEquals(null, n2.getFailMessageId());
 		DefaultJsonBuilder builder = new DefaultJsonBuilder();
 		report.accept( builder);
 		System.out.println(builder.getString());

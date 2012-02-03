@@ -33,8 +33,6 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 
 	public abstract List<R> generate();
 	
-	public abstract R generate(String domain);
-
 	protected abstract void process(MessageTree tree);
 
 	protected abstract boolean isTimeout();

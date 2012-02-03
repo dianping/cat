@@ -1,15 +1,12 @@
 <model>
   <entity name="failure-report" root="true">
     <attribute name="domain" value-type="String" />
+    <attribute name="machine" value-type="String" />
     <attribute name="baseUrl" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <entity-ref name="machines" />
     <entity-ref name="threads" />
     <entity-ref name="segment" type="list" names="segments" />
-  </entity>
-  <entity name="machines">
-    <element name="machine" value-type="String" type="list" names="machines" />
   </entity>
   <entity name="threads">
     <element name="thread" value-type="String" type="list" names="threads" />
