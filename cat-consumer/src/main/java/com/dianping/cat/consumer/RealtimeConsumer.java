@@ -99,14 +99,15 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Inject
 	private long m_extraTime = FIVE_MINUTES;
+	
+	@Inject
+	private int m_threads = 10;
 
 	@Inject
 	private List<String> m_analyzerNames;
 
 	@Inject
 	private AnalyzerFactory m_factory;
-
-	private int m_threads = 10;
 
 	private ExecutorService m_executor;
 

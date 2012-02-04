@@ -1,0 +1,48 @@
+.report .header {
+	background: orange;
+	color: white;
+	font-weight: bold;
+	border-bottom: solid black 1px;
+	width: 100%;
+}
+
+.report .header .title {
+	font-weight: bold;
+}
+
+.report .header .timestamp {
+	white-space: nowrap;
+	width: 200px;
+}
+
+.report .navbar {
+	background: lightblue;
+	font-weight: bold;
+	border-bottom: solid black 1px;
+	width: 100%;
+}
+
+.report .navbar .time {
+	text-align: right;
+	font-size: small;
+	font-weight: bold;
+}
+
+.report .navbar .time A {
+	text-decoration: none;
+	color: blue;
+}
+
+.report .navbar .time  A:hover {
+	color: yellow;
+}
+
+.report .footer {
+	background: orange;
+	color: white;
+	font-weight: bold;
+	border-top: solid black 1px;
+	border-bottom: solid black 1px;
+	width: 100%;
+	text-align: center;
+}
