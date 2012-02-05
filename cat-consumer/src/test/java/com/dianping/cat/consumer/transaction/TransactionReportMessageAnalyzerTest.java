@@ -11,7 +11,6 @@ import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -92,10 +91,9 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase{
 		assertEquals(1000.0, n2.getMax());
 		assertEquals(500.5, n2.getAvg());
 		assertEquals(500500.0, n2.getSum());
-		DefaultJsonBuilder builder = new DefaultJsonBuilder();
-		report.accept( builder);
-		System.out.println(builder.getString());
-		System.out.println(report.toString());
+
+//		System.out.println(new DefaultJsonBuilder().buildJson(report));
+//		System.out.println(report.toString());
 	}
 
 }

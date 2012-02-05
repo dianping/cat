@@ -256,12 +256,8 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 			file.getParentFile().mkdirs();
 
-			DefaultJsonBuilder builder = new DefaultJsonBuilder();
-
-			report.accept(builder);
-
 			try {
-				Files.forIO().writeTo(file, builder.getString());
+				Files.forIO().writeTo(file, new DefaultJsonBuilder().buildJson(report));
 			} catch (IOException e) {
 				m_logger.error(String.format("Error when writing to file(%s)!", file), e);
 			}

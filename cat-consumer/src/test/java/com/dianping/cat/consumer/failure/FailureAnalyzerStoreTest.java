@@ -67,10 +67,7 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		analyzer.store(report);
 		
 		FailureReport targetReport = analyzer.generateByDomainAndIp(m_domain,m_host);
-		DefaultJsonBuilder builder = new DefaultJsonBuilder();
-		builder.visitFailureReport(targetReport);
-
-		String json = builder.getString();
+		String json = new DefaultJsonBuilder().buildJson(targetReport);
 		String expected = Files.forIO().readFrom(getResourceFile("failure.json"), "utf-8");
 
 		Assert.assertEquals("Check json content!", expected.replace("\r", ""), json.replace("\r", ""));

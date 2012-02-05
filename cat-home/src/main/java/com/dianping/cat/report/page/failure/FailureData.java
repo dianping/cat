@@ -15,9 +15,7 @@ import com.site.helper.Files;
 public class FailureData {
 	
 	public String getFailureJsonDate(FailureReport report) {
-		DefaultJsonBuilder builder = new DefaultJsonBuilder();
-		report.accept(builder);
-		return builder.getString();
+		return new DefaultJsonBuilder().buildJson(report);
 	}
 
 	/*public String getFailureDataFromMemory(FailureReportAnalyzer analyzer, String domain) {

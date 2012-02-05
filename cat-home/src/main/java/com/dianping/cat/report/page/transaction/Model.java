@@ -22,10 +22,7 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	}
 	
 	public String getReportInJson() {
-		DefaultJsonBuilder builder = new DefaultJsonBuilder();
-		
-		m_report.accept(builder);
-		return builder.getString();
+		return new DefaultJsonBuilder().buildJson(m_report);
 	}
 
 	public void setReport(TransactionReport report) {

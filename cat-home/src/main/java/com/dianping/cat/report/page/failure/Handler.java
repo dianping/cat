@@ -208,10 +208,8 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				report = analyzer.generateByDomainAndIp(domain,ip);
 			}
-			DefaultJsonBuilder builder = new DefaultJsonBuilder();
 
-			report.accept(builder);
-			model.setJsonResult(builder.getString());
+			model.setJsonResult(new DefaultJsonBuilder().buildJson(report));
 		} else {
 			String baseFilePath = analyzerForPage.getReportPath();
 			model.setJsonResult(getJsonResultFromFile(baseFilePath, file));
