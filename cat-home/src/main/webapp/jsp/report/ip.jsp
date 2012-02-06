@@ -6,7 +6,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.ip.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.ip.Model" scope="request" />
 
-<a:report title="Hot IP Report">
+<a:report title="Hot IP Report XXX">
 
 	<jsp:attribute name="domain">
     	hello
