@@ -6,19 +6,24 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.failure.FailureAnalyzerStoreTest;
 import com.dianping.cat.consumer.failure.FailureAnalyzerTest;
+import com.dianping.cat.consumer.ip.IpAnalyzerTest;
 import com.dianping.cat.consumer.transaction.NumberFormatTest;
 import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzerTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
-/* .impl */
 ManyAnalyzerTest.class,
 
 OneAnalyzerTwoDurationTest.class,
 
-/* .model.failure */
-FailureAnalyzerTest.class, FailureAnalyzerStoreTest.class,
+/* .failure */
+FailureAnalyzerTest.class,
+
+FailureAnalyzerStoreTest.class,
+
+/* .ip */
+IpAnalyzerTest.class,
 
 /* .transaction */
 NumberFormatTest.class,

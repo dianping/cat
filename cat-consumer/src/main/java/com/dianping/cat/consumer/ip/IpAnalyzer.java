@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.dianping.cat.consumer.ip.model.entity.Ip;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
-import com.dianping.cat.consumer.ip.model.entity.Segment;
+import com.dianping.cat.consumer.ip.model.entity.Period;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -103,16 +103,15 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 			int minute = cal.get(Calendar.MINUTE);
 			IpReport report = findOrCreateReport(domain);
-			Segment segment = report.findOrCreateSegment(minute);
-			Ip ip = segment.findOrCreateIp(address);
+			Ip ip = report.findOrCreateIp(address);
+			Period period = ip.findOrCreatePeriod(minute);
 
-			ip.setCount(ip.getCount() + 1);
+			period.incValue();
 		}
 	}
 
 	@Override
 	protected void store(List<IpReport> reports) {
-		// TODO Auto-generated method stub
 
 	}
 }

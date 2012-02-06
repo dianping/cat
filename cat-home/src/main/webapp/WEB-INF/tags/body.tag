@@ -6,7 +6,7 @@
 <res:bean id="res"/>
 <html>
 	<head>
-		<title>Garden - ${model.page.description}</title>
+		<title>CAT - ${model.page.description}</title>
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		<res:cssSlot id="head-css"/>
 		<res:jsSlot id="head-js"/>
