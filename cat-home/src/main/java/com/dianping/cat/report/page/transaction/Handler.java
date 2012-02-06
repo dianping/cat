@@ -14,7 +14,12 @@ import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
+import com.site.web.mvc.payload.ParameterProvider;
 
+/**
+ * @author sean.wang
+ * @since Feb 6, 2012
+ */
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
@@ -37,11 +42,12 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.TRANSACTION);
 
-		TransactionReportAnalyzer analyzer = (TransactionReportAnalyzer) m_consumer
-		      .getCurrentAnalyzer("transaction");
+		TransactionReportAnalyzer analyzer = (TransactionReportAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
 
 		if (analyzer != null) {
-			model.setReport(analyzer.generate(ctx.getRequestContext().getParameterProvider().getParameter("domain")));
+			ParameterProvider provider = ctx.getRequestContext().getParameterProvider();
+			model.setReport(analyzer.generate(provider.getParameter("domain")));
+			model.setType(provider.getParameter("type"));
 		} else {
 			model.setReport(new TransactionReport("none"));
 		}

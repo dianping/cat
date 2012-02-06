@@ -23,6 +23,7 @@
 
 	<script type="text/javascript">
 	var data = ${model.reportInJson};
+	var nowtype = "${model.type}";
 	</script>
 
 	<table width="100%" border="0" cellpadding="6" cellspacing="0"
