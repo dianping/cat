@@ -16,9 +16,9 @@
     </jsp:attribute>
 
 	<jsp:body>
-		<pre>
-		${model.reportInJson}
-		</pre>
+<pre>
+${model.reportInJson}
+</pre>
 	</jsp:body>
 	
 </a:report>
