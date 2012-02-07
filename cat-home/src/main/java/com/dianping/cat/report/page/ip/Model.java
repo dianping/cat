@@ -11,6 +11,8 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	private List<DisplayModel> m_displayModels;
 
+	private List<String> m_domains;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -24,6 +26,10 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return m_displayModels;
 	}
 
+	public List<String> getDomains() {
+		return m_domains;
+	}
+
 	public IpReport getReport() {
 		return m_report;
 	}
@@ -34,6 +40,10 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	public void setDisplayModels(List<DisplayModel> models) {
 		m_displayModels = models;
+	}
+
+	public void setDomains(List<String> domains) {
+		m_domains = domains;
 	}
 
 	public void setReport(IpReport report) {

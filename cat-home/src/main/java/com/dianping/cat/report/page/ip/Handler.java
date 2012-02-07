@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -51,20 +53,29 @@ public class Handler implements PageHandler<Context> {
 		if (analyzer != null) {
 			Payload payload = ctx.getPayload();
 			String domain = payload.getDomain();
+			List<String> domains = analyzer.getDomains();
+
+			if (domain == null && domains.size() > 0) {
+				domain = domains.get(0);
+				payload.setDomain(domain);
+			}
 
 			report = analyzer.generate(domain);
+			model.setDomains(domains);
 		} else {
 			report = new IpReport();
 		}
 
 		Calendar cal = Calendar.getInstance();
 		int minute = cal.get(Calendar.MINUTE);
-		List<DisplayModel> models = new ArrayList<DisplayModel>();
+		Map<String, DisplayModel> models = new HashMap<String, DisplayModel>();
 		DisplayModelBuilder builder = new DisplayModelBuilder(models, minute);
 
 		report.accept(builder); // prepare display model
 
-		Collections.sort(models, new Comparator<DisplayModel>() {
+		List<DisplayModel> displayModels = new ArrayList<DisplayModel>(models.values());
+
+		Collections.sort(displayModels, new Comparator<DisplayModel>() {
 			@Override
 			public int compare(DisplayModel m1, DisplayModel m2) {
 				return m2.getLastFifteen() - m1.getLastFifteen(); // desc
@@ -72,33 +83,39 @@ public class Handler implements PageHandler<Context> {
 		});
 
 		model.setReport(report);
-		model.setDisplayModels(models);
+		model.setDisplayModels(displayModels);
 		m_jspViewer.view(ctx, model);
 	}
 
 	static class DisplayModelBuilder extends BaseVisitor {
 		private int m_minute;
 
-		private List<DisplayModel> m_models;
+		private Map<String, DisplayModel> m_models;
 
-		private DisplayModel m_model;
+		private Period m_period;
 
-		public DisplayModelBuilder(List<DisplayModel> models, int minute) {
+		public DisplayModelBuilder(Map<String, DisplayModel> models, int minute) {
 			m_models = models;
 			m_minute = minute;
 		}
 
 		@Override
 		public void visitIp(Ip ip) {
-			m_model = new DisplayModel(ip.getAddress());
-			m_models.add(m_model);
+			String address = ip.getAddress();
+			DisplayModel model = m_models.get(address);
 
-			super.visitIp(ip);
+			if (model == null) {
+				model = new DisplayModel(address);
+				m_models.put(address, model);
+			}
+
+			model.process(m_minute, m_period.getMinute(), ip.getCount());
 		}
 
 		@Override
 		public void visitPeriod(Period period) {
-			m_model.process(m_minute, period.getMinute(), period.getValue());
+			m_period = period;
+			super.visitPeriod(period);
 		}
 	}
 }

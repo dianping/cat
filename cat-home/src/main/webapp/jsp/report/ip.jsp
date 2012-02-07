@@ -6,12 +6,21 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.ip.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.ip.Model" scope="request" />
 
-<a:report title="Hot IP Report">
+<a:report title="Hot IP Report" timestamp="2012-02-07">
 
 <jsp:attribute name="domain">
-	Domain: ${payload.domain}
+	<div class="domain">
+	<c:forEach var="domain" items="${model.domains}">
+		&nbsp;[
+		<c:choose>
+			<c:when test="${payload.domain eq domain}"><a href="?domain=${domain}" class="current">&nbsp;${domain}&nbsp;</a></c:when>
+			<c:otherwise><a href="?domain=${domain}">&nbsp;${domain}&nbsp;</a></c:otherwise>
+		</c:choose>
+		]&nbsp;
+	</c:forEach>
+	</div>
 </jsp:attribute>
-<jsp:attribute name="time">
+<jsp:attribute name="nav">
 [ <a href="">-1d</a> ] [ <a href="">-2h</a> ] [ <a href="">-1h</a> ] [ <a href="">+1h</a> ] [ <a href="">+2h</a> ] [ <a href="">+1d</a> ]
 </jsp:attribute>
 
@@ -30,10 +39,7 @@
 		</tr>
 	</c:forEach>
 </table>
-	
-<%-- <xmp>
-${model.reportInJson}
-</xmp> --%>
+
 </jsp:body>
 	
 </a:report>

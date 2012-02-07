@@ -1,15 +1,8 @@
 <ip-report domain="Review" startTime="2012-01-25 13:00:00" endTime="2012-01-25 13:59:00">
-   <ip address="127.0.0.1">
-      <period minute="0" value="19"/>
-      <period minute="1" value="2"/>
-      <period minute="2" value="1"/>
-      <period minute="4" value="12"/>
-      <period minute="5" value="12"/>
-      <period minute="6" value="15"/>
-      <period minute="7" value="12"/>
-      <period minute="8" value="14"/>
-      <period minute="9" value="16"/>
-   </ip>
-   <ip address="192.168.63.30">
-   </ip>
+   <period minute="0">
+      <ip address="127.0.0.1" count="19"/>
+      <ip address="192.168.63.30" count="11"/>
+   </period>
+   <period minute="1">
+   </period>
 </ip-report>

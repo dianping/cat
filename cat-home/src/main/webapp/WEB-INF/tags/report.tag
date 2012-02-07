@@ -5,7 +5,7 @@
 <%@ attribute name="title"%>
 <%@ attribute name="timestamp"%>
 <%@ attribute name="domain" fragment="true"%>
-<%@ attribute name="time" fragment="true"%>
+<%@ attribute name="nav" fragment="true"%>
 <%@ attribute name="subtitle" fragment="true"%>
 
 <a:body>
@@ -23,7 +23,7 @@
 	<table class="navbar">
 		<tr>
 			<td class="domain"><jsp:invoke fragment="domain"/></td>
-			<td class="time"><jsp:invoke fragment="time"/></td>
+			<td class="nav"><jsp:invoke fragment="nav"/></td>
 		</tr>
 		<tr>
 			<td class="subtitle"><jsp:invoke fragment="subtitle"/></td>

@@ -4,15 +4,15 @@
     <attribute name="domain" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <entity-ref name="ip" type="list" names="ips" />
-  </entity>
-  <entity name="ip">
-    <attribute name="address" value-type="String" />
     <entity-ref name="period" type="list" names="periods" />
   </entity>
   <entity name="period">
     <attribute name="minute" value-type="int" />
-    <attribute name="value" value-type="int" />
+    <entity-ref name="ip" type="list" names="ips" />
+  </entity>
+  <entity name="ip">
+    <attribute name="address" value-type="String" />
+    <attribute name="count" value-type="int" />
   </entity>
 </model>
 
