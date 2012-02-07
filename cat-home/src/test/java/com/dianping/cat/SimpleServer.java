@@ -36,11 +36,6 @@ public class SimpleServer extends SimpleServerSupport {
 		JettyTestSupport.startServer(new SimpleServer());
 	}
 
-	@Override
-	protected File getWarRoot() {
-		return new File("src/main/webapp");
-	}
-
 	public static void main(String[] args) throws Exception {
 		SimpleServer server = new SimpleServer();
 
@@ -70,6 +65,29 @@ public class SimpleServer extends SimpleServerSupport {
 	}
 
 	@Override
+	protected String getContextPath() {
+		return "/cat";
+	}
+
+	@Override
+	protected File getScratchDir() {
+		File work = new File(System.getProperty("java.io.tmpdir", "."), "Cat");
+
+		work.mkdirs();
+		return work;
+	}
+
+	@Override
+	protected int getServerPort() {
+		return 2281;
+	}
+
+	@Override
+	protected File getWarRoot() {
+		return new File("src/main/webapp");
+	}
+
+	@Override
 	protected void postConfigure(Context ctx) {
 		ServletHolder holder = new ServletHolder(s_mvc);
 
@@ -78,16 +96,6 @@ public class SimpleServer extends SimpleServerSupport {
 		ctx.addServlet(holder, "/r/*");
 		ctx.addFilter(GzipFilter.class, "/r/*", Handler.ALL);
 		super.postConfigure(ctx);
-	}
-
-	@Override
-	protected String getContextPath() {
-		return "/cat";
-	}
-
-	@Override
-	protected int getServerPort() {
-		return 2281;
 	}
 
 	@Test
@@ -118,15 +126,6 @@ public class SimpleServer extends SimpleServerSupport {
 			}
 		}
 
-		@Override
-		public PlexusContainer getContainer() {
-			return super.getContainer();
-		}
-
-		public void setServerPort(int serverPort) {
-			m_serverPort = serverPort;
-		}
-
 		public void display(String requestUri) throws Exception {
 			StringBuilder sb = new StringBuilder(256);
 			BrowserManager manager = lookup(BrowserManager.class);
@@ -141,6 +140,11 @@ public class SimpleServer extends SimpleServerSupport {
 		}
 
 		@Override
+		public PlexusContainer getContainer() {
+			return super.getContainer();
+		}
+
+		@Override
 		public <T> T lookup(Class<T> role) throws Exception {
 			return super.lookup(role);
 		}
@@ -148,6 +152,10 @@ public class SimpleServer extends SimpleServerSupport {
 		@Override
 		public <T> T lookup(Class<T> role, Object roleHint) throws Exception {
 			return super.lookup(role, roleHint);
+		}
+
+		public void setServerPort(int serverPort) {
+			m_serverPort = serverPort;
 		}
 	}
 }

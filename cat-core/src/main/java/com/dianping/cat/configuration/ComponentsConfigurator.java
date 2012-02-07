@@ -66,7 +66,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageConsumer.class, "dummy", DummyConsumer.class));
 		all.add(C(MessageConsumer.class, "dump-to-html", DumpToHtmlConsumer.class) //
-		      .req(MessageCodec.class, "html") //
+		      .req(MessageStorage.class, "html") //
 		      .req(MessagePathBuilder.class));
 		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
 		      .req(MessageConsumer.class, new String[] { "dummy" }, "m_consumers"));

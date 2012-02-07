@@ -13,6 +13,8 @@ public class NavigationBar {
 
 		ReportPage.TRANSACTION,
 		
+		ReportPage.IP,
+		
 		ReportPage.LOGVIEW
 
 		};

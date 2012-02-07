@@ -8,7 +8,6 @@
 
 <a:body>
 
-<res:useCss value='${res.css.local.default_css}' target="head-css"/>
 <res:useCss value='${res.css.local.logview_css}' target="head-css"/>
 
 <c:choose>

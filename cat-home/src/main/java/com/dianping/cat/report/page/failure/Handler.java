@@ -161,6 +161,7 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				 jsonResult = FailureData.getFailureDataFromMemory(analyzer, domain, ip);
 			}
+			model.setJsonResult(jsonResult);
 		} else {
 			String baseFilePath = analyzerForPage.getReportPath();
 			jsonResult =FailureData.getFailureDataFromFile(baseFilePath, file);

@@ -2,15 +2,14 @@
 <model model-package="com.dianping.cat.consumer.ip.model" enable-merger="true" enable-json-builder="true"
 	enable-xml-parser="true" enable-base-visitor="true">
   <entity name="ip-report" root="true">
-    <entity-ref name="segment" type="map" names="segments" />
+    <entity-ref name="period" type="map" names="periods" method-find-or-create="true" />
   </entity>
-  <entity name="segment">
+  <entity name="period">
     <attribute name="minute" value-type="int" key="true" />
-    <entity-ref name="ip" type="map" names="ips" />
+    <entity-ref name="ip" type="map" names="ips" method-find-or-create="true" />
   </entity>
   <entity name="ip">
-    <attribute name="address" value-type="String" key="true"/>
-    <attribute name="count" value-type="int" format="#,###,###"/>
+    <attribute name="address" value-type="String" key="true" />
+    <attribute name="count" value-type="int" primitive="true" method-inc="true" />
   </entity>
 </model>
-

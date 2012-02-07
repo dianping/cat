@@ -17,10 +17,8 @@ public class FailureData {
 
 	private static final int CURRENT=1;
 	
-	private static  String getFailureJsonDate(FailureReport report) {
-		DefaultJsonBuilder builder = new DefaultJsonBuilder();
-		report.accept(builder);
-		return builder.getString();
+	public static String getFailureJsonDate(FailureReport report) {
+		return new DefaultJsonBuilder().buildJson(report);
 	}
 
 	public static String getFailureDataFromMemory(FailureReportAnalyzer analyzer, String domain, String ip) {

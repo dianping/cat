@@ -24,11 +24,7 @@ public class FailureReportStore {
 
 	public static String getStoreString(FailureReport report) {
 		StringBuilder result = new StringBuilder();
-		DefaultJsonBuilder jsonBuilder = new DefaultJsonBuilder();
-
-		jsonBuilder.visitFailureReport(report);
-
-		String jsonString = jsonBuilder.getString();
+		String jsonString = new DefaultJsonBuilder().buildJson(report);
 
 		result.append("<html>").append(END).append("<head>").append(END).append("<title>").append(END).append(
 		      "Failure Report ").append("From ").append(SDF.format(report.getStartTime())).append(" To ").append(

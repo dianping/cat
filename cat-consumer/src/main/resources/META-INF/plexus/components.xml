@@ -16,7 +16,7 @@
 			<configuration>
 				<consumerId>realtime</consumerId>
 				<extraTime>300000</extraTime>
-				<analyzerNames>failure,transaction</analyzerNames>
+				<analyzerNames>failure,transaction,ip</analyzerNames>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -89,6 +89,11 @@
 					<role-hint>html</role-hint>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.ip.IpAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 	</components>
 </plexus>

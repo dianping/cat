@@ -63,47 +63,53 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 		if (report == null) {
 			return report;
 		}
-
 		for (TransactionType type : report.getTypes().values()) {
-			long typeCount = 0;
-			long typeFailCount = 0;
-			double typeSum = 0;
-			double typeSum2 = 0;
-			Collection<TransactionName> names = type.getNames().values();
-			for (TransactionName name : names) {
-				long count = name.getTotalCount();
-				double sum = name.getSum();
-				double ave = sum / count;
-				double sum2 = name.getSum2();
-				double std = std(count, ave, sum2);
-				long failCount = name.getFailCount();
-				double failPercent = 100.0 * failCount / count;
-				name.setFailPercent(failPercent);
-				name.setAvg(ave);
-				name.setStd(std);
-				typeCount += count;
-				typeSum += sum;
-				typeSum2 += sum2;
-				typeFailCount += failCount;
-				if (type.getSuccessMessageUrl() == null && name.getSuccessMessageUrl() != null) {
-					type.setSuccessMessageUrl(name.getSuccessMessageUrl());
-				}
-				if (type.getFailMessageUrl() == null && name.getFailMessageUrl() != null) {
-					type.setFailMessageUrl(name.getFailMessageUrl());
-				}
-				type.setMax(Math.max(name.getMax(), type.getMax()));
-				type.setMin(Math.min(name.getMin(), type.getMin()));
-			}
-			type.setTotalCount(typeCount);
-			type.setFailCount(typeFailCount);
-			type.setSum(typeSum);
-			type.setSum2(typeSum2);
-			double typeAvg = typeSum / typeCount;
-			type.setAvg(typeAvg);
-			type.setFailPercent(100.0 * typeFailCount / typeCount);
-			type.setStd(std(typeCount, typeAvg, typeSum2));
+			doOneType(type);
 		}
 		return report;
+	}
+
+	/**
+	 * @param type
+	 */
+	public void doOneType(TransactionType type) {
+		long typeCount = 0;
+		long typeFailCount = 0;
+		double typeSum = 0;
+		double typeSum2 = 0;
+		Collection<TransactionName> names = type.getNames().values();
+		for (TransactionName name : names) {
+			long count = name.getTotalCount();
+			double sum = name.getSum();
+			double ave = sum / count;
+			double sum2 = name.getSum2();
+			double std = std(count, ave, sum2);
+			long failCount = name.getFailCount();
+			double failPercent = 100.0 * failCount / count;
+			name.setFailPercent(failPercent);
+			name.setAvg(ave);
+			name.setStd(std);
+			typeCount += count;
+			typeSum += sum;
+			typeSum2 += sum2;
+			typeFailCount += failCount;
+			if (type.getSuccessMessageUrl() == null && name.getSuccessMessageUrl() != null) {
+				type.setSuccessMessageUrl(name.getSuccessMessageUrl());
+			}
+			if (type.getFailMessageUrl() == null && name.getFailMessageUrl() != null) {
+				type.setFailMessageUrl(name.getFailMessageUrl());
+			}
+			type.setMax(Math.max(name.getMax(), type.getMax()));
+			type.setMin(Math.min(name.getMin(), type.getMin()));
+		}
+		type.setTotalCount(typeCount);
+		type.setFailCount(typeFailCount);
+		type.setSum(typeSum);
+		type.setSum2(typeSum2);
+		double typeAvg = typeSum / typeCount;
+		type.setAvg(typeAvg);
+		type.setFailPercent(100.0 * typeFailCount / typeCount);
+		type.setStd(std(typeCount, typeAvg, typeSum2));
 	}
 
 	@Override
@@ -187,12 +193,12 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 			if (tree != null) {
 				if (t.isSuccess()) {
 					if (name.getSuccessMessageUrl() == null) {
-						String url = this.messageStorage.store(tree);
+						String url = this.messageStorage.store(tree); // store first success
 						name.setSuccessMessageUrl(url);
 					}
 				} else {
+					String url = this.messageStorage.store(tree); // store all errors
 					if (name.getFailMessageUrl() == null) {
-						String url = this.messageStorage.store(tree);
 						name.setFailMessageUrl(url);
 					}
 				}
@@ -256,12 +262,8 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 			file.getParentFile().mkdirs();
 
-			DefaultJsonBuilder builder = new DefaultJsonBuilder();
-
-			report.accept(builder);
-
 			try {
-				Files.forIO().writeTo(file, builder.getString());
+				Files.forIO().writeTo(file, new DefaultJsonBuilder().buildJson(report));
 			} catch (IOException e) {
 				m_logger.error(String.format("Error when writing to file(%s)!", file), e);
 			}

@@ -11,6 +11,7 @@ import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.FailureHandler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.LongUrlHandler;
+import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageManager;
@@ -31,7 +32,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class).config(E("consumerId").value("realtime") //
 		            , E("extraTime").value("300000")//
-		            , E("analyzerNames").value("failure,transaction")));
+		            , E("analyzerNames").value("failure,transaction,ip")));
 
 		String failureTypes = "Error,RuntimeException,Exception";
 		
@@ -52,6 +53,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageManager.class) //
 		      .config(E("reportPath").value("target/report/transaction/"))
 		      .req(MessageStorage.class, "html"));
+		
+		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
 
 		return all;
 	}

@@ -5,27 +5,32 @@ import com.site.web.mvc.annotation.ModuleMeta;
 
 public enum ReportPage implements Page {
 
-   HOME("home", "home", "Home", true),
+   HOME("home", "home", "Home", "CAT Home Page.", true),
 
-   TRANSACTION("transaction", "t", "Transaction", true),
+   TRANSACTION("transaction", "t", "Transaction", "CAL summary report for Transactions in current hour.", true),
 
-   FAILURE("failure", "f", "Failure", true),
+   FAILURE("failure", "f", "Failure", "CAL detail report for failure messages in current hour.", true),
 
-   LOGVIEW("logview", "m", "Logview", true);
+   LOGVIEW("logview", "m", "Logview", "CAL log details view for a given message.", false),
+
+   IP("ip", "ip", "Top IP List", "Top visited IP list in current hour.", true);
 
    private String m_name;
 
    private String m_path;
 
+   private String m_title;
+
    private String m_description;
 
-   private boolean m_realPage;
+   private boolean m_standalone;
 
-   private ReportPage(String name, String path, String description, boolean realPage) {
+   private ReportPage(String name, String path, String title, String description, boolean standalone) {
       m_name = name;
       m_path = path;
+      m_title = title;
       m_description = description;
-      m_realPage = realPage;
+      m_standalone = standalone;
    }
 
    public static ReportPage getByName(String name, ReportPage defaultPage) {
@@ -62,8 +67,12 @@ public enum ReportPage implements Page {
       return m_path;
    }
 
-   public boolean isRealPage() {
-      return m_realPage;
+   public String getTitle() {
+      return m_title;
+   }
+
+   public boolean isStandalone() {
+      return m_standalone;
    }
 
    public ReportPage[] getValues() {

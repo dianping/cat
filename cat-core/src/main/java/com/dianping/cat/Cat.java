@@ -38,6 +38,7 @@ public class Cat {
 		if (!s_instance.m_initialized) {
 			try {
 				s_instance.setContainer(new DefaultPlexusContainer());
+				s_instance.m_initialized = true;
 			} catch (PlexusContainerException e) {
 				throw new RuntimeException("Error when creating Plexus container, "
 				      + "please make sure the environment was setup correctly!", e);
@@ -87,6 +88,7 @@ public class Cat {
 		if (container != null) {
 			if (!s_instance.m_initialized) {
 				s_instance.setContainer(container);
+				s_instance.m_initialized = true;
 			} else {
 				throw new RuntimeException("Cat has already been initialized before!");
 			}
@@ -102,6 +104,10 @@ public class Cat {
 		}
 	}
 
+	public static boolean isInitialized() {
+		return s_instance.m_initialized;
+	}
+
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
 		getInstance().m_manager.reset();
@@ -114,8 +120,6 @@ public class Cat {
 	}
 
 	void setContainer(PlexusContainer container) {
-		m_initialized = true;
-
 		try {
 			m_manager = (MessageManager) container.lookup(MessageManager.class);
 		} catch (ComponentLookupException e) {

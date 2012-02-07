@@ -2,7 +2,6 @@ package com.dianping.cat.message.spi.codec;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
-
 public class HtmlEncodingBufferWriter implements BufferWriter {
 	private static byte[] AMP = "&amp;".getBytes();
 
@@ -24,17 +23,17 @@ public class HtmlEncodingBufferWriter implements BufferWriter {
 			if (b == '&') {
 				buffer.writeBytes(data, offset, i - offset);
 				buffer.writeBytes(AMP);
-				count += AMP.length;
+				count += AMP.length - 1;
 				offset = i + 1;
 			} else if (b == '<') {
 				buffer.writeBytes(data, offset, i - offset);
 				buffer.writeBytes(LT);
-				count += LT.length;
+				count += LT.length - 1;
 				offset = i + 1;
 			} else if (b == '>') {
 				buffer.writeBytes(data, offset, i - offset);
 				buffer.writeBytes(GT);
-				count += GT.length;
+				count += GT.length - 1;
 				offset = i + 1;
 			} else if (b == '\n') {
 				// we want '\n' be output again for better format

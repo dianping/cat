@@ -5,6 +5,10 @@ import java.net.UnknownHostException;
 import java.util.Stack;
 import java.util.UUID;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -15,7 +19,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ContainerHolder;
 
-public class DefaultMessageManager extends ContainerHolder implements MessageManager {
+public class DefaultMessageManager extends ContainerHolder implements MessageManager, LogEnabled {
 	private TransportManager m_manager;
 
 	// we don't use static modifier since MessageManager is a singleton in
@@ -37,14 +41,27 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private String m_ipAddress;
 
+	private Logger m_logger;
+
+	private boolean m_firstMessage = true;
+
 	@Override
 	public void add(Message message) {
-		getContext().add(this, message);
+		if (Cat.isInitialized()) {
+			getContext().add(this, message);
+		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	@Override
 	public void end(Transaction transaction) {
-		getContext().end(this, transaction);
+		if (Cat.isInitialized()) {
+			getContext().end(this, transaction);
+		}
 	}
 
 	void flush(MessageTree tree) {
@@ -62,11 +79,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_clientConfig;
 	}
 
-	@Override
-	public Config getServerConfig() {
-		return m_serverConfig;
-	}
-
 	Context getContext() {
 		Context ctx = m_context.get();
 
@@ -76,6 +88,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		} else {
 			return ctx;
 		}
+	}
+
+	@Override
+	public Config getServerConfig() {
+		return m_serverConfig;
 	}
 
 	@Override
@@ -123,7 +140,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public void start(Transaction transaction) {
-		getContext().start(transaction);
+		if (Cat.isInitialized()) {
+			getContext().start(transaction);
+		} else if (m_firstMessage){
+			m_firstMessage = false;
+			m_logger.warn("CAT client is not enabled because it's not initialized yet");
+		}
 	}
 
 	static class Context {
@@ -138,12 +160,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_tree.setDomain(domain);
 			m_tree.setSessionToken(sessionToken);
 			m_tree.setRequestToken(requestToken);
-			
+
 			Thread thread = Thread.currentThread();
-			
+
 			m_tree.setThreadId(Long.toHexString(thread.getId()));
 			m_tree.setThreadId(thread.getName());
-			
+
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
 			m_tree.setMessageId(UUID.randomUUID().toString()); // TODO optimize it

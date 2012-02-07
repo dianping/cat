@@ -7,6 +7,8 @@ import com.site.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 	private TransactionReport m_report;
+	
+	private String type;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -22,13 +24,18 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	}
 	
 	public String getReportInJson() {
-		DefaultJsonBuilder builder = new DefaultJsonBuilder();
-		
-		m_report.accept(builder);
-		return builder.getString();
+		return new DefaultJsonBuilder().buildJson(m_report);
 	}
 
 	public void setReport(TransactionReport report) {
 		m_report = report;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

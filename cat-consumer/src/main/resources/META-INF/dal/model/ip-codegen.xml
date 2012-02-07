@@ -4,9 +4,9 @@
     <attribute name="domain" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <entity-ref name="segment" type="list" names="segments" />
+    <entity-ref name="period" type="list" names="periods" />
   </entity>
-  <entity name="segment">
+  <entity name="period">
     <attribute name="minute" value-type="int" />
     <entity-ref name="ip" type="list" names="ips" />
   </entity>
