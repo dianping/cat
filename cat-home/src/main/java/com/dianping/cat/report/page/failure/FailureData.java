@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 
+import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
 import com.dianping.cat.consumer.failure.model.entity.FailureReport;
 import com.dianping.cat.consumer.failure.model.entity.Segment;
 import com.dianping.cat.consumer.failure.model.entity.Threads;
@@ -13,19 +14,21 @@ import com.dianping.cat.tool.DateUtil;
 import com.site.helper.Files;
 
 public class FailureData {
+
+	private static final int CURRENT=1;
 	
-	public String getFailureJsonDate(FailureReport report) {
+	private static  String getFailureJsonDate(FailureReport report) {
 		DefaultJsonBuilder builder = new DefaultJsonBuilder();
 		report.accept(builder);
 		return builder.getString();
 	}
 
-	/*public String getFailureDataFromMemory(FailureReportAnalyzer analyzer, String domain) {
-		FailureReport report = analyzer.generateByDomain(domain);
+	public static String getFailureDataFromMemory(FailureReportAnalyzer analyzer, String domain, String ip) {
+		FailureReport report = analyzer.generateByDomainAndIp(domain, ip);
 		return getFailureJsonDate(report);
 	}
-*/
-	public String getFailureDataFromFile(String basePath, String file) {
+
+	public static String getFailureDataFromFile(String basePath, String file) {
 		String result = "";
 		try {
 			result = Files.forIO().readFrom(new File(basePath + file), "utf-8");
@@ -36,19 +39,20 @@ public class FailureData {
 		return result;
 	}
 
-	public String getFailureDataByNew(int pos, String domain) {
+	
+	public static String getFailureDataByNew(int pos, String domain, String ip) {
 		long currentTime = System.currentTimeMillis();
 		long currentStart = currentTime - currentTime % DateUtil.HOUR;
 		long lastStart = currentTime - currentTime % DateUtil.HOUR - DateUtil.HOUR;
 		Date date = new Date();
-		if (pos == 1) {
+		if (pos == CURRENT) {
 			date.setTime(currentStart);
 		} else {
 			date.setTime(lastStart);
 		}
 		FailureReport report = new FailureReport();
-		//TODO
-		//report.setMachines(new Machines());
+		
+		report.setMachine(ip);
 		report.setThreads(new Threads());
 		report.setStartTime(date);
 		report.setEndTime(new Date(date.getTime() + DateUtil.HOUR - DateUtil.MINUTE));

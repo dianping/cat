@@ -113,4 +113,5 @@ public class FailureAnalyzerStoreTest extends ComponentTestCase {
 		String exceptedResult = FailureReportStore.getStoreString(targetReport);
 		Assert.assertEquals("Check file content!", exceptedResult, realResult);
 	}
+
 }

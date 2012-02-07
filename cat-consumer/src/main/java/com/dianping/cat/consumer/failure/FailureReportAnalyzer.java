@@ -91,6 +91,14 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		return new ArrayList<String>(result);
 	}
 
+	public Map<String, FailureReport> getReports() {
+   	return m_reports;
+   }
+
+	public void setReports(Map<String, FailureReport> reports) {
+   	m_reports = reports;
+   }
+
 	private FailureReport getReportByDomainAndIp(String domain, String ip) {
 		String domainAndIp = new StringBuffer().append(domain).append(":").append(ip).toString();
 		FailureReport report = m_reports.get(domainAndIp);

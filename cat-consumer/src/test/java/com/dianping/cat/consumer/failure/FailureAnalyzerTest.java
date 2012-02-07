@@ -33,7 +33,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		long current = System.currentTimeMillis();
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
-		long start = current - current % (60 * 60 * 1000) -HOUR;
+		long start = current - current % (60 * 60 * 1000) - HOUR;
 
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory.create("failure", start, duration, m_domain,
@@ -94,7 +94,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		FailureReport report = analyzer.generateByDomainAndIp(m_domain, m_host);
 
 		assertEquals("Check the domain", report.getDomain(), "domain1");
-		assertEquals("Check the machines", m_host,report.getMachine());
+		assertEquals("Check the machines", m_host, report.getMachine());
 		assertEquals("Check the threads", threadNumber, report.getThreads().getThreads().size());
 
 		Date startDate = report.getStartTime();
@@ -115,9 +115,9 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		for (int i = 0; i < number / 10; i++) {
 			String minuteStr = sdf2.format(startDate);
 			Segment temp = segments.get(minuteStr);
-			
+
 			List<Entry> entries = temp.getEntries();
-			
+
 			if (entries == null) {
 				System.out.println(minuteStr);
 			} else {
@@ -155,7 +155,7 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 		}
 		FailureReport report = analyzer.generateByDomainAndIp(domain, m_host);
 
-		assertEquals("Check the machines", m_host,report.getMachine());
+		assertEquals("Check the machines", m_host, report.getMachine());
 		assertEquals("Check the domain", report.getDomain(), "domain1");
 
 		Date startDate = report.getStartTime();
@@ -179,6 +179,69 @@ public class FailureAnalyzerTest extends ComponentTestCase {
 
 			assertEquals("Check the segment size ", temp.getEntries().size(), 1);
 			startDate.setTime(startDate.getTime() + 1000 * 60);
+		}
+	}
+
+	@Test
+	public void testManyDomainAndIp() throws Exception {
+		long current = System.currentTimeMillis();
+		long duration = 60 * 60 * 1000;
+		long extraTime = 5 * 60 * 1000;
+		long start = current - current % (60 * 60 * 1000) - HOUR;
+		String baseDaomain = "domain";
+		String baseIp = "192.168.1.";
+
+		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
+		FailureReportAnalyzer analyzer = (FailureReportAnalyzer) factory
+		      .create("failure", start, duration, "", extraTime);
+		int number = 60;
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				for (int index = 0; index < number; index++) {
+					DefaultTransaction t = new DefaultTransaction("A1", "B1", null);
+					MessageTree tree = new DefaultMessageTree();
+					tree.setMessageId("thread0001");
+					tree.setDomain(baseDaomain + i);
+					tree.setIpAddress(baseIp + j);
+					tree.setMessage(t);
+					t.setDuration(3 * 1000);
+					t.setTimestamp(start + 1000L * 60 * index);
+					analyzer.process(tree);
+				}
+			}
+		}
+
+		Map<String, FailureReport> reports = analyzer.getReports();
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 3; j++) {
+				FailureReport report = reports.get(baseDaomain + i + ":" + baseIp + j);
+				assertEquals("Check the report is not null", report == null, false);
+				assertEquals("Check the machine", baseIp + j, report.getMachine());
+				assertEquals("Check the domain", baseDaomain + i, report.getDomain());
+
+				Date startDate = report.getStartTime();
+				Date endDate = report.getEndTime();
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String startStr = sdf.format(startDate);
+				String endStr = sdf.format(endDate);
+
+				Date realStartDate = new Date(start);
+				Date realEndDate = new Date(start + duration - 60 * 1000);
+
+				assertEquals("Check the report start time", sdf.format(realStartDate), startStr);
+				assertEquals("Check the report end time", sdf.format(realEndDate), endStr);
+
+				SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+				Map<String, Segment> segments = report.getSegments();
+				for (int k = 0; k < 60; k++) {
+					String minuteStr = sdf2.format(startDate);
+					Segment temp = segments.get(minuteStr);
+
+					assertEquals("Check the segment size ",temp.getEntries().size(), 1);
+					startDate.setTime(startDate.getTime() + 1000 * 60);
+				}
+			}
 		}
 	}
 }
