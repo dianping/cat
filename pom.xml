@@ -164,11 +164,6 @@ org.eclipse.jdt.core.compiler.compliance=1.6
                   </additionalConfig>
                </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.sonar</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>2.10</version>
-            </plugin>
          </plugins>
       </pluginManagement>
       <plugins>
