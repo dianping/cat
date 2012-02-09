@@ -26,6 +26,26 @@
       </mirror>
    </mirrors>
    <profiles>
+   		<profile>
+            <id>sonar</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <!-- EXAMPLE FOR MYSQL -->
+                <sonar.jdbc.url>
+                  jdbc:mysql://192.168.32.167:3306/sonar?useUnicode=true&amp;characterEncoding=utf8
+                </sonar.jdbc.url>
+                <sonar.jdbc.driverClassName>com.mysql.jdbc.Driver</sonar.jdbc.driverClassName>
+                <sonar.jdbc.username>root</sonar.jdbc.username>
+                <sonar.jdbc.password>123456</sonar.jdbc.password>
+ 
+                <!-- optional URL to server. Default value is http://localhost:9000 -->
+                <sonar.host.url>
+                  http://192.168.8.21:9000/sonar
+                </sonar.host.url>
+            </properties>
+        </profile>
       <profile>
          <id>dev</id>
          <repositories>
