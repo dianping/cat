@@ -2,11 +2,11 @@
 <description>JSP standard tag library for V4 resources</description>
 <tlib-version>1.0</tlib-version>
 <short-name>res</short-name>
-<uri>http://www.ebay.com/webres</uri>
+<uri>http://www.unidal.org/webres</uri>
 <tag>
 <description><![CDATA[jsSlot Resource Tag]]></description>
 <name>jsSlot</name>
-<tag-class>com.ebay.webres.taglib.basic.JsSlotTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.JsSlotTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[Identify whether the link URL is secure or not.]]></description>
@@ -34,7 +34,7 @@
 <tag>
 <description><![CDATA[Resource Bean Tag to define resource bean variable as bootstrap]]></description>
 <name>bean</name>
-<tag-class>com.ebay.webres.taglib.basic.BeanTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.BeanTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[A valid id for Bean.]]></description>
@@ -48,7 +48,7 @@
 <tag>
 <description><![CDATA[useCss Resource Tag]]></description>
 <name>useCss</name>
-<tag-class>com.ebay.webres.taglib.basic.UseCssTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.UseCssTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[Set the css value with EL or a css ref.]]></description>
@@ -90,7 +90,7 @@
 <tag>
 <description><![CDATA[Resource token tag for page resources]]></description>
 <name>token</name>
-<tag-class>com.ebay.webres.taglib.basic.TokenTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.TokenTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[Customized tag render type]]></description>
@@ -111,7 +111,7 @@
 <tag>
 <description><![CDATA[Set tag to define a page attribute with id as name]]></description>
 <name>set</name>
-<tag-class>com.ebay.webres.taglib.basic.SetTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.SetTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[The value]]></description>
@@ -132,7 +132,7 @@
 <tag>
 <description><![CDATA[useJs Resource Tag]]></description>
 <name>useJs</name>
-<tag-class>com.ebay.webres.taglib.basic.UseJsTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.UseJsTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[Set the js value with EL or a js ref.]]></description>
@@ -174,7 +174,7 @@
 <tag>
 <description><![CDATA[Link Resource Tag]]></description>
 <name>link</name>
-<tag-class>com.ebay.webres.taglib.basic.LinkTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.LinkTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[The value for link, could be a expression or a link ref.]]></description>
@@ -202,7 +202,7 @@
 <tag>
 <description><![CDATA[Image Resource Tag]]></description>
 <name>img</name>
-<tag-class>com.ebay.webres.taglib.basic.ImageTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.ImageTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[The value for image, could be a expression or a image path.]]></description>
@@ -237,7 +237,7 @@
 <tag>
 <description><![CDATA[cssSlot Resource Tag]]></description>
 <name>cssSlot</name>
-<tag-class>com.ebay.webres.taglib.basic.CssSlotTagHandler</tag-class>
+<tag-class>org.unidal.webres.taglib.basic.CssSlotTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
 <description><![CDATA[Identify whether the link URL is secure or not.]]></description>
