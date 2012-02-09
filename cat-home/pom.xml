@@ -28,7 +28,7 @@
 			<artifactId>web-framework</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.ebay.webres</groupId>
+			<groupId>org.unidal.webres</groupId>
 			<artifactId>WebResServer</artifactId>
 		</dependency>
 		<dependency>

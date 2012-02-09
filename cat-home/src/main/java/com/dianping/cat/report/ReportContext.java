@@ -4,13 +4,15 @@ import java.io.File;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import com.ebay.webres.resource.runtime.ResourceConfigurator;
-import com.ebay.webres.resource.runtime.ResourceInitializer;
-import com.ebay.webres.resource.runtime.ResourceRuntime;
-import com.ebay.webres.resource.runtime.ResourceRuntimeContext;
-import com.ebay.webres.resource.spi.IResourceRegistry;
-import com.ebay.webres.tag.resource.ResourceTagConfigurator;
-import com.ebay.webres.taglib.basic.ResourceTagLibConfigurator;
+
+import org.unidal.webres.resource.runtime.ResourceConfigurator;
+import org.unidal.webres.resource.runtime.ResourceInitializer;
+import org.unidal.webres.resource.runtime.ResourceRuntime;
+import org.unidal.webres.resource.runtime.ResourceRuntimeContext;
+import org.unidal.webres.resource.spi.IResourceRegistry;
+import org.unidal.webres.tag.resource.ResourceTagConfigurator;
+import org.unidal.webres.taglib.basic.ResourceTagLibConfigurator;
+
 import com.site.web.mvc.Action;
 import com.site.web.mvc.ActionContext;
 import com.site.web.mvc.ActionPayload;
