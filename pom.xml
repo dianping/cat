@@ -10,8 +10,9 @@
    <packaging>pom</packaging>
    <modules>
       <module>cat-core</module>
-      <module>cat-home</module>
       <module>cat-consumer</module>
+      <module>cat-home</module>
+      <module>cat-hadoop</module>
    </modules>
    <dependencyManagement>
       <dependencies>
