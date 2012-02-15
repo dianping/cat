@@ -1,27 +1,16 @@
 package com.dianping.cat.message;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
 
-public class EventTest {
-	public static MessageProducer CAT = Cat.getProducer();
-
-	@Before
-	public void before() {
-		Cat.setup(null, null);
-	}
-
-	@After
-	public void after() {
-		Cat.reset();
-	}
-
+@RunWith(JUnit4.class)
+public class EventTest extends CatTestCase {
 	@Test
 	public void testNormal() {
-		Event event = CAT.newEvent("Review", "New");
+		Event event = Cat.getProducer().newEvent("Review", "New");
 
 		event.addData("id", 12345);
 		event.addData("user", "john");
@@ -31,15 +20,15 @@ public class EventTest {
 
 	@Test
 	public void testException() {
-		CAT.logError(new RuntimeException());
+		Cat.getProducer().logError(new RuntimeException());
 	}
 
 	@Test
 	public void testInOneShot() {
 		// Normal case
-		CAT.logEvent("Review", "New", Message.SUCCESS, "id=12345&user=john");
+		Cat.getProducer().logEvent("Review", "New", Message.SUCCESS, "id=12345&user=john");
 
 		// Exception case
-		CAT.logError(new RuntimeException());
+		Cat.getProducer().logError(new RuntimeException());
 	}
 }

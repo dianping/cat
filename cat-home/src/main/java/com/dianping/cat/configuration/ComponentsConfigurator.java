@@ -16,8 +16,13 @@ public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-		      .req(MessageConsumer.class, new String[] { "realtime", "dump-to-html" }, "m_consumers"));
+		if (isEnv("dev")) {
+			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
+			      .req(MessageConsumer.class, new String[] { "realtime", "dump-to-html" }, "m_consumers"));
+		} else {
+			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
+			      .req(MessageConsumer.class, new String[] { "realtime" }, "m_consumers"));
+		}
 
 		defineModuleRegistry(all, ReportModule.class, ReportModule.class);
 

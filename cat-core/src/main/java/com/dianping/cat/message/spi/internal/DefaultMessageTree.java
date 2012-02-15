@@ -29,6 +29,23 @@ public class DefaultMessageTree implements MessageTree {
 	private Message m_message;
 
 	@Override
+	public DefaultMessageTree copy() {
+		DefaultMessageTree tree = new DefaultMessageTree();
+		
+		tree.setDomain(m_domain);
+		tree.setHostName(m_hostName);
+		tree.setIpAddress(m_ipAddress);
+		tree.setMessageId(m_messageId);
+		tree.setRequestToken(m_requestToken);
+		tree.setSessionToken(m_sessionToken);
+		tree.setThreadId(m_threadId);
+		tree.setThreadName(m_threadName);
+		tree.setMessage(m_message);
+		
+		return tree;
+	}
+
+	@Override
 	public String getDomain() {
 		return m_domain;
 	}

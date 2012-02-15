@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 
 public interface MessagePathBuilder {
+	public String getHdfsPath(MessageTree tree, String host);
+
 	public File getLogViewBaseDir();
 
 	public URL getLogViewBaseUrl();

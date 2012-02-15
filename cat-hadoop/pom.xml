@@ -7,16 +7,22 @@
 		<version>0.1.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cat-core</artifactId>
-	<name>CAT Core</name>
+	<artifactId>cat-hadoop</artifactId>
+	<name>CAT Hadoop Analysis</name>
 	<dependencies>
 		<dependency>
-			<groupId>com.site.common</groupId>
-			<artifactId>lookup</artifactId>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.jboss.netty</groupId>
-			<artifactId>netty</artifactId>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-core</artifactId>
+			<version>0.20.203.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.4</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -29,16 +35,16 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.6</version>
+				<version>1.0.7</version>
 				<executions>
 					<execution>
-						<id>default-cli</id>
-						<phase>generate-sources</phase>
+						<id>generate plexus component descriptor</id>
+						<phase>process-classes</phase>
 						<goals>
-							<goal>dal-model</goal>
+							<goal>plexus</goal>
 						</goals>
 						<configuration>
-							<manifest>${basedir}/src/main/resources/META-INF/dal/model/manifest.xml</manifest>
+							<className>com.dianping.cat.hadoop.plexus.ComponentsConfigurator</className>
 						</configuration>
 					</execution>
 				</executions>

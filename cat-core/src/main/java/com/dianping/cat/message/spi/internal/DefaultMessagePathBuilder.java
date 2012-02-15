@@ -25,6 +25,15 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	private URL m_baseLogUrl;
 
 	@Override
+	public String getHdfsPath(MessageTree tree, String host) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{0,date,mm}-{2}");
+		Date date = new Date(tree.getMessage().getTimestamp());
+		String path = format.format(new Object[] { date, tree.getDomain(), host });
+
+		return path;
+	}
+
+	@Override
 	public File getLogViewBaseDir() {
 		return m_baseLogDir;
 	}

@@ -1,7 +1,5 @@
-package com.dianping.cat.message.spi.internal;
+package com.dianping.cat.hadoop.hdfs;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -12,29 +10,30 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 
-import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageStorage implements MessageStorage, Initializable, Disposable, LogEnabled {
+public class HdfsMessageStorage implements MessageStorage, Initializable, Disposable, LogEnabled {
 	@Inject
-	private MessagePathBuilder m_builder;
+	private ChannelManager m_manager;
 
-	@Inject
-	private MessageCodec m_codec;
+	private WriteJob m_job;
 
-	private WriteJob m_job = new WriteJob();
+	private Thread m_thread;
 
 	private Logger m_logger;
 
 	@Override
 	public void dispose() {
 		m_job.shutdown();
+
+		try {
+			m_thread.join();
+		} catch (InterruptedException e) {
+			// ignore it
+		}
 	}
 
 	@Override
@@ -44,24 +43,28 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 
 	@Override
 	public void initialize() throws InitializationException {
+		m_job = new WriteJob();
+
 		Thread thread = new Thread(m_job);
 
 		thread.setName("Storage write Job");
 		thread.start();
+
+		m_thread = thread;
 	}
 
 	@Override
 	public String store(MessageTree tree) {
-		String path = m_builder.getLogViewPath(tree);
-
 		m_job.append(tree);
-		return path;
+
+		// Not available
+		return null;
 	}
 
 	class WriteJob implements Runnable {
 		private BlockingQueue<MessageTree> m_queue = new LinkedBlockingQueue<MessageTree>();
 
-		private boolean m_active = true;
+		private volatile boolean m_active = true;
 
 		public void append(MessageTree tree) {
 			try {
@@ -72,49 +75,48 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 		}
 
 		private void handle(MessageTree tree) {
-			String path = m_builder.getLogViewPath(tree);
-			File file = new File(m_builder.getLogViewBaseDir(), path);
+			try {
+				OutputChannel channel = m_manager.findChannel(tree, false);
+				boolean success = channel.out(tree);
 
-			if (!file.exists()) {
-				ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-				FileOutputStream fos = null;
+				if (!success) {
+					m_manager.closeChannel(channel);
 
-				file.getParentFile().mkdirs();
-
-				try {
-					fos = new FileOutputStream(file);
-					m_codec.encode(tree, buf);
-
-					int length = buf.readInt();
-
-					buf.getBytes(buf.readerIndex(), fos, length);
-				} catch (IOException e) {
-					m_logger.error(String.format("Error when writing to file(%s)!", file), e);
-				} finally {
-					if (fos != null) {
-						try {
-							fos.close();
-						} catch (IOException e) {
-							// ignore it
-						}
-					}
+					channel = m_manager.findChannel(tree, true);
+					channel.out(tree);
 				}
+			} catch (IOException e) {
+				m_logger.error("Error when writing to HDFS!", e);
+			}
+		}
+
+		private boolean isActive() {
+			synchronized (this) {
+				return m_active;
 			}
 		}
 
 		@Override
 		public void run() {
+			long lastCheckedTime = System.currentTimeMillis();
+
 			try {
-				while (m_active) {
+				while (isActive()) {
 					MessageTree tree = m_queue.poll(1000 * 1000L, TimeUnit.NANOSECONDS);
 
 					if (tree != null) {
 						handle(tree);
 					}
+
+					// check connection timeout and close it
+					if (System.currentTimeMillis() - lastCheckedTime >= 5 * 1000) {
+						lastCheckedTime = System.currentTimeMillis();
+						m_manager.cleanupChannels();
+					}
 				}
 
 				// process the remaining job in the queue
-				while (!m_active) {
+				while (!isActive()) {
 					MessageTree tree = m_queue.poll();
 
 					if (tree != null) {
@@ -124,12 +126,16 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 					}
 				}
 			} catch (Exception e) {
-				m_logger.warn("Error when writing message to local file system.", e);
+				m_logger.warn("Error when dumping message to HDFS.", e);
 			}
+
+			m_manager.closeAllChannels();
 		}
 
 		public void shutdown() {
-			m_active = false;
+			synchronized (this) {
+				m_active = false;
+			}
 		}
 	}
 }

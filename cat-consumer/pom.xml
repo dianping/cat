@@ -17,10 +17,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.site.common</groupId>
-			<artifactId>lookup</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
@@ -34,7 +31,7 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.6</version>
+				<version>1.0.7</version>
 				<executions>
 					<execution>
 						<id>generate failure report model</id>
@@ -57,14 +54,43 @@
 						</configuration>
 					</execution>
 					<execution>
-						<!-- <id>generate IP report model</id>  -->
-						<id>default-cli</id>
+						<id>generate IP report model</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>dal-model</goal>
 						</goals>
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/model/ip-manifest.xml</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate plexus component descriptor</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>plexus</goal>
+						</goals>
+						<configuration>
+							<className>com.dianping.cat.consumer.configuration.ComponentsConfigurator</className>
+							<env>dev</env>
+							<profile>
+								<env id="dev">
+									<property name="n1">v10</property>
+									<property name="n2">v20</property>
+									<property name="extraTime">12345</property>
+								</env>
+								<env id="alpha">
+									<property name="n1">v11</property>
+									<property name="n2">v21</property>
+								</env>
+								<env id="beta">
+									<property name="n1">v12</property>
+									<property name="n2">v22</property>
+								</env>
+								<env id="production">
+									<property name="n1">v13</property>
+									<property name="n2">v23</property>
+								</env>
+							</profile>
 						</configuration>
 					</execution>
 				</executions>

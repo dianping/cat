@@ -1,27 +1,16 @@
 package com.dianping.cat.message;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
 
-public class TransactionTest {
-	private static final MessageProducer CAT = Cat.getProducer();
-
-	@Before
-	public void before() {
-		Cat.setup(null, null);
-	}
-
-	@After
-	public void after() {
-		Cat.reset();
-	}
-
+@RunWith(JUnit4.class)
+public class TransactionTest extends CatTestCase {
 	@Test
 	public void testNormal() {
-		Transaction t = CAT.newTransaction("URL", "MyPage");
+		Transaction t = Cat.getProducer().newTransaction("URL", "MyPage");
 
 		try {
 			// do your business here

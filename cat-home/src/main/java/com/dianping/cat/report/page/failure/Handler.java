@@ -107,6 +107,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.FAILURE);
 		
 		Payload payload = ctx.getPayload();
+		
 		FailureReportAnalyzer analyzerForPage = (FailureReportAnalyzer) m_consumer.getCurrentAnalyzer("failure");
 		
 		//Set all domain of page

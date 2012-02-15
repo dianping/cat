@@ -64,12 +64,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageCodec.class, "html", HtmlMessageCodec.class) //
 		      .req(BufferWriter.class, "html-encode"));
 
-		all.add(C(MessageConsumer.class, "dummy", DummyConsumer.class));
-		all.add(C(MessageConsumer.class, "dump-to-html", DumpToHtmlConsumer.class) //
+		all.add(C(MessageConsumer.class, DummyConsumer.ID, DummyConsumer.class));
+		all.add(C(MessageConsumer.class, DumpToHtmlConsumer.ID, DumpToHtmlConsumer.class) //
 		      .req(MessageStorage.class, "html") //
 		      .req(MessagePathBuilder.class));
 		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-		      .req(MessageConsumer.class, new String[] { "dummy" }, "m_consumers"));
+		      .req(MessageConsumer.class, new String[] { DummyConsumer.ID }, "m_consumers"));
 
 		all.add(C(MessageSender.class, "tcp-socket", TcpSocketSender.class) //
 		      .is(PER_LOOKUP) //

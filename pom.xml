@@ -12,6 +12,7 @@
       <module>cat-core</module>
       <module>cat-consumer</module>
       <module>cat-home</module>
+      <module>cat-hadoop</module>
    </modules>
    <dependencyManagement>
       <dependencies>
@@ -28,7 +29,7 @@
          <dependency>
             <groupId>com.site.common</groupId>
             <artifactId>lookup</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
          </dependency>
          <dependency>
             <groupId>junit</groupId>
