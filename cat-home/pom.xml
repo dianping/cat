@@ -16,6 +16,11 @@
 			<artifactId>cat-consumer</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.site.dal</groupId>
+			<artifactId>dal-xml</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.site.common</groupId>
 			<artifactId>web-framework</artifactId>
 		</dependency>

@@ -1,4 +1,4 @@
-package com.dianping.garden.view;
+package com.dianping.cat.report.view;
 
 import com.site.web.mvc.Action;
 import com.site.web.mvc.ActionContext;

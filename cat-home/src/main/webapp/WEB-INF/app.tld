@@ -8,7 +8,7 @@
    
    <tag>
 		<name>errors</name>
-		<tag-class>com.dianping.garden.view.ErrorsTag</tag-class>
+		<tag-class>com.dianping.cat.report.view.ErrorsTag</tag-class>
 		<body-content>JSP</body-content>
    </tag>
    <tag-file>
@@ -22,21 +22,21 @@
    <function>
       <description>Build form action for given id</description>
       <name>action</name>
-      <function-class>com.dianping.garden.view.UriBuilder</function-class>
+      <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
       <function-signature>String action(com.site.web.mvc.ViewModel, java.lang.Object)</function-signature>
       <example>${a:action(model, 123)}</example>
    </function>
    <function>
       <description>Build uri for given id</description>
       <name>uri</name>
-      <function-class>com.dianping.garden.view.UriBuilder</function-class>
+      <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
       <function-signature>String uri(com.site.web.mvc.ViewModel, java.lang.Object)</function-signature>
       <example>${a:uri(model, 123)}</example>
    </function>
    <function>
       <description>Build uri for given id with additional query string</description>
       <name>uri2</name>
-      <function-class>com.dianping.garden.view.UriBuilder</function-class>
+      <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
       <function-signature>String uri2(com.site.web.mvc.ViewModel, java.lang.Object, java.lang.String)</function-signature>
       <example>${a:uri2(model, 123, 'a=1&amp;b=2')}</example>
    </function>

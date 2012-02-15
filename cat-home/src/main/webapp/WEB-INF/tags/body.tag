@@ -1,7 +1,7 @@
 <%@ tag trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="navBar" class="com.dianping.garden.view.NavigationBar" scope="page"/>
+<jsp:useBean id="navBar" class="com.dianping.cat.report.view.NavigationBar" scope="page"/>
 
 <res:bean id="res"/>
 <html>
