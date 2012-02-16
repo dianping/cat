@@ -31,7 +31,7 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8</version>
 				<executions>
 					<execution>
 						<id>generate failure report model</id>

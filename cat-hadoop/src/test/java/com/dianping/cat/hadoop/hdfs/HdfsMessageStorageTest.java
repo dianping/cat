@@ -20,8 +20,8 @@ public class HdfsMessageStorageTest extends CatTestCase {
 		MessageProducer producer = lookup(MessageProducer.class);
 		InMemoryQueue queue = lookup(InMemoryQueue.class);
 
-		for (int i = 0; i < 100; i++) {
-			Transaction t = producer.newTransaction("URL", "MyPage");
+		for (int i = 0; i < 10000; i++) {
+			Transaction t = producer.newTransaction("URL", "MyPage" + (int) (i / 500));
 
 			try {
 				// do your business here
@@ -29,7 +29,7 @@ public class HdfsMessageStorageTest extends CatTestCase {
 				t.addData("k2", "v2");
 				t.addData("k3", "v3");
 
-				Thread.sleep(10);
+				Thread.sleep(1);
 
 				producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
 				producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");

@@ -16,6 +16,7 @@ com.dianping.cat.report.page.failure.Handler.class,
 com.dianping.cat.report.page.logview.Handler.class,
 
 com.dianping.cat.report.page.ip.Handler.class
+
 })
 public class ReportModule extends AbstractModule {
 

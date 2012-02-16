@@ -24,7 +24,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		if (isEnv("dev") || property("env", null) == null) {
 			all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
 			      .req(MessageCodec.class, "plain-text") //
-			      .config(E("maxSize").value(String.valueOf(5 * 1024L))));
+			      .config(E("maxSize").value(String.valueOf(2 * 1024 * 1024L))));
 			all.add(C(ChannelManager.class, DefaultChannelManager.class) //
 			      .req(MessagePathBuilder.class));
 		} else {

@@ -5,7 +5,7 @@
 			<implementation>com.dianping.cat.hadoop.hdfs.DefaultOutputChannel</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
-				<maxSize>5120</maxSize>
+				<maxSize>2097152</maxSize>
 			</configuration>
 			<requirements>
 				<requirement>
