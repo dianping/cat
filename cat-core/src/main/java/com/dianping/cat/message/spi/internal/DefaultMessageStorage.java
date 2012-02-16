@@ -65,7 +65,7 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 
 		public void append(MessageTree tree) {
 			try {
-				m_queue.put(tree);
+				m_queue.offer(tree);
 			} catch (Exception e) {
 				m_logger.warn("Error when adding job to queue.", e);
 			}
@@ -106,8 +106,7 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 		public void run() {
 			try {
 				while (m_active) {
-					MessageTree tree = m_queue.poll(1000 * 1000L, TimeUnit.NANOSECONDS); // 1
-					                                                                     // ms
+					MessageTree tree = m_queue.poll(1000 * 1000L, TimeUnit.NANOSECONDS);
 
 					if (tree != null) {
 						handle(tree);
@@ -125,12 +124,12 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 					}
 				}
 			} catch (Exception e) {
-				m_logger.warn("Error when processing job in queue.", e);
+				m_logger.warn("Error when writing message to local file system.", e);
 			}
 		}
 
 		public void shutdown() {
-			m_active = true;
+			m_active = false;
 		}
 	}
 }

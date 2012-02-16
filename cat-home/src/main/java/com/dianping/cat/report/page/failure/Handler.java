@@ -54,7 +54,7 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.FAILURE);
-
+		
 		String domain = payload.getDomain();
 		String ip = payload.getIp();
 

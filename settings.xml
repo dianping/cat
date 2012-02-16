@@ -40,16 +40,6 @@
                </snapshots>
             </repository>
             <repository>
-               <id>dianping.releases</id>
-               <url>http://192.168.8.45:8080/artifactory/dianping-releases</url>
-               <releases>
-                  <enabled>true</enabled>
-               </releases>
-               <snapshots>
-                  <enabled>false</enabled>
-               </snapshots>
-            </repository>
-            <repository>
                <id>releases</id>
                <url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/releases/</url>
                <releases>

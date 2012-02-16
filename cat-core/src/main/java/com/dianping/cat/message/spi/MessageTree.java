@@ -2,7 +2,9 @@ package com.dianping.cat.message.spi;
 
 import com.dianping.cat.message.Message;
 
-public interface MessageTree {
+public interface MessageTree extends Cloneable {
+	public MessageTree copy();
+
 	public String getDomain();
 
 	public String getHostName();

@@ -16,12 +16,9 @@
 			<artifactId>cat-consumer</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.site.app</groupId>
-			<artifactId>app-core</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>com.site.dal</groupId>
-			<artifactId>dal-jdbc</artifactId>
+			<artifactId>dal-xml</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.site.common</groupId>
@@ -40,11 +37,6 @@
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jsp-2.1</artifactId>
 			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.site.common</groupId>
@@ -83,11 +75,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<properties>
-		<jdbc.driver>com.mysql.jdbc.Driver</jdbc.driver>
-		<jdbc.url>jdbc:mysql://tech-wuqim.dianpingoa.com:3306/garden</jdbc.url>
-		<jdbc.user>root</jdbc.user>
-		<jdbc.password>Passw0rd</jdbc.password>
-		<jdbc.connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></jdbc.connectionProperties>
-	</properties>
 </project>

@@ -9,12 +9,12 @@ import com.dianping.cat.consumer.failure.model.entity.Entry;
 import com.dianping.cat.consumer.failure.model.entity.FailureReport;
 import com.dianping.cat.consumer.failure.model.entity.Segment;
 import com.dianping.cat.consumer.failure.model.entity.Threads;
-import com.dianping.cat.consumer.failure.model.transform.DefaultParser;
+import com.dianping.cat.consumer.failure.model.transform.DefaultXmlParser;
 
 public class FailureReportTool {
 	
 	public static FailureReport parseXML(String xml) {
-		DefaultParser parser = new DefaultParser();
+		DefaultXmlParser parser = new DefaultXmlParser();
 		try {
 			return parser.parse(xml);
 		} catch (Exception e) {

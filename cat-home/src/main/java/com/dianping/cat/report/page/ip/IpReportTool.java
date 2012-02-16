@@ -3,12 +3,12 @@ package com.dianping.cat.report.page.ip;
 import java.util.List;
 
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
-import com.dianping.cat.consumer.ip.model.transform.DefaultParser;
+import com.dianping.cat.consumer.ip.model.transform.DefaultXmlParser;
 
 public class IpReportTool {
 	
 	public static IpReport parseXML(String xml) {
-		DefaultParser parser = new DefaultParser();
+		DefaultXmlParser parser = new DefaultXmlParser();
 		try {
 			return parser.parse(xml);
 		} catch (Exception e) {

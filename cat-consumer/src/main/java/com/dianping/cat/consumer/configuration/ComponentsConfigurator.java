@@ -31,18 +31,18 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class).config(E("consumerId").value("realtime") //
-		            , E("extraTime").value("300000")//
+		            , E("extraTime").value(property("extraTime", "300000"))//
 		            , E("analyzerNames").value("failure,transaction,ip")));
 
 		String failureTypes = "Error,RuntimeException,Exception";
-		
+
 		all.add(C(Handler.class, "failure-handler", FailureHandler.class)//
 		      .config(E("failureType").value(failureTypes))//
-		      .req(MessageStorage.class,"html"));
-		
+		      .req(MessageStorage.class, "html"));
+
 		all.add(C(Handler.class, "long-url-handler", LongUrlHandler.class) //
 		      .config(E("threshold").value("2000"))//
-		      .req(MessageStorage.class,"html"));
+		      .req(MessageStorage.class, "html"));
 
 		all.add(C(FailureReportAnalyzer.class).is(PER_LOOKUP) //
 		      .config(E("reportPath").value("target/report/failure/")) //
@@ -51,9 +51,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TransactionReportAnalyzer.class).is(PER_LOOKUP) //
 		      .req(MessageManager.class) //
-		      .config(E("reportPath").value("target/report/transaction/"))
-		      .req(MessageStorage.class, "html"));
-		
+		      .config(E("reportPath").value("target/report/transaction/")).req(MessageStorage.class, "html"));
+
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
 
 		return all;

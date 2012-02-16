@@ -114,7 +114,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_hostName = localHost.getHostName();
 			m_ipAddress = localHost.getHostAddress();
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			m_logger.warn("Unable to get local host!", e);
 		}
 
 		m_manager = lookup(TransportManager.class);
@@ -142,7 +142,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	public void start(Transaction transaction) {
 		if (Cat.isInitialized()) {
 			getContext().start(transaction);
-		} else if (m_firstMessage){
+		} else if (m_firstMessage) {
 			m_firstMessage = false;
 			m_logger.warn("CAT client is not enabled because it's not initialized yet");
 		}
@@ -168,14 +168,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
-			m_tree.setMessageId(UUID.randomUUID().toString()); // TODO optimize it
-			                                                   // to shorter UUID
 		}
 
 		public void add(DefaultMessageManager manager, Message message) {
 			if (m_stack.isEmpty()) {
-				m_tree.setMessage(message);
-				manager.flush(m_tree);
+				MessageTree tree = m_tree.copy();
+
+				tree.setMessage(message);
+				tree.setMessageId(UUID.randomUUID().toString());
+				manager.flush(tree);
 			} else {
 				Transaction entry = m_stack.peek();
 
@@ -196,7 +197,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				m_stack.pop();
 
 				if (m_stack.isEmpty()) {
-					manager.flush(m_tree);
+					MessageTree tree = m_tree.copy();
+
+					m_tree.setMessage(null);
+					tree.setMessageId(UUID.randomUUID().toString());
+					manager.flush(tree);
 				}
 			}
 		}

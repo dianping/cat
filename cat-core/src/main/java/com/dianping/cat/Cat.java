@@ -31,7 +31,13 @@ public class Cat {
 
 	private MessageManager m_manager;
 
+	private PlexusContainer m_container;
+
 	private Cat() {
+	}
+
+	public static void destroy() {
+		s_instance = new Cat();
 	}
 
 	static Cat getInstance() {
@@ -100,12 +106,22 @@ public class Cat {
 			config.accept(validator);
 			getInstance().m_manager.initializeClient(config);
 		} else {
+			getInstance().m_manager.initializeClient(null);
 			System.out.println("[WARN] Cat client is disabled due to no config file found!");
 		}
 	}
 
 	public static boolean isInitialized() {
 		return s_instance.m_initialized;
+	}
+
+	public static <T> T lookup(Class<T> role) throws ComponentLookupException {
+		return lookup(role, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T lookup(Class<T> role, String hint) throws ComponentLookupException {
+		return (T) getInstance().m_container.lookup(role, hint);
 	}
 
 	// this should be called when a thread ends to clean some thread local data
@@ -120,6 +136,8 @@ public class Cat {
 	}
 
 	void setContainer(PlexusContainer container) {
+		m_container = container;
+
 		try {
 			m_manager = (MessageManager) container.lookup(MessageManager.class);
 		} catch (ComponentLookupException e) {

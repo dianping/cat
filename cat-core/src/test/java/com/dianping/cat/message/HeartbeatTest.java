@@ -1,33 +1,22 @@
 package com.dianping.cat.message;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
 
-public class HeartbeatTest {
-	private static final MessageProducer CAT = Cat.getProducer();
-
-	@Before
-	public void before() {
-		Cat.setup(null, null);
-	}
-
-	@After
-	public void after() {
-		Cat.reset();
-	}
-
+@RunWith(JUnit4.class)
+public class HeartbeatTest extends CatTestCase {
 	@Test
 	public void testInOneShot() {
-		CAT.logHeartbeat("System", "Status", "0",
+		Cat.getProducer().logHeartbeat("System", "Status", "0",
 		      "ip=192.168.10.111&host=host-1&load=2.1&cpu=0.12,0.10&memory.total=2G&memory.free=456M");
 	}
 
 	@Test
 	public void testService() {
-		Heartbeat heartbeat = CAT.newHeartbeat("Service", "ReviewService");
+		Heartbeat heartbeat = Cat.getProducer().newHeartbeat("Service", "ReviewService");
 
 		heartbeat.addData("host", "192.168.10.112:1234");
 		heartbeat.addData("weight", "20");
@@ -40,7 +29,7 @@ public class HeartbeatTest {
 
 	@Test
 	public void testStatus() {
-		Heartbeat heartbeat = CAT.newHeartbeat("System", "Status");
+		Heartbeat heartbeat = Cat.getProducer().newHeartbeat("System", "Status");
 
 		heartbeat.addData("ip", "192.168.10.111");
 		heartbeat.addData("host", "host-1");

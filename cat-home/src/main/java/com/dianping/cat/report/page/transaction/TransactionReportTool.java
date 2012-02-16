@@ -3,11 +3,11 @@ package com.dianping.cat.report.page.transaction;
 import java.util.List;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
 
 public class TransactionReportTool {
 	public static TransactionReport parseXML(String xml) {
-		DefaultParser parser = new DefaultParser();
+		DefaultXmlParser parser = new DefaultXmlParser();
 		try {
 			return parser.parse(xml);
 		} catch (Exception e) {
