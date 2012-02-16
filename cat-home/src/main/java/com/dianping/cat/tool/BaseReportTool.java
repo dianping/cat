@@ -37,6 +37,7 @@ public class BaseReportTool {
 	}
 
 	// failure has the ip info, other have none
+	// input reportType should be page
 	public static String getConnectionUrl(String reportType, String server, String domain, String ip, String index) {
 		StringBuffer result = new StringBuffer("http://").append(server).append("/cat/r/service?model=").append(
 		      reportType);

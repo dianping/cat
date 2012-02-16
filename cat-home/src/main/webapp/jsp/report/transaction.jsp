@@ -13,8 +13,8 @@
 	var nowtype = "${model.type}";
 </script>
 
-<res:useCss value='${res.css.local.style_css}' target="head-css" />
 <res:useCss value='${res.css.local.default_css}' target="head-css" />
+<res:useCss value='${res.css.local.style_css}' target="head-css" />
 <res:useJs value='${res.js.local.jquery_min_js}' target="head-js" />
 
 <a:report title="Transaction Report" timestamp="2012-02-07">
