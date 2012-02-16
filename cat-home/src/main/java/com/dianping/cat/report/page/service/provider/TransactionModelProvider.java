@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.tool.Constant;
+import com.dianping.cat.report.tool.Constant;
 import com.site.lookup.annotation.Inject;
 
 public class TransactionModelProvider implements ModelProvider {

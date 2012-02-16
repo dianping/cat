@@ -8,9 +8,9 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
-import com.dianping.cat.configuration.model.ClientConfigValidator;
+import com.dianping.cat.configuration.ClientConfigValidator;
 import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.transform.DefaultParser;
+import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.site.helper.Files;
@@ -71,7 +71,7 @@ public class Cat {
 			if (configFile != null) {
 				String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
 
-				config = new DefaultParser().parse(xml);
+				config = new DefaultXmlParser().parse(xml);
 			}
 
 			if (config == null) {
@@ -84,7 +84,7 @@ public class Cat {
 				if (in != null) {
 					String xml = Files.forIO().readFrom(in, "utf-8");
 
-					config = new DefaultParser().parse(xml);
+					config = new DefaultXmlParser().parse(xml);
 				}
 			}
 		} catch (Exception e) {

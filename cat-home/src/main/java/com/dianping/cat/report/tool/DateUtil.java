@@ -1,4 +1,4 @@
-package com.dianping.cat.tool;
+package com.dianping.cat.report.tool;
 
 import java.text.SimpleDateFormat;
 

@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.configuration;
+package com.dianping.cat.consumer.build;
 
 import java.util.ArrayList;
 import java.util.List;

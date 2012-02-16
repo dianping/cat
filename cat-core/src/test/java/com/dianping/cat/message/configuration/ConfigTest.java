@@ -1,4 +1,4 @@
-package com.dianping.cat.message.configuration.model;
+package com.dianping.cat.message.configuration;
 
 import java.io.InputStream;
 
@@ -7,7 +7,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.transform.DefaultParser;
+import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
 import com.site.helper.Files;
 
 public class ConfigTest {
@@ -15,7 +15,7 @@ public class ConfigTest {
 	public void testClient() throws Exception {
 		InputStream in = getClass().getResourceAsStream("client.xml");
 		String xml = Files.forIO().readFrom(in, "utf-8");
-		Config config = new DefaultParser().parse(xml);
+		Config config = new DefaultXmlParser().parse(xml);
 
 		Assert.assertEquals("client", config.getMode());
 		Assert.assertEquals("Review", config.getApp().getDomain());
@@ -34,7 +34,7 @@ public class ConfigTest {
 	public void testServer() throws Exception {
 		InputStream in = getClass().getResourceAsStream("server.xml");
 		String xml = Files.forIO().readFrom(in, "utf-8");
-		Config config = new DefaultParser().parse(xml);
+		Config config = new DefaultXmlParser().parse(xml);
 
 		Assert.assertEquals("server", config.getMode());
 		Assert.assertEquals("192.168.8.21", config.getBind().getIp());

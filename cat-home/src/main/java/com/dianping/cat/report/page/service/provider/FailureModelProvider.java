@@ -13,8 +13,8 @@ import com.dianping.cat.consumer.failure.model.entity.Segment;
 import com.dianping.cat.consumer.failure.model.entity.Threads;
 import com.dianping.cat.consumer.failure.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.tool.Constant;
-import com.dianping.cat.tool.DateUtil;
+import com.dianping.cat.report.tool.Constant;
+import com.dianping.cat.report.tool.DateUtil;
 import com.site.lookup.annotation.Inject;
 
 public class FailureModelProvider implements ModelProvider {

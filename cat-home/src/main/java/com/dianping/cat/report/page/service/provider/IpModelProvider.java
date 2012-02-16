@@ -10,7 +10,7 @@ import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.tool.Constant;
+import com.dianping.cat.report.tool.Constant;
 import com.site.lookup.annotation.Inject;
 
 public class IpModelProvider implements ModelProvider {

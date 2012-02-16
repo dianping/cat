@@ -1,4 +1,4 @@
-package com.dianping.cat.configuration;
+package com.dianping.cat.report.build;
 
 import java.util.ArrayList;
 import java.util.List;
