@@ -1,18 +1,28 @@
 package com.dianping.cat.report.page.failure;
 
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
-import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.consumer.failure.model.entity.FailureReport;
+import com.dianping.cat.consumer.failure.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.ServerConfig;
+import com.dianping.cat.tool.BaseReportTool;
+import com.dianping.cat.tool.Constant;
+import com.dianping.cat.tool.DateUtil;
+import com.dianping.cat.tool.ServicePageTool;
+import com.site.helper.Files;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
@@ -21,76 +31,11 @@ import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
-	private static final String MEMORY_CURRENT = "memory-current";
-
-	private static final String MEMORY_LAST = "memory-last";
-
-	private static final long MINUTE = 60 * 1000L;
-
-	private static final long HOUR = 60 * MINUTE;
-
-	private static final long SECOND = 1000L;
-
-	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmm");
-
-	private static final SimpleDateFormat SDF_SEG = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-	private static String DEFAULT_IP = null;
-
-	private static String DEFAULT_DOMAIN = null;
+	@Inject
+	private ServerConfig serverConfig;
 
 	@Inject
 	private JspViewer m_jspViewer;
-
-	@Inject(type = MessageConsumer.class, value = "realtime")
-	private RealtimeConsumer m_consumer;
-
-	private String getFailureReportName(Payload payload, Model model) {
-		long currentTimeMillis = System.currentTimeMillis();
-		long currentTime = currentTimeMillis;
-		long currentStart = currentTime - currentTime % HOUR;
-		long lastStart = currentTime - currentTime % HOUR - HOUR;
-		long startLong = currentStart;
-
-		String reportStart = payload.getCurrent();
-		if (reportStart != null) {
-			try {
-				Date reportStartDate = SDF.parse(reportStart);
-				startLong = reportStartDate.getTime();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		} else {
-			reportStart = SDF.format(currentStart);
-		}
-
-		long computeStart = startLong + payload.getMethod() * HOUR;
-		if (computeStart > currentStart) {
-			computeStart = currentStart;
-		}
-		model.setCurrent(SDF.format(new Date(computeStart)));
-
-		long titleEndTime = computeStart + HOUR - SECOND;
-		if (titleEndTime > currentTimeMillis) {
-			titleEndTime = currentTimeMillis;
-		}
-		StringBuilder title = new StringBuilder().append("Domain:").append(model.getCurrentDomain());
-		title.append("  IP ").append(model.getCurrentIp());
-		title.append("  From ").append(SDF_SEG.format(new Date(computeStart))).append(" To ").append(
-		      SDF_SEG.format(new Date(titleEndTime)));
-		model.setReportTitle(title.toString());
-
-		if (computeStart == currentStart) {
-			return MEMORY_CURRENT;
-		} else if (computeStart == lastStart) {
-			return MEMORY_LAST;
-		}
-		StringBuilder result = new StringBuilder();
-
-		result.append(model.getCurrentDomain()).append(model.getCurrentIp()).append("-").append(SDF.format(new Date(computeStart))).append("-").append(
-		      SDF.format(new Date(computeStart + HOUR - MINUTE))).append(".html");
-		return result.toString();
-	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -103,70 +48,74 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "f")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
+		Payload payload = ctx.getPayload();
+		long currentTimeMillis = System.currentTimeMillis();
+		long currentTime = currentTimeMillis - currentTimeMillis % DateUtil.HOUR;
+
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.FAILURE);
-		
-		Payload payload = ctx.getPayload();
-		FailureReportAnalyzer analyzerForPage = (FailureReportAnalyzer) m_consumer.getCurrentAnalyzer("failure");
-		
-		//Set all domain of page
-		List<String> domains = analyzerForPage.getAllDomains();
-		Collections.sort(domains);
-		model.setDomains(domains);
-		//Set all ip of the domain
-		//Set the default domain and default ip
-		String domain = payload.getDomain();
-		if (null == domain) {
-			if(domains!=null&&domains.size()>0){
-				DEFAULT_DOMAIN = domains.get(0);
-				model.setCurrentDomain(DEFAULT_DOMAIN);
-			}else{
-				throw new RuntimeException("The domain is null!");
-			}
-		} else {
-			model.setCurrentDomain(domain);
-		}
-		
-		List<String> ips = analyzerForPage.getHostIpByDomain(model.getCurrentDomain());
-		Collections.sort(ips);
-		model.setIps(ips);
-		String ip = payload.getIp();
-		if(null==ip){
-			if(ips!=null&&ips.size()>0){
-				DEFAULT_IP = ips.get(0);
-				model.setCurrentIp(DEFAULT_IP);
-			}else{
-				throw new RuntimeException("The ip is null!");
-			}
-		} else {
-			model.setCurrentIp(ip);
-		}
 
-		String file = getFailureReportName(payload, model);
-		domain = model.getCurrentDomain();
-		ip = model.getCurrentIp();
-		String jsonResult="";
-		if (file.equals(MEMORY_CURRENT) || file.equals(MEMORY_LAST)) {
-			FailureReportAnalyzer analyzer;
-			int pos = 0;
-			if (file.equals(MEMORY_CURRENT)) {
-				analyzer = (FailureReportAnalyzer) m_consumer.getCurrentAnalyzer("failure");
-				pos = 1;
-			} else {
-				analyzer = (FailureReportAnalyzer) m_consumer.getLastAnalyzer("failure");
-				pos = 0;
+		String domain = payload.getDomain();
+		String ip = payload.getIp();
+
+		String urlCurrent = payload.getCurrent();
+		int method = payload.getMethod();
+		long reportStart = BaseReportTool.computeReportStart(currentTime,urlCurrent, method);
+		model.setCurrent(DateUtil.SDF_URL.format(new Date(reportStart)));
+		String index = BaseReportTool.getReportIndex(currentTime,reportStart);
+
+		if (index.equals(Constant.MEMORY_CURRENT) || index.equals(Constant.MEMORY_LAST)) {
+			List<FailureReport> reports = new ArrayList<FailureReport>();
+			List<String> servers = serverConfig.getConsumerServers();
+			Set<String> domains = new HashSet<String>();
+			Set<String> ips = new HashSet<String>();
+
+			for (String server : servers) {
+				URL url = new URL(BaseReportTool.getConnectionUrl("failure", server, domain, ip, index));
+				URLConnection URLconnection = url.openConnection();
+				HttpURLConnection httpConnection = (HttpURLConnection) URLconnection;
+				int responseCode = httpConnection.getResponseCode();
+				if (responseCode == HttpURLConnection.HTTP_OK) {
+					InputStream input = httpConnection.getInputStream();
+					String pageResult = Files.forIO().readFrom(input, "utf-8");
+					List<String> domainTemps = ServicePageTool.getListFromPage(pageResult, "<domains>", "</domains>");
+					if (domainTemps != null) {
+						for (String temp : domainTemps) {
+							domains.add(temp);
+						}
+					}
+					List<String> ipsTemps = ServicePageTool.getListFromPage(pageResult, "<ips>", "</ips>");
+					if (domainTemps != null) {
+						for (String temp : ipsTemps) {
+							ips.add(temp);
+						}
+					}
+					String xml = ServicePageTool.getStringFromPage(pageResult, "<data>", "</data>");
+					reports.add(FailureReportTool.parseXML(xml));
+				} else {
+					// TODO the remote server have some problem
+				}
 			}
-			if (analyzer == null) {
-				jsonResult= FailureData.getFailureDataByNew(pos, domain, ip);
-			} else {
-				 jsonResult = FailureData.getFailureDataFromMemory(analyzer, domain, ip);
-			}
-			model.setJsonResult(jsonResult);
+			FailureReport result = FailureReportTool.merge(reports);
+			List<String> domainList = new ArrayList<String>(domains);
+			List<String> ipList = new ArrayList<String>(ips);
+			
+			Collections.sort(domainList);
+			Collections.sort(ipList);
+			model.setDomains(domainList);
+			model.setIps(ipList);
+			model.setCurrentDomain(result.getDomain());
+			model.setCurrentIp(result.getMachine());
+			model.setJsonResult(new DefaultJsonBuilder().buildJson(result));
 		} else {
-			String baseFilePath = analyzerForPage.getReportPath();
-			jsonResult =FailureData.getFailureDataFromFile(baseFilePath, file);
+			// TODO
+			String reportFileName = BaseReportTool.getReportName(reportStart, payload.getDomain(), payload.getIp());
+			model.setCurrentDomain(payload.getDomain());
+			model.setCurrentIp(payload.getIp());
+			System.out.println(reportFileName);
 		}
-		model.setJsonResult(jsonResult);
+		String title = BaseReportTool.getReportTitle("failure", model.getCurrentDomain(), model.getCurrentIp(), reportStart);
+		model.setReportTitle(title);
 		m_jspViewer.view(ctx, model);
 	}
 }

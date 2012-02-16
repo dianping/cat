@@ -12,6 +12,12 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	private List<DisplayModel> m_displayModels;
 
 	private List<String> m_domains;
+	
+	private String m_currentDomain;
+
+	private String m_current;
+
+	private String m_reportTitle;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -29,6 +35,15 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public List<String> getDomains() {
 		return m_domains;
 	}
+
+	
+	public String getCurrentDomain() {
+   	return m_currentDomain;
+   }
+
+	public void setCurrentDomain(String currentDomain) {
+   	m_currentDomain = currentDomain;
+   }
 
 	public IpReport getReport() {
 		return m_report;
@@ -49,4 +64,21 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public void setReport(IpReport report) {
 		m_report = report;
 	}
+
+	public String getCurrent() {
+		return m_current;
+	}
+
+	public void setCurrent(String current) {
+		m_current = current;
+	}
+
+	public String getReportTitle() {
+		return m_reportTitle;
+	}
+
+	public void setReportTitle(String reportTitle) {
+		m_reportTitle = reportTitle;
+	}
+
 }

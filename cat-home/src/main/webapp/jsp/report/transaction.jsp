@@ -8,46 +8,42 @@
 	type="com.dianping.cat.report.page.transaction.Payload" scope="request" />
 <jsp:useBean id="model"
 	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
-
-<a:body>
-
-	<res:useCss value='${res.css.local.default_css}' target="head-css" />
-	<res:useCss value='${res.css.local.style_css}' target="head-css" />
-	<res:useCss value='${res.css.local.jquery_css}' target="head-css" />
-	<res:useCss value='${res.css.local.jqgrid_css}' target="head-css" />
-
-	<res:useJs value='${res.js.local.jquery_min_js}' target="head-js" />
-	<res:useJs value='${res.js.local.jquery_ui_min_js}' target="head-js" />
-	<res:useJs value='${res.js.local.grid_js}' target="head-js" />
-	<res:useJs value='${res.js.local.jqgrid_min_js}' target="head-js" />
-
-	<script type="text/javascript">
-	var data = ${model.reportInJson};
+<script type="text/javascript">
+	var data = ${model.jsonResult};
 	var nowtype = "${model.type}";
-	</script>
+</script>
 
-	<table width="100%" border="0" cellpadding="6" cellspacing="0"
-		class="fancy-header">
-		<tbody>
-			<tr>
-				<td id="reporttitle" nowrap=""></td>
-				<td width="100%" align="right" nowrap=""></td>
-			</tr>
-		</tbody>
-	</table>
-	<table width="100%" border="0" cellpadding="6" cellspacing="0"
-		class="navbar">
-		<tbody>
-			<tr>
-				<td id="domainlist" nowrap="nowrap" align="left" class="seealso">
-				</td>
+<res:useCss value='${res.css.local.style_css}' target="head-css" />
+<res:useCss value='${res.css.local.default_css}' target="head-css" />
+<res:useJs value='${res.js.local.jquery_min_js}' target="head-js" />
 
-			</tr>
-		</tbody>
-	</table>	
-	<table id="gridtable"></table>
-	<div id="gridpager"></div>
+<a:report title="Transaction Report" timestamp="2012-02-07">
+	<jsp:attribute name="domain">
+	<div class="domain">
+	<c:forEach var="domain" items="${model.domains}">
+		&nbsp;[
+		<c:choose>
+			<c:when test="${payload.domain eq domain}">
+					<a href="?domain=${domain}" class="current">&nbsp;${domain}&nbsp;</a>
+				</c:when>
+			<c:otherwise>
+					<a href="?domain=${domain}">&nbsp;${domain}&nbsp;</a>
+				</c:otherwise>
+		</c:choose>
+		]&nbsp;
+	</c:forEach>
+	</div>
+</jsp:attribute>
+	<jsp:attribute name="nav">
+[ <a href="">-1d</a> ] [ <a href="">-2h</a> ] [ <a href="">-1h</a> ] [ <a
+			href="">+1h</a> ] [ <a href="">+2h</a> ] [ <a href="">+1d</a> ]
+</jsp:attribute>
 
-	<res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
+	<jsp:body>
 
-</a:body>
+<res:useCss value='${res.css.local.ip_css}' target="head-css" />
+
+<table id="transactionTable" width="100%" border="0" cellspacing="0"></table>
+<res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
+</jsp:body>
+</a:report>
