@@ -1,4 +1,4 @@
-package com.dianping.cat.configuration.model;
+package com.dianping.cat.configuration;
 
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.transform.DefaultValidator;

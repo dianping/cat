@@ -13,7 +13,9 @@ public enum ReportPage implements Page {
 
    LOGVIEW("logview", "m", "Logview", "CAL log details view for a given message.", false),
 
-   IP("ip", "ip", "Top IP List", "Top visited IP list in current hour.", true);
+   IP("ip", "ip", "Top IP List", "Top visited IP list in current hour.", true),
+
+   SERVICE("service", "service", "Service", "Service Home", true);
 
    private String m_name;
 

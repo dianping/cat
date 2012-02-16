@@ -3,6 +3,8 @@ package com.dianping.cat.consumer.failure;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -73,7 +75,17 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 				result.add(domainAndIp.substring(0, domainAndIp.lastIndexOf(":")));
 			}
 		}
-		return new ArrayList<String>(result);
+		ArrayList<String> domains = new ArrayList<String>(result);
+		Collections.sort(domains, new Comparator<String>() {
+			@Override
+			public int compare(String d1, String d2) {
+				if (d1.equals("Cat")) {
+					return 1;
+				}
+				return d1.compareTo(d2);
+			}
+		});
+		return domains;
 	}
 
 	public List<String> getHostIpByDomain(String domain) {

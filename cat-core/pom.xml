@@ -29,7 +29,7 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.6</version>
+				<version>1.0.8</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -39,6 +39,17 @@
 						</goals>
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/model/manifest.xml</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate plexus component descriptor</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>plexus</goal>
+						</goals>
+						<configuration>
+							<className>com.dianping.cat.build.ComponentsConfigurator</className>
+							<env>dev</env>
 						</configuration>
 					</execution>
 				</executions>

@@ -16,6 +16,9 @@
     <page name="ip" title="Top IP List">
       <description>Top visited IP list in current hour.</description>
     </page>
+    <page name="service" path="service" title="Service" standalone="true">
+      <description>Service Home</description>
+    </page>
   </module>
 </wizard>
 

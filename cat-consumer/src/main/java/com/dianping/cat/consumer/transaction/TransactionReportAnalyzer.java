@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,9 +37,12 @@ import com.site.lookup.annotation.Inject;
  * @author sean.wang
  * @since Jan 5, 2012
  */
-public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable, LogEnabled {
+public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable,
+      LogEnabled {
 
 	private final static SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
+
+	private static final long MINUTE = 60 * 1000;
 
 	@Inject
 	private MessageManager messageManager;
@@ -193,7 +197,8 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 			if (tree != null) {
 				if (t.isSuccess()) {
 					if (name.getSuccessMessageUrl() == null) {
-						String url = this.messageStorage.store(tree); // store first success
+						String url = this.messageStorage.store(tree); // store first
+						// success
 						name.setSuccessMessageUrl(url);
 					}
 				} else {
@@ -224,6 +229,8 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 		TransactionReport report = this.m_reports.get(domain);
 		if (report == null) {
 			report = new TransactionReport(domain);
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 59));
 			this.m_reports.put(domain, report);
 		}
 		Message message = tree.getMessage();
@@ -270,4 +277,7 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 		}
 	}
 
+	public Map<String, TransactionReport> getReports() {
+		return m_reports;
+	}
 }

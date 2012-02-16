@@ -13,6 +13,12 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("domain")
 	private String m_domain;
+	
+	@FieldMeta("current")
+	private String m_current;
+
+	@FieldMeta("method")
+	private int m_method;
 
 	@Override
 	public Action getAction() {
@@ -44,4 +50,22 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 	}
+
+	public String getCurrent() {
+   	return m_current;
+   }
+
+	public void setCurrent(String current) {
+   	m_current = current;
+   }
+
+	public int getMethod() {
+   	return m_method;
+   }
+
+	public void setMethod(int method) {
+   	m_method = method;
+   }
+	
+	
 }

@@ -17,7 +17,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("ip")
 	private String m_ip;
 
-	@FieldMeta("start")
+	@FieldMeta("current")
 	private String m_current;
 
 	@FieldMeta("method")
@@ -55,12 +55,12 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	public String getCurrent() {
-		return m_current;
-	}
+   	return m_current;
+   }
 
 	public void setCurrent(String current) {
-		this.m_current = current;
-	}
+   	m_current = current;
+   }
 
 	public int getMethod() {
 		return m_method;

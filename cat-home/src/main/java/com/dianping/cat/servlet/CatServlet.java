@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.transform.DefaultParser;
+import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
@@ -60,7 +60,7 @@ public class CatServlet extends AbstractContainerServlet {
 			if (configFile != null) {
 				String xml = Files.forIO().readFrom(new File(configFile).getCanonicalFile(), "utf-8");
 
-				config = new DefaultParser().parse(xml);
+				config = new DefaultXmlParser().parse(xml);
 			}
 
 			if (config == null) {
@@ -73,7 +73,7 @@ public class CatServlet extends AbstractContainerServlet {
 				if (in != null) {
 					String xml = Files.forIO().readFrom(in, "utf-8");
 
-					config = new DefaultParser().parse(xml);
+					config = new DefaultXmlParser().parse(xml);
 				}
 			}
 		} catch (Exception e) {
