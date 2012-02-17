@@ -8,13 +8,13 @@ import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
 import com.dianping.cat.report.ReportModule;
 import com.dianping.cat.report.ServerConfig;
-import com.dianping.cat.report.page.failure.FailureManage;
-import com.dianping.cat.report.page.ip.IpManage;
+import com.dianping.cat.report.page.failure.FailureManager;
+import com.dianping.cat.report.page.ip.IpManager;
 import com.dianping.cat.report.page.service.provider.FailureModelProvider;
 import com.dianping.cat.report.page.service.provider.IpModelProvider;
 import com.dianping.cat.report.page.service.provider.ModelProvider;
 import com.dianping.cat.report.page.service.provider.TransactionModelProvider;
-import com.dianping.cat.report.page.transaction.TransactionManage;
+import com.dianping.cat.report.page.transaction.TransactionManager;
 import com.site.lookup.configuration.Component;
 import com.site.web.configuration.AbstractWebComponentsConfigurator;
 
@@ -33,8 +33,8 @@ public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
 		}
 
 		all.add(C(ServerConfig.class)//
-		      .config(E("consumerServers").value("192.168.32.68:2281,192.168.32.68:2281"))//
-		      .config(E("fileServer").value("192.168.32.68")));
+		      .config(E("consumerServers").value("127.0.0.1:2281,127.0.0.1:2281"))//
+		      .config(E("fileServer").value("127.0.0.1")));
 
 		all.add(C(ModelProvider.class, "failure", FailureModelProvider.class).req(MessageConsumer.class, "realtime"));
 
@@ -43,11 +43,11 @@ public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
 
 		all.add(C(ModelProvider.class, "ip", IpModelProvider.class).req(MessageConsumer.class, "realtime"));
 
-		all.add(C(FailureManage.class));
+		all.add(C(FailureManager.class));
 
-		all.add(C(TransactionManage.class));
+		all.add(C(TransactionManager.class));
 
-		all.add(C(IpManage.class));
+		all.add(C(IpManager.class));
 
 		// Please keep it last
 		defineModuleRegistry(all, ReportModule.class, ReportModule.class);

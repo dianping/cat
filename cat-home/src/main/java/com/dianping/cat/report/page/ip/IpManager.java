@@ -1,14 +1,14 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.report.page.ip;
 
 import java.util.Date;
 
-import com.dianping.cat.report.ReportManage;
+import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.tool.DateUtils;
 
-public class TransactionManage extends ReportManage{
+public class IpManager extends ReportManager{
 
-	public String getConnectionUrl(String server,String domain, String duration){
-		StringBuffer result = new StringBuffer("http://").append(server).append("/cat/r/service?model=transaction");
+	public String getConnectionUrl(String server,String domain,  String duration){
+		StringBuffer result = new StringBuffer("http://").append(server).append("/cat/r/service?model=ip");
 		if (domain != null && domain.length() > 0) {
 			result.append("&").append("domain=").append(domain);
 		}
@@ -28,7 +28,7 @@ public class TransactionManage extends ReportManage{
 		return result.toString();
 	}
 
-	public String getReportDisplayTitle (String domain,  long startHour){
+	public String getReportDisplayTitle (String domain, long startHour){
 		long currentTimeMillis = System.currentTimeMillis();
 		long end = startHour + DateUtils.HOUR - DateUtils.SECOND;
 		
@@ -40,11 +40,5 @@ public class TransactionManage extends ReportManage{
 		      DateUtils.SDF_SEG.format(new Date(end)));
 		return title.toString();
 	}
-	
-	public String getBaseUrl(String currentDomain, String reportCurrentTime) {
-	   StringBuffer urlPrefix = new StringBuffer("?domain=");
-		urlPrefix.append(currentDomain).append("&current=").append(reportCurrentTime).append("&method=");
-	   return urlPrefix.toString();
-   }
 }
 

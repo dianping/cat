@@ -18,8 +18,8 @@
 			<role>com.dianping.cat.report.ServerConfig</role>
 			<implementation>com.dianping.cat.report.ServerConfig</implementation>
 			<configuration>
-				<consumerServers>192.168.32.68:2281,192.168.32.68:2281</consumerServers>
-				<fileServer>192.168.32.68</fileServer>
+				<consumerServers>127.0.0.1:2281,127.0.0.1:2281</consumerServers>
+				<fileServer>127.0.0.1</fileServer>
 			</configuration>
 		</component>
 		<component>
@@ -56,16 +56,16 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.failure.FailureManage</role>
-			<implementation>com.dianping.cat.report.page.failure.FailureManage</implementation>
+			<role>com.dianping.cat.report.page.failure.FailureManager</role>
+			<implementation>com.dianping.cat.report.page.failure.FailureManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.TransactionManage</role>
-			<implementation>com.dianping.cat.report.page.transaction.TransactionManage</implementation>
+			<role>com.dianping.cat.report.page.transaction.TransactionManager</role>
+			<implementation>com.dianping.cat.report.page.transaction.TransactionManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.ip.IpManage</role>
-			<implementation>com.dianping.cat.report.page.ip.IpManage</implementation>
+			<role>com.dianping.cat.report.page.ip.IpManager</role>
+			<implementation>com.dianping.cat.report.page.ip.IpManager</implementation>
 		</component>
 		<component>
 			<role>com.site.web.mvc.model.ModuleRegistry</role>
@@ -104,7 +104,7 @@
 					<role>com.dianping.cat.report.ServerConfig</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionManage</role>
+					<role>com.dianping.cat.report.page.transaction.TransactionManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -123,7 +123,7 @@
 					<role>com.dianping.cat.report.page.failure.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.failure.FailureManage</role>
+					<role>com.dianping.cat.report.page.failure.FailureManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -158,7 +158,7 @@
 					<role>com.dianping.cat.report.ServerConfig</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.ip.IpManage</role>
+					<role>com.dianping.cat.report.page.ip.IpManager</role>
 				</requirement>
 			</requirements>
 		</component>

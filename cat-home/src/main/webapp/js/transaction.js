@@ -5,7 +5,7 @@ function renderTable(container, data) {
 	function makeRow(row) {
 		var tr = $('<tr />');
 		[  "<a href='?domain="+domain+"&type="+row.id+"'>"+row.id+"</a>"  , row.totalCount, row.failCount, row.failPercent,
-				'<a href="' + row.successMessageUrl + '" >success</a>',
+				'<a href="\m\\' + row.successMessageUrl + '" >success</a>',
 				row.min + "/" + row.max + "/" + row.avg + "/" + row.std ]
 				.forEach(function(e) {
 					$('<td />').html(e).appendTo(tr);

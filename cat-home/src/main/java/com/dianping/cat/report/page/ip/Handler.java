@@ -38,7 +38,7 @@ public class Handler implements PageHandler<Context> {
 	private ServerConfig serverConfig;
 	
 	@Inject
-	private IpManage m_manager;
+	private IpManager m_manager;
 
 	@Override
 	@PayloadMeta(Payload.class)

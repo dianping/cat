@@ -11,7 +11,7 @@ import com.dianping.cat.report.tool.Constants;
 import com.dianping.cat.report.tool.DateUtils;
 import com.site.helper.Files;
 
-public abstract class ReportManage {
+public abstract class ReportManager {
 	public String getRemotePageContent(String urlStr) {
 		try {
 			URL url = new URL(urlStr);
