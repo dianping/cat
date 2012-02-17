@@ -1,6 +1,6 @@
 package com.dianping.cat.report.tool;
 
-public class Constant {
+public class Constants {
 
 	public static final String MEMORY_CURRENT = "memoryCurrent";
 

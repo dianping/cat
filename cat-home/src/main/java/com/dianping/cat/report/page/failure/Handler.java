@@ -1,10 +1,6 @@
 package com.dianping.cat.report.page.failure;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -18,11 +14,10 @@ import com.dianping.cat.consumer.failure.model.entity.FailureReport;
 import com.dianping.cat.consumer.failure.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.ServerConfig;
-import com.dianping.cat.report.tool.BaseReportTool;
-import com.dianping.cat.report.tool.Constant;
-import com.dianping.cat.report.tool.DateUtil;
-import com.dianping.cat.report.tool.ServicePageTool;
-import com.site.helper.Files;
+import com.dianping.cat.report.tool.Constants;
+import com.dianping.cat.report.tool.DateUtils;
+import com.dianping.cat.report.tool.ReportUtils;
+import com.dianping.cat.report.tool.StringUtils;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
@@ -37,6 +32,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
+	@Inject
+	private FailureManage m_manager;
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "f")
@@ -49,73 +47,72 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		long currentTimeMillis = System.currentTimeMillis();
-		long currentTime = currentTimeMillis - currentTimeMillis % DateUtil.HOUR;
-
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.FAILURE);
-		
-		String domain = payload.getDomain();
-		String ip = payload.getIp();
 
+		long currentTimeMillis = System.currentTimeMillis();
+		long currentHour = currentTimeMillis - currentTimeMillis % DateUtils.HOUR;
+		String currentDomain = payload.getDomain();
+		String currentIp = payload.getIp();
 		String urlCurrent = payload.getCurrent();
 		int method = payload.getMethod();
-		long reportStart = BaseReportTool.computeReportStart(currentTime,urlCurrent, method);
-		model.setCurrent(DateUtil.SDF_URL.format(new Date(reportStart)));
-		String index = BaseReportTool.getReportIndex(currentTime,reportStart);
+		long reportStart = m_manager.computeReportStartHour(currentHour, urlCurrent, method);
+		String reportCurrentTime = DateUtils.SDF_URL.format(new Date(reportStart));
+		String index = m_manager.getReportStartType(currentHour, reportStart);
 
-		if (index.equals(Constant.MEMORY_CURRENT) || index.equals(Constant.MEMORY_LAST)) {
+		model.setCurrent(reportCurrentTime);
+		if (index.equals(Constants.MEMORY_CURRENT) || index.equals(Constants.MEMORY_LAST)) {
 			List<FailureReport> reports = new ArrayList<FailureReport>();
 			List<String> servers = serverConfig.getConsumerServers();
 			Set<String> domains = new HashSet<String>();
 			Set<String> ips = new HashSet<String>();
 
 			for (String server : servers) {
-				URL url = new URL(BaseReportTool.getConnectionUrl("failure", server, domain, ip, index));
-				URLConnection URLconnection = url.openConnection();
-				HttpURLConnection httpConnection = (HttpURLConnection) URLconnection;
-				int responseCode = httpConnection.getResponseCode();
-				if (responseCode == HttpURLConnection.HTTP_OK) {
-					InputStream input = httpConnection.getInputStream();
-					String pageResult = Files.forIO().readFrom(input, "utf-8");
-					List<String> domainTemps = ServicePageTool.getListFromPage(pageResult, "<domains>", "</domains>");
+				String connectionUrl = m_manager.getConnectionUrl(server, currentDomain, currentIp, index);
+				String pageResult = m_manager.getRemotePageContent(connectionUrl);
+				if(pageResult!=null){
+					List<String> domainTemps = StringUtils.getListFromPage(pageResult, "<domains>", "</domains>");
 					if (domainTemps != null) {
 						for (String temp : domainTemps) {
 							domains.add(temp);
 						}
 					}
-					List<String> ipsTemps = ServicePageTool.getListFromPage(pageResult, "<ips>", "</ips>");
+					List<String> ipsTemps = StringUtils.getListFromPage(pageResult, "<ips>", "</ips>");
 					if (domainTemps != null) {
 						for (String temp : ipsTemps) {
 							ips.add(temp);
 						}
 					}
-					String xml = ServicePageTool.getStringFromPage(pageResult, "<data>", "</data>");
-					reports.add(FailureReportTool.parseXML(xml));
-				} else {
-					// TODO the remote server have some problem
+					String xml = StringUtils.getStringFromPage(pageResult, "<data>", "</data>");
+					reports.add(ReportUtils.parseFailureReportXML(xml));
+				}else{
+					reports.add(new FailureReport());
 				}
 			}
-			FailureReport result = FailureReportTool.merge(reports);
+			FailureReport result = ReportUtils.mergeFailureReports(reports);
 			List<String> domainList = new ArrayList<String>(domains);
 			List<String> ipList = new ArrayList<String>(ips);
-			
+
 			Collections.sort(domainList);
 			Collections.sort(ipList);
 			model.setDomains(domainList);
 			model.setIps(ipList);
-			model.setCurrentDomain(result.getDomain());
-			model.setCurrentIp(result.getMachine());
+			currentDomain = result.getDomain();
+			model.setCurrentDomain(currentDomain);
+			currentIp = result.getMachine();
+			model.setCurrentIp(currentIp);
 			model.setJsonResult(new DefaultJsonBuilder().buildJson(result));
+			model.setGenerateTime(DateUtils.SDF_SEG.format(new Date()));
 		} else {
 			// TODO
-			String reportFileName = BaseReportTool.getReportName(reportStart, payload.getDomain(), payload.getIp());
+			model.setGenerateTime(DateUtils.SDF_SEG.format(new Date(reportStart + DateUtils.HOUR)));
+			String reportFileName = m_manager.getReportStoreFile(reportStart, payload.getDomain(), payload.getIp());
 			model.setCurrentDomain(payload.getDomain());
 			model.setCurrentIp(payload.getIp());
 			System.out.println(reportFileName);
 		}
-		String title = BaseReportTool.getReportTitle("failure", model.getCurrentDomain(), model.getCurrentIp(), reportStart);
-		model.setReportTitle(title);
+		model.setUrlPrefix(m_manager.getBaseUrl(currentDomain, currentIp, reportCurrentTime));
+		model.setReportTitle(m_manager.getReportDisplayTitle(model.getCurrentDomain(), model.getCurrentIp(), reportStart));
 		m_jspViewer.view(ctx, model);
 	}
 }

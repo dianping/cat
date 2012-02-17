@@ -4,8 +4,6 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ attribute name="title"%>
 <%@ attribute name="timestamp"%>
-<%@ attribute name="domain" fragment="true"%>
-<%@ attribute name="nav" fragment="true"%>
 <%@ attribute name="subtitle" fragment="true"%>
 
 <a:body>
@@ -15,15 +13,32 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">${title}</td>
-			<td class="timestamp">Generated: ${timestamp}</td>
+			<td class="title">${title}  &nbsp;${model.reportTitle}</td>
+			<td class="timestamp">Generated: ${model.generateTime}</td>
 		</tr>
 	</table>
 
 	<table class="navbar">
 		<tr>
-			<td class="domain"><jsp:invoke fragment="domain"/></td>
-			<td class="nav"><jsp:invoke fragment="nav"/></td>
+			<td class="domain">
+				<div class="domain">
+					<c:forEach var="domain" items="${model.domains}">
+						&nbsp;[<c:choose>
+							<c:when test="${model.currentDomain eq domain}">
+								<a href="?domain=${domain}" class="current">&nbsp;${domain}&nbsp;</a>
+							</c:when>
+							<c:otherwise>
+								<a href="?domain=${domain}">&nbsp;${domain}&nbsp;</a>
+							</c:otherwise>
+						</c:choose>	]&nbsp;
+					</c:forEach>
+				</div>
+			</td>
+			<td class="nav">
+				<c:forEach var="url" items="${model.urlNavs}">
+					&nbsp;[ <a href="${model.urlPrefix}${url.method}">${url.text}</a> ]&nbsp;
+				</c:forEach>
+			</td>
 		</tr>
 		<tr>
 			<td class="subtitle"><jsp:invoke fragment="subtitle"/></td>

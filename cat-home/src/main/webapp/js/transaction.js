@@ -1,10 +1,10 @@
 function renderTable(container, data) {
-	var table = $('<table />'), cols = "Type,Total Count,Fail Count,Failure%,Sample Link,Min/Max/Avg/Std(ms)"
+	var table = $('<table />').addClass('report-table'), cols = "Type,Total Count,Fail Count,Failure%,Sample Link,Min/Max/Avg/Std(ms)"
 			.split(','), tr, th, td;
 
 	function makeRow(row) {
 		var tr = $('<tr />');
-		[  "<a href='?type="+row.id+"'>"+row.id+"</a>"  , row.totalCount, row.failCount, row.failPercent,
+		[  "<a href='?domain="+domain+"&type="+row.id+"'>"+row.id+"</a>"  , row.totalCount, row.failCount, row.failPercent,
 				'<a href="' + row.successMessageUrl + '" >success</a>',
 				row.min + "/" + row.max + "/" + row.avg + "/" + row.std ]
 				.forEach(function(e) {

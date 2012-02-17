@@ -13,8 +13,8 @@ import com.dianping.cat.consumer.failure.model.entity.Segment;
 import com.dianping.cat.consumer.failure.model.entity.Threads;
 import com.dianping.cat.consumer.failure.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.tool.Constant;
-import com.dianping.cat.report.tool.DateUtil;
+import com.dianping.cat.report.tool.Constants;
+import com.dianping.cat.report.tool.DateUtils;
 import com.site.lookup.annotation.Inject;
 
 public class FailureModelProvider implements ModelProvider {
@@ -42,19 +42,19 @@ public class FailureModelProvider implements ModelProvider {
 	public String getModel(Map<String, String> parameters) {
 		String index = parameters.get("index");
 		if (index == null) {
-			index = Constant.MEMORY_CURRENT;
+			index = Constants.MEMORY_CURRENT;
 		}
 		String domain = parameters.get("domain");
 		String ip = parameters.get("ip");
 		FailureReportAnalyzer analyzer = null;
 
-		int pos = Constant.LAST;
-		if (index.equals(Constant.MEMORY_CURRENT)) {
+		int pos = Constants.LAST;
+		if (index.equals(Constants.MEMORY_CURRENT)) {
 			analyzer = (FailureReportAnalyzer) m_consumer.getCurrentAnalyzer("failure");
-			pos = Constant.CURRENT;
-		} else if (index.equals(Constant.MEMORY_LAST)) {
+			pos = Constants.CURRENT;
+		} else if (index.equals(Constants.MEMORY_LAST)) {
 			analyzer = (FailureReportAnalyzer) m_consumer.getLastAnalyzer("failure");
-			pos = Constant.LAST;
+			pos = Constants.LAST;
 		}
 		String xmlResult = "";
 		if (analyzer == null) {
@@ -91,10 +91,10 @@ public class FailureModelProvider implements ModelProvider {
 
 	private String getFailureDataByNew(int pos, String domain, String ip) {
 		long currentTime = System.currentTimeMillis();
-		long currentStart = currentTime - currentTime % DateUtil.HOUR;
-		long lastStart = currentTime - currentTime % DateUtil.HOUR - DateUtil.HOUR;
+		long currentStart = currentTime - currentTime % DateUtils.HOUR;
+		long lastStart = currentTime - currentTime % DateUtils.HOUR - DateUtils.HOUR;
 		Date date = new Date();
-		if (pos == Constant.CURRENT) {
+		if (pos == Constants.CURRENT) {
 			date.setTime(currentStart);
 		} else {
 			date.setTime(lastStart);
@@ -104,13 +104,13 @@ public class FailureModelProvider implements ModelProvider {
 		report.setMachine(ip);
 		report.setThreads(new Threads());
 		report.setStartTime(date);
-		report.setEndTime(new Date(date.getTime() + DateUtil.HOUR - DateUtil.MINUTE));
+		report.setEndTime(new Date(date.getTime() + DateUtils.HOUR - DateUtils.MINUTE));
 		report.setDomain(domain);
 		long start = report.getStartTime().getTime();
 		long endTime = report.getEndTime().getTime();
 		Map<String, Segment> segments = report.getSegments();
 		for (; start <= endTime; start = start + 60 * 1000) {
-			String minute = DateUtil.SDF_SEG.format(new Date(start));
+			String minute = DateUtils.SDF_SEG.format(new Date(start));
 			segments.put(minute, new Segment(minute));
 		}
 		return getFailureXMLData(report);

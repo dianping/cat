@@ -10,7 +10,7 @@ import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.tool.Constant;
+import com.dianping.cat.report.tool.Constants;
 import com.site.lookup.annotation.Inject;
 
 public class IpModelProvider implements ModelProvider {
@@ -51,11 +51,11 @@ public class IpModelProvider implements ModelProvider {
 		IpAnalyzer analyzer = null;
 		
 		if (index == null) {
-			index = Constant.MEMORY_CURRENT;
+			index = Constants.MEMORY_CURRENT;
 		}
-		if (index.equals(Constant.MEMORY_CURRENT)) {
+		if (index.equals(Constants.MEMORY_CURRENT)) {
 			analyzer = (IpAnalyzer) m_consumer.getCurrentAnalyzer("ip");
-		} else if (index.equals(Constant.MEMORY_LAST)) {
+		} else if (index.equals(Constants.MEMORY_LAST)) {
 			analyzer = (IpAnalyzer) m_consumer.getLastAnalyzer("ip");
 		}
 		

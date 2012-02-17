@@ -2,7 +2,7 @@ package com.dianping.cat.report.tool;
 
 import java.text.SimpleDateFormat;
 
-public class DateUtil {
+public class DateUtils {
 	public static final long SECOND = 1000L;
 
 	public static final long MINUTE = SECOND * 60;

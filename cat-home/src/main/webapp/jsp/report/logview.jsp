@@ -6,9 +6,10 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.logview.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.logview.Model" scope="request"/>
 
-<a:body>
-
+<res:useCss value='${res.css.local.default_css}' target="head-css" />
+<res:useCss value='${res.css.local.style_css}' target="head-css" />
 <res:useCss value='${res.css.local.logview_css}' target="head-css"/>
+<a:body>
 
 <c:choose>
 	<c:when test="${empty model.table}">
