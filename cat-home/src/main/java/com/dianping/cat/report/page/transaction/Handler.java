@@ -36,7 +36,7 @@ public class Handler implements PageHandler<Context> {
 	private ServerConfig serverConfig;
 
 	@Inject
-	private TransactionManage m_manager;
+	private TransactionManager m_manager;
 
 	@Override
 	@PayloadMeta(Payload.class)

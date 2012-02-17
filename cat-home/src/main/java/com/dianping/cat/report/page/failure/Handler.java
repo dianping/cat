@@ -33,7 +33,7 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private FailureManage m_manager;
+	private FailureManager m_manager;
 
 	@Override
 	@PayloadMeta(Payload.class)

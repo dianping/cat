@@ -2,10 +2,10 @@ package com.dianping.cat.report.page.failure;
 
 import java.util.Date;
 
-import com.dianping.cat.report.ReportManage;
+import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.tool.DateUtils;
 
-public class FailureManage extends ReportManage{
+public class FailureManager extends ReportManager{
 
 	public String getConnectionUrl(String server,String domain, String ip, String duration){
 		StringBuffer result = new StringBuffer("http://").append(server).append("/cat/r/service?model=failure");

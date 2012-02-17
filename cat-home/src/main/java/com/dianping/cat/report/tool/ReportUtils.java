@@ -71,7 +71,7 @@ public class ReportUtils {
 				// TODO Auto-generated method stub
 				//super.mergeName(old, name);
 				old.setTotalCount(old.getTotalCount() + name.getTotalCount());
-				old.setFailCount(old.getFailCount() + name.getTotalCount());
+				old.setFailCount(old.getFailCount() + name.getFailCount());
 				old.setFailPercent(old.getFailCount()* 100.0 / old.getTotalCount());
 				double min = name.getMin();
 				if (min < old.getMin()) {
@@ -114,7 +114,7 @@ public class ReportUtils {
 				//super.mergeType(old, type);
 				
 				old.setTotalCount(old.getTotalCount() + name.getTotalCount());
-				old.setFailCount(old.getFailCount() + name.getTotalCount());
+				old.setFailCount(old.getFailCount() + name.getFailCount());
 				old.setFailPercent( old.getFailCount()* 100.0 /  old.getTotalCount());
 				double min = name.getMin();
 				if (min < old.getMin()) {

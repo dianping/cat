@@ -8,7 +8,7 @@
 			<successmessageurl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successmessageurl>
 		</name>
-		<name id="service" totalCount="8" failCount="0" failPercent="0.00"
+		<name id="service" totalCount="8" failCount="4" failPercent="50.00"
 			min="1.0" max="58.0" avg="13.0" sum="104.0" sum2="3952.0" std="18.0">
 			<successmessageurl>20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html
 			</successmessageurl>
@@ -26,7 +26,7 @@
 		<successmessageurl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 		</successmessageurl>
 	</type>
-	<type id="MVC" totalCount="33" failCount="0" failPercent="0.00"
+	<type id="MVC" totalCount="33" failCount="11" failPercent="33.33"
 		min="0.0" max="191.0" avg="15.1" sum="499.0" sum2="68377.0" std="42.9">
 		<name id="InboundPhase" totalCount="11" failCount="0"
 			failPercent="0.00" min="0.0" max="17.0" avg="1.5" sum="17.0" sum2="289.0"
