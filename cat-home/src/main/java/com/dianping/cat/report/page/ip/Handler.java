@@ -1,10 +1,6 @@
 package com.dianping.cat.report.page.ip;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -24,11 +20,10 @@ import com.dianping.cat.consumer.ip.model.entity.Period;
 import com.dianping.cat.consumer.ip.model.transform.BaseVisitor;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.ServerConfig;
-import com.dianping.cat.report.tool.BaseReportTool;
-import com.dianping.cat.report.tool.Constant;
-import com.dianping.cat.report.tool.DateUtil;
-import com.dianping.cat.report.tool.ServicePageTool;
-import com.site.helper.Files;
+import com.dianping.cat.report.tool.Constants;
+import com.dianping.cat.report.tool.DateUtils;
+import com.dianping.cat.report.tool.ReportUtils;
+import com.dianping.cat.report.tool.StringUtils;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
@@ -41,6 +36,9 @@ public class Handler implements PageHandler<Context> {
 	
 	@Inject
 	private ServerConfig serverConfig;
+	
+	@Inject
+	private IpManage m_manager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -54,64 +52,53 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		IpReport report = null ;
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.IP);
 		
 		long currentTimeMillis = System.currentTimeMillis();
-		long currentTime = currentTimeMillis - currentTimeMillis % DateUtil.HOUR;
-
-		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.FAILURE);
-
+		long currentTime = currentTimeMillis - currentTimeMillis % DateUtils.HOUR;
 		String domain = payload.getDomain();
-
 		String urlCurrent = payload.getCurrent();
 		int method = payload.getMethod();
-		long reportStart = BaseReportTool.computeReportStart(currentTime,urlCurrent, method);
-		model.setCurrent(DateUtil.SDF_URL.format(new Date(reportStart)));
-		String index = BaseReportTool.getReportIndex(currentTime,reportStart);
+		long reportStart = m_manager.computeReportStartHour(currentTime,urlCurrent, method);
+		IpReport report = null ;
+		String index = m_manager.getReportStartType(currentTime,reportStart);
+		model.setCurrent(DateUtils.SDF_URL.format(new Date(reportStart)));
 
-		if (index.equals(Constant.MEMORY_CURRENT) || index.equals(Constant.MEMORY_LAST)) {
+		if (index.equals(Constants.MEMORY_CURRENT) || index.equals(Constants.MEMORY_LAST)) {
 			List<IpReport> reports = new ArrayList<IpReport>();
 			List<String> servers = serverConfig.getConsumerServers();
 			Set<String> domains = new HashSet<String>();
-
 			for (String server : servers) {
-				URL url = new URL(BaseReportTool.getConnectionUrl("ip", server, domain, "", index));
-				URLConnection URLconnection = url.openConnection();
-				HttpURLConnection httpConnection = (HttpURLConnection) URLconnection;
-				int responseCode = httpConnection.getResponseCode();
-				if (responseCode == HttpURLConnection.HTTP_OK) {
-					InputStream input = httpConnection.getInputStream();
-					String pageResult = Files.forIO().readFrom(input, "utf-8");
-					List<String> domainTemps = ServicePageTool.getListFromPage(pageResult, "<domains>", "</domains>");
+				String connectionUrl = m_manager.getConnectionUrl(server, domain,index);
+				String pageResult = m_manager.getRemotePageContent(connectionUrl);
+				if(pageResult!=null){
+					List<String> domainTemps = StringUtils.getListFromPage(pageResult, "<domains>", "</domains>");
 					if (domainTemps != null) {
 						for (String temp : domainTemps) {
 							domains.add(temp);
 						}
 					}
-					String xml = ServicePageTool.getStringFromPage(pageResult, "<data>", "</data>");
-					reports.add(IpReportTool.parseXML(xml));
-				} else {
+					String xml = StringUtils.getStringFromPage(pageResult, "<data>", "</data>");
+					reports.add(ReportUtils.parseIpReportXML(xml));
+				}else{
 					// TODO the remote server have some problem
 				}
 			}
-			report = IpReportTool.merge(reports);
+			report = ReportUtils.mergeIpReports(reports);
 			List<String> domainList = new ArrayList<String>(domains);
 			Collections.sort(domainList);
 			model.setDomains(domainList);
 			model.setCurrentDomain(report.getDomain());
-
+			model.setGenerateTime(DateUtils.SDF_SEG.format(new Date()));
 		} else {
 			// TODO
-			String reportFileName = BaseReportTool.getReportName(reportStart, payload.getDomain(), "");
+			model.setGenerateTime(DateUtils.SDF_SEG.format(new Date(reportStart+DateUtils.HOUR)));
+			String reportFileName = m_manager.getReportStoreFile(reportStart, payload.getDomain());
 			System.out.println(reportFileName);
 		}
-		String title = BaseReportTool.getReportTitle("failure", model.getCurrentDomain(), "", reportStart);
-		model.setReportTitle(title);
+		model.setReportTitle(m_manager.getReportDisplayTitle( model.getCurrentDomain(), reportStart));
 
-		//TODO get the all report 
 		Calendar cal = Calendar.getInstance();
 		int minute = cal.get(Calendar.MINUTE);
 		Map<String, DisplayModel> models = new HashMap<String, DisplayModel>();

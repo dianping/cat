@@ -17,7 +17,7 @@ import com.site.lookup.annotation.Inject;
 
 public class HdfsMessageStorage implements MessageStorage, Initializable, Disposable, LogEnabled {
 	@Inject
-	private ChannelManager m_manager;
+	private OutputChannelManager m_manager;
 
 	private WriteJob m_job;
 
@@ -76,14 +76,14 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 
 		private void handle(MessageTree tree) {
 			try {
-				OutputChannel channel = m_manager.findChannel(tree, false);
-				boolean success = channel.out(tree);
+				OutputChannel channel = m_manager.openChannel(tree, false);
+				boolean success = channel.write(tree);
 
 				if (!success) {
 					m_manager.closeChannel(channel);
 
-					channel = m_manager.findChannel(tree, true);
-					channel.out(tree);
+					channel = m_manager.openChannel(tree, true);
+					channel.write(tree);
 				}
 			} catch (IOException e) {
 				m_logger.error("Error when writing to HDFS!", e);

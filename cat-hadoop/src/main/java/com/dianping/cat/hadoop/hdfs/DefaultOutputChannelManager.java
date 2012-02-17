@@ -23,7 +23,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultChannelManager extends ContainerHolder implements ChannelManager, Initializable, LogEnabled {
+public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, Initializable, LogEnabled {
 	@Inject
 	private MessagePathBuilder m_builder;
 
@@ -85,7 +85,36 @@ public class DefaultChannelManager extends ContainerHolder implements ChannelMan
 	}
 
 	@Override
-	public OutputChannel findChannel(MessageTree tree, boolean forceNew) throws IOException {
+	public void initialize() throws InitializationException {
+		try {
+			Configuration config = new Configuration();
+			FileSystem fs;
+
+			config.setInt("io.file.buffer.size", 8192);
+
+			if (m_serverUri == null) {
+				fs = FileSystem.getLocal(config);
+			} else {
+				fs = FileSystem.get(m_serverUri, config); // TODO Not tested yet
+			}
+
+			m_fs = fs;
+			m_basePath = new Path(m_fs.getWorkingDirectory(), m_baseDir);
+		} catch (Exception e) {
+			throw new InitializationException("Error when getting HDFS file system.", e);
+		}
+
+		try {
+			InetAddress localHost = InetAddress.getLocalHost();
+
+			m_ipAddress = localHost.getHostAddress();
+		} catch (UnknownHostException e) {
+			m_logger.warn("Unable to get local host!", e);
+		}
+	}
+
+	@Override
+	public OutputChannel openChannel(MessageTree tree, boolean forceNew) throws IOException {
 		String path = m_builder.getHdfsPath(tree, m_ipAddress);
 		OutputChannel channel = m_channels.get(path);
 
@@ -113,35 +142,6 @@ public class DefaultChannelManager extends ContainerHolder implements ChannelMan
 		}
 
 		return channel;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		try {
-			Configuration config = new Configuration();
-			FileSystem fs;
-
-			config.setInt("io.file.buffer.size", 8192);
-
-			if (m_serverUri == null) {
-				fs = FileSystem.getLocal(config);
-			} else {
-				fs = FileSystem.get(m_serverUri, config); // TODO Not tested yet
-			}
-
-			m_fs = fs;
-			m_basePath = new Path(m_fs.getWorkingDirectory(), m_baseDir);
-		} catch (Exception e) {
-			throw new InitializationException("Error when getting HDFS file system.", e);
-		}
-
-		try {
-			InetAddress localHost = InetAddress.getLocalHost();
-
-			m_ipAddress = localHost.getHostAddress();
-		} catch (UnknownHostException e) {
-			m_logger.warn("Unable to get local host!", e);
-		}
 	}
 
 	public void setBaseDir(String baseDir) {

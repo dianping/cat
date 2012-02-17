@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.tool.Constant;
+import com.dianping.cat.report.tool.Constants;
 import com.site.lookup.annotation.Inject;
 
 public class TransactionModelProvider implements ModelProvider {
@@ -42,11 +42,11 @@ public class TransactionModelProvider implements ModelProvider {
 		TransactionReportAnalyzer analyzer = null;
 		
 		if (index == null) {
-			index = Constant.MEMORY_CURRENT;
+			index = Constants.MEMORY_CURRENT;
 		}
-		if (index.equals(Constant.MEMORY_CURRENT)) {
+		if (index.equals(Constants.MEMORY_CURRENT)) {
 			analyzer = (TransactionReportAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
-		} else if (index.equals(Constant.MEMORY_LAST)) {
+		} else if (index.equals(Constants.MEMORY_LAST)) {
 			analyzer = (TransactionReportAnalyzer) m_consumer.getLastAnalyzer("transaction");
 		}
 		

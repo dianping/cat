@@ -1,11 +1,11 @@
-package com.dianping.cat.hadoop.plexus;
+package com.dianping.cat.hadoop.build;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.hadoop.HdfsDumpConsumer;
-import com.dianping.cat.hadoop.hdfs.ChannelManager;
-import com.dianping.cat.hadoop.hdfs.DefaultChannelManager;
+import com.dianping.cat.hadoop.hdfs.OutputChannelManager;
+import com.dianping.cat.hadoop.hdfs.DefaultOutputChannelManager;
 import com.dianping.cat.hadoop.hdfs.DefaultOutputChannel;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageStorage;
 import com.dianping.cat.hadoop.hdfs.OutputChannel;
@@ -25,20 +25,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 			all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
 			      .req(MessageCodec.class, "plain-text") //
 			      .config(E("maxSize").value(String.valueOf(2 * 1024 * 1024L))));
-			all.add(C(ChannelManager.class, DefaultChannelManager.class) //
+			all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
 			      .req(MessagePathBuilder.class));
 		} else {
 			all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
 			      .req(MessageCodec.class, "plain-text") //
 			      .config(E("maxSize").value(String.valueOf(128 * 1024 * 1024L))));
-			all.add(C(ChannelManager.class, DefaultChannelManager.class) //
+			all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
 			      .req(MessagePathBuilder.class) //
 			      .config(E("baseDir").value("data"), //
 			            E("serverUri").value("/catlog")));
 		}
 
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
-		      .req(ChannelManager.class));
+		      .req(OutputChannelManager.class));
 		all.add(C(MessageConsumer.class, HdfsDumpConsumer.ID, HdfsDumpConsumer.class) //
 		      .req(MessageStorage.class, "hdfs"));
 

@@ -51,8 +51,16 @@ public class DefaultOutputChannel implements OutputChannel {
 		return now - m_timestamp > m_ttl;
 	}
 
+	public void setMaxSize(int maxSize) {
+		m_maxSize = maxSize;
+	}
+
+	public void setTtl(long ttl) {
+		m_ttl = ttl;
+	}
+
 	@Override
-	public boolean out(MessageTree tree) throws IOException {
+	public boolean write(MessageTree tree) throws IOException {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 		m_codec.encode(tree, buf);
@@ -71,13 +79,5 @@ public class DefaultOutputChannel implements OutputChannel {
 		m_count += length + 1;
 
 		return true;
-	}
-
-	public void setMaxSize(int maxSize) {
-		m_maxSize = maxSize;
-	}
-
-	public void setTtl(long ttl) {
-		m_ttl = ttl;
 	}
 }

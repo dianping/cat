@@ -11,7 +11,7 @@ import javax.servlet.ServletException;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.service.provider.FailureModelProvider;
 import com.dianping.cat.report.page.service.provider.ModelProvider;
-import com.dianping.cat.report.tool.Constant;
+import com.dianping.cat.report.tool.Constants;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
@@ -52,7 +52,7 @@ public class Handler implements PageHandler<Context> {
 		String modelStr = payload.getModel();
 		String domain = payload.getDomain();
 
-		if (modelStr == null || modelStr.equals(Constant.FAILURE)) {
+		if (modelStr == null || modelStr.equals(Constants.FAILURE)) {
 			String domains = getDomains(m_failureModel);
 			model.setDomains(domains);
 			if (null == domain) {
@@ -72,7 +72,7 @@ public class Handler implements PageHandler<Context> {
 				model.setXmlData("No domain or no ip in failure report!");
 			}
 
-		} else if (modelStr.equals(Constant.TRANSACTION)) {
+		} else if (modelStr.equals(Constants.TRANSACTION)) {
 			String domains = getDomains(m_transactionModel);
 			model.setDomains(domains);
 			if (null == domain) {
@@ -122,9 +122,9 @@ public class Handler implements PageHandler<Context> {
 
 	private String getModelXMLData(String domain, String ip, String index, ModelProvider provider) {
 		if (index == null) {
-			index = Constant.MEMORY_CURRENT;
+			index = Constants.MEMORY_CURRENT;
 		}
-		if (index.equals(Constant.MEMORY_CURRENT) || index.equals(Constant.MEMORY_LAST)) {
+		if (index.equals(Constants.MEMORY_CURRENT) || index.equals(Constants.MEMORY_LAST)) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("domain", domain);
 			map.put("ip", ip);

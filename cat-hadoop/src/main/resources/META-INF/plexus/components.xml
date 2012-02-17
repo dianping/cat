@@ -15,8 +15,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.hdfs.ChannelManager</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.DefaultChannelManager</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.OutputChannelManager</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.DefaultOutputChannelManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
@@ -29,7 +29,7 @@
 			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageStorage</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.ChannelManager</role>
+					<role>com.dianping.cat.hadoop.hdfs.OutputChannelManager</role>
 				</requirement>
 			</requirements>
 		</component>

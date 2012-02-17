@@ -1,9 +1,11 @@
 package com.dianping.cat.report.page.ip;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.view.UrlNav;
 import com.site.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
@@ -18,9 +20,16 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	private String m_current;
 
 	private String m_reportTitle;
+	
+	private String m_generateTime;
+	
+	private String m_urlPrefix;
+
+	private List<UrlNav> m_urlNavs;
 
 	public Model(Context ctx) {
 		super(ctx);
+		m_urlNavs = new ArrayList<UrlNav>();
 	}
 
 	@Override
@@ -35,8 +44,23 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public List<String> getDomains() {
 		return m_domains;
 	}
-
 	
+	public String getUrlPrefix() {
+   	return m_urlPrefix;
+   }
+
+	public void setUrlPrefix(String urlPrefix) {
+   	m_urlPrefix = urlPrefix;
+   }
+
+	public List<UrlNav> getUrlNavs() {
+   	return m_urlNavs;
+   }
+
+	public void setUrlNavs(List<UrlNav> urlNavs) {
+   	m_urlNavs = urlNavs;
+   }
+
 	public String getCurrentDomain() {
    	return m_currentDomain;
    }
@@ -80,5 +104,13 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public void setReportTitle(String reportTitle) {
 		m_reportTitle = reportTitle;
 	}
+
+	public String getGenerateTime() {
+   	return m_generateTime;
+   }
+
+	public void setGenerateTime(String generateTime) {
+   	m_generateTime = generateTime;
+   }
 
 }

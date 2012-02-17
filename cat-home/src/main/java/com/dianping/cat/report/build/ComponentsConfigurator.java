@@ -8,10 +8,13 @@ import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
 import com.dianping.cat.report.ReportModule;
 import com.dianping.cat.report.ServerConfig;
+import com.dianping.cat.report.page.failure.FailureManage;
+import com.dianping.cat.report.page.ip.IpManage;
 import com.dianping.cat.report.page.service.provider.FailureModelProvider;
 import com.dianping.cat.report.page.service.provider.IpModelProvider;
 import com.dianping.cat.report.page.service.provider.ModelProvider;
 import com.dianping.cat.report.page.service.provider.TransactionModelProvider;
+import com.dianping.cat.report.page.transaction.TransactionManage;
 import com.site.lookup.configuration.Component;
 import com.site.web.configuration.AbstractWebComponentsConfigurator;
 
@@ -40,7 +43,13 @@ public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
 
 		all.add(C(ModelProvider.class, "ip", IpModelProvider.class).req(MessageConsumer.class, "realtime"));
 
-		// LAST
+		all.add(C(FailureManage.class));
+
+		all.add(C(TransactionManage.class));
+
+		all.add(C(IpManage.class));
+
+		// Please keep it last
 		defineModuleRegistry(all, ReportModule.class, ReportModule.class);
 
 		return all;

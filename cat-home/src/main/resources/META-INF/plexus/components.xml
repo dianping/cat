@@ -8,6 +8,7 @@
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hints>
 						<role-hint>realtime</role-hint>
+						<role-hint>dump-to-html</role-hint>
 					</role-hints>
 					<field-name>m_consumers</field-name>
 				</requirement>
@@ -55,6 +56,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.failure.FailureManage</role>
+			<implementation>com.dianping.cat.report.page.failure.FailureManage</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.transaction.TransactionManage</role>
+			<implementation>com.dianping.cat.report.page.transaction.TransactionManage</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.ip.IpManage</role>
+			<implementation>com.dianping.cat.report.page.ip.IpManage</implementation>
+		</component>
+		<component>
 			<role>com.site.web.mvc.model.ModuleRegistry</role>
 			<implementation>com.site.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
@@ -90,6 +103,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.ServerConfig</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.TransactionManage</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -105,6 +121,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.failure.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.failure.FailureManage</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -137,6 +156,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.ServerConfig</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.ip.IpManage</role>
 				</requirement>
 			</requirements>
 		</component>
