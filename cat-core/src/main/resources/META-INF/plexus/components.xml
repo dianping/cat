@@ -171,6 +171,12 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>java.lang.String</role-hint>
+			<implementation>com.dianping.cat.storage.internal.DefaultBucket</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>[B</role-hint>
 			<implementation>com.dianping.cat.storage.internal.DefaultBucket</implementation>
 		</component>
 		<component>
