@@ -5,7 +5,7 @@ import java.nio.charset.Charset;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
-public class DefaultBucket<T> extends AbstractBucket<T> {
+public class DefaultBucket<T> extends AbstractFileBucket<T> {
 	private Class<?> m_type;
 
 	@SuppressWarnings("unchecked")
