@@ -9,7 +9,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import com.dianping.cat.storage.MessageBucket;
 import com.site.lookup.ContainerHolder;
 
 public class DefaultBucketManager extends ContainerHolder implements BucketManager, Disposable {
@@ -30,8 +29,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public <T> Bucket<T> getBucket(Class<T> type, String path) throws IOException {
+	protected <T> Bucket<T> getBucket(Class<T> type, String path) throws IOException {
 		if (type == null || path == null) {
 			throw new IllegalArgumentException(String.format("Type(%s) or path(%s) can't be null.", type, path));
 		}
@@ -54,8 +52,18 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@Override
-	public MessageBucket getMessageBucket(String path) throws IOException {
-		return (MessageBucket) getBucket(MessageTree.class, path);
+	public Bucket<byte[]> getBytesBucket(String path) throws IOException {
+		return getBucket(byte[].class, path);
+	}
+
+	@Override
+	public Bucket<MessageTree> getMessageBucket(String path) throws IOException {
+		return getBucket(MessageTree.class, path);
+	}
+
+	@Override
+	public Bucket<String> getStringBucket(String path) throws IOException {
+		return getBucket(String.class, path);
 	}
 
 	static class Entry {

@@ -2,8 +2,12 @@ package com.dianping.cat.storage;
 
 import java.io.IOException;
 
-public interface BucketManager {
-	public MessageBucket getMessageBucket(String path) throws IOException;
+import com.dianping.cat.message.spi.MessageTree;
 
-	public <T> Bucket<T> getBucket(Class<T> type, String path) throws IOException;
+public interface BucketManager {
+	public Bucket<MessageTree> getMessageBucket(String path) throws IOException;
+
+	public Bucket<String> getStringBucket(String path) throws IOException;
+
+	public Bucket<byte[]> getBytesBucket(String path) throws IOException;
 }

@@ -7,10 +7,9 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.MessageBucket;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageBucket extends AbstractFileBucket<MessageTree> implements MessageBucket {
+public class DefaultMessageBucket extends AbstractFileBucket<MessageTree> {
 	@Inject
 	private MessageCodec m_codec;
 

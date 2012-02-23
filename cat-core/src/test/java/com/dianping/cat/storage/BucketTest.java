@@ -31,7 +31,7 @@ public class BucketTest extends ComponentTestCase {
 	@Test
 	public void testBytesBucket() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<byte[]> bucket = manager.getBucket(byte[].class, "target/bucket/bytes");
+		Bucket<byte[]> bucket = manager.getBytesBucket("target/bucket/bytes");
 
 		// store it and load it
 		for (int i = 0; i < 100; i++) {
@@ -65,7 +65,7 @@ public class BucketTest extends ComponentTestCase {
 	@Test
 	public void testMessageBucket() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		MessageBucket bucket = manager.getMessageBucket("target/bucket/message");
+		Bucket<MessageTree> bucket = manager.getMessageBucket("target/bucket/message");
 		int groups = 10;
 
 		// store it and load it
@@ -113,7 +113,7 @@ public class BucketTest extends ComponentTestCase {
 	@Test
 	public void testStringBucket() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<String> bucket = manager.getBucket(String.class, "target/bucket/data");
+		Bucket<String> bucket = manager.getStringBucket("target/bucket/data");
 
 		// store it and load it
 		for (int i = 0; i < 100; i++) {

@@ -8,9 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.ReadLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -37,20 +35,22 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 
 	private File m_file;
 
-	private RandomAccessFile m_out;
+	private RandomAccessFile m_readFile;
+
+	private RandomAccessFile m_writeFile;
+
+	private ReentrantLock m_readLock;
+
+	private ReentrantLock m_writeLock;
 
 	private Logger m_logger;
-
-	private ReadLock m_readLock;
-
-	private WriteLock m_writeLock;
 
 	@Override
 	public void close() {
 		m_writeLock.lock();
 
 		try {
-			m_out.close();
+			m_writeFile.close();
 			m_idToOffsets.clear();
 			m_tagToIds.clear();
 		} catch (IOException e) {
@@ -99,20 +99,20 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 			m_readLock.lock();
 
 			try {
-				long old = m_out.getFilePointer();
+				long old = m_readFile.getFilePointer();
 
-				m_out.seek(offset);
-				m_out.readLine(); // first line is header, get rid of it
+				m_readFile.seek(offset);
+				m_readFile.readLine(); // first line is header, get rid of it
 
-				int num = Integer.parseInt(m_out.readLine());
+				int num = Integer.parseInt(m_readFile.readLine());
 				byte[] bytes = new byte[num];
 
-				m_out.readFully(bytes);
+				m_readFile.readFully(bytes);
 
 				ChannelBuffer buf = ChannelBuffers.wrappedBuffer(bytes);
 
 				T data = decode(buf);
-				m_out.seek(old);
+				m_readFile.seek(old);
 
 				return data;
 			} catch (Exception e) {
@@ -153,13 +153,12 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 
 	@Override
 	public void initialize(Class<?> type, String path) throws IOException {
-		ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-
-		m_readLock = lock.readLock();
-		m_writeLock = lock.writeLock();
+		m_writeLock = new ReentrantLock();
+		m_readLock = new ReentrantLock();
 		m_file = new File(m_baseDir, path);
 		m_file.getParentFile().mkdirs();
-		m_out = new RandomAccessFile(m_file, "rw");
+		m_writeFile = new RandomAccessFile(m_file, "rw");
+		m_readFile = new RandomAccessFile(m_file, "r");
 
 		if (m_file.exists()) {
 			loadIndexes();
@@ -173,14 +172,14 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 
 		try {
 			while (true) {
-				long offset = m_out.getFilePointer();
-				String first = m_out.readLine();
+				long offset = m_writeFile.getFilePointer();
+				String first = m_writeFile.readLine();
 
 				if (first == null) { // EOF
 					break;
 				}
 
-				int num = Integer.parseInt(m_out.readLine());
+				int num = Integer.parseInt(m_writeFile.readLine());
 
 				if (num > data.length) {
 					int newSize = data.length;
@@ -192,8 +191,8 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 					data = new byte[newSize];
 				}
 
-				m_out.readFully(data, 0, num); // get rid of it
-				m_out.readLine(); // get rid of empty line
+				m_writeFile.readFully(data, 0, num); // get rid of it
+				m_writeFile.readLine(); // get rid of empty line
 
 				List<String> parts = Splitters.by('\t').split(first);
 				if (parts.size() > 0) {
@@ -245,14 +244,16 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		m_writeLock.lock();
 
 		try {
-			long offset = m_out.getFilePointer();
+			long offset = m_writeFile.getFilePointer();
 
-			m_out.write(first);
-			m_out.write(num);
-			m_out.write('\n');
-			m_out.write(buf.array(), buf.readerIndex(), length);
-			m_out.write('\n');
-			m_out.getChannel().force(true);
+			m_writeFile.write(first);
+			m_writeFile.write(num);
+			m_writeFile.write('\n');
+			m_writeFile.write(buf.array(), buf.readerIndex(), length);
+			m_writeFile.write('\n');
+			
+			// TODO add a flag
+			m_writeFile.getChannel().force(true);
 
 			updateIndex(id, tags, offset);
 
