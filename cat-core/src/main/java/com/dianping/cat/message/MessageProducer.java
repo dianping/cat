@@ -117,6 +117,8 @@ package com.dianping.cat.message;
  * @author Frankie Wu
  */
 public interface MessageProducer {
+	public String createMessageId();
+	
 	/**
 	 * Log an event in one shot.
 	 * 

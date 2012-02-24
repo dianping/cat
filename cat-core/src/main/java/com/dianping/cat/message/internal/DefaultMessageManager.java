@@ -53,6 +53,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
+	public String createMessageId() {
+		return UUID.randomUUID().toString(); // TODO
+	}
+
+	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
@@ -146,7 +151,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public void start(Transaction transaction) {
 		if (Cat.isInitialized()) {
-			getContext().start(transaction);
+			getContext().start(this, transaction);
 		} else if (m_firstMessage) {
 			m_firstMessage = false;
 			m_logger.warn("CAT client is not enabled because it's not initialized yet");
@@ -177,17 +182,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				MessageTree tree = m_tree.copy();
 
 				tree.setMessage(message);
-				tree.setMessageId(createMessageId());
+				tree.setMessageId(manager.createMessageId());
 				manager.flush(tree);
 			} else {
 				Transaction entry = m_stack.peek();
 
 				entry.addChild(message);
 			}
-		}
-
-		String createMessageId() {
-			return UUID.randomUUID().toString();
 		}
 
 		public void end(DefaultMessageManager manager, Transaction transaction) {
@@ -211,13 +212,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			}
 		}
 
-		public void start(Transaction transaction) {
+		public void start(DefaultMessageManager manager, Transaction transaction) {
 			if (!m_stack.isEmpty()) {
 				Transaction entry = m_stack.peek();
 
 				entry.addChild(transaction);
 			} else {
-				m_tree.setMessageId(createMessageId());
+				m_tree.setMessageId(manager.createMessageId());
 				m_tree.setMessage(transaction);
 			}
 
