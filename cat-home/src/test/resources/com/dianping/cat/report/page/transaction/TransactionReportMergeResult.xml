@@ -1,10 +1,6 @@
 <transaction-report domain="Cat" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
    <domain>Cat</domain>
-<<<<<<< HEAD:cat-home/src/test/resources/com/dianping/cat/report/tool/TransactionReportMergeResult.xml
-   <type id="URL" totalCount="22" failCount="0" failPercent="0.00" min="0.0" max="194.0" avg="47.1" sum="1036.0" sum2="147884.0" std="67.1">
-=======
    <type id="URL" totalCount="22" failCount="4" failPercent="18.18" min="0.0" max="194.0" avg="47.1" sum="1036.0" sum2="147884.0" std="67.1">
->>>>>>> 4eeaaceb4535ac3dd3133176a1c2222e14bc15e0:cat-home/src/test/resources/com/dianping/cat/report/page/transaction/TransactionReportMergeResult.xml
       <name id="home" totalCount="2" failCount="0" failPercent="0.00" min="175.0" max="175.0" avg="175.0" sum="350.0" sum2="61250.0" std="0.0">
          <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successMessageUrl>
@@ -29,19 +25,13 @@
          <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successMessageUrl>
       </name>
-<<<<<<< HEAD:cat-home/src/test/resources/com/dianping/cat/report/tool/TransactionReportMergeResult.xml
       <name id="TransitionPhase" totalCount="22" failCount="0" failPercent="0.00" min="0.0" max="1234.0" avg="0.0" sum="0.0" sum2="0.0" std="0.0">
          <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successMessageUrl>
       </name>
-      <name id="OutboundPhase" totalCount="22" failCount="0" failPercent="0.00" min="1.0" max="191.0" avg="43.8" sum="964.0" sum2="136176.0" std="65.3">
+      <name id="OutboundPhase" totalCount="22" failCount="7" failPercent="31.82" min="1.0" max="191.0" avg="43.8" sum="964.0" sum2="136176.0" std="65.3">
          <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successMessageUrl>
-=======
-      <name id="TransitionPhase" totalCount="22" failCount="4" failPercent="18.18" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0" std="0.0">
-      </name>
-      <name id="OutboundPhase" totalCount="22" failCount="7" failPercent="31.82" min="1.0" max="191.0" avg="43.8" sum="964.0" sum2="136176.0" std="65.3">
->>>>>>> 4eeaaceb4535ac3dd3133176a1c2222e14bc15e0:cat-home/src/test/resources/com/dianping/cat/report/page/transaction/TransactionReportMergeResult.xml
       </name>
       <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 		</successMessageUrl>

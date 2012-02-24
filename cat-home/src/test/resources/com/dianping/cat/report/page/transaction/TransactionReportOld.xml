@@ -34,13 +34,8 @@
 			<successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successMessageUrl>
 		</name>
-<<<<<<< HEAD:cat-home/src/test/resources/com/dianping/cat/report/tool/TransactionReportOld.xml
 		<name id="TransitionPhase" totalCount="11" failCount="0"
 			failPercent="0.00" min="0.0" max="1234" avg="0.0" sum="0.0" sum2="0.0"
-=======
-		<name id="TransitionPhase" totalCount="11" failCount="4"
-			failPercent="0.00" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0"
->>>>>>> 4eeaaceb4535ac3dd3133176a1c2222e14bc15e0:cat-home/src/test/resources/com/dianping/cat/report/page/transaction/TransactionReportOld.xml
 			std="0.0">
 			<successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successMessageUrl>
