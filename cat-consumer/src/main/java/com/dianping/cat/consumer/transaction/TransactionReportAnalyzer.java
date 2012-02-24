@@ -225,6 +225,8 @@ public class TransactionReportAnalyzer extends AbstractMessageAnalyzer<Transacti
 
 	@Override
 	protected void process(MessageTree tree) {
+		//TO delete it , it should be delete after test
+		messageStorage.store(tree);
 		String domain = tree.getDomain();
 		TransactionReport report = this.m_reports.get(domain);
 		if (report == null) {

@@ -1,5 +1,5 @@
 <failure-report domain="Review" machine="192.168.32.68"
-	starttime="2012-02-16 22:00:00" endtime="2012-02-16 22:59:00">
+	startTime="2012-02-16 22:00:00" endTime="2012-02-16 22:59:00">
 	<threads>
 		<thread>main</thread>
 	</threads>
@@ -12,18 +12,18 @@
 	<segment id="2012-02-16 22:03">
 		<entry type="Error"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.OutOfMemoryError</entry>
+			threadId="main">java.lang.OutOfMemoryError</entry>
 		<entry type="Error"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.OutOfMemoryError</entry>
+			threadId="main">java.lang.OutOfMemoryError</entry>
 	</segment>
 	<segment id="2012-02-16 22:04">
 		<entry type="Error"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.OutOfMemoryError</entry>
+			threadId="main">java.lang.OutOfMemoryError</entry>
 		<entry type="Error"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.OutOfMemoryError</entry>
+			threadId="main">java.lang.OutOfMemoryError</entry>
 	</segment>
 	<segment id="2012-02-16 22:05">
 	</segment>
@@ -114,19 +114,19 @@
 	<segment id="2012-02-16 22:48">
 		<entry type="Error"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.OutOfMemoryError</entry>
+			threadId="main">java.lang.OutOfMemoryError</entry>
 		<entry type="Exception"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.Exception</entry>
+			threadId="main">java.lang.Exception</entry>
 		<entry type="RuntimeException"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.RuntimeException</entry>
+			threadId="main">java.lang.RuntimeException</entry>
 		<entry type="Exception"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.Exception</entry>
+			threadId="main">java.lang.Exception</entry>
 		<entry type="RuntimeException"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.NullPointerException</entry>
+			threadId="main">java.lang.NullPointerException</entry>
 	</segment>
 	<segment id="2012-02-16 22:49">
 	</segment>
@@ -135,18 +135,18 @@
 	<segment id="2012-02-16 22:51">
 		<entry type="Error"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.OutOfMemoryError</entry>
+			threadId="main">java.lang.OutOfMemoryError</entry>
 		<entry type="Exception"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.Exception</entry>
+			threadId="main">java.lang.Exception</entry>
 		<entry type="RuntimeException"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.RuntimeException</entry>
+			threadId="main">java.lang.RuntimeException</entry>
 		<entry type="Exception"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.Exception</entry>
+			threadId="main">java.lang.Exception</entry>
 		<entry type="RuntimeException"
 			path="20120216/22/Review/d872b43b-acde-40c4-a02b-c0df1fc88c97.html"
-			threadid="main">java.lang.NullPointerException</entry>
+			threadId="main">java.lang.NullPointerException</entry>
 	</segment>
 </failure-report>

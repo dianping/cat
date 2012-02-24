@@ -17,9 +17,11 @@ public class TransactionReportToolTest {
 		TransactionReport reportOld = new DefaultXmlParser().parse(oldXml);
 		TransactionReport reportNew = new DefaultXmlParser().parse(newXml);
 		String result = Files.forIO().readFrom(TransactionReportToolTest.class.getResourceAsStream("TransactionReportMergeResult.xml"),"utf-8");
-		
 		ReportUtils.mergeTransactionReport(reportOld, reportNew);
-		Assert.assertEquals("Chech the merage result!",result,new DefaultXmlBuilder().buildXml(reportOld));
+		
+		result=result.replaceAll("\\s","");
+		String buildXml = new DefaultXmlBuilder().buildXml(reportOld).replaceAll("\\s", "");
+		Assert.assertEquals("Chech the merage result!",result,buildXml);
 	}
 }
 
