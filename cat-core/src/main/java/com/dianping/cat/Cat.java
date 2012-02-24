@@ -130,6 +130,7 @@ public class Cat {
 
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
+		getInstance().m_initialized = false;
 		getInstance().m_manager.reset();
 	}
 
