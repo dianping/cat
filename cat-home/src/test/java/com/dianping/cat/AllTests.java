@@ -5,9 +5,9 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.page.ip.DisplayModelTest;
+import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 import com.dianping.cat.report.tool.FailureReportToolTest;
 import com.dianping.cat.report.tool.IpReportToolTest;
-import com.dianping.cat.report.tool.TransactionReportToolTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -20,7 +20,7 @@ FailureReportToolTest.class,
 
 IpReportToolTest.class,
 
-TransactionReportToolTest.class
+TransactionReportMergerTest.class
 
 })
 public class AllTests {

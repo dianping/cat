@@ -55,7 +55,8 @@ public class PlainTextMessageCodec implements MessageCodec {
 		String threadId = helper.read(buf, TAB);
 		String threadName = helper.read(buf, TAB);
 		String messageId = helper.read(buf, TAB);
-		String requestToken = helper.read(buf, TAB);
+		String parentMessageId = helper.read(buf, TAB);
+		String rootMessageId = helper.read(buf, TAB);
 		String sessionToken = helper.read(buf, LF);
 
 		if (ID.equals(id)) {
@@ -65,7 +66,8 @@ public class PlainTextMessageCodec implements MessageCodec {
 			tree.setThreadId(threadId);
 			tree.setThreadName(threadName);
 			tree.setMessageId(messageId);
-			tree.setRequestToken(requestToken);
+			tree.setParentMessageId(parentMessageId);
+			tree.setRootMessageId(rootMessageId);
 			tree.setSessionToken(sessionToken);
 		} else {
 			throw new RuntimeException(String.format("Unrecognized id(%s) for plain text message codec!", id));
@@ -214,7 +216,9 @@ public class PlainTextMessageCodec implements MessageCodec {
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getMessageId());
 		count += helper.write(buf, TAB);
-		count += helper.write(buf, tree.getRequestToken());
+		count += helper.write(buf, tree.getParentMessageId());
+		count += helper.write(buf, TAB);
+		count += helper.write(buf, tree.getRootMessageId());
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getSessionToken());
 		count += helper.write(buf, LF);

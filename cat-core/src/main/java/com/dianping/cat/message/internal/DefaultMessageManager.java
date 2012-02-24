@@ -96,6 +96,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
+	public MessageTree getThreadLocalMessageTree() {
+		return getContext().m_tree;
+	}
+
+	@Override
 	public void initializeClient(Config clientConfig) {
 		if (clientConfig != null) {
 			m_clientConfig = clientConfig;
@@ -132,8 +137,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public void setup(String sessionToken, String requestToken) {
-		Context ctx = new Context(m_domain, m_hostName, m_ipAddress, sessionToken, requestToken);
+	public void setup() {
+		Context ctx = new Context(m_domain, m_hostName, m_ipAddress);
 
 		m_context.set(ctx);
 	}
@@ -153,19 +158,16 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		private Stack<Transaction> m_stack;
 
-		public Context(String domain, String hostName, String ipAddress, String sessionToken, String requestToken) {
+		public Context(String domain, String hostName, String ipAddress) {
 			m_tree = new DefaultMessageTree();
 			m_stack = new Stack<Transaction>();
-
-			m_tree.setDomain(domain);
-			m_tree.setSessionToken(sessionToken);
-			m_tree.setRequestToken(requestToken);
 
 			Thread thread = Thread.currentThread();
 
 			m_tree.setThreadId(Long.toHexString(thread.getId()));
 			m_tree.setThreadId(thread.getName());
 
+			m_tree.setDomain(domain);
 			m_tree.setHostName(hostName);
 			m_tree.setIpAddress(ipAddress);
 		}
@@ -175,13 +177,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				MessageTree tree = m_tree.copy();
 
 				tree.setMessage(message);
-				tree.setMessageId(UUID.randomUUID().toString());
+				tree.setMessageId(createMessageId());
 				manager.flush(tree);
 			} else {
 				Transaction entry = m_stack.peek();
 
 				entry.addChild(message);
 			}
+		}
+
+		String createMessageId() {
+			return UUID.randomUUID().toString();
 		}
 
 		public void end(DefaultMessageManager manager, Transaction transaction) {
@@ -200,7 +206,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					MessageTree tree = m_tree.copy();
 
 					m_tree.setMessage(null);
-					tree.setMessageId(UUID.randomUUID().toString());
 					manager.flush(tree);
 				}
 			}
@@ -212,6 +217,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 				entry.addChild(transaction);
 			} else {
+				m_tree.setMessageId(createMessageId());
 				m_tree.setMessage(transaction);
 			}
 

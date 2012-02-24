@@ -169,5 +169,34 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>java.lang.String</role-hint>
+			<implementation>com.dianping.cat.storage.internal.DefaultBucket</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>[B</role-hint>
+			<implementation>com.dianping.cat.storage.internal.DefaultBucket</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>com.dianping.cat.message.spi.MessageTree</role-hint>
+			<implementation>com.dianping.cat.storage.internal.DefaultMessageBucket</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.BucketManager</role>
+			<implementation>com.dianping.cat.storage.internal.DefaultBucketManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.BucketFactory</role>
+			<implementation>com.dianping.cat.storage.internal.DefaultBucketFactory</implementation>
+		</component>
 	</components>
 </plexus>

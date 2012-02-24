@@ -24,7 +24,7 @@ public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		if (isEnv("dev")) {
+		if (isEnv("dev") || property("env", null) == null) {
 			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
 			      .req(MessageConsumer.class, new String[] { "realtime", "dump-to-html" }, "m_consumers"));
 		} else {
@@ -33,24 +33,25 @@ public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
 		}
 
 		all.add(C(ServerConfig.class)//
-				.config(E("consumerServers").value("127.0.0.1:2281,127.0.0.1:2281"))//
-				.config(E("fileServer").value("127.0.0.1")));	
+		      .config(E("consumerServers").value("127.0.0.1:2281,127.0.0.1:2281"))//
+		      .config(E("fileServer").value("127.0.0.1")));
 
-		all.add(C(ModelProvider.class,"failure",FailureModelProvider.class).req(MessageConsumer.class,"realtime"));
-		
-		all.add(C(ModelProvider.class,"transaction",TransactionModelProvider.class).req(MessageConsumer.class,"realtime"));
-		
-		all.add(C(ModelProvider.class,"ip",IpModelProvider.class).req(MessageConsumer.class,"realtime"));
+		all.add(C(ModelProvider.class, "failure", FailureModelProvider.class).req(MessageConsumer.class, "realtime"));
+
+		all.add(C(ModelProvider.class, "transaction", TransactionModelProvider.class).req(MessageConsumer.class,
+		      "realtime"));
+
+		all.add(C(ModelProvider.class, "ip", IpModelProvider.class).req(MessageConsumer.class, "realtime"));
 
 		all.add(C(FailureManager.class));
-		
+
 		all.add(C(TransactionManager.class));
-		
+
 		all.add(C(IpManager.class));
-		
-		//LAST
+
+		// Please keep it last
 		defineModuleRegistry(all, ReportModule.class, ReportModule.class);
-				
+
 		return all;
 	}
 

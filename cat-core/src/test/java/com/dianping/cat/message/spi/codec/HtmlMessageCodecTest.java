@@ -25,6 +25,7 @@ public class HtmlMessageCodecTest {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
 		codec.setBufferWriter(new HtmlEncodingBufferWriter());
+		codec.setLogViewPrefix("/cat/m/");
 		codec.encodeMessage(message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
@@ -68,7 +69,8 @@ public class HtmlMessageCodecTest {
 		tree.setHostName("hostName");
 		tree.setIpAddress("ipAddress");
 		tree.setMessageId("messageId");
-		tree.setRequestToken("requestToken");
+		tree.setParentMessageId("parentMessageId");
+		tree.setRootMessageId("rootMessageId");
 		tree.setSessionToken("sessionToken");
 		tree.setThreadId("threadId");
 		tree.setThreadName("threadName");
@@ -159,6 +161,35 @@ public class HtmlMessageCodecTest {
 		            + "<tr><td>&nbsp;&nbsp;t15:33:42.009</td><td>Cache</td><td>findReviewByPK</td><td></td><td></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;E15:33:42.009</td><td>CacheHost</td><td>host-1</td><td>0</td><td>ip=192.168.8.123</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;T15:33:42.010</td><td>Cache</td><td>findReviewByPK</td><td class=\"error\">Missing</td><td>1ms 2468</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;A15:33:42.012</td><td>DAL</td><td>findReviewByPK</td><td>0</td><td>5ms select title,content from Review where id = ?</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;E15:33:42.027</td><td>URL</td><td>View</td><td>0</td><td>view=HTML</td></tr>\r\n"
+		            + "<tr><td>T15:33:42.087</td><td>URL</td><td>Review</td><td>0</td><td>100ms /review/2468</td></tr>\r\n");
+	}
+
+	@Test
+	public void testTransactionWithRemoteCall() {
+		long timestamp = 1325489621987L;
+		Transaction root = newTransaction("URL", "Review", timestamp, "0", 100, "/review/2468");
+
+		root.addChild(newEvent("URL", "Payload", timestamp, "0", "ip=127.0.0.1&ua=Mozilla 5.0...&refer=...&..."));
+		root.addChild(newTransaction("Service", "Auth", timestamp, "0", 20, "userId=1357&token=..."));
+		root.addChild(newTransaction("Cache", "findReviewByPK", timestamp + 22, "Missing", 1, "2468") //
+		      .addChild(newEvent("CacheHost", "host-1", timestamp + 22, "0", "ip=192.168.8.123")));
+		root.addChild(newEvent("Service", "ReviewService", timestamp + 23, "0", "message_id"));
+		root.addChild(newEvent("RemoteCall", "Pigeon", timestamp + 23, "0", "message_id"));
+		root.addChild(newTransaction("DAL", "findReviewByPK", timestamp + 25, "0", 5,
+		      "select title,content from Review where id = ?"));
+		root.addChild(newEvent("URL", "View", timestamp + 40, "0", "view=HTML"));
+
+		check(root,
+		      "<tr><td>t15:33:41.987</td><td>URL</td><td>Review</td><td></td><td></td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;E15:33:41.987</td><td>URL</td><td>Payload</td><td>0</td><td>ip=127.0.0.1&amp;ua=Mozilla 5.0...&amp;refer=...&amp;...</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;A15:33:41.987</td><td>Service</td><td>Auth</td><td>0</td><td>20ms userId=1357&amp;token=...</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;t15:33:42.009</td><td>Cache</td><td>findReviewByPK</td><td></td><td></td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;E15:33:42.009</td><td>CacheHost</td><td>host-1</td><td>0</td><td>ip=192.168.8.123</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;T15:33:42.010</td><td>Cache</td><td>findReviewByPK</td><td class=\"error\">Missing</td><td>1ms 2468</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;E15:33:42.010</td><td>Service</td><td>ReviewService</td><td>0</td><td>message_id</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;<a href=\"/cat/m/message_id\" onclick=\"show(1690722221);return false;\">[:: show ::]</a></td><td colspan=\"4\" id=\"1690722221\"></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;A15:33:42.012</td><td>DAL</td><td>findReviewByPK</td><td>0</td><td>5ms select title,content from Review where id = ?</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.027</td><td>URL</td><td>View</td><td>0</td><td>view=HTML</td></tr>\r\n"
 		            + "<tr><td>T15:33:42.087</td><td>URL</td><td>Review</td><td>0</td><td>100ms /review/2468</td></tr>\r\n");

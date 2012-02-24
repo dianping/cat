@@ -25,6 +25,6 @@ public class CatListener implements ServletContextListener {
 		
 		Cat.initialize(new File(catClientXml));
 		//for background thread
-		Cat.setup(null,null);
+		Cat.setup(null);
 	}
 }

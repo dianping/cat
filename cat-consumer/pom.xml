@@ -15,8 +15,8 @@
 			<artifactId>cat-core</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
+			<groupId>com.site.common</groupId>
+			<artifactId>test-framework</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

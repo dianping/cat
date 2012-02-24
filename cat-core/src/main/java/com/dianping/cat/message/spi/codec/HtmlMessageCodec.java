@@ -20,13 +20,17 @@ import com.dianping.cat.message.spi.StringRope;
 import com.site.lookup.annotation.Inject;
 
 /**
- * Local use only, do not use it over network since it only supports one-way encoding
+ * Local use only, do not use it over network since it only supports one-way
+ * encoding
  */
 public class HtmlMessageCodec implements MessageCodec {
 	private static final String ID = "HT1"; // HTML version 1
 
 	@Inject
 	private BufferWriter m_writer;
+
+	@Inject
+	private String m_logViewPrefix;
 
 	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
 
@@ -69,7 +73,8 @@ public class HtmlMessageCodec implements MessageCodec {
 		count += helper.td(buf, tree.getThreadId());
 		count += helper.td(buf, tree.getThreadName());
 		count += helper.td(buf, tree.getMessageId());
-		count += helper.td(buf, tree.getRequestToken());
+		count += helper.td(buf, tree.getParentMessageId());
+		count += helper.td(buf, tree.getRootMessageId());
 		count += helper.td(buf, tree.getSessionToken());
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);
@@ -111,7 +116,7 @@ public class HtmlMessageCodec implements MessageCodec {
 			if (Message.SUCCESS.equals(message.getStatus())) {
 				count += helper.td(buf, message.getStatus());
 			} else {
-				count += helper.td(buf, message.getStatus(), "error");
+				count += helper.td(buf, message.getStatus(), "class=\"error\"");
 			}
 
 			Object data = message.getData();
@@ -145,9 +150,45 @@ public class HtmlMessageCodec implements MessageCodec {
 		return count;
 	}
 
+	protected int encodeLogViewLink(Message message, ChannelBuffer buf, int level, LineCounter counter) {
+		BufferHelper helper = m_bufferHelper;
+		int count = 0;
+
+		if (counter != null) {
+			counter.inc();
+
+			count += helper.tr1(buf, counter.getCount() % 2 != 0 ? "odd" : "even");
+		} else {
+			count += helper.tr1(buf, null);
+		}
+
+		String link = message.getData().toString();
+		int id = Math.abs(link.hashCode());
+
+		count += helper.td1(buf);
+
+		count += helper.nbsp(buf, level * 2); // 2 spaces per level
+		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"show(%s);return false;\">[:: show ::]</a>",
+		      m_logViewPrefix, link, id));
+		count += helper.td2(buf);
+
+		count += helper.td(buf, "", "colspan=\"4\" id=\"" + id + "\"");
+
+		count += helper.tr2(buf);
+		count += helper.crlf(buf);
+
+		return count;
+	}
+
 	public int encodeMessage(Message message, ChannelBuffer buf, int level, LineCounter counter) {
 		if (message instanceof Event) {
-			return encodeLine(message, buf, 'E', Policy.DEFAULT, level, counter);
+			String type = message.getType();
+
+			if ("RemoteCall".equals(type)) {
+				return encodeLogViewLink(message, buf, level, counter);
+			} else {
+				return encodeLine(message, buf, 'E', Policy.DEFAULT, level, counter);
+			}
 		} else if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 			List<Message> children = transaction.getChildren();
@@ -181,6 +222,10 @@ public class HtmlMessageCodec implements MessageCodec {
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
+	}
+
+	public void setLogViewPrefix(String logViewPrefix) {
+		m_logViewPrefix = logViewPrefix;
 	}
 
 	protected static class BufferHelper {
@@ -233,7 +278,7 @@ public class HtmlMessageCodec implements MessageCodec {
 			return td(buf, str, null);
 		}
 
-		public int td(ChannelBuffer buf, String str, String styleClass) {
+		public int td(ChannelBuffer buf, String str, String attributes) {
 			if (str == null) {
 				str = "null";
 			}
@@ -241,11 +286,11 @@ public class HtmlMessageCodec implements MessageCodec {
 			byte[] data = str.getBytes();
 			int count = 0;
 
-			if (styleClass == null) {
+			if (attributes == null) {
 				buf.writeBytes(TD1);
 				count += TD1.length;
 			} else {
-				String tag = "<td class=\"" + styleClass + "\">";
+				String tag = "<td " + attributes + ">";
 				byte[] bytes = tag.getBytes();
 
 				buf.writeBytes(bytes);
@@ -264,6 +309,19 @@ public class HtmlMessageCodec implements MessageCodec {
 		public int td1(ChannelBuffer buf) {
 			buf.writeBytes(TD1);
 			return TD1.length;
+		}
+
+		public int td1(ChannelBuffer buf, String attributes) {
+			if (attributes == null) {
+				buf.writeBytes(TD1);
+				return TD1.length;
+			} else {
+				String tag = "<td " + attributes + ">";
+				byte[] bytes = tag.getBytes();
+
+				buf.writeBytes(bytes);
+				return bytes.length;
+			}
 		}
 
 		public int td2(ChannelBuffer buf) {

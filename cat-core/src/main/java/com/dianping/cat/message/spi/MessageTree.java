@@ -15,7 +15,9 @@ public interface MessageTree extends Cloneable {
 
 	public String getMessageId();
 
-	public String getRequestToken();
+	public String getParentMessageId();
+
+	public String getRootMessageId();
 
 	public String getSessionToken();
 
@@ -33,7 +35,9 @@ public interface MessageTree extends Cloneable {
 
 	public void setMessageId(String messageId);
 
-	public void setRequestToken(String requestToken);
+	public void setParentMessageId(String parentMessageId);
+
+	public void setRootMessageId(String rootMessageId);
 
 	public void setSessionToken(String sessionToken);
 

@@ -16,6 +16,10 @@
 			<artifactId>cat-consumer</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-job</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.site.dal</groupId>
 			<artifactId>dal-xml</artifactId>
 			<version>1.0.0</version>

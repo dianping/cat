@@ -25,12 +25,10 @@ public abstract class CatFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
-		String requestToken = getRequestToken();
 		String sessionToken = req.getSession().getId();
-
 		// setup for thread local data
-		Cat.setup(sessionToken, requestToken);
-
+		Cat.setup(sessionToken);
+		
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("URL", req.getRequestURI());
 
