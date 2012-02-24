@@ -20,7 +20,8 @@ public class BucketTest extends ComponentTestCase {
 		tree.setHostName("hostName");
 		tree.setIpAddress("ipAddress");
 		tree.setMessageId(id);
-		tree.setRequestToken("requestToken");
+		tree.setParentMessageId("parentMessageId");
+		tree.setRootMessageId("rootMessageId");
 		tree.setSessionToken("sessionToken");
 		tree.setThreadId("threadId");
 		tree.setThreadName("threadName");

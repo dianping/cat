@@ -57,6 +57,10 @@ public class Cat {
 	public static MessageProducer getProducer() {
 		return getInstance().m_producer;
 	}
+	
+	public static MessageManager getManager() {
+		return getInstance().m_manager;
+	}
 
 	// this should be called during application initialization time
 	public static void initialize(File configFile) {
@@ -131,8 +135,8 @@ public class Cat {
 
 	// this should be called when a thread starts to create some thread local
 	// data
-	public static void setup(String sessionToken, String requestToken) {
-		getInstance().m_manager.setup(sessionToken, requestToken);
+	public static void setup(String sessionToken) {
+		getInstance().m_manager.setup();
 	}
 
 	void setContainer(PlexusContainer container) {

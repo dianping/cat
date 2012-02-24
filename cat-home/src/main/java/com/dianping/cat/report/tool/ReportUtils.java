@@ -52,27 +52,26 @@ public class ReportUtils {
 
 	public static void mergeTransactionReport(TransactionReport targetReport, TransactionReport mergeReport) {
 		mergeReport.accept(new com.dianping.cat.consumer.transaction.model.transform.DefaultMerger(targetReport) {
-			
+
 			private double std(long count, double ave, double sum2) {
 				return Math.sqrt(sum2 / count - 2 * ave * ave + ave * ave);
 			}
 
-			
 			@Override
 			protected void mergeName(TransactionName old, TransactionName name) {
-				if(old.getId()==null){
+				if (old.getId() == null) {
 					System.out.println("TransactionName old is null");
 					old = name;
-				}
-				else if(name.getId()==null){
+				} else if (name.getId() == null) {
 					System.out.println("TransactionName new is null");
 					return;
 				}
+
 				// TODO Auto-generated method stub
-				//super.mergeName(old, name);
+				// super.mergeName(old, name);
 				old.setTotalCount(old.getTotalCount() + name.getTotalCount());
 				old.setFailCount(old.getFailCount() + name.getFailCount());
-				old.setFailPercent(old.getFailCount()* 100.0 / old.getTotalCount());
+				old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 				double min = name.getMin();
 				if (min < old.getMin()) {
 					old.setMin(min);
@@ -83,11 +82,11 @@ public class ReportUtils {
 					old.setMax(max);
 				}
 
-				old.setSum(old.getSum()+name.getSum());
-				old.setAvg((double)old.getSum()/(double)old.getTotalCount());
-			
-				old.setSum2(old.getSum2()+name.getSum2());
-				
+				old.setSum(old.getSum() + name.getSum());
+				old.setAvg((double) old.getSum() / (double) old.getTotalCount());
+
+				old.setSum2(old.getSum2() + name.getSum2());
+
 				double std = std(old.getTotalCount(), old.getAvg(), old.getSum2());
 				old.setStd(std);
 			}
@@ -96,26 +95,24 @@ public class ReportUtils {
 			protected void mergeTransactionReport(TransactionReport old, TransactionReport transactionReport) {
 				// TODO Auto-generated method stub
 				super.mergeTransactionReport(old, transactionReport);
-				
-				
+
 			}
 
 			@Override
 			protected void mergeType(TransactionType old, TransactionType name) {
-				if(old.getId()==null){
+				if (old.getId() == null) {
 					System.out.println("TransactionType old is null");
 					old = name;
-				}
-				else if(name.getId()==null){
+				} else if (name.getId() == null) {
 					System.out.println("TransactionType new is null");
 					return;
 				}
 				// TODO Auto-generated method stub
-				//super.mergeType(old, type);
-				
+				// super.mergeType(old, type);
+
 				old.setTotalCount(old.getTotalCount() + name.getTotalCount());
 				old.setFailCount(old.getFailCount() + name.getFailCount());
-				old.setFailPercent( old.getFailCount()* 100.0 /  old.getTotalCount());
+				old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 				double min = name.getMin();
 				if (min < old.getMin()) {
 					old.setMin(min);
@@ -126,11 +123,11 @@ public class ReportUtils {
 					old.setMax(max);
 				}
 
-				old.setSum(old.getSum()+name.getSum());
-				old.setAvg((double)old.getSum()/(double)old.getTotalCount());
-			
-				old.setSum2(old.getSum2()+name.getSum2());
-				
+				old.setSum(old.getSum() + name.getSum());
+				old.setAvg((double) old.getSum() / (double) old.getTotalCount());
+
+				old.setSum2(old.getSum2() + name.getSum2());
+
 				double std = std(old.getTotalCount(), old.getAvg(), old.getSum2());
 				old.setStd(std);
 			}

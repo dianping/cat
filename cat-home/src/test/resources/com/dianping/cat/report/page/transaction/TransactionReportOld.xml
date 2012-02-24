@@ -1,7 +1,7 @@
 <transaction-report domain="Cat" startTime="2012-02-16 23:00:00"
 	endTime="2012-02-16 23:59:00">
 	<domain>Cat</domain>
-	<type id="URL" totalCount="11" failCount="0" failPercent="0.00"
+	<type id="URL" totalCount="11" failCount="4" failPercent="0.00"
 		min="1.0" max="193.0" avg="47.1" sum="518.0" sum2="73942.0" std="67.1">
 		<name id="home" totalCount="1" failCount="0" failPercent="0.00"
 			min="175.0" max="175.0" avg="175.0" sum="175.0" sum2="30625.0" std="0.0">
@@ -34,13 +34,13 @@
 			<successmessageurl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successmessageurl>
 		</name>
-		<name id="TransitionPhase" totalCount="11" failCount="0"
+		<name id="TransitionPhase" totalCount="11" failCount="4"
 			failPercent="0.00" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0"
 			std="0.0">
 			<successmessageurl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html
 			</successmessageurl>
 		</name>
-		<name id="OutboundPhase" totalCount="11" failCount="0"
+		<name id="OutboundPhase" totalCount="11" failCount="7"
 			failPercent="0.00" min="1.0" max="191.0" avg="43.8" sum="482.0" sum2="68088.0"
 			std="65.3">
 			<successmessageurl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html

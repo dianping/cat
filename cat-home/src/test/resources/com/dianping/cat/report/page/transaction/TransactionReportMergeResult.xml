@@ -1,6 +1,6 @@
 <transaction-report domain="Cat" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
    <domain>Cat</domain>
-   <type id="URL" totalCount="22" failCount="11" failPercent="50.00" min="0.0" max="194.0" avg="47.1" sum="1036.0" sum2="147884.0" std="67.1">
+   <type id="URL" totalCount="22" failCount="4" failPercent="18.18" min="0.0" max="194.0" avg="47.1" sum="1036.0" sum2="147884.0" std="67.1">
       <name id="home" totalCount="2" failCount="0" failPercent="0.00" min="175.0" max="175.0" avg="175.0" sum="350.0" sum2="61250.0" std="0.0">
       </name>
       <name id="service" totalCount="16" failCount="4" failPercent="25.00" min="1.0" max="58.0" avg="13.0" sum="208.0" sum2="7904.0" std="18.0">
@@ -10,12 +10,12 @@
       <name id="ip" totalCount="2" failCount="0" failPercent="0.00" min="46.0" max="46.0" avg="46.0" sum="92.0" sum2="4232.0" std="0.0">
       </name>
    </type>
-   <type id="MVC" totalCount="66" failCount="44" failPercent="66.67" min="0.0" max="191.0" avg="15.1" sum="998.0" sum2="136754.0" std="42.9">
+   <type id="MVC" totalCount="66" failCount="11" failPercent="16.67" min="0.0" max="191.0" avg="15.1" sum="998.0" sum2="136754.0" std="42.9">
       <name id="InboundPhase" totalCount="22" failCount="0" failPercent="0.00" min="0.0" max="17.0" avg="1.5" sum="34.0" sum2="578.0" std="4.9">
       </name>
-      <name id="TransitionPhase" totalCount="22" failCount="0" failPercent="0.00" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0" std="0.0">
+      <name id="TransitionPhase" totalCount="22" failCount="4" failPercent="18.18" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0" std="0.0">
       </name>
-      <name id="OutboundPhase" totalCount="22" failCount="0" failPercent="0.00" min="1.0" max="191.0" avg="43.8" sum="964.0" sum2="136176.0" std="65.3">
+      <name id="OutboundPhase" totalCount="22" failCount="7" failPercent="31.82" min="1.0" max="191.0" avg="43.8" sum="964.0" sum2="136176.0" std="65.3">
       </name>
    </type>
    <type id="OLD1" totalCount="33" failCount="0" failPercent="0.00" min="0.0" max="191.0" avg="15.1" sum="499.0" sum2="68377.0" std="42.9">

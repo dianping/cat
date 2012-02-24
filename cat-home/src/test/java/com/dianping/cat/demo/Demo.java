@@ -27,7 +27,7 @@ public class Demo extends ComponentTestCase {
 			Cat.initialize(getContainer(), configFile);
 		}
 
-		Cat.setup(null, null);
+		Cat.setup(null);
 	}
 
 	@After

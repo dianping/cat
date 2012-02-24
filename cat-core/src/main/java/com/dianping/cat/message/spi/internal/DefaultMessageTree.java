@@ -18,7 +18,9 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_messageId;
 
-	private String m_requestToken;
+	private String m_parentMessageId;
+
+	private String m_rootMessageId;
 
 	private String m_sessionToken;
 
@@ -31,18 +33,39 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public DefaultMessageTree copy() {
 		DefaultMessageTree tree = new DefaultMessageTree();
-		
+
 		tree.setDomain(m_domain);
 		tree.setHostName(m_hostName);
 		tree.setIpAddress(m_ipAddress);
 		tree.setMessageId(m_messageId);
-		tree.setRequestToken(m_requestToken);
+		tree.setParentMessageId(m_parentMessageId);
+		tree.setRootMessageId(m_rootMessageId);
 		tree.setSessionToken(m_sessionToken);
 		tree.setThreadId(m_threadId);
 		tree.setThreadName(m_threadName);
 		tree.setMessage(m_message);
-		
+
 		return tree;
+	}
+
+	@Override
+	public String getParentMessageId() {
+		return m_parentMessageId;
+	}
+
+	@Override
+	public void setParentMessageId(String parentMessageId) {
+		m_parentMessageId = parentMessageId;
+	}
+
+	@Override
+	public String getRootMessageId() {
+		return m_rootMessageId;
+	}
+
+	@Override
+	public void setRootMessageId(String rootMessageId) {
+		m_rootMessageId = rootMessageId;
 	}
 
 	@Override
@@ -68,11 +91,6 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public String getMessageId() {
 		return m_messageId;
-	}
-
-	@Override
-	public String getRequestToken() {
-		return m_requestToken;
 	}
 
 	@Override
@@ -112,11 +130,6 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public void setMessageId(String messageId) {
 		m_messageId = messageId;
-	}
-
-	@Override
-	public void setRequestToken(String requestToken) {
-		m_requestToken = requestToken;
 	}
 
 	@Override

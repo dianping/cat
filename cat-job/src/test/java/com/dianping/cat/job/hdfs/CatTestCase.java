@@ -10,7 +10,7 @@ public abstract class CatTestCase extends ComponentTestCase {
 	@Before
 	public void before() throws Exception {
 		Cat.initialize(getContainer(), null);
-		Cat.setup(null, null);
+		Cat.setup(null);
 	}
 
 	@After
