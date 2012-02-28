@@ -28,7 +28,7 @@ public abstract class CatFilter implements Filter {
 		String sessionToken = req.getSession().getId();
 		// setup for thread local data
 		Cat.setup(sessionToken);
-				
+		System.out.println("----------------Cat Filter init----------------");
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("URL", req.getRequestURI());
 
@@ -53,6 +53,7 @@ public abstract class CatFilter implements Filter {
 		} finally {
 			t.complete();
 
+			System.out.println("----------------Cat Filter End----------------");
 			// reset thread local data
 			Cat.reset();
 		}

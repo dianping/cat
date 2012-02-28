@@ -119,6 +119,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void consume(MessageTree tree) {
+		if(!tree.getDomain().equalsIgnoreCase("Cat")){
+			System.out.println(tree);
+		}
 		if (!isInDomain(tree))
 			return;
 

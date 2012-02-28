@@ -130,13 +130,19 @@ public class Cat {
 
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
-		getInstance().m_initialized = false;
+		System.out.println("Cat Reset>>>>>>>>>>> Id:"+ Thread.currentThread().getId() +" "+Thread.currentThread().getName() );
 		getInstance().m_manager.reset();
 	}
 
 	// this should be called when a thread starts to create some thread local
 	// data
 	public static void setup(String sessionToken) {
+		StackTraceElement element = new Exception().getStackTrace()[1];
+		
+		System.out.println(element.getClassName()+":"+element.getLineNumber());
+		
+		System.out.println("Cat Set>>>>>>>>>>> Id:"+ Thread.currentThread().getId() +" "+Thread.currentThread().getName() );
+		
 		MessageManager manager = getInstance().m_manager;
 		
 		manager.setup();
