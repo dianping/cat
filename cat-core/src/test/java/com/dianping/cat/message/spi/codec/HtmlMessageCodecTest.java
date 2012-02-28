@@ -191,7 +191,7 @@ public class HtmlMessageCodecTest {
 		            + "<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;E15:33:42.009</td><td>CacheHost</td><td>host-1</td><td>0</td><td>ip=192.168.8.123</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;T15:33:42.010</td><td>Cache</td><td>findReviewByPK</td><td class=\"error\">Missing</td><td>1ms 2468</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.010</td><td>Service</td><td>ReviewService</td><td>0</td><td>request data</td></tr>\r\n"
-		            + "<tr><td>&nbsp;&nbsp;<a href=\"/cat/m/20120227/15/domain1/domain1-c0a83f99-135bdb7825c-1.html\" onclick=\"show(this,1677274581);return false;\">[:: show ::]</a></td><td colspan=\"4\"><div id=\"1677274581\"></div></td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;<a href=\"/cat/r/m/20120227/15/domain1/domain1-c0a83f99-135bdb7825c-1.html\" onclick=\"return show(this,1677274581);\">[:: show ::]</a></td><td colspan=\"4\"><div id=\"1677274581\"></div></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;A15:33:42.012</td><td>DAL</td><td>findReviewByPK</td><td>0</td><td>5ms select title,content from Review where id = ?</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.027</td><td>URL</td><td>View</td><td>0</td><td>view=HTML</td></tr>\r\n"
 		            + "<tr><td>T15:33:42.087</td><td>URL</td><td>Review</td><td>0</td><td>100ms /review/2468</td></tr>\r\n");

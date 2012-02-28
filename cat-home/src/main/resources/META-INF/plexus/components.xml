@@ -18,7 +18,7 @@
 			<role>com.dianping.cat.report.ServerConfig</role>
 			<implementation>com.dianping.cat.report.ServerConfig</implementation>
 			<configuration>
-				<consumerServers>127.0.0.1:2281,127.0.0.1:2281</consumerServers>
+				<consumerServers>127.0.0.1:2281</consumerServers>
 				<fileServer>127.0.0.1</fileServer>
 			</configuration>
 		</component>

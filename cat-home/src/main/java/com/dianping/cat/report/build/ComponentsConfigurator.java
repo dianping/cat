@@ -33,7 +33,7 @@ public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
 		}
 
 		all.add(C(ServerConfig.class)//
-		      .config(E("consumerServers").value("127.0.0.1:2281,127.0.0.1:2281"))//
+		      .config(E("consumerServers").value("127.0.0.1:2281"))//
 		      .config(E("fileServer").value("127.0.0.1")));
 
 		all.add(C(ModelProvider.class, "failure", FailureModelProvider.class).req(MessageConsumer.class, "realtime"));
