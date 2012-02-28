@@ -57,7 +57,7 @@ public class Cat {
 	public static MessageProducer getProducer() {
 		return getInstance().m_producer;
 	}
-	
+
 	public static MessageManager getManager() {
 		return getInstance().m_manager;
 	}
@@ -144,7 +144,7 @@ public class Cat {
 		System.out.println("Cat Set>>>>>>>>>>> Id:"+ Thread.currentThread().getId() +" "+Thread.currentThread().getName() );
 		
 		MessageManager manager = getInstance().m_manager;
-		
+
 		manager.setup();
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
 	}

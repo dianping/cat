@@ -25,7 +25,6 @@ public class HtmlMessageCodecTest {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
 		codec.setBufferWriter(new HtmlEncodingBufferWriter());
-		codec.setLogViewPrefix("/cat/m/");
 		codec.encodeMessage(message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 

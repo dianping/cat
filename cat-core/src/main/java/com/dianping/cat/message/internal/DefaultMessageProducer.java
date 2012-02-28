@@ -15,6 +15,11 @@ public class DefaultMessageProducer implements MessageProducer {
 	private MessageManager m_manager;
 
 	@Override
+   public String createMessageId() {
+		return m_manager.createMessageId();
+   }
+
+	@Override
 	public void logError(Throwable cause) {
 		StringWriter writer = new StringWriter(2048);
 
