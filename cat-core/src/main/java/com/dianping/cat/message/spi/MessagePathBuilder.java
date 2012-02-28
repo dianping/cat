@@ -11,4 +11,6 @@ public interface MessagePathBuilder {
 	public URL getLogViewBaseUrl();
 
 	public String getLogViewPath(MessageTree tree);
+
+	public String getLogViewPath(String messageId);
 }

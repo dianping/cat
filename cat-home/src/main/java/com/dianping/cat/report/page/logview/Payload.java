@@ -12,35 +12,22 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
+	@FieldMeta("header")
+	private boolean m_showHeader = true;
+
 	@FieldMeta("id")
 	private int m_identifier;
 
 	@PathMeta("path")
 	private String[] m_path;
 
-	public void setAction(Action action) {
-		m_action = action;
-	}
-
-	public int getIdentifier() {
-		return m_identifier;
-	}
-
-	public void setIdentifier(int identifier) {
-		m_identifier = identifier;
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
 	}
 
-	public String[] getPath() {
-		return m_path;
-	}
-
-	public void setPath(String[] path) {
-		m_path = path;
+	public int getIdentifier() {
+		return m_identifier;
 	}
 
 	@Override
@@ -48,9 +35,33 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_page;
 	}
 
+	public String[] getPath() {
+		return m_path;
+	}
+
+	public boolean isShowHeader() {
+		return m_showHeader;
+	}
+
+	public void setAction(Action action) {
+		m_action = action;
+	}
+
+	public void setIdentifier(int identifier) {
+		m_identifier = identifier;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.LOGVIEW);
+	}
+
+	public void setPath(String[] path) {
+		m_path = path;
+	}
+
+	public void setShowHeader(String showHeader) {
+		m_showHeader = !"no".equals(showHeader);
 	}
 
 	@Override

@@ -7,10 +7,15 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 	@Override
 	protected String getJspFilePath(Context ctx, Model model) {
 		Action action = model.getAction();
+		Payload payload = ctx.getPayload();
 
 		switch (action) {
 		case VIEW:
-			return JspFile.VIEW.getPath();
+			if (payload.isShowHeader()) {
+				return JspFile.LOGVIEW.getPath();
+			} else {
+				return JspFile.LOGVIEW_NO_HEADER.getPath();
+			}
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

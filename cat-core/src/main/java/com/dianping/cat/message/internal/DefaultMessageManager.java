@@ -3,7 +3,6 @@ package com.dianping.cat.message.internal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Stack;
-import java.util.UUID;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -20,6 +19,8 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ContainerHolder;
 
 public class DefaultMessageManager extends ContainerHolder implements MessageManager, LogEnabled {
+	private MessageIdFactory m_factory;
+
 	private TransportManager m_manager;
 
 	// we don't use static modifier since MessageManager is a singleton in
@@ -54,7 +55,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public String createMessageId() {
-		return UUID.randomUUID().toString(); // TODO
+		return m_factory.getNextId();
 	}
 
 	@Override
@@ -128,6 +129,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		m_manager = lookup(TransportManager.class);
+		m_factory = lookup(MessageIdFactory.class);
+
+		// initialize milli second resolution level timer
+		MilliSecondTimer.initialize();
 	}
 
 	@Override
@@ -181,8 +186,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			if (m_stack.isEmpty()) {
 				MessageTree tree = m_tree.copy();
 
-				tree.setMessage(message);
 				tree.setMessageId(manager.createMessageId());
+				tree.setMessage(message);
 				manager.flush(tree);
 			} else {
 				Transaction entry = m_stack.peek();
@@ -206,6 +211,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				if (m_stack.isEmpty()) {
 					MessageTree tree = m_tree.copy();
 
+					m_tree.setMessageId(null);
 					m_tree.setMessage(null);
 					manager.flush(tree);
 				}

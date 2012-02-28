@@ -6,6 +6,7 @@ import java.util.List;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
+import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.io.DefaultTransportManager;
 import com.dianping.cat.message.io.InMemoryQueue;
 import com.dianping.cat.message.io.InMemoryReceiver;
@@ -58,6 +59,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageManager.class, DefaultMessageManager.class));
 		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
 		      .req(MessageManager.class));
+		all.add(C(MessageIdFactory.class) //
+		      .req(MessageManager.class));
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
 		      .req(MessageManager.class));
 		all.add(C(MessageStorage.class, "html", DefaultMessageStorage.class) //
@@ -70,6 +73,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageCodec.class, "plain-text", PlainTextMessageCodec.class) //
 		      .req(BufferWriter.class, "escape"));
 		all.add(C(MessageCodec.class, "html", HtmlMessageCodec.class) //
+		      .req(MessagePathBuilder.class) //
 		      .req(BufferWriter.class, "html-encode"));
 
 		all.add(C(MessageConsumer.class, DummyConsumer.ID, DummyConsumer.class));

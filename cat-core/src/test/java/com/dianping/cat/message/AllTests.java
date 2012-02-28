@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.message.configuration.ConfigTest;
+import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MessageProducerTest;
 import com.dianping.cat.message.internal.MillisSecondTimerTest;
 import com.dianping.cat.message.io.InMemoryTest;
@@ -26,6 +27,8 @@ TransactionTest.class,
 ConfigTest.class,
 
 /* .internal */
+MessageIdFactoryTest.class,
+
 MessageProducerTest.class,
 
 MillisSecondTimerTest.class,

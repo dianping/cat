@@ -15,6 +15,7 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.StringRope;
 import com.site.lookup.annotation.Inject;
@@ -30,11 +31,21 @@ public class HtmlMessageCodec implements MessageCodec {
 	private BufferWriter m_writer;
 
 	@Inject
-	private String m_logViewPrefix = "/cat/m/";
+	private MessagePathBuilder m_builder;
+
+	@Inject
+	private String m_logViewPrefix = "/cat/r/m/";
 
 	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
 
 	private DateHelper m_dateHelper = new DateHelper();
+
+	protected String buildLink(Message message) {
+		String messageId = message.getData().toString();
+		String path = m_builder.getLogViewPath(messageId);
+
+		return path;
+	}
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
@@ -150,6 +161,28 @@ public class HtmlMessageCodec implements MessageCodec {
 		return count;
 	}
 
+	//<style>
+	//.nested {
+	//width:100%;
+	//display:none;
+	//}
+	//</style>
+	//
+	//<script>
+	//function show(a,id) {
+	//	var cell = document.getElementById(id);
+	//	var text = a.innerHTML;
+	//	
+	//	if (text == '[:: show ::]') {
+	//		a.innerHTML = '[:: hide ::]';
+	//		cell.src = "file:///Users/qmwu/project/tracking/cat-core/target/test.html";
+	//		cell.style.display='block';
+	//	} else {
+	//		a.innerHTML = '[:: show ::]';
+	//		cell.style.display='none';
+	//	}
+	//}
+	//</script>
 	protected int encodeLogViewLink(Message message, ChannelBuffer buf, int level, LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
@@ -162,17 +195,17 @@ public class HtmlMessageCodec implements MessageCodec {
 			count += helper.tr1(buf, null);
 		}
 
-		String link = message.getData().toString();
+		String link = buildLink(message);
 		int id = Math.abs(link.hashCode());
 
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"show(%s);return false;\">[:: show ::]</a>",
+		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,%s);\">[:: show ::]</a>",
 		      m_logViewPrefix, link, id));
 		count += helper.td2(buf);
 
-		count += helper.td(buf, "", "colspan=\"4\" id=\"" + id + "\"");
+		count += helper.td(buf, "<div id=\"" + id + "\"></div>", "colspan=\"4\"");
 
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);
@@ -226,6 +259,10 @@ public class HtmlMessageCodec implements MessageCodec {
 
 	public void setLogViewPrefix(String logViewPrefix) {
 		m_logViewPrefix = logViewPrefix;
+	}
+
+	public void setMessagePathBuilder(MessagePathBuilder builder) {
+		m_builder = builder;
 	}
 
 	protected static class BufferHelper {

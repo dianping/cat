@@ -17,18 +17,19 @@ public class GsonTest {
 		Assert.assertEquals(expected, actual);
 	}
 
-	private Map<String, Pojo> mapOfPojo() {
-		Map<String, Pojo> map = new HashMap<String, Pojo>();
+	private Map<String, Object> map(Object forth) {
+		Map<String, Object> map = new HashMap<String, Object>();
 
 		map.put("first", new Pojo(1, "x"));
 		map.put("second", new Pojo(2, "y"));
 		map.put("third", new Pojo(3, "z"));
+		map.put("forth", forth);
 
 		return map;
 	}
 
 	@Test
-	public void test() {
+	public void testSame() {
 		check(null, "");
 		check(1, "1");
 		check(1.2, "1.2");
@@ -37,16 +38,19 @@ public class GsonTest {
 		check(new String[] { "x", "y" }, "[\"x\",\"y\"]");
 		check(new Pojo(3, null), "{\"x\":3}");
 		check(new Pojo(3, "a"), "{\"x\":3,\"y\":\"a\"}");
-		check(mapOfPojo(), "{\"second\":{\"x\":2,\"y\":\"y\"}," + //
-		      "\"third\":{\"x\":3,\"y\":\"z\"}," + //
-		      "\"first\":{\"x\":1,\"y\":\"x\"}}");
+		check(map(null),
+		      "{\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}}");
+		check(map(map(map(null))), //
+		      "{\"forth\":{\"forth\":{\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}},\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}},\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}}");
 	}
 
 	@Test
 	@Ignore
-	public void testOther() {
+	public void testNotSame() {
 		check(new Date(1330079278861L), "\"2012-02-24 18:27:58\"");
 		check(Date.class, "\"class java.util.Date\"");
+		check(new Object[] { "x", "y", new Object[] { 1, 2.3, true, map(null) } }, //
+				"[\"x\",\"y\",[1,2.3,true,{\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}}]]");
 	}
 
 	public static class Pojo {

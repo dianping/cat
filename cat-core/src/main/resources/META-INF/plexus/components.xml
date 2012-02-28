@@ -38,6 +38,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.internal.MessageIdFactory</role>
+			<implementation>com.dianping.cat.message.internal.MessageIdFactory</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 			<implementation>com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder</implementation>
 			<requirements>
@@ -86,6 +95,9 @@
 			<role-hint>html</role-hint>
 			<implementation>com.dianping.cat.message.spi.codec.HtmlMessageCodec</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
 					<role-hint>html-encode</role-hint>

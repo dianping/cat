@@ -1,3 +1,7 @@
+.logview {
+	width: auto;
+}
+
 tr.odd td {
 	background-color: #eee;
 	font-size: small;

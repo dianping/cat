@@ -6,7 +6,10 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -14,15 +17,18 @@ import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable {
+public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable, LogEnabled {
 	@Inject
 	private MessageManager m_manager;
 
 	private File m_baseLogDir;
 
 	private URL m_baseLogUrl;
+
+	private Logger m_logger;
 
 	@Override
 	public String getHdfsPath(MessageTree tree, String host) {
@@ -50,6 +56,26 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 		String path = format.format(new Object[] { date, tree.getDomain(), tree.getMessageId() });
 
 		return path;
+	}
+
+	@Override
+	public String getLogViewPath(String messageId) {
+		List<String> parts = Splitters.by('-').split(messageId);
+
+		if (parts.size() == 4) {
+			try {
+				String domain = parts.get(0);
+				long timestamp = Long.parseLong(parts.get(2), 16);
+				MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{2}.html");
+				String path = format.format(new Object[] { new Date(timestamp), domain, messageId });
+
+				return path;
+			} catch (Exception e) {
+				m_logger.error("Invalid message id format: " + messageId, e);
+			}
+		}
+
+		return messageId;
 	}
 
 	@Override
@@ -87,5 +113,10 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 	public void setBaseLogUrl(URL baseLogUrl) {
 		m_baseLogUrl = baseLogUrl;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

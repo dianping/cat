@@ -17,6 +17,7 @@ import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class HtmlMessageCodecTest {
@@ -25,6 +26,7 @@ public class HtmlMessageCodecTest {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
 		codec.setBufferWriter(new HtmlEncodingBufferWriter());
+		codec.setMessagePathBuilder(new DefaultMessagePathBuilder());
 		codec.encodeMessage(message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
@@ -36,6 +38,7 @@ public class HtmlMessageCodecTest {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
 		codec.setBufferWriter(new HtmlEncodingBufferWriter());
+		codec.setMessagePathBuilder(new DefaultMessagePathBuilder());
 		codec.encode(tree, buf);
 		buf.readInt(); // get rid of length
 		String actual = buf.toString(Charset.forName("utf-8"));
@@ -174,8 +177,8 @@ public class HtmlMessageCodecTest {
 		root.addChild(newTransaction("Service", "Auth", timestamp, "0", 20, "userId=1357&token=..."));
 		root.addChild(newTransaction("Cache", "findReviewByPK", timestamp + 22, "Missing", 1, "2468") //
 		      .addChild(newEvent("CacheHost", "host-1", timestamp + 22, "0", "ip=192.168.8.123")));
-		root.addChild(newEvent("Service", "ReviewService", timestamp + 23, "0", "message_id"));
-		root.addChild(newEvent("RemoteCall", "Pigeon", timestamp + 23, "0", "message_id"));
+		root.addChild(newEvent("Service", "ReviewService", timestamp + 23, "0", "request data"));
+		root.addChild(newEvent("RemoteCall", "Pigeon", timestamp + 23, "0", "domain1-c0a83f99-135bdb7825c-1"));
 		root.addChild(newTransaction("DAL", "findReviewByPK", timestamp + 25, "0", 5,
 		      "select title,content from Review where id = ?"));
 		root.addChild(newEvent("URL", "View", timestamp + 40, "0", "view=HTML"));
@@ -187,8 +190,8 @@ public class HtmlMessageCodecTest {
 		            + "<tr><td>&nbsp;&nbsp;t15:33:42.009</td><td>Cache</td><td>findReviewByPK</td><td></td><td></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;E15:33:42.009</td><td>CacheHost</td><td>host-1</td><td>0</td><td>ip=192.168.8.123</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;T15:33:42.010</td><td>Cache</td><td>findReviewByPK</td><td class=\"error\">Missing</td><td>1ms 2468</td></tr>\r\n"
-		            + "<tr><td>&nbsp;&nbsp;E15:33:42.010</td><td>Service</td><td>ReviewService</td><td>0</td><td>message_id</td></tr>\r\n"
-		            + "<tr><td>&nbsp;&nbsp;<a href=\"/cat/m/message_id\" onclick=\"show(1690722221);return false;\">[:: show ::]</a></td><td colspan=\"4\" id=\"1690722221\"></td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;E15:33:42.010</td><td>Service</td><td>ReviewService</td><td>0</td><td>request data</td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;<a href=\"/cat/m/20120227/15/domain1/domain1-c0a83f99-135bdb7825c-1.html\" onclick=\"show(this,1677274581);return false;\">[:: show ::]</a></td><td colspan=\"4\"><div id=\"1677274581\"></div></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;A15:33:42.012</td><td>DAL</td><td>findReviewByPK</td><td>0</td><td>5ms select title,content from Review where id = ?</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.027</td><td>URL</td><td>View</td><td>0</td><td>view=HTML</td></tr>\r\n"
 		            + "<tr><td>T15:33:42.087</td><td>URL</td><td>Review</td><td>0</td><td>100ms /review/2468</td></tr>\r\n");
