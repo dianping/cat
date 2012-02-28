@@ -12,7 +12,6 @@
 	var domain = '${model.currentDomain}';
 </script>
 
-<res:useCss value='${res.css.local.default_css}' target="head-css" />
 <res:useCss value='${res.css.local.style_css}' target="head-css" />
 <res:useCss value='${res.css.local.failure_css}' target="head-css" />
 

@@ -6,7 +6,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.failure.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.failure.Model" scope="request" />
 
-<res:useCss value='${res.css.local.default_css}' target="head-css" />
 <res:useCss value='${res.css.local.style_css}' target="head-css" />
 <res:useCss value='${res.css.local.failure_css}' target="head-css" />
 

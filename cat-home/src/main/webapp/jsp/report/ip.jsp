@@ -6,8 +6,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.ip.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.ip.Model" scope="request" />
 
-<res:useCss value='${res.css.local.default_css}' target="head-css" />
-<res:useCss value='${res.css.local.style_css}' target="head-css" />
 <res:useCss value='${res.css.local.ip_css}' target="head-css"/>
 
 <a:report title="Hot IP Report" timestamp="2012-02-07">

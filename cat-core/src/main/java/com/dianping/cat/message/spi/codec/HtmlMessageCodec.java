@@ -161,28 +161,6 @@ public class HtmlMessageCodec implements MessageCodec {
 		return count;
 	}
 
-	//<style>
-	//.nested {
-	//width:100%;
-	//display:none;
-	//}
-	//</style>
-	//
-	//<script>
-	//function show(a,id) {
-	//	var cell = document.getElementById(id);
-	//	var text = a.innerHTML;
-	//	
-	//	if (text == '[:: show ::]') {
-	//		a.innerHTML = '[:: hide ::]';
-	//		cell.src = "file:///Users/qmwu/project/tracking/cat-core/target/test.html";
-	//		cell.style.display='block';
-	//	} else {
-	//		a.innerHTML = '[:: show ::]';
-	//		cell.style.display='none';
-	//	}
-	//}
-	//</script>
 	protected int encodeLogViewLink(Message message, ChannelBuffer buf, int level, LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
@@ -190,7 +168,7 @@ public class HtmlMessageCodec implements MessageCodec {
 		if (counter != null) {
 			counter.inc();
 
-			count += helper.tr1(buf, counter.getCount() % 2 != 0 ? "odd" : "even");
+			count += helper.tr1(buf, "link");
 		} else {
 			count += helper.tr1(buf, null);
 		}
