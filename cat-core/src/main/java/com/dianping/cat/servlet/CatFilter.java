@@ -28,7 +28,6 @@ public abstract class CatFilter implements Filter {
 		String sessionToken = req.getSession().getId();
 		// setup for thread local data
 		Cat.setup(sessionToken);
-		System.out.println("----------------Cat Filter init----------------");
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("URL", req.getRequestURI());
 
@@ -40,21 +39,15 @@ public abstract class CatFilter implements Filter {
 			chain.doFilter(request, response);
 		} catch (ServletException e) {
 			t.setStatus(e);
-
 			throw e;
 		} catch (IOException e) {
 			t.setStatus(e);
-
 			throw e;
 		} catch (RuntimeException e) {
 			t.setStatus(e);
-
 			throw e;
 		} finally {
 			t.complete();
-
-			System.out.println("----------------Cat Filter End----------------");
-			// reset thread local data
 			Cat.reset();
 		}
 	}
