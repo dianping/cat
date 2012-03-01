@@ -49,8 +49,13 @@ public class TransactionModelProvider implements ModelProvider {
 		} else if (index.equals(Constants.MEMORY_LAST)) {
 			analyzer = (TransactionReportAnalyzer) m_consumer.getLastAnalyzer("transaction");
 		}
+		TransactionReport report;
 		
-		TransactionReport report = analyzer.generate(domain);
+		if (analyzer == null) {
+			report = new TransactionReport(domain);
+		} else {
+			report = analyzer.generate(domain);
+		}
 		return new DefaultXmlBuilder().buildXml(report);
 	}
 
