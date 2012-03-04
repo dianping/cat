@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.failure.FailureReportAnalyzer.FailureHandler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.LongUrlHandler;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageManager;
@@ -52,6 +53,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TransactionReportAnalyzer.class).is(PER_LOOKUP) //
 		      .req(MessageManager.class) //
 		      .config(E("reportPath").value("target/report/transaction/")).req(MessageStorage.class, "html"));
+		
+		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
+				.req(MessageManager.class) //
+				.config(E("reportPath").value("target/report/transaction/")).req(MessageStorage.class, "html"));
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
 

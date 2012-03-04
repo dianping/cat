@@ -64,13 +64,15 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 	}
 
 	public IpReport generate(String domain) {
-		if (domain != null) {
-			IpReport report = m_reports.get(domain);
+		if (domain == null) {
+			List<String> domains = getDomains();
 
-			return report;
-		} else {
-			return null;
+			domain = domains.size() > 0 ? domains.get(0) : null;
 		}
+
+		IpReport report = m_reports.get(domain);
+
+		return report;
 	}
 
 	private String getIpAddress(Transaction root) {

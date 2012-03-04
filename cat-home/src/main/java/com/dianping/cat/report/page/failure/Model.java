@@ -3,11 +3,10 @@ package com.dianping.cat.report.page.failure;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.UrlNav;
-import com.site.web.mvc.ViewModel;
 
-public class Model extends ViewModel<ReportPage, Action, Context> {
+public class Model extends AbstractReportModel<Action, Context> {
 	private String m_current;
 
 	private String m_currentDomain;
@@ -21,7 +20,7 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	private String m_jsonResult;
 
 	private String m_reportTitle;
-	
+
 	private String m_generateTime;
 
 	private String m_urlPrefix;
@@ -31,7 +30,7 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public Model(Context ctx) {
 		super(ctx);
 		m_urlNavs = new ArrayList<UrlNav>();
-		for(UrlNav temp: UrlNav.values()){
+		for (UrlNav temp : UrlNav.values()) {
 			m_urlNavs.add(temp);
 		}
 	}
@@ -110,19 +109,19 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	}
 
 	public List<UrlNav> getUrlNavs() {
-   	return m_urlNavs;
-   }
+		return m_urlNavs;
+	}
 
 	public void setUrlNavs(List<UrlNav> urlNavs) {
-   	this.m_urlNavs = urlNavs;
-   }
+		this.m_urlNavs = urlNavs;
+	}
 
 	public String getGenerateTime() {
-   	return m_generateTime;
-   }
+		return m_generateTime;
+	}
 
 	public void setGenerateTime(String generateTime) {
-   	m_generateTime = generateTime;
-   }
+		m_generateTime = generateTime;
+	}
 
 }

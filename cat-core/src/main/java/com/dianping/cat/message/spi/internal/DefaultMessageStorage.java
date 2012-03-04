@@ -51,6 +51,13 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 	}
 
 	@Override
+	public String getPath(MessageTree tree) {
+		String path = m_builder.getLogViewPath(tree);
+
+		return path;
+	}
+
+	@Override
 	public String store(MessageTree tree) {
 		String path = m_builder.getLogViewPath(tree);
 

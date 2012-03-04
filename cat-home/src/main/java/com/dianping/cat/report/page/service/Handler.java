@@ -19,7 +19,6 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
-
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -32,7 +31,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelProvider.class, value = "ip")
 	private ModelProvider m_ipModel;
 
-	
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "service")
@@ -48,6 +46,7 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.SERVICE);
+
 		String index = payload.getIndex();
 		String modelStr = payload.getModel();
 		String domain = payload.getDomain();

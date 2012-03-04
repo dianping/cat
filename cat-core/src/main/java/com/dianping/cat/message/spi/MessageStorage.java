@@ -9,4 +9,12 @@ public interface MessageStorage {
 	 * @return relative path to base directory or base URL
 	 */
 	public String store(MessageTree tree);
+
+	/**
+	 * Get relative path to base directory or base URL.
+	 * 
+	 * @param tree
+	 * @return relative path to base directory or base URL
+	 */
+	public String getPath(MessageTree tree);
 }

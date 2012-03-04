@@ -7,7 +7,7 @@ import org.unidal.webres.helper.Files;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
-import com.dianping.cat.report.page.transaction.TransactionReportMerger;
+import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 
 public class TransactionReportMergerTest {
 	@Test

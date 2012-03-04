@@ -1,114 +1,88 @@
 package com.dianping.cat.report.page.transaction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Set;
 
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.UrlNav;
 import com.site.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
-	private String m_current;
+	private TransactionReport m_report;
 
-	private String m_currentDomain;
-
-	private List<String> m_domains;
-	
-	private String m_jsonResult;
-	
-	private String m_reportTitle;
-	
-	private String m_generateTime;
-	
 	private String m_type;
-	
-	private String m_urlPrefix;
 
-	private List<UrlNav> m_urlNavs;
+	private Throwable m_exception;
+
+	private String m_graph;
 
 	public Model(Context ctx) {
 		super(ctx);
-		m_urlNavs = new ArrayList<UrlNav>();
-		for(UrlNav temp: UrlNav.values()){
-			m_urlNavs.add(temp);
-		}
 	}
 
-	public String getCurrent() {
-   	return m_current;
-   }
+	public String getBaseUri() {
+		return buildPageUri(getPage().getPath(), null);
+	}
 
-	public String getUrlPrefix() {
-   	return m_urlPrefix;
-   }
-
-	public void setUrlPrefix(String urlPrefix) {
-   	m_urlPrefix = urlPrefix;
-   }
-
-	public List<UrlNav> getUrlNavs() {
-   	return m_urlNavs;
-   }
-
-	public void setUrlNavs(List<UrlNav> urlNavs) {
-   	this.m_urlNavs = urlNavs;
-   }
-
-	public String getCurrentDomain() {
-   	return m_currentDomain;
-   }
+	// required by report tag
+	public Date getCurrentTime() {
+		return new Date();
+	}
 
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
 	}
 
-	public List<String> getDomains() {
-		return m_domains;
+	// required by report tag
+	public Set<String> getDomains() {
+		if (m_report == null) {
+			return Collections.emptySet();
+		} else {
+			return m_report.getDomains();
+		}
 	}
 
-	public String getJsonResult() {
-   	return m_jsonResult;
-   }
+	public Throwable getException() {
+		return m_exception;
+	}
 
-	public String getReportTitle() {
-   	return m_reportTitle;
-   }
+	public String getGraph() {
+		return m_graph;
+	}
+
+	public String getLogViewBaseUri() {
+		return buildPageUri(ReportPage.LOGVIEW.getPath(), null);
+	}
+
+	// required by report tag
+	public UrlNav[] getNavs() {
+		return UrlNav.values();
+	}
+
+	public TransactionReport getReport() {
+		return m_report;
+	}
 
 	public String getType() {
 		return m_type;
 	}
 
-	public void setCurrent(String current) {
-   	m_current = current;
-   }
-
-	public void setCurrentDomain(String currentDomain) {
-   	m_currentDomain = currentDomain;
-   }
-
-	public void setDomains(List<String> domains) {
-		this.m_domains = domains;
+	public void setException(Throwable exception) {
+		m_exception = exception;
 	}
 
-	public void setJsonResult(String jsonResult) {
-   	m_jsonResult = jsonResult;
-   }
+	public void setGraph(String graph) {
+		m_graph = graph;
+	}
 
-	public void setReportTitle(String reportTitle) {
-   	m_reportTitle = reportTitle;
-   }
+	public void setReport(TransactionReport report) {
+		m_report = report;
+	}
 
 	public void setType(String type) {
-		this.m_type = type;
+		m_type = type;
 	}
-
-	public String getGenerateTime() {
-   	return m_generateTime;
-   }
-
-	public void setGenerateTime(String generateTime) {
-   	m_generateTime = generateTime;
-   }
-	
 }

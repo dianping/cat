@@ -54,6 +54,12 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 	}
 
 	@Override
+   public String getPath(MessageTree tree) {
+		// TODO fix it
+	   return null;
+   }
+
+	@Override
 	public String store(MessageTree tree) {
 		m_job.append(tree);
 

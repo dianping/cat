@@ -2,6 +2,10 @@ package com.dianping.cat.report.page.transaction;
 
 public enum JspFile {
 	VIEW("/jsp/report/transaction.jsp"),
+	
+	GRAPHS("/jsp/report/transaction_graphs.jsp"),
+	
+	GRAPH("/jsp/report/transaction_graph.jsp"),
 
 	;
 

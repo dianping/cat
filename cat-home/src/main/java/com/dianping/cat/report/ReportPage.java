@@ -15,7 +15,9 @@ public enum ReportPage implements Page {
 
    IP("ip", "ip", "Top IP List", "Top visited IP list in current hour.", true),
 
-   SERVICE("service", "service", "Service", "Service Home", true);
+   SERVICE("service", "service", "Service", "Service Home", false),
+
+   MODEL("model", "model", "Model", "Model Service", false);
 
    private String m_name;
 

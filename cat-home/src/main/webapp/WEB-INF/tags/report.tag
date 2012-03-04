@@ -13,8 +13,8 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">${title}  &nbsp;${model.reportTitle}</td>
-			<td class="timestamp">Generated: ${model.generateTime}</td>
+			<td class="title">${title}</td>
+			<td class="timestamp">Generated: ${timestamp}</td>
 		</tr>
 	</table>
 
@@ -23,20 +23,20 @@
 			<td class="domain">
 				<div class="domain">
 					<c:forEach var="domain" items="${model.domains}">
-						&nbsp;[<c:choose>
-							<c:when test="${model.currentDomain eq domain}">
-								<a href="?domain=${domain}" class="current">&nbsp;${domain}&nbsp;</a>
+						&nbsp;<c:choose>
+							<c:when test="${payload.domain eq domain}">
+								<a href="${model.baseUri}?domain=${domain}" class="current">[&nbsp;${domain}&nbsp;]</a>
 							</c:when>
 							<c:otherwise>
-								<a href="?domain=${domain}">&nbsp;${domain}&nbsp;</a>
+								<a href="${model.baseUri}?domain=${domain}">[&nbsp;${domain}&nbsp;]</a>
 							</c:otherwise>
-						</c:choose>	]&nbsp;
+						</c:choose>&nbsp;
 					</c:forEach>
 				</div>
 			</td>
 			<td class="nav">
-				<c:forEach var="url" items="${model.urlNavs}">
-					&nbsp;[ <a href="${model.urlPrefix}${url.method}">${url.text}</a> ]&nbsp;
+				<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?hours=${nav.hours}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 			</td>
 		</tr>

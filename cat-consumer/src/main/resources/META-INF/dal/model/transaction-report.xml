@@ -5,32 +5,46 @@
 		<attribute name="domain" key="true" />
 		<attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
 		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-		<entity-ref name="type" type="map" />
+		<element name="domain" value-type="String" type="set" names="domains" />
+		<entity-ref name="type" type="map" method-find-or-create="true" />
 	</entity>
 	<entity name="type" class-name="TransactionType">
 		<attribute name="id" key="true" />
-		<attribute name="totalCount" value-type="long" primitive="true" />
-		<attribute name="failCount" value-type="long" primitive="true" />
+		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
 		<attribute name="min" value-type="double" primitive="true" default-value="Double.MAX_VALUE" />
 		<attribute name="max" value-type="double" primitive="true" default-value="Double.MIN_VALUE" />
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
-		<attribute name="sum" value-type="double" primitive="true" />
-		<attribute name="sum2" value-type="double" primitive="true" />
+		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
+		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
-		<entity-ref name="name" type="map" />
+		<entity-ref name="name" type="map" method-find-or-create="true" />
 	</entity>
 	<entity name="name" class-name="TransactionName">
 		<attribute name="id" key="true" />
-		<attribute name="totalCount" value-type="long" primitive="true" />
-		<attribute name="failCount" value-type="long" primitive="true" />
+		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
 		<attribute name="min" value-type="double" primitive="true" default-value="Double.MAX_VALUE" />
 		<attribute name="max" value-type="double" primitive="true" default-value="Double.MIN_VALUE" />
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
-		<attribute name="sum" value-type="double" primitive="true" />
-		<attribute name="sum2" value-type="double" primitive="true" />
+		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
+		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
+		<entity-ref name="range" type="list" names="ranges" method-find-or-create="true" />
+		<entity-ref name="duration" type="list" names="durations" method-find-or-create="true" />
+	</entity>
+	<entity name="range">
+		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+		<attribute name="sum" value-type="int" primitive="true" />
+		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
+		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+	<entity name="duration">
+		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 	</entity>
 </model>
 

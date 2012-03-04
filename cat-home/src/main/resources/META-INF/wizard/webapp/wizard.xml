@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wizard package="com.dianping.cat" webres="true">
-  <module name="report" path="r">
-    <page name="home" title="Home" default="true">
-      <description>CAT Home Page.</description>
-    </page>
-    <page name="transaction" path="t" title="Transaction">
-      <description>CAL summary report for Transactions in current hour.</description>
-    </page>
-    <page name="failure" path="f" title="Failure">
-      <description>CAL detail report for failure messages in current hour.</description>
-    </page>
-    <page name="logview" path="m" title="Logview" standalone="false">
-      <description>CAL log details view for a given message.</description>
-    </page>
-    <page name="ip" title="Top IP List">
-      <description>Top visited IP list in current hour.</description>
-    </page>
-    <page name="service" path="service" title="Service" standalone="true">
-      <description>Service Home</description>
-    </page>
-  </module>
+<wizard package="com.dianping.cat">
+  <webapp package="com.dianping.cat" webres="true">
+    <module name="report" path="r">
+      <page name="home" title="Home" default="true">
+        <description>CAT Home Page.</description>
+      </page>
+      <page name="transaction" title="Transaction" path="t">
+        <description>CAT summary report for Transactions in current hour.</description>
+      </page>
+      <page name="failure" title="Failure" path="f">
+        <description>CAT details report for failed messages in current hour.</description>
+      </page>
+      <page name="logview" title="Logview" path="m" standalone="false">
+        <description>CAT log details view for a given message.</description>
+      </page>
+      <page name="ip" title="Top IP List">
+        <description>Top visited IP list in current hour.</description>
+      </page>
+      <page name="service" title="Service" path="service" standalone="false">
+        <description>Service Home</description>
+      </page>
+      <page name="model" title="Model" path="model" standalone="false">
+        <description>Model Service</description>
+      </page>
+    </module>
+  </webapp>
 </wizard>
 
