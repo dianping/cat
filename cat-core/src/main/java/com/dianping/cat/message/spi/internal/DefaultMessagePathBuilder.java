@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Date;
-import java.util.List;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -14,15 +13,17 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.model.entity.Config;
+import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
-import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
 public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable, LogEnabled {
 	@Inject
 	private MessageManager m_manager;
+
+	@Inject
+	private MessageIdFactory m_factory;
 
 	private File m_baseLogDir;
 
@@ -31,12 +32,23 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	private Logger m_logger;
 
 	@Override
-	public String getHdfsPath(MessageTree tree, String host) {
+	public String getHdfsPath(String messageId) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{0,date,mm}-{2}");
-		Date date = new Date(tree.getMessage().getTimestamp());
-		String path = format.format(new Object[] { date, tree.getDomain(), host });
+		Object[] parts = m_factory.parse(messageId);
 
-		return path;
+		try {
+			String domain = (String) parts[0];
+			String ipAddress = (String) parts[1];
+			long timestamp = (Long) parts[2];
+			Date date = new Date(timestamp);
+			String path = format.format(new Object[] { date, domain, ipAddress });
+
+			return path;
+		} catch (Exception e) {
+			m_logger.error("Invalid message id format: " + messageId, e);
+		}
+
+		return messageId;
 	}
 
 	@Override
@@ -50,29 +62,18 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
-	public String getLogViewPath(MessageTree tree) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{2}.html");
-		Date date = new Date(tree.getMessage().getTimestamp());
-		String path = format.format(new Object[] { date, tree.getDomain(), tree.getMessageId() });
-
-		return path;
-	}
-
-	@Override
 	public String getLogViewPath(String messageId) {
-		List<String> parts = Splitters.by('-').split(messageId);
+		Object[] parts = m_factory.parse(messageId);
 
-		if (parts.size() == 4) {
-			try {
-				String domain = parts.get(0);
-				long timestamp = Long.parseLong(parts.get(2), 16);
-				MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{2}.html");
-				String path = format.format(new Object[] { new Date(timestamp), domain, messageId });
+		try {
+			String domain = (String) parts[0];
+			long timestamp = (Long) parts[2];
+			MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{2}.html");
+			String path = format.format(new Object[] { new Date(timestamp), domain, messageId });
 
-				return path;
-			} catch (Exception e) {
-				m_logger.error("Invalid message id format: " + messageId, e);
-			}
+			return path;
+		} catch (Exception e) {
+			m_logger.error("Invalid message id format: " + messageId, e);
 		}
 
 		return messageId;

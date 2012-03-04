@@ -14,10 +14,25 @@ public class MessageIdFactoryTest {
 		}
 	};
 
+	private void check(String domain, String expected) {
+		m_factory.setDomain(domain);
+		m_factory.setIpAddress("c0a83f99"); // 192.168.63.153
+
+		String actual = m_factory.getNextId();
+
+		Assert.assertEquals(expected, actual);
+
+		Object[] parts = m_factory.parse(actual);
+
+		Assert.assertEquals(domain, parts[0]);
+		Assert.assertEquals("c0a83f99", parts[1]);
+		Assert.assertEquals(m_timestamp, parts[2]);
+	}
+
 	@Test
 	public void test() throws Exception {
 		m_factory.initialize();
-		
+
 		check("domain1", "domain1-c0a83f99-135bdb7825c-0");
 		check("domain1", "domain1-c0a83f99-135bdb7825c-1");
 		check("domain1", "domain1-c0a83f99-135bdb7825c-2");
@@ -32,14 +47,5 @@ public class MessageIdFactoryTest {
 		check("domain1", "domain1-c0a83f99-135bdb7825e-0");
 		check("domain1", "domain1-c0a83f99-135bdb7825e-1");
 		check("domain1", "domain1-c0a83f99-135bdb7825e-2");
-	}
-
-	private void check(String domain, String expected) {
-		m_factory.setDomain(domain);
-		m_factory.setIpAddress("c0a83f99"); // 192.168.63.153
-
-		String actual = m_factory.getNextId();
-
-		Assert.assertEquals(expected, actual);
 	}
 }

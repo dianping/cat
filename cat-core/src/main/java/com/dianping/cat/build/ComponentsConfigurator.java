@@ -62,7 +62,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageIdFactory.class) //
 		      .req(MessageManager.class));
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
-		      .req(MessageManager.class));
+		      .req(MessageManager.class, MessageIdFactory.class));
 		all.add(C(MessageStorage.class, "html", DefaultMessageStorage.class) //
 		      .req(MessagePathBuilder.class) //
 		      .req(MessageCodec.class, "html"));

@@ -2,11 +2,13 @@ package com.dianping.cat.message.internal;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.message.spi.MessageManager;
+import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
 public class MessageIdFactory implements Initializable {
@@ -44,6 +46,21 @@ public class MessageIdFactory implements Initializable {
 		sb.append(Integer.toHexString(index));
 
 		return sb.toString();
+	}
+
+	public Object[] parse(String messageId) {
+		Object[] parts = new Object[4];
+		List<String> list = Splitters.by('-').split(messageId);
+		int len = list.size();
+
+		if (len == 4) {
+			parts[0] = list.get(0); // domain
+			parts[1] = list.get(1); // ip address in HEX
+			parts[2] = Long.parseLong(list.get(2), 16);
+			parts[3] = Integer.parseInt(list.get(3), 16);
+		}
+
+		return parts;
 	}
 
 	protected long getTimestamp() {
