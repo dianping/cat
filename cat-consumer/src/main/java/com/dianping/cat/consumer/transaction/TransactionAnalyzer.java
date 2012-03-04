@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -18,6 +19,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.entity.Property;
+import com.dianping.cat.consumer.transaction.model.entity.Duration;
+import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -219,6 +222,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		type.setSum(type.getSum() + duration);
 		type.setSum2(type.getSum2() + duration * duration);
 
+		processTransactionGrpah(name, t);
+
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
@@ -228,6 +233,31 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		return count;
+	}
+
+	void processTransactionGrpah(TransactionName name, Transaction t) {
+		long d = t.getDuration();
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(t.getTimestamp());
+		int min = cal.get(Calendar.MINUTE);
+		int dk = 1;
+		int tk = min - min % 5;
+
+		while (dk < d) {
+			dk <<= 1;
+		}
+
+		Duration duration = name.findOrCreateDuration(dk);
+		Range range = name.findOrCreateRange(tk);
+
+		duration.incCount();
+		range.incCount();
+
+		if (!t.isSuccess()) {
+			range.incFails();
+		}
+
+		range.setSum(range.getSum() + d);
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {

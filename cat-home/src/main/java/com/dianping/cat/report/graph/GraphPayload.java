@@ -1,9 +1,11 @@
 package com.dianping.cat.report.graph;
 
 public interface GraphPayload {
-	public String getAxisXLabel();
+	public String getAxisXTitle();
 
-	public String getAxisYLabel();
+	public String getAxisYTitle();
+
+	public String getAxisXLabel(int index);
 
 	public int getColumns();
 
@@ -30,4 +32,8 @@ public interface GraphPayload {
 	public int getDisplayHeight();
 
 	public int getDisplayWidth();
+
+	public boolean isAxisXLabelRotated();
+
+	public boolean isAxisXLabelSkipped();
 }

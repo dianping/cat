@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
+import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
@@ -7,6 +8,8 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 public class MeanSquareDeviationComputer extends BaseVisitor {
 	@Override
 	public void visitName(TransactionName name) {
+		super.visitName(name);
+
 		long count = name.getTotalCount();
 
 		if (count > 0) {
@@ -18,6 +21,13 @@ public class MeanSquareDeviationComputer extends BaseVisitor {
 			name.setFailPercent(failPercent);
 			name.setAvg(avg);
 			name.setStd(std);
+		}
+	}
+
+	@Override
+	public void visitRange(Range range) {
+		if (range.getCount() > 0) {
+			range.setAvg(range.getSum() / range.getCount());
 		}
 	}
 

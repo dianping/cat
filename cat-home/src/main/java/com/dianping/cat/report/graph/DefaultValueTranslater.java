@@ -25,7 +25,7 @@ public class DefaultValueTranslater implements ValueTranslater {
 		while (maxValue > max * 2) {
 			maxValue = maxValue / 2;
 		}
-
+		
 		return maxValue;
 	}
 

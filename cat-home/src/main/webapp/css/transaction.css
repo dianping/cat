@@ -11,11 +11,6 @@
 	font-size: small;
 }
 
-.graph {
-	width: 400px;
-	height: 100px;
-}
-
 tr.odd td {
 	background-color: #eee;
 	font-size: small;
@@ -47,4 +42,8 @@ tr.link td {
 
 .error {
 	color: red;
+}
+
+.graphs {
+	height: 1px;
 }

@@ -16,7 +16,13 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	private Throwable m_exception;
 
-	private String m_graph;
+	private String m_graph1;
+
+	private String m_graph2;
+
+	private String m_graph3;
+
+	private String m_graph4;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -49,9 +55,21 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return m_exception;
 	}
 
-	public String getGraph() {
-		return m_graph;
+	public String getGraph1() {
+		return m_graph1;
 	}
+
+	public String getGraph2() {
+   	return m_graph2;
+   }
+
+	public String getGraph3() {
+   	return m_graph3;
+   }
+
+	public String getGraph4() {
+   	return m_graph4;
+   }
 
 	public String getLogViewBaseUri() {
 		return buildPageUri(ReportPage.LOGVIEW.getPath(), null);
@@ -74,9 +92,21 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		m_exception = exception;
 	}
 
-	public void setGraph(String graph) {
-		m_graph = graph;
+	public void setGraph1(String graph1) {
+		m_graph1 = graph1;
 	}
+
+	public void setGraph2(String graph2) {
+   	m_graph2 = graph2;
+   }
+
+	public void setGraph3(String graph3) {
+   	m_graph3 = graph3;
+   }
+
+	public void setGraph4(String graph4) {
+   	m_graph4 = graph4;
+   }
 
 	public void setReport(TransactionReport report) {
 		m_report = report;

@@ -13,22 +13,36 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 		m_title = title;
 		m_axisXLabel = axisXLabel;
 		m_axisYLabel = axisYLabel;
-		m_values = getValues();
+	}
+
+	public final double[] getValues() {
+		if (m_values == null) {
+			m_values = loadValues();
+		}
+
+		return m_values;
+	}
+
+	protected abstract double[] loadValues();
+
+	@Override
+	public String getAxisXLabel(int index) {
+		return String.valueOf(index);
 	}
 
 	@Override
-	public String getAxisXLabel() {
+	public String getAxisXTitle() {
 		return m_axisXLabel;
 	}
 
 	@Override
-	public String getAxisYLabel() {
+	public String getAxisYTitle() {
 		return m_axisYLabel;
 	}
 
 	@Override
 	public int getColumns() {
-		return m_values.length;
+		return getValues().length;
 	}
 
 	@Override
@@ -48,12 +62,12 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 
 	@Override
 	public int getHeight() {
-		return 280;
+		return 250;
 	}
 
 	@Override
 	public int getMarginBottom() {
-		return 50;
+		return 60;
 	}
 
 	@Override
@@ -68,7 +82,7 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 
 	@Override
 	public int getMarginTop() {
-		return 50;
+		return 40;
 	}
 
 	@Override
@@ -84,5 +98,15 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 	@Override
 	public int getWidth() {
 		return 580;
+	}
+
+	@Override
+	public boolean isAxisXLabelRotated() {
+		return false;
+	}
+
+	@Override
+	public boolean isAxisXLabelSkipped() {
+		return getValues().length >= 16;
 	}
 }

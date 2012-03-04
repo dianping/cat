@@ -41,7 +41,7 @@
   <entity name="range">
     <attribute name="value" value-type="int" />
     <attribute name="count" value-type="int" />
-    <attribute name="sum" value-type="int" />
+    <attribute name="sum" value-type="double" />
     <attribute name="avg" value-type="double" />
     <attribute name="fails" value-type="int" />
   </entity>

@@ -14,7 +14,11 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		int maxValue = m_translater.getMaxValue(values);
 		XmlBuilder b = new XmlBuilder();
 
-		buildHeader(payload, b);
+		if (maxValue < payload.getRows()) {
+			maxValue = payload.getRows();
+		}
+
+		buildHeader(payload, b, maxValue);
 		buildCoordinate(payload, b);
 		buildYLabels(payload, b, maxValue);
 		buildXLabels(payload, b);
@@ -109,7 +113,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			b.tag("path", "id", "ys", "d", p.build());
 		}
 
-		if (cols >= 16) {
+		if (payload.isAxisXLabelSkipped()) {
 			p.moveTo(left, top + h).mark().v(9).m(xstep, -9).v(5).m(xstep, -5).repeat(cols / 2);
 
 			if (cols % 2 == 0) {
@@ -129,7 +133,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		b.tag2("svg");
 	}
 
-	protected void buildHeader(GraphPayload payload, XmlBuilder b) {
+	protected void buildHeader(GraphPayload payload, XmlBuilder b, int maxValue) {
 		int height = payload.getHeight();
 		int width = payload.getWidth();
 		int top = payload.getMarginTop();
@@ -153,22 +157,23 @@ public class DefaultGraphBuilder implements GraphBuilder {
 
 		b.tag1("g");
 
-		String axisXLabel = payload.getAxisXLabel();
+		String axisXTitle = payload.getAxisXTitle();
 
-		if (axisXLabel != null) {
-			int x = (width - left - right - axisXLabel.length() * 9) / 2 + left;
+		if (axisXTitle != null) {
+			int x = (width - left - right - axisXTitle.length() * 9) / 2 + left;
 			int y = height - 4;
-			b.tagWithText("text", axisXLabel, "x", x, "y", y, "font-size", "18");
+
+			b.tagWithText("text", axisXTitle, "x", x, "y", y, "font-size", "18");
 		}
 
-		String axisYLabel = payload.getAxisYLabel();
+		String axisYTitle = payload.getAxisYTitle();
 
-		if (axisYLabel != null) {
-			int x = 16;
-			int y = (height - top - bottom + axisYLabel.length() * 9) / 2 + top;
+		if (axisYTitle != null) {
+			int x = left - 20 - String.valueOf(maxValue).length() * 9;
+			int y = (height - top - bottom + axisYTitle.length() * 9) / 2 + top;
 			String transform = "rotate(-90," + x + "," + y + ")";
 
-			b.tagWithText("text", axisYLabel, "x", x, "y", y, "font-size", "18", "transform", transform);
+			b.tagWithText("text", axisYTitle, "x", x, "y", y, "font-size", "18", "transform", transform);
 		}
 
 		if (title != null) {
@@ -192,27 +197,34 @@ public class DefaultGraphBuilder implements GraphBuilder {
 
 		b.tag1("g", "id", "xt");
 
-		if (cols >= 16) {
-			for (int i = 0; i <= cols; i += 2) {
-				int x = left + xstep * i - 4;
-				int y = height - bottom + 22;
+		boolean rotated = payload.isAxisXLabelRotated();
+		boolean skipped = payload.isAxisXLabelSkipped();
 
-				if (i >= 10) {
-					x -= 4;
+		for (int i = 0; i <= cols;) {
+			int x = left + xstep * i - 4;
+			int y = height - bottom + 20 + (skipped ? 2 : 0);
+			String label = payload.getAxisXLabel(i);
+
+			if (!rotated) {
+				if (label.length() > 1) {
+					x -= 4 * (label.length() - 1);
 				}
-
-				b.tagWithText("text", i, "x", x, "y", y);
+			} else {
+				y -= 10;
 			}
-		} else {
-			for (int i = 0; i <= cols; i++) {
-				int x = left + xstep * i - 4;
-				int y = height - bottom + 20;
 
-				if (i >= 10) {
-					x -= 4;
-				}
+			if (rotated) {
+				String transform = "rotate(90," + x + "," + y + ")";
 
-				b.tagWithText("text", i, "x", x, "y", y);
+				b.tagWithText("text", label, "x", x, "y", y, "transform", transform);
+			} else {
+				b.tagWithText("text", label, "x", x, "y", y);
+			}
+
+			if (skipped) {
+				i += 2;
+			} else {
+				i++;
 			}
 		}
 

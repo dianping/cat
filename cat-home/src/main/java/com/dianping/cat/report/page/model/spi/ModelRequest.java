@@ -40,12 +40,13 @@ public class ModelRequest {
 		}
 	}
 
-	public void setProperty(String name, String value) {
+	public ModelRequest setProperty(String name, String value) {
 		if (m_properties == null) {
 			m_properties = new HashMap<String, String>();
 		}
 
 		m_properties.put(name, value);
+		return this;
 	}
 
 	public static ModelRequest from(String domain, String period) {
