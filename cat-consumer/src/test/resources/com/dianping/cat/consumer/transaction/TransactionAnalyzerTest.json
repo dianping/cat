@@ -1,0 +1,105 @@
+{
+   "domain": "Test",
+   "types": {
+      "A": {
+         "id": "A",
+         "successMessageUrl": "20120228/21/group/1.html",
+         "failMessageUrl": "20120228/21/group/2.html",
+         "totalCount": 1000,
+         "failCount": 500,
+         "failPercent": "50.00",
+         "min": 2.0,
+         "max": 2000.0,
+         "avg": "1001.0",
+         "sum": "1001000.0",
+         "sum2": "1335334000.0",
+         "std": "577.3",
+         "names": {
+            "n1": {
+               "id": "n1",
+               "totalCount": 500,
+               "failCount": 0,
+               "failPercent": "0.00",
+               "min": 2.0,
+               "max": 1998.0,
+               "avg": "1000.0",
+               "sum": "500000.0",
+               "sum2": "666666000.0",
+               "std": "577.3",
+               "successMessageUrl": "20120228/21/group/1.html"
+            },
+            "n0": {
+               "id": "n0",
+               "totalCount": 500,
+               "failCount": 500,
+               "failPercent": "100.00",
+               "min": 4.0,
+               "max": 2000.0,
+               "avg": "1002.0",
+               "sum": "501000.0",
+               "sum2": "668668000.0",
+               "std": "577.3",
+               "failMessageUrl": "20120228/21/group/2.html"
+            }
+         }
+      },
+      "A-1": {
+         "id": "A-1",
+         "successMessageUrl": "20120228/21/group/1.html",
+         "failMessageUrl": "20120228/21/group/2.html",
+         "totalCount": 1000,
+         "failCount": 500,
+         "failPercent": "50.00",
+         "min": 1.0,
+         "max": 1000.0,
+         "avg": "500.5",
+         "sum": "500500.0",
+         "sum2": "333833500.0",
+         "std": "288.7",
+         "names": {
+            "n1": {
+               "id": "n1",
+               "totalCount": 334,
+               "failCount": 167,
+               "failPercent": "50.00",
+               "min": 1.0,
+               "max": 1000.0,
+               "avg": "500.5",
+               "sum": "167167.0",
+               "sum2": "111611611.0",
+               "std": "289.3",
+               "successMessageUrl": "20120228/21/group/1.html",
+               "failMessageUrl": "20120228/21/group/4.html"
+            },
+            "n2": {
+               "id": "n2",
+               "totalCount": 333,
+               "failCount": 167,
+               "failPercent": "50.15",
+               "min": 2.0,
+               "max": 998.0,
+               "avg": "500.0",
+               "sum": "166500.0",
+               "sum2": "110944278.0",
+               "std": "288.4",
+               "successMessageUrl": "20120228/21/group/5.html",
+               "failMessageUrl": "20120228/21/group/2.html"
+            },
+            "n0": {
+               "id": "n0",
+               "totalCount": 333,
+               "failCount": 166,
+               "failPercent": "49.85",
+               "min": 3.0,
+               "max": 999.0,
+               "avg": "501.0",
+               "sum": "166833.0",
+               "sum2": "111277611.0",
+               "std": "288.4",
+               "successMessageUrl": "20120228/21/group/3.html",
+               "failMessageUrl": "20120228/21/group/6.html"
+            }
+         }
+      }
+   }
+}
