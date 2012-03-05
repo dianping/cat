@@ -41,6 +41,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		int cols = payload.getColumns();
 		int xstep = w / cols;
 		int[] pixels = m_translater.translate(h, maxValue, values);
+		String idPrefix = payload.getIdPrefix();
 
 		b.tag1("g", "id", "bar", "fill", "red");
 
@@ -49,7 +50,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			int x = left + xstep * i;
 			int y = top + h - pixel;
 
-			b.tag("rect", "id", "b" + i, "x", x, "y", y, "width", xstep - 1, "height", pixel);
+			b.tag("rect", "id", idPrefix + i, "x", x, "y", y, "width", xstep - 1, "height", pixel);
 		}
 
 		b.tag2("g");

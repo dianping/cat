@@ -15,16 +15,6 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 		m_axisYLabel = axisYLabel;
 	}
 
-	public final double[] getValues() {
-		if (m_values == null) {
-			m_values = loadValues();
-		}
-
-		return m_values;
-	}
-
-	protected abstract double[] loadValues();
-
 	@Override
 	public String getAxisXLabel(int index) {
 		return String.valueOf(index);
@@ -66,6 +56,17 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 	}
 
 	@Override
+	public String getIdPrefix() {
+		Class<?> clazz = getClass();
+
+		if (clazz.isAnonymousClass()) {
+			return "a";
+		} else {
+			return clazz.getSimpleName().substring(0, 1);
+		}
+	}
+
+	@Override
 	public int getMarginBottom() {
 		return 60;
 	}
@@ -95,6 +96,14 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 		return m_title;
 	}
 
+	public final double[] getValues() {
+		if (m_values == null) {
+			m_values = loadValues();
+		}
+
+		return m_values;
+	}
+
 	@Override
 	public int getWidth() {
 		return 580;
@@ -109,4 +118,6 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 	public boolean isAxisXLabelSkipped() {
 		return getValues().length >= 16;
 	}
+
+	protected abstract double[] loadValues();
 }

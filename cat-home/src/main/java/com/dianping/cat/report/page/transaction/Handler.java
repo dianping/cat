@@ -153,8 +153,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 
 		@Override
-		public int getWidth() {
-			return super.getWidth() + 120;
+		public String getAxisXLabel(int index) {
+			return String.valueOf(index * 5);
 		}
 
 		@Override
@@ -168,9 +168,10 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 
 		@Override
-		public String getAxisXLabel(int index) {
-			return String.valueOf(index * 5);
+		public int getWidth() {
+			return super.getWidth() + 120;
 		}
+
 	}
 
 	final class AverageTimePayload extends AbstractPayload {
