@@ -135,6 +135,8 @@ public class DefaultGraphBuilder implements GraphBuilder {
 	}
 
 	protected void buildHeader(GraphPayload payload, XmlBuilder b, int maxValue) {
+		int offsetX = payload.getOffsetX();
+		int offsetY = payload.getOffsetY();
 		int height = payload.getHeight();
 		int width = payload.getWidth();
 		int top = payload.getMarginTop();
@@ -142,9 +144,12 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		int bottom = payload.getMarginBottom();
 		int right = payload.getMarginRight();
 
-		b.add("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n");
-		b.tag1("svg", "width", payload.getDisplayWidth(), "height", payload.getDisplayHeight(), "viewBox", "0,0," + width
-		      + "," + height, "xmlns", "http://www.w3.org/2000/svg");
+		if (payload.isStandalone()) {
+			b.add("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n");
+		}
+
+		b.tag1("svg", "x", offsetX, "y", offsetY, "width", payload.getDisplayWidth(), "height",
+		      payload.getDisplayHeight(), "viewBox", "0,0," + width + "," + height, "xmlns", "http://www.w3.org/2000/svg");
 
 		String title = payload.getTitle();
 
@@ -217,9 +222,9 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			if (rotated) {
 				String transform = "rotate(90," + x + "," + y + ")";
 
-				b.tagWithText("text", label, "x", x, "y", y, "transform", transform);
+				b.tagWithText("text", label, "x", x, "y", y, "font-size", "14", "transform", transform);
 			} else {
-				b.tagWithText("text", label, "x", x, "y", y);
+				b.tagWithText("text", label, "x", x, "y", y, "font-size", "14");
 			}
 
 			if (skipped) {
@@ -248,14 +253,14 @@ public class DefaultGraphBuilder implements GraphBuilder {
 				int x = left - 12;
 				int y = top + 4 + ystep * i;
 
-				b.tagWithText("text", maxValue - maxValue / rows * i, "x", x, "y", y);
+				b.tagWithText("text", maxValue - maxValue / rows * i, "x", x, "y", y, "font-size", "14");
 			}
 		} else {
 			for (int i = 0; i < rows; i++) {
 				int x = left - 9;
 				int y = top + 4 + ystep * i;
 
-				b.tagWithText("text", maxValue - maxValue / rows * i, "x", x, "y", y);
+				b.tagWithText("text", maxValue - maxValue / rows * i, "x", x, "y", y, "font-size", "14");
 			}
 		}
 

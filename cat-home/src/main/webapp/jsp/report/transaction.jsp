@@ -45,7 +45,7 @@
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
 					<td>${w:format(e.min,'0')}/${w:format(e.max,'0')}/${w:format(e.avg,'0.0')}/${w:format(e.std,'0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="6"><div id="${status.index}"></div></td></tr>
+				<tr class="graphs"><td colspan="6"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>

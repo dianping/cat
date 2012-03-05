@@ -87,6 +87,16 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 	}
 
 	@Override
+	public int getOffsetX() {
+		return 0;
+	}
+
+	@Override
+	public int getOffsetY() {
+		return 0;
+	}
+
+	@Override
 	public int getRows() {
 		return 5;
 	}
@@ -117,6 +127,11 @@ public abstract class AbstractGraphPayload implements GraphPayload {
 	@Override
 	public boolean isAxisXLabelSkipped() {
 		return getValues().length >= 16;
+	}
+
+	@Override
+	public boolean isStandalone() {
+		return true;
 	}
 
 	protected abstract double[] loadValues();

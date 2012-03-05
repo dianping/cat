@@ -27,6 +27,10 @@ public interface GraphPayload {
 
 	public int getMarginTop();
 
+	public int getOffsetX();
+
+	public int getOffsetY();
+
 	public int getRows();
 
 	public String getTitle();
@@ -38,4 +42,6 @@ public interface GraphPayload {
 	public boolean isAxisXLabelRotated();
 
 	public boolean isAxisXLabelSkipped();
+
+	public boolean isStandalone();
 }

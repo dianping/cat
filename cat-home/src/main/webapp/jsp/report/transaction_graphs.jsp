@@ -1,15 +1,9 @@
 <%@ page contentType="text/html; charset=utf-8"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.transaction.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.report.page.transaction.Payload" scope="request" />
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
-
-<table>
-	<tr>
-		<td>${model.graph1}</td>
-		<td>${model.graph2}</td>
-	</tr>
-	<tr>
-		<td>${model.graph3}</td>
-		<td>${model.graph4}</td>
-	</tr>
-</table>
+<svg version="1.1" width="980" height="380" xmlns="http://www.w3.org/2000/svg">
+  ${model.graph1}
+  ${model.graph2}
+  ${model.graph3}
+  ${model.graph4}
+</svg>

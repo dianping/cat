@@ -148,8 +148,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	abstract class AbstractPayload extends AbstractGraphPayload {
-		public AbstractPayload(String title, String axisXLabel, String axisYLabel) {
+		private final TransactionName m_name;
+
+		public AbstractPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
 			super(title, axisXLabel, axisYLabel);
+
+			m_name = name;
 		}
 
 		@Override
@@ -167,27 +171,41 @@ public class Handler implements PageHandler<Context>, Initializable {
 			return (int) (super.getDisplayWidth() * 0.7);
 		}
 
+		protected TransactionName getTransactionName() {
+			return m_name;
+		}
+
 		@Override
 		public int getWidth() {
 			return super.getWidth() + 120;
 		}
 
+		@Override
+		public boolean isStandalone() {
+			return false;
+		}
+
+		@Override
+		public String getIdPrefix() {
+			return m_name.getId() + "-" + super.getIdPrefix();
+		}
 	}
 
 	final class AverageTimePayload extends AbstractPayload {
-		private final TransactionName m_name;
-
 		public AverageTimePayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel);
+			super(title, axisXLabel, axisYLabel, name);
+		}
 
-			m_name = name;
+		@Override
+		public int getOffsetY() {
+			return getDisplayHeight() + 20;
 		}
 
 		@Override
 		protected double[] loadValues() {
 			double[] values = new double[12];
 
-			for (Range range : m_name.getRanges()) {
+			for (Range range : getTransactionName().getRanges()) {
 				int value = range.getValue();
 				int k = value / 5;
 
@@ -199,12 +217,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	final class DurationPayload extends AbstractPayload {
-		private final TransactionName m_name;
-
 		public DurationPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel);
-
-			m_name = name;
+			super(title, axisXLabel, axisYLabel, name);
 		}
 
 		@Override
@@ -236,7 +250,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		protected double[] loadValues() {
 			double[] values = new double[17];
 
-			for (Duration duration : m_name.getDurations()) {
+			for (Duration duration : getTransactionName().getDurations()) {
 				int d = duration.getValue();
 				Integer k = m_map.get(d);
 
@@ -250,19 +264,25 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	final class FailurePayload extends AbstractPayload {
-		private final TransactionName m_name;
-
 		public FailurePayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel);
+			super(title, axisXLabel, axisYLabel, name);
+		}
 
-			m_name = name;
+		@Override
+		public int getOffsetX() {
+			return getDisplayWidth();
+		}
+
+		@Override
+		public int getOffsetY() {
+			return getDisplayHeight() + 20;
 		}
 
 		@Override
 		protected double[] loadValues() {
 			double[] values = new double[12];
 
-			for (Range range : m_name.getRanges()) {
+			for (Range range : getTransactionName().getRanges()) {
 				int value = range.getValue();
 				int k = value / 5;
 
@@ -274,19 +294,20 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	final class HitPayload extends AbstractPayload {
-		private final TransactionName m_name;
-
 		public HitPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel);
+			super(title, axisXLabel, axisYLabel, name);
+		}
 
-			m_name = name;
+		@Override
+		public int getOffsetX() {
+			return getDisplayWidth();
 		}
 
 		@Override
 		protected double[] loadValues() {
 			double[] values = new double[12];
 
-			for (Range range : m_name.getRanges()) {
+			for (Range range : getTransactionName().getRanges()) {
 				int value = range.getValue();
 				int k = value / 5;
 
