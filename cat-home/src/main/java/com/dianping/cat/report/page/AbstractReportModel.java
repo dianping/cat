@@ -13,6 +13,8 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
       ViewModel<ReportPage, A, M> {
 	private Throwable m_exception;
 
+	private long m_date;
+
 	public AbstractReportModel(M ctx) {
 		super(ctx);
 	}
@@ -24,6 +26,11 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	// required by report tag
 	public Date getCurrentTime() {
 		return new Date();
+	}
+
+	// required by report tag
+	public long getDate() {
+		return m_date;
 	}
 
 	// required by report tag
@@ -40,6 +47,10 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	// required by report tag
 	public UrlNav[] getNavs() {
 		return UrlNav.values();
+	}
+
+	public void setDate(long date) {
+		m_date = date;
 	}
 
 	public void setException(Throwable exception) {

@@ -39,12 +39,12 @@ public class LocalTransactionModelService implements ModelService<TransactionRep
 	}
 
 	private TransactionAnalyzer getAnalyzer(ModelPeriod period) {
-		if (period.isCurrent()) {
+		if (period.isCurrent() || period.isFuture()) {
 			return (TransactionAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
 		} else if (period.isLast()) {
 			return (TransactionAnalyzer) m_consumer.getLastAnalyzer("transaction");
 		} else {
-			return null;
+			throw new RuntimeException("Internal error: this method should not be called!");
 		}
 	}
 
@@ -52,6 +52,6 @@ public class LocalTransactionModelService implements ModelService<TransactionRep
 	public boolean isEligable(ModelRequest request) {
 		ModelPeriod period = request.getPeriod();
 
-		return period.isCurrent() || period.isLast();
+		return !period.isHistorical();
 	}
 }

@@ -1,4 +1,4 @@
-function showGraphs(anchor, id, domain, type, name) {
+function showGraphs(anchor, id, date, domain, type, name) {
 	var cell = document.getElementById(id);
 	var text = anchor.innerHTML;
 	
@@ -6,11 +6,11 @@ function showGraphs(anchor, id, domain, type, name) {
 		anchor.innerHTML = '[:: hide ::]';
 
 		if (cell.nodeName == 'IMG') { // <img src='...'/>
-			cell.src = "?op=graphs&domain="+domain+"&type="+type+"&name="+name;
+			cell.src = "?op=graphs&date="+date+"&domain="+domain+"&type="+type+"&name="+name;
 		} else { // <div>...</div>
 			$.ajax({
 				type: "get",
-				url: "?op=graphs&domain="+domain+"&type="+type+"&name="+name,
+				url: "?op=graphs&date="+date+"&domain="+domain+"&type="+type+"&name="+name,
 				success : function(data, textStatus) {
 					cell.innerHTML = data;
 				}

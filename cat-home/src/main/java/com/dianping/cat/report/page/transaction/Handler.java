@@ -140,6 +140,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 		try {
 			TransactionReport report = getReport(payload);
 
+			if (payload.getPeriod().isFuture()) {
+				model.setDate(payload.getCurrentDate());
+			} else {
+				model.setDate(payload.getDate());
+			}
+
 			report.accept(m_computer);
 			model.setReport(report);
 		} catch (Throwable e) {
@@ -171,6 +177,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 			return (int) (super.getDisplayWidth() * 0.7);
 		}
 
+		@Override
+		public String getIdPrefix() {
+			return m_name.getId() + "-" + super.getIdPrefix();
+		}
+
 		protected TransactionName getTransactionName() {
 			return m_name;
 		}
@@ -183,11 +194,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 		@Override
 		public boolean isStandalone() {
 			return false;
-		}
-
-		@Override
-		public String getIdPrefix() {
-			return m_name.getId() + "-" + super.getIdPrefix();
 		}
 	}
 

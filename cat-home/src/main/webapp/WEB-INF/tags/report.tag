@@ -36,7 +36,7 @@
 			</td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?hours=${nav.hours}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&hours=${nav.hours}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 			</td>
 		</tr>
