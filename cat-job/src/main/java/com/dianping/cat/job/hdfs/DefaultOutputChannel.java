@@ -80,4 +80,5 @@ public class DefaultOutputChannel implements OutputChannel {
 
 		return true;
 	}
+
 }

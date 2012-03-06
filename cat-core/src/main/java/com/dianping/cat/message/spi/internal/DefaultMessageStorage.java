@@ -132,4 +132,10 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 			m_active = false;
 		}
 	}
+
+	@Override
+	public MessageTree get(String messageId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

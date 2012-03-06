@@ -33,4 +33,5 @@ public interface OutputChannel {
 	 * @throws IOException
 	 */
 	public boolean write(MessageTree tree) throws IOException;
+
 }
