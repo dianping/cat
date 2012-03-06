@@ -1,7 +1,8 @@
 package com.dianping.cat.report.page.model.transaction;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,11 +16,12 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
 public class CompositeTransactionModelService implements ModelService<TransactionReport>, Initializable {
 	@Inject
-	private List<ModelService<TransactionReport>> m_services;
+	private List<ModelService<TransactionReport>> m_services = new ArrayList<ModelService<TransactionReport>>();
 
 	private ExecutorService m_threadPool;
 
@@ -92,6 +94,52 @@ public class CompositeTransactionModelService implements ModelService<Transactio
 	}
 
 	public void setSerivces(ModelService<TransactionReport>... services) {
-		m_services = Arrays.asList(services);
+		for (ModelService<TransactionReport> service : services) {
+			m_services.add(service);
+		}
+	}
+
+	/**
+	 * Inject remote servers to load transaction model.
+	 * <p>
+	 * 
+	 * For example, servers: 192.168.1.1:2281,192.168.1.2,192.168.1.3
+	 * 
+	 * @param servers
+	 *           server list separated by comma(',')
+	 */
+	public void setRemoteServers(String servers) {
+		List<String> endpoints = Splitters.by(',').split(servers);
+		String localAddress = null;
+		String localHost = null;
+
+		try {
+			localAddress = InetAddress.getLocalHost().getHostAddress();
+			localHost = InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			// ignore it
+		}
+
+		for (String endpoint : endpoints) {
+			int pos = endpoint.indexOf(':');
+			String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+			int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos) + 1) : 2281);
+
+			if (port == 2281) {
+				if ("localhost".equals(host) || "127.0.0.1".equals(host)) {
+					// exclude localhost
+					continue;
+				} else if (host.equals(localAddress) || host.equals(localHost)) {
+					// exclude itself
+					continue;
+				}
+			}
+
+			RemoteTransactionModelService remote = new RemoteTransactionModelService();
+
+			remote.setHost(host);
+			remote.setPort(port);
+			m_services.add(remote);
+		}
 	}
 }

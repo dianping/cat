@@ -24,12 +24,11 @@ public class LocalTransactionModelService implements ModelService<TransactionRep
 		if (analyzer != null) {
 			List<String> domains = analyzer.getDomains();
 			String d = request.getDomain();
-			TransactionReport report = analyzer.getReport(d != null ? d : domains.isEmpty() ? null : domains.get(0));
+			String domain = d != null ? d : domains.isEmpty() ? null : domains.get(0);
+			TransactionReport report = analyzer.getReport(domain);
 
 			if (report != null) {
-				for (String domain : domains) {
-					report.addDomain(domain);
-				}
+				report.getDomains().addAll(domains);
 			}
 
 			response.setModel(report);

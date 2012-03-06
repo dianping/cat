@@ -16,6 +16,12 @@ public class ModelRequest {
 		m_period = period;
 	}
 
+	public static ModelRequest from(String domain, String period) {
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.getByName(period, ModelPeriod.CURRENT));
+
+		return request;
+	}
+
 	public String getDomain() {
 		return m_domain;
 	}
@@ -49,9 +55,8 @@ public class ModelRequest {
 		return this;
 	}
 
-	public static ModelRequest from(String domain, String period) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.getByName(period, ModelPeriod.CURRENT));
-
-		return request;
+	@Override
+	public String toString() {
+		return String.format("ModelRequest[domain=%s, period=%s, properties=%s]", m_domain, m_period, m_properties);
 	}
 }

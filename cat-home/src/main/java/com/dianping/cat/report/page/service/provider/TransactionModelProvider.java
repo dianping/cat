@@ -48,6 +48,8 @@ public class TransactionModelProvider implements ModelProvider {
 			analyzer = (TransactionReportAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
 		} else if (index.equals(Constants.MEMORY_LAST)) {
 			analyzer = (TransactionReportAnalyzer) m_consumer.getLastAnalyzer("transaction");
+		} else {
+			System.err.println("historical model is not implemented yet");
 		}
 		
 		TransactionReport report = analyzer.generate(domain);

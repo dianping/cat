@@ -64,7 +64,7 @@ public class RemoteTransactionModelService implements ModelService<TransactionRe
 	public boolean isEligable(ModelRequest request) {
 		ModelPeriod period = request.getPeriod();
 
-		return period.isCurrent() || period.isLast();
+		return !period.isHistorical();
 	}
 
 	public void setHost(String host) {

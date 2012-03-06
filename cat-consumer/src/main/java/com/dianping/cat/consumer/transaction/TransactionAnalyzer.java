@@ -40,7 +40,6 @@ import com.site.lookup.annotation.Inject;
  */
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable,
       LogEnabled {
-
 	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
 
 	private static final long MINUTE = 60 * 1000;

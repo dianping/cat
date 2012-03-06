@@ -45,12 +45,16 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private MeanSquareDeviationComputer m_computer = new MeanSquareDeviationComputer();
 
-	private TransactionName getName(Payload payload) {
+	private TransactionName getTransactionName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
 		String name = payload.getName();
+		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("type", type).setProperty("name", name);
+		      .setProperty("domain", domain) //
+		      .setProperty("date", date) //
+		      .setProperty("type", payload.getType())//
+		      .setProperty("name", payload.getName());
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
 		TransactionType t = report.findType(type);
@@ -70,11 +74,20 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private TransactionReport getReport(Payload payload) {
 		String domain = payload.getDomain();
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod());
-		ModelResponse<TransactionReport> response = m_service.invoke(request);
-		TransactionReport report = response.getModel();
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("domain", domain) //
+		      .setProperty("date", date) //
+		      .setProperty("type", payload.getType());
 
-		return report;
+		if (m_service.isEligable(request)) {
+			ModelResponse<TransactionReport> response = m_service.invoke(request);
+			TransactionReport report = response.getModel();
+
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable service registered for " + request + "!");
+		}
 	}
 
 	@Override
@@ -118,7 +131,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	private void showGraphs(Model model, Payload payload) {
-		final TransactionName name = getName(payload);
+		final TransactionName name = getTransactionName(payload);
 
 		if (name == null) {
 			return;

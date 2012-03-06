@@ -23,6 +23,9 @@
       <page name="model" title="Model" path="model" standalone="false">
         <description>Model Service</description>
       </page>
+      <page name="problem" title="Problem" path="p">
+        <description>Problem</description>
+      </page>
     </module>
   </webapp>
 </wizard>

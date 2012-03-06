@@ -18,7 +18,7 @@
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 <jsp:body>
-<table class="transaction" border="0">
+<table class="transaction">
 	<tr><th>${empty payload.type ? "Type" : "Name"}</th><th>Total Count</th><th>Failure Count</th><th>Failure%</th><th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
 	<c:choose>
 		<c:when test="${empty payload.type}">

@@ -1,7 +1,5 @@
 package com.dianping.cat.report.page.model.transaction;
 
-import java.util.List;
-
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -12,16 +10,6 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
 public class TransactionReportMerger extends DefaultMerger {
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
-	}
-
-	public static TransactionReport merges(List<TransactionReport> reports) {
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(""));
-
-		for (TransactionReport report : reports) {
-			report.accept(merger);
-		}
-
-		return merger.getTransactionReport();
 	}
 
 	@Override

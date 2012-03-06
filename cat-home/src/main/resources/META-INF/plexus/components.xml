@@ -68,6 +68,19 @@
 			<implementation>com.dianping.cat.report.page.ip.IpManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.graph.ValueTranslater</role>
+			<implementation>com.dianping.cat.report.graph.DefaultValueTranslater</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.graph.GraphBuilder</role>
+			<implementation>com.dianping.cat.report.graph.DefaultGraphBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.graph.ValueTranslater</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionModelService</implementation>
@@ -80,11 +93,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>transaction-localhost</role-hint>
-			<implementation>com.dianping.cat.report.page.model.transaction.RemoteTransactionModelService</implementation>
-			<configuration>
-				<host>localhost</host>
-			</configuration>
+			<role-hint>transaction-hdfs</role-hint>
+			<implementation>com.dianping.cat.report.page.model.transaction.HdfsTransactionModelService</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -95,21 +105,34 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>transaction-local</role-hint>
+						<role-hint>transaction-hdfs</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.graph.ValueTranslater</role>
-			<implementation>com.dianping.cat.report.graph.DefaultValueTranslater</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.graph.GraphBuilder</role>
-			<implementation>com.dianping.cat.report.graph.DefaultGraphBuilder</implementation>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>failure-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.failure.LocalFailureModelService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.graph.ValueTranslater</role>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>failure</role-hint>
+			<implementation>com.dianping.cat.report.page.model.failure.CompositeFailureModelService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>failure-local</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -176,8 +199,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.ServerConfig</role>
+			<implementation>com.dianping.cat.report.ServerConfig</implementation>
+			<requirements>
+				<requirement>
+					<role>java.util.List</role>
+				</requirement>
+				<requirement>
+					<role>java.lang.String</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.failure.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.failure.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.failure.FailureManager</role>
+			<implementation>com.dianping.cat.report.page.failure.FailureManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.logview.Handler</role>
@@ -213,6 +252,10 @@
 		<component>
 			<role>com.dianping.cat.report.page.ip.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.ip.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.ip.IpManager</role>
+			<implementation>com.dianping.cat.report.page.ip.IpManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.service.Handler</role>
@@ -300,6 +343,24 @@
 					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.problem.Handler</role>
+			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.problem.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>failure</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.problem.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>

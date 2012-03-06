@@ -19,7 +19,9 @@ com.dianping.cat.report.page.ip.Handler.class,
 
 com.dianping.cat.report.page.service.Handler.class,
 
-com.dianping.cat.report.page.model.Handler.class
+com.dianping.cat.report.page.model.Handler.class,
+
+com.dianping.cat.report.page.problem.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

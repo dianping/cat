@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,7 +142,19 @@ public class FailureAnalyzer extends AbstractMessageAnalyzer<FailureReport> impl
 
 	@Override
 	protected void process(MessageTree tree) {
+		String domain = tree.getDomain();
+		FailureReport report = m_reports.get(domain);
 
+		if (report == null) {
+			report = new FailureReport();
+			report.setDomain(domain);
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+
+			m_reports.put(domain, report);
+		}
+		
+		// TODO
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
