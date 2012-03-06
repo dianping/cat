@@ -179,8 +179,8 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 			}
 		}
 		oldSegments.clear();
-		for (String key : newSegments.keySet()) {
-			oldSegments.put(key, newSegments.get(key));
+		for (java.util.Map.Entry<String, Segment> entry : newSegments.entrySet()) {
+			oldSegments.put(entry.getKey(), newSegments.get(entry.getValue()));
 		}
 		return m_report;
 	}

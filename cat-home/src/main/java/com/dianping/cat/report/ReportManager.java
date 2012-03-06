@@ -47,8 +47,6 @@ public abstract class ReportManager {
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-		} else {
-			inputStart = DateUtils.SDF_URL.format(currentHourStart);
 		}
 
 		long reportStart = startLong + changeValue * DateUtils.HOUR;

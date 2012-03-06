@@ -51,8 +51,13 @@ public class TransactionModelProvider implements ModelProvider {
 		} else {
 			System.err.println("historical model is not implemented yet");
 		}
+		TransactionReport report;
 		
-		TransactionReport report = analyzer.generate(domain);
+		if (analyzer == null) {
+			report = new TransactionReport(domain);
+		} else {
+			report = analyzer.generate(domain);
+		}
 		return new DefaultXmlBuilder().buildXml(report);
 	}
 
