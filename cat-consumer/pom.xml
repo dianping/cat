@@ -32,7 +32,11 @@
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
 <<<<<<< HEAD
+<<<<<<< HEAD
 				<version>1.0.10</version>
+=======
+				<version>1.0.9</version>
+>>>>>>> 31515b8c1b82963a28412ab90fbd3229ea890f3f
 =======
 				<version>1.0.9</version>
 >>>>>>> 31515b8c1b82963a28412ab90fbd3229ea890f3f
