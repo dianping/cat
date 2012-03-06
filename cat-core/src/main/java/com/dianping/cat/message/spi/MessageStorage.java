@@ -16,15 +16,6 @@ public interface MessageStorage {
 	public String store(MessageTree tree);
 
 	/**
-	 * Fetch a message tree from the store.
-	 * 
-	 * @param messageId
-	 * @return
-	 */
-	public MessageTree get(String messageId);
-
-	/**
-	 * 
 	 * Get relative path to base directory or base URL.
 	 * 
 	 * @param tree
