@@ -8,16 +8,16 @@
    "types": {
       "URL": {
          "id": "URL",
-         "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html",
          "totalCount": 11,
          "failCount": 0,
          "failPercent": "0.00",
          "min": 0.0,
          "max": 194.0,
          "avg": "47.1",
-         "sum": 518.0,
-         "sum2": 73942.0,
+         "sum": "518.0",
+         "sum2": "73942.0",
          "std": "67.1",
+         "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html",
          "names": {
             "home": {
                "id": "home",
@@ -27,10 +27,36 @@
                "min": 175.0,
                "max": 175.0,
                "avg": "175.0",
-               "sum": 175.0,
-               "sum2": 30625.0,
+               "sum": "175.0",
+               "sum2": "30625.0",
                "std": "0.0",
-               "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html"
+               "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html",
+               "ranges": [
+                  {
+                     "value": 5,
+                     "count": 123,
+                     "sum": 123456.0,
+                     "avg": "22.2",
+                     "fails": 3
+                  },
+                  {
+                     "value": 10,
+                     "count": 123,
+                     "sum": 12457.0,
+                     "avg": "222.0",
+                     "fails": 3
+                  }
+               ],
+               "durations": [
+                  {
+                     "value": 128,
+                     "count": 34
+                  },
+                  {
+                     "value": 256,
+                     "count": 12
+                  }
+               ]
             },
             "service": {
                "id": "service",
@@ -40,10 +66,11 @@
                "min": 1.0,
                "max": 58.0,
                "avg": "13.0",
-               "sum": 104.0,
-               "sum2": 3952.0,
+               "sum": "104.0",
+               "sum2": "3952.0",
                "std": "18.0",
-               "successMessageUrl": "20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html"
+               "successMessageUrl": "20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html",
+               "failMessageUrl": "20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html"
             },
             "t": {
                "id": "t",
@@ -53,8 +80,8 @@
                "min": 193.0,
                "max": 193.0,
                "avg": "193.0",
-               "sum": 193.0,
-               "sum2": 37249.0,
+               "sum": "193.0",
+               "sum2": "37249.0",
                "std": "0.0",
                "successMessageUrl": "20120216/23/Cat/8e7c91a0-7549-4b13-b43b-252b2a6ef4bb.html"
             },
@@ -66,8 +93,8 @@
                "min": 46.0,
                "max": 46.0,
                "avg": "46.0",
-               "sum": 46.0,
-               "sum2": 2116.0,
+               "sum": "46.0",
+               "sum2": "2116.0",
                "std": "0.0",
                "successMessageUrl": "20120216/23/Cat/2029c32e-b692-4e43-8eaf-96b8d6c846a2.html"
             }
@@ -75,16 +102,16 @@
       },
       "MVC": {
          "id": "MVC",
-         "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html",
          "totalCount": 33,
          "failCount": 0,
          "failPercent": "0.00",
          "min": 0.0,
          "max": 191.0,
          "avg": "15.1",
-         "sum": 499.0,
-         "sum2": 68377.0,
+         "sum": "499.0",
+         "sum2": "68377.0",
          "std": "42.9",
+         "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html",
          "names": {
             "InboundPhase": {
                "id": "InboundPhase",
@@ -94,8 +121,8 @@
                "min": 0.0,
                "max": 17.0,
                "avg": "1.5",
-               "sum": 17.0,
-               "sum2": 289.0,
+               "sum": "17.0",
+               "sum2": "289.0",
                "std": "4.9",
                "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html"
             },
@@ -107,8 +134,8 @@
                "min": 0.0,
                "max": 4.9E-324,
                "avg": "0.0",
-               "sum": 0.0,
-               "sum2": 0.0,
+               "sum": "0.0",
+               "sum2": "0.0",
                "std": "0.0",
                "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html"
             },
@@ -120,8 +147,8 @@
                "min": 1.0,
                "max": 191.0,
                "avg": "43.8",
-               "sum": 482.0,
-               "sum2": 68088.0,
+               "sum": "482.0",
+               "sum2": "68088.0",
                "std": "65.3",
                "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html"
             }
@@ -129,16 +156,16 @@
       },
       "NEW1": {
          "id": "NEW1",
-         "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html",
          "totalCount": 33,
          "failCount": 0,
          "failPercent": "0.00",
          "min": 0.0,
          "max": 191.0,
          "avg": "15.1",
-         "sum": 499.0,
-         "sum2": 68377.0,
+         "sum": "499.0",
+         "sum2": "68377.0",
          "std": "42.9",
+         "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html",
          "names": {
             "InboundPhase": {
                "id": "InboundPhase",
@@ -148,8 +175,8 @@
                "min": 0.0,
                "max": 17.0,
                "avg": "1.5",
-               "sum": 17.0,
-               "sum2": 289.0,
+               "sum": "17.0",
+               "sum2": "289.0",
                "std": "4.9",
                "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html"
             },
@@ -161,8 +188,8 @@
                "min": 0.0,
                "max": 4.9E-324,
                "avg": "0.0",
-               "sum": 0.0,
-               "sum2": 0.0,
+               "sum": "0.0",
+               "sum2": "0.0",
                "std": "0.0",
                "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html"
             },
@@ -174,8 +201,8 @@
                "min": 1.0,
                "max": 191.0,
                "avg": "43.8",
-               "sum": 482.0,
-               "sum2": 68088.0,
+               "sum": "482.0",
+               "sum2": "68088.0",
                "std": "65.3",
                "successMessageUrl": "20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html"
             }

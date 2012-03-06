@@ -137,7 +137,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 			return;
 		}
 
-		String graph1 = m_builder.build(new DurationPayload("Transaction Duration", "Duration (ms)", "Count", name));
+		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
 		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
 		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
 		      "Average Duration (ms)", name));

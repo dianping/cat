@@ -37,6 +37,7 @@ public class MessageProducerTest extends CatTestCase {
 			t.complete();
 		}
 
+		// please stop CAT server when you run this test case
 		Assert.assertEquals("One message should be in the queue.", 1, queue.size());
 
 		MessageTree tree = queue.peek();
