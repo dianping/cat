@@ -122,7 +122,7 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 
 	@Override
 	public InputChannel openChannel(String messageId) throws IOException {
-		String path = m_builder.getHdfsPath(tree, m_ipAddress);
+		String path = m_builder.getHdfsPath(messageId);
 		InputChannel channel = m_channels.get(path);
 
 		if (channel == null) {

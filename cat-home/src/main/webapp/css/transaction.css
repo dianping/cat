@@ -1,0 +1,45 @@
+.transaction {
+	width: auto;
+	font-size: small;
+}
+
+.subtitle {
+	font-size: small;
+}
+
+.timestamp {
+	font-size: small;
+}
+
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+tr.link td {
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+.current {
+	background-color: orange;
+	color: white;
+}
+
+.warn {
+	color: yellow;
+}
+
+.error {
+	color: red;
+}

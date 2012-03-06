@@ -91,6 +91,23 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.transaction.TransactionAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<configuration>
+				<reportPath>target/report/transaction/</reportPath>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStorage</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.ip.IpAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>

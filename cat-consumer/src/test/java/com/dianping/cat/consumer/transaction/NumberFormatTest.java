@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 
 import junit.framework.Assert;
@@ -8,13 +9,13 @@ import org.junit.Test;
 
 public class NumberFormatTest {
 	private void checkFormat(Number number, String format, String expected) {
-		String actual = new java.text.DecimalFormat(format).format(number);
+		String actual = new DecimalFormat(format).format(number);
 
 		Assert.assertEquals(expected, actual);
 	}
 
 	private void checkParse(String str, String format, Number expected) throws ParseException {
-		Number actual = new java.text.DecimalFormat(format).parse(str);
+		Number actual = new DecimalFormat(format).parse(str);
 
 		Assert.assertEquals(expected, actual);
 	}

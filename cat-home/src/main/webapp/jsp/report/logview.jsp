@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=utf-8" %>
+<%@ page contentType="text/html; charset=utf-8" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
@@ -6,8 +6,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.logview.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.logview.Model" scope="request"/>
 
-<res:useCss value="${res.css.local.default_css}" target="head-css" />
-<res:useCss value="${res.css.local.style_css}" target="head-css" />
 <res:useCss value="${res.css.local.logview_css}" target="head-css"/>
 
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>

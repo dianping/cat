@@ -25,7 +25,6 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
-
 	@Inject
 	private ServerConfig serverConfig;
 

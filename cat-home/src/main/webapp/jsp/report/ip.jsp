@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=utf-8" trimDirectiveWhitespaces="true"%>
+<%@ page contentType="text/html; charset=utf-8" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
@@ -6,14 +6,12 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.ip.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.ip.Model" scope="request" />
 
-<res:useCss value='${res.css.local.default_css}' target="head-css" />
-<res:useCss value='${res.css.local.style_css}' target="head-css" />
 <res:useCss value='${res.css.local.ip_css}' target="head-css"/>
 
 <a:report title="Hot IP Report" timestamp="2012-02-07">
 
 <jsp:body>
-
+${model.b}
 <table class="ip-table">
 	<tr><th>IP</th><th>last 1 min</th><th>last 5 mins</th><th>last 15 mins</th></tr>
 	<c:forEach var="m" items="${model.displayModels}" varStatus="status">

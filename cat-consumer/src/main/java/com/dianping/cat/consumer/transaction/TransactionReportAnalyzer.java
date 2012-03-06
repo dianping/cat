@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dianping.cat.consumer.transaction;
 
 import java.io.File;

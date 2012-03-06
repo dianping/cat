@@ -13,6 +13,8 @@ public class NavigationBar {
 
 		ReportPage.TRANSACTION,
 		
+		ReportPage.PROBLEM,
+		
 		ReportPage.IP,
 		
 		ReportPage.SERVICE,

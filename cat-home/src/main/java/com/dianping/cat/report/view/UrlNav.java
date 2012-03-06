@@ -1,22 +1,32 @@
 package com.dianping.cat.report.view;
 
 public enum UrlNav {
-	FIRST("-1d", -24), SECOND("-2h", -2), THIRD("-1h", -1), FOUR("+1h", 1), FIVE("+2h", 2), SIX("+1d", 24);
+	ONE_DAY_BEFORE("-1d", -24),
 
-	private UrlNav(String text, int method) {
-		m_text = text;
-		m_method = method;
+	TWO_HOURS_BEFORE("-2h", -2),
+
+	ONE_HOUR_BEFORE("-1h", -1),
+
+	ONE_HOUR_LATER("+1h", 1),
+
+	TWO_HOURS_LATER("+2h", 2),
+
+	ONE_DAY_LATER("+1d", 24);
+
+	private UrlNav(String title, int hours) {
+		m_title = title;
+		m_hours = hours;
 	}
 
-	private String m_text;
+	private String m_title;
 
-	private int m_method;
+	private int m_hours;
 
-	public String getText() {
-		return m_text;
+	public String getTitle() {
+		return m_title;
 	}
 
-	public int getMethod() {
-		return m_method;
+	public int getHours() {
+		return m_hours;
 	}
 }

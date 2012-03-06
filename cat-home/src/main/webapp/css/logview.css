@@ -16,6 +16,12 @@ tr.even td {
 	vertical-align: top;
 }
 
+tr.link td {
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
 .warn {
 	color: yellow;
 }

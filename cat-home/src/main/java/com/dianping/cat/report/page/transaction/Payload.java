@@ -1,46 +1,22 @@
 package com.dianping.cat.report.page.transaction;
 
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportPayload;
 import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.ActionPayload;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 
-public class Payload implements ActionPayload<ReportPage, Action> {
-	private ReportPage m_page;
-
-	@FieldMeta("domain")
-	private String m_domain;
-
-	@FieldMeta("type")
-	private String m_type;
-	
-	@FieldMeta("current")
-	private String m_current;
-	
-	@FieldMeta("method")
-	private int m_method;
-
+public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	public void setAction(Action action) {
-		m_action = action;
-	}
+	@FieldMeta("type")
+	private String m_type;
 
-	public String getDomain() {
-		return m_domain;
-	}
+	@FieldMeta("name")
+	private String m_name;
 
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public void setType(String type) {
-		m_type = type;
+	public Payload() {
+		super(ReportPage.TRANSACTION);
 	}
 
 	@Override
@@ -48,37 +24,30 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_action;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
+	public String getName() {
+		return m_name;
 	}
-	
-	public String getCurrent() {
-   	return m_current;
-   }
 
-	public void setCurrent(String current) {
-   	m_current = current;
-   }
+	public String getType() {
+		return m_type;
+	}
 
-	public int getMethod() {
-   	return m_method;
-   }
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
 
-	public void setMethod(int method) {
-   	m_method = method;
-   }
+	public void setName(String name) {
+		m_name = name;
+	}
 
-	public void setPage(ReportPage page) {
-   	m_page = page;
-   }
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.TRANSACTION);
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.VIEW;
+		}
 	}
 }

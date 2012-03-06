@@ -11,6 +11,8 @@ com.dianping.cat.message.AllTests.class,
 
 com.dianping.cat.consumer.AllTests.class,
 
+com.dianping.cat.AllTests.class,
+
 })
 public class AllAllTests {
 

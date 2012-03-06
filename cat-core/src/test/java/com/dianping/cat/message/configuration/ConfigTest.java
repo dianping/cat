@@ -1,12 +1,14 @@
 package com.dianping.cat.message.configuration;
 
 import java.io.InputStream;
+import java.util.List;
 
 import junit.framework.Assert;
 
 import org.junit.Test;
 
 import com.dianping.cat.configuration.model.entity.Config;
+import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
 import com.site.helper.Files;
 
@@ -21,13 +23,15 @@ public class ConfigTest {
 		Assert.assertEquals("Review", config.getApp().getDomain());
 		Assert.assertEquals("192.168.8.1", config.getApp().getIp());
 
-		Assert.assertEquals(3, config.getServers().size());
-		Assert.assertEquals(2280, config.getServers().get(0).getPort().intValue());
-		Assert.assertEquals(true, config.getServers().get(0).isEnabled());
-		Assert.assertEquals(2281, config.getServers().get(1).getPort().intValue());
-		Assert.assertEquals(false, config.getServers().get(1).isEnabled());
-		Assert.assertEquals(2280, config.getServers().get(2).getPort().intValue());
-		Assert.assertEquals(true, config.getServers().get(2).isEnabled());
+		List<Server> servers = config.getServers();
+		
+		Assert.assertEquals(3, servers.size());
+		Assert.assertEquals(2280, servers.get(0).getPort().intValue());
+		Assert.assertEquals(true, servers.get(0).isEnabled());
+		Assert.assertEquals(2281, servers.get(1).getPort().intValue());
+		Assert.assertEquals(false, servers.get(1).isEnabled());
+		Assert.assertEquals(2280, servers.get(2).getPort().intValue());
+		Assert.assertEquals(true, servers.get(2).isEnabled());
 	}
 
 	@Test

@@ -1,114 +1,87 @@
 package com.dianping.cat.report.page.transaction;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.view.UrlNav;
-import com.site.web.mvc.ViewModel;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.report.page.AbstractReportModel;
 
-public class Model extends ViewModel<ReportPage, Action, Context> {
-	private String m_current;
+public class Model extends AbstractReportModel<Action, Context> {
+	private TransactionReport m_report;
 
-	private String m_currentDomain;
-
-	private List<String> m_domains;
-	
-	private String m_jsonResult;
-	
-	private String m_reportTitle;
-	
-	private String m_generateTime;
-	
 	private String m_type;
-	
-	private String m_urlPrefix;
 
-	private List<UrlNav> m_urlNavs;
+	private String m_graph1;
+
+	private String m_graph2;
+
+	private String m_graph3;
+
+	private String m_graph4;
 
 	public Model(Context ctx) {
 		super(ctx);
-		m_urlNavs = new ArrayList<UrlNav>();
-		for(UrlNav temp: UrlNav.values()){
-			m_urlNavs.add(temp);
-		}
 	}
-
-	public String getCurrent() {
-   	return m_current;
-   }
-
-	public String getUrlPrefix() {
-   	return m_urlPrefix;
-   }
-
-	public void setUrlPrefix(String urlPrefix) {
-   	m_urlPrefix = urlPrefix;
-   }
-
-	public List<UrlNav> getUrlNavs() {
-   	return m_urlNavs;
-   }
-
-	public void setUrlNavs(List<UrlNav> urlNavs) {
-   	this.m_urlNavs = urlNavs;
-   }
-
-	public String getCurrentDomain() {
-   	return m_currentDomain;
-   }
 
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
 	}
 
-	public List<String> getDomains() {
-		return m_domains;
+	// required by report tag
+	public Set<String> getDomains() {
+		if (m_report == null) {
+			return Collections.emptySet();
+		} else {
+			return m_report.getDomains();
+		}
 	}
 
-	public String getJsonResult() {
-   	return m_jsonResult;
-   }
+	public String getGraph1() {
+		return m_graph1;
+	}
 
-	public String getReportTitle() {
-   	return m_reportTitle;
-   }
+	public String getGraph2() {
+		return m_graph2;
+	}
+
+	public String getGraph3() {
+		return m_graph3;
+	}
+
+	public String getGraph4() {
+		return m_graph4;
+	}
+
+	public TransactionReport getReport() {
+		return m_report;
+	}
 
 	public String getType() {
 		return m_type;
 	}
 
-	public void setCurrent(String current) {
-   	m_current = current;
-   }
-
-	public void setCurrentDomain(String currentDomain) {
-   	m_currentDomain = currentDomain;
-   }
-
-	public void setDomains(List<String> domains) {
-		this.m_domains = domains;
+	public void setGraph1(String graph1) {
+		m_graph1 = graph1;
 	}
 
-	public void setJsonResult(String jsonResult) {
-   	m_jsonResult = jsonResult;
-   }
+	public void setGraph2(String graph2) {
+		m_graph2 = graph2;
+	}
 
-	public void setReportTitle(String reportTitle) {
-   	m_reportTitle = reportTitle;
-   }
+	public void setGraph3(String graph3) {
+		m_graph3 = graph3;
+	}
+
+	public void setGraph4(String graph4) {
+		m_graph4 = graph4;
+	}
+
+	public void setReport(TransactionReport report) {
+		m_report = report;
+	}
 
 	public void setType(String type) {
-		this.m_type = type;
+		m_type = type;
 	}
-
-	public String getGenerateTime() {
-   	return m_generateTime;
-   }
-
-	public void setGenerateTime(String generateTime) {
-   	m_generateTime = generateTime;
-   }
-	
 }

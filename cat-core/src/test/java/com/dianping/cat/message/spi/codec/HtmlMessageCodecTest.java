@@ -8,6 +8,8 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -16,17 +18,18 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.site.lookup.ComponentTestCase;
 
-public class HtmlMessageCodecTest {
-	private void check(Message message, String expected) {
-		HtmlMessageCodec codec = new HtmlMessageCodec();
+@RunWith(JUnit4.class)
+public class HtmlMessageCodecTest extends ComponentTestCase {
+	private void check(Message message, String expected) throws Exception {
+		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
-		codec.setBufferWriter(new HtmlEncodingBufferWriter());
-		codec.setMessagePathBuilder(new DefaultMessagePathBuilder());
 		codec.encodeMessage(message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
@@ -92,7 +95,7 @@ public class HtmlMessageCodecTest {
 	}
 
 	@Test
-	public void testEvent() {
+	public void testEvent() throws Exception {
 		long timestamp = 1325489621987L;
 		Event event = newEvent("type", "name", timestamp, "0", "here is the data.");
 
@@ -100,7 +103,7 @@ public class HtmlMessageCodecTest {
 	}
 
 	@Test
-	public void testEventForRawData() {
+	public void testEventForRawData() throws Exception {
 		long timestamp = 1325489621987L;
 		String trace = "java.lang.Exception\n"
 		      + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\n"
@@ -115,7 +118,7 @@ public class HtmlMessageCodecTest {
 	}
 
 	@Test
-	public void testHeartbeat() {
+	public void testHeartbeat() throws Exception {
 		long timestamp = 1325489621987L;
 		Heartbeat heartbeat = newHeartbeat("type", "name", timestamp, "0", "here is the data.");
 
@@ -144,7 +147,7 @@ public class HtmlMessageCodecTest {
 	}
 
 	@Test
-	public void testTransactionNormal() {
+	public void testTransactionNormal() throws Exception {
 		long timestamp = 1325489621987L;
 		Transaction root = newTransaction("URL", "Review", timestamp, "0", 100, "/review/2468");
 
@@ -169,7 +172,7 @@ public class HtmlMessageCodecTest {
 	}
 
 	@Test
-	public void testTransactionWithRemoteCall() {
+	public void testTransactionWithRemoteCall() throws Exception {
 		long timestamp = 1325489621987L;
 		Transaction root = newTransaction("URL", "Review", timestamp, "0", 100, "/review/2468");
 
@@ -198,7 +201,7 @@ public class HtmlMessageCodecTest {
 	}
 
 	@Test
-	public void testTransactionSimple() {
+	public void testTransactionSimple() throws Exception {
 		long timestamp = 1325489621987L;
 		Transaction transaction = newTransaction("type", "name", timestamp, "0", 10, "here is the data.");
 

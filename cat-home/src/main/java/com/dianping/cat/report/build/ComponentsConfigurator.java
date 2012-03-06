@@ -6,8 +6,11 @@ import java.util.List;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
-import com.dianping.cat.report.ReportModule;
 import com.dianping.cat.report.ServerConfig;
+import com.dianping.cat.report.graph.DefaultGraphBuilder;
+import com.dianping.cat.report.graph.DefaultValueTranslater;
+import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.failure.FailureManager;
 import com.dianping.cat.report.page.ip.IpManager;
 import com.dianping.cat.report.page.service.provider.FailureModelProvider;
@@ -15,12 +18,11 @@ import com.dianping.cat.report.page.service.provider.IpModelProvider;
 import com.dianping.cat.report.page.service.provider.ModelProvider;
 import com.dianping.cat.report.page.service.provider.TransactionModelProvider;
 import com.dianping.cat.report.page.transaction.TransactionManager;
+import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
-import com.site.web.configuration.AbstractWebComponentsConfigurator;
 
-public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
+public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
-	@SuppressWarnings("unchecked")
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
@@ -49,8 +51,14 @@ public class ComponentsConfigurator extends AbstractWebComponentsConfigurator {
 
 		all.add(C(IpManager.class));
 
+		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
+		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
+		      .req(ValueTranslater.class));
+
+		all.addAll(new ServiceComponentConfigurator().defineComponents());
+
 		// Please keep it last
-		defineModuleRegistry(all, ReportModule.class, ReportModule.class);
+		all.addAll(new WebComponentConfigurator().defineComponents());
 
 		return all;
 	}

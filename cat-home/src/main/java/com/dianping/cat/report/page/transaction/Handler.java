@@ -1,23 +1,26 @@
 package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+
+import com.dianping.cat.consumer.transaction.MeanSquareDeviationComputer;
+import com.dianping.cat.consumer.transaction.model.entity.Duration;
+import com.dianping.cat.consumer.transaction.model.entity.Range;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.ServerConfig;
-import com.dianping.cat.report.tool.Constants;
-import com.dianping.cat.report.tool.DateUtils;
-import com.dianping.cat.report.tool.ReportUtils;
-import com.dianping.cat.report.tool.StringUtils;
+import com.dianping.cat.report.graph.AbstractGraphPayload;
+import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.page.model.spi.ModelRequest;
+import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
@@ -28,15 +31,64 @@ import com.site.web.mvc.annotation.PayloadMeta;
  * @author sean.wang
  * @since Feb 6, 2012
  */
-public class Handler implements PageHandler<Context> {
+public class Handler implements PageHandler<Context>, Initializable {
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject
-	private ServerConfig serverConfig;
+	@Inject(type = ModelService.class, value = "transaction")
+	private ModelService<TransactionReport> m_service;
 
 	@Inject
-	private TransactionManager m_manager;
+	private GraphBuilder m_builder;
+
+	private Map<Integer, Integer> m_map = new HashMap<Integer, Integer>();
+
+	private MeanSquareDeviationComputer m_computer = new MeanSquareDeviationComputer();
+
+	private TransactionName getTransactionName(Payload payload) {
+		String domain = payload.getDomain();
+		String type = payload.getType();
+		String name = payload.getName();
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("domain", domain) //
+		      .setProperty("date", date) //
+		      .setProperty("type", payload.getType())//
+		      .setProperty("name", payload.getName());
+		ModelResponse<TransactionReport> response = m_service.invoke(request);
+		TransactionReport report = response.getModel();
+		TransactionType t = report.findType(type);
+
+		if (t != null) {
+			TransactionName n = t.findName(name);
+
+			if (n != null) {
+				n.accept(m_computer);
+			}
+
+			return n;
+		}
+
+		return null;
+	}
+
+	private TransactionReport getReport(Payload payload) {
+		String domain = payload.getDomain();
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("domain", domain) //
+		      .setProperty("date", date) //
+		      .setProperty("type", payload.getType());
+
+		if (m_service.isEligable(request)) {
+			ModelResponse<TransactionReport> response = m_service.invoke(request);
+			TransactionReport report = response.getModel();
+
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable service registered for " + request + "!");
+		}
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -50,59 +102,238 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		model.setAction(Action.VIEW);
+
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
-		
-		long currentTimeMillis = System.currentTimeMillis();
-		long currentTime = currentTimeMillis - currentTimeMillis % DateUtils.HOUR;
-		int method = payload.getMethod();
-		String currentDomain = payload.getDomain();
-		String current = payload.getCurrent();
-		long reportStart = m_manager.computeReportStartHour(currentTime, current, method);
-		String reportCurrentTime = DateUtils.SDF_URL.format(new Date(reportStart));
-		String index = m_manager.getReportStartType(currentTime, reportStart);
-		
-		model.setCurrent(reportCurrentTime);
-		model.setCurrent(DateUtils.SDF_URL.format(new Date(reportStart)));
-		if (index.equals(Constants.MEMORY_CURRENT) || index.equals(Constants.MEMORY_LAST)) {
-			List<TransactionReport> reports = new ArrayList<TransactionReport>();
-			List<String> servers = serverConfig.getConsumerServers();
-			Set<String> domains = new HashSet<String>();
-			for (String server : servers) {
-				String connectionUrl = m_manager.getConnectionUrl(server, currentDomain,index);
-				String pageResult = m_manager.getRemotePageContent(connectionUrl);
-				if(pageResult!=null){
-					List<String> domainTemps = StringUtils.getListFromPage(pageResult, "<domains>", "</domains>");
-					if (domainTemps != null) {
-						for (String temp : domainTemps) {
-							domains.add(temp);
-						}
-					}
-					String xml = StringUtils.getStringFromPage(pageResult, "<data>", "</data>");
-					reports.add(ReportUtils.parseTransactionReportXML(xml));
-				}else{
-					reports.add(new TransactionReport(currentDomain));
+
+		switch (payload.getAction()) {
+		case VIEW:
+			showReport(model, payload);
+			break;
+		case GRAPHS:
+			showGraphs(model, payload);
+			break;
+		}
+
+		m_jspViewer.view(ctx, model);
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		int k = 1;
+
+		m_map.put(0, 0);
+
+		for (int i = 0; i < 17; i++) {
+			m_map.put(k, i);
+			k <<= 1;
+		}
+	}
+
+	private void showGraphs(Model model, Payload payload) {
+		final TransactionName name = getTransactionName(payload);
+
+		if (name == null) {
+			return;
+		}
+
+		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
+		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
+		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
+		      "Average Duration (ms)", name));
+		String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
+
+		model.setGraph1(graph1);
+		model.setGraph2(graph2);
+		model.setGraph3(graph3);
+		model.setGraph4(graph4);
+	}
+
+	private void showReport(Model model, Payload payload) {
+		try {
+			TransactionReport report = getReport(payload);
+
+			if (payload.getPeriod().isFuture()) {
+				model.setDate(payload.getCurrentDate());
+			} else {
+				model.setDate(payload.getDate());
+			}
+
+			report.accept(m_computer);
+			model.setReport(report);
+		} catch (Throwable e) {
+			model.setException(e);
+		}
+	}
+
+	abstract class AbstractPayload extends AbstractGraphPayload {
+		private final TransactionName m_name;
+
+		public AbstractPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
+			super(title, axisXLabel, axisYLabel);
+
+			m_name = name;
+		}
+
+		@Override
+		public String getAxisXLabel(int index) {
+			return String.valueOf(index * 5);
+		}
+
+		@Override
+		public int getDisplayHeight() {
+			return (int) (super.getDisplayHeight() * 0.7);
+		}
+
+		@Override
+		public int getDisplayWidth() {
+			return (int) (super.getDisplayWidth() * 0.7);
+		}
+
+		@Override
+		public String getIdPrefix() {
+			return m_name.getId() + "-" + super.getIdPrefix();
+		}
+
+		protected TransactionName getTransactionName() {
+			return m_name;
+		}
+
+		@Override
+		public int getWidth() {
+			return super.getWidth() + 120;
+		}
+
+		@Override
+		public boolean isStandalone() {
+			return false;
+		}
+	}
+
+	final class AverageTimePayload extends AbstractPayload {
+		public AverageTimePayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
+			super(title, axisXLabel, axisYLabel, name);
+		}
+
+		@Override
+		public int getOffsetY() {
+			return getDisplayHeight() + 20;
+		}
+
+		@Override
+		protected double[] loadValues() {
+			double[] values = new double[12];
+
+			for (Range range : getTransactionName().getRanges()) {
+				int value = range.getValue();
+				int k = value / 5;
+
+				values[k] += range.getAvg();
+			}
+
+			return values;
+		}
+	}
+
+	final class DurationPayload extends AbstractPayload {
+		public DurationPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
+			super(title, axisXLabel, axisYLabel, name);
+		}
+
+		@Override
+		public String getAxisXLabel(int index) {
+			if (index == 0) {
+				return "0";
+			}
+
+			int k = 1;
+
+			for (int i = 1; i < index; i++) {
+				k <<= 1;
+			}
+
+			return String.valueOf(k);
+		}
+
+		@Override
+		public boolean isAxisXLabelRotated() {
+			return true;
+		}
+
+		@Override
+		public boolean isAxisXLabelSkipped() {
+			return false;
+		}
+
+		@Override
+		protected double[] loadValues() {
+			double[] values = new double[17];
+
+			for (Duration duration : getTransactionName().getDurations()) {
+				int d = duration.getValue();
+				Integer k = m_map.get(d);
+
+				if (k != null) {
+					values[k] += duration.getCount();
 				}
 			}
-			TransactionReport result = ReportUtils.mergeTransactionReports(reports);
-			List<String> domainList = new ArrayList<String>(domains);
 
-			Collections.sort(domainList);
-			model.setDomains(domainList);
-			currentDomain = result.getDomain();
-			model.setCurrentDomain(currentDomain);
-			model.setJsonResult(new DefaultJsonBuilder().buildJson(result));
-			model.setGenerateTime(DateUtils.SDF_SEG.format(new Date()));
-		} else {
-			// TODO
-			model.setGenerateTime(DateUtils.SDF_SEG.format(new Date(reportStart+DateUtils.HOUR)));
-			String reportFileName = m_manager.getReportStoreFile(reportStart, payload.getDomain());
-			model.setCurrentDomain(payload.getDomain());
-			System.out.println(reportFileName);
+			return values;
 		}
-		model.setType(payload.getType());
-		model.setUrlPrefix(m_manager.getBaseUrl(currentDomain, reportCurrentTime));
-		model.setReportTitle(m_manager.getReportDisplayTitle(model.getCurrentDomain(), reportStart));
-		m_jspViewer.view(ctx, model);
+	}
+
+	final class FailurePayload extends AbstractPayload {
+		public FailurePayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
+			super(title, axisXLabel, axisYLabel, name);
+		}
+
+		@Override
+		public int getOffsetX() {
+			return getDisplayWidth();
+		}
+
+		@Override
+		public int getOffsetY() {
+			return getDisplayHeight() + 20;
+		}
+
+		@Override
+		protected double[] loadValues() {
+			double[] values = new double[12];
+
+			for (Range range : getTransactionName().getRanges()) {
+				int value = range.getValue();
+				int k = value / 5;
+
+				values[k] += range.getFails();
+			}
+
+			return values;
+		}
+	}
+
+	final class HitPayload extends AbstractPayload {
+		public HitPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
+			super(title, axisXLabel, axisYLabel, name);
+		}
+
+		@Override
+		public int getOffsetX() {
+			return getDisplayWidth();
+		}
+
+		@Override
+		protected double[] loadValues() {
+			double[] values = new double[12];
+
+			for (Range range : getTransactionName().getRanges()) {
+				int value = range.getValue();
+				int k = value / 5;
+
+				values[k] += range.getCount();
+			}
+
+			return values;
+		}
 	}
 }

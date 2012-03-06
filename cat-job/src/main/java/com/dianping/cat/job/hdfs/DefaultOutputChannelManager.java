@@ -2,9 +2,7 @@ package com.dianping.cat.job.hdfs;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,8 +34,6 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 	private FileSystem m_fs;
 
 	private Path m_basePath;
-
-	private String m_ipAddress;
 
 	private Map<String, OutputChannel> m_channels = new HashMap<String, OutputChannel>();
 
@@ -103,19 +99,11 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 		} catch (Exception e) {
 			throw new InitializationException("Error when getting HDFS file system.", e);
 		}
-
-		try {
-			InetAddress localHost = InetAddress.getLocalHost();
-
-			m_ipAddress = localHost.getHostAddress();
-		} catch (UnknownHostException e) {
-			m_logger.warn("Unable to get local host!", e);
-		}
 	}
 
 	@Override
 	public OutputChannel openChannel(MessageTree tree, boolean forceNew) throws IOException {
-		String path = m_builder.getHdfsPath(tree, m_ipAddress);
+		String path = m_builder.getHdfsPath(tree.getMessageId());
 		OutputChannel channel = m_channels.get(path);
 
 		if (channel == null) {

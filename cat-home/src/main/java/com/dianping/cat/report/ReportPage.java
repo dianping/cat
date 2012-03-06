@@ -7,15 +7,19 @@ public enum ReportPage implements Page {
 
    HOME("home", "home", "Home", "CAT Home Page.", true),
 
-   TRANSACTION("transaction", "t", "Transaction", "CAL summary report for Transactions in current hour.", true),
+   TRANSACTION("transaction", "t", "Transaction", "CAT summary report for Transactions in current hour.", true),
 
-   FAILURE("failure", "f", "Failure", "CAL detail report for failure messages in current hour.", true),
+   FAILURE("failure", "f", "Failure", "CAT details report for failed messages in current hour.", true),
 
-   LOGVIEW("logview", "m", "Logview", "CAL log details view for a given message.", false),
+   LOGVIEW("logview", "m", "Logview", "CAT log details view for a given message.", false),
 
    IP("ip", "ip", "Top IP List", "Top visited IP list in current hour.", true),
 
-   SERVICE("service", "service", "Service", "Service Home", true);
+   SERVICE("service", "service", "Service", "Service Home", false),
+
+   MODEL("model", "model", "Model", "Model Service", false),
+
+   PROBLEM("problem", "p", "Problem", "Problem", true);
 
    private String m_name;
 

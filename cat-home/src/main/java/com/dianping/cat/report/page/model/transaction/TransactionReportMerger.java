@@ -1,7 +1,7 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.report.page.model.transaction;
 
-import java.util.List;
-
+import com.dianping.cat.consumer.transaction.model.entity.Duration;
+import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -12,20 +12,9 @@ public class TransactionReportMerger extends DefaultMerger {
 		super(transactionReport);
 	}
 
-	public TransactionReport mergesFrom(TransactionReport report) {
-		report.accept(this);
-
-		return getTransactionReport();
-	}
-
-	public static TransactionReport merges(List<TransactionReport> reports) {
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(""));
-
-		for (TransactionReport report : reports) {
-			report.accept(merger);
-		}
-
-		return merger.getTransactionReport();
+	@Override
+	protected void mergeDuration(Duration old, Duration duration) {
+		old.setCount(old.getCount() + duration.getCount());
 	}
 
 	@Override
@@ -49,6 +38,38 @@ public class TransactionReportMerger extends DefaultMerger {
 			old.setAvg(old.getSum() / old.getTotalCount());
 			old.setStd(std(old.getTotalCount(), old.getAvg(), old.getSum2()));
 		}
+
+		if (old.getSuccessMessageUrl() == null) {
+			old.setSuccessMessageUrl(other.getSuccessMessageUrl());
+		}
+
+		if (old.getFailMessageUrl() == null) {
+			old.setFailMessageUrl(other.getFailMessageUrl());
+		}
+	}
+
+	@Override
+	protected void mergeRange(Range old, Range range) {
+		old.setCount(old.getCount() + range.getCount());
+		old.setFails(old.getFails() + range.getFails());
+		old.setSum(old.getSum() + range.getSum());
+
+		if (old.getCount() > 0) {
+			old.setAvg(old.getSum() / old.getCount());
+		}
+	}
+
+	public TransactionReport mergesFrom(TransactionReport report) {
+		report.accept(this);
+
+		return getTransactionReport();
+	}
+
+	@Override
+	protected void mergeTransactionReport(TransactionReport old, TransactionReport transactionReport) {
+		super.mergeTransactionReport(old, transactionReport);
+
+		old.getDomains().addAll(transactionReport.getDomains());
 	}
 
 	@Override
@@ -71,6 +92,14 @@ public class TransactionReportMerger extends DefaultMerger {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
 			old.setStd(std(old.getTotalCount(), old.getAvg(), old.getSum2()));
+		}
+
+		if (old.getSuccessMessageUrl() == null) {
+			old.setSuccessMessageUrl(other.getSuccessMessageUrl());
+		}
+
+		if (old.getFailMessageUrl() == null) {
+			old.setFailMessageUrl(other.getFailMessageUrl());
 		}
 	}
 
