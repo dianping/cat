@@ -8,9 +8,10 @@ import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 
-public class MessageTreeInputFormat extends FileInputFormat<LongWritable, MessageTreeWritable> {
+import com.dianping.cat.job.sql.MutiFileInputFormat;
+
+public class MessageTreeInputFormat extends MutiFileInputFormat<LongWritable, MessageTreeWritable> {
 	@Override
 	public RecordReader<LongWritable, MessageTreeWritable> createRecordReader(InputSplit split,
 	      TaskAttemptContext context) throws IOException, InterruptedException {
@@ -19,7 +20,6 @@ public class MessageTreeInputFormat extends FileInputFormat<LongWritable, Messag
 
 	@Override
 	protected boolean isSplitable(JobContext context, Path filename) {
-		// the file is already small enough, so do not need to split it
 		return false;
 	}
 }

@@ -11,6 +11,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -29,7 +30,7 @@ public abstract class CatFilter implements Filter {
 		// setup for thread local data
 		Cat.setup(sessionToken);
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("URL", req.getRequestURI());
+		Transaction t = cat.newTransaction(CatConstants.TYPE_URL, req.getRequestURI());
 
 		t.setStatus(Transaction.SUCCESS);
 		logRequestClientInfo(cat, req);
@@ -81,6 +82,6 @@ public abstract class CatFilter implements Filter {
 			sb.append('?').append(qs);
 		}
 
-		cat.logEvent("URL", "Payload", Event.SUCCESS, sb.toString());
+		cat.logEvent(CatConstants.TYPE_URL, CatConstants.NAME_PAYLOAD, Event.SUCCESS, sb.toString());
 	}
 }
