@@ -6,11 +6,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.helper.Files;
@@ -20,10 +19,8 @@ import com.site.lookup.ComponentTestCase;
 public class TransactionAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void testProcessTransaction() throws Exception {
-		TransactionAnalyzer analyzer = new TransactionAnalyzer();
+		TransactionAnalyzer analyzer = lookup(TransactionAnalyzer.class);
 		TransactionReport report = new TransactionReport("Test");
-
-		analyzer.setMessageStorage(lookup(MessageStorage.class, "html"));
 
 		for (int i = 1; i <= 1000; i++) {
 			MessageTree tree = newMessageTree(i);

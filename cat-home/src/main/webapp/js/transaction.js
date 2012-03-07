@@ -1,4 +1,8 @@
-function showGraphs(anchor, id, date, domain, type, name) {
+var isCtrl = false;
+
+function showGraphs(anchor, id, date, domain, type, name, isCurrent) {
+	if (isCtrl) return true;
+	
 	var cell = document.getElementById(id);
 	var text = anchor.innerHTML;
 	
@@ -6,11 +10,11 @@ function showGraphs(anchor, id, date, domain, type, name) {
 		anchor.innerHTML = '[:: hide ::]';
 
 		if (cell.nodeName == 'IMG') { // <img src='...'/>
-			cell.src = "?op=graphs&date="+date+"&domain="+domain+"&type="+type+"&name="+name;
+			cell.src = "?op=graphs&date="+date+"&domain="+domain+"&type="+type+"&name="+name+(isCurrent?"&t="+new Date().getTime():"");
 		} else { // <div>...</div>
 			$.ajax({
 				type: "get",
-				url: "?op=graphs&date="+date+"&domain="+domain+"&type="+type+"&name="+name,
+				url: "?op=graphs&date="+date+"&domain="+domain+"&type="+type+"&name="+name+(isCurrent?"&t="+new Date().getTime():""),
 				success : function(data, textStatus) {
 					cell.innerHTML = data;
 				}
@@ -27,3 +31,9 @@ function showGraphs(anchor, id, date, domain, type, name) {
 	
 	return false;
 }
+
+$(document).keydown(function(e) {
+    if(e.ctrlKey || e.metaKey) isCtrl = true;
+}).keyup(function(e) {
+    isCtrl = false;
+});

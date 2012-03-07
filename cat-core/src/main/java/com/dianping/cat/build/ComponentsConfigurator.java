@@ -36,10 +36,8 @@ import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageStorage;
 import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketFactory;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.internal.DefaultBucket;
-import com.dianping.cat.storage.internal.DefaultBucketFactory;
 import com.dianping.cat.storage.internal.DefaultBucketManager;
 import com.dianping.cat.storage.internal.DefaultMessageBucket;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
@@ -100,7 +98,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Bucket.class, MessageTree.class.getName(), DefaultMessageBucket.class) //
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(BucketManager.class, DefaultBucketManager.class));
-		all.add(C(BucketFactory.class, DefaultBucketFactory.class));
 
 		return all;
 	}

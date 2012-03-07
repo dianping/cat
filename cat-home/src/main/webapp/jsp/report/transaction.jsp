@@ -28,7 +28,7 @@
 					<td><a href="?date=${model.date}&type=${e.id}">${e.id}</a></td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
-					<td>${e.failPercent}</td>
+					<td>${w:format(e.failPercent,'0.00')}</td>
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
 					<td>${w:format(e.min,'0')}/${w:format(e.max,'0')}/${w:format(e.avg,'0.0')}/${w:format(e.std,'0.0')}</td>
 				</tr>
@@ -38,10 +38,10 @@
 			<c:forEach var="name" items="${report.types[payload.type].names}" varStatus="status">
 				<c:set var="e" value="${name.value}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td><a href="?op=graphs&date=${model.date}&domain=${report.domain}&type=${payload.type}&name=${e.id}" onclick="return showGraphs(this,${status.index},${model.date},'${report.domain}','${payload.type}','${e.id}');">[:: show ::]</a> ${e.id}</td>
+					<td><a href="?op=graphs&date=${model.date}&domain=${report.domain}&type=${payload.type}&name=${e.id}" onclick="return showGraphs(this,${status.index},${model.date},'${report.domain}','${payload.type}','${e.id}',${payload.period.current});">[:: show ::]</a> ${e.id}</td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
-					<td>${e.failPercent}</td>
+					<td>${w:format(e.failPercent,'0.00')}</td>
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
 					<td>${w:format(e.min,'0')}/${w:format(e.max,'0')}/${w:format(e.avg,'0.0')}/${w:format(e.std,'0.0')}</td>
 				</tr>

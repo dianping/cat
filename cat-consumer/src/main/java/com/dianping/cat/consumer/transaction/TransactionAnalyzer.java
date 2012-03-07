@@ -1,8 +1,5 @@
 package com.dianping.cat.consumer.transaction;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -17,21 +14,18 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.entity.Property;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
-import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessageStorage;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.Files;
+import com.dianping.cat.storage.Bucket;
+import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -40,21 +34,19 @@ import com.site.lookup.annotation.Inject;
  */
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable,
       LogEnabled {
-	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
-
 	private static final long MINUTE = 60 * 1000;
 
 	@Inject
-	private MessageManager m_messageManager;
+	private BucketManager m_bucketManager;
 
 	@Inject
-	private MessageStorage m_messageStorage;
+	private MessagePathBuilder m_pathBuilder;
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
-	private long m_extraTime;
+	private Bucket<MessageTree> m_messageBucket;
 
-	private String m_reportPath;
+	private long m_extraTime;
 
 	private Logger m_logger;
 
@@ -119,25 +111,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return m_reports;
 	}
 
-	private String getTransactionFileName(TransactionReport report) {
-		StringBuffer result = new StringBuffer();
-		String start = FILE_SDF.format(report.getStartTime());
-		String end = FILE_SDF.format(report.getEndTime());
-
-		result.append(report.getDomain()).append("-").append(start).append("-").append(end);
-		return result.toString();
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
-		Config config = m_messageManager.getClientConfig();
+		String path = m_pathBuilder.getLogViewPath(new Date(m_startTime));
 
-		if (config != null) {
-			Property property = config.findProperty("transaction-base-dir");
-
-			if (property != null) {
-				m_reportPath = property.getValue();
-			}
+		try {
+			m_messageBucket = m_bucketManager.getMessageBucket(path);
+		} catch (Exception e) {
+			throw new InitializationException(String.format("Unable to create message bucket at %s.", path), e);
 		}
 	}
 
@@ -169,7 +150,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			// the message is required by some transactions
 			if (count > 0) {
-				m_messageStorage.store(tree);
+				String messageId = tree.getMessageId();
+				String threadTag = "t:" + tree.getThreadId();
+				String sessionTag = "s:" + tree.getSessionToken();
+				String requestTag = "r:" + messageId;
+
+				m_messageBucket.storeById(messageId, tree, threadTag, sessionTag, requestTag);
 			}
 		}
 	}
@@ -177,7 +163,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		TransactionType type = report.findOrCreateType(t.getType());
 		TransactionName name = type.findOrCreateName(t.getName());
-		String url = m_messageStorage.getPath(tree);
+		String url = m_pathBuilder.getLogViewPath(tree.getMessageId());
 		int count = 0;
 
 		type.incTotalCount();
@@ -265,31 +251,50 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_duration = duration;
 	}
 
-	public void setMessageStorage(MessageStorage messageStorage) {
-		m_messageStorage = messageStorage;
-	}
-
-	public void setReportPath(String reportPath) {
-		m_reportPath = reportPath;
-	}
-
 	@Override
 	protected void store(List<TransactionReport> reports) {
 		if (reports == null || reports.size() == 0) {
 			return;
 		}
 
-		for (TransactionReport report : reports) {
-			String failureFileName = getTransactionFileName(report);
-			String htmlPath = new StringBuilder().append(m_reportPath).append(failureFileName).append(".html").toString();
-			File file = new File(htmlPath);
+		m_bucketManager.closeBucket(m_messageBucket);
 
-			file.getParentFile().mkdirs();
+		storeReports(reports);
+		storeLogviews();
+	}
 
-			try {
-				Files.forIO().writeTo(file, new DefaultJsonBuilder().buildJson(report));
-			} catch (IOException e) {
-				m_logger.error(String.format("Error when writing to file(%s)!", file), e);
+	void storeLogviews() {
+		String path = m_pathBuilder.getLogViewPath(new Date(m_startTime));
+		Bucket<byte[]> bucket = null;
+
+		try {
+			bucket = m_bucketManager.getBytesBucket(path);
+
+			m_pathBuilder.getLogViewBaseDir();
+		} catch (Exception e) {
+			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
+		} finally {
+			if (bucket != null) {
+				m_bucketManager.closeBucket(bucket);
+			}
+		}
+	}
+
+	void storeReports(List<TransactionReport> reports) {
+		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
+		Bucket<String> bucket = null;
+
+		try {
+			bucket = m_bucketManager.getStringBucket(path);
+
+			for (TransactionReport report : reports) {
+				bucket.storeById("transaction-" + report.getDomain(), report.toString());
+			}
+		} catch (Exception e) {
+			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
+		} finally {
+			if (bucket != null) {
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}

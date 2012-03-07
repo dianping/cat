@@ -18,6 +18,7 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStorage;
+import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -52,11 +53,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TransactionReportAnalyzer.class).is(PER_LOOKUP) //
 		      .req(MessageManager.class) //
-		      .config(E("reportPath").value("target/report/transaction/")).req(MessageStorage.class, "html"));
-		
+		      .req(MessageStorage.class, "html") //
+		      .config(E("reportPath").value("target/report/transaction/")));
+
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
-				.req(MessageManager.class) //
-				.config(E("reportPath").value("target/report/transaction/")).req(MessageStorage.class, "html"));
+		      .req(MessageManager.class, BucketManager.class) //
+		      .req(MessageStorage.class, "html"));
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
 

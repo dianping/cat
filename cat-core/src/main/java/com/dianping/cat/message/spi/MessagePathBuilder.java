@@ -2,6 +2,7 @@ package com.dianping.cat.message.spi;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Date;
 
 public interface MessagePathBuilder {
 	public String getHdfsPath(String messageId);
@@ -11,4 +12,8 @@ public interface MessagePathBuilder {
 	public URL getLogViewBaseUrl();
 
 	public String getLogViewPath(String messageId);
+
+	public String getLogViewPath(Date timestamp);
+	
+	public String getReportPath(Date timestamp);
 }
