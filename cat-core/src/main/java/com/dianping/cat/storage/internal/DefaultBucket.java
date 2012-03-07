@@ -1,5 +1,6 @@
 package com.dianping.cat.storage.internal;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 
@@ -45,7 +46,7 @@ public class DefaultBucket<T> extends AbstractFileBucket<T> {
 	}
 
 	@Override
-	public void initialize(Class<?> type, String path) throws IOException {
+	public void initialize(Class<?> type, File path) throws IOException {
 		super.initialize(type, path);
 
 		m_type = type;
@@ -55,4 +56,9 @@ public class DefaultBucket<T> extends AbstractFileBucket<T> {
 			      "Only String or byte[] are supported so far, but was %s.", m_type));
 		}
 	}
+
+	@Override
+   protected boolean isAutoFlush() {
+	   return true;
+   }
 }

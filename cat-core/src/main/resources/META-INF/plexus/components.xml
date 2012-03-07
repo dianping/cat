@@ -208,6 +208,9 @@
 		<component>
 			<role>com.dianping.cat.storage.BucketManager</role>
 			<implementation>com.dianping.cat.storage.internal.DefaultBucketManager</implementation>
+			<configuration>
+				<baseDir>target/bucket/</baseDir>
+			</configuration>
 		</component>
 	</components>
 </plexus>

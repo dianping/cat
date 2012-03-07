@@ -19,13 +19,9 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.TagThreadSupport;
 import com.site.helper.Joiners;
 import com.site.helper.Splitters;
-import com.site.lookup.annotation.Inject;
 
 public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSupport<T>, LogEnabled {
 	private static final String[] EMPTY = new String[0];
-
-	@Inject
-	private String m_baseDir;
 
 	// key => offset of record
 	private Map<String, Long> m_idToOffsets = new HashMap<String, Long>();
@@ -152,10 +148,10 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 	}
 
 	@Override
-	public void initialize(Class<?> type, String path) throws IOException {
+	public void initialize(Class<?> type, File path) throws IOException {
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
-		m_file = new File(m_baseDir, path);
+		m_file = path;
 		m_file.getParentFile().mkdirs();
 		m_writeFile = new RandomAccessFile(m_file, "rw");
 		m_readFile = new RandomAccessFile(m_file, "r");
@@ -164,6 +160,8 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 			loadIndexes();
 		}
 	}
+
+	protected abstract boolean isAutoFlush();
 
 	protected void loadIndexes() throws IOException {
 		byte[] data = new byte[8192];
@@ -207,10 +205,6 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		}
 	}
 
-	public void setBaseDir(String baseDir) {
-		m_baseDir = baseDir;
-	}
-
 	@Override
 	public boolean storeById(String id, T data) {
 		return storeById(id, data, EMPTY);
@@ -251,9 +245,10 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 			m_writeFile.write('\n');
 			m_writeFile.write(buf.array(), buf.readerIndex(), length);
 			m_writeFile.write('\n');
-			
-			// TODO add a flag
-			m_writeFile.getChannel().force(true);
+
+			if (isAutoFlush()) {
+				m_writeFile.getChannel().force(true);
+			}
 
 			updateIndex(id, tags, offset);
 

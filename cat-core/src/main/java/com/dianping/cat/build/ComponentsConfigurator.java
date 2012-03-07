@@ -97,7 +97,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Bucket.class, byte[].class.getName(), DefaultBucket.class));
 		all.add(C(Bucket.class, MessageTree.class.getName(), DefaultMessageBucket.class) //
 		      .req(MessageCodec.class, "plain-text"));
-		all.add(C(BucketManager.class, DefaultBucketManager.class));
+		all.add(C(BucketManager.class, DefaultBucketManager.class) //
+		      .config(E("baseDir").value("target/bucket/")));
 
 		return all;
 	}

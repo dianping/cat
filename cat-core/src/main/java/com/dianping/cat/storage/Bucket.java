@@ -1,5 +1,6 @@
 package com.dianping.cat.storage;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -10,7 +11,7 @@ public interface Bucket<T> extends TagThreadSupport<T> {
 
 	public T findById(String id);
 
-	public void initialize(Class<?> type, String path) throws IOException;
+	public void initialize(Class<?> type, File path) throws IOException;
 
 	public boolean storeById(String id, T data);
 

@@ -1,5 +1,7 @@
 package com.dianping.cat.storage;
 
+import java.io.File;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -51,7 +53,7 @@ public class BucketTest extends ComponentTestCase {
 
 		// close and reload it, check if everything is okay
 		bucket.close();
-		bucket.initialize(byte[].class, "target/bucket/bytes");
+		bucket.initialize(byte[].class, new File("target/bucket/bytes"));
 
 		// store it and load it
 		for (int i = 0; i < 100; i++) {
@@ -97,7 +99,7 @@ public class BucketTest extends ComponentTestCase {
 
 		// close and reload it, check if everything is okay
 		bucket.close();
-		bucket.initialize(MessageTree.class, "target/bucket/message");
+		bucket.initialize(MessageTree.class, new File("target/bucket/message"));
 
 		// check next message in the same thread
 		for (int i = 0; i < groups - 1; i++) {
@@ -133,7 +135,7 @@ public class BucketTest extends ComponentTestCase {
 
 		// close and reload it, check if everything is okay
 		bucket.close();
-		bucket.initialize(String.class, "target/bucket/data");
+		bucket.initialize(String.class, new File("target/bucket/data"));
 
 		// store it and load it
 		for (int i = 0; i < 100; i++) {

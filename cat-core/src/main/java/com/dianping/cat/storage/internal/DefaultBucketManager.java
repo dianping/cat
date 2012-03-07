@@ -1,5 +1,6 @@
 package com.dianping.cat.storage.internal;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,14 +11,18 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.ContainerHolder;
+import com.site.lookup.annotation.Inject;
 
 public class DefaultBucketManager extends ContainerHolder implements BucketManager, Disposable {
+	@Inject
+	private String m_baseDir;
+
 	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();
 
 	protected Bucket<?> createBucket(String path, Class<?> type) throws IOException {
 		Bucket<?> bucket = lookup(Bucket.class, type.getName());
 
-		bucket.initialize(type, path);
+		bucket.initialize(type, new File(m_baseDir, path));
 		return bucket;
 	}
 
@@ -64,6 +69,10 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	@Override
 	public Bucket<String> getStringBucket(String path) throws IOException {
 		return getBucket(String.class, path);
+	}
+
+	public void setBaseDir(String baseDir) {
+		m_baseDir = baseDir;
 	}
 
 	static class Entry {
