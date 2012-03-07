@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.transaction;
 
 public enum Action implements com.site.web.mvc.Action {
 	VIEW("view"),
-
+	
 	GRAPHS("graphs"),
 	
 	GRAPH("graph");

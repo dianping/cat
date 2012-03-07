@@ -13,7 +13,7 @@ public interface MessagePathBuilder {
 
 	public String getLogViewPath(String messageId);
 
-	public String getLogViewPath(Date timestamp);
+	public String getMessagePath(Date timestamp);
 	
 	public String getReportPath(Date timestamp);
 }

@@ -113,7 +113,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Override
 	public void initialize() throws InitializationException {
-		String path = m_pathBuilder.getLogViewPath(new Date(m_startTime));
+		String path = m_pathBuilder.getMessagePath(new Date(m_startTime));
 
 		try {
 			m_messageBucket = m_bucketManager.getMessageBucket(path);
@@ -264,7 +264,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	void storeLogviews() {
-		String path = m_pathBuilder.getLogViewPath(new Date(m_startTime));
+		String path = m_pathBuilder.getMessagePath(new Date(m_startTime));
 		Bucket<byte[]> bucket = null;
 
 		try {

@@ -26,6 +26,11 @@ public class DefaultMessageBucket extends AbstractFileBucket<MessageTree> {
 		m_codec.encode(tree, buf);
 	}
 
+	@Override
+   protected boolean isAutoFlush() {
+	   return true;
+   }
+
 	public void setCodec(MessageCodec codec) {
 		m_codec = codec;
 	}
