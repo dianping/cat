@@ -1,11 +1,11 @@
 package com.dianping.cat.job.hdfs;
 
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.InputStream;
 
 import com.dianping.cat.message.spi.MessageTree;
 
-public interface OutputChannel {
+public interface InputChannel {
 	/**
 	 * Close the channel.
 	 */
@@ -16,7 +16,7 @@ public interface OutputChannel {
 	 * 
 	 * @param out
 	 */
-	public void initialize(OutputStream out);
+	public void initialize(InputStream in);
 
 	/**
 	 * Check if the channel is expired.
@@ -25,13 +25,14 @@ public interface OutputChannel {
 	 */
 	public boolean isExpired();
 
+
 	/**
-	 * Output the message tree to the HDFS.
+	 * Fetch message tree from hdfs.
 	 * 
-	 * @param tree
-	 * @return false if the max size is reached, false otherwise.
+	 * @param index
+	 * @param length
+	 * @return
 	 * @throws IOException
 	 */
-	public boolean write(MessageTree tree) throws IOException;
-
+	public MessageTree read(int index, int length) throws IOException;
 }
