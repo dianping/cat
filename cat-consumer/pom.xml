@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.2.0</version>
+		<version>0.2.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-consumer</artifactId>
@@ -22,7 +22,6 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>1.6</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -31,7 +30,7 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.9</version>
+				<version>1.0.10</version>
 				<executions>
 					<execution>
 						<id>generate failure report model</id>

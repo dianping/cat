@@ -209,9 +209,5 @@
 			<role>com.dianping.cat.storage.BucketManager</role>
 			<implementation>com.dianping.cat.storage.internal.DefaultBucketManager</implementation>
 		</component>
-		<component>
-			<role>com.dianping.cat.storage.BucketFactory</role>
-			<implementation>com.dianping.cat.storage.internal.DefaultBucketFactory</implementation>
-		</component>
 	</components>
 </plexus>

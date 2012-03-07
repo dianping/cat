@@ -6,7 +6,7 @@ import java.util.List;
  * Map to one HDFS directory for one report.
  * <p>
  * 
- * Sample tags: "thread:101", "session:abc", "request:xyz", "parent:xxx"
+ * Sample tags: "thread:101", "session:abc", "request:xyz"
  */
 public interface TagThreadSupport<T> {
 	public boolean storeById(String id, T data, String... tags);

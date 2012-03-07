@@ -50,9 +50,9 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		m_writeLock.lock();
 
 		try {
-			m_writeFile.close();
 			m_idToOffsets.clear();
 			m_tagToIds.clear();
+			m_writeFile.close();
 		} catch (IOException e) {
 			// ignore it
 		} finally {

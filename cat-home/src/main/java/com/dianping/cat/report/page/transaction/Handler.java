@@ -51,7 +51,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 		String name = payload.getName();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("domain", domain) //
 		      .setProperty("date", date) //
 		      .setProperty("type", payload.getType())//
 		      .setProperty("name", payload.getName());
@@ -76,7 +75,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("domain", domain) //
 		      .setProperty("date", date) //
 		      .setProperty("type", payload.getType());
 

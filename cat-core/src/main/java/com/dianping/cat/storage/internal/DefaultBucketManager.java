@@ -103,4 +103,10 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			return hashcode;
 		}
 	}
+
+	@Override
+	public void closeBucket(Bucket<?> bucket) {
+		bucket.close();
+		release(bucket);
+	}
 }

@@ -32,6 +32,11 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	private Logger m_logger;
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public String getHdfsPath(String messageId) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{0,date,mm}-{2}");
 		Object[] parts = m_factory.parse(messageId);
@@ -80,6 +85,20 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
+	public String getReportPath(Date timestamp) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/report");
+
+		return format.format(new Object[] { timestamp });
+	}
+	
+	@Override
+	public String getLogViewPath(Date timestamp) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/logview");
+		
+		return format.format(new Object[] { timestamp });
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		Config config = m_manager.getClientConfig();
 
@@ -114,10 +133,5 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 	public void setBaseLogUrl(URL baseLogUrl) {
 		m_baseLogUrl = baseLogUrl;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

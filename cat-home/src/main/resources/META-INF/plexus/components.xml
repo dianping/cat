@@ -95,6 +95,14 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-hdfs</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.HdfsTransactionModelService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
