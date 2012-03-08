@@ -19,7 +19,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
-public class CompositeTransactionModelService implements ModelService<TransactionReport>, Initializable {
+public class CompositeTransactionService implements ModelService<TransactionReport>, Initializable {
 	@Inject
 	private List<ModelService<TransactionReport>> m_services = new ArrayList<ModelService<TransactionReport>>();
 

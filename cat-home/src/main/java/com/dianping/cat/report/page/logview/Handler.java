@@ -1,15 +1,17 @@
 package com.dianping.cat.report.page.logview;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.servlet.ServletException;
 
-import org.unidal.webres.helper.Files;
 import org.unidal.webres.helper.Joiners;
 
-import com.dianping.cat.message.spi.MessagePathBuilder;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.model.spi.ModelPeriod;
+import com.dianping.cat.report.page.model.spi.ModelRequest;
+import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
@@ -20,8 +22,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject
-	private MessagePathBuilder m_pathBuilder;
+	@Inject(type = ModelService.class, value = "logview")
+	private ModelService<String> m_service;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -39,20 +41,33 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.LOGVIEW);
 
 		Payload payload = ctx.getPayload();
+
+		model.setTable(getLogView(payload));
+		m_jspViewer.view(ctx, model);
+	}
+
+	private String getLogView(Payload payload) {
 		String[] path = payload.getPath();
 
 		if (path != null && path.length > 0) {
-			File baseDir = m_pathBuilder.getLogViewBaseDir();
+			String file = path[0];
+			int pos = file.lastIndexOf('.');
+			MessageId id = MessageId.parse(pos < 0 ? file : file.substring(0, pos));
 			String relativePath = Joiners.by('/').join(path);
-			File file = new File(baseDir, relativePath);
+			ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
+			ModelRequest request = new ModelRequest(id.getDomain(), period) //
+			      .setProperty("path", relativePath);
 
-			if (file.exists()) {
-				String content = Files.forIO().readFrom(file, "utf-8");
+			if (m_service.isEligable(request)) {
+				ModelResponse<String> response = m_service.invoke(request);
+				String logview = response.getModel();
 
-				model.setTable(content);
+				return logview;
+			} else {
+				throw new RuntimeException("Internal error: no eligable service registered for " + request + "!");
 			}
 		}
 
-		m_jspViewer.view(ctx, model);
+		return null;
 	}
 }

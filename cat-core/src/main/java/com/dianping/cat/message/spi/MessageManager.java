@@ -15,12 +15,6 @@ public interface MessageManager {
 	public void add(Message message);
 
 	/**
-	 * Create a new message id.
-	 * @return message id
-	 */
-	public String createMessageId();
-
-	/**
 	 * Be triggered when a transaction ends, whatever it's the root transaction
 	 * or nested transaction. However, if it's the root transaction then it will
 	 * be flushed to back-end CAT server asynchronously.

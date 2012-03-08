@@ -2,13 +2,11 @@ package com.dianping.cat.message.internal;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.message.spi.MessageManager;
-import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
 public class MessageIdFactory implements Initializable {
@@ -23,8 +21,7 @@ public class MessageIdFactory implements Initializable {
 
 	private String m_ipAddress;
 
-	public String getNextId() {
-		StringBuilder sb = new StringBuilder(40);
+	public MessageId getNextId() {
 		long timestamp = getTimestamp();
 		int index;
 
@@ -37,30 +34,11 @@ public class MessageIdFactory implements Initializable {
 			index = m_index++;
 		}
 
-		sb.append(m_domain); // in one machine, domain would not change
-		sb.append('-');
-		sb.append(m_ipAddress); // in one machine, ip address would not change
-		sb.append('-');
-		sb.append(Long.toHexString(timestamp));
-		sb.append('-');
-		sb.append(Integer.toHexString(index));
-
-		return sb.toString();
+		return new MessageId(m_domain, m_ipAddress, timestamp, index);
 	}
 
-	public Object[] parse(String messageId) {
-		Object[] parts = new Object[4];
-		List<String> list = Splitters.by('-').split(messageId);
-		int len = list.size();
-
-		if (len == 4) {
-			parts[0] = list.get(0); // domain
-			parts[1] = list.get(1); // ip address in HEX
-			parts[2] = Long.parseLong(list.get(2), 16);
-			parts[3] = Integer.parseInt(list.get(3), 16);
-		}
-
-		return parts;
+	public MessageId parse(String messageId) {
+		return MessageId.parse(messageId);
 	}
 
 	protected long getTimestamp() {

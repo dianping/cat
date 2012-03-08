@@ -12,7 +12,7 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
 
-public class HdfsTransactionModelService implements ModelService<TransactionReport> {
+public class HdfsTransactionService implements ModelService<TransactionReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 

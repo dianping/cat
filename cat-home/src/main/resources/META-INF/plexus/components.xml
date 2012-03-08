@@ -83,7 +83,7 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
-			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionModelService</implementation>
+			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -94,7 +94,7 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-hdfs</role-hint>
-			<implementation>com.dianping.cat.report.page.model.transaction.HdfsTransactionModelService</implementation>
+			<implementation>com.dianping.cat.report.page.model.transaction.HdfsTransactionService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -107,7 +107,7 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.report.page.model.transaction.CompositeTransactionModelService</implementation>
+			<implementation>com.dianping.cat.report.page.model.transaction.CompositeTransactionService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -139,6 +139,30 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>failure-local</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>logview-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>logview</role-hint>
+			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>logview-local</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -269,7 +293,9 @@
 					<role>com.dianping.cat.report.page.logview.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>logview</role-hint>
+					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -347,8 +373,8 @@
 			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionModelService</role>
-			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionModelService</implementation>
+			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
+			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>

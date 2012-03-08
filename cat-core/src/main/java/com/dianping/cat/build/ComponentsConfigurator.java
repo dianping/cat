@@ -56,7 +56,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageManager.class, DefaultMessageManager.class));
 		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
-		      .req(MessageManager.class));
+		      .req(MessageManager.class, MessageIdFactory.class));
 		all.add(C(MessageIdFactory.class) //
 		      .req(MessageManager.class));
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //

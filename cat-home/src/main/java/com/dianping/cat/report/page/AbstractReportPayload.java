@@ -56,18 +56,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	}
 
 	public ModelPeriod getPeriod() {
-		long current = getCurrentDate();
-		long date = getDate();
-
-		if (date >= current + ONE_HOUR) {
-			return ModelPeriod.FUTURE;
-		} else if (date >= current) {
-			return ModelPeriod.CURRENT;
-		} else if (date >= current - ONE_HOUR) {
-			return ModelPeriod.LAST;
-		} else {
-			return ModelPeriod.HISTORICAL;
-		}
+		return ModelPeriod.getByTime(getDate());
 	}
 
 	public void setDate(long date) {

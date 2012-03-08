@@ -14,10 +14,13 @@ public class DefaultMessageProducer implements MessageProducer {
 	@Inject
 	private MessageManager m_manager;
 
+	@Inject
+	private MessageIdFactory m_factory;
+
 	@Override
-   public String createMessageId() {
-		return m_manager.createMessageId();
-   }
+	public String createMessageId() {
+		return m_factory.getNextId().toString();
+	}
 
 	@Override
 	public void logError(Throwable cause) {

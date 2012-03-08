@@ -18,15 +18,15 @@ public class MessageIdFactoryTest {
 		m_factory.setDomain(domain);
 		m_factory.setIpAddress("c0a83f99"); // 192.168.63.153
 
-		String actual = m_factory.getNextId();
+		String actual = m_factory.getNextId().toString();
 
 		Assert.assertEquals(expected, actual);
 
-		Object[] parts = m_factory.parse(actual);
+		MessageId id = MessageId.parse(actual);
 
-		Assert.assertEquals(domain, parts[0]);
-		Assert.assertEquals("c0a83f99", parts[1]);
-		Assert.assertEquals(m_timestamp, parts[2]);
+		Assert.assertEquals(domain, id.getDomain());
+		Assert.assertEquals("c0a83f99", id.getIpAddressInHex());
+		Assert.assertEquals(m_timestamp, id.getTimestamp());
 	}
 
 	@Test

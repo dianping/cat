@@ -12,7 +12,7 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 
-public class LocalTransactionModelService implements ModelService<TransactionReport> {
+public class LocalTransactionService implements ModelService<TransactionReport> {
 	@Inject(type = MessageConsumer.class, value = "realtime")
 	private RealtimeConsumer m_consumer;
 

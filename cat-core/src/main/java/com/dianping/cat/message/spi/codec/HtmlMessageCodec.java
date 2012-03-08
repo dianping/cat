@@ -125,7 +125,7 @@ public class HtmlMessageCodec implements MessageCodec {
 
 		if (policy != Policy.WITHOUT_STATUS) {
 			if (Message.SUCCESS.equals(message.getStatus())) {
-				count += helper.td(buf, message.getStatus());
+				count += helper.td(buf, ""); // do not output "0"
 			} else {
 				count += helper.td(buf, message.getStatus(), "class=\"error\"");
 			}

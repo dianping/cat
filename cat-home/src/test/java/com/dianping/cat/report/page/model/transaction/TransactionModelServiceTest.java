@@ -19,14 +19,14 @@ public class TransactionModelServiceTest extends ComponentTestCase {
 		ModelService<?> localhost = lookup(ModelService.class, "transaction-localhost");
 		ModelService<?> composite = lookup(ModelService.class, "transaction");
 
-		Assert.assertEquals(LocalTransactionModelService.class, local.getClass());
+		Assert.assertEquals(LocalTransactionService.class, local.getClass());
 		Assert.assertEquals(RemoteTransactionModelService.class, localhost.getClass());
-		Assert.assertEquals(CompositeTransactionModelService.class, composite.getClass());
+		Assert.assertEquals(CompositeTransactionService.class, composite.getClass());
 	}
 
 	@Test
 	public void testLocal() throws Exception {
-		LocalTransactionModelService local = (LocalTransactionModelService) lookup(ModelService.class,
+		LocalTransactionService local = (LocalTransactionService) lookup(ModelService.class,
 		      "transaction-local");
 		ModelResponse<?> response = local.invoke(ModelRequest.from("Cat", "CURRENT"));
 

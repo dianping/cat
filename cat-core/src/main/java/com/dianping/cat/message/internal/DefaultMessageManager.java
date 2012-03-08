@@ -53,8 +53,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	@Override
-	public String createMessageId() {
+	MessageId nextMessageId() {
 		return m_factory.getNextId();
 	}
 
@@ -192,7 +191,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			if (m_stack.isEmpty()) {
 				MessageTree tree = m_tree.copy();
 
-				tree.setMessageId(manager.createMessageId());
+				tree.setMessageId(manager.nextMessageId().toString());
 				tree.setMessage(message);
 				manager.flush(tree);
 			} else {
@@ -230,7 +229,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 				entry.addChild(transaction);
 			} else {
-				m_tree.setMessageId(manager.createMessageId());
+				m_tree.setMessageId(manager.nextMessageId().toString());
 				m_tree.setMessage(transaction);
 			}
 

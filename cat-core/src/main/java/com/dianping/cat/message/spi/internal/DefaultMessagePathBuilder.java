@@ -13,6 +13,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.model.entity.Config;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
@@ -39,18 +40,15 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	@Override
 	public String getHdfsPath(String messageId) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{0,date,mm}-{2}");
-		Object[] parts = m_factory.parse(messageId);
 
 		try {
-			String domain = (String) parts[0];
-			String ipAddress = (String) parts[1];
-			long timestamp = (Long) parts[2];
-			Date date = new Date(timestamp);
-			String path = format.format(new Object[] { date, domain, ipAddress });
+			MessageId id = m_factory.parse(messageId);
+			Date date = new Date(id.getTimestamp());
+			String path = format.format(new Object[] { date, id.getDomain(), id.getIpAddressInHex() });
 
 			return path;
 		} catch (Exception e) {
-			m_logger.error("Invalid message id format: " + messageId, e);
+			m_logger.error("Error when building HDFS path for " + messageId, e);
 		}
 
 		return messageId;
@@ -68,33 +66,20 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 	@Override
 	public String getLogViewPath(String messageId) {
-		Object[] parts = m_factory.parse(messageId);
+		return messageId + "/logview.html";
+	}
 
-		try {
-			String domain = (String) parts[0];
-			long timestamp = (Long) parts[2];
-			MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{2}.html");
-			String path = format.format(new Object[] { new Date(timestamp), domain, messageId });
+	@Override
+	public String getMessagePath(Date timestamp) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/message");
 
-			return path;
-		} catch (Exception e) {
-			m_logger.error("Invalid message id format: " + messageId, e);
-		}
-
-		return messageId;
+		return format.format(new Object[] { timestamp });
 	}
 
 	@Override
 	public String getReportPath(Date timestamp) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/report");
 
-		return format.format(new Object[] { timestamp });
-	}
-	
-	@Override
-	public String getMessagePath(Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/message");
-		
 		return format.format(new Object[] { timestamp });
 	}
 
