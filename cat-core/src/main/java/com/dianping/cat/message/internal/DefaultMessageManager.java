@@ -103,7 +103,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public MessageTree getThreadLocalMessageTree() {
-		return getContext().m_tree;
+		Context ctx = m_context.get();
+
+		if (ctx != null) {
+			return ctx.m_tree;
+		} else {
+			return null;
+		}
 	}
 
 	@Override

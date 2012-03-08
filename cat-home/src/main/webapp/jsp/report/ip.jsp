@@ -11,7 +11,7 @@
 <a:report title="Hot IP Report" timestamp="2012-02-07">
 
 <jsp:body>
-${model.b}
+
 <table class="ip-table">
 	<tr><th>IP</th><th>last 1 min</th><th>last 5 mins</th><th>last 15 mins</th></tr>
 	<c:forEach var="m" items="${model.displayModels}" varStatus="status">

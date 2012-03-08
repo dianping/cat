@@ -1,6 +1,7 @@
 package com.dianping.cat.storage.internal;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -57,6 +59,26 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 	}
 
 	protected abstract T decode(ChannelBuffer buf) throws IOException;
+
+	@Override
+	public void deleteAndCreate() {
+		m_writeLock.lock();
+		m_readLock.lock();
+
+		m_idToOffsets.clear();
+		m_tagToIds.clear();
+
+		try {
+			m_file.delete();
+			m_writeFile = new RandomAccessFile(m_file, "rw");
+			m_readFile = new RandomAccessFile(m_file, "r");
+		} catch (FileNotFoundException e) {
+			m_logger.error(String.format("Error when clearing file bucket(%s)!", m_file), e);
+		} finally {
+			m_readLock.unlock();
+			m_writeLock.unlock();
+		}
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -145,6 +167,10 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		}
 
 		return null;
+	}
+
+	public Set<String> getIds() {
+		return m_idToOffsets.keySet();
 	}
 
 	@Override
@@ -260,6 +286,11 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		} finally {
 			m_writeLock.unlock();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s[file=%s, ids=%s]", getClass().getSimpleName(), m_file, m_idToOffsets.keySet());
 	}
 
 	protected void updateIndex(String id, String[] tags, long offset) {

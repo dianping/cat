@@ -164,11 +164,46 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.home.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_realtimeConsumer</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.home.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.home.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.RealtimeConsumer</role>
+			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.codehaus.plexus.logging.Logger</role>
+				</requirement>
+				<requirement>
+					<role>java.lang.String</role>
+				</requirement>
+				<requirement>
+					<role>java.lang.String</role>
+				</requirement>
+				<requirement>
+					<role>long</role>
+				</requirement>
+				<requirement>
+					<role>long</role>
+				</requirement>
+				<requirement>
+					<role>int</role>
+				</requirement>
+				<requirement>
+					<role>java.util.List</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
@@ -319,36 +354,6 @@
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.RealtimeConsumer</role>
-			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.codehaus.plexus.logging.Logger</role>
-				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
-				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
-				</requirement>
-				<requirement>
-					<role>long</role>
-				</requirement>
-				<requirement>
-					<role>long</role>
-				</requirement>
-				<requirement>
-					<role>int</role>
-				</requirement>
-				<requirement>
-					<role>java.util.List</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -38,7 +38,7 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase{
 		long start = current - current % (60 * 60 * 1000) -1000L*60*60;
 
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		TransactionReportAnalyzer analyzer = (TransactionReportAnalyzer) factory.create("transaction", start, duration, "testDomain",
+		TransactionAnalyzer analyzer = (TransactionAnalyzer) factory.create("transaction", start, duration, "testDomain",
 		      extraTime);
 
 		for (int i = 1; i <= 1000; i++) {
