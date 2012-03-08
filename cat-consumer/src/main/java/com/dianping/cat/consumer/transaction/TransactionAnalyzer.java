@@ -1,24 +1,27 @@
 package com.dianping.cat.consumer.transaction;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
@@ -26,14 +29,14 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.internal.AbstractFileBucket;
 import com.site.lookup.annotation.Inject;
 
 /**
  * @author sean.wang
  * @since Jan 5, 2012
  */
-public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements Initializable,
-      LogEnabled {
+public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 	private static final long MINUTE = 60 * 1000;
 
 	@Inject
@@ -55,6 +58,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private long m_duration;
 
 	@Override
+	public void doCheckpoint() throws IOException {
+		storeReports(m_reports.values());
+	}
+
+	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
@@ -74,7 +82,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return reports;
 	}
 
-	TransactionReport generate(String domain) {
+	public TransactionReport generate(String domain) {
 		if (domain == null) {
 			List<String> domains = getDomains();
 
@@ -112,22 +120,38 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
-		String path = m_pathBuilder.getMessagePath(new Date(m_startTime));
-
-		try {
-			m_messageBucket = m_bucketManager.getMessageBucket(path);
-		} catch (Exception e) {
-			throw new InitializationException(String.format("Unable to create message bucket at %s.", path), e);
-		}
-	}
-
-	@Override
 	protected boolean isTimeout() {
 		long currentTime = System.currentTimeMillis();
 		long endTime = m_startTime + m_duration + m_extraTime;
 
 		return currentTime > endTime;
+	}
+
+	void loadReports() {
+		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
+		Bucket<String> bucket = null;
+
+		try {
+			bucket = m_bucketManager.getStringBucket(path);
+
+			if (bucket instanceof AbstractFileBucket) {
+				DefaultXmlParser parser = new DefaultXmlParser();
+				Set<String> ids = ((AbstractFileBucket<?>) bucket).getIds();
+
+				for (String id : ids) {
+					String xml = bucket.findById(id);
+					TransactionReport report = parser.parse(xml);
+
+					m_reports.put(report.getDomain(), report);
+				}
+			}
+		} catch (Exception e) {
+			m_logger.error(String.format("Error when loading transaction reports from %s!", path), e);
+		} finally {
+			if (bucket != null) {
+				m_bucketManager.closeBucket(bucket);
+			}
+		}
 	}
 
 	@Override
@@ -249,6 +273,16 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_extraTime = extraTime;
 		m_startTime = startTime;
 		m_duration = duration;
+
+		String path = m_pathBuilder.getMessagePath(new Date(m_startTime));
+
+		try {
+			m_messageBucket = m_bucketManager.getMessageBucket(path);
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("Unable to create message bucket at %s.", path), e);
+		}
+
+		loadReports();
 	}
 
 	@Override
@@ -258,37 +292,22 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		m_bucketManager.closeBucket(m_messageBucket);
-
 		storeReports(reports);
-		storeLogviews();
 	}
 
-	void storeLogviews() {
-		String path = m_pathBuilder.getMessagePath(new Date(m_startTime));
-		Bucket<byte[]> bucket = null;
-
-		try {
-			bucket = m_bucketManager.getBytesBucket(path);
-
-			m_pathBuilder.getLogViewBaseDir();
-		} catch (Exception e) {
-			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
-			}
-		}
-	}
-
-	void storeReports(List<TransactionReport> reports) {
+	void storeReports(Collection<TransactionReport> reports) {
 		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
 		Bucket<String> bucket = null;
+		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 
 		try {
 			bucket = m_bucketManager.getStringBucket(path);
 
+			// delete old one, not append mode
+			bucket.deleteAndCreate();
+			
 			for (TransactionReport report : reports) {
-				bucket.storeById("transaction-" + report.getDomain(), report.toString());
+				bucket.storeById("transaction-" + report.getDomain(), builder.buildXml(report));
 			}
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);

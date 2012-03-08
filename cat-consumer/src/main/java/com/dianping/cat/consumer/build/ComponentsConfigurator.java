@@ -13,7 +13,6 @@ import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer.LongUrlHandler;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
@@ -51,11 +50,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("reportPath").value("target/report/failure/")) //
 		      .req(MessageManager.class) //
 		      .req(Handler.class, new String[] { "failure-handler", "long-url-handler" }, "m_handlers"));
-
-		all.add(C(TransactionReportAnalyzer.class).is(PER_LOOKUP) //
-		      .req(MessageManager.class) //
-		      .req(MessageStorage.class, "html") //
-		      .config(E("reportPath").value("target/report/transaction/")));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, MessagePathBuilder.class));

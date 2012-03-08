@@ -7,6 +7,8 @@ import java.util.List;
 public interface Bucket<T> extends TagThreadSupport<T> {
 	public void close();
 
+	public void deleteAndCreate();
+	
 	public List<T> findAllByIds(List<String> ids);
 
 	public T findById(String id);

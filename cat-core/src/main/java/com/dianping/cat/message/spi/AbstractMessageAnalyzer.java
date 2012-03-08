@@ -1,5 +1,6 @@
 package com.dianping.cat.message.spi;
 
+import java.io.IOException;
 import java.util.List;
 
 public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
@@ -28,11 +29,15 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 		store(result);
 	}
 
-	protected abstract void store(List<R> result);
+	public void doCheckpoint() throws IOException {
+		// override it
+	}
 
 	protected abstract List<R> generate();
 
+	protected abstract boolean isTimeout();
+
 	protected abstract void process(MessageTree tree);
 
-	protected abstract boolean isTimeout();
+	protected abstract void store(List<R> result);
 }

@@ -93,7 +93,7 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	
 	@Override
 	public String getMessagePath(Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/logview");
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/message");
 		
 		return format.format(new Object[] { timestamp });
 	}

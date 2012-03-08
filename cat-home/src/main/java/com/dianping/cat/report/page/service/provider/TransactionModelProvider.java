@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.transaction.TransactionReportAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -21,7 +21,7 @@ public class TransactionModelProvider implements ModelProvider {
 	
 	@Override
 	public List<String> getDomains() {
-		TransactionReportAnalyzer analyzer = (TransactionReportAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
+		TransactionAnalyzer analyzer = (TransactionAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
 		List<String> domains = new ArrayList<String>(analyzer.getReports().keySet());
 		Collections.sort(domains, new Comparator<String>() {
 			@Override
@@ -39,15 +39,15 @@ public class TransactionModelProvider implements ModelProvider {
 	public String getModel(Map<String, String> parameters) {
 		String domain = parameters.get("domain");
 		String index = parameters.get("index");
-		TransactionReportAnalyzer analyzer = null;
+		TransactionAnalyzer analyzer = null;
 		
 		if (index == null) {
 			index = Constants.MEMORY_CURRENT;
 		}
 		if (index.equals(Constants.MEMORY_CURRENT)) {
-			analyzer = (TransactionReportAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
+			analyzer = (TransactionAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
 		} else if (index.equals(Constants.MEMORY_LAST)) {
-			analyzer = (TransactionReportAnalyzer) m_consumer.getLastAnalyzer("transaction");
+			analyzer = (TransactionAnalyzer) m_consumer.getLastAnalyzer("transaction");
 		} else {
 			System.err.println("historical model is not implemented yet");
 		}
@@ -63,7 +63,7 @@ public class TransactionModelProvider implements ModelProvider {
 
 	@Override
    public String getDefaultDomain() {
-		TransactionReportAnalyzer analyzer = (TransactionReportAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
+		TransactionAnalyzer analyzer = (TransactionAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
 		List<String> domains = new ArrayList<String>(analyzer.getReports().keySet());
 		Collections.sort(domains);
 		if (domains != null && domains.size() > 0) {

@@ -47,7 +47,7 @@ public interface MessageManager {
 	/**
 	 * Get thread local message information.
 	 * 
-	 * @return message tree
+	 * @return message tree, null means current thread is not setup correctly.
 	 */
 	public MessageTree getThreadLocalMessageTree();
 

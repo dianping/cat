@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.MeanSquareDeviationComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -68,6 +69,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 			return n;
 		}
 
+		Cat.getManager().getThreadLocalMessageTree();
+		
 		return null;
 	}
 

@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer;
 
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,52 +31,6 @@ import com.site.lookup.annotation.Inject;
  * @since Jan 5, 2012
  */
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
-	static class Period {
-		private long m_startTime;
-
-		private long m_endTime;
-
-		private List<MessageQueue> m_queues;
-
-		public Period(long startTime, long endTime, List<MessageQueue> queues) {
-			m_startTime = startTime;
-			m_endTime = endTime;
-			m_queues = queues;
-		}
-
-		public List<MessageQueue> getQueues() {
-			return m_queues;
-		}
-
-		public boolean isIn(long timestamp) {
-			return timestamp >= m_startTime && timestamp < m_endTime;
-		}
-	}
-
-	static class Task implements Runnable {
-		private AnalyzerFactory m_factory;
-
-		private MessageAnalyzer m_analyzer;
-
-		private MessageQueue m_queue;
-
-		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue) {
-			m_factory = factory;
-			m_analyzer = analyzer;
-			m_queue = queue;
-		}
-
-		public MessageQueue getQueue() {
-			return m_queue;
-		}
-
-		public void run() {
-			m_analyzer.analyze(m_queue);
-			m_factory.release(m_analyzer);
-			m_factory.release(m_queue);
-		}
-	}
-
 	private static final long HOUR = 60 * 60 * 1000L;
 
 	private static final long MINUTE = 60 * 1000L;
@@ -99,7 +55,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Inject
 	private long m_extraTime = FIVE_MINUTES;
-	
+
 	@Inject
 	private int m_threads = 10;
 
@@ -156,6 +112,19 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			queue.offer(tree);
 		}
+	}
+
+	public void doCheckpoint() throws IOException {
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+		m_logger.info("Checkpoint starts at " + format.format(new Date()));
+
+		for (Map.Entry<String, MessageAnalyzer> e : m_currentAnalyzers.entrySet()) {
+			m_logger.info("Checkpoint for " + e.getKey());
+			e.getValue().doCheckpoint();
+		}
+
+		m_logger.info("Checkpoint ends at " + format.format(new Date()));
 	}
 
 	@Override
@@ -253,5 +222,51 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		m_periods.add(current);
+	}
+
+	static class Period {
+		private long m_startTime;
+
+		private long m_endTime;
+
+		private List<MessageQueue> m_queues;
+
+		public Period(long startTime, long endTime, List<MessageQueue> queues) {
+			m_startTime = startTime;
+			m_endTime = endTime;
+			m_queues = queues;
+		}
+
+		public List<MessageQueue> getQueues() {
+			return m_queues;
+		}
+
+		public boolean isIn(long timestamp) {
+			return timestamp >= m_startTime && timestamp < m_endTime;
+		}
+	}
+
+	static class Task implements Runnable {
+		private AnalyzerFactory m_factory;
+
+		private MessageAnalyzer m_analyzer;
+
+		private MessageQueue m_queue;
+
+		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue) {
+			m_factory = factory;
+			m_analyzer = analyzer;
+			m_queue = queue;
+		}
+
+		public MessageQueue getQueue() {
+			return m_queue;
+		}
+
+		public void run() {
+			m_analyzer.analyze(m_queue);
+			m_factory.release(m_analyzer);
+			m_factory.release(m_queue);
+		}
 	}
 }
