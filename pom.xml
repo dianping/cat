@@ -110,6 +110,11 @@
 				<artifactId>gson</artifactId>
 				<version>1.6</version>
 			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.14</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -130,7 +135,11 @@
 						<includes>
 							<include>**/AllTests.java</include>
 						</includes>
-						<!-- <debugForkedProcess>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE</debugForkedProcess> -->
+						<!--
+							<debugForkedProcess>-Xdebug
+							-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
+							-Xnoagent -Djava.compiler=NONE</debugForkedProcess>
+						-->
 					</configuration>
 					<dependencies>
 						<dependency>

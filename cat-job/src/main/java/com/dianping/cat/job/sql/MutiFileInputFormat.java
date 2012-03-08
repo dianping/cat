@@ -32,6 +32,7 @@ public abstract class MutiFileInputFormat<K,V> extends FileInputFormat<K, V> {
 		if (jobFilter != null) {
 			filters.add(jobFilter);
 		}
+		//Add Default Hidden file
 		PathFilter inputFilter = new MultiPathFilter(filters);
 
 		for (int i = 0; i < dirs.length; ++i) {

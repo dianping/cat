@@ -19,6 +19,14 @@ public class CatConstants {
 	public static final String TYPE_SERVICE = "Service";
 
 	public static final String TYPE_REMOTE_CALL = "RemoteCall";
+	
+	/**
+	 * Pigeon Event Type, it is used to record the param
+	 */
+
+	public static final String TYPE_REQUEST = "PigeonRequest";
+
+	public static final String TYPE_RESPONSE = "PigeonRespone";
 
 	/**
 	 * Pigeon Event name
@@ -53,6 +61,7 @@ public class CatConstants {
 	/**
 	 * Avatar
 	 */
+	
 	public static final String TYPE_URL = "URL";
 
 	public static final String NAME_CLIENT_INFO = "ClientInfo";
