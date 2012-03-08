@@ -25,7 +25,7 @@ public class CatAppender extends AppenderSkeleton {
 			}
 		}
 	}
-
+	
 	@Override
 	public void close() {
 	}
