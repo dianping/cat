@@ -17,11 +17,15 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
-public abstract class CatFilter implements Filter {
+public class CatFilter implements Filter {
 	@Override
 	public void destroy() {
 	}
-
+	
+	protected String getOriginalUrl(ServletRequest request){
+		return ((HttpServletRequest)request).getRequestURI();
+	}
+	
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
@@ -30,14 +34,20 @@ public abstract class CatFilter implements Filter {
 		// setup for thread local data
 		Cat.setup(sessionToken);
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction(CatConstants.TYPE_URL, req.getRequestURI());
+		Transaction t = cat.newTransaction(CatConstants.TYPE_URL, getOriginalUrl(request));
 
-		t.setStatus(Transaction.SUCCESS);
 		logRequestClientInfo(cat, req);
 		logRequestPayload(cat, req);
 
 		try {
 			chain.doFilter(request, response);
+
+			Object catStatus = request.getAttribute("cat-state");
+			if (catStatus != null) {
+				t.setStatus(catStatus.toString());
+			} else {
+				t.setStatus(Transaction.SUCCESS);
+			}
 		} catch (ServletException e) {
 			t.setStatus(e);
 			throw e;
@@ -47,13 +57,14 @@ public abstract class CatFilter implements Filter {
 		} catch (RuntimeException e) {
 			t.setStatus(e);
 			throw e;
+		} catch (Error e) {
+			t.setStatus(e);
+			throw e;
 		} finally {
 			t.complete();
 			Cat.reset();
 		}
 	}
-
-	protected abstract String getRequestToken();
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
