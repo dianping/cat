@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.problem.model" enable-merger="true" enable-json-builder="true"
+	enable-xml-parser="true" enable-base-visitor="true" enable-model-test="true">
+	<entity name="problem-report" root="true">
+		<attribute name="domain" value-type="String" key="true" />
+		<entity-ref name="all-domains" />
+		<entity-ref name="machine" type="map" names="machines" method-find-or-create="true" />
+	</entity>
+	<entity name="all-domains">
+		<element name="domain" value-type="String" type="set" names="domains" />
+	</entity>
+	<entity name="machine">
+		<attribute name="ip" value-type="String" key="true"/>
+		<entity-ref name="thread" type="map" names="threads" method-find-or-create="true" />
+	</entity>
+	<entity name="thread" class-name="java-thread">
+		<attribute name="id" value-type="String" key="true" />
+		<entity-ref name="segment" type="map" names="segments" method-find-or-create="true" />
+	</entity>
+	<entity name="segment">
+		<attribute name="id" value-type="int" key="true" />
+		<entity-ref name="entry" type="list" names="entries" />
+	</entity>
+	<entity name="entry">
+    	<attribute name="message-id" value-type="String" key="true" />
+		<attribute name="duration" value-type="int" primitive="true" />
+	</entity>
+</model>
+

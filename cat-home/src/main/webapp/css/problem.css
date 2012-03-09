@@ -1,0 +1,34 @@
+.problem {
+	font-size: small;
+	border-spacing: 1px; 
+}
+
+.machines {
+	font-size: small;
+}
+
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+a.error {
+	background-color: red;
+}
+
+a.failure {
+	background-color: yellow;
+}
+
+a.long-url {
+	background-color: blue;
+}

@@ -52,7 +52,7 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 			analyzer.processTransaction(report, tree, t);
 		}
 
-		report.accept(new MeanSquareDeviationComputer());
+		report.accept(new StatisticsComputer());
 
 		String json = new DefaultJsonBuilder().buildJson(report);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionAnalyzerTest.json"), "utf-8");

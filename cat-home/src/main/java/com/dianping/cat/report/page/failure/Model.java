@@ -60,6 +60,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Action.VIEW;
 	}
 
+	@Override
+	public String getDomain() {
+		return m_currentDomain;
+	}
+
 	public List<String> getDomains() {
 		return m_domains;
 	}

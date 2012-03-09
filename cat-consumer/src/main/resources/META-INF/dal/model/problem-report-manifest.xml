@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="problem-report-codegen.xml" />
+  <file path="problem-report-model.xml" />
+</manifest>
+

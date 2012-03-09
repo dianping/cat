@@ -121,8 +121,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>failure-local</role-hint>
-			<implementation>com.dianping.cat.report.page.model.failure.LocalFailureModelService</implementation>
+			<role-hint>problem-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -132,13 +132,13 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>failure</role-hint>
-			<implementation>com.dianping.cat.report.page.model.failure.CompositeFailureModelService</implementation>
+			<role-hint>problem</role-hint>
+			<implementation>com.dianping.cat.report.page.model.problem.CompositeProblemService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
-						<role-hint>failure-local</role-hint>
+						<role-hint>problem-local</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -366,6 +366,11 @@
 					<role-hint>transaction-local</role-hint>
 					<field-name>m_transactionService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>logview-local</role-hint>
+					<field-name>m_logviewService</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -384,6 +389,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.logview.LocalLogViewService</role>
+			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.problem.Handler</role>
 			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
 			<requirements>
@@ -392,7 +406,7 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>failure</role-hint>
+					<role-hint>problem</role-hint>
 					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>

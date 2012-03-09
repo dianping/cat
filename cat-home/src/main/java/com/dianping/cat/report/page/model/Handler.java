@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
+import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -23,6 +24,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "transaction-local")
 	private LocalTransactionService m_transactionService;
+	
+	@Inject(type = ModelService.class, value = "problem-local")
+	private LocalProblemService m_problemService;
 	
 	@Inject(type = ModelService.class, value = "logview-local")
 	private LocalLogViewService m_logviewService;
@@ -51,6 +55,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 			if ("transaction".equals(report)) {
 				response = m_transactionService.invoke(request);
+			} else if ("problem".equals(report)) {
+				response = m_problemService.invoke(request);
 			} else if ("logview".equals(report)) {
 				response = m_logviewService.invoke(request);
 			} else if ("failure".equals(report)) {

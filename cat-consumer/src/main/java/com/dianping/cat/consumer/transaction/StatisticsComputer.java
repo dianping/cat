@@ -5,7 +5,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
-public class MeanSquareDeviationComputer extends BaseVisitor {
+public class StatisticsComputer extends BaseVisitor {
 	@Override
 	public void visitName(TransactionName name) {
 		super.visitName(name);

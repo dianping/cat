@@ -61,72 +61,6 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 
 	private static final SimpleDateFormat FILE_SDF = new SimpleDateFormat("yyyyMMddHHmm");
 
-	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-	}
-
-	public List<String> getAllDomains() {
-		Set<String> domainAndIps = m_reports.keySet();
-		Set<String> result = new HashSet<String>();
-		if (domainAndIps != null) {
-			for (String domainAndIp : domainAndIps) {
-				result.add(domainAndIp.substring(0, domainAndIp.lastIndexOf(":")));
-			}
-		}
-		ArrayList<String> domains = new ArrayList<String>(result);
-		Collections.sort(domains, new Comparator<String>() {
-			@Override
-			public int compare(String d1, String d2) {
-				if (d1.equals("Cat")) {
-					return 1;
-				}
-				return d1.compareTo(d2);
-			}
-		});
-		return domains;
-	}
-
-	public List<String> getHostIpByDomain(String domain) {
-		Set<String> domainAndIps = m_reports.keySet();
-		Set<String> result = new HashSet<String>();
-		if (domainAndIps != null) {
-			for (String domainAndIp : domainAndIps) {
-				int index = domainAndIp.lastIndexOf(":");
-				if (domainAndIp.substring(0, index).equals(domain)) {
-					String ip = domainAndIp.substring(index + 1);
-					result.add(ip);
-				}
-			}
-		}
-		return new ArrayList<String>(result);
-	}
-
-	public Map<String, FailureReport> getReports() {
-   	return m_reports;
-   }
-
-	public void setReports(Map<String, FailureReport> reports) {
-   	m_reports = reports;
-   }
-
-	private FailureReport getReportByDomainAndIp(String domain, String ip) {
-		String domainAndIp = new StringBuffer().append(domain).append(":").append(ip).toString();
-		FailureReport report = m_reports.get(domainAndIp);
-		if (report != null) {
-			return report;
-		}
-
-		FailureReport addedReport = new FailureReport();
-		addedReport.setStartTime(new Date(m_startTime));
-		addedReport.setEndTime(new Date(m_startTime + m_duration - MINUTE));
-		addedReport.setDomain(domain);
-		addedReport.setThreads(new Threads());
-		m_reports.put(domainAndIp, addedReport);
-		return addedReport;
-	}
-
 	public void addHandlers(Handler handler) {
 		if (m_handlers == null) {
 			m_handlers = new ArrayList<FailureReportAnalyzer.Handler>();
@@ -143,18 +77,6 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 			reports.add(generateByDomainAndIp(temp[0], temp[1]));
 		}
 		return reports;
-	}
-	
-	@Override
-	protected void store(List<FailureReport> reports) {
-		if (reports != null) {
-			for (FailureReport report : reports) {
-				File file = new File(getFailureFilePath(report));
-
-				file.getParentFile().mkdirs();
-				FailureReportStore.storeToHtml(file, report);
-			}
-		}
 	}
 
 	public FailureReport generateByDomainAndIp(String domain, String ip) {
@@ -185,6 +107,99 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		return m_report;
 	}
 
+	public List<String> getAllDomains() {
+		Set<String> domainAndIps = m_reports.keySet();
+		Set<String> result = new HashSet<String>();
+		if (domainAndIps != null) {
+			for (String domainAndIp : domainAndIps) {
+				result.add(domainAndIp.substring(0, domainAndIp.lastIndexOf(":")));
+			}
+		}
+		ArrayList<String> domains = new ArrayList<String>(result);
+		Collections.sort(domains, new Comparator<String>() {
+			@Override
+			public int compare(String d1, String d2) {
+				if (d1.equals("Cat")) {
+					return 1;
+				}
+				return d1.compareTo(d2);
+			}
+		});
+		return domains;
+	}
+
+	public String getFailureFilePath(FailureReport report) {
+		StringBuffer result = new StringBuffer();
+		String start = FILE_SDF.format(report.getStartTime());
+		String end = FILE_SDF.format(report.getEndTime());
+		result.append(m_reportPath).append(report.getDomain()).append(report.getMachine()).append("-").append(start)
+		      .append("-").append(end).append(".html");
+		return result.toString();
+	}
+
+	public List<String> getHostIpByDomain(String domain) {
+		Set<String> domainAndIps = m_reports.keySet();
+		Set<String> result = new HashSet<String>();
+		if (domainAndIps != null) {
+			for (String domainAndIp : domainAndIps) {
+				int index = domainAndIp.lastIndexOf(":");
+				if (domainAndIp.substring(0, index).equals(domain)) {
+					String ip = domainAndIp.substring(index + 1);
+					result.add(ip);
+				}
+			}
+		}
+		return new ArrayList<String>(result);
+	}
+
+	private FailureReport getReportByDomainAndIp(String domain, String ip) {
+		String domainAndIp = new StringBuffer().append(domain).append(":").append(ip).toString();
+		FailureReport report = m_reports.get(domainAndIp);
+		if (report != null) {
+			return report;
+		}
+
+		FailureReport addedReport = new FailureReport();
+		addedReport.setStartTime(new Date(m_startTime));
+		addedReport.setEndTime(new Date(m_startTime + m_duration - MINUTE));
+		addedReport.setDomain(domain);
+		addedReport.setThreads(new Threads());
+		m_reports.put(domainAndIp, addedReport);
+		return addedReport;
+	}
+
+	public String getReportPath() {
+		return m_reportPath;
+	}
+	
+	public Map<String, FailureReport> getReports() {
+   	return m_reports;
+   }
+
+	@Override
+	public void initialize() throws InitializationException {
+		Config config = m_manager.getClientConfig();
+
+		if (config != null) {
+			Property property = config.findProperty("failure-base-dir");
+
+			if (property != null) {
+				m_reportPath = property.getValue();
+			}
+		}
+	}
+
+	@Override
+	protected boolean isTimeout() {
+		long endTime = m_startTime + m_duration + m_extraTime;
+		long currentTime = System.currentTimeMillis();
+
+		if (currentTime > endTime + m_extraTime) {
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	protected void process(MessageTree tree) {
 		if (m_handlers == null) {
@@ -203,46 +218,35 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		}
 	}
 
+	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
+		m_extraTime = extraTime;
+		m_startTime = startTime;
+		m_duration = duration;
+	}
+
 	public void setReportPath(String configPath) {
 		m_reportPath = configPath;
 	}
 
-	public String getReportPath() {
-		return m_reportPath;
-	}
-
-	public String getFailureFilePath(FailureReport report) {
-		StringBuffer result = new StringBuffer();
-		String start = FILE_SDF.format(report.getStartTime());
-		String end = FILE_SDF.format(report.getEndTime());
-		result.append(m_reportPath).append(report.getDomain()).append(report.getMachine()).append("-").append(start)
-		      .append("-").append(end).append(".html");
-		return result.toString();
-	}
+	public void setReports(Map<String, FailureReport> reports) {
+   	m_reports = reports;
+   }
 
 	@Override
-	protected boolean isTimeout() {
-		long endTime = m_startTime + m_duration + m_extraTime;
-		long currentTime = System.currentTimeMillis();
+	protected void store(List<FailureReport> reports) {
+		if (reports != null) {
+			for (FailureReport report : reports) {
+				File file = new File(getFailureFilePath(report));
 
-		if (currentTime > endTime + m_extraTime) {
-			return true;
+				file.getParentFile().mkdirs();
+				FailureReportStore.storeToHtml(file, report);
+			}
 		}
-		return false;
-	}
-
-	public static interface Handler {
-		public void handle(FailureReport report, MessageTree tree);
 	}
 
 	public static abstract class AbstractHandler implements Handler {
-
 		@Inject
 		private MessageStorage m_storage;
-
-		public void setMessageStorage(MessageStorage storage) {
-			m_storage = storage;
-		}
 
 		protected Segment findOrCreateSegment(Message message, FailureReport report) {
 			long time = message.getTimestamp();
@@ -277,6 +281,10 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 			entry.setPath(url);
 			entry.setThreadId(tree.getThreadId());
 			return entry;
+		}
+
+		public void setMessageStorage(MessageStorage storage) {
+			m_storage = storage;
 		}
 	}
 
@@ -335,6 +343,10 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 		}
 	}
 
+	public static interface Handler {
+		public void handle(FailureReport report, MessageTree tree);
+	}
+
 	public static class LongUrlHandler extends AbstractHandler {
 		@Inject
 		private long m_threshold;
@@ -362,19 +374,6 @@ public class FailureReportAnalyzer extends AbstractMessageAnalyzer<FailureReport
 
 		public void setThreshold(long threshold) {
 			m_threshold = threshold;
-		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		Config config = m_manager.getClientConfig();
-
-		if (config != null) {
-			Property property = config.findProperty("failure-base-dir");
-
-			if (property != null) {
-				m_reportPath = property.getValue();
-			}
 		}
 	}
 }

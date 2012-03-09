@@ -1,5 +1,8 @@
 package com.dianping.cat.consumer.build;
 
+import static com.dianping.cat.consumer.problem.ProblemType.FAILURE;
+import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,16 +11,16 @@ import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.DefaultMessageQueue;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
-import com.dianping.cat.consumer.failure.FailureReportAnalyzer.FailureHandler;
-import com.dianping.cat.consumer.failure.FailureReportAnalyzer.Handler;
-import com.dianping.cat.consumer.failure.FailureReportAnalyzer.LongUrlHandler;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.problem.handler.FailureHandler;
+import com.dianping.cat.consumer.problem.handler.Handler;
+import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageQueue;
-import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
@@ -34,27 +37,27 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class).config(E("consumerId").value("realtime") //
 		            , E("extraTime").value(property("extraTime", "300000"))//
-		            , E("analyzerNames").value("failure,transaction,ip")));
+		            , E("analyzerNames").value("problem,transaction,ip")));
 
 		String failureTypes = "Error,RuntimeException,Exception";
 
-		all.add(C(Handler.class, "failure-handler", FailureHandler.class)//
-		      .config(E("failureType").value(failureTypes))//
-		      .req(MessageStorage.class, "html"));
+		all.add(C(Handler.class, FAILURE.getName(), FailureHandler.class)//
+		      .config(E("failureType").value(failureTypes)));
 
-		all.add(C(Handler.class, "long-url-handler", LongUrlHandler.class) //
-		      .config(E("threshold").value("2000"))//
-		      .req(MessageStorage.class, "html"));
+		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
+		      .config(E("threshold").value("10")));
 
-		all.add(C(FailureReportAnalyzer.class).is(PER_LOOKUP) //
-		      .config(E("reportPath").value("target/report/failure/")) //
-		      .req(MessageManager.class) //
-		      .req(Handler.class, new String[] { "failure-handler", "long-url-handler" }, "m_handlers"));
+		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
+		      .req(Handler.class, new String[] { FAILURE.getName(), LONG_URL.getName() }, "m_handlers") //
+		      .req(BucketManager.class, MessagePathBuilder.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, MessagePathBuilder.class));
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
+
+		all.add(C(FailureReportAnalyzer.class).is(PER_LOOKUP) //
+		      .req(MessageManager.class));
 
 		return all;
 	}

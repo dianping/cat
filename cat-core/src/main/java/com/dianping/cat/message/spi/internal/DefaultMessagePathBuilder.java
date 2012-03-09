@@ -14,7 +14,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.site.lookup.annotation.Inject;
@@ -22,9 +21,6 @@ import com.site.lookup.annotation.Inject;
 public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable, LogEnabled {
 	@Inject
 	private MessageManager m_manager;
-
-	@Inject
-	private MessageIdFactory m_factory;
 
 	private File m_baseLogDir;
 
@@ -42,7 +38,7 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}/{0,date,mm}-{2}");
 
 		try {
-			MessageId id = m_factory.parse(messageId);
+			MessageId id = MessageId.parse(messageId);
 			Date date = new Date(id.getTimestamp());
 			String path = format.format(new Object[] { date, id.getDomain(), id.getIpAddressInHex() });
 

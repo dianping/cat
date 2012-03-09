@@ -4,6 +4,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.dianping.cat.configuration.model.entity.Config;
+
 public class MessageIdFactoryTest {
 	private long m_timestamp = 1330327814748L;
 
@@ -31,7 +33,7 @@ public class MessageIdFactoryTest {
 
 	@Test
 	public void test() throws Exception {
-		m_factory.initialize();
+		m_factory.initialize(new Config());
 
 		check("domain1", "domain1-c0a83f99-135bdb7825c-0");
 		check("domain1", "domain1-c0a83f99-135bdb7825c-1");

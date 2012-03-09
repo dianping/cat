@@ -16,7 +16,7 @@
 			<configuration>
 				<consumerId>realtime</consumerId>
 				<extraTime>300000</extraTime>
-				<analyzerNames>failure,transaction,ip</analyzerNames>
+				<analyzerNames>problem,transaction,ip</analyzerNames>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -25,51 +25,39 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer$Handler</role>
-			<role-hint>failure-handler</role-hint>
-			<implementation>com.dianping.cat.consumer.failure.FailureReportAnalyzer$FailureHandler</implementation>
+			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+			<role-hint>failure</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.handler.FailureHandler</implementation>
 			<configuration>
 				<failureType>Error,RuntimeException,Exception</failureType>
 			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStorage</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer$Handler</role>
-			<role-hint>long-url-handler</role-hint>
-			<implementation>com.dianping.cat.consumer.failure.FailureReportAnalyzer$LongUrlHandler</implementation>
+			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+			<role-hint>long-url</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.handler.LongUrlHandler</implementation>
 			<configuration>
-				<threshold>2000</threshold>
+				<threshold>10</threshold>
 			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStorage</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer</role>
-			<implementation>com.dianping.cat.consumer.failure.FailureReportAnalyzer</implementation>
+			<role>com.dianping.cat.consumer.problem.ProblemAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.problem.ProblemAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<configuration>
-				<reportPath>target/report/failure/</reportPath>
-			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer$Handler</role>
+					<role>com.dianping.cat.consumer.problem.handler.Handler</role>
 					<role-hints>
-						<role-hint>failure-handler</role-hint>
-						<role-hint>long-url-handler</role-hint>
+						<role-hint>failure</role-hint>
+						<role-hint>long-url</role-hint>
 					</role-hints>
 					<field-name>m_handlers</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -90,6 +78,16 @@
 			<role>com.dianping.cat.consumer.ip.IpAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.failure.FailureReportAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageManager</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>

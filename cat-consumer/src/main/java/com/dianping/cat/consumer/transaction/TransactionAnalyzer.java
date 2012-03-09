@@ -70,7 +70,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Override
 	protected List<TransactionReport> generate() {
 		List<TransactionReport> reports = new ArrayList<TransactionReport>(m_reports.size());
-		MeanSquareDeviationComputer computer = new MeanSquareDeviationComputer();
+		StatisticsComputer computer = new StatisticsComputer();
 
 		for (String domain : m_reports.keySet()) {
 			TransactionReport report = generate(domain);
@@ -139,10 +139,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				Set<String> ids = ((AbstractFileBucket<?>) bucket).getIds();
 
 				for (String id : ids) {
-					String xml = bucket.findById(id);
-					TransactionReport report = parser.parse(xml);
+					if (id.startsWith("transaction-")) {
+						String xml = bucket.findById(id);
+						TransactionReport report = parser.parse(xml);
 
-					m_reports.put(report.getDomain(), report);
+						m_reports.put(report.getDomain(), report);
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -305,7 +307,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			// delete old one, not append mode
 			bucket.deleteAndCreate();
-			
+
 			for (TransactionReport report : reports) {
 				bucket.storeById("transaction-" + report.getDomain(), builder.buildXml(report));
 			}
