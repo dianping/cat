@@ -10,7 +10,7 @@ public class SqlJobReducer extends Reducer<SqlStatementKey, SqlStatementValue, S
 		SqlJobResult result = new SqlJobResult();
 		
 		for (SqlStatementValue val : values) {
-			result.add(val.getValue(), val.getFlag());
+			result.add(val.getValue(), val.getFlag(), val.getSampleUrl());
 		}
 		context.write(key, result);
 	}

@@ -22,56 +22,71 @@ public class SqlJobDataProduceTest extends CatTestCase {
 		MessageStorage storage = lookup(MessageStorage.class, "hdfs");
 		MessageProducer producer = lookup(MessageProducer.class);
 		InMemoryQueue queue = lookup(InMemoryQueue.class);
+		for (int i = 0; i < 3; i++) {
+			for (int j = 0; j < 10000; j++) {
+				Transaction t = producer.newTransaction("URL", "MyPage" + (int) (j / 500));
 
-		for (int i = 0; i < 10000; i++) {
-			Transaction t = producer.newTransaction("URL", "MyPage" + (int) (i / 500));
+				try {
+					// do your business here
+					t.addData("k1", "v1");
+					t.addData("k2", "v2");
+					t.addData("k3", "v3");
 
-			try {
-				// do your business here
-				t.addData("k1", "v1");
-				t.addData("k2", "v2");
-				t.addData("k3", "v3");
+					Thread.sleep(1);
 
-				Thread.sleep(1);
+					producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
+					producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
+					producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
+					producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
 
-				producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
-				producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
-				producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
-				producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
+					String sqlName = "SQLStatement" + j / 500;
+					String sqlParaMeter = "SQLParaMeter" + j / 500;
+					String sqlStatement = "select * from	table where id=\"1\"\n	order by id	desc";
+					Transaction sqlTran = producer.newTransaction("SQL", sqlName);
 
-				String sqlStatement = "SQLStatement" + i / 500;
-				String sqlParaMeter = "SqlParaMeters";
-				Transaction sqlTran = producer.newTransaction("SQL", sqlStatement);
+					producer.logEvent("SQL.PARAM", sqlParaMeter, Transaction.SUCCESS,
+					      Stringizers.forJson().compact().from(sqlParaMeter));
+					sqlTran.addData(sqlStatement);
 
-				producer.logEvent("SQL.PARAM", sqlStatement, Transaction.SUCCESS,
-				      Stringizers.forJson().compact().from(sqlParaMeter));
-				sqlTran.addData(sqlStatement + "detail...");
+					String sqlInternalName = "SQLStatement Internal" + j / 500;
+					String sqlParaInternal = "SQLParaMeter Internal" + j / 500;
+					String sqlInternal = "select * from	intenal	table where id=\"1\"\n	order by id	desc";
+					Transaction internal = producer.newTransaction("SQL", sqlInternalName);
 
-				sqlTran.complete();
+					producer.logEvent("SQL.PARAM", sqlParaInternal, Transaction.SUCCESS, Stringizers.forJson().compact()
+					      .from(sqlParaInternal));
+					internal.addData(sqlInternal);
+					internal.complete();
 
-				if (i % 2 == 1) {
-					sqlTran.setStatus(Message.SUCCESS);
-				} else {
-					sqlTran.setStatus("Error");
+					if (j % 2 == 1) {
+						internal.setStatus(Message.SUCCESS);
+					} else {
+						internal.setStatus("Error");
+					}
+
+					sqlTran.complete();
+
+					DefaultTransaction sqlInternalTran = (DefaultTransaction) internal;
+					sqlInternalTran.setDuration(j % 100 + 100);
+					if (j % 2 == 1) {
+						sqlTran.setStatus(Message.SUCCESS);
+					} else {
+						sqlTran.setStatus("Error");
+					}
+
+					DefaultTransaction def = (DefaultTransaction) sqlTran;
+					def.setDuration(j % 100 + 50);
+					t.setStatus(Message.SUCCESS);
+				} catch (Exception e) {
+					t.setStatus(e);
+				} finally {
+					t.complete();
 				}
-
-				DefaultTransaction def = (DefaultTransaction) sqlTran;
-				def.setDuration(i % 100);
-
-				t.setStatus(Message.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-			} finally {
-				t.complete();
+				MessageTree tree = queue.poll(0);
+				tree.setDomain("domain" + i);
+				storage.store(tree);
 			}
-
-			MessageTree tree = queue.poll(0);
-
-			
-			//tree.setDomain("Domain" + i % 3);
-			storage.store(tree);
 		}
-
 		((HdfsMessageStorage) storage).dispose();
 	}
 }

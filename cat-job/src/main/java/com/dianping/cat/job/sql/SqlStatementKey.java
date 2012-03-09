@@ -8,13 +8,25 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 
 public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
-	private Text m_statement;
+	private Text m_name;
 
 	private Text m_domain;
 
+	private Text m_statement;
+
 	public SqlStatementKey() {
+		m_name = new Text();
 		m_statement = new Text();
 		m_domain = new Text();
+	}
+
+	public Text getName() {
+		return m_name;
+	}
+
+	public SqlStatementKey setName(Text name) {
+		m_name = name;
+		return this;
 	}
 
 	public Text getDomain() {
@@ -37,12 +49,14 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 
 	@Override
 	public void write(DataOutput out) throws IOException {
+		m_name.write(out);
 		m_domain.write(out);
 		m_statement.write(out);
 	}
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
+		m_name.readFields(in);
 		m_domain.readFields(in);
 		m_statement.readFields(in);
 	}
@@ -50,10 +64,10 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 	@Override
 	public int compareTo(SqlStatementKey key) {
 		if (m_domain.toString().equals(key.getDomain().toString())) {
-			if (m_statement.toString().equals(key.getStatement().toString())) {
+			if (m_name.toString().equals(key.getName().toString())) {
 				return 0;
 			} else {
-				return m_statement.compareTo(key.getStatement());
+				return m_name.compareTo(key.getName());
 			}
 		}
 		return m_domain.compareTo(key.getDomain());
@@ -61,6 +75,18 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 
 	@Override
 	public String toString() {
-		return String.format("[domain:%s statement:%s]", m_domain, m_statement);
+		String statement = m_statement.toString();
+		// to assure the output string not contain \t
+		statement = statement.replaceAll("\n", " ");
+		statement = statement.replaceAll("\t", " ");
+		statement = statement.replaceAll("\"", "\'");
+		m_statement = new Text(statement);
+
+		String name = m_name.toString();
+		name = name.replaceAll("\n", " ");
+		name = name.replaceAll("\t", " ");
+		name = name.replaceAll("\"", "\'");
+		m_name = new Text(name);
+		return String.format("%s\t%s\t%s", m_domain, m_name, m_statement);
 	}
 }
