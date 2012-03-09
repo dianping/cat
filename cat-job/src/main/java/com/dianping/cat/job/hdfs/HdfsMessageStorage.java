@@ -149,10 +149,9 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 			}
 		}
 	}
-
-	@Override
-	public MessageTree get(String messageId) {
-		// TODO Auto-generated method stub
+	
+	public MessageTree get(String messageId){
+		//TODO
 		return null;
 	}
 
