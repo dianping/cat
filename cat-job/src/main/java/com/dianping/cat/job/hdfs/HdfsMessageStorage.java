@@ -11,11 +11,15 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class HdfsMessageStorage implements MessageStorage, Initializable, Disposable, LogEnabled {
+	@Inject
+	private MessagePathBuilder m_builder;
+
 	@Inject
 	private OutputChannelManager m_manager;
 
@@ -54,13 +58,14 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 	}
 
 	@Override
-   public String getPath(MessageTree tree) {
-		// TODO fix it
-	   return null;
-   }
+	public String getPath(MessageTree tree) {
+		String path = m_builder.getLogViewPath(tree.getMessageId());
+
+		return path;
+	}
 
 	@Override
-	public String store(MessageTree tree) {
+	public String store(MessageTree tree, String... tags) {
 		m_job.append(tree);
 
 		// Not available
@@ -147,6 +152,18 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 
 	@Override
 	public MessageTree get(String messageId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MessageTree next(String messageId, String tag) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MessageTree previous(String messageId, String tag) {
 		// TODO Auto-generated method stub
 		return null;
 	}

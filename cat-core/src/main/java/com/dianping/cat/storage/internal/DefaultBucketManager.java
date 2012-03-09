@@ -115,7 +115,11 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 	@Override
 	public void closeBucket(Bucket<?> bucket) {
-		bucket.close();
+		try {
+			bucket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		release(bucket);
 	}
 }
