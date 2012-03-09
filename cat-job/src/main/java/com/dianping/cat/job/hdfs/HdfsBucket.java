@@ -20,36 +20,12 @@ public class HdfsBucket implements Bucket<byte[]> {
 
 	private HdfsImpl hdfs;
 
-	private String hdfsDir;
-
-	private String localDir;
-
-	private String indexFilename;
-
-	private String dataFilename;
-
 	private int keyLength = 32;
 
 	private int tagLength = 125;
 
 	public void setHdfs(HdfsImpl hdfs) {
 		this.hdfs = hdfs;
-	}
-
-	public void setHdfsDir(String hdfsDir) {
-		this.hdfsDir = hdfsDir;
-	}
-
-	public void setLocalDir(String localDir) {
-		this.localDir = localDir;
-	}
-
-	public void setIndexFilename(String indexFilename) {
-		this.indexFilename = indexFilename;
-	}
-
-	public void setDataFilename(String dataFilename) {
-		this.dataFilename = dataFilename;
 	}
 
 	public void setKeyLength(int keyLength) {
@@ -105,9 +81,19 @@ public class HdfsBucket implements Bucket<byte[]> {
 		return hdfs.get(id);
 	}
 
+	/**
+	 * @param baseDir
+	 *            e.g /data/appdata/cat/
+	 * @param logicalPath
+	 *            e.g /a/b/c
+	 */
 	@Override
-	public void initialize(Class<?> type, File path) throws IOException {
-		hdfs = new HdfsImpl(hdfsDir, localDir, indexFilename, dataFilename, keyLength, tagLength);
+	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
+		String name = new File(logicalPath).getName();
+		String indexFilename = null;
+		String dataFilename = null;
+		String hdfsDir = null;
+		hdfs = new HdfsImpl(hdfsDir, baseDir, indexFilename, dataFilename, keyLength, tagLength);
 	}
 
 	@Override

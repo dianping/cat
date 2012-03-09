@@ -13,7 +13,7 @@ public interface Bucket<T> extends TagThreadSupport<T> {
 
 	public T findById(String id) throws IOException;;
 
-	public void initialize(Class<?> type, File path) throws IOException;
+	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException;
 
 	public boolean storeById(String id, T data) throws IOException;;
 

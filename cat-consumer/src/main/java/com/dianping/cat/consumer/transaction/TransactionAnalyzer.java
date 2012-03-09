@@ -179,7 +179,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String sessionTag = "s:" + tree.getSessionToken();
 				String requestTag = "r:" + messageId;
 
-				m_messageBucket.storeById(messageId, tree, threadTag, sessionTag, requestTag);
+				try {
+					m_messageBucket.storeById(messageId, tree, threadTag, sessionTag, requestTag);
+				} catch (IOException e) {
+					m_logger.error("", e);
+				}
 			}
 		}
 	}
@@ -305,7 +309,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			// delete old one, not append mode
 			bucket.deleteAndCreate();
-			
+
 			for (TransactionReport report : reports) {
 				bucket.storeById("transaction-" + report.getDomain(), builder.buildXml(report));
 			}

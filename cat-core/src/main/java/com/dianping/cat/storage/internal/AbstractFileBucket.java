@@ -174,7 +174,8 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 	}
 
 	@Override
-	public void initialize(Class<?> type, File path) throws IOException {
+	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
+		File path = new File(baseDir, logicalPath);
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 		m_file = path;

@@ -22,7 +22,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	protected Bucket<?> createBucket(String path, Class<?> type) throws IOException {
 		Bucket<?> bucket = lookup(Bucket.class, type.getName());
 
-		bucket.initialize(type, new File(m_baseDir, path));
+		bucket.initialize(type, new File(m_baseDir), path);
 		return bucket;
 	}
 
