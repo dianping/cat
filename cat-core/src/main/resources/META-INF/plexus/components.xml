@@ -35,6 +35,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.internal.MessageIdFactory</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

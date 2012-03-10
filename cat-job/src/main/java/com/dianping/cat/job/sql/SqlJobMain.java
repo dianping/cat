@@ -51,7 +51,7 @@ public class SqlJobMain extends Configured implements Tool {
 
 	@Override
 	public int run(String[] args) throws Exception {
-		Configuration conf = getConf();
+		/*Configuration conf = getConf();
 
 		Job job = new Job(conf, "Sql Analyzer");
 		job.setJarByClass(SqlJobMain.class);
@@ -94,9 +94,9 @@ public class SqlJobMain extends Configured implements Tool {
 			return runSqlRecordJob(hourStr);
 		} else {
 			return 0;
-		}
-		//String hourStr = getLastHoursString(1);
-		//return runSqlRecordJob(hourStr);
+		}*/
+		String hourStr = getLastHoursString(1);
+		return runSqlRecordJob(hourStr);
 	}
 
 	/*
