@@ -21,8 +21,7 @@ public class DefaultBucket<T> extends AbstractFileBucket<T> {
 
 			return (T) bytes;
 		} else {
-			throw new UnsupportedOperationException(String.format(
-			      "Only String or byte[] are supported so far, but was %s.", m_type));
+			throw new UnsupportedOperationException(String.format("Only String or byte[] are supported so far, but was %s.", m_type));
 		}
 	}
 
@@ -40,25 +39,23 @@ public class DefaultBucket<T> extends AbstractFileBucket<T> {
 			buf.writeInt(bytes.length);
 			buf.writeBytes(bytes);
 		} else {
-			throw new UnsupportedOperationException(String.format(
-			      "Only String or byte[] are supported so far, but was %s.", m_type));
+			throw new UnsupportedOperationException(String.format("Only String or byte[] are supported so far, but was %s.", m_type));
 		}
 	}
 
 	@Override
-	public void initialize(Class<?> type, File path) throws IOException {
-		super.initialize(type, path);
+	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
+		super.initialize(type, baseDir, logicalPath);
 
 		m_type = type;
 
 		if (m_type != String.class && m_type != byte[].class) {
-			throw new UnsupportedOperationException(String.format(
-			      "Only String or byte[] are supported so far, but was %s.", m_type));
+			throw new UnsupportedOperationException(String.format("Only String or byte[] are supported so far, but was %s.", m_type));
 		}
 	}
 
 	@Override
-   protected boolean isAutoFlush() {
-	   return true;
-   }
+	protected boolean isAutoFlush() {
+		return true;
+	}
 }
