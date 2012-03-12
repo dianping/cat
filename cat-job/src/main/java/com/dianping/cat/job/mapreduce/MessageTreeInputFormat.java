@@ -9,9 +9,9 @@ import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.RecordReader;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
 
-import com.dianping.cat.job.sql.MutiFileInputFormat;
+import com.dianping.cat.job.sql.DirectoryInputFormat;
 
-public class MessageTreeInputFormat extends MutiFileInputFormat<LongWritable, MessageTreeWritable> {
+public class MessageTreeInputFormat extends DirectoryInputFormat<LongWritable, MessageTreeWritable> {
 	@Override
 	public RecordReader<LongWritable, MessageTreeWritable> createRecordReader(InputSplit split,
 	      TaskAttemptContext context) throws IOException, InterruptedException {

@@ -42,6 +42,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, HdfsDumpConsumer.ID, HdfsDumpConsumer.class) //
 		      .req(MessageStorage.class, "hdfs"));
 
+		all.addAll(new DatabaseConfigurator().defineComponents());
+		
 		return all;
 	}
 

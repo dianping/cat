@@ -5,12 +5,12 @@
 	<servlet>
 		<servlet-name>mvc-servlet</servlet-name>
 		<servlet-class>com.site.web.MVC</servlet-class>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet>
 		<servlet-name>cat-servlet</servlet-name>
 		<servlet-class>com.dianping.cat.servlet.CatServlet</servlet-class>
-		<load-on-startup>2</load-on-startup>
+		<load-on-startup>1</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>mvc-servlet</servlet-name>

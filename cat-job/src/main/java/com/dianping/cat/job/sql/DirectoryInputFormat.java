@@ -13,11 +13,10 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.input.InvalidInputException;
 import org.apache.hadoop.mapreduce.security.TokenCache;
 
+public abstract class DirectoryInputFormat<K, V> extends FileInputFormat<K, V> {
 
-public abstract class MutiFileInputFormat<K,V> extends FileInputFormat<K, V> {
-	
 	public List<FileStatus> listStatus(JobContext job) throws IOException {
-		
+
 		List<FileStatus> result = new ArrayList<FileStatus>();
 		Path[] dirs = getInputPaths(job);
 		if (dirs.length == 0) {
@@ -32,9 +31,10 @@ public abstract class MutiFileInputFormat<K,V> extends FileInputFormat<K, V> {
 		if (jobFilter != null) {
 			filters.add(jobFilter);
 		}
-		//Add Default Hidden file
+		// Add Default Hidden file
 		PathFilter inputFilter = new MultiPathFilter(filters);
 
+		filters.add(hiddenFileFilter);
 		for (int i = 0; i < dirs.length; ++i) {
 			Path p = dirs[i];
 			FileSystem fs = p.getFileSystem(job.getConfiguration());
@@ -44,7 +44,7 @@ public abstract class MutiFileInputFormat<K,V> extends FileInputFormat<K, V> {
 			} else if (matches.length == 0) {
 				errors.add(new IOException("Input Pattern " + p + " matches 0 files"));
 			} else {
-				
+
 				for (FileStatus globStat : matches) {
 					addFileStat(result, inputFilter, fs, globStat);
 				}
@@ -58,32 +58,37 @@ public abstract class MutiFileInputFormat<K,V> extends FileInputFormat<K, V> {
 	}
 
 	public void addFileStat(List<FileStatus> result, PathFilter inputFilter, FileSystem fs, FileStatus globStat)
-         throws IOException {
-	   if (globStat.isDir()) {
-	   	for (FileStatus stat : fs.listStatus(globStat.getPath(), inputFilter)) {
-	   		addFileStat(result,inputFilter,fs,stat);
-	   	}
-	   } else {
-	   	result.add(globStat);
-	   	
-	   	System.out.println(globStat.getPath().getName());
-	   }
-   }
-	
+	      throws IOException {
+		if (globStat.isDir()) {
+			for (FileStatus stat : fs.listStatus(globStat.getPath(), inputFilter)) {
+				addFileStat(result, inputFilter, fs, stat);
+			}
+		} else {
+			result.add(globStat);
+		}
+	}
+
+	private static final PathFilter hiddenFileFilter = new PathFilter() {
+		public boolean accept(Path p) {
+			String name = p.getName();
+			return !name.startsWith("_") && !name.startsWith(".");
+		}
+	};
+
 	private static class MultiPathFilter implements PathFilter {
-	    private List<PathFilter> filters;
+		private List<PathFilter> filters;
 
-	    public MultiPathFilter(List<PathFilter> filters) {
-	      this.filters = filters;
-	    }
+		public MultiPathFilter(List<PathFilter> filters) {
+			this.filters = filters;
+		}
 
-	    public boolean accept(Path path) {
-	      for (PathFilter filter : filters) {
-	        if (!filter.accept(path)) {
-	          return false;
-	        }
-	      }
-	      return true;
-	    }
-	  }
+		public boolean accept(Path path) {
+			for (PathFilter filter : filters) {
+				if (!filter.accept(path)) {
+					return false;
+				}
+			}
+			return true;
+		}
+	}
 }

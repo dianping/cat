@@ -40,15 +40,16 @@ public class SqlJobMapper extends Mapper<Object, MessageTreeWritable, SqlStateme
 
 		if (type.equals("SQL")) {
 			SqlStatementKey statementKey = new SqlStatementKey();
-			String statement = transaction.getName();
+			String name = transaction.getName();
+			String statement = transaction.getData().toString();
 			long duration = transaction.getDuration();
 			int flag = 0;
 
-			statementKey.setDomain(new Text(domain)).setStatement(new Text(statement));
+			statementKey.setDomain(new Text(domain)).setName(new Text(name)).setStatement(new Text(statement));
 			if (!transaction.getStatus().equals(Transaction.SUCCESS)) {
 				flag = 1;
 			}
-			SqlStatementValue result = new SqlStatementValue(flag, duration);
+			SqlStatementValue result = new SqlStatementValue(flag, duration ,tree.getMessageId());
 			context.write(statementKey, result);
 		}
 

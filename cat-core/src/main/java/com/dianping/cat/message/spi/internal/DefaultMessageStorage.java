@@ -58,7 +58,7 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 	}
 
 	@Override
-	public String store(MessageTree tree) {
+	public String store(MessageTree tree, String... tags) {
 		String path = m_builder.getLogViewPath(tree.getMessageId());
 
 		m_job.append(tree);
@@ -142,6 +142,18 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 
 	@Override
 	public MessageTree get(String messageId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MessageTree next(String messageId, String tag) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public MessageTree previous(String messageId, String tag) {
 		// TODO Auto-generated method stub
 		return null;
 	}

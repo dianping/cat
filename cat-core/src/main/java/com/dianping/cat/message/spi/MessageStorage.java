@@ -13,7 +13,7 @@ public interface MessageStorage {
 	 *            message tree to store
 	 * @return relative path to base directory or base URL
 	 */
-	public String store(MessageTree tree);
+	public String store(MessageTree tree, String... tag);
 
 	/**
 	 * Fetch a message tree from the store.
@@ -22,6 +22,18 @@ public interface MessageStorage {
 	 * @return
 	 */
 	public MessageTree get(String messageId);
+
+	/**
+	 * @param messageId
+	 * @return
+	 */
+	public MessageTree next(String messageId, String tag);
+
+	/**
+	 * @param messageId
+	 * @return
+	 */
+	public MessageTree previous(String messageId, String tag);
 
 	/**
 	 * 

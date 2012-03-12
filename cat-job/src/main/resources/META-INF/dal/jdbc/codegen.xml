@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+  <entity name="sqlreport" table="SqlReport" alias="s">
+    <member name="id" field="Id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="domain" field="Domain" value-type="String" length="50" nullable="false" />
+    <member name="statement" field="Statement" value-type="String" length="500" nullable="false" />
+    <member name="totalcount" field="TotalCount" value-type="int" length="10" nullable="false" />
+    <member name="failures" field="Failures" value-type="int" length="10" nullable="false" />
+    <member name="longsqls" field="LongSqls" value-type="int" length="10" nullable="false" />
+    <member name="minvalue" field="MinValue" value-type="long" length="22" nullable="false" />
+    <member name="maxvalue" field="MaxValue" value-type="long" length="22" nullable="false" />
+    <member name="avg2value" field="Avg2Value" value-type="long" length="22" nullable="false" />
+    <member name="sumvalue" field="SumValue" value-type="long" length="22" nullable="false" />
+    <member name="sum2value" field="Sum2Value" value-type="long" length="22" nullable="false" />
+    <member name="samplelink" field="SampleLink" value-type="String" length="64" nullable="false" />
+    <member name="transactiondate" field="TransactionDate" value-type="Date" nullable="false" />
+    <member name="creationdate" field="CreationDate" value-type="Date" nullable="false" />
+    <member name="name" field="Name" value-type="String" length="100" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="Id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>
+
