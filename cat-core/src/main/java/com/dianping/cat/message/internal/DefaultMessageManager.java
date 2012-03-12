@@ -136,6 +136,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_manager = lookup(TransportManager.class);
 		m_factory = lookup(MessageIdFactory.class);
 
+		// initialize domain and ip address
+		m_factory.initialize(m_clientConfig);
+
 		// initialize milli second resolution level timer
 		MilliSecondTimer.initialize();
 	}

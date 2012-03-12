@@ -40,4 +40,11 @@
       <function-signature>String uri2(com.site.web.mvc.ViewModel, java.lang.Object, java.lang.String)</function-signature>
       <example>${a:uri2(model, 123, 'a=1&amp;b=2')}</example>
    </function>
+   <function>
+      <description>show legends for problem summary report</description>
+      <name>showLegends</name>
+      <function-class>com.dianping.cat.report.view.ProblemReportHelper</function-class>
+      <function-signature>String showLegends(com.dianping.cat.consumer.problem.model.entity.JavaThread, int)</function-signature>
+      <example>${a:showLegends(thread,minute)}</example>
+   </function>
 </taglib>

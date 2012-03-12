@@ -28,6 +28,15 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Action.VIEW;
 	}
 
+	@Override
+   public String getDomain() {
+		if (m_report == null) {
+			return null;
+		} else {
+			return m_report.getDomain();
+		}
+   }
+
 	// required by report tag
 	public Set<String> getDomains() {
 		if (m_report == null) {

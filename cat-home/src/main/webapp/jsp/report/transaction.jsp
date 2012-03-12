@@ -13,11 +13,13 @@
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 <res:useJs value="${res.js.local.transaction_js}" target="head-js"/>
 
-<a:report title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?domain=${payload.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:report title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>" navUrlPrefix="domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
 
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 <jsp:body>
+
+<br>
 <table class="transaction">
 	<tr><th>${empty payload.type ? "Type" : "Name"}</th><th>Total Count</th><th>Failure Count</th><th>Failure%</th><th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
 	<c:choose>
@@ -25,7 +27,7 @@
 			<c:forEach var="type" items="${report.types}" varStatus="status">
 				<c:set var="e" value="${type.value}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td><a href="?domain=${reort.domain}&date=${model.date}&type=${e.id}">${e.id}</a></td>
+					<td><a href="?domain=${report.domain}&date=${model.date}&type=${e.id}">${e.id}</a></td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
@@ -50,6 +52,8 @@
 		</c:otherwise>
 	</c:choose>
 </table>
+<br>
+
 </jsp:body>
 
 </a:report>

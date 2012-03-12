@@ -10,7 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.transaction.MeanSquareDeviationComputer;
+import com.dianping.cat.consumer.transaction.StatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -44,7 +44,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private Map<Integer, Integer> m_map = new HashMap<Integer, Integer>();
 
-	private MeanSquareDeviationComputer m_computer = new MeanSquareDeviationComputer();
+	private StatisticsComputer m_computer = new StatisticsComputer();
 
 	private TransactionName getTransactionName(Payload payload) {
 		String domain = payload.getDomain();

@@ -40,6 +40,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_displayModels;
 	}
 
+
+	@Override
+   public String getDomain() {
+		if (m_report == null) {
+			return null;
+		} else {
+			return m_report.getDomain();
+		}
+   }
+	
 	public List<String> getDomains() {
 		return m_domains;
 	}

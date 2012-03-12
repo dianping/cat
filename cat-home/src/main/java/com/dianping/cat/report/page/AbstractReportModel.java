@@ -34,6 +34,9 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	}
 
 	// required by report tag
+	public abstract String getDomain();
+	
+	// required by report tag
 	public abstract Collection<String> getDomains();
 
 	public Throwable getException() {

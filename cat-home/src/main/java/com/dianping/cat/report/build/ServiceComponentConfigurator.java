@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
-import com.dianping.cat.report.page.model.failure.CompositeFailureModelService;
-import com.dianping.cat.report.page.model.failure.LocalFailureModelService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
+import com.dianping.cat.report.page.model.problem.CompositeProblemService;
+import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.transaction.CompositeTransactionService;
 import com.dianping.cat.report.page.model.transaction.HdfsTransactionService;
@@ -29,10 +29,10 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "transaction", CompositeTransactionService.class) //
 		      .req(ModelService.class, new String[] { "transaction-local", "transaction-hdfs" }, "m_services"));
 
-		all.add(C(ModelService.class, "failure-local", LocalFailureModelService.class) //
+		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
 		      .req(MessageConsumer.class, "realtime"));
-		all.add(C(ModelService.class, "failure", CompositeFailureModelService.class) //
-		      .req(ModelService.class, new String[] { "failure-local" }, "m_services"));
+		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //
+		      .req(ModelService.class, new String[] { "problem-local" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 		      .req(MessagePathBuilder.class));

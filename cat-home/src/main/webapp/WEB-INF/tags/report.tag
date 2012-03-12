@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ attribute name="title"%>
+<%@ attribute name="navUrlPrefix"%>
 <%@ attribute name="timestamp"%>
 <%@ attribute name="subtitle" fragment="true"%>
 
@@ -24,7 +25,7 @@
 				<div class="domain">
 					<c:forEach var="domain" items="${model.domains}">
 						&nbsp;<c:choose>
-							<c:when test="${payload.domain eq domain}">
+							<c:when test="${model.domain eq domain}">
 								<a href="${model.baseUri}?domain=${domain}" class="current">[&nbsp;${domain}&nbsp;]</a>
 							</c:when>
 							<c:otherwise>
@@ -36,7 +37,7 @@
 			</td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&hours=${nav.hours}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&hours=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 			</td>
 		</tr>
@@ -44,11 +45,9 @@
 			<td class="subtitle"><jsp:invoke fragment="subtitle"/></td>
 		</tr>
 	</table>
-	<br />
 
 	<jsp:doBody />
 
-	<br />
 	<table class="footer">
 		<tr>
 			<td>[ end ]</td>

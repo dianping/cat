@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dianping.cat.job.hdfs;
 
 import java.io.File;

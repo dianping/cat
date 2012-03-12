@@ -1,0 +1,57 @@
+{
+   "domain": "User",
+   "startTime": "2012-02-16 22:00:00",
+   "endTime": "2012-02-16 22:59:00",
+   "all-domains": {
+      "domains": [
+         "User",
+         "Cat"
+      ]
+   },
+   "machines": {
+      "192.168.32.68": {
+         "ip": "192.168.32.68",
+         "threads": {
+            "main": {
+               "id": "main",
+               "segments": {
+                  "00": {
+                     "id": "00",
+                     "entries": [
+                        {
+                           "type": "Error",
+                           "message-id": "Cat-c0a83f19-135f104c834-0",
+                           "status": "java.lang.OutOfMemoryError",
+                           "duration": 0
+                        }
+                     ]
+                  },
+                  "01": {
+                     "id": "01",
+                     "entries": [
+                        {
+                           "type": "Error",
+                           "message-id": "Cat-c0a83f19-135f104c834-0",
+                           "status": "java.lang.OutOfMemoryError",
+                           "duration": 1234
+                        },
+                        {
+                           "type": "Exception",
+                           "message-id": "Cat-c0a83f19-135f104c834-0",
+                           "status": "Exception",
+                           "duration": 0
+                        }
+                     ]
+                  }
+               }
+            },
+            "child": {
+               "id": "child"
+            }
+         }
+      },
+      "...": {
+         "ip": "..."
+      }
+   }
+}

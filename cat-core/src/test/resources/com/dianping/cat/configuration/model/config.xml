@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="config.xsd" mode="">
+<app domain=""/>
+<servers>
+<server/>
+<!-- more server -->
+</servers>
+<bind/>
+<filter>
+<domain>{domain}</domain>
+<!-- more domain -->
+</filter>
+<properties>
+<property name=""/>
+<!-- more property -->
+</properties>
+</config>
