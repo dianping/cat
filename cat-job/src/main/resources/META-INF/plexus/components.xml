@@ -24,6 +24,12 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>hdfs</role-hint>
+			<implementation>com.dianping.cat.job.hdfs.HdfsBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.MessageStorage</role>
 			<role-hint>hdfs</role-hint>
 			<implementation>com.dianping.cat.job.hdfs.HdfsMessageStorage</implementation>
