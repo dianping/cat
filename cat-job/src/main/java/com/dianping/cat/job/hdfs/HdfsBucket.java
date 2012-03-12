@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.dianping.cat.storage.Bucket;
 import com.dianping.tkv.Meta;
 import com.dianping.tkv.hdfs.HdfsImpl;
@@ -87,8 +89,10 @@ public class HdfsBucket implements Bucket<byte[]> {
 	@Override
 	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
 		String name = new File(logicalPath).getName();
-		String indexFilename = null;
-		String dataFilename = null;
+		String[] segs = StringUtils.split(name, File.pathSeparatorChar);
+		String filename = segs[segs.length - 1];
+		String indexFilename = filename + ".idx";
+		String dataFilename = filename + ".data";
 		String hdfsDir = null;
 		hdfs = new HdfsImpl(hdfsDir, baseDir, indexFilename, dataFilename, keyLength, tagLength);
 	}
