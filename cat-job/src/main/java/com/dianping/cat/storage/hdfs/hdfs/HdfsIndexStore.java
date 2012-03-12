@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.tkv.hdfs;
+package com.dianping.cat.storage.hdfs.hdfs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,17 +14,17 @@ import java.util.Comparator;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import com.dianping.tkv.IndexStore;
-import com.dianping.tkv.Meta;
-import com.dianping.tkv.local.RAFIndexStore;
-import com.dianping.tkv.util.IoKit;
+import com.dianping.cat.storage.hdfs.IndexStore;
+import com.dianping.cat.storage.hdfs.Meta;
+import com.dianping.cat.storage.hdfs.local.RAFIndexStore;
+import com.dianping.cat.storage.hdfs.util.IoKit;
 
 /**
  * @author sean.wang
  * @since Mar 7, 2012
  */
 public class HdfsIndexStore implements IndexStore {
-	private RAFIndexStore indexStore;
+	private RAFIndexStore localIndexStore;
 
 	private FileSystem fs;
 
@@ -32,37 +32,43 @@ public class HdfsIndexStore implements IndexStore {
 
 	private File localFile;
 
-	public HdfsIndexStore(String hdfsDir, String hdfsFilename, File localFile, int keyLength, int tagLength) throws IOException {
+	public HdfsIndexStore() {
+
+	}
+
+	public HdfsIndexStore(FileSystem fs, String hdfsFilename, File localFile, int keyLength, int tagLength) throws IOException {
+		this.fs = fs;
 		this.localFile = localFile;
-		this.indexStore = new RAFIndexStore(localFile, keyLength, tagLength);
-		this.fs = HdfsHelper.createFileSystem(hdfsDir);
+		this.localIndexStore = new RAFIndexStore(localFile, keyLength, tagLength);
 		this.path = new Path(fs.getWorkingDirectory(), hdfsFilename);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.IndexStore#append(com.dianping.tkv.Meta)
+	 * @see com.dianping.cat.storage.hdfs.IndexStore#append(com.dianping.cat.storage.hdfs.Meta)
 	 */
 	@Override
 	public void append(Meta meta) throws IOException {
-		this.indexStore.append(meta);
+		this.localIndexStore.append(meta);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.hdfs.IndexStore#close()
+	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#close()
 	 */
 	@Override
 	public void close() throws IOException {
-		this.indexStore.close();
+		this.localIndexStore.close();
 		this.fs.close();
 	}
 
 	@Override
 	public boolean delete() throws IOException {
-		return this.fs.delete(path, false);
+		boolean localDeleted = this.localIndexStore.delete();
+		boolean remoteDeleted = this.fs.delete(path, false);
+		return localDeleted && remoteDeleted;
 	}
 
 	public void download() throws IOException {
@@ -74,54 +80,55 @@ public class HdfsIndexStore implements IndexStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.hdfs.IndexStore#getIndex(int)
+	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#getIndex(int)
 	 */
 	@Override
 	public Meta getIndex(int indexPos) throws IOException {
-		return this.indexStore.getIndex(indexPos);
+		return this.localIndexStore.getIndex(indexPos);
 	}
 
 	@Override
 	public Meta getIndex(String key) throws IOException {
-		return this.indexStore.getIndex(key);
+		return this.localIndexStore.getIndex(key);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.hdfs.IndexStore#getIndex(java.lang.String)
+	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#getIndex(java.lang.String)
 	 */
 	@Override
 	public Meta getIndex(String key, Comparator<String> c) throws IOException {
-		return this.indexStore.getIndex(key, c);
+		return this.localIndexStore.getIndex(key, c);
 	}
 
 	@Override
 	public Meta getIndex(String key, String tagName) throws IOException {
-		return this.indexStore.getIndex(key, tagName);
+		return this.localIndexStore.getIndex(key, tagName);
 	}
 
 	@Override
 	public Meta getIndex(String key, String tagName, Comparator<String> c) throws IOException {
-		return this.indexStore.getIndex(key, tagName, c);
+		return this.localIndexStore.getIndex(key, tagName, c);
 	}
 
 	@Override
 	public int getIndexLength() {
-		return this.indexStore.getIndexLength();
+		return this.localIndexStore.getIndexLength();
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.hdfs.IndexStore#size()
+	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#size()
 	 */
 	@Override
 	public long size() throws IOException {
 		return length() / getIndexLength();
 	}
 
-	public void upload() throws IOException {
+	@Override
+	public void flush() throws IOException {
 		InputStream input = new FileInputStream(this.localFile);
 		OutputStream output = fs.create(path);
 		IoKit.copyAndClose(input, output);

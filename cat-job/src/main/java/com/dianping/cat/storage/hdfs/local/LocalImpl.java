@@ -1,10 +1,10 @@
 /**
  * 
  */
-package com.dianping.tkv.local;
+package com.dianping.cat.storage.hdfs.local;
 
-import static com.dianping.tkv.util.NumberKit.bytes2Int;
-import static com.dianping.tkv.util.NumberKit.int2Bytes;
+import static com.dianping.cat.storage.hdfs.util.NumberKit.bytes2Int;
+import static com.dianping.cat.storage.hdfs.util.NumberKit.int2Bytes;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,11 +16,11 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.dianping.tkv.DataStore;
-import com.dianping.tkv.Meta;
-import com.dianping.tkv.Record;
-import com.dianping.tkv.Tkv;
-import com.dianping.tkv.util.StringKit;
+import com.dianping.cat.storage.hdfs.DataStore;
+import com.dianping.cat.storage.hdfs.Meta;
+import com.dianping.cat.storage.hdfs.Record;
+import com.dianping.cat.storage.hdfs.Tkv;
+import com.dianping.cat.storage.hdfs.util.StringKit;
 
 /**
  * Tagged key-value store implement.
@@ -279,5 +279,10 @@ public class LocalImpl implements Tkv {
 		}
 		bb.put((byte) Record.ENDER);
 		this.store.append(bb.array());
+	}
+
+	@Override
+	public boolean delete() throws IOException {
+		return this.store.delete();
 	}
 }

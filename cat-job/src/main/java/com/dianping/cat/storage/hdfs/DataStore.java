@@ -1,4 +1,4 @@
-package com.dianping.tkv;
+package com.dianping.cat.storage.hdfs;
 
 import java.io.IOException;
 
@@ -18,5 +18,7 @@ public interface DataStore {
 	void close() throws IOException;
 
 	long length() throws IOException;
+
+	boolean delete() throws IOException;
 
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.tkv;
+package com.dianping.cat.storage.hdfs;
 
 import java.io.IOException;
 
@@ -104,4 +104,6 @@ public interface Tkv {
 	 * @throws IOException
 	 */
 	long size() throws IOException;
+
+	boolean delete() throws IOException;
 }
