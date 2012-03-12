@@ -12,4 +12,6 @@ public interface BucketManager {
 	public Bucket<String> getStringBucket(String path) throws IOException;
 
 	public Bucket<byte[]> getBytesBucket(String path) throws IOException;
+	
+	public Bucket<byte[]> getHdfsBucket(String path) throws IOException;
 }

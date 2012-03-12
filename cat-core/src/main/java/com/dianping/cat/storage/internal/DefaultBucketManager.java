@@ -19,8 +19,14 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();
 
-	protected Bucket<?> createBucket(String path, Class<?> type) throws IOException {
-		Bucket<?> bucket = lookup(Bucket.class, type.getName());
+	protected Bucket<?> createBucket(String path, Class<?> type, String namespace) throws IOException {
+		Bucket<?> bucket;
+
+		if (namespace.equals("hdfs")) {
+			bucket = lookup(Bucket.class, "hdfs");
+		} else {
+			bucket = lookup(Bucket.class, type.getName());
+		}
 
 		bucket.initialize(type, new File(m_baseDir), path);
 		return bucket;
@@ -34,12 +40,12 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T> Bucket<T> getBucket(Class<T> type, String path) throws IOException {
+	protected <T> Bucket<T> getBucket(Class<T> type, String path, String namespace) throws IOException {
 		if (type == null || path == null) {
 			throw new IllegalArgumentException(String.format("Type(%s) or path(%s) can't be null.", type, path));
 		}
 
-		Entry entry = new Entry(type, path);
+		Entry entry = new Entry(type, path, namespace);
 		Bucket<?> bucket = m_map.get(entry);
 
 		if (bucket == null) {
@@ -47,7 +53,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 				bucket = m_map.get(entry);
 
 				if (bucket == null) {
-					bucket = createBucket(path, type);
+					bucket = createBucket(path, type, namespace);
 					m_map.put(entry, bucket);
 				}
 			}
@@ -58,17 +64,22 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 	@Override
 	public Bucket<byte[]> getBytesBucket(String path) throws IOException {
-		return getBucket(byte[].class, path);
+		return getBucket(byte[].class, path, "file");
+	}
+
+	@Override
+	public Bucket<byte[]> getHdfsBucket(String path) throws IOException {
+		return getBucket(byte[].class, path, "hdfs");
 	}
 
 	@Override
 	public Bucket<MessageTree> getMessageBucket(String path) throws IOException {
-		return getBucket(MessageTree.class, path);
+		return getBucket(MessageTree.class, path, "file");
 	}
 
 	@Override
 	public Bucket<String> getStringBucket(String path) throws IOException {
-		return getBucket(String.class, path);
+		return getBucket(String.class, path, "file");
 	}
 
 	public void setBaseDir(String baseDir) {
@@ -80,9 +91,12 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 		private String m_path;
 
-		public Entry(Class<?> type, String path) {
+		private String m_namespace;
+
+		public Entry(Class<?> type, String path, String namespace) {
 			m_type = type;
 			m_path = path;
+			m_namespace = namespace;
 		}
 
 		@Override
@@ -90,7 +104,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			if (obj instanceof Entry) {
 				Entry e = (Entry) obj;
 
-				return e.getClass() == m_type && e.getPath().equals(m_path);
+				return e.getClass() == m_type && e.getPath().equals(m_path) && e.getNamespace().equals(m_namespace);
 			}
 
 			return false;
@@ -102,6 +116,10 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 		public Class<?> getType() {
 			return m_type;
+		}
+
+		public String getNamespace() {
+			return m_namespace;
 		}
 
 		@Override

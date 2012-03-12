@@ -16,7 +16,6 @@ import com.dianping.tkv.hdfs.HdfsImpl;
  * @since Mar 9, 2012
  */
 public class HdfsBucket implements Bucket<byte[]> {
-
 	private HdfsImpl hdfs;
 
 	private int keyLength = 32;
