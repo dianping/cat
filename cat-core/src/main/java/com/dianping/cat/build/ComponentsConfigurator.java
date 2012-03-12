@@ -92,9 +92,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class) //
 		      .req(MessageManager.class, MessageConsumerRegistry.class));
 
-		all.add(C(Bucket.class, String.class.getName(), DefaultBucket.class));
-		all.add(C(Bucket.class, byte[].class.getName(), DefaultBucket.class));
+		all.add(C(Bucket.class, String.class.getName(), DefaultBucket.class) //
+		      .is(PER_LOOKUP));
+		all.add(C(Bucket.class, byte[].class.getName(), DefaultBucket.class) //
+		      .is(PER_LOOKUP));
 		all.add(C(Bucket.class, MessageTree.class.getName(), DefaultMessageBucket.class) //
+		      .is(PER_LOOKUP) //
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(BucketManager.class, DefaultBucketManager.class) //
 		      .config(E("baseDir").value("target/bucket/")));
