@@ -184,7 +184,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				try {
 					m_messageBucket.storeById(messageId, tree, threadTag, sessionTag, requestTag);
 				} catch (IOException e) {
-					m_logger.error("", e);
+					m_logger.error("Error when storing message for transaction analyzer!", e);
 				}
 			}
 		}

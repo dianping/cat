@@ -5,26 +5,20 @@
       <page name="home" title="Home" default="true">
         <description>CAT Home Page.</description>
       </page>
-      <page name="transaction" title="Transaction" path="t">
-        <description>CAT summary report for Transactions in current hour.</description>
+      <page name="problem" title="Problem" path="p">
+        <description>Problem discovered</description>
       </page>
-      <page name="failure" title="Failure" path="f">
-        <description>CAT details report for failed messages in current hour.</description>
+      <page name="transaction" title="Transaction" path="t">
+        <description>Transaction summary report</description>
       </page>
       <page name="logview" title="Logview" path="m" standalone="false">
-        <description>CAT log details view for a given message.</description>
+        <description>Log view details</description>
       </page>
       <page name="ip" title="Top IP List">
-        <description>Top visited IP list in current hour.</description>
-      </page>
-      <page name="service" title="Service" path="service" standalone="false">
-        <description>Service Home</description>
+        <description>Top visited IP addresses</description>
       </page>
       <page name="model" title="Model" path="model" standalone="false">
-        <description>Model Service</description>
-      </page>
-      <page name="problem" title="Problem" path="p">
-        <description>Problem</description>
+        <description>Service model</description>
       </page>
     </module>
   </webapp>

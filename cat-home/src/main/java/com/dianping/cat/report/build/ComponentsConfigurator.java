@@ -11,13 +11,7 @@ import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
-import com.dianping.cat.report.page.failure.FailureManager;
 import com.dianping.cat.report.page.ip.IpManager;
-import com.dianping.cat.report.page.service.provider.FailureModelProvider;
-import com.dianping.cat.report.page.service.provider.IpModelProvider;
-import com.dianping.cat.report.page.service.provider.ModelProvider;
-import com.dianping.cat.report.page.service.provider.TransactionModelProvider;
-import com.dianping.cat.report.page.transaction.TransactionManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -37,17 +31,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ServerConfig.class)//
 		      .config(E("consumerServers").value("127.0.0.1:2281"))//
 		      .config(E("fileServer").value("127.0.0.1")));
-
-		all.add(C(ModelProvider.class, "failure", FailureModelProvider.class).req(MessageConsumer.class, "realtime"));
-
-		all.add(C(ModelProvider.class, "transaction", TransactionModelProvider.class).req(MessageConsumer.class,
-		      "realtime"));
-
-		all.add(C(ModelProvider.class, "ip", IpModelProvider.class).req(MessageConsumer.class, "realtime"));
-
-		all.add(C(FailureManager.class));
-
-		all.add(C(TransactionManager.class));
 
 		all.add(C(IpManager.class));
 

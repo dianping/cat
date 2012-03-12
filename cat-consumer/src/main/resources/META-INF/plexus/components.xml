@@ -79,15 +79,5 @@
 			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
-		<component>
-			<role>com.dianping.cat.consumer.failure.FailureReportAnalyzer</role>
-			<implementation>com.dianping.cat.consumer.failure.FailureReportAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-			</requirements>
-		</component>
 	</components>
 </plexus>

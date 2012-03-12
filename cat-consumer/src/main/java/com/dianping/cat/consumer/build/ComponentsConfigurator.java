@@ -10,7 +10,6 @@ import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.DefaultMessageQueue;
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.failure.FailureReportAnalyzer;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.handler.FailureHandler;
@@ -18,7 +17,6 @@ import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.storage.BucketManager;
@@ -55,9 +53,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, MessagePathBuilder.class));
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
-
-		all.add(C(FailureReportAnalyzer.class).is(PER_LOOKUP) //
-		      .req(MessageManager.class));
 
 		return all;
 	}

@@ -19,17 +19,19 @@
 			<artifactId>netty</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.site.common</groupId>
-			<artifactId>test-framework</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.site.common</groupId>
+			<artifactId>test-framework</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>

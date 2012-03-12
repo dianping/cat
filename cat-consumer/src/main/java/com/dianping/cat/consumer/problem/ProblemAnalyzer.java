@@ -184,7 +184,11 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			String sessionTag = "s:" + tree.getSessionToken();
 			String requestTag = "r:" + messageId;
 
-			m_messageBucket.storeById(messageId, tree, threadTag, sessionTag, requestTag);
+			try {
+				m_messageBucket.storeById(messageId, tree, threadTag, sessionTag, requestTag);
+			} catch (IOException e) {
+				m_logger.error("Error when storing message for problem analyzer!", e);
+			}
 		}
 	}
 
