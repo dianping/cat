@@ -23,47 +23,6 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.service.provider.ModelProvider</role>
-			<role-hint>failure</role-hint>
-			<implementation>com.dianping.cat.report.page.service.provider.FailureModelProvider</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.service.provider.ModelProvider</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.report.page.service.provider.TransactionModelProvider</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.service.provider.ModelProvider</role>
-			<role-hint>ip</role-hint>
-			<implementation>com.dianping.cat.report.page.service.provider.IpModelProvider</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.failure.FailureManager</role>
-			<implementation>com.dianping.cat.report.page.failure.FailureManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.TransactionManager</role>
-			<implementation>com.dianping.cat.report.page.transaction.TransactionManager</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.ip.IpManager</role>
 			<implementation>com.dianping.cat.report.page.ip.IpManager</implementation>
 		</component>
@@ -230,6 +189,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.problem.Handler</role>
+			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.problem.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.problem.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
@@ -249,41 +226,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.transaction.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.failure.Handler</role>
-			<implementation>com.dianping.cat.report.page.failure.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ServerConfig</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.failure.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.failure.FailureManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ServerConfig</role>
-			<implementation>com.dianping.cat.report.ServerConfig</implementation>
-			<requirements>
-				<requirement>
-					<role>java.util.List</role>
-				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.failure.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.failure.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.failure.FailureManager</role>
-			<implementation>com.dianping.cat.report.page.failure.FailureManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.logview.Handler</role>
@@ -323,36 +265,20 @@
 			<implementation>com.dianping.cat.report.page.ip.JspViewer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.ip.IpManager</role>
-			<implementation>com.dianping.cat.report.page.ip.IpManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.service.Handler</role>
-			<implementation>com.dianping.cat.report.page.service.Handler</implementation>
+			<role>com.dianping.cat.report.ServerConfig</role>
+			<implementation>com.dianping.cat.report.ServerConfig</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.service.JspViewer</role>
+					<role>java.util.List</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.service.provider.ModelProvider</role>
-					<role-hint>failure</role-hint>
-					<field-name>m_failureModel</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.service.provider.ModelProvider</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_transactionModel</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.service.provider.ModelProvider</role>
-					<role-hint>ip</role-hint>
-					<field-name>m_ipModel</field-name>
+					<role>java.lang.String</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.service.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.service.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.ip.IpManager</role>
+			<implementation>com.dianping.cat.report.page.ip.IpManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.Handler</role>
@@ -365,6 +291,11 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction-local</role-hint>
 					<field-name>m_transactionService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem-local</role-hint>
+					<field-name>m_problemService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -389,6 +320,17 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.problem.LocalProblemService</role>
+			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.logview.LocalLogViewService</role>
 			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
 			<requirements>
@@ -398,22 +340,29 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.problem.Handler</role>
-			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
+			<role>com.dianping.cat.report.page.sql.Handler</role>
+			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.problem.JspViewer</role>
+					<role>com.dianping.cat.report.page.sql.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
+					<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.problem.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.sql.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.sql.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
+			<implementation>com.dianping.cat.job.sql.dal.SqlReportRecordDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>
