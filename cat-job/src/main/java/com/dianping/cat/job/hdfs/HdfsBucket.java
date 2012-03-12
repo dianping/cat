@@ -88,12 +88,12 @@ public class HdfsBucket implements Bucket<byte[]> {
 	 */
 	@Override
 	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
-		String name = new File(logicalPath).getName();
-		String[] segs = StringUtils.split(name, File.pathSeparatorChar);
+		File logicalFile  = new File(logicalPath);
+		String[] segs = StringUtils.split(logicalFile.getName(), File.pathSeparatorChar);
 		String filename = segs[segs.length - 1];
 		String indexFilename = filename + ".idx";
 		String dataFilename = filename + ".data";
-		String hdfsDir = null;
+		String hdfsDir = logicalFile.getParent();
 		hdfs = new HdfsImpl(hdfsDir, baseDir, indexFilename, dataFilename, keyLength, tagLength);
 	}
 
