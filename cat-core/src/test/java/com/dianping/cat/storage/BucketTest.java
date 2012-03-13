@@ -4,6 +4,7 @@ import java.io.File;
 
 import junit.framework.Assert;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -15,6 +16,13 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class BucketTest extends ComponentTestCase {
+	@BeforeClass
+	public static void beforeClass() {
+		new File("target/bucket/bytes").delete();
+		new File("target/bucket/message").delete();
+		new File("target/bucket/data").delete();
+	}
+
 	private DefaultMessageTree newMessageTree(String id) {
 		DefaultMessageTree tree = new DefaultMessageTree();
 
@@ -34,7 +42,7 @@ public class BucketTest extends ComponentTestCase {
 	@Test
 	public void testBytesBucket() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<byte[]> bucket = manager.getBytesBucket("target/bucket/bytes");
+		Bucket<byte[]> bucket = manager.getBytesBucket("bytes");
 
 		// store it and load it
 		for (int i = 0; i < 100; i++) {
@@ -68,7 +76,7 @@ public class BucketTest extends ComponentTestCase {
 	@Test
 	public void testMessageBucket() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<MessageTree> bucket = manager.getMessageBucket("target/bucket/message");
+		Bucket<MessageTree> bucket = manager.getMessageBucket("message");
 		int groups = 10;
 
 		// store it and load it
@@ -116,7 +124,7 @@ public class BucketTest extends ComponentTestCase {
 	@Test
 	public void testStringBucket() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<String> bucket = manager.getStringBucket("target/bucket/data");
+		Bucket<String> bucket = manager.getStringBucket("data");
 
 		// store it and load it
 		for (int i = 0; i < 100; i++) {

@@ -207,18 +207,10 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 				int num = -1;
 
 				// if the index was corrupted, then try to skip some lines
-				while (num < 0) {
-					try {
-						String line = m_writeFile.readLine();
-
-						if (line == null) {
-							return;
-						}
-
-						num = Integer.parseInt(line);
-					} catch (NumberFormatException e) {
-						m_logger.warn("Error during loadIndexes: " + e.getMessage());
-					}
+				try {
+					num = Integer.parseInt(m_writeFile.readLine());
+				} catch (NumberFormatException e) {
+					m_logger.warn("Error during loadIndexes: " + e.getMessage());
 				}
 
 				if (num > data.length) {
@@ -261,7 +253,7 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 	public boolean storeById(String id, T data, String... tags) {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 		String attributes = id + "\t" + Joiners.by('\t').join(tags) + "\n";
-		byte[] first;
+		byte[] firstLine;
 		byte[] num;
 		int length;
 
@@ -269,7 +261,7 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 			encode(data, buf);
 
 			length = buf.readInt();
-			first = attributes.getBytes("utf-8");
+			firstLine = attributes.getBytes("utf-8");
 			num = String.valueOf(length).getBytes("utf-8");
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when preparing to write to file(%s)!", m_file), e);
@@ -282,7 +274,7 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		try {
 			long offset = m_writeFile.getFilePointer();
 
-			m_writeFile.write(first);
+			m_writeFile.write(firstLine);
 			m_writeFile.write(num);
 			m_writeFile.write('\n');
 			m_writeFile.write(buf.array(), buf.readerIndex(), length);
