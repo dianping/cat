@@ -17,7 +17,7 @@ public enum ReportPage implements Page {
 
    MODEL("model", "model", "Model", "Model Service", false),
 
-   SQL("sql", "sql", "Sql", "Sql", true);
+   SQL("sql", "sql", "SQL", "SQL Report", true);
 
    private String m_name;
 
