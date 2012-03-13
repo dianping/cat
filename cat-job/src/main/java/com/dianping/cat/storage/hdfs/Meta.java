@@ -1,4 +1,4 @@
-package com.dianping.tkv;
+package com.dianping.cat.storage.hdfs;
 
 import java.util.HashMap;
 import java.util.Map;

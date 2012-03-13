@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.hadoop.fs.FileSystem;
 
 import com.dianping.cat.storage.Bucket;
-import com.dianping.tkv.Meta;
-import com.dianping.tkv.hdfs.HdfsImpl;
+import com.dianping.cat.storage.hdfs.BatchHolder;
+import com.dianping.cat.storage.hdfs.Meta;
+import com.dianping.cat.storage.hdfs.hdfs.HdfsHelper;
+import com.dianping.cat.storage.hdfs.hdfs.HdfsImpl;
 
 /**
  * @author sean.wang
@@ -21,6 +24,74 @@ public class HdfsBucket implements Bucket<byte[]> {
 	private int keyLength = 32;
 
 	private int tagLength = 125;
+
+	private File baseDir;
+
+	private String logicalPath;
+
+	@Override
+	public void close() throws IOException {
+		this.hdfs.close();
+	}
+
+	@Override
+	public void deleteAndCreate() throws IOException {
+		this.hdfs.delete();
+		this.initialize(null, this.baseDir, this.logicalPath);
+	}
+
+	@Override
+	public List<byte[]> findAllByIds(List<String> ids) throws IOException {
+		List<byte[]> values = new ArrayList<byte[]>(ids.size());
+		for (String id : ids) {
+			byte[] value = this.findById(id);
+			values.add(value);
+		}
+		return values;
+	}
+
+	@Override
+	public List<String> findAllIdsByTag(String tag) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public byte[] findById(String id) throws IOException {
+		return hdfs.get(id);
+	}
+
+	@Override
+	public byte[] findNextById(String id, com.dianping.cat.storage.TagThreadSupport.Direction direction, String tag) throws IOException {
+		Meta meta = hdfs.getIndex(id, tag);
+		if (meta == null) {
+			return null;
+		}
+		int nextPos = meta.getTags().get(tag).getNext();
+		if (nextPos < 0) {
+			return null;
+		}
+		return hdfs.get(nextPos);
+	}
+
+	/**
+	 * @param baseDir
+	 *            e.g /data/appdata/cat/
+	 * @param logicalPath
+	 *            e.g /a/b/c
+	 */
+	@Override
+	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
+		this.baseDir = baseDir;
+		this.logicalPath = logicalPath;
+		File logicalFile = new File(logicalPath);
+		String[] segs = StringUtils.split(logicalFile.getName(), File.pathSeparatorChar);
+		String filename = segs[segs.length - 1];
+		String indexFilename = filename + ".index";
+		String dataFilename = filename + ".data";
+		String hdfsDir = logicalFile.getParent();
+		FileSystem fs = HdfsHelper.createLocalFileSystem(hdfsDir);
+		hdfs = new HdfsImpl(fs, baseDir, indexFilename, dataFilename, keyLength, tagLength);
+	}
 
 	public void setHdfs(HdfsImpl hdfs) {
 		this.hdfs = hdfs;
@@ -35,70 +106,29 @@ public class HdfsBucket implements Bucket<byte[]> {
 	}
 
 	@Override
-	public boolean storeById(String id, byte[] data, String... tags) {
-		throw new UnsupportedOperationException();
+	public boolean storeById(String id, byte[] data) throws IOException {
+		return this.hdfs.put(id, data);
 	}
 
 	@Override
-	public List<String> findAllIdsByTag(String tag) {
-		throw new UnsupportedOperationException();
+	public boolean storeById(String id, byte[] data, String... tags) throws IOException {
+		return this.hdfs.put(id, data, tags);
 	}
 
-	@Override
-	public byte[] findNextById(String id, com.dianping.cat.storage.TagThreadSupport.Direction direction, String tag) throws IOException {
-		Meta meta = hdfs.getIndex(id, tag);
-		if (meta == null) {
-			return null;
-		}
-		int nextPos = meta.getTags().get(tag).getNext();
-		return hdfs.get(nextPos);
+	public void startWrite() throws IOException {
+		this.hdfs.startWrite();
 	}
 
-	@Override
-	public void close() throws IOException {
-		this.hdfs.close();
+	public void endWrite() throws IOException {
+		this.hdfs.endWrite();
 	}
 
-	@Override
-	public void deleteAndCreate() {
-		throw new UnsupportedOperationException();
+	public void startRead() throws IOException {
+		this.hdfs.startRead();
 	}
 
-	@Override
-	public List<byte[]> findAllByIds(List<String> ids) throws IOException {
-		List<byte[]> values = new ArrayList<byte[]>(ids.size());
-		for (String id : ids) {
-			byte[] value = this.findById(id);
-			values.add(value);
-		}
-		return values;
-	}
-
-	@Override
-	public byte[] findById(String id) throws IOException {
-		return hdfs.get(id);
-	}
-
-	/**
-	 * @param baseDir
-	 *            e.g /data/appdata/cat/
-	 * @param logicalPath
-	 *            e.g /a/b/c
-	 */
-	@Override
-	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
-		String name = new File(logicalPath).getName();
-		String[] segs = StringUtils.split(name, File.pathSeparatorChar);
-		String filename = segs[segs.length - 1];
-		String indexFilename = filename + ".idx";
-		String dataFilename = filename + ".data";
-		String hdfsDir = null;
-		hdfs = new HdfsImpl(hdfsDir, baseDir, indexFilename, dataFilename, keyLength, tagLength);
-	}
-
-	@Override
-	public boolean storeById(String id, byte[] data) {
-		throw new UnsupportedOperationException();
+	public void batchPut(BatchHolder batchHolder) throws IOException {
+		this.hdfs.batchPut(batchHolder);
 	}
 
 }

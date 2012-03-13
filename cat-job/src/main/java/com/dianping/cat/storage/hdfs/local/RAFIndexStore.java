@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.tkv.local;
+package com.dianping.cat.storage.hdfs.local;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,11 +13,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import com.dianping.tkv.IndexStore;
-import com.dianping.tkv.Meta;
-import com.dianping.tkv.Tag;
-import com.dianping.tkv.util.ArrayKit;
-import com.dianping.tkv.util.NumberKit;
+import com.dianping.cat.storage.hdfs.IndexStore;
+import com.dianping.cat.storage.hdfs.Meta;
+import com.dianping.cat.storage.hdfs.Tag;
+import com.dianping.cat.storage.hdfs.util.ArrayKit;
+import com.dianping.cat.storage.hdfs.util.NumberKit;
 
 /**
  * @author sean.wang
@@ -113,7 +113,7 @@ public class RAFIndexStore implements IndexStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.hdfs.IndexStore#close()
+	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#close()
 	 */
 	@Override
 	public void close() throws IOException {
@@ -135,7 +135,7 @@ public class RAFIndexStore implements IndexStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.hdfs.IndexStore#getIndex(int)
+	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#getIndex(int)
 	 */
 	@Override
 	public Meta getIndex(int indexPos) throws IOException {
@@ -157,21 +157,23 @@ public class RAFIndexStore implements IndexStore {
 		m.setLength(NumberKit.bytes2Int(bytes, i));
 		i += 4;
 		int tagEnderIndex = ArrayUtils.lastIndexOf(bytes, TAG_SPLITER);
-		byte[] tagBytes = new byte[tagEnderIndex - i];
-		System.arraycopy(bytes, i, tagBytes, 0, tagBytes.length);
-		byte[][] tagSegs = ArrayKit.split(tagBytes, TAG_SPLITER);
-		for (byte[] tagSeg : tagSegs) {
-			byte[] nameSeg = new byte[tagSeg.length - 8];
-			System.arraycopy(tagSeg, 0, nameSeg, 0, nameSeg.length);
-			Tag t = new Tag();
-			t.setName(new String(nameSeg));
-			int j = nameSeg.length;
-			int previous = NumberKit.bytes2Int(tagSeg, j);
-			t.setPrevious(previous);
-			j += 4;
-			int next = NumberKit.bytes2Int(tagSeg, j);
-			t.setNext(next);
-			m.addTag(t);
+		if (tagEnderIndex > 0) {
+			byte[] tagBytes = new byte[tagEnderIndex - i];
+			System.arraycopy(bytes, i, tagBytes, 0, tagBytes.length);
+			byte[][] tagSegs = ArrayKit.split(tagBytes, TAG_SPLITER);
+			for (byte[] tagSeg : tagSegs) {
+				byte[] nameSeg = new byte[tagSeg.length - 8];
+				System.arraycopy(tagSeg, 0, nameSeg, 0, nameSeg.length);
+				Tag t = new Tag();
+				t.setName(new String(nameSeg));
+				int j = nameSeg.length;
+				int previous = NumberKit.bytes2Int(tagSeg, j);
+				t.setPrevious(previous);
+				j += 4;
+				int next = NumberKit.bytes2Int(tagSeg, j);
+				t.setNext(next);
+				m.addTag(t);
+			}
 		}
 		return m;
 	}
@@ -192,12 +194,15 @@ public class RAFIndexStore implements IndexStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.hdfs.IndexStore#getIndex(java.lang.String)
+	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#getIndex(java.lang.String)
 	 */
 	@Override
 	public Meta getIndex(String key, Comparator<String> c) throws IOException {
 		synchronized (this.readRAF) {
 			int pos = this.binarySearchPos(key, c);
+			if (pos < 0) {
+				return null;
+			}
 			return this.getIndex(pos);
 		}
 	}
@@ -210,6 +215,9 @@ public class RAFIndexStore implements IndexStore {
 	@Override
 	public Meta getIndex(String key, String tagName, Comparator<String> c) throws IOException {
 		Meta meta = this.getIndex(key, c);
+		if (meta == null) {
+			return null;
+		}
 		Map<String, Tag> tags = meta.getTags();
 		if (tagName != null && tags.get(tagName) == null) {
 			return null;
@@ -220,7 +228,7 @@ public class RAFIndexStore implements IndexStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.tkv.hdfs.IndexStore#size()
+	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#size()
 	 */
 	@Override
 	public long size() throws IOException {
@@ -240,6 +248,10 @@ public class RAFIndexStore implements IndexStore {
 	@Override
 	public boolean delete() throws IOException {
 		return this.storeFile.delete();
+	}
+
+	@Override
+	public void flush() throws IOException {
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.dianping.tkv;
+package com.dianping.cat.storage.hdfs;
 
 public class Tag implements Comparable<Tag> {
 	private int previous = -1;
@@ -43,8 +43,6 @@ public class Tag implements Comparable<Tag> {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Tag [previous=");
 		builder.append(previous);
-		builder.append(", pos=");
-		builder.append(pos);
 		builder.append(", next=");
 		builder.append(next);
 		builder.append(", name=");

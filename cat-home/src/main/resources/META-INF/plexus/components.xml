@@ -196,6 +196,26 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.problem.Handler</role>
+			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.problem.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.problem.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
+		</component>
+		<component>
+<<<<<<< HEAD
+=======
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
@@ -217,6 +237,7 @@
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
 		</component>
 		<component>
+>>>>>>> 1ce8aecf691c885c4773c6c52388dad926ad9557
 			<role>com.dianping.cat.report.page.logview.Handler</role>
 			<implementation>com.dianping.cat.report.page.logview.Handler</implementation>
 			<requirements>
@@ -335,22 +356,29 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.problem.Handler</role>
-			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
+			<role>com.dianping.cat.report.page.sql.Handler</role>
+			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.problem.JspViewer</role>
+					<role>com.dianping.cat.report.page.sql.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
+					<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.problem.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.sql.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.sql.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
+			<implementation>com.dianping.cat.job.sql.dal.SqlReportRecordDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>

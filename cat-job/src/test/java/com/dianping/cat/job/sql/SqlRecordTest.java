@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.job.sql.database.SqlReportRecord;
+import com.dianping.cat.job.sql.database.SqlReportJobRecord;
 
 @RunWith(JUnit4.class)
 public class SqlRecordTest {
@@ -23,7 +23,7 @@ public class SqlRecordTest {
 	@Test
 	public void test2() {
 		String text = "domain1	SQLStatement-Internal9	insert into mysql where is='sfsdf'	500	500	500	100	199	74750	11591750	147	www.sina.com";
-		SqlReportRecord record = new SqlReportRecord("20120309/11", text);
+		SqlReportJobRecord record = new SqlReportJobRecord("20120309/11", text);
 
 		Assert.assertEquals("domain1", record.getDomain());
 		Assert.assertEquals("SQLStatement-Internal9", record.getName());

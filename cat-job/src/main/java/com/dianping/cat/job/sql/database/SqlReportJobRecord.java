@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class SqlReportRecord {
+public class SqlReportJobRecord {
 
 	private String m_domain;
 	
@@ -43,7 +43,7 @@ public class SqlReportRecord {
 
 	private static final String SPIT = "\t";
 
-	public SqlReportRecord(){
+	public SqlReportJobRecord(){
 		
 	}
 	
@@ -68,7 +68,7 @@ public class SqlReportRecord {
 	}
 
 	// domain1 SQLStatement Internal9 500 500 500 100 199 74750 11591750 147
-	public SqlReportRecord(String currentHour,String text) {
+	public SqlReportJobRecord(String currentHour,String text) {
 		
 		try {
 	      m_transactionDate = hourFormat.parse(currentHour);

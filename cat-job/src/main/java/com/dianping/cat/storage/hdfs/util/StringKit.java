@@ -1,4 +1,4 @@
-package com.dianping.tkv.util;
+package com.dianping.cat.storage.hdfs.util;
 
 import java.io.IOException;
 import java.io.Writer;

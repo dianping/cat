@@ -92,8 +92,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.sql.dal.SqlreportDao</role>
-			<implementation>com.dianping.cat.job.sql.dal.SqlreportDao</implementation>
+			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
+			<implementation>com.dianping.cat.job.sql.dal.SqlReportRecordDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>

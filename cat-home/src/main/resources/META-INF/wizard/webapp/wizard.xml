@@ -20,6 +20,9 @@
       <page name="model" title="Model" path="model" standalone="false">
         <description>Service model</description>
       </page>
+      <page name="sql" title="Sql" path="sql">
+        <description>Sql</description>
+      </page>
     </module>
   </webapp>
 </wizard>

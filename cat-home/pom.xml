@@ -47,6 +47,11 @@
 			<artifactId>jsp-2.1</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
 			<groupId>com.site.common</groupId>
 			<artifactId>test-framework</artifactId>
 			<scope>test</scope>

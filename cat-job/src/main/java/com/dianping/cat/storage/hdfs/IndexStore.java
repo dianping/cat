@@ -1,4 +1,4 @@
-package com.dianping.tkv;
+package com.dianping.cat.storage.hdfs;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -26,5 +26,7 @@ public interface IndexStore {
 	long length() throws IOException;
 
 	boolean delete() throws IOException;
+
+	void flush() throws IOException;
 
 }
