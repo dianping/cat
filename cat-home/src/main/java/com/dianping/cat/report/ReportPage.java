@@ -16,7 +16,7 @@ public enum ReportPage implements Page {
    IP("ip", "ip", "Top IP List", "Top visited IP addresses", true),
 
    MODEL("model", "model", "Model", "Model Service", false),
-   
+
    SQL("sql", "sql", "Sql", "Sql", true);
 
    private String m_name;
