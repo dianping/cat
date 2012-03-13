@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.sql;
 public enum JspFile {
 	VIEW("/jsp/report/sql.jsp"),
 
+	GRAPHS("/jsp/report/sql_graphs.jsp"),
 	;
 
 	private String m_path;

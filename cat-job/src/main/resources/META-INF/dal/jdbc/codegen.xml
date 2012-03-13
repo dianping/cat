@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities>
-  <entity name="sqlreport" table="SqlReport" alias="s">
+  <entity name="sqlreport" table="sqlreport" alias="s">
     <member name="id" field="Id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="domain" field="Domain" value-type="String" length="50" nullable="false" />
     <member name="statement" field="Statement" value-type="String" length="500" nullable="false" />
@@ -16,6 +16,10 @@
     <member name="transactiondate" field="TransactionDate" value-type="Date" nullable="false" />
     <member name="creationdate" field="CreationDate" value-type="Date" nullable="false" />
     <member name="name" field="Name" value-type="String" length="100" nullable="false" />
+    <member name="durationdistribution" field="durationDistribution" value-type="String" length="500" nullable="false" />
+    <member name="hitsovertime" field="hitsOverTime" value-type="String" length="500" nullable="false" />
+    <member name="durationovertime" field="durationOverTime" value-type="String" length="500" nullable="false" />
+    <member name="failureovertime" field="failureOverTime" value-type="String" length="500" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="Id" />
     <readsets>

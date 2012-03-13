@@ -363,6 +363,9 @@
 				<requirement>
 					<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

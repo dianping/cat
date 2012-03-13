@@ -11,6 +11,7 @@ import org.apache.hadoop.fs.FileSystem;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.hdfs.BatchHolder;
 import com.dianping.cat.storage.hdfs.Meta;
+import com.dianping.cat.storage.hdfs.Tag;
 import com.dianping.cat.storage.hdfs.hdfs.HdfsHelper;
 import com.dianping.cat.storage.hdfs.hdfs.HdfsImpl;
 
@@ -61,12 +62,18 @@ public class HdfsBucket implements Bucket<byte[]> {
 	}
 
 	@Override
-	public byte[] findNextById(String id, com.dianping.cat.storage.TagThreadSupport.Direction direction, String tag) throws IOException {
-		Meta meta = hdfs.getIndex(id, tag);
+	public byte[] findNextById(String id, com.dianping.cat.storage.TagThreadSupport.Direction direction, String tagName) throws IOException {
+		Meta meta = hdfs.getIndex(id, tagName);
 		if (meta == null) {
 			return null;
 		}
-		int nextPos = meta.getTags().get(tag).getNext();
+		int nextPos = 0;
+		Tag tag = meta.getTags().get(tagName);
+		if (direction == Direction.BACKWARD) {
+			nextPos = tag.getNext();
+		} else if (direction == Direction.FORWARD) {
+			nextPos = tag.getPrevious();
+		}
 		if (nextPos < 0) {
 			return null;
 		}

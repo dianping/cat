@@ -9,13 +9,13 @@ public enum ReportPage implements Page {
 
    PROBLEM("problem", "p", "Problem", "Problem discovered", true),
 
+   LOGVIEW("logview", "m", "Logview", "CAT log details view for a given message.", false),
+   
    TRANSACTION("transaction", "t", "Transaction", "Transaction summary report", true),
-
-   LOGVIEW("logview", "m", "Logview", "Log view details", false),
 
    IP("ip", "ip", "Top IP List", "Top visited IP addresses", true),
 
-   MODEL("model", "model", "Model", "Service model", false),
+   MODEL("model", "model", "Model", "Model Service", false),
 
    SQL("sql", "sql", "Sql", "Sql", true);
 

@@ -13,6 +13,8 @@ public class SqlStatementValue implements Writable {
 
 	public double m_value;
 	
+	public int m_minute;
+	
 	public Text m_sampleUrl;
 	
 	public SqlStatementValue(){
@@ -26,14 +28,19 @@ public class SqlStatementValue implements Writable {
 	public double getValue() {
    	return m_value;
    }
-	
-	public String getSampleUrl(){
-		return m_sampleUrl.toString();
-	}
 
-	public SqlStatementValue(int flag, double value ,String url) {
+	public int getMinute() {
+   	return m_minute;
+   }
+
+	public Text getSampleUrl() {
+   	return m_sampleUrl;
+   }
+
+	public SqlStatementValue(int flag, double value ,String url ,int minute) {
 		m_flag = flag;
 		m_value = value;
+		m_minute = minute;
 		m_sampleUrl=new Text(url);
 	}
 
@@ -42,6 +49,7 @@ public class SqlStatementValue implements Writable {
 		m_flag = input.readInt();
 		m_value = input.readDouble();
 		m_sampleUrl.readFields(input);
+		m_minute = input.readInt();
 	}
 
 	@Override
@@ -49,5 +57,6 @@ public class SqlStatementValue implements Writable {
 		output.writeInt(m_flag);
 		output.writeDouble(m_value);
 		m_sampleUrl.write(output);
+		output.writeInt(m_minute);
 	}
 }

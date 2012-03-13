@@ -11,6 +11,7 @@ import com.dianping.cat.job.sql.dal.SqlReportRecord;
 import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
 import com.dianping.cat.job.sql.dal.SqlReportRecordEntity;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.graph.GraphBuilder;
 import com.site.dal.jdbc.DalException;
 import com.site.dal.jdbc.Readset;
 import com.site.lookup.annotation.Inject;
@@ -25,6 +26,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private SqlReportRecordDao m_dao;
+	
+	@Inject
+	private GraphBuilder m_builder;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -37,11 +41,49 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "sql")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
-		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.SQL);
-
 		Payload payload = ctx.getPayload();
-		SqlReport report = new SqlReport();
+		
+		Action action = payload.getAction();
+		if(action==null||action==Action.VIEW){
+			model.setAction(Action.VIEW);
+			showReport(model, payload);
+		}else{
+			model.setAction(Action.GRAPHS);
+			showGraphs(model, payload);
+		}
+		m_jspViewer.view(ctx, model);
+	}
+	
+	public void showGraphs(Model model,Payload payload){
+		int id = payload.getId();
+		try {
+	      SqlReportRecord record= m_dao.findByPK(id, SqlReportRecordEntity.READSET_FULL);
+	      String statement = record.getStatement();
+	      String durationDistribution =record.getDurationdistribution();
+	      String durationOvertime =record.getDurationovertime();
+	      String hitsovOvrtime =record.getHitsovertime();
+	      String failureOvertime =record.getFailureovertime();
+
+	      String graph1 = m_builder.build(new SqlGraphPayload(0,"SQL Exeture Time Distribution", "Duration (ms)", "Count", durationDistribution));
+			String graph2 = m_builder.build(new SqlGraphPayload(1,"SQL Hits Over One Hour", "Time (min)", "Count", hitsovOvrtime));
+			String graph3 = m_builder.build(new SqlGraphPayload(2,"SQL Exeture Average Time Over One Hour", "Time (min)",
+			      "Average Duration (ms)", durationOvertime));
+			String graph4 = m_builder.build(new SqlGraphPayload(3,"SQL Failures Over One Hour", "Time (min)", "Count", failureOvertime));
+
+			model.setGraph1(graph1);
+			model.setGraph2(graph2);
+			model.setGraph3(graph3);
+			model.setGraph4(graph4);
+			model.setStatement(statement);
+      } catch (DalException e) {
+	      // TODO Auto-generated catch block
+	      e.printStackTrace();
+      }	
+	}
+
+	public void showReport(Model model, Payload payload) {
+	   SqlReport report = new SqlReport();
 		String domain = payload.getDomain();
 		long startDate = payload.getDate();
 		model.setDate(startDate);
@@ -82,7 +124,5 @@ public class Handler implements PageHandler<Context> {
 		} catch (DalException e) {
 			e.printStackTrace();
 		}
-
-		m_jspViewer.view(ctx, model);
-	}
+   }
 }

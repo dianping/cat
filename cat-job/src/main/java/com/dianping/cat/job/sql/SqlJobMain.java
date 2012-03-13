@@ -51,17 +51,18 @@ public class SqlJobMain extends Configured implements Tool {
 	@Override
 	public int run(String[] args) throws Exception {
 		Configuration conf = getConf();
-
 		Job job = new Job(conf, "Sql Analyzer");
+
 		job.setJarByClass(SqlJobMain.class);
 		job.setMapperClass(SqlJobMapper.class);
 		job.setReducerClass(SqlJobReducer.class);
 		job.setInputFormatClass(MessageTreeInputFormat.class);
 		job.setOutputKeyClass(SqlStatementKey.class);
 		job.setOutputValueClass(SqlJobResult.class);
-		job.setPartitionerClass(SqlJobPatitioner.class);
 		job.setMapOutputKeyClass(SqlStatementKey.class);
 		job.setMapOutputValueClass(SqlStatementValue.class);
+		
+		job.setPartitionerClass(SqlJobPatitioner.class);
 		job.setNumReduceTasks(DEFAULT_REDUCE_NUMBER);
 
 		if (args.length > 0) {
@@ -102,6 +103,7 @@ public class SqlJobMain extends Configured implements Tool {
 	 * insert the result to mysql
 	 */
 	private int runSqlRecordJob(String currentHour) throws Exception {
+		System.out.println("Insert database job start!");
 		Configuration conf = getConf();
 		conf.set("JobHour", currentHour);
 		Job job = new Job(conf, "Sql Record");
