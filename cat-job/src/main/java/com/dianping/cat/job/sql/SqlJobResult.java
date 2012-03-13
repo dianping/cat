@@ -50,8 +50,9 @@ public class SqlJobResult implements Writable {
 	public SqlJobResult() {
 		for (int i = 0; i <= 60; i = i + 5) {
 			m_hitsOverTime.put(i, 0);
-			m_durationOverTime.put(i, 0.0);
 			m_failureOverTime.put(i, 0);
+			m_durationOverTime.put(i, 0.0);
+			m_durationOverTimeSum.put(i, 0.0);
 		}
 
 		m_durationDistribution.put(0, 0);
@@ -86,7 +87,7 @@ public class SqlJobResult implements Writable {
 		int minuteKey = minute - minute % 5;
 		m_hitsOverTime.put(minuteKey, m_hitsOverTime.get(minuteKey) + 1);
 
-		m_durationOverTime.put(minuteKey, m_durationOverTime.get(minuteKey) + 1);
+		m_durationOverTimeSum.put(minuteKey, m_durationOverTimeSum.get(minuteKey) + duration);
 
 		if (flag == 1) {
 			m_failureOverTime.put(minuteKey, m_failureOverTime.get(minuteKey) + 1);
@@ -96,8 +97,8 @@ public class SqlJobResult implements Writable {
 	}
 
 	public int getDuration(double duration) {
-		int min = 0;
-		while (duration > Math.pow(2, min + 1)) {
+		int min = -1;
+		while (duration >= Math.pow(2, min + 1)) {
 			min++;
 		}
 		return (int) Math.pow(2, min);
@@ -170,6 +171,94 @@ public class SqlJobResult implements Writable {
 		}
 		return sb.toString();
 	}
+
+	public List<Double> getDurations() {
+   	return m_durations;
+   }
+
+	public void setDurations(List<Double> durations) {
+   	m_durations = durations;
+   }
+
+	public int getFailureCount() {
+   	return m_failureCount;
+   }
+
+	public void setFailureCount(int failureCount) {
+   	m_failureCount = failureCount;
+   }
+
+	public int getLongTimeCount() {
+   	return m_longTimeCount;
+   }
+
+	public void setLongTimeCount(int longTimeCount) {
+   	m_longTimeCount = longTimeCount;
+   }
+
+	public double getMax() {
+   	return m_max;
+   }
+
+	public void setMax(double max) {
+   	m_max = max;
+   }
+
+	public double getMin() {
+   	return m_min;
+   }
+
+	public void setMin(double min) {
+   	m_min = min;
+   }
+
+	public double getSum() {
+   	return m_sum;
+   }
+
+	public void setSum(double sum) {
+   	m_sum = sum;
+   }
+
+	public double getSum2() {
+   	return m_sum2;
+   }
+
+	public void setSum2(double sum2) {
+   	m_sum2 = sum2;
+   }
+
+	public Map<Integer, Integer> getDurationDistribution() {
+   	return m_durationDistribution;
+   }
+
+	public void setDurationDistribution(Map<Integer, Integer> durationDistribution) {
+   	m_durationDistribution = durationDistribution;
+   }
+
+	public Map<Integer, Integer> getHitsOverTime() {
+   	return m_hitsOverTime;
+   }
+
+	public void setHitsOverTime(Map<Integer, Integer> hitsOverTime) {
+   	m_hitsOverTime = hitsOverTime;
+   }
+
+	public Map<Integer, Double> getDurationOverTime() {
+   	return m_durationOverTime;
+   }
+
+	public void setDurationOverTime(Map<Integer, Double> durationOverTime) {
+   	m_durationOverTime = durationOverTime;
+   }
+
+	public Map<Integer, Integer> getFailureOverTime() {
+   	return m_failureOverTime;
+   }
+
+	public void setFailureOverTime(Map<Integer, Integer> failureOverTime) {
+   	m_failureOverTime = failureOverTime;
+   }
 
 	@Override
 	public void write(DataOutput arg0) throws IOException {

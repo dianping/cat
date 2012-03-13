@@ -42,6 +42,7 @@ public class SqlGraphPayload extends AbstractGraphPayload {
 			m_labels = new String[1];
 			m_values = new double[1];
 		}
+		System.out.println(sum());
 	}
 
 	@Override
@@ -92,4 +93,11 @@ public class SqlGraphPayload extends AbstractGraphPayload {
 		return false;
 	}
 
+	public double sum() {
+		double result = 0;
+		for (int i = 0; i < m_size -1; i++) {
+			result += m_values[i];
+		}
+		return result;
+	}
 }
