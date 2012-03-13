@@ -61,7 +61,7 @@ public class CompositeLogViewService implements ModelService<String>, Initializa
 		}
 
 		for (ModelResponse<String> response : responses) {
-			if (response != null) {
+			if (response != null && response.getModel() != null) {
 				return response;
 			}
 		}

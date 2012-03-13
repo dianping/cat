@@ -101,7 +101,7 @@ public class SimpleServer extends SimpleServerSupport {
 	@Test
 	public void startServer() throws Exception {
 		// open the page in the default browser
-		//s_adaptor.display("/cat/r");
+		s_adaptor.display("/cat/r");
 
 		System.out.println(String.format("[%s] Press any key to stop server ... ", getTimestamp()));
 		System.in.read();
