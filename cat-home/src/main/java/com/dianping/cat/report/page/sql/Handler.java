@@ -26,7 +26,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private SqlReportRecordDao m_dao;
-	
+
 	@Inject
 	private GraphBuilder m_builder;
 
@@ -43,47 +43,49 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		model.setPage(ReportPage.SQL);
 		Payload payload = ctx.getPayload();
-		
+
 		Action action = payload.getAction();
-		if(action==null||action==Action.VIEW){
+		if (action == null || action == Action.VIEW) {
 			model.setAction(Action.VIEW);
 			showReport(model, payload);
-		}else{
+		} else {
 			model.setAction(Action.GRAPHS);
 			showGraphs(model, payload);
 		}
 		m_jspViewer.view(ctx, model);
 	}
-	
-	public void showGraphs(Model model,Payload payload){
+
+	public void showGraphs(Model model, Payload payload) {
 		int id = payload.getId();
 		try {
-	      SqlReportRecord record= m_dao.findByPK(id, SqlReportRecordEntity.READSET_FULL);
-	      String statement = record.getStatement();
-	      String durationDistribution =record.getDurationdistribution();
-	      String durationOvertime =record.getDurationovertime();
-	      String hitsovOvrtime =record.getHitsovertime();
-	      String failureOvertime =record.getFailureovertime();
+			SqlReportRecord record = m_dao.findByPK(id, SqlReportRecordEntity.READSET_FULL);
+			String statement = record.getStatement();
+			String durationDistribution = record.getDurationdistribution();
+			String durationOvertime = record.getDurationovertime();
+			String hitsovOvrtime = record.getHitsovertime();
+			String failureOvertime = record.getFailureovertime();
 
-	      String graph1 = m_builder.build(new SqlGraphPayload(0,"SQL Exeture Time Distribution", "Duration (ms)", "Count", durationDistribution));
-			String graph2 = m_builder.build(new SqlGraphPayload(1,"SQL Hits Over One Hour", "Time (min)", "Count", hitsovOvrtime));
-			String graph3 = m_builder.build(new SqlGraphPayload(2,"SQL Exeture Average Time Over One Hour", "Time (min)",
+			String graph1 = m_builder.build(new SqlGraphPayload(0, "SQL Exeture Time Distribution", "Duration (ms)",
+			      "Count", durationDistribution));
+			String graph2 = m_builder.build(new SqlGraphPayload(1, "SQL Hits Over One Hour", "Time (min)", "Count",
+			      hitsovOvrtime));
+			String graph3 = m_builder.build(new SqlGraphPayload(2, "SQL Exeture Average Time Over One Hour", "Time (min)",
 			      "Average Duration (ms)", durationOvertime));
-			String graph4 = m_builder.build(new SqlGraphPayload(3,"SQL Failures Over One Hour", "Time (min)", "Count", failureOvertime));
+			String graph4 = m_builder.build(new SqlGraphPayload(3, "SQL Failures Over One Hour", "Time (min)", "Count",
+			      failureOvertime));
 
 			model.setGraph1(graph1);
 			model.setGraph2(graph2);
 			model.setGraph3(graph3);
 			model.setGraph4(graph4);
 			model.setStatement(statement);
-      } catch (DalException e) {
-	      // TODO Auto-generated catch block
-	      e.printStackTrace();
-      }	
+		} catch (DalException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void showReport(Model model, Payload payload) {
-	   SqlReport report = new SqlReport();
+		SqlReport report = new SqlReport();
 		String domain = payload.getDomain();
 		long startDate = payload.getDate();
 		model.setDate(startDate);
@@ -104,11 +106,12 @@ public class Handler implements PageHandler<Context> {
 					domains.add(domain);
 				}
 			}
-			if (domain == null && domains.size() > 0) {
+			if ((domain == null || domain.length() == 0) && domains.size() > 0) {
 				domain = domains.get(0);
 			}
 
-			List<SqlReportRecord> reportRecords = m_dao.findAllByDomainAndDate(domain, transactiondate, SqlReportRecordEntity.READSET_FULL);
+			List<SqlReportRecord> reportRecords = m_dao.findAllByDomainAndDate(domain, transactiondate,
+			      SqlReportRecordEntity.READSET_FULL);
 			if (reportRecords != null) {
 				for (SqlReportRecord record : reportRecords) {
 					sqlRecordModels.add(new SqlReportModel(record));
@@ -124,5 +127,5 @@ public class Handler implements PageHandler<Context> {
 		} catch (DalException e) {
 			e.printStackTrace();
 		}
-   }
+	}
 }
