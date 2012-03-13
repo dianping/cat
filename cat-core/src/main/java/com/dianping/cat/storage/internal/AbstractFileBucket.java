@@ -204,7 +204,22 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 					break;
 				}
 
-				int num = Integer.parseInt(m_writeFile.readLine());
+				int num = -1;
+
+				// if the index was corrupted, then try to skip some lines
+				while (num < 0) {
+					try {
+						String line = m_writeFile.readLine();
+
+						if (line == null) {
+							return;
+						}
+
+						num = Integer.parseInt(line);
+					} catch (NumberFormatException e) {
+						m_logger.warn("Error during loadIndexes: " + e.getMessage());
+					}
+				}
 
 				if (num > data.length) {
 					int newSize = data.length;
@@ -305,7 +320,9 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 				m_tagToIds.put(tag, ids);
 			}
 
-			ids.add(id);
+			if (!ids.contains(id)) {
+				ids.add(id);
+			}
 		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.logview;
 
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.storage.TagThreadSupport.Direction;
 import com.site.web.mvc.ActionContext;
 import com.site.web.mvc.ActionPayload;
 import com.site.web.mvc.payload.annotation.FieldMeta;
@@ -15,19 +16,28 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("header")
 	private boolean m_showHeader = true;
 
-	@FieldMeta("id")
-	private int m_identifier;
-
 	@PathMeta("path")
 	private String[] m_path;
+
+	@FieldMeta("tag1")
+	private String m_tag1;
+
+	@FieldMeta("tag2")
+	private String m_tag2;
 
 	@Override
 	public Action getAction() {
 		return m_action;
 	}
 
-	public int getIdentifier() {
-		return m_identifier;
+	public Direction getDirection() {
+		if (m_tag1 != null) {
+			return Direction.BACKWARD;
+		} else if (m_tag2 != null) {
+			return Direction.FORWARD;
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -39,16 +49,22 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_path;
 	}
 
+	public String getTag() {
+		if (m_tag1 != null) {
+			return m_tag1;
+		} else if (m_tag2 != null) {
+			return m_tag2;
+		} else {
+			return null;
+		}
+	}
+
 	public boolean isShowHeader() {
 		return m_showHeader;
 	}
 
 	public void setAction(Action action) {
 		m_action = action;
-	}
-
-	public void setIdentifier(int identifier) {
-		m_identifier = identifier;
 	}
 
 	@Override
@@ -62,6 +78,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setShowHeader(String showHeader) {
 		m_showHeader = !"no".equals(showHeader);
+	}
+
+	public void setTag1(String tag1) {
+		m_tag1 = tag1;
+	}
+
+	public void setTag2(String tag2) {
+		m_tag2 = tag2;
 	}
 
 	@Override

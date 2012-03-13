@@ -1,9 +1,7 @@
 package com.dianping.cat.job.hdfs;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.URI;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +20,8 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultInputChannelManager extends ContainerHolder implements InputChannelManager, Initializable, LogEnabled {
+public class DefaultInputChannelManager extends ContainerHolder implements InputChannelManager, Initializable,
+      LogEnabled {
 	@Inject
 	private MessagePathBuilder m_builder;
 
@@ -35,8 +34,6 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 	private FileSystem m_fs;
 
 	private Path m_basePath;
-
-	private String m_ipAddress;
 
 	private Map<String, InputChannel> m_channels = new HashMap<String, InputChannel>();
 
@@ -99,14 +96,6 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 			m_basePath = new Path(m_fs.getWorkingDirectory(), m_baseDir);
 		} catch (Exception e) {
 			throw new InitializationException("Error when getting HDFS file system.", e);
-		}
-
-		try {
-			InetAddress localHost = InetAddress.getLocalHost();
-
-			m_ipAddress = localHost.getHostAddress();
-		} catch (UnknownHostException e) {
-			m_logger.warn("Unable to get local host!", e);
 		}
 	}
 

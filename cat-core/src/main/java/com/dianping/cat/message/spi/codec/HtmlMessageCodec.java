@@ -36,6 +36,9 @@ public class HtmlMessageCodec implements MessageCodec {
 	@Inject
 	private String m_logViewPrefix = "/cat/r/m/";
 
+	@Inject
+	private boolean m_showNav = true;
+
 	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
 
 	private DateHelper m_dateHelper = new DateHelper();
@@ -68,6 +71,10 @@ public class HtmlMessageCodec implements MessageCodec {
 			count += encodeMessage(tree.getMessage(), buf, 0, new LineCounter());
 		}
 
+		if (m_showNav) {
+			count += encodeFooter(tree, buf);
+		}
+
 		count += helper.table2(buf);
 		buf.setInt(index, count);
 	}
@@ -87,6 +94,45 @@ public class HtmlMessageCodec implements MessageCodec {
 		count += helper.td(buf, tree.getParentMessageId());
 		count += helper.td(buf, tree.getRootMessageId());
 		count += helper.td(buf, tree.getSessionToken());
+		count += helper.tr2(buf);
+		count += helper.crlf(buf);
+
+		return count;
+	}
+
+	protected int encodeFooter(MessageTree tree, ChannelBuffer buf) {
+		BufferHelper helper = m_bufferHelper;
+		int count = 0;
+
+		count += helper.tr1(buf, "nav");
+		count += helper.td1(buf, "colspan=\"4\" align=\"left\"");
+		count += helper.nbsp(buf, 3);
+		count += helper.write(buf, "<a href=\"?tag1=r:");
+		count += helper.write(buf, tree.getMessageId());
+		count += helper.write(buf, "\">&lt;&lt;&lt; Request</a>");
+		count += helper.nbsp(buf, 3);
+		count += helper.write(buf, "<a href=\"?tag1=s:");
+		count += helper.write(buf, tree.getSessionToken());
+		count += helper.write(buf, "\">&lt;&lt;&lt; Session</a>");
+		count += helper.nbsp(buf, 3);
+		count += helper.write(buf, "<a href=\"?tag1=t:");
+		count += helper.write(buf, tree.getThreadId());
+		count += helper.write(buf, "\">&lt;&lt;&lt; Thread</a>");
+		count += helper.td2(buf);
+		count += helper.td1(buf, "align=\"right\"");
+		count += helper.write(buf, "<a href=\"?tag2=t:");
+		count += helper.write(buf, tree.getThreadId());
+		count += helper.write(buf, "\">Thread &gt;&gt;&gt;</a>");
+		count += helper.nbsp(buf, 3);
+		count += helper.write(buf, "<a href=\"?tag2=s:");
+		count += helper.write(buf, tree.getSessionToken());
+		count += helper.write(buf, "\">Session &gt;&gt;&gt;</a>");
+		count += helper.nbsp(buf, 3);
+		count += helper.write(buf, "<a href=\"?tag2=r:");
+		count += helper.write(buf, tree.getMessageId());
+		count += helper.write(buf, "\">Request &gt;&gt;&gt;</a>");
+		count += helper.nbsp(buf, 3);
+		count += helper.td2(buf);
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);
 
@@ -125,7 +171,7 @@ public class HtmlMessageCodec implements MessageCodec {
 
 		if (policy != Policy.WITHOUT_STATUS) {
 			if (Message.SUCCESS.equals(message.getStatus())) {
-				count += helper.td(buf, ""); // do not output "0"
+				count += helper.td(buf, "&nbsp;"); // do not output "0"
 			} else {
 				count += helper.td(buf, message.getStatus(), "class=\"error\"");
 			}
@@ -233,6 +279,10 @@ public class HtmlMessageCodec implements MessageCodec {
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
+	}
+
+	public void setShowNav(boolean showNav) {
+		m_showNav = showNav;
 	}
 
 	public void setLogViewPrefix(String logViewPrefix) {

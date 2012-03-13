@@ -177,9 +177,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			// the message is required by some transactions
 			if (count > 0) {
 				String messageId = tree.getMessageId();
-				String threadTag = "t:" + tree.getThreadId();
-				String sessionTag = "s:" + tree.getSessionToken();
 				String requestTag = "r:" + messageId;
+				String sessionTag = "s:" + tree.getSessionToken();
+				String threadTag = "t:" + tree.getThreadId();
 
 				try {
 					m_messageBucket.storeById(messageId, tree, threadTag, sessionTag, requestTag);

@@ -9,15 +9,11 @@ public class NavigationBar {
 
 		ReportPage.HOME,
 
-		ReportPage.FAILURE,
-
 		ReportPage.TRANSACTION,
 		
 		ReportPage.PROBLEM,
 		
 		ReportPage.IP,
-		
-		ReportPage.SERVICE,
 		
 		ReportPage.LOGVIEW
 

@@ -2,6 +2,11 @@
 	width: auto;
 }
 
+.logview .nav {
+	font-size: small;
+	white-space: nowrap;
+}
+
 tr.odd td {
 	background-color: #eee;
 	font-size: small;

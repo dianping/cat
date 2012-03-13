@@ -3,6 +3,7 @@ package com.dianping.cat.report.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
@@ -35,7 +36,8 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, new String[] { "problem-local" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
-		      .req(MessagePathBuilder.class));
+		      .req(MessagePathBuilder.class, BucketManager.class) //
+		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ModelService.class, new String[] { "logview-local" }, "m_services"));
 

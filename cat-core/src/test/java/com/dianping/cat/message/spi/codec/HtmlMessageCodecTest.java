@@ -20,7 +20,6 @@ import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ComponentTestCase;
 
@@ -30,18 +29,18 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
+		codec.setShowNav(false);
 		codec.encodeMessage(message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
 		Assert.assertEquals(expected, actual);
 	}
 
-	private void checkTree(MessageTree tree, String expected) {
-		HtmlMessageCodec codec = new HtmlMessageCodec();
+	private void checkTree(MessageTree tree, String expected) throws Exception {
+		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
-		codec.setBufferWriter(new HtmlEncodingBufferWriter());
-		codec.setMessagePathBuilder(new DefaultMessagePathBuilder());
+		codec.setShowNav(false);
 		codec.encode(tree, buf);
 		buf.readInt(); // get rid of length
 		String actual = buf.toString(Charset.forName("utf-8"));
@@ -128,7 +127,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 
 	@Test
 	@Ignore
-	public void testMessageTree() {
+	public void testMessageTree() throws Exception {
 		DefaultMessageTree tree = newMessageTree();
 		long timestamp = 1325489621987L;
 		String expected1 = "<table class=\"logview\">\r\n"

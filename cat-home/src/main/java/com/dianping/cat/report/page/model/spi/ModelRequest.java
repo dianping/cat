@@ -46,6 +46,14 @@ public class ModelRequest {
 		}
 	}
 
+	public boolean hasProperty(String name) {
+		if (m_properties != null) {
+			return m_properties.containsKey(name);
+		} else {
+			return false;
+		}
+	}
+
 	public ModelRequest setProperty(String name, String value) {
 		if (m_properties == null) {
 			m_properties = new HashMap<String, String>();
