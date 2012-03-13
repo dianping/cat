@@ -18,6 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.dianping.cat.storage.hdfs.util.StringKit;
 
+
 /**
  * Tagged key-value store implement.
  * 
@@ -97,6 +98,11 @@ public class LocalImpl implements Tkv {
 		return newRecord;
 	}
 
+	@Override
+	public boolean delete() throws IOException {
+		return this.store.delete();
+	}
+
 	protected void deserial() throws IOException {
 		DataStore store = this.store;
 		int pos = 0;// record position
@@ -138,6 +144,11 @@ public class LocalImpl implements Tkv {
 	}
 
 	@Override
+	public byte[] get(int indexPos) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public byte[] get(String key) throws IOException {
 		return get(key, null);
 	}
@@ -149,7 +160,7 @@ public class LocalImpl implements Tkv {
 	}
 
 	@Override
-	public byte[] get(int indexPos) throws IOException {
+	public Meta getIndex(int indexPos) throws IOException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -164,8 +175,15 @@ public class LocalImpl implements Tkv {
 	}
 
 	@Override
-	public Meta getIndex(int indexPos) throws IOException {
-		throw new UnsupportedOperationException();
+	public byte[] getNext(String key, String tag) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public byte[] getPrevious(String key, String tag) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -275,10 +293,5 @@ public class LocalImpl implements Tkv {
 		}
 		bb.put((byte) Record.ENDER);
 		this.store.append(bb.array());
-	}
-
-	@Override
-	public boolean delete() throws IOException {
-		return this.store.delete();
 	}
 }

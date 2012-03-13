@@ -16,6 +16,8 @@ import org.apache.hadoop.fs.Path;
 
 import com.dianping.cat.storage.hdfs.util.IoKit;
 
+
+
 /**
  * @author sean.wang
  * @since Mar 7, 2012
@@ -28,10 +30,6 @@ public class HdfsIndexStore implements IndexStore {
 	private Path path;
 
 	private File localFile;
-
-	public HdfsIndexStore() {
-
-	}
 
 	public HdfsIndexStore(FileSystem fs, String hdfsFilename, File localFile, int keyLength, int tagLength) throws IOException {
 		this.fs = fs;

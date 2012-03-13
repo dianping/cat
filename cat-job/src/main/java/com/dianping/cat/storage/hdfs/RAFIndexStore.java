@@ -49,7 +49,9 @@ public class RAFIndexStore implements IndexStore {
 		}
 
 		byte[] fixed = new byte[keyLength];
-		System.arraycopy(keyBytes, 0, fixed, 0, keyBytes.length);
+		int len = keyBytes.length;
+		System.arraycopy(keyBytes, 0, fixed, 0, len);
+		fixed[len] = TAG_SPLITER;
 		return fixed;
 	}
 
@@ -83,12 +85,16 @@ public class RAFIndexStore implements IndexStore {
 			ByteBuffer buff = ByteBuffer.allocate(tagLength);
 			for (Tag t : tags.values()) {
 				buff.put(t.getName().getBytes());
-				buff.put(NumberKit.int2Bytes(t.getPrevious()));
-				buff.put(NumberKit.int2Bytes(t.getNext()));
+				buff.put(TAG_SPLITER);
+				buff.put(Integer.toString(t.getPrevious()).getBytes());
+				buff.put(TAG_SPLITER);
+				buff.put(Integer.toString(t.getNext()).getBytes());
 				buff.put(TAG_SPLITER);
 			}
 			byte[] tagArray = buff.array();
 			System.arraycopy(tagArray, 0, buf, i, tagLength);
+		} else {
+			buf[i] = TAG_SPLITER;
 		}
 		synchronized (this.writeRAF) {
 			this.writeRAF.seek(writeRAF.length());
@@ -164,22 +170,22 @@ public class RAFIndexStore implements IndexStore {
 		m.setLength(NumberKit.bytes2Int(bytes, i));
 		i += 4;
 		int tagEnderIndex = ArrayUtils.lastIndexOf(bytes, TAG_SPLITER);
-		if (tagEnderIndex > 0) {
+		if (tagEnderIndex > 0 && tagEnderIndex > i) {
 			byte[] tagBytes = new byte[tagEnderIndex - i];
 			System.arraycopy(bytes, i, tagBytes, 0, tagBytes.length);
 			byte[][] tagSegs = ArrayKit.split(tagBytes, TAG_SPLITER);
-			for (byte[] tagSeg : tagSegs) {
-				byte[] nameSeg = new byte[tagSeg.length - 8];
-				System.arraycopy(tagSeg, 0, nameSeg, 0, nameSeg.length);
-				Tag t = new Tag();
-				t.setName(new String(nameSeg));
-				int j = nameSeg.length;
-				int previous = NumberKit.bytes2Int(tagSeg, j);
-				t.setPrevious(previous);
-				j += 4;
-				int next = NumberKit.bytes2Int(tagSeg, j);
-				t.setNext(next);
-				m.addTag(t);
+			Tag t = null;
+			for (int j = 0; j < tagSegs.length; j++) {
+				String tagSeg = new String(tagSegs[j]);
+				if (j % 3 == 0) {
+					t = new Tag();
+					t.setName(tagSeg);
+					m.addTag(t);
+				} else if (j % 3 == 1) {
+					t.setPrevious(Integer.parseInt(tagSeg));
+				} else {
+					t.setNext(Integer.parseInt(tagSeg));
+				}
 			}
 		}
 		return m;
@@ -236,7 +242,7 @@ public class RAFIndexStore implements IndexStore {
 			return null;
 		}
 		Map<String, Tag> tags = meta.getTags();
-		if (tagName != null && (tags != null && tags.get(tagName) == null)) {
+		if (tagName != null && (tags == null || !tags.containsKey(tagName))) {
 			return null;
 		}
 		return meta;

@@ -56,6 +56,13 @@ public class Meta {
 		tags.put(tag.getName(), tag);
 	}
 
+	public boolean containsTag(String tagName) {
+		if (tags == null) {
+			return false;
+		}
+		return this.tags.containsKey(tagName);
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

@@ -3,14 +3,12 @@
  */
 package com.dianping.cat.storage.hdfs;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-
 
 /**
  * @author sean.wang
@@ -26,9 +24,9 @@ public class HdfsDataStore implements DataStore {
 	private FSDataOutputStream output;
 
 	private FSDataInputStream input;
-	
+
 	public HdfsDataStore() {
-		
+
 	}
 
 	public HdfsDataStore(FileSystem fs, String hdfsFilename) throws IOException {
@@ -39,7 +37,7 @@ public class HdfsDataStore implements DataStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.cat.storage.hdfs.DataStore#append(byte)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#append(byte)
 	 */
 	@Override
 	public void append(byte b) throws IOException {
@@ -50,7 +48,7 @@ public class HdfsDataStore implements DataStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.cat.storage.hdfs.DataStore#append(byte[])
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#append(byte[])
 	 */
 	@Override
 	public void append(byte[] bytes) throws IOException {
@@ -66,44 +64,52 @@ public class HdfsDataStore implements DataStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.cat.storage.hdfs.DataStore#close()
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#close()
 	 */
 	@Override
 	public void close() throws IOException {
-		if (this.output != null) {
-			this.output.close();
-		}
-		if (this.input != null) {
-			this.input.close();
-		}
-		this.fs.close();
+		this.closeOutput();
+		this.closeInput();
+		this.closeFlieSystem();
 	}
 
-	public void startWrite() throws IOException {
+	/**
+	 * @throws IOException
+	 */
+	private void closeFlieSystem() throws IOException {
+		if (this.fs == null) {
+			this.fs.close();
+			this.fs = null;
+		}
+	}
+
+	public void openOutput() throws IOException {
 		if (this.output == null) {
 			this.output = this.fs.create(this.path);
 		}
 	}
 
-	public void endWrite() throws IOException {
+	public void flushAndCloseOutput() throws IOException {
 		if (this.output != null) {
 			this.output.flush();
+			this.closeOutput();
+		}
+	}
+
+	public void closeOutput() throws IOException {
+		if (this.output != null) {
 			this.output.close();
 			this.output = null;
 		}
 	}
 
-	public void startRead() throws IOException {
+	public void openInput() throws IOException {
 		if (this.input == null) {
-			try {
-				this.input = this.fs.open(this.path, 1024);
-			} catch (FileNotFoundException e) {
-
-			}
+			this.input = this.fs.open(this.path, 1024);
 		}
 	}
 
-	public void endRead() throws IOException {
+	public void closeInput() throws IOException {
 		if (this.input != null) {
 			this.input.close();
 			this.input = null;
@@ -113,24 +119,24 @@ public class HdfsDataStore implements DataStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.cat.storage.hdfs.DataStore#get(long, int)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#get(long, int)
 	 */
 	@Override
 	public byte[] get(long offset, int length) throws IOException {
 		FSDataInputStream in = this.input;
 		if (in == null) {
-			return null;
+			throw new IllegalStateException("input can't null");
 		}
 		byte[] bytes = new byte[length];
 		in.seek(offset);
-		in.read(bytes);
+		int i = in.read(bytes);
 		return bytes;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.cat.storage.hdfs.DataStore#length()
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#length()
 	 */
 	@Override
 	public long length() throws IOException {
@@ -139,7 +145,10 @@ public class HdfsDataStore implements DataStore {
 
 	@Override
 	public boolean delete() throws IOException {
-		boolean remoteDeleted = this.fs.delete(path, false);
+		boolean remoteDeleted = false;
+		if (this.fs != null) {
+			remoteDeleted = this.fs.delete(path, false);
+		}
 		return remoteDeleted;
 	}
 

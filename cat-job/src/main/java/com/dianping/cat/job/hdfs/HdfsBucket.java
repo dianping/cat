@@ -4,17 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
 
 import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.hdfs.BatchHolder;
 import com.dianping.cat.storage.hdfs.HdfsHelper;
 import com.dianping.cat.storage.hdfs.HdfsImpl;
-import com.dianping.cat.storage.hdfs.Meta;
-import com.dianping.cat.storage.hdfs.Tag;
 
 /**
  * @author sean.wang
@@ -38,8 +34,11 @@ public class HdfsBucket implements Bucket<byte[]> {
 
 	@Override
 	public void deleteAndCreate() throws IOException {
-		this.hdfs.delete();
 		this.initialize(null, this.baseDir, this.logicalPath);
+	}
+	
+	public void delete() throws IOException {
+		this.hdfs.delete();
 	}
 
 	@Override
@@ -63,29 +62,20 @@ public class HdfsBucket implements Bucket<byte[]> {
 	}
 
 	@Override
-	public byte[] findNextById(String id, com.dianping.cat.storage.TagThreadSupport.Direction direction, String tagName) throws IOException {
-		Meta meta = hdfs.getIndex(id, tagName);
-		if (meta == null) {
-			return null;
-		}
-		int nextPos = 0;
-		Map<String, Tag> tags = meta.getTags();
-		if (tags == null) {
-			return null;
-		}
-		Tag tag = tags.get(tagName);
-		if (tag == null) {
-			return null;
-		}
-		if (direction == Direction.BACKWARD) {
-			nextPos = tag.getNext();
-		} else if (direction == Direction.FORWARD) {
-			nextPos = tag.getPrevious();
-		}
-		if (nextPos < 0) {
-			return null;
-		}
-		return hdfs.get(nextPos);
+	public void flush() throws IOException {
+		hdfs.buildIndex();
+		hdfs.endWrite();
+		this.startRead();
+	}
+
+	@Override
+	public byte[] findPreviousById(String id, String tagName) throws IOException {
+		return hdfs.getPrevious(id, tagName);
+	}
+
+	@Override
+	public byte[] findNextById(String id, String tagName) throws IOException {
+		return hdfs.getNext(id, tagName);
 	}
 
 	/**
@@ -105,7 +95,14 @@ public class HdfsBucket implements Bucket<byte[]> {
 		String dataFilename = filename + ".data";
 		String hdfsDir = logicalFile.getParent();
 		FileSystem fs = HdfsHelper.createLocalFileSystem(hdfsDir);
-		hdfs = new HdfsImpl(fs, baseDir, indexFilename, dataFilename, keyLength, tagLength);
+		this.hdfs = new HdfsImpl(fs, baseDir, indexFilename, dataFilename, keyLength, tagLength);
+	}
+
+	/**
+	 * @throws IOException
+	 */
+	public void startWrite() throws IOException {
+		hdfs.startWrite();
 	}
 
 	public void setHdfs(HdfsImpl hdfs) {
@@ -121,33 +118,12 @@ public class HdfsBucket implements Bucket<byte[]> {
 	}
 
 	@Override
-	public boolean storeById(String id, byte[] data) throws IOException {
-		return this.hdfs.put(id, data);
-	}
-
-	@Override
 	public boolean storeById(String id, byte[] data, String... tags) throws IOException {
 		return this.hdfs.put(id, data, tags);
 	}
 
-	public void startWrite() throws IOException {
-		this.hdfs.startWrite();
-	}
-
-	public void endWrite() throws IOException {
-		this.hdfs.endWrite();
-	}
-
 	public void startRead() throws IOException {
-		this.hdfs.startRead();
-	}
-
-	public void batchPut(BatchHolder batchHolder) throws IOException {
-		this.hdfs.batchPut(batchHolder);
-	}
-
-	public void endRead() throws IOException {
-		this.hdfs.endRead();
+		hdfs.startRead();
 	}
 
 }
