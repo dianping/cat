@@ -13,11 +13,11 @@ public interface IndexStore {
 
 	Meta getIndex(String key) throws IOException;
 
-	Meta getIndex(String key, Comparator<String> c) throws IOException;
+	Meta getIndex(String key, Comparator<byte[]> keyComp) throws IOException;
 
 	Meta getIndex(String key, String tag) throws IOException;
 
-	Meta getIndex(String key, String tag, Comparator<String> c) throws IOException;
+	Meta getIndex(String key, String tag, Comparator<byte[]> keyComp) throws IOException;
 
 	int getIndexLength();
 

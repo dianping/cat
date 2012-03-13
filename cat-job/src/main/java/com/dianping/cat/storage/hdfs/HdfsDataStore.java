@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.storage.hdfs.hdfs;
+package com.dianping.cat.storage.hdfs;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -11,7 +11,6 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import com.dianping.cat.storage.hdfs.DataStore;
 
 /**
  * @author sean.wang

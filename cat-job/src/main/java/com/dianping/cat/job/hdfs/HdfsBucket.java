@@ -4,16 +4,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.fs.FileSystem;
 
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.hdfs.BatchHolder;
+import com.dianping.cat.storage.hdfs.HdfsHelper;
+import com.dianping.cat.storage.hdfs.HdfsImpl;
 import com.dianping.cat.storage.hdfs.Meta;
 import com.dianping.cat.storage.hdfs.Tag;
-import com.dianping.cat.storage.hdfs.hdfs.HdfsHelper;
-import com.dianping.cat.storage.hdfs.hdfs.HdfsImpl;
 
 /**
  * @author sean.wang
@@ -68,7 +69,14 @@ public class HdfsBucket implements Bucket<byte[]> {
 			return null;
 		}
 		int nextPos = 0;
-		Tag tag = meta.getTags().get(tagName);
+		Map<String, Tag> tags = meta.getTags();
+		if (tags == null) {
+			return null;
+		}
+		Tag tag = tags.get(tagName);
+		if (tag == null) {
+			return null;
+		}
 		if (direction == Direction.BACKWARD) {
 			nextPos = tag.getNext();
 		} else if (direction == Direction.FORWARD) {
@@ -136,6 +144,10 @@ public class HdfsBucket implements Bucket<byte[]> {
 
 	public void batchPut(BatchHolder batchHolder) throws IOException {
 		this.hdfs.batchPut(batchHolder);
+	}
+
+	public void endRead() throws IOException {
+		this.hdfs.endRead();
 	}
 
 }

@@ -1,13 +1,12 @@
 /**
  * 
  */
-package com.dianping.cat.storage.hdfs.local;
+package com.dianping.cat.storage.hdfs;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import com.dianping.cat.storage.hdfs.DataStore;
 
 /**
  * @author sean.wang
