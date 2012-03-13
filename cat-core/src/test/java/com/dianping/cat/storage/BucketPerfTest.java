@@ -11,7 +11,7 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class BucketPerfTest extends ComponentTestCase {
-	private int perfTimes = 100000;
+	private int perfTimes = 10000;
 
 	/**
 	 * Test method for {@link com.dianping.tkv.TkvImpl#get(java.lang.String)}.
@@ -21,7 +21,7 @@ public class BucketPerfTest extends ComponentTestCase {
 	@Test
 	public void testPutDiffKeyWithoutTagsPerf() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<byte[]> bucket = manager.getBytesBucket("target/bucket/perf1");
+		Bucket<byte[]> bucket = manager.getBytesBucket("perf1");
 		String value = "0123456789";
 		long start = System.currentTimeMillis();
 
@@ -35,7 +35,7 @@ public class BucketPerfTest extends ComponentTestCase {
 	@Test
 	public void testGetDiffKeyWithoutTagsPerf() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<byte[]> bucket = manager.getBytesBucket("target/bucket/perf2");
+		Bucket<byte[]> bucket = manager.getBytesBucket("perf2");
 		String value = "0123456789";
 
 		for (int i = 0; i < perfTimes; i++) {
@@ -53,16 +53,16 @@ public class BucketPerfTest extends ComponentTestCase {
 	@Test
 	public void testGetTagRecordPerf() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<byte[]> bucket = manager.getBytesBucket("target/bucket/perf2");
+		Bucket<byte[]> bucket = manager.getBytesBucket("perf2");
 		String value = "0123456789";
 
 		for (int i = 0; i < perfTimes; i++) {
-			bucket.storeById(String.valueOf(10000000 + i), value.getBytes(), "pet" + (i % 100));
+			bucket.storeById(String.valueOf(10000000 + i), value.getBytes(), "pet" + (i % 1000));
 		}
 
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < perfTimes; i++) {
-			bucket.findNextById(String.valueOf(10000000 + i), Direction.FORWARD, "pet" + (i % 100));
+			bucket.findNextById(String.valueOf(10000000 + i), Direction.FORWARD, "pet" + (i % 1000));
 		}
 
 		System.out.println("testGetTagRecordPerf:" + (System.currentTimeMillis() - start));

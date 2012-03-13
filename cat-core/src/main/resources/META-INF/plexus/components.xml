@@ -68,41 +68,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-			<role-hint>escape</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.EscapingBufferWriter</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-			<role-hint>html-encode</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageCodec</role>
-			<role-hint>plain-text</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.PlainTextMessageCodec</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>escape</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageCodec</role>
-			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.spi.codec.HtmlMessageCodec</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>html-encode</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>dummy</role-hint>
 			<implementation>com.dianping.cat.message.spi.consumer.DummyConsumer</implementation>
@@ -176,6 +141,41 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+			<role-hint>escape</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.EscapingBufferWriter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+			<role-hint>html-encode</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageCodec</role>
+			<role-hint>plain-text</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.PlainTextMessageCodec</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+					<role-hint>escape</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageCodec</role>
+			<role-hint>html</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.HtmlMessageCodec</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+					<role-hint>html-encode</role-hint>
 				</requirement>
 			</requirements>
 		</component>

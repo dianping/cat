@@ -104,7 +104,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			if (obj instanceof Entry) {
 				Entry e = (Entry) obj;
 
-				return e.getClass() == m_type && e.getPath().equals(m_path) && e.getNamespace().equals(m_namespace);
+				return e.getType() == m_type && e.getPath().equals(m_path) && e.getNamespace().equals(m_namespace);
 			}
 
 			return false;
@@ -127,6 +127,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			int hashcode = m_type.hashCode();
 
 			hashcode = hashcode * 31 + m_path.hashCode();
+			hashcode = hashcode * 31 + m_namespace.hashCode();
 			return hashcode;
 		}
 	}

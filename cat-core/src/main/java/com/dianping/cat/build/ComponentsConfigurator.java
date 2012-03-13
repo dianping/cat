@@ -23,23 +23,12 @@ import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.BufferWriter;
-import com.dianping.cat.message.spi.codec.EscapingBufferWriter;
-import com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter;
-import com.dianping.cat.message.spi.codec.HtmlMessageCodec;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.consumer.DummyConsumer;
 import com.dianping.cat.message.spi.consumer.DumpToHtmlConsumer;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageStorage;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
-import com.dianping.cat.storage.internal.DefaultBucket;
-import com.dianping.cat.storage.internal.DefaultBucketManager;
-import com.dianping.cat.storage.internal.DefaultMessageBucket;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -60,19 +49,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageIdFactory.class));
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
 		      .req(MessageManager.class));
+		
 		all.add(C(MessageStorage.class, "html", DefaultMessageStorage.class) //
 		      .req(MessagePathBuilder.class) //
 		      .req(MessageCodec.class, "html"));
-
-		all.add(C(BufferWriter.class, "escape", EscapingBufferWriter.class));
-		all.add(C(BufferWriter.class, "html-encode", HtmlEncodingBufferWriter.class));
-
-		all.add(C(MessageCodec.class, "plain-text", PlainTextMessageCodec.class) //
-		      .req(BufferWriter.class, "escape"));
-		all.add(C(MessageCodec.class, "html", HtmlMessageCodec.class) //
-		      .req(MessagePathBuilder.class) //
-		      .req(BufferWriter.class, "html-encode"));
-
 		all.add(C(MessageConsumer.class, DummyConsumer.ID, DummyConsumer.class));
 		all.add(C(MessageConsumer.class, DumpToHtmlConsumer.ID, DumpToHtmlConsumer.class) //
 		      .req(MessageStorage.class, "html") //
@@ -92,15 +72,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class) //
 		      .req(MessageManager.class, MessageConsumerRegistry.class));
 
-		all.add(C(Bucket.class, String.class.getName(), DefaultBucket.class) //
-		      .is(PER_LOOKUP));
-		all.add(C(Bucket.class, byte[].class.getName(), DefaultBucket.class) //
-		      .is(PER_LOOKUP));
-		all.add(C(Bucket.class, MessageTree.class.getName(), DefaultMessageBucket.class) //
-		      .is(PER_LOOKUP) //
-		      .req(MessageCodec.class, "plain-text"));
-		all.add(C(BucketManager.class, DefaultBucketManager.class) //
-		      .config(E("baseDir").value("target/bucket/")));
+		all.addAll(new CodecComponentConfigurator().defineComponents());
+		all.addAll(new StorageComponentConfigurator().defineComponents());
 
 		return all;
 	}
