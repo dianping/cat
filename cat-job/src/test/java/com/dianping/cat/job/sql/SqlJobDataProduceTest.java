@@ -22,8 +22,10 @@ public class SqlJobDataProduceTest extends CatTestCase {
 		MessageStorage storage = lookup(MessageStorage.class, "hdfs");
 		MessageProducer producer = lookup(MessageProducer.class);
 		InMemoryQueue queue = lookup(InMemoryQueue.class);
+
+		long currentHour = System.currentTimeMillis() - System.currentTimeMillis() / (60 * 60 * 1000);
 		for (int i = 0; i < 3; i++) {
-			for (int j = 0; j < 10000; j++) {
+			for (int j = 0; j < 1200; j++) {
 				Transaction t = producer.newTransaction("URL", "MyPage" + (int) (j / 500));
 
 				try {
@@ -39,7 +41,7 @@ public class SqlJobDataProduceTest extends CatTestCase {
 					producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
 					producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
 
-					String sqlName = "SQLStatement" + j / 500;
+					String sqlName = "Project.insert" + j / 500;
 					String sqlParaMeter = "SQLParaMeter" + j / 500;
 					String sqlStatement = "select * from	table where id=\"1\"\n	order by id	desc";
 					Transaction sqlTran = producer.newTransaction("SQL", sqlName);
@@ -48,34 +50,20 @@ public class SqlJobDataProduceTest extends CatTestCase {
 					      Stringizers.forJson().compact().from(sqlParaMeter));
 					sqlTran.addData(sqlStatement);
 
-					String sqlInternalName = "SQLStatement Internal" + j / 500;
-					String sqlParaInternal = "SQLParaMeter Internal" + j / 500;
-					String sqlInternal = "select * from	intenal	table where id=\"1\"\n	order by id	desc";
-					Transaction internal = producer.newTransaction("SQL", sqlInternalName);
-
-					producer.logEvent("SQL.PARAM", sqlParaInternal, Transaction.SUCCESS, Stringizers.forJson().compact()
-					      .from(sqlParaInternal));
-					internal.addData(sqlInternal);
-					internal.complete();
-
-					if (j % 2 == 1) {
-						internal.setStatus(Message.SUCCESS);
-					} else {
-						internal.setStatus("Error");
-					}
-
 					sqlTran.complete();
 
-					DefaultTransaction sqlInternalTran = (DefaultTransaction) internal;
-					sqlInternalTran.setDuration(j % 100 + 100);
+					DefaultTransaction sqlInternalTran = (DefaultTransaction) sqlTran;
+					sqlInternalTran.setDuration((long)Math.pow(2, j % 12));
 					if (j % 2 == 1) {
 						sqlTran.setStatus(Message.SUCCESS);
 					} else {
 						sqlTran.setStatus("Error");
 					}
+					sqlInternalTran.setTimestamp(currentHour + (j % 60) * 1000 * 60);
 
 					DefaultTransaction def = (DefaultTransaction) sqlTran;
 					def.setDuration(j % 100 + 50);
+					def.setTimestamp(currentHour + (j % 60) * 1000 * 60);
 					t.setStatus(Message.SUCCESS);
 				} catch (Exception e) {
 					t.setStatus(e);

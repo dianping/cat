@@ -24,29 +24,34 @@
 <table class="sql">
 	<tr>
 		<th>SQL</th>
-		<th>Total</th>
+		<th>Exec Counts</th>
 		<th>Failure</th>
 		<th>Failure%</th>
+		<th>Min / Max / Avg / Std(ms)</th>
+		<th>95% Line</th>
+		<th>DB Time</th>
 		<th>LongSQL</th>
 		<th>Long%</th>
-		<th>Min/Max/Avg/Std(ms)</th>
-		<th>95% Avg</th>
-		<th>Sample Link</th>
+		<th>Sample</th>
 	</tr>
 	<c:forEach var="reportRecord" items="${model.report.reportRecords}" varStatus="status">
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-			<td>${reportRecord.record.name}</td>
-			<td>${reportRecord.record.totalcount}</td>
-			<td>${reportRecord.record.failures}</td>
-			<td>${reportRecord.failurePercent}</td>
-			<td>${reportRecord.record.longsqls}</td>
-			<td>${reportRecord.longPercent}</td>
-			<td>${reportRecord.record.minvalue}/${reportRecord.record.maxvalue}/${reportRecord.avg}/${reportRecord.std}</td>
-			<td>${reportRecord.avg}</td>
+			<td><a href="?op=graphs&id=${reportRecord.record.id}" onclick="return showGraphs(this,${status.index},'${reportRecord.record.id}');">[:: show ::]</a> ${reportRecord.record.name}</td>
+			<td>${w:format(reportRecord.record.totalcount,'0.00')}</td>
+			<td>${w:format(reportRecord.record.failures,'0.00')}</td>
+			<td>${w:format(reportRecord.failurePercent,'0.00%')}</td>
+			<td>${w:format(reportRecord.record.minvalue,'0.00')} / ${w:format(reportRecord.record.maxvalue,'0.00')} / ${w:format(reportRecord.avg,'0.00')} / ${w:format(reportRecord.std,'0.00')}</td>
+			<td>${w:format(reportRecord.record.avg2value,'0.00')}</td>
+			<td>${w:format(reportRecord.record.sumvalue,'0.00')}</td>
+			<td>${w:format(reportRecord.record.longsqls,'0.00')}</td>
+			<td>${w:format(reportRecord.longPercent,'0.00%')}</td>
 			<td><a href='cat/r/m/${reportRecord.record.samplelink}/logview.html'>Link</a></td>
 		</tr>
+		<tr class="graphs"><td colspan="10" align="center"><div id="${status.index}" style="display:none"></div></td></tr>
 	</c:forEach> 
 </table>
 <br>
 </jsp:body>
 </a:report>
+
+<res:useJs value="${res.js.local.sql_js}" target="bottom-js" />

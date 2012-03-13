@@ -26,10 +26,10 @@
 					<c:forEach var="domain" items="${model.domains}">
 						&nbsp;<c:choose>
 							<c:when test="${model.domain eq domain}">
-								<a href="${model.baseUri}?domain=${domain}" class="current">[&nbsp;${domain}&nbsp;]</a>
+								<a href="${model.baseUri}?domain=${domain}&date=${model.date}" class="current">[&nbsp;${domain}&nbsp;]</a>
 							</c:when>
 							<c:otherwise>
-								<a href="${model.baseUri}?domain=${domain}">[&nbsp;${domain}&nbsp;]</a>
+								<a href="${model.baseUri}?domain=${domain}&date=${model.date}">[&nbsp;${domain}&nbsp;]</a>
 							</c:otherwise>
 						</c:choose>&nbsp;
 					</c:forEach>

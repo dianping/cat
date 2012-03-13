@@ -7,7 +7,7 @@ import java.util.Date;
 public class SqlReportJobRecord {
 
 	private String m_domain;
-	
+
 	private String m_name;
 
 	private String m_statement;
@@ -37,16 +37,24 @@ public class SqlReportJobRecord {
 
 	private Date m_creationDate;
 
+	private String m_durationDistribution;
+
+	private String m_hitsOverTime;
+
+	private String m_durationOverTime;
+
+	private String m_failureOverTime;
+
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
+
 	private SimpleDateFormat hourFormat = new SimpleDateFormat("yyyyMMdd/HH");
 
 	private static final String SPIT = "\t";
 
-	public SqlReportJobRecord(){
-		
+	public SqlReportJobRecord() {
+
 	}
-	
+
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 
@@ -68,15 +76,15 @@ public class SqlReportJobRecord {
 	}
 
 	// domain1 SQLStatement Internal9 500 500 500 100 199 74750 11591750 147
-	public SqlReportJobRecord(String currentHour,String text) {
-		
+	public SqlReportJobRecord(String currentHour, String text) {
+
 		try {
-	      m_transactionDate = hourFormat.parse(currentHour);
-      } catch (ParseException e) {
-      	Date error = new Date();
-      	error.setTime(0);
-	      m_transactionDate =error ;
-      }
+			m_transactionDate = hourFormat.parse(currentHour);
+		} catch (ParseException e) {
+			Date error = new Date();
+			error.setTime(0);
+			m_transactionDate = error;
+		}
 
 		m_creationDate = new Date();
 		String[] params = text.split("\t");
@@ -92,16 +100,19 @@ public class SqlReportJobRecord {
 		m_sum2 = Double.parseDouble(params[9]);
 		m_avg2 = Double.parseDouble(params[10]);
 		m_sampleLink = params[11];
+		m_durationDistribution = params[12];
+		m_hitsOverTime = params[13];
+		m_durationOverTime = params[14];
+		m_failureOverTime = params[15];
 	}
 
-	
 	public String getName() {
-   	return m_name;
-   }
+		return m_name;
+	}
 
 	public void setName(String name) {
-   	m_name = name;
-   }
+		m_name = name;
+	}
 
 	public String getDomain() {
 		return m_domain;
@@ -206,5 +217,37 @@ public class SqlReportJobRecord {
 	public void setCreatTime(Date creatTime) {
 		m_creationDate = creatTime;
 	}
+
+	public Date getTransactionDate() {
+   	return m_transactionDate;
+   }
+
+	public Date getCreationDate() {
+   	return m_creationDate;
+   }
+
+	public String getDurationDistribution() {
+   	return m_durationDistribution;
+   }
+
+	public String getHitsOverTime() {
+   	return m_hitsOverTime;
+   }
+
+	public String getDurationOverTime() {
+   	return m_durationOverTime;
+   }
+
+	public String getFailureOverTime() {
+   	return m_failureOverTime;
+   }
+
+	public SimpleDateFormat getSdf() {
+   	return sdf;
+   }
+
+	public SimpleDateFormat getHourFormat() {
+   	return hourFormat;
+   }
 
 }

@@ -49,7 +49,10 @@ public class SqlJobMapper extends Mapper<Object, MessageTreeWritable, SqlStateme
 			if (!transaction.getStatus().equals(Transaction.SUCCESS)) {
 				flag = 1;
 			}
-			SqlStatementValue result = new SqlStatementValue(flag, duration ,tree.getMessageId());
+			long transactionTime = transaction.getTimestamp();
+			long hour = transactionTime - transactionTime % (60 * 60 * 1000);
+			int minute = (int) Math.floor((double) (transactionTime - hour) /(60* 1000.0));
+			SqlStatementValue result = new SqlStatementValue(flag, duration, tree.getMessageId(), minute);
 			context.write(statementKey, result);
 		}
 

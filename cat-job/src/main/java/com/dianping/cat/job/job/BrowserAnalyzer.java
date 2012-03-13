@@ -40,7 +40,7 @@ public class BrowserAnalyzer extends Configured implements Tool {
 		job.setInputFormatClass(MessageTreeInputFormat.class);
 		job.setOutputKeyClass(Text.class);
 		job.setOutputValueClass(IntWritable.class);
-		FileInputFormat.addInputPath(job, new Path("target/hdfs/20120215/17/null"));
+		FileInputFormat.addInputPath(job, new Path("target/hdfs/20120312/22/null/"));
 		FileOutputFormat.setOutputPath(job, new Path("target/browser"));
 
 		Files.forDir().delete(new File("target/browser"), true);

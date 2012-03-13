@@ -8,9 +8,8 @@ public class SqlJobReducer extends Reducer<SqlStatementKey, SqlStatementValue, S
 	public void reduce(SqlStatementKey key, Iterable<SqlStatementValue> values, Context context) throws IOException,
 	      InterruptedException {
 		SqlJobResult result = new SqlJobResult();
-		
 		for (SqlStatementValue val : values) {
-			result.add(val.getValue(), val.getFlag(), val.getSampleUrl());
+			result.add(val.getValue(), val.getFlag(), val.getSampleUrl().toString() ,val.getMinute());
 		}
 		context.write(key, result);
 	}
