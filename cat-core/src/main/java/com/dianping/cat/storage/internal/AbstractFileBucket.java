@@ -251,6 +251,10 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 	 */
 	@Override
 	public boolean storeById(String id, T data, String... tags) {
+		if (m_idToOffsets.containsKey(id)) {
+			return false;
+		}
+
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 		String attributes = id + "\t" + Joiners.by('\t').join(tags) + "\n";
 		byte[] firstLine;
