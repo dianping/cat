@@ -21,11 +21,12 @@ public class HdfsBucketTest extends ComponentTestCase {
 	public void testLookup() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
 		HdfsBucket bucket = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
+
 		bucket.deleteAndCreate();
 
 		bucket.startWrite();
 
-		// keys must asc order for offset calculation bellow! 
+		// keys must asc order for offset calculation bellow!
 		final String key1 = "12345678901234567890123456789010";
 		final String key2 = "12345678901234567890123456789017";
 		final String key3 = "12345678901234567890123456789029";

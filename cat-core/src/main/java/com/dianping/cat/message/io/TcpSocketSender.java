@@ -115,7 +115,7 @@ public class TcpSocketSender implements MessageSender, LogEnabled {
 		}
 
 		if (m_future != null && m_future.getChannel().isOpen()) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(20 * 1024); // 20K
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(10 * 1024); // 10K
 
 			m_codec.encode(tree, buf);
 			m_future.getChannel().write(buf);

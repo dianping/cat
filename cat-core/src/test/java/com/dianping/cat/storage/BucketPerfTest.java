@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.storage.TagThreadSupport.Direction;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -62,7 +61,7 @@ public class BucketPerfTest extends ComponentTestCase {
 
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < perfTimes; i++) {
-			bucket.findNextById(String.valueOf(10000000 + i), Direction.FORWARD, "pet" + (i % 1000));
+			bucket.findNextById(String.valueOf(10000000 + i), "pet" + (i % 1000));
 		}
 
 		System.out.println("testGetTagRecordPerf:" + (System.currentTimeMillis() - start));

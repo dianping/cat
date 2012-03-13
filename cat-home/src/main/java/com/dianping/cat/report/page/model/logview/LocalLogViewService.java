@@ -15,7 +15,6 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import com.dianping.cat.storage.TagThreadSupport.Direction;
 import com.site.lookup.annotation.Inject;
 
 public class LocalLogViewService implements ModelService<String> {
@@ -42,9 +41,13 @@ public class LocalLogViewService implements ModelService<String> {
 			MessageTree tree = null;
 
 			if (tag != null && direction != null) {
-				Direction d = Direction.valueOf(direction);
+				Boolean d = Boolean.valueOf(direction);
 
-				tree = bucket.findNextById(messageId, d, tag);
+				if (d.booleanValue()) {
+					tree = bucket.findNextById(messageId, tag);
+				} else {
+					tree = bucket.findPreviousById(messageId, tag);
+				}
 			}
 
 			// if not found, use current instead

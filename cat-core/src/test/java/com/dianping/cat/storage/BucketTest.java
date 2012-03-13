@@ -11,7 +11,6 @@ import org.junit.runners.JUnit4;
 
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.TagThreadSupport.Direction;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -99,7 +98,7 @@ public class BucketTest extends ComponentTestCase {
 			String id = "id" + (i * groups + i);
 			String nextId = "id" + ((i + 1) * groups + i);
 			String tag = "r:" + i;
-			MessageTree t1 = bucket.findNextById(id, Direction.FORWARD, tag);
+			MessageTree t1 = bucket.findNextById(id, tag);
 			MessageTree t2 = bucket.findById(nextId);
 
 			Assert.assertEquals("Unable to find next message in the thread " + i + ".", t1.toString(), t2.toString());
@@ -114,7 +113,7 @@ public class BucketTest extends ComponentTestCase {
 			String id = "id" + (i * groups + i);
 			String nextId = "id" + ((i + 1) * groups + i);
 			String tag = "r:" + i;
-			MessageTree t1 = bucket.findNextById(id, Direction.FORWARD, tag);
+			MessageTree t1 = bucket.findNextById(id, tag);
 			MessageTree t2 = bucket.findById(nextId);
 
 			Assert.assertEquals("Unable to find next message in the thread " + i + ".", t1.toString(), t2.toString());
@@ -153,5 +152,24 @@ public class BucketTest extends ComponentTestCase {
 
 			Assert.assertEquals("Unable to find data by id.", t1, t2);
 		}
+
+		for (int i = 0; i < 90; i++) {
+			String id = "id" + i;
+			String t1 = "value" + (i + 10);
+			String tag = "tag" + (i % 10);
+			String t2 = bucket.findNextById(id, tag);
+
+			Assert.assertEquals("Unable to find data by id.", t1, t2);
+		}
+
+		for (int i = 10; i < 100; i++) {
+			String id = "id" + i;
+			String t1 = "value" + (i - 10);
+			String tag = "tag" + (i % 10);
+			String t2 = bucket.findPreviousById(id, tag);
+
+			Assert.assertEquals("Unable to find data by id.", t1, t2);
+		}
+
 	}
 }
