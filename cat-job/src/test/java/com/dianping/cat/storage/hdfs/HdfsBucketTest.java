@@ -26,8 +26,8 @@ public class HdfsBucketTest extends ComponentTestCase {
 		bucket.startWrite();
 
 		// key must asc sort!
-		final String key1 = "12345678901234567890123456789011";
-		final String key2 = "12345678901234567890123456789012";
+		final String key1 = "12345678901234567890123456789010";
+		final String key2 = "12345678901234567890123456789017";
 		final String value1 = "It's A.";
 		final String value2 = "It's B.";
 		final String tagName1 = "t1";
@@ -68,9 +68,12 @@ public class HdfsBucketTest extends ComponentTestCase {
 		bucket.endWrite();
 		bucket.startRead();
 
+		Assert.assertNull(bucket.findById("not exist key"));
 		Assert.assertEquals(value1, new String(bucket.findById(key1)));
 		Assert.assertEquals(value2, new String(bucket.findById(key2)));
+		Assert.assertNull(bucket.findNextById("not exist key", Direction.BACKWARD, tagName1));
 		Assert.assertEquals(value2, new String(bucket.findNextById(key1, Direction.BACKWARD, tagName1)));
+		Assert.assertEquals(value1, new String(bucket.findNextById(key2, Direction.FORWARD, tagName1)));
 
 		bucket = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
 		bucket.startRead();
