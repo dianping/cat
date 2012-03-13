@@ -42,7 +42,6 @@ public class SqlGraphPayload extends AbstractGraphPayload {
 			m_labels = new String[1];
 			m_values = new double[1];
 		}
-		System.out.println(sum());
 	}
 
 	@Override
