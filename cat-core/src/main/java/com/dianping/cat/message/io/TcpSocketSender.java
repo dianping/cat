@@ -21,10 +21,11 @@ import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class TcpSocketSender implements MessageSender, LogEnabled {
+public class TcpSocketSender extends Thread implements MessageSender, LogEnabled {
 	@Inject
 	private String m_host;
 
@@ -33,6 +34,9 @@ public class TcpSocketSender implements MessageSender, LogEnabled {
 
 	@Inject
 	private MessageCodec m_codec;
+
+	@Inject
+	private MessageQueue m_queue;
 
 	private ChannelFactory m_factory;
 
@@ -45,6 +49,20 @@ public class TcpSocketSender implements MessageSender, LogEnabled {
 	private long m_lastReconnectTime;
 
 	private Logger m_logger;
+
+	public void run() {
+		while (true) {
+			try {
+				MessageTree tree = m_queue.poll();
+
+				if (tree != null) {
+					sendReal(tree);
+				} 
+			} catch (Throwable t) {
+				m_logger.error("Error when sending message over TCP socket!", t);
+			}
+		}
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -84,6 +102,8 @@ public class TcpSocketSender implements MessageSender, LogEnabled {
 		}
 
 		m_bootstrap = bootstrap;
+
+		this.start();
 	}
 
 	public void reconnect() {
@@ -110,6 +130,14 @@ public class TcpSocketSender implements MessageSender, LogEnabled {
 
 	@Override
 	public void send(MessageTree tree) {
+		boolean result = m_queue.offer(tree);
+		
+		if (!result) {
+			m_logger.error("Message queue is full in tcp socket sender!");
+		}
+	}
+
+	private void sendReal(MessageTree tree) {
 		if (m_future == null || !m_future.getChannel().isOpen()) {
 			reconnect();
 		}

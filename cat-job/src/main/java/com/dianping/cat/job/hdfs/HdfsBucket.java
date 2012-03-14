@@ -1,11 +1,14 @@
 package com.dianping.cat.job.hdfs;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FileSystem;
 
 import com.dianping.cat.storage.Bucket;
@@ -17,6 +20,8 @@ import com.dianping.cat.storage.hdfs.HdfsImpl;
  * @since Mar 9, 2012
  */
 public class HdfsBucket implements Bucket<byte[]> {
+	private static final Log log = LogFactory.getLog(HdfsBucket.class);
+
 	private HdfsImpl hdfs;
 
 	private int keyLength = 32;
@@ -34,9 +39,10 @@ public class HdfsBucket implements Bucket<byte[]> {
 
 	@Override
 	public void deleteAndCreate() throws IOException {
+		this.hdfs.deleteLocal();
 		this.initialize(null, this.baseDir, this.logicalPath);
 	}
-	
+
 	public void delete() throws IOException {
 		this.hdfs.delete();
 	}
@@ -96,12 +102,14 @@ public class HdfsBucket implements Bucket<byte[]> {
 		String hdfsDir = logicalFile.getParent();
 		FileSystem fs = HdfsHelper.createLocalFileSystem(hdfsDir);
 		this.hdfs = new HdfsImpl(fs, baseDir, indexFilename, dataFilename, keyLength, tagLength);
+		this.startWrite();
+		//this.startRead();
 	}
 
 	/**
 	 * @throws IOException
 	 */
-	public void startWrite() throws IOException {
+	private void startWrite() throws IOException {
 		hdfs.startWrite();
 	}
 
@@ -122,8 +130,11 @@ public class HdfsBucket implements Bucket<byte[]> {
 		return this.hdfs.put(id, data, tags);
 	}
 
-	public void startRead() throws IOException {
-		hdfs.startRead();
+	private void startRead() throws IOException {
+		try {
+			hdfs.startRead();
+		} catch (FileNotFoundException e) {
+			log.warn("hdfs remote data file not exists");
+		}
 	}
-
 }

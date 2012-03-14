@@ -61,14 +61,33 @@ public class HdfsIndexStore implements IndexStore {
 
 	@Override
 	public boolean delete() throws IOException {
-		boolean localDeleted = this.localIndexStore.delete();
-		boolean remoteDeleted = this.fs.delete(path, false);
+		boolean localDeleted = this.deleteLocal();
+		boolean remoteDeleted = this.deleteRemote();
 		return localDeleted && remoteDeleted;
+	}
+
+	public boolean deleteLocal() throws IOException {
+		return this.localIndexStore.delete();
+	}
+
+	public boolean deleteRemote() throws IOException {
+		boolean remoteDeleted = false;
+		if (this.fs != null) {
+			remoteDeleted = this.fs.delete(path, false);
+		}
+		return remoteDeleted;
 	}
 
 	public void download() throws IOException {
 		InputStream input = fs.open(path);
 		OutputStream output = new FileOutputStream(this.localFile);
+		IoKit.copyAndClose(input, output);
+	}
+
+	@Override
+	public void flush() throws IOException {
+		InputStream input = new FileInputStream(this.localFile);
+		OutputStream output = fs.create(path);
 		IoKit.copyAndClose(input, output);
 	}
 
@@ -112,6 +131,11 @@ public class HdfsIndexStore implements IndexStore {
 		return this.localIndexStore.getIndexLength();
 	}
 
+	@Override
+	public long length() throws IOException {
+		return this.fs.getFileStatus(path).getLen();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -120,18 +144,6 @@ public class HdfsIndexStore implements IndexStore {
 	@Override
 	public long size() throws IOException {
 		return length() / getIndexLength();
-	}
-
-	@Override
-	public void flush() throws IOException {
-		InputStream input = new FileInputStream(this.localFile);
-		OutputStream output = fs.create(path);
-		IoKit.copyAndClose(input, output);
-	}
-
-	@Override
-	public long length() throws IOException {
-		return this.fs.getFileStatus(path).getLen();
 	}
 
 }

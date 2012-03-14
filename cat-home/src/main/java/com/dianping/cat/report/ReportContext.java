@@ -31,6 +31,9 @@ public class ReportContext<T extends ActionPayload<? extends Page, ? extends Act
 			ServletContext servletContext = request.getSession().getServletContext();
 			File warRoot = new File(servletContext.getRealPath("/"));
 
+			System.out.println("Current working directory is "+ System.getProperty("user.dir"));
+			System.out.println("War root is " + warRoot);
+
 			ResourceRuntime.INSTANCE.removeConfig(contextPath);
 			ResourceInitializer.initialize(contextPath, warRoot);
 
@@ -45,5 +48,4 @@ public class ReportContext<T extends ActionPayload<? extends Page, ? extends Act
 
 		ResourceRuntimeContext.setup(contextPath);
 	}
-
 }

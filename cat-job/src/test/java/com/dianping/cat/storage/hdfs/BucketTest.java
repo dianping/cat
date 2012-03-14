@@ -16,11 +16,10 @@ public class BucketTest extends ComponentTestCase {
 	@Test
 	public void testBytesBucket() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<byte[]> bucket = manager.getHdfsBucket("hdfs");
-		((HdfsBucket)bucket).delete();
+		Bucket<byte[]> bucket = manager.getHdfsBucket("/a/b/c");
 		bucket.deleteAndCreate();
 		
-		((HdfsBucket)bucket).startWrite();
+		//((HdfsBucket)bucket).startWrite();
 
 		// store it
 		for (int i = 0; i < 100; i++) {
@@ -48,11 +47,9 @@ public class BucketTest extends ComponentTestCase {
 
 		// close and reload it, check if everything is okay
 		bucket.close();
+		bucket.deleteAndCreate();
+		
 		((HdfsBucket)bucket).delete();
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(Integer.toHexString(-1));
-		System.out.println(Integer.toHexString(1));
-	}
 }

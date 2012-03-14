@@ -275,6 +275,18 @@ public class HdfsImpl implements Tkv {
 		boolean indexDeleted = this.indexStore.delete();
 		return dataDeleted && indexDeleted;
 	}
+	
+	public boolean deleteLocal() throws IOException {
+		boolean dataDeleted = this.dataStore.deleteLocal();
+		boolean indexDeleted = this.indexStore.deleteLocal();
+		return dataDeleted && indexDeleted;
+	}
+	
+	public boolean deleteRemote() throws IOException {
+		boolean dataDeleted = this.dataStore.deleteRemote();
+		boolean indexDeleted = this.indexStore.deleteRemote();
+		return dataDeleted && indexDeleted;
+	}
 
 	@Override
 	public byte[] getNext(String key, String tagName) throws IOException {

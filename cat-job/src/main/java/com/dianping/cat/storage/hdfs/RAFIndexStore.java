@@ -42,9 +42,7 @@ public class RAFIndexStore implements IndexStore {
 	private byte[] toFixedKey(String key) {
 		byte[] keyBytes = key.getBytes();
 		int keyLength = this.keyLength;
-		if (key.length() == keyLength) {
-			return keyBytes;
-		} else if (key.length() > keyLength) {
+		if (key.length() >= keyLength) {
 			throw new IllegalArgumentException("key length overflow" + key);
 		}
 
@@ -158,11 +156,12 @@ public class RAFIndexStore implements IndexStore {
 		return deserialMeta(bytes);
 	}
 
-	private Meta deserialMeta(byte[] bytes) {
+	public Meta deserialMeta(byte[] bytes) {
 		Meta m = new Meta();
 		int keyLength = this.keyLength;
-		byte[] keyBytes = new byte[keyLength];
-		System.arraycopy(bytes, 0, keyBytes, 0, keyLength);
+		int keyLast = ArrayKit.lastIndexOf(bytes, TAG_SPLITER, keyLength - 1);
+		byte[] keyBytes = new byte[keyLast];
+		System.arraycopy(bytes, 0, keyBytes, 0, keyBytes.length);
 		m.setKey(new String(keyBytes));
 		int i = keyLength;
 		m.setOffset(NumberKit.bytes2Int(bytes, i));

@@ -1,6 +1,5 @@
 package com.dianping.cat.storage.hdfs;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -23,9 +22,8 @@ public class HdfsBucketConcurrentTest extends ComponentTestCase {
 	public void testConcurrentWriteRead() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
 		final HdfsBucket bucket = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
-		bucket.delete();//for testcase
 		bucket.deleteAndCreate();
-		bucket.startWrite();
+		//bucket.startWrite();
 
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
@@ -57,7 +55,6 @@ public class HdfsBucketConcurrentTest extends ComponentTestCase {
 		System.out.println("finished concurrent write." + (System.currentTimeMillis() - start));
 
 		bucket.flush();
-//		bucket.startRead();
 
 		pool = Executors.newFixedThreadPool(10);
 
@@ -85,13 +82,8 @@ public class HdfsBucketConcurrentTest extends ComponentTestCase {
 		pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
 
 		System.out.println("finished concurrent read." + (System.currentTimeMillis() - start));
-		bucket.close();
 
 		final HdfsBucket bucket2 = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
-		bucket2.deleteAndCreate();
-//		HdfsBucket bucket2 = new HdfsBucket();
-//		bucket2.initialize(null, new File("target/bucket"), "/a/b/c");
-		bucket2.startRead();
 
 		// test serial read
 		start = System.currentTimeMillis();
@@ -109,6 +101,8 @@ public class HdfsBucketConcurrentTest extends ComponentTestCase {
 
 		bucket2.close();
 
+		bucket2.deleteAndCreate();
+		
 		bucket2.delete();
 	}
 

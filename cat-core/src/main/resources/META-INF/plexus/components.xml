@@ -100,6 +100,14 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.spi.MessageQueue</role>
+			<implementation>com.dianping.cat.message.io.DefaultMessageQueue</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<configuration>
+				<size>1000</size>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.io.MessageSender</role>
 			<role-hint>tcp-socket</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
@@ -108,6 +116,11 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
+					<field-name>m_codec</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageQueue</role>
+					<field-name>m_queue</field-name>
 				</requirement>
 			</requirements>
 		</component>

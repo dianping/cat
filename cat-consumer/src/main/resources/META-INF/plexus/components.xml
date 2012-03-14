@@ -1,11 +1,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageQueue</role>
-			<implementation>com.dianping.cat.consumer.DefaultMessageQueue</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 			<implementation>com.dianping.cat.consumer.DefaultAnalyzerFactory</implementation>
 		</component>

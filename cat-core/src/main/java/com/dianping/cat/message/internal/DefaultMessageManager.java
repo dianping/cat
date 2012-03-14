@@ -182,8 +182,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			Thread thread = Thread.currentThread();
 
-			m_tree.setThreadId(Long.toHexString(thread.getId()));
-			m_tree.setThreadId(thread.getName());
+			// TODO hack here
+			String groupName = thread.getThreadGroup().getName();
+
+			m_tree.setThreadId(groupName == null ? Long.toHexString(thread.getId()) : groupName);
+			m_tree.setThreadName(thread.getName());
 
 			m_tree.setDomain(domain);
 			m_tree.setHostName(hostName);
