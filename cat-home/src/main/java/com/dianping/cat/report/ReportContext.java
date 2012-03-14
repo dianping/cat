@@ -42,6 +42,8 @@ public class ReportContext<T extends ActionPayload<? extends Page, ? extends Act
 			new ResourceConfigurator().configure(registry);
 			new ResourceTagConfigurator().configure(registry);
 			new ResourceTagLibConfigurator().configure(registry);
+			
+			registry.lock();
 		}
 
 		ResourceRuntimeContext.setup(contextPath);
