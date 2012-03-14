@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.dianping.cat.message.io.TcpSocketTest.MockMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageQueue;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -22,7 +23,8 @@ public class TcpSocketTestConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageCodec.class, tcpSocket, MockMessageCodec.class));
 		all.add(C(MessageSender.class, tcpSocket, TcpSocketSender.class).is(PER_LOOKUP) //
-		      .req(MessageCodec.class, tcpSocket) //
+		      .req(MessageCodec.class, tcpSocket, "m_codec") //
+		      .req(MessageQueue.class, "default", "m_queue") //
 		      .config(E("host").value("localhost")));
 		all.add(C(MessageReceiver.class, tcpSocket, TcpSocketReceiver.class).is(PER_LOOKUP) //
 				.req(MessageCodec.class, tcpSocket) //

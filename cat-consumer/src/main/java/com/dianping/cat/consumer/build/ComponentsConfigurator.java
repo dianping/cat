@@ -8,7 +8,6 @@ import java.util.List;
 
 import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
-import com.dianping.cat.consumer.DefaultMessageQueue;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -16,6 +15,7 @@ import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageQueue;
@@ -27,8 +27,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(MessageQueue.class, DefaultMessageQueue.class).is(PER_LOOKUP));
 
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
 
