@@ -18,11 +18,10 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.TagThreadSupport;
 import com.site.helper.Joiners;
 import com.site.helper.Splitters;
 
-public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSupport<T>, LogEnabled {
+public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	private static final String[] EMPTY = new String[0];
 
 	// key => offset of record
@@ -143,8 +142,7 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		return null;
 	}
 
-	@Override
-	public T findNextById(String id, Direction direction, String tag) {
+	private T findNextById(String id, Direction direction, String tag) {
 		List<String> ids = m_tagToIds.get(tag);
 
 		if (ids != null) {
@@ -167,6 +165,27 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		}
 
 		return null;
+	}
+
+	@Override
+	public T findNextById(String id, String tag) throws IOException {
+		return findNextById(id, Direction.BACKWARD, tag);
+	}
+
+	@Override
+	public T findPreviousById(String id, String tag) throws IOException {
+		return findNextById(id, Direction.FORWARD, tag);
+	}
+
+	@Override
+	public void flush() throws IOException {
+		m_writeLock.lock();
+
+		try {
+			m_writeFile.getChannel().force(true);
+		} finally {
+			m_writeLock.lock();
+		}
 	}
 
 	public Set<String> getIds() {
@@ -239,11 +258,6 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 		}
 	}
 
-	@Override
-	public boolean storeById(String id, T data) {
-		return storeById(id, data, EMPTY);
-	}
-
 	/**
 	 * Store the message in the format of:<br>
 	 * 
@@ -251,6 +265,10 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, TagThreadSuppo
 	 */
 	@Override
 	public boolean storeById(String id, T data, String... tags) {
+		if (m_idToOffsets.containsKey(id)) {
+			return false;
+		}
+
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 		String attributes = id + "\t" + Joiners.by('\t').join(tags) + "\n";
 		byte[] firstLine;

@@ -47,6 +47,26 @@ public interface Tkv {
 	byte[] get(String key, String tag) throws IOException;
 
 	/**
+	 * Get next tagged value by key and tag
+	 * 
+	 * @param key
+	 * @param tagName
+	 * @return
+	 * @throws IOException
+	 */
+	byte[] getNext(String key, String tagName) throws IOException;
+
+	/**
+	 * Get previous tagged value by key and tag
+	 * 
+	 * @param key
+	 * @param tagName
+	 * @return
+	 * @throws IOException
+	 */
+	byte[] getPrevious(String key, String tagName) throws IOException;
+
+	/**
 	 * get index by index pos
 	 * 
 	 * @param indexPos
@@ -68,19 +88,19 @@ public interface Tkv {
 	 * get index by key and tag
 	 * 
 	 * @param key
-	 * @param tag
+	 * @param tagName
 	 * @return
 	 * @throws IOException
 	 */
-	Meta getIndex(String key, String tag) throws IOException;
+	Meta getIndex(String key, String tagName) throws IOException;
 
 	/**
 	 * @param key
-	 * @param tag
+	 * @param tagName
 	 * @return
 	 * @throws IOException
 	 */
-	Record getRecord(String key, String tag) throws IOException;
+	Record getRecord(String key, String tagName) throws IOException;
 
 	/**
 	 * @param key
@@ -92,10 +112,10 @@ public interface Tkv {
 	/**
 	 * @param key
 	 * @param value
-	 * @param tags
+	 * @param tagNames
 	 * @throws IOException
 	 */
-	boolean put(String key, byte[] value, String... tags) throws IOException;
+	boolean put(String key, byte[] value, String... tagNames) throws IOException;
 
 	/**
 	 * record size
@@ -105,5 +125,11 @@ public interface Tkv {
 	 */
 	long size() throws IOException;
 
+	/**
+	 * delete store files
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
 	boolean delete() throws IOException;
 }

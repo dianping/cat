@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.storage.hdfs.hdfs;
+package com.dianping.cat.storage.hdfs;
 
 import java.io.IOException;
 import java.net.URI;

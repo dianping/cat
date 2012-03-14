@@ -8,16 +8,15 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <c:set var="report" value="${model.report}"/>
 
-<res:useCss value="${res.css.local.transaction_css}" target="head-css"/>
-
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
-<res:useJs value="${res.js.local.transaction_js}" target="head-js"/>
-
 <a:report title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>" navUrlPrefix="domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
 
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 <jsp:body>
+
+<res:useCss value="${res.css.local.transaction_css}" target="head-css"/>
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
+<res:useJs value="${res.js.local.transaction_js}" target="head-js"/>
 
 <br>
 <table class="transaction">

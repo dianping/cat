@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.storage.hdfs.hdfs;
+package com.dianping.cat.storage.hdfs;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,10 +14,9 @@ import java.util.Comparator;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import com.dianping.cat.storage.hdfs.IndexStore;
-import com.dianping.cat.storage.hdfs.Meta;
-import com.dianping.cat.storage.hdfs.local.RAFIndexStore;
 import com.dianping.cat.storage.hdfs.util.IoKit;
+
+
 
 /**
  * @author sean.wang
@@ -32,17 +31,13 @@ public class HdfsIndexStore implements IndexStore {
 
 	private File localFile;
 
-	public HdfsIndexStore() {
-
-	}
-
 	public HdfsIndexStore(FileSystem fs, String hdfsFilename, File localFile, int keyLength, int tagLength) throws IOException {
 		this.fs = fs;
 		this.localFile = localFile;
 		this.localIndexStore = new RAFIndexStore(localFile, keyLength, tagLength);
 		this.path = new Path(fs.getWorkingDirectory(), hdfsFilename);
 	}
-
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -98,8 +93,8 @@ public class HdfsIndexStore implements IndexStore {
 	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#getIndex(java.lang.String)
 	 */
 	@Override
-	public Meta getIndex(String key, Comparator<String> c) throws IOException {
-		return this.localIndexStore.getIndex(key, c);
+	public Meta getIndex(String key, Comparator<byte[]> keyComp) throws IOException {
+		return this.localIndexStore.getIndex(key, keyComp);
 	}
 
 	@Override
@@ -108,8 +103,8 @@ public class HdfsIndexStore implements IndexStore {
 	}
 
 	@Override
-	public Meta getIndex(String key, String tagName, Comparator<String> c) throws IOException {
-		return this.localIndexStore.getIndex(key, tagName, c);
+	public Meta getIndex(String key, String tagName, Comparator<byte[]> keyComp) throws IOException {
+		return this.localIndexStore.getIndex(key, tagName, keyComp);
 	}
 
 	@Override

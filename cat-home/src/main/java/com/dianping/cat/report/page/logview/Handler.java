@@ -10,7 +10,6 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.storage.TagThreadSupport.Direction;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
@@ -24,7 +23,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "logview")
 	private ModelService<String> m_service;
 
-	private String getLogView(String messageId, Direction direction, String tag) {
+	private String getLogView(String messageId, Boolean direction, String tag) {
 		if (messageId != null) {
 			MessageId id = MessageId.parse(messageId);
 			ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
@@ -32,7 +31,7 @@ public class Handler implements PageHandler<Context> {
 			      .setProperty("messageId", messageId);
 
 			if (direction != null && tag != null) {
-				request.setProperty("direction", direction.name());
+				request.setProperty("direction", String.valueOf(direction));
 				request.setProperty("tag", tag);
 			}
 

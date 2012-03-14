@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.storage.hdfs.local;
+package com.dianping.cat.storage.hdfs;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,9 +13,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.ArrayUtils;
 
-import com.dianping.cat.storage.hdfs.IndexStore;
-import com.dianping.cat.storage.hdfs.Meta;
-import com.dianping.cat.storage.hdfs.Tag;
 import com.dianping.cat.storage.hdfs.util.ArrayKit;
 import com.dianping.cat.storage.hdfs.util.NumberKit;
 
@@ -42,6 +39,22 @@ public class RAFIndexStore implements IndexStore {
 
 	private final static int LENGTH_LEN = 4;
 
+	private byte[] toFixedKey(String key) {
+		byte[] keyBytes = key.getBytes();
+		int keyLength = this.keyLength;
+		if (key.length() == keyLength) {
+			return keyBytes;
+		} else if (key.length() > keyLength) {
+			throw new IllegalArgumentException("key length overflow" + key);
+		}
+
+		byte[] fixed = new byte[keyLength];
+		int len = keyBytes.length;
+		System.arraycopy(keyBytes, 0, fixed, 0, len);
+		fixed[len] = TAG_SPLITER;
+		return fixed;
+	}
+
 	public RAFIndexStore(File storeFile, int keyLength, int tagLength) throws FileNotFoundException {
 		this.keyLength = keyLength;
 		this.tagLength = tagLength;
@@ -53,15 +66,11 @@ public class RAFIndexStore implements IndexStore {
 
 	@Override
 	public void append(Meta meta) throws IOException {
-		String key = meta.getKey();
 		Map<String, Tag> tags = meta.getTags();
 		long offset = meta.getOffset();
 		int length = meta.getLength();
-		if (this.keyLength != key.length()) {
-			throw new IllegalArgumentException(key);
-		}
 		byte[] buf = new byte[this.indexLength];
-		byte[] keyBytes = key.getBytes();
+		byte[] keyBytes = toFixedKey(meta.getKey());
 		System.arraycopy(keyBytes, 0, buf, 0, keyBytes.length);
 		int i = keyBytes.length;
 		buf[i++] = (byte) (offset >>> 24);
@@ -76,12 +85,16 @@ public class RAFIndexStore implements IndexStore {
 			ByteBuffer buff = ByteBuffer.allocate(tagLength);
 			for (Tag t : tags.values()) {
 				buff.put(t.getName().getBytes());
-				buff.put(NumberKit.int2Bytes(t.getPrevious()));
-				buff.put(NumberKit.int2Bytes(t.getNext()));
+				buff.put(TAG_SPLITER);
+				buff.put(Integer.toString(t.getPrevious()).getBytes());
+				buff.put(TAG_SPLITER);
+				buff.put(Integer.toString(t.getNext()).getBytes());
 				buff.put(TAG_SPLITER);
 			}
 			byte[] tagArray = buff.array();
 			System.arraycopy(tagArray, 0, buf, i, tagLength);
+		} else {
+			buf[i] = TAG_SPLITER;
 		}
 		synchronized (this.writeRAF) {
 			this.writeRAF.seek(writeRAF.length());
@@ -89,7 +102,7 @@ public class RAFIndexStore implements IndexStore {
 		}
 	}
 
-	private int binarySearchPos(String key, Comparator<String> c) throws IOException {
+	private int binarySearchPos(String key, Comparator<byte[]> keyComp) throws IOException {
 		int low = 0;
 		int indexLength = this.indexLength;
 		int keyLength = this.keyLength;
@@ -97,8 +110,8 @@ public class RAFIndexStore implements IndexStore {
 
 		while (low <= high) {
 			int mid = (low + high) >>> 1;
-			byte[] midVal = this.get(mid * indexLength, keyLength);
-			int cmp = c.compare(new String(midVal), key);
+			byte[] midVal = this.getBytes(mid * indexLength, keyLength);
+			int cmp = keyComp.compare(midVal, toFixedKey(key));
 
 			if (cmp < 0)
 				low = mid + 1;
@@ -125,7 +138,7 @@ public class RAFIndexStore implements IndexStore {
 		}
 	}
 
-	private byte[] get(long pos, int size) throws IOException {
+	private byte[] getBytes(long pos, int size) throws IOException {
 		byte[] bytes = new byte[size];
 		readRAF.seek(pos);
 		readRAF.read(bytes);
@@ -142,10 +155,10 @@ public class RAFIndexStore implements IndexStore {
 		this.readRAF.seek(indexPos * this.indexLength);
 		byte[] bytes = new byte[this.indexLength];
 		this.readRAF.read(bytes);
-		return getMeta(bytes);
+		return deserialMeta(bytes);
 	}
 
-	private Meta getMeta(byte[] bytes) {
+	private Meta deserialMeta(byte[] bytes) {
 		Meta m = new Meta();
 		int keyLength = this.keyLength;
 		byte[] keyBytes = new byte[keyLength];
@@ -157,32 +170,42 @@ public class RAFIndexStore implements IndexStore {
 		m.setLength(NumberKit.bytes2Int(bytes, i));
 		i += 4;
 		int tagEnderIndex = ArrayUtils.lastIndexOf(bytes, TAG_SPLITER);
-		if (tagEnderIndex > 0) {
+		if (tagEnderIndex > 0 && tagEnderIndex > i) {
 			byte[] tagBytes = new byte[tagEnderIndex - i];
 			System.arraycopy(bytes, i, tagBytes, 0, tagBytes.length);
 			byte[][] tagSegs = ArrayKit.split(tagBytes, TAG_SPLITER);
-			for (byte[] tagSeg : tagSegs) {
-				byte[] nameSeg = new byte[tagSeg.length - 8];
-				System.arraycopy(tagSeg, 0, nameSeg, 0, nameSeg.length);
-				Tag t = new Tag();
-				t.setName(new String(nameSeg));
-				int j = nameSeg.length;
-				int previous = NumberKit.bytes2Int(tagSeg, j);
-				t.setPrevious(previous);
-				j += 4;
-				int next = NumberKit.bytes2Int(tagSeg, j);
-				t.setNext(next);
-				m.addTag(t);
+			Tag t = null;
+			for (int j = 0; j < tagSegs.length; j++) {
+				String tagSeg = new String(tagSegs[j]);
+				if (j % 3 == 0) {
+					t = new Tag();
+					t.setName(tagSeg);
+					m.addTag(t);
+				} else if (j % 3 == 1) {
+					t.setPrevious(Integer.parseInt(tagSeg));
+				} else {
+					t.setNext(Integer.parseInt(tagSeg));
+				}
 			}
 		}
 		return m;
 	}
 
-	private Comparator<String> defaultKeyComparator = new Comparator<String>() {
+	private Comparator<byte[]> defaultKeyComparator = new Comparator<byte[]>() {
 
 		@Override
-		public int compare(String o1, String o2) {
-			return o1.compareTo(o2);
+		public int compare(byte[] o1, byte[] o2) {
+			if (o1.length != o2.length) {
+				throw new IllegalArgumentException("byte[] length must equals:" + o1.length + ":" + o2.length);
+			}
+			for (int i = 0; i < o1.length; i++) {
+				byte b1 = o1[i];
+				byte b2 = o2[i];
+				if (b1 != b2) {
+					return b1 - b2;
+				}
+			}
+			return 0;
 		}
 	};
 
@@ -197,9 +220,9 @@ public class RAFIndexStore implements IndexStore {
 	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#getIndex(java.lang.String)
 	 */
 	@Override
-	public Meta getIndex(String key, Comparator<String> c) throws IOException {
+	public Meta getIndex(String key, Comparator<byte[]> keyComp) throws IOException {
 		synchronized (this.readRAF) {
-			int pos = this.binarySearchPos(key, c);
+			int pos = this.binarySearchPos(key, keyComp);
 			if (pos < 0) {
 				return null;
 			}
@@ -213,13 +236,13 @@ public class RAFIndexStore implements IndexStore {
 	}
 
 	@Override
-	public Meta getIndex(String key, String tagName, Comparator<String> c) throws IOException {
-		Meta meta = this.getIndex(key, c);
+	public Meta getIndex(String key, String tagName, Comparator<byte[]> keyComp) throws IOException {
+		Meta meta = this.getIndex(key, keyComp);
 		if (meta == null) {
 			return null;
 		}
 		Map<String, Tag> tags = meta.getTags();
-		if (tagName != null && tags.get(tagName) == null) {
+		if (tagName != null && (tags == null || !tags.containsKey(tagName))) {
 			return null;
 		}
 		return meta;

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.storage.hdfs.local;
+package com.dianping.cat.storage.hdfs;
 
 import static com.dianping.cat.storage.hdfs.util.NumberKit.bytes2Int;
 import static com.dianping.cat.storage.hdfs.util.NumberKit.int2Bytes;
@@ -16,11 +16,8 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.dianping.cat.storage.hdfs.DataStore;
-import com.dianping.cat.storage.hdfs.Meta;
-import com.dianping.cat.storage.hdfs.Record;
-import com.dianping.cat.storage.hdfs.Tkv;
 import com.dianping.cat.storage.hdfs.util.StringKit;
+
 
 /**
  * Tagged key-value store implement.
@@ -101,6 +98,11 @@ public class LocalImpl implements Tkv {
 		return newRecord;
 	}
 
+	@Override
+	public boolean delete() throws IOException {
+		return this.store.delete();
+	}
+
 	protected void deserial() throws IOException {
 		DataStore store = this.store;
 		int pos = 0;// record position
@@ -142,6 +144,11 @@ public class LocalImpl implements Tkv {
 	}
 
 	@Override
+	public byte[] get(int indexPos) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public byte[] get(String key) throws IOException {
 		return get(key, null);
 	}
@@ -153,7 +160,7 @@ public class LocalImpl implements Tkv {
 	}
 
 	@Override
-	public byte[] get(int indexPos) throws IOException {
+	public Meta getIndex(int indexPos) throws IOException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -168,8 +175,15 @@ public class LocalImpl implements Tkv {
 	}
 
 	@Override
-	public Meta getIndex(int indexPos) throws IOException {
-		throw new UnsupportedOperationException();
+	public byte[] getNext(String key, String tag) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public byte[] getPrevious(String key, String tag) throws IOException {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -279,10 +293,5 @@ public class LocalImpl implements Tkv {
 		}
 		bb.put((byte) Record.ENDER);
 		this.store.append(bb.array());
-	}
-
-	@Override
-	public boolean delete() throws IOException {
-		return this.store.delete();
 	}
 }

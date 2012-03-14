@@ -181,11 +181,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		if (count > 0) {
 			String messageId = tree.getMessageId();
 			String threadTag = "t:" + tree.getThreadId();
-			String sessionTag = "s:" + tree.getSessionToken();
-			String requestTag = "r:" + messageId;
 
 			try {
-				m_messageBucket.storeById(messageId, tree, threadTag, sessionTag, requestTag);
+				m_messageBucket.storeById(messageId, tree, threadTag);
 			} catch (IOException e) {
 				m_logger.error("Error when storing message for problem analyzer!", e);
 			}

@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.logview;
 
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.storage.TagThreadSupport.Direction;
 import com.site.web.mvc.ActionContext;
 import com.site.web.mvc.ActionPayload;
 import com.site.web.mvc.payload.annotation.FieldMeta;
@@ -30,11 +29,11 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_action;
 	}
 
-	public Direction getDirection() {
+	public Boolean getDirection() {
 		if (m_tag1 != null) {
-			return Direction.BACKWARD;
+			return false;
 		} else if (m_tag2 != null) {
-			return Direction.FORWARD;
+			return true;
 		} else {
 			return null;
 		}

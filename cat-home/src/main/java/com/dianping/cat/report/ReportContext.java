@@ -2,6 +2,7 @@ package com.dianping.cat.report;
 
 import java.io.File;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -20,27 +21,27 @@ import com.site.web.mvc.Page;
 
 public class ReportContext<T extends ActionPayload<? extends Page, ? extends Action>> extends ActionContext<T> {
 
-   @SuppressWarnings("deprecation")
-   @Override
-   public void initialize(HttpServletRequest request, HttpServletResponse response) {
-      super.initialize(request, response);
+	@Override
+	public void initialize(HttpServletRequest request, HttpServletResponse response) {
+		super.initialize(request, response);
 
-      String contextPath = request.getContextPath();
+		String contextPath = request.getContextPath();
 
-      if (!ResourceRuntime.INSTANCE.hasConfig(contextPath)) {
-         File warRoot = new File(request.getRealPath("/"));
+		if (!ResourceRuntime.INSTANCE.hasConfig(contextPath)) {
+			ServletContext servletContext = request.getSession().getServletContext();
+			File warRoot = new File(servletContext.getRealPath("/"));
 
-         ResourceRuntime.INSTANCE.removeConfig(contextPath);
-         ResourceInitializer.initialize(contextPath, warRoot);
+			ResourceRuntime.INSTANCE.removeConfig(contextPath);
+			ResourceInitializer.initialize(contextPath, warRoot);
 
-         IResourceRegistry registry = ResourceRuntime.INSTANCE.getConfig(contextPath).getRegistry();
+			IResourceRegistry registry = ResourceRuntime.INSTANCE.getConfig(contextPath).getRegistry();
 
-         new ResourceConfigurator().configure(registry);
-         new ResourceTagConfigurator().configure(registry);
-         new ResourceTagLibConfigurator().configure(registry);
-      }
+			new ResourceConfigurator().configure(registry);
+			new ResourceTagConfigurator().configure(registry);
+			new ResourceTagLibConfigurator().configure(registry);
+		}
 
-      ResourceRuntimeContext.setup(contextPath);
-   }
+		ResourceRuntimeContext.setup(contextPath);
+	}
 
 }

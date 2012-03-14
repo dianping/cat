@@ -6,36 +6,41 @@ public class Tag implements Comparable<Tag> {
 	private int next = -1;
 	private String name;
 
-	public int getPrevious() {
-		return previous;
-	}
-
-	public void setPrevious(int previous) {
-		this.previous = previous;
-	}
-
-	public int getNext() {
-		return next;
-	}
-
-	public void setNext(int next) {
-		this.next = next;
+	@Override
+	public int compareTo(Tag o) {
+		return this.name.compareTo(o.name);
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public int getNext() {
+		return this.next;
 	}
 
 	public int getPos() {
 		return pos;
 	}
 
+	public int getPrevious() {
+		return previous;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setNext(int next) {
+		this.next = next;
+	}
+
 	public void setPos(int pos) {
 		this.pos = pos;
+	}
+
+	public void setPrevious(int previous) {
+		this.previous = previous;
 	}
 
 	@Override
@@ -49,11 +54,6 @@ public class Tag implements Comparable<Tag> {
 		builder.append(name);
 		builder.append("]");
 		return builder.toString();
-	}
-
-	@Override
-	public int compareTo(Tag o) {
-		return this.name.compareTo(o.name);
 	}
 
 }
