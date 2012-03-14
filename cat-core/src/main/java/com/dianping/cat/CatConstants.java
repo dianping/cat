@@ -6,6 +6,8 @@ public class CatConstants {
 	 * Config File
 	 */
 	public static final String CONFIG_FILE = "/data/appdatas/cat/client.xml";
+	
+	public static final String CAT_STATE ="cat-state";
 
 	/**
 	 * Pigeon Transation Type
@@ -19,14 +21,18 @@ public class CatConstants {
 	public static final String TYPE_SERVICE = "Service";
 
 	public static final String TYPE_REMOTE_CALL = "RemoteCall";
-	
+
+	public static final String TYPE_REQUEST = "Request";
+
+	public static final String TYPE_RESPONSE = "Respone";
+
 	/**
 	 * Pigeon Event Type, it is used to record the param
 	 */
 
-	public static final String TYPE_REQUEST = "PigeonRequest";
+	public static final String TYPE_PIGEON_REQUEST = "PigeonRequest";
 
-	public static final String TYPE_RESPONSE = "PigeonRespone";
+	public static final String TYPE_PIGEON_RESPONSE = "PigeonRespone";
 
 	/**
 	 * Pigeon Event name
@@ -38,7 +44,6 @@ public class CatConstants {
 	public static final String NAME_PAYLOAD = "Payload";
 
 	public static final String NAME_TIME_OUT = "ClientTimeOut";
-
 
 	/**
 	 * Pigeon Context Info
@@ -61,7 +66,7 @@ public class CatConstants {
 	/**
 	 * Avatar
 	 */
-	
+
 	public static final String TYPE_URL = "URL";
 
 	public static final String NAME_CLIENT_INFO = "ClientInfo";

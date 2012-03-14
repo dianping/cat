@@ -49,15 +49,19 @@ public class CatFilter implements Filter {
 				t.setStatus(Transaction.SUCCESS);
 			}
 		} catch (ServletException e) {
+			cat.logError(e);
 			t.setStatus(e);
 			throw e;
 		} catch (IOException e) {
+			cat.logError(e);
 			t.setStatus(e);
 			throw e;
 		} catch (RuntimeException e) {
+			cat.logError(e);
 			t.setStatus(e);
 			throw e;
 		} catch (Error e) {
+			cat.logError(e);
 			t.setStatus(e);
 			throw e;
 		} finally {
