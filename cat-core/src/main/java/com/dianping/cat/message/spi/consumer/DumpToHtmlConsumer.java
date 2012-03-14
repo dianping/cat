@@ -45,11 +45,6 @@ public class DumpToHtmlConsumer implements MessageConsumer, Initializable, LogEn
 	}
 
 	@Override
-	public String getDomain() {
-		return m_domain;
-	}
-
-	@Override
 	public void initialize() throws InitializationException {
 		File baseDir = m_builder.getLogViewBaseDir();
 

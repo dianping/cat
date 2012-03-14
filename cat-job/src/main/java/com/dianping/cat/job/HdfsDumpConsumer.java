@@ -26,11 +26,6 @@ public class HdfsDumpConsumer implements MessageConsumer {
 		return ID;
 	}
 
-	@Override
-	public String getDomain() {
-		return m_domain;
-	}
-
 	public void setDomain(String domain) {
 		m_domain = domain;
 	}

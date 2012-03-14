@@ -66,10 +66,10 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
-	public String getMessagePath(Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/message");
+	public String getMessagePath(String domain, Date timestamp) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/message-{1}");
 
-		return format.format(new Object[] { timestamp });
+		return format.format(new Object[] { timestamp, domain });
 	}
 
 	@Override

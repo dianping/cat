@@ -54,7 +54,7 @@
 			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
-				<datasourceFile>datasources.xml</datasourceFile>
+				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
 		</component>
 		<component>

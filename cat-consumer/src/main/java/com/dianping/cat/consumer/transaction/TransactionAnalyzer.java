@@ -47,8 +47,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
-	private Bucket<MessageTree> m_messageBucket;
-
 	private long m_extraTime;
 
 	private Logger m_logger;
@@ -180,7 +178,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String threadTag = "t:" + tree.getThreadId();
 
 				try {
-					m_messageBucket.storeById(messageId, tree, threadTag);
+					String path = m_pathBuilder.getMessagePath(domain, new Date(m_startTime));
+					Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
+
+					bucket.storeById(messageId, tree, threadTag);
 				} catch (IOException e) {
 					m_logger.error("Error when storing message for transaction analyzer!", e);
 				}
@@ -273,18 +274,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.setSum(range.getSum() + d);
 	}
 
-	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
+	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
 		m_extraTime = extraTime;
 		m_startTime = startTime;
 		m_duration = duration;
-
-		String path = m_pathBuilder.getMessagePath(new Date(m_startTime));
-
-		try {
-			m_messageBucket = m_bucketManager.getMessageBucket(path);
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("Unable to create message bucket at %s.", path), e);
-		}
 
 		loadReports();
 	}
@@ -295,7 +288,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			return;
 		}
 
-		m_bucketManager.closeBucket(m_messageBucket);
 		storeReports(reports);
 	}
 

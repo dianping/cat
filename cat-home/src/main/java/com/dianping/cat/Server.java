@@ -1,7 +1,6 @@
 package com.dianping.cat;
 
 import java.io.File;
-import java.net.URL;
 
 import org.codehaus.plexus.PlexusContainer;
 import org.junit.AfterClass;
@@ -16,10 +15,9 @@ import org.unidal.webres.taglib.support.JettyTestSupport;
 
 import com.dianping.cat.servlet.CatServlet;
 import com.site.lookup.ComponentTestCase;
-import com.site.test.browser.BrowserManager;
 import com.site.web.MVC;
 
-public class SimpleServer extends SimpleServerSupport {
+public class Server extends SimpleServerSupport {
 	private static ComponentAdaptor s_adaptor = new ComponentAdaptor();
 
 	private static MVC s_mvc = new MVC();
@@ -33,20 +31,20 @@ public class SimpleServer extends SimpleServerSupport {
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		JettyTestSupport.startServer(new SimpleServer());
+		JettyTestSupport.startServer(new Server());
 	}
 
 	public static void main(String[] args) throws Exception {
-		SimpleServer server = new SimpleServer();
+		Server server = new Server();
 
-		SimpleServer.beforeClass();
+		Server.beforeClass();
 
 		try {
 			server.before();
 			server.startServer();
 			server.after();
 		} finally {
-			SimpleServer.shutdownServer();
+			Server.shutdownServer();
 		}
 	}
 
@@ -58,7 +56,6 @@ public class SimpleServer extends SimpleServerSupport {
 
 	@Override
 	public void before() {
-		s_adaptor.setServerPort(getServerPort());
 		s_adaptor.before();
 		s_mvc.setContainer(s_adaptor.getContainer());
 		super.before();
@@ -100,16 +97,11 @@ public class SimpleServer extends SimpleServerSupport {
 
 	@Test
 	public void startServer() throws Exception {
-		// open the page in the default browser
-		//s_adaptor.display("/cat/r");
-
 		System.out.println(String.format("[%s] Press any key to stop server ... ", getTimestamp()));
 		System.in.read();
 	}
 
 	static class ComponentAdaptor extends ComponentTestCase {
-		private int m_serverPort;
-
 		public void after() {
 			try {
 				super.tearDown();
@@ -126,19 +118,6 @@ public class SimpleServer extends SimpleServerSupport {
 			}
 		}
 
-		public void display(String requestUri) throws Exception {
-			StringBuilder sb = new StringBuilder(256);
-			BrowserManager manager = lookup(BrowserManager.class);
-
-			sb.append("http://localhost:").append(m_serverPort).append(requestUri);
-
-			try {
-				manager.display(new URL(sb.toString()));
-			} finally {
-				release(manager);
-			}
-		}
-
 		@Override
 		public PlexusContainer getContainer() {
 			return super.getContainer();
@@ -152,10 +131,6 @@ public class SimpleServer extends SimpleServerSupport {
 		@Override
 		public <T> T lookup(Class<T> role, Object roleHint) throws Exception {
 			return super.lookup(role, roleHint);
-		}
-
-		public void setServerPort(int serverPort) {
-			m_serverPort = serverPort;
 		}
 	}
 }

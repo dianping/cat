@@ -22,11 +22,12 @@ import com.site.lookup.ComponentTestCase;
  * @since Jan 5, 2012
  */
 @RunWith(JUnit4.class)
-public class TransactionReportMessageAnalyzerTest extends ComponentTestCase{
-
+public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 
 	/**
-	 * Test method for {@link com.dianping.cat.consumer.transaction.TransactionReportAnalyzer#process(com.dianping.cat.message.spi.MessageTree)}.
+	 * Test method for
+	 * {@link com.dianping.cat.consumer.transaction.TransactionReportAnalyzer#process(com.dianping.cat.message.spi.MessageTree)}
+	 * .
 	 * 
 	 * @throws InterruptedException
 	 */
@@ -35,11 +36,10 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase{
 		long current = System.currentTimeMillis();
 		long duration = 60 * 60 * 1000;
 		long extraTime = 5 * 60 * 1000;
-		long start = current - current % (60 * 60 * 1000) -1000L*60*60;
+		long start = current - current % (60 * 60 * 1000) - 1000L * 60 * 60;
 
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		TransactionAnalyzer analyzer = (TransactionAnalyzer) factory.create("transaction", start, duration, "testDomain",
-		      extraTime);
+		TransactionAnalyzer analyzer = (TransactionAnalyzer) factory.create("transaction", start, duration, extraTime);
 
 		for (int i = 1; i <= 1000; i++) {
 			MessageTree tree = new DefaultMessageTree();
@@ -92,8 +92,8 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase{
 		assertEquals(500.5, n2.getAvg());
 		assertEquals(500500.0, n2.getSum());
 
-//		System.out.println(new DefaultJsonBuilder().buildJson(report));
-//		System.out.println(report.toString());
+		// System.out.println(new DefaultJsonBuilder().buildJson(report));
+		// System.out.println(report.toString());
 	}
 
 }

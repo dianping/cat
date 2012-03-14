@@ -24,10 +24,4 @@ public interface Bucket<T> {
 	public T findNextById(String id, String tag) throws IOException;;
 
 	public T findPreviousById(String id, String tag) throws IOException;;
-
-	public static enum Direction {
-		FORWARD,
-
-		BACKWARD;
-	}
 }

@@ -11,7 +11,7 @@ final class DatabaseConfigurator extends AbstractJdbcResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(defineJdbcDataSourceConfigurationManagerComponent("datasources.xml"));
+		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
 		all.add(defineJdbcDataSourceComponent("cat", "${jdbc.driver}", "${jdbc.url}", "${jdbc.user}", "${jdbc.password}",
 		      "<![CDATA[${jdbc.connectionProperties}]]>"));
 

@@ -44,8 +44,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
 
-	private Bucket<MessageTree> m_messageBucket;
-
 	private long m_extraTime;
 
 	private Logger m_logger;
@@ -183,25 +181,20 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			String threadTag = "t:" + tree.getThreadId();
 
 			try {
-				m_messageBucket.storeById(messageId, tree, threadTag);
+				String path = m_pathBuilder.getMessagePath(domain, new Date(m_startTime));
+				Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
+
+				bucket.storeById(messageId, tree, threadTag);
 			} catch (IOException e) {
 				m_logger.error("Error when storing message for problem analyzer!", e);
 			}
 		}
 	}
 
-	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
+	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
 		m_extraTime = extraTime;
 		m_startTime = startTime;
 		m_duration = duration;
-
-		String path = m_pathBuilder.getMessagePath(new Date(m_startTime));
-
-		try {
-			m_messageBucket = m_bucketManager.getMessageBucket(path);
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("Unable to create message bucket at %s.", path), e);
-		}
 
 		loadReports();
 	}
@@ -212,7 +205,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			return;
 		}
 
-		m_bucketManager.closeBucket(m_messageBucket);
 		storeReports(reports);
 	}
 

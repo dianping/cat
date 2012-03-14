@@ -5,16 +5,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.consumer.logview.LogViewPostHandler;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
@@ -24,8 +29,9 @@ import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 /**
- * This is the real time consumer process framework. The config of the consumer
- * contains name,domain,analyzers.
+ * This is the real time consumer process framework. All analyzers share the
+ * message decoding once, thereof reduce the overhead.
+ * <p>
  * 
  * @author yong.you
  * @since Jan 5, 2012
@@ -34,8 +40,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private static final long HOUR = 60 * 60 * 1000L;
 
 	private static final long MINUTE = 60 * 1000L;
-
-	private static final String DOMAIN_ALL = "all";
 
 	private static final int PROCESS_PERIOD = 3;
 
@@ -48,7 +52,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private String m_consumerId;
 
 	@Inject
-	private String m_domain = DOMAIN_ALL;
+	private List<String> m_eligibleDomains; // domains == null means not limit
 
 	@Inject
 	private long m_duration = 1 * HOUR;
@@ -73,10 +77,13 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private Map<String, MessageAnalyzer> m_currentAnalyzers = new HashMap<String, MessageAnalyzer>();
 
+	private Set<String> m_domains = new HashSet<String>();
+
 	@Override
 	public void consume(MessageTree tree) {
-		if (!isInDomain(tree))
+		if (!isInDomain(tree)) {
 			return;
+		}
 
 		long timestamp = tree.getMessage().getTimestamp();
 		Period current = null;
@@ -102,6 +109,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				m_logger.warn("The timestamp of message is out of range, IGNORED! \r\n" + tree);
 			}
 		}
+
+		m_domains.add(tree.getDomain());
 	}
 
 	private void distributeMessage(MessageTree tree, List<MessageQueue> queues) {
@@ -141,11 +150,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		return m_currentAnalyzers.get(name);
 	}
 
-	@Override
-	public String getDomain() {
-		return m_domain;
-	}
-
 	public MessageAnalyzer getLastAnalyzer(String name) {
 		return m_lastAnalyzers.get(name);
 	}
@@ -156,25 +160,25 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	}
 
 	private boolean isInDomain(MessageTree tree) {
-		if (m_domain == null || m_domain.length() == 0 || m_domain.equalsIgnoreCase(DOMAIN_ALL)) {
+		if (m_eligibleDomains == null || m_eligibleDomains.isEmpty()) {
 			return true;
+		} else {
+			return m_eligibleDomains.contains(tree.getDomain());
 		}
-		if (m_domain.indexOf(tree.getDomain()) > -1) {
-			return true;
-		}
-		return false;
 	}
 
-	public void setAnalyzerNames(String analyzerNames) {
-		m_analyzerNames = Splitters.by(',').noEmptyItem().trim().split(analyzerNames);
+	public void setAnalyzers(String analyzers) {
+		m_analyzerNames = Splitters.by(',').noEmptyItem().trim().split(analyzers);
 	}
 
 	public void setConsumerId(String consumerId) {
 		m_consumerId = consumerId;
 	}
 
-	public void setDomain(String domain) {
-		m_domain = domain;
+	public void setDomains(String domains) {
+		if (domains != null) {
+			m_eligibleDomains = Splitters.by(',').noEmptyItem().trim().split(domains);
+		}
 	}
 
 	public void setDuration(long duration) {
@@ -199,21 +203,28 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_logger.info("Start Tasks At " + new Date(start));
 		List<MessageQueue> queues = new ArrayList<MessageQueue>();
 		Period current = new Period(start, start + m_duration, queues);
+		CountDownLatch latch = new CountDownLatch(m_analyzerNames.size());
 
 		m_lastAnalyzers.clear();
 		m_lastAnalyzers.putAll(m_currentAnalyzers);
 		m_currentAnalyzers.clear();
 
 		for (String name : m_analyzerNames) {
-			MessageAnalyzer analyzer = m_factory.create(name, start, m_duration, m_domain, m_extraTime);
+			MessageAnalyzer analyzer = m_factory.create(name, start, m_duration, m_extraTime);
 			MessageQueue queue = lookup(MessageQueue.class);
-			Task task = new Task(m_factory, analyzer, queue);
+			Task task = new Task(m_factory, analyzer, queue, latch);
 
 			queue.offer(tree);
 			queues.add(queue);
 			m_executor.submit(task);
 			m_currentAnalyzers.put(name, analyzer);
 		}
+
+		LogViewPostHandler handler = (LogViewPostHandler) m_factory.create("logview", start, m_duration, m_extraTime);
+
+		handler.setDomains(m_domains);
+		m_executor.submit(new FinalizerTask(m_factory, handler, m_duration, latch));
+		m_currentAnalyzers.put("logview", handler);
 
 		int len = m_periods.size();
 
@@ -222,6 +233,40 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		m_periods.add(current);
+	}
+
+	static class FinalizerTask implements Runnable {
+		private AnalyzerFactory m_factory;
+
+		private MessageAnalyzer m_handler;
+
+		private long m_duration;
+
+		private CountDownLatch m_latch;
+
+		public FinalizerTask(AnalyzerFactory factory, MessageAnalyzer handler, long duration, CountDownLatch latch) {
+			m_factory = factory;
+			m_handler = handler;
+			m_duration = duration;
+			m_latch = latch;
+		}
+
+		@Override
+		public void run() {
+			try {
+				m_latch.await(m_duration * 2, TimeUnit.MILLISECONDS);
+			} catch (InterruptedException e) {
+				System.out.println("Waiting time out in FinalizerTask, do logview upload next");
+			}
+
+			try {
+				m_handler.doCheckpoint();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				m_factory.release(m_handler);
+			}
+		}
 	}
 
 	static class Period {
@@ -253,10 +298,13 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		private MessageQueue m_queue;
 
-		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue) {
+		private CountDownLatch m_latch;
+
+		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue, CountDownLatch latch) {
 			m_factory = factory;
 			m_analyzer = analyzer;
 			m_queue = queue;
+			m_latch = latch;
 		}
 
 		public MessageQueue getQueue() {
@@ -267,6 +315,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			m_analyzer.analyze(m_queue);
 			m_factory.release(m_analyzer);
 			m_factory.release(m_queue);
+			m_latch.countDown();
 		}
 	}
 }
