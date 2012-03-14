@@ -9,7 +9,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-home</artifactId>
 	<name>CAT Home</name>
-	<packaging>war</packaging>
+	<packaging>${packaging}</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
@@ -54,7 +54,7 @@
 		<dependency>
 			<groupId>com.site.common</groupId>
 			<artifactId>test-framework</artifactId>
-			<scope>test</scope>
+			<scope>${test-framework.scope}</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -104,6 +104,25 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<version>2.4</version>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+							<mainClass>com.dianping.cat.Server</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+	<properties>
+		<packaging>war</packaging>
+		<test-framework.scope>test</test-framework.scope>
+	</properties>
 </project>

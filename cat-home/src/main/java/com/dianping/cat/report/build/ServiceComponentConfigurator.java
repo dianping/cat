@@ -7,8 +7,10 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
+import com.dianping.cat.report.page.model.logview.HdfsLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
 import com.dianping.cat.report.page.model.problem.CompositeProblemService;
+import com.dianping.cat.report.page.model.problem.HdfsProblemService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.transaction.CompositeTransactionService;
@@ -32,14 +34,20 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
 		      .req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "problem-hdfs", HdfsProblemService.class) //
+		      .req(BucketManager.class, MessagePathBuilder.class));
 		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //
-		      .req(ModelService.class, new String[] { "problem-local" }, "m_services"));
+		      .req(ModelService.class, new String[] { "problem-local", "problem-hdfs" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 		      .req(MessagePathBuilder.class, BucketManager.class) //
 		      .req(MessageCodec.class, "html"));
+		all.add(C(ModelService.class, "logview-hdfs", HdfsLogViewService.class) //
+		      .req(MessagePathBuilder.class, BucketManager.class) //
+		      .req(MessageCodec.class, "html", "m_htmlCodec") //
+		      .req(MessageCodec.class, "plain-text", "m_plainCodec"));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
-		      .req(ModelService.class, new String[] { "logview-local" }, "m_services"));
+		      .req(ModelService.class, new String[] { "logview-local", "logview-hdfs" }, "m_services"));
 
 		return all;
 	}

@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
+import com.dianping.cat.consumer.logview.LogViewPostHandler;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
@@ -33,7 +34,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class).config(E("consumerId").value("realtime") //
 		            , E("extraTime").value(property("extraTime", "300000"))//
-		            , E("analyzerNames").value("problem,transaction,ip")));
+		            , E("analyzers").value("problem,transaction,ip")));
 
 		String failureTypes = "Error,RuntimeException,Exception";
 
@@ -51,6 +52,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, MessagePathBuilder.class));
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
+
+		all.add(C(LogViewPostHandler.class).is(PER_LOOKUP) //
+		      .req(BucketManager.class, MessagePathBuilder.class));
 
 		return all;
 	}

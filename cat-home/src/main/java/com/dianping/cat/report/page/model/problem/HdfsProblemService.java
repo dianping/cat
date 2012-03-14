@@ -1,9 +1,9 @@
-package com.dianping.cat.report.page.model.transaction;
+package com.dianping.cat.report.page.model.problem;
 
 import java.util.Date;
 
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -12,7 +12,7 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
 
-public class HdfsTransactionService implements ModelService<TransactionReport> {
+public class HdfsProblemService implements ModelService<ProblemReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -20,21 +20,20 @@ public class HdfsTransactionService implements ModelService<TransactionReport> {
 	private MessagePathBuilder m_pathBuilder;
 
 	@Override
-	public ModelResponse<TransactionReport> invoke(ModelRequest request) {
+	public ModelResponse<ProblemReport> invoke(ModelRequest request) {
 		String domain = request.getDomain();
 		long date = Long.parseLong(request.getProperty("date"));
 		String path = m_pathBuilder.getReportPath(new Date(date));
-		ModelResponse<TransactionReport> response = new ModelResponse<TransactionReport>();
-		Bucket<byte[]> bucket = null;
+		ModelResponse<ProblemReport> response = new ModelResponse<ProblemReport>();
+		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getHdfsBucket(path);
+			bucket = m_bucketManager.getStringBucket(path);
 
-			byte[] data = bucket.findById("transaction-" + domain);
+			String xml = bucket.findById("problem-" + domain);
 
-			if (data == null) {
-				String xml = new String(data, "utf-8");
-				TransactionReport report = new DefaultXmlParser().parse(xml);
+			if (xml == null) {
+				ProblemReport report = new DefaultXmlParser().parse(xml);
 
 				response.setModel(report);
 			}

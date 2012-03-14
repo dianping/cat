@@ -47,8 +47,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
-	private Bucket<MessageTree> m_messageBucket;
-
 	private long m_extraTime;
 
 	private Logger m_logger;
@@ -180,7 +178,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String threadTag = "t:" + tree.getThreadId();
 
 				try {
-					m_messageBucket.storeById(messageId, tree, threadTag);
+					String path = m_pathBuilder.getMessagePath(domain, new Date(m_startTime));
+					Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
+
+					bucket.storeById(messageId, tree, threadTag);
 				} catch (IOException e) {
 					m_logger.error("Error when storing message for transaction analyzer!", e);
 				}
@@ -273,18 +274,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.setSum(range.getSum() + d);
 	}
 
-	public void setAnalyzerInfo(long startTime, long duration, String domain, long extraTime) {
+	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
 		m_extraTime = extraTime;
 		m_startTime = startTime;
 		m_duration = duration;
-
-		String path = m_pathBuilder.getMessagePath(new Date(m_startTime));
-
-		try {
-			m_messageBucket = m_bucketManager.getMessageBucket(path);
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("Unable to create message bucket at %s.", path), e);
-		}
 
 		loadReports();
 	}
@@ -295,29 +288,43 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			return;
 		}
 
-		m_bucketManager.closeBucket(m_messageBucket);
 		storeReports(reports);
 	}
 
 	void storeReports(Collection<TransactionReport> reports) {
 		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
-		Bucket<String> bucket = null;
+		Bucket<byte[]> localBucket = null;
+		Bucket<byte[]> hdfsBucket = null;
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 
 		try {
-			bucket = m_bucketManager.getStringBucket(path);
+			localBucket = m_bucketManager.getBytesBucket(path);
+			hdfsBucket = m_bucketManager.getHdfsBucket(path);
 
 			// delete old one, not append mode
-			bucket.deleteAndCreate();
+			localBucket.deleteAndCreate();
+			hdfsBucket.deleteAndCreate();
 
 			for (TransactionReport report : reports) {
-				bucket.storeById("transaction-" + report.getDomain(), builder.buildXml(report));
+				String xml = builder.buildXml(report);
+				byte[] data = xml.getBytes("utf-8");
+				String key = "transaction-" + report.getDomain();
+
+				localBucket.storeById(key, data);
+				hdfsBucket.storeById(key, data);
 			}
+			
+			hdfsBucket.flush();
+			hdfsBucket.close();
+			localBucket.close();
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
 		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+			if (localBucket != null) {
+				m_bucketManager.closeBucket(localBucket);
+			}
+			if (hdfsBucket != null) {
+				m_bucketManager.closeBucket(hdfsBucket);
 			}
 		}
 	}

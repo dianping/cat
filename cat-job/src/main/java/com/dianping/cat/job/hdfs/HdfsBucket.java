@@ -3,13 +3,14 @@ package com.dianping.cat.job.hdfs;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.hdfs.HdfsHelper;
@@ -86,24 +87,27 @@ public class HdfsBucket implements Bucket<byte[]> {
 
 	/**
 	 * @param baseDir
-	 *            e.g /data/appdata/cat/
+	 *           e.g /data/appdata/cat/
 	 * @param logicalPath
-	 *            e.g /a/b/c
+	 *           e.g /a/b/c
 	 */
 	@Override
 	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
 		this.baseDir = baseDir;
 		this.logicalPath = logicalPath;
-		File logicalFile = new File(logicalPath);
-		String[] segs = StringUtils.split(logicalFile.getName(), File.pathSeparatorChar);
-		String filename = segs[segs.length - 1];
-		String indexFilename = filename + ".index";
-		String dataFilename = filename + ".data";
-		String hdfsDir = logicalFile.getParent();
-		FileSystem fs = HdfsHelper.createLocalFileSystem(hdfsDir);
-		this.hdfs = new HdfsImpl(fs, baseDir, indexFilename, dataFilename, keyLength, tagLength);
+
+		FileSystem fs = HdfsHelper.createLocalFileSystem("");
+		File file = new File(baseDir, logicalPath);
+		File parent = file.getParentFile();
+		String name = new File(logicalPath).getName() + "-" + InetAddress.getLocalHost().getHostAddress();
+
+		parent.mkdirs();
+
+		fs.setWorkingDirectory(new Path(new File(baseDir, "hdfs").getPath()));
+
+		this.hdfs = new HdfsImpl(fs, new File(parent, "tmp"), name + ".idx", name + ".dat", keyLength, tagLength);
 		this.startWrite();
-		//this.startRead();
+		// this.startRead();
 	}
 
 	/**

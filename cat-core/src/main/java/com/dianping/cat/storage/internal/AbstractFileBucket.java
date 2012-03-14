@@ -108,6 +108,11 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 		}
 	}
 
+	public String[] findTagsById(String id) {
+		 // TODO
+		return new String[0];
+	}
+
 	@Override
 	public T findById(String id) {
 		Long offset = m_idToOffsets.get(id);
@@ -335,4 +340,11 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 			}
 		}
 	}
+
+	public static enum Direction {
+		FORWARD,
+
+		BACKWARD;
+	}
+
 }

@@ -90,6 +90,19 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>problem-hdfs</role-hint>
+			<implementation>com.dianping.cat.report.page.model.problem.HdfsProblemService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.page.model.problem.CompositeProblemService</implementation>
 			<requirements>
@@ -97,6 +110,7 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>problem-local</role-hint>
+						<role-hint>problem-hdfs</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -121,6 +135,29 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>logview-hdfs</role-hint>
+			<implementation>com.dianping.cat.report.page.model.logview.HdfsLogViewService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>html</role-hint>
+					<field-name>m_htmlCodec</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+					<field-name>m_plainCodec</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>logview</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
 			<requirements>
@@ -128,6 +165,7 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>logview-local</role-hint>
+						<role-hint>logview-hdfs</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>

@@ -12,11 +12,6 @@ public class DummyConsumer implements MessageConsumer {
 	}
 
 	@Override
-	public String getDomain() {
-		return null;
-	}
-
-	@Override
 	public void consume(MessageTree tree) {
 		// Do nothing here
 	}

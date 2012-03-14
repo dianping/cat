@@ -35,7 +35,7 @@ public class HdfsIndexStore implements IndexStore {
 		this.fs = fs;
 		this.localFile = localFile;
 		this.localIndexStore = new RAFIndexStore(localFile, keyLength, tagLength);
-		this.path = new Path(fs.getWorkingDirectory(), hdfsFilename);
+		this.path = new Path(hdfsFilename);
 	}
 	
 	/*
