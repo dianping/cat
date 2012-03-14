@@ -34,6 +34,7 @@ public class HdfsBucket implements Bucket<byte[]> {
 
 	@Override
 	public void deleteAndCreate() throws IOException {
+		this.hdfs.deleteLocal();
 		this.initialize(null, this.baseDir, this.logicalPath);
 	}
 	

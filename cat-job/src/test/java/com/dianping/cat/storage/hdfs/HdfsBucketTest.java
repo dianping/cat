@@ -17,14 +17,13 @@ public class HdfsBucketTest extends ComponentTestCase {
 	public void testLookup() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
 		HdfsBucket bucket = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
-		bucket.delete();
 		bucket.deleteAndCreate();
 		bucket.startWrite();
 
 		// keys must asc order for offset calculation bellow!
-		final String key1 = "12345678901234567890123456789010";
-		final String key2 = "12345678901234567890123456789017";
-		final String key3 = "12345678901234567890123456789029";
+		final String key1 = "9010";
+		final String key2 = "9017";
+		final String key3 = "9029";
 		final String value1 = "It's A.";
 		final String value2 = "It's B.";
 		final String value3 = "It's C.";
@@ -52,15 +51,16 @@ public class HdfsBucketTest extends ComponentTestCase {
 		Assert.assertEquals(value2, new String(bucket.findNextById(key1, tagName1)));
 		Assert.assertEquals(value1, new String(bucket.findPreviousById(key2, tagName1)));
 
-		
 		bucket = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
 		bucket.deleteAndCreate();
 		bucket.startRead();
 
-		Assert.assertEquals(value1, new String(bucket.findById(key1)));
-		Assert.assertEquals(value2, new String(bucket.findById(key2)));
+		Assert.assertEquals(null, bucket.findById(key1));
+		Assert.assertEquals(null, bucket.findById(key2));
 
 		bucket.close();
-		bucket.delete();
+		bucket.deleteAndCreate();
+
+		((HdfsBucket) bucket).delete();
 	}
 }

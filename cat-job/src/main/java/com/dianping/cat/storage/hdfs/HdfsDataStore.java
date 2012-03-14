@@ -129,7 +129,7 @@ public class HdfsDataStore implements DataStore {
 		}
 		byte[] bytes = new byte[length];
 		in.seek(offset);
-		int i = in.read(bytes);
+		in.read(bytes);
 		return bytes;
 	}
 
@@ -145,11 +145,25 @@ public class HdfsDataStore implements DataStore {
 
 	@Override
 	public boolean delete() throws IOException {
+		boolean localDeleted = this.deleteLocal();
+		boolean remoteDeleted = this.deleteRemote();
+		return localDeleted && remoteDeleted;
+	}
+
+	/**
+	 * @return
+	 * @throws IOException
+	 */
+	public boolean deleteRemote() throws IOException {
 		boolean remoteDeleted = false;
 		if (this.fs != null) {
 			remoteDeleted = this.fs.delete(path, false);
 		}
 		return remoteDeleted;
+	}
+
+	public boolean deleteLocal() {
+		return true;
 	}
 
 }
