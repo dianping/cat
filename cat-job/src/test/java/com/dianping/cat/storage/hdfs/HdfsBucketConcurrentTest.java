@@ -23,7 +23,7 @@ public class HdfsBucketConcurrentTest extends ComponentTestCase {
 		BucketManager manager = lookup(BucketManager.class);
 		final HdfsBucket bucket = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
 		bucket.deleteAndCreate();
-		bucket.startWrite();
+		//bucket.startWrite();
 
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 

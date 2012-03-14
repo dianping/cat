@@ -105,7 +105,7 @@ public class HdfsDataStore implements DataStore {
 
 	public void openInput() throws IOException {
 		if (this.input == null) {
-			this.input = this.fs.open(this.path, 1024);
+			this.input = this.fs.open(this.path);
 		}
 	}
 

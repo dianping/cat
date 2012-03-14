@@ -19,7 +19,7 @@ public class BucketTest extends ComponentTestCase {
 		Bucket<byte[]> bucket = manager.getHdfsBucket("/a/b/c");
 		bucket.deleteAndCreate();
 		
-		((HdfsBucket)bucket).startWrite();
+		//((HdfsBucket)bucket).startWrite();
 
 		// store it
 		for (int i = 0; i < 100; i++) {

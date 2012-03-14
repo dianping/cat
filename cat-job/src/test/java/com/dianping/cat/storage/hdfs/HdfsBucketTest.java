@@ -18,7 +18,7 @@ public class HdfsBucketTest extends ComponentTestCase {
 		BucketManager manager = lookup(BucketManager.class);
 		HdfsBucket bucket = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
 		bucket.deleteAndCreate();
-		bucket.startWrite();
+		//bucket.startWrite();
 
 		// keys must asc order for offset calculation bellow!
 		final String key1 = "9010";
@@ -53,7 +53,6 @@ public class HdfsBucketTest extends ComponentTestCase {
 
 		bucket = (HdfsBucket) manager.getHdfsBucket("/a/b/c");
 		bucket.deleteAndCreate();
-		bucket.startRead();
 
 		Assert.assertEquals(null, bucket.findById(key1));
 		Assert.assertEquals(null, bucket.findById(key2));
