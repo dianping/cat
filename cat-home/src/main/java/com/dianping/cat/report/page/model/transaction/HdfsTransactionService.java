@@ -25,14 +25,15 @@ public class HdfsTransactionService implements ModelService<TransactionReport> {
 		long date = Long.parseLong(request.getProperty("date"));
 		String path = m_pathBuilder.getReportPath(new Date(date));
 		ModelResponse<TransactionReport> response = new ModelResponse<TransactionReport>();
-		Bucket<String> bucket = null;
+		Bucket<byte[]> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getStringBucket(path);
+			bucket = m_bucketManager.getHdfsBucket(path);
 
-			String xml = bucket.findById("transaction-" + domain);
+			byte[] data = bucket.findById("transaction-" + domain);
 
-			if (xml == null) {
+			if (data == null) {
+				String xml = new String(data, "utf-8");
 				TransactionReport report = new DefaultXmlParser().parse(xml);
 
 				response.setModel(report);

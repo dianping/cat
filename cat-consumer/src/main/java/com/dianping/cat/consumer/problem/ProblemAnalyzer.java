@@ -210,23 +210,38 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	void storeReports(Collection<ProblemReport> reports) {
 		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
-		Bucket<String> bucket = null;
+		Bucket<byte[]> localBucket = null;
+		Bucket<byte[]> hdfsBucket = null;
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 
 		try {
-			bucket = m_bucketManager.getStringBucket(path);
+			localBucket = m_bucketManager.getBytesBucket(path);
+			hdfsBucket = m_bucketManager.getHdfsBucket(path);
 
 			// delete old one, not append mode
-			bucket.deleteAndCreate();
+			localBucket.deleteAndCreate();
+			hdfsBucket.deleteAndCreate();
 
 			for (ProblemReport report : reports) {
-				bucket.storeById("problem-" + report.getDomain(), builder.buildXml(report));
+				String xml = builder.buildXml(report);
+				byte[] data = xml.getBytes("utf-8");
+				String key = "problem-" + report.getDomain();
+
+				localBucket.storeById(key, data);
+				hdfsBucket.storeById(key, data);
 			}
+			
+			hdfsBucket.flush();
+			hdfsBucket.close();
+			localBucket.close();
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when storing problem reports to %s!", path), e);
+			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
 		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+			if (localBucket != null) {
+				m_bucketManager.closeBucket(localBucket);
+			}
+			if (hdfsBucket != null) {
+				m_bucketManager.closeBucket(hdfsBucket);
 			}
 		}
 	}

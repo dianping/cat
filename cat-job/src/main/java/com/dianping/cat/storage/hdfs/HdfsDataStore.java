@@ -30,7 +30,7 @@ public class HdfsDataStore implements DataStore {
 	}
 
 	public HdfsDataStore(FileSystem fs, String hdfsFilename) throws IOException {
-		this.path = new Path(fs.getWorkingDirectory(), hdfsFilename);
+		this.path = new Path(hdfsFilename);
 		this.fs = fs;
 	}
 
