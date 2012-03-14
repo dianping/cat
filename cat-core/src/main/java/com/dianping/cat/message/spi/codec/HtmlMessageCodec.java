@@ -52,7 +52,7 @@ public class HtmlMessageCodec implements MessageCodec {
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
-		throw new UnsupportedOperationException("HtmlMessageCodec only supported in one-way right now!");
+		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
 	}
 
 	@Override
