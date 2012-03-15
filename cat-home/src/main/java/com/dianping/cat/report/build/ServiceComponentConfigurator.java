@@ -6,6 +6,8 @@ import java.util.List;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
+import com.dianping.cat.report.page.model.ip.CompositeIpService;
+import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
 import com.dianping.cat.report.page.model.logview.HdfsLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
@@ -39,6 +41,12 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //
 		      .req(ModelService.class, new String[] { "problem-local", "problem-hdfs" }, "m_services"));
 
+		
+		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
+				.req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "ip", CompositeIpService.class) //
+				.req(ModelService.class, new String[] { "ip-local" }, "m_services"));
+		
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 		      .req(MessagePathBuilder.class, BucketManager.class) //
 		      .req(MessageCodec.class, "html"));

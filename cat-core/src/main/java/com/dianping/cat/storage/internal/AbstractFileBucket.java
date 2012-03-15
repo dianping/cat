@@ -108,11 +108,6 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 		}
 	}
 
-	public String[] findTagsById(String id) {
-		 // TODO
-		return new String[0];
-	}
-
 	@Override
 	public T findById(String id) {
 		Long offset = m_idToOffsets.get(id);
@@ -147,20 +142,14 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 		return null;
 	}
 
-	private T findNextById(String id, Direction direction, String tag) {
+	@Override
+	public T findNextById(String id, String tag) throws IOException {
 		List<String> ids = m_tagToIds.get(tag);
 
 		if (ids != null) {
 			int index = ids.indexOf(id);
 
-			switch (direction) {
-			case FORWARD:
-				index++;
-				break;
-			case BACKWARD:
-				index--;
-				break;
-			}
+			index++;
 
 			if (index >= 0 && index < ids.size()) {
 				String nextId = ids.get(index);
@@ -173,13 +162,27 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	}
 
 	@Override
-	public T findNextById(String id, String tag) throws IOException {
-		return findNextById(id, Direction.BACKWARD, tag);
+	public T findPreviousById(String id, String tag) throws IOException {
+		List<String> ids = m_tagToIds.get(tag);
+
+		if (ids != null) {
+			int index = ids.indexOf(id);
+
+			index--;
+
+			if (index >= 0 && index < ids.size()) {
+				String nextId = ids.get(index);
+
+				return findById(nextId);
+			}
+		}
+
+		return null;
 	}
 
-	@Override
-	public T findPreviousById(String id, String tag) throws IOException {
-		return findNextById(id, Direction.FORWARD, tag);
+	public String[] findTagsById(String id) {
+		// TODO
+		return new String[0];
 	}
 
 	@Override
@@ -340,11 +343,4 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 			}
 		}
 	}
-
-	public static enum Direction {
-		FORWARD,
-
-		BACKWARD;
-	}
-
 }

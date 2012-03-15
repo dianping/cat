@@ -34,7 +34,7 @@ public class MilliSecondTimer {
 	}
 
 	public static long currentTimeMillis() {
-		if (m_baseTime <= 0) {
+		if (m_baseTime == 0) {
 			initialize();
 		}
 

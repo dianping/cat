@@ -3,6 +3,7 @@ package com.dianping.cat.message;
 import static com.dianping.cat.message.Message.SUCCESS;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 import org.junit.After;
@@ -17,9 +18,9 @@ import com.dianping.cat.Cat;
 @RunWith(JUnit4.class)
 public class CatPerformanceTest {
 
-	private int count = 10000;
+	private int count = 100000;
 
-	private int threadNumber = 500;
+	private int threadNumber = 4;
 
 	private static int error = 0;
 	
@@ -104,7 +105,10 @@ public class CatPerformanceTest {
 	}
 
 	@Test
-	public void testManyThread() {
+	public void testManyThread() throws IOException {
+		System.out.println("press any key to continue...");
+		System.in.read();
+		
 		CountDownLatch start = new CountDownLatch(threadNumber);
 		CountDownLatch end = new CountDownLatch(threadNumber);
 		for (int i = 0; i < threadNumber; i++) {
@@ -117,7 +121,8 @@ public class CatPerformanceTest {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Error Number:" + error);
+		
+		System.out.println("Done with errors: " + error);
 	}
 
 	class TestThread extends Thread {

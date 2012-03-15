@@ -27,10 +27,6 @@ public class HdfsImpl implements Tkv {
 
 	private Lock writeLock = new ReentrantLock();
 
-	public HdfsImpl() {
-
-	}
-
 	public HdfsImpl(FileSystem fs, File localDir, String indexFilename, String dataFilename, int keyLength, int tagLength) throws IOException {
 		File localIndexFile = new File(localDir, indexFilename);
 		if (!localDir.exists()) {

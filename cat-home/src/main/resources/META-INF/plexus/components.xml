@@ -14,18 +14,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.ServerConfig</role>
-			<implementation>com.dianping.cat.report.ServerConfig</implementation>
-			<configuration>
-				<consumerServers>127.0.0.1:2281</consumerServers>
-				<fileServer>127.0.0.1</fileServer>
-			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.ip.IpManager</role>
-			<implementation>com.dianping.cat.report.page.ip.IpManager</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.graph.ValueTranslater</role>
 			<implementation>com.dianping.cat.report.graph.DefaultValueTranslater</implementation>
 		</component>
@@ -111,6 +99,31 @@
 					<role-hints>
 						<role-hint>problem-local</role-hint>
 						<role-hint>problem-hdfs</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>ip-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>ip</role-hint>
+			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>ip-local</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -297,32 +310,15 @@
 					<role>com.dianping.cat.report.page.ip.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.ServerConfig</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.ip.IpManager</role>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>ip</role-hint>
+					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.ip.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.ip.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ServerConfig</role>
-			<implementation>com.dianping.cat.report.ServerConfig</implementation>
-			<requirements>
-				<requirement>
-					<role>java.util.List</role>
-				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.ip.IpManager</role>
-			<implementation>com.dianping.cat.report.page.ip.IpManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.Handler</role>

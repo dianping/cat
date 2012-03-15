@@ -8,6 +8,7 @@ import java.net.URI;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
 
 /**
  * @author sean.wang
@@ -26,8 +27,9 @@ public class HdfsHelper {
 	public static FileSystem createLocalFileSystem(String dir) throws IOException {
 		Configuration config = new Configuration();
 		config.setInt("io.file.buffer.size", 8192);
-		config.setStrings("dfs.data.dir", dir);
+		// config.setStrings("dfs.data.dir", dir);
 		FileSystem fs = FileSystem.getLocal(config);
+		fs.setWorkingDirectory(new Path(dir));
 		return fs;
 	}
 

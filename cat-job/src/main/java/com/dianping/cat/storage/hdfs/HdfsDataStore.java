@@ -30,7 +30,7 @@ public class HdfsDataStore implements DataStore {
 	}
 
 	public HdfsDataStore(FileSystem fs, String hdfsFilename) throws IOException {
-		this.path = new Path(hdfsFilename);
+		this.path = new Path(fs.getWorkingDirectory(), hdfsFilename);
 		this.fs = fs;
 	}
 
@@ -105,7 +105,7 @@ public class HdfsDataStore implements DataStore {
 
 	public void openInput() throws IOException {
 		if (this.input == null) {
-			this.input = this.fs.open(this.path);
+			this.input = this.fs.open(this.path, 1024);
 		}
 	}
 

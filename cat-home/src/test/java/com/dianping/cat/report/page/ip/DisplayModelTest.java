@@ -4,6 +4,8 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import com.dianping.cat.report.page.ip.Model.DisplayModel;
+
 public class DisplayModelTest {
 	private void check(DisplayModel model, int time, int count, int lastOne, int lastFive, int lastFifteen) {
 		model.process(0, time, count);

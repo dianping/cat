@@ -8,6 +8,7 @@ import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 
+/* used by problem.jsp */
 public class ProblemReportHelper {
 	public static String showLegends(JavaThread thread, int minute) {
 		Segment segment = thread.findSegment(minute);

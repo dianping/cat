@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.message.Event;
@@ -24,7 +26,7 @@ import com.site.lookup.annotation.Inject;
  * Local use only, do not use it over network since it only supports one-way
  * encoding
  */
-public class HtmlMessageCodec implements MessageCodec {
+public class HtmlMessageCodec implements MessageCodec, Initializable {
 	private static final String ID = "HT1"; // HTML version 1
 
 	@Inject
@@ -39,7 +41,7 @@ public class HtmlMessageCodec implements MessageCodec {
 	@Inject
 	private boolean m_showNav = true;
 
-	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
+	private BufferHelper m_bufferHelper;
 
 	private DateHelper m_dateHelper = new DateHelper();
 
@@ -79,27 +81,6 @@ public class HtmlMessageCodec implements MessageCodec {
 		buf.setInt(index, count);
 	}
 
-	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
-		BufferHelper helper = m_bufferHelper;
-		int count = 0;
-
-		count += helper.tr1(buf, null);
-		count += helper.td(buf, ID);
-		count += helper.td(buf, tree.getDomain());
-		count += helper.td(buf, tree.getHostName());
-		count += helper.td(buf, tree.getIpAddress());
-		count += helper.td(buf, tree.getThreadId());
-		count += helper.td(buf, tree.getThreadName());
-		count += helper.td(buf, tree.getMessageId());
-		count += helper.td(buf, tree.getParentMessageId());
-		count += helper.td(buf, tree.getRootMessageId());
-		count += helper.td(buf, tree.getSessionToken());
-		count += helper.tr2(buf);
-		count += helper.crlf(buf);
-
-		return count;
-	}
-
 	protected int encodeFooter(MessageTree tree, ChannelBuffer buf) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
@@ -122,6 +103,27 @@ public class HtmlMessageCodec implements MessageCodec {
 		count += helper.write(buf, "\">Thread &gt;&gt;&gt;</a>");
 		count += helper.nbsp(buf, 3);
 		count += helper.td2(buf);
+		count += helper.tr2(buf);
+		count += helper.crlf(buf);
+
+		return count;
+	}
+
+	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
+		BufferHelper helper = m_bufferHelper;
+		int count = 0;
+
+		count += helper.tr1(buf, null);
+		count += helper.td(buf, ID);
+		count += helper.td(buf, tree.getDomain());
+		count += helper.td(buf, tree.getHostName());
+		count += helper.td(buf, tree.getIpAddress());
+		count += helper.td(buf, tree.getThreadId());
+		count += helper.td(buf, tree.getThreadName());
+		count += helper.td(buf, tree.getMessageId());
+		count += helper.td(buf, tree.getParentMessageId());
+		count += helper.td(buf, tree.getRootMessageId());
+		count += helper.td(buf, tree.getSessionToken());
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);
 
@@ -265,13 +267,14 @@ public class HtmlMessageCodec implements MessageCodec {
 		}
 	}
 
+	@Override
+   public void initialize() throws InitializationException {
+		m_bufferHelper = new BufferHelper(m_writer);
+   }
+
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
-	}
-
-	public void setShowNav(boolean showNav) {
-		m_showNav = showNav;
 	}
 
 	public void setLogViewPrefix(String logViewPrefix) {
@@ -280,6 +283,10 @@ public class HtmlMessageCodec implements MessageCodec {
 
 	public void setMessagePathBuilder(MessagePathBuilder builder) {
 		m_builder = builder;
+	}
+
+	public void setShowNav(boolean showNav) {
+		m_showNav = showNav;
 	}
 
 	protected static class BufferHelper {
