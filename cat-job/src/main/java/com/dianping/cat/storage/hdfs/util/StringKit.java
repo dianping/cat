@@ -26,7 +26,7 @@ public class StringKit {
 	 * @return
 	 */
 	public static String capitalize(String str) {
-		if (str == null || str == "")
+		if (str == null || str.length()==0)
 			return str;
 		char[] chars = str.toCharArray();
 		char c = chars[0];

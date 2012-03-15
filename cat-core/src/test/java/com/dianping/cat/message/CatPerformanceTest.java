@@ -138,13 +138,11 @@ public class CatPerformanceTest {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			long time = 0;
-			long endtime = 0;
-			time = System.currentTimeMillis();
+			long time = System.currentTimeMillis();
 			for (int i = 0; i < count; i++) {
 					creatOneTransaction();
 			}
-			endtime = System.currentTimeMillis();
+			long endtime = System.currentTimeMillis();
 
 			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count
 			      + "ms");

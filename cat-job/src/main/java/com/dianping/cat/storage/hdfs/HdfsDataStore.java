@@ -77,7 +77,7 @@ public class HdfsDataStore implements DataStore {
 	 * @throws IOException
 	 */
 	private void closeFlieSystem() throws IOException {
-		if (this.fs == null) {
+		if (this.fs != null) {
 			this.fs.close();
 			this.fs = null;
 		}

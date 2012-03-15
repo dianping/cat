@@ -213,7 +213,7 @@
 					<role>java.lang.String</role>
 				</requirement>
 				<requirement>
-					<role>java.lang.String</role>
+					<role>java.util.List</role>
 				</requirement>
 				<requirement>
 					<role>long</role>
