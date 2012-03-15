@@ -6,12 +6,12 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.logview.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.logview.Model" scope="request"/>
 
+<a:body>
+
 <res:useCss value="${res.css.local.logview_css}" target="head-css"/>
 
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 <res:useJs value="${res.js.local.logview_js}" target="head-js"/>
-
-<a:body>
 
 <c:choose>
 	<c:when test="${empty model.table}">

@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Set;
 
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.model.entity.AllDomains;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.ip.IpAnalyzer;
+import com.dianping.cat.consumer.ip.model.entity.IpReport;
+import com.dianping.cat.consumer.ip.model.entity.AllDomains;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -18,21 +18,21 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 
-public class LocalIpService implements ModelService<ProblemReport> {
+public class LocalIpService implements ModelService<IpReport> {
 	@Inject(type = MessageConsumer.class, value = "realtime")
 	private RealtimeConsumer m_consumer;
 
 	@Override
-	public ModelResponse<ProblemReport> invoke(ModelRequest request) {
-		ProblemAnalyzer analyzer = getAnalyzer(request.getPeriod());
-		ModelResponse<ProblemReport> response = new ModelResponse<ProblemReport>();
+	public ModelResponse<IpReport> invoke(ModelRequest request) {
+		IpAnalyzer analyzer = getAnalyzer(request.getPeriod());
+		ModelResponse<IpReport> response = new ModelResponse<IpReport>();
 
 		if (analyzer != null) {
-			Map<String, ProblemReport> reports = analyzer.getReports();
+			Map<String, IpReport> reports = analyzer.getReports();
 			List<String> domains = getDomains(reports.keySet());
 			String d = request.getDomain();
 			String domain = d != null && d.length() > 0 ? d : domains.isEmpty() ? null : domains.get(0);
-			ProblemReport report = reports.get(domain);
+			IpReport report = reports.get(domain);
 
 			if (report != null) {
 				AllDomains allDomains = new AllDomains();
@@ -64,11 +64,11 @@ public class LocalIpService implements ModelService<ProblemReport> {
 		return domains;
 	}
 
-	private ProblemAnalyzer getAnalyzer(ModelPeriod period) {
+	private IpAnalyzer getAnalyzer(ModelPeriod period) {
 		if (period.isCurrent() || period.isFuture()) {
-			return (ProblemAnalyzer) m_consumer.getCurrentAnalyzer("problem");
+			return (IpAnalyzer) m_consumer.getCurrentAnalyzer("ip");
 		} else if (period.isLast()) {
-			return (ProblemAnalyzer) m_consumer.getLastAnalyzer("problem");
+			return (IpAnalyzer) m_consumer.getLastAnalyzer("ip");
 		} else {
 			return null;
 		}

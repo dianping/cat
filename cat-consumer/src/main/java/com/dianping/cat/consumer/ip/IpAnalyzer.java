@@ -24,6 +24,36 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 	private int m_lastPhase;
 
+	private void clearLastPhase() {
+		Calendar cal = Calendar.getInstance();
+		int minute = cal.get(Calendar.MINUTE);
+		int currentPhase = minute / 20; // 0, 1, 2
+
+		if (m_lastPhase != currentPhase) {
+			int baseIndex = m_lastPhase * 20;
+			List<String> domains = new ArrayList<String>();
+
+			for (Map.Entry<String, IpReport> e : m_reports.entrySet()) {
+				IpReport report = e.getValue();
+				Map<Integer, Period> periods = report.getPeriods();
+
+				for (int i = 0; i < 20; i++) {
+					periods.remove(baseIndex + i);
+				}
+
+				if (periods.isEmpty()) {
+					domains.add(e.getKey());
+				}
+			}
+
+			for (String domain : domains) {
+				m_reports.remove(domain);
+			}
+
+			m_lastPhase = currentPhase;
+		}
+	}
+
 	private IpReport findOrCreateReport(String domain) {
 		IpReport report = m_reports.get(domain);
 
@@ -45,6 +75,17 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 	public List<IpReport> generate() {
 		return null;
 	}
+	public IpReport generate(String domain) {
+		if (domain == null) {
+			List<String> domains = getDomains();
+
+			domain = domains.size() > 0 ? domains.get(0) : null;
+		}
+
+		IpReport report = m_reports.get(domain);
+
+		return report;
+	}
 
 	public List<String> getDomains() {
 		List<String> domains = new ArrayList<String>(m_reports.keySet());
@@ -61,18 +102,6 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 		});
 
 		return domains;
-	}
-
-	public IpReport generate(String domain) {
-		if (domain == null) {
-			List<String> domains = getDomains();
-
-			domain = domains.size() > 0 ? domains.get(0) : null;
-		}
-
-		IpReport report = m_reports.get(domain);
-
-		return report;
 	}
 
 	private String getIpAddress(Transaction root) {
@@ -96,6 +125,10 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 		}
 
 		return null;
+	}
+
+	public Map<String, IpReport> getReports() {
+		return m_reports;
 	}
 
 	@Override
@@ -127,36 +160,6 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 			ip.incCount();
 
 			clearLastPhase();
-		}
-	}
-
-	private void clearLastPhase() {
-		Calendar cal = Calendar.getInstance();
-		int minute = cal.get(Calendar.MINUTE);
-		int currentPhase = minute / 20; // 0, 1, 2
-
-		if (m_lastPhase != currentPhase) {
-			int baseIndex = m_lastPhase * 20;
-			List<String> domains = new ArrayList<String>();
-
-			for (Map.Entry<String, IpReport> e : m_reports.entrySet()) {
-				IpReport report = e.getValue();
-				Map<Integer, Period> periods = report.getPeriods();
-
-				for (int i = 0; i < 20; i++) {
-					periods.remove(baseIndex + i);
-				}
-
-				if (periods.isEmpty()) {
-					domains.add(e.getKey());
-				}
-			}
-
-			for (String domain : domains) {
-				m_reports.remove(domain);
-			}
-
-			m_lastPhase = currentPhase;
 		}
 	}
 

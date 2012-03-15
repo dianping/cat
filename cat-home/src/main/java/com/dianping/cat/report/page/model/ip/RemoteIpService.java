@@ -5,8 +5,8 @@ import java.net.URL;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.ip.model.entity.IpReport;
+import com.dianping.cat.consumer.ip.model.transform.DefaultXmlParser;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -16,7 +16,7 @@ import com.site.helper.Joiners;
 import com.site.helper.Joiners.IBuilder;
 import com.site.lookup.annotation.Inject;
 
-public class RemoteIpService implements ModelService<ProblemReport> {
+public class RemoteIpService implements ModelService<IpReport> {
 	@Inject
 	private String m_host;
 
@@ -34,22 +34,22 @@ public class RemoteIpService implements ModelService<ProblemReport> {
 				      return e.getKey() + "=" + e.getValue();
 			      }
 		      });
-		String url = String.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, "problem",
+		String url = String.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, "ip",
 		      request.getDomain(), request.getPeriod(), pairs);
 
 		return new URL(url);
 	}
 
 	@Override
-	public ModelResponse<ProblemReport> invoke(ModelRequest request) {
-		ModelResponse<ProblemReport> response = new ModelResponse<ProblemReport>();
+	public ModelResponse<IpReport> invoke(ModelRequest request) {
+		ModelResponse<IpReport> response = new ModelResponse<IpReport>();
 
 		try {
 			URL url = buildUrl(request);
 			String xml = Files.forIO().readFrom(url.openStream(), "utf-8");
 
 			if (xml != null && xml.trim().length() > 0) {
-				ProblemReport report = new DefaultXmlParser().parse(xml);
+				IpReport report = new DefaultXmlParser().parse(xml);
 
 				response.setModel(report);
 			}

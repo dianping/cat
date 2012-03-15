@@ -1,34 +1,21 @@
 package com.dianping.cat.report.page.ip;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.view.UrlNav;
 
 public class Model extends AbstractReportModel<Action, Context> {
 	private IpReport m_report;
 
 	private List<DisplayModel> m_displayModels;
 
-	private List<String> m_domains;
-
-	private String m_currentDomain;
-
-	private String m_current;
-
-	private String m_reportTitle;
-
-	private String m_generateTime;
-
-	private String m_urlPrefix;
-
-	private List<UrlNav> m_urlNavs;
+	private int m_hour;
 
 	public Model(Context ctx) {
 		super(ctx);
-		m_urlNavs = new ArrayList<UrlNav>();
 	}
 
 	@Override
@@ -40,86 +27,85 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_displayModels;
 	}
 
-
 	@Override
-   public String getDomain() {
+	public String getDomain() {
 		if (m_report == null) {
 			return null;
 		} else {
 			return m_report.getDomain();
 		}
-   }
-	
-	public List<String> getDomains() {
-		return m_domains;
 	}
 
-	public String getUrlPrefix() {
-		return m_urlPrefix;
+	public Set<String> getDomains() {
+		if (m_report == null) {
+			return Collections.emptySet();
+		} else {
+			return m_report.getAllDomains().getDomains();
+		}
 	}
 
-	public void setUrlPrefix(String urlPrefix) {
-		m_urlPrefix = urlPrefix;
-	}
-
-	public List<UrlNav> getUrlNavs() {
-		return m_urlNavs;
-	}
-
-	public void setUrlNavs(List<UrlNav> urlNavs) {
-		m_urlNavs = urlNavs;
-	}
-
-	public String getCurrentDomain() {
-		return m_currentDomain;
-	}
-
-	public void setCurrentDomain(String currentDomain) {
-		m_currentDomain = currentDomain;
+	public int getHour() {
+		return m_hour;
 	}
 
 	public IpReport getReport() {
 		return m_report;
 	}
 
-	public String getReportInJson() {
-		return String.format(IpReport.JSON, m_report);
-	}
-
 	public void setDisplayModels(List<DisplayModel> models) {
 		m_displayModels = models;
 	}
 
-	public void setDomains(List<String> domains) {
-		m_domains = domains;
+	public void setHour(int hour) {
+		m_hour = hour;
 	}
 
 	public void setReport(IpReport report) {
 		m_report = report;
 	}
+	
+	public static class DisplayModel {
+		private String m_address;
 
-	public String getCurrent() {
-		return m_current;
+		private int m_lastOne;
+
+		private int m_lastFive;
+
+		private int m_lastFifteen;
+
+		public DisplayModel(String address) {
+			m_address = address;
+		}
+
+		public String getAddress() {
+			return m_address;
+		}
+
+		public int getLastFifteen() {
+			return m_lastFifteen;
+		}
+
+		public int getLastFive() {
+			return m_lastFive;
+		}
+
+		public int getLastOne() {
+			return m_lastOne;
+		}
+
+		public void process(int current, int minute, int count) {
+			if (current == minute) {
+				m_lastOne += count;
+				m_lastFive += count;
+				m_lastFifteen += count;
+			} else if (current < minute) {
+				// ignore it
+			} else if (current - 5 < minute) {
+				m_lastFive += count;
+				m_lastFifteen += count;
+			} else if (current - 15 < minute) {
+				m_lastFifteen += count;
+			}
+		}
 	}
-
-	public void setCurrent(String current) {
-		m_current = current;
-	}
-
-	public String getReportTitle() {
-		return m_reportTitle;
-	}
-
-	public void setReportTitle(String reportTitle) {
-		m_reportTitle = reportTitle;
-	}
-
-	public String getGenerateTime() {
-		return m_generateTime;
-	}
-
-	public void setGenerateTime(String generateTime) {
-		m_generateTime = generateTime;
-	}
-
 }
