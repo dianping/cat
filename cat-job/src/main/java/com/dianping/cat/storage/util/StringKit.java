@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.hdfs.util;
+package com.dianping.cat.storage.util;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -26,7 +26,11 @@ public class StringKit {
 	 * @return
 	 */
 	public static String capitalize(String str) {
+<<<<<<< HEAD:cat-job/src/main/java/com/dianping/cat/storage/hdfs/util/StringKit.java
 		if (str == null || str.length()==0)
+=======
+		if (str == null || "".equals(str))
+>>>>>>> refactor:cat-job/src/main/java/com/dianping/cat/storage/util/StringKit.java
 			return str;
 		char[] chars = str.toCharArray();
 		char c = chars[0];

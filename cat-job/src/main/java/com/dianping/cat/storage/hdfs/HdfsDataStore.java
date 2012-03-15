@@ -10,6 +10,8 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
+import com.dianping.cat.storage.DataStore;
+
 /**
  * @author sean.wang
  * @since Mar 7, 2012
@@ -37,34 +39,38 @@ public class HdfsDataStore implements DataStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#append(byte)
+	 * @see com.dianping.com.dianping.cat.storage.DataStore#append(byte)
 	 */
 	@Override
 	public void append(byte b) throws IOException {
-		this.output.write(b);
-		this.length++;
+		synchronized (this.output) {
+			this.output.write(b);
+			this.length++;
+		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#append(byte[])
+	 * @see com.dianping.com.dianping.cat.storage.DataStore#append(byte[])
 	 */
 	@Override
 	public void append(byte[] bytes) throws IOException {
-		this.output.write(bytes);
-		this.length += bytes.length;
+		synchronized (this.output) {
+			this.output.write(bytes);
+			this.length += bytes.length;
+		}
 	}
 
 	@Override
 	public void append(long offset, byte[] bytes) throws IOException {
-		throw new UnsupportedOperationException();
+		throw new UnsupportedOperationException("Hdfs unsupport random write!");
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#close()
+	 * @see com.dianping.com.dianping.cat.storage.DataStore#close()
 	 */
 	@Override
 	public void close() throws IOException {
@@ -119,7 +125,7 @@ public class HdfsDataStore implements DataStore {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#get(long, int)
+	 * @see com.dianping.com.dianping.cat.storage.DataStore#get(long, int)
 	 */
 	@Override
 	public byte[] get(long offset, int length) throws IOException {
@@ -128,15 +134,20 @@ public class HdfsDataStore implements DataStore {
 			throw new IllegalStateException("input can't null");
 		}
 		byte[] bytes = new byte[length];
-		in.seek(offset);
-		in.read(bytes);
+		synchronized (in) {
+			in.seek(offset);
+			int actual = in.read(bytes);
+			if (actual != length) {
+				throw new IOException(String.format("readed bytes expect %s actual %s", length, actual));
+			}
+		}
 		return bytes;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.DataStore#length()
+	 * @see com.dianping.com.dianping.cat.storage.DataStore#length()
 	 */
 	@Override
 	public long length() throws IOException {

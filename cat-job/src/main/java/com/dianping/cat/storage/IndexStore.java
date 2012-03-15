@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.hdfs;
+package com.dianping.cat.storage;
 
 import java.io.IOException;
 import java.util.Comparator;
@@ -9,7 +9,7 @@ public interface IndexStore {
 
 	void close() throws IOException;
 
-	Meta getIndex(int indexPos) throws IOException;
+	Meta getIndex(long indexPos) throws IOException;
 
 	Meta getIndex(String key) throws IOException;
 

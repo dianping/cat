@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.hdfs.util;
+package com.dianping.cat.storage.util;
 
 public class NumberKit {
 	public static int bytes2Int(byte[] bytes) {

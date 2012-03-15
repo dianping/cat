@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.hdfs;
+package com.dianping.cat.storage;
 
 import java.util.HashMap;
 import java.util.Map;

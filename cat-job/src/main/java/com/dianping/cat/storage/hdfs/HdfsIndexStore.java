@@ -12,7 +12,10 @@ import java.util.Comparator;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 
-import com.dianping.cat.storage.hdfs.util.IoKit;
+import com.dianping.cat.storage.IndexStore;
+import com.dianping.cat.storage.Meta;
+import com.dianping.cat.storage.local.RAFIndexStore;
+import com.dianping.cat.storage.util.IoKit;
 
 
 
@@ -93,7 +96,7 @@ public class HdfsIndexStore implements IndexStore {
 	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#getIndex(int)
 	 */
 	@Override
-	public Meta getIndex(int indexPos) throws IOException {
+	public Meta getIndex(long indexPos) throws IOException {
 		return this.localIndexStore.getIndex(indexPos);
 	}
 

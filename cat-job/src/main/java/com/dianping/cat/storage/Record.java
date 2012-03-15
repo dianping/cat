@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.hdfs;
+package com.dianping.cat.storage;
 
 public class Record {
 

@@ -1,10 +1,10 @@
 /**
  * 
  */
-package com.dianping.cat.storage.hdfs;
+package com.dianping.cat.storage;
 
-import static com.dianping.cat.storage.hdfs.util.NumberKit.bytes2Int;
-import static com.dianping.cat.storage.hdfs.util.NumberKit.int2Bytes;
+import static com.dianping.cat.storage.util.NumberKit.bytes2Int;
+import static com.dianping.cat.storage.util.NumberKit.int2Bytes;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,8 @@ import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import com.dianping.cat.storage.hdfs.util.StringKit;
+import com.dianping.cat.storage.local.RAFDataStore;
+import com.dianping.cat.storage.util.StringKit;
 
 
 /**
