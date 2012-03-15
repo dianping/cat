@@ -6,7 +6,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.spi.StringRope;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public abstract class AbstractMessage implements Message {
@@ -18,7 +17,7 @@ public abstract class AbstractMessage implements Message {
 
 	private long m_timestamp;
 
-	private StringRope m_data;
+	private CharSequence m_data;
 
 	private boolean m_completed;
 
@@ -26,26 +25,48 @@ public abstract class AbstractMessage implements Message {
 		m_type = type;
 		m_name = name;
 		m_timestamp = MilliSecondTimer.currentTimeMillis();
-		m_data = new StringRope();
 	}
 
 	@Override
 	public void addData(String keyValuePairs) {
-		m_data.addRaw(keyValuePairs);
+		if (m_data == null) {
+			m_data = keyValuePairs;
+		} else if (m_data instanceof StringBuilder) {
+			((StringBuilder) m_data).append(keyValuePairs);
+		} else {
+			StringBuilder sb = new StringBuilder(m_data.length() + keyValuePairs.length() + 16);
+
+			sb.append(m_data);
+			sb.append(keyValuePairs);
+			m_data = sb;
+		}
 	}
 
 	@Override
 	public void addData(String key, Object value) {
-		if (!m_data.isEmpty()) {
-			m_data.add("&");
-		}
+		if (m_data instanceof StringBuilder) {
+			((StringBuilder) m_data).append('&').append(key).append('=').append(value);
+		} else {
+			String str = String.valueOf(value);
+			int old = m_data == null ? 0 : m_data.length();
+			StringBuilder sb = new StringBuilder(old + key.length() + str.length() + 16);
 
-		m_data.add(key).add("=").addRaw(String.valueOf(value));
+			if (m_data != null) {
+				sb.append(m_data).append('&');
+			}
+
+			sb.append(key).append('=').append(str);
+			m_data = sb;
+		}
 	}
 
 	@Override
-	public StringRope getData() {
-		return m_data;
+	public CharSequence getData() {
+		if (m_data == null) {
+			return "";
+		} else {
+			return m_data;
+		}
 	}
 
 	@Override

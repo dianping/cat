@@ -104,7 +104,7 @@
 			<implementation>com.dianping.cat.message.io.DefaultMessageQueue</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
-				<size>1000</size>
+				<size>100000</size>
 			</configuration>
 		</component>
 		<component>

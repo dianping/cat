@@ -19,7 +19,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public String createMessageId() {
-		return m_factory.getNextId().toString();
+		return m_factory.getNextId();
 	}
 
 	@Override

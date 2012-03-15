@@ -2,6 +2,7 @@ package com.dianping.cat.message.internal;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Stack;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -53,7 +54,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	MessageId nextMessageId() {
+	String nextMessageId() {
 		return m_factory.getNextId();
 	}
 
@@ -197,7 +198,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			if (m_stack.isEmpty()) {
 				MessageTree tree = m_tree.copy();
 
-				tree.setMessageId(manager.nextMessageId().toString());
+				tree.setMessageId(manager.nextMessageId());
 				tree.setMessage(message);
 				manager.flush(tree);
 			} else {
@@ -235,7 +236,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 				entry.addChild(transaction);
 			} else {
-				m_tree.setMessageId(manager.nextMessageId().toString());
+				m_tree.setMessageId(manager.nextMessageId());
 				m_tree.setMessage(transaction);
 			}
 
@@ -243,7 +244,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		void validateTransaction(Transaction transaction) {
-			for (Message message : transaction.getChildren()) {
+			List<Message> children = transaction.getChildren();
+			int len = children.size();
+
+			for (int i = 0; i < len; i++) {
+				Message message = children.get(i);
+
 				if (message.getStatus() == null) {
 					message.setStatus("unset");
 				}

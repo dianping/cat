@@ -14,7 +14,7 @@ public class MessageIdFactory {
 
 	private String m_ipAddress;
 
-	public MessageId getNextId() {
+	public String getNextId() {
 		long timestamp = getTimestamp();
 		int index;
 
@@ -27,7 +27,17 @@ public class MessageIdFactory {
 			index = m_index++;
 		}
 
-		return new MessageId(m_domain, m_ipAddress, timestamp, index);
+		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
+
+		sb.append(m_domain);
+		sb.append('-');
+		sb.append(m_ipAddress);
+		sb.append('-');
+		sb.append(timestamp);
+		sb.append('-');
+		sb.append(index);
+
+		return sb.toString();
 	}
 
 	protected long getTimestamp() {

@@ -50,19 +50,7 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 	private Logger m_logger;
 
-	public void run() {
-		while (true) {
-			try {
-				MessageTree tree = m_queue.poll();
-
-				if (tree != null) {
-					sendReal(tree);
-				} 
-			} catch (Throwable t) {
-				m_logger.error("Error when sending message over TCP socket!", t);
-			}
-		}
-	}
+	private transient boolean m_active;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -129,15 +117,36 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 	}
 
 	@Override
+	public void run() {
+		m_active = true;
+
+		while (m_active) {
+			try {
+				MessageTree tree = m_queue.poll();
+
+				if (tree != null) {
+					sendInternal(tree);
+					tree.setMessage(null);
+				}
+			} catch (Throwable t) {
+				m_logger.error("Error when sending message over TCP socket!", t);
+			}
+		}
+
+		m_future.getChannel().getCloseFuture().awaitUninterruptibly();
+		m_factory.releaseExternalResources();
+	}
+
+	@Override
 	public void send(MessageTree tree) {
 		boolean result = m_queue.offer(tree);
-		
+
 		if (!result) {
 			m_logger.error("Message queue is full in tcp socket sender!");
 		}
 	}
 
-	private void sendReal(MessageTree tree) {
+	private void sendInternal(MessageTree tree) {
 		if (m_future == null || !m_future.getChannel().isOpen()) {
 			reconnect();
 		}
@@ -168,8 +177,7 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 	@Override
 	public void shutdown() {
-		m_future.getChannel().getCloseFuture().awaitUninterruptibly();
-		m_factory.releaseExternalResources();
+		m_active = false;
 	}
 
 	class MyHandler extends SimpleChannelHandler {
