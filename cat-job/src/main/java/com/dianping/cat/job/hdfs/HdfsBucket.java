@@ -10,7 +10,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
 
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.hdfs.HdfsHelper;
@@ -95,19 +94,17 @@ public class HdfsBucket implements Bucket<byte[]> {
 	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
 		this.baseDir = baseDir;
 		this.logicalPath = logicalPath;
-
-		FileSystem fs = HdfsHelper.createLocalFileSystem("");
+		
 		File file = new File(baseDir, logicalPath);
 		File parent = file.getParentFile();
-		String name = new File(logicalPath).getName() + "-" + InetAddress.getLocalHost().getHostAddress();
-
 		parent.mkdirs();
 
-		fs.setWorkingDirectory(new Path(new File(baseDir, "hdfs").getPath()));
+		File tmpDir = new File(parent, "hdfstmp");
+		FileSystem fs = HdfsHelper.createLocalFileSystem(parent.getAbsolutePath());
+		String filename = new File(logicalPath).getName() + "-" + InetAddress.getLocalHost().getHostAddress();
 
-		this.hdfs = new HdfsImpl(fs, new File(parent, "tmp"), name + ".idx", name + ".dat", keyLength, tagLength);
+		this.hdfs = new HdfsImpl(fs, tmpDir, filename + ".idx", filename + ".dat", keyLength, tagLength);
 		this.startWrite();
-		// this.startRead();
 	}
 
 	/**

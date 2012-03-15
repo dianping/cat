@@ -4,8 +4,6 @@
 package com.dianping.cat.storage.hdfs;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -29,13 +27,10 @@ public class HdfsIndexStore implements IndexStore {
 
 	private Path path;
 
-	private File localFile;
-
 	public HdfsIndexStore(FileSystem fs, String hdfsFilename, File localFile, int keyLength, int tagLength) throws IOException {
 		this.fs = fs;
-		this.localFile = localFile;
 		this.localIndexStore = new RAFIndexStore(localFile, keyLength, tagLength);
-		this.path = new Path(hdfsFilename);
+		this.path = new Path(fs.getWorkingDirectory(), hdfsFilename);
 	}
 	
 	/*
@@ -80,13 +75,14 @@ public class HdfsIndexStore implements IndexStore {
 
 	public void download() throws IOException {
 		InputStream input = fs.open(path);
-		OutputStream output = new FileOutputStream(this.localFile);
+		OutputStream output = this.localIndexStore.getOutputStream();
 		IoKit.copyAndClose(input, output);
 	}
 
 	@Override
 	public void flush() throws IOException {
-		InputStream input = new FileInputStream(this.localFile);
+		this.localIndexStore.flush();
+		InputStream input = this.localIndexStore.getInputStream();
 		OutputStream output = fs.create(path);
 		IoKit.copyAndClose(input, output);
 	}
@@ -133,14 +129,9 @@ public class HdfsIndexStore implements IndexStore {
 
 	@Override
 	public long length() throws IOException {
-		return this.fs.getFileStatus(path).getLen();
+		return this.localIndexStore.length();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.storage.hdfs.hdfs.IndexStore#size()
-	 */
 	@Override
 	public long size() throws IOException {
 		return length() / getIndexLength();

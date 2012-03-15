@@ -4,8 +4,12 @@
 package com.dianping.cat.storage.hdfs;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.util.Comparator;
@@ -274,6 +278,15 @@ public class RAFIndexStore implements IndexStore {
 
 	@Override
 	public void flush() throws IOException {
+		this.writeRAF.getChannel().force(false);
+	}
+
+	public InputStream getInputStream() throws FileNotFoundException {
+		return new FileInputStream(storeFile);
+	}
+
+	public OutputStream getOutputStream() throws FileNotFoundException {
+		return new FileOutputStream(storeFile);
 	}
 
 }
