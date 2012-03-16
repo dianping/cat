@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.storage.hdfs;
+package com.dianping.cat.storage;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +15,9 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.hadoop.fs.FileSystem;
+
+import com.dianping.cat.storage.hdfs.HdfsDataStore;
+import com.dianping.cat.storage.hdfs.HdfsIndexStore;
 
 /**
  * @author sean.wang
@@ -42,14 +45,14 @@ public class HdfsImpl implements Tkv {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#close()
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#close()
 	 */
 	@Override
 	public void close() throws IOException {
 		try {
 			writeLock.lock();
-			this.getIndexStore().close();
-			this.getDataStore().close();
+			this.indexStore.close();
+			this.dataStore.close();
 		} finally {
 			writeLock.unlock();
 		}
@@ -58,11 +61,11 @@ public class HdfsImpl implements Tkv {
 	/*
 	 * 
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#get(int)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#get(int)
 	 */
 	@Override
 	public byte[] get(int indexPos) throws IOException {
-		Meta meta = this.getIndex(indexPos);
+		Meta meta = this.indexStore.getIndex(indexPos);
 		if (meta == null) {
 			return null;
 		}
@@ -72,7 +75,7 @@ public class HdfsImpl implements Tkv {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#get(java.lang.String)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#get(java.lang.String)
 	 */
 	@Override
 	public byte[] get(String key) throws IOException {
@@ -86,7 +89,7 @@ public class HdfsImpl implements Tkv {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#get(java.lang.String, java.lang.String)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#get(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public byte[] get(String key, String tag) throws IOException {
@@ -104,31 +107,31 @@ public class HdfsImpl implements Tkv {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#getIndex(int)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#getIndex(int)
 	 */
 	@Override
 	public Meta getIndex(int indexPos) throws IOException {
-		return this.getIndexStore().getIndex(indexPos);
+		return this.indexStore.getIndex(indexPos);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#getIndex(java.lang.String)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#getIndex(java.lang.String)
 	 */
 	@Override
 	public Meta getIndex(String key) throws IOException {
-		return this.getIndexStore().getIndex(key);
+		return this.indexStore.getIndex(key);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#getIndex(java.lang.String, java.lang.String)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#getIndex(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public Meta getIndex(String key, String tag) throws IOException {
-		return this.getIndexStore().getIndex(key, tag);
+		return this.indexStore.getIndex(key, tag);
 	}
 
 	public IndexStore getIndexStore() {
@@ -138,7 +141,7 @@ public class HdfsImpl implements Tkv {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#getRecord(java.lang.String, java.lang.String)
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#getRecord(java.lang.String, java.lang.String)
 	 */
 	@Override
 	public Record getRecord(String key, String tag) throws IOException {
@@ -151,7 +154,7 @@ public class HdfsImpl implements Tkv {
 	 * @throws IOException
 	 */
 	private byte[] getValue(Meta meta) throws IOException {
-		return getDataStore().get(meta.getOffset(), meta.getLength());
+		return this.dataStore.get(meta.getOffset(), meta.getLength());
 	}
 
 	private List<Meta> metas = new ArrayList<Meta>();
@@ -185,7 +188,7 @@ public class HdfsImpl implements Tkv {
 				}
 			}
 			for (Meta meta : metas) {
-				this.getIndexStore().append(meta);
+				this.indexStore.append(meta);
 			}
 			this.metas.clear();
 		} finally {
@@ -196,7 +199,7 @@ public class HdfsImpl implements Tkv {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#put(java.lang.String, byte[])
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#put(java.lang.String, byte[])
 	 */
 	@Override
 	public boolean put(String key, byte[] value) throws IOException {
@@ -209,11 +212,11 @@ public class HdfsImpl implements Tkv {
 	public boolean put(String key, byte[] value, String... tagNames) throws IOException {
 		try {
 			this.writeLock.lock();
-			if (this.getIndexStore().getIndex(key) != null) {
+			if (this.indexStore.getIndex(key) != null) {
 				return false; // this key already exists
 			}
-			long offset = this.getDataStore().length();
-			this.getDataStore().append(value);
+			long offset = this.dataStore.length();
+			this.dataStore.append(value);
 			Meta meta = new Meta();
 			meta.setKey(key);
 			meta.setOffset(offset);
@@ -233,11 +236,11 @@ public class HdfsImpl implements Tkv {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.dianping.com.dianping.cat.storage.hdfs.hdfs.Tkv#size()
+	 * @see com.dianping.com.dianping.cat.storage.hdfs.Tkv#size()
 	 */
 	@Override
 	public long size() throws IOException {
-		return this.getIndexStore().size();
+		return this.indexStore.size();
 	}
 
 	public void startWrite() throws IOException {
@@ -271,13 +274,13 @@ public class HdfsImpl implements Tkv {
 		boolean indexDeleted = this.indexStore.delete();
 		return dataDeleted && indexDeleted;
 	}
-	
+
 	public boolean deleteLocal() throws IOException {
 		boolean dataDeleted = this.dataStore.deleteLocal();
 		boolean indexDeleted = this.indexStore.deleteLocal();
 		return dataDeleted && indexDeleted;
 	}
-	
+
 	public boolean deleteRemote() throws IOException {
 		boolean dataDeleted = this.dataStore.deleteRemote();
 		boolean indexDeleted = this.indexStore.deleteRemote();

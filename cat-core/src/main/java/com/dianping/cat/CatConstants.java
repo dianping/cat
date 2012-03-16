@@ -1,13 +1,19 @@
 package com.dianping.cat;
 
 public class CatConstants {
+	/**
+	 * Cat Json length
+	 */
+	public static final int MAX_LENGTH = 1000;
+
+	public static final int MAX_ITEM_LENGTH = 50;
 
 	/**
 	 * Config File
 	 */
 	public static final String CONFIG_FILE = "/data/appdatas/cat/client.xml";
-	
-	public static final String CAT_STATE ="cat-state";
+
+	public static final String CAT_STATE = "cat-state";
 
 	/**
 	 * Pigeon Transation Type
