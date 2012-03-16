@@ -13,7 +13,7 @@ import org.apache.hadoop.fs.FileSystem;
 
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.hdfs.HdfsHelper;
-import com.dianping.cat.storage.hdfs.HdfsImpl;
+import com.dianping.cat.storage.HdfsImpl;
 
 /**
  * @author sean.wang

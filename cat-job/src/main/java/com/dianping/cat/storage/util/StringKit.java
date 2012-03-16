@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.hdfs.util;
+package com.dianping.cat.storage.util;
 
 import java.io.IOException;
 import java.io.Writer;

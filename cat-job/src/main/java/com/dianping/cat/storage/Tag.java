@@ -1,15 +1,10 @@
-package com.dianping.cat.storage.hdfs;
+package com.dianping.cat.storage;
 
-public class Tag implements Comparable<Tag> {
+public class Tag  {
 	private int previous = -1;
 	private int pos = 0;
 	private int next = -1;
 	private String name;
-
-	@Override
-	public int compareTo(Tag o) {
-		return this.name.compareTo(o.name);
-	}
 
 	public String getName() {
 		return name;
