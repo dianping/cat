@@ -32,7 +32,7 @@ public class HdfsTransactionService implements ModelService<TransactionReport> {
 
 			byte[] data = bucket.findById("transaction-" + domain);
 
-			if (data == null) {
+			if (data != null) {
 				String xml = new String(data, "utf-8");
 				TransactionReport report = new DefaultXmlParser().parse(xml);
 
