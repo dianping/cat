@@ -49,8 +49,6 @@
 <table class="legend">
 </table>
 
-<xmp>${report}</xmp>
-
 </jsp:body>
 
 </a:report>

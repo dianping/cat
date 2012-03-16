@@ -13,7 +13,7 @@
 <jsp:body>
 
 <res:useCss value='${res.css.local.ip_css}' target="head-css"/>
-${model.x }
+
 <table class="ip-table">
 	<tr><th>IP</th><th>last 1 min</th><th>last 5 mins</th><th>last 15 mins</th></tr>
 	<c:forEach var="m" items="${model.displayModels}" varStatus="status">
