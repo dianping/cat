@@ -17,5 +17,10 @@ public class LogViewDaoTest extends ComponentTestCase {
 		Logview logview = dao.findNextByMessageIdTags("id1", true, "pet", null, null, LogviewEntity.READSET_FULL);
 
 		System.out.println(logview);
+
+		logview = dao.findNextByMessageIdTags("id2", false, "pet", null, null, LogviewEntity.READSET_FULL);
+
+		System.out.println(logview);
 	}
+
 }
