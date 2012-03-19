@@ -20,9 +20,9 @@ public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 			SqlReportRecordDao dao = ContainerBootstrap.INSTANCE.lookup(SqlReportRecordDao.class);
 			SqlReportRecord row = dao.createLocal();
 			row.setDomain(sql.getDomain());
-			row.setTotalcount(sql.getTotalCount());
+			row.setTotalCount(sql.getTotalCount());
 			row.setFailures(sql.getFailureCount());
-			row.setLongsqls(sql.getLongCount());
+			row.setLongSqls(sql.getLongCount());
 			row.setAvg2value(sql.getAvg2());
 			row.setSumvalue(sql.getSum());
 			row.setSum2value(sql.getSum2());
@@ -30,13 +30,13 @@ public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 			row.setMinvalue(sql.getMin());
 			row.setStatement(sql.getStatement());
 			row.setName(sql.getName());
-			row.setSamplelink(sql.getSampleLink());
-			row.setTransactiondate(sql.getDate());
-			row.setCreationdate(new Date());
-			row.setDurationdistribution(sql.getDurationDistribution());
-			row.setHitsovertime(sql.getHitsOverTime());
-			row.setDurationovertime(sql.getDurationOverTime());
-			row.setFailureovertime(sql.getFailureOverTime());
+			row.setSampleLink(sql.getSampleLink());
+			row.setTransactionDate(sql.getDate());
+			row.setCreationDate(new Date());
+			row.setDurationDistribution(sql.getDurationDistribution());
+			row.setHitsOverTime(sql.getHitsOverTime());
+			row.setDurationOverTime(sql.getDurationOverTime());
+			row.setFailureOverTime(sql.getFailureOverTime());
 			dao.insert(row);
 		} catch (ComponentLookupException e) {
 			e.printStackTrace();
