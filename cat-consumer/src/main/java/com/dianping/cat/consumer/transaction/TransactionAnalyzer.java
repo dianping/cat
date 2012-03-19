@@ -32,10 +32,6 @@ import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.internal.AbstractFileBucket;
 import com.site.lookup.annotation.Inject;
 
-/**
- * @author sean.wang
- * @since Jan 5, 2012
- */
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 	private static final long MINUTE = 60 * 1000;
 

@@ -40,7 +40,6 @@ public class BucketTest extends ComponentTestCase {
 		for (int i = 0; i < 100; i++) {
 			String id = "id" + i;
 			String t1 = "value" + i;
-			String tag = "tag" + (i % 10);
 			String t2 = new String(bucket.findById(id));
 			Assert.assertEquals("Unable to find data after stored it.", t1, t2);
 		}

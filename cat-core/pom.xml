@@ -39,7 +39,7 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.10</version>
+				<version>1.0.11</version>
 				<executions>
 					<execution>
 						<id>default-cli</id>
@@ -48,7 +48,7 @@
 							<goal>dal-model</goal>
 						</goals>
 						<configuration>
-							<manifest>${basedir}/src/main/resources/META-INF/dal/model/manifest.xml
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/config-manifest.xml
 							</manifest>
 						</configuration>
 					</execution>

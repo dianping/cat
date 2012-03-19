@@ -3,6 +3,7 @@ package com.dianping.cat.message.internal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -10,6 +11,7 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.model.entity.Config;
+import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
@@ -121,9 +123,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_clientConfig.setMode("client");
 		}
 
-		if (m_clientConfig.getApp() != null) {
-			m_domain = m_clientConfig.getApp().getDomain();
-		}
+		Map<String, Domain> domains = clientConfig.getDomains();
+
+		m_domain = domains.isEmpty() ? "unknown" : domains.keySet().iterator().next();
 
 		try {
 			InetAddress localHost = InetAddress.getLocalHost();
@@ -138,9 +140,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_factory = lookup(MessageIdFactory.class);
 
 		// initialize domain and ip address
-		m_factory.initialize(m_clientConfig);
+		m_factory.initialize(m_domain);
 
-		// initialize milli second resolution level timer
+		// initialize milli-second resolution level timer
 		MilliSecondTimer.initialize();
 	}
 

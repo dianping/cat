@@ -2,6 +2,8 @@ package com.dianping.cat.message.spi.internal;
 
 import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -17,7 +19,8 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, Initializable, Runnable {
+public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, Initializable, LogEnabled,
+      Runnable {
 	@Inject
 	private MessageManager m_manager;
 
@@ -25,6 +28,13 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 	private MessageConsumerRegistry m_registry;
 
 	private MessageReceiver m_receiver;
+
+	private Logger m_logger;
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
 
 	@Override
 	public void handle(MessageTree tree) {
@@ -37,7 +47,7 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 			try {
 				consumer.consume(tree);
 			} catch (Exception e) {
-				e.printStackTrace();
+				m_logger.error("Error when consuming message in " + consumer + "!", e);
 			}
 		}
 	}

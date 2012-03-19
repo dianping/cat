@@ -1,7 +1,10 @@
 package com.dianping.cat.message.io;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -39,11 +42,13 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 	@Inject
 	private MessageCodec m_codec;
 
+	private BlockingQueue<ChannelBuffer> m_queue;
+
 	private ChannelFactory m_factory;
 
 	private ChannelGroup m_channelGroup = new DefaultChannelGroup();
 
-	private MessageHandler m_messageHandler;
+	private boolean m_active = true;
 
 	private Logger m_logger;
 
@@ -61,6 +66,8 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 		} else {
 			address = new InetSocketAddress(m_host, m_port);
 		}
+
+		m_queue = new LinkedBlockingQueue<ChannelBuffer>();
 
 		ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
 		      Executors.newCachedThreadPool());
@@ -80,9 +87,35 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 		m_factory = factory;
 	}
 
+	public boolean isActive() {
+		synchronized (this) {
+			return m_active;
+		}
+	}
+
 	@Override
 	public void onMessage(MessageHandler handler) {
-		m_messageHandler = handler;
+		try {
+			while (true) {
+				ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
+
+				if (buf != null) {
+					MessageTree tree = new DefaultMessageTree();
+
+					m_codec.decode(buf, tree);
+					handler.handle(tree);
+				} else if (!isActive()) {
+					break;
+				}
+			}
+		} catch (InterruptedException e) {
+			// ignore it
+		}
+
+		ChannelGroupFuture future = m_channelGroup.close();
+
+		future.awaitUninterruptibly();
+		m_factory.releaseExternalResources();
 	}
 
 	public void setCodec(MessageCodec codec) {
@@ -99,10 +132,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 	@Override
 	public void shutdown() {
-		ChannelGroupFuture future = m_channelGroup.close();
-
-		future.awaitUninterruptibly();
-		m_factory.releaseExternalResources();
+		m_active = false;
 	}
 
 	public static class MyDecoder extends FrameDecoder {
@@ -146,10 +176,8 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
 			ChannelBuffer buf = (ChannelBuffer) event.getMessage();
-			MessageTree tree = new DefaultMessageTree();
 
-			m_codec.decode(buf, tree);
-			m_messageHandler.handle(tree);
+			m_queue.offer(buf);
 		}
 	}
 }

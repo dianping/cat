@@ -8,6 +8,7 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
+import com.dianping.cat.configuration.ClientConfigMerger;
 import com.dianping.cat.configuration.ClientConfigValidator;
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
@@ -68,33 +69,6 @@ public class Cat {
 	}
 
 	public static void initialize(PlexusContainer container, File configFile) {
-		Config config = null;
-
-		// read config from local file system
-		try {
-			if (configFile != null) {
-				String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
-
-				config = new DefaultXmlParser().parse(xml);
-			}
-
-			if (config == null) {
-				InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CLIENT_XML);
-
-				if (in == null) {
-					in = Cat.class.getResourceAsStream(CAT_CLIENT_XML);
-				}
-
-				if (in != null) {
-					String xml = Files.forIO().readFrom(in, "utf-8");
-
-					config = new DefaultXmlParser().parse(xml);
-				}
-			}
-		} catch (Exception e) {
-			throw new RuntimeException(String.format("Error when loading configuration file: %s!", configFile), e);
-		}
-
 		if (container != null) {
 			if (!s_instance.m_initialized) {
 				s_instance.setContainer(container);
@@ -104,15 +78,60 @@ public class Cat {
 			}
 		}
 
-		if (config != null) {
-			ClientConfigValidator validator = new ClientConfigValidator();
+		Config config = loadClientConfig(configFile);
 
-			config.accept(validator);
+		if (config != null) {
 			getInstance().m_manager.initializeClient(config);
 		} else {
 			getInstance().m_manager.initializeClient(null);
 			System.out.println("[WARN] Cat client is disabled due to no config file found!");
 		}
+	}
+
+	static Config loadClientConfig(File configFile) {
+		Config globalConfig = null;
+		Config clientConfig = null;
+
+		try {
+			// read the global configure from local file system
+			// so that OPS can:
+			// - configure the cat servers to connect
+			// - enable/disable Cat for specific domain(s)
+			if (configFile != null) {
+				String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
+
+				globalConfig = new DefaultXmlParser().parse(xml);
+			}
+
+			// load the client configure from Java class-path
+			if (clientConfig == null) {
+				InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CLIENT_XML);
+
+				if (in == null) {
+					in = Cat.class.getResourceAsStream(CAT_CLIENT_XML);
+				}
+
+				if (in != null) {
+					String xml = Files.forIO().readFrom(in, "utf-8");
+
+					clientConfig = new DefaultXmlParser().parse(xml);
+				}
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(String.format("Error when loading configuration file(%s)!", configFile), e);
+		}
+
+		// merge the two configures together to make it effected
+		if (globalConfig != null && clientConfig != null) {
+			globalConfig.accept(new ClientConfigMerger(clientConfig));
+		}
+
+		// do validation
+		if (clientConfig != null) {
+			clientConfig.accept(new ClientConfigValidator());
+		}
+
+		return clientConfig;
 	}
 
 	public static boolean isInitialized() {

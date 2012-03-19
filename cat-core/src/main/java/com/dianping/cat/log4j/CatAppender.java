@@ -16,10 +16,10 @@ public class CatAppender extends AppenderSkeleton {
 			if (throwableInformation != null) {
 				if (Cat.getManager().getThreadLocalMessageTree() != null) {
 					Cat.getProducer().logError(throwableInformation.getThrowable());
-				} else {
-					Cat.setup(null);
-					Cat.getProducer().logError(throwableInformation.getThrowable());
-					Cat.reset();
+//				} else {
+//					Cat.setup(null);
+//					Cat.getProducer().logError(throwableInformation.getThrowable());
+//					Cat.reset();
 				}
 			}
 		}

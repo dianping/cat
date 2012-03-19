@@ -2,8 +2,6 @@ package com.dianping.cat.message.spi.internal;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Date;
 
@@ -23,8 +21,6 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	private MessageManager m_manager;
 
 	private File m_baseLogDir;
-
-	private URL m_baseLogUrl;
 
 	private Logger m_logger;
 
@@ -56,11 +52,6 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
-	public URL getLogViewBaseUrl() {
-		return m_baseLogUrl;
-	}
-
-	@Override
 	public String getLogViewPath(String messageId) {
 		return messageId + "/logview.html";
 	}
@@ -88,7 +79,6 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 		}
 
 		String baseLogDir = config.getBaseLogDir();
-		String baseLogUrl = config.getBaseLogUrl();
 
 		try {
 			m_baseLogDir = new File(baseLogDir).getCanonicalFile();
@@ -96,23 +86,9 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 		} catch (IOException e) {
 			throw new InitializationException(String.format("Unable to create log directory(%s)!", m_baseLogDir), e);
 		}
-
-		try {
-			if (baseLogUrl == null) {
-				m_baseLogUrl = m_baseLogDir.toURI().toURL();
-			} else {
-				m_baseLogUrl = new URL(baseLogUrl);
-			}
-		} catch (MalformedURLException e) {
-			throw new InitializationException("Unable to build base log URL!", e);
-		}
 	}
 
 	public void setBaseLogDir(File baseLogDir) {
 		m_baseLogDir = baseLogDir;
-	}
-
-	public void setBaseLogUrl(URL baseLogUrl) {
-		m_baseLogUrl = baseLogUrl;
 	}
 }

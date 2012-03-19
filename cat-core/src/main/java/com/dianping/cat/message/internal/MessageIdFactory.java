@@ -3,8 +3,6 @@ package com.dianping.cat.message.internal;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import com.dianping.cat.configuration.model.entity.Config;
-
 public class MessageIdFactory {
 	private long m_lastTimestamp = getTimestamp();
 
@@ -44,12 +42,8 @@ public class MessageIdFactory {
 		return MilliSecondTimer.currentTimeMillis();
 	}
 
-	public void initialize(Config clientConfig) {
-		try {
-			m_domain = clientConfig.getApp().getDomain();
-		} catch (Exception e) {
-			// ignore it
-		}
+	public void initialize(String domain) {
+		m_domain = domain;
 
 		if (m_ipAddress == null) {
 			try {

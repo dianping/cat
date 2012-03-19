@@ -9,8 +9,8 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.model.entity.App;
 import com.dianping.cat.configuration.model.entity.Config;
+import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.configuration.model.entity.Server;
 import com.site.helper.Files;
 import com.site.lookup.ComponentTestCase;
@@ -28,8 +28,8 @@ public abstract class CatTestCase extends ComponentTestCase {
 				Config config = new Config();
 
 				config.setMode("client");
-				config.setApp(new App().setDomain("Test"));
-				config.addServer(new Server().setIp("localhost").setPort(2280));
+				config.addDomain(new Domain("Cat"));
+				config.addServer(new Server("localhost").setPort(2280));
 
 				File file = new File("target/cat-config.xml");
 
