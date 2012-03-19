@@ -9,7 +9,7 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import com.dianping.cat.storage.internal.DefaultBucket;
+import com.dianping.cat.storage.internal.LocalStringBucket;
 import com.site.lookup.annotation.Inject;
 
 public class LogViewPostHandler implements MessageAnalyzer {
@@ -34,7 +34,7 @@ public class LogViewPostHandler implements MessageAnalyzer {
 			String path = m_pathBuilder.getMessagePath(domain, new Date(m_startTime));
 
 			try {
-				DefaultBucket<byte[]> localBucket = (DefaultBucket<byte[]>) m_bucketManager.getBytesBucket(path);
+				LocalStringBucket<byte[]> localBucket = (LocalStringBucket<byte[]>) m_bucketManager.getBytesBucket(path);
 				Bucket<byte[]> hdfsBucket = m_bucketManager.getHdfsBucket(path);
 
 				hdfsBucket.deleteAndCreate();

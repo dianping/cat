@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -29,7 +28,6 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import com.dianping.cat.storage.internal.AbstractFileBucket;
 import com.site.lookup.annotation.Inject;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
@@ -123,26 +121,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	void loadReports() {
 		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
+		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getStringBucket(path);
+			bucket = m_bucketManager.getReportBucket(path);
 
-			if (bucket instanceof AbstractFileBucket) {
-				DefaultXmlParser parser = new DefaultXmlParser();
-				Set<String> ids = ((AbstractFileBucket<?>) bucket).getIds();
+			for (String id : bucket.getIdsByPrefix("transaction-")) {
+				String xml = bucket.findById(id);
+				TransactionReport report = parser.parse(xml);
 
-				for (String id : ids) {
-					if (id.startsWith("transaction-")) {
-						String xml = bucket.findById(id);
-						TransactionReport report = parser.parse(xml);
-
-						m_reports.put(report.getDomain(), report);
-					}
-				}
+				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading transaction reports from %s!", path), e);
+			m_logger.error(String.format("Error when loading problem reports from %s!", path), e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
@@ -171,13 +163,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			// the message is required by some transactions
 			if (count > 0) {
 				String messageId = tree.getMessageId();
-				String threadTag = "t:" + tree.getThreadId();
 
 				try {
 					String path = m_pathBuilder.getMessagePath(domain, new Date(m_startTime));
 					Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
 
-					bucket.storeById(messageId, tree, threadTag);
+					bucket.storeById(messageId, tree);
 				} catch (IOException e) {
 					m_logger.error("Error when storing message for transaction analyzer!", e);
 				}
@@ -289,38 +280,26 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	void storeReports(Collection<TransactionReport> reports) {
 		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
-		Bucket<byte[]> localBucket = null;
-		Bucket<byte[]> hdfsBucket = null;
+		Bucket<String> bucket = null;
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 
 		try {
-			localBucket = m_bucketManager.getBytesBucket(path);
-			hdfsBucket = m_bucketManager.getHdfsBucket(path);
+			bucket = m_bucketManager.getReportBucket(path);
 
 			// delete old one, not append mode
-			localBucket.deleteAndCreate();
-			hdfsBucket.deleteAndCreate();
+			bucket.deleteAndCreate();
 
 			for (TransactionReport report : reports) {
 				String xml = builder.buildXml(report);
-				byte[] data = xml.getBytes("utf-8");
 				String key = "transaction-" + report.getDomain();
 
-				localBucket.storeById(key, data);
-				hdfsBucket.storeById(key, data);
+				bucket.storeById(key, xml);
 			}
-			
-			hdfsBucket.flush();
-			hdfsBucket.close();
-			localBucket.close();
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
 		} finally {
-			if (localBucket != null) {
-				m_bucketManager.closeBucket(localBucket);
-			}
-			if (hdfsBucket != null) {
-				m_bucketManager.closeBucket(hdfsBucket);
+			if (bucket != null) {
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}

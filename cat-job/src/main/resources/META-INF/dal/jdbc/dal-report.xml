@@ -61,6 +61,18 @@
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
+			<query name="find-all-by-period-type-name" type="SELECT" multiple="true">
+				<param name="period" />
+				<param name="type" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> = ${period}
+					AND <FIELD name='type'/> = ${type}
+					AND <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 

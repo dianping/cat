@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -27,7 +26,6 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import com.dianping.cat.storage.internal.AbstractFileBucket;
 import com.site.lookup.annotation.Inject;
 
 public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled {
@@ -122,23 +120,17 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	void loadReports() {
 		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
+		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getStringBucket(path);
+			bucket = m_bucketManager.getReportBucket(path);
 
-			if (bucket instanceof AbstractFileBucket) {
-				DefaultXmlParser parser = new DefaultXmlParser();
-				Set<String> ids = ((AbstractFileBucket<?>) bucket).getIds();
+			for (String id : bucket.getIdsByPrefix("problem-")) {
+				String xml = bucket.findById(id);
+				ProblemReport report = parser.parse(xml);
 
-				for (String id : ids) {
-					if (id.startsWith("problem-")) {
-						String xml = bucket.findById(id);
-						ProblemReport report = parser.parse(xml);
-
-						m_reports.put(report.getDomain(), report);
-					}
-				}
+				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when loading problem reports from %s!", path), e);
@@ -162,14 +154,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			m_reports.put(domain, report);
 		}
 
-		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
-		JavaThread thread = machine.findOrCreateThread(tree.getThreadId());
-		Calendar cal = Calendar.getInstance();
-
-		cal.setTimeInMillis(tree.getMessage().getTimestamp());
-
-		int minute = cal.get(Calendar.MINUTE);
-		Segment segment = thread.findOrCreateSegment(minute);
+		Segment segment = findOrCreateSegment(report, tree);
 		int count = 0;
 
 		for (Handler handler : m_handlers) {
@@ -178,17 +163,28 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 		if (count > 0) {
 			String messageId = tree.getMessageId();
-			String threadTag = "t:" + tree.getThreadId();
 
 			try {
 				String path = m_pathBuilder.getMessagePath(domain, new Date(m_startTime));
 				Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
 
-				bucket.storeById(messageId, tree, threadTag);
+				bucket.storeById(messageId, tree);
 			} catch (IOException e) {
 				m_logger.error("Error when storing message for problem analyzer!", e);
 			}
 		}
+	}
+
+	private Segment findOrCreateSegment(ProblemReport report, MessageTree tree) {
+		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
+		JavaThread thread = machine.findOrCreateThread(tree.getThreadId());
+		Calendar cal = Calendar.getInstance();
+
+		cal.setTimeInMillis(tree.getMessage().getTimestamp());
+
+		int minute = cal.get(Calendar.MINUTE);
+		Segment segment = thread.findOrCreateSegment(minute);
+		return segment;
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
@@ -210,38 +206,26 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	void storeReports(Collection<ProblemReport> reports) {
 		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
-		Bucket<byte[]> localBucket = null;
-		Bucket<byte[]> hdfsBucket = null;
+		Bucket<String> bucket = null;
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 
 		try {
-			localBucket = m_bucketManager.getBytesBucket(path);
-			hdfsBucket = m_bucketManager.getHdfsBucket(path);
+			bucket = m_bucketManager.getReportBucket(path);
 
 			// delete old one, not append mode
-			localBucket.deleteAndCreate();
-			hdfsBucket.deleteAndCreate();
+			bucket.deleteAndCreate();
 
 			for (ProblemReport report : reports) {
 				String xml = builder.buildXml(report);
-				byte[] data = xml.getBytes("utf-8");
-				String key = "problem-" + report.getDomain();
+				String key = "failure-" + report.getDomain();
 
-				localBucket.storeById(key, data);
-				hdfsBucket.storeById(key, data);
+				bucket.storeById(key, xml);
 			}
-			
-			hdfsBucket.flush();
-			hdfsBucket.close();
-			localBucket.close();
 		} catch (Exception e) {
 			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
 		} finally {
-			if (localBucket != null) {
-				m_bucketManager.closeBucket(localBucket);
-			}
-			if (hdfsBucket != null) {
-				m_bucketManager.closeBucket(hdfsBucket);
+			if (bucket != null) {
+				m_bucketManager.closeBucket(bucket);
 			}
 		}
 	}

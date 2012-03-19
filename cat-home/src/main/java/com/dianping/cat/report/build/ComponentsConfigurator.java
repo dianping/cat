@@ -20,10 +20,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		if (isEnv("dev") || property("env", null) == null) {
 			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-			      .req(MessageConsumer.class, new String[] { "realtime"/*
-																							 * ,
-																							 * "dump-to-html"
-																							 */}, "m_consumers"));
+			      .req(MessageConsumer.class, new String[] { "realtime" }, "m_consumers"));
 		} else {
 			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
 			      .req(MessageConsumer.class, new String[] { "realtime" }, "m_consumers"));

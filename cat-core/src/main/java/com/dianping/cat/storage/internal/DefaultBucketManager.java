@@ -19,16 +19,18 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();
 
-	protected Bucket<?> createBucket(String path, Class<?> type, String namespace) throws IOException {
-		Bucket<?> bucket;
-
-		if (namespace.equals("hdfs")) {
-			bucket = lookup(Bucket.class, "hdfs");
-		}else if (namespace.equals("hdfs-logview")) {
-			bucket = lookup(Bucket.class, "hdfs-logview");
-		} else {
-			bucket = lookup(Bucket.class, type.getName());
+	@Override
+	public void closeBucket(Bucket<?> bucket) {
+		try {
+			bucket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		release(bucket);
+	}
+
+	protected Bucket<?> createBucket(String path, Class<?> type) throws IOException {
+		Bucket<?> bucket = lookup(Bucket.class, type.getName());
 
 		bucket.initialize(type, new File(m_baseDir), path);
 		return bucket;
@@ -42,12 +44,12 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T> Bucket<T> getBucket(Class<T> type, String path, String namespace) throws IOException {
+	protected <T> Bucket<T> getBucket(Class<T> type, String path) throws IOException {
 		if (type == null || path == null) {
 			throw new IllegalArgumentException(String.format("Type(%s) or path(%s) can't be null.", type, path));
 		}
 
-		Entry entry = new Entry(type, path, namespace);
+		Entry entry = new Entry(type, path);
 		Bucket<?> bucket = m_map.get(entry);
 
 		if (bucket == null) {
@@ -55,7 +57,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 				bucket = m_map.get(entry);
 
 				if (bucket == null) {
-					bucket = createBucket(path, type, namespace);
+					bucket = createBucket(path, type);
 					m_map.put(entry, bucket);
 				}
 			}
@@ -65,23 +67,13 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@Override
-	public Bucket<byte[]> getBytesBucket(String path) throws IOException {
-		return getBucket(byte[].class, path, "file");
-	}
-
-	@Override
-	public Bucket<byte[]> getHdfsBucket(String path) throws IOException {
-		return getBucket(byte[].class, path, "hdfs");
-	}
-
-	@Override
 	public Bucket<MessageTree> getMessageBucket(String path) throws IOException {
-		return getBucket(MessageTree.class, path, "file");
+		return getBucket(MessageTree.class, path);
 	}
 
 	@Override
-	public Bucket<String> getStringBucket(String path) throws IOException {
-		return getBucket(String.class, path, "file");
+	public Bucket<String> getReportBucket(String path) throws IOException {
+		return getBucket(String.class, path);
 	}
 
 	public void setBaseDir(String baseDir) {
@@ -93,12 +85,9 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 		private String m_path;
 
-		private String m_namespace;
-
-		public Entry(Class<?> type, String path, String namespace) {
+		public Entry(Class<?> type, String path) {
 			m_type = type;
 			m_path = path;
-			m_namespace = namespace;
 		}
 
 		@Override
@@ -106,7 +95,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			if (obj instanceof Entry) {
 				Entry e = (Entry) obj;
 
-				return e.getType() == m_type && e.getPath().equals(m_path) && e.getNamespace().equals(m_namespace);
+				return e.getType() == m_type && e.getPath().equals(m_path);
 			}
 
 			return false;
@@ -120,27 +109,12 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			return m_type;
 		}
 
-		public String getNamespace() {
-			return m_namespace;
-		}
-
 		@Override
 		public int hashCode() {
 			int hashcode = m_type.hashCode();
 
 			hashcode = hashcode * 31 + m_path.hashCode();
-			hashcode = hashcode * 31 + m_namespace.hashCode();
 			return hashcode;
 		}
-	}
-
-	@Override
-	public void closeBucket(Bucket<?> bucket) {
-		try {
-			bucket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		release(bucket);
 	}
 }

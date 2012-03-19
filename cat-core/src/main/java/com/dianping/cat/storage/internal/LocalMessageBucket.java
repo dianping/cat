@@ -9,7 +9,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageBucket extends AbstractFileBucket<MessageTree> {
+public class LocalMessageBucket extends AbstractFileBucket<MessageTree> {
 	@Inject
 	private MessageCodec m_codec;
 
@@ -27,9 +27,18 @@ public class DefaultMessageBucket extends AbstractFileBucket<MessageTree> {
 	}
 
 	@Override
-   protected boolean isAutoFlush() {
-	   return true;
-   }
+	protected boolean isAutoFlush() {
+		return true;
+	}
+
+	@Override
+	public boolean storeById(String id, MessageTree tree) {
+		String tagThread = "t:" + tree.getThreadId();
+		String tagSession = "s:" + tree.getSessionToken();
+		String tagRequest = "r:" + tree.getMessageId();
+
+		return storeById(id, tree, new String[] { tagThread, tagSession, tagRequest });
+	}
 
 	public void setCodec(MessageCodec codec) {
 		m_codec = codec;

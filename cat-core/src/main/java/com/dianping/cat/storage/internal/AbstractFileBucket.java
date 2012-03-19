@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +23,7 @@ import com.site.helper.Splitters;
 
 public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	private static final String[] EMPTY = new String[0];
+
 
 	// key => offset of record
 	private Map<String, Long> m_idToOffsets = new HashMap<String, Long>();
@@ -159,7 +161,7 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 
 	public String[] findTagsById(String id) {
 		// TODO
-		return new String[0];
+		return EMPTY;
 	}
 
 	@Override
@@ -248,8 +250,7 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	 * 
 	 * <xmp> <id>\t<tag1>\t<tag2>\t...\n <length of message>\n <message>\n </xmp>
 	 */
-	@Override
-	public boolean storeById(String id, T data, String... tags) {
+	protected boolean storeById(String id, T data, String... tags) {
 		if (m_idToOffsets.containsKey(id)) {
 			return false;
 		}
@@ -297,6 +298,19 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 		} finally {
 			m_writeLock.unlock();
 		}
+	}
+
+	@Override
+	public Collection<String> getIdsByPrefix(String prefix) {
+		List<String> ids = new ArrayList<String>();
+
+		for (String id : m_idToOffsets.keySet()) {
+			if (id.startsWith(prefix)) {
+				ids.add(id);
+			}
+		}
+
+		return ids;
 	}
 
 	@Override

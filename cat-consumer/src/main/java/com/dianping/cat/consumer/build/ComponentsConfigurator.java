@@ -51,6 +51,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
 
+		// TODO remove it later
 		all.add(C(LogViewPostHandler.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, MessagePathBuilder.class));
 

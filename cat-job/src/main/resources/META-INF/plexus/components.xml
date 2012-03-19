@@ -30,6 +30,12 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>hdfs-logview</role-hint>
+			<implementation>com.dianping.cat.job.hdfs.LogviewBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.MessageStorage</role>
 			<role-hint>hdfs</role-hint>
 			<implementation>com.dianping.cat.job.hdfs.HdfsMessageStorage</implementation>
@@ -47,6 +53,24 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageStorage</role>
 					<role-hint>hdfs</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>java.lang.String</role-hint>
+			<implementation>com.dianping.cat.storage.internal.LocalStringBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>com.dianping.cat.message.spi.MessageTree</role-hint>
+			<implementation>com.dianping.cat.storage.internal.LocalMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
 				</requirement>
 			</requirements>
 		</component>
