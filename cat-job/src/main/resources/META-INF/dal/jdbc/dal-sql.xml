@@ -2,11 +2,6 @@
 <entities do-package="com.dianping.cat.job.sql.dal" gen="true">
 
 	<entity name="sqlreport" class-name="SqlReportRecord" table="SqlReport" alias="s">
-		<member name="minvalue" field="MinValue" value-type="double" length="22" nullable="false" />
-		<member name="maxvalue" field="MaxValue" value-type="double" length="22" nullable="false" />
-		<member name="avg2value" field="Avg2Value" value-type="double"	length="22" nullable="false" />
-		<member name="sumvalue" field="SumValue" value-type="double"	length="22" nullable="false" />
-		<member name="sum2value" field="Sum2Value" value-type="double"	length="22" nullable="false" />
 
 	    <readsets>
 	      <readset name="DOMAIN">
@@ -17,19 +12,19 @@
 		<query-defs>
 			<query name="find-all-by-domain-and-date" type="SELECT" multiple="true">
 				<param name="domain" />
-				<param name="transactiondate" />
+				<param name="transaction-date" />
 				<statement><![CDATA[
 				SELECT <FIELDS/> FROM <TABLE/> 
 				WHERE <FIELD name='domain'/> = ${domain} 
-					AND <FIELD name='transactiondate'/> = ${transactiondate}
+					AND <FIELD name='transaction-date'/> = ${transaction-date}
 				]]></statement>
 			</query>
 			
 			<query name="find-all-distinct-by-date" type="SELECT" multiple="true">
-				<param name="transactiondate" />
+				<param name="transaction-date" />
 				<statement><![CDATA[
 				SELECT distinct <FIELDS/> FROM <TABLE/> 
-				WHERE <FIELD name='transactiondate'/> = ${transactiondate} 
+				WHERE <FIELD name='transaction-date'/> = ${transaction-date} 
 				]]></statement>
 			</query>
 		</query-defs>

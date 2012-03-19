@@ -4,16 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.hadoop.fs.FileSystem;
 
 import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.hdfs.HdfsHelper;
 import com.dianping.cat.storage.HdfsImpl;
+import com.dianping.cat.storage.hdfs.HdfsHelper;
 
 /**
  * @author sean.wang
@@ -48,21 +46,6 @@ public class HdfsBucket implements Bucket<byte[]> {
 	}
 
 	@Override
-	public List<byte[]> findAllByIds(List<String> ids) throws IOException {
-		List<byte[]> values = new ArrayList<byte[]>(ids.size());
-		for (String id : ids) {
-			byte[] value = this.findById(id);
-			values.add(value);
-		}
-		return values;
-	}
-
-	@Override
-	public List<String> findAllIdsByTag(String tag) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public byte[] findById(String id) throws IOException {
 		return hdfs.get(id);
 	}
@@ -86,15 +69,15 @@ public class HdfsBucket implements Bucket<byte[]> {
 
 	/**
 	 * @param baseDir
-	 *           e.g /data/appdata/cat/
+	 *            e.g /data/appdata/cat/
 	 * @param logicalPath
-	 *           e.g /a/b/c
+	 *            e.g /a/b/c
 	 */
 	@Override
 	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
 		this.baseDir = baseDir;
 		this.logicalPath = logicalPath;
-		
+
 		File file = new File(baseDir, logicalPath);
 		File parent = file.getParentFile();
 		parent.mkdirs();

@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,28 +84,6 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	}
 
 	protected abstract void encode(T data, ChannelBuffer buf) throws IOException;
-
-	@Override
-	public List<T> findAllByIds(List<String> ids) {
-		List<T> list = new ArrayList<T>(ids.size());
-
-		for (String id : ids) {
-			list.add(findById(id));
-		}
-
-		return list;
-	}
-
-	@Override
-	public List<String> findAllIdsByTag(String tag) {
-		List<String> ids = m_tagToIds.get(tag);
-
-		if (ids == null) {
-			return Collections.emptyList();
-		} else {
-			return ids;
-		}
-	}
 
 	@Override
 	public T findById(String id) {

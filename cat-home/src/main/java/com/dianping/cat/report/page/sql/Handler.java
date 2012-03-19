@@ -60,10 +60,10 @@ public class Handler implements PageHandler<Context> {
 		try {
 			SqlReportRecord record = m_dao.findByPK(id, SqlReportRecordEntity.READSET_FULL);
 			String statement = record.getStatement();
-			String durationDistribution = record.getDurationdistribution();
-			String durationOvertime = record.getDurationovertime();
-			String hitsovOvrtime = record.getHitsovertime();
-			String failureOvertime = record.getFailureovertime();
+			String durationDistribution = record.getDurationDistribution();
+			String durationOvertime = record.getDurationOverTime();
+			String hitsovOvrtime = record.getHitsOverTime();
+			String failureOvertime = record.getFailureOverTime();
 
 			String graph1 = m_builder.build(new SqlGraphPayload(0, "SQL Exeture Time Distribution", "Duration (ms)",
 			      "Count", durationDistribution));
