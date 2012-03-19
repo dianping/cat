@@ -2,11 +2,6 @@
 <entities do-package="com.dianping.cat.job.sql.dal" gen="true">
 
 	<entity name="sqlreport" class-name="SqlReportRecord" table="SqlReport" alias="s">
-		<member name="minvalue" field="MinValue" value-type="double" length="22" nullable="false" />
-		<member name="maxvalue" field="MaxValue" value-type="double" length="22" nullable="false" />
-		<member name="avg2value" field="Avg2Value" value-type="double"	length="22" nullable="false" />
-		<member name="sumvalue" field="SumValue" value-type="double"	length="22" nullable="false" />
-		<member name="sum2value" field="Sum2Value" value-type="double"	length="22" nullable="false" />
 
 	    <readsets>
 	      <readset name="DOMAIN">

@@ -23,11 +23,11 @@ public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 			row.setTotalCount(sql.getTotalCount());
 			row.setFailures(sql.getFailureCount());
 			row.setLongSqls(sql.getLongCount());
-			row.setAvg2value(sql.getAvg2());
-			row.setSumvalue(sql.getSum());
-			row.setSum2value(sql.getSum2());
-			row.setMaxvalue(sql.getMax());
-			row.setMinvalue(sql.getMin());
+			row.setAvg2Value(sql.getAvg2());
+			row.setSumValue(sql.getSum());
+			row.setSum2Value(sql.getSum2());
+			row.setMaxValue(sql.getMax());
+			row.setMinValue(sql.getMin());
 			row.setStatement(sql.getStatement());
 			row.setName(sql.getName());
 			row.setSampleLink(sql.getSampleLink());

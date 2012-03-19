@@ -83,6 +83,26 @@
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>logview</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>logview</logical-table-name>
+				<physical-table-name>logview</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>report</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>report</logical-table-name>
+				<physical-table-name>report</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>sqlreport</role-hint>
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -90,6 +110,24 @@
 				<physical-table-name>sqlreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.sql.dal.LogviewDao</role>
+			<implementation>com.dianping.cat.job.sql.dal.LogviewDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.sql.dal.ReportDao</role>
+			<implementation>com.dianping.cat.job.sql.dal.ReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>

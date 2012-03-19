@@ -3,20 +3,23 @@ package com.dianping.cat.job.hdfs;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.ArrayList;
-import java.util.List;
 
+import com.dianping.cat.job.sql.dal.Logview;
+import com.dianping.cat.job.sql.dal.LogviewDao;
+import com.dianping.cat.job.sql.dal.LogviewEntity;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.hdfs.HdfsDataStore;
-import com.dianping.cat.storage.mysql.LogView;
+import com.site.dal.jdbc.DalException;
+import com.site.lookup.ContainerHolder;
+import com.site.lookup.annotation.Inject;
 
 /**
  * @author sean.wang
  * @since Mar 9, 2012
  */
-public class LogviewBucket implements Bucket<byte[]> {
-
-	private LogViewIndexStore indexStore;
+public class LogviewBucket extends ContainerHolder implements Bucket<byte[]> {
+	@Inject
+	private LogviewDao logviewDao;
 
 	private HdfsDataStore dataStore;
 
@@ -26,7 +29,7 @@ public class LogviewBucket implements Bucket<byte[]> {
 
 	@Override
 	public void close() throws IOException {
-		this.indexStore.close();
+		this.dataStore.close();
 	}
 
 	@Override
@@ -35,49 +38,56 @@ public class LogviewBucket implements Bucket<byte[]> {
 	}
 
 	@Override
-	public List<byte[]> findAllByIds(List<String> ids) throws IOException {
-		List<byte[]> values = new ArrayList<byte[]>(ids.size());
-		for (String id : ids) {
-			byte[] value = this.findById(id);
-			values.add(value);
-		}
-		return values;
-	}
-
-	@Override
-	public List<String> findAllIdsByTag(String tag) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public byte[] findById(String id) throws IOException {
-		LogView logview = this.indexStore.getLogViewByMessageId(id);
+		Logview logview;
+		try {
+			logview = this.logviewDao.findByPK(id, LogviewEntity.READSET_FULL);
+		} catch (DalException e) {
+			throw new IOException(e);
+		}
 		if (logview == null) {
 			return null;
 		}
-		return dataStore.get(logview.getOffset(), logview.getLength());
+		return dataStore.get(logview.getDataOffset(), logview.getDataLength());
 	}
 
-	@Override
-	public void flush() throws IOException {
-	}
-
-	@Override
-	public byte[] findPreviousById(String id, String tagName) throws IOException {
-		LogView logview = this.indexStore.getLogViewByMessageId(id);
+	protected byte[] findByIdAndTag(String id, String tagName, boolean direction) throws IOException {
+		String tagThread = null;
+		String tagSession = null;
+		String tagRequest = null;
+		if (tagName.startsWith("r:")) {
+			tagRequest = tagName;
+		}
+		if (tagName.startsWith("s:")) {
+			tagSession = tagName;
+		}
+		if (tagName.startsWith("t:")) {
+			tagThread = tagName;
+		}
+		Logview logview;
+		try {
+			logview = this.logviewDao.findNextByMessageIdTags(id, direction, tagThread, tagSession, tagRequest, LogviewEntity.READSET_FULL);
+		} catch (DalException e) {
+			throw new IOException(e);
+		}
 		if (logview == null) {
 			return null;
 		}
-		return dataStore.get(logview.getOffset(), logview.getLength());
+		return dataStore.get(logview.getDataOffset(), logview.getDataLength());
 	}
 
 	@Override
 	public byte[] findNextById(String id, String tagName) throws IOException {
-		LogView logview = this.indexStore.getLogViewByMessageId(id);
-		if (logview == null) {
-			return null;
-		}
-		return dataStore.get(logview.getOffset(), logview.getLength());
+		return findByIdAndTag(id, tagName, true);
+	}
+
+	@Override
+	public byte[] findPreviousById(String id, String tagName) throws IOException {
+		return findByIdAndTag(id, tagName, false);
+	}
+
+	@Override
+	public void flush() throws IOException {
 	}
 
 	/**
@@ -101,10 +111,19 @@ public class LogviewBucket implements Bucket<byte[]> {
 
 	@Override
 	public boolean storeById(String id, byte[] data, String... tags) throws IOException {
-		LogView logView = new LogView();
-		logView.setOffset(this.dataStore.length());
-		logView.setLength(data.length);
-		logView.setPath(this.hdfsPath);
+		Logview logview;
+		try {
+			logview = this.logviewDao.findByPK(id, LogviewEntity.READSET_FULL);
+		} catch (DalException e) {
+			throw new IOException(e);
+		}
+		if (logview != null) {
+			return false;
+		}
+		Logview logView = new Logview();
+		logView.setDataOffset(this.dataStore.length());
+		logView.setDataLength(data.length);
+		logView.setDataPath(this.hdfsPath);
 		if (tags != null) {
 			for (String tag : tags) {
 				if (tag.startsWith("r:")) {
@@ -119,7 +138,12 @@ public class LogviewBucket implements Bucket<byte[]> {
 			}
 		}
 		this.dataStore.append(data);
-		return this.indexStore.insert(logView);
+		try {
+			this.logviewDao.insert(logView);
+		} catch (DalException e) {
+			throw new IOException(e);
+		}
+		return true;
 	}
 
 }

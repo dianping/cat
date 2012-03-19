@@ -8,6 +8,7 @@ import com.dianping.cat.job.hdfs.DefaultOutputChannel;
 import com.dianping.cat.job.hdfs.DefaultOutputChannelManager;
 import com.dianping.cat.job.hdfs.HdfsBucket;
 import com.dianping.cat.job.hdfs.HdfsMessageStorage;
+import com.dianping.cat.job.hdfs.LogviewBucket;
 import com.dianping.cat.job.hdfs.OutputChannel;
 import com.dianping.cat.job.hdfs.OutputChannelManager;
 import com.dianping.cat.message.spi.MessageCodec;
@@ -41,6 +42,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Bucket.class, "hdfs", HdfsBucket.class) //
 		      .is(PER_LOOKUP));
+		all.add(C(Bucket.class, "hdfs-logview", LogviewBucket.class) //
+			      .is(PER_LOOKUP));
 
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
 		      .req(OutputChannelManager.class));

@@ -24,6 +24,8 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 
 		if (namespace.equals("hdfs")) {
 			bucket = lookup(Bucket.class, "hdfs");
+		}else if (namespace.equals("hdfs-logview")) {
+			bucket = lookup(Bucket.class, "hdfs-logview");
 		} else {
 			bucket = lookup(Bucket.class, type.getName());
 		}

@@ -19,13 +19,13 @@ public class SqlReportModel {
 	}
 
 	public double getAvg() {
-		return (double)m_record.getSumvalue() / (double)m_record.getTotalCount();
+		return (double)m_record.getSumValue() / (double)m_record.getTotalCount();
 	}
 
 	public double getStd() {
-		double sum2 = m_record.getSum2value();
+		double sum2 = m_record.getSum2Value();
 		int count = m_record.getTotalCount();
-		double avg = m_record.getSumvalue() / m_record.getTotalCount();
+		double avg = m_record.getSumValue() / m_record.getTotalCount();
 		return Math.sqrt(sum2 / count - avg * avg);
 	}
 
