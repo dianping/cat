@@ -123,7 +123,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_clientConfig.setMode("client");
 		}
 
-		Map<String, Domain> domains = clientConfig.getDomains();
+		Map<String, Domain> domains = m_clientConfig.getDomains();
 
 		m_domain = domains.isEmpty() ? "unknown" : domains.keySet().iterator().next();
 

@@ -142,6 +142,7 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 		boolean result = m_queue.offer(tree);
 
 		if (!result) {
+			System.out.println("Message queue is full in tcp socket sender!");
 			m_logger.error("Message queue is full in tcp socket sender!");
 		}
 	}
