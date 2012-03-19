@@ -19,7 +19,16 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public String createMessageId() {
-		return m_factory.getNextId();
+		if (m_manager.isCatEnabled()) {
+			return m_factory.getNextId();
+		} else {
+			return "cat-is-disabled";
+		}
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return m_manager.isCatEnabled();
 	}
 
 	@Override
@@ -60,25 +69,37 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public Event newEvent(String type, String name) {
-		DefaultEvent event = new DefaultEvent(type, name);
+		if (m_manager.isCatEnabled()) {
+			DefaultEvent event = new DefaultEvent(type, name);
 
-		m_manager.add(event);
-		return event;
+			m_manager.add(event);
+			return event;
+		} else {
+			return NullMessage.EVENT;
+		}
 	}
 
 	@Override
 	public Heartbeat newHeartbeat(String type, String name) {
-		DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
+		if (m_manager.isCatEnabled()) {
+			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
-		m_manager.add(heartbeat);
-		return heartbeat;
+			m_manager.add(heartbeat);
+			return heartbeat;
+		} else {
+			return NullMessage.HEARTBEAT;
+		}
 	}
 
 	@Override
 	public Transaction newTransaction(String type, String name) {
-		DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
+		if (m_manager.isCatEnabled()) {
+			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
-		m_manager.start(transaction);
-		return transaction;
+			m_manager.start(transaction);
+			return transaction;
+		} else {
+			return NullMessage.TRANSACTION;
+		}
 	}
 }

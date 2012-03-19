@@ -39,11 +39,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private Config m_serverConfig;
 
-	private String m_domain;
+	private Domain m_domain;
 
 	private String m_hostName;
-
-	private String m_ipAddress;
 
 	private Logger m_logger;
 
@@ -54,10 +52,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		if (Cat.isInitialized()) {
 			getContext().add(this, message);
 		}
-	}
-
-	String nextMessageId() {
-		return m_factory.getNextId();
 	}
 
 	@Override
@@ -124,14 +118,18 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		Map<String, Domain> domains = clientConfig.getDomains();
+		Domain firstDomain = domains.isEmpty() ? null : domains.values().iterator().next();
 
-		m_domain = domains.isEmpty() ? "unknown" : domains.keySet().iterator().next();
+		m_domain = firstDomain == null ? new Domain("unknown").setEnabled(false) : firstDomain;
 
 		try {
 			InetAddress localHost = InetAddress.getLocalHost();
 
 			m_hostName = localHost.getHostName();
-			m_ipAddress = localHost.getHostAddress();
+
+			if (m_domain.getIp() == null) {
+				m_domain.setIp(localHost.getHostAddress());
+			}
 		} catch (UnknownHostException e) {
 			m_logger.warn("Unable to get local host!", e);
 		}
@@ -140,7 +138,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_factory = lookup(MessageIdFactory.class);
 
 		// initialize domain and ip address
-		m_factory.initialize(m_domain);
+		m_factory.initialize(m_domain.getId());
 
 		// initialize milli-second resolution level timer
 		MilliSecondTimer.initialize();
@@ -152,6 +150,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
+	public boolean isCatEnabled() {
+		return m_domain != null && m_domain.isEnabled();
+	}
+
+	String nextMessageId() {
+		return m_factory.getNextId();
+	}
+
+	@Override
 	public void reset() {
 		// destroy current thread local data
 		m_context.remove();
@@ -159,7 +166,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public void setup() {
-		Context ctx = new Context(m_domain, m_hostName, m_ipAddress);
+		Context ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
 
 		m_context.set(ctx);
 	}

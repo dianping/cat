@@ -117,8 +117,28 @@ package com.dianping.cat.message;
  * @author Frankie Wu
  */
 public interface MessageProducer {
+	/**
+	 * Create a new message id.
+	 * 
+	 * @return new message id
+	 */
 	public String createMessageId();
-	
+
+	/**
+	 * Check if the CAT client is enabled for current domain.
+	 * 
+	 * @return true if CAT client is enabled, false means CAT client is disabled.
+	 */
+	public boolean isEnabled();
+
+	/**
+	 * Log an error.
+	 * 
+	 * @param cause
+	 *           root cause exception
+	 */
+	public void logError(Throwable cause);
+
 	/**
 	 * Log an event in one shot.
 	 * 
@@ -132,14 +152,6 @@ public interface MessageProducer {
 	 *           name value pairs in the format of "a=1&b=2&..."
 	 */
 	public void logEvent(String type, String name, String status, String nameValuePairs);
-
-	/**
-	 * Log an error.
-	 * 
-	 * @param cause
-	 *           root cause exception
-	 */
-	public void logError(Throwable cause);
 
 	/**
 	 * Log a heartbeat in one shot.

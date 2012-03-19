@@ -65,7 +65,14 @@ public class Cat {
 
 	// this should be called during application initialization time
 	public static void initialize(File configFile) {
-		initialize(null, configFile);
+		Config config = loadClientConfig(configFile);
+
+		if (config != null) {
+			getInstance().m_manager.initializeClient(config);
+		} else {
+			getInstance().m_manager.initializeClient(null);
+			System.out.println("[WARN] Cat client is disabled due to no config file found!");
+		}
 	}
 
 	public static void initialize(PlexusContainer container, File configFile) {
@@ -78,14 +85,7 @@ public class Cat {
 			}
 		}
 
-		Config config = loadClientConfig(configFile);
-
-		if (config != null) {
-			getInstance().m_manager.initializeClient(config);
-		} else {
-			getInstance().m_manager.initializeClient(null);
-			System.out.println("[WARN] Cat client is disabled due to no config file found!");
-		}
+		initialize(configFile);
 	}
 
 	static Config loadClientConfig(File configFile) {

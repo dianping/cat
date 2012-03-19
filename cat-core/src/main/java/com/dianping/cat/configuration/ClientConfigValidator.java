@@ -9,6 +9,8 @@ import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.configuration.model.transform.DefaultValidator;
 
 public class ClientConfigValidator extends DefaultValidator {
+	private Config m_config;
+
 	private String getLocalAddress() {
 		try {
 			return InetAddress.getLocalHost().getHostAddress();
@@ -24,10 +26,15 @@ public class ClientConfigValidator extends DefaultValidator {
 		if (!"client".equals(config.getMode())) {
 			throw new RuntimeException(String.format("Attribute(%s) of /config is required in config: %s", "mode", config));
 		} else if (config.getServers().size() == 0) {
-			throw new RuntimeException(
-			      String.format("Element(%s) of /config is required in config: %s", "servers", config));
+			config.setEnabled(false);
+			System.out.println("[WARN] CAT client was disabled due to no CAT servers configured!");
+		} else if (config.getEnabled() != null && !config.isEnabled()) {
+			System.out.println("[WARN] CAT client was globally disabled!");
+		} else if (config.getEnabled() == null) {
+			config.setEnabled(true);
 		}
 
+		m_config = config;
 		super.visitConfig(config);
 	}
 
@@ -42,6 +49,11 @@ public class ClientConfigValidator extends DefaultValidator {
 
 		if (domain.getIp() == null) {
 			domain.setIp(getLocalAddress());
+		}
+
+		if (!domain.isEnabled() && m_config.isEnabled()) {
+			m_config.setEnabled(false);
+			System.out.println("[WARN] CAT client was disabled in domain(" + domain.getId() + ") explicitly!");
 		}
 	}
 
@@ -58,5 +70,4 @@ public class ClientConfigValidator extends DefaultValidator {
 			server.setEnabled(true);
 		}
 	}
-
 }

@@ -40,7 +40,9 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 				List<Server> servers = config.getServers();
 				int size = servers.size();
 
-				if (size == 1) {
+				if (size == 0 || !config.isEnabled()) {
+					m_sender = lookup(MessageSender.class, "in-memory");
+				} else if (size == 1) {
 					TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, "tcp-socket");
 					Server server = servers.get(0);
 
@@ -49,8 +51,6 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 					sender.initialize();
 
 					m_sender = sender;
-				} else if (size == 0) {
-					m_sender = lookup(MessageSender.class, "in-memory");
 				} else {
 					throw new UnsupportedOperationException("Not implemented yet");
 				}

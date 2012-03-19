@@ -62,6 +62,13 @@ public interface MessageManager {
 	public void initializeServer(Config config);
 
 	/**
+	 * Check if CAT logging is enabled or disabled.
+	 * 
+	 * @return true if CAT is enabled
+	 */
+	public boolean isCatEnabled();
+
+	/**
 	 * Do cleanup for current thread environment in order to release resources in
 	 * thread local objects.
 	 */

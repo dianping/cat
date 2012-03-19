@@ -6,6 +6,10 @@
 		<servlet-name>mvc-servlet</servlet-name>
 		<servlet-class>com.site.web.MVC</servlet-class>
 		<load-on-startup>2</load-on-startup>
+		<init-param>
+			<param-name>cat-client-xml</param-name>
+			<param-value>/data/appdatas/cat/client.xml</param-value>
+		</init-param>
 	</servlet>
 	<servlet>
 		<servlet-name>cat-servlet</servlet-name>

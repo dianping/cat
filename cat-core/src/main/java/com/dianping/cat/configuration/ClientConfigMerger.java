@@ -15,8 +15,9 @@ public class ClientConfigMerger extends DefaultMerger {
 		if (old != null) {
 			getStack().push(old);
 
-			// if servers is configured, then never merge it
-			if (old.getServers().isEmpty()) {
+			// if servers is configured, then override it instead of merge
+			if (!config.getServers().isEmpty()) {
+				old.getServers().clear();
 				old.getServers().addAll(config.getServers());
 			}
 
