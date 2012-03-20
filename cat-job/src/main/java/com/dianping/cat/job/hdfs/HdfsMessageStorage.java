@@ -88,9 +88,9 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 		private void handle(MessageTree tree) {
 			try {
 				OutputChannel channel = m_manager.openChannel(tree, false);
-				boolean success = channel.write(tree);
+				int length = channel.write(tree);
 
-				if (!success) {
+				if (length <= 0) {
 					m_manager.closeChannel(channel);
 
 					channel = m_manager.openChannel(tree, true);
@@ -149,9 +149,9 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 			}
 		}
 	}
-	
-	public MessageTree get(String messageId){
-		//TODO
+
+	public MessageTree get(String messageId) {
+		// TODO
 		return null;
 	}
 

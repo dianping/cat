@@ -16,26 +16,17 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 public class DefaultInputChannelManager extends ContainerHolder implements InputChannelManager, Initializable,
       LogEnabled {
 	@Inject
-	private MessagePathBuilder m_builder;
-
-	@Inject
-	private String m_baseDir = "target/hdfs";
-
-	@Inject
 	private URI m_serverUri;
 
 	private FileSystem m_fs;
 
-	private Path m_basePath;
-
-	private Map<String, InputChannel> m_channels = new HashMap<String, InputChannel>();
+	private Map<String, DefaultInputChannel> m_channels = new HashMap<String, DefaultInputChannel>();
 
 	private Logger m_logger;
 
@@ -44,7 +35,7 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 		try {
 			List<String> expired = new ArrayList<String>();
 
-			for (Map.Entry<String, InputChannel> e : m_channels.entrySet()) {
+			for (Map.Entry<String, DefaultInputChannel> e : m_channels.entrySet()) {
 				if (e.getValue().isExpired()) {
 					expired.add(e.getKey());
 				}
@@ -62,7 +53,7 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 
 	@Override
 	public void closeAllChannels() {
-		for (InputChannel channel : m_channels.values()) {
+		for (DefaultInputChannel channel : m_channels.values()) {
 			closeChannel(channel);
 		}
 	}
@@ -93,35 +84,29 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 			}
 
 			m_fs = fs;
-			m_basePath = new Path(m_fs.getWorkingDirectory(), m_baseDir);
 		} catch (Exception e) {
 			throw new InitializationException("Error when getting HDFS file system.", e);
 		}
 	}
 
-	public void setBaseDir(String baseDir) {
-		m_baseDir = baseDir;
-	}
-
-	public void setServerUri(String serverUri) {
-		m_serverUri = URI.create(serverUri);
-	}
-
 	@Override
-	public InputChannel openChannel(String messageId) throws IOException {
-		String path = m_builder.getHdfsPath(messageId);
-		InputChannel channel = m_channels.get(path);
+	public InputChannel openChannel(String path) throws IOException {
+		DefaultInputChannel channel = m_channels.get(path);
 
 		if (channel == null) {
-			Path file = new Path(m_basePath, path + "-0");
+			Path file = new Path(path);
 			FSDataInputStream in = m_fs.open(file);
 
-			channel = lookup(InputChannel.class);
+			channel = (DefaultInputChannel) lookup(InputChannel.class);
 			channel.initialize(in);
 
 			m_channels.put(path, channel);
 		}
 
 		return channel;
+	}
+
+	public void setServerUri(String serverUri) {
+		m_serverUri = URI.create(serverUri);
 	}
 }

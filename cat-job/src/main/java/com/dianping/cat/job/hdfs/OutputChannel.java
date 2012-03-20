@@ -32,6 +32,13 @@ public interface OutputChannel {
 	 * @return false if the max size is reached, false otherwise.
 	 * @throws IOException
 	 */
-	public boolean write(MessageTree tree) throws IOException;
+	public int write(MessageTree tree) throws IOException;
+	
+	/**
+	 * Get the size of data written to the output channel.
+	 * 
+	 * @return size of data written to the output channel
+	 */
+	public int getSize();
 
 }

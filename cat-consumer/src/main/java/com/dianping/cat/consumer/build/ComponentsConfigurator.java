@@ -10,7 +10,6 @@ import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
-import com.dianping.cat.consumer.logview.LogViewPostHandler;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
@@ -50,10 +49,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, MessagePathBuilder.class));
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
-
-		// TODO remove it later
-		all.add(C(LogViewPostHandler.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, MessagePathBuilder.class));
 
 		return all;
 	}

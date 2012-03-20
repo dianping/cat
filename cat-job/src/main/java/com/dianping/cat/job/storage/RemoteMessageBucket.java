@@ -5,81 +5,91 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Collection;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
+import com.dianping.cat.job.hdfs.InputChannel;
+import com.dianping.cat.job.hdfs.InputChannelManager;
+import com.dianping.cat.job.hdfs.OutputChannel;
+import com.dianping.cat.job.hdfs.OutputChannelManager;
 import com.dianping.cat.job.sql.dal.Logview;
 import com.dianping.cat.job.sql.dal.LogviewDao;
 import com.dianping.cat.job.sql.dal.LogviewEntity;
-import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.hdfs.HdfsDataStore;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
-public class RemoteMessageBucket implements Bucket<MessageTree> {
+public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 	@Inject
-	private MessageCodec codec;
-	
+	private OutputChannelManager m_outputChannelManager;
+
 	@Inject
-	private LogviewDao logviewDao;
+	private InputChannelManager m_inputChannelManager;
 
-	private HdfsDataStore dataStore;
+	@Inject
+	private LogviewDao m_logviewDao;
 
-	private String logicalPath;
+	private OutputChannel m_outputChannel;
 
-	private String hdfsPath;
-	
-	public void setCodec(MessageCodec codec) {
-		this.codec = codec;
-	}
-	
+	private String m_path;
+
+	private Logger m_logger;
+
 	@Override
 	public void close() throws IOException {
-		this.dataStore.close();
+		m_outputChannelManager.closeChannel(m_outputChannel);
 	}
 
 	@Override
 	public void deleteAndCreate() throws IOException {
-		this.initialize(null, null, this.logicalPath);
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	@Override
 	public MessageTree findById(String id) throws IOException {
-		Logview logview;
 		try {
-			logview = this.logviewDao.findByPK(id, LogviewEntity.READSET_FULL);
+			Logview logview = m_logviewDao.findByPK(id, LogviewEntity.READSET_FULL);
+			MessageTree tree = readMessageTree(logview);
+
+			return tree;
 		} catch (DalException e) {
-			throw new IOException(e);
-		}
-		if (logview == null) {
+			m_logger.error(String.format("Unable to find message(%s)!", id), e);
+
 			return null;
 		}
-		 byte[] bytes = dataStore.get(logview.getDataOffset(), logview.getDataLength());
-		 this.codec.
 	}
-	
-	protected byte[] findByIdAndTag(String id, String tagName, boolean direction) throws IOException {
+
+	protected MessageTree findByIdAndTag(String id, String tagName, boolean direction) throws IOException {
 		String tagThread = null;
 		String tagSession = null;
 		String tagRequest = null;
+
 		if (tagName.startsWith("r:")) {
 			tagRequest = tagName;
-		}
-		if (tagName.startsWith("s:")) {
+		} else if (tagName.startsWith("s:")) {
 			tagSession = tagName;
-		}
-		if (tagName.startsWith("t:")) {
+		} else if (tagName.startsWith("t:")) {
 			tagThread = tagName;
 		}
-		Logview logview;
+
 		try {
-			logview = this.logviewDao.findNextByMessageIdTags(id, direction, tagThread, tagSession, tagRequest, LogviewEntity.READSET_FULL);
+			Logview logview = m_logviewDao.findNextByMessageIdTags(id, direction, tagThread, tagSession, tagRequest,
+			      LogviewEntity.READSET_FULL);
+			MessageTree tree = readMessageTree(logview);
+
+			return tree;
 		} catch (DalException e) {
-			throw new IOException(e);
-		}
-		if (logview == null) {
+			String message = String.format("Unable to find next message(%s) with tag(%s) and direction(%s)!", id, tagName,
+			      direction);
+
+			m_logger.error(message, e);
 			return null;
 		}
-		return dataStore.get(logview.getDataOffset(), logview.getDataLength());
 	}
 
 	@Override
@@ -98,59 +108,67 @@ public class RemoteMessageBucket implements Bucket<MessageTree> {
 
 	@Override
 	public Collection<String> getIdsByPrefix(String prefix) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
-		this.logicalPath = logicalPath;
+		String ipAddress = InetAddress.getLocalHost().getHostAddress();
 
-		File file = new File(baseDir, logicalPath);
-		File parent = file.getParentFile();
-		parent.mkdirs();
+		m_path = logicalPath + "-" + ipAddress + "-" + System.currentTimeMillis();
+		m_outputChannel = m_outputChannelManager.openChannel(m_path, false);
+	}
 
-		String hdfsDir = parent.getAbsolutePath();
-		String filename = new File(logicalPath).getName() + "-" + InetAddress.getLocalHost().getHostAddress();
-		this.hdfsPath = new File(hdfsDir, filename).getAbsolutePath();
+	protected MessageTree readMessageTree(Logview logview) throws IOException {
+		InputChannel inputChannel = null;
 
+		try {
+			String path = logview.getDataPath();
+			long offset = logview.getDataOffset();
+			int length = logview.getDataLength();
+
+			inputChannel = m_inputChannelManager.openChannel(path);
+
+			MessageTree tree = inputChannel.read(offset, length);
+
+			return tree;
+		} finally {
+			if (inputChannel != null) {
+				m_inputChannelManager.closeChannel(inputChannel);
+			}
+		}
 	}
 
 	@Override
-	public boolean storeById(String id, MessageTree data) throws IOException {
-		Logview logview;
+	public boolean storeById(String id, MessageTree tree) throws IOException {
+		// check if it's already stored
 		try {
-			logview = this.logviewDao.findByPK(id, LogviewEntity.READSET_FULL);
-		} catch (DalException e) {
-			throw new IOException(e);
-		}
-		if (logview != null) {
-			return false;
-		}
-		Logview logView = new Logview();
-		logView.setDataOffset(this.dataStore.length());
-		logView.setDataLength(data.length);
-		logView.setDataPath(this.hdfsPath);
-		if (tags != null) {
-			for (String tag : tags) {
-				if (tag.startsWith("r:")) {
-					logView.setTagRequest(tag);
-				}
-				if (tag.startsWith("s:")) {
-					logView.setTagSession(tag);
-				}
-				if (tag.startsWith("t:")) {
-					logView.setTagThread(tag);
-				}
-			}
-		}
-		this.dataStore.append(data);
-		try {
-			this.logviewDao.insert(logView);
-		} catch (DalException e) {
-			throw new IOException(e);
-		}
-		return true;
-	}
+			m_logviewDao.findByPK(id, LogviewEntity.READSET_FULL);
 
+			return false;
+		} catch (DalException e) {
+			// not exist
+		}
+
+		int offset = m_outputChannel.getSize();
+		int length = m_outputChannel.write(tree);
+
+		Logview logview = m_logviewDao.createLocal();
+
+		logview.setMessageId(tree.getMessageId());
+		logview.setDataPath(m_path);
+		logview.setDataOffset(offset);
+		logview.setDataLength(length);
+		logview.setTagThread("t:" + tree.getThreadId());
+		logview.setTagSession("s:" + tree.getSessionToken());
+		logview.setTagRequest("r:" + tree.getMessageId());
+
+		try {
+			m_logviewDao.insert(logview);
+
+			return true;
+		} catch (DalException e) {
+			throw new IOException("Error when inserting into logiew table!", e);
+		}
+	}
 }

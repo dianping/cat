@@ -1,8 +1,8 @@
 package com.dianping.cat.job.hdfs;
 
 import java.io.IOException;
-import java.io.InputStream;
 
+import org.apache.hadoop.fs.FSDataInputStream;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
@@ -15,10 +15,7 @@ public class DefaultInputChannel implements InputChannel {
 	@Inject
 	private MessageCodec m_codec;
 
-
-	private InputStream m_in;
-
-
+	private FSDataInputStream m_in;
 
 	@Override
 	public void close() {
@@ -32,16 +29,19 @@ public class DefaultInputChannel implements InputChannel {
 		}
 	}
 
-	@Override
-	public void initialize(InputStream in) {
+	public void initialize(FSDataInputStream in) {
 		m_in = in;
 	}
 
 	@Override
-	public MessageTree read(int index, int length) throws IOException {
+	public MessageTree read(long offset, int length) throws IOException {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
+
+		m_in.seek(offset);
 		buf.writeBytes(m_in, length);
+
 		MessageTree tree = new DefaultMessageTree();
+
 		m_codec.decode(buf, tree);
 		return tree;
 	}

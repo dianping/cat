@@ -12,7 +12,7 @@ import com.dianping.cat.message.io.InMemoryTest;
 import com.dianping.cat.message.io.TcpSocketTest;
 import com.dianping.cat.message.spi.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
-import com.dianping.cat.storage.BucketTest;
+import com.dianping.cat.storage.BucketManagerTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -45,7 +45,7 @@ PlainTextMessageCodecTest.class,
 HtmlMessageCodecTest.class,
 
 /* .storage */
-BucketTest.class
+BucketManagerTest.class
 
 })
 public class AllTests {

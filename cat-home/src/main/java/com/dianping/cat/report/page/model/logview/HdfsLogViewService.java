@@ -10,7 +10,6 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -25,11 +24,8 @@ public class HdfsLogViewService implements ModelService<String> {
 	@Inject
 	private BucketManager m_bucketManager;
 
-	@Inject(value = "plain-text")
-	private MessageCodec m_plainDecode;
-
 	@Inject(value = "html")
-	private MessageCodec m_htmlCodec;
+	private MessageCodec m_codec;
 
 	@Override
 	public ModelResponse<String> invoke(ModelRequest request) {
@@ -41,33 +37,28 @@ public class HdfsLogViewService implements ModelService<String> {
 		ModelResponse<String> response = new ModelResponse<String>();
 
 		try {
-			Bucket<byte[]> bucket = m_bucketManager.getHdfsBucket(path);
-			byte[] data = null;
+			Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
+			MessageTree tree = null;
 
 			if (tag != null && direction != null) {
 				Boolean d = Boolean.valueOf(direction);
 
 				if (d.booleanValue()) {
-					data = bucket.findNextById(messageId, tag);
+					tree = bucket.findNextById(messageId, tag);
 				} else {
-					data = bucket.findPreviousById(messageId, tag);
+					tree = bucket.findPreviousById(messageId, tag);
 				}
 			}
 
 			// if not found, use current instead
-			if (data == null) {
-				data = bucket.findById(messageId);
+			if (tree == null) {
+				tree = bucket.findById(messageId);
 			}
 
-			if (data != null) {
+			if (tree != null) {
 				ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-				MessageTree tree = new DefaultMessageTree();
 
-				buf.writeBytes(data);
-				m_plainDecode.decode(buf, tree);
-				buf.resetReaderIndex();
-				buf.resetWriterIndex();
-				m_htmlCodec.encode(tree, buf);
+				m_codec.encode(tree, buf);
 				buf.readInt(); // get rid of length
 				response.setModel(buf.toString(Charset.forName("utf-8")));
 			}

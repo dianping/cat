@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.job.sql.dal" gen="true">
-
 	<entity name="logview">
 		<var name="direction" value-type="boolean" />
 		<var name="message-ids" value-type="String[]" />
@@ -46,7 +45,8 @@
 		</query-defs>
 	</entity>
 	<entity name="report" table="report" alias="r">
-		<query-defs>
+		<member name="creation-date" insert-expr="now()" />
+  		<query-defs>
 			<query name="find-by-period-domain-type-name" type="SELECT">
 				<param name="period" />
 				<param name="domain" />
@@ -72,6 +72,15 @@
 					AND <FIELD name='type'/> = ${type}
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
+			</query>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[
+					INSERT 
+					INTO <TABLE/>(<FIELDS/>) 
+					VALUES(<VALUES/>)
+					ON DUPLICATE KEY 
+						UPDATE <FIELD name='content'/> = ${content}
+				]]></statement>
 			</query>
 		</query-defs>
 	</entity>

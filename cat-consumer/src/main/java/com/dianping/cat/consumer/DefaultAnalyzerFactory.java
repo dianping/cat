@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer;
 
 import com.dianping.cat.consumer.ip.IpAnalyzer;
-import com.dianping.cat.consumer.logview.LogViewPostHandler;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
@@ -29,11 +28,6 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			IpAnalyzer analyzer = lookup(IpAnalyzer.class);
 
 			return analyzer;
-		} else if (name.equals("logview")) {
-			LogViewPostHandler handler = lookup(LogViewPostHandler.class);
-
-			handler.initialize(start);
-			return handler;
 		}
 
 		throw new RuntimeException(String.format("No analyzer(%s) found!", name));

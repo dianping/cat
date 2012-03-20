@@ -28,7 +28,7 @@ public class HdfsProblemService implements ModelService<ProblemReport> {
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getStringBucket(path);
+			bucket = m_bucketManager.getReportBucket(path);
 
 			String xml = bucket.findById("problem-" + domain);
 

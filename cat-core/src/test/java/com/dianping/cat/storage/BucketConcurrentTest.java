@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -41,41 +40,6 @@ public class BucketConcurrentTest extends ComponentTestCase {
 		tree.setThreadName("threadName");
 
 		return tree;
-	}
-
-	@Test
-	@Ignore
-	public void testBytesBucket() throws Exception {
-		BucketManager manager = lookup(BucketManager.class);
-		Bucket<byte[]> bucket = manager.getBytesBucket("concurrent/bytes");
-
-		// store it and load it
-		for (int i = 0; i < 100; i++) {
-			String id = "id" + i;
-			String t1 = "value" + i;
-			boolean success = bucket.storeById(id, t1.getBytes());
-
-			if (success) {
-				String t2 = new String(bucket.findById(id));
-
-				Assert.assertEquals("Unable to find data after stored it.", t1, t2);
-			} else {
-				Assert.fail("Data failed to store at i=" + i + ".");
-			}
-		}
-
-		// close and reload it, check if everything is okay
-		bucket.close();
-		bucket.initialize(byte[].class, new File("target/bucket/"), "concurrent/bytes");
-
-		// store it and load it
-		for (int i = 0; i < 100; i++) {
-			String id = "id" + i;
-			String t1 = "value" + i;
-			String t2 = new String(bucket.findById(id));
-
-			Assert.assertEquals("Unable to find data by id.", t1, t2);
-		}
 	}
 
 	@Test
@@ -145,7 +109,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 	@Test
 	public void testStringBucket() throws Exception {
 		BucketManager manager = lookup(BucketManager.class);
-		final Bucket<String> bucket = manager.getStringBucket("concurrent/data");
+		final Bucket<String> bucket = manager.getReportBucket("concurrent/data");
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
 		for (int p = 0; p < 10; p++) {
@@ -173,7 +137,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 
 		pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
 
-		final Bucket<String> bucket2 = manager.getStringBucket("concurrent/data");
+		final Bucket<String> bucket2 = manager.getReportBucket("concurrent/data");
 
 		for (int p = 0; p < 10; p++) {
 			final int num = p;

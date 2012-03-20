@@ -104,6 +104,11 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 	@Override
 	public OutputChannel openChannel(MessageTree tree, boolean forceNew) throws IOException {
 		String path = m_builder.getHdfsPath(tree.getMessageId());
+		
+		return openChannel(path, forceNew);
+	} 
+	
+	public OutputChannel openChannel(String path, boolean forceNew) throws IOException {
 		OutputChannel channel = m_channels.get(path);
 
 		if (channel == null) {

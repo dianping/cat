@@ -19,7 +19,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.consumer.logview.LogViewPostHandler;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
@@ -219,12 +218,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			m_executor.submit(task);
 			m_currentAnalyzers.put(name, analyzer);
 		}
-
-		LogViewPostHandler handler = (LogViewPostHandler) m_factory.create("logview", start, m_duration, m_extraTime);
-
-		handler.setDomains(m_domains);
-		m_executor.submit(new FinalizerTask(m_factory, handler, m_duration, latch));
-		m_currentAnalyzers.put("logview", handler);
 
 		int len = m_periods.size();
 

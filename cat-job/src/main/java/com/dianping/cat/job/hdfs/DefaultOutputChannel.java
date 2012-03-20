@@ -60,7 +60,7 @@ public class DefaultOutputChannel implements OutputChannel {
 	}
 
 	@Override
-	public boolean write(MessageTree tree) throws IOException {
+	public int write(MessageTree tree) throws IOException {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 		m_codec.encode(tree, buf);
@@ -69,7 +69,7 @@ public class DefaultOutputChannel implements OutputChannel {
 
 		if (m_maxSize > 0 && m_count + length + 1 > m_maxSize) {
 			// exceed the max size
-			return false;
+			return 0;
 		}
 
 		buf.getBytes(buf.readerIndex(), m_out, length);
@@ -78,7 +78,11 @@ public class DefaultOutputChannel implements OutputChannel {
 		m_out.write('\n');
 		m_count += length + 1;
 
-		return true;
+		return length+1;
 	}
 
+	@Override
+	public int getSize() {
+		return m_count;
+	}
 }
