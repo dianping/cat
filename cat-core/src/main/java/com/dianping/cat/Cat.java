@@ -97,10 +97,14 @@ public class Cat {
 			// so that OPS can:
 			// - configure the cat servers to connect
 			// - enable/disable Cat for specific domain(s)
-			if (configFile != null && configFile.exists()) {
-				String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
+			if (configFile != null) {
+				if (configFile.exists()) {
+					String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
 
-				globalConfig = new DefaultXmlParser().parse(xml);
+					globalConfig = new DefaultXmlParser().parse(xml);
+				} else {
+					System.out.format("[WARN] global config file(%s) not found, IGNORED.", configFile);
+				}
 			}
 
 			// load the client configure from Java class-path
