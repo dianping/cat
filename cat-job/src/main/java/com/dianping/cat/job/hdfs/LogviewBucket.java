@@ -26,6 +26,10 @@ public class LogviewBucket extends ContainerHolder implements Bucket<byte[]> {
 	private String logicalPath;
 
 	private String hdfsPath;
+	
+	public void setLogviewDao(LogviewDao logviewDao) {
+		this.logviewDao = logviewDao;
+	}
 
 	@Override
 	public void close() throws IOException {
