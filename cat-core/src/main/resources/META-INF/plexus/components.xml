@@ -192,7 +192,7 @@
 				</requirement>
 			</requirements>
 		</component>
-		<component>
+		<!-- component>
 			<role>com.dianping.cat.storage.Bucket</role>
 			<role-hint>java.lang.String</role-hint>
 			<implementation>com.dianping.cat.storage.internal.LocalStringBucket</implementation>
@@ -217,7 +217,7 @@
 					<role-hint>plain-text</role-hint>
 				</requirement>
 			</requirements>
-		</component>
+		</component-->
 		<component>
 			<role>com.dianping.cat.storage.BucketManager</role>
 			<implementation>com.dianping.cat.storage.internal.DefaultBucketManager</implementation>
