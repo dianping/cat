@@ -21,5 +21,13 @@ public interface Bucket<T> {
 
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException;;
 
+	/**
+	 * store the data by id into the bucket.
+	 * 
+	 * @param id
+	 * @param data
+	 * @return true means the data was stored in the bucket, otherwise false.
+	 * @throws IOException
+	 */
 	public boolean storeById(String id, T data) throws IOException;;
 }

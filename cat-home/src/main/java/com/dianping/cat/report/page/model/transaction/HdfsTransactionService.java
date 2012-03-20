@@ -23,7 +23,7 @@ public class HdfsTransactionService implements ModelService<TransactionReport> {
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(new Date(date), domain);
+			bucket = m_bucketManager.getReportBucket(new Date(date), domain, "remote");
 
 			String xml = bucket.findById(domain);
 

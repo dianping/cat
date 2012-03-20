@@ -19,6 +19,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
@@ -208,6 +209,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_lastAnalyzers.putAll(m_currentAnalyzers);
 		m_currentAnalyzers.clear();
 
+		Cat.setup("realtime-consumer");
+		
 		for (String name : m_analyzerNames) {
 			MessageAnalyzer analyzer = m_factory.create(name, start, m_duration, m_extraTime);
 			MessageQueue queue = lookup(MessageQueue.class);
@@ -305,10 +308,16 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		public void run() {
-			m_analyzer.analyze(m_queue);
-			m_factory.release(m_analyzer);
-			m_factory.release(m_queue);
-			m_latch.countDown();
+			Cat.setup("realtime-consumer-task");
+
+			try {
+				m_analyzer.analyze(m_queue);
+				m_factory.release(m_analyzer);
+				m_factory.release(m_queue);
+				m_latch.countDown();
+			} finally {
+				Cat.reset();
+			}
 		}
 	}
 }
