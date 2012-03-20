@@ -8,7 +8,6 @@ import org.jboss.netty.buffer.ChannelBuffers;
 
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -18,9 +17,6 @@ import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
 
 public class HdfsLogViewService implements ModelService<String> {
-	@Inject
-	private MessagePathBuilder m_pathBuilder;
-
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -33,11 +29,10 @@ public class HdfsLogViewService implements ModelService<String> {
 		String direction = request.getProperty("direction");
 		String tag = request.getProperty("tag");
 		MessageId id = MessageId.parse(messageId);
-		String path = m_pathBuilder.getMessagePath(id.getDomain(), new Date(id.getTimestamp()));
 		ModelResponse<String> response = new ModelResponse<String>();
 
 		try {
-			Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
+			Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(id.getTimestamp()), id.getDomain());
 			MessageTree tree = null;
 
 			if (tag != null && direction != null) {

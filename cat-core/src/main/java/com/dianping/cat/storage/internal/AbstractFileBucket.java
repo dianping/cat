@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,10 +21,13 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import com.dianping.cat.storage.Bucket;
 import com.site.helper.Joiners;
 import com.site.helper.Splitters;
+import com.site.lookup.annotation.Inject;
 
 public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	private static final String[] EMPTY = new String[0];
 
+	@Inject
+	private String m_baseDir = "target/bucket";
 
 	// key => offset of record
 	private Map<String, Long> m_idToOffsets = new HashMap<String, Long>();
@@ -180,11 +184,10 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	}
 
 	@Override
-	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
-		File path = new File(baseDir, logicalPath);
+	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
-		m_file = path;
+		m_file = new File(m_baseDir, getLogicalPath(timestamp, name));
 		m_file.getParentFile().mkdirs();
 		m_writeFile = new RandomAccessFile(m_file, "rw");
 		m_readFile = new RandomAccessFile(m_file, "r");
@@ -193,6 +196,8 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 			loadIndexes();
 		}
 	}
+
+	protected abstract String getLogicalPath(Date timestamp, String name);
 
 	protected abstract boolean isAutoFlush();
 

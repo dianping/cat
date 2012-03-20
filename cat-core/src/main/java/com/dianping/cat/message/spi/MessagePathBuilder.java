@@ -12,5 +12,5 @@ public interface MessagePathBuilder {
 
 	public String getMessagePath(String domain, Date timestamp);
 
-	public String getReportPath(Date timestamp);
+	public String getReportPath(String name, Date timestamp);
 }

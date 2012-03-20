@@ -64,10 +64,10 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
-	public String getReportPath(Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/report");
+	public String getReportPath(String name, Date timestamp) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/report-{1}");
 
-		return format.format(new Object[] { timestamp });
+		return format.format(new Object[] { timestamp, name });
 	}
 
 	@Override

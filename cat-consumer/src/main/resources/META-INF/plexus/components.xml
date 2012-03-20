@@ -51,9 +51,6 @@
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -73,19 +70,6 @@
 			<role>com.dianping.cat.consumer.ip.IpAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.logview.LogViewPostHandler</role>
-			<implementation>com.dianping.cat.consumer.logview.LogViewPostHandler</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-			</requirements>
 		</component>
 	</components>
 </plexus>

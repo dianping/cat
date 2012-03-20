@@ -2,6 +2,7 @@ package com.dianping.cat.storage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -44,8 +45,9 @@ public class BucketConcurrentTest extends ComponentTestCase {
 
 	@Test
 	public void testMessageBucket() throws Exception {
+		Date timestamp = new Date();
 		BucketManager manager = lookup(BucketManager.class);
-		final Bucket<MessageTree> bucket = manager.getMessageBucket("concurrent/message");
+		final Bucket<MessageTree> bucket = manager.getMessageBucket(timestamp, "concurrent/message");
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
 		for (int p = 0; p < 10; p++) {
@@ -108,8 +110,9 @@ public class BucketConcurrentTest extends ComponentTestCase {
 
 	@Test
 	public void testStringBucket() throws Exception {
+		Date timestamp = new Date();
 		BucketManager manager = lookup(BucketManager.class);
-		final Bucket<String> bucket = manager.getReportBucket("concurrent/data");
+		final Bucket<String> bucket = manager.getReportBucket(timestamp, "concurrent/data");
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
 		for (int p = 0; p < 10; p++) {
@@ -137,7 +140,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 
 		pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
 
-		final Bucket<String> bucket2 = manager.getReportBucket("concurrent/data");
+		final Bucket<String> bucket2 = manager.getReportBucket(timestamp, "concurrent/data");
 
 		for (int p = 0; p < 10; p++) {
 			final int num = p;

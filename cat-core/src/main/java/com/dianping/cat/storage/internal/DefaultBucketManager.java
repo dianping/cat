@@ -1,7 +1,7 @@
 package com.dianping.cat.storage.internal;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,28 +11,25 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
 
 public class DefaultBucketManager extends ContainerHolder implements BucketManager, Disposable {
-	@Inject
-	private String m_baseDir;
-
 	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();
 
 	@Override
 	public void closeBucket(Bucket<?> bucket) {
 		try {
 			bucket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			// ignore it
 		}
+
 		release(bucket);
 	}
 
-	protected Bucket<?> createBucket(String path, Class<?> type) throws IOException {
+	protected Bucket<?> createBucket(Class<?> type, Date timestamp, String name) throws IOException {
 		Bucket<?> bucket = lookup(Bucket.class, type.getName());
 
-		bucket.initialize(type, new File(m_baseDir), path);
+		bucket.initialize(type, name, timestamp);
 		return bucket;
 	}
 
@@ -44,12 +41,8 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T> Bucket<T> getBucket(Class<T> type, String path) throws IOException {
-		if (type == null || path == null) {
-			throw new IllegalArgumentException(String.format("Type(%s) or path(%s) can't be null.", type, path));
-		}
-
-		Entry entry = new Entry(type, path);
+	protected <T> Bucket<T> getBucket(Class<T> type, Date timestamp, String name) throws IOException {
+		Entry entry = new Entry(type, timestamp, name);
 		Bucket<?> bucket = m_map.get(entry);
 
 		if (bucket == null) {
@@ -57,7 +50,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 				bucket = m_map.get(entry);
 
 				if (bucket == null) {
-					bucket = createBucket(path, type);
+					bucket = createBucket(type, timestamp, name);
 					m_map.put(entry, bucket);
 				}
 			}
@@ -67,27 +60,26 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@Override
-	public Bucket<MessageTree> getMessageBucket(String path) throws IOException {
-		return getBucket(MessageTree.class, path);
+	public Bucket<MessageTree> getMessageBucket(Date timestamp, String domain) throws IOException {
+		return getBucket(MessageTree.class, timestamp, domain);
 	}
 
 	@Override
-	public Bucket<String> getReportBucket(String path) throws IOException {
-		return getBucket(String.class, path);
-	}
-
-	public void setBaseDir(String baseDir) {
-		m_baseDir = baseDir;
+	public Bucket<String> getReportBucket(Date timestamp, String name) throws IOException {
+		return getBucket(String.class, timestamp, name);
 	}
 
 	static class Entry {
 		private Class<?> m_type;
 
-		private String m_path;
+		private Date m_timestamp;
 
-		public Entry(Class<?> type, String path) {
+		private String m_name;
+
+		public Entry(Class<?> type, Date timestamp, String name) {
 			m_type = type;
-			m_path = path;
+			m_timestamp = timestamp;
+			m_name = name;
 		}
 
 		@Override
@@ -95,14 +87,19 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			if (obj instanceof Entry) {
 				Entry e = (Entry) obj;
 
-				return e.getType() == m_type && e.getPath().equals(m_path);
+				return e.getType() == m_type && e.getTimestamp().getTime() == m_timestamp.getTime()
+				      && e.getName().equals(m_name);
 			}
 
 			return false;
 		}
 
-		public String getPath() {
-			return m_path;
+		public String getName() {
+			return m_name;
+		}
+
+		public Date getTimestamp() {
+			return m_timestamp;
 		}
 
 		public Class<?> getType() {
@@ -113,7 +110,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		public int hashCode() {
 			int hashcode = m_type.hashCode();
 
-			hashcode = hashcode * 31 + m_path.hashCode();
+			hashcode = hashcode * 31 + m_name.hashCode();
 			return hashcode;
 		}
 	}

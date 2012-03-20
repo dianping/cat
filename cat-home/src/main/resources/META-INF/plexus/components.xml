@@ -45,9 +45,6 @@
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -83,9 +80,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -135,9 +129,6 @@
 			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
@@ -151,9 +142,6 @@
 			<role-hint>logview-hdfs</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.HdfsLogViewService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
@@ -374,9 +362,6 @@
 			<role>com.dianping.cat.report.page.model.logview.LocalLogViewService</role>
 			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>

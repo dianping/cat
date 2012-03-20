@@ -1,10 +1,12 @@
 package com.dianping.cat.storage.internal;
 
 import java.io.IOException;
+import java.util.Date;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
@@ -12,6 +14,9 @@ import com.site.lookup.annotation.Inject;
 public class LocalMessageBucket extends AbstractFileBucket<MessageTree> {
 	@Inject
 	private MessageCodec m_codec;
+
+	@Inject
+	private MessagePathBuilder m_pathBuilder;
 
 	@Override
 	protected MessageTree decode(ChannelBuffer buf) throws IOException {
@@ -42,5 +47,10 @@ public class LocalMessageBucket extends AbstractFileBucket<MessageTree> {
 
 	public void setCodec(MessageCodec codec) {
 		m_codec = codec;
+	}
+
+	@Override
+	protected String getLogicalPath(Date timestamp, String domain) {
+		return m_pathBuilder.getMessagePath(domain, timestamp);
 	}
 }

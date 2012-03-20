@@ -43,7 +43,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(Handler.class, new String[] { FAILURE.getName(), LONG_URL.getName() }, "m_handlers") //
-		      .req(BucketManager.class, MessagePathBuilder.class));
+		      .req(BucketManager.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, MessagePathBuilder.class));

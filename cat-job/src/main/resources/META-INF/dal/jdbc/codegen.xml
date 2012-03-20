@@ -11,9 +11,9 @@
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-message-id" value-type="String" key-member="message-id" />
     <primary-key name="PRIMARY" members="message_id" />
-    <index name="mid_thread" members="message_id ASC, tag_thread ASC" />
-    <index name="mid_session" members="message_id ASC, tag_session ASC" />
-    <index name="mid_request" members="message_id ASC, tag_request ASC" />
+    <index name="tag_thread" members="tag_thread ASC" />
+    <index name="tag_session" members="tag_session ASC" />
+    <index name="tag_request" members="tag_request ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -39,16 +39,16 @@
     </query-defs>
   </entity>
   <entity name="report" table="report" alias="r">
-    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
-    <member name="name" field="name" value-type="String" length="20" />
-    <member name="domain" field="domain" value-type="String" length="20" />
-    <member name="period" field="period" value-type="Date" />
-    <member name="content" field="content" value-type="String" length="16777215" />
-    <member name="creation-date" field="creation_date" value-type="Date" />
+    <member name="name" field="name" value-type="String" length="20" nullable="false" />
+    <member name="domain" field="domain" value-type="String" length="20" nullable="false" />
+    <member name="period" field="period" value-type="Date" nullable="false" />
+    <member name="content" field="content" value-type="String" length="16777215" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="period_name" members="period ASC, domain ASC" />
+    <index name="period_domain_name_type" unique="true" members="period ASC, domain ASC, name ASC, type ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>

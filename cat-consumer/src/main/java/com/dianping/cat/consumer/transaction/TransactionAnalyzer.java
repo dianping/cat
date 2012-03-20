@@ -120,21 +120,21 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	void loadReports() {
-		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
+		Date timestamp = new Date(m_startTime);
 		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(path);
+			bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
 
-			for (String id : bucket.getIdsByPrefix("transaction-")) {
+			for (String id : bucket.getIdsByPrefix("")) {
 				String xml = bucket.findById(id);
 				TransactionReport report = parser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading problem reports from %s!", path), e);
+			m_logger.error(String.format("Error when loading problem reports of %s!", timestamp), e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
@@ -165,8 +165,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String messageId = tree.getMessageId();
 
 				try {
-					String path = m_pathBuilder.getMessagePath(domain, new Date(m_startTime));
-					Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
+					Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain);
 
 					bucket.storeById(messageId, tree);
 				} catch (IOException e) {
@@ -279,24 +278,24 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	void storeReports(Collection<TransactionReport> reports) {
-		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
-		Bucket<String> bucket = null;
+		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
+		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(path);
+			bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
 
 			// delete old one, not append mode
 			bucket.deleteAndCreate();
 
 			for (TransactionReport report : reports) {
 				String xml = builder.buildXml(report);
-				String key = "transaction-" + report.getDomain();
+				String domain = report.getDomain();
 
-				bucket.storeById(key, xml);
+				bucket.storeById(domain, xml);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
+			m_logger.error(String.format("Error when storing transaction reports to %s!", timestamp), e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);

@@ -1,9 +1,6 @@
 package com.dianping.cat.job.storage;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -95,14 +92,8 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 	}
 
 	@Override
-	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd'/'HH'/report'");
-
-		try {
-			m_period = format.parse(logicalPath);
-		} catch (ParseException e) {
-			throw new IOException(String.format("Unable to parse date out of logicalPath(%s)!", logicalPath), e);
-		}
+	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
+		m_period = timestamp;
 	}
 
 	@Override

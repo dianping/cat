@@ -1,9 +1,9 @@
 package com.dianping.cat.job.storage;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Collection;
+import java.util.Date;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -15,6 +15,7 @@ import com.dianping.cat.job.hdfs.OutputChannelManager;
 import com.dianping.cat.job.sql.dal.Logview;
 import com.dianping.cat.job.sql.dal.LogviewDao;
 import com.dianping.cat.job.sql.dal.LogviewEntity;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.site.dal.jdbc.DalException;
@@ -26,6 +27,9 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Inject
 	private InputChannelManager m_inputChannelManager;
+
+	@Inject
+	private MessagePathBuilder m_pathBuilder;
 
 	@Inject
 	private LogviewDao m_logviewDao;
@@ -112,9 +116,11 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 	}
 
 	@Override
-	public void initialize(Class<?> type, File baseDir, String logicalPath) throws IOException {
+	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
 		String ipAddress = InetAddress.getLocalHost().getHostAddress();
+		String logicalPath = m_pathBuilder.getMessagePath(name, timestamp);
 
+		// TODO make it lazy
 		m_path = logicalPath + "-" + ipAddress + "-" + System.currentTimeMillis();
 		m_outputChannel = m_outputChannelManager.openChannel(m_path, false);
 	}

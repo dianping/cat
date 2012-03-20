@@ -3,6 +3,7 @@ package com.dianping.cat.report.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.job.DumpToHdfsConsumer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
@@ -23,7 +24,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 			      .req(MessageConsumer.class, new String[] { "realtime" }, "m_consumers"));
 		} else {
 			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-			      .req(MessageConsumer.class, new String[] { "realtime" }, "m_consumers"));
+			      .req(MessageConsumer.class, new String[] { "realtime", DumpToHdfsConsumer.ID }, "m_consumers"));
 		}
 
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));

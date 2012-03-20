@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.page.model.ip.CompositeIpService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
@@ -30,14 +29,14 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "transaction-local", LocalTransactionService.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "transaction-hdfs", HdfsTransactionService.class) //
-		      .req(BucketManager.class, MessagePathBuilder.class));
+		      .req(BucketManager.class));
 		all.add(C(ModelService.class, "transaction", CompositeTransactionService.class) //
 		      .req(ModelService.class, new String[] { "transaction-local", "transaction-hdfs" }, "m_services"));
 
 		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "problem-hdfs", HdfsProblemService.class) //
-		      .req(BucketManager.class, MessagePathBuilder.class));
+		      .req(BucketManager.class));
 		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //
 		      .req(ModelService.class, new String[] { "problem-local", "problem-hdfs" }, "m_services"));
 
@@ -48,10 +47,10 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 				.req(ModelService.class, new String[] { "ip-local" }, "m_services"));
 		
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
-		      .req(MessagePathBuilder.class, BucketManager.class) //
+		      .req(BucketManager.class) //
 		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "logview-hdfs", HdfsLogViewService.class) //
-		      .req(MessagePathBuilder.class, BucketManager.class) //
+		      .req(BucketManager.class) //
 		      .req(MessageCodec.class, "html", "m_htmlCodec") //
 		      .req(MessageCodec.class, "plain-text", "m_plainCodec"));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //

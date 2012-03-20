@@ -4,7 +4,6 @@ import java.util.Date;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -16,19 +15,15 @@ public class HdfsProblemService implements ModelService<ProblemReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
-	@Inject
-	private MessagePathBuilder m_pathBuilder;
-
 	@Override
 	public ModelResponse<ProblemReport> invoke(ModelRequest request) {
 		String domain = request.getDomain();
 		long date = Long.parseLong(request.getProperty("date"));
-		String path = m_pathBuilder.getReportPath(new Date(date));
 		ModelResponse<ProblemReport> response = new ModelResponse<ProblemReport>();
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(path);
+			bucket = m_bucketManager.getReportBucket(new Date(date), domain);
 
 			String xml = bucket.findById("problem-" + domain);
 

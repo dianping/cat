@@ -22,7 +22,6 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
@@ -33,9 +32,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Inject
 	private BucketManager m_bucketManager;
-
-	@Inject
-	private MessagePathBuilder m_pathBuilder;
 
 	@Inject
 	private List<Handler> m_handlers;
@@ -119,21 +115,21 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	void loadReports() {
-		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
+		Date timestamp = new Date(m_startTime);
 		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(path);
+			bucket = m_bucketManager.getReportBucket(timestamp, "problem");
 
-			for (String id : bucket.getIdsByPrefix("problem-")) {
+			for (String id : bucket.getIdsByPrefix("")) {
 				String xml = bucket.findById(id);
 				ProblemReport report = parser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading problem reports from %s!", path), e);
+			m_logger.error(String.format("Error when loading problem reports of %s!", timestamp), e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
@@ -165,8 +161,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			String messageId = tree.getMessageId();
 
 			try {
-				String path = m_pathBuilder.getMessagePath(domain, new Date(m_startTime));
-				Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(path);
+				Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain);
 
 				bucket.storeById(messageId, tree);
 			} catch (IOException e) {
@@ -205,24 +200,24 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	void storeReports(Collection<ProblemReport> reports) {
-		String path = m_pathBuilder.getReportPath(new Date(m_startTime));
-		Bucket<String> bucket = null;
+		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
+		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(path);
+			bucket = m_bucketManager.getReportBucket(timestamp, "problem");
 
 			// delete old one, not append mode
 			bucket.deleteAndCreate();
 
 			for (ProblemReport report : reports) {
 				String xml = builder.buildXml(report);
-				String key = "failure-" + report.getDomain();
+				String domain = report.getDomain();
 
-				bucket.storeById(key, xml);
+				bucket.storeById(domain, xml);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when storing transaction reports to %s!", path), e);
+			m_logger.error(String.format("Error when storing transaction reports of %s!", timestamp), e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);

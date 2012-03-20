@@ -5,7 +5,7 @@ import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class HdfsDumpConsumer implements MessageConsumer {
+public class DumpToHdfsConsumer implements MessageConsumer {
 	public static final String ID = "dump-to-hdfs";
 
 	@Inject

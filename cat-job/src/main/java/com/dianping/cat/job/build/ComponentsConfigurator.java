@@ -3,10 +3,11 @@ package com.dianping.cat.job.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.job.HdfsDumpConsumer;
+import com.dianping.cat.job.DumpToHdfsConsumer;
 import com.dianping.cat.job.hdfs.DefaultOutputChannel;
 import com.dianping.cat.job.hdfs.DefaultOutputChannelManager;
 import com.dianping.cat.job.hdfs.HdfsMessageStorage;
+import com.dianping.cat.job.hdfs.InputChannelManager;
 import com.dianping.cat.job.hdfs.OutputChannel;
 import com.dianping.cat.job.hdfs.OutputChannelManager;
 import com.dianping.cat.job.sql.dal.LogviewDao;
@@ -42,12 +43,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 			all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
 			      .req(MessagePathBuilder.class) //
 			      .config(E("baseDir").value("data"), //
-			            E("serverUri").value("/catlog")));
+			            E("serverUri").value("hdfs://192.168.7.43:9000/user/cat/")));
 		}
 
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
 		      .req(OutputChannelManager.class));
-		all.add(C(MessageConsumer.class, HdfsDumpConsumer.ID, HdfsDumpConsumer.class) //
+		all.add(C(MessageConsumer.class, DumpToHdfsConsumer.ID, DumpToHdfsConsumer.class) //
 		      .req(MessageStorage.class, "hdfs"));
 
 		if (isEnv("dev") || property("env", null) == null) {
@@ -62,7 +63,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 			      .req(ReportDao.class));
 			all.add(C(Bucket.class, MessageTree.class.getName(), RemoteMessageBucket.class) //
 			      .is(PER_LOOKUP) //
-			      .req(LogviewDao.class) //
+			      .req(LogviewDao.class, MessagePathBuilder.class) //
+			      .req(OutputChannelManager.class, InputChannelManager.class) //
 			      .req(MessageCodec.class, "plain-text"));
 		}
 
