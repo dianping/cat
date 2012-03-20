@@ -24,6 +24,7 @@ class StorageComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessagePathBuilder.class));
 		all.add(C(Bucket.class, MessageTree.class.getName(), LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //
+		      .req(MessagePathBuilder.class) //
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(BucketManager.class, DefaultBucketManager.class));
 
