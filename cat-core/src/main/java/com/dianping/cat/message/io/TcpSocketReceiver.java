@@ -26,6 +26,7 @@ import org.jboss.netty.channel.group.DefaultChannelGroup;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageTree;
@@ -95,6 +96,8 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 	@Override
 	public void onMessage(MessageHandler handler) {
+		Cat.setup("tcp-socket-receiver");
+
 		try {
 			while (true) {
 				ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
@@ -110,6 +113,8 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 			}
 		} catch (InterruptedException e) {
 			// ignore it
+		} finally {
+			Cat.reset();
 		}
 
 		ChannelGroupFuture future = m_channelGroup.close();

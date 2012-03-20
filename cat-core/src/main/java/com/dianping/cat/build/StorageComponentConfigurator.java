@@ -19,14 +19,15 @@ class StorageComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(Bucket.class, String.class.getName(), LocalStringBucket.class) //
+		all.add(C(Bucket.class, String.class.getName() + "-local", LocalStringBucket.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessagePathBuilder.class));
-		all.add(C(Bucket.class, MessageTree.class.getName(), LocalMessageBucket.class) //
+		all.add(C(Bucket.class, MessageTree.class.getName() + "-local", LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessagePathBuilder.class) //
 		      .req(MessageCodec.class, "plain-text"));
-		all.add(C(BucketManager.class, DefaultBucketManager.class));
+		all.add(C(BucketManager.class, DefaultBucketManager.class) //
+		      .req(MessagePathBuilder.class));
 
 		return all;
 	}

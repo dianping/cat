@@ -39,7 +39,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("failureType").value(failureTypes)));
 
 		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
-		      .config(E("threshold").value("10")));
+		      .config(E("threshold").value("1000")));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(Handler.class, new String[] { FAILURE.getName(), LONG_URL.getName() }, "m_handlers") //

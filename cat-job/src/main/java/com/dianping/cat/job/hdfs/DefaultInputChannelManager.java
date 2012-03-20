@@ -24,6 +24,9 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 	@Inject
 	private URI m_serverUri;
 
+	@Inject
+	private String m_baseDir = "target/hdfs";
+
 	private FileSystem m_fs;
 
 	private Map<String, DefaultInputChannel> m_channels = new HashMap<String, DefaultInputChannel>();
@@ -94,7 +97,7 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 		DefaultInputChannel channel = m_channels.get(path);
 
 		if (channel == null) {
-			Path file = new Path(path);
+			Path file = new Path(m_baseDir, path);
 			FSDataInputStream in = m_fs.open(file);
 
 			channel = (DefaultInputChannel) lookup(InputChannel.class);
@@ -104,6 +107,10 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 		}
 
 		return channel;
+	}
+
+	public void setBaseDir(String baseDir) {
+		m_baseDir = baseDir;
 	}
 
 	public void setServerUri(String serverUri) {

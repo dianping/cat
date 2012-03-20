@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -49,9 +50,34 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private long m_duration;
 
+	void closeMessageBuckets(Set<String> set) {
+		Date timestamp = new Date(m_startTime);
+
+		for (String domain : m_reports.keySet()) {
+			Bucket<MessageTree> localBucket = null;
+			Bucket<MessageTree> remoteBucket = null;
+
+			try {
+				localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+				remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
+			} catch (Exception e) {
+				m_logger.error(String.format("Error when getting message bucket of %s!", timestamp), e);
+			} finally {
+				if (localBucket != null) {
+					m_bucketManager.closeBucket(localBucket);
+				}
+
+				if (remoteBucket != null) {
+					m_bucketManager.closeBucket(remoteBucket);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void doCheckpoint() throws IOException {
 		storeReports(m_reports.values());
+		closeMessageBuckets(m_reports.keySet());
 	}
 
 	@Override
@@ -125,7 +151,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
+			bucket = m_bucketManager.getReportBucket(timestamp, "transaction", "local");
 
 			for (String id : bucket.getIdsByPrefix("")) {
 				String xml = bucket.findById(id);
@@ -134,7 +160,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading problem reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when loading transacion reports of %s!", timestamp), e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
@@ -165,9 +191,13 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String messageId = tree.getMessageId();
 
 				try {
-					Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain);
+					Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain,
+					      "local");
+					Bucket<MessageTree> remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain,
+					      "remote");
 
-					bucket.storeById(messageId, tree);
+					localBucket.storeById(messageId, tree);
+					remoteBucket.storeById(messageId, tree);
 				} catch (IOException e) {
 					m_logger.error("Error when storing message for transaction analyzer!", e);
 				}
@@ -275,30 +305,38 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		storeReports(reports);
+		closeMessageBuckets(m_reports.keySet());
 	}
 
 	void storeReports(Collection<TransactionReport> reports) {
 		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
-		Bucket<String> bucket = null;
+		Bucket<String> localBucket = null;
+		Bucket<String> remoteBucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
+			localBucket = m_bucketManager.getReportBucket(timestamp, "transaction", "local");
+			remoteBucket = m_bucketManager.getReportBucket(timestamp, "transaction", "remote");
 
 			// delete old one, not append mode
-			bucket.deleteAndCreate();
+			localBucket.deleteAndCreate();
 
 			for (TransactionReport report : reports) {
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
-				bucket.storeById(domain, xml);
+				localBucket.storeById(domain, xml);
+				remoteBucket.storeById(domain, xml);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when storing transaction reports to %s!", timestamp), e);
+			m_logger.error(String.format("Error when storing transaction reports of %s!", timestamp), e);
 		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+			if (localBucket != null) {
+				m_bucketManager.closeBucket(localBucket);
+			}
+
+			if (remoteBucket != null) {
+				m_bucketManager.closeBucket(remoteBucket);
 			}
 		}
 	}

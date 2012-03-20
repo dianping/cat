@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -46,14 +47,51 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private long m_duration;
 
+	void closeMessageBuckets(Set<String> set) {
+		Date timestamp = new Date(m_startTime);
+
+		for (String domain : m_reports.keySet()) {
+			Bucket<MessageTree> localBucket = null;
+			Bucket<MessageTree> remoteBucket = null;
+
+			try {
+				localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+				remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
+			} catch (Exception e) {
+				m_logger.error(String.format("Error when getting message bucket of %s!", timestamp), e);
+			} finally {
+				if (localBucket != null) {
+					m_bucketManager.closeBucket(localBucket);
+				}
+
+				if (remoteBucket != null) {
+					m_bucketManager.closeBucket(remoteBucket);
+				}
+			}
+		}
+	}
+
 	@Override
 	public void doCheckpoint() throws IOException {
 		storeReports(m_reports.values());
+		closeMessageBuckets(m_reports.keySet());
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	private Segment findOrCreateSegment(ProblemReport report, MessageTree tree) {
+		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
+		JavaThread thread = machine.findOrCreateThread(tree.getThreadId());
+		Calendar cal = Calendar.getInstance();
+
+		cal.setTimeInMillis(tree.getMessage().getTimestamp());
+
+		int minute = cal.get(Calendar.MINUTE);
+		Segment segment = thread.findOrCreateSegment(minute);
+		return segment;
 	}
 
 	@Override
@@ -120,7 +158,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "problem");
+			bucket = m_bucketManager.getReportBucket(timestamp, "problem", "local");
 
 			for (String id : bucket.getIdsByPrefix("")) {
 				String xml = bucket.findById(id);
@@ -161,25 +199,16 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			String messageId = tree.getMessageId();
 
 			try {
-				Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain);
+				Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+				Bucket<MessageTree> remoteBucket = m_bucketManager
+				      .getMessageBucket(new Date(m_startTime), domain, "remote");
 
-				bucket.storeById(messageId, tree);
+				localBucket.storeById(messageId, tree);
+				remoteBucket.storeById(messageId, tree);
 			} catch (IOException e) {
 				m_logger.error("Error when storing message for problem analyzer!", e);
 			}
 		}
-	}
-
-	private Segment findOrCreateSegment(ProblemReport report, MessageTree tree) {
-		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
-		JavaThread thread = machine.findOrCreateThread(tree.getThreadId());
-		Calendar cal = Calendar.getInstance();
-
-		cal.setTimeInMillis(tree.getMessage().getTimestamp());
-
-		int minute = cal.get(Calendar.MINUTE);
-		Segment segment = thread.findOrCreateSegment(minute);
-		return segment;
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
@@ -197,30 +226,38 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 
 		storeReports(reports);
+		closeMessageBuckets(m_reports.keySet());
 	}
 
 	void storeReports(Collection<ProblemReport> reports) {
 		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
-		Bucket<String> bucket = null;
+		Bucket<String> localBucket = null;
+		Bucket<String> remoteBucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "problem");
+			localBucket = m_bucketManager.getReportBucket(timestamp, "problem", "local");
+			remoteBucket = m_bucketManager.getReportBucket(timestamp, "problem", "remote");
 
 			// delete old one, not append mode
-			bucket.deleteAndCreate();
+			localBucket.deleteAndCreate();
 
 			for (ProblemReport report : reports) {
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
-				bucket.storeById(domain, xml);
+				localBucket.storeById(domain, xml);
+				remoteBucket.storeById(domain, xml);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when storing transaction reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when storing problem reports to %s!", timestamp), e);
 		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+			if (localBucket != null) {
+				m_bucketManager.closeBucket(localBucket);
+			}
+
+			if (remoteBucket != null) {
+				m_bucketManager.closeBucket(remoteBucket);
 			}
 		}
 	}
