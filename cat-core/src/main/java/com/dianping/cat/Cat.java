@@ -97,7 +97,7 @@ public class Cat {
 			// so that OPS can:
 			// - configure the cat servers to connect
 			// - enable/disable Cat for specific domain(s)
-			if (configFile != null) {
+			if (configFile != null && configFile.exists()) {
 				String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
 
 				globalConfig = new DefaultXmlParser().parse(xml);
