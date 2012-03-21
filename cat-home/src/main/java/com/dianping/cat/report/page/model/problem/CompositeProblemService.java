@@ -62,6 +62,7 @@ public class CompositeProblemService implements ModelService<ProblemReport>, Ini
 						responses.add(service.invoke(request));
 						
 						t.addData(service.toString());
+						logEvent(t, "Client", "Problem", Message.SUCCESS, service.toString());
 					} catch (Exception e) {
 						logError(t, e);
 						t.setStatus(e);
@@ -102,7 +103,6 @@ public class CompositeProblemService implements ModelService<ProblemReport>, Ini
 		try {
 			semaphore.tryAcquire(count, 5000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			// ignore it
 			t.setStatus(e);
 		} finally {
 			t.complete();

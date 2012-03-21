@@ -17,6 +17,19 @@ a:hover {
 	text-decoration: underline;
 }
 
+.current {
+	background-color: orange;
+	color: white;
+}
+
+.subtitle {
+	font-size: small;
+}
+
+.timestamp {
+	font-size: small;
+}
+
 ul.tabs {
 	border-bottom: 1px solid gray;
 	list-style-type: none;

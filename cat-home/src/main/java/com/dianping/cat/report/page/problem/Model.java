@@ -1,10 +1,12 @@
 package com.dianping.cat.report.page.problem;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 
@@ -16,10 +18,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_ipAddress;
 
 	private int m_hour;
-	
-	private List<Entry> m_entries;
-	
-	private List<ProblemStatistics> m_statistics;
+
+	private String m_threadId;
+
+	private int m_currentMinute;
+
+	private Map<String, ProblemStatistics> m_statistics = new HashMap<String, ProblemStatistics>();
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -28,6 +32,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
+	}
+
+	public int getMinuteLast() {
+		if (m_currentMinute == 0) {
+			return 0;
+		}
+		return m_currentMinute - 1;
+	}
+
+	public int getMinuteNext() {
+		if (m_currentMinute == 59) {
+			return 59;
+		}
+		return m_currentMinute + 1;
 	}
 
 	@Override
@@ -40,11 +58,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	@Override
-	public Collection<String> getDomains() {
+	public List<String> getDomains() {
 		if (m_report == null) {
-			return Collections.emptySet();
+			return new ArrayList<String>();
 		} else {
-			return m_report.getAllDomains().getDomains();
+			Set<String> domains = m_report.getAllDomains().getDomains();
+			List<String> result = new ArrayList<String>();
+
+			for (String domain : domains) {
+				result.add(domain);
+			}
+			Collections.sort(result);
+			return result;
 		}
 	}
 
@@ -80,19 +105,27 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_ipAddress = ipAddress;
 	}
 
-	public List<Entry> getEntries() {
-   	return m_entries;
-   }
+	public Map<String, ProblemStatistics> getStatistics() {
+		return m_statistics;
+	}
 
-	public void setEntries(List<Entry> entries) {
-   	m_entries = entries;
-   }
+	public void setStatistics(Map<String, ProblemStatistics> statistics) {
+		this.m_statistics = statistics;
+	}
 
-	public List<ProblemStatistics> getStatistics() {
-   	return m_statistics;
-   }
+	public String getThreadId() {
+		return m_threadId;
+	}
 
-	public void setStatistics(List<ProblemStatistics> statistics) {
-   	m_statistics = statistics;
-   }
+	public void setThreadId(String threadId) {
+		m_threadId = threadId;
+	}
+
+	public int getCurrentMinute() {
+		return m_currentMinute;
+	}
+
+	public void setCurrentMinute(int currentMinute) {
+		m_currentMinute = currentMinute;
+	}
 }

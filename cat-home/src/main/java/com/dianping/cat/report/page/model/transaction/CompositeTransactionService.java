@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.transaction;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -12,7 +14,12 @@ import java.util.concurrent.TimeUnit;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -36,6 +43,10 @@ public class CompositeTransactionService implements ModelService<TransactionRepo
 		final List<ModelResponse<TransactionReport>> responses = new ArrayList<ModelResponse<TransactionReport>>(size);
 		final Semaphore semaphore = new Semaphore(0);
 		int count = 0;
+		final Transaction t = Cat.getProducer().newTransaction("ModelService", "Transaction");
+
+		t.setStatus(Message.SUCCESS);
+		t.addData("request", request);
 
 		for (final ModelService<TransactionReport> service : m_services) {
 			if (service.isEligable(request)) {
@@ -44,11 +55,41 @@ public class CompositeTransactionService implements ModelService<TransactionRepo
 					public void run() {
 						try {
 							responses.add(service.invoke(request));
+							
+							t.addData(service.toString());
+							logEvent(t, "Client", "Transaction", Message.SUCCESS, service.toString());
 						} catch (Exception e) {
-							e.printStackTrace();
+							logError(t, e);
+							t.setStatus(e);
 						} finally {
 							semaphore.release();
 						}
+					}
+					
+					void logError(Transaction t, Throwable cause) {
+						StringWriter writer = new StringWriter(2048);
+
+						cause.printStackTrace(new PrintWriter(writer));
+
+						if (cause instanceof Error) {
+							logEvent(t, "Error", cause.getClass().getName(), "ERROR", writer.toString());
+						} else if (cause instanceof RuntimeException) {
+							logEvent(t, "RuntimeException", cause.getClass().getName(), "ERROR", writer.toString());
+						} else {
+							logEvent(t, "Exception", cause.getClass().getName(), "ERROR", writer.toString());
+						}
+					}
+
+					void logEvent(Transaction t, String type, String name, String status, String nameValuePairs) {
+						Event event = new DefaultEvent(type, name);
+
+						if (nameValuePairs != null && nameValuePairs.length() > 0) {
+							event.addData(nameValuePairs);
+						}
+
+						event.setStatus(status);
+						event.complete();
+						t.addChild(event);
 					}
 				});
 				count++;
@@ -58,7 +99,9 @@ public class CompositeTransactionService implements ModelService<TransactionRepo
 		try {
 			semaphore.tryAcquire(count, 5000, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
-			// ignore it
+			t.setStatus(e);
+		}finally {
+			t.complete();
 		}
 
 		ModelResponse<TransactionReport> aggregated = new ModelResponse<TransactionReport>();
@@ -126,7 +169,7 @@ public class CompositeTransactionService implements ModelService<TransactionRepo
 			int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos) + 1) : 2281);
 
 			if (port == 2281) {
-				if ("localhost".equals(host) || "127.0.0.1".equals(host)) {
+				if ("localhost".equals(host) || host.startsWith("127.0.*")) {
 					// exclude localhost
 					continue;
 				} else if (host.equals(localAddress) || host.equals(localHost)) {

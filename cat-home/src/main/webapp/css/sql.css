@@ -1,15 +1,15 @@
-.ip-table {
+.sql-table {
 	width: auto;
 	font-size: small;
 }
 
-.ip-table .odd td {
+.sql-table .odd td {
 	background-color: #eee;
 	font-size: small;
 	text-align: center;
 }
 
-.ip-table .even td {
+.sql-table .even td {
 	background-color: white;
 	font-size: small;
 	text-align: center;
