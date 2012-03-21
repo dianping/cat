@@ -79,7 +79,7 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 			FileSystem fs;
 
 			config.setInt("io.file.buffer.size", 8192);
-
+			
 			if (m_serverUri == null) {
 				fs = FileSystem.getLocal(config);
 			} else {
