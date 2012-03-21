@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.problem;
 public enum JspFile {
 	VIEW("/jsp/report/problem.jsp"),
 
+	DETAIL("jsp/report/problemDetail.jsp")
 	;
 
 	private String m_path;

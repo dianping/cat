@@ -39,7 +39,7 @@
 		<tr class="${minute%2==0 ? 'even' : 'odd'}">
 			<td>${w:format(model.hour,'00')}:${w:format(minute,'00')}</td>
 			<c:forEach var="thread" items="${threads}">
-				<td>${a:showLegends(thread.value, minute)}</td>
+				<td>${a:showLegends(thread.value, minute, model.domain, model.ipAddress, model.date)}</td>
 			</c:forEach>
 		</tr>
 	</c:forEach>

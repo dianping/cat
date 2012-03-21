@@ -1,11 +1,15 @@
 package com.dianping.cat.report.page.problem;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -92,16 +96,49 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setAction(Action.VIEW);
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.PROBLEM);
 
 		switch (payload.getAction()) {
 		case VIEW:
 			showSummary(model, payload);
 			break;
+		case DETAIL:
+			showDetail(model, payload);
 		}
 
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void showDetail(Model model, Payload payload) {
+		ProblemReport report = getReport(payload);
+		Machine machine = report.getMachines().get(payload.getIpAddress());
+		JavaThread thread = machine.getThreads().get(payload.getThreadId());
+		Segment segment = thread.getSegments().get(payload.getMinute());
+		
+		if (segment == null) {
+			model.setEntries(new ArrayList<Entry>());
+			model.setStatistics(new ArrayList<ProblemStatistics>());
+			return;
+		}
+		List<Entry> entries = segment.getEntries();
+		Map<String, ProblemStatistics> typeCounts = new HashMap<String, ProblemStatistics>();
+
+		for (Entry entry : entries) {
+			String type = entry.getType();
+			ProblemStatistics staticstics = typeCounts.get(type);
+			
+			if (staticstics != null) {
+				staticstics.setCount(staticstics.getCount() + 1);
+			} else {
+				ProblemStatistics temp = new ProblemStatistics();
+			
+				temp.setCount(1).setType(type);
+				typeCounts.put(type, temp);
+			}
+		}
+		model.setEntries(entries);
+		model.setStatistics(new ArrayList<ProblemStatistics>(typeCounts.values()));
 	}
 
 	private void showSummary(Model model, Payload payload) {

@@ -11,9 +11,12 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("ip")
 	private String m_ipAddress;
-	
+
 	@FieldMeta("thread")
 	private String m_threadId;
+
+	@FieldMeta("minute")
+	private int m_minute;
 
 	public Payload() {
 		super(ReportPage.PROBLEM);
@@ -28,21 +31,30 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_ipAddress;
 	}
 
+	public int getMinute() {
+		return m_minute;
+	}
+		
 	public String getThreadId() {
-   	return m_threadId;
-   }
+		return m_threadId;
+	}
 
-	public void setAction(Action action) {
-		m_action = action;
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
 	}
 
+	public void setMinute(int minute) {
+		m_minute = minute;
+	}
+
 	public void setThreadId(String threadId) {
-   	m_threadId = threadId;
-   }
+		m_threadId = threadId;
+	}
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {

@@ -44,7 +44,7 @@
       <description>show legends for problem summary report</description>
       <name>showLegends</name>
       <function-class>com.dianping.cat.report.view.ProblemReportHelper</function-class>
-      <function-signature>String showLegends(com.dianping.cat.consumer.problem.model.entity.JavaThread, int)</function-signature>
-      <example>${a:showLegends(thread,minute)}</example>
+      <function-signature>String showLegends(com.dianping.cat.consumer.problem.model.entity.JavaThread, int, java.lang.String, java.lang.String, long)</function-signature>
+      <example>${a:showLegends(thread, minute, domain, ip, date)}</example>
    </function>
 </taglib>

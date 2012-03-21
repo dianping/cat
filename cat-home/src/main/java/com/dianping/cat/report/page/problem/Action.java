@@ -1,8 +1,9 @@
 package com.dianping.cat.report.page.problem;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view");
-
+	VIEW("view"),
+	DETAIL("detail");
+	
 	private String m_name;
 
 	private Action(String name) {
