@@ -32,7 +32,7 @@
 			<role-hint>long-url</role-hint>
 			<implementation>com.dianping.cat.consumer.problem.handler.LongUrlHandler</implementation>
 			<configuration>
-				<threshold>10</threshold>
+				<threshold>1000</threshold>
 			</configuration>
 		</component>
 		<component>

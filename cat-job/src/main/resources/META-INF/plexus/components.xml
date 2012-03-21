@@ -5,7 +5,7 @@
 			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannel</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
-				<maxSize>2097152</maxSize>
+				<maxSize>134217728</maxSize>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -17,11 +17,33 @@
 		<component>
 			<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
 			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
+			<configuration>
+				<baseDir>data</baseDir>
+				<serverUri>hdfs://192.168.7.43:9000/user/cat/</serverUri>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.hdfs.InputChannel</role>
+			<implementation>com.dianping.cat.job.hdfs.DefaultInputChannel</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.hdfs.InputChannelManager</role>
+			<implementation>com.dianping.cat.job.hdfs.DefaultInputChannelManager</implementation>
+			<configuration>
+				<serverUri>hdfs://192.168.7.43:9000/user/cat/</serverUri>
+			</configuration>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageStorage</role>
@@ -46,19 +68,32 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.storage.Bucket</role>
-			<role-hint>java.lang.String</role-hint>
-			<implementation>com.dianping.cat.storage.internal.LocalStringBucket</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-		</component>
-		<component>
-			<role>com.dianping.cat.storage.Bucket</role>
-			<role-hint>com.dianping.cat.message.spi.MessageTree</role-hint>
-			<implementation>com.dianping.cat.storage.internal.LocalMessageBucket</implementation>
+			<role-hint>java.lang.String-remote</role-hint>
+			<implementation>com.dianping.cat.job.storage.RemoteStringBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
+					<role>com.dianping.cat.job.sql.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>com.dianping.cat.message.spi.MessageTree-remote</role-hint>
+			<implementation>com.dianping.cat.job.storage.RemoteMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.job.hdfs.InputChannelManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.job.sql.dal.LogviewDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

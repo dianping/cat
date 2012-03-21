@@ -32,7 +32,7 @@ public class HdfsLogViewService implements ModelService<String> {
 		ModelResponse<String> response = new ModelResponse<String>();
 
 		try {
-			Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(id.getTimestamp()), id.getDomain());
+			Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(id.getTimestamp()), id.getDomain(), "remote");
 			MessageTree tree = null;
 
 			if (tag != null && direction != null) {

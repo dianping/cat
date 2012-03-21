@@ -194,7 +194,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.storage.Bucket</role>
-			<role-hint>java.lang.String</role-hint>
+			<role-hint>java.lang.String-local</role-hint>
 			<implementation>com.dianping.cat.storage.internal.LocalStringBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
@@ -205,7 +205,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.storage.Bucket</role>
-			<role-hint>com.dianping.cat.message.spi.MessageTree</role-hint>
+			<role-hint>com.dianping.cat.message.spi.MessageTree-local</role-hint>
 			<implementation>com.dianping.cat.storage.internal.LocalMessageBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
@@ -221,6 +221,11 @@
 		<component>
 			<role>com.dianping.cat.storage.BucketManager</role>
 			<implementation>com.dianping.cat.storage.internal.DefaultBucketManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>

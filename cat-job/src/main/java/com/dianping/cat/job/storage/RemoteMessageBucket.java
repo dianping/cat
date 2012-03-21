@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -37,6 +40,15 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 	private OutputChannel m_outputChannel;
 
 	private String m_path;
+
+	private Map<String, String> m_lruCache = new LinkedHashMap<String, String>(100, 0.75f, true) {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<String, String> eldest) {
+			return size() > 100;
+		}
+	};
 
 	private Logger m_logger;
 
@@ -147,34 +159,32 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public boolean storeById(String id, MessageTree tree) throws IOException {
-		// check if it's already stored
-		try {
-			m_logviewDao.findByPK(id, LogviewEntity.READSET_FULL);
+		String messageId = tree.getMessageId();
 
+		if (m_lruCache.containsKey(messageId)) {
 			return false;
-		} catch (DalException e) {
-			// not exist
 		}
+		
+		m_lruCache.put(messageId, messageId);
 
 		int offset = m_outputChannel.getSize();
 		int length = m_outputChannel.write(tree);
 
 		Logview logview = m_logviewDao.createLocal();
 
-		logview.setMessageId(tree.getMessageId());
+		logview.setMessageId(messageId);
 		logview.setDataPath(m_path);
 		logview.setDataOffset(offset);
 		logview.setDataLength(length);
 		logview.setTagThread("t:" + tree.getThreadId());
 		logview.setTagSession("s:" + tree.getSessionToken());
-		logview.setTagRequest("r:" + tree.getMessageId());
+		logview.setTagRequest("r:" + messageId);
 
 		try {
 			m_logviewDao.insert(logview);
-
 			return true;
 		} catch (DalException e) {
-			throw new IOException("Error when inserting into logiew table!", e);
+			throw new IOException("Error when inserting into logview table!", e);
 		}
 	}
 }

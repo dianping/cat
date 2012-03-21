@@ -50,7 +50,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public void add(Message message) {
 		if (Cat.isInitialized()) {
-			getContext().add(this, message);
+			Context ctx = m_context.get();
+
+			if (ctx != null) {
+				ctx.add(this, message);
+			} else if (m_clientConfig.isDevMode()) {
+				throw new RuntimeException("Cat has not been initialized successfully, "
+				      + "please call Cal.setup(...) first for each thread.");
+			}
 		}
 	}
 
@@ -62,7 +69,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public void end(Transaction transaction) {
 		if (Cat.isInitialized()) {
-			getContext().end(this, transaction);
+			Context ctx = m_context.get();
+
+			if (ctx != null) {
+				ctx.end(this, transaction);
+			} else if (m_clientConfig.isDevMode()) {
+				throw new RuntimeException("Cat has not been initialized successfully, "
+				      + "please call Cal.setup(...) first for each thread.");
+			}
 		}
 	}
 
@@ -79,17 +93,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public Config getClientConfig() {
 		return m_clientConfig;
-	}
-
-	Context getContext() {
-		Context ctx = m_context.get();
-
-		if (ctx == null) {
-			throw new RuntimeException("Cat has not been initialized successfully, "
-			      + "please call Cal.setup(...) first for each thread.");
-		} else {
-			return ctx;
-		}
 	}
 
 	@Override
@@ -151,7 +154,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public boolean isCatEnabled() {
-		return m_domain != null && m_domain.isEnabled();
+		return m_domain != null && m_domain.isEnabled() && m_context.get() != null;
 	}
 
 	String nextMessageId() {
@@ -166,7 +169,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public void setup() {
-		Context ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
+		Context ctx;
+
+		if (m_domain != null) {
+			ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
+		} else {
+			ctx = new Context("Unknown", m_hostName, "");
+		}
 
 		m_context.set(ctx);
 	}
@@ -174,7 +183,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public void start(Transaction transaction) {
 		if (Cat.isInitialized()) {
-			getContext().start(this, transaction);
+			Context ctx = m_context.get();
+
+			if (ctx != null) {
+				ctx.start(this, transaction);
+			} else if (m_clientConfig.isDevMode()) {
+				throw new RuntimeException("Cat has not been initialized successfully, "
+				      + "please call Cal.setup(...) first for each thread.");
+			}
 		} else if (m_firstMessage) {
 			m_firstMessage = false;
 			m_logger.warn("CAT client is not enabled because it's not initialized yet");

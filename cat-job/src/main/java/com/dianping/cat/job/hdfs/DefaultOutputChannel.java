@@ -76,6 +76,7 @@ public class DefaultOutputChannel implements OutputChannel {
 
 		// a blank line used to separate two message trees
 		m_out.write('\n');
+		m_out.flush();
 		m_count += length + 1;
 
 		return length+1;

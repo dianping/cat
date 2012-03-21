@@ -1,7 +1,6 @@
 package com.dianping.cat.job.hdfs;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.codehaus.plexus.logging.LogEnabled;
@@ -87,15 +87,15 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 			FileSystem fs;
 
 			config.setInt("io.file.buffer.size", 8192);
-
 			if (m_serverUri == null) {
 				fs = FileSystem.getLocal(config);
+				m_basePath = new Path(fs.getWorkingDirectory(), m_baseDir);
 			} else {
-				fs = FileSystem.get(m_serverUri, config); // TODO Not tested yet
+				fs = FileSystem.get(m_serverUri, config);
+				m_basePath = new Path(new Path(m_serverUri), m_baseDir);
 			}
 
 			m_fs = fs;
-			m_basePath = new Path(m_fs.getWorkingDirectory(), m_baseDir);
 		} catch (Exception e) {
 			throw new InitializationException("Error when getting HDFS file system.", e);
 		}
@@ -104,16 +104,16 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 	@Override
 	public OutputChannel openChannel(MessageTree tree, boolean forceNew) throws IOException {
 		String path = m_builder.getHdfsPath(tree.getMessageId());
-		
+
 		return openChannel(path, forceNew);
-	} 
-	
+	}
+
 	public OutputChannel openChannel(String path, boolean forceNew) throws IOException {
 		OutputChannel channel = m_channels.get(path);
 
 		if (channel == null) {
-			Path file = new Path(m_basePath, path + "-0");
-			OutputStream out = m_fs.create(file);
+			Path file = new Path(m_basePath, path);
+			FSDataOutputStream out = m_fs.create(file);
 
 			channel = lookup(OutputChannel.class);
 			channel.initialize(out);
@@ -127,7 +127,7 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 			m_indexes.put(path, ++index);
 
 			Path file = new Path(m_basePath, path + "-" + index);
-			OutputStream out = m_fs.create(file);
+			FSDataOutputStream out = m_fs.create(file);
 
 			channel = lookup(OutputChannel.class);
 			channel.initialize(out);

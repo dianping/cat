@@ -32,7 +32,7 @@ public class LocalLogViewService implements ModelService<String> {
 		ModelResponse<String> response = new ModelResponse<String>();
 
 		try {
-			Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(id.getTimestamp()), id.getDomain());
+			Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(new Date(id.getTimestamp()), id.getDomain(), "local");
 			MessageTree tree = null;
 
 			if (tag != null && direction != null) {
@@ -58,6 +58,7 @@ public class LocalLogViewService implements ModelService<String> {
 				response.setModel(buf.toString(Charset.forName("utf-8")));
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			response.setException(e);
 		}
 
