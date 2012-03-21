@@ -21,8 +21,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, Initializable,
-      LogEnabled {
+public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, Initializable, LogEnabled {
 	@Inject
 	private MessagePathBuilder m_builder;
 
@@ -88,15 +87,15 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 			FileSystem fs;
 
 			config.setInt("io.file.buffer.size", 8192);
-
 			if (m_serverUri == null) {
 				fs = FileSystem.getLocal(config);
+				m_basePath = new Path(fs.getWorkingDirectory(), m_baseDir);
 			} else {
-				fs = FileSystem.get(m_serverUri, config); // TODO Not tested yet
+				fs = FileSystem.get(m_serverUri, config);
+				m_basePath = new Path(new Path(m_serverUri), m_baseDir);
 			}
 
 			m_fs = fs;
-			m_basePath = new Path(m_fs.getWorkingDirectory(), m_baseDir);
 		} catch (Exception e) {
 			throw new InitializationException("Error when getting HDFS file system.", e);
 		}
