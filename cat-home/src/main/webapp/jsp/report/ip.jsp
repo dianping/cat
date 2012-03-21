@@ -9,7 +9,8 @@
 <c:set var="report" value="${model.report}"/>
 
 <a:report title="Hot IP Report" navUrlPrefix="domain=${model.domain}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
-
+	
+	<jsp:attribute name="subtitle">Ip Info In Last 15 Minutes</jsp:attribute>
 <jsp:body>
 
 <res:useCss value='${res.css.local.ip_css}' target="head-css"/>

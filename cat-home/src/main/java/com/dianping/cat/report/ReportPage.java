@@ -7,13 +7,13 @@ public enum ReportPage implements Page {
 
    HOME("home", "home", "Home", "CAT Home Page.", true),
 
-   PROBLEM("problem", "p", "Problem", "Problem discovered", true),
+   PROBLEM("problem", "p", "Problem", "Problem Discovered", true),
 
-   LOGVIEW("logview", "m", "Logview", "CAT log details view for a given message.", false),
+   LOGVIEW("logview", "m", "Logview", "CAT Log Details View For A Given Message.", false),
    
-   TRANSACTION("transaction", "t", "Transaction", "Transaction summary report", true),
+   TRANSACTION("transaction", "t", "Transaction", "Transaction Summary Report", true),
 
-   IP("ip", "ip", "Top IP List", "Top visited IP addresses", true),
+   IP("ip", "ip", "Top IP List", "Top Visited IP Addresses", true),
 
    MODEL("model", "model", "Model", "Model Service", false),
 
