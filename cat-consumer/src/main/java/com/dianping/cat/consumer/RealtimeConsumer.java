@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,6 +19,9 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
@@ -124,16 +126,28 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	}
 
 	public void doCheckpoint() throws IOException {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction("Realtime", "Checkpoint");
 
-		m_logger.info("Checkpoint starts at " + format.format(new Date()));
+		t.setStatus(Message.SUCCESS);
 
-		for (Map.Entry<String, MessageAnalyzer> e : m_currentAnalyzers.entrySet()) {
-			m_logger.info("Checkpoint for " + e.getKey());
-			e.getValue().doCheckpoint();
+		try {
+			for (Map.Entry<String, MessageAnalyzer> e : m_currentAnalyzers.entrySet()) {
+				Transaction t1 = cat.newTransaction("Checkpoint", e.getKey());
+
+				try {
+					e.getValue().doCheckpoint();
+					t1.setStatus(Message.SUCCESS);
+				} catch (Exception re) {
+					cat.logError(re);
+					t1.setStatus(re);
+				} finally {
+					t1.complete();
+				}
+			}
+		} finally {
+			t.complete();
 		}
-
-		m_logger.info("Checkpoint ends at " + format.format(new Date()));
 	}
 
 	@Override
@@ -210,7 +224,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_currentAnalyzers.clear();
 
 		Cat.setup("realtime-consumer");
-		
+
 		for (String name : m_analyzerNames) {
 			MessageAnalyzer analyzer = m_factory.create(name, start, m_duration, m_extraTime);
 			MessageQueue queue = lookup(MessageQueue.class);

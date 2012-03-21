@@ -42,13 +42,9 @@ public class Cat {
 	}
 
 	static Cat getInstance() {
-		if (!s_instance.m_initialized) {
-			try {
-				s_instance.setContainer(new DefaultPlexusContainer());
-				s_instance.m_initialized = true;
-			} catch (PlexusContainerException e) {
-				throw new RuntimeException("Error when creating Plexus container, "
-				      + "please make sure the environment was setup correctly!", e);
+		synchronized (s_instance) {
+			if (!s_instance.m_initialized) {
+				throw new RuntimeException("Cat has not been initialized yet, please call Cat.initialize(...) first!");
 			}
 		}
 
@@ -65,6 +61,28 @@ public class Cat {
 
 	// this should be called during application initialization time
 	public static void initialize(File configFile) {
+		try {
+			PlexusContainer container = new DefaultPlexusContainer();
+
+			initialize(container, configFile);
+		} catch (PlexusContainerException e) {
+			throw new RuntimeException("Error when creating Plexus container, "
+			      + "please make sure the environment was setup correctly!", e);
+		}
+	}
+
+	public static void initialize(PlexusContainer container, File configFile) {
+		if (container != null) {
+			synchronized (s_instance) {
+				if (!s_instance.m_initialized) {
+					s_instance.setContainer(container);
+					s_instance.m_initialized = true;
+				} else {
+					throw new RuntimeException("Cat has already been initialized before!");
+				}
+			}
+		}
+
 		Config config = loadClientConfig(configFile);
 
 		if (config != null) {
@@ -73,19 +91,6 @@ public class Cat {
 			getInstance().m_manager.initializeClient(null);
 			System.out.println("[WARN] Cat client is disabled due to no config file found!");
 		}
-	}
-
-	public static void initialize(PlexusContainer container, File configFile) {
-		if (container != null) {
-			if (!s_instance.m_initialized) {
-				s_instance.setContainer(container);
-				s_instance.m_initialized = true;
-			} else {
-				throw new RuntimeException("Cat has already been initialized before!");
-			}
-		}
-
-		initialize(configFile);
 	}
 
 	static Config loadClientConfig(File configFile) {
