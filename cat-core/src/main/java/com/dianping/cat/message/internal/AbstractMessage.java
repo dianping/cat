@@ -32,11 +32,11 @@ public abstract class AbstractMessage implements Message {
 		if (m_data == null) {
 			m_data = keyValuePairs;
 		} else if (m_data instanceof StringBuilder) {
-			((StringBuilder) m_data).append(keyValuePairs);
+			((StringBuilder) m_data).append('&').append(keyValuePairs);
 		} else {
 			StringBuilder sb = new StringBuilder(m_data.length() + keyValuePairs.length() + 16);
 
-			sb.append(m_data);
+			sb.append(m_data).append('&');
 			sb.append(keyValuePairs);
 			m_data = sb;
 		}

@@ -25,6 +25,8 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 
 	private Logger m_logger;
 
+	private String m_name;
+
 	@Override
 	public void close() throws IOException {
 	}
@@ -94,32 +96,24 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 	@Override
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
 		m_period = timestamp;
+		m_name = name;
 	}
 
 	@Override
-	public boolean storeById(String id, String data) throws IOException {
+	public boolean storeById(String domain, String data) throws IOException {
 		Report report = m_reportDao.createLocal();
-		int pos = id.indexOf('-');
+		report.setName(m_name);
+		report.setDomain(domain);
+		report.setType(1);
+		report.setContent(data);
+		report.setPeriod(m_period);
 
-		if (pos > 0) {
-			String name = id.substring(0, pos);
-			String domain = id.substring(pos + 1);
+		try {
+			m_reportDao.insert(report);
 
-			report.setName(name);
-			report.setDomain(domain);
-			report.setType(1);
-			report.setContent(data);
-			report.setPeriod(m_period);
-
-			try {
-				m_reportDao.insert(report);
-
-				return true;
-			} catch (DalException e) {
-				throw new IOException(String.format("Unable to insert report(%s)!", id), e);
-			}
+			return true;
+		} catch (DalException e) {
+			throw new IOException(String.format("Unable to insert report(%s)!", domain), e);
 		}
-
-		return false;
 	}
 }

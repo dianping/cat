@@ -18,6 +18,10 @@ import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.storage.Bucket;
 import com.site.helper.Joiners;
 import com.site.helper.Splitters;
@@ -260,48 +264,56 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 			return false;
 		}
 
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction(getClass().getSimpleName(), "store");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 		String attributes = id + "\t" + Joiners.by('\t').join(tags) + "\n";
 		byte[] firstLine;
 		byte[] num;
 		int length;
 
-		try {
-			encode(data, buf);
-
-			length = buf.readInt();
-			firstLine = attributes.getBytes("utf-8");
-			num = String.valueOf(length).getBytes("utf-8");
-		} catch (Exception e) {
-			m_logger.error(String.format("Error when preparing to write to file(%s)!", m_file), e);
-
-			return false;
-		}
-
-		m_writeLock.lock();
+		t.setStatus(Message.SUCCESS);
 
 		try {
-			long offset = m_writeFile.getFilePointer();
+			try {
+				encode(data, buf);
 
-			m_writeFile.write(firstLine);
-			m_writeFile.write(num);
-			m_writeFile.write('\n');
-			m_writeFile.write(buf.array(), buf.readerIndex(), length);
-			m_writeFile.write('\n');
-
-			if (isAutoFlush()) {
-				m_writeFile.getChannel().force(true);
+				length = buf.readInt();
+				firstLine = attributes.getBytes("utf-8");
+				num = String.valueOf(length).getBytes("utf-8");
+			} catch (IOException e) {
+				m_logger.error(String.format("Error when preparing to write to file(%s)!", m_file), e);
+				t.setStatus(e);
+				return false;
 			}
 
-			updateIndex(id, tags, offset);
+			m_writeLock.lock();
 
-			return true;
-		} catch (Exception e) {
-			m_logger.error(String.format("Error when writing to file(%s)!", m_file), e);
+			try {
+				long offset = m_writeFile.getFilePointer();
 
-			return false;
+				m_writeFile.write(firstLine);
+				m_writeFile.write(num);
+				m_writeFile.write('\n');
+				m_writeFile.write(buf.array(), buf.readerIndex(), length);
+				m_writeFile.write('\n');
+
+				if (isAutoFlush()) {
+					m_writeFile.getChannel().force(true);
+				}
+
+				updateIndex(id, tags, offset);
+
+				return true;
+			} catch (Exception e) {
+				m_logger.error(String.format("Error when writing to file(%s)!", m_file), e);
+				t.setStatus(e);
+				return false;
+			} finally {
+				m_writeLock.unlock();
+			}
 		} finally {
-			m_writeLock.unlock();
+			t.complete();
 		}
 	}
 

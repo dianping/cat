@@ -235,15 +235,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		public void end(DefaultMessageManager manager, Transaction transaction) {
 			if (!m_stack.isEmpty()) {
-				Transaction current = m_stack.peek();
+				Transaction current = m_stack.pop();
 
-				if (transaction.equals(current)) {
+				if (transaction == current) {
 					validateTransaction(current);
 				} else {
-					throw new RuntimeException("Internal error: Transaction logging mismatched!");
-				}
+					while (transaction != current && !m_stack.empty()) {
+						validateTransaction(current);
 
-				m_stack.pop();
+						current = m_stack.pop();
+					}
+				}
 
 				if (m_stack.isEmpty()) {
 					MessageTree tree = m_tree.copy();
@@ -279,20 +281,20 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					message.setStatus("unset");
 				}
 
-				if (!message.isCompleted() && message instanceof DefaultTransaction) {
-					DefaultTransaction t = (DefaultTransaction) message;
-
-					validateTransaction(t);
-
-					// missing transaction end, log a BadInstrument event so that
-					// developer can fix the code
-					DefaultEvent notCompleteEvent = new DefaultEvent("CAT", "BadInstrument");
-
-					notCompleteEvent.setStatus("TransactionNotCompleted");
-					notCompleteEvent.setCompleted(true);
-					transaction.addChild(notCompleteEvent);
-					t.setCompleted(true);
+				if (message instanceof Transaction) {
+					validateTransaction((Transaction) message);
 				}
+			}
+
+			if (!transaction.isCompleted() && transaction instanceof DefaultTransaction) {
+				// missing transaction end, log a BadInstrument event so that
+				// developer can fix the code
+				DefaultEvent notCompleteEvent = new DefaultEvent("CAT", "BadInstrument");
+
+				notCompleteEvent.setStatus("TransactionNotCompleted");
+				notCompleteEvent.setCompleted(true);
+				transaction.addChild(notCompleteEvent);
+				((DefaultTransaction) transaction).setCompleted(true);
 			}
 		}
 	}

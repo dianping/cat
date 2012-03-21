@@ -25,7 +25,7 @@
 		</tr>
 	</c:forEach>
 </table>
-
+${model.xxx}
 </jsp:body>
 	
 </a:report>

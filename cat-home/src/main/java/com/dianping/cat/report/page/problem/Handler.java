@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -79,7 +80,7 @@ public class Handler implements PageHandler<Context> {
 
 			return report;
 		} else {
-			throw new RuntimeException("Internal error: no eligable service registered for " + request + "!");
+			throw new RuntimeException("Internal error: no eligible service registered for " + request + "!");
 		}
 	}
 
@@ -105,9 +106,15 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case DETAIL:
 			showDetail(model, payload);
+			break;
 		}
 
-		m_jspViewer.view(ctx, model);
+		try {
+			m_jspViewer.view(ctx, model);
+		} catch (Throwable e) {
+			Cat.getProducer().logError(e);
+			e.printStackTrace();
+		}
 	}
 
 	private void showDetail(Model model, Payload payload) {
@@ -115,28 +122,30 @@ public class Handler implements PageHandler<Context> {
 		Machine machine = report.getMachines().get(payload.getIpAddress());
 		JavaThread thread = machine.getThreads().get(payload.getThreadId());
 		Segment segment = thread.getSegments().get(payload.getMinute());
-		
+
 		if (segment == null) {
 			model.setEntries(new ArrayList<Entry>());
 			model.setStatistics(new ArrayList<ProblemStatistics>());
 			return;
 		}
+
 		List<Entry> entries = segment.getEntries();
 		Map<String, ProblemStatistics> typeCounts = new HashMap<String, ProblemStatistics>();
 
 		for (Entry entry : entries) {
 			String type = entry.getType();
 			ProblemStatistics staticstics = typeCounts.get(type);
-			
+
 			if (staticstics != null) {
 				staticstics.setCount(staticstics.getCount() + 1);
 			} else {
 				ProblemStatistics temp = new ProblemStatistics();
-			
+
 				temp.setCount(1).setType(type);
 				typeCounts.put(type, temp);
 			}
 		}
+
 		model.setEntries(entries);
 		model.setStatistics(new ArrayList<ProblemStatistics>(typeCounts.values()));
 	}

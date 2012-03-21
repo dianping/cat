@@ -19,7 +19,7 @@ public interface Bucket<T> {
 
 	public Collection<String> getIdsByPrefix(String prefix);
 
-	public void initialize(Class<?> type, String name, Date timestamp) throws IOException;;
+	public void initialize(Class<?> type, String name, Date timestamp) throws IOException;
 
 	/**
 	 * store the data by id into the bucket.
@@ -29,5 +29,5 @@ public interface Bucket<T> {
 	 * @return true means the data was stored in the bucket, otherwise false.
 	 * @throws IOException
 	 */
-	public boolean storeById(String id, T data) throws IOException;;
+	public boolean storeById(String id, T data) throws IOException;
 }

@@ -15,6 +15,7 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -23,6 +24,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
@@ -76,8 +78,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Override
 	public void doCheckpoint() throws IOException {
-		storeReports(m_reports.values());
-		closeMessageBuckets(m_reports.keySet());
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction(getClass().getSimpleName(), "checkpoint");
+
+		try {
+			storeReports(m_reports.values());
+			closeMessageBuckets(m_reports.keySet());
+
+			t.setStatus(Message.SUCCESS);
+		} catch (Exception e) {
+			cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
 	}
 
 	@Override
