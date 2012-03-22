@@ -75,7 +75,7 @@ public class SqlReportJobRecord {
 		return sb.toString();
 	}
 
-	// domain1 SQLStatement Internal9 500 500 500 100 199 74750 11591750 147
+	// domain1 SQLStatement Internal9 500 500 500 100 199 74750 11591750 147	123	123	123	123	
 	public SqlReportJobRecord(String currentHour, String text) {
 
 		try {

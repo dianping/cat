@@ -22,7 +22,8 @@ public class SqlRecordTest {
 
 	@Test
 	public void test2() {
-		String text = "domain1	SQLStatement-Internal9	insert into mysql where is='sfsdf'	500	500	500	100	199	74750	11591750	147	www.sina.com";
+		String text = "domain1	SQLStatement-Internal9	insert into mysql where is='sfsdf'	"+"" +
+				"500	500	500	100	199	74750	11591750	147	www.sina.com	m_durationDistribution	m_hitsOverTime	m_durationOverTime	m_failureOverTime";
 		SqlReportJobRecord record = new SqlReportJobRecord("20120309/11", text);
 
 		Assert.assertEquals("domain1", record.getDomain());
@@ -37,5 +38,9 @@ public class SqlRecordTest {
 		Assert.assertEquals(11591750.0, record.getSum2());
 		Assert.assertEquals(147.0, record.getAvg2());
 		Assert.assertEquals("www.sina.com", record.getSampleLink());
+		Assert.assertEquals("m_durationDistribution", record.getDurationDistribution());
+		Assert.assertEquals("m_hitsOverTime", record.getHitsOverTime());
+		Assert.assertEquals("m_durationOverTime", record.getDurationOverTime());
+		Assert.assertEquals("m_failureOverTime", record.getFailureOverTime());
 	}
 }
