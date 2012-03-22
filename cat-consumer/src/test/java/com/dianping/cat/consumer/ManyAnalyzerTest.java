@@ -18,13 +18,14 @@ import com.site.lookup.ComponentTestCase;
 @RunWith(JUnit4.class)
 public class ManyAnalyzerTest extends ComponentTestCase {
 	private static int s_count1;
+
 	private static int s_count2;
+
 	private static int s_count3;
 
 	@Test
 	public void test() throws Exception {
-		MessageConsumer consumer = lookup(MessageConsumer.class,
-				"mockManyAnalyzers");
+		MessageConsumer consumer = lookup(MessageConsumer.class, "mockManyAnalyzers");
 
 		for (int i = 0; i < 100; i++) {
 			DefaultMessageTree tree = new DefaultMessageTree();
@@ -39,8 +40,7 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		Assert.assertEquals(300, s_count3);
 	}
 
-	public static class MockAnalyzer1 extends
-			AbstractMessageAnalyzer<AnalyzerResult> {
+	public static class MockAnalyzer1 extends AbstractMessageAnalyzer<AnalyzerResult> {
 
 		@Override
 		protected void process(MessageTree tree) {
@@ -53,19 +53,23 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-      public List<AnalyzerResult> generate() {
-	      return null;
-      }
+		public List<AnalyzerResult> generate() {
+			return null;
+		}
 
 		@Override
-      protected void store(List<AnalyzerResult> result) {
-      }
+		protected void store(List<AnalyzerResult> result) {
+		}
+
+		@Override
+		public AnalyzerResult getReport(String domain) {
+			return null;
+		}
 
 	}
 
-	public static class MockAnalyzer2 extends
-			AbstractMessageAnalyzer<AnalyzerResult> {
-@Override
+	public static class MockAnalyzer2 extends AbstractMessageAnalyzer<AnalyzerResult> {
+		@Override
 		protected void process(MessageTree tree) {
 			s_count2 = s_count2 + 2;
 		}
@@ -76,37 +80,45 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-      public List<AnalyzerResult> generate() {
-	      return null;
-      }
+		public List<AnalyzerResult> generate() {
+			return null;
+		}
 
 		@Override
-      protected void store(List<AnalyzerResult> result) {
-      }
+		protected void store(List<AnalyzerResult> result) {
+		}
+
+		@Override
+		public AnalyzerResult getReport(String domain) {
+			return null;
+		}
 
 	}
 
-	public static class MockAnalyzer3 extends
-			AbstractMessageAnalyzer<AnalyzerResult> {
+	public static class MockAnalyzer3 extends AbstractMessageAnalyzer<AnalyzerResult> {
 		@Override
 		protected void process(MessageTree tree) {
 			s_count3 = s_count3 + 3;
 		}
-		
+
 		@Override
 		protected boolean isTimeout() {
 			return false;
 		}
 
 		@Override
-      public List<AnalyzerResult> generate() {
-	      return null;
-      }
+		public List<AnalyzerResult> generate() {
+			return null;
+		}
 
 		@Override
-      protected void store(List<AnalyzerResult> result) {
-      }
+		protected void store(List<AnalyzerResult> result) {
+		}
 
+		@Override
+      public AnalyzerResult getReport(String domain) {
+	      return null;
+      }
 	}
 
 	public static class AnalyzerResult {

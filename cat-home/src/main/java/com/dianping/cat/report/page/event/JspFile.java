@@ -1,9 +1,9 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.report.page.event;
 
 public enum JspFile {
-	VIEW("/jsp/report/transaction.jsp"),
+	VIEW("/jsp/report/event.jsp"),
 	
-	GRAPHS("/jsp/report/transaction_graphs.jsp");
+	GRAPHS("/jsp/report/event_graphs.jsp");
 
 	private String m_path;
 

@@ -8,7 +8,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.ip.Model" scope="request" />
 <c:set var="report" value="${model.report}"/>
 
-<a:report title="Hot IP Report" navUrlPrefix="domain=${model.domain}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:report title="Top IP Report" navUrlPrefix="domain=${model.domain}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
 	
 	<jsp:attribute name="subtitle">Ip Info In Last 15 Minutes</jsp:attribute>
 <jsp:body>

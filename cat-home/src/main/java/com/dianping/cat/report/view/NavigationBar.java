@@ -10,13 +10,15 @@ public class NavigationBar {
 		ReportPage.HOME,
 
 		ReportPage.TRANSACTION,
-		
+
+		ReportPage.EVENT,
+
 		ReportPage.PROBLEM,
-		
+
 		ReportPage.IP,
 
 		ReportPage.SQL,
-		
+
 		ReportPage.LOGVIEW
 
 		};

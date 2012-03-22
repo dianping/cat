@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.report.page.event;
 
 public enum Action implements com.site.web.mvc.Action {
 	VIEW("view"),

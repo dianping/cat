@@ -5,6 +5,9 @@ import java.util.List;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.report.page.model.event.CompositeEventService;
+import com.dianping.cat.report.page.model.event.HistoricalEventService;
+import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.ip.CompositeIpService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
@@ -26,17 +29,29 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 		String remoteServers = property("remote-servers", ""); // no remote server
+		String defaultDomain = property("default-domain", "Cat");
 
 		all.add(C(ModelService.class, "transaction-local", LocalTransactionService.class) //
-		      .req(MessageConsumer.class, "realtime"));
+		      .req(MessageConsumer.class, "realtime") //
+		      .config(E("defaultDomain").value(defaultDomain)));
 		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
 		      .req(BucketManager.class));
 		all.add(C(ModelService.class, "transaction", CompositeTransactionService.class) //
 		      .req(ModelService.class, new String[] { "transaction-local", "transaction-historical" }, "m_services") //
 		      .config(E("remoteServers").value(remoteServers)));
 
+		all.add(C(ModelService.class, "event-local", LocalEventService.class) //
+		      .req(MessageConsumer.class, "realtime") //
+		      .config(E("defaultDomain").value(defaultDomain)));
+		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
+		      .req(BucketManager.class));
+		all.add(C(ModelService.class, "event", CompositeEventService.class) //
+		      .req(ModelService.class, new String[] { "event-local", "event-historical" }, "m_services") //
+		      .config(E("remoteServers").value(remoteServers)));
+
 		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
-		      .req(MessageConsumer.class, "realtime"));
+		      .req(MessageConsumer.class, "realtime") //
+		      .config(E("defaultDomain").value(defaultDomain)));
 		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
 		      .req(BucketManager.class));
 		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //

@@ -1,9 +1,11 @@
-package com.dianping.cat.consumer.transaction;
+package com.dianping.cat.consumer.event;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,13 +16,13 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.transaction.model.entity.Duration;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.event.model.entity.EventName;
+import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.entity.Range;
+import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.consumer.event.model.transform.DefaultXmlParser;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -31,7 +33,7 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
 
-public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
+public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implements LogEnabled {
 	private static final long MINUTE = 60 * 1000;
 
 	@Inject
@@ -40,7 +42,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject
 	private MessagePathBuilder m_pathBuilder;
 
-	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
+	private Map<String, EventReport> m_reports = new HashMap<String, EventReport>();
 
 	private long m_extraTime;
 
@@ -77,7 +79,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Override
 	public void doCheckpoint() throws IOException {
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction(getClass().getSimpleName(), "checkpoint");
+		Event t = cat.newEvent(getClass().getSimpleName(), "checkpoint");
 
 		try {
 			storeReports(m_reports.values());
@@ -98,12 +100,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	protected List<TransactionReport> generate() {
-		List<TransactionReport> reports = new ArrayList<TransactionReport>(m_reports.size());
+	protected List<EventReport> generate() {
+		List<EventReport> reports = new ArrayList<EventReport>(m_reports.size());
 		StatisticsComputer computer = new StatisticsComputer();
 
 		for (String domain : m_reports.keySet()) {
-			TransactionReport report = getReport(domain);
+			EventReport report = getReport(domain);
 
 			report.accept(computer);
 			reports.add(report);
@@ -112,9 +114,25 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return reports;
 	}
 
-	@Override
-	public TransactionReport getReport(String domain) {
-		TransactionReport report = m_reports.get(domain);
+	public List<String> getDomains() {
+		List<String> domains = new ArrayList<String>(m_reports.keySet());
+
+		Collections.sort(domains, new Comparator<String>() {
+			@Override
+			public int compare(String d1, String d2) {
+				if (d1.equals("Cat")) {
+					return 1;
+				}
+
+				return d1.compareTo(d2);
+			}
+		});
+
+		return domains;
+	}
+
+	public EventReport getReport(String domain) {
+		EventReport report = m_reports.get(domain);
 
 		if (report != null) {
 			List<String> sortedDomains = getSortedDomains(m_reports.keySet());
@@ -141,11 +159,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "transaction", "local");
+			bucket = m_bucketManager.getReportBucket(timestamp, "event", "local");
 
 			for (String id : bucket.getIdsByPrefix("")) {
 				String xml = bucket.findById(id);
-				TransactionReport report = parser.parse(xml);
+				EventReport report = parser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}
@@ -161,10 +179,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		TransactionReport report = m_reports.get(domain);
+		EventReport report = m_reports.get(domain);
 
 		if (report == null) {
-			report = new TransactionReport(domain);
+			report = new EventReport(domain);
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 
@@ -173,38 +191,56 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		Message message = tree.getMessage();
 
+		int count = 0;
+
 		if (message instanceof Transaction) {
-			int count = processTransaction(report, tree, (Transaction) message);
+			count += processTransaction(report, tree, (Transaction) message);
+		} else if (message instanceof Event) {
+			count += processEvent(report, tree, (Event) message);
+		}
 
-			// the message is required by some transactions
-			if (count > 0) {
-				String messageId = tree.getMessageId();
+		// the message is required by some events
+		if (count > 0) {
+			String messageId = tree.getMessageId();
 
-				try {
-					Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain,
-					      "local");
-					Bucket<MessageTree> remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain,
-					      "remote");
+			try {
+				Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+				Bucket<MessageTree> remoteBucket = m_bucketManager
+				      .getMessageBucket(new Date(m_startTime), domain, "remote");
 
-					localBucket.storeById(messageId, tree);
-					remoteBucket.storeById(messageId, tree);
-				} catch (IOException e) {
-					m_logger.error("Error when storing message for transaction analyzer!", e);
-				}
+				localBucket.storeById(messageId, tree);
+				remoteBucket.storeById(messageId, tree);
+			} catch (IOException e) {
+				m_logger.error("Error when storing message for event analyzer!", e);
 			}
 		}
 	}
 
-	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		TransactionType type = report.findOrCreateType(t.getType());
-		TransactionName name = type.findOrCreateName(t.getName());
+	int processTransaction(EventReport report, MessageTree tree, Transaction t) {
+		List<Message> children = t.getChildren();
+		int count = 0;
+
+		for (Message child : children) {
+			if (child instanceof Transaction) {
+				count += processTransaction(report, tree, (Transaction) child);
+			} else if (child instanceof Event) {
+				count += processEvent(report, tree, (Event) child);
+			}
+		}
+
+		return count;
+	}
+
+	int processEvent(EventReport report, MessageTree tree, Event event) {
+		EventType type = report.findOrCreateType(event.getType());
+		EventName name = type.findOrCreateName(event.getName());
 		String url = m_pathBuilder.getLogViewPath(tree.getMessageId());
 		int count = 0;
 
 		type.incTotalCount();
 		name.incTotalCount();
 
-		if (t.isSuccess()) {
+		if (event.isSuccess()) {
 			if (type.getSuccessMessageUrl() == null) {
 				type.setSuccessMessageUrl(url);
 				count++;
@@ -229,55 +265,24 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			}
 		}
 
-		// update statistics
-		long duration = t.getDuration();
-
-		name.setMax(Math.max(name.getMax(), duration));
-		name.setMin(Math.min(name.getMin(), duration));
-		name.setSum(name.getSum() + duration);
-		name.setSum2(name.getSum2() + duration * duration);
-
-		type.setMax(Math.max(type.getMax(), duration));
-		type.setMin(Math.min(type.getMin(), duration));
-		type.setSum(type.getSum() + duration);
-		type.setSum2(type.getSum2() + duration * duration);
-
-		processTransactionGrpah(name, t);
-
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				count += processTransaction(report, tree, (Transaction) child);
-			}
-		}
+		processEventGrpah(name, event);
 
 		return count;
 	}
 
-	void processTransactionGrpah(TransactionName name, Transaction t) {
-		long d = t.getDuration();
+	void processEventGrpah(EventName name, Event t) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(t.getTimestamp());
 		int min = cal.get(Calendar.MINUTE);
-		int dk = 1;
 		int tk = min - min % 5;
 
-		while (dk < d) {
-			dk <<= 1;
-		}
-
-		Duration duration = name.findOrCreateDuration(dk);
 		Range range = name.findOrCreateRange(tk);
 
-		duration.incCount();
 		range.incCount();
 
 		if (!t.isSuccess()) {
 			range.incFails();
 		}
-
-		range.setSum(range.getSum() + d);
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
@@ -289,7 +294,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	protected void store(List<TransactionReport> reports) {
+	protected void store(List<EventReport> reports) {
 		if (reports == null || reports.size() == 0) {
 			return;
 		}
@@ -298,20 +303,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		closeMessageBuckets(m_reports.keySet());
 	}
 
-	void storeReports(Collection<TransactionReport> reports) {
+	void storeReports(Collection<EventReport> reports) {
 		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> localBucket = null;
 		Bucket<String> remoteBucket = null;
 
 		try {
-			localBucket = m_bucketManager.getReportBucket(timestamp, "transaction", "local");
-			remoteBucket = m_bucketManager.getReportBucket(timestamp, "transaction", "remote");
+			localBucket = m_bucketManager.getReportBucket(timestamp, "event", "local");
+			remoteBucket = m_bucketManager.getReportBucket(timestamp, "event", "remote");
 
 			// delete old one, not append mode
 			localBucket.deleteAndCreate();
 
-			for (TransactionReport report : reports) {
+			for (EventReport report : reports) {
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
@@ -319,7 +324,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				remoteBucket.storeById(domain, xml);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when storing transaction reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when storing event reports of %s!", timestamp), e);
 		} finally {
 			if (localBucket != null) {
 				m_bucketManager.closeBucket(localBucket);

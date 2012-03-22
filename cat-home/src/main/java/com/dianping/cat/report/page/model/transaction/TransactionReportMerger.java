@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.model.transaction;
 
+import com.dianping.cat.consumer.transaction.StatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -10,6 +11,8 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
 public class TransactionReportMerger extends DefaultMerger {
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
+		
+		transactionReport.accept(new StatisticsComputer());
 	}
 
 	@Override
@@ -104,6 +107,6 @@ public class TransactionReportMerger extends DefaultMerger {
 	}
 
 	protected double std(long count, double ave, double sum2) {
-		return Math.sqrt(sum2 / count - 2 * ave * ave + ave * ave);
+		return Math.sqrt(sum2 / count - ave * ave);
 	}
 }

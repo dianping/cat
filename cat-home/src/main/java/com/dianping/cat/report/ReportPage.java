@@ -5,17 +5,19 @@ import com.site.web.mvc.annotation.ModuleMeta;
 
 public enum ReportPage implements Page {
 
-   HOME("home", "home", "Home", "CAT Home Page.", true),
+   HOME("home", "home", "Home", "Home Page", true),
 
    PROBLEM("problem", "p", "Problem", "Problem Discovered", true),
 
-   LOGVIEW("logview", "m", "Logview", "CAT Log Details View For A Given Message.", false),
-   
    TRANSACTION("transaction", "t", "Transaction", "Transaction Summary Report", true),
 
-   IP("ip", "ip", "Top IP List", "Top Visited IP Addresses", true),
+   EVENT("event", "e", "Event", "Event Summary Report", true),
 
-   MODEL("model", "model", "Model", "Model Service", false),
+   LOGVIEW("logview", "m", "Logview", "Log View Details", false),
+
+   IP("ip", "ip", "Top IP", "Top Visited IP", true),
+
+   MODEL("model", "model", "Model", "Service Model", false),
 
    SQL("sql", "sql", "SQL", "SQL Report", true);
 

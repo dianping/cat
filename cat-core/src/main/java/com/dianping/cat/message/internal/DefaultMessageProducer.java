@@ -79,6 +79,17 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 	}
 
+	public Event newEvent(Transaction parent, String type, String name) {
+		if (m_manager.isCatEnabled() && parent != null) {
+			DefaultEvent event = new DefaultEvent(type, name);
+
+			parent.addChild(event);
+			return event;
+		} else {
+			return NullMessage.EVENT;
+		}
+	}
+
 	@Override
 	public Heartbeat newHeartbeat(String type, String name) {
 		if (m_manager.isCatEnabled()) {
@@ -91,12 +102,34 @@ public class DefaultMessageProducer implements MessageProducer {
 		}
 	}
 
+	public Heartbeat newHeartbeat(Transaction parent, String type, String name) {
+		if (m_manager.isCatEnabled() && parent != null) {
+			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
+
+			parent.addChild(heartbeat);
+			return heartbeat;
+		} else {
+			return NullMessage.HEARTBEAT;
+		}
+	}
+
 	@Override
 	public Transaction newTransaction(String type, String name) {
 		if (m_manager.isCatEnabled()) {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
 			m_manager.start(transaction);
+			return transaction;
+		} else {
+			return NullMessage.TRANSACTION;
+		}
+	}
+
+	public Transaction newTransaction(Transaction parent, String type, String name) {
+		if (m_manager.isCatEnabled() && parent != null) {
+			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
+
+			parent.addChild(transaction);
 			return transaction;
 		} else {
 			return NullMessage.TRANSACTION;

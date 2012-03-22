@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -108,7 +109,6 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		m_jspViewer.view(ctx, model);
-		
 	}
 
 	private void showDetail(Model model, Payload payload) {
@@ -178,6 +178,7 @@ public class Handler implements PageHandler<Context> {
 			model.setIpAddress(ip);
 			model.setReport(report);
 		} catch (Throwable e) {
+			Cat.getProducer().logError(e);
 			model.setException(e);
 		}
 	}

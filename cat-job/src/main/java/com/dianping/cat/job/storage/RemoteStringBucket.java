@@ -41,24 +41,14 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 	}
 
 	@Override
-	public String findById(String id) throws IOException {
-		int pos = id.indexOf('-');
+	public String findById(String domain) throws IOException {
+		try {
+			Report report = m_reportDao.findByPeriodDomainTypeName(m_period, domain, 1, m_name, ReportEntity.READSET_FULL);
 
-		if (pos > 0) {
-			String name = id.substring(0, pos);
-			String domain = id.substring(pos + 1);
-
-			try {
-				Report report = m_reportDao
-				      .findByPeriodDomainTypeName(m_period, domain, 1, name, ReportEntity.READSET_FULL);
-
-				return report.getContent();
-			} catch (DalException e) {
-				throw new IOException(String.format("Unable to insert report(%s)!", id), e);
-			}
+			return report.getContent();
+		} catch (DalException e) {
+			throw new IOException(String.format("Unable to insert report(name=%s, domain=%s)!", m_name, domain), e);
 		}
-
-		return null;
 	}
 
 	@Override

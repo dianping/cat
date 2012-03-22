@@ -3,25 +3,28 @@
   <webapp package="com.dianping.cat" webres="true">
     <module name="report" path="r">
       <page name="home" title="Home" default="true">
-        <description>CAT Home Page.</description>
+        <description>Home Page</description>
       </page>
       <page name="problem" title="Problem" path="p">
-        <description>Problem discovered</description>
+        <description>Problem Discovered</description>
       </page>
       <page name="transaction" title="Transaction" path="t">
-        <description>Transaction summary report</description>
+        <description>Transaction Summary Report</description>
+      </page>
+      <page name="event" title="Event" path="e">
+        <description>Event Summary Report</description>
       </page>
       <page name="logview" title="Logview" path="m" standalone="false">
-        <description>Log view details</description>
+        <description>Log View Details</description>
       </page>
-      <page name="ip" title="Top IP List">
-        <description>Top visited IP addresses</description>
+      <page name="ip" title="Top IP">
+        <description>Top Visited IP</description>
       </page>
       <page name="model" title="Model" path="model" standalone="false">
-        <description>Service model</description>
+        <description>Service Model</description>
       </page>
-      <page name="sql" title="Sql" path="sql">
-        <description>Sql</description>
+      <page name="sql" title="SQL" path="sql">
+        <description>SQL Report</description>
       </page>
     </module>
   </webapp>

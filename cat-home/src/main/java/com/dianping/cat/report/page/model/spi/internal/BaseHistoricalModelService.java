@@ -1,11 +1,12 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
-import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 
-public abstract class BaseHistoricalModelService<T> implements ModelService<T> {
+public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
 	private String m_name;
 
 	public BaseHistoricalModelService(String name) {
@@ -21,14 +22,19 @@ public abstract class BaseHistoricalModelService<T> implements ModelService<T> {
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
+		Transaction t = newTransaction(getClass().getSimpleName(), m_name);
 
 		try {
 			T model = buildModel(request);
 
 			response.setModel(model);
+			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
-			Cat.getProducer().logError(e);
+			logError(e);
+			t.setStatus(e);
 			response.setException(e);
+		} finally {
+			t.complete();
 		}
 
 		return response;

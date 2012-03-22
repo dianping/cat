@@ -71,7 +71,7 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 			analyzer.process(tree);
 		}
 
-		TransactionReport report = analyzer.generate("group");
+		TransactionReport report = analyzer.getReport("group");
 		TransactionType typeA = report.getTypes().get("A");
 		TransactionName n1 = typeA.getNames().get("n1");
 		assertEquals(1000, n1.getTotalCount());

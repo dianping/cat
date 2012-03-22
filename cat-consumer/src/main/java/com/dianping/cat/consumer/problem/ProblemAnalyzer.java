@@ -17,6 +17,7 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.handler.Handler;
+import com.dianping.cat.consumer.problem.model.entity.AllDomains;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -115,24 +116,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		List<ProblemReport> reports = new ArrayList<ProblemReport>(m_reports.size());
 
 		for (String domain : m_reports.keySet()) {
-			ProblemReport report = generate(domain);
+			ProblemReport report = getReport(domain);
 
 			reports.add(report);
 		}
 
 		return reports;
-	}
-
-	public ProblemReport generate(String domain) {
-		if (domain == null) {
-			List<String> domains = getDomains();
-
-			domain = domains.size() > 0 ? domains.get(0) : null;
-		}
-
-		ProblemReport report = m_reports.get(domain);
-
-		return report;
 	}
 
 	public List<String> getDomains() {
@@ -153,17 +142,20 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	public ProblemReport getReport(String domain) {
-		if (domain == null) {
-			List<String> domains = getDomains();
+		ProblemReport report = m_reports.get(domain);
 
-			domain = domains.isEmpty() ? null : domains.get(0);
+		if (report != null) {
+			List<String> sortedDomains = getSortedDomains(m_reports.keySet());
+			AllDomains allDomains = new AllDomains();
+
+			for (String e : sortedDomains) {
+				allDomains.addDomain(e);
+			}
+
+			report.setAllDomains(allDomains);
 		}
 
-		return m_reports.get(domain);
-	}
-
-	public Map<String, ProblemReport> getReports() {
-		return m_reports;
+		return report;
 	}
 
 	@Override

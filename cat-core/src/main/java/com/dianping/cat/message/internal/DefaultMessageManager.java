@@ -49,15 +49,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public void add(Message message) {
-		if (Cat.isInitialized()) {
-			Context ctx = m_context.get();
+		Context ctx = getContext();
 
-			if (ctx != null) {
-				ctx.add(this, message);
-			} else if (m_clientConfig.isDevMode()) {
-				throw new RuntimeException("Cat has not been initialized successfully, "
-				      + "please call Cal.setup(...) first for each thread.");
-			}
+		if (ctx != null) {
+			ctx.add(this, message);
 		}
 	}
 
@@ -68,15 +63,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public void end(Transaction transaction) {
-		if (Cat.isInitialized()) {
-			Context ctx = m_context.get();
+		Context ctx = getContext();
 
-			if (ctx != null) {
-				ctx.end(this, transaction);
-			} else if (m_clientConfig.isDevMode()) {
-				throw new RuntimeException("Cat has not been initialized successfully, "
-				      + "please call Cal.setup(...) first for each thread.");
-			}
+		if (ctx != null) {
+			ctx.end(this, transaction);
 		}
 	}
 
@@ -93,6 +83,32 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public Config getClientConfig() {
 		return m_clientConfig;
+	}
+
+	Context getContext() {
+		if (Cat.isInitialized()) {
+			Context ctx = m_context.get();
+
+			if (ctx != null) {
+				return ctx;
+			} else if (m_clientConfig.isDevMode()) {
+				throw new RuntimeException("Cat has not been initialized successfully, "
+				      + "please call Cal.setup(...) first for each thread.");
+			}
+		}
+
+		return null;
+	}
+
+	@Override
+	public Transaction getPeekTransaction() {
+		Context ctx = getContext();
+
+		if (ctx != null) {
+			return ctx.peekTransaction(this);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -182,15 +198,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public void start(Transaction transaction) {
-		if (Cat.isInitialized()) {
-			Context ctx = m_context.get();
+		Context ctx = getContext();
 
-			if (ctx != null) {
-				ctx.start(this, transaction);
-			} else if (m_clientConfig.isDevMode()) {
-				throw new RuntimeException("Cat has not been initialized successfully, "
-				      + "please call Cal.setup(...) first for each thread.");
-			}
+		if (ctx != null) {
+			ctx.start(this, transaction);
 		} else if (m_firstMessage) {
 			m_firstMessage = false;
 			m_logger.warn("CAT client is not enabled because it's not initialized yet");
@@ -254,6 +265,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					m_tree.setMessage(null);
 					manager.flush(tree);
 				}
+			}
+		}
+
+		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
+			if (m_stack.isEmpty()) {
+				return null;
+			} else {
+				return m_stack.peek();
 			}
 		}
 

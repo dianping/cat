@@ -32,6 +32,13 @@ public interface MessageManager {
 	public Config getClientConfig();
 
 	/**
+	 * Get peek transaction for current thread.
+	 * 
+	 * @return peek transaction for current thread, null if no transaction there.
+	 */
+	public Transaction getPeekTransaction();
+
+	/**
 	 * Return configuration for CAT client.
 	 * 
 	 * @return CAT configuration

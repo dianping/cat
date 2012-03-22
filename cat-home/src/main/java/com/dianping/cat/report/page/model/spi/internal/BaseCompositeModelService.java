@@ -1,7 +1,5 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -15,17 +13,16 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
-public abstract class BaseCompositeModelService<T> implements ModelService<T>, Initializable {
+public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
+      Initializable {
 	@Inject
 	private List<ModelService<T>> m_services;
 
@@ -68,21 +65,23 @@ public abstract class BaseCompositeModelService<T> implements ModelService<T>, I
 				continue;
 			}
 
+			// save current transaction so that child thread can access it
+			setParentTransaction(t);
+
 			m_threadPool.submit(new Runnable() {
 				@Override
 				public void run() {
 					try {
-						logEvent(t, "ModelRequest", service.getName(), Message.SUCCESS, service.toString());
-						
 						responses.add(service.invoke(request));
 					} catch (Exception e) {
-						logError(t, e);
+						logError(e);
 						t.setStatus(e);
 					} finally {
 						semaphore.release();
 					}
 				}
 			});
+
 			count++;
 		}
 
@@ -111,32 +110,6 @@ public abstract class BaseCompositeModelService<T> implements ModelService<T>, I
 		}
 
 		return false;
-	}
-
-	void logError(Transaction t, Throwable cause) {
-		StringWriter writer = new StringWriter(2048);
-
-		cause.printStackTrace(new PrintWriter(writer));
-
-		if (cause instanceof Error) {
-			logEvent(t, "Error", cause.getClass().getName(), "ERROR", writer.toString());
-		} else if (cause instanceof RuntimeException) {
-			logEvent(t, "RuntimeException", cause.getClass().getName(), "ERROR", writer.toString());
-		} else {
-			logEvent(t, "Exception", cause.getClass().getName(), "ERROR", writer.toString());
-		}
-	}
-
-	void logEvent(Transaction t, String type, String name, String status, String nameValuePairs) {
-		Event event = new DefaultEvent(type, name);
-
-		if (nameValuePairs != null && nameValuePairs.length() > 0) {
-			event.addData(nameValuePairs);
-		}
-
-		event.setStatus(status);
-		event.complete();
-		t.addChild(event);
 	}
 
 	protected abstract T merge(final List<ModelResponse<T>> responses);
