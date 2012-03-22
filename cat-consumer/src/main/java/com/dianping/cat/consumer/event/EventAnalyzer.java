@@ -105,25 +105,13 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		StatisticsComputer computer = new StatisticsComputer();
 
 		for (String domain : m_reports.keySet()) {
-			EventReport report = generate(domain);
+			EventReport report = getReport(domain);
 
 			report.accept(computer);
 			reports.add(report);
 		}
 
 		return reports;
-	}
-
-	public EventReport generate(String domain) {
-		if (domain == null) {
-			List<String> domains = getDomains();
-
-			domain = domains.size() > 0 ? domains.get(0) : null;
-		}
-
-		EventReport report = m_reports.get(domain);
-
-		return report;
 	}
 
 	public List<String> getDomains() {
@@ -144,17 +132,17 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	public EventReport getReport(String domain) {
-		if (domain == null) {
-			List<String> domains = getDomains();
+		EventReport report = m_reports.get(domain);
 
-			domain = domains.isEmpty() ? null : domains.get(0);
+		if (report != null) {
+			List<String> sortedDomains = getSortedDomains(m_reports.keySet());
+
+			for (String e : sortedDomains) {
+				report.addDomain(e);
+			}
 		}
 
-		return m_reports.get(domain);
-	}
-
-	public Map<String, EventReport> getReports() {
-		return m_reports;
+		return report;
 	}
 
 	@Override

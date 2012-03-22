@@ -16,6 +16,9 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 	@Inject(type = MessageConsumer.class, value = "realtime")
 	private RealtimeConsumer m_consumer;
 
+	@Inject
+	private String m_defaultDomain;
+
 	private String m_name;
 
 	public BaseLocalModelService(String name) {
@@ -39,7 +42,11 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 		if (analyzer instanceof AbstractMessageAnalyzer) {
 			AbstractMessageAnalyzer<T> a = (AbstractMessageAnalyzer<T>) analyzer;
 
-			return a.getReport(domain);
+			if (domain == null) {
+				return a.getReport(m_defaultDomain);
+			} else {
+				return a.getReport(domain);
+			}
 		}
 
 		throw new RuntimeException("Internal error: this should not be reached!");
@@ -71,6 +78,10 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 		ModelPeriod period = request.getPeriod();
 
 		return !period.isHistorical();
+	}
+
+	public void setDefaultDomain(String defaultDomain) {
+		m_defaultDomain = defaultDomain;
 	}
 
 	@Override

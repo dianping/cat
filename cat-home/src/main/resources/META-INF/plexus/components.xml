@@ -30,6 +30,9 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
+			<configuration>
+				<defaultDomain>Cat</defaultDomain>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -69,6 +72,9 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>event-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.event.LocalEventService</implementation>
+			<configuration>
+				<defaultDomain>Cat</defaultDomain>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -108,6 +114,9 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>problem-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
+			<configuration>
+				<defaultDomain>Cat</defaultDomain>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -322,6 +331,27 @@
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.event.Handler</role>
+			<implementation>com.dianping.cat.report.page.event.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>event</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.event.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.event.JspViewer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.logview.Handler</role>
 			<implementation>com.dianping.cat.report.page.logview.Handler</implementation>
 			<requirements>
@@ -394,6 +424,9 @@
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
 				</requirement>
+				<requirement>
+					<role>java.lang.String</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -404,6 +437,9 @@
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
+				</requirement>
+				<requirement>
+					<role>java.lang.String</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -422,6 +458,9 @@
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
+				</requirement>
+				<requirement>
+					<role>java.lang.String</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -452,27 +491,6 @@
 					<role>com.site.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.event.Handler</role>
-			<implementation>com.dianping.cat.report.page.event.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>event</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.graph.GraphBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.event.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.event.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>

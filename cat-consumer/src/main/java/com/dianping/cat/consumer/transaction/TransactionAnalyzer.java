@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -105,7 +103,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		StatisticsComputer computer = new StatisticsComputer();
 
 		for (String domain : m_reports.keySet()) {
-			TransactionReport report = generate(domain);
+			TransactionReport report = getReport(domain);
 
 			report.accept(computer);
 			reports.add(report);
@@ -114,47 +112,19 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return reports;
 	}
 
-	public TransactionReport generate(String domain) {
-		if (domain == null) {
-			List<String> domains = getDomains();
-
-			domain = domains.size() > 0 ? domains.get(0) : null;
-		}
-
+	@Override
+	public TransactionReport getReport(String domain) {
 		TransactionReport report = m_reports.get(domain);
 
-		return report;
-	}
+		if (report != null) {
+			List<String> sortedDomains = getSortedDomains(m_reports.keySet());
 
-	public List<String> getDomains() {
-		List<String> domains = new ArrayList<String>(m_reports.keySet());
-
-		Collections.sort(domains, new Comparator<String>() {
-			@Override
-			public int compare(String d1, String d2) {
-				if (d1.equals("Cat")) {
-					return 1;
-				}
-
-				return d1.compareTo(d2);
+			for (String e : sortedDomains) {
+				report.addDomain(e);
 			}
-		});
-
-		return domains;
-	}
-
-	public TransactionReport getReport(String domain) {
-		if (domain == null) {
-			List<String> domains = getDomains();
-
-			domain = domains.isEmpty() ? null : domains.get(0);
 		}
 
-		return m_reports.get(domain);
-	}
-
-	public Map<String, TransactionReport> getReports() {
-		return m_reports;
+		return report;
 	}
 
 	@Override

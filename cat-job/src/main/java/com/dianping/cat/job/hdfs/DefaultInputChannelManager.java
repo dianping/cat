@@ -7,15 +7,13 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultInputChannelManager extends ContainerHolder implements InputChannelManager, Initializable, LogEnabled {
+public class DefaultInputChannelManager extends ContainerHolder implements InputChannelManager, Initializable {
 	@Inject
 	private URI m_serverUri;
 
@@ -23,8 +21,6 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 	private String m_baseDir = "target/hdfs";
 
 	private FileSystem m_fs;
-
-	private Logger m_logger;
 
 	private Path m_basePath;
 
@@ -40,11 +36,6 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 	public void closeChannel(InputChannel channel) {
 		channel.close();
 		super.release(channel);
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	@Override

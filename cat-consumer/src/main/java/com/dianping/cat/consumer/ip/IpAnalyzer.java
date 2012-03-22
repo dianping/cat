@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.consumer.ip.model.entity.AllDomains;
 import com.dianping.cat.consumer.ip.model.entity.Ip;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.entity.Period;
@@ -75,15 +76,22 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 	public List<IpReport> generate() {
 		return null;
 	}
-	public IpReport generate(String domain) {
-		if (domain == null) {
-			List<String> domains = getDomains();
 
-			domain = domains.size() > 0 ? domains.get(0) : null;
-		}
-
+	public IpReport getReport(String domain) {
 		IpReport report = m_reports.get(domain);
 
+		if (report == null) {
+			report = new IpReport();
+		}
+
+		List<String> sortedDomains = getSortedDomains(m_reports.keySet());
+		AllDomains allDomains = new AllDomains();
+
+		for (String e : sortedDomains) {
+			allDomains.addDomain(e);
+		}
+
+		report.setAllDomains(allDomains);
 		return report;
 	}
 
