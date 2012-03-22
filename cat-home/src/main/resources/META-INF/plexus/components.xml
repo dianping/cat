@@ -52,7 +52,7 @@
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.CompositeTransactionService</implementation>
 			<configuration>
-				<remoteServers>192.168.7.43</remoteServers>
+				<remoteServers></remoteServers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -91,7 +91,7 @@
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.page.model.problem.CompositeProblemService</implementation>
 			<configuration>
-				<remoteServers>192.168.7.43</remoteServers>
+				<remoteServers></remoteServers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -120,7 +120,7 @@
 			<role-hint>ip</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
 			<configuration>
-				<remoteServers>192.168.7.43</remoteServers>
+				<remoteServers></remoteServers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -169,7 +169,7 @@
 			<role-hint>logview</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
 			<configuration>
-				<remoteServers>192.168.7.43</remoteServers>
+				<remoteServers></remoteServers>
 			</configuration>
 			<requirements>
 				<requirement>
