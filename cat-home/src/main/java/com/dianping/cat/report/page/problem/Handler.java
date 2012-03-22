@@ -108,7 +108,6 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		m_jspViewer.view(ctx, model);
-		
 	}
 
 	private void showDetail(Model model, Payload payload) {
