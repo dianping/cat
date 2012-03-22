@@ -16,6 +16,8 @@ public class DefaultInputChannel implements InputChannel {
 	private MessageCodec m_codec;
 
 	private FSDataInputStream m_in;
+	
+	private String path;
 
 	@Override
 	public void close() {
@@ -50,5 +52,14 @@ public class DefaultInputChannel implements InputChannel {
 	public boolean isExpired() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
 	}
 }
