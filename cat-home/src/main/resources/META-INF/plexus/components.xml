@@ -52,7 +52,7 @@
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.CompositeTransactionService</implementation>
 			<configuration>
-				<remoteServers>192.168.7.43</remoteServers>
+				<remoteServers></remoteServers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -60,6 +60,45 @@
 					<role-hints>
 						<role-hint>transaction-local</role-hint>
 						<role-hint>transaction-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>event-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.event.LocalEventService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>event-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.event.HistoricalEventService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>event</role-hint>
+			<implementation>com.dianping.cat.report.page.model.event.CompositeEventService</implementation>
+			<configuration>
+				<remoteServers></remoteServers>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>event-local</role-hint>
+						<role-hint>event-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -91,7 +130,7 @@
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.page.model.problem.CompositeProblemService</implementation>
 			<configuration>
-				<remoteServers>192.168.7.43</remoteServers>
+				<remoteServers></remoteServers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -120,7 +159,7 @@
 			<role-hint>ip</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
 			<configuration>
-				<remoteServers>192.168.7.43</remoteServers>
+				<remoteServers></remoteServers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -169,7 +208,7 @@
 			<role-hint>logview</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
 			<configuration>
-				<remoteServers>192.168.7.43</remoteServers>
+				<remoteServers></remoteServers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -413,6 +452,27 @@
 					<role>com.site.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.event.Handler</role>
+			<implementation>com.dianping.cat.report.page.event.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>event</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.event.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.event.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>

@@ -18,7 +18,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.helper.Files;
 import com.site.lookup.annotation.Inject;
 
-public abstract class BaseRemoteModelService<T> implements ModelService<T> {
+public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
 	@Inject
 	private String m_host;
 
@@ -60,9 +60,7 @@ public abstract class BaseRemoteModelService<T> implements ModelService<T> {
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("RemoteModel", m_name);
-
-		t.addData("request", request);
+		Transaction t = newTransaction(getClass().getSimpleName(), m_name);
 
 		try {
 			URL url = buildUrl(request);

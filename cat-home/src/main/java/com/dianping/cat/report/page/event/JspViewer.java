@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.report.page.event;
 
 import com.dianping.cat.report.ReportPage;
 import com.site.web.mvc.view.BaseJspViewer;

@@ -11,6 +11,9 @@
       <page name="transaction" title="Transaction" path="t">
         <description>Transaction summary report</description>
       </page>
+      <page name="event" title="Event" path="e">
+        <description>Event</description>
+      </page>
       <page name="logview" title="Logview" path="m" standalone="false">
         <description>Log view details</description>
       </page>

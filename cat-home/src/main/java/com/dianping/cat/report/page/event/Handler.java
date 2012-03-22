@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.report.page.event;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -10,12 +10,11 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.transaction.StatisticsComputer;
-import com.dianping.cat.consumer.transaction.model.entity.Duration;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.event.StatisticsComputer;
+import com.dianping.cat.consumer.event.model.entity.EventName;
+import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -36,8 +35,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject(type = ModelService.class, value = "transaction")
-	private ModelService<TransactionReport> m_service;
+	@Inject(type = ModelService.class, value = "event")
+	private ModelService<EventReport> m_service;
 
 	@Inject
 	private GraphBuilder m_builder;
@@ -46,7 +45,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
-	private TransactionName getTransactionName(Payload payload) {
+	private EventName getEventName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
 		String name = payload.getName();
@@ -55,12 +54,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("date", date) //
 		      .setProperty("type", payload.getType())//
 		      .setProperty("name", payload.getName());
-		ModelResponse<TransactionReport> response = m_service.invoke(request);
-		TransactionReport report = response.getModel();
-		TransactionType t = report.findType(type);
+		ModelResponse<EventReport> response = m_service.invoke(request);
+		EventReport report = response.getModel();
+		EventType t = report.findType(type);
 
 		if (t != null) {
-			TransactionName n = t.findName(name);
+			EventName n = t.findName(name);
 
 			if (n != null) {
 				n.accept(m_computer);
@@ -70,11 +69,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 
 		Cat.getManager().getThreadLocalMessageTree();
-		
+
 		return null;
 	}
 
-	private TransactionReport getReport(Payload payload) {
+	private EventReport getReport(Payload payload) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
@@ -82,8 +81,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("type", payload.getType());
 
 		if (m_service.isEligable(request)) {
-			ModelResponse<TransactionReport> response = m_service.invoke(request);
-			TransactionReport report = response.getModel();
+			ModelResponse<EventReport> response = m_service.invoke(request);
+			EventReport report = response.getModel();
 
 			return report;
 		} else {
@@ -93,19 +92,19 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "t")
+	@InboundActionMeta(name = "e")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "t")
+	@OutboundActionMeta(name = "e")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
 		model.setAction(payload.getAction());
-		model.setPage(ReportPage.TRANSACTION);
+		model.setPage(ReportPage.EVENT);
 
 		switch (payload.getAction()) {
 		case VIEW:
@@ -132,27 +131,22 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	private void showGraphs(Model model, Payload payload) {
-		final TransactionName name = getTransactionName(payload);
+		final EventName name = getEventName(payload);
 
 		if (name == null) {
 			return;
 		}
 
-		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
-		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
-		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
-		      "Average Duration (ms)", name));
-		String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
+		String graph1 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
+		String graph2 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
 
 		model.setGraph1(graph1);
 		model.setGraph2(graph2);
-		model.setGraph3(graph3);
-		model.setGraph4(graph4);
 	}
 
 	private void showReport(Model model, Payload payload) {
 		try {
-			TransactionReport report = getReport(payload);
+			EventReport report = getReport(payload);
 
 			if (payload.getPeriod().isFuture()) {
 				model.setDate(payload.getCurrentDate());
@@ -169,9 +163,9 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	abstract class AbstractPayload extends AbstractGraphPayload {
-		private final TransactionName m_name;
+		private final EventName m_name;
 
-		public AbstractPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
+		public AbstractPayload(String title, String axisXLabel, String axisYLabel, EventName name) {
 			super(title, axisXLabel, axisYLabel);
 
 			m_name = name;
@@ -197,7 +191,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 			return m_name.getId() + "-" + super.getIdPrefix();
 		}
 
-		protected TransactionName getTransactionName() {
+		protected EventName getEventName() {
 			return m_name;
 		}
 
@@ -212,80 +206,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 	}
 
-	final class AverageTimePayload extends AbstractPayload {
-		public AverageTimePayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel, name);
-		}
-
-		@Override
-		public int getOffsetY() {
-			return getDisplayHeight() + 20;
-		}
-
-		@Override
-		protected double[] loadValues() {
-			double[] values = new double[12];
-
-			for (Range range : getTransactionName().getRanges()) {
-				int value = range.getValue();
-				int k = value / 5;
-
-				values[k] += range.getAvg();
-			}
-
-			return values;
-		}
-	}
-
-	final class DurationPayload extends AbstractPayload {
-		public DurationPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel, name);
-		}
-
-		@Override
-		public String getAxisXLabel(int index) {
-			if (index == 0) {
-				return "0";
-			}
-
-			int k = 1;
-
-			for (int i = 1; i < index; i++) {
-				k <<= 1;
-			}
-
-			return String.valueOf(k);
-		}
-
-		@Override
-		public boolean isAxisXLabelRotated() {
-			return true;
-		}
-
-		@Override
-		public boolean isAxisXLabelSkipped() {
-			return false;
-		}
-
-		@Override
-		protected double[] loadValues() {
-			double[] values = new double[17];
-
-			for (Duration duration : getTransactionName().getDurations()) {
-				int d = duration.getValue();
-				Integer k = m_map.get(d);
-
-				if (k != null) {
-					values[k] += duration.getCount();
-				}
-			}
-
-			return values;
-		}
-	}
-
 	final class FailurePayload extends AbstractPayload {
-		public FailurePayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
+		public FailurePayload(String title, String axisXLabel, String axisYLabel, EventName name) {
 			super(title, axisXLabel, axisYLabel, name);
 		}
 
@@ -295,15 +217,10 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 
 		@Override
-		public int getOffsetY() {
-			return getDisplayHeight() + 20;
-		}
-
-		@Override
 		protected double[] loadValues() {
 			double[] values = new double[12];
 
-			for (Range range : getTransactionName().getRanges()) {
+			for (Range range : getEventName().getRanges()) {
 				int value = range.getValue();
 				int k = value / 5;
 
@@ -315,20 +232,15 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	final class HitPayload extends AbstractPayload {
-		public HitPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
+		public HitPayload(String title, String axisXLabel, String axisYLabel, EventName name) {
 			super(title, axisXLabel, axisYLabel, name);
-		}
-
-		@Override
-		public int getOffsetX() {
-			return getDisplayWidth();
 		}
 
 		@Override
 		protected double[] loadValues() {
 			double[] values = new double[12];
 
-			for (Range range : getTransactionName().getRanges()) {
+			for (Range range : getEventName().getRanges()) {
 				int value = range.getValue();
 				int k = value / 5;
 

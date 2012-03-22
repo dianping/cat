@@ -1,7 +1,8 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -11,7 +12,7 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 
-public class BaseLocalModelService<T> implements ModelService<T> {
+public class BaseLocalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
 	@Inject(type = MessageConsumer.class, value = "realtime")
 	private RealtimeConsumer m_consumer;
 
@@ -47,14 +48,19 @@ public class BaseLocalModelService<T> implements ModelService<T> {
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
+		Transaction t = newTransaction(getClass().getSimpleName(), m_name);
 
 		try {
 			T report = getReport(request, request.getPeriod(), request.getDomain());
 
 			response.setModel(report);
+			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
-			Cat.getProducer().logError(e);
+			logError(e);
+			t.setStatus(e);
 			response.setException(e);
+		} finally {
+			t.complete();
 		}
 
 		return response;

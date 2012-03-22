@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer;
 
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -22,6 +23,11 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 		} else if (name.equals("transaction")) {
 			TransactionAnalyzer analyzer = lookup(TransactionAnalyzer.class);
 
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
+			return analyzer;
+		} else if (name.equals("event")) {
+			EventAnalyzer analyzer = lookup(EventAnalyzer.class);
+			
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;
 		} else if (name.equals("ip")) {
