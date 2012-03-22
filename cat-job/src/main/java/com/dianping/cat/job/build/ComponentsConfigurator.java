@@ -51,7 +51,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 			all.add(C(InputChannel.class, DefaultInputChannel.class).is(PER_LOOKUP) //
 			      .req(MessageCodec.class, "plain-text"));
 			all.add(C(InputChannelManager.class, DefaultInputChannelManager.class) //
-			      .config(E("serverUri").value("hdfs://192.168.7.43:9000/user/cat/")));
+			      .config(E("baseDir").value("data"), //
+			    		  E("serverUri").value("hdfs://192.168.7.43:9000/user/cat/")));
 		}
 
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //

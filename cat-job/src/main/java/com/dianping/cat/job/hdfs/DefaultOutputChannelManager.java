@@ -3,6 +3,7 @@ package com.dianping.cat.job.hdfs;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +104,7 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 
 	@Override
 	public OutputChannel openChannel(MessageTree tree, boolean forceNew) throws IOException {
-		String path = m_builder.getHdfsPath(tree.getMessageId());
+		String path = m_builder.getMessagePath(tree.getDomain(), new Date(tree.getMessage().getTimestamp()));
 
 		return openChannel(path, forceNew);
 	}
