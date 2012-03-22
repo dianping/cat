@@ -1,10 +1,9 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
-import java.util.List;
-
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
+import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -12,39 +11,53 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 
-public class BaseLocalModelService implements ModelService<TransactionReport> {
+public class BaseLocalModelService<T> implements ModelService<T> {
 	@Inject(type = MessageConsumer.class, value = "realtime")
 	private RealtimeConsumer m_consumer;
 
+	private String m_name;
+
+	public BaseLocalModelService(String name) {
+		m_name = name;
+	}
+
+	public String getName() {
+		return m_name;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected T getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
+		MessageAnalyzer analyzer = null;
+
+		if (period.isCurrent() || period.isFuture()) {
+			analyzer = m_consumer.getCurrentAnalyzer(m_name);
+		} else if (period.isLast()) {
+			analyzer = m_consumer.getLastAnalyzer(m_name);
+		}
+
+		if (analyzer instanceof AbstractMessageAnalyzer) {
+			AbstractMessageAnalyzer<T> a = (AbstractMessageAnalyzer<T>) analyzer;
+
+			return a.getReport(domain);
+		}
+
+		throw new RuntimeException("Internal error: this should not be reached!");
+	}
+
 	@Override
-	public ModelResponse<TransactionReport> invoke(ModelRequest request) {
-		TransactionAnalyzer analyzer = getAnalyzer(request.getPeriod());
-		ModelResponse<TransactionReport> response = new ModelResponse<TransactionReport>();
+	public ModelResponse<T> invoke(ModelRequest request) {
+		ModelResponse<T> response = new ModelResponse<T>();
 
-		if (analyzer != null) {
-			List<String> domains = analyzer.getDomains();
-			String d = request.getDomain();
-			String domain = d != null && d.length() > 0 ? d : domains.isEmpty() ? null : domains.get(0);
-			TransactionReport report = analyzer.getReport(domain);
-
-			if (report != null) {
-				report.getDomains().addAll(domains);
-			}
+		try {
+			T report = getReport(request, request.getPeriod(), request.getDomain());
 
 			response.setModel(report);
+		} catch (Exception e) {
+			Cat.getProducer().logError(e);
+			response.setException(e);
 		}
 
 		return response;
-	}
-
-	private TransactionAnalyzer getAnalyzer(ModelPeriod period) {
-		if (period.isCurrent() || period.isFuture()) {
-			return (TransactionAnalyzer) m_consumer.getCurrentAnalyzer("transaction");
-		} else if (period.isLast()) {
-			return (TransactionAnalyzer) m_consumer.getLastAnalyzer("transaction");
-		} else {
-			throw new RuntimeException("Internal error: this method should not be called!");
-		}
 	}
 
 	@Override
@@ -52,5 +65,16 @@ public class BaseLocalModelService implements ModelService<TransactionReport> {
 		ModelPeriod period = request.getPeriod();
 
 		return !period.isHistorical();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(64);
+
+		sb.append(getClass().getSimpleName()).append('[');
+		sb.append("name=").append(m_name);
+		sb.append(']');
+
+		return sb.toString();
 	}
 }

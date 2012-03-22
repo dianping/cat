@@ -3,18 +3,19 @@ package com.dianping.cat.report.page.model.spi.internal;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.xml.sax.SAXException;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.helper.Files;
-import com.site.helper.Joiners;
-import com.site.helper.Joiners.IBuilder;
 import com.site.lookup.annotation.Inject;
 
 public abstract class BaseRemoteModelService<T> implements ModelService<T> {
@@ -33,35 +34,59 @@ public abstract class BaseRemoteModelService<T> implements ModelService<T> {
 		m_name = name;
 	}
 
-	protected URL buildUrl(ModelRequest request) throws MalformedURLException {
-		String pairs = Joiners.by('&').prefixDelimiter()
-		      .join(request.getProperties().entrySet(), new IBuilder<Map.Entry<String, String>>() {
-			      @Override
-			      public String asString(Entry<String, String> e) {
-				      return e.getKey() + "=" + e.getValue();
-			      }
-		      });
+	protected abstract T buildModel(String xml) throws SAXException, IOException;
+
+	public URL buildUrl(ModelRequest request) throws MalformedURLException {
+		StringBuilder sb = new StringBuilder(64);
+
+		for (Entry<String, String> e : request.getProperties().entrySet()) {
+			if (e.getValue() != null) {
+				sb.append('&');
+				// TODO do url encode here
+				sb.append(e.getKey()).append('=').append(e.getValue());
+			}
+		}
 		String url = String.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, m_name,
-		      request.getDomain(), request.getPeriod(), pairs);
+		      request.getDomain(), request.getPeriod(), sb.toString());
 
 		return new URL(url);
+	}
+
+	public String getName() {
+		return m_name;
 	}
 
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction("RemoteModel", m_name);
+
+		t.addData("request", request);
 
 		try {
 			URL url = buildUrl(request);
-			String xml = Files.forIO().readFrom(url.openStream(), "utf-8");
 
-			if (xml != null && xml.trim().length() > 0) {
-				T report = parse(xml);
+			t.addData("url", url);
+
+			String xml = Files.forIO().readFrom(url.openStream(), "utf-8");
+			int len = xml == null ? 0 : xml.length();
+
+			t.addData("length", len);
+
+			if (len > 0) {
+				T report = buildModel(xml);
 
 				response.setModel(report);
 			}
+
+			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
+			cat.logError(e);
+			t.setStatus(e);
 			response.setException(e);
+		} finally {
+			t.complete();
 		}
 
 		return response;
@@ -74,8 +99,6 @@ public abstract class BaseRemoteModelService<T> implements ModelService<T> {
 		return !period.isHistorical();
 	}
 
-	protected abstract T parse(String xml) throws SAXException, IOException;
-
 	public void setHost(String host) {
 		m_host = host;
 	}
@@ -86,5 +109,16 @@ public abstract class BaseRemoteModelService<T> implements ModelService<T> {
 
 	public void setServiceUri(String serviceUri) {
 		m_serviceUri = serviceUri;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(64);
+
+		sb.append(getClass().getSimpleName()).append('[');
+		sb.append("name=").append(m_name);
+		sb.append(']');
+
+		return sb.toString();
 	}
 }

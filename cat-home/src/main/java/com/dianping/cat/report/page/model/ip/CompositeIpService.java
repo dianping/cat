@@ -91,4 +91,8 @@ public class CompositeIpService implements ModelService<IpReport>, Initializable
 	public void setSerivces(ModelService<IpReport>... services) {
 		m_services = Arrays.asList(services);
 	}
+	
+	public void setRemoteServers(String servers) {
+		
+	}
 }

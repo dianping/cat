@@ -39,8 +39,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>transaction-hdfs</role-hint>
-			<implementation>com.dianping.cat.report.page.model.transaction.HdfsTransactionService</implementation>
+			<role-hint>transaction-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.transaction.HistoricalTransactionService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -51,12 +51,15 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.CompositeTransactionService</implementation>
+			<configuration>
+				<remoteServers>192.168.7.43</remoteServers>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>transaction-local</role-hint>
-						<role-hint>transaction-hdfs</role-hint>
+						<role-hint>transaction-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -75,8 +78,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>problem-hdfs</role-hint>
-			<implementation>com.dianping.cat.report.page.model.problem.HdfsProblemService</implementation>
+			<role-hint>problem-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.problem.HistoricalProblemService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -87,12 +90,15 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.page.model.problem.CompositeProblemService</implementation>
+			<configuration>
+				<remoteServers>192.168.7.43</remoteServers>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>problem-local</role-hint>
-						<role-hint>problem-hdfs</role-hint>
+						<role-hint>problem-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -113,6 +119,9 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>ip</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
+			<configuration>
+				<remoteServers>192.168.7.43</remoteServers>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -129,6 +138,10 @@
 			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
@@ -139,8 +152,8 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>logview-hdfs</role-hint>
-			<implementation>com.dianping.cat.report.page.model.logview.HdfsLogViewService</implementation>
+			<role-hint>logview-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.logview.HistoricalLogViewService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -148,12 +161,6 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>html</role-hint>
-					<field-name>m_htmlCodec</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-					<field-name>m_plainCodec</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -161,12 +168,15 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>logview</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
+			<configuration>
+				<remoteServers>192.168.7.43</remoteServers>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>logview-local</role-hint>
-						<role-hint>logview-hdfs</role-hint>
+						<role-hint>logview-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -368,6 +378,11 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>html</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
 				</requirement>
 			</requirements>
 		</component>

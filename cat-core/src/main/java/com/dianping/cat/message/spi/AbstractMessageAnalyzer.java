@@ -33,6 +33,10 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 		// override it
 	}
 
+	public R getReport(String domain) {
+		throw new UnsupportedOperationException("Not implemented yet!");
+	}
+
 	protected abstract List<R> generate();
 
 	protected abstract boolean isTimeout();

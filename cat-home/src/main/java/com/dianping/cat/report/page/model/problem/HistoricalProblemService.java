@@ -5,46 +5,41 @@ import java.util.Date;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
-import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
 
-public class HdfsProblemService implements ModelService<ProblemReport> {
+public class HistoricalProblemService extends BaseHistoricalModelService<ProblemReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
+	public HistoricalProblemService() {
+		super("problem");
+	}
+
 	@Override
-	public ModelResponse<ProblemReport> invoke(ModelRequest request) {
+	protected ProblemReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
 		long date = Long.parseLong(request.getProperty("date"));
-		ModelResponse<ProblemReport> response = new ModelResponse<ProblemReport>();
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(new Date(date), domain, "remote");
+			bucket = m_bucketManager.getReportBucket(new Date(date), getName(), "remote");
 
-			String xml = bucket.findById("problem-" + domain);
+			String xml = bucket.findById(domain);
 
-			if (xml == null) {
+			if (xml != null) {
 				ProblemReport report = new DefaultXmlParser().parse(xml);
 
-				response.setModel(report);
+				return report;
+			} else {
+				return null;
 			}
-		} catch (Exception e) {
-			response.setException(e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
 			}
 		}
-
-		return response;
-	}
-
-	@Override
-	public boolean isEligable(ModelRequest request) {
-		return request.getPeriod().isHistorical();
 	}
 }

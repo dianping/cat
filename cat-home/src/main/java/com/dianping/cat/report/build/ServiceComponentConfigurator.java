@@ -8,14 +8,14 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.page.model.ip.CompositeIpService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
-import com.dianping.cat.report.page.model.logview.HdfsLogViewService;
+import com.dianping.cat.report.page.model.logview.HistoricalLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
 import com.dianping.cat.report.page.model.problem.CompositeProblemService;
-import com.dianping.cat.report.page.model.problem.HdfsProblemService;
+import com.dianping.cat.report.page.model.problem.HistoricalProblemService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.transaction.CompositeTransactionService;
-import com.dianping.cat.report.page.model.transaction.HdfsTransactionService;
+import com.dianping.cat.report.page.model.transaction.HistoricalTransactionService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
@@ -25,36 +25,40 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
+		String remoteServers = property("remote-servers", ""); // no remote server
 
 		all.add(C(ModelService.class, "transaction-local", LocalTransactionService.class) //
 		      .req(MessageConsumer.class, "realtime"));
-		all.add(C(ModelService.class, "transaction-hdfs", HdfsTransactionService.class) //
+		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
 		      .req(BucketManager.class));
 		all.add(C(ModelService.class, "transaction", CompositeTransactionService.class) //
-		      .req(ModelService.class, new String[] { "transaction-local", "transaction-hdfs" }, "m_services"));
+		      .req(ModelService.class, new String[] { "transaction-local", "transaction-historical" }, "m_services") //
+		      .config(E("remoteServers").value(remoteServers)));
 
 		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
 		      .req(MessageConsumer.class, "realtime"));
-		all.add(C(ModelService.class, "problem-hdfs", HdfsProblemService.class) //
+		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
 		      .req(BucketManager.class));
 		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //
-		      .req(ModelService.class, new String[] { "problem-local", "problem-hdfs" }, "m_services"));
+		      .req(ModelService.class, new String[] { "problem-local", "problem-historical" }, "m_services") //
+		      .config(E("remoteServers").value(remoteServers)));
 
-		
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
-				.req(MessageConsumer.class, "realtime"));
+		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "ip", CompositeIpService.class) //
-				.req(ModelService.class, new String[] { "ip-local" }, "m_services"));
-		
+		      .req(ModelService.class, new String[] { "ip-local" }, "m_services") //
+		      .config(E("remoteServers").value(remoteServers)));
+
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
+		      .req(MessageConsumer.class, "realtime") //
 		      .req(BucketManager.class) //
 		      .req(MessageCodec.class, "html"));
-		all.add(C(ModelService.class, "logview-hdfs", HdfsLogViewService.class) //
+		all.add(C(ModelService.class, "logview-historical", HistoricalLogViewService.class) //
 		      .req(BucketManager.class) //
-		      .req(MessageCodec.class, "html", "m_htmlCodec") //
-		      .req(MessageCodec.class, "plain-text", "m_plainCodec"));
+		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
-		      .req(ModelService.class, new String[] { "logview-local", "logview-hdfs" }, "m_services"));
+		      .req(ModelService.class, new String[] { "logview-local", "logview-historical" }, "m_services") //
+		      .config(E("remoteServers").value(remoteServers)));
 
 		return all;
 	}

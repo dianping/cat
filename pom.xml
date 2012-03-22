@@ -48,7 +48,7 @@
 			<dependency>
 				<groupId>com.site.common</groupId>
 				<artifactId>test-framework</artifactId>
-				<version>1.0.0-a1</version>
+				<version>1.0.1</version>
 			</dependency>
 			<dependency>
 				<groupId>com.site.common</groupId>

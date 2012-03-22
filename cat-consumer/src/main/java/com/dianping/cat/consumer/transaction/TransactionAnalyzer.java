@@ -144,6 +144,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	public TransactionReport getReport(String domain) {
+		if (domain == null) {
+			List<String> domains = getDomains();
+
+			domain = domains.isEmpty() ? null : domains.get(0);
+		}
+
 		return m_reports.get(domain);
 	}
 
