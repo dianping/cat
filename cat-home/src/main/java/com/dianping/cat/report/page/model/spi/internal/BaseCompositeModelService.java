@@ -57,7 +57,7 @@ public abstract class BaseCompositeModelService<T> implements ModelService<T>, I
 		int size = m_allServices.size();
 		final List<ModelResponse<T>> responses = new ArrayList<ModelResponse<T>>(size);
 		final Semaphore semaphore = new Semaphore(0);
-		final Transaction t = Cat.getProducer().newTransaction("ModelService", m_name);
+		final Transaction t = Cat.getProducer().newTransaction(getClass().getSimpleName(), m_name);
 		int count = 0;
 
 		t.setStatus(Message.SUCCESS);
@@ -72,9 +72,9 @@ public abstract class BaseCompositeModelService<T> implements ModelService<T>, I
 				@Override
 				public void run() {
 					try {
+						logEvent(t, "ModelRequest", service.getName(), Message.SUCCESS, service.toString());
+						
 						responses.add(service.invoke(request));
-
-						t.addData(service.toString());
 					} catch (Exception e) {
 						logError(t, e);
 						t.setStatus(e);

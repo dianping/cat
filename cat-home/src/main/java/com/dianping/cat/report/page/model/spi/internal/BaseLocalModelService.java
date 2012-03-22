@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.model.spi.internal;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;

@@ -3,14 +3,6 @@
 	font-size: small;
 }
 
-.subtitle {
-	font-size: small;
-}
-
-.timestamp {
-	font-size: small;
-}
-
 tr.odd td {
 	background-color: #eee;
 	font-size: small;
@@ -31,10 +23,6 @@ tr.link td {
 	vertical-align: top;
 }
 
-.current {
-	background-color: orange;
-	color: white;
-}
 
 .warn {
 	color: yellow;

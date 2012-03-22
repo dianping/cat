@@ -42,6 +42,7 @@
 			<role>com.dianping.cat.job.hdfs.InputChannelManager</role>
 			<implementation>com.dianping.cat.job.hdfs.DefaultInputChannelManager</implementation>
 			<configuration>
+				<baseDir>data</baseDir>
 				<serverUri>hdfs://192.168.7.43:9000/user/cat/</serverUri>
 			</configuration>
 		</component>

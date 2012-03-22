@@ -33,6 +33,8 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 
 	private Logger m_logger;
 
+	private Path m_basePath;
+
 	@Override
 	public void cleanupChannels() {
 		try {
@@ -82,8 +84,10 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 			
 			if (m_serverUri == null) {
 				fs = FileSystem.getLocal(config);
+				m_basePath = new Path(fs.getWorkingDirectory(), m_baseDir);
 			} else {
-				fs = FileSystem.get(m_serverUri, config); // TODO Not tested yet
+				fs = FileSystem.get(m_serverUri, config);
+				m_basePath = new Path(new Path(m_serverUri), m_baseDir);
 			}
 
 			m_fs = fs;
@@ -97,7 +101,7 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 		DefaultInputChannel channel = m_channels.get(path);
 
 		if (channel == null) {
-			Path file = new Path(m_baseDir, path);
+			Path file = new Path(m_basePath, path);
 			FSDataInputStream in = m_fs.open(file);
 
 			channel = (DefaultInputChannel) lookup(InputChannel.class);

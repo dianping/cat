@@ -80,4 +80,10 @@ public class LocalIpService implements ModelService<IpReport> {
 
 		return !period.isHistorical();
 	}
+
+	@Override
+   public String getName() {
+	   // TODO Auto-generated method stub
+	   return null;
+   }
 }

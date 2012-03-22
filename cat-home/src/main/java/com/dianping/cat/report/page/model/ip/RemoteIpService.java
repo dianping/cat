@@ -78,4 +78,10 @@ public class RemoteIpService implements ModelService<IpReport> {
 	public void setServiceUri(String serviceUri) {
 		m_serviceUri = serviceUri;
 	}
+
+	@Override
+   public String getName() {
+	   // TODO Auto-generated method stub
+	   return null;
+   }
 }

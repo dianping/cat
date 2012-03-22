@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.problem;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -118,36 +117,48 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void showDetail(Model model, Payload payload) {
+		model.setDate(payload.getDate());
+		model.setIpAddress(payload.getIpAddress());
+		model.setThreadId(payload.getThreadId());
+		model.setCurrentMinute(payload.getMinute());
+		
 		ProblemReport report = getReport(payload);
+
+		if (report == null) {
+			return;
+		}
+		model.setReport(report);
 		Machine machine = report.getMachines().get(payload.getIpAddress());
+
+		if (machine == null) {
+			return;
+		}
 		JavaThread thread = machine.getThreads().get(payload.getThreadId());
+
+		if (thread == null) {
+			return;
+		}
 		Segment segment = thread.getSegments().get(payload.getMinute());
 
 		if (segment == null) {
-			model.setEntries(new ArrayList<Entry>());
-			model.setStatistics(new ArrayList<ProblemStatistics>());
 			return;
 		}
 
 		List<Entry> entries = segment.getEntries();
-		Map<String, ProblemStatistics> typeCounts = new HashMap<String, ProblemStatistics>();
+		Map<String, ProblemStatistics> statistics = new HashMap<String, ProblemStatistics>();
 
 		for (Entry entry : entries) {
 			String type = entry.getType();
-			ProblemStatistics staticstics = typeCounts.get(type);
+			ProblemStatistics staticstics = statistics.get(type);
 
 			if (staticstics != null) {
-				staticstics.setCount(staticstics.getCount() + 1);
+				staticstics.add(entry);
 			} else {
-				ProblemStatistics temp = new ProblemStatistics();
-
-				temp.setCount(1).setType(type);
-				typeCounts.put(type, temp);
+				statistics.put(type, new ProblemStatistics(entry));
 			}
 		}
-
-		model.setEntries(entries);
-		model.setStatistics(new ArrayList<ProblemStatistics>(typeCounts.values()));
+		
+		model.setStatistics(statistics);
 	}
 
 	private void showSummary(Model model, Payload payload) {

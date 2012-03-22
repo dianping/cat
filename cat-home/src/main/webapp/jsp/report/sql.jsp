@@ -9,19 +9,19 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.sql.Model"	scope="request" />
 
 <a:report
-	title="SQL Report"
+	title="SQL Report Created By Hadoop Job , One Hour Delay"
 	navUrlPrefix="domain=${model.domain}"
 	timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	
-<res:useCss value="${res.css.local.transaction_css}" target="head-css"/>
+<res:useCss value='${res.css.local.sql_css}' target="head-css"/>
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 <res:useJs value="${res.js.local.transaction_js}" target="head-js"/>
 
 <br>
-<table class="sql">
+<table class="sql-table">
 	<tr>
 		<th>SQL</th>
 		<th>Exec Counts</th>

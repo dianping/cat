@@ -7,6 +7,7 @@ import org.junit.runners.JUnit4;
 import com.dianping.cat.job.sql.dal.Logview;
 import com.dianping.cat.job.sql.dal.LogviewDao;
 import com.dianping.cat.job.sql.dal.LogviewEntity;
+import com.site.dal.jdbc.DalException;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -14,13 +15,27 @@ public class LogViewDaoTest extends ComponentTestCase {
 	@Test
 	public void testDao() throws Exception {
 		LogviewDao dao = lookup(LogviewDao.class);
-		Logview logview = dao.findNextByMessageIdTags("id1", true, "pet", null, null, LogviewEntity.READSET_FULL);
+		Logview logview = null;
+		try {
+			logview = dao.findNextByMessageIdTags("id1", true, "pet", null, null, LogviewEntity.READSET_FULL);
+		} catch (DalException e) {
 
-		System.out.println(logview);
+		}
 
-		logview = dao.findNextByMessageIdTags("id2", false, "pet", null, null, LogviewEntity.READSET_FULL);
+		if (logview != null) {
 
-		System.out.println(logview);
+			System.out.println(logview);
+		}
+
+		try {
+			logview = dao.findNextByMessageIdTags("id2", false, "pet", null, null, LogviewEntity.READSET_FULL);
+
+		} catch (DalException e) {
+
+		}
+		if (logview != null) {
+			System.out.println(logview);
+		}
 	}
 
 }

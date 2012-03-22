@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.transaction;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -38,11 +40,19 @@ public class Model extends AbstractReportModel<Action, Context> {
    }
 
 	// required by report tag
-	public Set<String> getDomains() {
+	@Override
+	public List<String> getDomains() {
 		if (m_report == null) {
-			return Collections.emptySet();
+			return new ArrayList<String>();
 		} else {
-			return m_report.getDomains();
+			List<String> result = new ArrayList<String>();
+			Set<String> domains = m_report.getDomains();
+			
+			for (String domain : domains) {
+				result.add(domain);
+			}
+			Collections.sort(result);
+			return result;
 		}
 	}
 
