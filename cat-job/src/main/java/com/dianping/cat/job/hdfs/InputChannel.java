@@ -26,4 +26,9 @@ public interface InputChannel {
 	 * @throws IOException
 	 */
 	public MessageTree read(long offset, int length) throws IOException;
+
+	/**
+	 * @return
+	 */
+	String getPath();
 }
