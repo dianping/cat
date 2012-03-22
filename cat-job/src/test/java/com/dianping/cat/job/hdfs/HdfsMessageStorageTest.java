@@ -38,7 +38,7 @@ public class HdfsMessageStorageTest extends CatTestCase {
 		tree.setMessage(t);
 		storage.store(tree);
 		MessageTree actual = storage.get(tree.getMessageId());
-		Assert.assertTrue(tree.equals(actual));
+		Assert.assertEquals(tree, actual);
 		((HdfsMessageStorage) storage).dispose();
 	}
 }
