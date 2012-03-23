@@ -60,7 +60,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = newTransaction(getClass().getSimpleName(), m_name);
+		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
 			URL url = buildUrl(request);

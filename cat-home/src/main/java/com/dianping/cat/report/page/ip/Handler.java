@@ -11,6 +11,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.ip.model.entity.Ip;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.entity.Period;
@@ -100,6 +101,7 @@ public class Handler implements PageHandler<Context> {
 			model.setDisplayDomain(payload.getDomain());
 			model.setReport(report);
 		} catch (Throwable e) {
+			Cat.getProducer().logError(e);
 			model.setException(e);
 		}
 	}

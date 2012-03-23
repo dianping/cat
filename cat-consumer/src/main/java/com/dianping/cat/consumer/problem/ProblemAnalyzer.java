@@ -25,7 +25,6 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
@@ -78,20 +77,8 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Override
 	public void doCheckpoint() throws IOException {
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction(getClass().getSimpleName(), "checkpoint");
-
-		try {
-			storeReports(m_reports.values());
-			closeMessageBuckets(m_reports.keySet());
-
-			t.setStatus(Message.SUCCESS);
-		} catch (Exception e) {
-			cat.logError(e);
-			t.setStatus(e);
-		} finally {
-			t.complete();
-		}
+		storeReports(m_reports.values());
+		closeMessageBuckets(m_reports.keySet());
 	}
 
 	@Override
@@ -248,6 +235,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> localBucket = null;
 		Bucket<String> remoteBucket = null;
+		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
 			localBucket = m_bucketManager.getReportBucket(timestamp, "problem", "local");
@@ -263,9 +251,15 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				localBucket.storeById(domain, xml);
 				remoteBucket.storeById(domain, xml);
 			}
+
+			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
+			Cat.getProducer().logError(e);
+			t.setStatus(e);
 			m_logger.error(String.format("Error when storing problem reports to %s!", timestamp), e);
 		} finally {
+			t.complete();
+
 			if (localBucket != null) {
 				m_bucketManager.closeBucket(localBucket);
 			}

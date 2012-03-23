@@ -59,7 +59,8 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .config(E("remoteServers").value(remoteServers)));
 
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
-		      .req(MessageConsumer.class, "realtime"));
+		      .req(MessageConsumer.class, "realtime") //
+		      .config(E("defaultDomain").value(defaultDomain)));
 		all.add(C(ModelService.class, "ip", CompositeIpService.class) //
 		      .req(ModelService.class, new String[] { "ip-local" }, "m_services") //
 		      .config(E("remoteServers").value(remoteServers)));

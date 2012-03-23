@@ -24,8 +24,8 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	@FieldMeta("hours")
 	private int m_hours;
-	
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+
+	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;
@@ -69,10 +69,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			m_date = getCurrentDate();
 		} else {
 			try {
-				Date temp = sdf.parse(date);
+				Date temp = m_dateFormat.parse(date);
+
 				m_date = temp.getTime();
 			} catch (Exception e) {
-
+				// ignore it
+				m_date = getCurrentDate();
 			}
 		}
 	}

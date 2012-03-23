@@ -127,7 +127,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	public void doCheckpoint() throws IOException {
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction(getClass().getSimpleName(), "checkpoint");
+		Transaction t = cat.newTransaction("Checkpoint", getClass().getSimpleName());
 
 		t.setStatus(Message.SUCCESS);
 
