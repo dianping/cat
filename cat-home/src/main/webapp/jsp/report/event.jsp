@@ -25,6 +25,7 @@
 		<c:when test="${empty payload.type}">
 			<c:forEach var="type" items="${report.types}" varStatus="status">
 				<c:set var="e" value="${type.value}"/>
+				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td><a href="?domain=${report.domain}&date=${model.date}&type=${e.id}">${e.id}</a></td>
 					<td>${e.totalCount}</td>
@@ -37,6 +38,7 @@
 		<c:otherwise>
 			<c:forEach var="name" items="${report.types[payload.type].names}" varStatus="status">
 				<c:set var="e" value="${name.value}"/>
+				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td><a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}&name=${e.id}" onclick="return showGraphs(this,${status.index},${model.date},'${report.domain}','${payload.type}','${e.id}',${payload.period.current});">[:: show ::]</a> ${e.id}</td>
 					<td>${e.totalCount}</td>
@@ -49,7 +51,7 @@
 		</c:otherwise>
 	</c:choose>
 </table>
-<br>
+<font color="white">${lastIndex+1}</font>
 
 </jsp:body>
 

@@ -15,6 +15,8 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	private long m_date;
 
+	private String m_defaultDomain;
+
 	public AbstractReportModel(M ctx) {
 		super(ctx);
 	}
@@ -33,9 +35,13 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		return m_date;
 	}
 
+	protected String getDefaultDomain() {
+		return m_defaultDomain;
+	}
+
 	// required by report tag
 	public abstract String getDomain();
-	
+
 	// required by report tag
 	public abstract Collection<String> getDomains();
 
@@ -54,6 +60,10 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public void setDate(long date) {
 		m_date = date;
+	}
+
+	public void setDefaultDomain(String defaultDomain) {
+		m_defaultDomain = defaultDomain;
 	}
 
 	public void setException(Throwable exception) {

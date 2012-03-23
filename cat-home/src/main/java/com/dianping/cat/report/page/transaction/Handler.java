@@ -106,6 +106,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
+		model.setDefaultDomain(payload.getDomain());
 
 		switch (payload.getAction()) {
 		case VIEW:

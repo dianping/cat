@@ -51,7 +51,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public String getDomain() {
 		if (m_report == null) {
-			return null;
+			return getDefaultDomain();
 		} else {
 			return m_report.getDomain();
 		}

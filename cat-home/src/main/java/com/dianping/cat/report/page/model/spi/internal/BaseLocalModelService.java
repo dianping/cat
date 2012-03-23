@@ -42,7 +42,7 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 		if (analyzer instanceof AbstractMessageAnalyzer) {
 			AbstractMessageAnalyzer<T> a = (AbstractMessageAnalyzer<T>) analyzer;
 
-			if (domain == null) {
+			if (domain == null || domain.length() == 0) {
 				return a.getReport(m_defaultDomain);
 			} else {
 				return a.getReport(domain);

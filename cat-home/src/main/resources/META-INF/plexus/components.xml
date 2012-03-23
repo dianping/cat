@@ -156,6 +156,9 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>ip-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
+			<configuration>
+				<defaultDomain>Cat</defaultDomain>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
