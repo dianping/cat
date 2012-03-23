@@ -19,8 +19,11 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	private String m_displayDomain;
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+<<<<<<< HEAD
 
 	private String m_defaultDomain;
+=======
+>>>>>>> 8fba9da1445e5bf08a418057a70f787f909d543f
 
 	public AbstractReportModel(M ctx) {
 		super(ctx);
@@ -41,8 +44,14 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	}
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 	protected String getDefaultDomain() {
 		return m_defaultDomain;
+=======
+	// requird by report tag
+	public String getDate() {
+		return sdf.format(new Date(m_date));
+>>>>>>> 8fba9da1445e5bf08a418057a70f787f909d543f
 =======
 	// requird by report tag
 	public String getDate() {

@@ -52,7 +52,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public String getDomain() {
 		if (m_report == null) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 			return getDefaultDomain();
+=======
+			return getDisplayDomain();
+>>>>>>> 8fba9da1445e5bf08a418057a70f787f909d543f
 =======
 			return getDisplayDomain();
 >>>>>>> 8fba9da1445e5bf08a418057a70f787f909d543f
