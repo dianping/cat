@@ -55,7 +55,7 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
-		Transaction t = newTransaction(getClass().getSimpleName(), m_name);
+		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
 			T report = getReport(request, request.getPeriod(), request.getDomain());

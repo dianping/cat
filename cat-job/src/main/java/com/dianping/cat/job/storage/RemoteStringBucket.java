@@ -10,9 +10,12 @@ import java.util.List;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.job.sql.dal.Report;
 import com.dianping.cat.job.sql.dal.ReportDao;
 import com.dianping.cat.job.sql.dal.ReportEntity;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.storage.Bucket;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
@@ -91,19 +94,26 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public boolean storeById(String domain, String data) throws IOException {
+		Transaction t = Cat.getProducer().newTransaction(getClass().getSimpleName(), "store");
 		Report report = m_reportDao.createLocal();
+
 		report.setName(m_name);
 		report.setDomain(domain);
 		report.setType(1);
 		report.setContent(data);
 		report.setPeriod(m_period);
 
+		t.setStatus(Message.SUCCESS);
+
 		try {
 			m_reportDao.insert(report);
 
 			return true;
 		} catch (DalException e) {
+			t.setStatus(e);
 			throw new IOException(String.format("Unable to insert report(%s)!", domain), e);
+		} finally {
+			t.complete();
 		}
 	}
 }

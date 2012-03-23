@@ -22,7 +22,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
-		Transaction t = newTransaction(getClass().getSimpleName(), m_name);
+		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
 			T model = buildModel(request);
