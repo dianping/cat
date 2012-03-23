@@ -88,15 +88,16 @@ public class Handler implements PageHandler<Context> {
 			IpReport report = getReport(payload);
 
 			if (period.isFuture()) {
-				model.setDate(payload.getCurrentDate());
+				model.setLongDate(payload.getCurrentDate());
 			} else {
-				model.setDate(payload.getDate());
+				model.setLongDate(payload.getDate());
 			}
 
 			List<DisplayModel> displayModels = getDisplayModels(report);
 
-			model.setHour(getHour(model.getDate()));
+			model.setHour(getHour(model.getLongDate()));
 			model.setDisplayModels(displayModels);
+			model.setDisplayDomain(payload.getDomain());
 			model.setReport(report);
 		} catch (Throwable e) {
 			model.setException(e);

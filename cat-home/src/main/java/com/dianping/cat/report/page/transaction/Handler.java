@@ -106,7 +106,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
-
+		model.setDisplayDomain(payload.getDomain());
+		
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);
@@ -155,9 +156,9 @@ public class Handler implements PageHandler<Context>, Initializable {
 			TransactionReport report = getReport(payload);
 
 			if (payload.getPeriod().isFuture()) {
-				model.setDate(payload.getCurrentDate());
+				model.setLongDate(payload.getCurrentDate());
 			} else {
-				model.setDate(payload.getDate());
+				model.setLongDate(payload.getDate());
 			}
 
 			report.accept(m_computer);

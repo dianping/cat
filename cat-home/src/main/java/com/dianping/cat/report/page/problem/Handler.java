@@ -98,7 +98,9 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.PROBLEM);
-
+		model.setDisplayDomain(payload.getDomain());
+		model.setIpAddress(payload.getIpAddress());
+		
 		switch (payload.getAction()) {
 		case VIEW:
 			showSummary(model, payload);
@@ -112,7 +114,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void showDetail(Model model, Payload payload) {
-		model.setDate(payload.getDate());
+		model.setLongDate(payload.getDate());
 		model.setIpAddress(payload.getIpAddress());
 		model.setThreadId(payload.getThreadId());
 		model.setCurrentMinute(payload.getMinute());
@@ -163,9 +165,9 @@ public class Handler implements PageHandler<Context> {
 			String ip = getIpAddress(report, payload);
 
 			if (period.isFuture()) {
-				model.setDate(payload.getCurrentDate());
+				model.setLongDate(payload.getCurrentDate());
 			} else {
-				model.setDate(payload.getDate());
+				model.setLongDate(payload.getDate());
 			}
 
 			if (period.isCurrent() || period.isFuture()) {
@@ -174,7 +176,7 @@ public class Handler implements PageHandler<Context> {
 				model.setLastMinute(59);
 			}
 
-			model.setHour(getHour(model.getDate()));
+			model.setHour(getHour(model.getLongDate()));
 			model.setIpAddress(ip);
 			model.setReport(report);
 		} catch (Throwable e) {

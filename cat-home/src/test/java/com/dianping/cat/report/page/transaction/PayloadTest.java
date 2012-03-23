@@ -1,5 +1,8 @@
 package com.dianping.cat.report.page.transaction;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -28,14 +31,18 @@ public class PayloadTest {
 		checkDate(payload, -1, now - ONE_HOUR, ModelPeriod.LAST);
 		checkDate(payload, -2, now - 2 * ONE_HOUR, ModelPeriod.HISTORICAL);
 
-		payload.setDate(now - ONE_HOUR);
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+		String currentHour = sdf.format(new Date(now - ONE_HOUR));
+
+		payload.setDate(currentHour);
 		checkDate(payload, 2, now + ONE_HOUR, ModelPeriod.FUTURE);
 		checkDate(payload, 1, now, ModelPeriod.CURRENT);
 		checkDate(payload, 0, now - ONE_HOUR, ModelPeriod.LAST);
 		checkDate(payload, -1, now - 2 * ONE_HOUR, ModelPeriod.HISTORICAL);
 		checkDate(payload, -2, now - 3 * ONE_HOUR, ModelPeriod.HISTORICAL);
 
-		payload.setDate(now - 2 * ONE_HOUR);
+		currentHour = sdf.format(new Date(now - 2 * ONE_HOUR));
+		payload.setDate(currentHour);
 		checkDate(payload, 3, now + ONE_HOUR, ModelPeriod.FUTURE);
 		checkDate(payload, 2, now, ModelPeriod.CURRENT);
 		checkDate(payload, 1, now - ONE_HOUR, ModelPeriod.LAST);
