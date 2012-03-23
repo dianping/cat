@@ -30,30 +30,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
+		String serverUri = property("serve-uri", "hdfs://192.168.7.43:9000/user/cat");
 
-		if (isEnv("dev") || property("env", null) == null) {
-			all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
-			      .req(MessageCodec.class, "plain-text") //
-			      .config(E("maxSize").value(String.valueOf(2 * 1024 * 1024L))));
-			all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
-			      .req(MessagePathBuilder.class));
-			all.add(C(InputChannel.class, DefaultInputChannel.class).is(PER_LOOKUP) //
-			      .req(MessageCodec.class, "plain-text"));
-			all.add(C(InputChannelManager.class, DefaultInputChannelManager.class));
-		} else {
-			all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
-			      .req(MessageCodec.class, "plain-text") //
-			      .config(E("maxSize").value(String.valueOf(128 * 1024 * 1024L))));
-			all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
-			      .req(MessagePathBuilder.class) //
-			      .config(E("baseDir").value("data"), //
-			            E("serverUri").value("hdfs://192.168.7.43:9000/user/cat/")));
-			all.add(C(InputChannel.class, DefaultInputChannel.class).is(PER_LOOKUP) //
-			      .req(MessageCodec.class, "plain-text"));
-			all.add(C(InputChannelManager.class, DefaultInputChannelManager.class) //
-			      .config(E("baseDir").value("data"), //
-			    		  E("serverUri").value("hdfs://192.168.7.43:9000/user/cat/")));
-		}
+		all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
+		      .req(MessageCodec.class, "plain-text") //
+		      .config(E("maxSize").value(String.valueOf(128 * 1024 * 1024L))));
+		all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
+		      .req(MessagePathBuilder.class) //
+		      .config(E("baseDir").value("data"), //
+		            E("serverUri").value(serverUri)));
+		all.add(C(InputChannel.class, DefaultInputChannel.class).is(PER_LOOKUP) //
+		      .req(MessageCodec.class, "plain-text"));
+		all.add(C(InputChannelManager.class, DefaultInputChannelManager.class) //
+		      .config(E("baseDir").value("data"), //
+		            E("serverUri").value(serverUri)));
 
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
 		      .req(OutputChannelManager.class));
