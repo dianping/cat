@@ -21,11 +21,11 @@ public class CatFilter implements Filter {
 	@Override
 	public void destroy() {
 	}
-	
-	protected String getOriginalUrl(ServletRequest request){
-		return ((HttpServletRequest)request).getRequestURI();
+
+	protected String getOriginalUrl(ServletRequest request) {
+		return ((HttpServletRequest) request).getRequestURI();
 	}
-	
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
@@ -76,8 +76,16 @@ public class CatFilter implements Filter {
 
 	protected void logRequestClientInfo(MessageProducer cat, HttpServletRequest req) {
 		StringBuilder sb = new StringBuilder(1024);
-
-		sb.append("RemoteIP=").append(req.getRemoteAddr());
+		String ip = "";
+		String ipForwarded = req.getHeader("x-forwarded-for");
+		if (ipForwarded == null) {
+			ip = req.getRemoteAddr();
+		} else {
+			String ips[] = ipForwarded.split(",");
+			ip = ips[ips.length - 1].trim();
+		}
+		sb.append("RemoteIp=").append(ip);
+		sb.append("VirtualIP=").append(req.getRemoteAddr());
 		sb.append("&Server=").append(req.getServerName());
 		sb.append("&Referer=").append(req.getHeader("referer"));
 		sb.append("&Agent=").append(req.getHeader("user-agent"));

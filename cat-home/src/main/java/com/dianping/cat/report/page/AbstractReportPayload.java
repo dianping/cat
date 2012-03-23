@@ -1,5 +1,8 @@
 package com.dianping.cat.report.page;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.site.web.mvc.Action;
@@ -21,6 +24,8 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	@FieldMeta("hours")
 	private int m_hours;
+	
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
 
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;
@@ -59,8 +64,17 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		return ModelPeriod.getByTime(getDate());
 	}
 
-	public void setDate(long date) {
-		m_date = date;
+	public void setDate(String date) {
+		if (date == null || date.length() == 0) {
+			m_date = getCurrentDate();
+		} else {
+			try {
+				Date temp = sdf.parse(date);
+				m_date = temp.getTime();
+			} catch (Exception e) {
+
+			}
+		}
 	}
 
 	public void setDomain(String domain) {

@@ -91,7 +91,7 @@ public class Handler implements PageHandler<Context> {
 		SqlReport report = new SqlReport();
 		String domain = payload.getDomain();
 		long startDate = payload.getDate();
-		model.setDate(startDate);
+		model.setLongDate(startDate);
 		Date transactiondate = new Date(startDate);
 		List<String> domains = new ArrayList<String>();
 		Readset<SqlReportRecord> domainSet = SqlReportRecordEntity.READSET_DOMAIN;

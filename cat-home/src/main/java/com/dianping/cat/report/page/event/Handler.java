@@ -105,8 +105,13 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.EVENT);
+<<<<<<< HEAD
 		model.setDefaultDomain(payload.getDomain());
 
+=======
+		model.setDisplayDomain(payload.getDomain());
+		
+>>>>>>> 8fba9da1445e5bf08a418057a70f787f909d543f
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);
@@ -150,9 +155,9 @@ public class Handler implements PageHandler<Context>, Initializable {
 			EventReport report = getReport(payload);
 
 			if (payload.getPeriod().isFuture()) {
-				model.setDate(payload.getCurrentDate());
+				model.setLongDate(payload.getCurrentDate());
 			} else {
-				model.setDate(payload.getDate());
+				model.setLongDate(payload.getDate());
 			}
 
 			report.accept(m_computer);

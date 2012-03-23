@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page;
 
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
@@ -14,6 +15,10 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	private Throwable m_exception;
 
 	private long m_date;
+	
+	private String m_displayDomain;
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
 
 	private String m_defaultDomain;
 
@@ -31,12 +36,18 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	}
 
 	// required by report tag
-	public long getDate() {
+	public long getLongDate() {
 		return m_date;
 	}
 
+<<<<<<< HEAD
 	protected String getDefaultDomain() {
 		return m_defaultDomain;
+=======
+	// requird by report tag
+	public String getDate() {
+		return sdf.format(new Date(m_date));
+>>>>>>> 8fba9da1445e5bf08a418057a70f787f909d543f
 	}
 
 	// required by report tag
@@ -58,7 +69,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		return UrlNav.values();
 	}
 
-	public void setDate(long date) {
+	public void setLongDate(long date) {
 		m_date = date;
 	}
 
@@ -69,4 +80,12 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	public void setException(Throwable exception) {
 		m_exception = exception;
 	}
+
+	public String getDisplayDomain() {
+   	return m_displayDomain;
+   }
+
+	public void setDisplayDomain(String displayDomain) {
+   	m_displayDomain = displayDomain;
+   }
 }
