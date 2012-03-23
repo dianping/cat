@@ -216,13 +216,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		public Context(String domain, String hostName, String ipAddress) {
 			m_tree = new DefaultMessageTree();
 			m_stack = new Stack<Transaction>();
-
 			Thread thread = Thread.currentThread();
-
-			// TODO hack here
 			String groupName = thread.getThreadGroup().getName();
 
-			m_tree.setThreadId(groupName == null ? Long.toHexString(thread.getId()) : groupName);
+			m_tree.setThreadGroupName(groupName);
+			m_tree.setThreadId(thread.getId()+"");
 			m_tree.setThreadName(thread.getName());
 
 			m_tree.setDomain(domain);

@@ -52,6 +52,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 		String domain = helper.read(buf, TAB);
 		String hostName = helper.read(buf, TAB);
 		String ipAddress = helper.read(buf, TAB);
+		String threadGroupName = helper.read(buf, TAB);
 		String threadId = helper.read(buf, TAB);
 		String threadName = helper.read(buf, TAB);
 		String messageId = helper.read(buf, TAB);
@@ -63,6 +64,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			tree.setDomain(domain);
 			tree.setHostName(hostName);
 			tree.setIpAddress(ipAddress);
+			tree.setThreadGroupName(threadGroupName);
 			tree.setThreadId(threadId);
 			tree.setThreadName(threadName);
 			tree.setMessageId(messageId);
@@ -209,6 +211,8 @@ public class PlainTextMessageCodec implements MessageCodec {
 		count += helper.write(buf, tree.getHostName());
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getIpAddress());
+		count += helper.write(buf, TAB);
+		count += helper.write(buf, tree.getThreadGroupName());
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getThreadId());
 		count += helper.write(buf, TAB);

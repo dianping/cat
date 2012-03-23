@@ -67,7 +67,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		count += helper.table1(buf);
 		count += helper.crlf(buf);
-		// count += encodeHeader(tree, buf);
+		count += encodeHeader(tree, buf);
 
 		if (tree.getMessage() != null) {
 			count += encodeMessage(tree.getMessage(), buf, 0, new LineCounter());
@@ -113,11 +113,12 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
-		count += helper.tr1(buf, null);
+		count += helper.tr1(buf,"header");
 		count += helper.td(buf, ID);
 		count += helper.td(buf, tree.getDomain());
 		count += helper.td(buf, tree.getHostName());
 		count += helper.td(buf, tree.getIpAddress());
+		count += helper.td(buf, tree.getThreadGroupName());
 		count += helper.td(buf, tree.getThreadId());
 		count += helper.td(buf, tree.getThreadName());
 		count += helper.td(buf, tree.getMessageId());
@@ -402,7 +403,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 				return bytes.length;
 			}
 		}
-
+		
 		public int tr2(ChannelBuffer buf) {
 			buf.writeBytes(TR2);
 			return TR2.length;

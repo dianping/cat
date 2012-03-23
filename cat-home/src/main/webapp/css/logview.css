@@ -34,3 +34,8 @@ tr.link td {
 .error {
 	color: red;
 }
+
+
+.header{
+	display:hidden;
+}

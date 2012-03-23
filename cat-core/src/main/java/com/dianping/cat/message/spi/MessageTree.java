@@ -20,6 +20,8 @@ public interface MessageTree extends Cloneable {
 	public String getRootMessageId();
 
 	public String getSessionToken();
+	
+	public String getThreadGroupName();
 
 	public String getThreadId();
 
@@ -40,8 +42,10 @@ public interface MessageTree extends Cloneable {
 	public void setRootMessageId(String rootMessageId);
 
 	public void setSessionToken(String sessionToken);
+	
+	public void setThreadGroupName(String name);
 
 	public void setThreadId(String threadId);
 
-	public void setThreadName(String threadName);
+	public void setThreadName(String id);
 }
