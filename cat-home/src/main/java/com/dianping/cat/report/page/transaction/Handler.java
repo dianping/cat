@@ -70,7 +70,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 
 		Cat.getManager().getThreadLocalMessageTree();
-		
+
 		return null;
 	}
 
@@ -106,18 +106,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
-<<<<<<< HEAD
-<<<<<<< HEAD
-		model.setDefaultDomain(payload.getDomain());
+		model.setDisplayDomain(payload.getDomain());
 
-=======
-		model.setDisplayDomain(payload.getDomain());
-		
->>>>>>> 8fba9da1445e5bf08a418057a70f787f909d543f
-=======
-		model.setDisplayDomain(payload.getDomain());
-		
->>>>>>> 8fba9da1445e5bf08a418057a70f787f909d543f
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);

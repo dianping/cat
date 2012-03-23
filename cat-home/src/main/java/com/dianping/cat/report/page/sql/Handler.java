@@ -44,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		model.setPage(ReportPage.SQL);
-		model.setDefaultDomain(payload.getDomain());
+		model.setDisplayDomain(payload.getDomain());
 
 		Action action = payload.getAction();
 		if (action == null || action == Action.VIEW) {
@@ -58,7 +58,7 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	public void showGraphs(Model model, Payload payload) {
+	protected void showGraphs(Model model, Payload payload) {
 		int id = payload.getId();
 		try {
 			SqlReportRecord record = m_dao.findByPK(id, SqlReportRecordEntity.READSET_FULL);
@@ -87,7 +87,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public void showReport(Model model, Payload payload) {
+	protected void showReport(Model model, Payload payload) {
 		SqlReport report = new SqlReport();
 		String domain = payload.getDomain();
 		long startDate = payload.getDate();

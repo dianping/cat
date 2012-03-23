@@ -73,7 +73,6 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.IP);
-		model.setDefaultDomain(payload.getDomain());
 
 		switch (payload.getAction()) {
 		case VIEW:
