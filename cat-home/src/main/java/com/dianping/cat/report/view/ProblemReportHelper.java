@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 
 /* used by problem.jsp */
 public class ProblemReportHelper {
+	
 	public static String showLegends(JavaThread thread, int minute, String domain, String ipAddress, long date) {
 		Segment segment = thread.findSegment(minute);
 
@@ -49,4 +50,15 @@ public class ProblemReportHelper {
 
 		return sb.toString();
 	}
+	
+	public static String creatLinkString(String baseUrl, String classStyle, Map<String, String> params) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("<a href=\"").append(baseUrl);
+		for (java.util.Map.Entry<String, String> param : params.entrySet()) {
+			sb.append("&").append(param.getKey()).append("=").append(param.getValue());
+		}
+		sb.append("\" class=\"").append(classStyle).append("\">&nbsp;&nbsp;</a>");
+		return sb.toString();
+	}
+
 }

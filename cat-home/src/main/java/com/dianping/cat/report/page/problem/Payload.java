@@ -12,6 +12,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("ip")
 	private String m_ipAddress;
 
+	@FieldMeta("group")
+	private String m_groupName;
+
 	@FieldMeta("thread")
 	private String m_threadId;
 
@@ -40,7 +43,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+		m_action = Action.getByName(action, Action.GROUP);
 	}
 
 	public void setIpAddress(String ipAddress) {
@@ -55,10 +58,18 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_threadId = threadId;
 	}
 
+	public String getGroupName() {
+   	return m_groupName;
+   }
+
+	public void setGroupName(String groupName) {
+   	m_groupName = groupName;
+   }
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.VIEW;
+			m_action = Action.GROUP;
 		}
 	}
 }

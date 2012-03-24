@@ -1,7 +1,10 @@
 package com.dianping.cat.report.page.problem;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view"),
+	GROUP("group"),
+	
+	THREAD("thread"),
+	
 	DETAIL("detail");
 	
 	private String m_name;

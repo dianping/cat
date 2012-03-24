@@ -2,14 +2,10 @@ package com.dianping.cat.report.page.problem;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -100,10 +96,23 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.PROBLEM);
 		model.setDisplayDomain(payload.getDomain());
 		model.setIpAddress(payload.getIpAddress());
-		
+
+		ProblemReport report;
 		switch (payload.getAction()) {
-		case VIEW:
-			showSummary(model, payload);
+		case GROUP:
+			report = showSummary(model, payload);
+			if(report!=null){
+				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
+			}
+			break;
+		case THREAD:
+			report = showSummary(model, payload);
+			String groupName = payload.getGroupName();
+			
+			model.setGroupName(groupName);
+			if(report!=null){
+				model.setThreadLevelInfo(new ThreadLevelInfo(model,groupName).display(report));
+			}
 			break;
 		case DETAIL:
 			showDetail(model, payload);
@@ -116,72 +125,41 @@ public class Handler implements PageHandler<Context> {
 	private void showDetail(Model model, Payload payload) {
 		model.setLongDate(payload.getDate());
 		model.setIpAddress(payload.getIpAddress());
-		model.setThreadId(payload.getThreadId());
+		model.setGroupName(payload.getGroupName());
 		model.setCurrentMinute(payload.getMinute());
-		
+		model.setThreadId(payload.getThreadId());
 		ProblemReport report = getReport(payload);
 
 		if (report == null) {
 			return;
 		}
 		model.setReport(report);
-		Machine machine = report.getMachines().get(payload.getIpAddress());
-
-		if (machine == null) {
-			return;
-		}
-		JavaThread thread = machine.getThreads().get(payload.getThreadId());
-
-		if (thread == null) {
-			return;
-		}
-		Segment segment = thread.getSegments().get(payload.getMinute());
-
-		if (segment == null) {
-			return;
-		}
-
-		List<Entry> entries = segment.getEntries();
-		Map<String, ProblemStatistics> statistics = new HashMap<String, ProblemStatistics>();
-
-		for (Entry entry : entries) {
-			String type = entry.getType();
-			ProblemStatistics staticstics = statistics.get(type);
-
-			if (staticstics != null) {
-				staticstics.add(entry);
-			} else {
-				statistics.put(type, new ProblemStatistics(entry));
-			}
-		}
-		
-		model.setStatistics(statistics);
+		model.setProblemStatistics(new ProblemStatistics().display(report, model));
 	}
 
-	private void showSummary(Model model, Payload payload) {
-		try {
-			ModelPeriod period = payload.getPeriod();
-			ProblemReport report = getReport(payload);
-			String ip = getIpAddress(report, payload);
-
-			if (period.isFuture()) {
-				model.setLongDate(payload.getCurrentDate());
-			} else {
-				model.setLongDate(payload.getDate());
-			}
-
-			if (period.isCurrent() || period.isFuture()) {
-				model.setLastMinute(getLastMinute(report, ip));
-			} else {
-				model.setLastMinute(59);
-			}
-
-			model.setHour(getHour(model.getLongDate()));
-			model.setIpAddress(ip);
-			model.setReport(report);
-		} catch (Throwable e) {
-			Cat.getProducer().logError(e);
-			model.setException(e);
+	private ProblemReport showSummary(Model model, Payload payload) {
+		ModelPeriod period = payload.getPeriod();
+		if (period.isFuture()) {
+			model.setLongDate(payload.getCurrentDate());
+		} else {
+			model.setLongDate(payload.getDate());
 		}
+
+		ProblemReport report = getReport(payload);
+		if(report ==null){
+			return null;
+		}
+		String ip = getIpAddress(report, payload);
+
+		if (period.isCurrent() || period.isFuture()) {
+			model.setLastMinute(getLastMinute(report, ip));
+		} else {
+			model.setLastMinute(59);
+		}
+
+		model.setHour(getHour(model.getLongDate()));
+		model.setIpAddress(ip);
+		model.setReport(report);
+		return report;
 	}
 }

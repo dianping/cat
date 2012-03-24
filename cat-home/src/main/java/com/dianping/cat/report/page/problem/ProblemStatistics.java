@@ -1,60 +1,149 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.JavaThread;
+import com.dianping.cat.consumer.problem.model.entity.Machine;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.entity.Segment;
 
 public class ProblemStatistics {
-	private int m_count;
 
-	private String m_type;
+	private Map<String, TypeStatistics> m_status = new LinkedHashMap<String, TypeStatistics>();
 
-	private Map<String, StatusStatistics> m_status = new HashMap<String, StatusStatistics>();
+	private String m_groupName;
 
-	public ProblemStatistics(Entry entry) {
-		m_type = entry.getType();
-		add(entry);
+	private String m_threadId;
+
+	public ProblemStatistics display(ProblemReport report, Model model) {
+		Machine machine = report.getMachines().get(model.getIpAddress());
+
+		if (machine == null) {
+			return null;
+		}
+
+		m_groupName = model.getGroupName();
+		m_threadId = model.getThreadId();
+
+		if (isEmpty(m_threadId) && isEmpty(m_groupName)) {
+			// Min Level
+			Map<String, JavaThread> threads = machine.getThreads();
+			for (JavaThread thread : threads.values()) {
+				Segment segment = thread.getSegments().get(model.getCurrentMinute());
+				if (segment == null) {
+					continue;
+				}
+				List<Entry> entries = segment.getEntries();
+				statisticsEntries(entries);
+			}
+
+		} else if (isEmpty(m_groupName) && !isEmpty(m_threadId)) {
+			Map<String, JavaThread> threads = machine.getThreads();
+			for (JavaThread thread : threads.values()) {
+				if (thread.getGroupName().equals(m_groupName)) {
+					Segment segment = thread.getSegments().get(model.getCurrentMinute());
+					if (segment == null) {
+						continue;
+					}
+					List<Entry> entries = segment.getEntries();
+					statisticsEntries(entries);
+				}
+			}
+
+		} else {
+			// Thread Level
+			JavaThread thread = machine.getThreads().get(model.getThreadId());
+			if (thread == null) {
+				return null;
+			}
+			Segment segment = thread.getSegments().get(model.getCurrentMinute());
+			if (segment == null) {
+				return null;
+			}
+			List<Entry> entries = segment.getEntries();
+			statisticsEntries(entries);
+		}
+
+		return this;
 	}
 
-	public void add(Entry entry) {
-		m_count++;
-		String status = entry.getStatus();
-		StatusStatistics statusStatistics = m_status.get(status);
+	private void statisticsEntries(List<Entry> entries) {
+		for (Entry entry : entries) {
+			String type = entry.getType();
+			TypeStatistics staticstics = m_status.get(type);
 
-		if (statusStatistics == null) {
-			m_status.put(status, new StatusStatistics(entry));
-		} else {
-			statusStatistics.add(entry);
+			if (staticstics != null) {
+				staticstics.add(entry, m_groupName, m_threadId);
+			} else {
+				m_status.put(type, new TypeStatistics(entry, m_groupName, m_threadId));
+			}
 		}
 	}
 
-	public int getCount() {
-		return m_count;
+	private boolean isEmpty(String str) {
+		if (str == null || str.length() == 0) {
+			return true;
+		}
+		return false;
 	}
 
-	public ProblemStatistics setCount(int count) {
-		m_count = count;
-		return this;
-	}
+	public Map<String, TypeStatistics> getStatus() {
+   	return m_status;
+   }
 
-	public String getType() {
-		return m_type;
-	}
+	public static class TypeStatistics {
+		private int m_count;
 
-	public ProblemStatistics setType(String type) {
-		m_type = type;
-		return this;
-	}
+		private String m_type;
 
-	public Map<String, StatusStatistics> getStatus() {
-		return m_status;
-	}
+		private Map<String, StatusStatistics> m_status = new LinkedHashMap<String, StatusStatistics>();
 
-	public void setStatus(Map<String, StatusStatistics> status) {
-		m_status = status;
+		public TypeStatistics(Entry entry, String groupName, String threadName) {
+			m_type = entry.getType();
+			add(entry, groupName, threadName);
+		}
+
+		public void add(Entry entry, String groupName, String threadId) {
+			m_count++;
+			String status = entry.getStatus();
+			StatusStatistics statusStatistics = m_status.get(status);
+
+			if (statusStatistics == null) {
+				m_status.put(status, new StatusStatistics(entry, groupName, threadId));
+			} else {
+				statusStatistics.add(entry, groupName, threadId);
+			}
+		}
+
+		public int getCount() {
+			return m_count;
+		}
+
+		public TypeStatistics setCount(int count) {
+			m_count = count;
+			return this;
+		}
+
+		public String getType() {
+			return m_type;
+		}
+
+		public TypeStatistics setType(String type) {
+			m_type = type;
+			return this;
+		}
+
+		public Map<String, StatusStatistics> getStatus() {
+			return m_status;
+		}
+
+		public void setStatus(Map<String, StatusStatistics> status) {
+			m_status = status;
+		}
 	}
 
 	public static class StatusStatistics {
@@ -66,15 +155,14 @@ public class ProblemStatistics {
 
 		private static int s_maxLinkSize = 5;
 
-		public StatusStatistics(Entry entry) {
+		public StatusStatistics(Entry entry, String groupName, String threadId) {
 			m_status = entry.getStatus();
-			m_count = 1;
-			m_links.add(entry.getMessageId());
+			add(entry, groupName, threadId);
 		}
 
-		public void add(Entry entry) {
-			m_count++;
+		public void add(Entry entry, String groupName, String threadId) {
 			if (m_links.size() <= s_maxLinkSize) {
+				m_count++;
 				m_links.add(entry.getMessageId());
 			}
 		}
