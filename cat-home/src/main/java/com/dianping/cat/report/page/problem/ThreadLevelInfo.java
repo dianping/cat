@@ -60,12 +60,21 @@ public class ThreadLevelInfo {
 	}
 
 	private String getShowDetailByMinte(int minute) {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		String baseUrl = "/cat/r/p?op=detail";
+		params.put("domain", m_model.getDomain());
+		params.put("ip", m_model.getIpAddress());
+		params.put("date", m_model.getDate());
+		params.put("minute", Integer.toString(minute));
+	
 		StringBuilder sb = new StringBuilder().append("<td>");
-
+		String minuteStr = Integer.toString(minute);
 		if (minute < 10) {
-			sb.append("0");
+			minuteStr ="0" +minute;
 		}
-		sb.append(minute).append("</td>");
+		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
+		sb.append("</td>");
+		
 		for (java.util.Map.Entry<String, GroupStatistics> statistics : m_groupStatistics.entrySet()) {
 			GroupStatistics value = statistics.getValue();
 			String groupName = statistics.getKey();
@@ -77,17 +86,11 @@ public class ThreadLevelInfo {
 				HashSet<String> errors = theadStatistics.getStatistics().get(minute);
 				sb.append("<td>");
 				for (String error : errors) {
-					Map<String, String> params = new LinkedHashMap<String, String>();
-					String baseUrl = "/cat/r/p?op=detail";
 					params.put("group", statistics.getKey());
 					if (groupName.equals(m_groupName)) {
 						params.put("thread", thread);
 					}
-					params.put("domain", m_model.getDomain());
-					params.put("ip", m_model.getIpAddress());
-					params.put("date", m_model.getDate());
-					params.put("minute", Integer.toString(minute));
-					String url = ProblemReportHelper.creatLinkString(baseUrl, error, params);
+					String url = ProblemReportHelper.creatLinkString(baseUrl, error, params,"");
 					sb.append(url);
 				}
 				sb.append("</td>");

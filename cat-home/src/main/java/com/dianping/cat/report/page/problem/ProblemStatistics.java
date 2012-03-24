@@ -28,7 +28,7 @@ public class ProblemStatistics {
 
 		m_groupName = model.getGroupName();
 		m_threadId = model.getThreadId();
-
+		
 		if (isEmpty(m_threadId) && isEmpty(m_groupName)) {
 			// Min Level
 			Map<String, JavaThread> threads = machine.getThreads();
@@ -41,7 +41,7 @@ public class ProblemStatistics {
 				statisticsEntries(entries);
 			}
 
-		} else if (isEmpty(m_groupName) && !isEmpty(m_threadId)) {
+		} else if (!isEmpty(m_groupName) && isEmpty(m_threadId)) {
 			Map<String, JavaThread> threads = machine.getThreads();
 			for (JavaThread thread : threads.values()) {
 				if (thread.getGroupName().equals(m_groupName)) {
@@ -54,7 +54,7 @@ public class ProblemStatistics {
 				}
 			}
 
-		} else {
+		} else if (!isEmpty(m_groupName) && !isEmpty(m_threadId)) {
 			// Thread Level
 			JavaThread thread = machine.getThreads().get(model.getThreadId());
 			if (thread == null) {
@@ -66,8 +66,10 @@ public class ProblemStatistics {
 			}
 			List<Entry> entries = segment.getEntries();
 			statisticsEntries(entries);
+		} else{
+			throw new RuntimeException("The url is error, it should contains thread group name at least!");
 		}
-
+		
 		return this;
 	}
 

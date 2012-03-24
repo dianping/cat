@@ -37,5 +37,6 @@ tr.link td {
 
 
 .header{
-	display:hidden;
+	font-size: small;
+	white-space: nowrap;
 }

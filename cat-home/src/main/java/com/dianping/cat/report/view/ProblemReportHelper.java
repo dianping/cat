@@ -10,7 +10,7 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 
 /* used by problem.jsp */
 public class ProblemReportHelper {
-	
+
 	public static String showLegends(JavaThread thread, int minute, String domain, String ipAddress, long date) {
 		Segment segment = thread.findSegment(minute);
 
@@ -42,22 +42,30 @@ public class ProblemReportHelper {
 				sb.append("&date=").append(date);
 				sb.append("&minute=").append(minute);
 				sb.append("\" class=\"").append(name).append("\">&nbsp;&nbsp;</a>");
-				//sb.append("<a href=\"/cat/r/m/").append(messageId).append("/logview.html\" class=\"");
-				//sb.append(name);
-				//sb.append("\">&nbsp;&nbsp;</a>");
+				// sb.append("<a href=\"/cat/r/m/").append(messageId).append("/logview.html\" class=\"");
+				// sb.append(name);
+				// sb.append("\">&nbsp;&nbsp;</a>");
 			}
 		}
 
 		return sb.toString();
 	}
-	
-	public static String creatLinkString(String baseUrl, String classStyle, Map<String, String> params) {
+
+	public static String creatLinkString(String baseUrl, String classStyle, Map<String, String> params, String text) {
 		StringBuilder sb = new StringBuilder();
-		sb.append("<a href=\"").append(baseUrl);
+		sb.append("<a ");
+		sb.append("href=\"").append(baseUrl);
 		for (java.util.Map.Entry<String, String> param : params.entrySet()) {
 			sb.append("&").append(param.getKey()).append("=").append(param.getValue());
 		}
-		sb.append("\" class=\"").append(classStyle).append("\">&nbsp;&nbsp;</a>");
+		sb.append("\" class=\"").append(classStyle).append("\"");
+		sb.append(" onclick=\"return show(this);\"" ).append(" >");
+		if (text.trim().length() == 0) {
+			sb.append("&nbsp;&nbsp");
+		} else {
+			sb.append(text);
+		}
+		sb.append("</a>");
 		return sb.toString();
 	}
 

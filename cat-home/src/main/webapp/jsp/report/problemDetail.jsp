@@ -24,7 +24,7 @@
 <res:useJs value="${res.js.local.problem_js}" target="head-js"/>
 <table class="problem">
 	<tr><th>Type</th><th>Count</th><th>Detail</th></tr>
-	<c:forEach var="statistics" items="${model.statistics}">
+	<c:forEach var="statistics" items="${model.problemStatistics.status}">
 	<tr>
 		<td><a href="#" class="${statistics.value.type}" >&nbsp;&nbsp;</a>&nbsp;&nbsp;${statistics.value.type}
 			</td>

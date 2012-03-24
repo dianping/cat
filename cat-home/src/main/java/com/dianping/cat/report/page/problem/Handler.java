@@ -152,7 +152,10 @@ public class Handler implements PageHandler<Context> {
 		String ip = getIpAddress(report, payload);
 
 		if (period.isCurrent() || period.isFuture()) {
-			model.setLastMinute(getLastMinute(report, ip));
+			Calendar cal = Calendar.getInstance();
+			int minute = cal.get(Calendar.MINUTE);
+			//model.setLastMinute(getLastMinute(report, ip));
+			model.setLastMinute(minute);
 		} else {
 			model.setLastMinute(59);
 		}
