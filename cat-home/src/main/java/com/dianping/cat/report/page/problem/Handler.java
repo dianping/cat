@@ -6,10 +6,8 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -46,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 		return ip;
 	}
 
-	private int getLastMinute(ProblemReport report, String ip) {
+/*	private int getLastMinute(ProblemReport report, String ip) {
 		Machine machine = report.findMachine(ip);
 		int lastMinute = 0;
 
@@ -59,7 +57,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		return lastMinute;
-	}
+	}*/
 
 	private ProblemReport getReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -104,6 +102,7 @@ public class Handler implements PageHandler<Context> {
 			if(report!=null){
 				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
 			}
+			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
 			break;
 		case THREAD:
 			report = showSummary(model, payload);
@@ -113,6 +112,7 @@ public class Handler implements PageHandler<Context> {
 			if(report!=null){
 				model.setThreadLevelInfo(new ThreadLevelInfo(model,groupName).display(report));
 			}
+			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
 			break;
 		case DETAIL:
 			showDetail(model, payload);

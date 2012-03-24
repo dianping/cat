@@ -8,7 +8,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.sql.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.sql.Model"	scope="request" />
 
-<a:report1
+<a:report
 	title="SQL Report Created By Hadoop Job , One Hour Delay"
 	navUrlPrefix="domain=${model.domain}"
 	timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">

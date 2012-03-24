@@ -19,6 +19,54 @@ public class ProblemStatistics {
 
 	private String m_threadId;
 
+	public String getSubTitle() {
+		StringBuilder sb = new StringBuilder();
+		if (isEmpty(m_threadId) && isEmpty(m_groupName)) {
+			return "All Thread Groups";
+		} else if (!isEmpty(m_groupName) && isEmpty(m_threadId)) {
+			return "All Threads in Group:" + m_groupName;
+		} else if (!isEmpty(m_groupName) && !isEmpty(m_threadId)) {
+			return "Thread :" + m_threadId;
+		}
+		return sb.toString();
+	}
+
+	public String getUrl() {
+		StringBuilder sb = new StringBuilder();
+		if (!isEmpty(m_groupName)) {
+			sb.append("&group=").append(m_groupName);
+		}
+		if (!isEmpty(m_threadId)) {
+			sb.append("&thread=").append(m_threadId);
+		}
+		return sb.toString();
+	}
+
+	public ProblemStatistics displayAll(ProblemReport report, Model model) {
+		if (report == null) {
+			return null;
+		}
+		Machine machine = report.getMachines().get(model.getIpAddress());
+
+		if (machine == null) {
+			return null;
+		}
+
+		// All Level
+		Map<String, JavaThread> threads = machine.getThreads();
+		for (JavaThread thread : threads.values()) {
+			for (Segment segment : thread.getSegments().values()) {
+				if (segment == null) {
+					continue;
+				}
+				List<Entry> entries = segment.getEntries();
+				statisticsEntries(entries);
+			}
+		}
+
+		return this;
+	}
+
 	public ProblemStatistics display(ProblemReport report, Model model) {
 		Machine machine = report.getMachines().get(model.getIpAddress());
 
@@ -28,7 +76,7 @@ public class ProblemStatistics {
 
 		m_groupName = model.getGroupName();
 		m_threadId = model.getThreadId();
-		
+
 		if (isEmpty(m_threadId) && isEmpty(m_groupName)) {
 			// Min Level
 			Map<String, JavaThread> threads = machine.getThreads();
@@ -66,10 +114,8 @@ public class ProblemStatistics {
 			}
 			List<Entry> entries = segment.getEntries();
 			statisticsEntries(entries);
-		} else{
-			throw new RuntimeException("The url is error, it should contains thread group name at least!");
 		}
-		
+
 		return this;
 	}
 
@@ -94,8 +140,8 @@ public class ProblemStatistics {
 	}
 
 	public Map<String, TypeStatistics> getStatus() {
-   	return m_status;
-   }
+		return m_status;
+	}
 
 	public static class TypeStatistics {
 		private int m_count;

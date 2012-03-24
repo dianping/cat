@@ -67,14 +67,13 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		count += helper.table1(buf);
 		count += helper.crlf(buf);
+		if (m_showNav) {
+			count += encodeFooter(tree, buf);
+		}
 		count += encodeHeader(tree, buf);
 
 		if (tree.getMessage() != null) {
 			count += encodeMessage(tree.getMessage(), buf, 0, new LineCounter());
-		}
-
-		if (m_showNav) {
-			count += encodeFooter(tree, buf);
 		}
 
 		count += helper.table2(buf);
@@ -87,20 +86,18 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		String uri = "/cat/r/m/" + m_builder.getLogViewPath(tree.getMessageId());
 
 		count += helper.tr1(buf, "nav");
-		count += helper.td1(buf, "colspan=\"2\" align=\"left\"");
+		count += helper.td1(buf, "colspan=\"4\" align=\"left\"");
 		count += helper.nbsp(buf, 3);
 		count += helper.write(buf, "<a href=\"");
 		count += helper.write(buf, uri);
 		count += helper.write(buf, "?tag1=t:");
 		count += helper.write(buf, tree.getThreadId());
-		count += helper.write(buf, "\">&lt;&lt;&lt; Thread</a>");
-		count += helper.td2(buf);
-		count += helper.td1(buf, "colspan=\"2\" align=\"right\"");
+		count += helper.write(buf, "\">&lt;&lt;&lt; Thread &nbsp;&nbsp;</a>");
 		count += helper.write(buf, "<a href=\"");
 		count += helper.write(buf, uri);
 		count += helper.write(buf, "?tag2=t:");
 		count += helper.write(buf, tree.getThreadId());
-		count += helper.write(buf, "\">Thread &gt;&gt;&gt;</a>");
+		count += helper.write(buf, "\"> &nbsp;&nbsp;Thread &gt;&gt;&gt;</a>");
 		count += helper.nbsp(buf, 3);
 		count += helper.td2(buf);
 		count += helper.tr2(buf);

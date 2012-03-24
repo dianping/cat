@@ -28,6 +28,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private ThreadLevelInfo m_threadLevelInfo; 
 
 	private ProblemStatistics m_problemStatistics ;
+	
+	private ProblemStatistics m_allStatistics ;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -155,5 +157,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {
    	m_threadLevelInfo = threadLevelInfo;
+   }
+
+	public ProblemStatistics getAllStatistics() {
+   	return m_allStatistics;
+   }
+
+	public void setAllStatistics(ProblemStatistics allStatistics) {
+   	m_allStatistics = allStatistics;
    }
 }
