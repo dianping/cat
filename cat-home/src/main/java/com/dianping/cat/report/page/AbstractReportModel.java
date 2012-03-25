@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
+import javax.servlet.http.HttpSession;
+
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.UrlNav;
 import com.site.web.mvc.Action;

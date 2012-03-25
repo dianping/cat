@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
@@ -103,6 +105,15 @@ public class Handler implements PageHandler<Context>, Initializable {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+		HttpSession session = ctx.getHttpServletRequest().getSession();
+		String sessionDomain = (String) session.getAttribute("domain");
+		String sessionDate = (String) session.getAttribute("date");
+		if (StringUtils.isEmpty(payload.getDomain())&&sessionDomain != null) {
+				payload.setDomain(sessionDomain);
+		}
+		if (payload.getRealDate() == 0&&sessionDate != null) {
+				payload.setDate(sessionDate);
+		}
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
@@ -116,6 +127,9 @@ public class Handler implements PageHandler<Context>, Initializable {
 			showGraphs(model, payload);
 			break;
 		}
+		// reset session
+		session.setAttribute("domain", model.getDomain());
+		session.setAttribute("date", model.getDate());
 
 		m_jspViewer.view(ctx, model);
 	}

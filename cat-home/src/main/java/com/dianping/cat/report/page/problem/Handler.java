@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -14,6 +15,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
+import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
@@ -44,20 +46,16 @@ public class Handler implements PageHandler<Context> {
 		return ip;
 	}
 
-/*	private int getLastMinute(ProblemReport report, String ip) {
-		Machine machine = report.findMachine(ip);
-		int lastMinute = 0;
-
-		for (JavaThread thread : machine.getThreads().values()) {
-			for (Segment segment : thread.getSegments().values()) {
-				if (segment.getId() > lastMinute) {
-					lastMinute = segment.getId();
-				}
-			}
-		}
-
-		return lastMinute;
-	}*/
+	/*
+	 * private int getLastMinute(ProblemReport report, String ip) { Machine
+	 * machine = report.findMachine(ip); int lastMinute = 0;
+	 * 
+	 * for (JavaThread thread : machine.getThreads().values()) { for (Segment
+	 * segment : thread.getSegments().values()) { if (segment.getId() >
+	 * lastMinute) { lastMinute = segment.getId(); } } }
+	 * 
+	 * return lastMinute; }
+	 */
 
 	private ProblemReport getReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -90,6 +88,21 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
+		// init session
+		HttpSession session = ctx.getHttpServletRequest().getSession();
+		String sessionIp = (String) session.getAttribute("ip");
+		String sessionDomain = (String) session.getAttribute("domain");
+		String sessionDate = (String) session.getAttribute("date");
+		if (StringUtils.isEmpty(payload.getIpAddress()) && sessionIp != null) {
+			payload.setIpAddress(sessionIp);
+		}
+		if (StringUtils.isEmpty(payload.getDomain()) && sessionDomain != null) {
+			payload.setDomain(sessionDomain);
+		}
+		if (payload.getRealDate() == 0 && sessionIp != null) {
+			payload.setDate(sessionDate);
+		}
+
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.PROBLEM);
 		model.setDisplayDomain(payload.getDomain());
@@ -99,7 +112,7 @@ public class Handler implements PageHandler<Context> {
 		switch (payload.getAction()) {
 		case GROUP:
 			report = showSummary(model, payload);
-			if(report!=null){
+			if (report != null) {
 				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
 			}
 			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
@@ -107,10 +120,10 @@ public class Handler implements PageHandler<Context> {
 		case THREAD:
 			report = showSummary(model, payload);
 			String groupName = payload.getGroupName();
-			
+
 			model.setGroupName(groupName);
-			if(report!=null){
-				model.setThreadLevelInfo(new ThreadLevelInfo(model,groupName).display(report));
+			if (report != null) {
+				model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
 			}
 			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
 			break;
@@ -118,6 +131,10 @@ public class Handler implements PageHandler<Context> {
 			showDetail(model, payload);
 			break;
 		}
+		// reset session
+		session.setAttribute("domain", model.getDomain());
+		session.setAttribute("ip", model.getIpAddress());
+		session.setAttribute("date", model.getDate());
 
 		m_jspViewer.view(ctx, model);
 	}
@@ -146,7 +163,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ProblemReport report = getReport(payload);
-		if(report ==null){
+		if (report == null) {
 			return null;
 		}
 		String ip = getIpAddress(report, payload);
@@ -154,7 +171,7 @@ public class Handler implements PageHandler<Context> {
 		if (period.isCurrent() || period.isFuture()) {
 			Calendar cal = Calendar.getInstance();
 			int minute = cal.get(Calendar.MINUTE);
-			//model.setLastMinute(getLastMinute(report, ip));
+			// model.setLastMinute(getLastMinute(report, ip));
 			model.setLastMinute(minute);
 		} else {
 			model.setLastMinute(59);
