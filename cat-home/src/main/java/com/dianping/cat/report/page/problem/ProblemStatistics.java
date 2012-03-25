@@ -51,7 +51,6 @@ public class ProblemStatistics {
 		if (machine == null) {
 			return null;
 		}
-
 		// All Level
 		Map<String, JavaThread> threads = machine.getThreads();
 		for (JavaThread thread : threads.values()) {
