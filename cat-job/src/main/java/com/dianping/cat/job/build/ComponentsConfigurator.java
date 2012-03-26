@@ -30,7 +30,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-		String serverUri = property("serve-uri", "hdfs://192.168.7.43:9000/user/cat");
+		String serverUri = property("server-uri", "hdfs://192.168.7.43:9000/user/cat");
 
 		all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
 		      .req(MessageCodec.class, "plain-text") //
@@ -45,8 +45,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("baseDir").value("data"), //
 		            E("serverUri").value(serverUri)));
 
+		all.add(C(OutputChannelManager.class, "dump", DefaultOutputChannelManager.class) //
+			      .req(MessagePathBuilder.class) //
+			      .config(E("baseDir").value("dump"), //
+			            E("serverUri").value(serverUri)));
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
-		      .req(OutputChannelManager.class));
+		      .req(OutputChannelManager.class, "dump").req(MessagePathBuilder.class));
 		all.add(C(MessageConsumer.class, DumpToHdfsConsumer.ID, DumpToHdfsConsumer.class) //
 		      .req(MessageStorage.class, "hdfs"));
 

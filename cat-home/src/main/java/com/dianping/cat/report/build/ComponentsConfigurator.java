@@ -19,17 +19,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		if (isEnv("dev") || property("env", null) == null) {
-			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-			      .req(MessageConsumer.class, new String[] { "realtime" }, "m_consumers"));
-		} else {
-			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-			      .req(MessageConsumer.class, new String[] { "realtime", DumpToHdfsConsumer.ID }, "m_consumers"));
-		}
+		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
+				.req(MessageConsumer.class, new String[] { "realtime", DumpToHdfsConsumer.ID }, "m_consumers"));
 
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
-		      .req(ValueTranslater.class));
+				.req(ValueTranslater.class));
 
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

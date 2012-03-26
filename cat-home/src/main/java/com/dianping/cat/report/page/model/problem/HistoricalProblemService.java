@@ -1,8 +1,10 @@
 package com.dianping.cat.report.page.model.problem;
 
 import java.util.Date;
+import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.transform.DefaultMerger;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
@@ -27,12 +29,20 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 		try {
 			bucket = m_bucketManager.getReportBucket(new Date(date), getName(), "remote");
 
-			String xml = bucket.findById(domain);
+			List<String> xmls = bucket.findAllById(domain);
 
-			if (xml != null) {
-				ProblemReport report = new DefaultXmlParser().parse(xml);
+			DefaultMerger merger = null;
 
-				return report;
+			if (xmls != null) {
+				for (String xml : xmls) {
+					ProblemReport model = new DefaultXmlParser().parse(xml);
+					if (merger == null) {
+						merger = new DefaultMerger(model);
+					} else {
+						model.accept(merger);
+					}
+				}
+				return merger.getProblemReport();
 			} else {
 				return null;
 			}
