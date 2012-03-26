@@ -1,6 +1,8 @@
 package com.dianping.cat.job.hdfs;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -87,7 +89,10 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 
 		private void handle(MessageTree tree) {
 			try {
-				OutputChannel channel = m_manager.openChannel(tree, false);
+				String tmp = m_builder.getMessagePath(tree.getDomain(), new Date(tree.getMessage().getTimestamp()));
+				String ipAddress = InetAddress.getLocalHost().getHostAddress();
+				String path = tmp + "-" + ipAddress;
+				OutputChannel channel = m_manager.openChannel(path, false);
 				int length = channel.write(tree);
 
 				if (length <= 0) {
@@ -151,19 +156,16 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 	}
 
 	public MessageTree get(String messageId) {
-		// TODO
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public MessageTree next(String messageId, String tag) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public MessageTree previous(String messageId, String tag) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 }

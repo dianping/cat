@@ -50,7 +50,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 			      .config(E("baseDir").value("dump"), //
 			            E("serverUri").value(serverUri)));
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
-		      .req(OutputChannelManager.class, "dump"));
+		      .req(OutputChannelManager.class, "dump").req(MessagePathBuilder.class));
 		all.add(C(MessageConsumer.class, DumpToHdfsConsumer.ID, DumpToHdfsConsumer.class) //
 		      .req(MessageStorage.class, "hdfs"));
 
