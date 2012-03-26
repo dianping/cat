@@ -2,8 +2,6 @@ package com.dianping.cat.consumer.ip;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,23 +99,6 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 		report.setAllDomains(allDomains);
 		return report;
-	}
-
-	public List<String> getDomains() {
-		List<String> domains = new ArrayList<String>(m_reports.keySet());
-
-		Collections.sort(domains, new Comparator<String>() {
-			@Override
-			public int compare(String d1, String d2) {
-				if (d1.equals("Cat")) {
-					return 1;
-				}
-
-				return d1.compareTo(d2);
-			}
-		});
-
-		return domains;
 	}
 
 	private String getIpAddress(Transaction root) {

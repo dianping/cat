@@ -6,9 +6,7 @@ import junit.framework.Assert;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.experimental.categories.Categories.IncludeCategory;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
@@ -26,8 +24,6 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class HtmlMessageCodecTest extends ComponentTestCase {
-	
-	private static String STATUS="&nbsp;";
 	
 	private void check(Message message, String expected) throws Exception {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");

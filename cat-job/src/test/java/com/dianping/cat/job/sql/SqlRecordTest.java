@@ -14,14 +14,14 @@ import com.dianping.cat.job.sql.database.SqlReportJobRecord;
 public class SqlRecordTest {
 
 	@Test
-	public void test() {
+	public void testFomat() {
 		DecimalFormat df = new DecimalFormat("#.##");
 
 		Assert.assertEquals("1.23", df.format(1.234567));
 	}
 
 	@Test
-	public void test2() {
+	public void testSplit() {
 		String text = "domain1	SQLStatement-Internal9	insert into mysql where is='sfsdf'	"+"" +
 				"500	500	500	100	199	74750	11591750	147	www.sina.com	m_durationDistribution	m_hitsOverTime	m_durationOverTime	m_failureOverTime";
 		SqlReportJobRecord record = new SqlReportJobRecord("20120309/11", text);
