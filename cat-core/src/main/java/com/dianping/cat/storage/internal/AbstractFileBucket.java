@@ -92,6 +92,16 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
+	
+	@Override
+	public boolean storeById(String id, T data) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<String> findAllById(String id) throws IOException {
+		throw new UnsupportedOperationException();
+	}
 
 	protected abstract void encode(T data, ChannelBuffer buf) throws IOException;
 

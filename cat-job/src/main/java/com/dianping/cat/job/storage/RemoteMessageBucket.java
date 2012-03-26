@@ -5,6 +5,7 @@ import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -195,5 +196,10 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 		} finally {
 			t.complete();
 		}
+	}
+
+	@Override
+	public List<String> findAllById(String id) throws IOException {
+		throw new UnsupportedOperationException();
 	}
 }

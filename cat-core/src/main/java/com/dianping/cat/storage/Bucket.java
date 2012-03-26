@@ -3,6 +3,7 @@ package com.dianping.cat.storage;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 public interface Bucket<T> {
 	public void close() throws IOException;
@@ -30,4 +31,6 @@ public interface Bucket<T> {
 	 * @throws IOException
 	 */
 	public boolean storeById(String id, T data) throws IOException;
+
+	List<String> findAllById(String id) throws IOException;
 }
