@@ -8,6 +8,7 @@
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hints>
 						<role-hint>realtime</role-hint>
+						<role-hint>dump-to-hdfs</role-hint>
 					</role-hints>
 					<field-name>m_consumers</field-name>
 				</requirement>
