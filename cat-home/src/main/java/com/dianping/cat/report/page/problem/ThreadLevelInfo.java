@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -41,6 +43,12 @@ public class ThreadLevelInfo {
 		for (java.util.Map.Entry<String, TreeSet<String>> entry : m_threadsInfo.entrySet()) {
 			result.add(new GroupDisplayInfo().setName(entry.getKey()).setNumber(entry.getValue().size()));
 		}
+		Collections.sort(result, new Comparator<GroupDisplayInfo>() {
+			@Override
+			public int compare(GroupDisplayInfo o1, GroupDisplayInfo o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
 		return result;
 	}
 
@@ -55,7 +63,7 @@ public class ThreadLevelInfo {
 		return result;
 	}
 
-	private Set<String> getThreadsByGroup(String groupName) {
+	private TreeSet<String> getThreadsByGroup(String groupName) {
 		return m_threadsInfo.get(groupName);
 	}
 
@@ -66,18 +74,18 @@ public class ThreadLevelInfo {
 		params.put("ip", m_model.getIpAddress());
 		params.put("date", m_model.getDate());
 		params.put("minute", Integer.toString(minute));
-	
+
 		StringBuilder sb = new StringBuilder().append("<td>");
 		String minuteStr = Integer.toString(minute);
 		if (minute < 10) {
-			minuteStr ="0" +minute;
+			minuteStr = "0" + minute;
 		}
 		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
 		sb.append("</td>");
-		
-		for (java.util.Map.Entry<String, GroupStatistics> statistics : m_groupStatistics.entrySet()) {
-			GroupStatistics value = statistics.getValue();
-			String groupName = statistics.getKey();
+
+		for (GroupDisplayInfo group : getGroups()) {
+			GroupStatistics value = m_groupStatistics.get(group);
+			String groupName = group.getName();
 			Set<String> threads = getThreadsByGroup(groupName);
 			Map<String, TheadStatistics> temps = value.getStatistics();
 
@@ -86,11 +94,11 @@ public class ThreadLevelInfo {
 				HashSet<String> errors = theadStatistics.getStatistics().get(minute);
 				sb.append("<td>");
 				for (String error : errors) {
-					params.put("group", statistics.getKey());
+					params.put("group", groupName);
 					if (groupName.equals(m_groupName)) {
 						params.put("thread", thread);
 					}
-					String url = ProblemReportHelper.creatLinkString(baseUrl, error, params,"");
+					String url = ProblemReportHelper.creatLinkString(baseUrl, error, params, "");
 					sb.append(url);
 				}
 				sb.append("</td>");

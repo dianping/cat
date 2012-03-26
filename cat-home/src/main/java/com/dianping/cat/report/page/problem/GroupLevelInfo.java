@@ -1,11 +1,10 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeSet;
 
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -13,6 +12,7 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.report.view.ProblemReportHelper;
+import com.dianping.cat.report.view.StringSortHelper;
 
 public class GroupLevelInfo {
 	private int m_minutes;
@@ -28,8 +28,8 @@ public class GroupLevelInfo {
 		m_minutes = model.getLastMinute();
 	}
 
-	public Set<String> getGroups() {
-		return m_groupStatistics.keySet();
+	public List<String> getGroups() {
+		return StringSortHelper.sortString(m_groupStatistics.keySet());
 	}
 
 	private String getShowDetailByMinte(int minute) {
@@ -39,21 +39,21 @@ public class GroupLevelInfo {
 		params.put("ip", m_model.getIpAddress());
 		params.put("date", m_model.getDate());
 		params.put("minute", Integer.toString(minute));
-	
+
 		StringBuilder sb = new StringBuilder().append("<td>");
 		String minuteStr = Integer.toString(minute);
 		if (minute < 10) {
-			minuteStr ="0" +minute;
+			minuteStr = "0" + minute;
 		}
 		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
 		sb.append("</td>");
-		
-		for (java.util.Map.Entry<String, GroupStatistics> statistics : m_groupStatistics.entrySet()) {
+
+		for (String group : getGroups()) {
 			sb.append("<td>");
-			params.put("group", statistics.getKey());
-			GroupStatistics value = statistics.getValue();
+			params.put("group", group);
+			GroupStatistics value = m_groupStatistics.get(group);
 			for (String temp : value.getStatistics().get(minute)) {
-				String url = ProblemReportHelper.creatLinkString(baseUrl, temp, params,"");
+				String url = ProblemReportHelper.creatLinkString(baseUrl, temp, params, "");
 				sb.append(url);
 			}
 			sb.append("</td>");
@@ -108,16 +108,16 @@ public class GroupLevelInfo {
 
 	public static class GroupStatistics {
 
-		private Map<Integer, HashSet<String>> m_statistics = new LinkedHashMap<Integer, HashSet<String>>();
+		private Map<Integer, TreeSet<String>> m_statistics = new LinkedHashMap<Integer, TreeSet<String>>();
 
-		public HashSet<String> getTag(int minutes) {
+		public TreeSet<String> getTag(int minutes) {
 			return m_statistics.get(minutes);
 		}
 
 		public GroupStatistics(int lastMinute) {
 			for (int i = 0; i <= lastMinute; i++) {
 
-				m_statistics.put(new Integer(i), new HashSet<String>());
+				m_statistics.put(new Integer(i), new TreeSet<String>());
 			}
 		}
 
@@ -131,7 +131,7 @@ public class GroupLevelInfo {
 			}
 		}
 
-		public Map<Integer, HashSet<String>> getStatistics() {
+		public Map<Integer, TreeSet<String>> getStatistics() {
 			return m_statistics;
 		}
 	}

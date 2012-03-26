@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.report.page.AbstractReportModel;
-import com.dianping.cat.report.view.DomainSortHelper;
+import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context>  {
 	private SqlReport m_report;
@@ -50,7 +50,7 @@ public class Model extends AbstractReportModel<Action, Context>  {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			return DomainSortHelper.sortDomain(m_report.getDomains());
+			return StringSortHelper.sortDomain(m_report.getDomains());
 		}
    }
 
