@@ -1,12 +1,11 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.List;
 
-import com.dianping.cat.consumer.problem.model.entity.AllDomains;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.view.DomainSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
 	private ProblemReport m_report;
@@ -54,17 +53,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	@Override
-	public Collection<String> getDomains() {
+	public List<String> getDomains() {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			AllDomains allDomains = m_report.getAllDomains();
-
-			if (allDomains == null) {
-				return Collections.emptySet();
-			} else {
-				return allDomains.getDomains();
-			}
+			return DomainSortHelper.sortDomain(m_report.getAllDomains().getDomains());
 		}
 	}
 

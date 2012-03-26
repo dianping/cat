@@ -1,12 +1,11 @@
 package com.dianping.cat.report.page.transaction;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.view.DomainSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
 	private TransactionReport m_report;
@@ -45,14 +44,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			List<String> result = new ArrayList<String>();
-			Set<String> domains = m_report.getDomains();
-			
-			for (String domain : domains) {
-				result.add(domain);
-			}
-			Collections.sort(result);
-			return result;
+			return DomainSortHelper.sortDomain(m_report.getDomains());
 		}
 	}
 

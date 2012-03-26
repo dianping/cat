@@ -51,10 +51,10 @@ function alertWin(title, msg, w, h) {
 		iHeight = 600;
 	if (iWidth < 1000)
 		iWidth = 1000;
-	var top_ = 0;
-	if (iHeight > h)
+	var top_ = 160;
+	/*if (iHeight > h)
 		top_ = (iHeight - h) / 2 - 50 + document.body.scrollTop
-				+ document.documentElement.scrollTop-70;
+				+ document.documentElement.scrollTop-50;*/
 	var msgObj = document.createElement("div");
 	msgObj.setAttribute("id", "msgObjRef");
 	msgObj.style.cssText = "position:absolute;top:" + top_ + "px;left:"
