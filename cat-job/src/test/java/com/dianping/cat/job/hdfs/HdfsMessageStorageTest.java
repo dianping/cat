@@ -1,7 +1,5 @@
 package com.dianping.cat.job.hdfs;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;

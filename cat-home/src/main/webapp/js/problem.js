@@ -52,15 +52,15 @@ function alertWin(title, msg, w, h) {
 	if (iWidth < 1000)
 		iWidth = 1000;
 	var top_ = 160;
-	/*if (iHeight > h)
-		top_ = (iHeight - h) / 2 - 50 + document.body.scrollTop
-				+ document.documentElement.scrollTop-50;*/
+	/*
+	 * if (iHeight > h) top_ = (iHeight - h) / 2 - 50 + document.body.scrollTop +
+	 * document.documentElement.scrollTop-50;
+	 */
 	var msgObj = document.createElement("div");
 	msgObj.setAttribute("id", "msgObjRef");
-	msgObj.style.cssText = "position:absolute;top:" + top_ + "px;left:"
-			+ (iWidth - w) / 2 + "px;width:" + w + "px;height:" + 'auto'
-			+ "px;text-align:center;border:1px solid " + bordercolor
-			+ ";background-color:" + bgcolor
+	msgObj.style.cssText = "position:absolute;top:" + top_ + "px;left:400"
+			+ "px;width:auto;height:auto;text-align:center;border:1px solid "
+			+ bordercolor + ";background-color:" + bgcolor
 			+ ";padding:1px;line-height:22px;z-index:102;";
 	document.body.appendChild(msgObj);
 	var table = document.createElement("table");
@@ -69,13 +69,13 @@ function alertWin(title, msg, w, h) {
 	table.cellSpacing = 0;
 	var tr = table.insertRow(-1);
 	var titleBar = tr.insertCell(-1);
-	var titlewid = w - 20;
-	titlewidth = titlewid + 'px';
-	titleBar.style.cssText = "width:" + titlewidth + ";height:" + titleheight
+//	var titlewid = w - 20;
+//	titlewidth = titlewid + 'px';
+	titleBar.style.cssText ="height:" + titleheight
 			+ "px;text-align:left;padding:3px;margin:0px;color:" + titlecolor
 			+ ";border:1px solid " + bordercolor
 			+ ";cursor:move;background-color:" + titlebgcolor;
-	titleBar.style.paddingLeft = "10px";
+//	titleBar.style.paddingLeft = "10px";
 	titleBar.innerHTML = title;
 	var moveX = 0;
 	var moveY = 0;
@@ -117,8 +117,7 @@ function alertWin(title, msg, w, h) {
 	};
 	var closeBtn = tr.insertCell(-1);
 	closeBtn.style.cssText = "cursor:pointer;background-color:" + titlebgcolor;
-	closeBtn.innerHTML = "<span style='font-size:15pt;color:" + titlecolor
-			+ ";'>×</span>";
+	closeBtn.innerHTML = "<span color:" + titlecolor+ ";'>×</span>";
 	closeBtn.onclick = function() {
 		document.body.removeChild(msgObj);
 	};

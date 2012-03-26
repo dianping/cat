@@ -208,8 +208,8 @@ public class ProblemStatistics {
 		}
 
 		public void add(Entry entry, String groupName, String threadId) {
+			m_count++;
 			if (m_links.size() <= s_maxLinkSize) {
-				m_count++;
 				m_links.add(entry.getMessageId());
 			}
 		}
