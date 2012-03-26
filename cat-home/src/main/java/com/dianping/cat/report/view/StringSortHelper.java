@@ -16,11 +16,11 @@ public class StringSortHelper {
 		if (lists == null) {
 			return null;
 		} else {
-			List<String> domainsList = new ArrayList<String>();
+			List<String> result = new ArrayList<String>();
 			for (String domain : lists) {
-				domainsList.add(domain);
+				result.add(domain);
 			}
-			return sortDomain(domainsList);
+			return sortDomain(result);
 		}
 	}
 
@@ -43,7 +43,9 @@ public class StringSortHelper {
 			if (d1.equals("Cat")) {
 				return 1;
 			}
-
+			if (d2.equals("Cat")) {
+				return -1;
+			}
 			return d1.compareTo(d2);
 		}
 	}

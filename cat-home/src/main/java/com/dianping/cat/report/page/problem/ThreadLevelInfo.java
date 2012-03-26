@@ -84,8 +84,8 @@ public class ThreadLevelInfo {
 		sb.append("</td>");
 
 		for (GroupDisplayInfo group : getGroups()) {
-			GroupStatistics value = m_groupStatistics.get(group);
 			String groupName = group.getName();
+			GroupStatistics value = m_groupStatistics.get(groupName);
 			Set<String> threads = getThreadsByGroup(groupName);
 			Map<String, TheadStatistics> temps = value.getStatistics();
 
