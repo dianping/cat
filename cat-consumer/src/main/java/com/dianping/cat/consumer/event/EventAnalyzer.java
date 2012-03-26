@@ -189,16 +189,19 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		// the message is required by some events
 		if (count > 0) {
 			String messageId = tree.getMessageId();
+			Transaction t = Cat.getProducer().newTransaction("MessageProcess", getClass().getSimpleName());
+			t.setStatus(Message.SUCCESS);
 
 			try {
 				Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
-				Bucket<MessageTree> remoteBucket = m_bucketManager
-				      .getMessageBucket(new Date(m_startTime), domain, "remote");
+				Bucket<MessageTree> remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
 
 				localBucket.storeById(messageId, tree);
 				remoteBucket.storeById(messageId, tree);
 			} catch (IOException e) {
 				m_logger.error("Error when storing message for event analyzer!", e);
+			} finally {
+				t.complete();
 			}
 		}
 	}

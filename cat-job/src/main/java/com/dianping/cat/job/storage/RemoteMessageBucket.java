@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.job.hdfs.InputChannel;
 import com.dianping.cat.job.hdfs.InputChannelManager;
 import com.dianping.cat.job.hdfs.OutputChannel;
@@ -18,6 +19,8 @@ import com.dianping.cat.job.hdfs.OutputChannelManager;
 import com.dianping.cat.job.sql.dal.Logview;
 import com.dianping.cat.job.sql.dal.LogviewDao;
 import com.dianping.cat.job.sql.dal.LogviewEntity;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
@@ -165,6 +168,8 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 			return false;
 		}
 		
+		Transaction t = Cat.getProducer().newTransaction("Bucket", getClass().getSimpleName());
+		
 		m_lruCache.put(messageId, messageId);
 
 		int offset = m_outputChannel.getSize();
@@ -182,9 +187,13 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 
 		try {
 			m_logviewDao.insert(logview);
+			t.setStatus(Message.SUCCESS);
 			return true;
 		} catch (DalException e) {
+			t.setStatus(e);
 			throw new IOException("Error when inserting into logview table!", e);
+		} finally {
+			t.complete();
 		}
 	}
 }

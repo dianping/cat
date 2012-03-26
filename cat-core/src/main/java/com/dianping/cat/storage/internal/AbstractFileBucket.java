@@ -265,7 +265,7 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 		}
 
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction(getClass().getSimpleName(), "store");
+		Transaction t = cat.newTransaction("Bucket", getClass().getSimpleName());
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 		String attributes = id + "\t" + Joiners.by('\t').join(tags) + "\n";
 		byte[] firstLine;

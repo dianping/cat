@@ -166,17 +166,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			// the message is required by some transactions
 			if (count > 0) {
 				String messageId = tree.getMessageId();
+				Transaction t = Cat.getProducer().newTransaction("MessageProcess", getClass().getSimpleName());
+				t.setStatus(Message.SUCCESS);
 
 				try {
-					Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain,
-					      "local");
-					Bucket<MessageTree> remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain,
-					      "remote");
+					Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+					Bucket<MessageTree> remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
 
 					localBucket.storeById(messageId, tree);
 					remoteBucket.storeById(messageId, tree);
 				} catch (IOException e) {
+					// we don't let transaction status to fail to avoid message storm
 					m_logger.error("Error when storing message for transaction analyzer!", e);
+				} finally {
+					t.complete();
 				}
 			}
 		}

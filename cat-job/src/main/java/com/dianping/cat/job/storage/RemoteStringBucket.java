@@ -94,7 +94,7 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public boolean storeById(String domain, String data) throws IOException {
-		Transaction t = Cat.getProducer().newTransaction(getClass().getSimpleName(), "store");
+		Transaction t = Cat.getProducer().newTransaction("Bucket", getClass().getSimpleName());
 		Report report = m_reportDao.createLocal();
 
 		report.setName(m_name);
