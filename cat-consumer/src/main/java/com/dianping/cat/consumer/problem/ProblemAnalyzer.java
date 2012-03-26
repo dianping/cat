@@ -89,8 +89,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	private Segment findOrCreateSegment(ProblemReport report, MessageTree tree) {
 		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
 		JavaThread thread = machine.findOrCreateThread(tree.getThreadId());
+		thread.setGroupName(tree.getThreadGroupName()).setName(tree.getThreadName());
+		
 		Calendar cal = Calendar.getInstance();
-
 		cal.setTimeInMillis(tree.getMessage().getTimestamp());
 
 		int minute = cal.get(Calendar.MINUTE);

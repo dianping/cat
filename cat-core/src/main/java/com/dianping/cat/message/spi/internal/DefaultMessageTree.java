@@ -23,6 +23,8 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_rootMessageId;
 
 	private String m_sessionToken;
+	
+	private String m_threadGroupName;
 
 	private String m_threadId;
 
@@ -41,35 +43,12 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setParentMessageId(m_parentMessageId);
 		tree.setRootMessageId(m_rootMessageId);
 		tree.setSessionToken(m_sessionToken);
+		tree.setThreadGroupName(m_threadGroupName);
 		tree.setThreadId(m_threadId);
 		tree.setThreadName(m_threadName);
 		tree.setMessage(m_message);
 
 		return tree;
-	}
-
-	@Override
-	public String getParentMessageId() {
-		return m_parentMessageId;
-	}
-
-	@Override
-	public void setParentMessageId(String parentMessageId) {
-		if (parentMessageId != null && parentMessageId.length() > 0) {
-			m_parentMessageId = parentMessageId;
-		}
-	}
-
-	@Override
-	public String getRootMessageId() {
-		return m_rootMessageId;
-	}
-
-	@Override
-	public void setRootMessageId(String rootMessageId) {
-		if (rootMessageId != null && rootMessageId.length() > 0) {
-			m_rootMessageId = rootMessageId;
-		}
 	}
 
 	@Override
@@ -98,9 +77,23 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public String getParentMessageId() {
+		return m_parentMessageId;
+	}
+
+	@Override
+	public String getRootMessageId() {
+		return m_rootMessageId;
+	}
+
+	@Override
 	public String getSessionToken() {
 		return m_sessionToken;
 	}
+
+	public String getThreadGroupName() {
+   	return m_threadGroupName;
+   }
 
 	@Override
 	public String getThreadId() {
@@ -139,10 +132,28 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setParentMessageId(String parentMessageId) {
+		if (parentMessageId != null && parentMessageId.length() > 0) {
+			m_parentMessageId = parentMessageId;
+		}
+	}
+
+	@Override
+	public void setRootMessageId(String rootMessageId) {
+		if (rootMessageId != null && rootMessageId.length() > 0) {
+			m_rootMessageId = rootMessageId;
+		}
+	}
+
+	@Override
 	public void setSessionToken(String sessionToken) {
 		m_sessionToken = sessionToken;
 	}
 
+	public void setThreadGroupName(String threadGroupName) {
+   	m_threadGroupName = threadGroupName;
+   }
+	
 	@Override
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;

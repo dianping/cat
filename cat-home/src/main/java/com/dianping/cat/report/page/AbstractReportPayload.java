@@ -46,6 +46,10 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			return m_date + m_hours * ONE_HOUR;
 		}
 	}
+	
+	public long getRealDate(){
+		return m_date;
+	}
 
 	public String getDomain() {
 		return m_domain;

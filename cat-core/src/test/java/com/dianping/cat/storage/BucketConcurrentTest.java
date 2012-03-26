@@ -37,6 +37,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 		tree.setParentMessageId("parentMessageId");
 		tree.setRootMessageId("rootMessageId");
 		tree.setSessionToken("sessionToken");
+		tree.setThreadGroupName("threadGroupName");
 		tree.setThreadId("threadId");
 		tree.setThreadName("threadName");
 

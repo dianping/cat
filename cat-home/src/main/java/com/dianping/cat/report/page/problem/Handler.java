@@ -2,24 +2,20 @@ package com.dianping.cat.report.page.problem;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
+import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
@@ -50,20 +46,16 @@ public class Handler implements PageHandler<Context> {
 		return ip;
 	}
 
-	private int getLastMinute(ProblemReport report, String ip) {
-		Machine machine = report.findMachine(ip);
-		int lastMinute = 0;
-
-		for (JavaThread thread : machine.getThreads().values()) {
-			for (Segment segment : thread.getSegments().values()) {
-				if (segment.getId() > lastMinute) {
-					lastMinute = segment.getId();
-				}
-			}
-		}
-
-		return lastMinute;
-	}
+	/*
+	 * private int getLastMinute(ProblemReport report, String ip) { Machine
+	 * machine = report.findMachine(ip); int lastMinute = 0;
+	 * 
+	 * for (JavaThread thread : machine.getThreads().values()) { for (Segment
+	 * segment : thread.getSegments().values()) { if (segment.getId() >
+	 * lastMinute) { lastMinute = segment.getId(); } } }
+	 * 
+	 * return lastMinute; }
+	 */
 
 	private ProblemReport getReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -96,19 +88,53 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
+		// init session
+		HttpSession session = ctx.getHttpServletRequest().getSession();
+		String sessionIp = (String) session.getAttribute("ip");
+		String sessionDomain = (String) session.getAttribute("domain");
+		String sessionDate = (String) session.getAttribute("date");
+		if (StringUtils.isEmpty(payload.getIpAddress()) && sessionIp != null) {
+			payload.setIpAddress(sessionIp);
+		}
+		if (StringUtils.isEmpty(payload.getDomain()) && sessionDomain != null) {
+			payload.setDomain(sessionDomain);
+		}
+		if (payload.getRealDate() == 0 && sessionIp != null) {
+			payload.setDate(sessionDate);
+		}
+
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.PROBLEM);
 		model.setDisplayDomain(payload.getDomain());
 		model.setIpAddress(payload.getIpAddress());
-		
+
+		ProblemReport report;
 		switch (payload.getAction()) {
-		case VIEW:
-			showSummary(model, payload);
+		case GROUP:
+			report = showSummary(model, payload);
+			if (report != null) {
+				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
+			}
+			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
+			break;
+		case THREAD:
+			report = showSummary(model, payload);
+			String groupName = payload.getGroupName();
+
+			model.setGroupName(groupName);
+			if (report != null) {
+				model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
+			}
+			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
 			break;
 		case DETAIL:
 			showDetail(model, payload);
 			break;
 		}
+		// reset session
+		session.setAttribute("domain", model.getDomain());
+		session.setAttribute("ip", model.getIpAddress());
+		session.setAttribute("date", model.getDate());
 
 		m_jspViewer.view(ctx, model);
 	}
@@ -116,72 +142,44 @@ public class Handler implements PageHandler<Context> {
 	private void showDetail(Model model, Payload payload) {
 		model.setLongDate(payload.getDate());
 		model.setIpAddress(payload.getIpAddress());
-		model.setThreadId(payload.getThreadId());
+		model.setGroupName(payload.getGroupName());
 		model.setCurrentMinute(payload.getMinute());
-		
+		model.setThreadId(payload.getThreadId());
 		ProblemReport report = getReport(payload);
 
 		if (report == null) {
 			return;
 		}
 		model.setReport(report);
-		Machine machine = report.getMachines().get(payload.getIpAddress());
-
-		if (machine == null) {
-			return;
-		}
-		JavaThread thread = machine.getThreads().get(payload.getThreadId());
-
-		if (thread == null) {
-			return;
-		}
-		Segment segment = thread.getSegments().get(payload.getMinute());
-
-		if (segment == null) {
-			return;
-		}
-
-		List<Entry> entries = segment.getEntries();
-		Map<String, ProblemStatistics> statistics = new HashMap<String, ProblemStatistics>();
-
-		for (Entry entry : entries) {
-			String type = entry.getType();
-			ProblemStatistics staticstics = statistics.get(type);
-
-			if (staticstics != null) {
-				staticstics.add(entry);
-			} else {
-				statistics.put(type, new ProblemStatistics(entry));
-			}
-		}
-		
-		model.setStatistics(statistics);
+		model.setProblemStatistics(new ProblemStatistics().display(report, model));
 	}
 
-	private void showSummary(Model model, Payload payload) {
-		try {
-			ModelPeriod period = payload.getPeriod();
-			ProblemReport report = getReport(payload);
-			String ip = getIpAddress(report, payload);
-
-			if (period.isFuture()) {
-				model.setLongDate(payload.getCurrentDate());
-			} else {
-				model.setLongDate(payload.getDate());
-			}
-
-			if (period.isCurrent() || period.isFuture()) {
-				model.setLastMinute(getLastMinute(report, ip));
-			} else {
-				model.setLastMinute(59);
-			}
-
-			model.setHour(getHour(model.getLongDate()));
-			model.setIpAddress(ip);
-			model.setReport(report);
-		} catch (Throwable e) {
-			Cat.getProducer().logError(e);
-			model.setException(e);
+	private ProblemReport showSummary(Model model, Payload payload) {
+		ModelPeriod period = payload.getPeriod();
+		if (period.isFuture()) {
+			model.setLongDate(payload.getCurrentDate());
+		} else {
+			model.setLongDate(payload.getDate());
 		}
+
+		ProblemReport report = getReport(payload);
+		if (report == null) {
+			return null;
+		}
+		String ip = getIpAddress(report, payload);
+
+		if (period.isCurrent() || period.isFuture()) {
+			Calendar cal = Calendar.getInstance();
+			int minute = cal.get(Calendar.MINUTE);
+			// model.setLastMinute(getLastMinute(report, ip));
+			model.setLastMinute(minute);
+		} else {
+			model.setLastMinute(59);
+		}
+
+		model.setHour(getHour(model.getLongDate()));
+		model.setIpAddress(ip);
+		model.setReport(report);
+		return report;
 	}
 }

@@ -81,6 +81,7 @@ public class PlainTextMessageCodecTest {
 		tree.setParentMessageId("parentMessageId");
 		tree.setRootMessageId("rootMessageId");
 		tree.setSessionToken("sessionToken");
+		tree.setThreadGroupName("threadGroupName");
 		tree.setThreadId("threadId");
 		tree.setThreadName("threadName");
 
@@ -129,7 +130,7 @@ public class PlainTextMessageCodecTest {
 	public void testMessageTree() {
 		DefaultMessageTree tree = newMessageTree();
 		long timestamp = 1325489621987L;
-		String expected = "PT1\tdomain\thostName\tipAddress\tthreadId\tthreadName\tmessageId\tparentMessageId\trootMessageId\tsessionToken\n";
+		String expected = "PT1\tdomain\thostName\tipAddress\tthreadGroupName\tthreadId\tthreadName\tmessageId\tparentMessageId\trootMessageId\tsessionToken\n";
 
 		checkTree(tree, expected);
 
