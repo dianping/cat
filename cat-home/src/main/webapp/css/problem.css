@@ -1,6 +1,6 @@
 .problem {
 	font-size: small;
-	border-spacing: 1px; 
+	border-spacing: 1px;
 }
 
 .machines {
@@ -33,6 +33,34 @@ a.long-url {
 	background-color: blue;
 }
 
-.minute{
+.minute {
 	
+}
+
+.detail {
+	font-size: small;
+	border-spacing: 1px;
+}
+
+#msgObjRef {
+	position: absolute;
+	text-align: center;
+	border: 1px solid;
+	border-color: #666699;
+	background-color: #FFFFFF;
+	line-height: 22px;
+	z-index: 102;
+}
+
+#titleBar {
+	text-align: left;
+	color: #FFFFFF;
+	cursor: move;
+	background-color: #06C;
+}
+
+#closeBtn {
+	width:10px;
+	cursor: pointer;
+	background-color: #06C;
 }

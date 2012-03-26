@@ -40,8 +40,8 @@
 						<th width="10%">Count</th>
 						<th width="70%">SampLinks</th>
 					</tr>
-					<c:forEach var="status" items="${statistics.value.status}">
-						<tr>
+					<c:forEach var="status" items="${statistics.value.status}" varStatus="index">
+						<tr class="${index.index  mod 2==1 ? 'even' : 'odd'}">
 							<td>${status.value.status}</td>
 							<td>${status.value.count}</td>
 							<td><c:forEach var="links" items="${status.value.links}">
