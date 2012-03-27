@@ -29,8 +29,10 @@ public class SqlJobDataProduceTest extends CatTestCase {
 		transport.setSender(messageSender);
 		InMemoryQueue queue = lookup(InMemoryQueue.class);
 
-		long currentHour = System.currentTimeMillis() - System.currentTimeMillis() / (60 * 60 * 1000);
+		long currentTimeMillis = System.currentTimeMillis();
+		long currentHour = currentTimeMillis - currentTimeMillis % (60 * 60 * 1000);
 		for (int i = 0; i < 3; i++) {
+	
 			for (int j = 0; j < 1200; j++) {
 				Transaction t = producer.newTransaction("URL", "MyPage" + (int) (j / 500));
 

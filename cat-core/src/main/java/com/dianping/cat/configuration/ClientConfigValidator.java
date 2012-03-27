@@ -1,8 +1,5 @@
 package com.dianping.cat.configuration;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.configuration.model.entity.Server;
@@ -12,13 +9,7 @@ public class ClientConfigValidator extends DefaultValidator {
 	private Config m_config;
 
 	private String getLocalAddress() {
-		try {
-			return InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			// ignore it
-		}
-
-		return null;
+		return LocalIP.getAddress();
 	}
 
 	@Override
