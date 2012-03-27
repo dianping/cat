@@ -23,6 +23,9 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class TcpSocketTest extends ComponentTestCase {
+	/**
+	 * many client to one receiver
+	 */
 	@Test
 	public void testOneToMany() throws Exception {
 		final MessageReceiver receiver = lookup(MessageReceiver.class, "tcp-socket");
@@ -35,7 +38,13 @@ public class TcpSocketTest extends ComponentTestCase {
 		final CountDownLatch forReceiver = new CountDownLatch(numSenders * len);
 
 		receiver.initialize();
-		receiver.onMessage(new MockMessageHandler(sb, forReceiver));
+		
+		Thread receiverthread = new Thread(new Runnable() {
+			public void run() {
+				receiver.onMessage(new MockMessageHandler(sb, forReceiver));
+			}
+		});
+		receiverthread.start();
 
 		final MessageSender[] senders = new MessageSender[numSenders];
 
@@ -64,6 +73,8 @@ public class TcpSocketTest extends ComponentTestCase {
 		forReceiver.await();
 
 		receiver.shutdown();
+		receiverthread.join();
+		
 		pool.shutdown();
 
 		for (int i = 0; i < senders.length; i++) {
@@ -73,20 +84,28 @@ public class TcpSocketTest extends ComponentTestCase {
 		Assert.assertEquals(numSenders * len, sb.length());
 	}
 
+	/**
+	 * one client to one server
+	 */
 	@Test
 	public void testOneToOne() throws Exception {
 		final MessageSender sender = lookup(MessageSender.class, "tcp-socket");
 		final MessageReceiver receiver = lookup(MessageReceiver.class, "tcp-socket");
-		final int len = 1000;
+		final int len = 100;
 		final StringBuilder sb = new StringBuilder(len);
-		ExecutorService pool = Executors.newFixedThreadPool(3);
-		List<Future<?>> futures = new ArrayList<Future<?>>();
+		ExecutorService pool = Executors.newFixedThreadPool(1);
 		final CountDownLatch forReceiver = new CountDownLatch(len);
 
 		receiver.initialize();
-		receiver.onMessage(new MockMessageHandler(sb, forReceiver));
 
-		futures.add(pool.submit(new Runnable() {
+		Thread receiverthread = new Thread(new Runnable() {
+			public void run() {
+				receiver.onMessage(new MockMessageHandler(sb, forReceiver));
+			}
+		});
+		receiverthread.start();
+
+		pool.submit(new Runnable() {
 			@Override
 			public void run() {
 				sender.initialize();
@@ -95,16 +114,14 @@ public class TcpSocketTest extends ComponentTestCase {
 					sender.send(new DefaultMessageTree());
 				}
 			}
-		}));
-
-		for (Future<?> future : futures) {
-			future.get();
-		}
+		});
 
 		forReceiver.await();
 
 		pool.shutdown();
 		receiver.shutdown();
+		receiverthread.join();
+		
 		sender.shutdown();
 
 		Assert.assertEquals(len, sb.length());

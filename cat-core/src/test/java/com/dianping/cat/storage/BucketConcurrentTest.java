@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 import junit.framework.Assert;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -19,6 +20,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
+@Ignore
 public class BucketConcurrentTest extends ComponentTestCase {
 	@BeforeClass
 	public static void beforeClass() {

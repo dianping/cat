@@ -1,5 +1,6 @@
 package com.dianping.cat.job.sql;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -18,6 +19,7 @@ import com.site.helper.Stringizers;
 @RunWith(JUnit4.class)
 public class SqlJobDataProduceTest extends CatTestCase {
 	@Test
+	@Ignore
 	public void test() throws Exception {
 		MessageStorage storage = lookup(MessageStorage.class, "hdfs");
 		MessageProducer producer = lookup(MessageProducer.class);
