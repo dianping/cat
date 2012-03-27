@@ -52,21 +52,7 @@
 			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
 			<configuration>
 				<baseDir>dump</baseDir>
-				<serverUri>hdfs://192.168.7.43:9000/user/cat</serverUri>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
-			<role-hint>dump</role-hint>
-			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
-			<configuration>
-				<baseDir>dump</baseDir>
-				<serverUri>hdfs://192.168.7.43:9000/user/cat</serverUri>
+				<serverUri></serverUri>
 			</configuration>
 			<requirements>
 				<requirement>
