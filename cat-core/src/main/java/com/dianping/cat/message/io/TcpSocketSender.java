@@ -29,18 +29,14 @@ import com.site.lookup.annotation.Inject;
 public class TcpSocketSender extends Thread implements MessageSender, LogEnabled {
 	@Inject
 	private MessageCodec m_codec;
-	
-	@Inject
-	private MessageQueue m_queue;
-	
-	@Inject
-	private MessageStatistics m_statistics;
-	
-	@Inject
-	private String m_host;
 
 	@Inject
-	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
+	private MessageQueue m_queue;
+
+	@Inject
+	private MessageStatistics m_statistics;
+
+	private InetSocketAddress m_serverAddress;
 
 	private ChannelFactory m_factory;
 
@@ -63,8 +59,8 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 	@Override
 	public void initialize() {
-		if (m_host == null) {
-			throw new RuntimeException("No host was configured for TcpSocketSender!");
+		if (m_serverAddress == null) {
+			throw new RuntimeException("No server address was configured for TcpSocketSender!");
 		}
 
 		ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
@@ -80,17 +76,16 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 		bootstrap.setOption("tcpNoDelay", true);
 		bootstrap.setOption("keepAlive", true);
 
-		InetSocketAddress address = new InetSocketAddress(m_host, m_port);
-		ChannelFuture future = bootstrap.connect(address);
+		ChannelFuture future = bootstrap.connect(m_serverAddress);
 
 		future.awaitUninterruptibly();
 
 		if (!future.isSuccess()) {
-			m_logger.error("Error when connecting to " + address, future.getCause());
+			m_logger.error("Error when connecting to " + m_serverAddress, future.getCause());
 		} else {
 			m_factory = factory;
 			m_future = future;
-			m_logger.info("Connected to CAT server at " + address);
+			m_logger.info("Connected to CAT server at " + m_serverAddress);
 		}
 
 		m_bootstrap = bootstrap;
@@ -108,16 +103,15 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 		m_lastReconnectTime = now;
 
-		InetSocketAddress address = new InetSocketAddress(m_host, m_port);
-		ChannelFuture future = m_bootstrap.connect(address);
+		ChannelFuture future = m_bootstrap.connect(m_serverAddress);
 
 		future.awaitUninterruptibly();
 
 		if (!future.isSuccess()) {
-			m_logger.error("Error when reconnecting to " + address, future.getCause());
+			m_logger.error("Error when reconnecting to " + m_serverAddress, future.getCause());
 		} else {
 			m_future = future;
-			m_logger.info("Reconnected to CAT server at " + address);
+			m_logger.info("Reconnected to CAT server at " + m_serverAddress);
 		}
 	}
 
@@ -179,16 +173,12 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 		m_codec = codec;
 	}
 
-	public void setHost(String host) {
-		m_host = host;
-	}
-
-	public void setPort(int port) {
-		m_port = port;
-	}
-
 	public void setReconnectPeriod(int reconnectPeriod) {
 		m_reconnectPeriod = reconnectPeriod;
+	}
+
+	public void setServerAddress(InetSocketAddress serverAddress) {
+		m_serverAddress = serverAddress;
 	}
 
 	@Override

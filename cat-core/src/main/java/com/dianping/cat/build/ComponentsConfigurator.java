@@ -14,6 +14,7 @@ import com.dianping.cat.message.io.InMemoryReceiver;
 import com.dianping.cat.message.io.InMemorySender;
 import com.dianping.cat.message.io.MessageReceiver;
 import com.dianping.cat.message.io.MessageSender;
+import com.dianping.cat.message.io.TcpSocketHierarchySender;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.io.TcpSocketSender;
 import com.dianping.cat.message.io.TransportManager;
@@ -75,6 +76,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageStatistics.class, "default", "m_statistics") //
 		      .req(MessageCodec.class, "plain-text", "m_codec")//
 		      .req(MessageQueue.class, "default", "m_queue"));
+		all.add(C(MessageSender.class, "tcp-socket-hierarchy", TcpSocketHierarchySender.class) //
+				.is(PER_LOOKUP) //
+				.req(MessageStatistics.class, "default", "m_statistics") //
+				.req(MessageCodec.class, "plain-text", "m_codec")//
+				.req(MessageQueue.class, "default", "m_queue"));
 		all.add(C(MessageReceiver.class, "tcp-socket", TcpSocketReceiver.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageCodec.class, "plain-text"));

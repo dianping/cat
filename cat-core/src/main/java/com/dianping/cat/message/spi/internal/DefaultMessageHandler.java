@@ -40,7 +40,7 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 	public void handle(MessageTree tree) {
 		List<MessageConsumer> consumers = m_registry.getConsumers();
 		int size = consumers.size();
-
+		
 		for (int i = 0; i < size; i++) {
 			MessageConsumer consumer = consumers.get(i);
 

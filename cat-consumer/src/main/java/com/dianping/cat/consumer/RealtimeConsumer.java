@@ -129,12 +129,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("Checkpoint", getClass().getSimpleName());
 
-		t.setStatus(Message.SUCCESS);
-
 		try {
 			for (Map.Entry<String, MessageAnalyzer> e : m_currentAnalyzers.entrySet()) {
 				e.getValue().doCheckpoint();
 			}
+
+			t.setStatus(Message.SUCCESS);
 		} catch (IOException e) {
 			cat.logError(e);
 			t.setStatus(e);

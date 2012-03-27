@@ -164,18 +164,17 @@ public class Handler implements PageHandler<Context>, Initializable {
 	private void showReport(Model model, Payload payload) {
 		try {
 			EventReport report = getReport(payload);
-			if (report == null) {
-				return;
-			}
-			
+
 			if (payload.getPeriod().isFuture()) {
 				model.setLongDate(payload.getCurrentDate());
 			} else {
 				model.setLongDate(payload.getDate());
 			}
 
-			report.accept(m_computer);
-			model.setReport(report);
+			if (report != null) {
+				report.accept(m_computer);
+				model.setReport(report);
+			}
 		} catch (Throwable e) {
 			Cat.getProducer().logError(e);
 			model.setException(e);

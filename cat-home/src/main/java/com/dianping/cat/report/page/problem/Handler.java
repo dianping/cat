@@ -118,13 +118,15 @@ public class Handler implements PageHandler<Context> {
 			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
 			break;
 		case THREAD:
-			report = showSummary(model, payload);
 			String groupName = payload.getGroupName();
 
+			report = showSummary(model, payload);
 			model.setGroupName(groupName);
+
 			if (report != null) {
 				model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
 			}
+
 			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
 			break;
 		case DETAIL:
@@ -162,24 +164,26 @@ public class Handler implements PageHandler<Context> {
 			model.setLongDate(payload.getDate());
 		}
 
-		ProblemReport report = getReport(payload);
-		if (report == null) {
-			return null;
-		}
-		String ip = getIpAddress(report, payload);
-
 		if (period.isCurrent() || period.isFuture()) {
 			Calendar cal = Calendar.getInstance();
 			int minute = cal.get(Calendar.MINUTE);
-			// model.setLastMinute(getLastMinute(report, ip));
+
 			model.setLastMinute(minute);
 		} else {
 			model.setLastMinute(59);
 		}
 
 		model.setHour(getHour(model.getLongDate()));
-		model.setIpAddress(ip);
-		model.setReport(report);
+
+		ProblemReport report = getReport(payload);
+
+		if (report != null) {
+			String ip = getIpAddress(report, payload);
+
+			model.setIpAddress(ip);
+			model.setReport(report);
+		}
+
 		return report;
 	}
 }

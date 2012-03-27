@@ -134,6 +134,27 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.io.MessageSender</role>
+			<role-hint>tcp-socket-hierarchy</role-hint>
+			<implementation>com.dianping.cat.message.io.TcpSocketHierarchySender</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStatistics</role>
+					<field-name>m_statistics</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+					<field-name>m_codec</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageQueue</role>
+					<field-name>m_queue</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.io.MessageReceiver</role>
 			<role-hint>tcp-socket</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketReceiver</implementation>

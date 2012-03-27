@@ -1,5 +1,7 @@
 package com.dianping.cat.message.io;
 
+import java.net.InetSocketAddress;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -42,17 +44,31 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 
 				if (size == 0 || !config.isEnabled()) {
 					m_sender = lookup(MessageSender.class, "in-memory");
-				} else if (size == 1) {
-					TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, "tcp-socket");
-					Server server = servers.get(0);
-
-					sender.setHost(server.getIp());
-					sender.setPort(server.getPort());
-					sender.initialize();
-
-					m_sender = sender;
 				} else {
-					throw new UnsupportedOperationException("Not implemented yet");
+					List<InetSocketAddress> addresses = new ArrayList<InetSocketAddress>();
+
+					for (Server server : servers) {
+						if (server.isEnabled()) {
+							addresses.add(new InetSocketAddress(server.getIp(), server.getPort()));
+						}
+					}
+
+					if (addresses.isEmpty()) {
+						throw new RuntimeException("All servers in configuration are disabled!\r\n" + servers);
+					} else if (addresses.size() == 1) {
+						TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, "tcp-socket");
+
+						sender.setServerAddress(addresses.get(0));
+						sender.initialize();
+						m_sender = sender;
+					} else {
+						TcpSocketHierarchySender sender = (TcpSocketHierarchySender) lookup(MessageSender.class,
+						      "tcp-socket-hierarchy");
+
+						sender.setServerAddresses(addresses);
+						sender.initialize();
+						m_sender = sender;
+					}
 				}
 			} else {
 				throw new IllegalArgumentException(String.format(
