@@ -1,5 +1,7 @@
 package com.dianping.cat.job.hdfs;
 
+import java.io.File;
+
 import org.junit.After;
 import org.junit.Before;
 
@@ -10,6 +12,7 @@ public abstract class CatTestCase extends ComponentTestCase {
 	@Before
 	public void before() throws Exception {
 		Cat.initialize(getContainer(), null);
+		
 		Cat.setup(null);
 	}
 

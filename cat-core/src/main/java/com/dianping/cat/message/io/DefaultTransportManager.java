@@ -16,6 +16,10 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 	private MessageManager m_manager;
 
 	private MessageSender m_sender;
+	
+	public void setSender(MessageSender sender) {
+		this.m_sender = sender;
+	}
 
 	@Override
 	public MessageSender getSender() {
