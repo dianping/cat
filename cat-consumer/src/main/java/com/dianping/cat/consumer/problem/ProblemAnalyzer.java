@@ -91,9 +91,8 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	private Segment findOrCreateSegment(ProblemReport report, MessageTree tree) {
 		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
 		JavaThread thread = machine.findOrCreateThread(tree.getThreadId());
-
 		thread.setGroupName(tree.getThreadGroupName()).setName(tree.getThreadName());
-
+		
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(tree.getMessage().getTimestamp());
 
@@ -184,7 +183,21 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 
 		if (count > 0) {
-			storeMessage(tree);
+			String messageId = tree.getMessageId();
+			Transaction t = Cat.getProducer().newTransaction("MessageProcess", getClass().getSimpleName());
+			t.setStatus(Message.SUCCESS);
+
+			try {
+				Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+				Bucket<MessageTree> remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
+
+				localBucket.storeById(messageId, tree);
+				remoteBucket.storeById(messageId, tree);
+			} catch (IOException e) {
+				m_logger.error("Error when storing message for problem analyzer!", e);
+			} finally {
+				t.complete();
+			}
 		}
 	}
 
