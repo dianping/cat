@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.model.transaction;
 
 import java.util.Date;
+import java.util.List;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
@@ -27,12 +28,20 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 		try {
 			bucket = m_bucketManager.getReportBucket(new Date(date), getName(), "remote");
 
-			String xml = bucket.findById(domain);
+			List<String> xmls = bucket.findAllById(domain);
 
-			if (xml != null) {
-				TransactionReport report = new DefaultXmlParser().parse(xml);
+			TransactionReportMerger merger = null;
 
-				return report;
+			if (xmls != null) {
+				for (String xml : xmls) {
+					TransactionReport model = new DefaultXmlParser().parse(xml);
+					if (merger == null) {
+						merger = new TransactionReportMerger(model);
+					} else {
+						model.accept(merger);
+					}
+				}
+				return merger.getTransactionReport();
 			} else {
 				return null;
 			}

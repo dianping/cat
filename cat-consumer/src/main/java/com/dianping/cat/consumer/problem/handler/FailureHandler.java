@@ -42,7 +42,7 @@ public class FailureHandler implements Handler {
 			if (segment.findEntry(messageId) == null) {
 				Entry entry = new Entry(messageId);
 
-				entry.setStatus(message.getStatus());
+				entry.setStatus(message.getName());
 				entry.setType(ProblemType.ERROR.getName());
 
 				if (message instanceof Transaction) {

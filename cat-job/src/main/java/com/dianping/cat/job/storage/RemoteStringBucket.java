@@ -45,10 +45,18 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public String findById(String domain) throws IOException {
-		try {
-			Report report = m_reportDao.findByPeriodDomainTypeName(m_period, domain, 1, m_name, ReportEntity.READSET_FULL);
+		throw new UnsupportedOperationException();
+	}
 
-			return report.getContent();
+	@Override
+	public List<String> findAllById(String domain) throws IOException {
+		try {
+			List<Report> reports = m_reportDao.findByPeriodDomainTypeName(m_period, domain, 1, m_name, ReportEntity.READSET_FULL);
+			List<String> contents = new ArrayList<String>(reports.size());
+			for (Report r : reports) {
+				contents.add(r.getContent());
+			}
+			return contents;
 		} catch (DalException e) {
 			throw new IOException(String.format("Unable to insert report(name=%s, domain=%s)!", m_name, domain), e);
 		}
@@ -94,7 +102,7 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public boolean storeById(String domain, String data) throws IOException {
-		Transaction t = Cat.getProducer().newTransaction(getClass().getSimpleName(), "store");
+		Transaction t = Cat.getProducer().newTransaction("Bucket", getClass().getSimpleName());
 		Report report = m_reportDao.createLocal();
 
 		report.setName(m_name);

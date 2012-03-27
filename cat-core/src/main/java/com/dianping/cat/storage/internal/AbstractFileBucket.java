@@ -92,6 +92,16 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
+	
+	@Override
+	public boolean storeById(String id, T data) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<String> findAllById(String id) throws IOException {
+		throw new UnsupportedOperationException();
+	}
 
 	protected abstract void encode(T data, ChannelBuffer buf) throws IOException;
 
@@ -265,7 +275,7 @@ public abstract class AbstractFileBucket<T> implements Bucket<T>, LogEnabled {
 		}
 
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction(getClass().getSimpleName(), "store");
+		Transaction t = cat.newTransaction("Bucket", getClass().getSimpleName());
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 		String attributes = id + "\t" + Joiners.by('\t').join(tags) + "\n";
 		byte[] firstLine;

@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.model.event;
 
 import java.util.Date;
+import java.util.List;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlParser;
@@ -27,12 +28,20 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 		try {
 			bucket = m_bucketManager.getReportBucket(new Date(date), getName(), "remote");
 
-			String xml = bucket.findById(domain);
+			List<String> xmls = bucket.findAllById(domain);
 
-			if (xml != null) {
-				EventReport report = new DefaultXmlParser().parse(xml);
+			EventReportMerger merger = null;
 
-				return report;
+			if (xmls != null) {
+				for (String xml : xmls) {
+					EventReport model = new DefaultXmlParser().parse(xml);
+					if (merger == null) {
+						merger = new EventReportMerger(model);
+					} else {
+						model.accept(merger);
+					}
+				}
+				return merger.getEventReport();
 			} else {
 				return null;
 			}

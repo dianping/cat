@@ -1,11 +1,11 @@
 package com.dianping.cat.report.page.ip;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
 	private IpReport m_report;
@@ -36,11 +36,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
-	public Set<String> getDomains() {
+	public List<String> getDomains() {
 		if (m_report == null) {
-			return Collections.emptySet();
+			return new ArrayList<String>();
 		} else {
-			return m_report.getAllDomains().getDomains();
+			return StringSortHelper.sortDomain(m_report.getAllDomains().getDomains());
 		}
 	}
 

@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -93,8 +91,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	private Segment findOrCreateSegment(ProblemReport report, MessageTree tree) {
 		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
 		JavaThread thread = machine.findOrCreateThread(tree.getThreadId());
-		Calendar cal = Calendar.getInstance();
 
+		thread.setGroupName(tree.getThreadGroupName()).setName(tree.getThreadName());
+
+		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(tree.getMessage().getTimestamp());
 
 		int minute = cal.get(Calendar.MINUTE);
@@ -113,23 +113,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 
 		return reports;
-	}
-
-	public List<String> getDomains() {
-		List<String> domains = new ArrayList<String>(m_reports.keySet());
-
-		Collections.sort(domains, new Comparator<String>() {
-			@Override
-			public int compare(String d1, String d2) {
-				if (d1.equals("Cat")) {
-					return 1;
-				}
-
-				return d1.compareTo(d2);
-			}
-		});
-
-		return domains;
 	}
 
 	public ProblemReport getReport(String domain) {

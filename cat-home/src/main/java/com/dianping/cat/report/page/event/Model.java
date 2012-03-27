@@ -1,12 +1,11 @@
 package com.dianping.cat.report.page.event;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
 	private EventReport m_report;
@@ -31,13 +30,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	@Override
-   public String getDomain() {
+	public String getDomain() {
 		if (m_report == null) {
 			return getDisplayDomain();
 		} else {
 			return m_report.getDomain();
 		}
-   }
+	}
 
 	// required by report tag
 	@Override
@@ -45,14 +44,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			List<String> result = new ArrayList<String>();
-			Set<String> domains = m_report.getDomains();
-			
-			for (String domain : domains) {
-				result.add(domain);
-			}
-			Collections.sort(result);
-			return result;
+			return StringSortHelper.sortDomain(m_report.getDomains());
 		}
 	}
 

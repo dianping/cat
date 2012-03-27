@@ -67,14 +67,13 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		count += helper.table1(buf);
 		count += helper.crlf(buf);
-		// count += encodeHeader(tree, buf);
+		if (m_showNav) {
+			count += encodeFooter(tree, buf);
+		}
+		count += encodeHeader(tree, buf);
 
 		if (tree.getMessage() != null) {
 			count += encodeMessage(tree.getMessage(), buf, 0, new LineCounter());
-		}
-
-		if (m_showNav) {
-			count += encodeFooter(tree, buf);
 		}
 
 		count += helper.table2(buf);
@@ -87,20 +86,18 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		String uri = "/cat/r/m/" + m_builder.getLogViewPath(tree.getMessageId());
 
 		count += helper.tr1(buf, "nav");
-		count += helper.td1(buf, "colspan=\"2\" align=\"left\"");
+		count += helper.td1(buf, "colspan=\"4\" align=\"left\"");
 		count += helper.nbsp(buf, 3);
 		count += helper.write(buf, "<a href=\"");
 		count += helper.write(buf, uri);
 		count += helper.write(buf, "?tag1=t:");
 		count += helper.write(buf, tree.getThreadId());
-		count += helper.write(buf, "\">&lt;&lt;&lt; Thread</a>");
-		count += helper.td2(buf);
-		count += helper.td1(buf, "colspan=\"2\" align=\"right\"");
+		count += helper.write(buf, "\">&lt;&lt;&lt; Thread &nbsp;&nbsp;</a>");
 		count += helper.write(buf, "<a href=\"");
 		count += helper.write(buf, uri);
 		count += helper.write(buf, "?tag2=t:");
 		count += helper.write(buf, tree.getThreadId());
-		count += helper.write(buf, "\">Thread &gt;&gt;&gt;</a>");
+		count += helper.write(buf, "\"> &nbsp;&nbsp;Thread &gt;&gt;&gt;</a>");
 		count += helper.nbsp(buf, 3);
 		count += helper.td2(buf);
 		count += helper.tr2(buf);
@@ -111,22 +108,33 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
 		BufferHelper helper = m_bufferHelper;
-		int count = 0;
+//		int count = 0;
 
-		count += helper.tr1(buf, null);
-		count += helper.td(buf, ID);
-		count += helper.td(buf, tree.getDomain());
-		count += helper.td(buf, tree.getHostName());
-		count += helper.td(buf, tree.getIpAddress());
-		count += helper.td(buf, tree.getThreadId());
-		count += helper.td(buf, tree.getThreadName());
-		count += helper.td(buf, tree.getMessageId());
-		count += helper.td(buf, tree.getParentMessageId());
-		count += helper.td(buf, tree.getRootMessageId());
-		count += helper.td(buf, tree.getSessionToken());
-		count += helper.tr2(buf);
-		count += helper.crlf(buf);
+//		count += helper.tr1(buf,"header");
+//		count += helper.td(buf, ID);
+//		count += helper.td(buf, tree.getDomain());
+//		count += helper.td(buf, tree.getHostName());
+//		count += helper.td(buf, tree.getIpAddress());
+//		count += helper.td(buf, tree.getThreadGroupName());
+//		count += helper.td(buf, tree.getThreadId());
+//		count += helper.td(buf, tree.getThreadName());
+//		count += helper.td(buf, tree.getMessageId());
+//		count += helper.td(buf, tree.getParentMessageId());
+//		count += helper.td(buf, tree.getRootMessageId());
+//		count += helper.td(buf, tree.getSessionToken());
+//		count += helper.tr2(buf);
+//		count += helper.crlf(buf);
 
+		StringBuilder sb = new StringBuilder();
+		sb.append("<tr class=\"header\" ><td colspan=5>");
+		sb.append(ID).append(" ").append(tree.getDomain()).append(" ");
+		sb.append(tree.getHostName()).append(" ").append(tree.getIpAddress()).append(" ");
+		sb.append(tree.getThreadGroupName()).append(" ").append(tree.getThreadId()).append(" ");
+		sb.append(tree.getThreadName()).append(" ").append(tree.getMessageId()).append(" ");
+		sb.append(tree.getParentMessageId()).append(" ").append(tree.getRootMessageId()).append(" ");
+		sb.append(tree.getSessionToken()).append(" ");
+		sb.append("</td></tr>");
+		int count = helper.write(buf,sb.toString());
 		return count;
 	}
 
@@ -402,7 +410,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 				return bytes.length;
 			}
 		}
-
+		
 		public int tr2(ChannelBuffer buf) {
 			buf.writeBytes(TR2);
 			return TR2.length;

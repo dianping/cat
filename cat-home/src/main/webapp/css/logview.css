@@ -34,3 +34,10 @@ tr.link td {
 .error {
 	color: red;
 }
+
+
+.header{
+	font-size: small;
+	white-space: nowrap;
+	color: white;
+}
