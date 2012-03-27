@@ -1,7 +1,6 @@
 package com.dianping.cat.job.hdfs;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -13,6 +12,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.configuration.LocalIP;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
@@ -90,7 +90,7 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 		private void handle(MessageTree tree) {
 			try {
 				String tmp = m_builder.getMessagePath(tree.getDomain(), new Date(tree.getMessage().getTimestamp()));
-				String ipAddress = InetAddress.getLocalHost().getHostAddress();
+				String ipAddress = LocalIP.getAddress();
 				String path = tmp + "-" + ipAddress;
 				OutputChannel channel = m_manager.openChannel(path, false);
 				int length = channel.write(tree);

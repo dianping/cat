@@ -1,7 +1,6 @@
 package com.dianping.cat.job.storage;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -13,6 +12,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.LocalIP;
 import com.dianping.cat.job.hdfs.InputChannel;
 import com.dianping.cat.job.hdfs.InputChannelManager;
 import com.dianping.cat.job.hdfs.OutputChannel;
@@ -133,10 +133,8 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
-		String ipAddress = InetAddress.getLocalHost().getHostAddress();
+		String ipAddress = LocalIP.getAddress();
 		String logicalPath = m_pathBuilder.getMessagePath(name, timestamp);
-
-		// TODO make it lazy
 		m_path = logicalPath + "-" + ipAddress + "-" + System.currentTimeMillis();
 		m_outputChannel = m_outputChannelManager.openChannel(m_path, false);
 	}
