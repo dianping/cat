@@ -1,12 +1,10 @@
 package com.dianping.cat.status;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.LocalIP;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MilliSecondTimer;
@@ -26,11 +24,7 @@ public class StatusUpdateTask implements Runnable, Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		try {
-			m_ipAddress = InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			// ignore it
-		}
+			m_ipAddress = LocalIP.getAddress();
 	}
 
 	@Override

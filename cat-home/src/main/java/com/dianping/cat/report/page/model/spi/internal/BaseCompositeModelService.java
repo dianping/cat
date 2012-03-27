@@ -13,6 +13,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.LocalIP;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -129,7 +130,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		String localHost = null;
 
 		try {
-			localAddress = InetAddress.getLocalHost().getHostAddress();
+			localAddress = LocalIP.getAddress();
 			localHost = InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException e) {
 			// ignore it

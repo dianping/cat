@@ -10,6 +10,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.LocalIP;
 import com.dianping.cat.configuration.model.entity.Config;
 import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.message.Message;
@@ -154,12 +155,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_domain = firstDomain == null ? new Domain("unknown").setEnabled(false) : firstDomain;
 
 		try {
-			InetAddress localHost = InetAddress.getLocalHost();
-
-			m_hostName = localHost.getHostName();
+			m_hostName = InetAddress.getLocalHost().getHostName();
 
 			if (m_domain.getIp() == null) {
-				m_domain.setIp(localHost.getHostAddress());
+				m_domain.setIp(LocalIP.getAddress());
 			}
 		} catch (UnknownHostException e) {
 			m_logger.warn("Unable to get local host!", e);
@@ -236,7 +235,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			String groupName = thread.getThreadGroup().getName();
 
 			m_tree.setThreadGroupName(groupName);
-			m_tree.setThreadId(thread.getId()+"");
+			m_tree.setThreadId(thread.getId() + "");
 			m_tree.setThreadName(thread.getName());
 
 			m_tree.setDomain(domain);
