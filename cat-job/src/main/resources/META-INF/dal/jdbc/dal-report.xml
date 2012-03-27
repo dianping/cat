@@ -42,6 +42,14 @@
 					WHERE <FIELD name='message-id'/> <IN> ${message-ids} </IN>
 				]]></statement>
 			</query>
+			<query name="find-by-message-id" type="SELECT" multiple="false">
+				<param name="message-id" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='message-id'/> = ${message-id} </IN>
+				]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 	<entity name="report" table="report" alias="r">

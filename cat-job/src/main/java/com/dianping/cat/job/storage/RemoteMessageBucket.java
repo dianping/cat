@@ -73,7 +73,7 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 	@Override
 	public MessageTree findById(String id) throws IOException {
 		try {
-			Logview logview = m_logviewDao.findByPK(id, LogviewEntity.READSET_FULL);
+			Logview logview = m_logviewDao.findByMessageId(id, LogviewEntity.READSET_FULL);
 			MessageTree tree = readMessageTree(logview);
 
 			return tree;

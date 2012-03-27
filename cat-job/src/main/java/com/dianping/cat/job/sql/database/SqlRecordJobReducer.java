@@ -21,7 +21,7 @@ public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 			SqlReportRecord row = dao.createLocal();
 			row.setDomain(sql.getDomain());
 			row.setTotalCount(sql.getTotalCount());
-			row.setFailures(sql.getFailureCount());
+			row.setFailureCount(sql.getFailureCount());
 			row.setLongSqls(sql.getLongCount());
 			row.setAvg2Value(sql.getAvg2());
 			row.setSumValue(sql.getSum());

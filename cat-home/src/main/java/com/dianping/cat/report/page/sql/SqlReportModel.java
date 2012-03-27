@@ -11,7 +11,7 @@ public class SqlReportModel {
 	}
 
 	public double getFailurePercent() {
-		return (double)m_record.getFailures() / (double)m_record.getTotalCount();
+		return (double)m_record.getFailureCount() / (double)m_record.getTotalCount();
 	}
 
 	public double getLongPercent() {
