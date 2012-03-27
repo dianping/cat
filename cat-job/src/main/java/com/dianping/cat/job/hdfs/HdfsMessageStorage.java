@@ -90,7 +90,6 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 		private void handle(MessageTree tree) {
 			try {
 				String tmp = m_builder.getMessagePath(tree.getDomain(), new Date(tree.getMessage().getTimestamp()));
-				//String ipAddress = InetAddress.getLocalHost().getHostAddress();
 				String ipAddress = LocalIP.getAddress();
 				String path = tmp + "-" + ipAddress;
 				OutputChannel channel = m_manager.openChannel(path, false);

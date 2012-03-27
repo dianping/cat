@@ -235,7 +235,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			String groupName = thread.getThreadGroup().getName();
 
 			m_tree.setThreadGroupName(groupName);
-			m_tree.setThreadId(thread.getId() + "");
+			m_tree.setThreadId(thread.getId()+"");
 			m_tree.setThreadName(thread.getName());
 
 			m_tree.setDomain(domain);

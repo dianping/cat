@@ -133,11 +133,8 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
-		//String ipAddress = InetAddress.getLocalHost().getHostAddress();
 		String ipAddress = LocalIP.getAddress();
 		String logicalPath = m_pathBuilder.getMessagePath(name, timestamp);
-
-		// TODO make it lazy
 		m_path = logicalPath + "-" + ipAddress + "-" + System.currentTimeMillis();
 		m_outputChannel = m_outputChannelManager.openChannel(m_path, false);
 	}
@@ -169,9 +166,9 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 		if (m_lruCache.containsKey(messageId)) {
 			return false;
 		}
-		
+
 		Transaction t = Cat.getProducer().newTransaction("Bucket", getClass().getSimpleName());
-		
+
 		m_lruCache.put(messageId, messageId);
 
 		int offset = m_outputChannel.getSize();
