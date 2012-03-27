@@ -90,16 +90,12 @@ public class Handler implements PageHandler<Context> {
 
 		// init session
 		HttpSession session = ctx.getHttpServletRequest().getSession();
-		String sessionIp = (String) session.getAttribute("ip");
 		String sessionDomain = (String) session.getAttribute("domain");
 		String sessionDate = (String) session.getAttribute("date");
-		if (StringUtils.isEmpty(payload.getIpAddress()) && sessionIp != null) {
-			payload.setIpAddress(sessionIp);
-		}
 		if (StringUtils.isEmpty(payload.getDomain()) && sessionDomain != null) {
 			payload.setDomain(sessionDomain);
 		}
-		if (payload.getRealDate() == 0 && sessionIp != null) {
+		if (payload.getRealDate() == 0 && sessionDate != null) {
 			payload.setDate(sessionDate);
 		}
 
@@ -135,7 +131,6 @@ public class Handler implements PageHandler<Context> {
 		}
 		// reset session
 		session.setAttribute("domain", model.getDomain());
-		session.setAttribute("ip", model.getIpAddress());
 		session.setAttribute("date", model.getDate());
 
 		m_jspViewer.view(ctx, model);
