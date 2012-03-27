@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="status" root="true">
+    <entity-ref name="runtime" />
+    <entity-ref name="os" />
+    <entity-ref name="disk-space" />
+    <entity-ref name="memory" />
+    <entity-ref name="thread" />
+    <entity-ref name="message" />
+  </entity>
+  <entity name="runtime">
+    <attribute name="start-time" value-type="int" />
+    <attribute name="up-time" value-type="int" />
+  </entity>
+  <entity name="os">
+    <attribute name="name" value-type="String" />
+    <attribute name="arch" value-type="String" />
+    <attribute name="version" value-type="String" />
+    <attribute name="available-processors" value-type="int" />
+    <attribute name="system-load-average" value-type="double" />
+    <attribute name="process-time" value-type="int" />
+    <attribute name="total-physical-memory" value-type="int" />
+    <attribute name="free-physical-memory" value-type="int" />
+    <attribute name="committed-virtual-memory" value-type="int" />
+    <attribute name="total-swap-space" value-type="int" />
+    <attribute name="free-swap-space" value-type="int" />
+  </entity>
+  <entity name="disk-space">
+    <attribute name="total" value-type="int" />
+    <attribute name="free" value-type="int" />
+    <attribute name="usable" value-type="int" />
+  </entity>
+  <entity name="memory">
+    <attribute name="total" value-type="int" />
+    <attribute name="free" value-type="int" />
+    <attribute name="heap-usage" value-type="int" />
+    <attribute name="non-heap-usage" value-type="int" />
+    <entity-ref name="gc" />
+  </entity>
+  <entity name="gc">
+    <attribute name="count" value-type="int" />
+    <attribute name="time" value-type="int" />
+  </entity>
+  <entity name="thread">
+    <attribute name="count" value-type="int" />
+    <attribute name="daemon-count" value-type="int" />
+    <attribute name="peek-count" value-type="int" />
+    <attribute name="total-started-count" value-type="int" />
+  </entity>
+  <entity name="message">
+    <attribute name="produced" value-type="int" />
+    <attribute name="overflowed" value-type="int" />
+    <attribute name="bytes" value-type="int" />
+  </entity>
+</model>
+

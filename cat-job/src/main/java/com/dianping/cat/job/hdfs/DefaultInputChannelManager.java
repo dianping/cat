@@ -75,6 +75,8 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 	}
 
 	public void setServerUri(String serverUri) {
-		m_serverUri = URI.create(serverUri);
+		if (serverUri != null && serverUri.length() > 0) {
+			m_serverUri = URI.create(serverUri);
+		}
 	}
 }

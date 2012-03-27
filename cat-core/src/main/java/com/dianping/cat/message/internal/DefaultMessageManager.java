@@ -17,11 +17,19 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.status.StatusUpdateTask;
 import com.site.lookup.ContainerHolder;
+import com.site.lookup.annotation.Inject;
 
 public class DefaultMessageManager extends ContainerHolder implements MessageManager, LogEnabled {
+	@Inject
+	private MessageStatistics m_statistics;
+
+	private StatusUpdateTask m_statusUpdateTask;
+
 	private MessageIdFactory m_factory;
 
 	private TransportManager m_manager;
@@ -76,6 +84,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			if (sender != null) {
 				sender.send(tree);
+
+				if (m_statistics != null) {
+					m_statistics.onSending(tree);
+				}
 			}
 		}
 	}
@@ -153,14 +165,18 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			m_logger.warn("Unable to get local host!", e);
 		}
 
+		// initialize milli-second resolution level timer
+		MilliSecondTimer.initialize();
+
 		m_manager = lookup(TransportManager.class);
 		m_factory = lookup(MessageIdFactory.class);
+		m_statusUpdateTask = lookup(StatusUpdateTask.class);
 
 		// initialize domain and ip address
 		m_factory.initialize(m_domain.getId());
 
-		// initialize milli-second resolution level timer
-		MilliSecondTimer.initialize();
+		// start status update task
+		new Thread(m_statusUpdateTask).start();
 	}
 
 	@Override

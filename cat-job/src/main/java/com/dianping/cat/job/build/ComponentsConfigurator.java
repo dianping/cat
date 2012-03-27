@@ -30,7 +30,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-		String serverUri = property("serve-uri", "hdfs://192.168.7.43:9000/user/cat");
+		String serverUri = property("server-uri", "hdfs://192.168.7.43:9000/user/cat");
 
 		all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
 		      .req(MessageCodec.class, "plain-text") //

@@ -1,0 +1,12 @@
+<event-report domain="Cat" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
+   <domain>Cat</domain>
+   <type id="URL" totalCount="11" failCount="0" failPercent="0.00">
+      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
+   </type>
+   <type id="MVC" totalCount="33" failCount="0" failPercent="0.00">
+      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
+   </type>
+   <type id="NEW1" totalCount="33" failCount="0" failPercent="0.00">
+      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
+   </type>
+</event-report>

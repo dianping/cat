@@ -17,8 +17,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@PathMeta("path")
 	private String[] m_path;
 
-	@FieldMeta("ip")
-	private String m_ip;
+	@FieldMeta("type")
+	private String m_type;
+	@FieldMeta("name")
+	private String m_name;
 
 	@Override
 	public Action getAction() {
@@ -31,10 +33,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		} else {
 			return null;
 		}
-	}
-
-	public String getIp() {
-		return m_ip;
 	}
 
 	@Override
@@ -58,12 +56,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
-	public void setAction(Action action) {
-		m_action = action;
-	}
-
-	public void setIp(String ip) {
-		m_ip = ip;
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.XML);
 	}
 
 	@Override
@@ -75,7 +69,26 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_path = path;
 	}
 
+	public String getType() {
+   	return m_type;
+   }
+
+	public void setType(String type) {
+   	m_type = type;
+   }
+
+	public String getName() {
+   	return m_name;
+   }
+
+	public void setName(String name) {
+   	m_name = name;
+   }
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.XML;
+		}
 	}
 }

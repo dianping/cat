@@ -22,21 +22,25 @@ import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class TcpSocketSender extends Thread implements MessageSender, LogEnabled {
 	@Inject
+	private MessageCodec m_codec;
+	
+	@Inject
+	private MessageQueue m_queue;
+	
+	@Inject
+	private MessageStatistics m_statistics;
+	
+	@Inject
 	private String m_host;
 
 	@Inject
 	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
-
-	@Inject
-	private MessageCodec m_codec;
-
-	@Inject
-	private MessageQueue m_queue;
 
 	private ChannelFactory m_factory;
 
@@ -91,6 +95,7 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 		m_bootstrap = bootstrap;
 
+		this.setName("TcpSocketSender");
 		this.start();
 	}
 
@@ -142,7 +147,10 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 		boolean result = m_queue.offer(tree);
 
 		if (!result) {
-			System.out.println("Message queue is full in tcp socket sender!");
+			if (m_statistics != null) {
+				m_statistics.onOverflowed(tree);
+			}
+
 			m_logger.error("Message queue is full in tcp socket sender!");
 		}
 	}
@@ -156,7 +164,14 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(10 * 1024); // 10K
 
 			m_codec.encode(tree, buf);
+
+			int size = buf.readableBytes();
+
 			m_future.getChannel().write(buf);
+
+			if (m_statistics != null) {
+				m_statistics.onBytes(size);
+			}
 		}
 	}
 

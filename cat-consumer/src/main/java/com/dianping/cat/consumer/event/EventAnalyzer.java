@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -51,7 +50,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	private long m_duration;
 
-	void closeMessageBuckets(Set<String> set) {
+	private boolean m_local;
+
+	void closeMessageBuckets() {
 		Date timestamp = new Date(m_startTime);
 
 		for (String domain : m_reports.keySet()) {
@@ -60,7 +61,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 			try {
 				localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
-				remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
+
+				if (!m_local) {
+					remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
+				}
 			} catch (Exception e) {
 				m_logger.error(String.format("Error when getting message bucket of %s!", timestamp), e);
 			} finally {
@@ -78,7 +82,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Override
 	public void doCheckpoint() throws IOException {
 		storeReports(m_reports.values());
-		closeMessageBuckets(m_reports.keySet());
+		closeMessageBuckets();
 	}
 
 	@Override
@@ -188,34 +192,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 		// the message is required by some events
 		if (count > 0) {
-			String messageId = tree.getMessageId();
-
-			try {
-				Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
-				Bucket<MessageTree> remoteBucket = m_bucketManager
-				      .getMessageBucket(new Date(m_startTime), domain, "remote");
-
-				localBucket.storeById(messageId, tree);
-				remoteBucket.storeById(messageId, tree);
-			} catch (IOException e) {
-				m_logger.error("Error when storing message for event analyzer!", e);
-			}
+			storeMessage(tree);
 		}
-	}
-
-	int processTransaction(EventReport report, MessageTree tree, Transaction t) {
-		List<Message> children = t.getChildren();
-		int count = 0;
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				count += processTransaction(report, tree, (Transaction) child);
-			} else if (child instanceof Event) {
-				count += processEvent(report, tree, (Event) child);
-			}
-		}
-
-		return count;
 	}
 
 	int processEvent(EventReport report, MessageTree tree, Event event) {
@@ -272,12 +250,31 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
+	int processTransaction(EventReport report, MessageTree tree, Transaction t) {
+		List<Message> children = t.getChildren();
+		int count = 0;
+
+		for (Message child : children) {
+			if (child instanceof Transaction) {
+				count += processTransaction(report, tree, (Transaction) child);
+			} else if (child instanceof Event) {
+				count += processEvent(report, tree, (Event) child);
+			}
+		}
+
+		return count;
+	}
+
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
 		m_extraTime = extraTime;
 		m_startTime = startTime;
 		m_duration = duration;
 
 		loadReports();
+	}
+
+	public void setLocal(boolean local) {
+		m_local = local;
 	}
 
 	@Override
@@ -287,7 +284,27 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 
 		storeReports(reports);
-		closeMessageBuckets(m_reports.keySet());
+		closeMessageBuckets();
+	}
+
+	void storeMessage(MessageTree tree) {
+		String messageId = tree.getMessageId();
+		String domain = tree.getDomain();
+
+		try {
+			Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+
+			localBucket.storeById(messageId, tree);
+
+			if (!m_local) {
+				Bucket<MessageTree> remoteBucket = m_bucketManager
+				      .getMessageBucket(new Date(m_startTime), domain, "remote");
+
+				remoteBucket.storeById(messageId, tree);
+			}
+		} catch (IOException e) {
+			m_logger.error("Error when storing message for event analyzer!", e);
+		}
 	}
 
 	void storeReports(Collection<EventReport> reports) {

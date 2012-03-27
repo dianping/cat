@@ -24,13 +24,16 @@ import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.consumer.DummyConsumer;
 import com.dianping.cat.message.spi.consumer.DumpToHtmlConsumer;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
+import com.dianping.cat.message.spi.internal.DefaultMessageStatistics;
 import com.dianping.cat.message.spi.internal.DefaultMessageStorage;
+import com.dianping.cat.status.StatusUpdateTask;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -45,7 +48,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageReceiver.class, "in-memory", InMemoryReceiver.class) //
 		      .req(InMemoryQueue.class));
 
-		all.add(C(MessageManager.class, DefaultMessageManager.class));
+		all.add(C(MessageManager.class, DefaultMessageManager.class) //
+		      .req(MessageStatistics.class));
 		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
 		      .req(MessageManager.class, MessageIdFactory.class));
 		all.add(C(MessageIdFactory.class));
@@ -63,11 +67,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageConsumer.class, new String[] { DummyConsumer.ID }, "m_consumers"));
 
 		all.add(C(MessageQueue.class, DefaultMessageQueue.class) //
-				.config(E("size").value("100000")) //
-				.is(PER_LOOKUP));
+		      .config(E("size").value("100000")) //
+		      .is(PER_LOOKUP));
 
 		all.add(C(MessageSender.class, "tcp-socket", TcpSocketSender.class) //
 		      .is(PER_LOOKUP) //
+		      .req(MessageStatistics.class, "default", "m_statistics") //
 		      .req(MessageCodec.class, "plain-text", "m_codec")//
 		      .req(MessageQueue.class, "default", "m_queue"));
 		all.add(C(MessageReceiver.class, "tcp-socket", TcpSocketReceiver.class) //
@@ -78,6 +83,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class) //
 		      .req(MessageManager.class, MessageConsumerRegistry.class));
+		all.add(C(MessageStatistics.class, DefaultMessageStatistics.class));
+		all.add(C(StatusUpdateTask.class) //
+		      .req(MessageStatistics.class));
 
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());

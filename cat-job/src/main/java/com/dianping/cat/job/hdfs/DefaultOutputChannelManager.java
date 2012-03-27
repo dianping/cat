@@ -22,7 +22,8 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, Initializable, LogEnabled {
+public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, Initializable,
+      LogEnabled {
 	@Inject
 	private MessagePathBuilder m_builder;
 
@@ -143,6 +144,8 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 	}
 
 	public void setServerUri(String serverUri) {
-		m_serverUri = URI.create(serverUri);
+		if (serverUri != null && serverUri.length() > 0) {
+			m_serverUri = URI.create(serverUri);
+		}
 	}
 }

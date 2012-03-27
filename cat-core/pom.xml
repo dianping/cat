@@ -42,13 +42,24 @@
 				<version>1.0.13</version>
 				<executions>
 					<execution>
-						<id>default-cli</id>
+						<id>generate configuration model</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>dal-model</goal>
 						</goals>
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/model/config-manifest.xml
+							</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-cli</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml
 							</manifest>
 						</configuration>
 					</execution>

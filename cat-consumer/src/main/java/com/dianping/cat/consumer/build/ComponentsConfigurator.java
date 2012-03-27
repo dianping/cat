@@ -27,7 +27,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
+		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class) //
+		      .config(E("local").value("true")));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class).config(E("consumerId").value("realtime") //
@@ -48,9 +49,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, MessagePathBuilder.class));
-		
+
 		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
-				.req(BucketManager.class, MessagePathBuilder.class));
+		      .req(BucketManager.class, MessagePathBuilder.class));
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
 

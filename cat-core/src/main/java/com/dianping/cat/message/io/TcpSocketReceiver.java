@@ -154,8 +154,6 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 				return null;
 			}
 
-			// TODO filter
-
 			return buffer.readBytes(length);
 		}
 	}
@@ -168,7 +166,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent event) {
-			event.getCause().printStackTrace();
+			m_logger.warn(event.getChannel().toString(), event.getCause());
 
 			event.getChannel().close();
 		}

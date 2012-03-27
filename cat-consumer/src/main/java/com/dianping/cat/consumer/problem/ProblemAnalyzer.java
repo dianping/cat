@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -51,7 +50,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private long m_duration;
 
-	void closeMessageBuckets(Set<String> set) {
+	private boolean m_local;
+
+	void closeMessageBuckets() {
 		Date timestamp = new Date(m_startTime);
 
 		for (String domain : m_reports.keySet()) {
@@ -60,7 +61,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 			try {
 				localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
-				remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
+
+				if (!m_local) {
+					remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
+				}
 			} catch (Exception e) {
 				m_logger.error(String.format("Error when getting message bucket of %s!", timestamp), e);
 			} finally {
@@ -78,7 +82,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	@Override
 	public void doCheckpoint() throws IOException {
 		storeReports(m_reports.values());
-		closeMessageBuckets(m_reports.keySet());
+		closeMessageBuckets();
 	}
 
 	@Override
@@ -197,18 +201,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 
 		if (count > 0) {
-			String messageId = tree.getMessageId();
-
-			try {
-				Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
-				Bucket<MessageTree> remoteBucket = m_bucketManager
-				      .getMessageBucket(new Date(m_startTime), domain, "remote");
-
-				localBucket.storeById(messageId, tree);
-				remoteBucket.storeById(messageId, tree);
-			} catch (IOException e) {
-				m_logger.error("Error when storing message for problem analyzer!", e);
-			}
+			storeMessage(tree);
 		}
 	}
 
@@ -220,6 +213,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		loadReports();
 	}
 
+	public void setLocal(boolean local) {
+		m_local = local;
+	}
+
 	@Override
 	protected void store(List<ProblemReport> reports) {
 		if (reports == null || reports.size() == 0) {
@@ -227,7 +224,27 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 
 		storeReports(reports);
-		closeMessageBuckets(m_reports.keySet());
+		closeMessageBuckets();
+	}
+
+	void storeMessage(MessageTree tree) {
+		String messageId = tree.getMessageId();
+		String domain = tree.getDomain();
+
+		try {
+			Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+
+			localBucket.storeById(messageId, tree);
+
+			if (!m_local) {
+				Bucket<MessageTree> remoteBucket = m_bucketManager
+				      .getMessageBucket(new Date(m_startTime), domain, "remote");
+
+				remoteBucket.storeById(messageId, tree);
+			}
+		} catch (IOException e) {
+			m_logger.error("Error when storing message for problem analyzer!", e);
+		}
 	}
 
 	void storeReports(Collection<ProblemReport> reports) {
@@ -239,7 +256,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 		try {
 			localBucket = m_bucketManager.getReportBucket(timestamp, "problem", "local");
-			remoteBucket = m_bucketManager.getReportBucket(timestamp, "problem", "remote");
+
+			if (!m_local) {
+				remoteBucket = m_bucketManager.getReportBucket(timestamp, "problem", "remote");
+			}
 
 			// delete old one, not append mode
 			localBucket.deleteAndCreate();
@@ -249,7 +269,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				String domain = report.getDomain();
 
 				localBucket.storeById(domain, xml);
-				remoteBucket.storeById(domain, xml);
+
+				if (!m_local) {
+					remoteBucket.storeById(domain, xml);
+				}
 			}
 
 			t.setStatus(Message.SUCCESS);

@@ -27,6 +27,11 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageManager</role>
 			<implementation>com.dianping.cat.message.internal.DefaultMessageManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStatistics</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.MessageProducer</role>
@@ -114,6 +119,10 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStatistics</role>
+					<field-name>m_statistics</field-name>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 					<field-name>m_codec</field-name>
@@ -154,6 +163,19 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.message.spi.MessageStatistics</role>
+			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageStatistics</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.status.StatusUpdateTask</role>
+			<implementation>com.dianping.cat.status.StatusUpdateTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageStatistics</role>
 				</requirement>
 			</requirements>
 		</component>
