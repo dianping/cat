@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -127,6 +128,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void testMessageTree() throws Exception {
 		DefaultMessageTree tree = newMessageTree();
 		long timestamp = 1325489621987L;

@@ -41,10 +41,13 @@ public class GroupLevelInfo {
 		params.put("minute", Integer.toString(minute));
 
 		StringBuilder sb = new StringBuilder().append("<td>");
-		String minuteStr = Integer.toString(minute);
+		String minuteStr = m_model.getDisplayHour() + ":";
 		if (minute < 10) {
-			minuteStr = "0" + minute;
+			minuteStr = minuteStr + "0" + Integer.toString(minute);
+		} else {
+			minuteStr = minuteStr + Integer.toString(minute);
 		}
+		
 		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
 		sb.append("</td>");
 

@@ -10,7 +10,10 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.io.DefaultTransportManager;
 import com.dianping.cat.message.io.InMemoryQueue;
+import com.dianping.cat.message.io.MessageSender;
+import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Stringizers;
@@ -21,6 +24,9 @@ public class SqlJobDataProduceTest extends CatTestCase {
 	public void test() throws Exception {
 		MessageStorage storage = lookup(MessageStorage.class, "hdfs");
 		MessageProducer producer = lookup(MessageProducer.class);
+		DefaultTransportManager transport = (DefaultTransportManager) lookup(TransportManager.class);
+		MessageSender messageSender = lookup(MessageSender.class, "in-memory");
+		transport.setSender(messageSender);
 		InMemoryQueue queue = lookup(InMemoryQueue.class);
 
 		long currentHour = System.currentTimeMillis() - System.currentTimeMillis() / (60 * 60 * 1000);
@@ -46,14 +52,13 @@ public class SqlJobDataProduceTest extends CatTestCase {
 					String sqlStatement = "select * from	table where id=\"1\"\n	order by id	desc";
 					Transaction sqlTran = producer.newTransaction("SQL", sqlName);
 
-					producer.logEvent("SQL.PARAM", sqlParaMeter, Transaction.SUCCESS,
-					      Stringizers.forJson().compact().from(sqlParaMeter));
+					producer.logEvent("SQL.PARAM", sqlParaMeter, Transaction.SUCCESS, Stringizers.forJson().compact().from(sqlParaMeter));
 					sqlTran.addData(sqlStatement);
 
 					sqlTran.complete();
 
 					DefaultTransaction sqlInternalTran = (DefaultTransaction) sqlTran;
-					sqlInternalTran.setDuration((long)Math.pow(2, j % 12));
+					sqlInternalTran.setDuration((long) Math.pow(2, j % 12));
 					if (j % 2 == 1) {
 						sqlTran.setStatus(Message.SUCCESS);
 					} else {

@@ -105,6 +105,7 @@ public class CatPerformanceTest {
 	}
 
 	@Test
+	@Ignore
 	public void testManyThread() throws IOException {
 		System.out.println("press any key to continue...");
 		System.in.read();

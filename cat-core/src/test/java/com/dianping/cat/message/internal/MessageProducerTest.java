@@ -2,6 +2,7 @@ package com.dianping.cat.message.internal;
 
 import junit.framework.Assert;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -16,10 +17,12 @@ import com.dianping.cat.message.spi.MessageTree;
 @RunWith(JUnit4.class)
 public class MessageProducerTest extends CatTestCase {
 	@Test
+	@Ignore
 	public void testNormal() throws Exception {
 		MessageProducer producer = lookup(MessageProducer.class);
 		InMemoryQueue queue = lookup(InMemoryQueue.class);
 		Transaction t = producer.newTransaction("URL", "MyPage");
+		
 
 		try {
 			// do your business here
