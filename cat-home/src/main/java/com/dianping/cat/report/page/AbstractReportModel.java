@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -76,5 +77,15 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public void setLongDate(long date) {
 		m_date = date;
+	}
+
+	public String getDisplayHour() {
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(m_date);
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		if (hour < 10) {
+			return "0" + Integer.toString(hour);
+		} else
+			return Integer.toString(hour);
 	}
 }
