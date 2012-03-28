@@ -69,6 +69,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.job.configuration.HdfsConfig</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
