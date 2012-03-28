@@ -297,7 +297,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 		try {
 			localBucket = m_bucketManager.getReportBucket(timestamp, "event", "local");
-			remoteBucket = m_bucketManager.getReportBucket(timestamp, "event", "remote");
+
+			if (!m_local) {
+				remoteBucket = m_bucketManager.getReportBucket(timestamp, "event", "remote");
+			}
 
 			// delete old one, not append mode
 			localBucket.deleteAndCreate();
@@ -307,7 +310,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 				String domain = report.getDomain();
 
 				localBucket.storeById(domain, xml);
-				remoteBucket.storeById(domain, xml);
+
+				if (!m_local) {
+					remoteBucket.storeById(domain, xml);
+				}
 			}
 
 			t.setStatus(Message.SUCCESS);

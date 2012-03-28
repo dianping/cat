@@ -15,7 +15,7 @@ import com.site.lookup.annotation.Inject;
 public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerFactory {
 	@Inject
 	private boolean m_local;
-	
+
 	@Override
 	public MessageAnalyzer create(String name, long start, long duration, long extraTime) {
 		if (name.equals("problem")) {
@@ -32,7 +32,7 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			return analyzer;
 		} else if (name.equals("event")) {
 			EventAnalyzer analyzer = lookup(EventAnalyzer.class);
-			
+
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			analyzer.setLocal(m_local);
 			return analyzer;
@@ -49,7 +49,14 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 	public void release(Object component) {
 		super.release(component);
 	}
-	
+
+	/**
+	 * Set local mode. In local mode, all reports and log-views will only be
+	 * stored in local disk, no reports or log-views will be stored in HDFS or
+	 * MySQL. <p>
+	 * 
+	 * @param local
+	 */
 	public void setLocal(boolean local) {
 		m_local = local;
 	}

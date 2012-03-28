@@ -231,7 +231,7 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 						}
 					}
 
-					Thread.sleep(1000 * 10); // check every 10 seconds
+					Thread.sleep(2 * 1000); // check every 2 seconds
 				}
 			} catch (InterruptedException e) {
 				// ignore

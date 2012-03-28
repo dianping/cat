@@ -26,9 +26,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
+		String defaultLocalMode = "false";
 
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class) //
-		      .config(E("local").value("true")));
+		      .config(E("local").value(property("local", defaultLocalMode))));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class).config(E("consumerId").value("realtime") //

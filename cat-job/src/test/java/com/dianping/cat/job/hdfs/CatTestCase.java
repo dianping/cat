@@ -1,7 +1,5 @@
 package com.dianping.cat.job.hdfs;
 
-import java.io.File;
-
 import org.junit.After;
 import org.junit.Before;
 
