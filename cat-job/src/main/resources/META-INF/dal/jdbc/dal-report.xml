@@ -47,7 +47,7 @@
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
-					WHERE <FIELD name='message-id'/> = ${message-id} </IN>
+					WHERE <FIELD name='message-id'/> = ${message-id}
 				]]></statement>
 			</query>
 		</query-defs>
