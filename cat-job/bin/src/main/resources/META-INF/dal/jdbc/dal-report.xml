@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.cat.job.sql.dal" gen="true">
+	<entity name="logview">
+		<var name="direction" value-type="boolean" />
+		<var name="message-ids" value-type="String[]" />
+		<query-defs>
+			<query name="find-next-by-message-id-tags" type="SELECT">
+				<param name="message-id" />
+				<param name="direction" />
+				<param name="tag-thread" />
+				<param name="tag-session" />
+				<param name="tag-request" />
+				<statement><![CDATA[
+			        SELECT <FIELDS/> 
+			        FROM <TABLE/> 
+			        WHERE 1 = 1
+			        	<IF type='NOT_NULL' field='tag-thread'>
+					        AND <FIELD name='tag-thread'/> = ${tag-thread}
+			        	</IF>
+			        	<IF type='NOT_NULL' field='tag-session'>
+					        AND <FIELD name='tag-session'/> = ${tag-session}
+			        	</IF>
+			        	<IF type='NOT_NULL' field='tag-request'>
+					        AND <FIELD name='tag-request'/> = ${tag-request}
+			        	</IF>
+			        	<IF type='EQ' field='direction' value='true'>
+					        AND <FIELD name='message-id'/> \\> ${message-id}
+				        	ORDER BY <FIELD name='message-id'/> ASC 
+			        	</IF>
+			        	<IF type='EQ' field='direction' value='false'>
+					        AND <FIELD name='message-id'/> \\< ${message-id}
+				        	ORDER BY <FIELD name='message-id'/> DESC 
+			        	</IF>
+			        	LIMIT 1 
+		        ]]></statement>
+			</query>
+			<query name="find-by-message-ids" type="SELECT" multiple="true">
+				<param name="message-ids" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='message-id'/> <IN> ${message-ids} </IN>
+				]]></statement>
+			</query>
+			<query name="find-by-message-id" type="SELECT" multiple="false">
+				<param name="message-id" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='message-id'/> = ${message-id}
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="report" table="report" alias="r">
+		<member name="creation-date" insert-expr="now()" />
+  		<query-defs>
+			<query name="find-by-period-domain-type-name" type="SELECT" multiple="true">
+				<param name="period" />
+				<param name="domain" />
+				<param name="type" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> = ${period}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='type'/> = ${type}
+					AND <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
+			<query name="find-all-by-period-type-name" type="SELECT" multiple="true">
+				<param name="period" />
+				<param name="type" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> = ${period}
+					AND <FIELD name='type'/> = ${type}
+					AND <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[
+					INSERT 
+					INTO <TABLE/>(<FIELDS/>) 
+					VALUES(<VALUES/>)
+					ON DUPLICATE KEY 
+						UPDATE <FIELD name='content'/> = ${content},
+							<FIELD name='creation-date'/> = NOW()
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+
+</entities>
+

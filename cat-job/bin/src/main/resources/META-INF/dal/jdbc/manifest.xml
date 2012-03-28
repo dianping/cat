@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="codegen.xml" />
+  <file path="dal-sql.xml" />
+    <file path="dal-report.xml" />
+</manifest>
+
