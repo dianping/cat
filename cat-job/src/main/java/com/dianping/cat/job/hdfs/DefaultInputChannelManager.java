@@ -50,7 +50,12 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 
 			config.setInt("io.file.buffer.size", 8192);
 
-			this.setServerUri(this.m_hdfsConfig.getServerUrl());
+			String dataPath = this.m_hdfsConfig.getDataPath();
+			if (dataPath.startsWith("hdfs://")) {
+				this.setServerUri(dataPath);
+			} else {
+				this.m_baseDir = dataPath;
+			}
 			if (m_serverUri == null) {
 				fs = FileSystem.getLocal(config);
 				m_basePath = new Path(fs.getWorkingDirectory(), m_baseDir);

@@ -92,11 +92,16 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 		try {
 			Configuration config = new Configuration();
 			FileSystem fs;
-
+			String dataPath = null;
 			if ("data".equals(this.m_type)) {
-				this.setServerUri(this.m_hdfsConfig.getServerUrl());
+				dataPath = this.m_hdfsConfig.getDataPath();
 			} else if ("dump".equals(this.m_type)) {
-				this.setServerUri(this.m_hdfsConfig.getDumpUrl());
+				dataPath = this.m_hdfsConfig.getDumpPath();
+			}
+			if (dataPath.startsWith("hdfs://")) {
+				this.setServerUri(dataPath);
+			} else {
+				this.m_baseDir = dataPath;
 			}
 			config.setInt("io.file.buffer.size", 8192);
 			if (m_serverUri == null) {
@@ -158,7 +163,7 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 			m_serverUri = URI.create(serverUri);
 		}
 	}
-	
+
 	public void setType(String type) {
 		this.m_type = type;
 	}

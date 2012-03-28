@@ -11,15 +11,15 @@ import com.site.helper.Files;
 
 public class HdfsConfig implements Initializable {
 
-	private String m_serverUrl;
-	private String m_dumpUrl;
+	private String m_dataPath;
+	private String m_dumpPath;
 
-	public String getServerUrl() {
-		return m_serverUrl;
+	public String getDataPath() {
+		return m_dataPath;
 	}
 
-	public String getDumpUrl() {
-		return m_dumpUrl;
+	public String getDumpPath() {
+		return m_dumpPath;
 	}
 
 	@Override
@@ -28,8 +28,8 @@ public class HdfsConfig implements Initializable {
 		try {
 			String xml = Files.forIO().readFrom(new File(path), "utf-8");
 			Config config = new DefaultXmlParser().parse(xml);
-			m_serverUrl = config.getHdfses().get("data").getPath();
-			m_dumpUrl = config.getHdfses().get("dump").getPath();
+			m_dataPath = config.getHdfses().get("data").getPath();
+			m_dumpPath = config.getHdfses().get("dump").getPath();
 		} catch (Exception e) {
 			throw new InitializationException("Init hdfs file config error", e);
 		}
