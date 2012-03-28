@@ -10,6 +10,8 @@ public interface OutputChannelManager {
 	public void closeAllChannels();
 
 	public void closeChannel(OutputChannel channel);
+	
+	public void setServerUri(String serverUri);
 
 	public OutputChannel openChannel(MessageTree tree, boolean forceNew) throws IOException;
 

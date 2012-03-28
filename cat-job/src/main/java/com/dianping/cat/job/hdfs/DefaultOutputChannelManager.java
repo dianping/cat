@@ -17,21 +17,26 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.job.configuration.HdfsConfig;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, Initializable,
-      LogEnabled {
+public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, Initializable, LogEnabled {
 	@Inject
 	private MessagePathBuilder m_builder;
 
 	@Inject
 	private String m_baseDir = "target/hdfs";
 
-	@Inject
 	private URI m_serverUri;
+
+	@Inject
+	private HdfsConfig m_hdfsConfig;
+
+	@Inject
+	private String m_type = "data";
 
 	private FileSystem m_fs;
 
@@ -88,6 +93,11 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 			Configuration config = new Configuration();
 			FileSystem fs;
 
+			if ("data".equals(this.m_type)) {
+				this.setServerUri(this.m_hdfsConfig.getServerUrl());
+			} else if ("dump".equals(this.m_type)) {
+				this.setServerUri(this.m_hdfsConfig.getDumpUrl());
+			}
 			config.setInt("io.file.buffer.size", 8192);
 			if (m_serverUri == null) {
 				fs = FileSystem.getLocal(config);
@@ -147,5 +157,9 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 		if (serverUri != null && serverUri.length() > 0) {
 			m_serverUri = URI.create(serverUri);
 		}
+	}
+	
+	public void setType(String type) {
+		this.m_type = type;
 	}
 }

@@ -98,14 +98,12 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 		}
 
 		try {
-			Logview logview = m_logviewDao.findNextByMessageIdTags(id, direction, tagThread, tagSession, tagRequest,
-			      LogviewEntity.READSET_FULL);
+			Logview logview = m_logviewDao.findNextByMessageIdTags(id, direction, tagThread, tagSession, tagRequest, LogviewEntity.READSET_FULL);
 			MessageTree tree = readMessageTree(logview);
 
 			return tree;
 		} catch (DalException e) {
-			String message = String.format("Unable to find next message(%s) with tag(%s) and direction(%s)!", id, tagName,
-			      direction);
+			String message = String.format("Unable to find next message(%s) with tag(%s) and direction(%s)!", id, tagName, direction);
 
 			m_logger.error(message, e);
 			return null;
