@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -21,11 +22,13 @@ import com.site.helper.Files;
 
 public class SqlJobMain extends Configured implements Tool {
 
-	private static final String DEFAUL_IN_PATH = "target/hdfs/";
+	private static String BASE_URL;
 
-	private static final String DEFAUL_OUT_PATH = "target/cat/sql/";
+	private static String DEFAULT_IN_PATH = "hdfs://h169.hadoop/user/cat/dump/";
 
-	private static final String DEFAULT_FINAL_PATH = "target/cat/result/";
+	private static String DEFAULT_OUT_PATH = "hdfs://h169.hadoop/user/cat/sql/";
+
+	private static String DEFAULT_FINAL_PATH = "hdfs://h169.hadoop/user/cat/sqlResult/";
 
 	private static final int DEFAULT_REDUCE_NUMBER = 3;
 
@@ -34,9 +37,11 @@ public class SqlJobMain extends Configured implements Tool {
 	 * the number of reduce; The args[1] is for input path
 	 */
 	public static void main(String[] args) throws Exception {
-		int exitCode = ToolRunner.run(new Configuration(), new SqlJobMain(), args);
+	//	int exitCode = ToolRunner.run(new Configuration(), new SqlJobMain(), args);
 
-		System.exit(exitCode);
+	//	System.exit(exitCode);
+		int exitCode = ToolRunner.run(new Configuration(), new SqlJobMain(), args);
+		
 	}
 
 	private String getLastHoursString(int hours) {
@@ -50,6 +55,8 @@ public class SqlJobMain extends Configured implements Tool {
 
 	@Override
 	public int run(String[] args) throws Exception {
+		runSqlRecordJob();
+		
 		Configuration conf = getConf();
 		Job job = new Job(conf, "Sql Analyzer");
 
@@ -61,11 +68,11 @@ public class SqlJobMain extends Configured implements Tool {
 		job.setOutputValueClass(SqlJobResult.class);
 		job.setMapOutputKeyClass(SqlStatementKey.class);
 		job.setMapOutputValueClass(SqlStatementValue.class);
-		
+
 		job.setPartitionerClass(SqlJobPatitioner.class);
 		job.setNumReduceTasks(DEFAULT_REDUCE_NUMBER);
 
-		if (args.length > 0) {
+		if (args.length >= 1) {
 			try {
 				job.setNumReduceTasks(Integer.parseInt(args[0]));
 			} catch (Exception e) {
@@ -73,21 +80,35 @@ public class SqlJobMain extends Configured implements Tool {
 				return 0;
 			}
 		}
+
 		String hourStr = getLastHoursString(1);
 
-		String inputPath = DEFAUL_IN_PATH + hourStr;
-		String outputPath = DEFAUL_OUT_PATH + hourStr;
-
-		if (args.length > 1) {
-			if (args.length >= 2) {
-				inputPath = args[1];
-			}
+		if (args.length >= 2) {
+			hourStr = args[1];
 		}
 
-		System.out.println(String.format("InputPath: %s,OutPath %s", inputPath, outputPath));
+		if (args.length >= 3) {
+			BASE_URL = args[2];
+			if (BASE_URL.charAt(BASE_URL.length() - 1) == '/') {
+				BASE_URL = BASE_URL.substring(0, BASE_URL.length() - 1);
+			}
+			DEFAULT_IN_PATH = BASE_URL + "/dump/";
+			DEFAULT_OUT_PATH = BASE_URL + "/sql/";
+			DEFAULT_FINAL_PATH = BASE_URL + "/sqlResult/";
+		}
+
+		String inputPath = DEFAULT_IN_PATH + hourStr;
+		String outputPath = DEFAULT_OUT_PATH + hourStr;
+		
+		System.out.println(String.format("InputPath: %s , OutPath %s", inputPath, outputPath));
 
 		FileInputFormat.addInputPath(job, new Path(inputPath));
-		FileOutputFormat.setOutputPath(job, new Path(outputPath));
+		Path outPath = new Path(outputPath);
+
+		FileSystem fs = FileSystem.get(conf);
+		fs.delete(outPath, true);		
+		FileOutputFormat.setOutputPath(job, outPath);
+		
 		Files.forDir().delete(new File(outputPath), true);
 
 		if (job.waitForCompletion(true)) {
@@ -95,8 +116,8 @@ public class SqlJobMain extends Configured implements Tool {
 		} else {
 			return 0;
 		}
-		//String hourStr = getLastHoursString(1);
-		//return runSqlRecordJob(hourStr);
+		// String hourStr = getLastHoursString(1);
+		// return runSqlRecordJob(hourStr);
 	}
 
 	/*
@@ -113,9 +134,28 @@ public class SqlJobMain extends Configured implements Tool {
 		job.setReducerClass(SqlRecordJobReducer.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(Text.class);
-		FileInputFormat.addInputPath(job, new Path(DEFAUL_OUT_PATH+currentHour));
+		FileInputFormat.addInputPath(job, new Path(DEFAULT_OUT_PATH + currentHour));
 		FileOutputFormat.setOutputPath(job, new Path(DEFAULT_FINAL_PATH));
 		Files.forDir().delete(new File(DEFAULT_FINAL_PATH), true);
+		return job.waitForCompletion(true) ? 0 : 1;
+	}
+	
+	private int runSqlRecordJob() throws Exception {
+		System.out.println("Insert database job start!");
+		Configuration conf = getConf();
+		conf.set("JobHour", "20120328/19");
+		Job job = new Job(conf, "Sql Record");
+
+		job.setJarByClass(SqlJobMain.class);
+		job.setMapperClass(SqlRecordJobMapper.class);
+		job.setReducerClass(SqlRecordJobReducer.class);
+		job.setMapOutputKeyClass(Text.class);
+		job.setMapOutputValueClass(Text.class);
+		FileInputFormat.addInputPath(job, new Path("target/Test"));
+		String output = "target/test2";
+		FileOutputFormat.setOutputPath(job, new Path(output));
+		FileSystem fs = FileSystem.get(conf);
+		fs.delete(new Path(output), true);	
 		return job.waitForCompletion(true) ? 0 : 1;
 	}
 }

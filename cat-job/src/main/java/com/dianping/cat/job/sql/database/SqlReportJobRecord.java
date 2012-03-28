@@ -88,22 +88,26 @@ public class SqlReportJobRecord {
 
 		m_creationDate = new Date();
 		String[] params = text.split("\t");
-		m_domain = params[0];
-		m_name = params[1];
-		m_statement = params[2];
-		m_totalCount = Integer.parseInt(params[3]);
-		m_failureCount = Integer.parseInt(params[4]);
-		m_longCount = Integer.parseInt(params[5]);
-		m_min = Double.parseDouble(params[6]);
-		m_max = Double.parseDouble(params[7]);
-		m_sum = Double.parseDouble(params[8]);
-		m_sum2 = Double.parseDouble(params[9]);
-		m_avg2 = Double.parseDouble(params[10]);
-		m_sampleLink = params[11];
-		m_durationDistribution = params[12];
-		m_hitsOverTime = params[13];
-		m_durationOverTime = params[14];
-		m_failureOverTime = params[15];
+		try {
+	      m_domain = params[0];
+	      m_name = params[1];
+	      m_statement = params[2];
+	      m_totalCount = Integer.parseInt(params[3]);
+	      m_failureCount = Integer.parseInt(params[4]);
+	      m_longCount = Integer.parseInt(params[5]);
+	      m_min = Double.parseDouble(params[6]);
+	      m_max = Double.parseDouble(params[7]);
+	      m_sum = Double.parseDouble(params[8]);
+	      m_sum2 = Double.parseDouble(params[9]);
+	      m_avg2 = Double.parseDouble(params[10]);
+	      m_sampleLink = params[11];
+	      m_durationDistribution = params[12];
+	      m_hitsOverTime = params[13];
+	      m_durationOverTime = params[14];
+	      m_failureOverTime = params[15];
+      } catch (NumberFormatException e) {
+	      e.printStackTrace();
+      }
 	}
 
 	public String getName() {
