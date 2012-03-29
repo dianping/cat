@@ -6,12 +6,13 @@ import javax.servlet.ServletException;
 
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.problem.model.entity.JavaThread;
+import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.IEntity;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
@@ -55,7 +56,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 			return filter.buildXml((com.dianping.cat.consumer.event.model.IEntity<?>) dataModel);
 		} else if ("problem".equals(report)) {
-			ProblemReportFilter filter = new ProblemReportFilter();
+			ProblemReportFilter filter = new ProblemReportFilter(payload.getIpAddress(), payload.getThreadId());
 
 			return filter.buildXml((com.dianping.cat.consumer.problem.model.IEntity<?>) dataModel);
 		} else {
@@ -152,10 +153,39 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	}
 
 	static class ProblemReportFilter extends com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder {
-		// TODO
+		private String m_ipAddress;
+
+		private String m_threadId;
+
+		public ProblemReportFilter(String ipAddress, String threadId) {
+			m_ipAddress = ipAddress;
+			m_threadId = threadId;
+		}
+
+		@Override
+		public void visitMachine(Machine machine) {
+			if (m_ipAddress == null) {
+				super.visitMachine(machine);
+			} else if (machine.getIp().equals(m_ipAddress)) {
+				super.visitMachine(machine);
+			} else {
+				// skip it
+			}
+		}
+
+		@Override
+		public void visitThread(JavaThread thread) {
+			if (m_threadId == null) {
+				super.visitThread(thread);
+			} else if (thread.getId().equals(m_threadId)) {
+				super.visitThread(thread);
+			} else {
+				// skip it
+			}
+		}
 	}
 
-	static class TransactionReportFilter extends DefaultXmlBuilder {
+	static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_type;
 
 		private String m_name;
