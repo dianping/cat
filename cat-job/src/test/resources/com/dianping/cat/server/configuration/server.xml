@@ -1,0 +1,25 @@
+<config>
+	<bind ip="" port="2280"/>
+	
+	<storage>
+		<hdfs id="logview" max-size="128M" server-uri="hdfs://192.168.7.43:9000/user/cat" base-dir="logview"/>
+		<hdfs id="dump" max-size="128M" server-uri="hdfs://192.168.7.43:9000/user/cat" base-dir="dump"/>
+		<properties>
+			<property name="hadoop.security.authentication" value="kerberos"/>
+			<property name="dfs.datanode.kerberos.principal" value="hadoop/h163.hadoop@DIANPING.COM"/>
+			<property name="dfs.datanode.keytab.file" value="/tmp/hadoop.keytab"/>
+		</properties>
+	</storage>
+
+	<consumer local-mode="false">
+		<long-url default-threshold="1000">
+			<domain name="Cat" threshold="500"/>
+			<domain name="S1" threshold="100"/>
+			<domain name="S2" threshold="300"/>
+		</long-url>
+	</consumer>
+	
+	<console default-domain="Cat" show-cat-domain="true">
+		<remote-servers>192.168.7.43:8080,192.168.63.64:2280</remote-servers>
+	</console>
+</config>

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <file path="configuration-codegen.xml" />
-  <file path="configuration-model.xml" />
-</manifest>
-
