@@ -1,6 +1,10 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.job.configuration.HdfsConfig</role>
+			<implementation>com.dianping.cat.job.configuration.HdfsConfig</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.job.hdfs.OutputChannel</role>
 			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannel</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -18,12 +22,15 @@
 			<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
 			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
 			<configuration>
+				<type>data</type>
 				<baseDir>data</baseDir>
-				<serverUri>hdfs://192.168.7.43:9000/user/cat</serverUri>
 			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.job.configuration.HdfsConfig</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -43,20 +50,27 @@
 			<implementation>com.dianping.cat.job.hdfs.DefaultInputChannelManager</implementation>
 			<configuration>
 				<baseDir>data</baseDir>
-				<serverUri>hdfs://192.168.7.43:9000/user/cat</serverUri>
 			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.job.configuration.HdfsConfig</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
 			<role-hint>dump</role-hint>
 			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
 			<configuration>
+				<type>dump</type>
 				<baseDir>dump</baseDir>
-				<serverUri>hdfs://192.168.7.43:9000/user/cat</serverUri>
 			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.job.configuration.HdfsConfig</role>
 				</requirement>
 			</requirements>
 		</component>

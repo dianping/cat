@@ -10,6 +10,7 @@ import org.apache.hadoop.fs.Path;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.job.configuration.HdfsConfig;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
@@ -19,6 +20,9 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 
 	@Inject
 	private String m_baseDir = "target/hdfs";
+
+	@Inject
+	private HdfsConfig m_hdfsConfig;
 
 	private FileSystem m_fs;
 
@@ -46,6 +50,12 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 
 			config.setInt("io.file.buffer.size", 8192);
 
+			String dataPath = this.m_hdfsConfig.getDataPath();
+			if (dataPath.startsWith("hdfs://")) {
+				this.setServerUri(dataPath);
+			} else {
+				this.m_baseDir = dataPath;
+			}
 			if (m_serverUri == null) {
 				fs = FileSystem.getLocal(config);
 				m_basePath = new Path(fs.getWorkingDirectory(), m_baseDir);

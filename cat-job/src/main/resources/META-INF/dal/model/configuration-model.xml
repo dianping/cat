@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.job.configuration.model"  enable-merger="true" enable-json-builder="true"
+	enable-xml-parser="true" enable-base-visitor="true">
+  <entity name="config" root="true">
+    <entity-ref name="hdfs" type="map" names="hdfses" />
+  </entity>
+  <entity name="hdfs">
+    <attribute name="id" value-type="String" key="true"  />
+    <attribute name="path" value-type="String" />
+  </entity>
+</model>
