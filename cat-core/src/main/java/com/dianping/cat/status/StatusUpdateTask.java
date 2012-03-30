@@ -20,7 +20,7 @@ public class StatusUpdateTask implements Runnable, Initializable {
 
 	private String m_ipAddress;
 
-	private long m_interval = 1000; // 1 ms
+	private long m_interval = 1000; // 1 second
 
 	@Override
 	public void initialize() throws InitializationException {

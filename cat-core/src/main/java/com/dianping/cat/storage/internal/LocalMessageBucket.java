@@ -8,7 +8,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class LocalMessageBucket extends AbstractFileBucket<MessageTree> {
@@ -20,9 +19,8 @@ public class LocalMessageBucket extends AbstractFileBucket<MessageTree> {
 
 	@Override
 	protected MessageTree decode(ChannelBuffer buf) throws IOException {
-		MessageTree tree = new DefaultMessageTree();
+		MessageTree tree = m_codec.decode(buf);
 
-		m_codec.decode(buf, tree);
 		return tree;
 	}
 

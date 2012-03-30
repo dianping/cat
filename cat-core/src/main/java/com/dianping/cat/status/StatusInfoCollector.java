@@ -7,6 +7,7 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
+import java.util.Date;
 import java.util.List;
 
 import com.dianping.cat.message.spi.MessageStatistics;
@@ -142,6 +143,7 @@ class StatusInfoCollector extends BaseVisitor {
 
 	@Override
 	public void visitStatus(StatusInfo status) {
+		status.setTimestamp(new Date());
 		status.setOs(new OsInfo());
 		status.setDiskSpace(new DiskSpaceInfo());
 		status.setRuntime(new RuntimeInfo());

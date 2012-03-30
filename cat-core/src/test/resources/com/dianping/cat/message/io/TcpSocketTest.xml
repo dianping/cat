@@ -10,9 +10,6 @@
 			<role-hint>tcp-socket</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<configuration>
-				<host>localhost</host>
-			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
@@ -30,9 +27,6 @@
 			<role-hint>tcp-socket</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketReceiver</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<configuration>
-				<host>localhost</host>
-			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>

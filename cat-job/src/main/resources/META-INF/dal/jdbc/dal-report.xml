@@ -50,6 +50,13 @@
 					WHERE <FIELD name='message-id'/> = ${message-id}
 				]]></statement>
 			</query>
+	        <query name="insert" type="INSERT" batch="true">
+	           <statement><![CDATA[
+	           INSERT 
+	           INTO <TABLE/>(<FIELDS/>) 
+	           VALUES(<VALUES/>)
+	           ]]></statement>
+	        </query>
 		</query-defs>
 	</entity>
 	<entity name="report" table="report" alias="r">

@@ -195,6 +195,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Override
 	public void reset() {
 		// destroy current thread local data
+		Context ctx = m_context.get();
+
+		if (ctx != null) {
+			ctx.m_stack = null;
+			ctx.m_tree = null;
+		}
+
 		m_context.remove();
 	}
 
@@ -235,7 +242,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			String groupName = thread.getThreadGroup().getName();
 
 			m_tree.setThreadGroupName(groupName);
-			m_tree.setThreadId(thread.getId()+"");
+			m_tree.setThreadId(String.valueOf(thread.getId()));
 			m_tree.setThreadName(thread.getName());
 
 			m_tree.setDomain(domain);

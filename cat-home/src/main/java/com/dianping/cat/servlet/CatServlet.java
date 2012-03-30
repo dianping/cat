@@ -16,6 +16,7 @@ import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
+import com.dianping.cat.server.configuration.ServerConfigManager;
 import com.site.helper.Files;
 import com.site.web.AbstractContainerServlet;
 
@@ -29,12 +30,16 @@ public class CatServlet extends AbstractContainerServlet {
 	@Override
 	protected void initComponents(ServletConfig servletConfig) throws ServletException {
 		String catServerXml = servletConfig.getInitParameter("cat-server-xml");
-		Config config = loadConfig(catServerXml);
+		Config config = loadConfig(null);
 
 		try {
 			MessageManager manager = lookup(MessageManager.class);
 
 			manager.initializeServer(config);
+
+			ServerConfigManager configManager = lookup(ServerConfigManager.class);
+
+			configManager.initialize(new File(catServerXml));
 
 			final DefaultMessageHandler handler = (DefaultMessageHandler) lookup(MessageHandler.class);
 

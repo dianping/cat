@@ -24,11 +24,9 @@ public class TcpSocketTestConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageCodec.class, tcpSocket, MockMessageCodec.class));
 		all.add(C(MessageSender.class, tcpSocket, TcpSocketSender.class).is(PER_LOOKUP) //
 		      .req(MessageCodec.class, tcpSocket, "m_codec") //
-		      .req(MessageQueue.class, "default", "m_queue") //
-		      .config(E("host").value("localhost")));
+		      .req(MessageQueue.class, "default", "m_queue"));
 		all.add(C(MessageReceiver.class, tcpSocket, TcpSocketReceiver.class).is(PER_LOOKUP) //
-				.req(MessageCodec.class, tcpSocket) //
-		      .config(E("host").value("localhost")));
+		      .req(MessageCodec.class, tcpSocket));
 
 		return all;
 	}

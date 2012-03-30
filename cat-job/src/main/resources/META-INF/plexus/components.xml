@@ -5,12 +5,13 @@
 			<implementation>com.dianping.cat.job.configuration.HdfsConfig</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.server.configuration.ServerConfigManager</role>
+			<implementation>com.dianping.cat.server.configuration.ServerConfigManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.job.hdfs.OutputChannel</role>
 			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannel</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<configuration>
-				<maxSize>134217728</maxSize>
-			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
@@ -22,15 +23,11 @@
 			<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
 			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
 			<configuration>
-				<type>data</type>
-				<baseDir>data</baseDir>
+				<defaultBaseDir>target/hdfs</defaultBaseDir>
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.job.configuration.HdfsConfig</role>
+					<role>com.dianping.cat.server.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -58,30 +55,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
-			<role-hint>dump</role-hint>
-			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
-			<configuration>
-				<type>dump</type>
-				<baseDir>dump</baseDir>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.job.configuration.HdfsConfig</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.MessageStorage</role>
 			<role-hint>hdfs</role-hint>
 			<implementation>com.dianping.cat.job.hdfs.HdfsMessageStorage</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
-					<role-hint>dump</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>

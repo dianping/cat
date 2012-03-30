@@ -1,12 +1,15 @@
 package com.dianping.cat.job.storage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -21,6 +24,7 @@ import com.dianping.cat.job.sql.dal.Logview;
 import com.dianping.cat.job.sql.dal.LogviewDao;
 import com.dianping.cat.job.sql.dal.LogviewEntity;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -45,6 +49,8 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 
 	private String m_path;
 
+	private MessageUploadWorker m_worker;
+
 	private Map<String, String> m_lruCache = new LinkedHashMap<String, String>(100, 0.75f, true) {
 		private static final long serialVersionUID = 1L;
 
@@ -68,6 +74,11 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	@Override
+	public List<String> findAllById(String id) throws IOException {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -98,12 +109,14 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 		}
 
 		try {
-			Logview logview = m_logviewDao.findNextByMessageIdTags(id, direction, tagThread, tagSession, tagRequest, LogviewEntity.READSET_FULL);
+			Logview logview = m_logviewDao.findNextByMessageIdTags(id, direction, tagThread, tagSession, tagRequest,
+			      LogviewEntity.READSET_FULL);
 			MessageTree tree = readMessageTree(logview);
 
 			return tree;
 		} catch (DalException e) {
-			String message = String.format("Unable to find next message(%s) with tag(%s) and direction(%s)!", id, tagName, direction);
+			String message = String.format("Unable to find next message(%s) with tag(%s) and direction(%s)!", id, tagName,
+			      direction);
 
 			m_logger.error(message, e);
 			return null;
@@ -133,8 +146,12 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
 		String ipAddress = LocalIP.getAddress();
 		String logicalPath = m_pathBuilder.getMessagePath(name, timestamp);
+
 		m_path = logicalPath + "-" + ipAddress + "-" + System.currentTimeMillis();
-		m_outputChannel = m_outputChannelManager.openChannel(m_path, false);
+		m_outputChannel = m_outputChannelManager.openChannel("logview", m_path, false);
+		m_worker = new MessageUploadWorker();
+
+		m_worker.start();
 	}
 
 	protected MessageTree readMessageTree(Logview logview) throws IOException {
@@ -165,37 +182,85 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 			return false;
 		}
 
-		Transaction t = Cat.getProducer().newTransaction("Bucket", getClass().getSimpleName());
-
 		m_lruCache.put(messageId, messageId);
-
-		int offset = m_outputChannel.getSize();
-		int length = m_outputChannel.write(tree);
-
-		Logview logview = m_logviewDao.createLocal();
-
-		logview.setMessageId(messageId);
-		logview.setDataPath(m_path);
-		logview.setDataOffset(offset);
-		logview.setDataLength(length);
-		logview.setTagThread("t:" + tree.getThreadId());
-		logview.setTagSession("s:" + tree.getSessionToken());
-		logview.setTagRequest("r:" + messageId);
-
-		try {
-			m_logviewDao.insert(logview);
-			t.setStatus(Message.SUCCESS);
-			return true;
-		} catch (DalException e) {
-			t.setStatus(e);
-			throw new IOException("Error when inserting into logview table!", e);
-		} finally {
-			t.complete();
-		}
+		return m_worker.add(tree);
 	}
 
-	@Override
-	public List<String> findAllById(String id) throws IOException {
-		throw new UnsupportedOperationException();
+	class MessageUploadWorker extends Thread {
+		private BlockingQueue<MessageTree> m_queue = new LinkedBlockingQueue<MessageTree>(10000);
+
+		private boolean m_active = true;
+
+		public boolean add(MessageTree tree) {
+			return m_queue.offer(tree);
+		}
+
+		@Override
+		public void run() {
+			List<MessageTree> trees = new ArrayList<MessageTree>();
+
+			try {
+				while (m_active) {
+					for (int i = 0; i < 10; i++) {
+						MessageTree tree = m_queue.poll();
+
+						if (tree != null) {
+							trees.add(tree);
+						} else {
+							break;
+						}
+					}
+
+					if (trees.size() > 0) {
+						uploadMessage(trees);
+						trees.clear();
+					} else {
+						Thread.sleep(5);
+					}
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
+		}
+
+		public void shutdown() {
+			m_active = true;
+		}
+
+		void uploadMessage(List<MessageTree> trees) {
+			MessageProducer cat = Cat.getProducer();
+			Transaction t = cat.newTransaction("Bucket", getClass().getSimpleName());
+			List<Logview> logviews = new ArrayList<Logview>();
+
+			try {
+				for (MessageTree tree : trees) {
+					String messageId = tree.getMessageId();
+
+					int offset = m_outputChannel.getSize();
+					int length = m_outputChannel.write(tree);
+
+					Logview logview = m_logviewDao.createLocal();
+
+					logview.setMessageId(messageId);
+					logview.setDataPath(m_path);
+					logview.setDataOffset(offset);
+					logview.setDataLength(length);
+					logview.setTagThread("t:" + tree.getThreadId());
+					logview.setTagSession("s:" + tree.getSessionToken());
+					logview.setTagRequest("r:" + messageId);
+				}
+				
+				m_logviewDao.insert(logviews.toArray(new Logview[0]));
+				t.setStatus(Message.SUCCESS);
+			} catch (IOException e) {
+				cat.logError(e);
+				t.setStatus(e);
+			} catch (DalException e) {
+				cat.logError(e);
+				t.setStatus(e);
+			} finally {
+				t.complete();
+			}
+		}
 	}
 }

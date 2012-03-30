@@ -53,6 +53,11 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	@Override
+	public MessageTree decode(ChannelBuffer buf) {
+		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
+	}
+
+	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
 		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
 	}
@@ -108,25 +113,9 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
 		BufferHelper helper = m_bufferHelper;
-//		int count = 0;
-
-//		count += helper.tr1(buf,"header");
-//		count += helper.td(buf, ID);
-//		count += helper.td(buf, tree.getDomain());
-//		count += helper.td(buf, tree.getHostName());
-//		count += helper.td(buf, tree.getIpAddress());
-//		count += helper.td(buf, tree.getThreadGroupName());
-//		count += helper.td(buf, tree.getThreadId());
-//		count += helper.td(buf, tree.getThreadName());
-//		count += helper.td(buf, tree.getMessageId());
-//		count += helper.td(buf, tree.getParentMessageId());
-//		count += helper.td(buf, tree.getRootMessageId());
-//		count += helper.td(buf, tree.getSessionToken());
-//		count += helper.tr2(buf);
-//		count += helper.crlf(buf);
-
 		StringBuilder sb = new StringBuilder();
-		sb.append("<tr class=\"header\" ><td colspan=5>");
+
+		sb.append("<tr class=\"header\"><td colspan=5>");
 		sb.append(ID).append(" ").append(tree.getDomain()).append(" ");
 		sb.append(tree.getHostName()).append(" ").append(tree.getIpAddress()).append(" ");
 		sb.append(tree.getThreadGroupName()).append(" ").append(tree.getThreadId()).append(" ");
@@ -134,7 +123,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		sb.append(tree.getParentMessageId()).append(" ").append(tree.getRootMessageId()).append(" ");
 		sb.append(tree.getSessionToken()).append(" ");
 		sb.append("</td></tr>");
-		int count = helper.write(buf,sb.toString());
+
+		int count = helper.write(buf, sb.toString());
 		return count;
 	}
 
@@ -276,9 +266,9 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	@Override
-   public void initialize() throws InitializationException {
+	public void initialize() throws InitializationException {
 		m_bufferHelper = new BufferHelper(m_writer);
-   }
+	}
 
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
@@ -410,7 +400,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 				return bytes.length;
 			}
 		}
-		
+
 		public int tr2(ChannelBuffer buf) {
 			buf.writeBytes(TR2);
 			return TR2.length;

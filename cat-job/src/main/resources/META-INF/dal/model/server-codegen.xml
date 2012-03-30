@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <entity name="config" root="true">
-    <entity-ref name="bind" />
     <entity-ref name="storage" />
     <entity-ref name="consumer" />
     <entity-ref name="console" />
   </entity>
-  <entity name="bind">
-    <attribute name="ip" value-type="String" />
-    <attribute name="port" value-type="int" />
-  </entity>
   <entity name="storage">
+    <attribute name="disabled" value-type="boolean" />
     <entity-ref name="hdfs" type="list" names="hdfses" />
     <entity-ref name="property" type="list" names="properties" xml-indent="true" />
   </entity>

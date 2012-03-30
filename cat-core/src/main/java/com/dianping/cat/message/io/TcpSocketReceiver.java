@@ -29,7 +29,6 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
@@ -100,9 +99,8 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 				ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
 
 				if (buf != null) {
-					MessageTree tree = new DefaultMessageTree();
+					MessageTree tree = m_codec.decode(buf);
 
-					m_codec.decode(buf, tree);
 					handler.handle(tree);
 				} else if (!isActive()) {
 					break;

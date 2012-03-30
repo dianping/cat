@@ -8,6 +8,7 @@ import org.jboss.netty.buffer.ChannelBuffers;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.server.configuration.entity.HdfsConfig;
 import com.site.lookup.annotation.Inject;
 
 public class DefaultOutputChannel implements OutputChannel {
@@ -15,12 +16,11 @@ public class DefaultOutputChannel implements OutputChannel {
 	private MessageCodec m_codec;
 
 	@Inject
-	private int m_maxSize = 0; // 0 means unlimited
-
-	@Inject
 	private long m_ttl = 90 * 1000L; // 90 seconds
 
 	private OutputStream m_out;
+
+	private int m_maxSize;
 
 	private int m_count;
 
@@ -39,9 +39,15 @@ public class DefaultOutputChannel implements OutputChannel {
 	}
 
 	@Override
-	public void initialize(OutputStream out) {
+	public int getSize() {
+		return m_count;
+	}
+
+	@Override
+	public void initialize(HdfsConfig config, OutputStream out) {
 		m_out = out;
 		m_timestamp = System.currentTimeMillis();
+		m_maxSize = toInteger(config.getMaxSize(), 0);
 	}
 
 	@Override
@@ -57,6 +63,29 @@ public class DefaultOutputChannel implements OutputChannel {
 
 	public void setTtl(long ttl) {
 		m_ttl = ttl;
+	}
+
+	int toInteger(String str, int defaultValue) {
+		int value = 0;
+		int len = str.length();
+
+		for (int i = 0; i < len; i++) {
+			char ch = str.charAt(i);
+
+			if (Character.isDigit(ch)) {
+				value = value * 10 + (ch - '0');
+			} else if (ch == 'm' || ch == 'M') {
+				value *= 1024 * 1024;
+			} else if (ch == 'k' || ch == 'K') {
+				value *= 1024;
+			}
+		}
+
+		if (value > 0) {
+			return value;
+		} else {
+			return defaultValue;
+		}
 	}
 
 	@Override
@@ -79,11 +108,6 @@ public class DefaultOutputChannel implements OutputChannel {
 		m_out.flush();
 		m_count += length + 1;
 
-		return length+1;
-	}
-
-	@Override
-	public int getSize() {
-		return m_count;
+		return length + 1;
 	}
 }

@@ -21,6 +21,7 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.StringRope;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class PlainTextMessageCodec implements MessageCodec {
@@ -36,6 +37,14 @@ public class PlainTextMessageCodec implements MessageCodec {
 	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
 
 	private DateHelper m_dateHelper = new DateHelper();
+
+	@Override
+	public MessageTree decode(ChannelBuffer buf) {
+		DefaultMessageTree tree = new DefaultMessageTree();
+
+		decode(buf, tree);
+		return tree;
+	}
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {

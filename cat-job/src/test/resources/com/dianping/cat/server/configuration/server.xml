@@ -1,13 +1,12 @@
 <config>
-	<bind ip="" port="2280"/>
-	
-	<storage>
-		<hdfs id="logview" max-size="128M" server-uri="hdfs://192.168.7.43:9000/user/cat" base-dir="logview"/>
-		<hdfs id="dump" max-size="128M" server-uri="hdfs://192.168.7.43:9000/user/cat" base-dir="dump"/>
+	<storage disabled="false">
+		<hdfs id="logview" max-size="128M" server-uri="hdfs://dev80.hadoop:9000/user/cat" base-dir="logview"/>
+		<hdfs id="dump" max-size="128M" server-uri="hdfs://dev80.hadoop:9000/user/cat" base-dir="dump"/>
 		<properties>
 			<property name="hadoop.security.authentication" value="kerberos"/>
-			<property name="dfs.datanode.kerberos.principal" value="hadoop/h163.hadoop@DIANPING.COM"/>
-			<property name="dfs.datanode.keytab.file" value="/tmp/hadoop.keytab"/>
+			<property name="dfs.namenode.kerberos.principal" value="hadoop/dev80.hadoop@DIANPING.COM"/>
+			<property name="dfs.cat.kerberos.principal" value="cat@DIANPING.COM"/>
+			<property name="dfs.cat.keytab.file" value="/data/appdatas/cat/cat.keytab"/>
 		</properties>
 	</storage>
 

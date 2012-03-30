@@ -31,11 +31,10 @@ public class HdfsChannelManagerTest extends CatTestCase {
 	@Test
 	public void testOutputAndInput() throws Exception {
 		DefaultOutputChannelManager ocm = (DefaultOutputChannelManager) lookup(OutputChannelManager.class);
-		ocm.initialize();
 		String testid = "" + System.currentTimeMillis();
 		DefaultMessageTree tree = newMessageTree(testid);
 		String path = "20120321/11/Cat-192.168.63.36-1332299450675";
-		OutputChannel oc = ocm.openChannel(path, true);
+		OutputChannel oc = ocm.openChannel("dump", path, true);
 		oc.write(tree);
 		ocm.closeChannel(oc);
 

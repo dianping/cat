@@ -3,18 +3,22 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
 	<servlet>
+		<servlet-name>cat-servlet</servlet-name>
+		<servlet-class>com.dianping.cat.servlet.CatServlet</servlet-class>
+		<init-param>
+			<param-name>cat-server-xml</param-name>
+			<param-value>/data/appdatas/cat/server.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet>
 		<servlet-name>mvc-servlet</servlet-name>
 		<servlet-class>com.site.web.MVC</servlet-class>
-		<load-on-startup>2</load-on-startup>
 		<init-param>
 			<param-name>cat-client-xml</param-name>
 			<param-value>/data/appdatas/cat/client.xml</param-value>
 		</init-param>
-	</servlet>
-	<servlet>
-		<servlet-name>cat-servlet</servlet-name>
-		<servlet-class>com.dianping.cat.servlet.CatServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>mvc-servlet</servlet-name>

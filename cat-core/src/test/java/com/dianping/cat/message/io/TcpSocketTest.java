@@ -139,6 +139,11 @@ public class TcpSocketTest extends ComponentTestCase {
 
 	public static class MockMessageCodec implements MessageCodec {
 		@Override
+      public MessageTree decode(ChannelBuffer buf) {
+	      throw new UnsupportedOperationException();
+      }
+
+		@Override
 		public void decode(ChannelBuffer buf, MessageTree tree) {
 			// do nothing here
 		}

@@ -23,6 +23,7 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.server.configuration.ServerConfigManager;
 import com.dianping.cat.storage.Bucket;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
@@ -34,38 +35,32 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HdfsConfig.class));
 
-		all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
-				.req(MessageCodec.class, "plain-text") //
-				.config(E("maxSize").value(String.valueOf(128 * 1024 * 1024L))));
-		all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
-				.req(MessagePathBuilder.class) //
-				.req(HdfsConfig.class) //
-				.config(E("type").value("data"))//
-				.config(E("baseDir").value("data")));
-		all.add(C(InputChannel.class, DefaultInputChannel.class).is(PER_LOOKUP) //
-				.req(MessageCodec.class, "plain-text"));
-		all.add(C(InputChannelManager.class, DefaultInputChannelManager.class) //
-				.req(HdfsConfig.class) //
-				.config(E("baseDir").value("data")));
+		all.add(C(ServerConfigManager.class));
 
-		all.add(C(OutputChannelManager.class, "dump", DefaultOutputChannelManager.class) //
-				.req(MessagePathBuilder.class) //
-				.req(HdfsConfig.class) //
-				.config(E("type").value("dump")) //
-				.config(E("baseDir").value("dump")));
+		all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
+		      .req(MessageCodec.class, "plain-text"));
+		all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
+		      .req(ServerConfigManager.class) //
+		      .config(E("defaultBaseDir").value("target/hdfs")));
+		all.add(C(InputChannel.class, DefaultInputChannel.class).is(PER_LOOKUP) //
+		      .req(MessageCodec.class, "plain-text"));
+		all.add(C(InputChannelManager.class, DefaultInputChannelManager.class) //
+		      .req(HdfsConfig.class) //
+		      .config(E("baseDir").value("data")));
+
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
-				.req(OutputChannelManager.class, "dump") //
-				.req(MessagePathBuilder.class));
+		      .req(OutputChannelManager.class) //
+		      .req(MessagePathBuilder.class));
 		all.add(C(MessageConsumer.class, DumpToHdfsConsumer.ID, DumpToHdfsConsumer.class) //
-				.req(MessageStorage.class, "hdfs"));
+		      .req(MessageStorage.class, "hdfs"));
 
 		all.add(C(Bucket.class, String.class.getName() + "-remote", RemoteStringBucket.class) //
-				.is(PER_LOOKUP) //
-				.req(ReportDao.class));
+		      .is(PER_LOOKUP) //
+		      .req(ReportDao.class));
 		all.add(C(Bucket.class, MessageTree.class.getName() + "-remote", RemoteMessageBucket.class) //
-				.is(PER_LOOKUP) //
-				.req(OutputChannelManager.class, InputChannelManager.class) //
-				.req(LogviewDao.class, MessagePathBuilder.class));
+		      .is(PER_LOOKUP) //
+		      .req(OutputChannelManager.class, InputChannelManager.class) //
+		      .req(LogviewDao.class, MessagePathBuilder.class));
 
 		all.addAll(new DatabaseConfigurator().defineComponents());
 

@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model model-package="com.dianping.cat.server.configuration" enable-xml-parser="true">
-	<entity name="bind">
-		<attribute name="port" value-type="int" primitive="true" default-value="2280" />
-	</entity>
-	<entity name="storage">
+<model model-package="com.dianping.cat.server.configuration" enable-xml-parser="true" enable-validator="true">
+  <entity name="config" class-name="ServerConfig"/>
+	<entity name="storage" class-name="StorageConfig">
 		<entity-ref name="hdfs" type="map" names="hdfses" />
 		<entity-ref name="property" type="map" names="properties" xml-indent="true" />
 	</entity>
-	<entity name="hdfs">
+	<entity name="hdfs" class-name="HdfsConfig">
 		<attribute name="id" value-type="String" key="true" />
 		<attribute name="max-size" value-type="String" default-value="128M" />
 	</entity>
 	<entity name="property">
 		<attribute name="name" value-type="String" key="true" />
 	</entity>
+	<entity name="consumer" class-name="ConsumerConfig"/>
 	<entity name="long-url">
 		<attribute name="default-threshold" value-type="int" default-value="2000" />
 		<entity-ref name="domain" type="map" names="domains" />
@@ -21,5 +20,6 @@
 	<entity name="domain">
 		<attribute name="name" value-type="String" key="true" />
 	</entity>
+  <entity name="console" class-name="ConsoleConfig"/>
 </model>
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.server.configuration.entity.HdfsConfig;
 
 public interface OutputChannel {
 	/**
@@ -16,7 +17,7 @@ public interface OutputChannel {
 	 * 
 	 * @param out
 	 */
-	public void initialize(OutputStream out);
+	public void initialize(HdfsConfig config, OutputStream out);
 
 	/**
 	 * Check if the channel is expired.

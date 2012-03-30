@@ -3,7 +3,6 @@ package com.dianping.cat.job.hdfs;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,35 +11,25 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.security.SecurityUtil;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.job.configuration.HdfsConfig;
-import com.dianping.cat.message.spi.MessagePathBuilder;
-import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.server.configuration.ServerConfigManager;
+import com.dianping.cat.server.configuration.entity.HdfsConfig;
+import com.dianping.cat.server.configuration.entity.Property;
+import com.dianping.cat.server.configuration.entity.ServerConfig;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, Initializable, LogEnabled {
+public class DefaultOutputChannelManager extends ContainerHolder implements OutputChannelManager, LogEnabled {
 	@Inject
-	private MessagePathBuilder m_builder;
-
-	@Inject
-	private String m_baseDir = "target/hdfs";
-
-	private URI m_serverUri;
+	private ServerConfigManager m_manager;
 
 	@Inject
-	private HdfsConfig m_hdfsConfig;
+	private String m_defaultBaseDir = "target/hdfs";
 
-	@Inject
-	private String m_type = "data";
-
-	private FileSystem m_fs;
-
-	private Path m_basePath;
+	private Map<String, FileSystem> m_fileSystems = new HashMap<String, FileSystem>();
 
 	private Map<String, OutputChannel> m_channels = new HashMap<String, OutputChannel>();
 
@@ -87,84 +76,109 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 		m_logger = logger;
 	}
 
-	@Override
-	public void initialize() throws InitializationException {
-		try {
-			Configuration config = new Configuration();
-			FileSystem fs;
-			String dataPath = null;
-			if ("data".equals(this.m_type)) {
-				dataPath = this.m_hdfsConfig.getDataPath();
-			} else if ("dump".equals(this.m_type)) {
-				dataPath = this.m_hdfsConfig.getDumpPath();
-			}
-			if (dataPath.startsWith("hdfs://")) {
-				this.setServerUri(dataPath);
-			} else {
-				this.m_baseDir = dataPath;
-			}
-			config.setInt("io.file.buffer.size", 8192);
-			if (m_serverUri == null) {
-				fs = FileSystem.getLocal(config);
-				m_basePath = new Path(fs.getWorkingDirectory(), m_baseDir);
-			} else {
-				fs = FileSystem.get(m_serverUri, config);
-				m_basePath = new Path(new Path(m_serverUri), m_baseDir);
-			}
-
-			m_fs = fs;
-		} catch (Exception e) {
-			throw new InitializationException("Error when getting HDFS file system.", e);
-		}
-	}
-
-	@Override
-	public OutputChannel openChannel(MessageTree tree, boolean forceNew) throws IOException {
-		String path = m_builder.getMessagePath(tree.getDomain(), new Date(tree.getMessage().getTimestamp()));
-
-		return openChannel(path, forceNew);
-	}
-
-	public OutputChannel openChannel(String path, boolean forceNew) throws IOException {
-		OutputChannel channel = m_channels.get(path);
+	public OutputChannel openChannel(String id, String path, boolean forceNew) throws IOException {
+		String key = id + ":" + path;
+		OutputChannel channel = m_channels.get(key);
 
 		if (channel == null) {
-			Path file = new Path(m_basePath, path);
-			FSDataOutputStream out = m_fs.create(file);
+			synchronized (m_channels) {
+				channel = m_channels.get(key);
 
-			channel = lookup(OutputChannel.class);
-			channel.initialize(out);
-
-			m_indexes.put(path, 0);
-			m_channels.put(path, channel);
+				if (channel == null) {
+					channel = makeChannel(key, id, path, false);
+				}
+			}
 		} else if (forceNew) {
-			int index = m_indexes.get(path);
-
-			closeChannel(channel);
-			m_indexes.put(path, ++index);
-
-			Path file = new Path(m_basePath, path + "-" + index);
-			FSDataOutputStream out = m_fs.create(file);
-
-			channel = lookup(OutputChannel.class);
-			channel.initialize(out);
-			m_channels.put(path, channel);
+			channel = makeChannel(key, id, path, true);
 		}
 
 		return channel;
 	}
 
-	public void setBaseDir(String baseDir) {
-		m_baseDir = baseDir;
-	}
+	private OutputChannel makeChannel(String key, String id, String path, boolean forceNew) throws IOException {
+		OutputChannel channel = lookup(OutputChannel.class);
+		ServerConfig config = m_manager.getServerConfig();
+		HdfsConfig hdfsConfig = config.getStorage().findHdfs(id);
+		FileSystem fs = m_fileSystems.get(id);
+		String baseDir;
 
-	public void setServerUri(String serverUri) {
-		if (serverUri != null && serverUri.length() > 0) {
-			m_serverUri = URI.create(serverUri);
+		if (hdfsConfig == null) {
+			// no config found, use local HDFS
+			if (fs == null) {
+				fs = FileSystem.getLocal(getHdfsConfiguration());
+				m_fileSystems.put(id, fs);
+			}
+
+			baseDir = m_defaultBaseDir + "/" + id;
+		} else if (hdfsConfig.getServerUri() == null || hdfsConfig.getServerUri().length() == 0) {
+			// invalid server-uri, use local HDFS instead
+			if (fs == null) {
+				fs = FileSystem.getLocal(getHdfsConfiguration());
+				m_fileSystems.put(id, fs);
+			}
+
+			baseDir = m_defaultBaseDir + "/" + (hdfsConfig.getBaseDir() == null ? id : hdfsConfig.getBaseDir());
+		} else {
+			if (fs == null) {
+				URI serverUri = URI.create(hdfsConfig.getServerUri());
+
+				fs = FileSystem.get(serverUri, getHdfsConfiguration());
+				m_fileSystems.put(id, fs);
+			}
+
+			baseDir = hdfsConfig.getBaseDir();
 		}
+
+		Path file;
+
+		if (forceNew) {
+			Integer index = m_indexes.get(key);
+
+			if (index == null) {
+				index = 0;
+			} else {
+				index++;
+			}
+
+			file = new Path(baseDir, path + (index > 0 ? "-" + index : ""));
+			m_indexes.put(key, index);
+		} else {
+			file = new Path(baseDir, path);
+		}
+
+		FSDataOutputStream out = fs.create(file);
+
+		channel.initialize(hdfsConfig, out);
+
+		m_channels.put(key, channel);
+		return channel;
 	}
 
-	public void setType(String type) {
-		this.m_type = type;
+	// prepare file /etc/krb5.conf
+	// prepare file /data/appdatas/cat/cat.keytab
+	// prepare mapping [host] => [ip] at /etc/hosts
+	// put core-site.xml at / of classpath
+	// use "hdfs://dev80.hadoop:9000/user/cat" as example. Notes: host name can't
+	// be an ip address
+	private Configuration getHdfsConfiguration() throws IOException {
+		Configuration config = new Configuration();
+		Map<String, Property> properties = m_manager.getServerConfig().getStorage().getProperties();
+		Property authentication = properties.get("hadoop.security.authentication");
+
+		config.setInt("io.file.buffer.size", 8192);
+
+		for (Property property : properties.values()) {
+			config.set(property.getName(), property.getValue());
+		}
+
+		if (authentication != null && "kerberos".equals(authentication.getValue())) {
+			SecurityUtil.login(config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
+		}
+
+		return config;
+	}
+
+	public void setDefaultBaseDir(String defaultBaseDir) {
+		m_defaultBaseDir = defaultBaseDir;
 	}
 }

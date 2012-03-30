@@ -8,7 +8,6 @@ import org.jboss.netty.buffer.ChannelBuffers;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class DefaultInputChannel implements InputChannel {
@@ -42,9 +41,7 @@ public class DefaultInputChannel implements InputChannel {
 		m_in.seek(offset);
 		buf.writeBytes(m_in, length);
 
-		MessageTree tree = new DefaultMessageTree();
-
-		m_codec.decode(buf, tree);
+		MessageTree tree = m_codec.decode(buf);
 		return tree;
 	}
 

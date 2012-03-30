@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <entity name="status" root="true">
+    <attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss.SSS" />
     <entity-ref name="runtime" />
     <entity-ref name="os" />
     <entity-ref name="disk-space" />

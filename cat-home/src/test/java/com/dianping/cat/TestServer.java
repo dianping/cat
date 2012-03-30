@@ -90,9 +90,12 @@ public class TestServer extends SimpleServerSupport {
 	@Override
 	protected void postConfigure(Context ctx) {
 		ServletHolder mvc = new ServletHolder(s_mvc);
+		ServletHolder cat = new ServletHolder(s_cat);
 
 		mvc.setInitParameter("cat-client-xml", "/data/appdatas/cat/client.xml");
-		ctx.addServlet(new ServletHolder(s_cat), "/s/*");
+		cat.setInitParameter("cat-server-xml", "/data/appdatas/cat/server.xml");
+
+		ctx.addServlet(cat, "/s/*");
 		ctx.addServlet(mvc, "/");
 		ctx.addServlet(mvc, "/r/*");
 		ctx.addFilter(GzipFilter.class, "/r/*", Handler.ALL);
