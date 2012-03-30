@@ -1,5 +1,8 @@
 package com.dianping.cat.status;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -20,7 +23,7 @@ public class StatusUpdateTask implements Runnable, Initializable {
 
 	private String m_ipAddress;
 
-	private long m_interval = 1000; // 1 ms
+	private long m_interval = 1000*30; // 1 ms
 
 	@Override
 	public void initialize() throws InitializationException {
@@ -39,7 +42,8 @@ public class StatusUpdateTask implements Runnable, Initializable {
 			heartbeat.addData(status.toString());
 			heartbeat.setStatus(Message.SUCCESS);
 			heartbeat.complete();
-
+			System.out.println(new SimpleDateFormat("HH:mm:ss.SSS").format(new Date()));
+			System.out.println(status);
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;
 
 			if (elapsed < m_interval) {

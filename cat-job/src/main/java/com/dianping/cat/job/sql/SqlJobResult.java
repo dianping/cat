@@ -104,9 +104,12 @@ public class SqlJobResult implements Writable {
 		return (int) Math.pow(2, min);
 	}
 
-	public double getAvg() {
+	//get the 
+	public double getPercent95Line() {
 		Collections.sort(m_durations);
 		int size = 95 * m_durations.size() / 100;
+		return m_durations.get(size);
+		/*
 		double sum = 0;
 
 		for (int i = 0; i < size; i++) {
@@ -114,7 +117,8 @@ public class SqlJobResult implements Writable {
 		}
 
 		return sum / (double) size;
-	}
+		 */	
+		}
 
 	@Override
 	public void readFields(DataInput arg0) throws IOException {
@@ -125,10 +129,14 @@ public class SqlJobResult implements Writable {
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
 
-		sb.append(m_durations.size()).append(SPIT).append(m_failureCount).append(SPIT).append(m_longTimeCount)
-		      .append(SPIT);
-		sb.append(df.format(m_min)).append(SPIT).append(df.format(m_max)).append(SPIT).append(df.format(m_sum))
-		      .append(SPIT).append(df.format(m_sum2)).append(SPIT).append(df.format(getAvg())).append(SPIT);
+		sb.append(m_durations.size()).append(SPIT);
+		sb.append(m_failureCount).append(SPIT);
+		sb.append(m_longTimeCount).append(SPIT);
+		sb.append(df.format(m_min)).append(SPIT);
+		sb.append(df.format(m_max)).append(SPIT);
+		sb.append(df.format(m_sum)).append(SPIT);
+		sb.append(df.format(m_sum2)).append(SPIT);
+		sb.append(df.format(getPercent95Line())).append(SPIT);
 
 		int size = m_urls.size();
 
@@ -173,92 +181,92 @@ public class SqlJobResult implements Writable {
 	}
 
 	public List<Double> getDurations() {
-   	return m_durations;
-   }
+		return m_durations;
+	}
 
 	public void setDurations(List<Double> durations) {
-   	m_durations = durations;
-   }
+		m_durations = durations;
+	}
 
 	public int getFailureCount() {
-   	return m_failureCount;
-   }
+		return m_failureCount;
+	}
 
 	public void setFailureCount(int failureCount) {
-   	m_failureCount = failureCount;
-   }
+		m_failureCount = failureCount;
+	}
 
 	public int getLongTimeCount() {
-   	return m_longTimeCount;
-   }
+		return m_longTimeCount;
+	}
 
 	public void setLongTimeCount(int longTimeCount) {
-   	m_longTimeCount = longTimeCount;
-   }
+		m_longTimeCount = longTimeCount;
+	}
 
 	public double getMax() {
-   	return m_max;
-   }
+		return m_max;
+	}
 
 	public void setMax(double max) {
-   	m_max = max;
-   }
+		m_max = max;
+	}
 
 	public double getMin() {
-   	return m_min;
-   }
+		return m_min;
+	}
 
 	public void setMin(double min) {
-   	m_min = min;
-   }
+		m_min = min;
+	}
 
 	public double getSum() {
-   	return m_sum;
-   }
+		return m_sum;
+	}
 
 	public void setSum(double sum) {
-   	m_sum = sum;
-   }
+		m_sum = sum;
+	}
 
 	public double getSum2() {
-   	return m_sum2;
-   }
+		return m_sum2;
+	}
 
 	public void setSum2(double sum2) {
-   	m_sum2 = sum2;
-   }
+		m_sum2 = sum2;
+	}
 
 	public Map<Integer, Integer> getDurationDistribution() {
-   	return m_durationDistribution;
-   }
+		return m_durationDistribution;
+	}
 
 	public void setDurationDistribution(Map<Integer, Integer> durationDistribution) {
-   	m_durationDistribution = durationDistribution;
-   }
+		m_durationDistribution = durationDistribution;
+	}
 
 	public Map<Integer, Integer> getHitsOverTime() {
-   	return m_hitsOverTime;
-   }
+		return m_hitsOverTime;
+	}
 
 	public void setHitsOverTime(Map<Integer, Integer> hitsOverTime) {
-   	m_hitsOverTime = hitsOverTime;
-   }
+		m_hitsOverTime = hitsOverTime;
+	}
 
 	public Map<Integer, Double> getDurationOverTime() {
-   	return m_durationOverTime;
-   }
+		return m_durationOverTime;
+	}
 
 	public void setDurationOverTime(Map<Integer, Double> durationOverTime) {
-   	m_durationOverTime = durationOverTime;
-   }
+		m_durationOverTime = durationOverTime;
+	}
 
 	public Map<Integer, Integer> getFailureOverTime() {
-   	return m_failureOverTime;
-   }
+		return m_failureOverTime;
+	}
 
 	public void setFailureOverTime(Map<Integer, Integer> failureOverTime) {
-   	m_failureOverTime = failureOverTime;
-   }
+		m_failureOverTime = failureOverTime;
+	}
 
 	@Override
 	public void write(DataOutput arg0) throws IOException {

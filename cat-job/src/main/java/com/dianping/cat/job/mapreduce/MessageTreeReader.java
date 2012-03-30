@@ -72,22 +72,25 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 
 		// open the file and seek to the start of the split
 		Path file = split.getPath();
+
+		System.out.println("Starting process: " + file.getName());
+
 		CompressionCodec codec = m_compressionCodecs.getCodec(file);
 		FileSystem fs = file.getFileSystem(config);
 		FSDataInputStream fileIn = fs.open(split.getPath());
 		boolean skipFirstLine = false;
 
 		if (codec != null) {
-			m_in = new BlockReader(codec.createInputStream(fileIn), config);
+			m_in = new BlockReader(file, codec.createInputStream(fileIn), config);
 			m_end = Long.MAX_VALUE;
 		} else {
 			if (m_start != 0) {
 				skipFirstLine = true;
-				--m_start;
+				m_start--;
 				fileIn.seek(m_start);
 			}
 
-			m_in = new BlockReader(fileIn, config);
+			m_in = new BlockReader(file, fileIn, config);
 		}
 
 		if (skipFirstLine) { // skip first line and re-establish "start".
@@ -113,7 +116,12 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 
 		if (m_pos < m_end) {
 			blockSize = m_in.readBlock(m_value);
+
 			m_pos += blockSize;
+			
+			if (!m_value.isCompleted()) {
+				return false;
+			}
 		}
 
 		if (blockSize == 0) {
@@ -130,9 +138,12 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 
 		private PlainTextMessageCodec m_codec;
 
-		public BlockReader(InputStream in, Configuration config) {
+		private Path m_file;
+
+		public BlockReader(Path file, InputStream in, Configuration config) {
 			int bufferSize = config.getInt("io.file.buffer.size", 8192);
 
+			m_file = file;
 			m_in = new BufferedInputStream(in, bufferSize);
 			m_codec = new PlainTextMessageCodec();
 			m_codec.setBufferWriter(new EscapingBufferWriter());
@@ -179,7 +190,14 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 				prev = b;
 			}
 
-			m_codec.decode(buf, tree.get());
+			try {
+				m_codec.decode(buf, tree.get());
+				tree.complete();
+			} catch (Throwable e) {
+				System.out.println("Error when parsing file: " + m_file);
+				e.printStackTrace(System.out);
+				System.out.println("The message tree is: " + tree.get());
+			}
 
 			return count;
 		}

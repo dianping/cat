@@ -52,6 +52,10 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 	private transient boolean m_active;
 
+	private static int s_error;
+
+	private static int s_write;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -63,8 +67,8 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 			throw new RuntimeException("No server address was configured for TcpSocketSender!");
 		}
 
-		ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
-		      Executors.newCachedThreadPool());
+		ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(10),
+		      Executors.newFixedThreadPool(10));
 		ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
@@ -121,11 +125,29 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 		while (m_active) {
 			try {
-				MessageTree tree = m_queue.poll();
+				boolean isWriteable = false;
+				if (m_future != null && m_future.getChannel().isOpen()) {
+					if (m_future.getChannel().isWritable()) {
+						isWriteable = true;
+					} else {
+						try {
+							s_write++;
+							if (s_write % 1000 == 0) {
+								System.out.println("Can't write!");
+							}
+							Thread.sleep(100);
+						} catch (Exception e) {
+							break;
+						}
+					}
+				}
+				if (isWriteable) {
+					MessageTree tree = m_queue.poll();
 
-				if (tree != null) {
-					sendInternal(tree);
-					tree.setMessage(null);
+					if (tree != null) {
+						sendInternal(tree);
+						tree.setMessage(null);
+					}
 				}
 			} catch (Throwable t) {
 				m_logger.error("Error when sending message over TCP socket!", t);
@@ -144,8 +166,10 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 			if (m_statistics != null) {
 				m_statistics.onOverflowed(tree);
 			}
-
-			m_logger.error("Message queue is full in tcp socket sender!");
+			s_error++;
+			if (s_error % 100 == 0) {
+				m_logger.error("Message queue is full in tcp socket sender! Number: " + s_error);
+			}
 		}
 	}
 

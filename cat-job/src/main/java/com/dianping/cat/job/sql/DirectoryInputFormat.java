@@ -64,6 +64,7 @@ public abstract class DirectoryInputFormat<K, V> extends FileInputFormat<K, V> {
 				addFileStat(result, inputFilter, fs, stat);
 			}
 		} else {
+			System.out.println(globStat.getPath().getName());
 			result.add(globStat);
 		}
 	}

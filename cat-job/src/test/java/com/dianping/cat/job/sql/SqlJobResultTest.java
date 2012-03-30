@@ -53,7 +53,7 @@ public class SqlJobResultTest {
 		Assert.assertEquals(46200.0, sql.getSum2());
 
 		DecimalFormat df = new DecimalFormat("#.##");
-		Assert.assertEquals("5.26", df.format(sql.getAvg()));
+		Assert.assertEquals("10", df.format(sql.getPercent95Line()));
 
 		Map<Integer, Integer> durationDistribution = sql.getDurationDistribution();
 		for (int i = 0; i <= 65536;) {

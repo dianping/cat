@@ -30,6 +30,7 @@ public class DefaultOutputChannel implements OutputChannel {
 	public void close() {
 		if (m_out != null) {
 			try {
+				m_out.flush();
 				m_out.close();
 				m_out = null;
 			} catch (IOException e) {

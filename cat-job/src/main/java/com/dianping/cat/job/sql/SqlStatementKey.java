@@ -89,4 +89,12 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 		m_name = new Text(name);
 		return String.format("%s\t%s\t%s", m_domain, m_name, m_statement);
 	}
+	
+	public String replaceBlank(String str){
+		String name = str.toString();
+		name = name.replaceAll("\\s", " ");
+		name = name.replaceAll("\t", " ");
+		name = name.replaceAll("\"", "\'");
+		return name;
+	}
 }

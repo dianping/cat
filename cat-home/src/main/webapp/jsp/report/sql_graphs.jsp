@@ -1,7 +1,9 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.sql.Model" scope="request" />
+<div class="sql-title">
 SQL Statement:  ${model.statement}
+</div>
 <svg version="1.1" width="980" height="380" xmlns="http://www.w3.org/2000/svg">
   ${model.graph1}
   ${model.graph2}

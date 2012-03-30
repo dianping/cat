@@ -40,6 +40,8 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 		} catch (InterruptedException e) {
 			// ignore it
 		}
+		
+		this.m_manager.closeAllChannels();
 	}
 
 	@Override
