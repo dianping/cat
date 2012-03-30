@@ -1,0 +1,2 @@
+put krb5.conf and krb5.keytab to /etc/ folder
+put client.xml server.xml datasources.xml cat.keytab to /data/appdatas/cat/ folder
