@@ -23,6 +23,10 @@ public class SqlRecordTest {
 	@Test
 	public void testBlankReplace(){
 		SqlStatementKey key = new SqlStatementKey();
+<<<<<<< HEAD
+=======
+		String excepted ="";
+>>>>>>> 9403be6e2abceeb07ae420e75eea33204d4ca53d
 		String str = "sdf		123 	\nfddf	 43	fd";
 		str = key.replaceBlank(str);
 		String temp =str.replaceAll("\\s", "*");

@@ -187,7 +187,6 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 
 			ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(10),
 			      Executors.newFixedThreadPool(10));
-
 			ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
