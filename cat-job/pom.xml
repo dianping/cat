@@ -54,25 +54,18 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.14</version>
+				<version>1.0.15</version>
 				<executions>
 					<execution>
-						<id>generate problem report model</id>
+						<id>generate server configuration model</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>dal-model</goal>
 						</goals>
 						<configuration>
-							<manifest>${basedir}/src/main/resources/META-INF/dal/model/manifest.xml</manifest>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml</manifest>
 						</configuration>
 					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>com.site.maven.plugins</groupId>
-				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.15</version>
-				<executions>
 					<execution>
 						<id>generate dal jdbc model</id>
 						<phase>generate-sources</phase>

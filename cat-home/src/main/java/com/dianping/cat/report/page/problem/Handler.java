@@ -63,7 +63,7 @@ public class Handler implements PageHandler<Context> {
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
 		      .setProperty("ip", payload.getIpAddress()) //
-		      .setProperty("thread", payload.getIpAddress());
+		      .setProperty("thread", payload.getThreadId());
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_service.invoke(request);

@@ -39,7 +39,7 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.13</version>
+				<version>1.0.15</version>
 				<executions>
 					<execution>
 						<id>generate configuration model</id>

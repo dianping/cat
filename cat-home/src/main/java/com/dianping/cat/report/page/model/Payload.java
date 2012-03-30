@@ -19,8 +19,15 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("type")
 	private String m_type;
+
 	@FieldMeta("name")
 	private String m_name;
+
+	@FieldMeta("ip")
+	private String m_ipAddress;
+
+	@FieldMeta("thread")
+	private String m_threadId;
 
 	@Override
 	public Action getAction() {
@@ -33,6 +40,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		} else {
 			return null;
 		}
+	}
+
+	public String getIpAddress() {
+   	return m_ipAddress;
+   }
+
+	public String getName() {
+		return m_name;
 	}
 
 	@Override
@@ -56,8 +71,24 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public String getThreadId() {
+   	return m_threadId;
+   }
+
+	public String getType() {
+		return m_type;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.XML);
+	}
+
+	public void setIpAddress(String ipAddress) {
+   	m_ipAddress = ipAddress;
+   }
+
+	public void setName(String name) {
+		m_name = name;
 	}
 
 	@Override
@@ -69,21 +100,13 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_path = path;
 	}
 
-	public String getType() {
-   	return m_type;
+	public void setThreadId(String threadId) {
+   	m_threadId = threadId;
    }
 
 	public void setType(String type) {
-   	m_type = type;
-   }
-
-	public String getName() {
-   	return m_name;
-   }
-
-	public void setName(String name) {
-   	m_name = name;
-   }
+		m_type = type;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

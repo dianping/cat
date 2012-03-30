@@ -5,6 +5,8 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.page.ip.DisplayModelTest;
+import com.dianping.cat.report.page.model.EventReportFilterTest;
+import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 
 @RunWith(Suite.class)
@@ -12,6 +14,11 @@ import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 
 /* .report.page.ip */
 DisplayModelTest.class,
+
+/* .report.page.model */
+EventReportFilterTest.class,
+
+TransactionReportFilterTest.class,
 
 /* .report.page.transaction */
 TransactionReportMergerTest.class
