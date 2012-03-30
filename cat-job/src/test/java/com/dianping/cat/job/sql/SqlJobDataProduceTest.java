@@ -33,7 +33,7 @@ public class SqlJobDataProduceTest extends CatTestCase {
 		long currentHour = currentTimeMillis - currentTimeMillis % (60 * 60 * 1000);
 		for (int i = 0; i < 3; i++) {
 	
-			for (int j = 0; j < 1200; j++) {
+			for (int j = 0; j < 12000; j++) {
 				Transaction t = producer.newTransaction("URL", "MyPage" + (int) (j / 500));
 
 				try {

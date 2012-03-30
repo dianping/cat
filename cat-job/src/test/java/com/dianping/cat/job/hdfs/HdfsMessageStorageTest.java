@@ -2,6 +2,7 @@ package com.dianping.cat.job.hdfs;
 
 import java.io.File;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -30,21 +31,24 @@ public class HdfsMessageStorageTest extends CatTestCase {
 		return tree;
 	}
 
+	@Before
+	public void before() throws Exception {
+		ServerConfigManager configManager = lookup(ServerConfigManager.class);
+
+		configManager.initialize(new File("/data/appdatas/cat/server.xml"));
+	}
+
 	@Test
 	public void test() throws Exception {
-		ServerConfigManager configManager = lookup(ServerConfigManager.class);
-		
-		configManager.initialize(new File("/data/appdatas/cat/server.xml"));
-		
 		MessageStorage storage = lookup(MessageStorage.class, "hdfs");
 		MessageManager manager = lookup(MessageManager.class);
 		MessageTree tree = newMessageTree("abcdef");
 		Transaction t = new DefaultTransaction("t", "n", manager);
-		
+
 		tree.setMessage(t);
 		storage.store(tree);
-//		MessageTree actual = storage.get(tree.getMessageId());
-//		Assert.assertEquals(tree, actual);
+		// MessageTree actual = storage.get(tree.getMessageId());
+		// Assert.assertEquals(tree, actual);
 		((HdfsMessageStorage) storage).dispose();
 	}
 }

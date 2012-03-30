@@ -21,8 +21,8 @@ public class DefaultMessageQueue implements MessageQueue, Initializable {
 	public void initialize() throws InitializationException {
 		if (m_size > 0) {
 			m_queue = new LinkedBlockingQueue<MessageTree>(m_size);
-		}else{
-			m_queue = new LinkedBlockingQueue<MessageTree>(100);
+		} else {
+			m_queue = new LinkedBlockingQueue<MessageTree>(1000);
 		}
 	}
 
@@ -46,6 +46,6 @@ public class DefaultMessageQueue implements MessageQueue, Initializable {
 	}
 
 	public void setSize(int size) {
-   	m_size = size;
-   }
+		m_size = size;
+	}
 }

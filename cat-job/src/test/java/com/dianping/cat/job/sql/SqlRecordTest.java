@@ -21,6 +21,15 @@ public class SqlRecordTest {
 	}
 
 	@Test
+	public void testBlankReplace(){
+		SqlStatementKey key = new SqlStatementKey();
+		String str = "sdf		123 	\nfddf	 43	fd";
+		str = key.replaceBlank(str);
+		String temp =str.replaceAll("\\s", "*");
+		System.out.println(temp);
+		System.out.println(str);
+	}
+	@Test
 	public void testSplit() {
 		String text = "domain1	SQLStatement-Internal9	insert into mysql where is='sfsdf'	"+"" +
 				"500	500	500	100	199	74750	11591750	147	www.sina.com	m_durationDistribution	m_hitsOverTime	m_durationOverTime	m_failureOverTime";

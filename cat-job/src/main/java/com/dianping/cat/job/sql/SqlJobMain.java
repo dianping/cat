@@ -37,11 +37,9 @@ public class SqlJobMain extends Configured implements Tool {
 	 * the number of reduce; The args[1] is for input path
 	 */
 	public static void main(String[] args) throws Exception {
-	//	int exitCode = ToolRunner.run(new Configuration(), new SqlJobMain(), args);
-
-	//	System.exit(exitCode);
 		int exitCode = ToolRunner.run(new Configuration(), new SqlJobMain(), args);
-		
+
+		System.exit(exitCode);
 	}
 
 	private String getLastHoursString(int hours) {
@@ -55,8 +53,6 @@ public class SqlJobMain extends Configured implements Tool {
 
 	@Override
 	public int run(String[] args) throws Exception {
-		runSqlRecordJob();
-		
 		Configuration conf = getConf();
 		Job job = new Job(conf, "Sql Analyzer");
 
@@ -92,7 +88,7 @@ public class SqlJobMain extends Configured implements Tool {
 			if (BASE_URL.charAt(BASE_URL.length() - 1) == '/') {
 				BASE_URL = BASE_URL.substring(0, BASE_URL.length() - 1);
 			}
-			DEFAULT_IN_PATH = BASE_URL + "/dump/";
+			DEFAULT_IN_PATH = BASE_URL;
 			DEFAULT_OUT_PATH = BASE_URL + "/sql/";
 			DEFAULT_FINAL_PATH = BASE_URL + "/sqlResult/";
 		}
@@ -116,8 +112,6 @@ public class SqlJobMain extends Configured implements Tool {
 		} else {
 			return 0;
 		}
-		// String hourStr = getLastHoursString(1);
-		// return runSqlRecordJob(hourStr);
 	}
 
 	/*
@@ -137,25 +131,6 @@ public class SqlJobMain extends Configured implements Tool {
 		FileInputFormat.addInputPath(job, new Path(DEFAULT_OUT_PATH + currentHour));
 		FileOutputFormat.setOutputPath(job, new Path(DEFAULT_FINAL_PATH));
 		Files.forDir().delete(new File(DEFAULT_FINAL_PATH), true);
-		return job.waitForCompletion(true) ? 0 : 1;
-	}
-	
-	private int runSqlRecordJob() throws Exception {
-		System.out.println("Insert database job start!");
-		Configuration conf = getConf();
-		conf.set("JobHour", "20120328/19");
-		Job job = new Job(conf, "Sql Record");
-
-		job.setJarByClass(SqlJobMain.class);
-		job.setMapperClass(SqlRecordJobMapper.class);
-		job.setReducerClass(SqlRecordJobReducer.class);
-		job.setMapOutputKeyClass(Text.class);
-		job.setMapOutputValueClass(Text.class);
-		FileInputFormat.addInputPath(job, new Path("target/Test"));
-		String output = "target/test2";
-		FileOutputFormat.setOutputPath(job, new Path(output));
-		FileSystem fs = FileSystem.get(conf);
-		fs.delete(new Path(output), true);	
 		return job.waitForCompletion(true) ? 0 : 1;
 	}
 }

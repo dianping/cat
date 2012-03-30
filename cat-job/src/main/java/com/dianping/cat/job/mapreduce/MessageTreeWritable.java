@@ -12,8 +12,18 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 public class MessageTreeWritable implements Writable {
 	private MessageTree m_tree = new DefaultMessageTree();
 
+	private boolean m_completed;
+
+	public void complete() {
+		m_completed = true;
+	}
+
 	public MessageTree get() {
 		return m_tree;
+	}
+
+	public boolean isCompleted() {
+		return m_completed;
 	}
 
 	@Override

@@ -151,6 +151,8 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 		m_outputChannel = m_outputChannelManager.openChannel("logview", m_path, false);
 		m_worker = new MessageUploadWorker();
 
+
+		m_worker.setName("MessageUploadWorker");
 		m_worker.start();
 	}
 
@@ -162,7 +164,7 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 			long offset = logview.getDataOffset();
 			int length = logview.getDataLength();
 
-			inputChannel = m_inputChannelManager.openChannel(path);
+			inputChannel = m_inputChannelManager.openChannel("logview", path);
 
 			MessageTree tree = inputChannel.read(offset, length);
 
@@ -215,7 +217,7 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 						uploadMessage(trees);
 						trees.clear();
 					} else {
-						Thread.sleep(5);
+						Thread.sleep(10);
 					}
 				}
 			} catch (InterruptedException e) {
@@ -248,16 +250,16 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 					logview.setTagThread("t:" + tree.getThreadId());
 					logview.setTagSession("s:" + tree.getSessionToken());
 					logview.setTagRequest("r:" + messageId);
+					
+					logviews.add(logview);
 				}
-				
+
 				m_logviewDao.insert(logviews.toArray(new Logview[0]));
 				t.setStatus(Message.SUCCESS);
-			} catch (IOException e) {
+			} catch (Exception e) {
 				cat.logError(e);
 				t.setStatus(e);
-			} catch (DalException e) {
-				cat.logError(e);
-				t.setStatus(e);
+				e.printStackTrace();
 			} finally {
 				t.complete();
 			}

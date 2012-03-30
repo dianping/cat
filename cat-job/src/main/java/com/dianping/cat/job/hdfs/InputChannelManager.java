@@ -9,5 +9,5 @@ public interface InputChannelManager {
 
 	public void closeChannel(InputChannel channel);
 
-	public InputChannel openChannel(String path) throws IOException;
+	public InputChannel openChannel(String id, String path) throws IOException;
 }

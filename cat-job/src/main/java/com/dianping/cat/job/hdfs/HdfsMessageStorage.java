@@ -40,6 +40,8 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 		} catch (InterruptedException e) {
 			// ignore it
 		}
+		
+		this.m_manager.closeAllChannels();
 	}
 
 	@Override
@@ -53,7 +55,7 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 
 		Thread thread = new Thread(m_job);
 
-		thread.setName("Storage write Job");
+		thread.setName("HdfsMessageStorage-WriteJob");
 		thread.start();
 
 		m_thread = thread;

@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.job.DumpToHdfsConsumer;
-import com.dianping.cat.job.configuration.HdfsConfig;
 import com.dianping.cat.job.hdfs.DefaultInputChannel;
 import com.dianping.cat.job.hdfs.DefaultInputChannelManager;
 import com.dianping.cat.job.hdfs.DefaultOutputChannel;
 import com.dianping.cat.job.hdfs.DefaultOutputChannelManager;
+import com.dianping.cat.job.hdfs.FileSystemManager;
 import com.dianping.cat.job.hdfs.HdfsMessageStorage;
 import com.dianping.cat.job.hdfs.InputChannel;
 import com.dianping.cat.job.hdfs.InputChannelManager;
@@ -33,20 +33,18 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(HdfsConfig.class));
-
 		all.add(C(ServerConfigManager.class));
+		all.add(C(FileSystemManager.class) //
+		      .req(ServerConfigManager.class));
 
 		all.add(C(OutputChannel.class, DefaultOutputChannel.class).is(PER_LOOKUP) //
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(OutputChannelManager.class, DefaultOutputChannelManager.class) //
-		      .req(ServerConfigManager.class) //
-		      .config(E("defaultBaseDir").value("target/hdfs")));
+		      .req(FileSystemManager.class));
 		all.add(C(InputChannel.class, DefaultInputChannel.class).is(PER_LOOKUP) //
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(InputChannelManager.class, DefaultInputChannelManager.class) //
-		      .req(HdfsConfig.class) //
-		      .config(E("baseDir").value("data")));
+		      .req(FileSystemManager.class));
 
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
 		      .req(OutputChannelManager.class) //

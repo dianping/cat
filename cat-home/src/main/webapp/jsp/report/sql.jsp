@@ -37,15 +37,15 @@
 	<c:forEach var="reportRecord" items="${model.report.reportRecords}" varStatus="status">
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 			<td><a href="?op=graphs&id=${reportRecord.record.id}" onclick="return showGraphs(this,${status.index},'${reportRecord.record.id}');">[:: show ::]</a> ${reportRecord.record.name}</td>
-			<td>${w:format(reportRecord.record.totalcount,'0.00')}</td>
-			<td>${w:format(reportRecord.record.failures,'0.00')}</td>
+			<td>${w:format(reportRecord.record.totalCount,'0.00')}</td>
+			<td>${w:format(reportRecord.record.failureCount,'0.00')}</td>
 			<td>${w:format(reportRecord.failurePercent,'0.00%')}</td>
-			<td>${w:format(reportRecord.record.minvalue,'0.00')} / ${w:format(reportRecord.record.maxvalue,'0.00')} / ${w:format(reportRecord.avg,'0.00')} / ${w:format(reportRecord.std,'0.00')}</td>
-			<td>${w:format(reportRecord.record.avg2value,'0.00')}</td>
-			<td>${w:format(reportRecord.record.sumvalue,'0.00')}</td>
-			<td>${w:format(reportRecord.record.longsqls,'0.00')}</td>
+			<td>${w:format(reportRecord.record.minValue,'0.00')} / ${w:format(reportRecord.record.maxValue,'0.00')} / ${w:format(reportRecord.avg,'0.00')} / ${w:format(reportRecord.std,'0.00')}</td>
+			<td>${w:format(reportRecord.record.avg2Value,'0.00')}</td>
+			<td>${w:format(reportRecord.record.sumValue,'0.00')}</td>
+			<td>${w:format(reportRecord.record.longSqls,'0.00')}</td>
 			<td>${w:format(reportRecord.longPercent,'0.00%')}</td>
-			<td><a href='cat/r/m/${reportRecord.record.samplelink}/logview.html'>Link</a></td>
+			<td><a href='cat/r/m/${reportRecord.record.sampleLink}/logview.html'>Link</a></td>
 		</tr>
 		<tr class="graphs"><td colspan="10" align="center"><div id="${status.index}" style="display:none"></div></td></tr>
 	</c:forEach> 

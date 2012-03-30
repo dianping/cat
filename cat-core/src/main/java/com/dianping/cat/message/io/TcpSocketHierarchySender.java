@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -19,7 +20,6 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
@@ -46,6 +46,28 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 	private Logger m_logger;
 
 	private transient boolean m_active;
+
+	private AtomicInteger m_errors = new AtomicInteger();
+
+	private AtomicInteger m_attempts = new AtomicInteger();
+
+	boolean checkWritable(ChannelFuture future) {
+		boolean isWriteable = false;
+
+		if (future != null && future.getChannel().isOpen()) {
+			if (future.getChannel().isWritable()) {
+				isWriteable = true;
+			} else {
+				int count = m_attempts.incrementAndGet();
+
+				if (count % 100 == 0) {
+					m_logger.error("Can't send message to cat-server due to Netty write buffer full! Count: " + count);
+				}
+			}
+		}
+
+		return isWriteable;
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -90,24 +112,37 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 				m_statistics.onOverflowed(tree);
 			}
 
-			m_logger.error("Message queue is full in tcp socket sender!");
+			int count = m_errors.incrementAndGet();
+
+			if (count % 100 == 0) {
+				m_logger.error("Message queue is full in tcp socket sender! Count: " + count);
+			}
 		}
 	}
 
 	private void sendInternal(MessageTree tree) {
 		ChannelFuture future = m_manager.getChannel();
 
-		if (future != null && future.getChannel().isOpen()) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(10 * 1024); // 10K
+		if (checkWritable(future)) {
+			if (future != null && future.getChannel().isOpen()) {
+				ChannelBuffer buf = ChannelBuffers.dynamicBuffer(10 * 1024); // 10K
 
-			m_codec.encode(tree, buf);
+				m_codec.encode(tree, buf);
 
-			int size = buf.readableBytes();
+				int size = buf.readableBytes();
 
-			future.getChannel().write(buf);
+				future.getChannel().write(buf);
 
-			if (m_statistics != null) {
-				m_statistics.onBytes(size);
+				if (m_statistics != null) {
+					m_statistics.onBytes(size);
+				}
+			}
+		} else {
+			try {
+				Thread.sleep(100);
+			} catch (Exception e) {
+				// ignore it
+				m_active = false;
 			}
 		}
 	}
@@ -150,8 +185,9 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 			m_serverAddresses = serverAddresses;
 			m_futures = new ArrayList<ChannelFuture>(Collections.<ChannelFuture> nCopies(len, null));
 
-			ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
-			      Executors.newCachedThreadPool());
+			ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(10),
+			      Executors.newFixedThreadPool(10));
+
 			ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
@@ -258,17 +294,6 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
 			e.getChannel().close();
-		}
-
-		@Override
-		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-			ChannelBuffer buf = (ChannelBuffer) e.getMessage();
-
-			while (buf.readable()) {
-				// TODO do something here
-				System.out.println((char) buf.readByte());
-				System.out.flush();
-			}
 		}
 	}
 }

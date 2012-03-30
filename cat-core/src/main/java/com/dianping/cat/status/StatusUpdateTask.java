@@ -20,11 +20,11 @@ public class StatusUpdateTask implements Runnable, Initializable {
 
 	private String m_ipAddress;
 
-	private long m_interval = 1000; // 1 second
+	private long m_interval = 60 * 1000; // 60 seconds
 
 	@Override
 	public void initialize() throws InitializationException {
-			m_ipAddress = LocalIP.getAddress();
+		m_ipAddress = LocalIP.getAddress();
 	}
 
 	@Override

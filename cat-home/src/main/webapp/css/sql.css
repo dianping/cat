@@ -6,11 +6,14 @@
 .sql-table .odd td {
 	background-color: #eee;
 	font-size: small;
-	text-align: center;
 }
 
 .sql-table .even td {
 	background-color: white;
 	font-size: small;
-	text-align: center;
+}
+
+.sql-title {
+	background-color: #F2F2F2;
+	font-size: medium;
 }

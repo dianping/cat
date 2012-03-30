@@ -1,9 +1,12 @@
 package com.dianping.cat.job.hdfs;
 
+import java.io.File;
+
 import junit.framework.Assert;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -11,6 +14,7 @@ import org.junit.runners.JUnit4;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.server.configuration.ServerConfigManager;
 
 @RunWith(JUnit4.class)
 public class HdfsChannelManagerTest extends CatTestCase {
@@ -28,9 +32,16 @@ public class HdfsChannelManagerTest extends CatTestCase {
 		return tree;
 	}
 
+	@Before
+	public void before() throws Exception {
+		ServerConfigManager configManager = lookup(ServerConfigManager.class);
+
+		configManager.initialize(new File("/data/appdatas/cat/server.xml"));
+	}
+
 	@Test
 	public void testOutputAndInput() throws Exception {
-		DefaultOutputChannelManager ocm = (DefaultOutputChannelManager) lookup(OutputChannelManager.class);
+		OutputChannelManager ocm = lookup(OutputChannelManager.class);
 		String testid = "" + System.currentTimeMillis();
 		DefaultMessageTree tree = newMessageTree(testid);
 		String path = "20120321/11/Cat-192.168.63.36-1332299450675";
@@ -38,9 +49,8 @@ public class HdfsChannelManagerTest extends CatTestCase {
 		oc.write(tree);
 		ocm.closeChannel(oc);
 
-		DefaultInputChannelManager icm = (DefaultInputChannelManager) lookup(InputChannelManager.class);
-		icm.initialize();
-		InputChannel ic = icm.openChannel(path);
+		InputChannelManager icm = lookup(InputChannelManager.class);
+		InputChannel ic = icm.openChannel("logview", path);
 		MessageCodec codec = lookup(MessageCodec.class, "plain-text");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 		codec.encode(tree, buf);

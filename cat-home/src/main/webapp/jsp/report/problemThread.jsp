@@ -23,7 +23,7 @@
    <tr>
 	  <th>Machines:</th>
    	  <c:forEach var="machine" items="${report.machines}">
-   	  	<td><a href="?domain=${model.domain}&ip=${model.ipAddress}">${machine.value.ip}</a></td>
+   	  	<td><a href="?domain=${model.domain}&ip=${machine.value.ip}">${machine.value.ip}</a></td>
    	  </c:forEach>
    </tr>
 </table>

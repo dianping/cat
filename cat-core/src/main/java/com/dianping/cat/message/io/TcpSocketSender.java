@@ -2,6 +2,7 @@ package com.dianping.cat.message.io;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -16,7 +17,6 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.ChannelStateEvent;
 import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
-import org.jboss.netty.channel.MessageEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
 
@@ -52,6 +52,10 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 	private transient boolean m_active;
 
+	private AtomicInteger m_errors = new AtomicInteger();
+
+	private AtomicInteger m_attempts = new AtomicInteger();
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -63,8 +67,8 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 			throw new RuntimeException("No server address was configured for TcpSocketSender!");
 		}
 
-		ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newCachedThreadPool(),
-		      Executors.newCachedThreadPool());
+		ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(10),
+		      Executors.newFixedThreadPool(10));
 		ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
@@ -132,12 +136,20 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 			}
 
 			try {
-				MessageTree tree = m_queue.poll();
+				if (checkWritable()) {
+					MessageTree tree = m_queue.poll();
 
-				if (tree != null) {
-					sendInternal(tree);
+					if (tree != null) {
+						sendInternal(tree);
 
-					tree.setMessage(null);
+						tree.setMessage(null);
+					}
+				} else {
+					try {
+						Thread.sleep(100);
+					} catch (Exception e) {
+						break;
+					}
 				}
 			} catch (Throwable t) {
 				m_logger.error("Error when sending message over TCP socket!", t);
@@ -146,6 +158,24 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 
 		m_future.getChannel().getCloseFuture().awaitUninterruptibly();
 		m_factory.releaseExternalResources();
+	}
+
+	boolean checkWritable() {
+		boolean isWriteable = false;
+
+		if (m_future != null && m_future.getChannel().isOpen()) {
+			if (m_future.getChannel().isWritable()) {
+				isWriteable = true;
+			} else {
+				int count = m_attempts.incrementAndGet();
+
+				if (count % 100 == 0) {
+					m_logger.error("Can't send message to cat-server due to Netty write buffer full! Count: " + count);
+				}
+			}
+		}
+
+		return isWriteable;
 	}
 
 	@Override
@@ -157,7 +187,11 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 				m_statistics.onOverflowed(tree);
 			}
 
-			m_logger.error("Message queue is full in tcp socket sender!");
+			int count = m_errors.incrementAndGet();
+
+			if (count % 100 == 0) {
+				m_logger.error("Message queue is full in tcp socket sender! Count: " + count);
+			}
 		}
 	}
 
@@ -207,17 +241,6 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 		@Override
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
 			e.getChannel().close();
-		}
-
-		@Override
-		public void messageReceived(ChannelHandlerContext ctx, MessageEvent e) {
-			ChannelBuffer buf = (ChannelBuffer) e.getMessage();
-
-			while (buf.readable()) {
-				// TODO do something here
-				System.out.println((char) buf.readByte());
-				System.out.flush();
-			}
 		}
 	}
 }

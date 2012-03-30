@@ -1,32 +1,17 @@
 package com.dianping.cat.job.hdfs;
 
 import java.io.IOException;
-import java.net.URI;
 
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.job.configuration.HdfsConfig;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultInputChannelManager extends ContainerHolder implements InputChannelManager, Initializable {
+public class DefaultInputChannelManager extends ContainerHolder implements InputChannelManager {
 	@Inject
-	private URI m_serverUri;
-
-	@Inject
-	private String m_baseDir = "target/hdfs";
-
-	@Inject
-	private HdfsConfig m_hdfsConfig;
-
-	private FileSystem m_fs;
-
-	private Path m_basePath;
+	private FileSystemManager m_manager;
 
 	@Override
 	public void cleanupChannels() {
@@ -43,50 +28,18 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
-		try {
-			Configuration config = new Configuration();
-			FileSystem fs;
+	public InputChannel openChannel(String id, String path) throws IOException {
+		String key = id + ":" + path;
+		StringBuilder baseDir = new StringBuilder(32);
+		FileSystem fs = m_manager.getFileSystem(key, id, path, baseDir);
+		Path file = new Path(baseDir.toString(), path);
 
-			config.setInt("io.file.buffer.size", 8192);
-
-			String dataPath = this.m_hdfsConfig.getDataPath();
-			if (dataPath.startsWith("hdfs://")) {
-				this.setServerUri(dataPath);
-			} else {
-				this.m_baseDir = dataPath;
-			}
-			if (m_serverUri == null) {
-				fs = FileSystem.getLocal(config);
-				m_basePath = new Path(fs.getWorkingDirectory(), m_baseDir);
-			} else {
-				fs = FileSystem.get(m_serverUri, config);
-				m_basePath = new Path(new Path(m_serverUri), m_baseDir);
-			}
-
-			m_fs = fs;
-		} catch (Exception e) {
-			throw new InitializationException("Error when getting HDFS file system.", e);
-		}
-	}
-
-	@Override
-	public InputChannel openChannel(String path) throws IOException {
-		Path file = new Path(m_basePath, path);
-		FSDataInputStream in = m_fs.open(file);
+		FSDataInputStream in = fs.open(file);
 		DefaultInputChannel channel = (DefaultInputChannel) lookup(InputChannel.class);
+
 		channel.setPath(path);
 		channel.initialize(in);
+
 		return channel;
-	}
-
-	public void setBaseDir(String baseDir) {
-		m_baseDir = baseDir;
-	}
-
-	public void setServerUri(String serverUri) {
-		if (serverUri != null && serverUri.length() > 0) {
-			m_serverUri = URI.create(serverUri);
-		}
 	}
 }
