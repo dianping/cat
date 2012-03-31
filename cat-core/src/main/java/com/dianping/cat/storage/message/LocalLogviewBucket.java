@@ -63,6 +63,8 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 	private Logger m_logger;
 
+	private String m_logicalPath;
+
 	@Override
 	public void close() throws IOException {
 		m_writeLock.lock();
@@ -81,7 +83,8 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public void deleteAndCreate() throws IOException {
-		throw new UnsupportedOperationException("Not supported by local logview bucket!");
+		new File(m_baseDir, m_logicalPath).delete();
+		new File(m_baseDir, m_logicalPath + ".idx").delete();
 	}
 
 	@Override
@@ -101,13 +104,12 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		if (offset != null) {
 			m_readLock.lock();
 
-			if (m_dirty.get()) {
-				flush(); // flush first if any read requesting
-			}
-
 			try {
+				if (m_dirty.get()) {
+					flush(); // flush first if any read requesting
+				}
+
 				m_readDataFile.seek(offset);
-				m_readDataFile.readLine(); // first line is header, get rid of it
 
 				int num = Integer.parseInt(m_readDataFile.readLine());
 				byte[] bytes = new byte[num];
@@ -175,7 +177,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 			m_writeIndexFile.flush();
 		} finally {
 			m_dirty.set(false);
-			m_writeLock.lock();
+			m_writeLock.unlock();
 		}
 	}
 
@@ -196,9 +198,10 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 		dataFile.getParentFile().mkdirs();
 
+		m_logicalPath = logicalPath;
+		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile, true), 8192);
+		m_writeIndexFile = new BufferedOutputStream(new FileOutputStream(indexFile, true), 8192);
 		m_readDataFile = new RandomAccessFile(dataFile, "r");
-		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile), 8192);
-		m_writeIndexFile = new BufferedOutputStream(new FileOutputStream(indexFile), 8192);
 
 		if (indexFile.exists()) {
 			loadIndexes(indexFile);
@@ -256,6 +259,8 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public boolean storeById(String id, MessageTree tree) throws IOException {
+		m_writeLock.lock();
+
 		if (m_idToOffsets.containsKey(id)) {
 			return false;
 		}
@@ -268,20 +273,18 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 		int length = buf.readInt();
 		byte[] num = String.valueOf(length).getBytes("utf-8");
-		long offset = m_writeDataFileLength;
-
-		m_writeLock.lock();
 
 		try {
 			m_writeDataFile.write(num);
 			m_writeDataFile.write('\n');
 			m_writeDataFile.write(buf.array(), buf.readerIndex(), length);
 			m_writeDataFile.write('\n');
-			m_writeDataFileLength += num.length + 1 + length + 1;
 
+			long offset = m_writeDataFileLength;
 			String line = id + '\t' + offset + '\t' + Joiners.by('\t').join(tags) + '\n';
 			byte[] data = line.getBytes("utf-8");
 
+			m_writeDataFileLength += num.length + 1 + length + 1;
 			m_writeIndexFile.write(data);
 			m_dirty.set(true);
 
