@@ -8,7 +8,43 @@
 <a:body>
 
 Welcome to <b>Central Application Tracking (CAT)</b>.
-
-<br><br><a href="?op=checkpoint">Do checkpoint here</a>
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<a href="?op=checkpoint" style="color:#FFF">Do checkpoint here</a>
 </a:body>

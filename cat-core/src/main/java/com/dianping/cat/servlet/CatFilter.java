@@ -85,7 +85,7 @@ public class CatFilter implements Filter {
 			ip = ips[ips.length - 1].trim();
 		}
 		sb.append("RemoteIp=").append(ip);
-		sb.append("VirtualIP=").append(req.getRemoteAddr());
+		sb.append("&VirtualIP=").append(req.getRemoteAddr());
 		sb.append("&Server=").append(req.getServerName());
 		sb.append("&Referer=").append(req.getHeader("referer"));
 		sb.append("&Agent=").append(req.getHeader("user-agent"));
