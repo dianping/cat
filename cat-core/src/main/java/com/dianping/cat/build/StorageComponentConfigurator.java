@@ -34,6 +34,11 @@ class StorageComponentConfigurator extends AbstractResourceConfigurator {
 		      .is(PER_LOOKUP) //
 		      .req(MessagePathBuilder.class) //
 		      .req(MessageCodec.class, "plain-text"));
+		all.add(C(Bucket.class, MessageTree.class.getName() + "-message",
+		      com.dianping.cat.storage.message.LocalMessageBucket.class) //
+		      .is(PER_LOOKUP) //
+		      .req(MessagePathBuilder.class) //
+		      .req(MessageCodec.class, "plain-text"));
 
 		return all;
 	}

@@ -22,10 +22,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -266,47 +262,35 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 		List<String> tags = prepareTags(tree);
 
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("Bucket", getClass().getSimpleName());
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
+		m_codec.encode(tree, buf);
+
+		int length = buf.readInt();
+		byte[] num = String.valueOf(length).getBytes("utf-8");
+		long offset = m_writeDataFileLength;
+
+		m_writeLock.lock();
+
 		try {
-			m_codec.encode(tree, buf);
+			m_writeDataFile.write(num);
+			m_writeDataFile.write('\n');
+			m_writeDataFile.write(buf.array(), buf.readerIndex(), length);
+			m_writeDataFile.write('\n');
+			m_writeDataFileLength += num.length + 1 + length + 1;
 
-			int length = buf.readInt();
-			byte[] num = String.valueOf(length).getBytes("utf-8");
-			long offset = m_writeDataFileLength;
+			String line = id + '\t' + offset + '\t' + Joiners.by('\t').join(tags) + '\n';
+			byte[] data = line.getBytes("utf-8");
 
-			m_writeLock.lock();
+			m_writeIndexFile.write(data);
+			m_dirty.set(true);
 
-			try {
-				m_writeDataFile.write(num);
-				m_writeDataFile.write('\n');
-				m_writeDataFile.write(buf.array(), buf.readerIndex(), length);
-				m_writeDataFile.write('\n');
-				m_writeDataFileLength += num.length + 1 + length + 1;
+			updateIndex(id, offset, tags);
 
-				String line = id + '\t' + offset + '\t' + Joiners.by('\t').join(tags) + '\n';
-				byte[] data = line.getBytes("utf-8");
-
-				m_writeIndexFile.write(data);
-				m_dirty.set(true);
-
-				updateIndex(id, offset, tags);
-
-				t.setStatus(Message.SUCCESS);
-				return true;
-			} catch (Exception e) {
-				cat.logError(e);
-				t.setStatus(e);
-			} finally {
-				m_writeLock.unlock();
-			}
+			return true;
 		} finally {
-			t.complete();
+			m_writeLock.unlock();
 		}
-
-		return false;
 	}
 
 	protected void updateIndex(String id, long offset, List<String> tags) {
