@@ -18,13 +18,19 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
+		String defaultLocalMode = "true";
 
-		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-				.req(MessageConsumer.class, new String[] { "realtime", DumpToHdfsConsumer.ID }, "m_consumers"));
+		if ("true".equals(defaultLocalMode)) {
+			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
+			      .req(MessageConsumer.class, new String[] { "realtime" }, "m_consumers"));
+		} else {
+			all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
+			      .req(MessageConsumer.class, new String[] { "realtime", DumpToHdfsConsumer.ID }, "m_consumers"));
+		}
 
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
-				.req(ValueTranslater.class));
+		      .req(ValueTranslater.class));
 
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

@@ -26,7 +26,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-		String defaultLocalMode = "false";
+		String defaultLocalMode = "true";
 
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class) //
 		      .config(E("local").value(property("local", defaultLocalMode))));

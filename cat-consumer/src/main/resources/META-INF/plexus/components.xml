@@ -4,7 +4,7 @@
 			<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 			<implementation>com.dianping.cat.consumer.DefaultAnalyzerFactory</implementation>
 			<configuration>
-				<local>false</local>
+				<local>true</local>
 			</configuration>
 		</component>
 		<component>

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.2.0</version>
+	<version>0.2.1</version>
 	<name>Tracking</name>
 	<packaging>pom</packaging>
 	<modules>
@@ -23,12 +23,12 @@
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-consumer</artifactId>
-				<version>0.2.0</version>
+				<version>0.2.1</version>
 			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-job</artifactId>
-				<version>0.2.0</version>
+				<version>0.2.1</version>
 			</dependency>
 			<dependency>
 				<groupId>com.site.common</groupId>
@@ -195,6 +195,12 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 		</plugins>
 	</build>
 	<distributionManagement>
+      <repository>
+         <id>dianping.repo</id>
+         <url>http://192.168.8.45:8080/artifactory/dianping-releases</url>
+      </repository>
+
+<!--
 		<repository>
 			<id>releases</id>
 			<url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/releases/</url>
@@ -203,6 +209,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 			<id>snapshots</id>
 			<url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/snapshots/</url>
 		</snapshotRepository>
+-->
 	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
