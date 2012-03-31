@@ -270,5 +270,20 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>com.dianping.cat.message.spi.MessageTree-logview</role-hint>
+			<implementation>com.dianping.cat.storage.message.LocalLogviewBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
+		</component>
 	</components>
 </plexus>

@@ -11,6 +11,7 @@ import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.internal.DefaultBucketManager;
 import com.dianping.cat.storage.internal.LocalMessageBucket;
 import com.dianping.cat.storage.internal.LocalStringBucket;
+import com.dianping.cat.storage.message.LocalLogviewBucket;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -28,6 +29,11 @@ class StorageComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(BucketManager.class, DefaultBucketManager.class) //
 		      .req(MessagePathBuilder.class));
+
+		all.add(C(Bucket.class, MessageTree.class.getName() + "-logview", LocalLogviewBucket.class) //
+		      .is(PER_LOOKUP) //
+		      .req(MessagePathBuilder.class) //
+		      .req(MessageCodec.class, "plain-text"));
 
 		return all;
 	}
