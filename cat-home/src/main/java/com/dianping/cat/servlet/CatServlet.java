@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.transform.DefaultXmlParser;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
-import com.dianping.cat.server.configuration.ServerConfigManager;
 import com.site.helper.Files;
 import com.site.web.AbstractContainerServlet;
 
@@ -30,7 +30,7 @@ public class CatServlet extends AbstractContainerServlet {
 	@Override
 	protected void initComponents(ServletConfig servletConfig) throws ServletException {
 		String catServerXml = servletConfig.getInitParameter("cat-server-xml");
-		Config config = loadConfig(null);
+		ClientConfig config = loadConfig(null);
 
 		try {
 			MessageManager manager = lookup(MessageManager.class);
@@ -57,8 +57,8 @@ public class CatServlet extends AbstractContainerServlet {
 		}
 	}
 
-	protected Config loadConfig(String configFile) {
-		Config config = null;
+	protected ClientConfig loadConfig(String configFile) {
+		ClientConfig config = null;
 
 		// read config from local file system
 		try {

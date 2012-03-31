@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import com.dianping.cat.job.mapreduce.MessageTreeWritable;
+import com.dianping.cat.hadoop.mapreduce.MessageTreeWritable;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;

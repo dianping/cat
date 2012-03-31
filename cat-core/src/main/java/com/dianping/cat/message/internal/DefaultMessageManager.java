@@ -11,8 +11,8 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.LocalIP;
-import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.entity.Domain;
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
@@ -44,9 +44,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	};
 
-	private Config m_clientConfig;
+	private ClientConfig m_clientConfig;
 
-	private Config m_serverConfig;
+	private ClientConfig m_serverConfig;
 
 	private Domain m_domain;
 
@@ -94,7 +94,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public Config getClientConfig() {
+	public ClientConfig getClientConfig() {
 		return m_clientConfig;
 	}
 
@@ -125,7 +125,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public Config getServerConfig() {
+	public ClientConfig getServerConfig() {
 		return m_serverConfig;
 	}
 
@@ -141,11 +141,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public void initializeClient(Config clientConfig) {
+	public void initializeClient(ClientConfig clientConfig) {
 		if (clientConfig != null) {
 			m_clientConfig = clientConfig;
 		} else {
-			m_clientConfig = new Config();
+			m_clientConfig = new ClientConfig();
 			m_clientConfig.setMode("client");
 		}
 
@@ -179,7 +179,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public void initializeServer(Config serverConfig) {
+	public void initializeServer(ClientConfig serverConfig) {
 		m_serverConfig = serverConfig;
 	}
 

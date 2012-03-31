@@ -48,8 +48,18 @@
 							<goal>dal-model</goal>
 						</goals>
 						<configuration>
-							<manifest>${basedir}/src/main/resources/META-INF/dal/model/config-manifest.xml
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml
 							</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate server configuration model</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml</manifest>
 						</configuration>
 					</execution>
 					<execution>
@@ -70,9 +80,7 @@
 							<goal>plexus</goal>
 						</goals>
 						<configuration>
-							<className>com.dianping.cat.build.ComponentsConfigurator
-							</className>
-							<env>dev</env>
+							<className>com.dianping.cat.build.ComponentsConfigurator</className>
 						</configuration>
 					</execution>
 				</executions>

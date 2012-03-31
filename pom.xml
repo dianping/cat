@@ -9,6 +9,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>cat-core</module>
+		<module>cat-hadoop</module>
 		<module>cat-consumer</module>
 		<module>cat-home</module>
 		<module>cat-job</module>
@@ -18,6 +19,11 @@
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-core</artifactId>
+				<version>0.2.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>cat-hadoop</artifactId>
 				<version>0.2.1</version>
 			</dependency>
 			<dependency>

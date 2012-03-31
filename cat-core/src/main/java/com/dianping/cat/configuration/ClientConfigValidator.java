@@ -1,19 +1,19 @@
 package com.dianping.cat.configuration;
 
-import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.entity.Domain;
-import com.dianping.cat.configuration.model.entity.Server;
-import com.dianping.cat.configuration.model.transform.DefaultValidator;
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.entity.Domain;
+import com.dianping.cat.configuration.client.entity.Server;
+import com.dianping.cat.configuration.client.transform.DefaultValidator;
 
 public class ClientConfigValidator extends DefaultValidator {
-	private Config m_config;
+	private ClientConfig m_config;
 
 	private String getLocalAddress() {
 		return LocalIP.getAddress();
 	}
 
 	@Override
-	public void visitConfig(Config config) {
+	public void visitConfig(ClientConfig config) {
 		if (!"client".equals(config.getMode())) {
 			throw new RuntimeException(String.format("Attribute(%s) of /config is required in config: %s", "mode", config));
 		} else if (config.getServers().size() == 0) {

@@ -139,7 +139,7 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 			}
 		} else {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(5);
 			} catch (Exception e) {
 				// ignore it
 				m_active = false;

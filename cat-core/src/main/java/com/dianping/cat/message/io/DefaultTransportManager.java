@@ -7,8 +7,8 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.entity.Server;
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.spi.MessageManager;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
@@ -34,7 +34,7 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 
 	@Override
 	public void initialize() throws InitializationException {
-		Config config = m_manager.getClientConfig();
+		ClientConfig config = m_manager.getClientConfig();
 
 		if (config == null) {
 			// by default, no configuration needed in develop mode, all in memory

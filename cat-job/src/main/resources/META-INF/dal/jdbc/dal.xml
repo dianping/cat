@@ -1,3 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<entities do-package="com.dianping.cat.job.sql.dal" gen="true" />
-
+<entities do-package="com.dianping.cat.job.sql.dal" gen="true">
+	<entity name="sqlreport" class-name="SqlReportRecord" table="SqlReport" alias="s">
+	    <readsets>
+	      <readset name="DOMAIN">
+	      	<member name="domain"/>
+	      </readset>
+	    </readsets>
+		<query-defs>
+			<query name="find-all-by-domain-and-date" type="SELECT" multiple="true">
+				<param name="domain" />
+				<param name="transaction-date" />
+				<statement><![CDATA[
+				SELECT <FIELDS/> FROM <TABLE/> 
+				WHERE <FIELD name='domain'/> = ${domain} 
+					AND <FIELD name='transaction-date'/> = ${transaction-date}
+				]]></statement>
+			</query>
+			<query name="find-all-distinct-by-date" type="SELECT" multiple="true">
+				<param name="transaction-date" />
+				<statement><![CDATA[
+				SELECT distinct <FIELDS/> FROM <TABLE/> 
+				WHERE <FIELD name='transaction-date'/> = ${transaction-date} 
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+</entities>

@@ -10,8 +10,8 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 
 import com.dianping.cat.configuration.ClientConfigMerger;
 import com.dianping.cat.configuration.ClientConfigValidator;
-import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.transform.DefaultXmlParser;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.site.helper.Files;
@@ -83,7 +83,7 @@ public class Cat {
 			}
 		}
 
-		Config config = loadClientConfig(configFile);
+		ClientConfig config = loadClientConfig(configFile);
 
 		if (config != null) {
 			getInstance().m_manager.initializeClient(config);
@@ -93,9 +93,9 @@ public class Cat {
 		}
 	}
 
-	static Config loadClientConfig(File configFile) {
-		Config globalConfig = null;
-		Config clientConfig = null;
+	static ClientConfig loadClientConfig(File configFile) {
+		ClientConfig globalConfig = null;
+		ClientConfig clientConfig = null;
 
 		try {
 			// read the global configure from local file system

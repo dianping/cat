@@ -9,9 +9,9 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.entity.Domain;
-import com.dianping.cat.configuration.model.entity.Server;
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.entity.Domain;
+import com.dianping.cat.configuration.client.entity.Server;
 import com.site.helper.Files;
 import com.site.lookup.ComponentTestCase;
 
@@ -25,7 +25,7 @@ public abstract class CatTestCase extends ComponentTestCase {
 	protected File getConfigurationFile() {
 		if (isCatServerAlive()) {
 			try {
-				Config config = new Config();
+				ClientConfig config = new ClientConfig();
 
 				config.setMode("client");
 				config.addDomain(new Domain("Cat"));

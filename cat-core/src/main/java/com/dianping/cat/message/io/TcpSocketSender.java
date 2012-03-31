@@ -124,17 +124,6 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 		m_active = true;
 
 		while (m_active) {
-			if (m_future != null && m_future.getChannel().isOpen()) {
-				while (!m_future.getChannel().isWritable()) {
-					try {
-						Thread.sleep(5);
-					} catch (InterruptedException e) {
-						m_active = false;
-						break;
-					}
-				}
-			}
-
 			try {
 				if (checkWritable()) {
 					MessageTree tree = m_queue.poll();
@@ -146,7 +135,7 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 					}
 				} else {
 					try {
-						Thread.sleep(100);
+						Thread.sleep(5);
 					} catch (Exception e) {
 						break;
 					}

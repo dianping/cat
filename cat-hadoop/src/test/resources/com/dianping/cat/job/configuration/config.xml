@@ -1,0 +1,4 @@
+<config>
+	<hdfs id="data" path="hdfs://192.168.7.43:9000/user/cat"/>
+	<hdfs id="dump" path="hdfs://192.168.7.43:9000/user/cat"/>
+</config>

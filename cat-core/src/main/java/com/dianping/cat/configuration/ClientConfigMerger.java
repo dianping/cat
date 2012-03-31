@@ -1,17 +1,17 @@
 package com.dianping.cat.configuration;
 
-import com.dianping.cat.configuration.model.entity.Config;
-import com.dianping.cat.configuration.model.entity.Domain;
-import com.dianping.cat.configuration.model.entity.Property;
-import com.dianping.cat.configuration.model.transform.DefaultMerger;
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.client.entity.Domain;
+import com.dianping.cat.configuration.client.entity.Property;
+import com.dianping.cat.configuration.client.transform.DefaultMerger;
 
 public class ClientConfigMerger extends DefaultMerger {
-	public ClientConfigMerger(Config config) {
+	public ClientConfigMerger(ClientConfig config) {
 		super(config);
 	}
 
 	@Override
-	protected void visitConfigChildren(Config old, Config config) {
+	protected void visitConfigChildren(ClientConfig old, ClientConfig config) {
 		if (old != null) {
 			getStack().push(old);
 

@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.message.configuration.ConfigTest;
+import com.dianping.cat.message.configuration.ClientConfigTest;
 import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MessageProducerTest;
 import com.dianping.cat.message.internal.MillisSecondTimerTest;
@@ -25,7 +25,7 @@ HeartbeatTest.class,
 TransactionTest.class,
 
 /* .configuration.model */
-ConfigTest.class,
+ClientConfigTest.class,
 
 /* .internal */
 MessageIdFactoryTest.class,

@@ -7,8 +7,8 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.configuration.model.entity.Bind;
-import com.dianping.cat.configuration.model.entity.Config;
+import com.dianping.cat.configuration.client.entity.Bind;
+import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.message.io.MessageReceiver;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -54,7 +54,7 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 
 	@Override
 	public void initialize() throws InitializationException {
-		Config config = m_manager.getServerConfig();
+		ClientConfig config = m_manager.getServerConfig();
 
 		if (config == null) {
 			// by default, no configuration needed in develop mode, all in memory
