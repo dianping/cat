@@ -36,10 +36,6 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 	}
 
 	@Override
-	public void deleteAndCreate() throws IOException {
-	}
-
-	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
@@ -49,10 +45,9 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 		throw new UnsupportedOperationException();
 	}
 
-	@Override
 	public List<String> findAllById(String domain) throws IOException {
 		try {
-			List<Report> reports = m_reportDao.findByPeriodDomainTypeName(m_period, domain, 1, m_name, ReportEntity.READSET_FULL);
+			List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(m_period, domain, 1, m_name, ReportEntity.READSET_FULL);
 			List<String> contents = new ArrayList<String>(reports.size());
 			for (Report r : reports) {
 				contents.add(r.getContent());
@@ -78,7 +73,9 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 	}
 
 	@Override
-	public Collection<String> getIdsByPrefix(String name) {
+	public Collection<String> getIds() {
+		String name = "";
+		
 		try {
 			List<Report> reports = m_reportDao.findAllByPeriodTypeName(m_period, 1, name, ReportEntity.READSET_FULL);
 			List<String> ids = new ArrayList<String>(reports.size());

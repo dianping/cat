@@ -76,7 +76,6 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 	public void tearDown() throws Exception {
 		super.tearDown();
 		bucket.close();
-		bucket.deleteAndCreate();
 	}
 	
 	@Test

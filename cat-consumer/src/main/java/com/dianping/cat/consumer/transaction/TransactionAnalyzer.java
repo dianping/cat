@@ -49,15 +49,13 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private long m_duration;
 
 	void closeMessageBuckets() {
-		Date timestamp = new Date(m_startTime);
-
 		for (String domain : m_reports.keySet()) {
 			Bucket<MessageTree> logviewBucket = null;
 
 			try {
-				logviewBucket = m_bucketManager.getLogviewBucket(timestamp, domain);
+				logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
 			} catch (Exception e) {
-				m_logger.error(String.format("Error when getting logview bucket of %s!", timestamp), e);
+				m_logger.error(String.format("Error when getting logview bucket of %s!", new Date(m_startTime)), e);
 			} finally {
 				if (logviewBucket != null) {
 					m_bucketManager.closeBucket(logviewBucket);
@@ -116,21 +114,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	void loadReports() {
-		Date timestamp = new Date(m_startTime);
 		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
+			bucket = m_bucketManager.getReportBucket(m_startTime, "transaction");
 
-			for (String id : bucket.getIdsByPrefix("")) {
+			for (String id : bucket.getIds()) {
 				String xml = bucket.findById(id);
 				TransactionReport report = parser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading transacion reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when loading transacion reports of %s!", new Date(m_startTime)), e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
@@ -271,7 +268,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		String domain = tree.getDomain();
 
 		try {
-			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
+			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
 
 			logviewBucket.storeById(messageId, tree);
 		} catch (IOException e) {
@@ -280,13 +277,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	void storeReports(Collection<TransactionReport> reports) {
-		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 		Bucket<String> reportBucket = null;
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(timestamp, "transaction");
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, "transaction");
 
 			for (TransactionReport report : reports) {
 				String xml = builder.buildXml(report);
@@ -299,7 +295,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);
 			t.setStatus(e);
-			m_logger.error(String.format("Error when storing transaction reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when storing transaction reports of %s!", new Date(m_startTime)), e);
 		} finally {
 			t.complete();
 

@@ -1,7 +1,5 @@
 package com.dianping.cat.message.internal;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -10,7 +8,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.LocalIP;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.message.Message;
@@ -154,14 +152,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		m_domain = firstDomain == null ? new Domain("unknown").setEnabled(false) : firstDomain;
 
-		try {
-			m_hostName = InetAddress.getLocalHost().getHostName();
+		m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
 
-			if (m_domain.getIp() == null) {
-				m_domain.setIp(LocalIP.getAddress());
-			}
-		} catch (UnknownHostException e) {
-			m_logger.warn("Unable to get local host!", e);
+		if (m_domain.getIp() == null) {
+			m_domain.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		}
 
 		// initialize milli-second resolution level timer

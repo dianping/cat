@@ -4,6 +4,7 @@ import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,7 +47,11 @@ public enum NetworkInterfaceManager {
 	}
 
 	public String getLocalHostName() {
-		return m_local.getCanonicalHostName();
+		try {
+			return InetAddress.getLocalHost().getHostName();
+		} catch (UnknownHostException e) {
+			return m_local.getHostName();
+		}
 	}
 
 	public String getLocalHostAddress() {

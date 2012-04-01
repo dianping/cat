@@ -26,7 +26,6 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
-import com.site.helper.Joiners;
 import com.site.helper.Splitters;
 import com.site.helper.Splitters.StringSplitter;
 import com.site.lookup.annotation.Inject;
@@ -74,27 +73,14 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 			m_tagToIds.clear();
 			m_writeDataFile.close();
 			m_writeIndexFile.close();
-		} catch (Exception e) {
-			// ignore it
 		} finally {
 			m_writeLock.unlock();
 		}
 	}
 
 	@Override
-	public void deleteAndCreate() throws IOException {
-		new File(m_baseDir, m_logicalPath).delete();
-		new File(m_baseDir, m_logicalPath + ".idx").delete();
-	}
-
-	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public List<String> findAllById(String id) throws IOException {
-		throw new UnsupportedOperationException("Not supported by local logview bucket!");
 	}
 
 	@Override
@@ -182,8 +168,12 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	}
 
 	@Override
-	public Collection<String> getIdsByPrefix(String tag) {
+	public Collection<String> getIds() {
 		throw new UnsupportedOperationException("Not supported by local logview bucket!");
+	}
+
+	public String getLogicalPath() {
+		return m_logicalPath;
 	}
 
 	@Override
@@ -224,12 +214,13 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 				List<String> parts = splitter.split(line);
 
-				if (parts.size() >= 2) {
-					String id = parts.remove(0);
-					String offset = parts.remove(0);
+				if (parts.size() >= 3) {
+					String id = parts.get(0);
+					String offset = parts.get(1);
+					String tag = parts.get(2);
 
 					try {
-						updateIndex(id, Long.parseLong(offset), parts);
+						updateIndex(id, Long.parseLong(offset), tag);
 					} catch (NumberFormatException e) {
 						// ignore it
 					}
@@ -238,14 +229,6 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		} finally {
 			m_writeLock.unlock();
 		}
-	}
-
-	protected List<String> prepareTags(MessageTree tree) {
-		List<String> tags = new ArrayList<String>(1);
-
-		tags.add("t:" + tree.getThreadId());
-
-		return tags;
 	}
 
 	public void setBaseDir(String baseDir) {
@@ -258,7 +241,6 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 			return false;
 		}
 
-		List<String> tags = prepareTags(tree);
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 		m_codec.encode(tree, buf);
@@ -275,14 +257,15 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 			m_writeDataFile.write('\n');
 
 			long offset = m_writeDataFileLength;
-			String line = id + '\t' + offset + '\t' + Joiners.by('\t').join(tags) + '\n';
+			String tag = "t:" + tree.getThreadId();
+			String line = id + '\t' + offset + '\t' + tag + '\n';
 			byte[] data = line.getBytes("utf-8");
 
 			m_writeDataFileLength += num.length + 1 + length + 1;
 			m_writeIndexFile.write(data);
 			m_dirty.set(true);
 
-			updateIndex(id, offset, tags);
+			updateIndex(id, offset, tag);
 
 			return true;
 		} finally {
@@ -290,21 +273,19 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		}
 	}
 
-	protected void updateIndex(String id, long offset, List<String> tags) {
+	protected void updateIndex(String id, long offset, String tag) {
 		m_idToOffsets.put(id, offset);
 
-		for (String tag : tags) {
-			List<String> ids = m_tagToIds.get(tag);
+		List<String> ids = m_tagToIds.get(tag);
 
-			if (ids == null) {
-				ids = new ArrayList<String>(3);
+		if (ids == null) {
+			ids = new ArrayList<String>(3);
 
-				m_tagToIds.put(tag, ids);
-			}
+			m_tagToIds.put(tag, ids);
+		}
 
-			if (!ids.contains(id)) {
-				ids.add(id);
-			}
+		if (!ids.contains(id)) {
+			ids.add(id);
 		}
 	}
 }

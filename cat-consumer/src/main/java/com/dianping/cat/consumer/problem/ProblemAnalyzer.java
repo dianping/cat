@@ -55,7 +55,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			Bucket<MessageTree> logviewBucket = null;
 
 			try {
-				logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
+				logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
 			} catch (Exception e) {
 				m_logger.error(String.format("Error when getting logview bucket of %s!", timestamp), e);
 			} finally {
@@ -129,21 +129,20 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	void loadReports() {
-		Date timestamp = new Date(m_startTime);
 		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "problem");
+			bucket = m_bucketManager.getReportBucket(m_startTime, "problem");
 
-			for (String id : bucket.getIdsByPrefix("")) {
+			for (String id : bucket.getIds()) {
 				String xml = bucket.findById(id);
 				ProblemReport report = parser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading problem reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when loading problem reports of %s!", new Date(m_startTime)), e);
 		} finally {
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
@@ -199,7 +198,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		String domain = tree.getDomain();
 
 		try {
-			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
+			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
 
 			logviewBucket.storeById(messageId, tree);
 		} catch (Exception e) {
@@ -208,16 +207,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	void storeReports(Collection<ProblemReport> reports) {
-		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(timestamp, "problem");
-
-			// delete old one, not append mode
-			reportBucket.deleteAndCreate();
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, "problem");
 
 			for (ProblemReport report : reports) {
 				String xml = builder.buildXml(report);
@@ -230,7 +225,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);
 			t.setStatus(e);
-			m_logger.error(String.format("Error when storing problem reports to %s!", timestamp), e);
+			m_logger.error(String.format("Error when storing problem reports to %s!", new Date(m_startTime)), e);
 		} finally {
 			t.complete();
 

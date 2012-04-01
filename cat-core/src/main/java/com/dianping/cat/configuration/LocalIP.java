@@ -46,6 +46,7 @@ public class LocalIP {
 	}
 
 	public static String getAddress() {
-		return address;
+		return NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+//		return address;
 	}
 }

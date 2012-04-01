@@ -62,30 +62,14 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 			m_tagToIds.clear();
 			m_writeDataFile.close();
 			m_writeIndexFile.close();
-		} catch (Exception e) {
-			// ignore it
 		} finally {
 			m_writeLock.unlock();
 		}
 	}
 
 	@Override
-	public void deleteAndCreate() throws IOException {
-		File dataFile = new File(m_baseDir, m_logicalPath);
-		File indexFile = new File(m_baseDir, m_logicalPath + ".idx");
-
-		dataFile.delete();
-		indexFile.delete();
-	}
-
-	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public List<String> findAllById(String id) throws IOException {
-		throw new UnsupportedOperationException("Not supported by local logview bucket!");
 	}
 
 	@Override
@@ -154,11 +138,23 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public void flush() throws IOException {
+		m_writeLock.lock();
+
+		try {
+			m_writeDataFile.flush();
+			m_writeIndexFile.flush();
+		} finally {
+			m_writeLock.unlock();
+		}
 	}
 
 	@Override
-	public Collection<String> getIdsByPrefix(String tag) {
+	public Collection<String> getIds() {
 		return m_idToOffsets.keySet();
+	}
+
+	public String getLogicalPath() {
+		return m_logicalPath;
 	}
 
 	@Override
@@ -171,16 +167,16 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 		File dataFile = new File(m_baseDir, logicalPath);
 		File indexFile = new File(m_baseDir, logicalPath + ".idx");
 
+		if (indexFile.exists()) {
+			loadIndexes(indexFile);
+		}
+
 		dataFile.getParentFile().mkdirs();
 
 		m_logicalPath = logicalPath;
 		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile), 8192);
 		m_writeIndexFile = new BufferedOutputStream(new FileOutputStream(indexFile), 8192);
 		m_readDataFile = new RandomAccessFile(dataFile, "r");
-
-		if (indexFile.exists()) {
-			loadIndexes(indexFile);
-		}
 	}
 
 	protected void loadIndexes(File indexFile) throws IOException {

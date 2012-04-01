@@ -55,7 +55,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			Bucket<MessageTree> logviewBucket = null;
 
 			try {
-				logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
+				logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
 			} catch (Exception e) {
 				m_logger.error(String.format("Error when getting logview bucket of %s!", timestamp), e);
 			} finally {
@@ -115,21 +115,20 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	void loadReports() {
-		Date timestamp = new Date(m_startTime);
 		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> reportBucket = null;
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(timestamp, "event");
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, "event");
 
-			for (String id : reportBucket.getIdsByPrefix("")) {
+			for (String id : reportBucket.getIds()) {
 				String xml = reportBucket.findById(id);
 				EventReport report = parser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading event reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when loading event reports of %s!", new Date(m_startTime)), e);
 		} finally {
 			if (reportBucket != null) {
 				m_bucketManager.closeBucket(reportBucket);
@@ -258,7 +257,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		String domain = tree.getDomain();
 
 		try {
-			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
+			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
 
 			logviewBucket.storeById(messageId, tree);
 		} catch (IOException e) {
@@ -267,13 +266,12 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	void storeReports(Collection<EventReport> reports) {
-		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(timestamp, "event");
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, "event");
 
 			for (EventReport report : reports) {
 				String xml = builder.buildXml(report);
@@ -286,7 +284,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);
 			t.setStatus(e);
-			m_logger.error(String.format("Error when storing event reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when storing event reports of %s!", new Date(m_startTime)), e);
 		} finally {
 			t.complete();
 

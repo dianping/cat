@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.model.logview;
 
 import java.nio.charset.Charset;
-import java.util.Date;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -31,8 +30,7 @@ public class HistoricalLogViewService extends BaseHistoricalModelService<String>
 		String direction = request.getProperty("direction");
 		String tag = request.getProperty("tag");
 		MessageId id = MessageId.parse(messageId);
-		Date timestamp = new Date(id.getTimestamp());
-		Bucket<MessageTree> bucket = m_bucketManager.getLogviewBucket(timestamp, id.getDomain());
+		Bucket<MessageTree> bucket = m_bucketManager.getLogviewBucket(id.getTimestamp(), id.getDomain());
 		MessageTree tree = null;
 
 		if (tag != null && direction != null) {

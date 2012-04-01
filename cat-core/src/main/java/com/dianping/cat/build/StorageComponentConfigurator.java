@@ -8,10 +8,10 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import com.dianping.cat.storage.internal.DefaultBucketManager;
-import com.dianping.cat.storage.internal.LocalMessageBucket;
-import com.dianping.cat.storage.internal.LocalStringBucket;
+import com.dianping.cat.storage.DefaultBucketManager;
 import com.dianping.cat.storage.message.LocalLogviewBucket;
+import com.dianping.cat.storage.message.LocalMessageBucket;
+import com.dianping.cat.storage.report.LocalReportBucket;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -20,29 +20,20 @@ class StorageComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(Bucket.class, String.class.getName() + "-local", LocalStringBucket.class) //
-				.is(PER_LOOKUP) //
-				.req(MessagePathBuilder.class));
-		all.add(C(Bucket.class, MessageTree.class.getName() + "-local", LocalMessageBucket.class) //
-				.is(PER_LOOKUP) //
-				.req(MessagePathBuilder.class) //
-				.req(MessageCodec.class, "plain-text"));
 		all.add(C(BucketManager.class, DefaultBucketManager.class) //
-				.req(MessagePathBuilder.class));
+		      .req(MessagePathBuilder.class));
 
 		all.add(C(Bucket.class, MessageTree.class.getName() + "-logview", LocalLogviewBucket.class) //
-				.is(PER_LOOKUP) //
-				.req(MessagePathBuilder.class) //
-				.req(MessageCodec.class, "plain-text"));
-		all.add(C(Bucket.class, MessageTree.class.getName() + "-message",//
-				com.dianping.cat.storage.message.LocalMessageBucket.class) //
-				.is(PER_LOOKUP) //
-				.req(MessagePathBuilder.class) //
-				.req(MessageCodec.class, "plain-text"));
-		all.add(C(Bucket.class, String.class.getName() + "-report",//
-				com.dianping.cat.storage.report.LocalReportBucket.class) //
-				.is(PER_LOOKUP) //
-				.req(MessagePathBuilder.class));
+		      .is(PER_LOOKUP) //
+		      .req(MessagePathBuilder.class) //
+		      .req(MessageCodec.class, "plain-text"));
+		all.add(C(Bucket.class, MessageTree.class.getName() + "-message", LocalMessageBucket.class) //
+		      .is(PER_LOOKUP) //
+		      .req(MessagePathBuilder.class) //
+		      .req(MessageCodec.class, "plain-text"));
+		all.add(C(Bucket.class, String.class.getName() + "-report", LocalReportBucket.class) //
+		      .is(PER_LOOKUP) //
+		      .req(MessagePathBuilder.class));
 
 		return all;
 	}

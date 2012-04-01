@@ -78,12 +78,15 @@ public class CatFilter implements Filter {
 		StringBuilder sb = new StringBuilder(1024);
 		String ip = "";
 		String ipForwarded = req.getHeader("x-forwarded-for");
+
 		if (ipForwarded == null) {
 			ip = req.getRemoteAddr();
 		} else {
 			String ips[] = ipForwarded.split(",");
+
 			ip = ips[ips.length - 1].trim();
 		}
+
 		sb.append("RemoteIp=").append(ip);
 		sb.append("&VirtualIP=").append(req.getRemoteAddr());
 		sb.append("&Server=").append(req.getServerName());

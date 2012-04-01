@@ -1,4 +1,4 @@
-package com.dianping.cat.storage.internal;
+package com.dianping.cat.storage;
 
 import java.io.IOException;
 import java.util.Date;
@@ -9,8 +9,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
@@ -63,13 +61,14 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T> Bucket<T> getBucket(Class<T> type, Date timestamp, String name, String namespace) throws IOException {
+	protected <T> Bucket<T> getBucket(Class<T> type, long timestamp, String name, String namespace) throws IOException {
 		String path;
+		Date date = new Date(timestamp);
 
 		if (type == MessageTree.class) {
-			path = m_pathBuilder.getMessagePath(name, timestamp);
+			path = m_pathBuilder.getMessagePath(name, date);
 		} else {
-			path = m_pathBuilder.getReportPath(name, timestamp);
+			path = m_pathBuilder.getReportPath(name, date);
 		}
 
 		Entry entry = new Entry(type, path, namespace);
@@ -80,7 +79,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 				bucket = m_map.get(entry);
 
 				if (bucket == null) {
-					bucket = createBucket(type, timestamp, name, namespace);
+					bucket = createBucket(type, date, name, namespace);
 					m_map.put(entry, bucket);
 				}
 			}
@@ -90,17 +89,17 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@Override
-	public Bucket<MessageTree> getLogviewBucket(Date timestamp, String domain) throws IOException {
+	public Bucket<MessageTree> getLogviewBucket(long timestamp, String domain) throws IOException {
 		return getBucket(MessageTree.class, timestamp, domain, "logview");
 	}
 
 	@Override
-	public Bucket<MessageTree> getMessageBucket(Date timestamp, String domain) throws IOException {
+	public Bucket<MessageTree> getMessageBucket(long timestamp, String domain) throws IOException {
 		return getBucket(MessageTree.class, timestamp, domain, "message");
 	}
 
 	@Override
-	public Bucket<String> getReportBucket(Date timestamp, String name) throws IOException {
+	public Bucket<String> getReportBucket(long timestamp, String name) throws IOException {
 		return getBucket(String.class, timestamp, name, "report");
 	}
 

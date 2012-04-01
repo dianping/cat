@@ -68,17 +68,8 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 	}
 
 	@Override
-	public void deleteAndCreate() throws IOException {
-	}
-
-	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public List<String> findAllById(String id) throws IOException {
-		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -138,7 +129,7 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 	}
 
 	@Override
-	public Collection<String> getIdsByPrefix(String prefix) {
+	public Collection<String> getIds() {
 		throw new UnsupportedOperationException();
 	}
 

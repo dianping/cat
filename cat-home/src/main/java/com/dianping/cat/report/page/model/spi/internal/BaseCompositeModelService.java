@@ -1,7 +1,5 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -13,7 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.LocalIP;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -126,15 +124,8 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	 */
 	public void setRemoteServers(String servers) {
 		List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(servers);
-		String localAddress = null;
-		String localHost = null;
-
-		try {
-			localAddress = LocalIP.getAddress();
-			localHost = InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
-			// ignore it
-		}
+		String localAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String localHost = NetworkInterfaceManager.INSTANCE.getLocalHostName();
 
 		for (String endpoint : endpoints) {
 			int pos = endpoint.indexOf(':');

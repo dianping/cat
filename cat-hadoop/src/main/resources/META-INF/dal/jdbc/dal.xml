@@ -34,7 +34,7 @@
 			        	LIMIT 1 
 		        ]]></statement>
 			</query>
-			<query name="find-by-message-ids" type="SELECT" multiple="true">
+			<query name="find-all-by-message-ids" type="SELECT" multiple="true">
 				<param name="message-ids" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
@@ -42,7 +42,7 @@
 					WHERE <FIELD name='message-id'/> <IN> ${message-ids} </IN>
 				]]></statement>
 			</query>
-			<query name="find-by-message-id" type="SELECT" multiple="false">
+			<query name="find-by-message-id" type="SELECT">
 				<param name="message-id" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
@@ -62,7 +62,7 @@
 	<entity name="report" table="report" alias="r">
 		<member name="creation-date" insert-expr="now()" />
   		<query-defs>
-			<query name="find-by-period-domain-type-name" type="SELECT" multiple="true">
+			<query name="find-all-by-period-domain-type-name" type="SELECT" multiple="true">
 				<param name="period" />
 				<param name="domain" />
 				<param name="type" />

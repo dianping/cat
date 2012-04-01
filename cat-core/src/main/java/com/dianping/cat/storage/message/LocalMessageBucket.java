@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -33,27 +32,17 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 
 	private OutputStream m_writeDataFile;
 
+	private String m_logicalPath;
+
 	@Override
 	public void close() throws IOException {
 		m_writeLock.lock();
 
 		try {
 			m_writeDataFile.close();
-		} catch (Exception e) {
-			// ignore it
 		} finally {
 			m_writeLock.unlock();
 		}
-	}
-
-	@Override
-	public void deleteAndCreate() throws IOException {
-		throw new UnsupportedOperationException("Not supported by local message bucket!");
-	}
-
-	@Override
-	public List<String> findAllById(String id) throws IOException {
-		throw new UnsupportedOperationException("Not supported by local message bucket!");
 	}
 
 	@Override
@@ -83,8 +72,12 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 	}
 
 	@Override
-	public Collection<String> getIdsByPrefix(String tag) {
+	public Collection<String> getIds() {
 		throw new UnsupportedOperationException("Not supported by local logview bucket!");
+	}
+
+	public String getLogicalPath() {
+		return m_logicalPath;
 	}
 
 	@Override
@@ -95,6 +88,8 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 		File dataFile = new File(m_baseDir, logicalPath);
 
 		dataFile.getParentFile().mkdirs();
+
+		m_logicalPath = logicalPath;
 		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile), 8192);
 	}
 

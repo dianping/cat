@@ -1,7 +1,5 @@
 package com.dianping.cat.storage;
 
-import java.util.Date;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -15,7 +13,7 @@ import com.site.lookup.ComponentTestCase;
 public class BucketManagerTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
-		Date timestamp = new Date();
+		long timestamp = System.currentTimeMillis();
 		BucketManager manager = lookup(BucketManager.class);
 		Bucket<MessageTree> bucket1 = manager.getLogviewBucket(timestamp, "test/path1");
 		Bucket<MessageTree> bucket2 = manager.getLogviewBucket(timestamp, "test/path2");
