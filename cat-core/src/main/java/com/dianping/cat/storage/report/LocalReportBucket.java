@@ -158,7 +158,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public Collection<String> getIdsByPrefix(String tag) {
-		throw new UnsupportedOperationException("Not supported by local logview bucket!");
+		return m_idToOffsets.keySet();
 	}
 
 	@Override
@@ -221,8 +221,6 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public boolean storeById(String id, String report) throws IOException {
-		m_writeLock.lock();
-
 		if (m_idToOffsets.containsKey(id)) {
 			return false;
 		}
@@ -230,6 +228,8 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 		byte[] content = report.getBytes("utf-8");
 		int length = content.length;
 		byte[] num = String.valueOf(length).getBytes("utf-8");
+
+		m_writeLock.lock();
 
 		try {
 			m_writeDataFile.write(num);

@@ -48,30 +48,19 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private long m_duration;
 
-	private boolean m_local;
-
 	void closeMessageBuckets() {
 		Date timestamp = new Date(m_startTime);
 
 		for (String domain : m_reports.keySet()) {
-			Bucket<MessageTree> localBucket = null;
-			Bucket<MessageTree> remoteBucket = null;
+			Bucket<MessageTree> logviewBucket = null;
 
 			try {
-				localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
-
-				if (!m_local) {
-					remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
-				}
+				logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
 			} catch (Exception e) {
-				m_logger.error(String.format("Error when getting message bucket of %s!", timestamp), e);
+				m_logger.error(String.format("Error when getting logview bucket of %s!", timestamp), e);
 			} finally {
-				if (localBucket != null) {
-					m_bucketManager.closeBucket(localBucket);
-				}
-
-				if (remoteBucket != null) {
-					m_bucketManager.closeBucket(remoteBucket);
+				if (logviewBucket != null) {
+					m_bucketManager.closeBucket(logviewBucket);
 				}
 			}
 		}
@@ -145,7 +134,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "problem", "local");
+			bucket = m_bucketManager.getReportBucket(timestamp, "problem");
 
 			for (String id : bucket.getIdsByPrefix("")) {
 				String xml = bucket.findById(id);
@@ -195,10 +184,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		loadReports();
 	}
 
-	public void setLocal(boolean local) {
-		m_local = local;
-	}
-
 	@Override
 	protected void store(List<ProblemReport> reports) {
 		if (reports == null || reports.size() == 0) {
@@ -214,16 +199,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		String domain = tree.getDomain();
 
 		try {
-			Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
 
-			localBucket.storeById(messageId, tree);
-
-			if (!m_local) {
-				Bucket<MessageTree> remoteBucket = m_bucketManager
-				      .getMessageBucket(new Date(m_startTime), domain, "remote");
-
-				remoteBucket.storeById(messageId, tree);
-			}
+			logviewBucket.storeById(messageId, tree);
 		} catch (Exception e) {
 			m_logger.error("Error when storing message for problem analyzer!", e);
 		}
@@ -232,29 +210,20 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	void storeReports(Collection<ProblemReport> reports) {
 		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
-		Bucket<String> localBucket = null;
-		Bucket<String> remoteBucket = null;
+		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
-			localBucket = m_bucketManager.getReportBucket(timestamp, "problem", "local");
-
-			if (!m_local) {
-				remoteBucket = m_bucketManager.getReportBucket(timestamp, "problem", "remote");
-			}
+			reportBucket = m_bucketManager.getReportBucket(timestamp, "problem");
 
 			// delete old one, not append mode
-			localBucket.deleteAndCreate();
+			reportBucket.deleteAndCreate();
 
 			for (ProblemReport report : reports) {
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
-				localBucket.storeById(domain, xml);
-
-				if (!m_local) {
-					remoteBucket.storeById(domain, xml);
-				}
+				reportBucket.storeById(domain, xml);
 			}
 
 			t.setStatus(Message.SUCCESS);
@@ -265,12 +234,8 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		} finally {
 			t.complete();
 
-			if (localBucket != null) {
-				m_bucketManager.closeBucket(localBucket);
-			}
-
-			if (remoteBucket != null) {
-				m_bucketManager.closeBucket(remoteBucket);
+			if (reportBucket != null) {
+				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
 	}

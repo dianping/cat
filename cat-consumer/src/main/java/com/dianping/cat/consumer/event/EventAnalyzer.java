@@ -48,30 +48,19 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	private long m_duration;
 
-	private boolean m_local;
-
 	void closeMessageBuckets() {
 		Date timestamp = new Date(m_startTime);
 
 		for (String domain : m_reports.keySet()) {
-			Bucket<MessageTree> localBucket = null;
-			Bucket<MessageTree> remoteBucket = null;
+			Bucket<MessageTree> logviewBucket = null;
 
 			try {
-				localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
-
-				if (!m_local) {
-					remoteBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "remote");
-				}
+				logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
 			} catch (Exception e) {
-				m_logger.error(String.format("Error when getting message bucket of %s!", timestamp), e);
+				m_logger.error(String.format("Error when getting logview bucket of %s!", timestamp), e);
 			} finally {
-				if (localBucket != null) {
-					m_bucketManager.closeBucket(localBucket);
-				}
-
-				if (remoteBucket != null) {
-					m_bucketManager.closeBucket(remoteBucket);
+				if (logviewBucket != null) {
+					m_bucketManager.closeBucket(logviewBucket);
 				}
 			}
 		}
@@ -128,22 +117,22 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	void loadReports() {
 		Date timestamp = new Date(m_startTime);
 		DefaultXmlParser parser = new DefaultXmlParser();
-		Bucket<String> bucket = null;
+		Bucket<String> reportBucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, "event", "local");
+			reportBucket = m_bucketManager.getReportBucket(timestamp, "event");
 
-			for (String id : bucket.getIdsByPrefix("")) {
-				String xml = bucket.findById(id);
+			for (String id : reportBucket.getIdsByPrefix("")) {
+				String xml = reportBucket.findById(id);
 				EventReport report = parser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading transacion reports of %s!", timestamp), e);
+			m_logger.error(String.format("Error when loading event reports of %s!", timestamp), e);
 		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+			if (reportBucket != null) {
+				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
 	}
@@ -254,10 +243,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		loadReports();
 	}
 
-	public void setLocal(boolean local) {
-		m_local = local;
-	}
-
 	@Override
 	protected void store(List<EventReport> reports) {
 		if (reports == null || reports.size() == 0) {
@@ -273,47 +258,28 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		String domain = tree.getDomain();
 
 		try {
-			Bucket<MessageTree> localBucket = m_bucketManager.getMessageBucket(new Date(m_startTime), domain, "local");
+			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(new Date(m_startTime), domain);
 
-			localBucket.storeById(messageId, tree);
-
-			if (!m_local) {
-				Bucket<MessageTree> remoteBucket = m_bucketManager
-				      .getMessageBucket(new Date(m_startTime), domain, "remote");
-
-				remoteBucket.storeById(messageId, tree);
-			}
+			logviewBucket.storeById(messageId, tree);
 		} catch (IOException e) {
-			m_logger.error("Error when storing message for event analyzer!", e);
+			m_logger.error("Error when storing logview for event analyzer!", e);
 		}
 	}
 
 	void storeReports(Collection<EventReport> reports) {
 		Date timestamp = new Date(m_startTime);
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
-		Bucket<String> localBucket = null;
-		Bucket<String> remoteBucket = null;
+		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
-			localBucket = m_bucketManager.getReportBucket(timestamp, "event", "local");
-
-			if (!m_local) {
-				remoteBucket = m_bucketManager.getReportBucket(timestamp, "event", "remote");
-			}
-
-			// delete old one, not append mode
-			localBucket.deleteAndCreate();
+			reportBucket = m_bucketManager.getReportBucket(timestamp, "event");
 
 			for (EventReport report : reports) {
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
-				localBucket.storeById(domain, xml);
-
-				if (!m_local) {
-					remoteBucket.storeById(domain, xml);
-				}
+				reportBucket.storeById(domain, xml);
 			}
 
 			t.setStatus(Message.SUCCESS);
@@ -324,12 +290,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		} finally {
 			t.complete();
 
-			if (localBucket != null) {
-				m_bucketManager.closeBucket(localBucket);
-			}
-
-			if (remoteBucket != null) {
-				m_bucketManager.closeBucket(remoteBucket);
+			if (reportBucket != null) {
+				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
 	}

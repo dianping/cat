@@ -90,13 +90,18 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@Override
-	public Bucket<MessageTree> getMessageBucket(Date timestamp, String domain, String namespace) throws IOException {
-		return getBucket(MessageTree.class, timestamp, domain, namespace);
+	public Bucket<MessageTree> getLogviewBucket(Date timestamp, String domain) throws IOException {
+		return getBucket(MessageTree.class, timestamp, domain, "logview");
 	}
 
 	@Override
-	public Bucket<String> getReportBucket(Date timestamp, String name, String namespace) throws IOException {
-		return getBucket(String.class, timestamp, name, namespace);
+	public Bucket<MessageTree> getMessageBucket(Date timestamp, String domain) throws IOException {
+		return getBucket(MessageTree.class, timestamp, domain, "message");
+	}
+
+	@Override
+	public Bucket<String> getReportBucket(Date timestamp, String name) throws IOException {
+		return getBucket(String.class, timestamp, name, "report");
 	}
 
 	static class Entry {

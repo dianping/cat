@@ -26,7 +26,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(new Date(date), getName(), "remote");
+			bucket = m_bucketManager.getReportBucket(new Date(date), getName());
 
 			List<String> xmls = bucket.findAllById(domain);
 

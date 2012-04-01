@@ -17,10 +17,10 @@ public class BucketManagerTest extends ComponentTestCase {
 	public void test() throws Exception {
 		Date timestamp = new Date();
 		BucketManager manager = lookup(BucketManager.class);
-		Bucket<MessageTree> bucket1 = manager.getMessageBucket(timestamp, "test/path1", "local");
-		Bucket<MessageTree> bucket2 = manager.getMessageBucket(timestamp, "test/path2", "local");
-		Bucket<MessageTree> bucket3 = manager.getMessageBucket(timestamp, "test/path1", "local");
-		Bucket<MessageTree> bucket4 = manager.getMessageBucket(timestamp, "test/path2", "local");
+		Bucket<MessageTree> bucket1 = manager.getLogviewBucket(timestamp, "test/path1");
+		Bucket<MessageTree> bucket2 = manager.getLogviewBucket(timestamp, "test/path2");
+		Bucket<MessageTree> bucket3 = manager.getLogviewBucket(timestamp, "test/path1");
+		Bucket<MessageTree> bucket4 = manager.getLogviewBucket(timestamp, "test/path2");
 
 		Assert.assertEquals(bucket1, bucket3);
 		Assert.assertEquals(bucket2, bucket4);

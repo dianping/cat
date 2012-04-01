@@ -32,7 +32,7 @@ public class HistoricalLogViewService extends BaseHistoricalModelService<String>
 		String tag = request.getProperty("tag");
 		MessageId id = MessageId.parse(messageId);
 		Date timestamp = new Date(id.getTimestamp());
-		Bucket<MessageTree> bucket = m_bucketManager.getMessageBucket(timestamp, id.getDomain(), "remote");
+		Bucket<MessageTree> bucket = m_bucketManager.getLogviewBucket(timestamp, id.getDomain());
 		MessageTree tree = null;
 
 		if (tag != null && direction != null) {

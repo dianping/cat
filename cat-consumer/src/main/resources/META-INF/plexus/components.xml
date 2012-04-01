@@ -3,9 +3,6 @@
 		<component>
 			<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 			<implementation>com.dianping.cat.consumer.DefaultAnalyzerFactory</implementation>
-			<configuration>
-				<local>true</local>
-			</configuration>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>

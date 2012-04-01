@@ -27,7 +27,7 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 		Bucket<String> bucket = null;
 
 		try {
-			bucket = m_bucketManager.getReportBucket(new Date(date), getName(), "remote");
+			bucket = m_bucketManager.getReportBucket(new Date(date), getName());
 
 			List<String> xmls = bucket.findAllById(domain);
 

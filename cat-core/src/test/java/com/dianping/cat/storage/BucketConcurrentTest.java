@@ -50,7 +50,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 	public void testMessageBucket() throws Exception {
 		Date timestamp = new Date();
 		BucketManager manager = lookup(BucketManager.class);
-		final Bucket<MessageTree> bucket = manager.getMessageBucket(timestamp, "concurrent/message", "local");
+		final Bucket<MessageTree> bucket = manager.getLogviewBucket(timestamp, "concurrent/message");
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
 		for (int p = 0; p < 10; p++) {
@@ -115,7 +115,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 	public void testStringBucket() throws Exception {
 		Date timestamp = new Date();
 		BucketManager manager = lookup(BucketManager.class);
-		final Bucket<String> bucket = manager.getReportBucket(timestamp, "concurrent/data", "local");
+		final Bucket<String> bucket = manager.getReportBucket(timestamp, "concurrent/data");
 		ExecutorService pool = Executors.newFixedThreadPool(10);
 
 		for (int p = 0; p < 10; p++) {
@@ -143,7 +143,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 
 		pool.awaitTermination(5000, TimeUnit.MILLISECONDS);
 
-		final Bucket<String> bucket2 = manager.getReportBucket(timestamp, "concurrent/data", "local");
+		final Bucket<String> bucket2 = manager.getReportBucket(timestamp, "concurrent/data");
 
 		for (int p = 0; p < 10; p++) {
 			final int num = p;

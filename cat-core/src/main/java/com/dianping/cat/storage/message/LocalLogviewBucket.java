@@ -241,14 +241,9 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	}
 
 	protected List<String> prepareTags(MessageTree tree) {
-		List<String> tags = new ArrayList<String>();
+		List<String> tags = new ArrayList<String>(1);
 
 		tags.add("t:" + tree.getThreadId());
-		tags.add("r:" + tree.getMessageId());
-
-		if (tree.getSessionToken() != null) {
-			tags.add("s:" + tree.getSessionToken());
-		}
 
 		return tags;
 	}
@@ -259,20 +254,19 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public boolean storeById(String id, MessageTree tree) throws IOException {
-		m_writeLock.lock();
-
 		if (m_idToOffsets.containsKey(id)) {
 			return false;
 		}
 
 		List<String> tags = prepareTags(tree);
-
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 		m_codec.encode(tree, buf);
 
 		int length = buf.readInt();
 		byte[] num = String.valueOf(length).getBytes("utf-8");
+
+		m_writeLock.lock();
 
 		try {
 			m_writeDataFile.write(num);
