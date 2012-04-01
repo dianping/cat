@@ -1,114 +1,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.server.configuration.ServerConfigManager</role>
-			<implementation>com.dianping.cat.server.configuration.ServerConfigManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.hdfs.FileSystemManager</role>
-			<implementation>com.dianping.cat.job.hdfs.FileSystemManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.server.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.hdfs.OutputChannel</role>
-			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannel</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
-			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.job.hdfs.FileSystemManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.hdfs.InputChannel</role>
-			<implementation>com.dianping.cat.job.hdfs.DefaultInputChannel</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.hdfs.InputChannelManager</role>
-			<implementation>com.dianping.cat.job.hdfs.DefaultInputChannelManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.job.hdfs.FileSystemManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageStorage</role>
-			<role-hint>hdfs</role-hint>
-			<implementation>com.dianping.cat.job.hdfs.HdfsMessageStorage</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageConsumer</role>
-			<role-hint>dump-to-hdfs</role-hint>
-			<implementation>com.dianping.cat.job.DumpToHdfsConsumer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStorage</role>
-					<role-hint>hdfs</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.storage.Bucket</role>
-			<role-hint>java.lang.String-remote</role-hint>
-			<implementation>com.dianping.cat.job.storage.RemoteStringBucket</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.job.sql.dal.ReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.storage.Bucket</role>
-			<role-hint>com.dianping.cat.message.spi.MessageTree-remote</role-hint>
-			<implementation>com.dianping.cat.job.storage.RemoteMessageBucket</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.job.hdfs.InputChannelManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.job.sql.dal.LogviewDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
@@ -141,26 +33,6 @@
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>logview</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>logview</logical-table-name>
-				<physical-table-name>logview</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>report</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>report</logical-table-name>
-				<physical-table-name>report</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>sqlreport</role-hint>
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -168,24 +40,6 @@
 				<physical-table-name>sqlreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.sql.dal.LogviewDao</role>
-			<implementation>com.dianping.cat.job.sql.dal.LogviewDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.sql.dal.ReportDao</role>
-			<implementation>com.dianping.cat.job.sql.dal.ReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>

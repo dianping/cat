@@ -1,21 +1,21 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.server.configuration.ServerConfigManager</role>
-			<implementation>com.dianping.cat.server.configuration.ServerConfigManager</implementation>
+			<role>com.dianping.cat.configuration.ServerConfigManager</role>
+			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.hdfs.FileSystemManager</role>
-			<implementation>com.dianping.cat.job.hdfs.FileSystemManager</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.FileSystemManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.server.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.hdfs.OutputChannel</role>
-			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannel</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.OutputChannel</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.DefaultOutputChannel</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
@@ -25,17 +25,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
-			<implementation>com.dianping.cat.job.hdfs.DefaultOutputChannelManager</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.OutputChannelManager</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.DefaultOutputChannelManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.job.hdfs.FileSystemManager</role>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.hdfs.InputChannel</role>
-			<implementation>com.dianping.cat.job.hdfs.DefaultInputChannel</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.InputChannel</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.DefaultInputChannel</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
@@ -45,21 +45,21 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.hdfs.InputChannelManager</role>
-			<implementation>com.dianping.cat.job.hdfs.DefaultInputChannelManager</implementation>
+			<role>com.dianping.cat.hadoop.hdfs.InputChannelManager</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.DefaultInputChannelManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.job.hdfs.FileSystemManager</role>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageStorage</role>
 			<role-hint>hdfs</role-hint>
-			<implementation>com.dianping.cat.job.hdfs.HdfsMessageStorage</implementation>
+			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageStorage</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
+					<role>com.dianping.cat.hadoop.hdfs.OutputChannelManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
@@ -69,7 +69,7 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>dump-to-hdfs</role-hint>
-			<implementation>com.dianping.cat.job.DumpToHdfsConsumer</implementation>
+			<implementation>com.dianping.cat.hadoop.DumpToHdfsConsumer</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageStorage</role>
@@ -80,28 +80,28 @@
 		<component>
 			<role>com.dianping.cat.storage.Bucket</role>
 			<role-hint>java.lang.String-remote</role-hint>
-			<implementation>com.dianping.cat.job.storage.RemoteStringBucket</implementation>
+			<implementation>com.dianping.cat.hadoop.storage.RemoteStringBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.job.sql.dal.ReportDao</role>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.storage.Bucket</role>
 			<role-hint>com.dianping.cat.message.spi.MessageTree-remote</role-hint>
-			<implementation>com.dianping.cat.job.storage.RemoteMessageBucket</implementation>
+			<implementation>com.dianping.cat.hadoop.storage.RemoteMessageBucket</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.job.hdfs.OutputChannelManager</role>
+					<role>com.dianping.cat.hadoop.hdfs.OutputChannelManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.job.hdfs.InputChannelManager</role>
+					<role>com.dianping.cat.hadoop.hdfs.InputChannelManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.job.sql.dal.LogviewDao</role>
+					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
@@ -160,18 +160,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>sqlreport</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>sqlreport</logical-table-name>
-				<physical-table-name>sqlreport</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.sql.dal.LogviewDao</role>
-			<implementation>com.dianping.cat.job.sql.dal.LogviewDao</implementation>
+			<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.LogviewDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -179,17 +169,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.sql.dal.ReportDao</role>
-			<implementation>com.dianping.cat.job.sql.dal.ReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
-			<implementation>com.dianping.cat.job.sql.dal.SqlReportRecordDao</implementation>
+			<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.ReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
