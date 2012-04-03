@@ -9,7 +9,7 @@ public class ClientConfigValidator extends DefaultValidator {
 	private ClientConfig m_config;
 
 	private String getLocalAddress() {
-		return LocalIP.getAddress();
+		return NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
 
 	@Override

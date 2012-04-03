@@ -54,10 +54,10 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.CompositeTransactionService</implementation>
-			<configuration>
-				<remoteServers></remoteServers>
-			</configuration>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -96,10 +96,10 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.page.model.event.CompositeEventService</implementation>
-			<configuration>
-				<remoteServers></remoteServers>
-			</configuration>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -138,10 +138,10 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.page.model.problem.CompositeProblemService</implementation>
-			<configuration>
-				<remoteServers></remoteServers>
-			</configuration>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -170,10 +170,10 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>ip</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
-			<configuration>
-				<remoteServers></remoteServers>
-			</configuration>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -210,6 +210,12 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.InputChannelManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>html</role-hint>
 				</requirement>
@@ -219,10 +225,10 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>logview</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
-			<configuration>
-				<remoteServers></remoteServers>
-			</configuration>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>

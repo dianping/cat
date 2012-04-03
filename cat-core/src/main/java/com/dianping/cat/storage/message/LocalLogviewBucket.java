@@ -185,17 +185,18 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 		File dataFile = new File(m_baseDir, logicalPath);
 		File indexFile = new File(m_baseDir, logicalPath + ".idx");
+		
+		if (indexFile.exists()) {
+			loadIndexes(indexFile);
+		}
 
 		dataFile.getParentFile().mkdirs();
 
 		m_logicalPath = logicalPath;
 		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile, true), 8192);
 		m_writeIndexFile = new BufferedOutputStream(new FileOutputStream(indexFile, true), 8192);
+		m_writeDataFileLength = dataFile.length();
 		m_readDataFile = new RandomAccessFile(dataFile, "r");
-
-		if (indexFile.exists()) {
-			loadIndexes(indexFile);
-		}
 	}
 
 	protected void loadIndexes(File indexFile) throws IOException {

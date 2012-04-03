@@ -12,6 +12,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -24,6 +26,9 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
       Initializable {
 	@Inject
 	private List<ModelService<T>> m_services;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	private ExecutorService m_threadPool;
 
@@ -46,6 +51,13 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	public void initialize() throws InitializationException {
 		m_threadPool = Executors.newFixedThreadPool(10);
 		m_allServices.addAll(m_services);
+
+		ConsoleConfig console = m_configManager.getServerConfig().getConsole();
+		String remoteServers = console.getRemoteServers();
+
+		if (remoteServers != null && remoteServers.length() > 0) {
+			setRemoteServers(remoteServers);
+		}
 	}
 
 	@Override
@@ -65,7 +77,9 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			}
 
 			// save current transaction so that child thread can access it
-			setParentTransaction(t);
+			if (service instanceof ModelServiceWithCalSupport) {
+				 ((ModelServiceWithCalSupport) service).setParentTransaction(t);
+			}
 
 			m_threadPool.submit(new Runnable() {
 				@Override
@@ -73,6 +87,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 					try {
 						responses.add(service.invoke(request));
 					} catch (Exception e) {
+						e.printStackTrace();
 						logError(e);
 						t.setStatus(e);
 					} finally {
@@ -130,7 +145,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		for (String endpoint : endpoints) {
 			int pos = endpoint.indexOf(':');
 			String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
-			int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos) + 1) : 2281);
+			int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
 
 			if (port == 2281) {
 				if ("localhost".equals(host) || host.startsWith("127.0.")) {

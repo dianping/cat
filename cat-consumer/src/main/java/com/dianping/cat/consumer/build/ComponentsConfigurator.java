@@ -6,6 +6,7 @@ import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
@@ -40,7 +41,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("failureType").value(failureTypes)));
 
 		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
-		      .config(E("threshold").value("1000")));
+				.req(ServerConfigManager.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(Handler.class, new String[] { FAILURE.getName(), LONG_URL.getName() }, "m_handlers") //

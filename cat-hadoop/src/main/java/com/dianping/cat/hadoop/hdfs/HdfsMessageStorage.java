@@ -12,7 +12,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.configuration.LocalIP;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
@@ -92,7 +92,7 @@ public class HdfsMessageStorage implements MessageStorage, Initializable, Dispos
 		private void handle(MessageTree tree) {
 			try {
 				String tmp = m_builder.getMessagePath(tree.getDomain(), new Date(tree.getMessage().getTimestamp()));
-				String ipAddress = LocalIP.getAddress();
+				String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 				String path = tmp + "-" + ipAddress;
 				OutputChannel channel = m_manager.openChannel("dump", path, false);
 				int length = channel.write(tree);

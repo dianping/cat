@@ -226,7 +226,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	public int encodeMessage(Message message, ChannelBuffer buf, int level, LineCounter counter) {
+	protected int encodeMessage(Message message, ChannelBuffer buf, int level, LineCounter counter) {
 		if (message instanceof Event) {
 			String type = message.getType();
 

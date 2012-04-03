@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -55,7 +56,7 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
-		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
+		Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
 			T report = getReport(request, request.getPeriod(), request.getDomain());

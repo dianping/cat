@@ -192,8 +192,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx = m_context.get();
 
 		if (ctx != null) {
-			ctx.m_stack = null;
-			ctx.m_tree = null;
+			ctx.m_stack.clear();
 		}
 
 		m_context.remove();
@@ -266,7 +265,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					validateTransaction(current);
 				} else {
 					while (transaction != current && !m_stack.empty()) {
-						validateTransaction(current);
+						// validateTransaction(current);
 
 						current = m_stack.pop();
 					}

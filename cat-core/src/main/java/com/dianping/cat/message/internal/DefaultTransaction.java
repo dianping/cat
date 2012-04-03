@@ -9,7 +9,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
-	private long m_duration = -1;
+	private long m_duration = -1; // must be less than 0
 
 	private List<Message> m_children;
 
@@ -62,16 +62,33 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	@Override
 	public long getDuration() {
-		return m_duration;
-	}
+		if (m_duration >= 0) {
+			return m_duration;
+		} else { // if it's not completed explicitly
+			long duration = 0;
+			int len = m_children == null ? 0 : m_children.size();
 
-	public void setDuration(long duration) {
-		m_duration = duration;
+			if (len > 0) {
+				Message lastChild = m_children.get(len - 1);
+
+				duration = lastChild.getTimestamp() - getTimestamp();
+
+				if (lastChild instanceof Transaction) {
+					duration += ((Transaction) lastChild).getDuration();
+				}
+			}
+
+			return duration;
+		}
 	}
 
 	@Override
 	public boolean hasChildren() {
 		return m_children != null && m_children.size() > 0;
+	}
+
+	public void setDuration(long duration) {
+		m_duration = duration;
 	}
 
 }

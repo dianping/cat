@@ -31,7 +31,7 @@ public abstract class ModelServiceWithCalSupport {
 
 	protected void logEvent(String type, String name, String status, String nameValuePairs) {
 		DefaultMessageProducer cat = (DefaultMessageProducer) Cat.getProducer();
-		Event event = cat.newEvent(type, name);
+		Event event = cat.newEvent(m_current, type, name);
 
 		if (nameValuePairs != null && nameValuePairs.length() > 0) {
 			event.addData(nameValuePairs);
@@ -39,10 +39,6 @@ public abstract class ModelServiceWithCalSupport {
 
 		event.setStatus(status);
 		event.complete();
-
-		if (m_current != null) {
-			m_current.addChild(event);
-		}
 	}
 
 	protected Transaction newTransaction(String type, String name) {

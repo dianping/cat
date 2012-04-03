@@ -9,7 +9,6 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -59,8 +58,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
+		Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
 			URL url = buildUrl(request);
@@ -80,7 +78,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
-			cat.logError(e);
+			logError(e);
 			t.setStatus(e);
 			response.setException(e);
 		} finally {

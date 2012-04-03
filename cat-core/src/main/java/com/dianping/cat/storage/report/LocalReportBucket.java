@@ -174,8 +174,9 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 		dataFile.getParentFile().mkdirs();
 
 		m_logicalPath = logicalPath;
-		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile), 8192);
-		m_writeIndexFile = new BufferedOutputStream(new FileOutputStream(indexFile), 8192);
+		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile, true), 8192);
+		m_writeIndexFile = new BufferedOutputStream(new FileOutputStream(indexFile, true), 8192);
+		m_writeDataFileLength = dataFile.length();
 		m_readDataFile = new RandomAccessFile(dataFile, "r");
 	}
 

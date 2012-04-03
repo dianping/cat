@@ -2,7 +2,7 @@ package com.dianping.cat.message.internal;
 
 import java.util.List;
 
-import com.dianping.cat.configuration.LocalIP;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.site.helper.Splitters;
 
 public class MessageIdFactory {
@@ -48,7 +48,7 @@ public class MessageIdFactory {
 		m_domain = domain;
 
 		if (m_ipAddress == null) {
-			String ip = LocalIP.getAddress();
+			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 			List<String> items = Splitters.by(".").noEmptyItem().split(ip);
 			byte[] bytes = new byte[4];
 			

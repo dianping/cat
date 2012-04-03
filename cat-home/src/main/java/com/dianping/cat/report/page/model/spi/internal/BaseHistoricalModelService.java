@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -22,7 +23,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
-		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
+		Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
 			T model = buildModel(request);
@@ -50,8 +51,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 		StringBuilder sb = new StringBuilder(64);
 
 		sb.append(getClass().getSimpleName()).append('[');
-		sb.append("name=").append(m_name);
-		sb.append(']');
+		sb.append("name=").append(m_name).append(']');
 
 		return sb.toString();
 	}

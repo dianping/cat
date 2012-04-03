@@ -85,7 +85,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 		}
 	}
 
-	protected Message decodeLine(ChannelBuffer buf, DefaultTransaction parent) {
+	protected Message decodeLine(ChannelBuffer buf, DefaultTransaction parent, Stack<DefaultTransaction> stack) {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = buf.readByte();
 		String timestamp = helper.read(buf, TAB);
@@ -101,7 +101,13 @@ public class PlainTextMessageCodec implements MessageCodec {
 			event.setTimestamp(m_dateHelper.parse(timestamp));
 			event.setStatus(status);
 			event.addData(data);
-			return event;
+
+			if (parent != null) {
+				parent.addChild(event);
+				return parent;
+			} else {
+				return event;
+			}
 		} else if (identifier == 'H') {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 			String status = helper.read(buf, TAB);
@@ -111,12 +117,24 @@ public class PlainTextMessageCodec implements MessageCodec {
 			heartbeat.setTimestamp(m_dateHelper.parse(timestamp));
 			heartbeat.setStatus(status);
 			heartbeat.addData(data);
-			return heartbeat;
+
+			if (parent != null) {
+				parent.addChild(heartbeat);
+				return parent;
+			} else {
+				return heartbeat;
+			}
 		} else if (identifier == 't') {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
 
 			helper.read(buf, LF); // get rid of line feed
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
+
+			if (parent != null) {
+				parent.addChild(transaction);
+			}
+
+			stack.push(parent);
 			return transaction;
 		} else if (identifier == 'A') {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
@@ -129,7 +147,13 @@ public class PlainTextMessageCodec implements MessageCodec {
 			transaction.setStatus(status);
 			transaction.setDuration(Long.parseLong(duration.substring(0, duration.length() - 2)));
 			transaction.addData(data);
-			return transaction;
+
+			if (parent != null) {
+				parent.addChild(transaction);
+				return parent;
+			} else {
+				return transaction;
+			}
 		} else if (identifier == 'T') {
 			String status = helper.read(buf, TAB);
 			String duration = helper.read(buf, TAB);
@@ -139,57 +163,26 @@ public class PlainTextMessageCodec implements MessageCodec {
 			parent.setStatus(status);
 			parent.setDuration(Long.parseLong(duration.substring(0, duration.length() - 2)));
 			parent.addData(data);
-			return parent;
+			return stack.pop();
 		} else {
 			// unknown message, ignore it
-			return null;
+			return parent;
 		}
 	}
 
 	protected void decodeMessage(ChannelBuffer buf, MessageTree tree) {
-		Message root = decodeLine(buf, null);
+		Stack<DefaultTransaction> stack = new Stack<DefaultTransaction>();
+		Message parent = decodeLine(buf, null, stack);
 
-		tree.setMessage(root);
+		tree.setMessage(parent);
 
-		if (root instanceof DefaultTransaction) {
-			Stack<DefaultTransaction> stack = new Stack<DefaultTransaction>();
-			DefaultTransaction parent = (DefaultTransaction) root;
+		while (buf.readableBytes() > 0) {
+			Message message = decodeLine(buf, (DefaultTransaction) parent, stack);
 
-			stack.push(parent);
-
-			while (!stack.isEmpty() && buf.readableBytes() > 0) {
-				Message message = decodeLine(buf, parent);
-
-				if (message instanceof DefaultTransaction) {
-					int index = stack.lastIndexOf(message);
-
-					if (index >= 0) {
-						for (int i = stack.size() - 1; i >= index; i--) {
-							stack.pop();
-						}
-
-						if (!stack.isEmpty()) {
-							parent = stack.peek();
-						} else {
-							break;
-						}
-
-						continue;
-					}
-				}
-
-				if (message != null) {
-					parent.addChild(message);
-
-					if (message instanceof DefaultTransaction) {
-						DefaultTransaction child = (DefaultTransaction) message;
-
-						if (child.getDuration() < 0) { // 't'
-							stack.push(child);
-							parent = child;
-						}
-					}
-				}
+			if (message instanceof DefaultTransaction) {
+				parent = message;
+			} else {
+				break;
 			}
 		}
 	}

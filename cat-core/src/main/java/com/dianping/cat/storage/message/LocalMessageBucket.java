@@ -90,7 +90,7 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 		dataFile.getParentFile().mkdirs();
 
 		m_logicalPath = logicalPath;
-		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile), 8192);
+		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile, true), 8192);
 	}
 
 	public void setBaseDir(String baseDir) {

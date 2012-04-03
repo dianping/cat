@@ -11,7 +11,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.LocalIP;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -108,7 +108,7 @@ public class RemoteStringBucket implements Bucket<String>, LogEnabled {
 		report.setType(1);
 		report.setContent(data);
 		report.setPeriod(m_period);
-		report.setIp(LocalIP.getAddress());
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 
 		t.setStatus(Message.SUCCESS);
 

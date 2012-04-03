@@ -106,9 +106,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 		HttpSession session = ctx.getHttpServletRequest().getSession();
 		String sessionDomain = (String) session.getAttribute("domain");
 		String sessionDate = (String) session.getAttribute("date");
+
 		if (StringUtils.isEmpty(payload.getDomain()) && sessionDomain != null) {
 			payload.setDomain(sessionDomain);
 		}
+
 		if (payload.getRealDate() == 0 && sessionDate != null) {
 			payload.setDate(sessionDate);
 		}
@@ -125,6 +127,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 			showGraphs(model, payload);
 			break;
 		}
+
 		// reset session
 		session.setAttribute("domain", model.getDomain());
 		session.setAttribute("date", model.getDate());

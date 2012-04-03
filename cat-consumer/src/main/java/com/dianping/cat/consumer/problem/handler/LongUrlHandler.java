@@ -1,5 +1,14 @@
 package com.dianping.cat.consumer.problem.handler;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.Domain;
+import com.dianping.cat.configuration.server.entity.LongUrl;
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
@@ -8,9 +17,13 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class LongUrlHandler implements Handler {
+public class LongUrlHandler implements Handler, Initializable {
 	@Inject
-	private long m_threshold;
+	private ServerConfigManager m_configManager;
+
+	private int m_defaultThreshold = 1000; // 1 second
+
+	private Map<String, Integer> m_thresholds = new HashMap<String, Integer>();
 
 	@Override
 	public int handle(Segment segment, MessageTree tree) {
@@ -18,10 +31,11 @@ public class LongUrlHandler implements Handler {
 		int count = 0;
 
 		if (message instanceof Transaction) {
-			Transaction t = (Transaction) message;
-			long duration = t.getDuration();
+			long duration = ((Transaction) message).getDuration();
+			Integer threshold = m_thresholds.get(tree.getDomain());
+			long value = threshold != null ? threshold.longValue() : m_defaultThreshold;
 
-			if (duration > m_threshold) {
+			if (duration > value) {
 				String messageId = tree.getMessageId();
 
 				if (segment.findEntry(messageId) == null) {
@@ -41,7 +55,20 @@ public class LongUrlHandler implements Handler {
 		return count;
 	}
 
-	public void setThreshold(long threshold) {
-		m_threshold = threshold;
+	@Override
+	public void initialize() throws InitializationException {
+		LongUrl longUrl = m_configManager.getServerConfig().getConsumer().getLongUrl();
+
+		if (longUrl != null) {
+			if (longUrl.getDefaultThreshold() != null) {
+				m_defaultThreshold = longUrl.getDefaultThreshold();
+			}
+
+			for (Domain domain : longUrl.getDomains().values()) {
+				if (domain.getThreshold() != null) {
+					m_thresholds.put(domain.getName(), domain.getThreshold());
+				}
+			}
+		}
 	}
 }

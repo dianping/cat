@@ -15,7 +15,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.LocalIP;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Logview;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.dal.LogviewEntity;
@@ -135,7 +135,7 @@ public class RemoteMessageBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
-		String ipAddress = LocalIP.getAddress();
+		String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		String logicalPath = m_pathBuilder.getMessagePath(name, timestamp);
 
 		m_path = logicalPath + "-" + ipAddress + "-" + System.currentTimeMillis();
