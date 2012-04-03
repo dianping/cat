@@ -53,7 +53,7 @@ public class MessageProducerTest extends CatTestCase {
 		Assert.assertEquals("URL", trans.getType());
 		Assert.assertEquals("MyPage", trans.getName());
 		Assert.assertEquals("0", trans.getStatus());
-		Assert.assertTrue(trans.getDuration() > 0);
+		Assert.assertTrue(trans.getDurationInMillis() > 0);
 		Assert.assertEquals("k1=v1&k2=v2&k3=v3", trans.getData().toString());
 
 		Assert.assertEquals(1, trans.getChildren().size());

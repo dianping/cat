@@ -46,7 +46,7 @@ public class FailureHandler implements Handler {
 				entry.setType(ProblemType.ERROR.getName());
 
 				if (message instanceof Transaction) {
-					long duration = ((Transaction) message).getDuration();
+					long duration = ((Transaction) message).getDurationInMillis();
 
 					entry.setDuration((int) duration);
 				}

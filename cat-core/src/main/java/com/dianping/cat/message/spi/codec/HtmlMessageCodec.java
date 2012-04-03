@@ -146,7 +146,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		count += helper.write(buf, (byte) type);
 
 		if (type == 'T' && message instanceof Transaction) {
-			long duration = ((Transaction) message).getDuration();
+			long duration = ((Transaction) message).getDurationInMillis();
 
 			count += helper.write(buf, m_dateHelper.format(message.getTimestamp() + duration));
 		} else {
@@ -170,9 +170,18 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			count += helper.td1(buf);
 
 			if (policy == Policy.WITH_DURATION && message instanceof Transaction) {
-				long duration = ((Transaction) message).getDuration();
+				long durationInMicro = ((Transaction) message).getDurationInMicros();
+				long durationInMillis = durationInMicro / 1000L;
 
-				count += helper.write(buf, String.valueOf(duration));
+				if (durationInMicro < 100L) {
+					count += helper.write(buf, "0");
+				} else if (durationInMicro < 10000L) { // less than 10 ms
+					count += helper.write(buf, Long.toString(durationInMillis) + "."
+					      + (int) ((durationInMicro - durationInMillis * 1000L) / 100L));
+				} else { // no fraction
+					count += helper.write(buf, Long.toString(durationInMillis));
+				}
+
 				count += helper.write(buf, "ms ");
 			}
 
@@ -240,7 +249,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 			List<Message> children = transaction.getChildren();
 
 			if (children.isEmpty()) {
-				if (transaction.getDuration() < 0) {
+				if (transaction.getDurationInMillis() < 0) {
 					return encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS, level, counter);
 				} else {
 					return encodeLine(transaction, buf, 'A', Policy.WITH_DURATION, level, counter);

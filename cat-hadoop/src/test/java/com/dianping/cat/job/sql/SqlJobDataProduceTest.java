@@ -60,7 +60,7 @@ public class SqlJobDataProduceTest extends CatTestCase {
 					sqlTran.complete();
 
 					DefaultTransaction sqlInternalTran = (DefaultTransaction) sqlTran;
-					sqlInternalTran.setDuration((long) Math.pow(2, j % 12));
+					sqlInternalTran.setDurationInMillis((long) Math.pow(2, j % 12));
 					if (j % 2 == 1) {
 						sqlTran.setStatus(Message.SUCCESS);
 					} else {
@@ -69,7 +69,7 @@ public class SqlJobDataProduceTest extends CatTestCase {
 					sqlInternalTran.setTimestamp(currentHour + (j % 60) * 1000 * 60);
 
 					DefaultTransaction def = (DefaultTransaction) sqlTran;
-					def.setDuration(j % 100 + 50);
+					def.setDurationInMillis(j % 100 + 50);
 					def.setTimestamp(currentHour + (j % 60) * 1000 * 60);
 					t.setStatus(Message.SUCCESS);
 				} catch (Exception e) {

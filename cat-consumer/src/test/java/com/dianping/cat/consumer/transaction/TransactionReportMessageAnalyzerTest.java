@@ -56,7 +56,7 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 				t2.setStatus(Message.SUCCESS);
 			}
 			t2.complete();
-			t2.setDuration(i);
+			t2.setDurationInMillis(i);
 
 			t.addChild(t2);
 			if (i % 2 == 0) {
@@ -65,7 +65,7 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 				t.setStatus(Message.SUCCESS);
 			}
 			t.complete();
-			t.setDuration(i * 2);
+			t.setDurationInMillis(i * 2);
 
 			tree.setMessage(t);
 			analyzer.process(tree);

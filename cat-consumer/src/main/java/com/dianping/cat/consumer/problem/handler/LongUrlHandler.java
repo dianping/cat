@@ -31,7 +31,7 @@ public class LongUrlHandler implements Handler, Initializable {
 		int count = 0;
 
 		if (message instanceof Transaction) {
-			long duration = ((Transaction) message).getDuration();
+			long duration = ((Transaction) message).getDurationInMillis();
 			Integer threshold = m_thresholds.get(tree.getDomain());
 			long value = threshold != null ? threshold.longValue() : m_defaultThreshold;
 

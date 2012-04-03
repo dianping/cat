@@ -15,7 +15,7 @@ public abstract class AbstractMessage implements Message {
 
 	private String m_status;
 
-	private long m_timestamp;
+	private long m_timestampInMicros;
 
 	private CharSequence m_data;
 
@@ -24,7 +24,7 @@ public abstract class AbstractMessage implements Message {
 	public AbstractMessage(String type, String name) {
 		m_type = type;
 		m_name = name;
-		m_timestamp = MilliSecondTimer.currentTimeMillis();
+		m_timestampInMicros = MilliSecondTimer.currentTimeMicros();
 	}
 
 	@Override
@@ -81,7 +81,11 @@ public abstract class AbstractMessage implements Message {
 
 	@Override
 	public long getTimestamp() {
-		return m_timestamp;
+		return m_timestampInMicros / 1000L;
+	}
+
+	protected long getTimestampInMicros() {
+		return m_timestampInMicros;
 	}
 
 	@Override
@@ -93,13 +97,13 @@ public abstract class AbstractMessage implements Message {
 		return m_completed;
 	}
 
-	protected void setCompleted(boolean completed) {
-		m_completed = completed;
-	}
-
 	@Override
 	public boolean isSuccess() {
 		return Message.SUCCESS.equals(m_status);
+	}
+
+	protected void setCompleted(boolean completed) {
+		m_completed = completed;
 	}
 
 	@Override
@@ -113,7 +117,7 @@ public abstract class AbstractMessage implements Message {
 	}
 
 	public void setTimestamp(long timestamp) {
-		m_timestamp = timestamp;
+		m_timestampInMicros = timestamp * 1000L;
 	}
 
 	@Override

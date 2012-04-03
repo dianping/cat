@@ -86,7 +86,12 @@ public enum NullMessage implements Transaction, Event, Heartbeat {
    }
 
 	@Override
-   public long getDuration() {
+   public long getDurationInMillis() {
 	   return 0;
    }
+	
+	@Override
+	public long getDurationInMicros() {
+		return 0;
+	}
 }

@@ -9,7 +9,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
-	private long m_duration = -1; // must be less than 0
+	private long m_durationInMicro = -1; // must be less than 0
 
 	private List<Message> m_children;
 
@@ -41,7 +41,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 			event.complete();
 			addChild(event);
 		} else {
-			m_duration = MilliSecondTimer.currentTimeMillis() - getTimestamp();
+			m_durationInMicro = MilliSecondTimer.currentTimeMicros() - getTimestampInMicros();
 
 			setCompleted(true);
 
@@ -61,9 +61,9 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	}
 
 	@Override
-	public long getDuration() {
-		if (m_duration >= 0) {
-			return m_duration;
+	public long getDurationInMicros() {
+		if (m_durationInMicro >= 0) {
+			return m_durationInMicro;
 		} else { // if it's not completed explicitly
 			long duration = 0;
 			int len = m_children == null ? 0 : m_children.size();
@@ -74,7 +74,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 				duration = lastChild.getTimestamp() - getTimestamp();
 
 				if (lastChild instanceof Transaction) {
-					duration += ((Transaction) lastChild).getDuration();
+					duration += ((Transaction) lastChild).getDurationInMillis();
 				}
 			}
 
@@ -83,12 +83,20 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	}
 
 	@Override
+	public long getDurationInMillis() {
+		return getDurationInMicros() / 1000L;
+	}
+
+	@Override
 	public boolean hasChildren() {
 		return m_children != null && m_children.size() > 0;
 	}
 
-	public void setDuration(long duration) {
-		m_duration = duration;
+	public void setDurationInMicros(long duration) {
+		m_durationInMicro = duration;
 	}
 
+	public void setDurationInMillis(long duration) {
+		m_durationInMicro = duration * 1000L;
+	}
 }

@@ -59,11 +59,12 @@ public interface Transaction extends Message {
 	public List<Message> getChildren();
 	
 	/**
-	 * Has children.
+	 * How long the transaction took from construction to complete. Time unit is
+	 * microsecond.
 	 * 
-	 * @return true if child exists, else false.
+	 * @return duration time in microsecond
 	 */
-	public boolean hasChildren();
+	public long getDurationInMicros();
 
 	/**
 	 * How long the transaction took from construction to complete. Time unit is
@@ -71,6 +72,12 @@ public interface Transaction extends Message {
 	 * 
 	 * @return duration time in millisecond
 	 */
-	public long getDuration();
-
+	public long getDurationInMillis();
+	
+	/**
+	 * Has children.
+	 * 
+	 * @return true if child exists, else false.
+	 */
+	public boolean hasChildren();
 }

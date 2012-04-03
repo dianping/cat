@@ -33,6 +33,16 @@ public class MilliSecondTimer {
 		}
 	}
 
+	public static long currentTimeMicros() {
+		if (m_baseTime == 0) {
+			initialize();
+		}
+
+		long elipsed = (long) ((System.nanoTime() - m_startNanoTime) / 1e3);
+
+		return m_baseTime * 1000L + elipsed;
+	}
+
 	public static long currentTimeMillis() {
 		if (m_baseTime == 0) {
 			initialize();

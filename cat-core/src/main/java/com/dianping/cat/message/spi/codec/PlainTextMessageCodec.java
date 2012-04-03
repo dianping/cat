@@ -145,7 +145,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			helper.read(buf, LF); // get rid of line feed
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
 			transaction.setStatus(status);
-			transaction.setDuration(Long.parseLong(duration.substring(0, duration.length() - 2)));
+			transaction.setDurationInMicros(Long.parseLong(duration.substring(0, duration.length() - 2)));
 			transaction.addData(data);
 
 			if (parent != null) {
@@ -161,7 +161,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 			helper.read(buf, LF); // get rid of line feed
 			parent.setStatus(status);
-			parent.setDuration(Long.parseLong(duration.substring(0, duration.length() - 2)));
+			parent.setDurationInMicros(Long.parseLong(duration.substring(0, duration.length() - 2)));
 			parent.addData(data);
 			return stack.pop();
 		} else {
@@ -239,7 +239,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 		count += helper.write(buf, (byte) type);
 
 		if (type == 'T' && message instanceof Transaction) {
-			long duration = ((Transaction) message).getDuration();
+			long duration = ((Transaction) message).getDurationInMillis();
 
 			count += helper.write(buf, m_dateHelper.format(message.getTimestamp() + duration));
 		} else {
@@ -259,10 +259,10 @@ public class PlainTextMessageCodec implements MessageCodec {
 			Object data = message.getData();
 
 			if (policy == Policy.WITH_DURATION && message instanceof Transaction) {
-				long duration = ((Transaction) message).getDuration();
+				long duration = ((Transaction) message).getDurationInMicros();
 
 				count += helper.write(buf, String.valueOf(duration));
-				count += helper.write(buf, "ms");
+				count += helper.write(buf, "us");
 				count += helper.write(buf, TAB);
 			}
 
@@ -290,11 +290,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			List<Message> children = transaction.getChildren();
 
 			if (children.isEmpty()) {
-				if (transaction.getDuration() < 0) {
-					return encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS);
-				} else {
-					return encodeLine(transaction, buf, 'A', Policy.WITH_DURATION);
-				}
+				return encodeLine(transaction, buf, 'A', Policy.WITH_DURATION);
 			} else {
 				int count = 0;
 

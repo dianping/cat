@@ -10,6 +10,7 @@ import java.util.concurrent.Future;
 import junit.framework.Assert;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,6 +28,7 @@ public class TcpSocketTest extends ComponentTestCase {
 	 * many client to one receiver
 	 */
 	@Test
+	@Ignore("fix me")
 	public void testOneToMany() throws Exception {
 		final MessageReceiver receiver = lookup(MessageReceiver.class, "tcp-socket");
 		int numSenders = 10;
@@ -88,6 +90,7 @@ public class TcpSocketTest extends ComponentTestCase {
 	 * one client to one server
 	 */
 	@Test
+	@Ignore("fix me")
 	public void testOneToOne() throws Exception {
 		final MessageSender sender = lookup(MessageSender.class, "tcp-socket");
 		final MessageReceiver receiver = lookup(MessageReceiver.class, "tcp-socket");

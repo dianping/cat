@@ -34,7 +34,7 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 			}
 
 			t2.complete();
-			t2.setDuration(i);
+			t2.setDurationInMillis(i);
 
 			t.addChild(t2);
 
@@ -45,7 +45,7 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 			}
 
 			t.complete();
-			t.setDuration(i * 2);
+			t.setDurationInMillis(i * 2);
 
 			tree.setMessage(t);
 

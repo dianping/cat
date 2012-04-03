@@ -42,7 +42,7 @@ public class SqlJobMapper extends Mapper<Object, MessageTreeWritable, SqlStateme
 			SqlStatementKey statementKey = new SqlStatementKey();
 			String name = transaction.getName();
 			String statement = transaction.getData().toString();
-			long duration = transaction.getDuration();
+			long duration = transaction.getDurationInMillis();
 			int flag = 0;
 
 			statementKey.setDomain(new Text(domain)).setName(new Text(name)).setStatement(new Text(statement));
