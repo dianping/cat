@@ -20,9 +20,9 @@
 
 <br>
 <table class="event">
-	<tr><th>${empty payload.type ? "Type" : "Name"}</th><th>Total Count</th><th>Failure Count</th><th>Failure%</th><th>Sample Link</th></tr>
 	<c:choose>
 		<c:when test="${empty payload.type}">
+			<tr><th>Type</th><th>Total Count</th><th>Failure Count</th><th>Failure%</th><th>Sample Link</th></tr>
 			<c:forEach var="type" items="${report.types}" varStatus="status">
 				<c:set var="e" value="${type.value}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -36,11 +36,15 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
+		<tr><th class="leftStyle">
+			<a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
+			Name</th><th>Total Count</th><th>Failure Count</th><th>Failure%</th><th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
+			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="name" items="${report.types[payload.type].names}" varStatus="status">
 				<c:set var="e" value="${name.value}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td><a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}&name=${e.id}" onclick="return showGraphs(this,${status.index},${model.date},'${report.domain}','${payload.type}','${e.id}',${payload.period.current});">[:: show ::]</a> ${e.id}</td>
+					<td><a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> ${e.id}</td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>

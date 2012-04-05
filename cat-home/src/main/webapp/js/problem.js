@@ -1,30 +1,3 @@
-$(function() {
-	$('.minute').click(function(e) {
-		e.preventDefault();
-	});
-});
-
-$(function() {
-	$('.error').click(function(e) {
-		e.preventDefault();
-	});
-
-});
-
-$(function() {
-	$('.failure').click(function(e) {
-		e.preventDefault();
-	});
-
-});
-
-$(function() {
-	$('.long-url').click(function(e) {
-		e.preventDefault();
-	});
-
-});
-
 function show(anchor) {
 	$.ajax({
 		type : "get",
@@ -33,7 +6,9 @@ function show(anchor) {
 			alertWin("Problem Detail", data);
 		}
 	});
+	return false;
 }
+
 $(document).keypress(function(e) {
 	if (e.which == 113) {
 		var lastMsgObj = document.getElementById("msgObjRef");
@@ -42,6 +17,7 @@ $(document).keypress(function(e) {
 		}
 	}
 });
+
 function alertWin(title, msg) {
 	var lastMsgObj = document.getElementById("msgObjRef");
 	if (lastMsgObj != null) {
@@ -119,9 +95,4 @@ function alertWin(title, msg) {
 	function getEvent() {
 		return window.event || arguments.callee.caller.arguments[0];
 	}
-	$(function() {
-		$('.minute').click(function(e) {
-			e.preventDefault();
-		});
-	});
 }

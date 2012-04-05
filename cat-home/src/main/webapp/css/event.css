@@ -31,3 +31,11 @@ tr.link td {
 .error {
 	color: red;
 }
+
+.graph_link{
+	font-weight: normal;
+}
+
+.leftStyle{
+	text-align:left;
+}
