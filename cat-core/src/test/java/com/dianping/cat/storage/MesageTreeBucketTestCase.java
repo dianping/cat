@@ -24,7 +24,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 
 	protected ExecutorService pool = null;
 
-	Bucket<MessageTree> bucket = null;
+	protected Bucket<MessageTree> bucket = null;
 
 	protected void printFails(final int fails, final long start) {
 		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:" + threadNum * timesPerThread + " fails:" + fails + " waste:" + (System.currentTimeMillis() - start) + "ms");

@@ -22,7 +22,7 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 
 	protected ExecutorService pool = null;
 
-	Bucket<String> bucket = null;
+	protected Bucket<String> bucket = null;
 
 	protected void printFails(final int fails, final long start) {
 		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:" + threadNum * timesPerThread + " fails:" + fails + " waste:" + (System.currentTimeMillis() - start) + "ms");

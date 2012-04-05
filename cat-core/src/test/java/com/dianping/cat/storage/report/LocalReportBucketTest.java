@@ -1,8 +1,10 @@
 package com.dianping.cat.storage.report;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 
+import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -17,7 +19,16 @@ public class LocalReportBucketTest extends StringBucketTestCase {
 		bucket.initialize(null, "cat", new Date());
 		return bucket;
 	}
-	
+
+	@After
+	public void tearDown() throws Exception {
+		super.tearDown();
+		String m_baseDir = "target/bucket";
+		String logicalPath = ((LocalReportBucket) this.bucket).getLogicalPath();
+		new File(m_baseDir, logicalPath).delete();
+		new File(m_baseDir, logicalPath + ".idx").delete();
+	}
+
 	@Test
 	@Ignore
 	public void testReload() throws Exception {
