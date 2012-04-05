@@ -46,38 +46,20 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
-	private TransactionName getAllNameTransactionName(Payload payload) {
+	private TransactionName getAggregatedTransactionName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
-		      .setProperty("type", type);
+		      .setProperty("type", type) //
+		      .setProperty("all", "true");
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
-		TransactionName all = new TransactionName("ALL");
 		TransactionType t = report.findType(type);
 
 		if (t != null) {
-			for (TransactionName name : t.getNames().values()) {
-				all.setTotalCount(all.getTotalCount() + name.getTotalCount());
-				all.setFailCount(all.getFailCount() + name.getFailCount());
-
-				if (name.getMin() < all.getMin()) {
-					all.setMin(name.getMin());
-				}
-
-				if (name.getMax() > all.getMax()) {
-					all.setMax(name.getMax());
-				}
-
-				all.setSum(all.getSum() + name.getSum());
-				all.setSum2(all.getSum2() + name.getSum2());
-			}
-
-			if (all != null) {
-				all.accept(m_computer);
-			}
+			TransactionName all = t.findName("ALL");
 
 			return all;
 		} else {
@@ -177,10 +159,9 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private void showGraphs(Model model, Payload payload) {
 		TransactionName name;
-		String transactionName = payload.getName();
 
-		if (StringUtils.isEmpty(transactionName)) {
-			name = getAllNameTransactionName(payload);
+		if (payload.getName() == null || payload.getName().length() == 0) {
+			name = getAggregatedTransactionName(payload);
 		} else {
 			name = getTransactionName(payload);
 		}
@@ -211,7 +192,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();
-			
+
 			Cat.getProducer().logError(e);
 			model.setException(e);
 		}

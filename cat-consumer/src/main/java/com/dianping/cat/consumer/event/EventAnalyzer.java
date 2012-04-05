@@ -171,31 +171,33 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		String url = m_pathBuilder.getLogViewPath(tree.getMessageId());
 		int count = 0;
 
-		type.incTotalCount();
-		name.incTotalCount();
+		synchronized (type) {
+			type.incTotalCount();
+			name.incTotalCount();
 
-		if (event.isSuccess()) {
-			if (type.getSuccessMessageUrl() == null) {
-				type.setSuccessMessageUrl(url);
-				count++;
-			}
+			if (event.isSuccess()) {
+				if (type.getSuccessMessageUrl() == null) {
+					type.setSuccessMessageUrl(url);
+					count++;
+				}
 
-			if (name.getSuccessMessageUrl() == null) {
-				name.setSuccessMessageUrl(url);
-				count++;
-			}
-		} else {
-			type.incFailCount();
-			name.incFailCount();
+				if (name.getSuccessMessageUrl() == null) {
+					name.setSuccessMessageUrl(url);
+					count++;
+				}
+			} else {
+				type.incFailCount();
+				name.incFailCount();
 
-			if (type.getFailMessageUrl() == null) {
-				type.setFailMessageUrl(url);
-				count++;
-			}
+				if (type.getFailMessageUrl() == null) {
+					type.setFailMessageUrl(url);
+					count++;
+				}
 
-			if (name.getFailMessageUrl() == null) {
-				name.setFailMessageUrl(url);
-				count++;
+				if (name.getFailMessageUrl() == null) {
+					name.setFailMessageUrl(url);
+					count++;
+				}
 			}
 		}
 
@@ -210,12 +212,14 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		int min = cal.get(Calendar.MINUTE);
 		int tk = min - min % 5;
 
-		Range range = name.findOrCreateRange(tk);
+		synchronized (name) {
+			Range range = name.findOrCreateRange(tk);
 
-		range.incCount();
+			range.incCount();
 
-		if (!t.isSuccess()) {
-			range.incFails();
+			if (!t.isSuccess()) {
+				range.incFails();
+			}
 		}
 	}
 

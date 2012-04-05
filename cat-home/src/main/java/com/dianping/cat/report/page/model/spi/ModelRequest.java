@@ -38,12 +38,18 @@ public class ModelRequest {
 		}
 	}
 
-	public String getProperty(String name) {
+	public String getProperty(String name, String defaultValue) {
 		if (m_properties == null) {
-			return null;
-		} else {
+			return defaultValue;
+		} else if (m_properties.containsKey(name)) {
 			return m_properties.get(name);
+		} else {
+			return defaultValue;
 		}
+	}
+
+	public String getProperty(String name) {
+		return getProperty(name, null);
 	}
 
 	public boolean hasProperty(String name) {

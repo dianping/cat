@@ -1,3 +1,7 @@
+.sql-table tr th {
+	text-align: left;
+}
+
 .sql-table {
 	width: auto;
 	font-size: small;

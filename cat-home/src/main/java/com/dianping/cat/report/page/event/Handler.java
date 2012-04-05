@@ -45,6 +45,27 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
+	private EventName getAggregatedEventName(Payload payload) {
+		String domain = payload.getDomain();
+		String type = payload.getType();
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("date", date) //
+		      .setProperty("type", type) //
+		      .setProperty("all", "true");
+		ModelResponse<EventReport> response = m_service.invoke(request);
+		EventReport report = response.getModel();
+		EventType t = report.findType(type);
+
+		if (t != null) {
+			EventName all = t.findName("ALL");
+
+			return all;
+		} else {
+			return null;
+		}
+	}
+
 	private EventName getEventName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
@@ -132,7 +153,13 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	private void showGraphs(Model model, Payload payload) {
-		final EventName name = getEventName(payload);
+		EventName name;
+
+		if (payload.getName() == null || payload.getName().length() == 0) {
+			name = getAggregatedEventName(payload);
+		} else {
+			name = getEventName(payload);
+		}
 
 		if (name == null) {
 			return;

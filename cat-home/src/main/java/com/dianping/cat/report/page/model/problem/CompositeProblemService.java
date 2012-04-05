@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultMerger;
+import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
@@ -19,7 +20,7 @@ public class CompositeProblemService extends BaseCompositeModelService<ProblemRe
 	}
 
 	@Override
-	protected ProblemReport merge(List<ModelResponse<ProblemReport>> responses) {
+	protected ProblemReport merge(ModelRequest request, List<ModelResponse<ProblemReport>> responses) {
 		DefaultMerger merger = null;
 
 		for (ModelResponse<ProblemReport> response : responses) {

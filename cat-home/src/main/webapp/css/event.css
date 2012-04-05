@@ -3,6 +3,10 @@
 	font-size: small;
 }
 
+.event tr th {
+	text-align: left;
+}
+
 tr.odd td {
 	background-color: #eee;
 	font-size: small;
@@ -34,8 +38,4 @@ tr.link td {
 
 .graph_link{
 	font-weight: normal;
-}
-
-.leftStyle{
-	text-align:left;
 }

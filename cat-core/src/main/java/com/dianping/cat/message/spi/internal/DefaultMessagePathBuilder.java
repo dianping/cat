@@ -82,7 +82,6 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 		try {
 			m_baseLogDir = new File(baseLogDir).getCanonicalFile();
-			m_baseLogDir.mkdirs();
 		} catch (IOException e) {
 			throw new InitializationException(String.format("Unable to create log directory(%s)!", m_baseLogDir), e);
 		}

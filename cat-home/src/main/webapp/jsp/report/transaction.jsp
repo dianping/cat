@@ -37,7 +37,7 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-			<tr><th class="leftStyle">
+			<tr><th>
 			<a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
 			Name</th><th>Total Count</th><th>Failure Count</th><th>Failure%</th><th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
 			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>

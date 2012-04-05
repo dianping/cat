@@ -109,7 +109,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		}
 
 		ModelResponse<T> aggregated = new ModelResponse<T>();
-		T report = merge(responses);
+		T report = merge(request, responses);
 
 		aggregated.setModel(report);
 		return aggregated;
@@ -126,7 +126,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		return false;
 	}
 
-	protected abstract T merge(final List<ModelResponse<T>> responses);
+	protected abstract T merge(ModelRequest request, final List<ModelResponse<T>> responses);
 
 	/**
 	 * Inject remote servers to load report model.

@@ -166,46 +166,48 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		String url = m_pathBuilder.getLogViewPath(tree.getMessageId());
 		int count = 0;
 
-		type.incTotalCount();
-		name.incTotalCount();
+		synchronized (type) {
+			type.incTotalCount();
+			name.incTotalCount();
 
-		if (t.isSuccess()) {
-			if (type.getSuccessMessageUrl() == null) {
-				type.setSuccessMessageUrl(url);
-				count++;
+			if (t.isSuccess()) {
+				if (type.getSuccessMessageUrl() == null) {
+					type.setSuccessMessageUrl(url);
+					count++;
+				}
+
+				if (name.getSuccessMessageUrl() == null) {
+					name.setSuccessMessageUrl(url);
+					count++;
+				}
+			} else {
+				type.incFailCount();
+				name.incFailCount();
+
+				if (type.getFailMessageUrl() == null) {
+					type.setFailMessageUrl(url);
+					count++;
+				}
+
+				if (name.getFailMessageUrl() == null) {
+					name.setFailMessageUrl(url);
+					count++;
+				}
 			}
 
-			if (name.getSuccessMessageUrl() == null) {
-				name.setSuccessMessageUrl(url);
-				count++;
-			}
-		} else {
-			type.incFailCount();
-			name.incFailCount();
+			// update statistics
+			long duration = t.getDurationInMillis();
 
-			if (type.getFailMessageUrl() == null) {
-				type.setFailMessageUrl(url);
-				count++;
-			}
+			name.setMax(Math.max(name.getMax(), duration));
+			name.setMin(Math.min(name.getMin(), duration));
+			name.setSum(name.getSum() + duration);
+			name.setSum2(name.getSum2() + duration * duration);
 
-			if (name.getFailMessageUrl() == null) {
-				name.setFailMessageUrl(url);
-				count++;
-			}
+			type.setMax(Math.max(type.getMax(), duration));
+			type.setMin(Math.min(type.getMin(), duration));
+			type.setSum(type.getSum() + duration);
+			type.setSum2(type.getSum2() + duration * duration);
 		}
-
-		// update statistics
-		long duration = t.getDurationInMillis();
-
-		name.setMax(Math.max(name.getMax(), duration));
-		name.setMin(Math.min(name.getMin(), duration));
-		name.setSum(name.getSum() + duration);
-		name.setSum2(name.getSum2() + duration * duration);
-
-		type.setMax(Math.max(type.getMax(), duration));
-		type.setMin(Math.min(type.getMin(), duration));
-		type.setSum(type.getSum() + duration);
-		type.setSum2(type.getSum2() + duration * duration);
 
 		processTransactionGrpah(name, t);
 
@@ -235,14 +237,16 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		Duration duration = name.findOrCreateDuration(dk);
 		Range range = name.findOrCreateRange(tk);
 
-		duration.incCount();
-		range.incCount();
+		synchronized (name) {
+			duration.incCount();
+			range.incCount();
 
-		if (!t.isSuccess()) {
-			range.incFails();
+			if (!t.isSuccess()) {
+				range.incFails();
+			}
+
+			range.setSum(range.getSum() + d);
 		}
-
-		range.setSum(range.getSum() + d);
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
