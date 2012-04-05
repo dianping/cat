@@ -35,9 +35,12 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "home")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
+		Payload payload = ctx.getPayload();
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.HOME);
+		model.setDomain(payload.getDomain());
+		model.setLongDate(payload.getDate());
 
 		m_jspViewer.view(ctx, model);
 	}

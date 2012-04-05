@@ -69,11 +69,13 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "m")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
+		Payload payload = ctx.getPayload();
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.LOGVIEW);
+		model.setDomain(payload.getDomain());
+		model.setLongDate(payload.getDate());
 
-		Payload payload = ctx.getPayload();
 		String messageId = getMessageId(payload);
 		String logView = getLogView(messageId, payload.getDirection(), payload.getTag());
 

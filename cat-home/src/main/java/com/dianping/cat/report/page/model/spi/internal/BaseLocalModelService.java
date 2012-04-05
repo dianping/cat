@@ -40,7 +40,9 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 			analyzer = m_consumer.getLastAnalyzer(m_name);
 		}
 
-		if (analyzer instanceof AbstractMessageAnalyzer) {
+		if (analyzer == null) {
+			return null;
+		} else if (analyzer instanceof AbstractMessageAnalyzer) {
 			AbstractMessageAnalyzer<T> a = (AbstractMessageAnalyzer<T>) analyzer;
 
 			if (domain == null || domain.length() == 0) {

@@ -1,13 +1,15 @@
 package com.dianping.cat.report.page.logview;
 
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportPayload;
 import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.ActionPayload;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 import com.site.web.mvc.payload.annotation.PathMeta;
 
-public class Payload implements ActionPayload<ReportPage, Action> {
-	private ReportPage m_page;
+public class Payload extends AbstractReportPayload<Action> {
+	public Payload() {
+		super(ReportPage.LOGVIEW);
+	}
 
 	@FieldMeta("op")
 	private Action m_action;
@@ -39,11 +41,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
 	public String[] getPath() {
 		return m_path;
 	}
@@ -64,11 +61,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setAction(Action action) {
 		m_action = action;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.LOGVIEW);
 	}
 
 	public void setPath(String[] path) {

@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
 
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -15,7 +14,6 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
-import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
@@ -88,17 +86,6 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		// init session
-		HttpSession session = ctx.getHttpServletRequest().getSession();
-		String sessionDomain = (String) session.getAttribute("domain");
-		String sessionDate = (String) session.getAttribute("date");
-		if (StringUtils.isEmpty(payload.getDomain()) && sessionDomain != null) {
-			payload.setDomain(sessionDomain);
-		}
-		if (payload.getRealDate() == 0 && sessionDate != null) {
-			payload.setDate(sessionDate);
-		}
-
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.PROBLEM);
 		model.setDisplayDomain(payload.getDomain());
@@ -129,9 +116,6 @@ public class Handler implements PageHandler<Context> {
 			showDetail(model, payload);
 			break;
 		}
-		// reset session
-		session.setAttribute("domain", model.getDomain());
-		session.setAttribute("date", model.getDate());
 
 		m_jspViewer.view(ctx, model);
 	}

@@ -57,7 +57,6 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		return buildPageUri(ReportPage.LOGVIEW.getPath(), null);
 	}
 
-	// required by report tag
 	public long getLongDate() {
 		return m_date;
 	}

@@ -18,13 +18,6 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 <br>
 <br>
 <br>
-<a href="?op=checkpoint" style="color:#FFF">Do checkpoint here</a>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+<a href="?op=checkpoint&domain=${model.domain}&date=${model.date}" style="color:#FFF">Do checkpoint here</a>
+
 </a:body>
