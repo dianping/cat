@@ -19,7 +19,7 @@
 		<ul class="tabs">
 			<c:forEach var="page" items="${navBar.visiblePages}">
 				<c:if test="${page.standalone}">
-					<li ${model.page.name == page.name ? 'class="selected"' : ''}><a href="${model.webapp}/${page.moduleName}/${page.path}">${page.title}</a></li>
+					<li ${model.page.name == page.name ? 'class="selected"' : ''}><a href="${model.webapp}/${page.moduleName}/${page.path}?domain=${model.domain}&date=${model.date}">${page.title}</a></li>
 				</c:if>
 				<c:if test="${not page.standalone and model.page.name == page.name}">
 					<li class="selected">${page.title}</li>
