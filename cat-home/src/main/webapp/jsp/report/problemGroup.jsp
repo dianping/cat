@@ -45,33 +45,26 @@
 <table class="problem">
 <tr>
 		<th>Type</th>
+		<th>Total</th>
+		<th>Status</th>
 		<th>Count</th>
-		<th>Detail</th>
+		<th>SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}">
 		<tr>
-			<td><a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>&nbsp;&nbsp;${statistics.value.type}
+			<td rowspan="${size}"><a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
+				&nbsp;&nbsp;${statistics.value.type}
 			</td>
-			<td>${statistics.value.count}</td>
-			<td>
-				<table class="problem">
-					<tr>
-						<th width="20%">Status</th>
-						<th width="10%">Count</th>
-						<th width="70%">SampLinks</th>
-					</tr>
-					<c:forEach var="status" items="${statistics.value.status}">
-						<tr>
-							<td>${status.value.status}</td>
-							<td>${status.value.count}</td>
-							<td><c:forEach var="links" items="${status.value.links}">
-									<a href="${model.logViewBaseUri}/${links}">Log</a>
-								</c:forEach></td>
-						</tr>
+			<td rowspan="${size}">${statistics.value.count}</td>
+			<c:forEach var="status" items="${statistics.value.status}">
+				<td>${status.value.status}</td>
+				<td>${status.value.count}</td>
+				<td><c:forEach var="links" items="${status.value.links}">
+							<a href="${model.logViewBaseUri}/${links}">Log</a>
 					</c:forEach>
-				</table>
-			</td>
-		</tr>
+				</td>
+			</c:forEach>
+			</tr>
 	</c:forEach>
 </table>
 
