@@ -107,7 +107,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 			return report;
 		} else {
-			throw new RuntimeException("Internal error: no eligable service registered for " + request + "!");
+			throw new RuntimeException("Internal error: no eligable event service registered for " + request + "!");
 		}
 	}
 

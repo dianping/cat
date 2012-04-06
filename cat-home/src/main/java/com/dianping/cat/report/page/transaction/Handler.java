@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
@@ -107,7 +106,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 			return report;
 		} else {
-			throw new RuntimeException("Internal error: no eligable service registered for " + request + "!");
+			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
 		}
 	}
 

@@ -69,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 
 			return report;
 		} else {
-			throw new RuntimeException("Internal error: no eligible service registered for " + request + "!");
+			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");
 		}
 	}
 
