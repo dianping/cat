@@ -30,9 +30,6 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
-			<configuration>
-				<defaultDomain>Cat</defaultDomain>
-			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -48,6 +45,9 @@
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -55,9 +55,6 @@
 			<role-hint>transaction</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.CompositeTransactionService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -72,9 +69,6 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>event-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.event.LocalEventService</implementation>
-			<configuration>
-				<defaultDomain>Cat</defaultDomain>
-			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -90,6 +84,9 @@
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -97,9 +94,6 @@
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.page.model.event.CompositeEventService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -114,9 +108,6 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>problem-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
-			<configuration>
-				<defaultDomain>Cat</defaultDomain>
-			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -132,6 +123,9 @@
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -139,9 +133,6 @@
 			<role-hint>problem</role-hint>
 			<implementation>com.dianping.cat.report.page.model.problem.CompositeProblemService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -156,9 +147,6 @@
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>ip-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
-			<configuration>
-				<defaultDomain>Cat</defaultDomain>
-			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -171,9 +159,6 @@
 			<role-hint>ip</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -226,9 +211,6 @@
 			<role-hint>logview</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -438,9 +420,6 @@
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
 				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -452,9 +431,6 @@
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
 				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -465,9 +441,6 @@
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
-				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -486,9 +459,6 @@
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
-				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
 				</requirement>
 			</requirements>
 		</component>

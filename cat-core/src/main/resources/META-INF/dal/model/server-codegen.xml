@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
   <entity name="config" root="true">
+    <attribute name="local-mode" value-type="boolean" />
     <entity-ref name="storage" />
     <entity-ref name="consumer" />
     <entity-ref name="console" />

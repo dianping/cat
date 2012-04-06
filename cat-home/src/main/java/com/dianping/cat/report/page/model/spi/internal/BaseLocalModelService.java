@@ -1,6 +1,11 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -13,11 +18,10 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 
-public class BaseLocalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
+public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>, Initializable {
 	@Inject(type = MessageConsumer.class, value = "realtime")
 	private RealtimeConsumer m_consumer;
 
-	@Inject
 	private String m_defaultDomain;
 
 	private String m_name;
@@ -83,10 +87,6 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 		return !period.isHistorical();
 	}
 
-	public void setDefaultDomain(String defaultDomain) {
-		m_defaultDomain = defaultDomain;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder(64);
@@ -96,5 +96,19 @@ public class BaseLocalModelService<T> extends ModelServiceWithCalSupport impleme
 		sb.append(']');
 
 		return sb.toString();
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		ServerConfigManager manager = lookup(ServerConfigManager.class);
+		ServerConfig config = manager.getServerConfig();
+
+		try {
+			if (config != null) {
+				m_defaultDomain = config.getConsole().getDefaultDomain();
+			}
+		} finally {
+			release(manager);
+		}
 	}
 }

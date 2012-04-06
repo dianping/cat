@@ -14,6 +14,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
+import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -26,9 +27,6 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
       Initializable {
 	@Inject
 	private List<ModelService<T>> m_services;
-
-	@Inject
-	private ServerConfigManager m_configManager;
 
 	private ExecutorService m_threadPool;
 
@@ -52,11 +50,20 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		m_threadPool = Executors.newFixedThreadPool(10);
 		m_allServices.addAll(m_services);
 
-		ConsoleConfig console = m_configManager.getServerConfig().getConsole();
-		String remoteServers = console.getRemoteServers();
+		ServerConfigManager manager = lookup(ServerConfigManager.class);
+		ServerConfig serverConfig = manager.getServerConfig();
 
-		if (remoteServers != null && remoteServers.length() > 0) {
-			setRemoteServers(remoteServers);
+		try {
+			if (serverConfig != null) {
+				ConsoleConfig console = serverConfig.getConsole();
+				String remoteServers = console.getRemoteServers();
+
+				if (remoteServers != null && remoteServers.length() > 0) {
+					setRemoteServers(remoteServers);
+				}
+			}
+		} finally {
+			release(manager);
 		}
 	}
 
@@ -78,7 +85,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 			// save current transaction so that child thread can access it
 			if (service instanceof ModelServiceWithCalSupport) {
-				 ((ModelServiceWithCalSupport) service).setParentTransaction(t);
+				((ModelServiceWithCalSupport) service).setParentTransaction(t);
 			}
 
 			m_threadPool.submit(new Runnable() {

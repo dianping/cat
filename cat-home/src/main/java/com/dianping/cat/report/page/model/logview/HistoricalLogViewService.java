@@ -23,6 +23,9 @@ import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
 
 public class HistoricalLogViewService extends BaseHistoricalModelService<String> implements LogEnabled {
+	@Inject
+	private LogviewDao m_logviewDao;
+
 	@Inject(value = "html")
 	private MessageCodec m_codec;
 
@@ -30,13 +33,7 @@ public class HistoricalLogViewService extends BaseHistoricalModelService<String>
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private LogviewDao m_logviewDao;
-
-	@Inject
 	private InputChannelManager m_inputChannelManager;
-
-	@Inject
-	private boolean m_localOnly;
 
 	private Logger m_logger;
 
@@ -51,7 +48,7 @@ public class HistoricalLogViewService extends BaseHistoricalModelService<String>
 		MessageTree tree = getLocalLogview(messageId, direction, tagThread);
 
 		// try remote logview
-		if (tree == null && !m_localOnly) {
+		if (tree == null && !isLocalMode()) {
 			tree = getRemoteLogview(messageId, direction, tagThread);
 		}
 
@@ -133,9 +130,5 @@ public class HistoricalLogViewService extends BaseHistoricalModelService<String>
 				m_inputChannelManager.closeChannel(inputChannel);
 			}
 		}
-	}
-
-	public void setLocalOnly(boolean localOnly) {
-		m_localOnly = localOnly;
 	}
 }
