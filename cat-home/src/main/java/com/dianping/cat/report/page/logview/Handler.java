@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 
 				return logview;
 			} else {
-				throw new RuntimeException("Internal error: no eligible service registered for " + request + "!");
+				throw new RuntimeException("Internal error: no eligible logview service registered for " + request + "!");
 			}
 		}
 

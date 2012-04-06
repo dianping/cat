@@ -54,7 +54,7 @@ public class Handler implements PageHandler<Context> {
 
 			return report;
 		} else {
-			throw new RuntimeException("Internal error: no eligable service registered for " + request + "!");
+			throw new RuntimeException("Internal error: no eligable ip service registered for " + request + "!");
 		}
 	}
 
