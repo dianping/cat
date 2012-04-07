@@ -17,8 +17,8 @@ import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
@@ -31,8 +31,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
-		      .req(AnalyzerFactory.class).config(E("consumerId").value("realtime") //
-		            , E("extraTime").value(property("extraTime", "300000"))//
+		      .req(AnalyzerFactory.class) //
+		      .config(E("extraTime").value(property("extraTime", "300000"))//
 		            , E("analyzers").value("problem,transaction,event,ip")));
 
 		String failureTypes = "Error,RuntimeException,Exception";
@@ -41,17 +41,17 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("failureType").value(failureTypes)));
 
 		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
-				.req(ServerConfigManager.class));
+		      .req(ServerConfigManager.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(Handler.class, new String[] { FAILURE.getName(), LONG_URL.getName() }, "m_handlers") //
-		      .req(BucketManager.class));
+		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, MessagePathBuilder.class));
+		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, MessagePathBuilder.class));
+		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
 

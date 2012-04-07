@@ -2,6 +2,8 @@ package com.dianping.cat;
 
 import java.io.File;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.codehaus.plexus.PlexusContainer;
 import org.junit.AfterClass;
@@ -82,6 +84,10 @@ public class TestServer extends SimpleServerSupport {
 		return 2281;
 	}
 
+	protected String getTimestamp() {
+		return new SimpleDateFormat("MM-dd HH:mm:ss.SSS").format(new Date());
+	}
+
 	@Override
 	protected File getWarRoot() {
 		return new File("src/main/webapp");
@@ -107,7 +113,7 @@ public class TestServer extends SimpleServerSupport {
 		// open the page in the default browser
 		s_adaptor.display("/cat/r");
 
-		System.out.println(String.format("[%s] Press any key to stop server ... ", getTimestamp()));
+		System.out.println(String.format("[%s] [INFO] Press any key to stop server ... ", getTimestamp()));
 		System.in.read();
 	}
 

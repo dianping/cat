@@ -1,17 +1,14 @@
 package com.dianping.cat.consumer;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -39,22 +36,11 @@ import com.site.lookup.annotation.Inject;
  * @since Jan 5, 2012
  */
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
-	private static final long HOUR = 60 * 60 * 1000L;
-
 	private static final long MINUTE = 60 * 1000L;
 
-	private static final int PROCESS_PERIOD = 3;
+	private static final long FIVE_MINUTES = 5 * MINUTE;
 
-	private static final long FIVE_MINUTES = 5 * 60 * 1000L;
-
-	@Inject
-	private Logger m_logger;
-
-	@Inject
-	private String m_consumerId;
-
-	@Inject
-	private List<String> m_eligibleDomains; // domains == null means not limit
+	private static final long HOUR = 60 * MINUTE;
 
 	@Inject
 	private long m_duration = 1 * HOUR;
@@ -63,7 +49,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private long m_extraTime = FIVE_MINUTES;
 
 	@Inject
-	private int m_threads = 10;
+	private int m_threads = 20;
 
 	@Inject
 	private List<String> m_analyzerNames;
@@ -73,55 +59,27 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private ExecutorService m_executor;
 
-	private List<Period> m_periods = new ArrayList<Period>(PROCESS_PERIOD);
-
-	private Map<String, MessageAnalyzer> m_lastAnalyzers = new HashMap<String, MessageAnalyzer>();
-
-	private Map<String, MessageAnalyzer> m_currentAnalyzers = new HashMap<String, MessageAnalyzer>();
-
 	private Set<String> m_domains = new HashSet<String>();
+
+	private Logger m_logger;
+
+	private PeriodManager m_periodManager;
 
 	@Override
 	public void consume(MessageTree tree) {
-		if (!isInDomain(tree)) {
-			return;
-		}
-
 		long timestamp = tree.getMessage().getTimestamp();
-		Period current = null;
+		Period period = m_periodManager.findPeriod(timestamp);
 
-		for (Period period : m_periods) {
-			if (period.isIn(timestamp)) {
-				current = period;
-				break;
+		if (period != null) {
+			period.distribute(tree);
+
+			String domain = tree.getDomain();
+
+			if (!m_domains.contains(domain)) {
+				m_domains.add(domain);
 			}
-		}
-
-		if (current != null) {
-			List<MessageQueue> queues = current.getQueues();
-
-			distributeMessage(tree, queues);
 		} else {
-			long now = System.currentTimeMillis();
-			long nextStart = now - now % m_duration - 3 * m_duration;
-
-			if (timestamp < now + MINUTE * 3 && timestamp >= nextStart) {
-				startTasks(tree);
-			} else {
-				m_logger.warn("The timestamp of message is out of range, IGNORED! \r\n" + tree);
-			}
-		}
-
-		m_domains.add(tree.getDomain());
-	}
-
-	private void distributeMessage(MessageTree tree, List<MessageQueue> queues) {
-		int size = queues.size();
-
-		for (int i = 0; i < size; i++) {
-			MessageQueue queue = queues.get(i);
-
-			queue.offer(tree);
+			m_logger.warn("The timestamp of message is out of range, IGNORED! \r\n" + tree);
 		}
 	}
 
@@ -130,14 +88,14 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		Transaction t = cat.newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
-			for (Map.Entry<String, MessageAnalyzer> e : m_currentAnalyzers.entrySet()) {
-				e.getValue().doCheckpoint();
+			long currentStartTime = m_periodManager.getCurrentStartTime();
+			Period period = m_periodManager.findPeriod(currentStartTime);
+
+			for (MessageAnalyzer analyzer : period.getAnalzyers()) {
+				analyzer.doCheckpoint(false);
 			}
 
 			t.setStatus(Message.SUCCESS);
-		} catch (IOException e) {
-			cat.logError(e);
-			t.setStatus(e);
 		} catch (RuntimeException e) {
 			cat.logError(e);
 			t.setStatus(e);
@@ -153,147 +111,197 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public String getConsumerId() {
-		return m_consumerId;
+		return "realtime";
 	}
 
 	public MessageAnalyzer getCurrentAnalyzer(String name) {
-		return m_currentAnalyzers.get(name);
+		long currentStartTime = m_periodManager.getCurrentStartTime();
+		Period period = m_periodManager.findPeriod(currentStartTime);
+
+		return period.getAnalyzer(name);
 	}
 
 	public MessageAnalyzer getLastAnalyzer(String name) {
-		return m_lastAnalyzers.get(name);
+		long lastStartTime = m_periodManager.getCurrentStartTime() - m_duration;
+		Period period = m_periodManager.findPeriod(lastStartTime);
+
+		return period.getAnalyzer(name);
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
 		m_executor = Executors.newFixedThreadPool(m_threads);
-	}
+		m_periodManager = new PeriodManager(m_duration);
 
-	private boolean isInDomain(MessageTree tree) {
-		if (m_eligibleDomains == null || m_eligibleDomains.isEmpty()) {
-			return true;
-		} else {
-			return m_eligibleDomains.contains(tree.getDomain());
-		}
+		m_periodManager.setName("RealtimeConsumer-PeriodManager");
+		m_periodManager.start();
 	}
 
 	public void setAnalyzers(String analyzers) {
 		m_analyzerNames = Splitters.by(',').noEmptyItem().trim().split(analyzers);
 	}
 
-	public void setConsumerId(String consumerId) {
-		m_consumerId = consumerId;
-	}
-
-	public void setDomains(String domains) {
-		if (domains != null) {
-			m_eligibleDomains = Splitters.by(',').noEmptyItem().trim().split(domains);
-		}
-	}
-
-	public void setDuration(long duration) {
-		m_duration = duration;
-	}
-
 	public void setExtraTime(long time) {
 		m_extraTime = time;
 	}
 
-	public void setFactory(AnalyzerFactory factory) {
-		m_factory = factory;
-	}
-
-	public void setThreads(int threads) {
-		m_threads = threads;
-	}
-
-	private void startTasks(MessageTree tree) {
-		long time = tree.getMessage().getTimestamp();
-		long start = time - time % m_duration;
-		m_logger.info("Start Tasks At " + new Date(start));
-		List<MessageQueue> queues = new ArrayList<MessageQueue>();
-		Period current = new Period(start, start + m_duration, queues);
-		CountDownLatch latch = new CountDownLatch(m_analyzerNames.size());
-
-		m_lastAnalyzers.clear();
-		m_lastAnalyzers.putAll(m_currentAnalyzers);
-		m_currentAnalyzers.clear();
-
-		Cat.setup("realtime-consumer");
-
-		for (String name : m_analyzerNames) {
-			MessageAnalyzer analyzer = m_factory.create(name, start, m_duration, m_extraTime);
-			MessageQueue queue = lookup(MessageQueue.class);
-			Task task = new Task(m_factory, analyzer, queue, latch);
-
-			queue.offer(tree);
-			queues.add(queue);
-			m_executor.submit(task);
-			m_currentAnalyzers.put(name, analyzer);
-		}
-
-		int len = m_periods.size();
-
-		if (len >= PROCESS_PERIOD) {
-			m_periods.remove(0);
-		}
-
-		m_periods.add(current);
-	}
-
-	static class FinalizerTask implements Runnable {
-		private AnalyzerFactory m_factory;
-
-		private MessageAnalyzer m_handler;
-
-		private long m_duration;
-
-		private CountDownLatch m_latch;
-
-		public FinalizerTask(AnalyzerFactory factory, MessageAnalyzer handler, long duration, CountDownLatch latch) {
-			m_factory = factory;
-			m_handler = handler;
-			m_duration = duration;
-			m_latch = latch;
-		}
-
-		@Override
-		public void run() {
-			try {
-				m_latch.await(m_duration * 2, TimeUnit.MILLISECONDS);
-			} catch (InterruptedException e) {
-				System.out.println("Waiting time out in FinalizerTask, do logview upload next");
-			}
-
-			try {
-				m_handler.doCheckpoint();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				m_factory.release(m_handler);
-			}
-		}
-	}
-
-	static class Period {
+	class Period {
 		private long m_startTime;
 
 		private long m_endTime;
 
-		private List<MessageQueue> m_queues;
+		private List<Task> m_tasks;
 
-		public Period(long startTime, long endTime, List<MessageQueue> queues) {
+		public Period(long startTime, long endTime) {
 			m_startTime = startTime;
 			m_endTime = endTime;
-			m_queues = queues;
+			m_tasks = new ArrayList<Task>(m_analyzerNames.size());
+
+			for (String name : m_analyzerNames) {
+				MessageAnalyzer analyzer = m_factory.create(name, startTime, m_duration, m_extraTime);
+				MessageQueue queue = lookup(MessageQueue.class);
+				Task task = new Task(m_factory, analyzer, queue);
+
+				m_tasks.add(task);
+			}
 		}
 
-		public List<MessageQueue> getQueues() {
-			return m_queues;
+		public void distribute(MessageTree tree) {
+			for (Task task : m_tasks) {
+				task.enqueue(tree);
+			}
+		}
+
+		public void finish() {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+			m_logger.info(String.format("Finishing %s tasks for period [%s, %s]", m_tasks.size(),
+			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+
+			Cat.setup(null);
+
+			for (Task task : m_tasks) {
+				task.finish();
+			}
+
+			Cat.reset();
+		}
+
+		public MessageAnalyzer getAnalyzer(String name) {
+			int index = m_analyzerNames.indexOf(name);
+
+			if (index >= 0) {
+				Task task = m_tasks.get(index);
+
+				return task.getAnalyzer();
+			}
+
+			return null;
+		}
+
+		public List<MessageAnalyzer> getAnalzyers() {
+			List<MessageAnalyzer> analyzers = new ArrayList<MessageAnalyzer>(m_tasks.size());
+
+			for (Task task : m_tasks) {
+				analyzers.add(task.getAnalyzer());
+			}
+
+			return analyzers;
 		}
 
 		public boolean isIn(long timestamp) {
 			return timestamp >= m_startTime && timestamp < m_endTime;
+		}
+
+		public void start() {
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+			m_logger.info(String.format("Starting %s tasks for period [%s, %s]", m_tasks.size(),
+			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+
+			for (Task task : m_tasks) {
+				m_executor.submit(task);
+			}
+		}
+	}
+
+	class PeriodManager extends Thread {
+		private long m_duration;
+
+		private List<Period> m_periods = new ArrayList<RealtimeConsumer.Period>();
+
+		public PeriodManager(long duration) {
+			m_duration = duration;
+		}
+
+		private void endPeriod(long startTime) {
+			int len = m_periods.size();
+
+			for (int i = 0; i < len; i++) {
+				Period period = m_periods.get(i);
+
+				if (period.isIn(startTime)) {
+					m_periods.remove(i);
+					period.finish();
+					break;
+				}
+			}
+		}
+
+		public Period findPeriod(long timestamp) {
+			for (Period period : m_periods) {
+				if (period.isIn(timestamp)) {
+					return period;
+				}
+			}
+
+			return null;
+		}
+
+		public long getCurrentStartTime() {
+			long now = System.currentTimeMillis();
+			long time = now - now % m_duration;
+
+			return time;
+		}
+
+		@Override
+		public void run() {
+			long now = System.currentTimeMillis();
+			long startTime = now - now % m_duration;
+			long lastStartTime = startTime;
+
+			startPeriod(startTime);
+
+			try {
+				while (true) {
+					now = System.currentTimeMillis();
+
+					// prepare next period in ahead of 3 minutes
+					if (now - startTime >= m_duration - 3 * MINUTE) {
+						startTime = now - now % m_duration + m_duration;
+						startPeriod(startTime);
+					}
+
+					// last period is over
+					if (now - lastStartTime >= m_duration + m_extraTime) {
+						endPeriod(lastStartTime);
+						lastStartTime = startTime;
+					}
+
+					sleep(1000L);
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
+		}
+
+		private void startPeriod(long startTime) {
+			long endTime = startTime + m_duration;
+			Period period = new Period(startTime, endTime);
+
+			m_periods.add(period);
+			period.start();
 		}
 	}
 
@@ -304,29 +312,35 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		private MessageQueue m_queue;
 
-		private CountDownLatch m_latch;
-
-		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue, CountDownLatch latch) {
+		public Task(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue) {
 			m_factory = factory;
 			m_analyzer = analyzer;
 			m_queue = queue;
-			m_latch = latch;
 		}
 
-		public MessageQueue getQueue() {
-			return m_queue;
+		public boolean enqueue(MessageTree tree) {
+			return m_queue.offer(tree);
 		}
 
-		public void run() {
-			Cat.setup("realtime-consumer-task");
-
+		public void finish() {
 			try {
-				m_analyzer.analyze(m_queue);
+				m_analyzer.doCheckpoint(true);
+			} finally {
 				m_factory.release(m_analyzer);
 				m_factory.release(m_queue);
-				m_latch.countDown();
-			} finally {
-				Cat.reset();
+			}
+		}
+
+		public MessageAnalyzer getAnalyzer() {
+			return m_analyzer;
+		}
+
+		@Override
+		public void run() {
+			try {
+				m_analyzer.analyze(m_queue);
+			} catch (RuntimeException e) {
+				e.printStackTrace();
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.hadoop.dal" gen="true">
 	<entity name="logview">
+		<member name="creation-date" insert-expr="NOW()"/>
 		<var name="direction" value-type="boolean" />
 		<var name="message-ids" value-type="String[]" />
 		<query-defs>
@@ -60,7 +61,7 @@
 		</query-defs>
 	</entity>
 	<entity name="report" table="report" alias="r">
-		<member name="creation-date" insert-expr="now()" />
+		<member name="creation-date" insert-expr="NOW()" />
   		<query-defs>
 			<query name="find-all-by-period-domain-type-name" type="SELECT" multiple="true">
 				<param name="period" />

@@ -1,9 +1,6 @@
 package com.dianping.cat.consumer.problem;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +10,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.model.entity.AllDomains;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -21,6 +19,8 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
@@ -36,6 +36,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	private BucketManager m_bucketManager;
 
 	@Inject
+	private ReportDao m_reportDao;
+
+	@Inject
 	private List<Handler> m_handlers;
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
@@ -48,7 +51,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private long m_duration;
 
-	void closeMessageBuckets() {
+	private void closeMessageBuckets() {
 		Date timestamp = new Date(m_startTime);
 
 		for (String domain : m_reports.keySet()) {
@@ -67,8 +70,8 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	@Override
-	public void doCheckpoint() throws IOException {
-		storeReports(m_reports.values());
+	public void doCheckpoint(boolean atEnd) {
+		storeReports(atEnd);
 		closeMessageBuckets();
 	}
 
@@ -88,19 +91,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		int minute = cal.get(Calendar.MINUTE);
 		Segment segment = thread.findOrCreateSegment(minute);
 		return segment;
-	}
-
-	@Override
-	protected List<ProblemReport> generate() {
-		List<ProblemReport> reports = new ArrayList<ProblemReport>(m_reports.size());
-
-		for (String domain : m_reports.keySet()) {
-			ProblemReport report = getReport(domain);
-
-			reports.add(report);
-		}
-
-		return reports;
 	}
 
 	public ProblemReport getReport(String domain) {
@@ -128,7 +118,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		return currentTime > endTime;
 	}
 
-	void loadReports() {
+	private void loadReports() {
 		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> bucket = null;
 
@@ -183,17 +173,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		loadReports();
 	}
 
-	@Override
-	protected void store(List<ProblemReport> reports) {
-		if (reports == null || reports.size() == 0) {
-			return;
-		}
-
-		storeReports(reports);
-		closeMessageBuckets();
-	}
-
-	void storeMessage(MessageTree tree) {
+	private void storeMessage(MessageTree tree) {
 		String messageId = tree.getMessageId();
 		String domain = tree.getDomain();
 
@@ -206,7 +186,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 	}
 
-	void storeReports(Collection<ProblemReport> reports) {
+	private void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
@@ -214,11 +194,31 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "problem");
 
-			for (ProblemReport report : reports) {
+			for (ProblemReport report : m_reports.values()) {
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
 				reportBucket.storeById(domain, xml);
+			}
+
+			if (atEnd && !isLocalMode()) {
+				Date period = new Date(m_startTime);
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+				for (ProblemReport report : m_reports.values()) {
+					Report r = m_reportDao.createLocal();
+					String xml = builder.buildXml(report);
+					String domain = report.getDomain();
+
+					r.setName("event");
+					r.setDomain(domain);
+					r.setPeriod(period);
+					r.setIp(ip);
+					r.setType(1);
+					r.setContent(xml);
+
+					m_reportDao.insert(r);
+				}
 			}
 
 			t.setStatus(Message.SUCCESS);

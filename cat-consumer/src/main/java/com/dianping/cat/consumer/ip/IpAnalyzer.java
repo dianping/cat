@@ -70,19 +70,6 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 		return report;
 	}
 
-	@Override
-	public List<IpReport> generate() {
-		List<IpReport> reports = new ArrayList<IpReport>(m_reports.size());
-
-		for (String domain : m_reports.keySet()) {
-			IpReport report = getReport(domain);
-
-			reports.add(report);
-		}
-
-		return reports;
-	}
-
 	public IpReport getReport(String domain) {
 		IpReport report = m_reports.get(domain);
 
@@ -154,10 +141,5 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 			clearLastPhase();
 		}
-	}
-
-	@Override
-	protected void store(List<IpReport> reports) {
-
 	}
 }

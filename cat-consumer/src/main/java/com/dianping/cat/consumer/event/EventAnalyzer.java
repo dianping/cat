@@ -1,9 +1,7 @@
 package com.dianping.cat.consumer.event;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,17 +11,19 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlParser;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
@@ -36,7 +36,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private MessagePathBuilder m_pathBuilder;
+	private ReportDao m_reportDao;
 
 	private Map<String, EventReport> m_reports = new HashMap<String, EventReport>();
 
@@ -48,7 +48,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	private long m_duration;
 
-	void closeMessageBuckets() {
+	private void closeMessageBuckets() {
 		Date timestamp = new Date(m_startTime);
 
 		for (String domain : m_reports.keySet()) {
@@ -67,29 +67,14 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-	public void doCheckpoint() throws IOException {
-		storeReports(m_reports.values());
+	public void doCheckpoint(boolean atEnd) {
+		storeReports(atEnd);
 		closeMessageBuckets();
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	protected List<EventReport> generate() {
-		List<EventReport> reports = new ArrayList<EventReport>(m_reports.size());
-		StatisticsComputer computer = new StatisticsComputer();
-
-		for (String domain : m_reports.keySet()) {
-			EventReport report = getReport(domain);
-
-			report.accept(computer);
-			reports.add(report);
-		}
-
-		return reports;
 	}
 
 	public EventReport getReport(String domain) {
@@ -114,7 +99,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		return currentTime > endTime;
 	}
 
-	void loadReports() {
+	private void loadReports() {
 		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> reportBucket = null;
 
@@ -165,10 +150,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
-	int processEvent(EventReport report, MessageTree tree, Event event) {
+	private int processEvent(EventReport report, MessageTree tree, Event event) {
 		EventType type = report.findOrCreateType(event.getType());
 		EventName name = type.findOrCreateName(event.getName());
-		String url = m_pathBuilder.getLogViewPath(tree.getMessageId());
+		String messageId = tree.getMessageId();
 		int count = 0;
 
 		synchronized (type) {
@@ -177,12 +162,12 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 			if (event.isSuccess()) {
 				if (type.getSuccessMessageUrl() == null) {
-					type.setSuccessMessageUrl(url);
+					type.setSuccessMessageUrl(messageId);
 					count++;
 				}
 
 				if (name.getSuccessMessageUrl() == null) {
-					name.setSuccessMessageUrl(url);
+					name.setSuccessMessageUrl(messageId);
 					count++;
 				}
 			} else {
@@ -190,12 +175,12 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 				name.incFailCount();
 
 				if (type.getFailMessageUrl() == null) {
-					type.setFailMessageUrl(url);
+					type.setFailMessageUrl(messageId);
 					count++;
 				}
 
 				if (name.getFailMessageUrl() == null) {
-					name.setFailMessageUrl(url);
+					name.setFailMessageUrl(messageId);
 					count++;
 				}
 			}
@@ -206,7 +191,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		return count;
 	}
 
-	void processEventGrpah(EventName name, Event t) {
+	private void processEventGrpah(EventName name, Event t) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(t.getTimestamp());
 		int min = cal.get(Calendar.MINUTE);
@@ -223,7 +208,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
-	int processTransaction(EventReport report, MessageTree tree, Transaction t) {
+	private int processTransaction(EventReport report, MessageTree tree, Transaction t) {
 		List<Message> children = t.getChildren();
 		int count = 0;
 
@@ -246,17 +231,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		loadReports();
 	}
 
-	@Override
-	protected void store(List<EventReport> reports) {
-		if (reports == null || reports.size() == 0) {
-			return;
-		}
-
-		storeReports(reports);
-		closeMessageBuckets();
-	}
-
-	void storeMessage(MessageTree tree) {
+	private void storeMessage(MessageTree tree) {
 		String messageId = tree.getMessageId();
 		String domain = tree.getDomain();
 
@@ -269,7 +244,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 	}
 
-	void storeReports(Collection<EventReport> reports) {
+	private void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
@@ -277,11 +252,31 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "event");
 
-			for (EventReport report : reports) {
+			for (EventReport report : m_reports.values()) {
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
 				reportBucket.storeById(domain, xml);
+			}
+
+			if (atEnd && !isLocalMode()) {
+				Date period = new Date(m_startTime);
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+				for (EventReport report : m_reports.values()) {
+					Report r = m_reportDao.createLocal();
+					String xml = builder.buildXml(report);
+					String domain = report.getDomain();
+
+					r.setName("event");
+					r.setDomain(domain);
+					r.setPeriod(period);
+					r.setIp(ip);
+					r.setType(1);
+					r.setContent(xml);
+
+					m_reportDao.insert(r);
+				}
 			}
 
 			t.setStatus(Message.SUCCESS);
@@ -296,5 +291,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
+
+		// TODO
 	}
 }

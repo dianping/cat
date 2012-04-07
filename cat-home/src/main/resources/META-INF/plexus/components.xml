@@ -156,6 +156,19 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>ip-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.ip.HistoricalIpService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>ip</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
 			<requirements>
@@ -163,6 +176,7 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>ip-local</role-hint>
+						<role-hint>ip-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -256,15 +270,6 @@
 			<role>com.dianping.cat.consumer.RealtimeConsumer</role>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<requirements>
-				<requirement>
-					<role>org.codehaus.plexus.logging.Logger</role>
-				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
-				</requirement>
-				<requirement>
-					<role>java.util.List</role>
-				</requirement>
 				<requirement>
 					<role>long</role>
 				</requirement>

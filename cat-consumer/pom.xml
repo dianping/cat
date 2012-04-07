@@ -12,7 +12,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-core</artifactId>
+			<artifactId>cat-hadoop</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.site.common</groupId>

@@ -1,7 +1,5 @@
 package com.dianping.cat.consumer;
 
-import java.util.List;
-
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -53,15 +51,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public List<AnalyzerResult> generate() {
-			return null;
-		}
-
-		@Override
-		protected void store(List<AnalyzerResult> result) {
-		}
-
-		@Override
 		public AnalyzerResult getReport(String domain) {
 			return null;
 		}
@@ -77,15 +66,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		@Override
 		protected boolean isTimeout() {
 			return false;
-		}
-
-		@Override
-		public List<AnalyzerResult> generate() {
-			return null;
-		}
-
-		@Override
-		protected void store(List<AnalyzerResult> result) {
 		}
 
 		@Override
@@ -107,18 +87,9 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public List<AnalyzerResult> generate() {
+		public AnalyzerResult getReport(String domain) {
 			return null;
 		}
-
-		@Override
-		protected void store(List<AnalyzerResult> result) {
-		}
-
-		@Override
-      public AnalyzerResult getReport(String domain) {
-	      return null;
-      }
 	}
 
 	public static class AnalyzerResult {

@@ -12,6 +12,7 @@ import com.dianping.cat.report.page.model.event.CompositeEventService;
 import com.dianping.cat.report.page.model.event.HistoricalEventService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.ip.CompositeIpService;
+import com.dianping.cat.report.page.model.ip.HistoricalIpService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
 import com.dianping.cat.report.page.model.logview.HistoricalLogViewService;
@@ -55,8 +56,10 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
 		      .req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "ip-historical", HistoricalIpService.class) //
+		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "ip", CompositeIpService.class) //
-		      .req(ModelService.class, new String[] { "ip-local" }, "m_services"));
+		      .req(ModelService.class, new String[] { "ip-local", "ip-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 		      .req(MessageConsumer.class, "realtime") //

@@ -1,13 +1,16 @@
 package com.dianping.cat.message.spi;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.ServerConfig;
+import com.site.lookup.ContainerHolder;
+
+public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 	@Override
 	public void analyze(MessageQueue queue) {
 		while (!isTimeout()) {
@@ -27,17 +30,23 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 				break;
 			}
 		}
-
-		List<R> result = generate();
-
-		store(result);
 	}
 
-	public void doCheckpoint() throws IOException {
+	protected boolean isLocalMode() {
+		ServerConfigManager manager = lookup(ServerConfigManager.class);
+		ServerConfig config = manager.getServerConfig();
+
+		// local mode should be turned off explicitly
+		if (config != null && !config.isLocalMode()) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public void doCheckpoint(boolean atEnd) {
 		// override it
 	}
-
-	protected abstract List<R> generate();
 
 	protected List<String> getSortedDomains(Set<String> domains) {
 		List<String> sortedDomains = new ArrayList<String>(domains);
@@ -47,6 +56,8 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 			public int compare(String d1, String d2) {
 				if (d1.equals("Cat")) {
 					return 1;
+				} else if (d2.equals("Cat")) {
+					return -1;
 				}
 
 				return d1.compareTo(d2);
@@ -61,6 +72,4 @@ public abstract class AbstractMessageAnalyzer<R> implements MessageAnalyzer {
 	protected abstract boolean isTimeout();
 
 	protected abstract void process(MessageTree tree);
-
-	protected abstract void store(List<R> result);
 }

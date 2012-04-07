@@ -9,7 +9,6 @@
 			<role-hint>realtime</role-hint>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
-				<consumerId>realtime</consumerId>
 				<extraTime>300000</extraTime>
 				<analyzers>problem,transaction,event,ip</analyzers>
 			</configuration>
@@ -53,6 +52,9 @@
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -64,7 +66,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -77,7 +79,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>

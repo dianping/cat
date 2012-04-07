@@ -1,9 +1,7 @@
 package com.dianping.cat.consumer.transaction;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +11,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -20,10 +19,11 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
@@ -36,19 +36,19 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private MessagePathBuilder m_pathBuilder;
+	private ReportDao m_reportDao;
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
 	private long m_extraTime;
 
-	private Logger m_logger;
-
 	private long m_startTime;
 
 	private long m_duration;
 
-	void closeMessageBuckets() {
+	private Logger m_logger;
+
+	private void closeMessageBuckets() {
 		for (String domain : m_reports.keySet()) {
 			Bucket<MessageTree> logviewBucket = null;
 
@@ -65,29 +65,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	public void doCheckpoint() throws IOException {
-		storeReports(m_reports.values());
+	public void doCheckpoint(boolean atEnd) {
+		storeReports(atEnd);
 		closeMessageBuckets();
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	protected List<TransactionReport> generate() {
-		List<TransactionReport> reports = new ArrayList<TransactionReport>(m_reports.size());
-		StatisticsComputer computer = new StatisticsComputer();
-
-		for (String domain : m_reports.keySet()) {
-			TransactionReport report = getReport(domain);
-
-			report.accept(computer);
-			reports.add(report);
-		}
-
-		return reports;
 	}
 
 	@Override
@@ -113,7 +98,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return currentTime > endTime;
 	}
 
-	void loadReports() {
+	private void loadReports() {
 		DefaultXmlParser parser = new DefaultXmlParser();
 		Bucket<String> bucket = null;
 
@@ -163,7 +148,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		TransactionType type = report.findOrCreateType(t.getType());
 		TransactionName name = type.findOrCreateName(t.getName());
-		String url = m_pathBuilder.getLogViewPath(tree.getMessageId());
+		String messageId = tree.getMessageId();
 		int count = 0;
 
 		synchronized (type) {
@@ -172,12 +157,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			if (t.isSuccess()) {
 				if (type.getSuccessMessageUrl() == null) {
-					type.setSuccessMessageUrl(url);
+					type.setSuccessMessageUrl(messageId);
 					count++;
 				}
 
 				if (name.getSuccessMessageUrl() == null) {
-					name.setSuccessMessageUrl(url);
+					name.setSuccessMessageUrl(messageId);
 					count++;
 				}
 			} else {
@@ -185,12 +170,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				name.incFailCount();
 
 				if (type.getFailMessageUrl() == null) {
-					type.setFailMessageUrl(url);
+					type.setFailMessageUrl(messageId);
 					count++;
 				}
 
 				if (name.getFailMessageUrl() == null) {
-					name.setFailMessageUrl(url);
+					name.setFailMessageUrl(messageId);
 					count++;
 				}
 			}
@@ -222,7 +207,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return count;
 	}
 
-	void processTransactionGrpah(TransactionName name, Transaction t) {
+	private void processTransactionGrpah(TransactionName name, Transaction t) {
 		long d = t.getDurationInMillis();
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(t.getTimestamp());
@@ -257,17 +242,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		loadReports();
 	}
 
-	@Override
-	protected void store(List<TransactionReport> reports) {
-		if (reports == null || reports.size() == 0) {
-			return;
-		}
-
-		storeReports(reports);
-		closeMessageBuckets();
-	}
-
-	void storeMessage(MessageTree tree) {
+	private void storeMessage(MessageTree tree) {
 		String messageId = tree.getMessageId();
 		String domain = tree.getDomain();
 
@@ -280,7 +255,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
-	void storeReports(Collection<TransactionReport> reports) {
+	private void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 		Bucket<String> reportBucket = null;
@@ -288,11 +263,31 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "transaction");
 
-			for (TransactionReport report : reports) {
+			for (TransactionReport report : m_reports.values()) {
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
 				reportBucket.storeById(domain, xml);
+			}
+
+			if (atEnd && !isLocalMode()) {
+				Date period = new Date(m_startTime);
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+				for (TransactionReport report : m_reports.values()) {
+					Report r = m_reportDao.createLocal();
+					String xml = builder.buildXml(report);
+					String domain = report.getDomain();
+
+					r.setName("transaction");
+					r.setDomain(domain);
+					r.setPeriod(period);
+					r.setIp(ip);
+					r.setType(1);
+					r.setContent(xml);
+
+					m_reportDao.insert(r);
+				}
 			}
 
 			t.setStatus(Message.SUCCESS);
