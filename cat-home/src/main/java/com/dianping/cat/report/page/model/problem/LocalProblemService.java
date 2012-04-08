@@ -1,10 +1,39 @@
 package com.dianping.cat.report.page.model.problem;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
+import com.dianping.cat.report.page.model.spi.ModelPeriod;
+import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
+import com.dianping.cat.storage.Bucket;
+import com.dianping.cat.storage.BucketManager;
+import com.site.lookup.annotation.Inject;
 
 public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
+	@Inject
+	private BucketManager m_bucketManager;
+
 	public LocalProblemService() {
 		super("problem");
+	}
+
+	@Override
+	protected ProblemReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
+		ProblemReport report = super.getReport(request, period, domain);
+
+		if (report == null && period.isLast()) {
+			long date = Long.parseLong(request.getProperty("date"));
+
+			report = getLocalReport(date, domain);
+		}
+
+		return report;
+	}
+
+	private ProblemReport getLocalReport(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "problem");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : new DefaultXmlParser().parse(xml);
 	}
 }

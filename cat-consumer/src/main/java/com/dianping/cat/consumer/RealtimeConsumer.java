@@ -127,7 +127,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		long lastStartTime = m_periodManager.getCurrentStartTime() - m_duration;
 		Period period = m_periodManager.findPeriod(lastStartTime);
 
-		return period.getAnalyzer(name);
+		return period == null ? null : period.getAnalyzer(name);
 	}
 
 	@Override

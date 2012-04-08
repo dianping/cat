@@ -2,6 +2,7 @@
 <model model-package="com.dianping.cat.configuration.server" enable-xml-parser="true" enable-validator="true">
   <entity name="config" class-name="ServerConfig"/>
 	<entity name="storage" class-name="StorageConfig">
+		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />
 		<entity-ref name="hdfs" type="map" names="hdfses" />
 		<entity-ref name="property" type="map" names="properties" xml-indent="true" />
 	</entity>

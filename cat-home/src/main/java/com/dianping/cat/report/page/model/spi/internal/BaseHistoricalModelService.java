@@ -16,7 +16,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
       Initializable {
 	private String m_name;
 
-	private boolean m_localMode;
+	private boolean m_localMode = true;
 
 	public BaseHistoricalModelService(String name) {
 		m_name = name;
@@ -33,14 +33,8 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
 		ServerConfig serverConfig = manager.getServerConfig();
 
-		try {
-			if (serverConfig != null) {
-				m_localMode = serverConfig.isLocalMode();
-			} else {
-				m_localMode = true;
-			}
-		} finally {
-			release(manager);
+		if (serverConfig != null) {
+			m_localMode = serverConfig.isLocalMode();
 		}
 	}
 

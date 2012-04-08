@@ -18,7 +18,8 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 
-public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>, Initializable {
+public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
+      Initializable {
 	@Inject(type = MessageConsumer.class, value = "realtime")
 	private RealtimeConsumer m_consumer;
 
@@ -60,6 +61,16 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 	}
 
 	@Override
+	public void initialize() throws InitializationException {
+		ServerConfigManager manager = lookup(ServerConfigManager.class);
+		ServerConfig config = manager.getServerConfig();
+
+		if (config != null) {
+			m_defaultDomain = config.getConsole().getDefaultDomain();
+		}
+	}
+
+	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
 		Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
@@ -96,19 +107,5 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 		sb.append(']');
 
 		return sb.toString();
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		ServerConfig config = manager.getServerConfig();
-
-		try {
-			if (config != null) {
-				m_defaultDomain = config.getConsole().getDefaultDomain();
-			}
-		} finally {
-			release(manager);
-		}
 	}
 }

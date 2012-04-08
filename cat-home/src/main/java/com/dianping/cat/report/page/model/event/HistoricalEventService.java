@@ -42,9 +42,8 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	private EventReport getLocalReport(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "event");
 		String xml = bucket.findById(domain);
-		DefaultXmlParser parser = new DefaultXmlParser();
 
-		return parser.parse(xml);
+		return xml == null ? null : new DefaultXmlParser().parse(xml);
 	}
 
 	private EventReport getRemoteReport(long timestamp, String domain) throws Exception {

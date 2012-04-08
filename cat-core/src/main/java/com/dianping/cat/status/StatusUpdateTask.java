@@ -30,6 +30,8 @@ public class StatusUpdateTask implements Runnable, Initializable {
 
 	@Override
 	public void run() {
+		Cat.setup("StatusUpdateTask");
+		
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
 			MessageProducer cat = Cat.getProducer();
@@ -51,6 +53,8 @@ public class StatusUpdateTask implements Runnable, Initializable {
 				}
 			}
 		}
+		
+		Cat.reset();
 	}
 
 	public void setInterval(long interval) {

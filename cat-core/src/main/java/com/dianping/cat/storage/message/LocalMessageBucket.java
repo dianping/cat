@@ -12,6 +12,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -26,6 +28,8 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 	private MessagePathBuilder m_pathBuilder;
 
 	@Inject
+	private ServerConfigManager m_configManager;
+
 	private String m_baseDir = "target/bucket";
 
 	private ReentrantLock m_writeLock;
@@ -82,6 +86,12 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 
 	@Override
 	public void initialize(Class<?> type, String domain, Date timestamp) throws IOException {
+		ServerConfig serverConfig = m_configManager.getServerConfig();
+
+		if (serverConfig != null) {
+			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+		}
+
 		m_writeLock = new ReentrantLock();
 
 		String logicalPath = m_pathBuilder.getMessagePath(domain, timestamp);
@@ -91,10 +101,6 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 
 		m_logicalPath = logicalPath;
 		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile, true), 8192);
-	}
-
-	public void setBaseDir(String baseDir) {
-		m_baseDir = baseDir;
 	}
 
 	@Override

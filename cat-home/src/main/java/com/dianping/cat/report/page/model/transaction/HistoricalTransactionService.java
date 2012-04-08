@@ -42,9 +42,8 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	private TransactionReport getLocalReport(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
 		String xml = bucket.findById(domain);
-		DefaultXmlParser parser = new DefaultXmlParser();
 
-		return parser.parse(xml);
+		return xml == null ? null : new DefaultXmlParser().parse(xml);
 	}
 
 	private TransactionReport getRemoteReport(long timestamp, String domain) throws Exception {

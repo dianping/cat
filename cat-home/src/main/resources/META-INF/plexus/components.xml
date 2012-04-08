@@ -32,6 +32,9 @@
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 				</requirement>
@@ -70,6 +73,9 @@
 			<role-hint>event-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.event.LocalEventService</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
@@ -110,6 +116,9 @@
 			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 				</requirement>
@@ -148,6 +157,9 @@
 			<role-hint>ip-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
@@ -421,6 +433,9 @@
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
@@ -432,6 +447,9 @@
 			<implementation>com.dianping.cat.report.page.model.event.LocalEventService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
@@ -442,6 +460,9 @@
 			<role>com.dianping.cat.report.page.model.problem.LocalProblemService</role>
 			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>

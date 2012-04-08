@@ -22,6 +22,8 @@ import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -38,6 +40,8 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	private MessagePathBuilder m_pathBuilder;
 
 	@Inject
+	private ServerConfigManager m_configManager;
+
 	private String m_baseDir = "target/bucket";
 
 	// key => offset of record
@@ -178,6 +182,12 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public void initialize(Class<?> type, String domain, Date timestamp) throws IOException {
+		ServerConfig serverConfig = m_configManager.getServerConfig();
+
+		if (serverConfig != null) {
+			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+		}
+
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 
@@ -232,9 +242,6 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		}
 	}
 
-	public void setBaseDir(String baseDir) {
-		m_baseDir = baseDir;
-	}
 
 	@Override
 	public boolean storeById(String id, MessageTree tree) throws IOException {

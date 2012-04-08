@@ -169,7 +169,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			}
 
 			// update statistics
-			long duration = t.getDurationInMillis();
+			double duration = t.getDurationInMicros() / 1000d;
 
 			name.setMax(Math.max(name.getMax(), duration));
 			name.setMin(Math.min(name.getMin(), duration));
@@ -196,7 +196,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	private void processTransactionGrpah(TransactionName name, Transaction t) {
-		long d = t.getDurationInMillis();
+		double d = t.getDurationInMicros() / 1000d;
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(t.getTimestamp());
 		int min = cal.get(Calendar.MINUTE);

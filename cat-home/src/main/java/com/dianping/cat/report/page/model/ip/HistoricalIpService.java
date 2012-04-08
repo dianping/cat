@@ -42,9 +42,8 @@ public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 	private IpReport getLocalReport(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "ip");
 		String xml = bucket.findById(domain);
-		DefaultXmlParser parser = new DefaultXmlParser();
 
-		return parser.parse(xml);
+		return xml == null ? null : new DefaultXmlParser().parse(xml);
 	}
 
 	private IpReport getRemoteReport(long timestamp, String domain) throws Exception {

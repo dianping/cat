@@ -43,9 +43,8 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	private ProblemReport getLocalReport(long timestamp, String domain) throws Exception {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "problem");
 		String xml = bucket.findById(domain);
-		DefaultXmlParser parser = new DefaultXmlParser();
 
-		return parser.parse(xml);
+		return xml == null ? null : new DefaultXmlParser().parse(xml);
 	}
 
 	private ProblemReport getRemoteReport(long timestamp, String domain) throws Exception {

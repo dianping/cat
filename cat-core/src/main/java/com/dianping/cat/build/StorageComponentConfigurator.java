@@ -3,6 +3,7 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -25,15 +26,15 @@ class StorageComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Bucket.class, MessageTree.class.getName() + "-logview", LocalLogviewBucket.class) //
 		      .is(PER_LOOKUP) //
-		      .req(MessagePathBuilder.class) //
+		      .req(ServerConfigManager.class, MessagePathBuilder.class) //
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(Bucket.class, MessageTree.class.getName() + "-message", LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //
-		      .req(MessagePathBuilder.class) //
+		      .req(ServerConfigManager.class, MessagePathBuilder.class) //
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(Bucket.class, String.class.getName() + "-report", LocalReportBucket.class) //
 		      .is(PER_LOOKUP) //
-		      .req(MessagePathBuilder.class));
+		      .req(ServerConfigManager.class, MessagePathBuilder.class));
 
 		return all;
 	}

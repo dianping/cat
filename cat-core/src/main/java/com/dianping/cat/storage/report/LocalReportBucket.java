@@ -18,6 +18,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.storage.Bucket;
 import com.site.helper.Splitters;
@@ -29,6 +31,8 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 	private MessagePathBuilder m_pathBuilder;
 
 	@Inject
+	private ServerConfigManager m_configManager;
+
 	private String m_baseDir = "target/bucket";
 
 	// key => offset of record
@@ -159,6 +163,12 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
+		ServerConfig serverConfig = m_configManager.getServerConfig();
+
+		if (serverConfig != null) {
+			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+		}
+
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 
@@ -210,10 +220,6 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 		} finally {
 			m_writeLock.unlock();
 		}
-	}
-
-	public void setBaseDir(String baseDir) {
-		m_baseDir = baseDir;
 	}
 
 	@Override
