@@ -23,7 +23,7 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 	@Inject(type = MessageConsumer.class, value = "realtime")
 	private RealtimeConsumer m_consumer;
 
-	private String m_defaultDomain;
+	private String m_defaultDomain = "Cat";
 
 	private String m_name;
 

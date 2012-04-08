@@ -39,7 +39,7 @@ public class CatServlet extends AbstractContainerServlet {
 
 			ServerConfigManager configManager = lookup(ServerConfigManager.class);
 
-			configManager.initialize(new File(catServerXml));
+			configManager.initialize(catServerXml == null ? null : new File(catServerXml));
 
 			final DefaultMessageHandler handler = (DefaultMessageHandler) lookup(MessageHandler.class);
 

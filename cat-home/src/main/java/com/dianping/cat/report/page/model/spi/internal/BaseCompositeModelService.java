@@ -92,9 +92,14 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 				@Override
 				public void run() {
 					try {
-						responses.add(service.invoke(request));
+						ModelResponse<T> response = service.invoke(request);
+
+						if (response.getException() != null) {
+							logError(response.getException());
+						}
+
+						responses.add(response);
 					} catch (Exception e) {
-						e.printStackTrace();
 						logError(e);
 						t.setStatus(e);
 					} finally {
