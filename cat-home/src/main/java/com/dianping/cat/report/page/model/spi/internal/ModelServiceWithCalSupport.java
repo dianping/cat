@@ -7,8 +7,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
+import com.site.lookup.ContainerHolder;
 
-public abstract class ModelServiceWithCalSupport {
+public abstract class ModelServiceWithCalSupport extends ContainerHolder {
 	private Transaction m_current;
 
 	protected void setParentTransaction(Transaction current) {
