@@ -12,10 +12,10 @@
 <c:set var="report" value="${model.report}" />
 <table class="problem">
 	<tr>
-		<th colspan="3">${model.problemStatistics.subTitle}</th>
+		<th colspan="5">${model.problemStatistics.subTitle}</th>
 	</tr>
 	<tr>
-		<td colspan="3"><a
+		<td colspan="5"><a
 			href="?op=detail&domain=${model.domain}&ip=${model.ipAddress}&minute=${model.minuteLast}&date=${model.date}${model.problemStatistics.url}"
 			class="minute" onclick="return show(this);">上一分钟</a> &nbsp;&nbsp; <a
 			href="?op=detail&domain=${model.domain}&ip=${model.ipAddress}&minute=${model.minuteNext}&date=${model.date}${model.problemStatistics.url}"
@@ -25,34 +25,37 @@
 	</tr>
 	<tr>
 		<th>Type</th>
+		<th>Total</th>
+		<th>Status</th>
 		<th>Count</th>
-		<th>Detail</th>
+		<th>SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.problemStatistics.status}">
 		<tr>
-			<td><a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>&nbsp;&nbsp;${statistics.value.type}
+			<td rowspan="${w:size(statistics.value.status)}"><a href="#"
+						class="${statistics.value.type}">&nbsp;&nbsp;</a>
+				&nbsp;&nbsp;${statistics.value.type}
 			</td>
-			<td>${statistics.value.count}</td>
-			<td>
-				<table class="problem">
+			<td rowspan="${w:size(statistics.value.status)}">${statistics.value.count}</td>
+			<c:forEach var="status" items="${statistics.value.status}"
+						varStatus="index">
+				<c:if test="${index.index != 0}">
 					<tr>
-						<th width="20%">Status</th>
-						<th width="10%">Count</th>
-						<th width="70%">SampLinks</th>
-					</tr>
-					<c:forEach var="status" items="${statistics.value.status}" varStatus="index">
-						<tr class="${index.index  mod 2==1 ? 'even' : 'odd'}">
-							<td>${status.value.status}</td>
-							<td>${status.value.count}</td>
-							<td><c:forEach var="links" items="${status.value.links}">
-									<a href="${model.logViewBaseUri}/${links}">Log</a>
-								</c:forEach></td>
-						</tr>
+				</c:if>
+				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}">${status.value.status}</td>
+				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}">${status.value.count}</td>
+				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}"><c:forEach var="links" items="${status.value.links}">
+							<a href="${model.logViewBaseUri}/${links}">Log</a>
 					</c:forEach>
-				</table>
-			</td>
-		</tr>
+				</td>
+				<c:if test="${index.index != 0}">
+					
+				</tr>
+				</c:if>
+			</c:forEach>
+			</tr>
 	</c:forEach>
 </table>
+
 
 
