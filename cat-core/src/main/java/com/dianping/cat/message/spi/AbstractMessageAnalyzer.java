@@ -48,7 +48,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		// override it
 	}
 
-	protected List<String> getSortedDomains(Set<String> domains) {
+	protected List<String> sortDomains(Set<String> domains) {
 		List<String> sortedDomains = new ArrayList<String>(domains);
 
 		Collections.sort(sortedDomains, new Comparator<String>() {

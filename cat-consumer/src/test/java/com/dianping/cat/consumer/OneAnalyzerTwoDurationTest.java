@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer;
 
+import java.util.Set;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -49,7 +51,6 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 	}
 
 	public static class MockAnalyzer extends AbstractMessageAnalyzer<AnalyzerResult> {
-
 		public MockAnalyzer() {
 			s_period++;
 		}
@@ -73,6 +74,11 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		public AnalyzerResult getReport(String domain) {
 			return null;
 		}
+
+		@Override
+      public Set<String> getDomains() {
+	      return null;
+      }
 	}
 
 	public static class AnalyzerResult {

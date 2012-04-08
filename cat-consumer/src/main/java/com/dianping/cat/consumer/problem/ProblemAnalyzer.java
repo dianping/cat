@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -93,11 +94,16 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		return segment;
 	}
 
+	@Override
+	public Set<String> getDomains() {
+		return m_reports.keySet();
+	}
+
 	public ProblemReport getReport(String domain) {
 		ProblemReport report = m_reports.get(domain);
 
 		if (report != null) {
-			List<String> sortedDomains = getSortedDomains(m_reports.keySet());
+			List<String> sortedDomains = sortDomains(m_reports.keySet());
 			AllDomains allDomains = new AllDomains();
 
 			for (String e : sortedDomains) {

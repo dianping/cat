@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer;
 
+import java.util.Set;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
@@ -39,7 +41,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 	}
 
 	public static class MockAnalyzer1 extends AbstractMessageAnalyzer<AnalyzerResult> {
-
 		@Override
 		protected void process(MessageTree tree) {
 			++s_count1;
@@ -55,6 +56,10 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 			return null;
 		}
 
+		@Override
+      public Set<String> getDomains() {
+	      return null;
+      }
 	}
 
 	public static class MockAnalyzer2 extends AbstractMessageAnalyzer<AnalyzerResult> {
@@ -73,6 +78,10 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 			return null;
 		}
 
+		@Override
+      public Set<String> getDomains() {
+	      return null;
+      }
 	}
 
 	public static class MockAnalyzer3 extends AbstractMessageAnalyzer<AnalyzerResult> {
@@ -90,6 +99,11 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		public AnalyzerResult getReport(String domain) {
 			return null;
 		}
+
+		@Override
+      public Set<String> getDomains() {
+	      return null;
+      }
 	}
 
 	public static class AnalyzerResult {

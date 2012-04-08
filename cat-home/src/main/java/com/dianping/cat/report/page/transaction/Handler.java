@@ -56,7 +56,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("all", "true");
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
-		TransactionType t = report.findType(type);
+		TransactionType t = report == null ? null : report.findType(type);
 
 		if (t != null) {
 			TransactionName all = t.findName("ALL");
@@ -224,7 +224,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		@Override
 		public String getIdPrefix() {
-			return m_name.getId() + "-" + super.getIdPrefix();
+			return m_name.getId() + "_" + super.getIdPrefix();
 		}
 
 		protected TransactionName getTransactionName() {

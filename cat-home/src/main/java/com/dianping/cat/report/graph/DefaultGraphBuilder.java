@@ -47,6 +47,11 @@ public class DefaultGraphBuilder implements GraphBuilder {
 
 		for (int i = 0; i < cols && i < pixels.length; i++) {
 			int pixel = pixels[i];
+
+			if (pixel <= 0) {
+				continue;
+			}
+
 			int x = left + xstep * i;
 			int y = top + h - pixel;
 
@@ -59,6 +64,11 @@ public class DefaultGraphBuilder implements GraphBuilder {
 
 		for (int i = 0; i < cols && i < pixels.length; i++) {
 			int pixel = pixels[i];
+
+			if (pixel <= 0) {
+				continue;
+			}
+
 			double value = values[i];
 			int x = left + xstep * i;
 			int y = top - 6 + h - pixel;
@@ -72,8 +82,8 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			b.tag1("text", "x", x, "y", y, "display", "none");
 
 			b.indent().add(tip).newLine();
-			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", "b" + i + ".mouseover",
-			      "end", "b" + i + ".mouseout");
+			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", idPrefix + i + ".mouseover",
+			      "end", idPrefix + i + ".mouseout");
 			b.tag2("text");
 		}
 

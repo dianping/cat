@@ -2,9 +2,11 @@ package com.dianping.cat.consumer.ip;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dianping.cat.consumer.ip.model.entity.AllDomains;
 import com.dianping.cat.consumer.ip.model.entity.Ip;
@@ -70,22 +72,9 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 		return report;
 	}
 
-	public IpReport getReport(String domain) {
-		IpReport report = m_reports.get(domain);
-
-		if (report == null) {
-			report = new IpReport();
-		}
-
-		List<String> sortedDomains = getSortedDomains(m_reports.keySet());
-		AllDomains allDomains = new AllDomains();
-
-		for (String e : sortedDomains) {
-			allDomains.addDomain(e);
-		}
-
-		report.setAllDomains(allDomains);
-		return report;
+	@Override
+	public Set<String> getDomains() {
+		return Collections.emptySet();
 	}
 
 	private String getIpAddress(Transaction root) {
@@ -109,6 +98,24 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 		}
 
 		return null;
+	}
+
+	public IpReport getReport(String domain) {
+		IpReport report = m_reports.get(domain);
+
+		if (report == null) {
+			report = new IpReport();
+		}
+
+		List<String> sortedDomains = sortDomains(m_reports.keySet());
+		AllDomains allDomains = new AllDomains();
+
+		for (String e : sortedDomains) {
+			allDomains.addDomain(e);
+		}
+
+		report.setAllDomains(allDomains);
+		return report;
 	}
 
 	@Override

@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -48,28 +49,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	private long m_duration;
 
-	private void closeMessageBuckets() {
-		Date timestamp = new Date(m_startTime);
-
-		for (String domain : m_reports.keySet()) {
-			Bucket<MessageTree> logviewBucket = null;
-
-			try {
-				logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
-			} catch (Exception e) {
-				m_logger.error(String.format("Error when getting logview bucket of %s!", timestamp), e);
-			} finally {
-				if (logviewBucket != null) {
-					m_bucketManager.closeBucket(logviewBucket);
-				}
-			}
-		}
-	}
-
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
-		closeMessageBuckets();
 	}
 
 	@Override
@@ -77,15 +59,19 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		m_logger = logger;
 	}
 
+	@Override
+	public Set<String> getDomains() {
+		return m_reports.keySet();
+	}
+
 	public EventReport getReport(String domain) {
 		EventReport report = m_reports.get(domain);
 
 		if (report != null) {
-			List<String> sortedDomains = getSortedDomains(m_reports.keySet());
+			List<String> sortedDomains = sortDomains(m_reports.keySet());
 
-			for (String e : sortedDomains) {
-				report.addDomain(e);
-			}
+			report.getDomains().clear();
+			report.getDomains().addAll(sortedDomains);
 		}
 
 		return report;
@@ -291,7 +277,5 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
-
-		// TODO
 	}
 }

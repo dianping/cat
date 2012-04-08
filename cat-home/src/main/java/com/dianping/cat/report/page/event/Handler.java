@@ -55,7 +55,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("all", "true");
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
-		EventType t = report.findType(type);
+		EventType t = report == null ? null : report.findType(type);
 
 		if (t != null) {
 			EventName all = t.findName("ALL");
@@ -218,7 +218,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		@Override
 		public String getIdPrefix() {
-			return m_name.getId() + "-" + super.getIdPrefix();
+			return m_name.getId() + "_" + super.getIdPrefix();
 		}
 
 		protected EventName getEventName() {

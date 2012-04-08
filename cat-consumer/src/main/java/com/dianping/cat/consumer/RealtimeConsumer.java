@@ -23,6 +23,8 @@ import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.storage.Bucket;
+import com.dianping.cat.storage.BucketManager;
 import com.site.helper.Splitters;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
@@ -174,17 +176,53 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		public void finish() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-			m_logger.info(String.format("Finishing %s tasks for period [%s, %s]", m_tasks.size(),
-			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+			Date startDate = new Date(m_startTime);
+			Set<String> domains = new HashSet<String>();
+			Date endDate = new Date(m_endTime - 1);
+			m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
+			      df.format(endDate)));
 
 			Cat.setup(null);
 
-			for (Task task : m_tasks) {
-				task.finish();
+			MessageProducer cat = Cat.getProducer();
+			Transaction t = cat.newTransaction("Checkpoint", "RealtimeConsumer");
+
+			try {
+				for (Task task : m_tasks) {
+					task.finish();
+					domains.addAll(task.getAnalyzer().getDomains());
+				}
+
+				flushLogviewBuckets(domains);
+				uploadLogviewBuckets(domains);
+
+				t.setStatus(Message.SUCCESS);
+			} catch (Throwable e) {
+				cat.logError(e);
+				t.setStatus(e);
+			} finally {
+				t.complete();
 			}
 
 			Cat.reset();
+		}
+
+		private void uploadLogviewBuckets(Set<String> domains) {
+			// TODO
+		}
+
+		private void flushLogviewBuckets(Set<String> domains) {
+			BucketManager manager = lookup(BucketManager.class);
+
+			try {
+				for (String domain : domains) {
+					Bucket<MessageTree> bucket = manager.getLogviewBucket(m_startTime, domain);
+
+					bucket.flush();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 
 		public MessageAnalyzer getAnalyzer(String name) {
@@ -216,7 +254,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void start() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			m_logger.info(String.format("Starting %s tasks for period [%s, %s]", m_tasks.size(),
+			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
 			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
 			for (Task task : m_tasks) {
