@@ -142,7 +142,7 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements Log
 			if (address == null) {
 				address = "N/A";
 
-				m_logger.info("Unable to find IP address from message: " + tree);
+				m_logger.debug("Unable to find IP address from message: " + tree);
 			}
 
 			String domain = tree.getDomain();
