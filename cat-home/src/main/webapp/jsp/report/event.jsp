@@ -27,7 +27,7 @@
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=failure">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
+			<th>Sample Link</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -47,8 +47,7 @@
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=failure">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
-			<th>Total Count</th><th>Failure Count</th><th>Failure%</th>
-			<th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
+			<th>Sample Link</th></tr>
 			
 			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
