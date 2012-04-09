@@ -187,15 +187,15 @@ public class Handler implements PageHandler<Context>, Initializable {
 				report.accept(m_computer);
 				model.setReport(report);
 			}
-			
+
 			String type = payload.getType();
 			String sorted = payload.getSortBy();
+
 			if (!StringUtils.isEmpty(type)) {
 				model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, report));
 			} else {
 				model.setDisplayTypeReport(new DisplayEventReport().display(sorted, report));
 			}
-			
 		} catch (Throwable e) {
 			Cat.getProducer().logError(e);
 			model.setException(e);

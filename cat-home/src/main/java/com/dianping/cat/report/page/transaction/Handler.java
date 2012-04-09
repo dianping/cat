@@ -193,6 +193,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 				String type = payload.getType();
 				String sorted = payload.getSortBy();
+
 				if (!StringUtils.isEmpty(type)) {
 					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, report));
 				} else {
