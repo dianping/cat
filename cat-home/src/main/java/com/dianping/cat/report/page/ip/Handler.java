@@ -112,7 +112,9 @@ public class Handler implements PageHandler<Context> {
 		Map<String, DisplayModel> models = new HashMap<String, DisplayModel>();
 		DisplayModelBuilder builder = new DisplayModelBuilder(models, minute);
 
-		report.accept(builder); // prepare display model
+		if (report != null) {
+			report.accept(builder); // prepare display model
+		}
 
 		List<DisplayModel> displayModels = new ArrayList<DisplayModel>(models.values());
 

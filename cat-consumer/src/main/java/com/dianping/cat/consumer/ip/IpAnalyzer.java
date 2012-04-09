@@ -2,28 +2,33 @@ package com.dianping.cat.consumer.ip;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.consumer.ip.model.entity.AllDomains;
 import com.dianping.cat.consumer.ip.model.entity.Ip;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.entity.Period;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 
-public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
+public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements LogEnabled {
 	private static final String TOKEN = "RemoteIP=";
 
 	private Map<String, IpReport> m_reports = new HashMap<String, IpReport>();
 
 	private int m_lastPhase;
+
+	private Logger m_logger;
 
 	private void clearLastPhase() {
 		Calendar cal = Calendar.getInstance();
@@ -74,7 +79,7 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 	@Override
 	public Set<String> getDomains() {
-		return Collections.emptySet();
+		return m_reports.keySet();
 	}
 
 	private String getIpAddress(Transaction root) {
@@ -82,6 +87,7 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 		for (Message child : children) {
 			if (child instanceof Event && child.getType().equals("URL") && child.getName().equals("ClientInfo")) {
+				// URL:ClientInfo RemoteIp=<ip>&...
 				String data = child.getData().toString();
 				int off = data.indexOf(TOKEN);
 
@@ -94,6 +100,9 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 				}
 
 				break;
+			} else if (child instanceof Heartbeat) {
+				// Heartbeat:<ip>
+				return child.getName();
 			}
 		}
 
@@ -132,6 +141,8 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 			if (address == null) {
 				address = "N/A";
+
+				m_logger.info("Unable to find IP address from message: " + tree);
 			}
 
 			String domain = tree.getDomain();
@@ -148,5 +159,10 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> {
 
 			clearLastPhase();
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

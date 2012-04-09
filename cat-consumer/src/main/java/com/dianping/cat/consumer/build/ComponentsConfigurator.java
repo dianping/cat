@@ -53,7 +53,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
 
-		all.add(C(IpAnalyzer.class).is(PER_LOOKUP));
+		all.add(C(IpAnalyzer.class));
 
 		return all;
 	}
