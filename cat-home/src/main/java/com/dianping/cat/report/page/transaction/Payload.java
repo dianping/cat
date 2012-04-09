@@ -14,6 +14,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("name")
 	private String m_name;
+	
+	@FieldMeta("sort")
+	private String m_sortBy;
 
 	public Payload() {
 		super(ReportPage.TRANSACTION);
@@ -50,4 +53,13 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.VIEW;
 		}
 	}
+
+	public String getSortBy() {
+   	return m_sortBy;
+   }
+
+	public void setSortBy(String sortBy) {
+   	m_sortBy = sortBy;
+   }
+	
 }

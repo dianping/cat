@@ -23,6 +23,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
+import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
@@ -189,6 +190,14 @@ public class Handler implements PageHandler<Context>, Initializable {
 			if (report != null) {
 				report.accept(m_computer);
 				model.setReport(report);
+
+				String type = payload.getType();
+				String sorted = payload.getSortBy();
+				if (!StringUtils.isEmpty(type)) {
+					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, report));
+				} else {
+					model.setDisplayTypeReport(new DisplayTransactionReport().display(sorted, report));
+				}
 			}
 		} catch (Throwable e) {
 			e.printStackTrace();

@@ -15,6 +15,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("name")
 	private String m_name;
 
+	@FieldMeta("sort")
+	private String m_sortBy;
+
 	public Payload() {
 		super(ReportPage.EVENT);
 	}
@@ -43,6 +46,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setType(String type) {
 		m_type = type;
 	}
+	
+	public String getSortBy() {
+   	return m_sortBy;
+   }
+
+	public void setSortBy(String sortBy) {
+   	m_sortBy = sortBy;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

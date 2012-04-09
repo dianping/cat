@@ -9,6 +9,10 @@ import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
 	private TransactionReport m_report;
+	
+	private DisplayTransactionReport m_displayTypeReport;
+	
+	private DisplayTransactionNameReport m_displayNameReport;
 
 	private String m_type;
 
@@ -95,4 +99,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setType(String type) {
 		m_type = type;
 	}
+
+	public DisplayTransactionReport getDisplayTypeReport() {
+   	return m_displayTypeReport;
+   }
+
+	public void setDisplayTypeReport(DisplayTransactionReport dispalyReport) {
+		m_displayTypeReport = dispalyReport;
+   }
+
+	public DisplayTransactionNameReport getDisplayNameReport() {
+   	return m_displayNameReport;
+   }
+
+	public void setDisplayNameReport(DisplayTransactionNameReport displayNameReport) {
+   	m_displayNameReport = displayNameReport;
+   }
+	
 }

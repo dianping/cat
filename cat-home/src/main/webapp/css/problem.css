@@ -21,6 +21,14 @@ tr.even td {
 	vertical-align: top;
 }
 
+td.odd  {
+	background-color: #eee;
+}
+
+td.even  {
+	background-color: white;
+}
+
 a.error {
 	background-color: red;
 }

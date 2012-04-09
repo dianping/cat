@@ -122,7 +122,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 		ModelResponse<T> aggregated = new ModelResponse<T>();
 		T report = merge(request, responses);
-
+		
 		aggregated.setModel(report);
 		return aggregated;
 	}

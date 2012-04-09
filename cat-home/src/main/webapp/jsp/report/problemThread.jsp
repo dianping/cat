@@ -23,7 +23,7 @@
    <tr>
 	  <th>Machines:</th>
    	  <c:forEach var="machine" items="${report.machines}">
-   	  	<td><a href="?domain=${model.domain}&ip=${machine.value.ip}">${machine.value.ip}</a></td>
+   	  	<td><a href="?domain=${model.domain}&ip=${machine.value.ip}">&nbsp;[ ${machine.value.ip} ]&nbsp;</a></td>
    	  </c:forEach>
    </tr>
 </table>
@@ -49,33 +49,35 @@
 <table class="problem">
 <tr>
 		<th>Type</th>
+		<th>Total</th>
+		<th>Status</th>
 		<th>Count</th>
-		<th>Detail</th>
+		<th>SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}">
 		<tr>
-			<td><a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>&nbsp;&nbsp;${statistics.value.type}
+			<td rowspan="${w:size(statistics.value.status)}"><a href="#"
+						class="${statistics.value.type}">&nbsp;&nbsp;</a>
+				&nbsp;&nbsp;${statistics.value.type}
 			</td>
-			<td>${statistics.value.count}</td>
-			<td>
-				<table class="problem">
+			<td rowspan="${w:size(statistics.value.status)}">${statistics.value.count}</td>
+			<c:forEach var="status" items="${statistics.value.status}"
+						varStatus="index">
+				<c:if test="${index.index != 0}">
 					<tr>
-						<th width="20%">Status</th>
-						<th width="10%">Count</th>
-						<th width="70%">SampLinks</th>
-					</tr>
-					<c:forEach var="status" items="${statistics.value.status}">
-						<tr>
-							<td>${status.value.status}</td>
-							<td>${status.value.count}</td>
-							<td><c:forEach var="links" items="${status.value.links}">
-									<a href="${model.logViewBaseUri}/${links}">Log</a>
-								</c:forEach></td>
-						</tr>
+				</c:if>
+				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}">${status.value.status}</td>
+				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}">${status.value.count}</td>
+				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}"><c:forEach var="links" items="${status.value.links}">
+							<a href="${model.logViewBaseUri}/${links}">Log</a>
 					</c:forEach>
-				</table>
-			</td>
-		</tr>
+				</td>
+				<c:if test="${index.index != 0}">
+					
+				</tr>
+				</c:if>
+			</c:forEach>
+			</tr>
 	</c:forEach>
 </table>
 <table class="legend">

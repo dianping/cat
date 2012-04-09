@@ -22,12 +22,17 @@
 <table class="event">
 	<c:choose>
 		<c:when test="${empty payload.type}">
-			<tr><th>Type</th><th>Total Count</th><th>Failure Count</th><th>Failure%</th><th>Sample Link</th></tr>
-			<c:forEach var="type" items="${report.types}" varStatus="status">
-				<c:set var="e" value="${type.value}"/>
+			<tr>
+			<th><a href="?domain=${model.domain}&date=${model.date}&sort=type"> Type</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&sort=total">Total Count</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&sort=failure">Failure Count</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&sort=failurePercent">Failure%</a></th>
+			<th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
+			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
+				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td><a href="?domain=${report.domain}&date=${model.date}&type=${e.id}">${e.id}</a></td>
+					<td><a href="?domain=${report.domain}&date=${model.date}&type=${item.type}">${item.type}</a></td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
@@ -36,12 +41,18 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-		<tr><th>
-			<a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
-			Name</th><th>Total Count</th><th>Failure Count</th><th>Failure%</th><th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
+		<tr>
+			<th><a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
+			<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=type"> Name</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=total">Total Count</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=failure">Failure Count</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
+			<th>Total Count</th><th>Failure Count</th><th>Failure%</th>
+			<th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
+			
 			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>
-			<c:forEach var="name" items="${report.types[payload.type].names}" varStatus="status">
-				<c:set var="e" value="${name.value}"/>
+			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
+				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td><a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> ${e.id}</td>
