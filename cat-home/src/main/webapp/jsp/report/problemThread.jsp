@@ -54,13 +54,13 @@
 		<th>Count</th>
 		<th>SampleLinks</th>
 	</tr>
-	<c:forEach var="statistics" items="${model.allStatistics.status}">
+	<c:forEach var="statistics" items="${model.allStatistics.status}" varStatus="typeIndex">
 		<tr>
-			<td rowspan="${w:size(statistics.value.status)}"><a href="#"
+			<td rowspan="${w:size(statistics.value.status)}" class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'}"><a href="#"
 						class="${statistics.value.type}">&nbsp;&nbsp;</a>
 				&nbsp;&nbsp;${statistics.value.type}
 			</td>
-			<td rowspan="${w:size(statistics.value.status)}">${statistics.value.count}</td>
+			<td rowspan="${w:size(statistics.value.status)}" class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'}">${statistics.value.count}</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 						varStatus="index">
 				<c:if test="${index.index != 0}">
