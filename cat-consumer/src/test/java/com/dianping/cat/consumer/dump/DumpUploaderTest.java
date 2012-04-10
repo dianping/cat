@@ -1,7 +1,13 @@
 package com.dianping.cat.consumer.dump;
 
-import org.junit.Test;
+import java.io.File;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
@@ -10,7 +16,14 @@ import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ComponentTestCase;
 
+@RunWith(JUnit4.class)
 public class DumpUploaderTest extends ComponentTestCase {
+	@Before
+	public void before() throws Exception {
+		ServerConfigManager manager = lookup(ServerConfigManager.class);
+
+		manager.initialize(new File("/data/appdatas/cat/server.xml"));
+	}
 
 	@Test
 	public void testUpload() throws Exception {
@@ -33,6 +46,7 @@ public class DumpUploaderTest extends ComponentTestCase {
 		analyzer.doCheckpoint(true);
 
 		DumpUploader uploader = lookup(DumpUploader.class);
+
 		uploader.upload();
 	}
 

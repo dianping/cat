@@ -28,7 +28,7 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 
 	private Map<String, Integer> m_indexes = new HashMap<String, Integer>();
 
-	private long m_maxSize = DEFAULT_MAX_SIZE / 1024 * 16;
+	private long m_maxSize = DEFAULT_MAX_SIZE;
 
 	private long m_lastChunkAdjust = 100 * 1024L; // 100K
 
