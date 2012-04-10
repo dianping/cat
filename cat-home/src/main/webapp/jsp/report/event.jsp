@@ -16,7 +16,6 @@
 
 <res:useCss value="${res.css.local.event_css}" target="head-css"/>
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
-<res:useJs value="${res.js.local.event_js}" target="head-js"/>
 
 <br>
 <table class="event">
