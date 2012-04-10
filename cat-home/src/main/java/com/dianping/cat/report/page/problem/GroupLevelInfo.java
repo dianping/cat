@@ -124,11 +124,20 @@ public class GroupLevelInfo {
 			}
 		}
 
+		public TreeSet<String> findOrCreat(Integer key) {
+			TreeSet<String> result = m_statistics.get(key);
+			if (result == null) {
+				result = new TreeSet<String>();
+				m_statistics.put(key, result);
+			}
+			return result;
+		}
+
 		public void add(Map<Integer, Segment> segments) {
 			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
 				List<Entry> entries = entry.getValue().getEntries();
 				for (Entry temp : entries) {
-						m_statistics.get(entry.getKey()).add(temp.getType());
+					findOrCreat(entry.getKey()).add(temp.getType());
 				}
 			}
 		}

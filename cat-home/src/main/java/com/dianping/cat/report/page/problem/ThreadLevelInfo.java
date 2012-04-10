@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +92,7 @@ public class ThreadLevelInfo {
 
 			for (String thread : threads) {
 				TheadStatistics theadStatistics = temps.get(thread);
-				HashSet<String> errors = theadStatistics.getStatistics().get(minute);
+				TreeSet<String> errors = theadStatistics.getStatistics().get(minute);
 				sb.append("<td>");
 				for (String error : errors) {
 					params.put("group", groupName);
@@ -230,25 +229,34 @@ public class ThreadLevelInfo {
 
 	public static class TheadStatistics {
 
-		private Map<Integer, HashSet<String>> m_statistics = new LinkedHashMap<Integer, HashSet<String>>();
+		private Map<Integer, TreeSet<String>> m_statistics = new LinkedHashMap<Integer, TreeSet<String>>();
 
 		public TheadStatistics(int lastMinute) {
 			for (int i = 0; i <= lastMinute; i++) {
-				m_statistics.put(new Integer(i), new HashSet<String>());
+				m_statistics.put(new Integer(i), new TreeSet<String>());
 			}
 		}
 
+		public TreeSet<String> findOrCreat(Integer key) {
+			TreeSet<String> result = m_statistics.get(key);
+			if (result == null) {
+				result = new TreeSet<String>();
+				m_statistics.put(key, result);
+			}
+			return result;
+		}
+		
 		public void add(Map<Integer, Segment> segments) {
 			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
 				List<Entry> entries = entry.getValue().getEntries();
 				for (Entry temp : entries) {
 
-					m_statistics.get(entry.getKey()).add(temp.getType());
+					findOrCreat(entry.getKey()).add(temp.getType());
 				}
 			}
 		}
 
-		public Map<Integer, HashSet<String>> getStatistics() {
+		public Map<Integer, TreeSet<String>> getStatistics() {
 			return m_statistics;
 		}
 	}

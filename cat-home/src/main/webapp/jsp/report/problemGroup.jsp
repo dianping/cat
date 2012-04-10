@@ -42,7 +42,9 @@
    </tr>
 </table>
 
+<br>
 <%@ include file="problemTable.jsp" %>
+<br>
 
 <table class="problem">
 	<tr>
