@@ -1,10 +1,6 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.configuration.ServerConfigManager</role>
-			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 			<implementation>com.dianping.cat.hadoop.hdfs.FileSystemManager</implementation>
 			<requirements>
