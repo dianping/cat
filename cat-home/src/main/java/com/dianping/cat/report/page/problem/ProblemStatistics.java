@@ -209,10 +209,10 @@ public class ProblemStatistics {
 		}
 
 		public void add(Entry entry, String groupName, String threadId) {
-			m_count++;
-			if (m_links.size() <= s_maxLinkSize) {
+			if (m_links.size() < s_maxLinkSize) {
 				m_links.add(entry.getMessageId());
 			}
+			m_count++;
 		}
 
 		public String getStatus() {
