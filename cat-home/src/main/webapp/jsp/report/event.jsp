@@ -66,8 +66,6 @@
 </table>
 <font color="white">${lastIndex+1}</font>
 
-</jsp:body>
-
-</a:report>
-
 <res:useJs value="${res.js.local.event_js}" target="bottom-js" />
+</jsp:body>
+</a:report>

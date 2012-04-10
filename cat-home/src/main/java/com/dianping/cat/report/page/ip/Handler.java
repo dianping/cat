@@ -124,8 +124,12 @@ public class Handler implements PageHandler<Context> {
 				return m2.getLastFifteen() - m1.getLastFifteen(); // desc order
 			}
 		});
-
-		return displayModels;
+		
+		if (displayModels.size() > 100) {
+			return displayModels.subList(0, 100);
+		} else {
+			return displayModels;
+		}
 	}
 
 	static class DisplayModelBuilder extends BaseVisitor {

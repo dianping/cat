@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.helper.MapUtils;
 
 public class ProblemStatistics {
 
@@ -186,7 +188,14 @@ public class ProblemStatistics {
 		}
 
 		public Map<String, StatusStatistics> getStatus() {
-			return m_status;
+			Map<String,StatusStatistics> result = MapUtils.sortMap(m_status, new Comparator<java.util.Map.Entry<String, StatusStatistics>>() {
+				@Override
+            public int compare(java.util.Map.Entry<String, StatusStatistics> o1,
+                  java.util.Map.Entry<String, StatusStatistics> o2) {
+					return o2.getValue().getCount()-o1.getValue().getCount();
+            }
+			});
+			return result;
 		}
 
 		public void setStatus(Map<String, StatusStatistics> status) {

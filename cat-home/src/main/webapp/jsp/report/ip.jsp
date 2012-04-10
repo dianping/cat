@@ -16,9 +16,10 @@
 <res:useCss value='${res.css.local.ip_css}' target="head-css"/>
 
 <table class="ip-table">
-	<tr><th>IP</th><th>last 1 min</th><th>last 5 mins</th><th>last 15 mins</th></tr>
+	<tr><th>No.</th><th>IP</th><th>last 1 min</th><th>last 5 mins</th><th>last 15 mins</th></tr>
 	<c:forEach var="m" items="${model.displayModels}" varStatus="status">
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+			<td>${status.index+1}</td>
 			<td>${m.address}</td>
 			<td>${m.lastOne}</td>
 			<td>${m.lastFive}</td>

@@ -87,7 +87,7 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements Log
 
 		for (Message child : children) {
 			if (child instanceof Event && child.getType().equals("URL") && child.getName().equals("ClientInfo")) {
-				// URL:ClientInfo RemoteIp=<ip>&...
+				// URL:ClientInfo RemoteIP=<ip>&...
 				String data = child.getData().toString();
 				int off = data.indexOf(TOKEN);
 
@@ -97,6 +97,11 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements Log
 					if (pos > 0) {
 						return data.substring(off + TOKEN.length(), pos);
 					}
+				} else {
+					//TODO remove it after mobileApi upgrade
+					off = data.indexOf("RemoteIp=");
+					int pos = data.indexOf("VirtualIP=");
+					return data.substring(off + "RemoteIp=".length(), pos);
 				}
 
 				break;
