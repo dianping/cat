@@ -209,7 +209,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		private void uploadLogviewBuckets(Set<String> domains) {
-			// TODO
+			
 		}
 
 		private void flushLogviewBuckets(Set<String> domains) {
