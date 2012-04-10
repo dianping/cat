@@ -28,18 +28,20 @@
    <tr>
 	  <th>Machines:</th>
    	  <c:forEach var="machine" items="${report.machines}">
-   	  	<td><a href="?domain=${model.domain}&ip=${machine.value.ip}">&nbsp;[ ${machine.value.ip} ]&nbsp;</a></td>
+   	  	<td>&nbsp;[&nbsp;<a
+						href="?domain=${model.domain}&ip=${machine.value.ip}">${machine.value.ip}</a>&nbsp;]&nbsp;</td>
    	  </c:forEach>
    </tr>
 </table>
 
 <table class="problem">
 	<tr>
-				<td title="time\group">T\G</td>
+		<td title="time\group">T\G</td>
 		<c:forEach var="group" items="${model.groupLevelInfo.groups}"
 					varStatus="status">
-			<td> <a
-						href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group}&date=${model.date}">${group}</a></td>
+		<td title="${group}"> 
+			<a	href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group}&date=${model.date}">${w:shorten(group, 5)}</a>
+					</td>
 		</c:forEach>
 	</tr>
 	<c:forEach var="minute" items="${model.groupLevelInfo.datas}"
@@ -51,40 +53,7 @@
 </table>
 <br>
 
-<table class="problem">
-<tr>
-		<th>Type</th>
-		<th>Total</th>
-		<th>Status</th>
-		<th>Count</th>
-		<th>SampleLinks</th>
-	</tr>
-	<c:forEach var="statistics" items="${model.allStatistics.status}">
-		<tr>
-			<td rowspan="${w:size(statistics.value.status)}"><a href="#"
-						class="${statistics.value.type}">&nbsp;&nbsp;</a>
-				&nbsp;&nbsp;${statistics.value.type}
-			</td>
-			<td rowspan="${w:size(statistics.value.status)}">${statistics.value.count}</td>
-			<c:forEach var="status" items="${statistics.value.status}"
-						varStatus="index">
-				<c:if test="${index.index != 0}">
-					<tr>
-				</c:if>
-				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}">${status.value.status}</td>
-				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}">${status.value.count}</td>
-				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}"><c:forEach var="links" items="${status.value.links}">
-							<a href="${model.logViewBaseUri}/${links}">Log</a>
-					</c:forEach>
-				</td>
-				<c:if test="${index.index != 0}">
-					
-				</tr>
-				</c:if>
-			</c:forEach>
-			</tr>
-	</c:forEach>
-</table>
+<%@ include file="problemTable.jsp" %>
 
 <table class="legend">
 </table>

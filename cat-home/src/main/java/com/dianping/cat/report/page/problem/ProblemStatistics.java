@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -13,7 +14,7 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 
 public class ProblemStatistics {
 
-	private Map<String, TypeStatistics> m_status = new LinkedHashMap<String, TypeStatistics>();
+	private Map<String, TypeStatistics> m_status = new TreeMap<String, TypeStatistics>();
 
 	private String m_groupName;
 
@@ -200,7 +201,7 @@ public class ProblemStatistics {
 
 		private List<String> m_links = new ArrayList<String>();
 
-		private static int s_maxLinkSize = 5;
+		private static int s_maxLinkSize = 20;
 
 		public StatusStatistics(Entry entry, String groupName, String threadId) {
 			m_status = entry.getStatus();
@@ -208,10 +209,10 @@ public class ProblemStatistics {
 		}
 
 		public void add(Entry entry, String groupName, String threadId) {
-			m_count++;
-			if (m_links.size() <= s_maxLinkSize) {
+			if (m_links.size() < s_maxLinkSize) {
 				m_links.add(entry.getMessageId());
 			}
+			m_count++;
 		}
 
 		public String getStatus() {
