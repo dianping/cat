@@ -14,6 +14,7 @@ import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.dump.DumpChannel;
 import com.dianping.cat.consumer.dump.DumpChannelManager;
+import com.dianping.cat.consumer.dump.DumpUploader;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -23,6 +24,7 @@ import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
@@ -38,41 +40,45 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
-		      .req(AnalyzerFactory.class) //
-		      .config(E("extraTime").value(property("extraTime", "300000"))//
-		            , E("analyzers").value("problem,transaction,event,ip,dump")));
+				.req(AnalyzerFactory.class) //
+				.config(E("extraTime").value(property("extraTime", "300000"))//
+						, E("analyzers").value("problem,transaction,event,ip,dump")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
 
 		all.add(C(Handler.class, ERROR.getName(), ErrorHandler.class)//
-		      .config(E("errorType").value(errorTypes)));
+				.config(E("errorType").value(errorTypes)));
 
 		all.add(C(Handler.class, FAILURE.getName(), FailureHandler.class)//
-		      .config(E("failureType").value(failureTypes)));
+				.config(E("failureType").value(failureTypes)));
 
 		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
-		      .req(ServerConfigManager.class));
+				.req(ServerConfigManager.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName() }, "m_handlers") //
-		      .req(BucketManager.class, ReportDao.class));
+				.req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName() }, "m_handlers") //
+				.req(BucketManager.class, ReportDao.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
+				.req(BucketManager.class, ReportDao.class));
 
 		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
+				.req(BucketManager.class, ReportDao.class));
 
 		all.add(C(IpAnalyzer.class));
 
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(MessagePathBuilder.class) //
-		      .req(DumpChannelManager.class));
+				.req(MessagePathBuilder.class) //
+				.req(DumpChannelManager.class));
 
 		all.add(C(DumpChannel.class));
 		all.add(C(DumpChannelManager.class) //
-		      .req(MessageCodec.class, "plain-text"));
+				.req(MessageCodec.class, "plain-text"));
+
+		all.add(C(DumpUploader.class)//
+				.req(FileSystemManager.class)//
+		);
 
 		return all;
 	}

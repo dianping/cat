@@ -123,5 +123,14 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.consumer.dump.DumpUploader</role>
+			<implementation>com.dianping.cat.consumer.dump.DumpUploader</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+			</requirements>
+		</component>
 	</components>
 </plexus>
