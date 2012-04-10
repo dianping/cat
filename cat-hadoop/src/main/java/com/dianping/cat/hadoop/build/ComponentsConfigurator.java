@@ -33,7 +33,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ServerConfigManager.class));
 		all.add(C(FileSystemManager.class) //
 		      .req(ServerConfigManager.class));
 
