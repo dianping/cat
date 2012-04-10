@@ -21,20 +21,8 @@
 				</c:if>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.status}</td>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.count}</td>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}"><c:forEach
-								var="links" items="${status.value.links}" varStatus="linkIndex">
-						<a href="${model.logViewBaseUri}/${links}">
-							<c:if test="${linkIndex.first}">
-								L
-							</c:if>
-							<c:if test="${linkIndex.first==false&&linkIndex.last}">
-								G
-							</c:if>
-							<c:if test="${linkIndex.first==false&&linkIndex.last==false}">
-								O
-							</c:if>
-						</a>
-					</c:forEach>
+				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">
+					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex"><a href="${model.logViewBaseUri}/${links}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a></c:forEach>
 				</td>
 				<c:if test="${index.index != 0}">
 				</tr>

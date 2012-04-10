@@ -85,7 +85,8 @@ public class PlainTextMessageCodec implements MessageCodec {
 		}
 	}
 
-	protected Message decodeLine(ChannelBuffer buf, DefaultTransaction parent, Stack<DefaultTransaction> stack) {
+	protected Message decodeLine(ChannelBuffer buf, DefaultTransaction parent, Stack<DefaultTransaction> stack,
+	      MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = buf.readByte();
 		String timestamp = helper.read(buf, TAB);
@@ -145,8 +146,15 @@ public class PlainTextMessageCodec implements MessageCodec {
 			helper.read(buf, LF); // get rid of line feed
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
 			transaction.setStatus(status);
-			transaction.setDurationInMicros(Long.parseLong(duration.substring(0, duration.length() - 2)));
 			transaction.addData(data);
+
+			long d = Long.parseLong(duration.substring(0, duration.length() - 2));
+
+			if (tree.getDomain().equals("MobileApi")) { //TODO remove it after MobileApi upgrade
+				transaction.setDurationInMillis(d);
+			} else {
+				transaction.setDurationInMicros(d);
+			}
 
 			if (parent != null) {
 				parent.addChild(transaction);
@@ -161,8 +169,16 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 			helper.read(buf, LF); // get rid of line feed
 			parent.setStatus(status);
-			parent.setDurationInMicros(Long.parseLong(duration.substring(0, duration.length() - 2)));
 			parent.addData(data);
+
+			long d = Long.parseLong(duration.substring(0, duration.length() - 2));
+
+			if (tree.getDomain().equals("MobileApi")) {  //TODO remove it after MobileApi upgrade
+				parent.setDurationInMillis(d);
+			} else {
+				parent.setDurationInMicros(d);
+			}
+
 			return stack.pop();
 		} else {
 			// unknown message, ignore it
@@ -172,12 +188,12 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 	protected void decodeMessage(ChannelBuffer buf, MessageTree tree) {
 		Stack<DefaultTransaction> stack = new Stack<DefaultTransaction>();
-		Message parent = decodeLine(buf, null, stack);
+		Message parent = decodeLine(buf, null, stack, tree);
 
 		tree.setMessage(parent);
 
 		while (buf.readableBytes() > 0) {
-			Message message = decodeLine(buf, (DefaultTransaction) parent, stack);
+			Message message = decodeLine(buf, (DefaultTransaction) parent, stack, tree);
 
 			if (message instanceof DefaultTransaction) {
 				parent = message;

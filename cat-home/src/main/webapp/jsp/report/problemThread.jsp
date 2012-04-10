@@ -23,15 +23,26 @@
    <tr>
 	  <th>Machines:</th>
    	  <c:forEach var="machine" items="${report.machines}">
-   	  	<td>&nbsp;[&nbsp;<a href="?domain=${model.domain}&ip=${machine.value.ip}">${machine.value.ip}</a>&nbsp;]&nbsp;</td>
-   	  </c:forEach>
+   	  		<td>&nbsp;[&nbsp; 
+   	  		<c:choose>
+				<c:when test="${model.ipAddress eq machine.value.ip}">
+					<a	href="?domain=${model.domain}&ip=${machine.value.ip}" class="current">${machine.value.ip}</a>
+   	 			</c:when>
+				<c:otherwise>
+					<a	href="?domain=${model.domain}&ip=${machine.value.ip}">${machine.value.ip}</a>
+	   	 		</c:otherwise>
+	   	 	</c:choose>
+   	 		&nbsp;]&nbsp;</td>
+		 </c:forEach>
    </tr>
 </table>
+
+<%@ include file="problemTable.jsp" %>
 
 <table class="problem">
 	<tr><td title="time\group">T\G</td>
 		<c:forEach var="group" items="${model.threadLevelInfo.groups}" varStatus="status">
-			<td colspan="${group.number}" title="${group.name}"><a href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group.name}&date=${model.date}">${w:shorten(group.name, 5)}</a></td>
+			<td colspan="${group.number}" title="${group.name}"><a href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group.name}&date=${model.date}">${w:shorten(group.name, 20)}</a></td>
 		</c:forEach>
 	</tr>
 	<tr><td title="time\thread">T\T</td>
@@ -47,7 +58,6 @@
 </table>
 <br>
 
-<%@ include file="problemTable.jsp" %>
 
 <table class="legend">
 </table>

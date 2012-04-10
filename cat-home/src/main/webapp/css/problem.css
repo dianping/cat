@@ -59,6 +59,10 @@ a.cache{
 	font-size: small;
 	border-spacing: 1px;
 }
+.current {
+	background-color: orange;
+	color: white;
+}
 
 #msgObjRef {
 	position: absolute;
