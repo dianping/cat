@@ -13,9 +13,9 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
-public class FailureHandler implements Handler {
+public class ErrorHandler implements Handler {
 	@Inject
-	private Set<String> m_failureTypes;
+	private Set<String> m_errorTypes;
 
 	@Override
 	public int handle(Segment segment, MessageTree tree) {
@@ -26,47 +26,60 @@ public class FailureHandler implements Handler {
 			Transaction transaction = (Transaction) message;
 
 			count += processTransaction(segment, transaction, tree);
+		} else {
+			count += processMessage(segment, message, tree);
+		}
+
+		return count;
+	}
+
+	private int processMessage(Segment segment, Message message, MessageTree tree) {
+		int count = 0;
+
+		if (!message.getStatus().equals(Message.SUCCESS) && m_errorTypes.contains(message.getType())) {
+			String messageId = tree.getMessageId();
+
+			if (segment.findEntry(messageId) == null) {
+				Entry entry = new Entry(messageId);
+
+				entry.setStatus(message.getName());
+				entry.setType(ProblemType.ERROR.getName());
+
+				if (message instanceof Transaction) {
+					long duration = ((Transaction) message).getDurationInMillis();
+
+					entry.setDuration((int) duration);
+				}
+
+				segment.addEntry(entry);
+			}
+
+			count++;
 		}
 
 		return count;
 	}
 
 	private int processTransaction(Segment segment, Transaction transaction, MessageTree tree) {
-		int count = 0;
-		String status = transaction.getStatus();
-		if (!status.equals(Transaction.SUCCESS)) {
-			String messageId = tree.getMessageId();
-			Entry entry = new Entry(messageId);
-
-			String type = transaction.getType();
-			if (m_failureTypes.contains(type)) {
-				entry.setType(transaction.getType().toLowerCase());
-				entry.setStatus(transaction.getName());
-			} else {
-				entry.setType(ProblemType.FAILURE.getName());
-				entry.setStatus(transaction.getType() + ":" + transaction.getName());
-			}
-
-			entry.setDuration((int) transaction.getDurationInMillis());
-			segment.addEntry(entry);
-
-			count++;
-		}
-
 		List<Message> children = transaction.getChildren();
+		int count = 0;
+
+		count += processMessage(segment, transaction, tree);
 
 		for (Message message : children) {
 			if (message instanceof Transaction) {
 				Transaction temp = (Transaction) message;
 
 				count += processTransaction(segment, temp, tree);
+			} else {
+				count += processMessage(segment, message, tree);
 			}
 		}
 
 		return count;
 	}
 
-	public void setFailureType(String type) {
-		m_failureTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
+	public void setErrorType(String type) {
+		m_errorTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
 	}
 }

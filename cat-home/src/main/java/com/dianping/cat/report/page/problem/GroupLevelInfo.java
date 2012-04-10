@@ -47,7 +47,7 @@ public class GroupLevelInfo {
 		} else {
 			minuteStr = minuteStr + Integer.toString(minute);
 		}
-		
+
 		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
 		sb.append("</td>");
 
@@ -128,8 +128,7 @@ public class GroupLevelInfo {
 			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
 				List<Entry> entries = entry.getValue().getEntries();
 				for (Entry temp : entries) {
-
-					m_statistics.get(entry.getKey()).add(temp.getType());
+						m_statistics.get(entry.getKey()).add(temp.getType());
 				}
 			}
 		}

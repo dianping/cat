@@ -23,7 +23,7 @@
    <tr>
 	  <th>Machines:</th>
    	  <c:forEach var="machine" items="${report.machines}">
-   	  	<td><a href="?domain=${model.domain}&ip=${machine.value.ip}">&nbsp;[ ${machine.value.ip} ]&nbsp;</a></td>
+   	  	<td>&nbsp;[&nbsp;<a href="?domain=${model.domain}&ip=${machine.value.ip}">${machine.value.ip}</a>&nbsp;]&nbsp;</td>
    	  </c:forEach>
    </tr>
 </table>
@@ -31,7 +31,7 @@
 <table class="problem">
 	<tr><td title="time\group">T\G</td>
 		<c:forEach var="group" items="${model.threadLevelInfo.groups}" varStatus="status">
-			<td colspan="${group.number}"><a href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group.name}&date=${model.date}">${group.name}</a></td>
+			<td colspan="${group.number}" title="${group.name}"><a href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group.name}&date=${model.date}">${w:shorten(group.name, 5)}</a></td>
 		</c:forEach>
 	</tr>
 	<tr><td title="time\thread">T\T</td>
@@ -66,10 +66,21 @@
 				<c:if test="${index.index != 0}">
 					<tr>
 				</c:if>
-				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}">${status.value.status}</td>
-				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}">${status.value.count}</td>
-				<td class="${index.index mod 2 != 0 ? 'odd' : 'even'}"><c:forEach var="links" items="${status.value.links}">
-							<a href="${model.logViewBaseUri}/${links}">Log</a>
+				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.status}</td>
+				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.count}</td>
+				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}"><c:forEach var="links" items="${status.value.links}" varStatus="linkIndex">
+					<a href="${model.logViewBaseUri}/${links}">
+							<c:if test="${linkIndex.first}">
+								L
+							</c:if>
+							<c:if test="${linkIndex.first==false&&linkIndex.last}">
+								G
+							</c:if>
+							<c:if test="${linkIndex.first==false&&linkIndex.last==false}">
+								O
+							</c:if>
+							
+					</a>
 					</c:forEach>
 				</td>
 				<c:if test="${index.index != 0}">

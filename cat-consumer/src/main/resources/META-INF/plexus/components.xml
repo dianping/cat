@@ -20,10 +20,18 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+			<role-hint>error</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.handler.ErrorHandler</implementation>
+			<configuration>
+				<errorType>Error,RuntimeException,Exception</errorType>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
 			<role-hint>failure</role-hint>
 			<implementation>com.dianping.cat.consumer.problem.handler.FailureHandler</implementation>
 			<configuration>
-				<failureType>Error,RuntimeException,Exception</failureType>
+				<failureType>URL,SQL,Call,Cache</failureType>
 			</configuration>
 		</component>
 		<component>
@@ -45,6 +53,7 @@
 					<role>com.dianping.cat.consumer.problem.handler.Handler</role>
 					<role-hints>
 						<role-hint>failure</role-hint>
+						<role-hint>error</role-hint>
 						<role-hint>long-url</role-hint>
 					</role-hints>
 					<field-name>m_handlers</field-name>
@@ -86,7 +95,6 @@
 		<component>
 			<role>com.dianping.cat.consumer.ip.IpAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 	</components>
 </plexus>

@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.build;
 
 import static com.dianping.cat.consumer.problem.ProblemType.FAILURE;
 import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
+import static com.dianping.cat.consumer.problem.ProblemType.ERROR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.problem.handler.ErrorHandler;
 import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
@@ -35,16 +37,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("extraTime").value(property("extraTime", "300000"))//
 		            , E("analyzers").value("problem,transaction,event,ip")));
 
-		String failureTypes = "Error,RuntimeException,Exception";
+		String errorTypes = "Error,RuntimeException,Exception";
+		String failureTypes= "URL,SQL,Call,Cache";
+		
+		all.add(C(Handler.class, ERROR.getName(), ErrorHandler.class)//
+		      .config(E("errorType").value(errorTypes)));
 
 		all.add(C(Handler.class, FAILURE.getName(), FailureHandler.class)//
 		      .config(E("failureType").value(failureTypes)));
-
+		
 		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
 		      .req(ServerConfigManager.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(Handler.class, new String[] { FAILURE.getName(), LONG_URL.getName() }, "m_handlers") //
+		      .req(Handler.class, new String[] { FAILURE.getName(),ERROR.getName(), LONG_URL.getName() }, "m_handlers") //
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //

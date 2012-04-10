@@ -34,15 +34,25 @@ a.error {
 }
 
 a.failure {
-	background-color: yellow;
+	background-color: #770000;
 }
 
 a.long-url {
 	background-color: blue;
 }
 
-.minute {
-	
+a.url{
+	background-color: #cc0000;
+}
+a.sql{
+	background-color: purple;
+}
+
+a.call{
+	background-color: #9966ff;
+}
+a.cache{
+	background-color: #aa3faa;
 }
 
 .detail {
