@@ -3,7 +3,7 @@ package com.dianping.cat.report.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.job.DumpToHdfsConsumer;
+import com.dianping.cat.hadoop.DumpToHdfsConsumer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;

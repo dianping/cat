@@ -43,11 +43,11 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	private long m_extraTime;
 
-	private Logger m_logger;
-
 	private long m_startTime;
 
 	private long m_duration;
+
+	private Logger m_logger;
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {

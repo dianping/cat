@@ -10,7 +10,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>300000</extraTime>
-				<analyzers>problem,transaction,event,ip</analyzers>
+				<analyzers>problem,transaction,event,ip,dump</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -86,7 +86,33 @@
 		<component>
 			<role>com.dianping.cat.consumer.ip.IpAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.dump.DumpAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.dump.DumpAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.dump.DumpChannelManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.dump.DumpChannel</role>
+			<implementation>com.dianping.cat.consumer.dump.DumpChannel</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.dump.DumpChannelManager</role>
+			<implementation>com.dianping.cat.consumer.dump.DumpChannelManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>

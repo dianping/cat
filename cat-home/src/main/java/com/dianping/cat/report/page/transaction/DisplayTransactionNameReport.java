@@ -20,13 +20,15 @@ public class DisplayTransactionNameReport {
 		return m_results;
 	}
 
-	public DisplayTransactionNameReport display(String sorted,String type,TransactionReport report) {
+	public DisplayTransactionNameReport display(String sorted, String type, TransactionReport report) {
 		Map<String, TransactionType> types = report.getTypes();
 		if (types != null) {
 			TransactionType names = types.get(type);
-			
-			for (Entry<String, TransactionName> entry : names.getNames().entrySet()) {
-				m_results.add(new TransactionModel(entry.getKey(), entry.getValue()));
+
+			if (names != null) {
+				for (Entry<String, TransactionName> entry : names.getNames().entrySet()) {
+					m_results.add(new TransactionModel(entry.getKey(), entry.getValue()));
+				}
 			}
 		}
 		if (!StringUtils.isEmpty(sorted)) {

@@ -179,6 +179,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Date startDate = new Date(m_startTime);
 			Set<String> domains = new HashSet<String>();
 			Date endDate = new Date(m_endTime - 1);
+
 			m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
 			      df.format(endDate)));
 

@@ -5,11 +5,14 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.junit.After;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.MesageTreeBucketTestCase;
 
+@RunWith(JUnit4.class)
 public class LocalLogviewBucketTest extends MesageTreeBucketTestCase {
 
 	@SuppressWarnings("unchecked")

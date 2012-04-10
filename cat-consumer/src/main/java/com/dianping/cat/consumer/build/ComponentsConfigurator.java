@@ -10,6 +10,9 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.consumer.dump.DumpAnalyzer;
+import com.dianping.cat.consumer.dump.DumpChannel;
+import com.dianping.cat.consumer.dump.DumpChannelManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.ip.IpAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -18,7 +21,9 @@ import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
@@ -33,7 +38,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class) //
 		      .config(E("extraTime").value(property("extraTime", "300000"))//
-		            , E("analyzers").value("problem,transaction,event,ip")));
+		            , E("analyzers").value("problem,transaction,event,ip,dump")));
 
 		String failureTypes = "Error,RuntimeException,Exception";
 
@@ -54,6 +59,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(IpAnalyzer.class));
+
+		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
+		      .req(MessagePathBuilder.class) //
+		      .req(DumpChannelManager.class));
+
+		all.add(C(DumpChannel.class));
+		all.add(C(DumpChannelManager.class) //
+		      .req(MessageCodec.class, "plain-text"));
 
 		return all;
 	}

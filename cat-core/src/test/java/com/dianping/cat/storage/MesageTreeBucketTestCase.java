@@ -62,6 +62,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
+		
 		try {
 			pool = Executors.newFixedThreadPool(threadNum);
 			bucket = createBucket();
