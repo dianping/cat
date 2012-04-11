@@ -32,9 +32,10 @@ import com.site.helper.Files;
 import com.site.helper.Files.AutoClose;
 import com.site.helper.Joiners;
 import com.site.helper.Splitters;
+import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class LogviewUploader implements Runnable, Initializable, LogEnabled {
+public class LogviewUploader extends ContainerHolder implements Runnable, Initializable, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
@@ -64,6 +65,11 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
+		m_configManager = lookup(ServerConfigManager.class);
+		m_fileSystemManager = lookup(FileSystemManager.class);
+		m_bucketManager = lookup(BucketManager.class);
+		m_logviewDao = lookup(LogviewDao.class);
+
 		ServerConfig serverConfig = m_configManager.getServerConfig();
 
 		if (serverConfig != null) {

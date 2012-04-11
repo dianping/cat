@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.DumpToHdfsConsumer;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.hdfs.DefaultInputChannel;
@@ -20,7 +19,6 @@ import com.dianping.cat.hadoop.hdfs.OutputChannelManager;
 import com.dianping.cat.hadoop.storage.RemoteMessageBucket;
 import com.dianping.cat.hadoop.storage.RemoteStringBucket;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
@@ -48,8 +46,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
 		      .req(OutputChannelManager.class) //
 		      .req(MessagePathBuilder.class));
-		all.add(C(MessageConsumer.class, DumpToHdfsConsumer.ID, DumpToHdfsConsumer.class) //
-		      .req(MessageStorage.class, "hdfs"));
 
 		all.add(C(Bucket.class, String.class.getName() + "-remote", RemoteStringBucket.class) //
 		      .is(PER_LOOKUP) //

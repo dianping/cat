@@ -74,49 +74,6 @@ public class DumpUploader implements Initializable, LogEnabled {
 		}
 	}
 
-	public void upload() {
-		m_logger.info("Scanning ");
-
-		File baseDir = new File(m_baseDir, "outbox");
-		final List<String> paths = new ArrayList<String>();
-
-		Scanners.forDir().scan(baseDir, new FileMatcher() {
-			@Override
-			public Direction matches(File base, String path) {
-				if (new File(base, path).isFile()) {
-					paths.add(path);
-				}
-
-				return Direction.DOWN;
-			}
-		});
-
-		if (paths.size() > 0) {
-			for (String path : paths) {
-				File file = new File(baseDir, path);
-
-				try {
-					m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
-
-					FileInputStream fis = new FileInputStream(file);
-					FSDataOutputStream fdos = makeHdfsOutputStream(path);
-
-					Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
-
-					if (!file.delete()) {
-						m_logger.warn("Can't delete file: " + file);
-					}
-
-					m_logger.info(String.format("Finish uploading(%s) to HDFS(%s).", file.getCanonicalPath(), path));
-				} catch (AccessControlException e) {
-					m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
-				} catch (Exception e) {
-					m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
-				}
-			}
-		}
-	}
-
 	class WriteJob extends Thread {
 		private volatile boolean m_active = true;
 
@@ -140,6 +97,47 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 		public void shutdown() {
 			m_active = false;
+		}
+
+		private void upload() {
+			File baseDir = new File(m_baseDir, "outbox");
+			final List<String> paths = new ArrayList<String>();
+
+			Scanners.forDir().scan(baseDir, new FileMatcher() {
+				@Override
+				public Direction matches(File base, String path) {
+					if (new File(base, path).isFile()) {
+						paths.add(path);
+					}
+
+					return Direction.DOWN;
+				}
+			});
+
+			if (paths.size() > 0) {
+				for (String path : paths) {
+					File file = new File(baseDir, path);
+
+					try {
+						m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
+
+						FileInputStream fis = new FileInputStream(file);
+						FSDataOutputStream fdos = makeHdfsOutputStream(path);
+
+						Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
+
+						if (!file.delete()) {
+							m_logger.warn("Can't delete file: " + file);
+						}
+
+						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s).", file.getCanonicalPath(), path));
+					} catch (AccessControlException e) {
+						m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
+					} catch (Exception e) {
+						m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
+					}
+				}
+			}
 		}
 	}
 }

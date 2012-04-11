@@ -16,14 +16,10 @@ import com.site.lookup.ComponentTestCase;
 public class LogviewUploaderTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
-		BucketManager manager = lookup(BucketManager.class);
 		LogviewUploader uploader = lookup(LogviewUploader.class);
+		BucketManager manager = lookup(BucketManager.class);
 		long timestamp = 1334122638154L; // [04-11 13:37:18.154]
 		String domain = "test";
-
-		Thread thread = new Thread(uploader);
-
-		thread.start();
 
 		Bucket<MessageTree> bucket = manager.getLogviewBucket(timestamp, domain);
 
@@ -35,8 +31,6 @@ public class LogviewUploaderTest extends ComponentTestCase {
 
 		bucket.flush();
 		uploader.addBucket(timestamp, domain);
-
-		thread.join();
 	}
 
 	private DefaultMessageTree newMessageTree(int i, long timestamp) {

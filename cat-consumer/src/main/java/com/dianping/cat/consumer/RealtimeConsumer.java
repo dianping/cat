@@ -46,6 +46,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private static final long HOUR = 60 * MINUTE;
 
 	@Inject
+	private AnalyzerFactory m_factory;
+
+	@Inject
+	private LogviewUploader m_uploader;
+
+	@Inject
 	private long m_duration = 1 * HOUR;
 
 	@Inject
@@ -56,12 +62,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Inject
 	private List<String> m_analyzerNames;
-
-	@Inject
-	private AnalyzerFactory m_factory;
-
-	@Inject
-	private LogviewUploader m_uploader;
 
 	private ExecutorService m_executor;
 
@@ -142,10 +142,13 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_periodManager.setName("RealtimeConsumer-PeriodManager");
 		m_periodManager.start();
 
-		Thread uploadThread = new Thread(m_uploader);
-		
-		uploadThread.setName("LogviewUploader");
-		uploadThread.start();
+		if (m_uploader != null) {
+			Thread uploadThread = new Thread(m_uploader);
+
+			uploadThread.setName("LogviewUploader");
+			uploadThread.start();
+			System.out.println("LogviewUploader started.");
+		}
 	}
 
 	public void setAnalyzers(String analyzers) {

@@ -24,9 +24,7 @@ import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
@@ -40,6 +38,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
+		all.add(C(LogviewUploader.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class, LogviewUploader.class) //
@@ -78,11 +77,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DumpChannelManager.class) //
 		      .req(MessageCodec.class, "plain-text"));
 
-		all.add(C(LogviewUploader.class) //
-		      .req(ServerConfigManager.class, FileSystemManager.class) //
-		      .req(BucketManager.class, LogviewDao.class));
 		all.add(C(DumpUploader.class) //
-		      .req(ServerConfigManager.class, FileSystemManager.class));
+		      .req(ServerConfigManager.class));
 
 		return all;
 	}
