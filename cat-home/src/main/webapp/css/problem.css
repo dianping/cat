@@ -63,6 +63,9 @@ a.cache{
 	background-color: orange;
 	color: white;
 }
+.top{
+	vertical-align: top;
+}
 
 #msgObjRef {
 	position: absolute;

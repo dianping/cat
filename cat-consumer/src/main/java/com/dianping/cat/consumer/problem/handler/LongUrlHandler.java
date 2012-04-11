@@ -41,7 +41,7 @@ public class LongUrlHandler implements Handler, Initializable {
 				if (segment.findEntry(messageId) == null) {
 					Entry entry = new Entry(messageId);
 
-					entry.setStatus(message.getType() + ":" + message.getName());
+					entry.setStatus(message.getName());
 					entry.setType(ProblemType.LONG_URL.getName());
 					entry.setDuration((int) duration);
 
