@@ -105,7 +105,8 @@ public class Handler implements PageHandler<Context> {
 			model.setIpAddress("All");
 			report = getAllIpReport(payload);
 			model.setReport(report);
-			model.setAllStatistics(new ProblemStatistics().displayAllIp(report));
+			model.setLongDate(payload.getDate());
+			model.setAllStatistics(new ProblemStatistics().displayAllIp(report,payload));
 		} else {
 			switch (payload.getAction()) {
 			case GROUP:

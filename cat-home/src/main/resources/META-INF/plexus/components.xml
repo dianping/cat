@@ -331,9 +331,6 @@
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>java.lang.String</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
