@@ -3,6 +3,7 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
@@ -43,6 +44,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		all.add(C(ServerConfigManager.class));
+
 		all.add(C(InMemoryQueue.class));
 		all.add(C(MessageSender.class, "in-memory", InMemorySender.class) //
 		      .req(InMemoryQueue.class));
@@ -77,10 +80,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, "plain-text", "m_codec")//
 		      .req(MessageQueue.class, "default", "m_queue"));
 		all.add(C(MessageSender.class, "tcp-socket-hierarchy", TcpSocketHierarchySender.class) //
-				.is(PER_LOOKUP) //
-				.req(MessageStatistics.class, "default", "m_statistics") //
-				.req(MessageCodec.class, "plain-text", "m_codec")//
-				.req(MessageQueue.class, "default", "m_queue"));
+		      .is(PER_LOOKUP) //
+		      .req(MessageStatistics.class, "default", "m_statistics") //
+		      .req(MessageCodec.class, "plain-text", "m_codec")//
+		      .req(MessageQueue.class, "default", "m_queue"));
 		all.add(C(MessageReceiver.class, "tcp-socket", TcpSocketReceiver.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageCodec.class, "plain-text"));

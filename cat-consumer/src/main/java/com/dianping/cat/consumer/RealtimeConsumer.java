@@ -16,6 +16,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.logview.LogviewUploader;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -58,6 +59,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Inject
 	private AnalyzerFactory m_factory;
+
+	@Inject
+	private LogviewUploader m_uploader;
 
 	private ExecutorService m_executor;
 
@@ -137,6 +141,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		m_periodManager.setName("RealtimeConsumer-PeriodManager");
 		m_periodManager.start();
+
+		Thread uploadThread = new Thread(m_uploader);
+		
+		uploadThread.setName("LogviewUploader");
+		uploadThread.start();
 	}
 
 	public void setAnalyzers(String analyzers) {
@@ -208,10 +217,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Cat.reset();
 		}
 
-		private void uploadLogviewBuckets(Set<String> domains) {
-			
-		}
-
 		private void flushLogviewBuckets(Set<String> domains) {
 			BucketManager manager = lookup(BucketManager.class);
 
@@ -221,8 +226,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 					bucket.flush();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				m_logger.warn("Error when flushing logview bucket for domains: " + domains, e);
 			}
 		}
 
@@ -260,6 +265,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			for (Task task : m_tasks) {
 				m_executor.submit(task);
+			}
+		}
+
+		private void uploadLogviewBuckets(Set<String> domains) {
+			for (String domain : domains) {
+				m_uploader.addBucket(m_startTime, domain);
 			}
 		}
 	}

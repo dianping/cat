@@ -16,6 +16,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -102,7 +105,13 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.dump.DumpUploader</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.dump.DumpChannelManager</role>
@@ -124,9 +133,27 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
+			<implementation>com.dianping.cat.consumer.logview.LogviewUploader</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.dump.DumpUploader</role>
 			<implementation>com.dianping.cat.consumer.dump.DumpUploader</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>

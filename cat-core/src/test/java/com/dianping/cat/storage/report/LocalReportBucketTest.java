@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.util.Date;
 
 import org.junit.After;
-import org.junit.Ignore;
-import org.junit.Test;
 
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.StringBucketTestCase;
@@ -29,8 +27,4 @@ public class LocalReportBucketTest extends StringBucketTestCase {
 		new File(m_baseDir, logicalPath + ".idx").delete();
 	}
 
-	@Test
-	@Ignore
-	public void testReload() throws Exception {
-	}
 }

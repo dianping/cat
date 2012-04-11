@@ -33,7 +33,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private String m_baseDir = "target/bucket";
+	private String m_baseDir = "target/bucket/report";
 
 	// key => offset of record
 	private Map<String, Long> m_idToOffsets = new HashMap<String, Long>();

@@ -1,53 +1,42 @@
-package com.dianping.cat.consumer.dump;
+package com.dianping.cat.consumer.logview;
 
-import java.io.File;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.io.DefaultMessageQueue;
-import com.dianping.cat.message.spi.MessageAnalyzer;
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.storage.Bucket;
+import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
-public class DumpUploaderTest extends ComponentTestCase {
-	@Before
-	public void before() throws Exception {
-		ServerConfigManager manager = lookup(ServerConfigManager.class);
-
-		manager.initialize(new File("/data/appdatas/cat/server.xml"));
-	}
-
+public class LogviewUploaderTest extends ComponentTestCase {
 	@Test
-	public void testUpload() throws Exception {
-		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		long now = 1334041324150L;
-		DefaultMessageQueue queue = new DefaultMessageQueue();
-		int num = 10000;
+	public void test() throws Exception {
+		BucketManager manager = lookup(BucketManager.class);
+		LogviewUploader uploader = lookup(LogviewUploader.class);
+		long timestamp = 1334122638154L; // [04-11 13:37:18.154]
+		String domain = "test";
 
-		queue.setSize(num);
-		queue.initialize();
+		Thread thread = new Thread(uploader);
 
-		for (int i = 0; i < num; i++) {
-			queue.offer(newMessageTree(i, now + i * 10L));
+		thread.start();
+
+		Bucket<MessageTree> bucket = manager.getLogviewBucket(timestamp, domain);
+
+		for (int i = 0; i < 1000; i++) {
+			DefaultMessageTree tree = newMessageTree(i, timestamp);
+
+			bucket.storeById(tree.getMessageId(), tree);
 		}
 
-		MessageAnalyzer analyzer = factory.create("dump", now, 10 * 1000L, 10 * 1000L);
+		bucket.flush();
+		uploader.addBucket(timestamp, domain);
 
-		analyzer.analyze(queue);
-
-		analyzer.doCheckpoint(true);
-
-		DumpUploader uploader = lookup(DumpUploader.class);
-
-		uploader.upload();
+		thread.join();
 	}
 
 	private DefaultMessageTree newMessageTree(int i, long timestamp) {
@@ -78,5 +67,4 @@ public class DumpUploaderTest extends ComponentTestCase {
 		transaction.setDurationInMillis(duration);
 		return transaction;
 	}
-
 }

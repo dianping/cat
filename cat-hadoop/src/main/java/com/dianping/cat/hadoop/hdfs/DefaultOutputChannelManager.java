@@ -88,7 +88,7 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 	private OutputChannel makeChannel(String key, String id, String path, boolean forceNew) throws IOException {
 		OutputChannel channel = lookup(OutputChannel.class);
 		StringBuilder baseDir = new StringBuilder(32);
-		FileSystem fs = m_manager.getFileSystem(key, id, path, baseDir);
+		FileSystem fs = m_manager.getFileSystem(id, baseDir);
 		Path file;
 
 		if (forceNew) {
