@@ -22,52 +22,35 @@
 
 <res:useCss value="${res.css.local.problem_css}" target="head-css" />
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local.problem_js}" target="head-js" />
 
-<table class="machines">
-   <tr>
-	  <th>Machines:</th>
-   	  <c:forEach var="machine" items="${report.machines}">
-   	  		<td>&nbsp;[&nbsp; 
-   	  		<c:choose>
-				<c:when test="${model.ipAddress eq machine.value.ip}">
-					<a	href="?domain=${model.domain}&ip=${machine.value.ip}" class="current">${machine.value.ip}</a>
-   	 			</c:when>
-				<c:otherwise>
-					<a	href="?domain=${model.domain}&ip=${machine.value.ip}">${machine.value.ip}</a>
-	   	 		</c:otherwise>
-	   	 	</c:choose>
-   	 		&nbsp;]&nbsp;</td>
-		 </c:forEach>
-   </tr>
-</table>
+<%@ include file="problemTable.jsp"%>
 
-<br>
-<%@ include file="problemTable.jsp" %>
-<br>
-
+<c:if test="${model.ipAddress ne 'All'}">
 <table class="problem">
 	<tr>
 		<td title="time\group">T\G</td>
 		<c:forEach var="group" items="${model.groupLevelInfo.groups}"
-					varStatus="status">
+						varStatus="status">
 		<td title="${group}"> 
-			<a	href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group}&date=${model.date}">${w:shorten(group, 20)}</a>
+			<a
+							href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group}&date=${model.date}">${w:shorten(group, 20)}</a>
 					</td>
 		</c:forEach>
 	</tr>
 	<c:forEach var="minute" items="${model.groupLevelInfo.datas}"
-				varStatus="status">
+					varStatus="status">
 		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'}">
 			${minute}
 		</tr>
 	</c:forEach>
 </table>
 <br>
+</c:if>
 
 <table class="legend">
 </table>
 
+<res:useJs value="${res.js.local.problem_js}" target="buttom-js" />
 </jsp:body>
 
 </a:report>

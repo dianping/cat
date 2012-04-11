@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.problem;
 
 public enum JspFile {
+	
 	GROUP("/jsp/report/problemGroup.jsp"),
 
 	THREAD("/jsp/report/problemThread.jsp"),

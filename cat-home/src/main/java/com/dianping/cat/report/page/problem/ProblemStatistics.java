@@ -22,6 +22,10 @@ public class ProblemStatistics {
 
 	private String m_threadId;
 
+	private int m_threshold = ONE_SECOND;
+
+	private static final int ONE_SECOND = 1000;
+
 	public String getSubTitle() {
 		StringBuilder sb = new StringBuilder();
 		if (isEmpty(m_threadId) && isEmpty(m_groupName)) {
@@ -45,7 +49,29 @@ public class ProblemStatistics {
 		return sb.toString();
 	}
 
-	public ProblemStatistics displayAll(ProblemReport report, Model model) {
+	public ProblemStatistics displayAllIp(ProblemReport report) {
+		if (report == null) {
+			return null;
+		}
+		for (Machine machine : report.getMachines().values()) {
+			//All Ip
+			Map<String, JavaThread> threads = machine.getThreads();
+			for (JavaThread thread : threads.values()) {
+				for (Segment segment : thread.getSegments().values()) {
+					if (segment == null) {
+						continue;
+					}
+					List<Entry> entries = segment.getEntries();
+					statisticsEntries(entries, m_threshold);
+				}
+			}
+		}
+		return this;
+	}
+
+	public ProblemStatistics displayByIp(ProblemReport report, Model model, Payload payload) {
+		m_threshold = payload.getLongTime();
+
 		if (report == null) {
 			return null;
 		}
@@ -62,14 +88,14 @@ public class ProblemStatistics {
 					continue;
 				}
 				List<Entry> entries = segment.getEntries();
-				statisticsEntries(entries);
+				statisticsEntries(entries, m_threshold);
 			}
 		}
 
 		return this;
 	}
 
-	public ProblemStatistics display(ProblemReport report, Model model) {
+	public ProblemStatistics displayByGroupOrThread(ProblemReport report, Model model) {
 		Machine machine = report.getMachines().get(model.getIpAddress());
 
 		if (machine == null) {
@@ -88,10 +114,11 @@ public class ProblemStatistics {
 					continue;
 				}
 				List<Entry> entries = segment.getEntries();
-				statisticsEntries(entries);
+				statisticsEntries(entries, ONE_SECOND);
 			}
 
 		} else if (!isEmpty(m_groupName) && isEmpty(m_threadId)) {
+			// Group Level Show
 			Map<String, JavaThread> threads = machine.getThreads();
 			for (JavaThread thread : threads.values()) {
 				if (thread.getGroupName().equals(m_groupName)) {
@@ -100,12 +127,12 @@ public class ProblemStatistics {
 						continue;
 					}
 					List<Entry> entries = segment.getEntries();
-					statisticsEntries(entries);
+					statisticsEntries(entries, ONE_SECOND);
 				}
 			}
 
 		} else if (!isEmpty(m_groupName) && !isEmpty(m_threadId)) {
-			// Thread Level
+			// Thread Level Show
 			JavaThread thread = machine.getThreads().get(model.getThreadId());
 			if (thread == null) {
 				return null;
@@ -115,16 +142,21 @@ public class ProblemStatistics {
 				return null;
 			}
 			List<Entry> entries = segment.getEntries();
-			statisticsEntries(entries);
+			statisticsEntries(entries, ONE_SECOND);
 		}
 
 		return this;
 	}
 
-	private void statisticsEntries(List<Entry> entries) {
+	private void statisticsEntries(List<Entry> entries, int longTime) {
 		for (Entry entry : entries) {
 			String type = entry.getType();
 			TypeStatistics staticstics = m_status.get(type);
+
+			if (type.equals("long-url") && entry.getDuration() < longTime) {
+				// Skip the duration which duration less than longTime
+				continue;
+			}
 
 			if (staticstics != null) {
 				staticstics.add(entry, m_groupName, m_threadId);
@@ -188,13 +220,14 @@ public class ProblemStatistics {
 		}
 
 		public Map<String, StatusStatistics> getStatus() {
-			Map<String,StatusStatistics> result = MapUtils.sortMap(m_status, new Comparator<java.util.Map.Entry<String, StatusStatistics>>() {
-				@Override
-            public int compare(java.util.Map.Entry<String, StatusStatistics> o1,
-                  java.util.Map.Entry<String, StatusStatistics> o2) {
-					return o2.getValue().getCount()-o1.getValue().getCount();
-            }
-			});
+			Map<String, StatusStatistics> result = MapUtils.sortMap(m_status,
+			      new Comparator<java.util.Map.Entry<String, StatusStatistics>>() {
+				      @Override
+				      public int compare(java.util.Map.Entry<String, StatusStatistics> o1,
+				            java.util.Map.Entry<String, StatusStatistics> o2) {
+					      return o2.getValue().getCount() - o1.getValue().getCount();
+				      }
+			      });
 			return result;
 		}
 

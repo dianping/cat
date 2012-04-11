@@ -14,6 +14,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
+import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
@@ -44,16 +45,22 @@ public class Handler implements PageHandler<Context> {
 		return ip;
 	}
 
-	/*
-	 * private int getLastMinute(ProblemReport report, String ip) { Machine
-	 * machine = report.findMachine(ip); int lastMinute = 0;
-	 * 
-	 * for (JavaThread thread : machine.getThreads().values()) { for (Segment
-	 * segment : thread.getSegments().values()) { if (segment.getId() >
-	 * lastMinute) { lastMinute = segment.getId(); } } }
-	 * 
-	 * return lastMinute; }
-	 */
+	private ProblemReport getAllIpReport(Payload payload) {
+		String domain = payload.getDomain();
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("date", date);
+		;
+
+		if (m_service.isEligable(request)) {
+			ModelResponse<ProblemReport> response = m_service.invoke(request);
+			ProblemReport report = response.getModel();
+
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");
+		}
+	}
 
 	private ProblemReport getReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -90,49 +97,61 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.PROBLEM);
 		model.setDisplayDomain(payload.getDomain());
 		model.setIpAddress(payload.getIpAddress());
+		model.setThreshold(payload.getLongTime());
 
 		ProblemReport report;
-		switch (payload.getAction()) {
-		case GROUP:
-			report = showSummary(model, payload);
-			if (report != null) {
-				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
+		String ip = payload.getIpAddress();
+
+		if (ip == null || ip.length() == 0 || ip.equals("All")) {
+			model.setIpAddress("All");
+			report = getAllIpReport(payload);
+			model.setReport(report);
+			model.setAllStatistics(new ProblemStatistics().displayAllIp(report));
+		} else {
+			switch (payload.getAction()) {
+			case GROUP:
+				report = showSummary(model, payload);
+				if (report != null) {
+					model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
+				}
+				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model, payload));
+				break;
+			case THREAD:
+				String groupName = payload.getGroupName();
+
+				report = showSummary(model, payload);
+				model.setGroupName(groupName);
+
+				if (report != null) {
+					model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
+				}
+
+				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model, payload));
+				break;
+			case DETAIL:
+				showDetail(model, payload);
+				break;
 			}
-			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
-			break;
-		case THREAD:
-			String groupName = payload.getGroupName();
-
-			report = showSummary(model, payload);
-			model.setGroupName(groupName);
-
-			if (report != null) {
-				model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
-			}
-
-			model.setAllStatistics(new ProblemStatistics().displayAll(report, model));
-			break;
-		case DETAIL:
-			showDetail(model, payload);
-			break;
 		}
 
 		m_jspViewer.view(ctx, model);
 	}
 
 	private void showDetail(Model model, Payload payload) {
+		String ipAddress = payload.getIpAddress();
 		model.setLongDate(payload.getDate());
-		model.setIpAddress(payload.getIpAddress());
+		model.setIpAddress(ipAddress);
 		model.setGroupName(payload.getGroupName());
 		model.setCurrentMinute(payload.getMinute());
 		model.setThreadId(payload.getThreadId());
+
 		ProblemReport report = getReport(payload);
 
 		if (report == null) {
 			return;
 		}
 		model.setReport(report);
-		model.setProblemStatistics(new ProblemStatistics().display(report, model));
+		model.setProblemStatistics(new ProblemStatistics().displayByGroupOrThread(report, model));
 	}
 
 	private ProblemReport showSummary(Model model, Payload payload) {

@@ -17,29 +17,8 @@
 
 <res:useCss value="${res.css.local.problem_css}" target="head-css"/>
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
-<res:useJs value="${res.js.local.problem_js}" target="head-js"/>
 
-<table class="machines">
-   <tr>
-	  <th>Machines:</th>
-   	  <c:forEach var="machine" items="${report.machines}">
-   	  		<td>&nbsp;[&nbsp; 
-   	  		<c:choose>
-				<c:when test="${model.ipAddress eq machine.value.ip}">
-					<a	href="?domain=${model.domain}&ip=${machine.value.ip}" class="current">${machine.value.ip}</a>
-   	 			</c:when>
-				<c:otherwise>
-					<a	href="?domain=${model.domain}&ip=${machine.value.ip}">${machine.value.ip}</a>
-	   	 		</c:otherwise>
-	   	 	</c:choose>
-   	 		&nbsp;]&nbsp;</td>
-		 </c:forEach>
-   </tr>
-</table>
-
-<br>
 <%@ include file="problemTable.jsp" %>
-<br>
 
 <table class="problem">
 	<tr><td title="time\group">T\G</td>
@@ -64,6 +43,7 @@
 <table class="legend">
 </table>
 
+<res:useJs value="${res.js.local.problem_js}" target="head-js"/>
 </jsp:body>
 
 </a:report>

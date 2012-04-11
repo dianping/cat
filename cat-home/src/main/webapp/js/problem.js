@@ -18,6 +18,14 @@ $(document).keypress(function(e) {
 	}
 });
 
+
+$("#p_longUrl").val($("#thresholdInput").val()) ;
+
+function longTimeChange(date,domain,ip){
+	var longtime=$("#p_longUrl").val();
+	window.location.href="?domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime;
+}
+
 function alertWin(title, msg) {
 	var lastMsgObj = document.getElementById("msgObjRef");
 	if (lastMsgObj != null) {

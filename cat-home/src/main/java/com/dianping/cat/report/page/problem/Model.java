@@ -20,6 +20,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private int m_currentMinute; // for navigation
 	
+	private int m_threshold;
+	
 	private String m_groupName;
 	
 	private GroupLevelInfo m_groupLevelInfo;
@@ -159,4 +161,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setAllStatistics(ProblemStatistics allStatistics) {
    	m_allStatistics = allStatistics;
    }
+
+	public int getThreshold() {
+   	return m_threshold;
+   }
+
+	public void setThreshold(int threshold) {
+   	m_threshold = threshold;
+   }
+	
 }
