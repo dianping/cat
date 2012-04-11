@@ -21,7 +21,7 @@ import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.site.helper.Files;
 import com.site.helper.Files.AutoClose;
 import com.site.helper.Scanners;
-import com.site.helper.Scanners.IMatcher;
+import com.site.helper.Scanners.FileMatcher;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -39,7 +39,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 	private String m_baseDir = "target/dump";
 
-	private WriteJob m_job= new WriteJob();
+	private WriteJob m_job = new WriteJob();
 
 	private Logger m_logger;
 
@@ -80,17 +80,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 		File baseDir = new File(m_baseDir, "outbox");
 		final List<String> paths = new ArrayList<String>();
 
-		Scanners.forDir().scan(baseDir, new IMatcher<File>() {
-			@Override
-			public boolean isDirEligible() {
-				return false;
-			}
-
-			@Override
-			public boolean isFileElegible() {
-				return true;
-			}
-
+		Scanners.forDir().scan(baseDir, new FileMatcher() {
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
@@ -101,31 +91,28 @@ public class DumpUploader implements Initializable, LogEnabled {
 			}
 		});
 
-		if (paths == null || paths.size() == 0) {
-			return;
-		}
+		if (paths.size() > 0) {
+			for (String path : paths) {
+				File file = new File(baseDir, path);
 
-		System.out.println(paths);
-		for (String path : paths) {
-			File file = new File(baseDir, path);
+				try {
+					m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
 
-			try {
-				m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
+					FileInputStream fis = new FileInputStream(file);
+					FSDataOutputStream fdos = makeHdfsOutputStream(path);
 
-				FileInputStream fis = new FileInputStream(file);
-				FSDataOutputStream fdos = makeHdfsOutputStream(path);
+					Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
 
-				Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
+					if (!file.delete()) {
+						m_logger.warn("Can't delete file: " + file);
+					}
 
-				if (!file.delete()) {
-					m_logger.warn("Can't delete file: " + file);
+					m_logger.info(String.format("Finish uploading(%s) to HDFS(%s).", file.getCanonicalPath(), path));
+				} catch (AccessControlException e) {
+					m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
+				} catch (Exception e) {
+					m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
 				}
-
-				m_logger.info(String.format("Finish uploading(%s) to HDFS(%s).", file.getCanonicalPath(), path));
-			} catch (AccessControlException e) {
-				m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
-			} catch (Exception e) {
-				m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
 			}
 		}
 	}
@@ -139,13 +126,11 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			System.out.println("WriteJob");
-
 			try {
 				while (isActive()) {
 					upload();
 
-					Thread.sleep(1000);
+					Thread.sleep(2000);
 				}
 
 			} catch (Exception e) {
