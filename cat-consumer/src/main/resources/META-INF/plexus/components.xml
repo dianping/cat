@@ -140,6 +140,9 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
