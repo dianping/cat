@@ -307,7 +307,41 @@
 			<implementation>com.dianping.cat.consumer.logview.LogviewUploader</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.configuration.ServerConfigManager</role>
+			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+			<implementation>com.dianping.cat.hadoop.hdfs.FileSystemManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>java.lang.String</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.LogviewDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

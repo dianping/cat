@@ -49,7 +49,9 @@ public class ProblemStatistics {
 		return sb.toString();
 	}
 
-	public ProblemStatistics displayAllIp(ProblemReport report) {
+	public ProblemStatistics displayAllIp(ProblemReport report,Payload payload) {
+		m_threshold = payload.getLongTime();
+
 		if (report == null) {
 			return null;
 		}

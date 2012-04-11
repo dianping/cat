@@ -14,7 +14,6 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
-import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
@@ -106,7 +105,8 @@ public class Handler implements PageHandler<Context> {
 			model.setIpAddress("All");
 			report = getAllIpReport(payload);
 			model.setReport(report);
-			model.setAllStatistics(new ProblemStatistics().displayAllIp(report));
+			model.setLongDate(payload.getDate());
+			model.setAllStatistics(new ProblemStatistics().displayAllIp(report,payload));
 		} else {
 			switch (payload.getAction()) {
 			case GROUP:
