@@ -121,13 +121,19 @@ public class DumpUploader extends ContainerHolder implements Initializable, LogE
 			}
 		});
 
+		if (paths == null || paths.size() == 0) {
+			return;
+		}
+		m_logger.info("start uploading:" + paths.size());
+		long start = System.currentTimeMillis();
 		for (String path : paths) {
+			m_logger.info("start uploading:" + path);
 			File file = new File(baseDir, path);
 			FSDataOutputStream fdos = null;
 			FileInputStream fis = null;
 			try {
-				fdos = makeHdfsOutputStream(path);
 				fis = new FileInputStream(file);
+				fdos = makeHdfsOutputStream(path);
 				transfer(fis, fdos);
 			} catch (AccessControlException e) {
 				m_logger.error(String.format("No permission to create file(%s)!", file), e);
@@ -149,7 +155,9 @@ public class DumpUploader extends ContainerHolder implements Initializable, LogE
 				}
 			}
 			file.delete();
+			m_logger.info("finish upload :" + path);
 		}
+		m_logger.info("finish uploading, waste:" + (System.currentTimeMillis() - start));
 
 	}
 
@@ -163,15 +171,12 @@ public class DumpUploader extends ContainerHolder implements Initializable, LogE
 
 		@Override
 		public void run() {
-			long lastCheckedTime = System.currentTimeMillis();
 
 			try {
 				while (isActive()) {
 					upload();
 
-					if (System.currentTimeMillis() - lastCheckedTime >= DEFAULT_CHECK_DURATION) {
-						lastCheckedTime = System.currentTimeMillis();
-					}
+					Thread.sleep(DEFAULT_CHECK_DURATION);
 				}
 
 			} catch (Exception e) {

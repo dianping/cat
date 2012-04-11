@@ -17,7 +17,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
-public class DumpUploaderTest extends ComponentTestCase {
+public class DumpUploaderSample extends ComponentTestCase {
 	@Before
 	public void before() throws Exception {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
@@ -28,7 +28,7 @@ public class DumpUploaderTest extends ComponentTestCase {
 	@Test
 	public void testUpload() throws Exception {
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
-		long now = 1334041324150L;
+		long now = System.currentTimeMillis();
 		DefaultMessageQueue queue = new DefaultMessageQueue();
 		int num = 10000;
 
