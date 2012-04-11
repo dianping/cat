@@ -141,6 +141,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		m_periodManager.setName("RealtimeConsumer-PeriodManager");
 		m_periodManager.start();
+
+		Thread uploadThread = new Thread(m_uploader);
+		
+		uploadThread.setName("LogviewUploader");
+		uploadThread.start();
 	}
 
 	public void setAnalyzers(String analyzers) {
@@ -221,8 +226,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 					bucket.flush();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				m_logger.warn("Error when flushing logview bucket for domains: " + domains, e);
 			}
 		}
 
@@ -265,7 +270,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		private void uploadLogviewBuckets(Set<String> domains) {
 			for (String domain : domains) {
-				m_uploader.upload(m_startTime, domain);
+				m_uploader.addBucket(m_startTime, domain);
 			}
 		}
 	}

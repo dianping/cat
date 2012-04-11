@@ -6,19 +6,29 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements LogEnabled {
+public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
+	@Inject
+	private ServerConfigManager m_configManager;
+
 	@Inject
 	private MessagePathBuilder m_builder;
 
 	@Inject
 	private DumpChannelManager m_manager;
+
+	@Inject
+	private DumpUploader m_uploader;
 
 	private long m_extraTime;
 
@@ -26,13 +36,14 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	private long m_duration;
 
+	private boolean m_localMode = true;
+
 	private Logger m_logger;
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd) {
 			m_manager.closeAllChannels();
-			// TODO upload to remote HDFS
 		}
 	}
 
@@ -61,7 +72,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	protected void process(MessageTree tree) {
-		if (tree.getMessage() == null) {
+		if (m_localMode || tree.getMessage() == null) {
 			return;
 		}
 
@@ -88,5 +99,18 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		m_extraTime = extraTime;
 		m_startTime = startTime;
 		m_duration = duration;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		ServerConfig serverConfig = m_configManager.getServerConfig();
+
+		if (serverConfig != null) {
+			m_localMode = serverConfig.isLocalMode();
+		}
+
+		if (!m_localMode) {
+			m_uploader.start();
+		}
 	}
 }

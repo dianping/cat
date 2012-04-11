@@ -5,14 +5,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
-
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultBucketManager extends ContainerHolder implements BucketManager, Disposable {
+public class DefaultBucketManager extends ContainerHolder implements BucketManager {
 	@Inject
 	private MessagePathBuilder m_pathBuilder;
 
@@ -48,15 +46,6 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			e.printStackTrace();
 
 			throw e;
-		}
-	}
-
-	@Override
-	public void dispose() {
-		synchronized (m_map) {
-			for (Bucket<?> bucket : m_map.values()) {
-				release(bucket);
-			}
 		}
 	}
 

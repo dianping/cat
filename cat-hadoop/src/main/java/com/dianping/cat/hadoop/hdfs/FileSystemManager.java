@@ -29,7 +29,7 @@ public class FileSystemManager extends ContainerHolder {
 		return m_manager.getServerConfig();
 	}
 
-	public FileSystem getFileSystem(String key, String id, String path, StringBuilder baseDir) throws IOException {
+	public FileSystem getFileSystem(String id, StringBuilder baseDir) throws IOException {
 		ServerConfig config = m_manager.getServerConfig();
 		HdfsConfig hdfsConfig = config.getStorage().findHdfs(id);
 		FileSystem fs = m_fileSystems.get(id);

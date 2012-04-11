@@ -42,7 +42,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private String m_baseDir = "target/bucket";
+	private String m_baseDir = "target/bucket/logview";
 
 	// key => offset of record
 	private Map<String, Long> m_idToOffsets = new HashMap<String, Long>();
@@ -120,6 +120,71 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		return null;
 	}
 
+	public Meta getMeta(String id) {
+		Long offset = m_idToOffsets.get(id);
+
+		if (offset != null) {
+			m_readLock.lock();
+
+			try {
+				if (m_dirty.get()) {
+					flush(); // flush first if any read requesting
+				}
+
+				m_readDataFile.seek(offset);
+
+				int num = Integer.parseInt(m_readDataFile.readLine());
+				byte[] bytes = new byte[num];
+
+				m_readDataFile.readFully(bytes);
+
+				ChannelBuffer buf = ChannelBuffers.wrappedBuffer(bytes);
+				MessageTree data = m_codec.decode(buf);
+
+				return new Meta(data.getMessageId(), data.getThreadId(), offset, num);
+			} catch (Exception e) {
+				m_logger.error(String.format("Error when reading file(%s)!", m_readDataFile), e);
+			} finally {
+				m_readLock.unlock();
+			}
+		}
+
+		return null;
+	}
+
+	public static class Meta {
+		private String m_messageId;
+
+		private String m_tagThread;
+
+		private long m_offset;
+
+		private int m_legnth;
+
+		public Meta(String messageId, String tagThread, long offset, int length) {
+			m_messageId = messageId;
+			m_tagThread = tagThread;
+			m_offset = offset;
+			m_legnth = length;
+		}
+
+		public String getMessageId() {
+			return m_messageId;
+		}
+
+		public String getTagThread() {
+			return m_tagThread;
+		}
+
+		public long getOffset() {
+			return m_offset;
+		}
+
+		public int getLegnth() {
+			return m_legnth;
+		}
+	}
+
 	@Override
 	public MessageTree findNextById(String id, String tag) throws IOException {
 		List<String> ids = m_tagToIds.get(tag);
@@ -173,7 +238,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public Collection<String> getIds() {
-		throw new UnsupportedOperationException("Not supported by local logview bucket!");
+		return m_idToOffsets.keySet();
 	}
 
 	public String getLogicalPath() {
@@ -195,7 +260,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 		File dataFile = new File(m_baseDir, logicalPath);
 		File indexFile = new File(m_baseDir, logicalPath + ".idx");
-		
+
 		if (indexFile.exists()) {
 			loadIndexes(indexFile);
 		}
@@ -241,7 +306,6 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 			m_writeLock.unlock();
 		}
 	}
-
 
 	@Override
 	public boolean storeById(String id, MessageTree tree) throws IOException {

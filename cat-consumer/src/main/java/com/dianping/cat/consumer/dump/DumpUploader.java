@@ -18,9 +18,10 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
+import com.site.helper.Files;
+import com.site.helper.Files.AutoClose;
 import com.site.helper.Scanners;
 import com.site.helper.Scanners.IMatcher;
-import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -29,19 +30,18 @@ import com.site.lookup.annotation.Inject;
  * @author sean.wang
  * @since Apr 10, 2012
  */
-public class DumpUploader extends ContainerHolder implements Initializable, LogEnabled {
-	private static final int DEFAULT_CHECK_DURATION = 5 * 1000; // ms
-
-	private String m_baseDir = "target/dump";
+public class DumpUploader implements Initializable, LogEnabled {
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	@Inject
 	private FileSystemManager m_fileSystemManager;
 
+	private String m_baseDir = "target/dump";
+
+	private WriteJob m_job= new WriteJob();
+
 	private Logger m_logger;
-
-	private Thread m_thread;
-
-	private WriteJob m_job;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -50,56 +50,36 @@ public class DumpUploader extends ContainerHolder implements Initializable, LogE
 
 	@Override
 	public void initialize() throws InitializationException {
-		ServerConfigManager configManager = lookup(ServerConfigManager.class);
-		ServerConfig serverConfig = configManager.getServerConfig();
+		ServerConfig serverConfig = m_configManager.getServerConfig();
 
 		if (serverConfig != null) {
 			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
-		}
-
-		m_job = new WriteJob();
-
-		Thread thread = new Thread(m_job);
-		thread.setName("MessageDumpToHdfs");
-		thread.start();
-
-		m_thread = thread;
-	}
-
-	public void dispose() {
-		m_job.shutdown();
-
-		try {
-			m_thread.join();
-		} catch (InterruptedException e) {
 		}
 	}
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
 		StringBuilder baseDir = new StringBuilder(32);
 		String id = "dump";
-		String key = id + ":" + path;
-		FileSystem fs = m_fileSystemManager.getFileSystem(key, id, path, baseDir);
+		FileSystem fs = m_fileSystemManager.getFileSystem(id, baseDir);
 		Path file = new Path(baseDir.toString(), path);
 		FSDataOutputStream out = fs.create(file);
 
 		return out;
 	}
 
-	private void transfer(FileInputStream fis, FSDataOutputStream fdos) throws IOException {
-		byte[] buffer = new byte[10 * 1024];
-		int byteRead = -1;
-
-		while ((byteRead = fis.read(buffer)) != -1) {
-			fdos.write(buffer, 0, byteRead);
+	public void start() {
+		if (!m_job.isAlive()) {
+			m_job.setName("DumpUploader");
+			m_job.start();
 		}
-
-		fdos.flush();
 	}
 
 	public void upload() {
+		m_logger.info("Scanning ");
+
 		File baseDir = new File(m_baseDir, "outbox");
 		final List<String> paths = new ArrayList<String>();
+
 		Scanners.forDir().scan(baseDir, new IMatcher<File>() {
 			@Override
 			public boolean isDirEligible() {
@@ -124,45 +104,33 @@ public class DumpUploader extends ContainerHolder implements Initializable, LogE
 		if (paths == null || paths.size() == 0) {
 			return;
 		}
-		m_logger.info("start uploading:" + paths.size());
-		long start = System.currentTimeMillis();
-		for (String path : paths) {
-			m_logger.info("start uploading:" + path);
-			File file = new File(baseDir, path);
-			FSDataOutputStream fdos = null;
-			FileInputStream fis = null;
-			try {
-				fis = new FileInputStream(file);
-				fdos = makeHdfsOutputStream(path);
-				transfer(fis, fdos);
-			} catch (AccessControlException e) {
-				m_logger.error(String.format("No permission to create file(%s)!", file), e);
-			} catch (IOException e) {
-				m_logger.error("Transfer file to hdfs fail!", e);
-				continue;
-			} finally {
-				try {
-					if (fdos != null) {
-						fdos.close();
-					}
-				} catch (IOException e) {
-				}
-				try {
-					if (fis != null) {
-						fis.close();
-					}
-				} catch (IOException e) {
-				}
-			}
-			file.delete();
-			m_logger.info("finish upload :" + path);
-		}
-		m_logger.info("finish uploading, waste:" + (System.currentTimeMillis() - start));
 
+		System.out.println(paths);
+		for (String path : paths) {
+			File file = new File(baseDir, path);
+
+			try {
+				m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
+
+				FileInputStream fis = new FileInputStream(file);
+				FSDataOutputStream fdos = makeHdfsOutputStream(path);
+
+				Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
+
+				if (!file.delete()) {
+					m_logger.warn("Can't delete file: " + file);
+				}
+
+				m_logger.info(String.format("Finish uploading(%s) to HDFS(%s).", file.getCanonicalPath(), path));
+			} catch (AccessControlException e) {
+				m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
+			} catch (Exception e) {
+				m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
+			}
+		}
 	}
 
-	private class WriteJob implements Runnable {
-
+	class WriteJob extends Thread {
 		private volatile boolean m_active = true;
 
 		private boolean isActive() {
@@ -171,18 +139,18 @@ public class DumpUploader extends ContainerHolder implements Initializable, LogE
 
 		@Override
 		public void run() {
+			System.out.println("WriteJob");
 
 			try {
 				while (isActive()) {
 					upload();
 
-					Thread.sleep(DEFAULT_CHECK_DURATION);
+					Thread.sleep(1000);
 				}
 
 			} catch (Exception e) {
 				m_logger.warn("Error when dumping message to HDFS.", e);
 			}
-
 		}
 
 		public void shutdown() {

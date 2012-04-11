@@ -29,9 +29,8 @@ public class DefaultInputChannelManager extends ContainerHolder implements Input
 
 	@Override
 	public InputChannel openChannel(String id, String path) throws IOException {
-		String key = id + ":" + path;
 		StringBuilder baseDir = new StringBuilder(32);
-		FileSystem fs = m_manager.getFileSystem(key, id, path, baseDir);
+		FileSystem fs = m_manager.getFileSystem(id, baseDir);
 		Path file = new Path(baseDir.toString(), path);
 
 		FSDataInputStream in = fs.open(file);
