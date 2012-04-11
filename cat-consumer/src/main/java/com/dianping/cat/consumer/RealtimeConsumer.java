@@ -147,7 +147,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			uploadThread.setName("LogviewUploader");
 			uploadThread.start();
-			System.out.println("LogviewUploader started.");
+
+			m_logger.info("LogviewUploader started.");
 		}
 	}
 

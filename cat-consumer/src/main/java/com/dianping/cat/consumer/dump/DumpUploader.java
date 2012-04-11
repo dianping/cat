@@ -71,6 +71,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 		if (!m_job.isAlive()) {
 			m_job.setName("DumpUploader");
 			m_job.start();
+			m_logger.info("DumpUploader started.");
 		}
 	}
 

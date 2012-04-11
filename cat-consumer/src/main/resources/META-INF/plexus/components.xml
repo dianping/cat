@@ -5,10 +5,6 @@
 			<implementation>com.dianping.cat.consumer.DefaultAnalyzerFactory</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
-			<implementation>com.dianping.cat.consumer.logview.LogviewUploader</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>realtime</role-hint>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
@@ -141,7 +137,28 @@
 			<implementation>com.dianping.cat.consumer.dump.DumpUploader</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
+			<implementation>com.dianping.cat.consumer.logview.LogviewUploader</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>
 			</requirements>
 		</component>
