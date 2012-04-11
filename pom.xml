@@ -4,37 +4,37 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.2.1</version>
+	<version>0.2.2</version>
 	<name>Tracking</name>
 	<packaging>pom</packaging>
 	<modules>
 		<module>cat-core</module>
 		<module>cat-hadoop</module>
 		<module>cat-consumer</module>
-		<module>cat-home</module>
 		<module>cat-job</module>
+		<module>cat-home</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-core</artifactId>
-				<version>0.2.1</version>
+				<version>0.2.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-hadoop</artifactId>
-				<version>0.2.1</version>
+				<version>0.2.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-consumer</artifactId>
-				<version>0.2.1</version>
+				<version>0.2.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-job</artifactId>
-				<version>0.2.1</version>
+				<version>0.2.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.site.common</groupId>

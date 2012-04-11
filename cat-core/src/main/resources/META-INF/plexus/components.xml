@@ -1,6 +1,10 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.configuration.ServerConfigManager</role>
+			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.io.InMemoryQueue</role>
 			<implementation>com.dianping.cat.message.io.InMemoryQueue</implementation>
 		</component>

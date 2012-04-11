@@ -30,7 +30,7 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private String m_baseDir = "target/bucket";
+	private String m_baseDir = "target/bucket/dump";
 
 	private ReentrantLock m_writeLock;
 

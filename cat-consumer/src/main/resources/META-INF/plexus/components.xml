@@ -16,6 +16,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -122,6 +125,10 @@
 					<role-hint>plain-text</role-hint>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
+			<implementation>com.dianping.cat.consumer.logview.LogviewUploader</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.dump.DumpUploader</role>
