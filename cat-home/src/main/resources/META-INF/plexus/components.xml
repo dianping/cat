@@ -61,7 +61,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
-						<role-hint>transaction-local</role-hint>
 						<role-hint>transaction-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
@@ -103,7 +102,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
-						<role-hint>event-local</role-hint>
 						<role-hint>event-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
@@ -145,7 +143,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
-						<role-hint>problem-local</role-hint>
 						<role-hint>problem-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
@@ -187,7 +184,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
-						<role-hint>ip-local</role-hint>
 						<role-hint>ip-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>

@@ -11,7 +11,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
@@ -31,6 +30,8 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	private ExecutorService m_threadPool;
 
 	private String m_name;
+
+	private String m_remoteServers;
 
 	// introduce another list is due to a bug inside Plexus ComponentList
 	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
@@ -54,13 +55,31 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		ServerConfig serverConfig = manager.getServerConfig();
 
 		try {
+			String remoteServers = m_remoteServers;
+
 			if (serverConfig != null) {
 				ConsoleConfig console = serverConfig.getConsole();
-				String remoteServers = console.getRemoteServers();
 
-				if (remoteServers != null && remoteServers.length() > 0) {
-					setRemoteServers(remoteServers);
+				if (console.getRemoteServers() != null && console.getRemoteServers().length() > 0) {
+					remoteServers = console.getRemoteServers();
 				}
+			}
+
+			if (remoteServers == null || remoteServers.length() == 0) {
+				remoteServers = "127.0.0.1:2281";
+			}
+
+			List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
+
+			for (String endpoint : endpoints) {
+				int pos = endpoint.indexOf(':');
+				String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+				int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
+				BaseRemoteModelService<T> remote = createRemoteService();
+
+				remote.setHost(host);
+				remote.setPort(port);
+				m_allServices.add(remote);
 			}
 		} finally {
 			release(manager);
@@ -122,7 +141,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 		ModelResponse<T> aggregated = new ModelResponse<T>();
 		T report = merge(request, responses);
-		
+
 		aggregated.setModel(report);
 		return aggregated;
 	}
@@ -150,31 +169,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	 *           server list separated by comma(',')
 	 */
 	public void setRemoteServers(String servers) {
-		List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(servers);
-		String localAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		String localHost = NetworkInterfaceManager.INSTANCE.getLocalHostName();
-
-		for (String endpoint : endpoints) {
-			int pos = endpoint.indexOf(':');
-			String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
-			int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
-
-			if (port == 2281) {
-				if ("localhost".equals(host) || host.startsWith("127.0.")) {
-					// exclude localhost
-					continue;
-				} else if (host.equals(localAddress) || host.equals(localHost)) {
-					// exclude itself
-					continue;
-				}
-			}
-
-			BaseRemoteModelService<T> remote = createRemoteService();
-
-			remote.setHost(host);
-			remote.setPort(port);
-			m_allServices.add(remote);
-		}
+		m_remoteServers = servers;
 	}
 
 	public void setSerivces(ModelService<T>... services) {

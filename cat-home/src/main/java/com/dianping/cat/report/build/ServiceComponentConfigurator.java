@@ -39,7 +39,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "transaction", CompositeTransactionService.class) //
-		      .req(ModelService.class, new String[] { "transaction-local", "transaction-historical" }, "m_services"));
+		      .req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "event-local", LocalEventService.class) //
 		      .req(BucketManager.class) //
@@ -47,7 +47,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "event", CompositeEventService.class) //
-		      .req(ModelService.class, new String[] { "event-local", "event-historical" }, "m_services"));
+		      .req(ModelService.class, new String[] { "event-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
 		      .req(BucketManager.class) //
@@ -55,7 +55,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //
-		      .req(ModelService.class, new String[] { "problem-local", "problem-historical" }, "m_services"));
+		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
 		      .req(BucketManager.class) //
@@ -63,7 +63,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "ip-historical", HistoricalIpService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "ip", CompositeIpService.class) //
-		      .req(ModelService.class, new String[] { "ip-local", "ip-historical" }, "m_services"));
+		      .req(ModelService.class, new String[] { "ip-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 		      .req(MessageConsumer.class, "realtime") //
