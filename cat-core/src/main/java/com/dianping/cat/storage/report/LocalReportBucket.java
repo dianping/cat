@@ -160,6 +160,10 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 	public String getLogicalPath() {
 		return m_logicalPath;
 	}
+	
+	public String getBaseDir() {
+		return m_baseDir;
+	}
 
 	@Override
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {

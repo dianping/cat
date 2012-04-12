@@ -244,6 +244,10 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	public String getLogicalPath() {
 		return m_logicalPath;
 	}
+	
+	public String getBaseDir() {
+		return m_baseDir;
+	}
 
 	@Override
 	public void initialize(Class<?> type, String domain, Date timestamp) throws IOException {
