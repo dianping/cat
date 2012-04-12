@@ -54,6 +54,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
 		      .setProperty("type", type) //
+		      .setProperty("name", "*") //
 		      .setProperty("all", "true");
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();

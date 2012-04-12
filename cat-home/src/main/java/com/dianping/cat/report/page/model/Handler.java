@@ -125,6 +125,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				// skip it
 			} else if (m_name != null && name.getId().equals(m_name)) {
 				super.visitName(name);
+			} else if ("*".equals(m_name)) {
+				super.visitName(name);
 			} else {
 				super.visitName(name);
 			}
@@ -207,6 +209,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			if (m_type == null) {
 				// skip it
 			} else if (m_name != null && name.getId().equals(m_name)) {
+				super.visitName(name);
+			} else if ("*".equals(m_name)) {
 				super.visitName(name);
 			} else {
 				super.visitName(name);

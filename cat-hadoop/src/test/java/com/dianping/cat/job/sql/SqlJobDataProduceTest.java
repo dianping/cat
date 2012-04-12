@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.hadoop.hdfs.HdfsMessageStorage;
 import com.dianping.cat.job.hdfs.CatTestCase;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -82,6 +81,5 @@ public class SqlJobDataProduceTest extends CatTestCase {
 				storage.store(tree);
 			}
 		}
-		((HdfsMessageStorage) storage).dispose();
 	}
 }

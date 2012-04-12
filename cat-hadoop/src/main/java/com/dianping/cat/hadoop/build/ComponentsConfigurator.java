@@ -9,14 +9,11 @@ import com.dianping.cat.hadoop.hdfs.DefaultInputChannelManager;
 import com.dianping.cat.hadoop.hdfs.DefaultOutputChannel;
 import com.dianping.cat.hadoop.hdfs.DefaultOutputChannelManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
-import com.dianping.cat.hadoop.hdfs.HdfsMessageStorage;
 import com.dianping.cat.hadoop.hdfs.InputChannel;
 import com.dianping.cat.hadoop.hdfs.InputChannelManager;
 import com.dianping.cat.hadoop.hdfs.OutputChannel;
 import com.dianping.cat.hadoop.hdfs.OutputChannelManager;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessagePathBuilder;
-import com.dianping.cat.message.spi.MessageStorage;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -36,10 +33,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(InputChannelManager.class, DefaultInputChannelManager.class) //
 		      .req(FileSystemManager.class));
-
-		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
-		      .req(OutputChannelManager.class) //
-		      .req(MessagePathBuilder.class));
 
 		all.addAll(new DatabaseConfigurator().defineComponents());
 

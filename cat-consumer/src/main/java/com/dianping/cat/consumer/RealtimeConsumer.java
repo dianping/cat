@@ -71,6 +71,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private PeriodManager m_periodManager;
 
+	private long m_lastTime = 0;
+
 	@Override
 	public void consume(MessageTree tree) {
 		long timestamp = tree.getMessage().getTimestamp();
@@ -85,7 +87,13 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				m_domains.add(domain);
 			}
 		} else {
-			m_logger.warn("The timestamp of message is out of range, IGNORED! \r\n" + tree);
+			long now = System.currentTimeMillis();
+
+			// ensure not output too much, and then run out of disk
+			if (now - m_lastTime > 1000L) {
+				m_lastTime = now;
+				m_logger.warn("The timestamp of message is out of range, IGNORED! \r\n" + tree);
+			}
 		}
 	}
 
@@ -325,6 +333,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			long startTime = now - now % m_duration;
 			long lastStartTime = startTime;
 
+			// for current period
 			startPeriod(startTime);
 
 			try {
