@@ -94,4 +94,9 @@ public enum NullMessage implements Transaction, Event, Heartbeat {
 	public long getDurationInMicros() {
 		return 0;
 	}
+
+	@Override
+   public boolean isStandalone() {
+	   return true;
+   }
 }

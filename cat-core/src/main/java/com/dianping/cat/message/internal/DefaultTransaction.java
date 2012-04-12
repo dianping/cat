@@ -15,10 +15,13 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	private MessageManager m_manager;
 
+	private boolean m_standalone;
+
 	public DefaultTransaction(String type, String name, MessageManager manager) {
 		super(type, name);
 
 		m_manager = manager;
+		m_standalone = true;
 	}
 
 	@Override
@@ -71,10 +74,12 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 			if (len > 0) {
 				Message lastChild = m_children.get(len - 1);
 
-				duration = lastChild.getTimestamp() - getTimestamp();
-
 				if (lastChild instanceof Transaction) {
-					duration += ((Transaction) lastChild).getDurationInMillis();
+					DefaultTransaction trx = (DefaultTransaction) lastChild;
+
+					duration = trx.getTimestampInMicros() + trx.getDurationInMicros() - getTimestampInMicros();
+				} else {
+					duration = lastChild.getTimestamp() * 1000L - getTimestampInMicros();
 				}
 			}
 
@@ -92,11 +97,20 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		return m_children != null && m_children.size() > 0;
 	}
 
+	@Override
+	public boolean isStandalone() {
+		return m_standalone;
+	}
+
 	public void setDurationInMicros(long duration) {
 		m_durationInMicro = duration;
 	}
 
 	public void setDurationInMillis(long duration) {
 		m_durationInMicro = duration * 1000L;
+	}
+
+	public void setStandalone(boolean standalone) {
+		m_standalone = standalone;
 	}
 }

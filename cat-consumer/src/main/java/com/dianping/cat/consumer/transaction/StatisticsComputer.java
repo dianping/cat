@@ -6,6 +6,12 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
 public class StatisticsComputer extends BaseVisitor {
+	double std(long count, double avg, double sum2) {
+		double value = sum2 / count - avg * avg;
+
+		return count <= 1 ? 0 : Math.sqrt(value);
+	}
+
 	@Override
 	public void visitName(TransactionName name) {
 		super.visitName(name);
@@ -47,9 +53,5 @@ public class StatisticsComputer extends BaseVisitor {
 			type.setAvg(avg);
 			type.setStd(std);
 		}
-	}
-
-	double std(long count, double avg, double sum2) {
-		return Math.sqrt(sum2 / count - avg * avg);
 	}
 }

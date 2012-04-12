@@ -72,7 +72,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	public void end(Transaction transaction) {
 		Context ctx = getContext();
 
-		if (ctx != null) {
+		if (ctx != null && transaction.isStandalone()) {
 			ctx.end(this, transaction);
 		}
 	}
@@ -265,7 +265,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					validateTransaction(current);
 				} else {
 					while (transaction != current && !m_stack.empty()) {
-						// validateTransaction(current);
+						validateTransaction(current);
 
 						current = m_stack.pop();
 					}
@@ -303,22 +303,22 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		void validateTransaction(Transaction transaction) {
+			if (!transaction.isStandalone()) {
+				return;
+			}
+
 			List<Message> children = transaction.getChildren();
 			int len = children.size();
 
 			for (int i = 0; i < len; i++) {
 				Message message = children.get(i);
 
-				if (message.getStatus() == null) {
-					message.setStatus("unset");
-				}
-
 				if (message instanceof Transaction) {
 					validateTransaction((Transaction) message);
 				}
 			}
 
-			if (!transaction.isCompleted() && transaction instanceof DefaultTransaction) {
+			if (!transaction.isCompleted() && transaction.isStandalone() && transaction instanceof DefaultTransaction) {
 				// missing transaction end, log a BadInstrument event so that
 				// developer can fix the code
 				DefaultEvent notCompleteEvent = new DefaultEvent("CAT", "BadInstrument");

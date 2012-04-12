@@ -57,7 +57,7 @@ public interface Transaction extends Message {
 	 * @return all children messages, empty if there is no nested children.
 	 */
 	public List<Message> getChildren();
-	
+
 	/**
 	 * How long the transaction took from construction to complete. Time unit is
 	 * microsecond.
@@ -73,11 +73,19 @@ public interface Transaction extends Message {
 	 * @return duration time in millisecond
 	 */
 	public long getDurationInMillis();
-	
+
 	/**
-	 * Has children.
+	 * Has children or not. An atomic transaction does not have any children
+	 * message.
 	 * 
 	 * @return true if child exists, else false.
 	 */
 	public boolean hasChildren();
+
+	/**
+	 * Check if the transaction is stand-alone or belongs to another one.
+	 * 
+	 * @return true if it's an root transaction.
+	 */
+	public boolean isStandalone();
 }

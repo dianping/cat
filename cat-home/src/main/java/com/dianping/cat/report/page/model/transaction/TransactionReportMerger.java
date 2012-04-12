@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
 public class TransactionReportMerger extends DefaultMerger {
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
-		
+
 		transactionReport.accept(new StatisticsComputer());
 	}
 
@@ -106,7 +106,9 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
-	protected double std(long count, double ave, double sum2) {
-		return Math.sqrt(sum2 / count - ave * ave);
+	protected double std(long count, double avg, double sum2) {
+		double value = sum2 / count - avg * avg;
+
+		return count <= 1 ? 0 : Math.sqrt(value);
 	}
 }
