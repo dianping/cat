@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.security.SecurityUtil;
+import org.apache.hadoop.security.UserGroupInformation;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -94,7 +95,7 @@ public class FileSystemManager implements Initializable {
 				      getValue(properties.get("java.security.krb5.realm"), "DIANPING.COM"));
 				System.setProperty("java.security.krb5.kdc",
 				      getValue(properties.get("java.security.krb5.kdc"), "192.168.7.80"));
-
+				UserGroupInformation.setConfiguration(config);
 				SecurityUtil.login(config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
 			}
 		}
