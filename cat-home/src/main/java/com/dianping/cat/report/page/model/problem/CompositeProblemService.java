@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.model.problem;
 import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.DefaultMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.internal.BaseCompositeModelService;
@@ -21,7 +20,7 @@ public class CompositeProblemService extends BaseCompositeModelService<ProblemRe
 
 	@Override
 	protected ProblemReport merge(ModelRequest request, List<ModelResponse<ProblemReport>> responses) {
-		DefaultMerger merger = null;
+		ProblemReportMerger merger = null;
 
 		for (ModelResponse<ProblemReport> response : responses) {
 			if (response != null) {
@@ -29,7 +28,7 @@ public class CompositeProblemService extends BaseCompositeModelService<ProblemRe
 
 				if (model != null) {
 					if (merger == null) {
-						merger = new DefaultMerger(model);
+						merger = new ProblemReportMerger(model);
 					} else {
 						model.accept(merger);
 					}
