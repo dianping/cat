@@ -32,7 +32,7 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 
 	private long m_lastChunkAdjust = 100 * 1024L; // 100K
 
-	private String m_baseDir = "target/dump";
+	private String m_baseDir = "target/bucket/dump";
 
 	private Logger m_logger;
 
@@ -68,7 +68,7 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 			StorageConfig storage = config.getStorage();
 			HdfsConfig hdfsConfig = storage.findHdfs("dump");
 
-			m_baseDir = storage.getLocalBaseDir();
+			m_baseDir = storage.getLocalBaseDir() + "/dump";
 			m_maxSize = toLong(hdfsConfig == null ? null : hdfsConfig.getMaxSize(), DEFAULT_MAX_SIZE);
 		}
 	}

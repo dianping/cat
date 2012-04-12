@@ -53,7 +53,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 		ServerConfig serverConfig = m_configManager.getServerConfig();
 
 		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/dump";
 		}
 	}
 

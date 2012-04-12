@@ -89,7 +89,7 @@ public class LocalMessageBucket implements Bucket<MessageTree> {
 		ServerConfig serverConfig = m_configManager.getServerConfig();
 
 		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/dump";
 		}
 
 		m_writeLock = new ReentrantLock();

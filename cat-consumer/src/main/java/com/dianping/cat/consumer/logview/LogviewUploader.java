@@ -69,7 +69,7 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 		ServerConfig serverConfig = m_configManager.getServerConfig();
 
 		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/logview";
 			m_localMode = serverConfig.getLocalMode();
 		}
 

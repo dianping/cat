@@ -244,7 +244,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	public String getLogicalPath() {
 		return m_logicalPath;
 	}
-	
+
 	public String getBaseDir() {
 		return m_baseDir;
 	}
@@ -254,7 +254,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		ServerConfig serverConfig = m_configManager.getServerConfig();
 
 		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/logview";
 		}
 
 		m_writeLock = new ReentrantLock();

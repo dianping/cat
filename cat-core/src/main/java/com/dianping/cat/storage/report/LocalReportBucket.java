@@ -160,7 +160,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 	public String getLogicalPath() {
 		return m_logicalPath;
 	}
-	
+
 	public String getBaseDir() {
 		return m_baseDir;
 	}
@@ -170,7 +170,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 		ServerConfig serverConfig = m_configManager.getServerConfig();
 
 		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/report";
 		}
 
 		m_writeLock = new ReentrantLock();
