@@ -21,11 +21,11 @@
 <table class="transaction">
 	<c:choose>
 		<c:when test="${empty payload.type}">
-		<tr><th><a href="?domain=${model.domain}&date=${model.date}&sort=type"> Type</a></th>
+		<tr><th><a href="?domain=${model.domain}&date=${model.date}&sort=type">Type</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=failure">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
+			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th><th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th><th>Std(ms)</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -35,18 +35,21 @@
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
-					<td>${w:format(e.min,'0.#')}/${w:format(e.max,'0.#')}/${w:format(e.avg,'0.0')}/${w:format(e.std,'0.0')}</td>
+					<td>${w:format(e.min,'0.#')}</td>
+					<td>${w:format(e.max,'0.#')}</td>
+					<td>${w:format(e.avg,'0.0')}</td>
+					<td>${w:format(e.std,'0.0')}</td>
 				</tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
 			<tr>
 			<th><a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
-			<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=type"> Name</a></th>
+			<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=type">Name</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=failure">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min/Max/Avg/Std(ms)</th></tr>
+			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th><th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg">Avg</a>(ms)</th><th>Std(ms)</th></tr>
 			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
@@ -57,7 +60,10 @@
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
-					<td>${w:format(e.min,'0.#')}/${w:format(e.max,'0.#')}/${w:format(e.avg,'0.0')}/${w:format(e.std,'0.0')}</td>
+					<td>${w:format(e.min,'0.#')}</td>
+					<td>${w:format(e.max,'0.#')}</td>
+					<td>${w:format(e.avg,'0.0')}</td>
+					<td>${w:format(e.std,'0.0')}</td>
 				</tr>
 				<tr class="graphs"><td colspan="6"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>

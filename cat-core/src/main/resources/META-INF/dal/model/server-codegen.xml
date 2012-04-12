@@ -23,7 +23,6 @@
     <attribute name="value" value-type="String" />
   </entity>
   <entity name="consumer">
-    <attribute name="local-mode" value-type="boolean" />
     <entity-ref name="long-url" />
   </entity>
   <entity name="long-url">

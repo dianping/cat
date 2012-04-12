@@ -25,6 +25,10 @@
 		<url-pattern>/r/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
+		<servlet-name>mvc-servlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>cat-servlet</servlet-name>
 		<url-pattern>/s/*</url-pattern>
 	</servlet-mapping>

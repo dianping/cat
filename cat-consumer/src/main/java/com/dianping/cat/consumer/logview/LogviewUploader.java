@@ -53,6 +53,8 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 
 	private Logger m_logger;
 
+	private boolean m_localMode = true;
+
 	public void addBucket(long timestamp, String domain) {
 		m_todoList.offer(timestamp + ":" + domain);
 	}
@@ -68,9 +70,15 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 
 		if (serverConfig != null) {
 			m_baseDir = serverConfig.getStorage().getLocalBaseDir();
+			m_localMode = serverConfig.getLocalMode();
 		}
 
 		m_todoList = new TodoList(new File(m_baseDir, "TODO"), m_logger);
+	}
+
+	// TODO temporary way
+	public boolean isLocalMode() {
+		return m_localMode;
 	}
 
 	@Override
@@ -91,6 +99,8 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 
 					throw e;
 				}
+
+				Thread.sleep(100);
 			}
 		} catch (Exception e) {
 			m_logger.error("Error when uploading bucket.", e);

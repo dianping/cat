@@ -73,6 +73,9 @@ public class DisplayTransactionReport {
 			if (m_sorted.equals("failurePercent")) {
 				return (int) (m2.getDetail().getFailPercent() * 100 - m1.getDetail().getFailPercent() * 100);
 			}
+			if (m_sorted.equals("avg")) {
+				return (int) (m2.getDetail().getAvg() * 100 - m1.getDetail().getAvg() * 100);
+			}
 			return 0;
 		}
 	}

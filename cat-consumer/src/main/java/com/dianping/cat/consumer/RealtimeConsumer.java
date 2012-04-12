@@ -142,7 +142,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_periodManager.setName("RealtimeConsumer-PeriodManager");
 		m_periodManager.start();
 
-		if (m_uploader != null) {
+		if (m_uploader != null && !m_uploader.isLocalMode()) {
 			Thread uploadThread = new Thread(m_uploader);
 
 			uploadThread.setName("LogviewUploader");

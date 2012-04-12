@@ -35,6 +35,10 @@ public class ServerConfigManager implements LogEnabled {
 			config.accept(new ServerConfigValidator());
 			m_config = config;
 		}
+
+		if (m_config.isLocalMode()) {
+			m_logger.warn("CAT server is running in LOCAL mode! No HDFS and MySQL will be accessed!");
+		}
 	}
 
 	public ServerConfig getServerConfig() {

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.dal.LogviewDao;
-import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.hdfs.DefaultInputChannel;
 import com.dianping.cat.hadoop.hdfs.DefaultInputChannelManager;
 import com.dianping.cat.hadoop.hdfs.DefaultOutputChannel;
@@ -16,13 +14,9 @@ import com.dianping.cat.hadoop.hdfs.InputChannel;
 import com.dianping.cat.hadoop.hdfs.InputChannelManager;
 import com.dianping.cat.hadoop.hdfs.OutputChannel;
 import com.dianping.cat.hadoop.hdfs.OutputChannelManager;
-import com.dianping.cat.hadoop.storage.RemoteMessageBucket;
-import com.dianping.cat.hadoop.storage.RemoteStringBucket;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.storage.Bucket;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -46,14 +40,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageStorage.class, "hdfs", HdfsMessageStorage.class) //
 		      .req(OutputChannelManager.class) //
 		      .req(MessagePathBuilder.class));
-
-		all.add(C(Bucket.class, String.class.getName() + "-remote", RemoteStringBucket.class) //
-		      .is(PER_LOOKUP) //
-		      .req(ReportDao.class));
-		all.add(C(Bucket.class, MessageTree.class.getName() + "-remote", RemoteMessageBucket.class) //
-		      .is(PER_LOOKUP) //
-		      .req(OutputChannelManager.class, InputChannelManager.class) //
-		      .req(LogviewDao.class, MessagePathBuilder.class));
 
 		all.addAll(new DatabaseConfigurator().defineComponents());
 
