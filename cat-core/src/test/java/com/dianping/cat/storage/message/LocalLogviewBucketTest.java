@@ -21,11 +21,11 @@ public class LocalLogviewBucketTest extends MesageTreeBucketTestCase {
 		bucket.initialize(null, "cat", new Date());
 		return bucket;
 	}
-	
+
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
-		String m_baseDir = "target/bucket";
+		String m_baseDir = ((LocalLogviewBucket) this.bucket).getBaseDir();
 		String logicalPath = ((LocalLogviewBucket) this.bucket).getLogicalPath();
 		new File(m_baseDir, logicalPath).delete();
 		new File(m_baseDir, logicalPath + ".idx").delete();

@@ -150,7 +150,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 			long d = Long.parseLong(duration.substring(0, duration.length() - 2));
 
-			if (tree.getDomain().equals("MobileApi")) { //TODO remove it after MobileApi upgrade
+			if ("MobileApi".equals(tree.getDomain())) { //TODO remove it after MobileApi upgrade
 				transaction.setDurationInMillis(d);
 			} else {
 				transaction.setDurationInMicros(d);
@@ -173,7 +173,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 			long d = Long.parseLong(duration.substring(0, duration.length() - 2));
 
-			if (tree.getDomain().equals("MobileApi")) {  //TODO remove it after MobileApi upgrade
+			if ("MobileApi".equals(tree.getDomain())) {  //TODO remove it after MobileApi upgrade
 				parent.setDurationInMillis(d);
 			} else {
 				parent.setDurationInMicros(d);
