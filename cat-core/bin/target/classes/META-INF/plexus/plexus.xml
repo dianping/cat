@@ -1,0 +1,8 @@
+<plexus>
+	<components>
+		<component>
+			<role>org.codehaus.plexus.logging.LoggerManager</role>
+			<implementation>com.site.lookup.logger.TimedConsoleLoggerManager</implementation>
+		</component>
+	</components>
+</plexus>

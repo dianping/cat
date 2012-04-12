@@ -20,6 +20,10 @@ public class DisplayEventReport {
 	}
 
 	public DisplayEventReport display(String sorted, EventReport report) {
+		if(report==null){
+			return this;
+		}
+		
 		Map<String, EventType> types = report.getTypes();
 		if (types != null) {
 			for (Entry<String, EventType> entry : types.entrySet()) {

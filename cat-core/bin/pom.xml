@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<parent>
+		<groupId>com.dianping.cat</groupId>
+		<artifactId>parent</artifactId>
+		<version>0.2.2</version>
+	</parent>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>cat-core</artifactId>
+	<name>CAT Core</name>
+	<dependencies>
+		<dependency>
+			<groupId>com.site.common</groupId>
+			<artifactId>lookup</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.netty</groupId>
+			<artifactId>netty</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.site.common</groupId>
+			<artifactId>test-framework</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.site.maven.plugins</groupId>
+				<artifactId>maven-codegen-plugin</artifactId>
+				<version>1.0.15</version>
+				<executions>
+					<execution>
+						<id>generate configuration model</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml
+							</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate server configuration model</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-cli</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml
+							</manifest>
+						</configuration>
+					</execution>
+					<execution>
+						<id>generate plexus component descriptor</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>plexus</goal>
+						</goals>
+						<configuration>
+							<className>com.dianping.cat.build.ComponentsConfigurator</className>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
