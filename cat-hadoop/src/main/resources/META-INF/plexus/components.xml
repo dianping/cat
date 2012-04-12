@@ -63,6 +63,40 @@
 			</requirements>
 		</component>
 		<component>
+<<<<<<< HEAD
+=======
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>java.lang.String-remote</role-hint>
+			<implementation>com.dianping.cat.hadoop.storage.RemoteStringBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.Bucket</role>
+			<role-hint>com.dianping.cat.message.spi.MessageTree-remote</role-hint>
+			<implementation>com.dianping.cat.hadoop.storage.RemoteMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.OutputChannelManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.InputChannelManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+>>>>>>> 2d07efec630c105cf2c02942cf35c9961e03565a
 			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
