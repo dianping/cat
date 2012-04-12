@@ -3,11 +3,9 @@
 	enable-xml-parser="true" enable-base-visitor="true" enable-model-test="false">
 	<entity name="problem-report" root="true">
 		<attribute name="domain" value-type="String" key="true" />
-		<entity-ref name="all-domains" />
+		<element name="domain" value-type="String" type="set" names="domain-names" />
+		<element name="ip" value-type="String" type="set" names="ips" />
 		<entity-ref name="machine" type="map" names="machines" method-find-or-create="true" />
-	</entity>
-	<entity name="all-domains">
-		<element name="domain" value-type="String" type="set" names="domains" />
 	</entity>
 	<entity name="machine">
 		<attribute name="ip" value-type="String" key="true"/>

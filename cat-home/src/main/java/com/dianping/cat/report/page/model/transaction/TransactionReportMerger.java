@@ -72,7 +72,7 @@ public class TransactionReportMerger extends DefaultMerger {
 	protected void mergeTransactionReport(TransactionReport old, TransactionReport transactionReport) {
 		super.mergeTransactionReport(old, transactionReport);
 
-		old.getDomains().addAll(transactionReport.getDomains());
+		old.getDomainNames().addAll(transactionReport.getDomainNames());
 	}
 
 	@Override

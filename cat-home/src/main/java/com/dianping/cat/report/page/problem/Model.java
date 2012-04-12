@@ -59,7 +59,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			return StringSortHelper.sortDomain(m_report.getAllDomains().getDomains());
+			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
 	}
 

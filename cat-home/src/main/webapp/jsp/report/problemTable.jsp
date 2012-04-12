@@ -12,14 +12,14 @@
 	   	 	</c:otherwise>
 	  </c:choose> &nbsp;]&nbsp;
 	   	 	
-   	  <c:forEach var="machine" items="${report.machines}">
+   	  <c:forEach var="ip" items="${report.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
-				<c:when test="${model.ipAddress eq machine.value.ip}">
-					<a	href="?domain=${model.domain}&ip=${machine.value.ip}&date=${model.date}" class="current">${machine.value.ip}</a>
+				<c:when test="${model.ipAddress eq ip}">
+					<a	href="?domain=${model.domain}&ip=${ip}&date=${model.date}" class="current">${ip}</a>
    	 			</c:when>
 				<c:otherwise>
-					<a	href="?domain=${model.domain}&ip=${machine.value.ip}&date=${model.date}">${machine.value.ip}</a>
+					<a	href="?domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
 	   	 		</c:otherwise>
 	   	 	</c:choose>
    	 		&nbsp;]&nbsp;

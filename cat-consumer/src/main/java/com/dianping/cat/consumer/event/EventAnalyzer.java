@@ -70,8 +70,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		if (report != null) {
 			List<String> sortedDomains = sortDomains(m_reports.keySet());
 
-			report.getDomains().clear();
-			report.getDomains().addAll(sortedDomains);
+			report.getDomainNames().clear();
+			report.getDomainNames().addAll(sortedDomains);
 		}
 
 		return report;

@@ -5,7 +5,7 @@
 		<attribute name="domain" key="true" />
 		<attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
 		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-		<element name="domain" value-type="String" type="set" names="domains" />
+		<element name="domain" value-type="String" type="set" names="domain-names" />
 		<entity-ref name="type" type="map" method-find-or-create="true" />
 	</entity>
 	<entity name="type" class-name="TransactionType">

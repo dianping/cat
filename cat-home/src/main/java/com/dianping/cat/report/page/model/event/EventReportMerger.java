@@ -48,7 +48,7 @@ public class EventReportMerger extends DefaultMerger {
 	protected void mergeEventReport(EventReport old, EventReport eventReport) {
 		super.mergeEventReport(old, eventReport);
 
-		old.getDomains().addAll(eventReport.getDomains());
+		old.getDomainNames().addAll(eventReport.getDomainNames());
 	}
 
 	@Override

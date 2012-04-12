@@ -13,7 +13,6 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.handler.Handler;
-import com.dianping.cat.consumer.problem.model.entity.AllDomains;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -104,13 +103,13 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 		if (report != null) {
 			List<String> sortedDomains = sortDomains(m_reports.keySet());
-			AllDomains allDomains = new AllDomains();
+			Set<String> domains = report.getDomainNames();
+
+			domains.clear();
 
 			for (String e : sortedDomains) {
-				allDomains.addDomain(e);
+				domains.add(e);
 			}
-
-			report.setAllDomains(allDomains);
 		}
 
 		return report;
@@ -158,6 +157,8 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 			m_reports.put(domain, report);
 		}
+
+		report.addIp(tree.getIpAddress());
 
 		Segment segment = findOrCreateSegment(report, tree);
 		int count = 0;

@@ -4,11 +4,7 @@
     <attribute name="domain" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <entity-ref name="all-domains" />
     <entity-ref name="machine" type="list" names="machines" />
-  </entity>
-  <entity name="all-domains">
-    <element name="domain" value-type="String" type="list" names="domains" />
   </entity>
   <entity name="machine">
     <attribute name="ip" value-type="String" />
