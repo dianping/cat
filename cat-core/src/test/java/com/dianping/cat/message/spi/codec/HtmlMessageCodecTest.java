@@ -26,12 +26,12 @@ import com.site.lookup.ComponentTestCase;
 @RunWith(JUnit4.class)
 public class HtmlMessageCodecTest extends ComponentTestCase {
 	
-	private void check(Message message, String expected) throws Exception {
+	private void check(MessageTree tree, Message message, String expected) throws Exception {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
 		codec.setShowNav(false);
-		codec.encodeMessage(message, buf, 0, null);
+		codec.encodeMessage(tree, message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
 		Assert.assertEquals(expected, actual);
@@ -100,7 +100,9 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		long timestamp = 1325489621987L;
 		Event event = newEvent("type", "name", timestamp, "0", "here is the data.");
 
-		check(event, "<tr><td>E15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>here is the data.</td></tr>\r\n");
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(event);
+		check(tree, event, "<tr><td>E15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>here is the data.</td></tr>\r\n");
 	}
 
 	@Test
@@ -111,7 +113,9 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		      + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:108)\n";
 		Event event = newEvent("Exception", Exception.class.getName(), timestamp, "ERROR", trace);
 
-		check(event,
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(event);
+		check(tree, event,
 		      "<tr><td>E15:33:41.987</td><td>Exception</td><td>java.lang.Exception</td><td class=\"error\">ERROR</td><td>java.lang.Exception\n<br>"
 		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\n<br>"
 		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:108)\n<br>"
@@ -123,7 +127,9 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		long timestamp = 1325489621987L;
 		Heartbeat heartbeat = newHeartbeat("type", "name", timestamp, "0", "here is the data.");
 
-		check(heartbeat,
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(heartbeat);
+		check(tree, heartbeat,
 		      "<tr><td>H15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>here is the data.</td></tr>\r\n");
 	}
 
@@ -160,7 +166,9 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		      "select title,content from Review where id = ?"));
 		root.addChild(newEvent("URL", "View", timestamp + 40, "0", "view=HTML"));
 
-		check(root,
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(root);
+		check(tree, root,
 		      "<tr><td>t15:33:41.987</td><td>URL</td><td>Review</td><td></td><td></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:41.987</td><td>URL</td><td>Payload</td><td>&nbsp;</td><td>ip=127.0.0.1&amp;ua=Mozilla 5.0...&amp;refer=...&amp;...</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;A15:33:41.987</td><td>Service</td><td>Auth</td><td>&nbsp;</td><td>20ms userId=1357&amp;token=...</td></tr>\r\n"
@@ -187,7 +195,10 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		      "select title,content from Review where id = ?"));
 		root.addChild(newEvent("URL", "View", timestamp + 40, "0", "view=HTML"));
 
-		check(root,
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(root);
+		tree.setMessageId("1637924287");
+		check(tree, root,
 		      "<tr><td>t15:33:41.987</td><td>URL</td><td>Review</td><td></td><td></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:41.987</td><td>URL</td><td>Payload</td><td>&nbsp;</td><td>ip=127.0.0.1&amp;ua=Mozilla 5.0...&amp;refer=...&amp;...</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;A15:33:41.987</td><td>Service</td><td>Auth</td><td>&nbsp;</td><td>20ms userId=1357&amp;token=...</td></tr>\r\n"
@@ -206,7 +217,9 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		long timestamp = 1325489621987L;
 		Transaction transaction = newTransaction("type", "name", timestamp, "0", 10, "here is the data.");
 
-		check(transaction,
+		MessageTree tree = new DefaultMessageTree();
+		tree.setMessage(transaction);
+		check(tree, transaction,
 		      "<tr><td>A15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>10ms here is the data.</td></tr>\r\n");
 	}
 }

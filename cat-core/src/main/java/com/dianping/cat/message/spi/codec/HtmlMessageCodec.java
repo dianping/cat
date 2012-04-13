@@ -78,7 +78,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		count += encodeHeader(tree, buf);
 
 		if (tree.getMessage() != null) {
-			count += encodeMessage(tree.getMessage(), buf, 0, new LineCounter());
+			count += encodeMessage(tree, tree.getMessage(), buf, 0, new LineCounter());
 		}
 
 		count += helper.table2(buf);
@@ -128,7 +128,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	protected int encodeLine(Message message, ChannelBuffer buf, char type, Policy policy, int level, LineCounter counter) {
+	protected int encodeLine(MessageTree tree, Message message, ChannelBuffer buf, char type, Policy policy, int level, LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
@@ -205,7 +205,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	protected int encodeLogViewLink(Message message, ChannelBuffer buf, int level, LineCounter counter) {
+	protected int encodeLogViewLink(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
@@ -218,7 +218,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		}
 
 		String link = buildLink(message);
-		int id = Math.abs(link.hashCode());
+		String id = tree.getMessageId();
 
 		count += helper.td1(buf);
 
@@ -235,14 +235,14 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	protected int encodeMessage(Message message, ChannelBuffer buf, int level, LineCounter counter) {
+	protected int encodeMessage(MessageTree tree, Message message, ChannelBuffer buf, int level, LineCounter counter) {
 		if (message instanceof Event) {
 			String type = message.getType();
 
 			if ("RemoteCall".equals(type)) {
-				return encodeLogViewLink(message, buf, level, counter);
+				return encodeLogViewLink(tree, message, buf, level, counter);
 			} else {
-				return encodeLine(message, buf, 'E', Policy.DEFAULT, level, counter);
+				return encodeLine(tree, message, buf, 'E', Policy.DEFAULT, level, counter);
 			}
 		} else if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
@@ -250,25 +250,25 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 			if (children.isEmpty()) {
 				if (transaction.getDurationInMillis() < 0) {
-					return encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS, level, counter);
+					return encodeLine(tree, transaction, buf, 't', Policy.WITHOUT_STATUS, level, counter);
 				} else {
-					return encodeLine(transaction, buf, 'A', Policy.WITH_DURATION, level, counter);
+					return encodeLine(tree, transaction, buf, 'A', Policy.WITH_DURATION, level, counter);
 				}
 			} else {
 				int count = 0;
 
-				count += encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS, level, counter);
+				count += encodeLine(tree, transaction, buf, 't', Policy.WITHOUT_STATUS, level, counter);
 
 				for (Message child : children) {
-					count += encodeMessage(child, buf, level + 1, counter);
+					count += encodeMessage(tree, child, buf, level + 1, counter);
 				}
 
-				count += encodeLine(transaction, buf, 'T', Policy.WITH_DURATION, level, counter);
+				count += encodeLine(tree, transaction, buf, 'T', Policy.WITH_DURATION, level, counter);
 
 				return count;
 			}
 		} else if (message instanceof Heartbeat) {
-			return encodeLine(message, buf, 'H', Policy.DEFAULT, level, counter);
+			return encodeLine(tree, message, buf, 'H', Policy.DEFAULT, level, counter);
 		} else {
 			throw new RuntimeException(String.format("Unsupported message type: %s.", message.getClass()));
 		}
