@@ -226,13 +226,12 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	@Override
 	public void flush() throws IOException {
 		m_writeLock.lock();
-
 		try {
 			m_writeDataFile.flush();
 			m_writeIndexFile.flush();
 		} finally {
-			m_dirty.set(false);
 			m_writeLock.unlock();
+			m_dirty.set(false);
 		}
 	}
 
@@ -279,9 +278,8 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	}
 
 	protected void loadIndexes(File indexFile) throws IOException {
-		m_writeLock.lock();
-
 		BufferedReader reader = null;
+		m_writeLock.lock();
 		try {
 			reader = new BufferedReader(new FileReader(indexFile));
 			StringSplitter splitter = Splitters.by('\t');
@@ -308,10 +306,10 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 				}
 			}
 		} finally {
+			m_writeLock.unlock();
 			if (reader != null) {
 				reader.close();
 			}
-			m_writeLock.unlock();
 		}
 	}
 
