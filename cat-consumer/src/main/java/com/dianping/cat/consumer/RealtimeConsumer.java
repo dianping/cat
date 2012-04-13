@@ -102,7 +102,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		Transaction t = cat.newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
-			long currentStartTime = m_periodManager.getCurrentStartTime();
+			long currentStartTime = getCurrentStartTime();
 			Period period = m_periodManager.findPeriod(currentStartTime);
 
 			for (MessageAnalyzer analyzer : period.getAnalzyers()) {
@@ -129,14 +129,21 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	}
 
 	public MessageAnalyzer getCurrentAnalyzer(String name) {
-		long currentStartTime = m_periodManager.getCurrentStartTime();
+		long currentStartTime = getCurrentStartTime();
 		Period period = m_periodManager.findPeriod(currentStartTime);
 
 		return period.getAnalyzer(name);
 	}
 
+	private long getCurrentStartTime() {
+		long now = System.currentTimeMillis();
+		long time = now - now % m_duration;
+
+		return time;
+	}
+
 	public MessageAnalyzer getLastAnalyzer(String name) {
-		long lastStartTime = m_periodManager.getCurrentStartTime() - m_duration;
+		long lastStartTime = getCurrentStartTime() - m_duration;
 		Period period = m_periodManager.findPeriod(lastStartTime);
 
 		return period == null ? null : period.getAnalyzer(name);
@@ -145,7 +152,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	@Override
 	public void initialize() throws InitializationException {
 		m_executor = Executors.newFixedThreadPool(m_threads);
-		m_periodManager = new PeriodManager(m_duration);
+		m_periodManager = new PeriodManager();
 
 		m_periodManager.setName("RealtimeConsumer-PeriodManager");
 		m_periodManager.start();
@@ -224,6 +231,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				t.setStatus(e);
 			} finally {
 				t.complete();
+
+				m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
+				      df.format(endDate)));
 			}
 
 			Cat.reset();
@@ -288,12 +298,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	}
 
 	class PeriodManager extends Thread {
-		private long m_duration;
+		private PeriodStrategy m_strategy;
 
 		private List<Period> m_periods = new ArrayList<RealtimeConsumer.Period>();
 
-		public PeriodManager(long duration) {
-			m_duration = duration;
+		public PeriodManager() {
+			m_strategy = new PeriodStrategy(m_duration, m_extraTime, 3 * MINUTE);
 		}
 
 		private void endPeriod(long startTime) {
@@ -320,36 +330,26 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			return null;
 		}
 
-		public long getCurrentStartTime() {
-			long now = System.currentTimeMillis();
-			long time = now - now % m_duration;
-
-			return time;
-		}
-
 		@Override
 		public void run() {
-			long now = System.currentTimeMillis();
-			long startTime = now - now % m_duration;
-			long lastStartTime = startTime;
+			long startTime = m_strategy.next(System.currentTimeMillis());
 
 			// for current period
 			startPeriod(startTime);
 
 			try {
 				while (true) {
-					now = System.currentTimeMillis();
+					long now = System.currentTimeMillis();
+					long value = m_strategy.next(now);
 
-					// prepare next period in ahead of 3 minutes
-					if (now - startTime >= m_duration - 3 * MINUTE) {
-						startTime = now - now % m_duration + m_duration;
-						startPeriod(startTime);
-					}
-
-					// last period is over
-					if (now - lastStartTime >= m_duration + m_extraTime) {
-						endPeriod(lastStartTime);
-						lastStartTime = startTime;
+					if (value == 0) {
+						// do nothing here
+					} else if (value > 0) {
+						// prepare next period in ahead of 3 minutes
+						startPeriod(value);
+					} else {
+						// last period is over
+						endPeriod(-value);
 					}
 
 					sleep(1000L);
@@ -365,6 +365,51 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			m_periods.add(period);
 			period.start();
+		}
+	}
+
+	static class PeriodStrategy {
+		private long m_duration;
+
+		private long m_extraTime;
+
+		private long m_aheadTime;
+
+		private long m_lastStartTime;
+
+		private long m_lastEndTime;
+
+		public PeriodStrategy(long duration, long extraTime, long aheadTime) {
+			m_duration = duration;
+			m_extraTime = extraTime;
+			m_aheadTime = aheadTime;
+			m_lastStartTime = -1;
+			m_lastEndTime = 0;
+		}
+
+		public long next(long now) {
+			long startTime = now - now % m_duration;
+
+			// for current period
+			if (startTime > m_lastStartTime) {
+				m_lastStartTime = startTime;
+				return startTime;
+			}
+
+			// prepare next period ahead
+			if (now - m_lastStartTime >= m_duration - m_aheadTime) {
+				m_lastStartTime = startTime + m_duration;
+				return startTime + m_duration;
+			}
+
+			// last period is over
+			if (now - m_lastEndTime >= m_duration + m_extraTime) {
+				long lastEndTime = m_lastEndTime;
+				m_lastEndTime = startTime;
+				return -lastEndTime;
+			}
+
+			return 0;
 		}
 	}
 

@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
@@ -179,8 +178,6 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 	static class TodoList {
 		private BlockingQueue<String> m_queue = new LinkedBlockingQueue<String>();
 
-		private ReentrantLock m_lock = new ReentrantLock();
-
 		private File m_file;
 
 		private Logger m_logger;
@@ -206,13 +203,9 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 		}
 
 		public void offer(String item) {
-			m_lock.lock();
-
 			if (m_queue.offer(item)) {
 				persist();
 			}
-
-			m_lock.unlock();
 		}
 
 		private void persist() {
@@ -220,19 +213,18 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 
 			try {
 				Files.forIO().writeTo(m_file, content);
+
+				m_logger.info(String.format("TODO file(%s) persisted!", m_file));
 			} catch (IOException e) {
 				m_logger.error("Error when persisting TODO list.", e);
 			}
 		}
 
 		public String take() throws InterruptedException {
-			m_lock.lock();
-
 			try {
 				return m_queue.take();
 			} finally {
 				persist();
-				m_lock.unlock();
 			}
 		}
 	}

@@ -1,9 +1,13 @@
 package com.dianping.cat.consumer.logview;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.dianping.cat.consumer.logview.LogviewUploader.TodoList;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -14,6 +18,11 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class LogviewUploaderTest extends ComponentTestCase {
+	@Test
+	public void testTodoList() throws IOException {
+		TodoList todo = new TodoList(File.createTempFile(null, null), null);
+	}
+
 	@Test
 	public void test() throws Exception {
 		LogviewUploader uploader = lookup(LogviewUploader.class);
