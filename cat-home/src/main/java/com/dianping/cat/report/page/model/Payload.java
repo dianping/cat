@@ -28,6 +28,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("thread")
 	private String m_threadId;
+	
+	@FieldMeta("messageId")
+	private String m_messageId;
 
 	@Override
 	public Action getAction() {
@@ -107,6 +110,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public void setType(String type) {
 		m_type = type;
 	}
+	
+	public String getMessageId() {
+   	return m_messageId;
+   }
+
+	public void setMessageId(String messageId) {
+   	m_messageId = messageId;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

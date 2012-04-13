@@ -73,7 +73,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, LogviewDao.class, InputChannelManager.class) //
 		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
-		      .req(ModelService.class, new String[] { "logview-local", "logview-historical" }, "m_services"));
+		      .req(ModelService.class, new String[] { "logview-historical" }, "m_services"));
 
 		return all;
 	}

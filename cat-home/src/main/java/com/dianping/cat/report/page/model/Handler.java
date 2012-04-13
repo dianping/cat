@@ -93,6 +93,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			} else if ("problem".equals(report)) {
 				response = m_problemService.invoke(request);
 			} else if ("logview".equals(report)) {
+				request.setProperty("messageId", payload.getMessageId());
 				response = m_logviewService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
