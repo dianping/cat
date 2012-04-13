@@ -1,9 +1,0 @@
-<status timestamp="2012-03-30 11:39:50.123" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="status.xsd">
-   <runtime start-time="1332558734422" up-time="373"/>
-   <os name="Mac OS X" arch="x86_64" version="Mac OS X" available-processors="4" system-load-average="0.9189453125" process-time="730000000" total-physical-memory="4294967296" free-physical-memory="55799808" committed-virtual-memory="2921177088" total-swap-space="7516192768" free-swap-space="337608704"/>
-   <memory total="85000192" free="80400592" heap-usage="4599600" non-heap-usage="6804336">
-      <gc count="0" time="0"/>
-   </memory>
-   <thread count="5" daemon-count="3" peek-count="5" total-started-count="5"/>
-   <message produced="123" overflowed="2" bytes="12345"/>
-</status>
