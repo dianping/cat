@@ -281,8 +281,9 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	protected void loadIndexes(File indexFile) throws IOException {
 		m_writeLock.lock();
 
+		BufferedReader reader = null;
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(indexFile));
+			reader = new BufferedReader(new FileReader(indexFile));
 			StringSplitter splitter = Splitters.by('\t');
 
 			while (true) {
@@ -307,6 +308,9 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 				}
 			}
 		} finally {
+			if (reader != null) {
+				reader.close();
+			}
 			m_writeLock.unlock();
 		}
 	}
