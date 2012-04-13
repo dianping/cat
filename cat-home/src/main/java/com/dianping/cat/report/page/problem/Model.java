@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -91,9 +90,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public List<String> getIps() {
-		List<String> result = new ArrayList<String>(m_report.getIps());
-		Collections.sort(result);
-		return result;
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getIps());
+		}
 	}
 
 	public int getLastMinute() {

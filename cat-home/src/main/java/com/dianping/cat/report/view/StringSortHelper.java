@@ -7,6 +7,23 @@ import java.util.List;
 import java.util.Set;
 
 public class StringSortHelper {
+	public static List<String> sort(List<String> lists) {
+		Collections.sort(lists);
+		return lists;
+	}
+
+	public static List<String> sort(Set<String> lists) {
+		if (lists == null) {
+			return null;
+		} else {
+			List<String> result = new ArrayList<String>();
+			for (String temp : lists) {
+				result.add(temp);
+			}
+			return sort(result);
+		}
+	}
+	
 	public static List<String> sortDomain(List<String> lists) {
 		Collections.sort(lists, new DomainComparator());
 		return lists;
