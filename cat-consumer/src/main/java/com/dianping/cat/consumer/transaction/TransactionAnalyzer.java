@@ -263,6 +263,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (TransactionReport report : m_reports.values()) {
+					Set<String> domainNames = report.getDomainNames();
+					domainNames.clear();
+					domainNames.addAll(getDomains());
+					
 					Report r = m_reportDao.createLocal();
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();

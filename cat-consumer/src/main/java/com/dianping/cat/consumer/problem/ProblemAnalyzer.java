@@ -213,6 +213,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (ProblemReport report : m_reports.values()) {
+					Set<String> domainNames = report.getDomainNames();
+					domainNames.clear();
+					domainNames.addAll(getDomains());
+					
 					Report r = m_reportDao.createLocal();
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();
