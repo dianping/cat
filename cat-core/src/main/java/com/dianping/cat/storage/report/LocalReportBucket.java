@@ -195,9 +195,8 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 	}
 
 	protected void loadIndexes(File indexFile) throws IOException {
-		m_writeLock.lock();
-
 		BufferedReader reader = null;
+		m_writeLock.lock();
 		try {
 			reader = new BufferedReader(new FileReader(indexFile));
 			StringSplitter splitter = Splitters.by('\t');
@@ -223,10 +222,10 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 				}
 			}
 		} finally {
+			m_writeLock.unlock();
 			if (reader != null) {
 				reader.close();
 			}
-			m_writeLock.unlock();
 		}
 	}
 

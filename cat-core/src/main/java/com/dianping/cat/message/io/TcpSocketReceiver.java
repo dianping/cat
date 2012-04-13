@@ -68,8 +68,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 		m_queue = new LinkedBlockingQueue<ChannelBuffer>();
 
-		ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
-		      Executors.newCachedThreadPool());
+		ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
 		ServerBootstrap bootstrap = new ServerBootstrap(factory);
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
@@ -130,7 +129,9 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 	@Override
 	public void shutdown() {
-		m_active = false;
+		synchronized (this) {
+			m_active = false;
+		}
 	}
 
 	public static class MyDecoder extends FrameDecoder {

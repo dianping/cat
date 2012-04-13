@@ -39,7 +39,7 @@ public class TransactionReportMerger extends DefaultMerger {
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
-			old.setStd(std(old.getTotalCount(), old.getAvg(), old.getSum2()));
+			old.setStd(std(old.getTotalCount(), old.getAvg(), old.getSum2(), old.getMax()));
 		}
 
 		if (old.getSuccessMessageUrl() == null) {
@@ -94,7 +94,7 @@ public class TransactionReportMerger extends DefaultMerger {
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
-			old.setStd(std(old.getTotalCount(), old.getAvg(), old.getSum2()));
+			old.setStd(std(old.getTotalCount(), old.getAvg(), old.getSum2(), old.getMax()));
 		}
 
 		if (old.getSuccessMessageUrl() == null) {
@@ -106,9 +106,15 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
-	protected double std(long count, double avg, double sum2) {
+	protected double std(long count, double avg, double sum2, double max) {
 		double value = sum2 / count - avg * avg;
 
-		return count <= 1 ? 0 : Math.sqrt(value);
+		if (value <= 0 || count <= 1) {
+			return 0;
+		} else if (count == 2) {
+			return max - avg;
+		} else {
+			return Math.sqrt(value);
+		}
 	}
 }
