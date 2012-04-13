@@ -13,7 +13,7 @@ public abstract class AbstractMessage implements Message {
 
 	private String m_name;
 
-	private String m_status;
+	private String m_status = "unset";
 
 	private long m_timestampInMicros;
 

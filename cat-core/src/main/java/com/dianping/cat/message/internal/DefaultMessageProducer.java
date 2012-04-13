@@ -130,6 +130,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
 			parent.addChild(transaction);
+			transaction.setStandalone(false);
 			return transaction;
 		} else {
 			return NullMessage.TRANSACTION;

@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.model.spi.internal;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.Message;
@@ -41,7 +40,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	@Override
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
-		Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
+		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
 			T model = buildModel(request);

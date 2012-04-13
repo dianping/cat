@@ -29,6 +29,11 @@ public class LocalLogViewService extends BaseLocalModelService<String> {
 	@Override
 	protected String getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		String messageId = request.getProperty("messageId");
+
+		if (messageId == null) {
+			return null;
+		}
+
 		String direction = request.getProperty("direction");
 		String tag = request.getProperty("tag");
 		MessageId id = MessageId.parse(messageId);
