@@ -75,6 +75,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		}
 		return m_longTime;
 	}
+	
+	public int getRealLongTime(){
+		return m_longTime;
+	}
 
 	public void setLongTime(int longTime) {
 		m_longTime = longTime;

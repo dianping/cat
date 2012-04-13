@@ -12,6 +12,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.ip.model.entity.Ip;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.entity.Period;
@@ -23,6 +24,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
+import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
@@ -31,6 +33,9 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
+	
+	@Inject
+	private ServerConfigManager m_manager;
 
 	@Inject(type = ModelService.class, value = "ip")
 	private ModelService<IpReport> m_service;
@@ -70,7 +75,9 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-
+		if(StringUtils.isEmpty(payload.getDomain())){
+			payload.setDomain(m_manager.getServerConfig().getConsole().getDefaultDomain());
+		}
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.IP);
 

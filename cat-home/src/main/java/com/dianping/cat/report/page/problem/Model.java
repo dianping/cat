@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -19,21 +20,27 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_threadId;
 
 	private int m_currentMinute; // for navigation
-	
-	private int m_threshold;
-	
-	private String m_groupName;
-	
-	private GroupLevelInfo m_groupLevelInfo;
-	
-	private ThreadLevelInfo m_threadLevelInfo; 
 
-	private ProblemStatistics m_problemStatistics ;
-	
-	private ProblemStatistics m_allStatistics ;
+	private int m_threshold;
+
+	private String m_groupName;
+
+	private String m_defaultThreshold;
+
+	private GroupLevelInfo m_groupLevelInfo;
+
+	private ThreadLevelInfo m_threadLevelInfo;
+
+	private ProblemStatistics m_problemStatistics;
+
+	private ProblemStatistics m_allStatistics;
 
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public ProblemStatistics getAllStatistics() {
+		return m_allStatistics;
 	}
 
 	public int getCurrentMinute() {
@@ -43,6 +50,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.GROUP;
+	}
+
+	public String getDefaultThreshold() {
+		return m_defaultThreshold;
 	}
 
 	@Override
@@ -64,12 +75,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public GroupLevelInfo getGroupLevelInfo() {
-   	return m_groupLevelInfo;
-   }
+		return m_groupLevelInfo;
+	}
 
 	public String getGroupName() {
-   	return m_groupName;
-   }
+		return m_groupName;
+	}
 
 	public int getHour() {
 		return m_hour;
@@ -77,6 +88,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+
+	public List<String> getIps() {
+		List<String> result = new ArrayList<String>(m_report.getIps());
+		Collections.sort(result);
+		return result;
 	}
 
 	public int getLastMinute() {
@@ -98,33 +115,44 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public ProblemStatistics getProblemStatistics() {
-   	return m_problemStatistics;
-   }
+		return m_problemStatistics;
+	}
 
 	public ProblemReport getReport() {
 		return m_report;
 	}
-
 
 	public String getThreadId() {
 		return m_threadId;
 	}
 
 	public ThreadLevelInfo getThreadLevelInfo() {
-   	return m_threadLevelInfo;
-   }
+		return m_threadLevelInfo;
+	}
+
+	public int getThreshold() {
+		return m_threshold;
+	}
+
+	public void setAllStatistics(ProblemStatistics allStatistics) {
+		m_allStatistics = allStatistics;
+	}
 
 	public void setCurrentMinute(int currentMinute) {
 		m_currentMinute = currentMinute;
 	}
 
+	public void setDefaultThreshold(String defaultThreshold) {
+		m_defaultThreshold = defaultThreshold;
+	}
+
 	public void setGroupLevelInfo(GroupLevelInfo groupLevelInfo) {
-   	m_groupLevelInfo = groupLevelInfo;
-   }
+		m_groupLevelInfo = groupLevelInfo;
+	}
 
 	public void setGroupName(String groupName) {
-   	m_groupName = groupName;
-   }
+		m_groupName = groupName;
+	}
 
 	public void setHour(int hour) {
 		m_hour = hour;
@@ -139,8 +167,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setProblemStatistics(ProblemStatistics problemStatistics) {
-   	m_problemStatistics = problemStatistics;
-   }
+		m_problemStatistics = problemStatistics;
+	}
 
 	public void setReport(ProblemReport report) {
 		m_report = report;
@@ -151,23 +179,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {
-   	m_threadLevelInfo = threadLevelInfo;
-   }
-
-	public ProblemStatistics getAllStatistics() {
-   	return m_allStatistics;
-   }
-
-	public void setAllStatistics(ProblemStatistics allStatistics) {
-   	m_allStatistics = allStatistics;
-   }
-
-	public int getThreshold() {
-   	return m_threshold;
-   }
+		m_threadLevelInfo = threadLevelInfo;
+	}
 
 	public void setThreshold(int threshold) {
-   	m_threshold = threshold;
-   }
-	
+		m_threshold = threshold;
+	}
+
 }

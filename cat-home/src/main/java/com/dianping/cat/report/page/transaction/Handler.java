@@ -10,6 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -42,6 +43,9 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	@Inject
 	private GraphBuilder m_builder;
+	
+	@Inject
+	private ServerConfigManager m_manager;
 
 	private Map<Integer, Integer> m_map = new HashMap<Integer, Integer>();
 
@@ -127,6 +131,10 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
+		if(StringUtils.isEmpty(payload.getDomain())){
+			payload.setDomain(m_manager.getServerConfig().getConsole().getDefaultDomain());
+		}
+		
 		model.setDisplayDomain(payload.getDomain());
 
 		if (payload.getPeriod().isFuture()) {

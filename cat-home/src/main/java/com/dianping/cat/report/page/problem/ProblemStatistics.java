@@ -49,7 +49,7 @@ public class ProblemStatistics {
 		return sb.toString();
 	}
 
-	public ProblemStatistics displayAllIp(ProblemReport report,Payload payload) {
+	public ProblemStatistics displayByAllIps(ProblemReport report,Payload payload) {
 		m_threshold = payload.getLongTime();
 
 		if (report == null) {
@@ -97,8 +97,9 @@ public class ProblemStatistics {
 		return this;
 	}
 
-	public ProblemStatistics displayByGroupOrThread(ProblemReport report, Model model) {
+	public ProblemStatistics displayByGroupOrThread(ProblemReport report, Model model,Payload payload) {
 		Machine machine = report.getMachines().get(model.getIpAddress());
+		m_threshold = payload.getLongTime();
 
 		if (machine == null) {
 			return null;
@@ -116,7 +117,7 @@ public class ProblemStatistics {
 					continue;
 				}
 				List<Entry> entries = segment.getEntries();
-				statisticsEntries(entries, ONE_SECOND);
+				statisticsEntries(entries, m_threshold);
 			}
 
 		} else if (!isEmpty(m_groupName) && isEmpty(m_threadId)) {
@@ -129,7 +130,7 @@ public class ProblemStatistics {
 						continue;
 					}
 					List<Entry> entries = segment.getEntries();
-					statisticsEntries(entries, ONE_SECOND);
+					statisticsEntries(entries, m_threshold);
 				}
 			}
 
@@ -144,7 +145,7 @@ public class ProblemStatistics {
 				return null;
 			}
 			List<Entry> entries = segment.getEntries();
-			statisticsEntries(entries, ONE_SECOND);
+			statisticsEntries(entries, m_threshold);
 		}
 
 		return this;
@@ -245,7 +246,7 @@ public class ProblemStatistics {
 
 		private List<String> m_links = new ArrayList<String>();
 
-		private static int s_maxLinkSize = 20;
+		private static int s_maxLinkSize = 40;
 
 		public StatusStatistics(Entry entry, String groupName, String threadId) {
 			m_status = entry.getStatus();

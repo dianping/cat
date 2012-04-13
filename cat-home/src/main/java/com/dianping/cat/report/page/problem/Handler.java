@@ -1,11 +1,15 @@
 package com.dianping.cat.report.page.problem;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.ReportPage;
@@ -14,6 +18,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
+import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
@@ -25,6 +30,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "problem")
 	private ModelService<ProblemReport> m_service;
+
+	@Inject
+	private ServerConfigManager m_manager;
 
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
@@ -78,6 +86,20 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private void setDefaultThreshold(Model model, Payload payload) {
+		Domain d = m_manager.getServerConfig().getConsumer().getLongUrl().getDomains().get(payload.getDomain());
+		if (d != null) {
+			int longUrlTime = d.getThreshold();
+			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
+			      && longUrlTime != 4000 && longUrlTime != 5000) {
+				double sec = (double) (longUrlTime) / (double) 1000;
+				NumberFormat nf = new DecimalFormat("#.#");
+				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
+				model.setDefaultThreshold(option);
+			}
+		}
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "p")
@@ -90,6 +112,14 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+		if (StringUtils.isEmpty(payload.getDomain())) {
+			payload.setDomain(m_manager.getServerConfig().getConsole().getDefaultDomain());
+		}
+		setDefaultThreshold(model, payload);
+		Domain d = m_manager.getServerConfig().getConsumer().getLongUrl().getDomains().get(payload.getDomain());
+		if (d != null && payload.getRealLongTime() == 0) {
+			payload.setLongTime(d.getThreshold());
+		}
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.PROBLEM);
@@ -105,7 +135,7 @@ public class Handler implements PageHandler<Context> {
 			report = getAllIpReport(payload);
 			model.setReport(report);
 			model.setLongDate(payload.getDate());
-			model.setAllStatistics(new ProblemStatistics().displayAllIp(report,payload));
+			model.setAllStatistics(new ProblemStatistics().displayByAllIps(report, payload));
 		} else {
 			switch (payload.getAction()) {
 			case GROUP:
@@ -150,7 +180,7 @@ public class Handler implements PageHandler<Context> {
 			return;
 		}
 		model.setReport(report);
-		model.setProblemStatistics(new ProblemStatistics().displayByGroupOrThread(report, model));
+		model.setProblemStatistics(new ProblemStatistics().displayByGroupOrThread(report, model, payload));
 	}
 
 	private ProblemReport showSummary(Model model, Payload payload) {

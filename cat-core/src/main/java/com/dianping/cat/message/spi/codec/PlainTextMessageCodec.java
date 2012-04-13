@@ -149,12 +149,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			transaction.addData(data);
 
 			long d = Long.parseLong(duration.substring(0, duration.length() - 2));
-
-			if ("MobileApi".equals(tree.getDomain())) { //TODO remove it after MobileApi upgrade
-				transaction.setDurationInMillis(d);
-			} else {
-				transaction.setDurationInMicros(d);
-			}
+			transaction.setDurationInMicros(d);
 
 			if (parent != null) {
 				parent.addChild(transaction);
@@ -172,12 +167,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 			parent.addData(data);
 
 			long d = Long.parseLong(duration.substring(0, duration.length() - 2));
-
-			if ("MobileApi".equals(tree.getDomain())) {  //TODO remove it after MobileApi upgrade
-				parent.setDurationInMillis(d);
-			} else {
-				parent.setDurationInMicros(d);
-			}
+			parent.setDurationInMicros(d);
 
 			return stack.pop();
 		} else {

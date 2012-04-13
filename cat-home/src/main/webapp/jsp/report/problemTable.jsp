@@ -9,7 +9,7 @@
 				<c:otherwise>
 					<a href="?domain=${model.domain}&date=${model.date}">All</a>
 				</c:otherwise>
-			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${report.ips}">
+			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
@@ -24,6 +24,7 @@
 			 </c:forEach>
 		</th><th>long-url <input id="thresholdInput" style="display: none"
 			value="${model.threshold}"> <select size="1" id="p_longUrl">
+				${model.defaultThreshold}
 				<option value="500">0.5 Sec</option>
 				<option value="1000">1.0 Sec</option>
 				<option value="1500">1.5 Sec</option>

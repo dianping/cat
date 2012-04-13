@@ -97,13 +97,7 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements Log
 					if (pos > 0) {
 						return data.substring(off + TOKEN.length(), pos);
 					}
-				} else {
-					//TODO remove it after mobileApi upgrade
-					off = data.indexOf("RemoteIp=");
-					int pos = data.indexOf("VirtualIP=");
-					return data.substring(off + "RemoteIp=".length(), pos);
-				}
-
+				}				
 				break;
 			} else if (child instanceof Heartbeat) {
 				// Heartbeat:<ip>

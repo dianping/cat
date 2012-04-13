@@ -350,6 +350,9 @@
 					<role-hint>problem</role-hint>
 					<field-name>m_service</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -371,6 +374,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.graph.GraphBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -391,6 +397,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -422,6 +431,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.ip.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
