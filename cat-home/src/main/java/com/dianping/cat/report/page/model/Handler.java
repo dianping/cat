@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.event.LocalEventService;
+import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -43,6 +44,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "logview-local")
 	private LocalLogViewService m_logviewService;
+
+	@Inject(type = ModelService.class, value = "ip-local")
+	private LocalIpService m_ipService;
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -95,6 +99,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			} else if ("logview".equals(report)) {
 				request.setProperty("messageId", payload.getMessageId());
 				response = m_logviewService.invoke(request);
+			} else if ("ip".equals(report)) {
+				response = m_ipService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}
