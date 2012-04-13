@@ -38,16 +38,21 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	}
 
 	public long getDate() {
+		long current = getCurrentDate();
+		
 		if (m_date <= 0) {
-			long current = getCurrentDate();
-
 			return current + m_hours * ONE_HOUR;
 		} else {
-			return m_date + m_hours * ONE_HOUR;
+			long result = m_date + m_hours * ONE_HOUR;
+			
+			if (result > current) {
+				return current;
+			}
+			return result;
 		}
 	}
-	
-	public long getRealDate(){
+
+	public long getRealDate() {
 		return m_date;
 	}
 
