@@ -22,8 +22,9 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 		ProblemReport report = super.getReport(request, period, domain);
 
 		if (report == null && period.isLast()) {
-			long date = Long.parseLong(request.getProperty("date"));
-
+			long current = System.currentTimeMillis();
+			long hour = 60 * 60 * 1000;
+			long date = current - current % (hour) - hour;
 			report = getLocalReport(date, domain);
 		}
 
