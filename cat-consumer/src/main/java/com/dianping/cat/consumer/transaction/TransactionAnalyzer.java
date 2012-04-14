@@ -68,12 +68,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	public TransactionReport getReport(String domain) {
 		TransactionReport report = m_reports.get(domain);
 
-		if (report != null) {
-			List<String> sortedDomains = sortDomains(m_reports.keySet());
-
-			report.getDomainNames().clear();
-			report.getDomainNames().addAll(sortedDomains);
+		if (report == null) {
+			report = new TransactionReport(domain);
 		}
+		report.getDomainNames().clear();
+		report.getDomainNames().addAll(m_reports.keySet());
+
 
 		return report;
 	}
@@ -252,6 +252,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "transaction");
 
 			for (TransactionReport report : m_reports.values()) {
+				Set<String> domainNames = report.getDomainNames();
+				domainNames.clear();
+				domainNames.addAll(getDomains());
+				
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
@@ -263,9 +267,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (TransactionReport report : m_reports.values()) {
-					Set<String> domainNames = report.getDomainNames();
-					domainNames.clear();
-					domainNames.addAll(getDomains());
 					
 					Report r = m_reportDao.createLocal();
 					String xml = builder.buildXml(report);

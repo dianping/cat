@@ -8,10 +8,12 @@ public class ProblemReportMerger extends DefaultMerger {
 	   super(problemReport);
    }
 
+	
 	@Override
    public void visitProblemReport(ProblemReport problemReport) {
 	   super.visitProblemReport(problemReport);
 	   
 	   getProblemReport().getIps().addAll(problemReport.getIps());
+	   getProblemReport().getDomainNames().addAll(problemReport.getDomainNames());
    }
 }

@@ -15,6 +15,12 @@ public class EventReportMerger extends DefaultMerger {
 	}
 
 	@Override
+	public void visitEventReport(EventReport eventReport) {
+		super.visitEventReport(eventReport);
+		getEventReport().getDomainNames().addAll(eventReport.getDomainNames());
+	}
+
+	@Override
 	protected void mergeName(EventName old, EventName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
 		old.setFailCount(old.getFailCount() + other.getFailCount());
@@ -48,7 +54,6 @@ public class EventReportMerger extends DefaultMerger {
 	protected void mergeEventReport(EventReport old, EventReport eventReport) {
 		super.mergeEventReport(old, eventReport);
 
-		old.getDomainNames().addAll(eventReport.getDomainNames());
 	}
 
 	@Override
@@ -68,4 +73,5 @@ public class EventReportMerger extends DefaultMerger {
 			old.setFailMessageUrl(other.getFailMessageUrl());
 		}
 	}
+
 }
