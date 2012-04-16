@@ -150,10 +150,10 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	public void initialize() throws InitializationException {
 		m_periodManager = new PeriodManager();
 
-		Threads.forGroup().start(m_periodManager);
+		Threads.forGroup("Cat").start(m_periodManager);
 
 		if (m_uploader != null && !m_uploader.isLocalMode()) {
-			Threads.forGroup().start(m_uploader);
+			Threads.forGroup("Cat").start(m_uploader);
 		}
 	}
 
@@ -276,7 +276,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
 			for (PeriodTask task : m_tasks) {
-				Threads.forGroup("RealtimeConsumer").start(task);
+				Threads.forGroup("Cat-RealtimeConsumer").start(task);
 			}
 		}
 
@@ -287,7 +287,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 	}
 
-	class PeriodManager implements Threads.Task {
+	class PeriodManager implements Task {
 		private PeriodStrategy m_strategy;
 
 		private List<Period> m_periods = new ArrayList<RealtimeConsumer.Period>();

@@ -66,7 +66,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 	public void start() {
 		// only start at first time and long running
 		if (m_job == null) {
-			m_job = Threads.forGroup().start(new WriteJob());
+			m_job = Threads.forGroup("Cat").start(new WriteJob());
 		}
 	}
 

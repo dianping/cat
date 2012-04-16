@@ -220,10 +220,10 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 			String content = Joiners.by('\n').join(m_queue);
 
 			try {
-				Files.forIO().writeTo(m_file, content);
+				Files.forIO().writeTo(m_file.getCanonicalFile(), content);
 
 				m_logger.info(String.format("TODO file(%s) persisted!", m_file));
-			} catch (IOException e) {
+			} catch (Exception e) {
 				m_logger.error("Error when persisting TODO list.", e);
 			}
 		}

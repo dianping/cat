@@ -178,7 +178,7 @@ public class ServerConfigManager implements LogEnabled {
 			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
 		}
 
-		Threads.forGroup().start(new ServerConfigReloader(configFile));
+		Threads.forGroup("Cat").start(new ServerConfigReloader(configFile));
 	}
 
 	public boolean isLocalMode() {
@@ -225,7 +225,7 @@ public class ServerConfigManager implements LogEnabled {
 	static class ServerConfigReloader implements Task {
 		private File m_file;
 
-		private volatile boolean m_active;
+		private volatile boolean m_active = true;
 
 		public ServerConfigReloader(File file) {
 			m_file = file;
@@ -238,7 +238,7 @@ public class ServerConfigManager implements LogEnabled {
 					if (m_file.exists()) {
 						// TODO
 					}
-					
+
 					Thread.sleep(2000L);
 				} catch (InterruptedException e) {
 					m_active = false;

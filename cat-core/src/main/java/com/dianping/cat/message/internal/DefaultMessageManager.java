@@ -170,7 +170,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_factory.initialize(m_domain.getId());
 
 		// start status update task
-		Threads.forGroup().start(m_statusUpdateTask);
+		Threads.forGroup("Cat").start(m_statusUpdateTask);
 	}
 
 	@Override

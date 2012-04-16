@@ -77,7 +77,7 @@ public class CatServlet extends AbstractContainerServlet {
 
 			final DefaultMessageHandler handler = (DefaultMessageHandler) lookup(MessageHandler.class);
 
-			Threads.forGroup().start(handler);
+			Threads.forGroup("Cat").start(handler);
 		} catch (Exception e) {
 			m_exception = e;
 			throw new RuntimeException("Error when initializing CatServlet, "

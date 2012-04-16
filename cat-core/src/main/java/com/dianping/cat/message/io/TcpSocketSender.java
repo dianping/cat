@@ -69,8 +69,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			throw new RuntimeException("No server address was configured for TcpSocketSender!");
 		}
 
-		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("TcpSocketSender-Boss", 10);
-		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("TcpSocketSender-Worker", 10);
+		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Boss", 10);
+		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Worker", 10);
 		ChannelFactory factory = new NioClientSocketChannelFactory(bossExecutor, workerExecutor);
 		ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
@@ -96,7 +96,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 
 		m_bootstrap = bootstrap;
-		Threads.forGroup().start(this);
+		Threads.forGroup("Cat").start(this);
 	}
 
 	public void reconnect() {

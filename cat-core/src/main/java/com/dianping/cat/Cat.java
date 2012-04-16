@@ -91,13 +91,16 @@ public class Cat {
 		}
 
 		ClientConfig config = loadClientConfig(configFile);
+		Cat instance = getInstance();
+
+		instance.m_logger.info("Current working directory is " + System.getProperty("user.dir"));
 
 		if (config != null) {
-			getInstance().m_manager.initializeClient(config);
-			getInstance().m_logger.info("Cat client is initialized!");
+			instance.m_manager.initializeClient(config);
+			instance.m_logger.info("Cat client is initialized!");
 		} else {
-			getInstance().m_manager.initializeClient(null);
-			getInstance().m_logger.warn("Cat client is disabled due to no config file found!");
+			instance.m_manager.initializeClient(null);
+			instance.m_logger.warn("Cat client is disabled due to no config file found!");
 		}
 	}
 
@@ -202,7 +205,7 @@ public class Cat {
 				public void onThreadGroupCreated(ThreadGroup group, String name) {
 					m_logger.info(String.format("Thread group(%s) created.", name));
 				}
-				
+
 				@Override
 				public void onThreadPoolCreated(ExecutorService pool, String name) {
 					m_logger.info(String.format("Thread pool(%s) created.", name));

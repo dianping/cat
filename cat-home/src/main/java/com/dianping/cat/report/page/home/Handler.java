@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
+import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 
@@ -59,18 +60,35 @@ public class Handler implements PageHandler<Context> {
 	private void showThreadDump(Model model, Payload payload) {
 		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
 		ThreadInfo[] threads = bean.dumpAllThreads(true, true);
-		StringBuilder sb = new StringBuilder(8096);
+		StringBuilder sb = new StringBuilder(32768);
 		int index = 1;
+
+		TreeMap<String, ThreadInfo> sortedThreads = new TreeMap<String, ThreadInfo>();
+		
+		for (ThreadInfo thread : threads) {
+			sortedThreads.put(thread.getThreadName(), thread);
+		}
 		
 		sb.append("Threads: ").append(threads.length);
 		sb.append("<pre>");
-		
-		for (ThreadInfo thread: threads) {
-			sb.append(index++).append(": ").append(thread).append("\r\n");
+
+		for (ThreadInfo thread : sortedThreads.values()) {
+			sb.append(index++).append(": <a href=\"#").append(thread.getThreadId()).append("\">")
+			      .append(thread.getThreadName()).append("</a>\r\n");
 		}
+
+		sb.append("\r\n");
+		sb.append("\r\n");
 		
+		index = 1;
+		
+		for (ThreadInfo thread : sortedThreads.values()) {
+			sb.append("<a name=\"").append(thread.getThreadId()).append("\">").append(index++).append(": ")
+			      .append(thread).append("\r\n");
+		}
+
 		sb.append("</pre>");
-		
+
 		model.setContent(sb.toString());
 	}
 }

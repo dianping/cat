@@ -85,8 +85,8 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 	public void initialize() {
 		m_manager = new ChannelManager(m_logger, m_serverAddresses);
 
-		Threads.forGroup().start(this);
-		Threads.forGroup().start(m_manager);
+		Threads.forGroup("Cat").start(this);
+		Threads.forGroup("Cat").start(m_manager);
 	}
 
 	@Override

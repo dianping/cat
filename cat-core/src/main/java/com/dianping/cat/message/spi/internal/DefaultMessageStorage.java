@@ -52,7 +52,7 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Log
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup().start(m_job);
+		Threads.forGroup("Cat").start(m_job);
 	}
 
 	@Override

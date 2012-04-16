@@ -29,7 +29,7 @@ public class DumpChannel {
 	public DumpChannel(MessageCodec codec, File baseDir, String path, long maxSize, long lastChunkAdjust)
 	      throws IOException {
 		m_codec = codec;
-		m_file = new File(baseDir, path);
+		m_file = new File(baseDir, path).getCanonicalFile();
 		m_path = path;
 		m_maxSize = maxSize;
 		m_lastChunkAdjust = lastChunkAdjust;
