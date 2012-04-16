@@ -99,7 +99,7 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 					throw e;
 				}
 
-				Thread.sleep(100);
+				Thread.sleep(2000);
 			}
 		} catch (Exception e) {
 			m_logger.error("Error when uploading bucket.", e);

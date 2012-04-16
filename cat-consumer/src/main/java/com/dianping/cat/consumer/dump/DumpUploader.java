@@ -134,7 +134,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s).", file.getCanonicalPath(), path));
 					} catch (AccessControlException e) {
 						m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
-					} catch (Exception e) {
+					} catch (IOException e) {
 						m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
 					}
 				}
