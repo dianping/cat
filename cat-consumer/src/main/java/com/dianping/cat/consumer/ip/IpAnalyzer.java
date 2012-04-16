@@ -113,14 +113,10 @@ public class IpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements Log
 
 		if (report == null) {
 			report = new IpReport();
+			report.setDomain(domain);
 		}
-
-		List<String> sortedDomains = sortDomains(m_reports.keySet());
 		AllDomains allDomains = new AllDomains();
-
-		for (String e : sortedDomains) {
-			allDomains.addDomain(e);
-		}
+		allDomains.getDomains().addAll(m_reports.keySet());
 
 		report.setAllDomains(allDomains);
 		return report;

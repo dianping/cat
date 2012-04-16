@@ -101,16 +101,11 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	public ProblemReport getReport(String domain) {
 		ProblemReport report = m_reports.get(domain);
 
-		if (report != null) {
-			List<String> sortedDomains = sortDomains(m_reports.keySet());
-			Set<String> domains = report.getDomainNames();
-
-			domains.clear();
-
-			for (String e : sortedDomains) {
-				domains.add(e);
-			}
+		if (report == null) {
+			report = new ProblemReport(domain);
 		}
+		report.getDomainNames().clear();
+		report.getDomainNames().addAll(m_reports.keySet());
 
 		return report;
 	}
@@ -202,6 +197,10 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "problem");
 
 			for (ProblemReport report : m_reports.values()) {
+				Set<String> domainNames = report.getDomainNames();
+				domainNames.clear();
+				domainNames.addAll(getDomains());
+				
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
@@ -213,9 +212,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (ProblemReport report : m_reports.values()) {
-					Set<String> domainNames = report.getDomainNames();
-					domainNames.clear();
-					domainNames.addAll(getDomains());
 					
 					Report r = m_reportDao.createLocal();
 					String xml = builder.buildXml(report);

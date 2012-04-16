@@ -30,6 +30,11 @@
 			<version>1.0.0</version>
 		</dependency>
 		<dependency>
+				<groupId>com.google.code.gson</groupId>
+				<artifactId>gson</artifactId>
+				<version>1.6</version>
+		</dependency>
+		<dependency>
 			<groupId>com.site.common</groupId>
 			<artifactId>web-framework</artifactId>
 		</dependency>

@@ -54,7 +54,9 @@ a.call{
 a.cache{
 	background-color: #aa3faa;
 }
-
+a.heartbeat{
+	background-color: #009933;
+}
 .detail {
 	font-size: small;
 	border-spacing: 1px;

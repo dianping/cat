@@ -67,13 +67,12 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	public EventReport getReport(String domain) {
 		EventReport report = m_reports.get(domain);
 
-		if (report != null) {
-			List<String> sortedDomains = sortDomains(m_reports.keySet());
-
-			report.getDomainNames().clear();
-			report.getDomainNames().addAll(sortedDomains);
+		if (report == null) {
+			report = new EventReport(domain);
 		}
-
+		report.getDomainNames().clear();
+		report.getDomainNames().addAll(m_reports.keySet());
+		
 		return report;
 	}
 
@@ -239,6 +238,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "event");
 
 			for (EventReport report : m_reports.values()) {
+				Set<String> domainNames = report.getDomainNames();
+				domainNames.clear();
+				domainNames.addAll(getDomains());
+				
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
@@ -250,10 +253,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (EventReport report : m_reports.values()) {
-					Set<String> domainNames = report.getDomainNames();
-					domainNames.clear();
-					domainNames.addAll(getDomains());
-					
 					Report r = m_reportDao.createLocal();
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();

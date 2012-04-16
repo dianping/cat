@@ -14,6 +14,13 @@ public class TransactionReportMerger extends DefaultMerger {
 
 		transactionReport.accept(new StatisticsComputer());
 	}
+	
+	@Override
+   public void visitTransactionReport(TransactionReport transactionReport) {
+	   super.visitTransactionReport(transactionReport);
+		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
+   }
+
 
 	@Override
 	protected void mergeDuration(Duration old, Duration duration) {
@@ -71,8 +78,6 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	protected void mergeTransactionReport(TransactionReport old, TransactionReport transactionReport) {
 		super.mergeTransactionReport(old, transactionReport);
-
-		old.getDomainNames().addAll(transactionReport.getDomainNames());
 	}
 
 	@Override

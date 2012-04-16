@@ -13,4 +13,11 @@ public class IpReportMerger extends DefaultMerger {
 	protected void mergeIp(Ip old, Ip ip) {
 		old.setCount(old.getCount() + ip.getCount());
 	}
+
+	@Override
+   public void visitIpReport(IpReport ipReport) {
+	   super.visitIpReport(ipReport);
+	   getIpReport().getAllDomains().getDomains().addAll(ipReport.getAllDomains().getDomains());
+   }
+	
 }

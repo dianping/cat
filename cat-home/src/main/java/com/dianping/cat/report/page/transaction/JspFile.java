@@ -3,7 +3,9 @@ package com.dianping.cat.report.page.transaction;
 public enum JspFile {
 	VIEW("/jsp/report/transaction.jsp"),
 	
-	GRAPHS("/jsp/report/transaction_graphs.jsp");
+	GRAPHS("/jsp/report/transaction_graphs.jsp"),
+
+	MOBILE("/jsp/report/mobile.jsp");
 
 	private String m_path;
 

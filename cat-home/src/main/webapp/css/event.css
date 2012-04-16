@@ -12,6 +12,7 @@ tr.odd td {
 	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
+	text-align:right;
 }
 
 tr.even td {
@@ -19,6 +20,7 @@ tr.even td {
 	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
+	text-align:right;
 }
 
 tr.link td {

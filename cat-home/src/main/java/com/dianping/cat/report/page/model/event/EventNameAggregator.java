@@ -10,7 +10,7 @@ public class EventNameAggregator extends DefaultMerger {
 	public EventNameAggregator(EventReport eventReport) {
 		super(eventReport);
 	}
-
+	
 	@Override
 	protected void mergeName(EventName old, EventName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());

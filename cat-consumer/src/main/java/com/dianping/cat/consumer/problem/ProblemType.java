@@ -4,6 +4,8 @@ public enum ProblemType {
 	ERROR("error"),
 
 	FAILURE("failure"),
+	
+	HEARTBEAT("heartbeat"),
 
 	LONG_URL("long-url");
 
