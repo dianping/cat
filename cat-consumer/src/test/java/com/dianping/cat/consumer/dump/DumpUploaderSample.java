@@ -44,8 +44,12 @@ public class DumpUploaderSample extends ComponentTestCase {
 		analyzer.analyze(queue);
 
 		analyzer.doCheckpoint(true);
+		
+		System.out.println("checkpoint");
 
-		Thread.sleep(30 * 1000);
+		((DumpAnalyzer) analyzer).getDumpUploader().setSleepPeriod(0);
+
+		Thread.sleep(30 * 100 * 1000);
 	}
 
 	private DefaultMessageTree newMessageTree(int i, long timestamp) {

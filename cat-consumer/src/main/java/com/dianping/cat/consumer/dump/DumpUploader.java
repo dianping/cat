@@ -69,6 +69,13 @@ public class DumpUploader implements Initializable, LogEnabled {
 			m_job = Threads.forGroup("Cat").start(new WriteJob());
 		}
 	}
+	
+	
+	private long sleepPeriod = 1000;
+	
+	public void setSleepPeriod(long period) {
+		this.sleepPeriod = period;
+	}
 
 	class WriteJob implements Task {
 		private volatile boolean m_active = true;
@@ -90,7 +97,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 				while (isActive()) {
 					upload();
 
-					Thread.sleep(1000);
+					Thread.sleep(sleepPeriod);
 				}
 
 			} catch (Exception e) {
