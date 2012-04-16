@@ -24,6 +24,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("threshold")
 	private int m_longTime;
 
+	@FieldMeta("linkCount")
+	private int m_linkCount;
+
 	public Payload() {
 		super(ReportPage.PROBLEM);
 	}
@@ -75,13 +78,24 @@ public class Payload extends AbstractReportPayload<Action> {
 		}
 		return m_longTime;
 	}
-	
-	public int getRealLongTime(){
+
+	public int getRealLongTime() {
 		return m_longTime;
 	}
 
 	public void setLongTime(int longTime) {
 		m_longTime = longTime;
+	}
+
+	public int getLinkCount() {
+		if (m_linkCount < 40) {
+			m_linkCount = 40;
+		}
+		return m_linkCount;
+	}
+
+	public void setLinkCount(int linkSize) {
+		m_linkCount = linkSize;
 	}
 
 	@Override

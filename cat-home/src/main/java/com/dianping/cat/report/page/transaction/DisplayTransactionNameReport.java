@@ -14,9 +14,13 @@ import com.site.lookup.util.StringUtils;
 
 public class DisplayTransactionNameReport {
 
-	private List<TransactionModel> m_results = new ArrayList<TransactionModel>();
+	private List<TransactionNameModel> m_results = new ArrayList<TransactionNameModel>();
 
-	public List<TransactionModel> getResults() {
+	public DisplayTransactionNameReport() {
+
+	}
+
+	public List<TransactionNameModel> getResults() {
 		return m_results;
 	}
 
@@ -27,22 +31,25 @@ public class DisplayTransactionNameReport {
 
 			if (names != null) {
 				for (Entry<String, TransactionName> entry : names.getNames().entrySet()) {
-					m_results.add(new TransactionModel(entry.getKey(), entry.getValue()));
+					m_results.add(new TransactionNameModel(entry.getKey(), entry.getValue()));
 				}
 			}
 		}
 		if (!StringUtils.isEmpty(sorted)) {
-			Collections.sort(m_results, new TransactionComparator(sorted));
+			Collections.sort(m_results, new TransactionNameComparator(sorted));
 		}
 		return this;
 	}
 
-	public static class TransactionModel {
+	public static class TransactionNameModel {
 		private String m_type;
 
 		private TransactionName m_detail;
+		
+		public TransactionNameModel(){
+		}
 
-		public TransactionModel(String str, TransactionName detail) {
+		public TransactionNameModel(String str, TransactionName detail) {
 			m_type = str;
 			m_detail = detail;
 		}
@@ -56,16 +63,16 @@ public class DisplayTransactionNameReport {
 		}
 	}
 
-	public static class TransactionComparator implements Comparator<TransactionModel> {
+	public static class TransactionNameComparator implements Comparator<TransactionNameModel> {
 
 		private String m_sorted;
 
-		public TransactionComparator(String type) {
+		public TransactionNameComparator(String type) {
 			m_sorted = type;
 		}
 
 		@Override
-		public int compare(TransactionModel m1, TransactionModel m2) {
+		public int compare(TransactionNameModel m1, TransactionNameModel m2) {
 			if (m_sorted.equals("name") || m_sorted.equals("type")) {
 				return m1.getType().compareTo(m2.getType());
 			}

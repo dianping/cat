@@ -23,6 +23,11 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+			<role-hint>heartbeat</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.handler.HeartbeatHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
 			<role-hint>error</role-hint>
 			<implementation>com.dianping.cat.consumer.problem.handler.ErrorHandler</implementation>
 			<configuration>
@@ -58,6 +63,7 @@
 						<role-hint>failure</role-hint>
 						<role-hint>error</role-hint>
 						<role-hint>long-url</role-hint>
+						<role-hint>heartbeat</role-hint>
 					</role-hints>
 					<field-name>m_handlers</field-name>
 				</requirement>
