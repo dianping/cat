@@ -31,8 +31,6 @@ import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
-	private static final long MINUTE = 60 * 1000;
-
 	@Inject
 	private BucketManager m_bucketManager;
 

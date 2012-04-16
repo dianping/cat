@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="heartbeat-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <element name="domain" value-type="String" type="list" names="domains" />
+    <entity-ref name="period" type="list" names="periods" />
+  </entity>
+  <entity name="period">
+    <attribute name="minute" value-type="int" />
+    <attribute name="thread-count" value-type="int" />
+    <attribute name="daemon-count" value-type="int" />
+    <attribute name="total-started-count" value-type="int" />
+  </entity>
+</model>
+

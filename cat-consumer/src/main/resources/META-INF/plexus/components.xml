@@ -10,7 +10,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>300000</extraTime>
-				<analyzers>problem,transaction,event,ip,dump</analyzers>
+				<analyzers>problem,transaction,event,ip,heartbeat,dump</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -104,6 +104,19 @@
 		<component>
 			<role>com.dianping.cat.consumer.ip.TopIpAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.ip.TopIpAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>

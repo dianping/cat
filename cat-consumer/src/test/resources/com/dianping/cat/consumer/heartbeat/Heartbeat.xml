@@ -1,0 +1,10 @@
+<heartbeat-report domain="Review" startTime="2012-01-25 13:00:00" endTime="2012-01-25 13:59:00">
+   <domain>Cat</domain>
+   <period minute="0">
+   		<thread-count value="100"></thread-count>
+   		<daemon-count value="100"></daemon-count>
+   		<total-started-count value="100"></total-started-count>
+   </period>
+   <period minute="1">
+   </period>
+</heartbeat-report>

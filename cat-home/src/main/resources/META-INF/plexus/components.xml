@@ -151,6 +151,47 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>heartbeat-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>heartbeat-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.heartbeat.HistoricalHeartbeatService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>heartbeat</role-hint>
+			<implementation>com.dianping.cat.report.page.model.heartbeat.CompositeHeartbeatService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>heartbeat-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>ip-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
 			<requirements>
@@ -404,6 +445,30 @@
 			<implementation>com.dianping.cat.report.page.event.JspViewer</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.heartbeat.Handler</role>
+			<implementation>com.dianping.cat.report.page.heartbeat.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>heartbeat</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.heartbeat.JspViewer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.logview.Handler</role>
 			<implementation>com.dianping.cat.report.page.logview.Handler</implementation>
 			<requirements>
@@ -474,6 +539,11 @@
 					<role-hint>ip-local</role-hint>
 					<field-name>m_ipService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>heartbeat-local</role-hint>
+					<field-name>m_heartbeatService</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -543,6 +613,20 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.ip.LocalIpService</role>
 			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService</role>
+			<implementation>com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>

@@ -13,6 +13,8 @@ public enum ReportPage implements Page {
 
    EVENT("event", "e", "Event", "Event Summary Report", true),
 
+   HEARTBEAT("heartbeat", "h", "Heartbeat", "Heartbeat Summary Report", true),
+
    LOGVIEW("logview", "m", "Logview", "Log View Details", false),
 
    IP("ip", "ip", "Top IP", "Top Visited IP", true),

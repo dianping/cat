@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.site.lookup.util.StringUtils;
 
 public class DisplayTransactionNameReport {
 
@@ -35,9 +34,10 @@ public class DisplayTransactionNameReport {
 				}
 			}
 		}
-		if (!StringUtils.isEmpty(sorted)) {
-			Collections.sort(m_results, new TransactionNameComparator(sorted));
+		if (sorted == null) {
+			sorted = "total";
 		}
+		Collections.sort(m_results, new TransactionNameComparator(sorted));
 		return this;
 	}
 
@@ -45,8 +45,8 @@ public class DisplayTransactionNameReport {
 		private String m_type;
 
 		private TransactionName m_detail;
-		
-		public TransactionNameModel(){
+
+		public TransactionNameModel() {
 		}
 
 		public TransactionNameModel(String str, TransactionName detail) {

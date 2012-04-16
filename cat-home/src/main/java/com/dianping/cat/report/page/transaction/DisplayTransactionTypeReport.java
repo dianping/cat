@@ -9,15 +9,14 @@ import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.site.lookup.util.StringUtils;
 
 public class DisplayTransactionTypeReport {
 
 	private List<TransactionTypeModel> m_results = new ArrayList<TransactionTypeModel>();
 
-	public DisplayTransactionTypeReport(){
+	public DisplayTransactionTypeReport() {
 	}
-	
+
 	public List<TransactionTypeModel> getResults() {
 		return m_results;
 	}
@@ -29,9 +28,10 @@ public class DisplayTransactionTypeReport {
 				m_results.add(new TransactionTypeModel(entry.getKey(), entry.getValue()));
 			}
 		}
-		if (!StringUtils.isEmpty(sorted)) {
-			Collections.sort(m_results, new TransactionTypeComparator(sorted));
+		if (sorted == null) {
+			sorted = "total";
 		}
+		Collections.sort(m_results, new TransactionTypeComparator(sorted));
 		return this;
 	}
 
@@ -39,8 +39,8 @@ public class DisplayTransactionTypeReport {
 		private String m_type;
 
 		private TransactionType m_detail;
-		
-		public TransactionTypeModel(){
+
+		public TransactionTypeModel() {
 		}
 
 		public TransactionTypeModel(String str, TransactionType detail) {

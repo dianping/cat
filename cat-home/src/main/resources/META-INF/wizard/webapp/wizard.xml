@@ -14,6 +14,9 @@
       <page name="event" title="Event" path="e">
         <description>Event Summary Report</description>
       </page>
+      <page name="heartbeat" title="Heartbeat" path="h">
+        <description>Heartbeat Summary Report</description>
+      </page>
       <page name="logview" title="Logview" path="m" standalone="false">
         <description>Log View Details</description>
       </page>

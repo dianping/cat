@@ -15,6 +15,8 @@ com.dianping.cat.report.page.transaction.Handler.class,
 
 com.dianping.cat.report.page.event.Handler.class,
 
+com.dianping.cat.report.page.heartbeat.Handler.class,
+
 com.dianping.cat.report.page.logview.Handler.class,
 
 com.dianping.cat.report.page.ip.Handler.class,

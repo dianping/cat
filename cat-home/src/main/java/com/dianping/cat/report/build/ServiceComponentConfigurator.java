@@ -11,6 +11,9 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.page.model.event.CompositeEventService;
 import com.dianping.cat.report.page.model.event.HistoricalEventService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
+import com.dianping.cat.report.page.model.heartbeat.CompositeHeartbeatService;
+import com.dianping.cat.report.page.model.heartbeat.HistoricalHeartbeatService;
+import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
 import com.dianping.cat.report.page.model.ip.CompositeIpService;
 import com.dianping.cat.report.page.model.ip.HistoricalIpService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
@@ -57,6 +60,15 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //
 		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
 
+		all.add(C(ModelService.class, "heartbeat-local", LocalHeartbeatService.class) //
+		      .req(BucketManager.class) //
+		      .req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "heartbeat-historical", HistoricalHeartbeatService.class) //
+		      .req(BucketManager.class, ReportDao.class));
+		all.add(C(ModelService.class, "heartbeat", CompositeHeartbeatService.class) //
+		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
+
+		
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class, "realtime"));

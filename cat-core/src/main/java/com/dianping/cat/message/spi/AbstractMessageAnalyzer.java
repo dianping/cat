@@ -12,6 +12,8 @@ import com.site.lookup.ContainerHolder;
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 	private volatile boolean m_active = true;
 
+	protected static final long MINUTE = 60 * 1000;
+
 	@Override
 	public void analyze(MessageQueue queue) {
 		while (!isTimeout() && isActive()) {

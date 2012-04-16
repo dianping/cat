@@ -33,6 +33,16 @@
 				<version>1.0.15</version>
 				<executions>
 					<execution>
+						<id>generate heartbeat report model</id>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>dal-model</goal>
+						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/heartbeat-report-manifest.xml</manifest>
+						</configuration>
+					</execution>
+					<execution>
 						<id>generate problem report model</id>
 						<phase>generate-sources</phase>
 						<goals>
