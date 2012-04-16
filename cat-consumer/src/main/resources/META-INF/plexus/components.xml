@@ -102,8 +102,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.ip.IpAnalyzer</role>
-			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
+			<role>com.dianping.cat.consumer.ip.TopIpAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.ip.TopIpAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.dump.DumpAnalyzer</role>

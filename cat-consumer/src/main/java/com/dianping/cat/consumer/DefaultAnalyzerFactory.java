@@ -2,7 +2,7 @@ package com.dianping.cat.consumer;
 
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
-import com.dianping.cat.consumer.ip.IpAnalyzer;
+import com.dianping.cat.consumer.ip.TopIpAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
@@ -32,8 +32,9 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;
 		} else if (name.equals("ip")) {
-			IpAnalyzer analyzer = lookup(IpAnalyzer.class);
+			TopIpAnalyzer analyzer = lookup(TopIpAnalyzer.class);
 
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;
 		}
 

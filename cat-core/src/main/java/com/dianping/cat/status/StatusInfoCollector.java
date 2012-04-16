@@ -7,7 +7,6 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
 import java.lang.management.ThreadMXBean;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -164,9 +163,7 @@ class StatusInfoCollector extends BaseVisitor {
 		thread.setPeekCount(bean.getPeakThreadCount());
 		thread.setTotalStartedCount(bean.getTotalStartedThreadCount());
 
-		// remove below
-		java.lang.management.ThreadInfo[] threads = bean.dumpAllThreads(true, true);
-
-		System.out.println(Arrays.asList(threads));
+		// TODO remove below
+		// System.out.println(Arrays.asList(bean.dumpAllThreads(true, true)));
 	}
 }

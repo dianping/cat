@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.dump.DumpChannel;
 import com.dianping.cat.consumer.dump.DumpChannelManager;
 import com.dianping.cat.consumer.dump.DumpUploader;
 import com.dianping.cat.consumer.event.EventAnalyzer;
-import com.dianping.cat.consumer.ip.IpAnalyzer;
+import com.dianping.cat.consumer.ip.TopIpAnalyzer;
 import com.dianping.cat.consumer.logview.LogviewUploader;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.handler.ErrorHandler;
@@ -71,8 +71,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
-
-		all.add(C(IpAnalyzer.class));
+		
+		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //
+				.req(BucketManager.class, ReportDao.class));
 
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class) //
