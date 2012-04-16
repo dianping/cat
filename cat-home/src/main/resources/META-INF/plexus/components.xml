@@ -291,9 +291,6 @@
 					<role>long</role>
 				</requirement>
 				<requirement>
-					<role>int</role>
-				</requirement>
-				<requirement>
 					<role>java.util.List</role>
 				</requirement>
 			</requirements>
