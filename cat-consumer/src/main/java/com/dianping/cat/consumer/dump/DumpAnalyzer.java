@@ -11,7 +11,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -103,11 +102,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	@Override
 	public void initialize() throws InitializationException {
-		ServerConfig serverConfig = m_configManager.getServerConfig();
-
-		if (serverConfig != null) {
-			m_localMode = serverConfig.isLocalMode();
-		}
+		m_localMode = m_configManager.isLocalMode();
 
 		if (!m_localMode) {
 			m_uploader.start();

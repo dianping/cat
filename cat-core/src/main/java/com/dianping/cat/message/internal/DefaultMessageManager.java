@@ -20,6 +20,7 @@ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.status.StatusUpdateTask;
+import com.site.helper.Threads;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
@@ -169,7 +170,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_factory.initialize(m_domain.getId());
 
 		// start status update task
-		new Thread(m_statusUpdateTask).start();
+		Threads.forGroup().start(m_statusUpdateTask);
 	}
 
 	@Override

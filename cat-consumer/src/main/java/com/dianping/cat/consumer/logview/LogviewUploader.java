@@ -19,7 +19,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.hadoop.dal.Logview;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
@@ -31,9 +30,10 @@ import com.site.helper.Files;
 import com.site.helper.Files.AutoClose;
 import com.site.helper.Joiners;
 import com.site.helper.Splitters;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class LogviewUploader implements Runnable, Initializable, LogEnabled {
+public class LogviewUploader implements Task, Initializable, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
@@ -46,13 +46,15 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 	@Inject
 	private LogviewDao m_logviewDao;
 
-	private String m_baseDir = "target/bucket/logview";
+	private String m_baseDir;
 
 	private TodoList m_todoList;
 
-	private Logger m_logger;
-
 	private boolean m_localMode = true;
+
+	private boolean m_active;
+
+	private Logger m_logger;
 
 	public void addBucket(long timestamp, String domain) {
 		m_todoList.offer(timestamp + ":" + domain);
@@ -64,18 +66,19 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
-		ServerConfig serverConfig = m_configManager.getServerConfig();
-
-		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/logview";
-			m_localMode = serverConfig.getLocalMode();
-		}
-
-		m_todoList = new TodoList(new File(m_baseDir, "TODO"), m_logger);
+	public String getName() {
+		return getClass().getSimpleName();
 	}
 
-	// TODO temporary way
+	@Override
+	public void initialize() throws InitializationException {
+		m_baseDir = m_configManager.getHdfsLocalBaseDir("logview");
+		m_localMode = m_configManager.isLocalMode();
+		m_todoList = new TodoList(new File(m_baseDir, "TODO"), m_logger);
+		m_active = true;
+	}
+
+	// TODO try to remove it
 	public boolean isLocalMode() {
 		return m_localMode;
 	}
@@ -83,7 +86,7 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 	@Override
 	public void run() {
 		try {
-			while (true) {
+			while (m_active) {
 				String item = m_todoList.take();
 				int pos = item.indexOf(':');
 				long timestamp = Long.parseLong(item.substring(0, pos));
@@ -99,11 +102,16 @@ public class LogviewUploader implements Runnable, Initializable, LogEnabled {
 					throw e;
 				}
 
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			}
 		} catch (Exception e) {
 			m_logger.error("Error when uploading bucket.", e);
 		}
+	}
+
+	@Override
+	public void shutdown() {
+		m_active = false;
 	}
 
 	private void upload(long timestamp, LocalLogviewBucket bucket) throws DalException {

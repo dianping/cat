@@ -16,12 +16,13 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.site.helper.Files;
 import com.site.helper.Files.AutoClose;
 import com.site.helper.Scanners;
 import com.site.helper.Scanners.FileMatcher;
+import com.site.helper.Threads;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -37,11 +38,11 @@ public class DumpUploader implements Initializable, LogEnabled {
 	@Inject
 	private FileSystemManager m_fileSystemManager;
 
-	private String m_baseDir = "target/dump";
-
-	private WriteJob m_job = new WriteJob();
+	private String m_baseDir;
 
 	private Logger m_logger;
+
+	private Thread m_job;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -50,17 +51,12 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		ServerConfig serverConfig = m_configManager.getServerConfig();
-
-		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/dump";
-		}
+		m_baseDir = m_configManager.getHdfsLocalBaseDir("dump");
 	}
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
 		StringBuilder baseDir = new StringBuilder(32);
-		String id = "dump";
-		FileSystem fs = m_fileSystemManager.getFileSystem(id, baseDir);
+		FileSystem fs = m_fileSystemManager.getFileSystem("dump", baseDir);
 		Path file = new Path(baseDir.toString(), path);
 		FSDataOutputStream out = fs.create(file);
 
@@ -68,18 +64,24 @@ public class DumpUploader implements Initializable, LogEnabled {
 	}
 
 	public void start() {
-		if (!m_job.isAlive()) {
-			m_job.setName("DumpUploader");
-			m_job.start();
-			m_logger.info("DumpUploader started.");
+		// only start at first time and long running
+		if (m_job == null) {
+			m_job = Threads.forGroup().start(new WriteJob());
 		}
 	}
 
-	class WriteJob extends Thread {
+	class WriteJob implements Task {
 		private volatile boolean m_active = true;
 
+		@Override
+		public String getName() {
+			return "DumpUploader";
+		}
+
 		private boolean isActive() {
-			return m_active;
+			synchronized (this) {
+				return m_active;
+			}
 		}
 
 		@Override
@@ -88,7 +90,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 				while (isActive()) {
 					upload();
 
-					Thread.sleep(2000);
+					Thread.sleep(1000);
 				}
 
 			} catch (Exception e) {
@@ -96,8 +98,11 @@ public class DumpUploader implements Initializable, LogEnabled {
 			}
 		}
 
+		@Override
 		public void shutdown() {
-			m_active = false;
+			synchronized (this) {
+				m_active = false;
+			}
 		}
 
 		private void upload() {

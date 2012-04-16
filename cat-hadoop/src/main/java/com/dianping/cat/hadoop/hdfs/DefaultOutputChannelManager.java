@@ -12,8 +12,6 @@ import org.apache.hadoop.fs.Path;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
-import com.dianping.cat.configuration.server.entity.HdfsConfig;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
@@ -107,10 +105,9 @@ public class DefaultOutputChannelManager extends ContainerHolder implements Outp
 		}
 
 		FSDataOutputStream out = fs.create(file);
-		ServerConfig config = m_manager.getServerConfig();
-		HdfsConfig hdfsConfig = config.getStorage().findHdfs(id);
+		long maxSize = m_manager.getFileMaxSize(id);
 
-		channel.initialize(hdfsConfig, out);
+		channel.initialize(maxSize, out);
 
 		m_channels.put(key, channel);
 		return channel;

@@ -2,6 +2,7 @@ package com.dianping.cat.message.internal;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.lang.management.ManagementFactory;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -116,10 +117,18 @@ public class DefaultMessageProducer implements MessageProducer {
 	@Override
 	public Transaction newTransaction(String type, String name) {
 		if (m_manager.isCatEnabled()) {
-			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
+			int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
 
-			m_manager.start(transaction);
-			return transaction;
+			// if the system is too busy, then stop producing new messages
+			// TODO make it configurable
+			if (threadCount < 400) {
+				DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
+
+				m_manager.start(transaction);
+				return transaction;
+			} else {
+				return NullMessage.TRANSACTION;
+			}
 		} else {
 			return NullMessage.TRANSACTION;
 		}

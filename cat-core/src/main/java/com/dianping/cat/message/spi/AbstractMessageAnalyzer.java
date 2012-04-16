@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Set;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.site.lookup.ContainerHolder;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
+	private volatile boolean m_active = true;
+
 	@Override
 	public void analyze(MessageQueue queue) {
-		while (!isTimeout()) {
+		while (!isTimeout() && isActive()) {
 			MessageTree tree = queue.poll();
 
 			if (tree != null) {
@@ -32,16 +33,22 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		}
 	}
 
+	protected boolean isActive() {
+		synchronized (this) {
+			return m_active;
+		}
+	}
+
+	public void shutdown() {
+		synchronized (this) {
+			m_active = false;
+		}
+	}
+
 	protected boolean isLocalMode() {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		ServerConfig config = manager.getServerConfig();
 
-		// local mode should be turned off explicitly
-		if (config != null && !config.isLocalMode()) {
-			return false;
-		} else {
-			return true;
-		}
+		return manager.isLocalMode();
 	}
 
 	public void doCheckpoint(boolean atEnd) {

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.concurrent.ExecutorService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -18,6 +19,8 @@ import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.site.helper.Files;
+import com.site.helper.Threads;
+import com.site.helper.Threads.DefaultThreadListener;
 import com.site.web.AbstractContainerServlet;
 
 public class CatServlet extends AbstractContainerServlet {
@@ -32,6 +35,37 @@ public class CatServlet extends AbstractContainerServlet {
 		String catServerXml = servletConfig.getInitParameter("cat-server-xml");
 		ClientConfig config = loadConfig(null);
 
+		Threads.addListener(new DefaultThreadListener() {
+			@Override
+			public void onThreadGroupCreated(ThreadGroup group, String name) {
+				getLogger().info(String.format("Thread group(%s) created.", name));
+			}
+			
+			@Override
+			public void onThreadPoolCreated(ExecutorService pool, String name) {
+				getLogger().info(String.format("Thread pool(%s) created.", name));
+			}
+
+			@Override
+			public void onThreadStarting(Thread thread, String name) {
+				getLogger().info(String.format("Starting thread(%s) ...", name));
+			}
+
+			@Override
+			public void onThreadStopping(Thread thread, String name) {
+				getLogger().info(String.format("Stopping thread(%s).", name));
+			}
+
+			@Override
+			public boolean onUncaughtException(Thread thread, Throwable e) {
+				getLogger().error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
+				return true;
+			}
+		});
+
+		// to notify CAT client to not add another ThreadListener
+		getContainer().addContextValue("Cat.ThreadListener", "true");
+
 		try {
 			MessageManager manager = lookup(MessageManager.class);
 
@@ -43,13 +77,7 @@ public class CatServlet extends AbstractContainerServlet {
 
 			final DefaultMessageHandler handler = (DefaultMessageHandler) lookup(MessageHandler.class);
 
-			new Thread(handler).start();
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				@Override
-				public void run() {
-					handler.shutdown();
-				}
-			});
+			Threads.forGroup().start(handler);
 		} catch (Exception e) {
 			m_exception = e;
 			throw new RuntimeException("Error when initializing CatServlet, "

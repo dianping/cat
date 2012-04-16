@@ -43,7 +43,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	@Inject
 	private GraphBuilder m_builder;
-	
+
 	@Inject
 	private ServerConfigManager m_manager;
 
@@ -131,10 +131,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
-		if(StringUtils.isEmpty(payload.getDomain())){
-			payload.setDomain(m_manager.getServerConfig().getConsole().getDefaultDomain());
+
+		if (StringUtils.isEmpty(payload.getDomain())) {
+			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
-		
+
 		model.setDisplayDomain(payload.getDomain());
 
 		if (payload.getPeriod().isFuture()) {

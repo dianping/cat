@@ -11,16 +11,11 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.HdfsConfig;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
-import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 public class DumpChannelManager extends ContainerHolder implements Initializable, LogEnabled {
-	private static final long DEFAULT_MAX_SIZE = 128 * 1024 * 1024L;
-
 	@Inject
 	private MessageCodec m_codec;
 
@@ -28,11 +23,11 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 
 	private Map<String, Integer> m_indexes = new HashMap<String, Integer>();
 
-	private long m_maxSize = DEFAULT_MAX_SIZE;
+	private long m_maxSize;
 
 	private long m_lastChunkAdjust = 100 * 1024L; // 100K
 
-	private String m_baseDir = "target/bucket/dump";
+	private String m_baseDir;
 
 	private Logger m_logger;
 
@@ -60,17 +55,16 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 	}
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		ServerConfigManager configManager = lookup(ServerConfigManager.class);
-		ServerConfig config = configManager.getServerConfig();
-
-		if (config != null) {
-			StorageConfig storage = config.getStorage();
-			HdfsConfig hdfsConfig = storage.findHdfs("dump");
-
-			m_baseDir = storage.getLocalBaseDir() + "/dump";
-			m_maxSize = toLong(hdfsConfig == null ? null : hdfsConfig.getMaxSize(), DEFAULT_MAX_SIZE);
-		}
+		
+		m_baseDir = configManager.getHdfsLocalBaseDir("dump");
+		m_maxSize = configManager.getHdfsFileMaxSize("dump");
 	}
 
 	private DumpChannel makeChannel(String key, String path, boolean forceNew) throws IOException {
@@ -115,33 +109,5 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 		}
 
 		return channel;
-	}
-
-	private long toLong(String str, long defaultValue) {
-		long value = 0;
-		int len = str == null ? 0 : str.length();
-
-		for (int i = 0; i < len; i++) {
-			char ch = str.charAt(i);
-
-			if (Character.isDigit(ch)) {
-				value = value * 10L + (ch - '0');
-			} else if (ch == 'm' || ch == 'M') {
-				value *= 1024 * 1024L;
-			} else if (ch == 'k' || ch == 'K') {
-				value *= 1024L;
-			}
-		}
-
-		if (value > 0) {
-			return value;
-		} else {
-			return defaultValue;
-		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

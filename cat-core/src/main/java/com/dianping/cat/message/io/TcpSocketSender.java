@@ -1,7 +1,7 @@
 package com.dianping.cat.message.io;
 
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -24,9 +24,11 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.helper.Threads;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class TcpSocketSender extends Thread implements MessageSender, LogEnabled {
+public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Inject
 	private MessageCodec m_codec;
 
@@ -67,8 +69,9 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 			throw new RuntimeException("No server address was configured for TcpSocketSender!");
 		}
 
-		ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(10),
-		      Executors.newFixedThreadPool(10));
+		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("TcpSocketSender-Boss", 10);
+		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("TcpSocketSender-Worker", 10);
+		ChannelFactory factory = new NioClientSocketChannelFactory(bossExecutor, workerExecutor);
 		ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
@@ -93,9 +96,7 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 		}
 
 		m_bootstrap = bootstrap;
-
-		this.setName("TcpSocketSender");
-		this.start();
+		Threads.forGroup().start(this);
 	}
 
 	public void reconnect() {
@@ -231,5 +232,10 @@ public class TcpSocketSender extends Thread implements MessageSender, LogEnabled
 		public void exceptionCaught(ChannelHandlerContext ctx, ExceptionEvent e) {
 			e.getChannel().close();
 		}
+	}
+
+	@Override
+	public String getName() {
+		return "TcpSocketSender";
 	}
 }

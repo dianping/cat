@@ -79,9 +79,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, "plain-text"));
 
 		all.add(C(DumpUploader.class) //
-		      .req(FileSystemManager.class, ServerConfigManager.class));
+		      .req(ServerConfigManager.class, FileSystemManager.class)); //
 		all.add(C(LogviewUploader.class) //
-		      .req(ServerConfigManager.class, BucketManager.class, LogviewDao.class, FileSystemManager.class));
+		      .req(ServerConfigManager.class, FileSystemManager.class) //
+		      .req(BucketManager.class, LogviewDao.class));
 
 		return all;
 	}
