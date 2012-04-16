@@ -33,7 +33,7 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-	
+
 	@Inject
 	private ServerConfigManager m_manager;
 
@@ -75,9 +75,11 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-		if(StringUtils.isEmpty(payload.getDomain())){
-			payload.setDomain(m_manager.getServerConfig().getConsole().getDefaultDomain());
+
+		if (StringUtils.isEmpty(payload.getDomain())) {
+			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
+
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.IP);
 
@@ -131,7 +133,7 @@ public class Handler implements PageHandler<Context> {
 				return m2.getLastFifteen() - m1.getLastFifteen(); // desc order
 			}
 		});
-		
+
 		if (displayModels.size() > 100) {
 			return displayModels.subList(0, 100);
 		} else {

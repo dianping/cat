@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.build;
 
 import static com.dianping.cat.consumer.problem.ProblemType.ERROR;
 import static com.dianping.cat.consumer.problem.ProblemType.FAILURE;
+import static com.dianping.cat.consumer.problem.ProblemType.HEARTBEAT;
 import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
 
 import java.util.ArrayList;
@@ -16,12 +17,13 @@ import com.dianping.cat.consumer.dump.DumpChannel;
 import com.dianping.cat.consumer.dump.DumpChannelManager;
 import com.dianping.cat.consumer.dump.DumpUploader;
 import com.dianping.cat.consumer.event.EventAnalyzer;
-import com.dianping.cat.consumer.ip.IpAnalyzer;
+import com.dianping.cat.consumer.ip.TopIpAnalyzer;
 import com.dianping.cat.consumer.logview.LogviewUploader;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.handler.ErrorHandler;
 import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
+import com.dianping.cat.consumer.problem.handler.HeartbeatHandler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.dal.LogviewDao;
@@ -48,6 +50,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
+		
+		all.add(C(Handler.class, HEARTBEAT.getName(), HeartbeatHandler.class));
 
 		all.add(C(Handler.class, ERROR.getName(), ErrorHandler.class)//
 		      .config(E("errorType").value(errorTypes)));
@@ -59,7 +63,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName() }, "m_handlers") //
+		      .req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName() ,HEARTBEAT.getName() }, "m_handlers") //
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
@@ -67,8 +71,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
-
-		all.add(C(IpAnalyzer.class));
+		
+		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //
+				.req(BucketManager.class, ReportDao.class));
 
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class) //
@@ -79,9 +84,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, "plain-text"));
 
 		all.add(C(DumpUploader.class) //
-		      .req(FileSystemManager.class, ServerConfigManager.class));
+		      .req(ServerConfigManager.class, FileSystemManager.class)); //
 		all.add(C(LogviewUploader.class) //
-		      .req(ServerConfigManager.class, BucketManager.class, LogviewDao.class, FileSystemManager.class));
+		      .req(ServerConfigManager.class, FileSystemManager.class) //
+		      .req(BucketManager.class, LogviewDao.class));
 
 		return all;
 	}

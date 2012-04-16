@@ -4,7 +4,7 @@
     <attribute name="domain" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <element name="domain" value-type="String" />
+    <element name="domain" value-type="String" type="list" names="domains" />
     <entity-ref name="type" type="list" names="types" />
   </entity>
   <entity name="type">

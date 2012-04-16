@@ -24,6 +24,8 @@ public class ProblemStatistics {
 
 	private int m_threshold = ONE_SECOND;
 
+	public static int s_linkCount = 40;
+
 	private static final int ONE_SECOND = 1000;
 
 	public String getSubTitle() {
@@ -51,7 +53,7 @@ public class ProblemStatistics {
 
 	public ProblemStatistics displayByAllIps(ProblemReport report,Payload payload) {
 		m_threshold = payload.getLongTime();
-
+		s_linkCount = payload.getLinkCount();
 		if (report == null) {
 			return null;
 		}
@@ -73,7 +75,8 @@ public class ProblemStatistics {
 
 	public ProblemStatistics displayByIp(ProblemReport report, Model model, Payload payload) {
 		m_threshold = payload.getLongTime();
-
+		s_linkCount = payload.getLinkCount();
+		
 		if (report == null) {
 			return null;
 		}
@@ -100,7 +103,8 @@ public class ProblemStatistics {
 	public ProblemStatistics displayByGroupOrThread(ProblemReport report, Model model,Payload payload) {
 		Machine machine = report.getMachines().get(model.getIpAddress());
 		m_threshold = payload.getLongTime();
-
+		s_linkCount = payload.getLinkCount();
+		
 		if (machine == null) {
 			return null;
 		}
@@ -198,9 +202,9 @@ public class ProblemStatistics {
 			StatusStatistics statusStatistics = m_status.get(status);
 
 			if (statusStatistics == null) {
-				m_status.put(status, new StatusStatistics(entry, groupName, threadId));
+				m_status.put(status, new StatusStatistics(entry, groupName, threadId ));
 			} else {
-				statusStatistics.add(entry, groupName, threadId);
+				statusStatistics.add(entry, groupName, threadId );
 			}
 		}
 
@@ -246,15 +250,13 @@ public class ProblemStatistics {
 
 		private List<String> m_links = new ArrayList<String>();
 
-		private static int s_maxLinkSize = 40;
-
-		public StatusStatistics(Entry entry, String groupName, String threadId) {
+		public StatusStatistics(Entry entry, String groupName, String threadId ) {
 			m_status = entry.getStatus();
 			add(entry, groupName, threadId);
 		}
 
 		public void add(Entry entry, String groupName, String threadId) {
-			if (m_links.size() < s_maxLinkSize) {
+			if (m_links.size() < s_linkCount) {
 				m_links.add(entry.getMessageId());
 			}
 			m_count++;

@@ -23,6 +23,7 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -43,7 +44,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	@Inject
 	private GraphBuilder m_builder;
-	
+
 	@Inject
 	private ServerConfigManager m_manager;
 
@@ -131,10 +132,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
-		if(StringUtils.isEmpty(payload.getDomain())){
-			payload.setDomain(m_manager.getServerConfig().getConsole().getDefaultDomain());
+
+		if (StringUtils.isEmpty(payload.getDomain())) {
+			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
-		
+
 		model.setDisplayDomain(payload.getDomain());
 
 		if (payload.getPeriod().isFuture()) {
@@ -150,6 +152,19 @@ public class Handler implements PageHandler<Context>, Initializable {
 		case GRAPHS:
 			showGraphs(model, payload);
 			break;
+		case MOBILE:
+			showReport(model, payload);
+			if (!StringUtils.isEmpty(payload.getType())) {
+				DisplayTransactionNameReport report = model.getDisplayNameReport();
+				Gson gson = new Gson();
+				String json = gson.toJson(report);
+				model.setMobileResponse(json);
+			} else {
+				DisplayTransactionTypeReport report = model.getDisplayTypeReport();
+				Gson gson = new Gson();
+				String json = gson.toJson(report);
+				model.setMobileResponse(json);
+			}
 		}
 
 		m_jspViewer.view(ctx, model);
@@ -206,7 +221,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 				if (!StringUtils.isEmpty(type)) {
 					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, report));
 				} else {
-					model.setDisplayTypeReport(new DisplayTransactionReport().display(sorted, report));
+					model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, report));
 				}
 			}
 		} catch (Throwable e) {

@@ -4,7 +4,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -62,11 +61,8 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 	@Override
 	public void initialize() throws InitializationException {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		ServerConfig config = manager.getServerConfig();
-
-		if (config != null) {
-			m_defaultDomain = config.getConsole().getDefaultDomain();
-		}
+		
+		m_defaultDomain = manager.getConsoleDefaultDomain();
 	}
 
 	@Override

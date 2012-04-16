@@ -8,7 +8,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
-import com.dianping.cat.configuration.server.entity.LongUrl;
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
@@ -21,7 +20,7 @@ public class LongUrlHandler implements Handler, Initializable {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private int m_defaultThreshold = 1000; // 1 second
+	private int m_defaultThreshold;
 
 	private Map<String, Integer> m_thresholds = new HashMap<String, Integer>();
 
@@ -57,17 +56,13 @@ public class LongUrlHandler implements Handler, Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		LongUrl longUrl = m_configManager.getServerConfig().getConsumer().getLongUrl();
+		Map<String, Domain> domains = m_configManager.getLongUrlDomains();
 
-		if (longUrl != null) {
-			if (longUrl.getDefaultThreshold() != null) {
-				m_defaultThreshold = longUrl.getDefaultThreshold();
-			}
+		m_defaultThreshold = m_configManager.getLongUrlDefaultThreshold();
 
-			for (Domain domain : longUrl.getDomains().values()) {
-				if (domain.getThreshold() != null) {
-					m_thresholds.put(domain.getName(), domain.getThreshold());
-				}
+		for (Domain domain : domains.values()) {
+			if (domain.getThreshold() != null) {
+				m_thresholds.put(domain.getName(), domain.getThreshold());
 			}
 		}
 	}

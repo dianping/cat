@@ -19,7 +19,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.storage.Bucket;
 import com.site.helper.Splitters;
@@ -167,12 +166,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
-		ServerConfig serverConfig = m_configManager.getServerConfig();
-
-		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/report";
-		}
-
+		m_baseDir = m_configManager.getHdfsLocalBaseDir("logview");
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 

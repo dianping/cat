@@ -11,33 +11,39 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.site.lookup.util.StringUtils;
 
-public class DisplayTransactionReport {
+public class DisplayTransactionTypeReport {
 
-	private List<TransactionModel> m_results = new ArrayList<TransactionModel>();
+	private List<TransactionTypeModel> m_results = new ArrayList<TransactionTypeModel>();
 
-	public List<TransactionModel> getResults() {
+	public DisplayTransactionTypeReport(){
+	}
+	
+	public List<TransactionTypeModel> getResults() {
 		return m_results;
 	}
 
-	public DisplayTransactionReport display(String sorted, TransactionReport report) {
+	public DisplayTransactionTypeReport display(String sorted, TransactionReport report) {
 		Map<String, TransactionType> types = report.getTypes();
 		if (types != null) {
 			for (Entry<String, TransactionType> entry : types.entrySet()) {
-				m_results.add(new TransactionModel(entry.getKey(), entry.getValue()));
+				m_results.add(new TransactionTypeModel(entry.getKey(), entry.getValue()));
 			}
 		}
 		if (!StringUtils.isEmpty(sorted)) {
-			Collections.sort(m_results, new TransactionComparator(sorted));
+			Collections.sort(m_results, new TransactionTypeComparator(sorted));
 		}
 		return this;
 	}
 
-	public static class TransactionModel {
+	public static class TransactionTypeModel {
 		private String m_type;
 
 		private TransactionType m_detail;
+		
+		public TransactionTypeModel(){
+		}
 
-		public TransactionModel(String str, TransactionType detail) {
+		public TransactionTypeModel(String str, TransactionType detail) {
 			m_type = str;
 			m_detail = detail;
 		}
@@ -51,16 +57,16 @@ public class DisplayTransactionReport {
 		}
 	}
 
-	public static class TransactionComparator implements Comparator<TransactionModel> {
+	public static class TransactionTypeComparator implements Comparator<TransactionTypeModel> {
 
 		private String m_sorted;
 
-		public TransactionComparator(String type) {
+		public TransactionTypeComparator(String type) {
 			m_sorted = type;
 		}
 
 		@Override
-		public int compare(TransactionModel m1, TransactionModel m2) {
+		public int compare(TransactionTypeModel m1, TransactionTypeModel m2) {
 			if (m_sorted.equals("name") || m_sorted.equals("type")) {
 				return m1.getType().compareTo(m2.getType());
 			}

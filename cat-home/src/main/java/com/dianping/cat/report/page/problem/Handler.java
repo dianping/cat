@@ -87,14 +87,18 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void setDefaultThreshold(Model model, Payload payload) {
-		Domain d = m_manager.getServerConfig().getConsumer().getLongUrl().getDomains().get(payload.getDomain());
+		Map<String, Domain> domains = m_manager.getLongUrlDomains();
+		Domain d = domains.get(payload.getDomain());
+
 		if (d != null) {
 			int longUrlTime = d.getThreshold();
+
 			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
 			      && longUrlTime != 4000 && longUrlTime != 5000) {
 				double sec = (double) (longUrlTime) / (double) 1000;
-				NumberFormat nf = new DecimalFormat("#.#");
+				NumberFormat nf = new DecimalFormat("#.##");
 				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
+
 				model.setDefaultThreshold(option);
 			}
 		}
@@ -112,11 +116,16 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+
 		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getServerConfig().getConsole().getDefaultDomain());
+			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
+
 		setDefaultThreshold(model, payload);
-		Domain d = m_manager.getServerConfig().getConsumer().getLongUrl().getDomains().get(payload.getDomain());
+
+		Map<String, Domain> domains = m_manager.getLongUrlDomains();
+		Domain d = domains.get(payload.getDomain());
+
 		if (d != null && payload.getRealLongTime() == 0) {
 			payload.setLongTime(d.getThreshold());
 		}

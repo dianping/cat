@@ -9,7 +9,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Disposable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -19,9 +18,11 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.helper.Threads;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageStorage implements MessageStorage, Initializable, Disposable, LogEnabled {
+public class DefaultMessageStorage implements MessageStorage, Initializable, LogEnabled {
 	@Inject
 	private MessagePathBuilder m_builder;
 
@@ -33,21 +34,13 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 	private Logger m_logger;
 
 	@Override
-	public void dispose() {
-		m_job.shutdown();
-	}
-
-	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
-		Thread thread = new Thread(m_job);
-
-		thread.setName("Storage write Job");
-		thread.start();
+	public MessageTree get(String messageId) {
+		return null;
 	}
 
 	@Override
@@ -58,6 +51,21 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 	}
 
 	@Override
+	public void initialize() throws InitializationException {
+		Threads.forGroup().start(m_job);
+	}
+
+	@Override
+	public MessageTree next(String messageId, String tag) {
+		return null;
+	}
+
+	@Override
+	public MessageTree previous(String messageId, String tag) {
+		return null;
+	}
+
+	@Override
 	public String store(MessageTree tree, String... tags) {
 		String path = m_builder.getLogViewPath(tree.getMessageId());
 
@@ -65,7 +73,7 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 		return path;
 	}
 
-	class WriteJob implements Runnable {
+	class WriteJob implements Task {
 		private BlockingQueue<MessageTree> m_queue = new LinkedBlockingQueue<MessageTree>();
 
 		private boolean m_active = true;
@@ -76,6 +84,11 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 			} catch (Exception e) {
 				m_logger.warn("Error when adding job to queue.", e);
 			}
+		}
+
+		@Override
+		public String getName() {
+			return "DefaultMessageStorage";
 		}
 
 		private void handle(MessageTree tree) {
@@ -135,26 +148,9 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Dis
 			}
 		}
 
+		@Override
 		public void shutdown() {
 			m_active = false;
 		}
-	}
-
-	@Override
-	public MessageTree get(String messageId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public MessageTree next(String messageId, String tag) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public MessageTree previous(String messageId, String tag) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

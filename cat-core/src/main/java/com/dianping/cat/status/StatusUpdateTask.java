@@ -11,9 +11,10 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.StatusInfo;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class StatusUpdateTask implements Runnable, Initializable {
+public class StatusUpdateTask implements Task, Initializable {
 	@Inject
 	private MessageStatistics m_statistics;
 
@@ -24,6 +25,11 @@ public class StatusUpdateTask implements Runnable, Initializable {
 	private long m_interval = 60 * 1000; // 60 seconds
 
 	@Override
+	public String getName() {
+		return "StatusUpdateTask";
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
@@ -31,7 +37,7 @@ public class StatusUpdateTask implements Runnable, Initializable {
 	@Override
 	public void run() {
 		Cat.setup("StatusUpdateTask");
-		
+
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
 			MessageProducer cat = Cat.getProducer();
@@ -53,7 +59,7 @@ public class StatusUpdateTask implements Runnable, Initializable {
 				}
 			}
 		}
-		
+
 		Cat.reset();
 	}
 
@@ -61,6 +67,7 @@ public class StatusUpdateTask implements Runnable, Initializable {
 		m_interval = interval;
 	}
 
+	@Override
 	public void shutdown() {
 		m_active = false;
 	}

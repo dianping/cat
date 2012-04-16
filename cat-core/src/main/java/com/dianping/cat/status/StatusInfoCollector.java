@@ -162,5 +162,8 @@ class StatusInfoCollector extends BaseVisitor {
 		thread.setDaemonCount(bean.getDaemonThreadCount());
 		thread.setPeekCount(bean.getPeakThreadCount());
 		thread.setTotalStartedCount(bean.getTotalStartedThreadCount());
+
+		// TODO remove below
+		// System.out.println(Arrays.asList(bean.dumpAllThreads(true, true)));
 	}
 }

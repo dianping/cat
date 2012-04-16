@@ -16,11 +16,11 @@ import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.helper.Threads.Task;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, Initializable, LogEnabled,
-      Runnable {
+public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, Initializable, LogEnabled, Task {
 	@Inject
 	private MessageManager m_manager;
 
@@ -40,7 +40,7 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 	public void handle(MessageTree tree) {
 		List<MessageConsumer> consumers = m_registry.getConsumers();
 		int size = consumers.size();
-		
+
 		for (int i = 0; i < size; i++) {
 			MessageConsumer consumer = consumers.get(i);
 
@@ -88,7 +88,13 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 		m_registry = registry;
 	}
 
+	@Override
 	public void shutdown() {
 		m_receiver.shutdown();
+	}
+
+	@Override
+	public String getName() {
+		return getClass().getSimpleName();
 	}
 }

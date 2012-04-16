@@ -23,7 +23,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -42,7 +41,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private String m_baseDir = "target/bucket/logview";
+	private String m_baseDir;
 
 	// key => offset of record
 	private Map<String, Long> m_idToOffsets = new HashMap<String, Long>();
@@ -250,12 +249,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 	@Override
 	public void initialize(Class<?> type, String domain, Date timestamp) throws IOException {
-		ServerConfig serverConfig = m_configManager.getServerConfig();
-
-		if (serverConfig != null) {
-			m_baseDir = serverConfig.getStorage().getLocalBaseDir() + "/logview";
-		}
-
+		m_baseDir = m_configManager.getHdfsLocalBaseDir("logview");
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 

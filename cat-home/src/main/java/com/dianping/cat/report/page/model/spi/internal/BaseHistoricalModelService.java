@@ -4,7 +4,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -30,11 +29,8 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	@Override
 	public void initialize() throws InitializationException {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		ServerConfig serverConfig = manager.getServerConfig();
-
-		if (serverConfig != null) {
-			m_localMode = serverConfig.isLocalMode();
-		}
+		
+		m_localMode = manager.isLocalMode();
 	}
 
 	@Override

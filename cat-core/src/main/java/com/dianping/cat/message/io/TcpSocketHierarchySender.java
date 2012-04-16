@@ -27,9 +27,11 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.helper.Threads;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class TcpSocketHierarchySender extends Thread implements MessageSender, LogEnabled {
+public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled {
 	@Inject
 	private MessageCodec m_codec;
 
@@ -75,12 +77,16 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 	}
 
 	@Override
+	public String getName() {
+		return "TcpSocketHierarchySender";
+	}
+
+	@Override
 	public void initialize() {
 		m_manager = new ChannelManager(m_logger, m_serverAddresses);
 
-		this.setName("TcpSocketHierarchySender");
-		this.start();
-		m_manager.start();
+		Threads.forGroup().start(this);
+		Threads.forGroup().start(m_manager);
 	}
 
 	@Override
@@ -161,7 +167,7 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 		m_manager.shutdown();
 	}
 
-	static class ChannelManager extends Thread {
+	static class ChannelManager implements Task {
 		private List<InetSocketAddress> m_serverAddresses;
 
 		private List<ChannelFuture> m_futures;
@@ -176,7 +182,7 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 
 		private ChannelFuture m_lastFuture;
 
-		private boolean m_enabled = true;
+		private boolean m_active = true;
 
 		public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses) {
 			int len = serverAddresses.size();
@@ -236,6 +242,11 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 			return m_activeFuture;
 		}
 
+		@Override
+		public String getName() {
+			return "TcpSocketHierarchySender-ChannelManager";
+		}
+
 		public void releaseAll() {
 			for (ChannelFuture future : m_futures) {
 				if (future != null) {
@@ -250,7 +261,7 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 		@Override
 		public void run() {
 			try {
-				while (m_enabled) {
+				while (m_active) {
 					if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
 						m_activeIndex = m_serverAddresses.size();
 					}
@@ -266,15 +277,16 @@ public class TcpSocketHierarchySender extends Thread implements MessageSender, L
 						}
 					}
 
-					Thread.sleep(2 * 1000); // check every 2 seconds
+					Thread.sleep(2 * 1000L); // check every 2 seconds
 				}
 			} catch (InterruptedException e) {
 				// ignore
 			}
 		}
 
+		@Override
 		public void shutdown() {
-			m_enabled = false;
+			m_active = false;
 		}
 	}
 

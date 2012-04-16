@@ -3,8 +3,6 @@
 	enable-xml-parser="true" enable-base-visitor="true">
 	<entity name="event-report" root="true">
 		<attribute name="domain" key="true" />
-		<attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
 		<element name="domain" value-type="String" type="set" names="domain-names" />
 		<entity-ref name="type" type="map" method-find-or-create="true" />
 	</entity>

@@ -2,11 +2,14 @@ package com.dianping.cat;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.concurrent.ExecutorService;
 
 import org.codehaus.plexus.DefaultPlexusContainer;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.PlexusContainerException;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.configuration.ClientConfigMerger;
 import com.dianping.cat.configuration.ClientConfigValidator;
@@ -15,6 +18,8 @@ import com.dianping.cat.configuration.client.transform.DefaultXmlParser;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.site.helper.Files;
+import com.site.helper.Threads;
+import com.site.helper.Threads.DefaultThreadListener;
 
 /**
  * This is the main entry point to the system.
@@ -34,6 +39,8 @@ public class Cat {
 
 	private PlexusContainer m_container;
 
+	private Logger m_logger;
+
 	private Cat() {
 	}
 
@@ -51,12 +58,12 @@ public class Cat {
 		return s_instance;
 	}
 
-	public static MessageProducer getProducer() {
-		return getInstance().m_producer;
-	}
-
 	public static MessageManager getManager() {
 		return getInstance().m_manager;
+	}
+
+	public static MessageProducer getProducer() {
+		return getInstance().m_producer;
 	}
 
 	// this should be called during application initialization time
@@ -87,10 +94,15 @@ public class Cat {
 
 		if (config != null) {
 			getInstance().m_manager.initializeClient(config);
+			getInstance().m_logger.info("Cat client is initialized!");
 		} else {
 			getInstance().m_manager.initializeClient(null);
-			System.out.println("[WARN] Cat client is disabled due to no config file found!");
+			getInstance().m_logger.warn("Cat client is disabled due to no config file found!");
 		}
+	}
+
+	public static boolean isInitialized() {
+		return s_instance.m_initialized;
 	}
 
 	static ClientConfig loadClientConfig(File configFile) {
@@ -108,7 +120,7 @@ public class Cat {
 
 					globalConfig = new DefaultXmlParser().parse(xml);
 				} else {
-					System.out.format("[WARN] global config file(%s) not found, IGNORED.", configFile);
+					getInstance().m_logger.warn(String.format("Global config file(%s) not found, IGNORED.", configFile));
 				}
 			}
 
@@ -143,10 +155,6 @@ public class Cat {
 		return clientConfig;
 	}
 
-	public static boolean isInitialized() {
-		return s_instance.m_initialized;
-	}
-
 	public static <T> T lookup(Class<T> role) throws ComponentLookupException {
 		return lookup(role, null);
 	}
@@ -170,8 +178,53 @@ public class Cat {
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
 	}
 
+	private boolean isCatServerFound(PlexusContainer container) {
+		try {
+			return container.getContext().get("Cat.ThreadListener") != null;
+		} catch (ContextException e) {
+			return false;
+		}
+	}
+
 	void setContainer(PlexusContainer container) {
 		m_container = container;
+
+		try {
+			m_logger = container.getLoggerManager().getLoggerForComponent(MessageManager.class.getName());
+		} catch (Exception e) {
+			throw new RuntimeException("Unable to get instance of Logger, "
+			      + "please make sure the environment was setup correctly!", e);
+		}
+
+		if (!isCatServerFound(container)) {
+			Threads.addListener(new DefaultThreadListener() {
+				@Override
+				public void onThreadGroupCreated(ThreadGroup group, String name) {
+					m_logger.info(String.format("Thread group(%s) created.", name));
+				}
+				
+				@Override
+				public void onThreadPoolCreated(ExecutorService pool, String name) {
+					m_logger.info(String.format("Thread pool(%s) created.", name));
+				}
+
+				@Override
+				public void onThreadStarting(Thread thread, String name) {
+					m_logger.info(String.format("Starting thread(%s) ...", name));
+				}
+
+				@Override
+				public void onThreadStopping(Thread thread, String name) {
+					m_logger.info(String.format("Stopping thread(%s).", name));
+				}
+
+				@Override
+				public boolean onUncaughtException(Thread thread, Throwable e) {
+					m_logger.error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
+					return true;
+				}
+			});
+		}
 
 		try {
 			m_manager = (MessageManager) container.lookup(MessageManager.class);

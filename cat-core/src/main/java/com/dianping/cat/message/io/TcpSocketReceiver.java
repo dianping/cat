@@ -2,7 +2,7 @@ package com.dianping.cat.message.io;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +29,7 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.helper.Threads;
 import com.site.lookup.annotation.Inject;
 
 public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
@@ -68,7 +69,9 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 		m_queue = new LinkedBlockingQueue<ChannelBuffer>();
 
-		ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(), Executors.newCachedThreadPool());
+		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("TcpSocketReceiver-Boss", 20);
+		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("TcpSocketReceiver-Worker", 20);
+		ChannelFactory factory = new NioServerSocketChannelFactory(bossExecutor, workerExecutor);
 		ServerBootstrap bootstrap = new ServerBootstrap(factory);
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {

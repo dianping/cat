@@ -23,6 +23,11 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+			<role-hint>heartbeat</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.handler.HeartbeatHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
 			<role-hint>error</role-hint>
 			<implementation>com.dianping.cat.consumer.problem.handler.ErrorHandler</implementation>
 			<configuration>
@@ -58,6 +63,7 @@
 						<role-hint>failure</role-hint>
 						<role-hint>error</role-hint>
 						<role-hint>long-url</role-hint>
+						<role-hint>heartbeat</role-hint>
 					</role-hints>
 					<field-name>m_handlers</field-name>
 				</requirement>
@@ -96,8 +102,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.ip.IpAnalyzer</role>
-			<implementation>com.dianping.cat.consumer.ip.IpAnalyzer</implementation>
+			<role>com.dianping.cat.consumer.ip.TopIpAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.ip.TopIpAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.dump.DumpAnalyzer</role>
@@ -137,10 +152,10 @@
 			<implementation>com.dianping.cat.consumer.dump.DumpUploader</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -152,13 +167,13 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>
 			</requirements>
 		</component>

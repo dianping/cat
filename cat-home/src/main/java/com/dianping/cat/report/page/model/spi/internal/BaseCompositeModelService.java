@@ -12,8 +12,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.configuration.server.entity.ConsoleConfig;
-import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -30,8 +28,6 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	private ExecutorService m_threadPool;
 
 	private String m_name;
-
-	private String m_remoteServers;
 
 	// introduce another list is due to a bug inside Plexus ComponentList
 	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
@@ -52,23 +48,9 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		m_allServices.addAll(m_services);
 
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		ServerConfig serverConfig = manager.getServerConfig();
 
 		try {
-			String remoteServers = m_remoteServers;
-
-			if (serverConfig != null) {
-				ConsoleConfig console = serverConfig.getConsole();
-
-				if (console.getRemoteServers() != null && console.getRemoteServers().length() > 0) {
-					remoteServers = console.getRemoteServers();
-				}
-			}
-
-			if (remoteServers == null || remoteServers.length() == 0) {
-				remoteServers = "127.0.0.1:2281";
-			}
-
+			String remoteServers = manager.getConsoleRemoteServers();
 			List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
 
 			for (String endpoint : endpoints) {
@@ -158,19 +140,6 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	}
 
 	protected abstract T merge(ModelRequest request, final List<ModelResponse<T>> responses);
-
-	/**
-	 * Inject remote servers to load report model.
-	 * <p>
-	 * 
-	 * For example, servers: 192.168.1.1:2281,192.168.1.2,192.168.1.3
-	 * 
-	 * @param servers
-	 *           server list separated by comma(',')
-	 */
-	public void setRemoteServers(String servers) {
-		m_remoteServers = servers;
-	}
 
 	public void setSerivces(ModelService<T>... services) {
 		for (ModelService<T> service : services) {

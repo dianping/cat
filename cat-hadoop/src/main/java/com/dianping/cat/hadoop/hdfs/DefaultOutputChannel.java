@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
-import com.dianping.cat.configuration.server.entity.HdfsConfig;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
@@ -20,7 +19,7 @@ public class DefaultOutputChannel implements OutputChannel {
 
 	private OutputStream m_out;
 
-	private int m_maxSize;
+	private long m_maxSize;
 
 	private int m_count;
 
@@ -45,10 +44,10 @@ public class DefaultOutputChannel implements OutputChannel {
 	}
 
 	@Override
-	public void initialize(HdfsConfig config, OutputStream out) {
+	public void initialize(long maxSize, OutputStream out) {
 		m_out = out;
 		m_timestamp = System.currentTimeMillis();
-		m_maxSize = toInteger(config.getMaxSize(), 0);
+		m_maxSize = maxSize;
 	}
 
 	@Override
@@ -58,7 +57,7 @@ public class DefaultOutputChannel implements OutputChannel {
 		return now - m_timestamp > m_ttl;
 	}
 
-	public void setMaxSize(int maxSize) {
+	public void setMaxSize(long maxSize) {
 		m_maxSize = maxSize;
 	}
 
