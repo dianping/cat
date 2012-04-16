@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.model.spi.internal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -18,14 +17,15 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.helper.Splitters;
+import com.site.helper.Threads;
 import com.site.lookup.annotation.Inject;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {
+	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 10);
+
 	@Inject
 	private List<ModelService<T>> m_services;
-
-	private ExecutorService m_threadPool;
 
 	private String m_name;
 
@@ -44,7 +44,6 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_threadPool = Executors.newFixedThreadPool(10);
 		m_allServices.addAll(m_services);
 
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
@@ -89,7 +88,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 				((ModelServiceWithCalSupport) service).setParentTransaction(t);
 			}
 
-			m_threadPool.submit(new Runnable() {
+			s_threadPool.submit(new Runnable() {
 				@Override
 				public void run() {
 					try {

@@ -35,33 +35,7 @@ public class CatServlet extends AbstractContainerServlet {
 		String catServerXml = servletConfig.getInitParameter("cat-server-xml");
 		ClientConfig config = loadConfig(null);
 
-		Threads.addListener(new DefaultThreadListener() {
-			@Override
-			public void onThreadGroupCreated(ThreadGroup group, String name) {
-				getLogger().info(String.format("Thread group(%s) created.", name));
-			}
-			
-			@Override
-			public void onThreadPoolCreated(ExecutorService pool, String name) {
-				getLogger().info(String.format("Thread pool(%s) created.", name));
-			}
-
-			@Override
-			public void onThreadStarting(Thread thread, String name) {
-				getLogger().info(String.format("Starting thread(%s) ...", name));
-			}
-
-			@Override
-			public void onThreadStopping(Thread thread, String name) {
-				getLogger().info(String.format("Stopping thread(%s).", name));
-			}
-
-			@Override
-			public boolean onUncaughtException(Thread thread, Throwable e) {
-				getLogger().error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
-				return true;
-			}
-		});
+		Threads.addListener(new CatThreadListener());
 
 		// to notify CAT client to not add another ThreadListener
 		getContainer().addContextValue("Cat.ThreadListener", "true");
@@ -131,4 +105,32 @@ public class CatServlet extends AbstractContainerServlet {
 			writer.write("Not implemented yet!");
 		}
 	}
+
+	private final class CatThreadListener extends DefaultThreadListener {
+	   @Override
+	   public void onThreadGroupCreated(ThreadGroup group, String name) {
+	   	getLogger().info(String.format("Thread group(%s) created.", name));
+	   }
+
+	   @Override
+	   public void onThreadPoolCreated(ExecutorService pool, String name) {
+	   	getLogger().info(String.format("Thread pool(%s) created.", name));
+	   }
+
+	   @Override
+	   public void onThreadStarting(Thread thread, String name) {
+	   	getLogger().info(String.format("Starting thread(%s) ...", name));
+	   }
+
+	   @Override
+	   public void onThreadStopping(Thread thread, String name) {
+	   	getLogger().info(String.format("Stopping thread(%s).", name));
+	   }
+
+	   @Override
+	   public boolean onUncaughtException(Thread thread, Throwable e) {
+	   	getLogger().error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
+	   	return true;
+	   }
+   }
 }

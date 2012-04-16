@@ -25,6 +25,8 @@ import org.jboss.netty.channel.group.ChannelGroupFuture;
 import org.jboss.netty.channel.group.DefaultChannelGroup;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
+import org.jboss.netty.util.ThreadNameDeterminer;
+import org.jboss.netty.util.ThreadRenamingRunnable;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
@@ -59,6 +61,9 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 	@Override
 	public void initialize() {
+		// disable thread renaming of Netty
+		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
+
 		InetSocketAddress address;
 
 		if (m_host == null) {
@@ -69,7 +74,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 		m_queue = new LinkedBlockingQueue<ChannelBuffer>();
 
-		ExecutorService bossExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Boss");
+		ExecutorService bossExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Boss-" + address);
 		ExecutorService workerExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Worker");
 		ChannelFactory factory = new NioServerSocketChannelFactory(bossExecutor, workerExecutor);
 		ServerBootstrap bootstrap = new ServerBootstrap(factory);
