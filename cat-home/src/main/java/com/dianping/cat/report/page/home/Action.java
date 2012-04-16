@@ -3,7 +3,9 @@ package com.dianping.cat.report.page.home;
 public enum Action implements com.site.web.mvc.Action {
 	VIEW("view"),
 
-	CHECKPOINT("checkpoint");
+	CHECKPOINT("checkpoint"),
+	
+	THREAD_DUMP("threadDump");
 
 	private String m_name;
 

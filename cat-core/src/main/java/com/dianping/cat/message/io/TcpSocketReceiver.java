@@ -69,8 +69,8 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 		m_queue = new LinkedBlockingQueue<ChannelBuffer>();
 
-		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("TcpSocketReceiver-Boss", 20);
-		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("TcpSocketReceiver-Worker", 20);
+		ExecutorService bossExecutor = Threads.forPool().getCachedThreadPool("TcpSocketReceiver-Boss");
+		ExecutorService workerExecutor = Threads.forPool().getCachedThreadPool("TcpSocketReceiver-Worker");
 		ChannelFactory factory = new NioServerSocketChannelFactory(bossExecutor, workerExecutor);
 		ServerBootstrap bootstrap = new ServerBootstrap(factory);
 

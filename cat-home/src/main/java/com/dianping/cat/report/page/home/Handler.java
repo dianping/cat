@@ -1,6 +1,9 @@
 package com.dianping.cat.report.page.home;
 
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.lang.management.ThreadInfo;
+import java.lang.management.ThreadMXBean;
 
 import javax.servlet.ServletException;
 
@@ -37,11 +40,37 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setAction(Action.VIEW);
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HOME);
 		model.setDomain(payload.getDomain());
 		model.setLongDate(payload.getDate());
 
+		switch (payload.getAction()) {
+		case THREAD_DUMP:
+			showThreadDump(model, payload);
+			break;
+		case VIEW:
+			break;
+		}
+
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void showThreadDump(Model model, Payload payload) {
+		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+		ThreadInfo[] threads = bean.dumpAllThreads(true, true);
+		StringBuilder sb = new StringBuilder(8096);
+		int index = 1;
+		
+		sb.append("Threads: ").append(threads.length);
+		sb.append("<pre>");
+		
+		for (ThreadInfo thread: threads) {
+			sb.append(index++).append(": ").append(thread).append("\r\n");
+		}
+		
+		sb.append("</pre>");
+		
+		model.setContent(sb.toString());
 	}
 }
