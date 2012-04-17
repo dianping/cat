@@ -29,11 +29,11 @@ public class DisplayHeartbeat {
 		m_builder = builder;
 	}
 
-	public DisplayHeartbeat display(HeartbeatReport report) {
+	public DisplayHeartbeat display(HeartbeatReport report,String ip) {
 		if (report == null) {
 			return null;
 		}
-		List<Period> periods = report.getPeriods();
+		List<Period> periods = report.getMachines().get(ip).getPeriods();
 		int size = periods.size();
 
 		for (; size > 0; size--) {

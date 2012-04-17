@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.consumer.heartbeat.model" enable-merger="true" enable-json-builder="true"
 	enable-xml-parser="true" enable-base-visitor="true">
-  <entity name="heartbeat-report" root="true">
+    <entity name="heartbeat-report" root="true">
     <attribute name="domain" value-type="String" key="true"/>
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <element name="domain" value-type="String" type="set" names="domain-names" />
+	<element name="domain" value-type="String" type="set" names="domain-names" />
+	<element name="ip" value-type="String" type="set" names="ips" />
+    <entity-ref name="machine" type="map" names="machines" method-find-or-create="true"/>
+  </entity>
+  <entity name="machine">
+    <attribute name="ip" value-type="String" key="true"/>
     <entity-ref name="period" type="list" names="periods" />
   </entity>
   <entity name="period">

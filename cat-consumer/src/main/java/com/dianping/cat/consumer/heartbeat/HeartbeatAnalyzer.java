@@ -128,7 +128,8 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		String domain = tree.getDomain();
 		Message message = tree.getMessage();
 		HeartbeatReport report = findOrCreateReport(domain);
-
+		report.addIp(tree.getIpAddress());
+		
 		if (message instanceof Transaction) {
 			int count = processTransaction(report, tree, (Transaction) message);
 			if (count > 0) {
@@ -141,10 +142,11 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(heartbeat.getTimestamp());
 		int minute = cal.get(Calendar.MINUTE);
-
+		String ip = tree.getIpAddress();
+		
 		Period period = new Period(minute);
 		setHeartBeatInfo(period, heartbeat);
-		report.getPeriods().add(period);
+		report.findOrCreateMachine(ip).getPeriods().add(period);
 		return 1;
 	}
 

@@ -6,12 +6,15 @@ import com.site.web.mvc.ActionContext;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
-	public Payload() {
-		super(ReportPage.IP);
-	}
+	@FieldMeta("ip")
+	private String m_ipAddress;
 
 	@FieldMeta("op")
 	private Action m_action;
+
+	public Payload() {
+		super(ReportPage.HEARTBEAT);
+	}
 
 	@Override
 	public Action getAction() {
@@ -20,6 +23,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setAction(Action action) {
 		m_action = action;
+	}
+
+	public String getIpAddress() {
+		return m_ipAddress;
+	}
+
+	public void setIpAddress(String ip) {
+		m_ipAddress = ip;
 	}
 
 	@Override
