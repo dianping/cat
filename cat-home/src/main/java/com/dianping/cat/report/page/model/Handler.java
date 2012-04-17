@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -102,6 +104,12 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_problemService.invoke(request);
 			} else if ("logview".equals(report)) {
 				request.setProperty("messageId", payload.getMessageId());
+				if(!StringUtils.isEmpty(payload.getDirection())){
+					request.setProperty("direction", payload.getDirection());
+				}
+				if(!StringUtils.isEmpty(payload.getTag())){
+					request.setProperty("tag", payload.getTag());
+				}
 				response = m_logviewService.invoke(request);
 			} else if ("ip".equals(report)) {
 				response = m_ipService.invoke(request);
