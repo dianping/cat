@@ -16,9 +16,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_activeThreadGraph;
 	
-	private String m_deamonThreadGraph;
+	private String m_daemonThreadGraph;
 	
 	private String m_totalThreadGraph;
+	
+	private String m_startedThreadGraph;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -78,12 +80,12 @@ public class Model extends AbstractReportModel<Action, Context> {
    	m_activeThreadGraph = activeThreadGraph;
    }
 
-	public String getDeamonThreadGraph() {
-   	return m_deamonThreadGraph;
+	public String getDaemonThreadGraph() {
+   	return m_daemonThreadGraph;
    }
 
-	public void setDeamonThreadGraph(String deamonThreadGraph) {
-   	m_deamonThreadGraph = deamonThreadGraph;
+	public void setDaemonThreadGraph(String daemonThreadGraph) {
+   	m_daemonThreadGraph = daemonThreadGraph;
    }
 
 	public String getTotalThreadGraph() {
@@ -93,6 +95,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTotalThreadGraph(String totalThreadGraph) {
    	m_totalThreadGraph = totalThreadGraph;
    }
-	
+
+	public String getStartedThreadGraph() {
+   	return m_startedThreadGraph;
+   }
+
+	public void setStartedThreadGraph(String startedThreadGraph) {
+   	m_startedThreadGraph = startedThreadGraph;
+   }
 	
 }

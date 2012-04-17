@@ -57,6 +57,25 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		m_logger = logger;
 	}
 
+	private HeartbeatReport findOrCreateReport(String domain) {
+		HeartbeatReport report = m_reports.get(domain);
+
+		if (report == null) {
+			synchronized (m_reports) {
+				report = m_reports.get(domain);
+
+				if (report == null) {
+					report = new HeartbeatReport(domain);
+					report.setStartTime(new Date(m_startTime));
+					report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+					m_reports.put(domain, report);
+				}
+			}
+		}
+
+		return report;
+	}
+
 	@Override
 	public Set<String> getDomains() {
 		return m_reports.keySet();
@@ -87,7 +106,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		Bucket<String> reportBucket = null;
 
 		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, "ip");
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, "heartbeat");
 
 			for (String id : reportBucket.getIds()) {
 				String xml = reportBucket.findById(id);
@@ -96,88 +115,8 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 				m_reports.put(report.getDomain(), report);
 			}
 		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading ip reports of %s!", new Date(m_startTime)), e);
+			m_logger.error(String.format("Error when loading heartbeat reports of %s!", new Date(m_startTime)), e);
 		} finally {
-			if (reportBucket != null) {
-				m_bucketManager.closeBucket(reportBucket);
-			}
-		}
-	}
-
-	private HeartbeatReport findOrCreateReport(String domain) {
-		HeartbeatReport report = m_reports.get(domain);
-
-		if (report == null) {
-			synchronized (m_reports) {
-				report = m_reports.get(domain);
-
-				if (report == null) {
-					report = new HeartbeatReport(domain);
-					report.setStartTime(new Date(m_startTime));
-					report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-					m_reports.put(domain, report);
-				}
-			}
-		}
-
-		return report;
-	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-
-		loadReports();
-	}
-
-	private void storeReports(boolean atEnd) {
-		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
-		Bucket<String> reportBucket = null;
-		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-
-		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, "ip");
-
-			for (HeartbeatReport report : m_reports.values()) {
-				Set<String> domainNames = report.getDomainNames();
-				domainNames.clear();
-				domainNames.addAll(getDomains());
-
-				String xml = builder.buildXml(report);
-				String domain = report.getDomain();
-
-				reportBucket.storeById(domain, xml);
-			}
-
-			if (atEnd && !isLocalMode()) {
-				Date period = new Date(m_startTime);
-				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-				for (HeartbeatReport report : m_reports.values()) {
-					Report r = m_reportDao.createLocal();
-					String xml = builder.buildXml(report);
-					String domain = report.getDomain();
-
-					r.setName("ip");
-					r.setDomain(domain);
-					r.setPeriod(period);
-					r.setIp(ip);
-					r.setType(1);
-					r.setContent(xml);
-
-					m_reportDao.insert(r);
-				}
-			}
-
-			t.setStatus(Message.SUCCESS);
-		} catch (Exception e) {
-			Cat.getProducer().logError(e);
-			t.setStatus(e);
-			m_logger.error(String.format("Error when storing ip reports of %s!", new Date(m_startTime)), e);
-		} finally {
-			t.complete();
-
 			if (reportBucket != null) {
 				m_bucketManager.closeBucket(reportBucket);
 			}
@@ -195,21 +134,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			if (count > 0) {
 				storeMessage(tree);
 			}
-		}
-	}
-
-	private void setHeartBeatInfo(Period period, Heartbeat heartbeat) {
-		String xml = (String) heartbeat.getData();
-		try {
-			StatusInfo info = new com.dianping.cat.status.model.transform.DefaultXmlParser().parse(xml);
-			ThreadInfo thread = info.getThread();
-			period.setThreadCount(thread.getCount());
-			period.setDaemonCount(thread.getDaemonCount());
-			period.setTotalStartedCount((int) thread.getTotalStartedCount());
-		} catch (Exception e) {
-			period.setThreadCount(-1);
-			period.setDaemonCount(-1);
-			period.setTotalStartedCount(-1);
 		}
 	}
 
@@ -241,6 +165,29 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		return count;
 	}
 
+	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
+		m_extraTime = extraTime;
+		m_startTime = startTime;
+		m_duration = duration;
+
+		loadReports();
+	}
+
+	private void setHeartBeatInfo(Period period, Heartbeat heartbeat) {
+		String xml = (String) heartbeat.getData();
+		try {
+			StatusInfo info = new com.dianping.cat.status.model.transform.DefaultXmlParser().parse(xml);
+			ThreadInfo thread = info.getThread();
+			period.setThreadCount(thread.getCount());
+			period.setDaemonCount(thread.getDaemonCount());
+			period.setTotalStartedCount((int) thread.getTotalStartedCount());
+		} catch (Exception e) {
+			period.setThreadCount(-1);
+			period.setDaemonCount(-1);
+			period.setTotalStartedCount(-1);
+		}
+	}
+
 	private void storeMessage(MessageTree tree) {
 		String messageId = tree.getMessageId();
 		String domain = tree.getDomain();
@@ -251,6 +198,59 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			logviewBucket.storeById(messageId, tree);
 		} catch (IOException e) {
 			m_logger.error("Error when storing logview for transaction analyzer!", e);
+		}
+	}
+
+	private void storeReports(boolean atEnd) {
+		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
+		Bucket<String> reportBucket = null;
+		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
+
+		try {
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, "heartbeat");
+
+			for (HeartbeatReport report : m_reports.values()) {
+				Set<String> domainNames = report.getDomainNames();
+				domainNames.clear();
+				domainNames.addAll(getDomains());
+
+				String xml = builder.buildXml(report);
+				String domain = report.getDomain();
+
+				reportBucket.storeById(domain, xml);
+			}
+
+			if (atEnd && !isLocalMode()) {
+				Date period = new Date(m_startTime);
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+				for (HeartbeatReport report : m_reports.values()) {
+					Report r = m_reportDao.createLocal();
+					String xml = builder.buildXml(report);
+					String domain = report.getDomain();
+
+					r.setName("heartbeat");
+					r.setDomain(domain);
+					r.setPeriod(period);
+					r.setIp(ip);
+					r.setType(1);
+					r.setContent(xml);
+
+					m_reportDao.insert(r);
+				}
+			}
+
+			t.setStatus(Message.SUCCESS);
+		} catch (Exception e) {
+			Cat.getProducer().logError(e);
+			t.setStatus(e);
+			m_logger.error(String.format("Error when storing ip reports of %s!", new Date(m_startTime)), e);
+		} finally {
+			t.complete();
+
+			if (reportBucket != null) {
+				m_bucketManager.closeBucket(reportBucket);
+			}
 		}
 	}
 }

@@ -22,8 +22,9 @@
 <table class="graph">
 <svg version="1.1" width="980" height="380" xmlns="http://www.w3.org/2000/svg">
   ${model.activeThreadGraph}
-  ${model.deamonThreadGraph}
+  ${model.daemonThreadGraph}
   ${model.totalThreadGraph}
+  ${model.startedThreadGraph}
 </svg>
 </table>
 <table class="heartbeat">

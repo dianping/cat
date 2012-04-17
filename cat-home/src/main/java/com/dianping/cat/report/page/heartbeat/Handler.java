@@ -93,8 +93,9 @@ public class Handler implements PageHandler<Context> {
 			DisplayHeartbeat displayHeartbeat = new DisplayHeartbeat(m_builder);
 			model.setResult(displayHeartbeat.display(report));
 			model.setActiveThreadGraph(displayHeartbeat.getActiceThreadGraph());
-			model.setDeamonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
+			model.setDaemonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
 			model.setTotalThreadGraph(displayHeartbeat.getTotalThreadGraph());
+			model.setStartedThreadGraph(displayHeartbeat.getStartedThreadGraph());
 		} catch (Throwable e) {
 			Cat.getProducer().logError(e);
 			model.setException(e);

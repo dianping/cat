@@ -13,9 +13,11 @@ public class DisplayHeartbeat {
 
 	public double[] m_activeThreads = new double[60];
 
-	public double[] m_deamonThreads = new double[60];
+	public double[] m_daemonThreads = new double[60];
 
 	public double[] m_totalThreads = new double[60];
+
+	public double[] m_newThreads = new double[60];
 
 	private GraphBuilder m_builder;
 
@@ -39,8 +41,15 @@ public class DisplayHeartbeat {
 			m_periods.add(period);
 			int minute = period.getMinute();
 			m_activeThreads[minute] = period.getThreadCount();
-			m_deamonThreads[minute] = period.getDaemonCount();
+			m_daemonThreads[minute] = period.getDaemonCount();
 			m_totalThreads[minute] = period.getTotalStartedCount();
+		}
+		for (int i = 1; i <= 59; i++) {
+			double d = m_totalThreads[i] - m_totalThreads[i - 1];
+			if(d<0){
+				d = m_totalThreads[i];
+			}
+			m_newThreads[i] = d;
 		}
 		return this;
 	}
@@ -50,15 +59,19 @@ public class DisplayHeartbeat {
 	}
 
 	public String getActiceThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "ActiceThread", "Minute", "Count", m_activeThreads));
+		return m_builder.build(new HeartbeatPayload(0, "Active Thread", "Minute", "Count", m_activeThreads));
 	}
 
 	public String getDeamonThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "DeamonThread", "Minute", "Count", m_deamonThreads));
+		return m_builder.build(new HeartbeatPayload(1, "Daemon Thread", "Minute", "Count", m_daemonThreads));
 	}
 
 	public String getTotalThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(2, "Started Thread", "Minute", "Count", m_totalThreads));
+		return m_builder.build(new HeartbeatPayload(2, "Total Started Thread", "Minute", "Count", m_totalThreads));
+	}
+
+	public String getStartedThreadGraph() {
+		return m_builder.build(new HeartbeatPayload(3, "Started Thread", "Minute", "Count", m_newThreads));
 	}
 
 	public static class HeartbeatPayload extends AbstractGraphPayload {
@@ -68,8 +81,12 @@ public class DisplayHeartbeat {
 
 		private int m_index;
 
+		private String m_idPrefix;
+
 		public HeartbeatPayload(int index, String title, String axisXLabel, String axisYLabel, double[] values) {
 			super(title, axisXLabel, axisYLabel);
+
+			m_idPrefix = title.substring(0, 1);
 			m_index = index;
 			m_labels = new String[61];
 
@@ -77,6 +94,11 @@ public class DisplayHeartbeat {
 				m_labels[i] = String.valueOf(i % 60);
 			}
 			m_values = values;
+		}
+
+		@Override
+		public String getIdPrefix() {
+			return m_idPrefix;
 		}
 
 		@Override
