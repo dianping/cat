@@ -10,10 +10,11 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
+import com.site.helper.Threads;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
-public class LogviewUploaderTest extends ComponentTestCase {
+public class LogviewUploaderSample extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		LogviewUploader uploader = lookup(LogviewUploader.class);
@@ -31,6 +32,8 @@ public class LogviewUploaderTest extends ComponentTestCase {
 
 		bucket.flush();
 		uploader.addBucket(timestamp, domain);
+		Threads.forGroup("Cat").start(uploader);
+		Thread.sleep(60 * 100 * 1000);
 		
 	}
 
