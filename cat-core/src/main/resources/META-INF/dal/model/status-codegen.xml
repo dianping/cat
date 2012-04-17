@@ -47,6 +47,9 @@
     <attribute name="daemon-count" value-type="int" />
     <attribute name="peek-count" value-type="int" />
     <attribute name="total-started-count" value-type="int" />
+    <attribute name="cat-thread-count" value-type="int" />
+    <attribute name="pigeon-thread-count" value-type="int" />
+    <element name="dump" value-type="String"/>
   </entity>
   <entity name="message">
     <attribute name="produced" value-type="int" />

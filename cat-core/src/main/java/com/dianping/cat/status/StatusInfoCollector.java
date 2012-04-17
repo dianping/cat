@@ -6,9 +6,11 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.lang.management.RuntimeMXBean;
+import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.Date;
 import java.util.List;
+import java.util.TreeMap;
 
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.DiskSpaceInfo;
@@ -18,7 +20,7 @@ import com.dianping.cat.status.model.entity.MessageInfo;
 import com.dianping.cat.status.model.entity.OsInfo;
 import com.dianping.cat.status.model.entity.RuntimeInfo;
 import com.dianping.cat.status.model.entity.StatusInfo;
-import com.dianping.cat.status.model.entity.ThreadInfo;
+import com.dianping.cat.status.model.entity.ThreadsInfo;
 import com.dianping.cat.status.model.transform.BaseVisitor;
 
 class StatusInfoCollector extends BaseVisitor {
@@ -26,6 +28,18 @@ class StatusInfoCollector extends BaseVisitor {
 
 	public StatusInfoCollector(MessageStatistics statistics) {
 		m_statistics = statistics;
+	}
+
+	int countThreadsByPrefix(ThreadInfo[] threads, String prefix) {
+		int count = 0;
+
+		for (ThreadInfo thread : threads) {
+			if (thread.getThreadName().startsWith(prefix)) {
+				count++;
+			}
+		}
+
+		return count;
 	}
 
 	long getGcCount(List<GarbageCollectorMXBean> mxbeans) {
@@ -50,6 +64,23 @@ class StatusInfoCollector extends BaseVisitor {
 		}
 
 		return time;
+	}
+
+	String getThreadDump(ThreadInfo[] threads) {
+		StringBuilder sb = new StringBuilder(32768);
+		int index = 1;
+
+		TreeMap<String, ThreadInfo> sortedThreads = new TreeMap<String, ThreadInfo>();
+
+		for (ThreadInfo thread : threads) {
+			sortedThreads.put(thread.getThreadName(), thread);
+		}
+
+		for (ThreadInfo thread : sortedThreads.values()) {
+			sb.append(index++).append(": ").append(thread);
+		}
+
+		return sb.toString();
 	}
 
 	boolean isInstanceOfInterface(Class<?> clazz, String interfaceName) {
@@ -148,22 +179,23 @@ class StatusInfoCollector extends BaseVisitor {
 		status.setDiskSpace(new DiskSpaceInfo());
 		status.setRuntime(new RuntimeInfo());
 		status.setMemory(new MemoryInfo());
-		status.setThread(new ThreadInfo());
+		status.setThread(new ThreadsInfo());
 		status.setMessage(new MessageInfo());
 
 		super.visitStatus(status);
 	}
 
 	@Override
-	public void visitThread(ThreadInfo thread) {
+	public void visitThread(ThreadsInfo thread) {
 		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
+		ThreadInfo[] threads = bean.dumpAllThreads(true, true);
 
 		thread.setCount(bean.getThreadCount());
 		thread.setDaemonCount(bean.getDaemonThreadCount());
 		thread.setPeekCount(bean.getPeakThreadCount());
 		thread.setTotalStartedCount(bean.getTotalStartedThreadCount());
-
-		// TODO remove below
-		// System.out.println(Arrays.asList(bean.dumpAllThreads(true, true)));
+		thread.setCatThreadCount(countThreadsByPrefix(threads, "Cat-"));
+		thread.setPigeonThreadCount(countThreadsByPrefix(threads, "Pigeon-"));
+		thread.setDump(getThreadDump(threads));
 	}
 }
