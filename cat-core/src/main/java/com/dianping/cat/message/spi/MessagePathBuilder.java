@@ -11,6 +11,8 @@ public interface MessagePathBuilder {
 	public String getLogViewPath(String messageId);
 
 	public String getMessagePath(String domain, Date timestamp);
+	
+	public String getLogViewPath(String domain, Date timestamp);
 
 	public String getReportPath(String name, Date timestamp);
 }

@@ -28,6 +28,10 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	@Inject
 	private DumpUploader m_uploader;
+	
+	public DumpUploader getDumpUploader(){
+		return m_uploader;
+	}
 
 	private long m_extraTime;
 

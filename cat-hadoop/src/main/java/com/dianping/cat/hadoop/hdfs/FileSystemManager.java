@@ -23,6 +23,8 @@ public class FileSystemManager implements Initializable {
 
 	private Map<String, FileSystem> m_fileSystems = new HashMap<String, FileSystem>();
 
+	private Configuration m_config;
+
 	public long getFileMaxSize(String id) {
 		return m_configManager.getHdfsFileMaxSize(id);
 	}
@@ -35,7 +37,7 @@ public class FileSystemManager implements Initializable {
 		if (serverUri == null || !serverUri.startsWith("hdfs:")) {
 			// no config found, use local HDFS
 			if (fs == null) {
-				fs = FileSystem.getLocal(getHdfsConfiguration());
+				fs = FileSystem.getLocal(m_config);
 				m_fileSystems.put(id, fs);
 			}
 
@@ -49,8 +51,7 @@ public class FileSystemManager implements Initializable {
 		} else {
 			if (fs == null) {
 				URI uri = URI.create(serverUri);
-
-				fs = FileSystem.get(uri, getHdfsConfiguration());
+				fs = FileSystem.get(uri, m_config);
 				m_fileSystems.put(id, fs);
 			}
 
@@ -85,12 +86,11 @@ public class FileSystemManager implements Initializable {
 			// For MAC OS X
 			// -Djava.security.krb5.realm=OX.AC.UK
 			// -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk
-			System.setProperty("java.security.krb5.realm",
-			      getValue(properties, "java.security.krb5.realm", "DIANPING.COM"));
+			System.setProperty("java.security.krb5.realm", getValue(properties, "java.security.krb5.realm", "DIANPING.COM"));
 			System.setProperty("java.security.krb5.kdc", getValue(properties, "java.security.krb5.kdc", "192.168.7.80"));
 
 			UserGroupInformation.setConfiguration(config);
-			SecurityUtil.login(config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
+
 		}
 
 		return config;
@@ -109,5 +109,11 @@ public class FileSystemManager implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		m_defaultBaseDir = m_configManager.getHdfsLocalBaseDir("hdfs");
+		try {
+			m_config = getHdfsConfiguration();
+			SecurityUtil.login(m_config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
+		} catch (IOException e) {
+			throw new InitializationException("init FileSystemManager fail", e);
+		}
 	}
 }
