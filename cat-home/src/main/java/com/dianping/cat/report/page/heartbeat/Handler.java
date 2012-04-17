@@ -14,6 +14,7 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.view.StringSortHelper;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -39,7 +40,7 @@ public class Handler implements PageHandler<Context> {
 		String ip = payload.getIpAddress();
 
 		if ((ip == null || ip.length() == 0) && !ips.isEmpty()) {
-			ip = ips.iterator().next();
+			ip = StringSortHelper.sort(ips).get(0);
 		}
 
 		return ip;

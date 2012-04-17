@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -31,9 +32,14 @@ public class DisplayHeartbeat {
 
 	public DisplayHeartbeat display(HeartbeatReport report,String ip) {
 		if (report == null) {
-			return null;
+			return this;
 		}
-		List<Period> periods = report.getMachines().get(ip).getPeriods();
+		Machine machine = report.getMachines().get(ip);
+		if(machine==null){
+			return this;
+		}
+		
+		List<Period> periods = machine.getPeriods();
 		int size = periods.size();
 
 		for (; size > 0; size--) {
