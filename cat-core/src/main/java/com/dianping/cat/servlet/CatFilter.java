@@ -8,6 +8,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import com.dianping.cat.Cat;
@@ -22,17 +23,15 @@ public class CatFilter implements Filter {
 	public void destroy() {
 	}
 
-	protected String getOriginalUrl(ServletRequest request) {
-		return ((HttpServletRequest) request).getRequestURI();
-	}
-
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
-		String sessionToken = req.getSession().getId();
+		String sessionToken = getSessionIdFromCookie(req);
+
 		// setup for thread local data
 		Cat.setup(sessionToken);
+
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction(CatConstants.TYPE_URL, getOriginalUrl(request));
 
@@ -68,6 +67,24 @@ public class CatFilter implements Filter {
 			t.complete();
 			Cat.reset();
 		}
+	}
+
+	protected String getOriginalUrl(ServletRequest request) {
+		return ((HttpServletRequest) request).getRequestURI();
+	}
+
+	private String getSessionIdFromCookie(HttpServletRequest req) {
+		Cookie[] cookies = req.getCookies();
+
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("JSESSIONID".equalsIgnoreCase(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+
+		return null;
 	}
 
 	@Override

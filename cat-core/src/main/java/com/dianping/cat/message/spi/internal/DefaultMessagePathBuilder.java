@@ -64,6 +64,13 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
+	public String getLogViewPath(String domain, Date timestamp) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/logview-{1}");
+
+		return format.format(new Object[] { timestamp, domain });
+	}
+
+	@Override
 	public String getReportPath(String name, Date timestamp) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/report-{1}");
 

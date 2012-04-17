@@ -4,7 +4,7 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -191,8 +191,9 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 			m_serverAddresses = serverAddresses;
 			m_futures = new ArrayList<ChannelFuture>(Collections.<ChannelFuture> nCopies(len, null));
 
-			ChannelFactory factory = new NioClientSocketChannelFactory(Executors.newFixedThreadPool(10),
-			      Executors.newFixedThreadPool(10));
+			ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Boss", 10);
+			ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Worker", 10);
+			ChannelFactory factory = new NioClientSocketChannelFactory(bossExecutor, workerExecutor);
 			ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {

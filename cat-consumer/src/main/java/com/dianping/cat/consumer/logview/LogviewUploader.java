@@ -18,6 +18,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.dal.Logview;
 import com.dianping.cat.hadoop.dal.LogviewDao;
@@ -143,8 +144,8 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 
 			try {
 				FileSystem fs = m_fileSystemManager.getFileSystem("logview", sb);
-
-				path = new Path(sb.toString(), logicalPath);
+				String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				path = new Path(sb.toString(), logicalPath + "-" + ipAddress);
 
 				FileInputStream fis = new FileInputStream(file);
 				FSDataOutputStream fdos = fs.create(path);

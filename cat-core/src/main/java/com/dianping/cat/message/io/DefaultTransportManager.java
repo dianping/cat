@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.jboss.netty.util.ThreadNameDeterminer;
+import org.jboss.netty.util.ThreadRenamingRunnable;
 
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
@@ -18,7 +20,7 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 	private MessageManager m_manager;
 
 	private MessageSender m_sender;
-	
+
 	public void setSender(MessageSender sender) {
 		this.m_sender = sender;
 	}
@@ -34,6 +36,9 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 
 	@Override
 	public void initialize() throws InitializationException {
+		// disable thread renaming of Netty
+		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
+
 		ClientConfig config = m_manager.getClientConfig();
 
 		if (config == null) {

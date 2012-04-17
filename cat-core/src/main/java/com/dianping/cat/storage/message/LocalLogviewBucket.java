@@ -253,7 +253,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 
-		String logicalPath = m_pathBuilder.getMessagePath(domain, timestamp);
+		String logicalPath = m_pathBuilder.getLogViewPath(domain, timestamp);
 
 		File dataFile = new File(m_baseDir, logicalPath);
 		File indexFile = new File(m_baseDir, logicalPath + ".idx");

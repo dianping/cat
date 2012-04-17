@@ -3,6 +3,10 @@
 		<component>
 			<role>org.codehaus.plexus.logging.LoggerManager</role>
 			<implementation>com.site.lookup.logger.TimedConsoleLoggerManager</implementation>
+			<configuration>
+				<dateFormat>MM-dd HH:mm:ss.SSS</dateFormat>
+				<showClass>true</showClass>
+			</configuration>
 		</component>
 	</components>
 </plexus>
