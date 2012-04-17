@@ -31,7 +31,13 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	
 	@FieldMeta("messageId")
 	private String m_messageId;
-
+	
+	@FieldMeta("tag")
+	private String m_tag;
+	
+	@FieldMeta("direction")
+	private String m_direction;
+	
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -117,6 +123,22 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setMessageId(String messageId) {
    	m_messageId = messageId;
+   }
+
+	public String getTag() {
+   	return m_tag;
+   }
+
+	public void setTag(String tag) {
+   	m_tag = tag;
+   }
+
+	public String getDirection() {
+   	return m_direction;
+   }
+
+	public void setDirection(String direction) {
+   	m_direction = direction;
    }
 
 	@Override

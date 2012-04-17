@@ -1,3 +1,4 @@
+<%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=utf-8" %>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="w" uri="/web/core"%>
@@ -9,7 +10,7 @@
 <c:set var="report" value="${model.report}"/>
 <c:set var="threads" value="${report.machines[model.ipAddress].threads}"/>
 
-<a:report title="Problem Report" navUrlPrefix="op=thread&group=${model.groupName}&domain=${model.domain}&ip=${model.ipAddress}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:report title="Problem Report" navUrlPrefix="op=thread&group=${model.groupName}&domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
 
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
@@ -23,7 +24,10 @@
 <table class="problem">
 	<tr><td title="time\group">T\G</td>
 		<c:forEach var="group" items="${model.threadLevelInfo.groups}" varStatus="status">
-			<td colspan="${group.number}" title="${group.name}"><a href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group.name}&date=${model.date}">${w:shorten(group.name, 20)}</a></td>
+			<td colspan="${group.number}" title="${group.name}">
+				<a href="?op=thread&domain=${model.domain}&ip=${model.ipAddress}&group=${group.name}&date=${model.date}
+				&threshold=${model.threshold}">${w:shorten(group.name, 20)}</a>
+			</td>
 		</c:forEach>
 	</tr>
 	<tr><td title="time\thread">T\T</td>
@@ -43,7 +47,7 @@
 <table class="legend">
 </table>
 
-<res:useJs value="${res.js.local.problem_js}" target="head-js"/>
+<res:useJs value="${res.js.local.problem_js}" target="buttom-js"/>
 </jsp:body>
 
 </a:report>

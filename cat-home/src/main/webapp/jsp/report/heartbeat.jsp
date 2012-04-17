@@ -1,3 +1,4 @@
+<%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=utf-8" trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="w" uri="/web/core"%>
@@ -9,7 +10,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
 <c:set var="report" value="${model.report}"/>
 
-<a:report title="Heartbeat Report" navUrlPrefix="domain=${model.domain}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:report title="Heartbeat Report" navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
 
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
@@ -18,6 +19,23 @@
 <res:useCss value="${res.css.local.heartbeat_css}" target="head-css"/>
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 
+<table class="machines">
+<th>Machines: 
+		<c:forEach var="ip" items="${model.ips}">
+   	  		&nbsp;[&nbsp;
+   	  		<c:choose>
+					<c:when test="${model.ipAddress eq ip}">
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}"
+									class="current">${ip}</a>
+					</c:when>
+					<c:otherwise>
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
+					</c:otherwise>
+				</c:choose>
+   	 		&nbsp;]&nbsp;
+		</c:forEach>
+		</th>
+</table>
 <br>
 <table class="graph">
 <svg version="1.1" width="980" height="380" xmlns="http://www.w3.org/2000/svg">

@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -13,6 +14,7 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.view.StringSortHelper;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -32,6 +34,17 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "heartbeat")
 	private ModelService<HeartbeatReport> m_service;
+	
+	private String getIpAddress(HeartbeatReport report, Payload payload) {
+		Set<String> ips = report.getIps();
+		String ip = payload.getIpAddress();
+
+		if ((ip == null || ip.length() == 0) && !ips.isEmpty()) {
+			ip = StringSortHelper.sort(ips).get(0);
+		}
+
+		return ip;
+	}
 	
 	private HeartbeatReport getReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -68,7 +81,8 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.HEARTBEAT);
-
+		model.setIpAddress(payload.getIpAddress());
+		
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);
@@ -90,8 +104,11 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setDisplayDomain(payload.getDomain());
 			model.setReport(report);
+			String ip = getIpAddress(report, payload);
+			model.setIpAddress(ip);
+			
 			DisplayHeartbeat displayHeartbeat = new DisplayHeartbeat(m_builder);
-			model.setResult(displayHeartbeat.display(report));
+			model.setResult(displayHeartbeat.display(report,ip));
 			model.setActiveThreadGraph(displayHeartbeat.getActiceThreadGraph());
 			model.setDaemonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
 			model.setTotalThreadGraph(displayHeartbeat.getTotalThreadGraph());

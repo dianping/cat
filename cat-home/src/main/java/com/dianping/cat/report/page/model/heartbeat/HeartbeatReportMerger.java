@@ -14,5 +14,6 @@ public class HeartbeatReportMerger extends DefaultMerger {
 	   super.visitHeartbeatReport(heartbeatReport);
 	   
 	   getHeartbeatReport().getDomainNames().addAll(heartbeatReport.getDomainNames());
+	   getHeartbeatReport().getIps().addAll(heartbeatReport.getIps());
    }
 }

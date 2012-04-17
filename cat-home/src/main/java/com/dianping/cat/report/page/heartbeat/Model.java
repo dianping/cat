@@ -14,6 +14,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private int m_hour;
 	
+	private String m_ipAddress;
+	
 	private String m_activeThreadGraph;
 	
 	private String m_daemonThreadGraph;
@@ -26,11 +28,19 @@ public class Model extends AbstractReportModel<Action, Context> {
 		super(ctx);
 	}
 
+	public String getActiveThreadGraph() {
+   	return m_activeThreadGraph;
+   }
+
+	public String getDaemonThreadGraph() {
+   	return m_daemonThreadGraph;
+   }
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
 	}
-
+	
 	@Override
 	public String getDomain() {
 		if (m_report == null) {
@@ -39,7 +49,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 			return m_report.getDomain();
 		}
 	}
-
+	
 	public List<String> getDomains() {
 		if (m_report == null) {
 			return new ArrayList<String>();
@@ -52,56 +62,64 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_hour;
 	}
 
+	public String getIpAddress() {
+   	return m_ipAddress;
+   }
+
+	public List<String> getIps() {
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getIps());
+		}
+	}
+
 	public HeartbeatReport getReport() {
 		return m_report;
-	}
-
-	public void setHour(int hour) {
-		m_hour = hour;
-	}
-
-	public void setReport(HeartbeatReport report) {
-		m_report = report;
 	}
 
 	public DisplayHeartbeat getResult() {
    	return m_result;
    }
 
-	public void setResult(DisplayHeartbeat result) {
-   	m_result = result;
-   }
-
-	public String getActiveThreadGraph() {
-   	return m_activeThreadGraph;
-   }
-
-	public void setActiveThreadGraph(String activeThreadGraph) {
-   	m_activeThreadGraph = activeThreadGraph;
-   }
-
-	public String getDaemonThreadGraph() {
-   	return m_daemonThreadGraph;
-   }
-
-	public void setDaemonThreadGraph(String daemonThreadGraph) {
-   	m_daemonThreadGraph = daemonThreadGraph;
+	public String getStartedThreadGraph() {
+   	return m_startedThreadGraph;
    }
 
 	public String getTotalThreadGraph() {
    	return m_totalThreadGraph;
    }
 
-	public void setTotalThreadGraph(String totalThreadGraph) {
-   	m_totalThreadGraph = totalThreadGraph;
+	public void setActiveThreadGraph(String activeThreadGraph) {
+   	m_activeThreadGraph = activeThreadGraph;
    }
 
-	public String getStartedThreadGraph() {
-   	return m_startedThreadGraph;
+	public void setDaemonThreadGraph(String daemonThreadGraph) {
+   	m_daemonThreadGraph = daemonThreadGraph;
+   }
+
+	public void setHour(int hour) {
+		m_hour = hour;
+	}
+
+	public void setIpAddress(String ipAddress) {
+   	m_ipAddress = ipAddress;
+   }
+
+	public void setReport(HeartbeatReport report) {
+		m_report = report;
+	}
+
+	public void setResult(DisplayHeartbeat result) {
+   	m_result = result;
    }
 
 	public void setStartedThreadGraph(String startedThreadGraph) {
    	m_startedThreadGraph = startedThreadGraph;
+   }
+
+	public void setTotalThreadGraph(String totalThreadGraph) {
+   	m_totalThreadGraph = totalThreadGraph;
    }
 	
 }

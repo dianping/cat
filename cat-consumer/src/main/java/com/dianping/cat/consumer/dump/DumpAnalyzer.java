@@ -28,8 +28,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	@Inject
 	private DumpUploader m_uploader;
-	
-	public DumpUploader getDumpUploader(){
+
+	public DumpUploader getDumpUploader() {
 		return m_uploader;
 	}
 
@@ -46,7 +46,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd) {
-			m_manager.closeAllChannels();
+			m_manager.closeAllChannels(m_startTime);
 		}
 	}
 
@@ -84,13 +84,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			long timestamp = tree.getMessage().getTimestamp();
 			String domain = tree.getDomain();
 			String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
-			DumpChannel channel = m_manager.openChannel(path, false);
+			DumpChannel channel = m_manager.openChannel(path, false, m_startTime);
 			int length = channel.write(tree);
 
 			if (length <= 0) {
 				m_manager.closeChannel(channel);
 
-				channel = m_manager.openChannel(path, true);
+				channel = m_manager.openChannel(path, true, m_startTime);
 				channel.write(tree);
 			}
 		} catch (Exception e) {

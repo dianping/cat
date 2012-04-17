@@ -26,8 +26,10 @@ public class DumpChannel {
 
 	private long m_lastChunkAdjust = 100 * 1024L; // 100K
 
-	public DumpChannel(MessageCodec codec, File baseDir, String path, long maxSize, long lastChunkAdjust)
-	      throws IOException {
+	private long m_startTime;
+
+	public DumpChannel(MessageCodec codec, File baseDir, String path, long maxSize, long lastChunkAdjust, long startTime) throws IOException {
+		m_startTime = startTime;
 		m_codec = codec;
 		m_file = new File(baseDir, path).getCanonicalFile();
 		m_path = path;
@@ -45,6 +47,14 @@ public class DumpChannel {
 		} catch (IOException e) {
 			// ignore it
 		}
+	}
+
+	public File getFile() {
+		return m_file;
+	}
+
+	public long getStartTime() {
+		return m_startTime;
 	}
 
 	public void moveTo(File anotherBase) throws IOException {
@@ -84,9 +94,5 @@ public class DumpChannel {
 		m_out.flush();
 
 		return length + 1;
-	}
-
-	public File getFile() {
-		return m_file;
 	}
 }

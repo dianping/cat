@@ -39,6 +39,16 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 		m_channels.clear();
 	}
 
+	public void closeAllChannels(long startTime) {
+		for (DumpChannel channel : m_channels.values()) {
+			if (channel.getStartTime() == startTime) {
+				closeChannel(channel);
+			}
+		}
+
+		m_channels.clear();
+	}
+
 	public void closeChannel(DumpChannel channel) {
 		release(channel);
 		channel.close();
@@ -62,12 +72,12 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 	@Override
 	public void initialize() throws InitializationException {
 		ServerConfigManager configManager = lookup(ServerConfigManager.class);
-		
+
 		m_baseDir = configManager.getHdfsLocalBaseDir("dump");
 		m_maxSize = configManager.getHdfsFileMaxSize("dump");
 	}
 
-	private DumpChannel makeChannel(String key, String path, boolean forceNew) throws IOException {
+	private DumpChannel makeChannel(String key, String path, boolean forceNew, long startTime) throws IOException {
 		String file;
 
 		if (forceNew) {
@@ -85,13 +95,13 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 			file = path + ".gz";
 		}
 
-		DumpChannel channel = new DumpChannel(m_codec, new File(m_baseDir, "draft"), file, m_maxSize, m_lastChunkAdjust);
+		DumpChannel channel = new DumpChannel(m_codec, new File(m_baseDir, "draft"), file, m_maxSize, m_lastChunkAdjust, startTime);
 
 		m_channels.put(key, channel);
 		return channel;
 	}
 
-	public DumpChannel openChannel(String path, boolean forceNew) throws IOException {
+	public DumpChannel openChannel(String path, boolean forceNew, long startTime) throws IOException {
 		DumpChannel channel = m_channels.get(path);
 
 		if (channel == null) {
@@ -99,12 +109,12 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 				channel = m_channels.get(path);
 
 				if (channel == null) {
-					channel = makeChannel(path, path, false);
+					channel = makeChannel(path, path, false, startTime);
 				}
 			}
 		} else if (forceNew) {
 			synchronized (m_channels) {
-				channel = makeChannel(path, path, true);
+				channel = makeChannel(path, path, true, startTime);
 			}
 		}
 
