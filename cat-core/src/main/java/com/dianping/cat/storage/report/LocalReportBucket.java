@@ -225,10 +225,6 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 
 	@Override
 	public boolean storeById(String id, String report) throws IOException {
-		if (m_idToOffsets.containsKey(id)) {
-			return false;
-		}
-
 		byte[] content = report.getBytes("utf-8");
 		int length = content.length;
 		byte[] num = String.valueOf(length).getBytes("utf-8");

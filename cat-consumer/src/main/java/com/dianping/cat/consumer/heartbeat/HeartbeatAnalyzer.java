@@ -25,7 +25,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.model.entity.StatusInfo;
-import com.dianping.cat.status.model.entity.ThreadInfo;
+import com.dianping.cat.status.model.entity.ThreadsInfo;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.site.lookup.annotation.Inject;
@@ -177,7 +177,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		String xml = (String) heartbeat.getData();
 		try {
 			StatusInfo info = new com.dianping.cat.status.model.transform.DefaultXmlParser().parse(xml);
-			ThreadInfo thread = info.getThread();
+			ThreadsInfo thread = info.getThread();
 			period.setThreadCount(thread.getCount());
 			period.setDaemonCount(thread.getDaemonCount());
 			period.setTotalStartedCount((int) thread.getTotalStartedCount());
