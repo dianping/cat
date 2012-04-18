@@ -25,7 +25,7 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-	
+
 	@Inject
 	private ServerConfigManager m_manager;
 
@@ -34,7 +34,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "heartbeat")
 	private ModelService<HeartbeatReport> m_service;
-	
+
 	private String getIpAddress(HeartbeatReport report, Payload payload) {
 		Set<String> ips = report.getIps();
 		String ip = payload.getIpAddress();
@@ -45,7 +45,7 @@ public class Handler implements PageHandler<Context> {
 
 		return ip;
 	}
-	
+
 	private HeartbeatReport getReport(Payload payload) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
@@ -61,7 +61,7 @@ public class Handler implements PageHandler<Context> {
 			throw new RuntimeException("Internal error: no eligable ip service registered for " + request + "!");
 		}
 	}
-	
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "h")
@@ -82,7 +82,7 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.HEARTBEAT);
 		model.setIpAddress(payload.getIpAddress());
-		
+
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);
@@ -91,11 +91,10 @@ public class Handler implements PageHandler<Context> {
 
 		m_jspViewer.view(ctx, model);
 	}
-	
+
 	private void showReport(Model model, Payload payload) {
 		try {
 			ModelPeriod period = payload.getPeriod();
-			HeartbeatReport report = getReport(payload);
 
 			if (period.isFuture()) {
 				model.setLongDate(payload.getCurrentDate());
@@ -103,12 +102,17 @@ public class Handler implements PageHandler<Context> {
 				model.setLongDate(payload.getDate());
 			}
 			model.setDisplayDomain(payload.getDomain());
+
+			HeartbeatReport report = getReport(payload);
+			if (report == null) {
+				return;
+			}
 			model.setReport(report);
 			String ip = getIpAddress(report, payload);
 			model.setIpAddress(ip);
-			
+
 			DisplayHeartbeat displayHeartbeat = new DisplayHeartbeat(m_builder);
-			model.setResult(displayHeartbeat.display(report,ip));
+			model.setResult(displayHeartbeat.display(report, ip));
 			model.setActiveThreadGraph(displayHeartbeat.getActiceThreadGraph());
 			model.setDaemonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
 			model.setTotalThreadGraph(displayHeartbeat.getTotalThreadGraph());
