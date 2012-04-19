@@ -41,7 +41,7 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 
 	public void closeAllChannels(long startTime) {
 		for (DumpChannel channel : m_channels.values()) {
-			if (channel.getStartTime() == startTime) {
+			if (channel.getStartTime() <= startTime) {
 				closeChannel(channel);
 			}
 		}
