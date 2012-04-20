@@ -24,6 +24,9 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.status.model.entity.DiskSpaceInfo;
+import com.dianping.cat.status.model.entity.MemoryInfo;
+import com.dianping.cat.status.model.entity.MessageInfo;
 import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.entity.ThreadsInfo;
 import com.dianping.cat.storage.Bucket;
@@ -129,7 +132,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		Message message = tree.getMessage();
 		HeartbeatReport report = findOrCreateReport(domain);
 		report.addIp(tree.getIpAddress());
-		
+
 		if (message instanceof Transaction) {
 			int count = processTransaction(report, tree, (Transaction) message);
 			if (count > 0) {
@@ -139,14 +142,12 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	private int processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(heartbeat.getTimestamp());
-		int minute = cal.get(Calendar.MINUTE);
 		String ip = tree.getIpAddress();
-		
-		Period period = new Period(minute);
-		setHeartBeatInfo(period, heartbeat);
-		report.findOrCreateMachine(ip).getPeriods().add(period);
+
+		Period period = getHeartBeatInfo(heartbeat);
+		if (period != null) {
+			report.findOrCreateMachine(ip).getPeriods().add(period);
+		}
 		return 1;
 	}
 
@@ -175,19 +176,46 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		loadReports();
 	}
 
-	private void setHeartBeatInfo(Period period, Heartbeat heartbeat) {
+	private Period getHeartBeatInfo(Heartbeat heartbeat) {
 		String xml = (String) heartbeat.getData();
+		StatusInfo info = null;
 		try {
-			StatusInfo info = new com.dianping.cat.status.model.transform.DefaultXmlParser().parse(xml);
+			info = new com.dianping.cat.status.model.transform.DefaultXmlParser().parse(xml);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(heartbeat.getTimestamp());
+		int minute = cal.get(Calendar.MINUTE);
+
+		Period period = new Period(minute);
+		try {
 			ThreadsInfo thread = info.getThread();
 			period.setThreadCount(thread.getCount());
 			period.setDaemonCount(thread.getDaemonCount());
 			period.setTotalStartedCount((int) thread.getTotalStartedCount());
+			period.setCatThreadCount(thread.getCatThreadCount());
+			period.setPigeonThreadCount(thread.getPigeonThreadCount());
+
+			MessageInfo catInfo = info.getMessage();
+			period.setCatMessageProduced((int) catInfo.getProduced());
+			period.setCatMessageOverflow((int) catInfo.getOverflowed());
+			period.setCatMessageSize(catInfo.getBytes());
+
+			DiskSpaceInfo diskInfo = info.getDiskSpace();
+			MemoryInfo memeryInfo = info.getMemory();
+			period.setGcCount(period.getGcCount());
+			period.setHeapUsage(memeryInfo.getHeapUsage());
+			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
+			period.setDiskFree(diskInfo.getFree());
+			period.setDiskUseable(diskInfo.getUsable());
+			period.setSystemLoadAverage(info.getOs().getSystemLoadAverage());
+
 		} catch (Exception e) {
-			period.setThreadCount(-1);
-			period.setDaemonCount(-1);
-			period.setTotalStartedCount(-1);
+			e.printStackTrace();
 		}
+		return period;
 	}
 
 	private void storeMessage(MessageTree tree) {

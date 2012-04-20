@@ -117,6 +117,17 @@ public class Handler implements PageHandler<Context> {
 			model.setDaemonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
 			model.setTotalThreadGraph(displayHeartbeat.getTotalThreadGraph());
 			model.setStartedThreadGraph(displayHeartbeat.getStartedThreadGraph());
+			model.setCatThreadGraph(displayHeartbeat.getCatThreadGraph());
+			model.setPigeonThreadGraph(displayHeartbeat.getPigeonTheadGraph());
+			model.setCatMessageProducedGraph(displayHeartbeat.getCatMessageProducedGraph());
+			model.setCatMessageOverflowGraph(displayHeartbeat.getCatMessageOverflowGraph());
+			model.setCatMessageSizeGraph(displayHeartbeat.getCatMessageSizeGraph());
+			model.setGcCountGraph(displayHeartbeat.getGcCountGraph());
+			model.setHeapUsageGraph(displayHeartbeat.getHeapUsageGraph());
+			model.setNoneHeapUsageGraph(displayHeartbeat.getNoneHeapUsageGraph());
+			model.setDiskFreeGraph(displayHeartbeat.getDiskFreeGraph());
+			model.setDiskUseableGraph(displayHeartbeat.getDiskUseableGraph());
+			model.setSystemLoadAverageGraph(displayHeartbeat.getSystemLoadAverageGraph());
 		} catch (Throwable e) {
 			Cat.getProducer().logError(e);
 			model.setException(e);

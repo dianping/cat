@@ -29,7 +29,7 @@ public class DisplayTransactionTypeReport {
 			}
 		}
 		if (sorted == null) {
-			sorted = "total";
+			sorted = "avg";
 		}
 		Collections.sort(m_results, new TransactionTypeComparator(sorted));
 		return this;
