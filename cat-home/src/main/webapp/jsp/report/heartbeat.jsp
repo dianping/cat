@@ -49,7 +49,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="980" height="570"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="380"	xmlns="http://www.w3.org/2000/svg">
 		  ${model.activeThreadGraph}
 		  ${model.daemonThreadGraph}
 		  ${model.totalThreadGraph}
@@ -64,7 +64,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="980" height="190"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
 		  ${model.gcCountGraph}
 		  ${model.systemLoadAverageGraph}
 		</svg>
@@ -75,7 +75,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="980" height="190"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
 		  ${model.heapUsageGraph}
 		  ${model.noneHeapUsageGraph}
 		</svg>
@@ -86,7 +86,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="980" height="190"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
 		  ${model.diskFreeGraph}
 		  ${model.diskUseableGraph}
 		</svg>
@@ -97,7 +97,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="980" height="380"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
 		  ${model.catMessageProducedGraph}
 		  ${model.catMessageOverflowGraph}
 		  ${model.catMessageSizeGraph}
@@ -140,7 +140,7 @@
 		<td>${w:format(item.diskUseable,'0.#G')}</td>
 		<td>${item.catMessageProduced}</td>
 		<td>${item.catMessageOverflow}</td>
-		<td>${w:format(item.catMessageSize,'0.#M')}</td>
+		<td>${w:format(item.catMessageSize,'0.#K')}</td>
 		</tr>
 	</c:forEach>
 </table>

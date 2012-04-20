@@ -205,7 +205,8 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 			DiskSpaceInfo diskInfo = info.getDiskSpace();
 			MemoryInfo memeryInfo = info.getMemory();
-			period.setGcCount(period.getGcCount());
+			
+			period.setGcCount((int)info.getMemory().getGc().getCount());
 			period.setHeapUsage(memeryInfo.getHeapUsage());
 			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
 			period.setDiskFree(diskInfo.getFree());
