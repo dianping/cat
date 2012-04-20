@@ -77,7 +77,7 @@ public class DisplayHeartbeat {
 			m_pigeonTheads[minute] = period.getPigeonThreadCount();
 			m_catMessageProduced[minute] = period.getCatMessageProduced();
 			m_catMessageOverflow[minute] = period.getCatMessageOverflow();
-			period.setCatMessageSize(period.getCatMessageSize() / 8 / SIZE );
+			period.setCatMessageSize(period.getCatMessageSize() / 8 / SIZE /SIZE );
 			m_catMessageSize[minute] = period.getCatMessageSize();
 			m_gcCount[minute] = period.getGcCount();
 

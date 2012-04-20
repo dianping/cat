@@ -140,7 +140,7 @@
 		<td>${w:format(item.diskUseable,'0.#G')}</td>
 		<td>${item.catMessageProduced}</td>
 		<td>${item.catMessageOverflow}</td>
-		<td>${w:format(item.catMessageSize,'0.#K')}</td>
+		<td>${w:format(item.catMessageSize,'0.#M')}</td>
 		</tr>
 	</c:forEach>
 </table>
