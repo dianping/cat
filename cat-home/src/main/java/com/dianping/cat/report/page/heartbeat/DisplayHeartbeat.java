@@ -28,11 +28,19 @@ public class DisplayHeartbeat {
 
 	public double[] m_catMessageProduced = new double[60];
 
+	public double[] m_addCatMessageProduced = new double[60];
+
 	public double[] m_catMessageOverflow = new double[60];
+
+	public double[] m_addCatMessageOverflow = new double[60];
 
 	public double[] m_catMessageSize = new double[60];
 
+	public double[] m_addCatMessageSize = new double[60];
+
 	public double[] m_gcCount = new double[60];
+
+	public double[] m_addGcCount = new double[60];
 
 	public double[] m_heapUsage = new double[60];
 
@@ -77,7 +85,7 @@ public class DisplayHeartbeat {
 			m_pigeonTheads[minute] = period.getPigeonThreadCount();
 			m_catMessageProduced[minute] = period.getCatMessageProduced();
 			m_catMessageOverflow[minute] = period.getCatMessageOverflow();
-			period.setCatMessageSize(period.getCatMessageSize() / 8 / SIZE /SIZE );
+			period.setCatMessageSize(period.getCatMessageSize() / 8 / SIZE );
 			m_catMessageSize[minute] = period.getCatMessageSize();
 			m_gcCount[minute] = period.getGcCount();
 
@@ -100,6 +108,31 @@ public class DisplayHeartbeat {
 				d = m_totalThreads[i];
 			}
 			m_newThreads[i] = d;
+			
+			double gc = m_gcCount[i] - m_gcCount[i-1];
+			if(gc<0){
+				d = m_gcCount[i];
+			}
+			m_addGcCount[i]=gc;
+			
+			double addMessageCount = m_catMessageProduced[i] - m_catMessageProduced[i-1];
+			if(addMessageCount<0){
+				addMessageCount = m_catMessageProduced[i];
+			}
+			m_addCatMessageProduced[i]=addMessageCount;
+			
+			double addMessageSize = m_catMessageSize[i] - m_catMessageSize[i-1];
+			if(addMessageSize<0){
+				addMessageSize = m_catMessageSize[i];
+			}
+			m_addCatMessageSize[i]=addMessageSize;
+			
+			double addMessageFlow = m_catMessageOverflow[i] - m_catMessageOverflow[i-1];
+			if(addMessageFlow<0){
+				addMessageFlow = m_catMessageOverflow[i];
+			}
+			m_addCatMessageOverflow[i]=addMessageFlow;
+			
 		}
 		return this;
 	}
@@ -133,21 +166,21 @@ public class DisplayHeartbeat {
 	}
 
 	public String getCatMessageProducedGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "Cat Total Message Produced", "Minute", "Count",
-		      m_catMessageProduced));
+		return m_builder.build(new HeartbeatPayload(0, "Cat Message Produced / Minute", "Minute", "Count",
+				m_addCatMessageProduced));
 	}
 
 	public String getCatMessageOverflowGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "Cat Total Message Overflow", "Minute", "Count",
-		      m_catMessageOverflow));
+		return m_builder.build(new HeartbeatPayload(1, "Cat Message Overflow / Minute", "Minute", "Count",
+		      m_addCatMessageOverflow));
 	}
 
 	public String getCatMessageSizeGraph() {
-		return m_builder.build(new HeartbeatPayload(2, "Cat Total Message Size", "Minute", "KB", m_catMessageSize));
+		return m_builder.build(new HeartbeatPayload(2, "Cat Message Size / Minute", "Minute", "KB", m_addCatMessageSize));
 	}
 
 	public String getGcCountGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "Gc Count", "Minute", "Count", m_gcCount));
+		return m_builder.build(new HeartbeatPayload(0, "Gc Count", "Minute", "Count", m_addGcCount));
 	}
 
 	public String getSystemLoadAverageGraph() {
@@ -182,7 +215,7 @@ public class DisplayHeartbeat {
 		public HeartbeatPayload(int index, String title, String axisXLabel, String axisYLabel, double[] values) {
 			super(title, axisXLabel, axisYLabel);
 
-			m_idPrefix = title.substring(0, 1);
+			m_idPrefix = title;
 			m_index = index;
 			m_labels = new String[61];
 
