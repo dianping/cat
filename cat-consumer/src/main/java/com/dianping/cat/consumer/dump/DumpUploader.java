@@ -69,10 +69,9 @@ public class DumpUploader implements Initializable, LogEnabled {
 			m_job = Threads.forGroup("Cat").start(new WriteJob());
 		}
 	}
-	
-	
+
 	private long sleepPeriod = 1000;
-	
+
 	public void setSleepPeriod(long period) {
 		this.sleepPeriod = period;
 	}
@@ -132,18 +131,18 @@ public class DumpUploader implements Initializable, LogEnabled {
 					File file = new File(baseDir, path);
 
 					try {
-						m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
-
 						FileInputStream fis = new FileInputStream(file);
 						FSDataOutputStream fdos = makeHdfsOutputStream(path);
 
+						long start = System.currentTimeMillis();
+						m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
 						Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
-
+						float sec = (System.currentTimeMillis() - start) / 1000;
+						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s). Size(%s) Speed(%s)", file.getCanonicalPath(), path, file.length() / sec));
+						
 						if (!file.delete()) {
 							m_logger.warn("Can't delete file: " + file);
 						}
-
-						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s).", file.getCanonicalPath(), path));
 					} catch (AccessControlException e) {
 						m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
 					} catch (IOException e) {
