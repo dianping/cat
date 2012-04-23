@@ -45,7 +45,7 @@
 <br>
 <table class="graph">
 <tr>
-	<th>System Thread Info</th>
+	<th>Thread Info</th>
 </tr>
 <tr>
 	<td>
@@ -93,7 +93,7 @@
 	</td>
 </tr>
 <tr>
-	<th>Cat Info</th>
+	<th>Cat Message Info</th>
 </tr>
 <tr>
 	<td>
@@ -119,9 +119,9 @@
 		<th>NoneHeapUsage</th>
 		<th>DiskFree</th>
 		<th>DiskUseable</th>
-		<th>CatMessageProduced</th>
-		<th>CatMessageOverflow</th>
-		<th>CatMessageSize</th>
+		<th>CatProduced</th>
+		<th>CatOverflow</th>
+		<th>CatSize</th>
 	</tr>
 	<c:forEach var="item" items="${model.result.periods}"
 				varStatus="status">
@@ -134,13 +134,13 @@
 		<td>${item.pigeonThreadCount}</td>
 		<td>${item.gcCount}</td>
 		<td>${item.systemLoadAverage}</td>
-		<td>${w:format(item.heapUsage,'0.#M')}</td>
-		<td>${w:format(item.noneHeapUsage,'0.#M')}</td>
-		<td>${w:format(item.diskFree,'0.#G')}</td>
-		<td>${w:format(item.diskUseable,'0.#G')}</td>
+		<td>${w:format(item.heapUsage,'0.#MB')}</td>
+		<td>${w:format(item.noneHeapUsage,'0.#MB')}</td>
+		<td>${w:format(item.diskFree,'0.#GB')}</td>
+		<td>${w:format(item.diskUseable,'0.#GB')}</td>
 		<td>${item.catMessageProduced}</td>
 		<td>${item.catMessageOverflow}</td>
-		<td>${w:format(item.catMessageSize,'0.#M')}</td>
+		<td>${w:format(item.catMessageSize,'0.#KB')}</td>
 		</tr>
 	</c:forEach>
 </table>
