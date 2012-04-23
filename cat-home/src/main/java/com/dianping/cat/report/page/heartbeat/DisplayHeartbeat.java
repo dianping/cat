@@ -260,7 +260,7 @@ public class DisplayHeartbeat {
 
 		@Override
 		public int getDisplayWidth() {
-			return (int) (super.getDisplayWidth() * 0.7);
+			return (int) (super.getDisplayWidth() * 0.66);
 		}
 
 		@Override

@@ -72,7 +72,7 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 
 		// open the file and seek to the start of the split
 		Path file = split.getPath();
-
+	
 		System.out.println("Starting process: " + file.getName());
 
 		CompressionCodec codec = m_compressionCodecs.getCodec(file);
