@@ -24,11 +24,11 @@ public class SqlJobMain extends Configured implements Tool {
 
 	private static String BASE_URL;
 
-	private static String DEFAULT_IN_PATH = "hdfs://h169.hadoop/user/cat/dump/";
+	private static String DEFAULT_IN_PATH = "hdfs://10.1.1.169/user/cat/dump/";
 
-	private static String DEFAULT_OUT_PATH = "hdfs://h169.hadoop/user/cat/sql/";
+	private static String DEFAULT_OUT_PATH = "hdfs://10.1.1.169/user/cat/sql/";
 
-	private static String DEFAULT_FINAL_PATH = "hdfs://h169.hadoop/user/cat/sqlResult/";
+	private static String DEFAULT_FINAL_PATH = "hdfs://10.1.1.169/user/cat/sqlResult/";
 
 	private static final int DEFAULT_REDUCE_NUMBER = 3;
 
