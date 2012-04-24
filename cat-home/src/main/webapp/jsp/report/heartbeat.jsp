@@ -134,13 +134,13 @@
 		<td>${item.pigeonThreadCount}</td>
 		<td>${item.gcCount}</td>
 		<td>${item.systemLoadAverage}</td>
-		<td>${w:format(item.heapUsage,'0.#MB')}</td>
-		<td>${w:format(item.noneHeapUsage,'0.#MB')}</td>
-		<td>${w:format(item.diskFree,'0.#GB')}</td>
-		<td>${w:format(item.diskUseable,'0.#GB')}</td>
+		<td>${w:format(item.heapUsage,'0.0MB')}</td>
+		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
+		<td>${w:format(item.diskFree,'0.0GB')}</td>
+		<td>${w:format(item.diskUseable,'0.0GB')}</td>
 		<td>${item.catMessageProduced}</td>
 		<td>${item.catMessageOverflow}</td>
-		<td>${w:format(item.catMessageSize,'0.#KB')}</td>
+		<td>${w:format(item.catMessageSize,'0.0MB')}</td>
 		</tr>
 	</c:forEach>
 </table>

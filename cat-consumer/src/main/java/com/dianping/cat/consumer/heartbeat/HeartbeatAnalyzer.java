@@ -199,8 +199,8 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			period.setPigeonThreadCount(thread.getPigeonThreadCount());
 
 			MessageInfo catInfo = info.getMessage();
-			period.setCatMessageProduced((int) catInfo.getProduced());
-			period.setCatMessageOverflow((int) catInfo.getOverflowed());
+			period.setCatMessageProduced(catInfo.getProduced());
+			period.setCatMessageOverflow(catInfo.getOverflowed());
 			period.setCatMessageSize(catInfo.getBytes());
 
 			DiskSpaceInfo diskInfo = info.getDiskSpace();
