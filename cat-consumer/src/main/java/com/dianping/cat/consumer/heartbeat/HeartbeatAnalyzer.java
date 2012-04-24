@@ -126,20 +126,20 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			ThreadsInfo thread = info.getThread();
 			period.setThreadCount(thread.getCount());
 			period.setDaemonCount(thread.getDaemonCount());
-			period.setTotalStartedCount((int) thread.getTotalStartedCount());
+			period.setTotalStartedCount(thread.getTotalStartedCount());
 			period.setCatThreadCount(thread.getCatThreadCount());
 			period.setPigeonThreadCount(thread.getPigeonThreadCount());
 
 			MessageInfo catInfo = info.getMessage();
-			period.setCatMessageProduced((int) catInfo.getProduced());
-			period.setCatMessageOverflow((int) catInfo.getOverflowed());
+			period.setCatMessageProduced(catInfo.getProduced());
+			period.setCatMessageOverflow(catInfo.getOverflowed());
 			period.setCatMessageSize(catInfo.getBytes());
 
 			MemoryInfo memeryInfo = info.getMemory();
 			DiskInfo diskInfo = info.getDisk();
 			DiskVolumeInfo volumeInfo = getDefaultDiskVolume(diskInfo);
 
-			period.setGcCount((int) info.getMemory().getGc().getCount());
+			period.setGcCount(info.getMemory().getGc().getCount());
 			period.setHeapUsage(memeryInfo.getHeapUsage());
 			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
 			period.setDiskFree(volumeInfo.getFree());

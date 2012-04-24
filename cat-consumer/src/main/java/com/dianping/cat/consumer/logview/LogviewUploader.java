@@ -150,9 +150,11 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 				FileInputStream fis = new FileInputStream(file);
 				FSDataOutputStream fdos = fs.create(path);
 
+				long start = System.currentTimeMillis();
 				m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
 				Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
-				m_logger.info(String.format("Finish uploading(%s) to HDFS(%s).", file.getCanonicalPath(), path));
+				float sec = (System.currentTimeMillis() - start) / 1000;
+				m_logger.info(String.format("Finish uploading(%s) to HDFS(%s). Size(%s) Speed(%s)", file.getCanonicalPath(), path, file.length(), file.length() / sec));
 			} catch (AccessControlException e) {
 				m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
 			} catch (IOException e) {

@@ -26,8 +26,8 @@
     <attribute name="disk-free" value-type="double" primitive="true" />
     <attribute name="disk-useable" value-type="double" primitive="true" />
     <attribute name="system-load-average" value-type="double" primitive="true" />
-    <attribute name="cat-message-produced" value-type="int" primitive="true" />
-    <attribute name="cat-message-overflow" value-type="int" primitive="true" />
+    <attribute name="cat-message-produced" value-type="long" primitive="true" />
+    <attribute name="cat-message-overflow" value-type="long" primitive="true" />
     <attribute name="cat-message-size" value-type="double" primitive="true" />
   </entity>
 </model>

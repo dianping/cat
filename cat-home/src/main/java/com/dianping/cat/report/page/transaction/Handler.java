@@ -164,9 +164,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 				Gson gson = new Gson();
 				String json = gson.toJson(report);
 				model.setMobileResponse(json);
-				
-				DisplayTransactionTypeReport test = gson.fromJson(json, DisplayTransactionTypeReport.class);
-				System.out.println(test);
 			}
 		}
 
