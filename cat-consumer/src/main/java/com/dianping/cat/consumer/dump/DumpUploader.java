@@ -92,16 +92,21 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			try {
-				while (isActive()) {
-					upload();
+			while (isActive()) {
 
-					Thread.sleep(sleepPeriod);
+				try {
+					upload();
+				} catch (Exception e) {
+					m_logger.warn("Error when dumping message to HDFS.", e);
 				}
 
-			} catch (Exception e) {
-				m_logger.warn("Error when dumping message to HDFS.", e);
+				try {
+					Thread.sleep(sleepPeriod);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+
 		}
 
 		@Override
@@ -138,8 +143,8 @@ public class DumpUploader implements Initializable, LogEnabled {
 						m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
 						Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
 						float sec = (System.currentTimeMillis() - start) / 1000;
-						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s). Size(%s) Speed(%s)", file.getCanonicalPath(), path, file.length() / sec));
-						
+						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s). Size(%s) Speed(%s)", file.getCanonicalPath(), path, file.length(), file.length() / sec));
+
 						if (!file.delete()) {
 							m_logger.warn("Can't delete file: " + file);
 						}
