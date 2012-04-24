@@ -38,10 +38,13 @@ public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 			row.setDurationOverTime(sql.getDurationOverTime());
 			row.setFailureOverTime(sql.getFailureOverTime());
 			dao.insert(row);
+			System.out.println("insert successful " + sql.getName());
 		} catch (ComponentLookupException e) {
-			e.printStackTrace();
+			System.out.println(e);
 		} catch (DalException e) {
-			e.printStackTrace();
+			System.out.println(e);
+		} catch(Exception e){
+			System.out.println(e);
 		}
 	}
 }

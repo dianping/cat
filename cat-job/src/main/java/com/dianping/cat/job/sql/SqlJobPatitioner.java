@@ -6,6 +6,8 @@ public class SqlJobPatitioner extends Partitioner<SqlStatementKey, SqlStatementV
 
 	@Override
 	public int getPartition(SqlStatementKey key, SqlStatementValue value, int numPartitions) {
-		return key.getDomain().hashCode() % numPartitions;
+		int hashCode = key.getDomain().hashCode();
+		hashCode = Math.abs(hashCode);
+		return hashCode % numPartitions;
 	}
 }

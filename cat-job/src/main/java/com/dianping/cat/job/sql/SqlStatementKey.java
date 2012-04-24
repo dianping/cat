@@ -75,22 +75,15 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 
 	@Override
 	public String toString() {
-		String statement = m_statement.toString();
 		// to assure the output string not contain \t
-		statement = statement.replaceAll("\n", " ");
-		statement = statement.replaceAll("\t", " ");
-		statement = statement.replaceAll("\"", "\'");
-		m_statement = new Text(statement);
-
+		String statement = m_statement.toString();
+		m_statement = new Text(replaceBlank(statement));
 		String name = m_name.toString();
-		name = name.replaceAll("\n", " ");
-		name = name.replaceAll("\t", " ");
-		name = name.replaceAll("\"", "\'");
-		m_name = new Text(name);
+		m_name = new Text(replaceBlank(name));
 		return String.format("%s\t%s\t%s", m_domain, m_name, m_statement);
 	}
-	
-	public String replaceBlank(String str){
+
+	public String replaceBlank(String str) {
 		String name = str.toString();
 		name = name.replaceAll("\\s", " ");
 		name = name.replaceAll("\t", " ");

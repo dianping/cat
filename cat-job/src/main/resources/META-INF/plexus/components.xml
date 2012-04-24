@@ -18,11 +18,11 @@
 				<idle-timeout>10m</idle-timeout>
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
-					<driver>${jdbc.driver}</driver>
-					<URL>${jdbc.url}</URL>
-					<user>${jdbc.user}</user>
-					<password>${jdbc.password}</password>
-					<connectionProperties><![CDATA[${jdbc.connectionProperties}]]></connectionProperties>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<URL>jdbc:mysql://10.1.1.220:3306/cat</URL>
+					<user>dpcom_cat</user>
+					<password>dp!@jWLcFDfEX</password>
+					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
 			</configuration>
 			<requirements>

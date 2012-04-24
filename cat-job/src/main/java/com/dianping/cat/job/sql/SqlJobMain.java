@@ -77,6 +77,7 @@ public class SqlJobMain extends Configured implements Tool {
 			}
 		}
 
+		
 		String hourStr = getLastHoursString(1);
 
 		if (args.length >= 2) {
@@ -105,8 +106,6 @@ public class SqlJobMain extends Configured implements Tool {
 		fs.delete(outPath, true);		
 		FileOutputFormat.setOutputPath(job, outPath);
 		
-		Files.forDir().delete(new File(outputPath), true);
-
 		if (job.waitForCompletion(true)) {
 			return runSqlRecordJob(hourStr);
 		} else {
@@ -130,7 +129,8 @@ public class SqlJobMain extends Configured implements Tool {
 		job.setMapOutputValueClass(Text.class);
 		FileInputFormat.addInputPath(job, new Path(DEFAULT_OUT_PATH + currentHour));
 		FileOutputFormat.setOutputPath(job, new Path(DEFAULT_FINAL_PATH));
-		Files.forDir().delete(new File(DEFAULT_FINAL_PATH), true);
+		FileSystem fs = FileSystem.get(conf);
+		fs.delete(new Path(DEFAULT_FINAL_PATH), true);		
 		return job.waitForCompletion(true) ? 0 : 1;
 	}
 }
