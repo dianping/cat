@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.consumer.ip.location;
+package com.dianping.cat.report.page.ip.location;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.ip.location;
+package com.dianping.cat.report.page.ip.location;
 
 import java.io.UnsupportedEncodingException;
 import java.util.StringTokenizer;

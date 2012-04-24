@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.ip.location;
+package com.dianping.cat.report.page.ip.location;
 
 import java.io.IOException;
 
@@ -7,6 +7,10 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import com.dianping.cat.report.page.ip.location.IPLocation;
+import com.dianping.cat.report.page.ip.location.IPSeeker;
+import com.dianping.cat.report.page.ip.location.IPSeekerFactory;
 
 public class IPSeekerTest {
 

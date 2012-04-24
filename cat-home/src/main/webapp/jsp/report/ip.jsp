@@ -26,7 +26,6 @@
 			<td>${m.lastFive}</td>
 			<td>${m.lastFifteen}</td>
 			<td>${a:getLocation(m.address)}</td>
-			
 		</tr>
 	</c:forEach>
 </table>

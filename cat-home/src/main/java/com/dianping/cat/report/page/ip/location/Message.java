@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.ip.location;
+package com.dianping.cat.report.page.ip.location;
 
 public interface Message {
     String bad_ip_file="IP地址库文件错误";
