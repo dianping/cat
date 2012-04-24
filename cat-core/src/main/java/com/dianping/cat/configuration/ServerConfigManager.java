@@ -152,6 +152,16 @@ public class ServerConfigManager implements LogEnabled {
 		return m_config;
 	}
 
+	public String getStorageLocalBaseDir() {
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+
+			return storage.getLocalBaseDir();
+		} else {
+			return "target/bucket";
+		}
+	}
+
 	public void initialize(File configFile) throws Exception {
 		if (configFile != null && configFile.canRead()) {
 			m_logger.info(String.format("Loading configuration file(%s) ...", configFile.getCanonicalPath()));

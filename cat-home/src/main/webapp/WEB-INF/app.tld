@@ -50,7 +50,7 @@
    <function>
       <description>ip location</description>
       <name>getLocation</name>
-      <function-class>com.dianping.cat.report.page.ip.location.IPSeekerFactory</function-class>
+      <function-class>com.dianping.cat.report.page.ip.location.IPSeekerManager</function-class>
       <function-signature>String getLocation(java.lang.String)</function-signature>
       <example>${a:getLocation(ip)}</example>
    </function>

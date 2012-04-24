@@ -18,6 +18,7 @@ import com.dianping.cat.configuration.client.transform.DefaultXmlParser;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
+import com.dianping.cat.report.page.ip.location.IPSeekerManager;
 import com.site.helper.Files;
 import com.site.helper.Threads;
 import com.site.helper.Threads.DefaultThreadListener;
@@ -48,6 +49,8 @@ public class CatServlet extends AbstractContainerServlet {
 			ServerConfigManager serverConfigManager = lookup(ServerConfigManager.class);
 
 			serverConfigManager.initialize(catServerXml == null ? null : new File(catServerXml));
+
+			IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
 
 			final DefaultMessageHandler handler = (DefaultMessageHandler) lookup(MessageHandler.class);
 
@@ -107,30 +110,30 @@ public class CatServlet extends AbstractContainerServlet {
 	}
 
 	private final class CatThreadListener extends DefaultThreadListener {
-	   @Override
-	   public void onThreadGroupCreated(ThreadGroup group, String name) {
-	   	getLogger().info(String.format("Thread group(%s) created.", name));
-	   }
+		@Override
+		public void onThreadGroupCreated(ThreadGroup group, String name) {
+			getLogger().info(String.format("Thread group(%s) created.", name));
+		}
 
-	   @Override
-	   public void onThreadPoolCreated(ExecutorService pool, String name) {
-	   	getLogger().info(String.format("Thread pool(%s) created.", name));
-	   }
+		@Override
+		public void onThreadPoolCreated(ExecutorService pool, String name) {
+			getLogger().info(String.format("Thread pool(%s) created.", name));
+		}
 
-	   @Override
-	   public void onThreadStarting(Thread thread, String name) {
-	   	getLogger().info(String.format("Starting thread(%s) ...", name));
-	   }
+		@Override
+		public void onThreadStarting(Thread thread, String name) {
+			getLogger().info(String.format("Starting thread(%s) ...", name));
+		}
 
-	   @Override
-	   public void onThreadStopping(Thread thread, String name) {
-	   	getLogger().info(String.format("Stopping thread(%s).", name));
-	   }
+		@Override
+		public void onThreadStopping(Thread thread, String name) {
+			getLogger().info(String.format("Stopping thread(%s).", name));
+		}
 
-	   @Override
-	   public boolean onUncaughtException(Thread thread, Throwable e) {
-	   	getLogger().error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
-	   	return true;
-	   }
-   }
+		@Override
+		public boolean onUncaughtException(Thread thread, Throwable e) {
+			getLogger().error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
+			return true;
+		}
+	}
 }
