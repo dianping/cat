@@ -16,11 +16,15 @@
 		<attribute name="total-swap-space" value-type="long" primitive="true" />
 		<attribute name="free-swap-space" value-type="long" primitive="true" />
 	</entity>
-  <entity name="disk-space" class-name="DiskSpaceInfo">
-    <attribute name="total" value-type="long" primitive="true" />
-    <attribute name="free" value-type="long" primitive="true" />
-    <attribute name="usable" value-type="long" primitive="true" />
-  </entity>
+	<entity name="disk" class-name="DiskInfo">
+		<entity-ref name="disk-volume" list="list" names="disk-volumes" />
+	</entity>
+	<entity name="disk-volume" class-name="DiskVolumeInfo">
+		<attribute name="id" value-type="String" key="true" />
+		<attribute name="total" value-type="long" primitive="true"/>
+		<attribute name="free" value-type="long" primitive="true" />
+		<attribute name="usable" value-type="long" primitive="true" />
+	</entity>
 	<entity name="memory" class-name="MemoryInfo">
 		<attribute name="total" value-type="long" primitive="true" />
 		<attribute name="free" value-type="long" primitive="true" />
@@ -29,16 +33,16 @@
 		<entity-ref name="gc" />
 	</entity>
 	<entity name="gc" class-name="GcInfo">
-		<attribute name="count" value-type="long" primitive="true" />
+		<attribute name="count" value-type="int" primitive="true" />
 		<attribute name="time" value-type="long" primitive="true" />
 	</entity>
 	<entity name="thread" class-name="ThreadsInfo">
 		<attribute name="count" value-type="int" primitive="true" />
 		<attribute name="daemon-count" value-type="int" primitive="true" />
 		<attribute name="peek-count" value-type="int" primitive="true" />
-    	<attribute name="cat-thread-count" value-type="int" primitive="true" />
-    	<attribute name="pigeon-thread-count" value-type="int" primitive="true" />
-		<attribute name="total-started-count" value-type="long" primitive="true" />
+		<attribute name="cat-thread-count" value-type="int" primitive="true" />
+		<attribute name="pigeon-thread-count" value-type="int" primitive="true" />
+		<attribute name="total-started-count" value-type="int" primitive="true" />
 	</entity>
 	<entity name="message" class-name="MessageInfo">
 		<attribute name="produced" value-type="long" primitive="true" />

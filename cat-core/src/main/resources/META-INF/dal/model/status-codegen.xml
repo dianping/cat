@@ -4,7 +4,7 @@
     <attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss.SSS" />
     <entity-ref name="runtime" />
     <entity-ref name="os" />
-    <entity-ref name="disk-space" />
+    <entity-ref name="disk" />
     <entity-ref name="memory" />
     <entity-ref name="thread" />
     <entity-ref name="message" />
@@ -26,10 +26,14 @@
     <attribute name="total-swap-space" value-type="int" />
     <attribute name="free-swap-space" value-type="int" />
   </entity>
-  <entity name="disk-space">
-    <attribute name="total" value-type="int" />
-    <attribute name="free" value-type="int" />
-    <attribute name="usable" value-type="int" />
+  <entity name="disk">
+    <entity-ref name="disk-volume" type="list" names="disk-volumes" />
+  </entity>
+  <entity name="disk-volume">
+    <attribute name="id" value-type="String" />
+    <attribute name="total" value-type="long" />
+    <attribute name="free" value-type="long" />
+    <attribute name="usable" value-type="long" />
   </entity>
   <entity name="memory">
     <attribute name="total" value-type="int" />

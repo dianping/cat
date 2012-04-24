@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.TreeMap;
 
 import com.dianping.cat.message.spi.MessageStatistics;
-import com.dianping.cat.status.model.entity.DiskSpaceInfo;
+import com.dianping.cat.status.model.entity.DiskInfo;
+import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.GcInfo;
 import com.dianping.cat.status.model.entity.MemoryInfo;
 import com.dianping.cat.status.model.entity.MessageInfo;
@@ -30,20 +31,22 @@ class StatusInfoCollector extends BaseVisitor {
 		m_statistics = statistics;
 	}
 
-	int countThreadsByPrefix(ThreadInfo[] threads, String prefix) {
+	int countThreadsByPrefix(ThreadInfo[] threads, String... prefixes) {
 		int count = 0;
 
 		for (ThreadInfo thread : threads) {
-			if (thread.getThreadName().startsWith(prefix)) {
-				count++;
+			for (String prefix : prefixes) {
+				if (thread.getThreadName().startsWith(prefix)) {
+					count++;
+				}
 			}
 		}
 
 		return count;
 	}
 
-	long getGcCount(List<GarbageCollectorMXBean> mxbeans) {
-		long count = 0;
+	int getGcCount(List<GarbageCollectorMXBean> mxbeans) {
+		int count = 0;
 
 		for (GarbageCollectorMXBean mxbean : mxbeans) {
 			if (mxbean.isValid()) {
@@ -102,12 +105,23 @@ class StatusInfoCollector extends BaseVisitor {
 	}
 
 	@Override
-	public void visitDiskSpace(DiskSpaceInfo diskSpace) {
-		File workingDir = new File(".");
+   public void visitDisk(DiskInfo disk) {
+		File[] roots = File.listRoots();
+		
+		for (File root: roots) {
+			disk.addDiskVolume(new DiskVolumeInfo(root.getAbsolutePath()));
+		}
+		
+	   super.visitDisk(disk);
+   }
 
-		diskSpace.setTotal(workingDir.getTotalSpace());
-		diskSpace.setFree(workingDir.getFreeSpace());
-		diskSpace.setUsable(workingDir.getUsableSpace());
+	@Override
+	public void visitDiskVolume(DiskVolumeInfo diskVolume) {
+		File volume = new File(diskVolume.getId());
+
+		diskVolume.setTotal(volume.getTotalSpace());
+		diskVolume.setFree(volume.getFreeSpace());
+		diskVolume.setUsable(volume.getUsableSpace());
 	}
 
 	@Override
@@ -176,7 +190,7 @@ class StatusInfoCollector extends BaseVisitor {
 	public void visitStatus(StatusInfo status) {
 		status.setTimestamp(new Date());
 		status.setOs(new OsInfo());
-		status.setDiskSpace(new DiskSpaceInfo());
+		status.setDisk(new DiskInfo());
 		status.setRuntime(new RuntimeInfo());
 		status.setMemory(new MemoryInfo());
 		status.setThread(new ThreadsInfo());
@@ -193,9 +207,10 @@ class StatusInfoCollector extends BaseVisitor {
 		thread.setCount(bean.getThreadCount());
 		thread.setDaemonCount(bean.getDaemonThreadCount());
 		thread.setPeekCount(bean.getPeakThreadCount());
-		thread.setTotalStartedCount(bean.getTotalStartedThreadCount());
+		thread.setTotalStartedCount((int) bean.getTotalStartedThreadCount());
 		thread.setCatThreadCount(countThreadsByPrefix(threads, "Cat-"));
-		thread.setPigeonThreadCount(countThreadsByPrefix(threads, "Pigeon-"));
+		thread.setPigeonThreadCount(countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-",
+		      "Client-ResponseProcessor"));
 		thread.setDump(getThreadDump(threads));
 	}
 }

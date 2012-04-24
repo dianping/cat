@@ -86,7 +86,8 @@ public class FileSystemManager implements Initializable {
 			// For MAC OS X
 			// -Djava.security.krb5.realm=OX.AC.UK
 			// -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk
-			System.setProperty("java.security.krb5.realm", getValue(properties, "java.security.krb5.realm", "DIANPING.COM"));
+			System.setProperty("java.security.krb5.realm",
+			      getValue(properties, "java.security.krb5.realm", "DIANPING.COM"));
 			System.setProperty("java.security.krb5.kdc", getValue(properties, "java.security.krb5.kdc", "192.168.7.80"));
 
 			UserGroupInformation.setConfiguration(config);
@@ -109,11 +110,14 @@ public class FileSystemManager implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		m_defaultBaseDir = m_configManager.getHdfsLocalBaseDir("hdfs");
-		try {
-			m_config = getHdfsConfiguration();
-			SecurityUtil.login(m_config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
-		} catch (IOException e) {
-			throw new InitializationException("init FileSystemManager fail", e);
+
+		if (!m_configManager.isLocalMode()) {
+			try {
+				m_config = getHdfsConfiguration();
+				SecurityUtil.login(m_config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
+			} catch (IOException e) {
+				throw new InitializationException("init FileSystemManager fail", e);
+			}
 		}
 	}
 }

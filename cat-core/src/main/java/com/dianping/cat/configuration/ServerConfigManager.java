@@ -25,7 +25,7 @@ import com.site.helper.Threads.Task;
 public class ServerConfigManager implements LogEnabled {
 	private ServerConfig m_config;
 
-	private List<Listener> m_listeners = new ArrayList<ServerConfigManager.Listener>();
+	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
 
 	private Logger m_logger;
 
@@ -189,6 +189,12 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
+	public void onRefresh(ServiceConfigSupport listener) {
+		if (!m_listeners.contains(listener)) {
+			m_listeners.add(listener);
+		}
+	}
+
 	private long toLong(String str, long defaultValue) {
 		long value = 0;
 		int len = str == null ? 0 : str.length();
@@ -212,14 +218,8 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public void onRefresh(Listener listener) {
-		if (!m_listeners.contains(listener)) {
-			m_listeners.add(listener);
-		}
-	}
-
-	public static interface Listener {
-		public void onRefresh(ServerConfigManager manager);
+	public static interface ServerConfigKey {
+		public void add(String section);
 	}
 
 	static class ServerConfigReloader implements Task {
@@ -229,6 +229,17 @@ public class ServerConfigManager implements LogEnabled {
 
 		public ServerConfigReloader(File file) {
 			m_file = file;
+		}
+
+		@Override
+		public String getName() {
+			return "ServerConfigReloader";
+		}
+
+		private boolean isActive() {
+			synchronized (this) {
+				return m_active;
+			}
 		}
 
 		@Override
@@ -246,22 +257,17 @@ public class ServerConfigManager implements LogEnabled {
 			}
 		}
 
-		private boolean isActive() {
-			synchronized (this) {
-				return m_active;
-			}
-		}
-
-		@Override
-		public String getName() {
-			return "ServerConfigReloader";
-		}
-
 		@Override
 		public void shutdown() {
 			synchronized (this) {
 				m_active = false;
 			}
 		}
+	}
+
+	public static interface ServiceConfigSupport {
+		public void buildKey(ServerConfigManager manager, ServerConfigKey key);
+
+		public void configure(ServerConfigManager manager, boolean firstTime);
 	}
 }
