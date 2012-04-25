@@ -167,7 +167,8 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		int len = ids.size();
 		List<Logview> logviews = new ArrayList<Logview>();
 		Date date = new Date(timestamp);
-		String path = bucket.getLogicalPath();
+		String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String path = bucket.getLogicalPath() +  "-" + ipAddress;
 
 		for (int i = 0; i < len; i++) {
 			String id = ids.get(i);
