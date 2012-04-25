@@ -128,6 +128,7 @@ public class Handler implements PageHandler<Context> {
 			model.setDiskFreeGraph(displayHeartbeat.getDiskFreeGraph());
 			model.setDiskUseableGraph(displayHeartbeat.getDiskUseableGraph());
 			model.setSystemLoadAverageGraph(displayHeartbeat.getSystemLoadAverageGraph());
+			model.setMemoryFreeGraph(displayHeartbeat.getMemoryFreeGraph());
 		} catch (Throwable e) {
 			Cat.getProducer().logError(e);
 			model.setException(e);

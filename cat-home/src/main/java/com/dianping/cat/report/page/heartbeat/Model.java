@@ -33,6 +33,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_ipAddress;
 
 	private String m_noneHeapUsageGraph;
+	
+	private String m_memoryFreeGraph;
 
 	private String m_pigeonThreadGraph;
 
@@ -231,6 +233,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setTotalThreadGraph(String totalThreadGraph) {
    	m_totalThreadGraph = totalThreadGraph;
+   }
+
+	public String getMemoryFreeGraph() {
+   	return m_memoryFreeGraph;
+   }
+
+	public void setMemoryFreeGraph(String memoryFreeGraph) {
+   	m_memoryFreeGraph = memoryFreeGraph;
    }
 	
 }

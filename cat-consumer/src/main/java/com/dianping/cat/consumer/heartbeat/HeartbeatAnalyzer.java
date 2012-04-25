@@ -141,6 +141,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			period.setGcCount(info.getMemory().getGc().getCount());
 			period.setHeapUsage(memeryInfo.getHeapUsage());
 			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
+			period.setMemoryFree(memeryInfo.getFree());
 			period.setSystemLoadAverage(info.getOs().getSystemLoadAverage());
 
 			if (diskInfo != null) {

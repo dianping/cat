@@ -45,6 +45,8 @@ public class DisplayHeartbeat {
 	public double[] m_heapUsage = new double[60];
 
 	public double[] m_noneHeapUsage = new double[60];
+	
+	public double[] m_memoryFree = new double[60];
 
 	public double[] m_diskFree = new double[60];
 
@@ -98,11 +100,20 @@ public class DisplayHeartbeat {
 			period.setDiskFree(period.getDiskFree() / SIZE / SIZE / SIZE);
 			m_diskFree[minute] = period.getDiskFree();
 
+			period.setMemoryFree(period.getMemoryFree()/SIZE/SIZE);
+			m_memoryFree[minute] = period.getMemoryFree();
+			
 			period.setDiskUseable(period.getDiskUseable() / SIZE / SIZE / SIZE);
 			m_diskUseable[minute] = period.getDiskUseable();
 			m_systemLoadAverage[minute] = period.getSystemLoadAverage();
 		}
-		for (int i = 1; i <= 59; i++) {
+		m_newThreads =getAddedCount(m_totalThreads);
+		m_addGcCount=getAddedCount(m_gcCount);
+		m_addCatMessageProduced= getAddedCount(m_catMessageProduced);
+		m_addCatMessageSize=getAddedCount(m_catMessageSize);
+		m_addCatMessageOverflow= getAddedCount(m_catMessageOverflow);
+		
+		/*for (int i = 1; i <= 59; i++) {
 			double d = m_totalThreads[i] - m_totalThreads[i - 1];
 			if (d < 0) {
 				d = m_totalThreads[i];
@@ -133,7 +144,7 @@ public class DisplayHeartbeat {
 			}
 			m_addCatMessageOverflow[i] = addMessageFlow;
 
-		}
+		}*/
 		return this;
 	}
 
@@ -195,12 +206,30 @@ public class DisplayHeartbeat {
 		return m_builder.build(new HeartbeatPayload(1, "None Heap Usage", "Minute", "MB", m_noneHeapUsage));
 	}
 
+	public String getMemoryFreeGraph() {
+		return m_builder.build(new HeartbeatPayload(2, "Memory Free", "Minute", "MB", m_memoryFree));
+	}
+	
 	public String getDiskFreeGraph() {
 		return m_builder.build(new HeartbeatPayload(0, "Disk Free", "Minute", "GB", m_diskFree));
 	}
 
 	public String getDiskUseableGraph() {
 		return m_builder.build(new HeartbeatPayload(1, "Disk Useable", "Minute", "GB", m_diskUseable));
+	}
+
+	private double[] getAddedCount(double[] source) {
+		double[] result = new double[60];
+		for (int i = 1; i <= 59; i++) {
+			if (source[i - 1] > 0) {
+				double d = source[i] - source[i - 1];
+				if (d < 0) {
+					d = source[i];
+				}
+				result[i] = d;
+			}
+		}
+		return result;
 	}
 
 	public static class HeartbeatPayload extends AbstractGraphPayload {

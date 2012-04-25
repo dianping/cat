@@ -78,6 +78,7 @@
 		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
 		  ${model.heapUsageGraph}
 		  ${model.noneHeapUsageGraph}
+		  ${model.memoryFreeGraph}
 		</svg>
 	</td>
 </tr>
@@ -117,6 +118,7 @@
 		<th>SystemLoad</th>
 		<th>HeapUsage</th>
 		<th>NoneHeapUsage</th>
+		<th>MemoryFree</th>
 		<th>DiskFree</th>
 		<th>DiskUseable</th>
 		<th>CatProduced</th>
@@ -136,6 +138,7 @@
 		<td>${item.systemLoadAverage}</td>
 		<td>${w:format(item.heapUsage,'0.0MB')}</td>
 		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
+		<td>${w:format(item.memoryFree,'0.0MB')}</td>
 		<td>${w:format(item.diskFree,'0.0GB')}</td>
 		<td>${w:format(item.diskUseable,'0.0GB')}</td>
 		<td>${item.catMessageProduced}</td>
