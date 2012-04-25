@@ -5,7 +5,6 @@ import com.dianping.cat.job.sql.dal.SqlReportRecord;
 public class SqlReportModel {
 	private SqlReportRecord m_record;
 
-
 	public SqlReportModel(SqlReportRecord record) {
 		m_record = record;
 	}

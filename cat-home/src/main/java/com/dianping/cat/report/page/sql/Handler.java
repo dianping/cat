@@ -89,6 +89,7 @@ public class Handler implements PageHandler<Context> {
 
 	protected void showReport(Model model, Payload payload) {
 		SqlReport report = new SqlReport();
+		report.setSortBy(payload.getSortBy());
 		String domain = payload.getDomain();
 		long startDate = payload.getDate();
 		model.setLongDate(startDate);

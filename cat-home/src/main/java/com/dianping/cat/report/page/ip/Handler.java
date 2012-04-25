@@ -135,10 +135,7 @@ public class Handler implements PageHandler<Context> {
 		});
 
 		if (displayModels.size() > 100) {
-			List<DisplayModel> topModels = new ArrayList<Model.DisplayModel>(100);
-
-			Collections.copy(topModels, displayModels.subList(0, 100));
-			return topModels;
+			return displayModels.subList(0, 100);
 		} else {
 			return displayModels;
 		}

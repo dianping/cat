@@ -13,9 +13,22 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("id")
 	private int id;
 
+	@FieldMeta("sort")
+	private String m_sortBy;
+	
 	public Payload() {
 		super(ReportPage.SQL);
 	}
+	
+	public String getSortBy() {
+   	return m_sortBy;
+   }
+
+	public void setSortBy(String sortBy) {
+   	m_sortBy = sortBy;
+   }
+
+
 
 	public int getId() {
 		return id;
