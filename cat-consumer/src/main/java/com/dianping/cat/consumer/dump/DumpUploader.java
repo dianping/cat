@@ -18,6 +18,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.site.helper.Files;
+import com.site.helper.Formats;
 import com.site.helper.Files.AutoClose;
 import com.site.helper.Scanners;
 import com.site.helper.Scanners.FileMatcher;
@@ -140,10 +141,16 @@ public class DumpUploader implements Initializable, LogEnabled {
 						FSDataOutputStream fdos = makeHdfsOutputStream(path);
 
 						long start = System.currentTimeMillis();
+
 						m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
 						Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
-						float sec = (System.currentTimeMillis() - start) / 1000;
-						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s). Size(%s) Speed(%s)", file.getCanonicalPath(), path, file.length(), file.length() / sec));
+
+						double sec = (System.currentTimeMillis() - start) / 1000d;
+						String size = Formats.forNumber().format(file.length(), "0.#", "B");
+						String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
+
+						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.",
+						      file.getCanonicalPath(), path, size, speed));
 
 						if (!file.delete()) {
 							m_logger.warn("Can't delete file: " + file);
