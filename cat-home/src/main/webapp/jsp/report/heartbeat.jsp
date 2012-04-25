@@ -2,7 +2,7 @@
 <%@ page contentType="text/html; charset=utf-8"
 	trimDirectiveWhitespaces="true"%>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
-<%@ taglib prefix="w" uri="/web/core"%>
+<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
@@ -135,7 +135,7 @@
 		<td>${item.catThreadCount}</td>
 		<td>${item.pigeonThreadCount}</td>
 		<td>${item.gcCount}</td>
-		<td>${item.systemLoadAverage}</td>
+		<td>${w:format(item.systemLoadAverage,'0.00')}</td>
 		<td>${w:format(item.heapUsage,'0.0MB')}</td>
 		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
 		<td>${w:format(item.memoryFree,'0.0MB')}</td>

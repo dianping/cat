@@ -29,6 +29,7 @@ import com.dianping.cat.storage.message.LocalLogviewBucket.Meta;
 import com.site.dal.jdbc.DalException;
 import com.site.helper.Files;
 import com.site.helper.Files.AutoClose;
+import com.site.helper.Formats;
 import com.site.helper.Joiners;
 import com.site.helper.Splitters;
 import com.site.helper.Threads.Task;
@@ -151,10 +152,16 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 				FSDataOutputStream fdos = fs.create(path);
 
 				long start = System.currentTimeMillis();
+
 				m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
 				Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
-				float sec = (System.currentTimeMillis() - start) / 1000;
-				m_logger.info(String.format("Finish uploading(%s) to HDFS(%s). Size(%s) Speed(%s)", file.getCanonicalPath(), path, file.length(), file.length() / sec));
+
+				double sec = (System.currentTimeMillis() - start) / 1000d;
+				String size = Formats.forNumber().format(file.length(), "0.#", "B");
+				String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
+
+				m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.",
+				      file.getCanonicalPath(), path, size, speed));
 			} catch (AccessControlException e) {
 				m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
 			} catch (IOException e) {
@@ -168,7 +175,7 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		List<Logview> logviews = new ArrayList<Logview>();
 		Date date = new Date(timestamp);
 		String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		String path = bucket.getLogicalPath() +  "-" + ipAddress;
+		String path = bucket.getLogicalPath() + "-" + ipAddress;
 
 		for (int i = 0; i < len; i++) {
 			String id = ids.get(i);

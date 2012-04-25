@@ -1,6 +1,5 @@
 package com.dianping.cat.job.sql;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -18,7 +17,6 @@ import org.apache.hadoop.util.ToolRunner;
 import com.dianping.cat.hadoop.mapreduce.MessageTreeInputFormat;
 import com.dianping.cat.job.sql.database.SqlRecordJobMapper;
 import com.dianping.cat.job.sql.database.SqlRecordJobReducer;
-import com.site.helper.Files;
 
 public class SqlJobMain extends Configured implements Tool {
 
