@@ -10,6 +10,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 import com.dianping.cat.job.sql.dal.SqlReportRecord;
 import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
 import com.site.dal.jdbc.DalException;
+import com.site.helper.Formats;
 
 public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
@@ -28,7 +29,7 @@ public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 			row.setSum2Value(sql.getSum2());
 			row.setMaxValue(sql.getMax());
 			row.setMinValue(sql.getMin());
-			row.setStatement(sql.getStatement());
+			row.setStatement(Formats.forObject().shorten(sql.getStatement(), 2000));
 			row.setName(sql.getName());
 			row.setSampleLink(sql.getSampleLink());
 			row.setTransactionDate(sql.getDate());
@@ -43,7 +44,7 @@ public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 			System.out.println(e);
 		} catch (DalException e) {
 			System.out.println(e);
-		} catch(Exception e){
+		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
