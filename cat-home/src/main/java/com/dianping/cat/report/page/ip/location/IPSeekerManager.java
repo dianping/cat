@@ -26,7 +26,7 @@ public class IPSeekerManager {
 
 	public static void initailize(File baseDir) throws IOException {
 		File file = new File(baseDir, "qqwry.dat");
-		InputStream in = IPSeekerManager.class.getResourceAsStream("qqwry.dat.gz");
+		InputStream in = IPSeekerManager.class.getResourceAsStream("qqwry.dat");
 
 		if (in == null) {
 			throw new IllegalStateException("Resource(qqwry.dat.gz) is not found in the classpath!");
