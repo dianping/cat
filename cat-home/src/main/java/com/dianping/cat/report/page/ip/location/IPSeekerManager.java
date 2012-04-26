@@ -17,7 +17,7 @@ public class IPSeekerManager {
 		String area = loc.getArea();
 		String country = loc.getCountry();
 
-		if (area.isEmpty() && country.isEmpty()) {
+		if (area.trim().isEmpty() && country.trim().isEmpty()) {
 			return "";
 		} else {
 			return area + "@" + country;

@@ -36,6 +36,7 @@
     <attribute name="usable" value-type="long" />
   </entity>
   <entity name="memory">
+    <attribute name="max" value-type="int" />
     <attribute name="total" value-type="int" />
     <attribute name="free" value-type="int" />
     <attribute name="heap-usage" value-type="int" />

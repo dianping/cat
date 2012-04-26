@@ -30,24 +30,18 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	protected HeartbeatReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
 		long date = Long.parseLong(request.getProperty("date"));
-		HeartbeatReport report = getLocalReport(date, domain);
+		HeartbeatReport report;
 
-		// try remote report
-		if (report == null && !isLocalMode()) {
-			report = getRemoteReport(date, domain);
+		if (isLocalMode()) {
+			report = getReportFromLocalDisk(date, domain);
+		} else {
+			report = getReportFromDatabase(date, domain);
 		}
 
 		return report;
 	}
 
-	private HeartbeatReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "heartbeat");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : new DefaultXmlParser().parse(xml);
-	}
-
-	private HeartbeatReport getRemoteReport(long timestamp, String domain) throws Exception {
+	private HeartbeatReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
 		DefaultXmlParser parser = new DefaultXmlParser();
@@ -64,6 +58,13 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 			}
 		}
 
-		return merger.getHeartbeatReport();
+		return merger == null ? null : merger.getHeartbeatReport();
+	}
+
+	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "heartbeat");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : new DefaultXmlParser().parse(xml);
 	}
 }

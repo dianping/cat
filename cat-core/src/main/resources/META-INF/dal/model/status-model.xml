@@ -26,6 +26,7 @@
 		<attribute name="usable" value-type="long" primitive="true" />
 	</entity>
 	<entity name="memory" class-name="MemoryInfo">
+		<attribute name="max" value-type="long" primitive="true" />
 		<attribute name="total" value-type="long" primitive="true" />
 		<attribute name="free" value-type="long" primitive="true" />
 		<attribute name="heap-usage" value-type="long" primitive="true" />

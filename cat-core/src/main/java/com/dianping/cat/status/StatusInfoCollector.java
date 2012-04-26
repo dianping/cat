@@ -137,6 +137,7 @@ class StatusInfoCollector extends BaseVisitor {
 		MemoryMXBean bean = ManagementFactory.getMemoryMXBean();
 		Runtime runtime = Runtime.getRuntime();
 
+		memory.setMax(runtime.maxMemory());
 		memory.setTotal(runtime.totalMemory());
 		memory.setFree(runtime.freeMemory());
 		memory.setHeapUsage(bean.getHeapMemoryUsage().getUsed());

@@ -29,24 +29,18 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	protected TransactionReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
 		long date = Long.parseLong(request.getProperty("date"));
-		TransactionReport report = getLocalReport(date, domain);
+		TransactionReport report;
 
-		// try remote report
-		if (report == null && !isLocalMode()) {
-			report = getRemoteReport(date, domain);
+		if (isLocalMode()) {
+			report = getReportFromLocalDisk(date, domain);
+		} else {
+			report = getReportFromDatabase(date, domain);
 		}
 
 		return report;
 	}
 
-	private TransactionReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : new DefaultXmlParser().parse(xml);
-	}
-
-	private TransactionReport getRemoteReport(long timestamp, String domain) throws Exception {
+	private TransactionReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
 		DefaultXmlParser parser = new DefaultXmlParser();
@@ -63,6 +57,13 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 			}
 		}
 
-		return merger.getTransactionReport();
+		return merger == null ? null : merger.getTransactionReport();
+	}
+
+	private TransactionReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : new DefaultXmlParser().parse(xml);
 	}
 }

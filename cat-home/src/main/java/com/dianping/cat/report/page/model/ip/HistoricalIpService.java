@@ -29,24 +29,18 @@ public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 	protected IpReport buildModel(ModelRequest request) throws Exception {
 		String domain = request.getDomain();
 		long date = Long.parseLong(request.getProperty("date"));
-		IpReport report = getLocalReport(date, domain);
+		IpReport report;
 
-		// try remote report
-		if (report == null && !isLocalMode()) {
-			report = getRemoteReport(date, domain);
+		if (isLocalMode()) {
+			report = getReportFromLocalDisk(date, domain);
+		} else {
+			report = getReportFromDatabase(date, domain);
 		}
 
 		return report;
 	}
 
-	private IpReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "ip");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : new DefaultXmlParser().parse(xml);
-	}
-
-	private IpReport getRemoteReport(long timestamp, String domain) throws Exception {
+	private IpReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
 		DefaultXmlParser parser = new DefaultXmlParser();
@@ -63,6 +57,13 @@ public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 			}
 		}
 
-		return merger.getIpReport();
+		return merger == null ? null : merger.getIpReport();
+	}
+
+	private IpReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "ip");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : new DefaultXmlParser().parse(xml);
 	}
 }
