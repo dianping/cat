@@ -33,7 +33,8 @@ import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 /**
- * This is the real time consumer process framework. All analyzers share the message decoding once, thereof reduce the overhead.
+ * This is the real time consumer process framework. All analyzers share the
+ * message decoding once, thereof reduce the overhead.
  * <p>
  * 
  * @author yong.you
@@ -197,7 +198,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Set<String> domains = new HashSet<String>();
 			Date endDate = new Date(m_endTime - 1);
 
-			m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate), df.format(endDate)));
+			m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
+			      df.format(endDate)));
 
 			Cat.setup(null);
 
@@ -220,7 +222,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			} finally {
 				t.complete();
 
-				m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate), df.format(endDate)));
+				m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
+				      df.format(endDate)));
 			}
 
 			Cat.reset();
@@ -269,7 +272,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void start() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(), df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
+			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
 			for (PeriodTask task : m_tasks) {
 				Threads.forGroup("Cat-RealtimeConsumer").start(task);
