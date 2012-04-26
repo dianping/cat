@@ -69,7 +69,39 @@ public class SqlReport {
 			m_sortBy = "avg";
 		}
 		Collections.sort(m_reportRecords, new SqlReportModelCompartor(m_sortBy));
+		m_reportRecords.add(1, addTotal());
 		return m_reportRecords;
+	}
+
+	private SqlReportModel addTotal() {
+		SqlReportRecord result = new SqlReportRecord();
+		int total = 0;
+		int failure = 0;
+		double min = 0;
+		double max = 0;
+		double sum2 = 0;
+		double sum = 0;
+		int longSql = 0;
+		for (SqlReportModel model : m_reportRecords) {
+			SqlReportRecord temp = model.getRecord();
+			total = total + temp.getTotalCount();
+			failure = failure + temp.getFailureCount();
+			min = min < temp.getMinValue() ? min : temp.getMinValue();
+			max = max > temp.getMaxValue() ? max : temp.getMaxValue();
+			sum2 = sum2 + temp.getSum2Value();
+			sum = sum + temp.getSumValue();
+			longSql = longSql + temp.getLongSqls();
+		}
+		result.setAvg2Value(0);
+		result.setStatement("All");
+		result.setTotalCount(total);
+		result.setFailureCount(failure);
+		result.setMaxValue(max);
+		result.setMinValue(min);
+		result.setSumValue(sum);
+		result.setSum2Value(sum2);
+		result.setLongSqls(longSql);
+		return new SqlReportModel(result);
 	}
 
 	public void setReportRecords(List<SqlReportModel> reportRecords) {
@@ -87,7 +119,7 @@ public class SqlReport {
 		public int compare(SqlReportModel m1, SqlReportModel m2) {
 			SqlReportRecord record1 = m1.getRecord();
 			SqlReportRecord record2 = m2.getRecord();
-			
+
 			if (m_sorted.equals("name")) {
 				return record1.getName().compareTo(record2.getName());
 			}
