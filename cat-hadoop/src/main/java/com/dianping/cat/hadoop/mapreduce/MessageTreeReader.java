@@ -72,7 +72,7 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 
 		// open the file and seek to the start of the split
 		Path file = split.getPath();
-	
+
 		System.out.println("Starting process: " + file.getName());
 
 		CompressionCodec codec = m_compressionCodecs.getCodec(file);
@@ -118,7 +118,7 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 			blockSize = m_in.readBlock(m_value);
 
 			m_pos += blockSize;
-			
+
 			if (!m_value.isCompleted()) {
 				return false;
 			}
@@ -183,7 +183,12 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 					buf.writeBytes(data, 0, pos - 1);
 					count += pos;
 					m_in.reset();
-					m_in.skip(pos);
+					long result = m_in.skip(pos);
+
+					if (result != pos) {
+						System.out.println("Error when skipping " + pos + " bytes, but skipped " + result + " bytes! "
+						      + m_file);
+					}
 					break;
 				}
 
