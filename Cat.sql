@@ -33,7 +33,7 @@ CREATE TABLE `sqlreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain` varchar(50) NOT NULL COMMENT 'SQL报表的内容',
   `name` varchar(100) NOT NULL COMMENT 'SQL的名称',
-  `statement` varchar(500) NOT NULL COMMENT 'SQL的简写',
+  `statement` varchar(3000) NOT NULL COMMENT 'SQL的简写',
   `total_count` int(11) NOT NULL COMMENT '总数',
   `failure_count` int(11) NOT NULL COMMENT '错误数目',
   `long_sqls` int(11) NOT NULL COMMENT 'longsql的数目',

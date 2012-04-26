@@ -33,8 +33,7 @@ import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 /**
- * This is the real time consumer process framework. All analyzers share the
- * message decoding once, thereof reduce the overhead.
+ * This is the real time consumer process framework. All analyzers share the message decoding once, thereof reduce the overhead.
  * <p>
  * 
  * @author yong.you
@@ -198,8 +197,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			Set<String> domains = new HashSet<String>();
 			Date endDate = new Date(m_endTime - 1);
 
-			m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
-			      df.format(endDate)));
+			m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate), df.format(endDate)));
 
 			Cat.setup(null);
 
@@ -222,8 +220,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			} finally {
 				t.complete();
 
-				m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
-				      df.format(endDate)));
+				m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate), df.format(endDate)));
 			}
 
 			Cat.reset();
@@ -272,8 +269,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void start() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
-			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(), df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
 
 			for (PeriodTask task : m_tasks) {
 				Threads.forGroup("Cat-RealtimeConsumer").start(task);
@@ -416,7 +412,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 	}
 
-	static class PeriodTask implements Task {
+	static class PeriodTask implements Task, LogEnabled {
 		private AnalyzerFactory m_factory;
 
 		private MessageAnalyzer m_analyzer;
@@ -424,6 +420,15 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		private MessageQueue m_queue;
 
 		private long m_startTime;
+
+		private int m_queueOverflow;
+
+		private Logger m_logger;
+
+		@Override
+		public void enableLogging(Logger logger) {
+			m_logger = logger;
+		}
 
 		public PeriodTask(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
 			m_factory = factory;
@@ -433,7 +438,15 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		public boolean enqueue(MessageTree tree) {
-			return m_queue.offer(tree);
+			boolean result = m_queue.offer(tree);
+			if (!result) { // trace queue overflow
+				m_queueOverflow++;
+				if (m_queueOverflow >= 100) {
+					m_logger.warn(m_analyzer + " queue overflow");
+					m_queueOverflow = 0;
+				}
+			}
+			return result;
 		}
 
 		public void finish() {
