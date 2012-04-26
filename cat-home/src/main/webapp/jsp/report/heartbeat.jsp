@@ -76,9 +76,9 @@
 <tr>
 	<td>
 		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
+		  ${model.memoryFreeGraph}
 		  ${model.heapUsageGraph}
 		  ${model.noneHeapUsageGraph}
-		  ${model.memoryFreeGraph}
 		</svg>
 	</td>
 </tr>
