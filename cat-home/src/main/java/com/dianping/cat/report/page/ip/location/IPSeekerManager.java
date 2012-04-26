@@ -26,18 +26,22 @@ public class IPSeekerManager {
 
 	public static void initailize(File baseDir) throws IOException {
 		File file = new File(baseDir, "qqwry.dat");
-		InputStream in = IPSeekerManager.class.getResourceAsStream("qqwry.dat.gz");
 
-		if (in == null) {
-			throw new IllegalStateException("Resource(qqwry.dat.gz) is not found in the classpath!");
+		try {
+			InputStream in = IPSeekerManager.class.getResourceAsStream("qqwry.dat");
+
+			if (in == null) {
+				throw new IllegalStateException("Resource(qqwry.dat.gz) is not found in the classpath!");
+			}
+
+			file.getParentFile().mkdirs();
+			GZIPInputStream gis = new GZIPInputStream(in);
+			FileOutputStream fos = new FileOutputStream(file);
+
+			Files.forIO().copy(gis, fos, AutoClose.INPUT_OUTPUT);
+		} catch (IOException e) { // not gzip file
+			file = new File(IPSeekerManager.class.getResource("qqwry.dat").getFile());
 		}
-
-		file.getParentFile().mkdirs();
-
-		GZIPInputStream gis = new GZIPInputStream(in);
-		FileOutputStream fos = new FileOutputStream(file);
-
-		Files.forIO().copy(gis, fos, AutoClose.INPUT_OUTPUT);
 
 		s_seeker = new IPSeeker(file.getAbsolutePath(), null);
 	}
