@@ -38,9 +38,13 @@ public class DisplayHeartbeat {
 
 	public double[] m_addCatMessageSize = new double[60];
 
-	public double[] m_gcCount = new double[60];
+	public double[] m_newGcCount = new double[60];
+	
+	public double[] m_oldGcCount = new double[60];
 
-	public double[] m_addGcCount = new double[60];
+	public double[] m_addNewGcCount = new double[60];
+	
+	public double[] m_addOldGcCount = new double[60];
 
 	public double[] m_heapUsage = new double[60];
 
@@ -88,7 +92,8 @@ public class DisplayHeartbeat {
 			m_catMessageOverflow[minute] = period.getCatMessageOverflow();
 			period.setCatMessageSize(period.getCatMessageSize() / K / K);
 			m_catMessageSize[minute] = period.getCatMessageSize();
-			m_gcCount[minute] = period.getGcCount();
+			m_newGcCount[minute] = period.getNewGcCount();
+			m_oldGcCount[minute] = period.getOldGcCount();
 
 			period.setHeapUsage(period.getHeapUsage() / K / K);
 			m_heapUsage[minute] = period.getHeapUsage();
@@ -108,7 +113,8 @@ public class DisplayHeartbeat {
 		}
 
 		m_newThreads = getAddedCount(m_totalThreads);
-		m_addGcCount = getAddedCount(m_gcCount);
+		m_addNewGcCount = getAddedCount(m_newGcCount);
+		m_addOldGcCount = getAddedCount(m_oldGcCount);
 		m_addCatMessageProduced = getAddedCount(m_catMessageProduced);
 		m_addCatMessageSize = getAddedCount(m_catMessageSize);
 		m_addCatMessageOverflow = getAddedCount(m_catMessageOverflow);
@@ -181,12 +187,16 @@ public class DisplayHeartbeat {
 		return m_builder.build(new HeartbeatPayload(2, "Cat Message Size / Minute", "Minute", "MB", m_addCatMessageSize));
 	}
 
-	public String getGcCountGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "Gc Count", "Minute", "Count", m_addGcCount));
+	public String getNewGcCountGraph() {
+		return m_builder.build(new HeartbeatPayload(0, "NewGc Count", "Minute", "Count", m_addNewGcCount));
+	}
+	
+	public String getOldGcCountGraph() {
+		return m_builder.build(new HeartbeatPayload(1, "OldGc Count", "Minute", "Count", m_addOldGcCount));
 	}
 
 	public String getSystemLoadAverageGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "System Load Average", "Minute", "", m_systemLoadAverage));
+		return m_builder.build(new HeartbeatPayload(2, "System Load Average", "Minute", "", m_systemLoadAverage));
 	}
 
 	public String getHeapUsageGraph() {

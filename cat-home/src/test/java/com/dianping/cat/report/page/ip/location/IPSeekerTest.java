@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class IPSeekerTest {
 	@Test
-	public void testGetIPLocation() throws IOException {
+	public void testGetIPLocationPref() throws IOException {
 		IPSeekerManager.initailize(new File("target/ip"));
 
 		String location = IPSeekerManager.getLocation("112.64.189.69");
@@ -21,6 +21,16 @@ public class IPSeekerTest {
 		}
 
 		System.out.println(String.format("Done in %s ms for 100 IP lookup.", System.currentTimeMillis() - start));
+	}
+	
+	@Test
+	public void testGetIP() throws IOException {
+		IPSeekerManager.initailize(new File("target/ip"));
+
+		String location = IPSeekerManager.getLocation("119.164.79.85");
+
+		System.out.println(location);
+
 	}
 
 }

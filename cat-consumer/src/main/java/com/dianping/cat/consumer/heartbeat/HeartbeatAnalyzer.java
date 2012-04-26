@@ -26,6 +26,7 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
+import com.dianping.cat.status.model.entity.GcInfo;
 import com.dianping.cat.status.model.entity.MemoryInfo;
 import com.dianping.cat.status.model.entity.MessageInfo;
 import com.dianping.cat.status.model.entity.StatusInfo;
@@ -138,7 +139,14 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			MemoryInfo memeryInfo = info.getMemory();
 			DiskInfo diskInfo = info.getDisk();
 
-			period.setGcCount(info.getMemory().getGc().getCount());
+			List<GcInfo> gcs = info.getMemory().getGcs();
+			for (GcInfo gc : gcs) {
+				if ("ParNew".equals(gc.getName())) {
+					period.setNewGcCount(gc.getCount());
+				} else if ("ConcurrentMarkSweep".equals(gc.getName())) {
+					period.setOldGcCount(gc.getCount());
+				}
+			}
 			period.setHeapUsage(memeryInfo.getHeapUsage());
 			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
 			period.setMemoryFree(memeryInfo.getFree());
