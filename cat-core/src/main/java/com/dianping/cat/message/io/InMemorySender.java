@@ -9,6 +9,10 @@ public class InMemorySender implements MessageSender {
 
 	private transient boolean m_active = true;
 
+	public InMemoryQueue getQueue() {
+		return m_queue;
+	}
+
 	@Override
 	public void initialize() {
 	}

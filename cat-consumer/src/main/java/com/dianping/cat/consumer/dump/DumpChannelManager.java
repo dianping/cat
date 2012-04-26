@@ -2,6 +2,8 @@ package com.dianping.cat.consumer.dump;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +22,6 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 	private MessageCodec m_codec;
 
 	private Map<String, DumpChannel> m_channels = new HashMap<String, DumpChannel>();
-
-	private Map<String, Integer> m_indexes = new HashMap<String, Integer>();
 
 	private long m_maxSize;
 
@@ -81,21 +81,15 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 		String file;
 
 		if (forceNew) {
-			Integer index = m_indexes.get(key);
+			SimpleDateFormat format = new SimpleDateFormat("mm");
 
-			if (index == null) {
-				index = 1;
-			}
-
-			index++;
-
-			file = path + "-" + index + ".gz";
-			m_indexes.put(key, index);
+			file = path + "-" + format.format(new Date()) + ".gz";
 		} else {
 			file = path + ".gz";
 		}
 
-		DumpChannel channel = new DumpChannel(m_codec, new File(m_baseDir, "draft"), file, m_maxSize, m_lastChunkAdjust, startTime);
+		DumpChannel channel = new DumpChannel(m_codec, new File(m_baseDir, "draft"), file, m_maxSize, m_lastChunkAdjust,
+		      startTime);
 
 		m_channels.put(key, channel);
 		return channel;

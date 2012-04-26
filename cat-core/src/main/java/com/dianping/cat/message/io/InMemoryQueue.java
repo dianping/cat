@@ -46,8 +46,8 @@ public class InMemoryQueue implements LogEnabled, Initializable {
 	}
 
 	public MessageTree peek() {
-	   return m_queue.peek();
-   }
+		return m_queue.peek();
+	}
 
 	public MessageTree poll(long timeout) throws InterruptedException {
 		if (timeout <= 0) {
@@ -63,5 +63,9 @@ public class InMemoryQueue implements LogEnabled, Initializable {
 
 	public int size() {
 		return m_queue.size();
+	}
+
+	public void clear() {
+		m_queue.clear();
 	}
 }

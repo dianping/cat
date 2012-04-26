@@ -153,6 +153,8 @@ public class Cat {
 		// do validation
 		if (clientConfig != null) {
 			clientConfig.accept(new ClientConfigValidator());
+		} else if (globalConfig != null) { // for test purpose
+			return globalConfig;
 		}
 
 		return clientConfig;

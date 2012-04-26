@@ -10,7 +10,7 @@ import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
 
 public class DisplayHeartbeat {
-	public static final int SIZE = 1024;
+	public static final int K = 1024;
 
 	public List<Period> m_periods = new ArrayList<Period>();
 
@@ -45,7 +45,7 @@ public class DisplayHeartbeat {
 	public double[] m_heapUsage = new double[60];
 
 	public double[] m_noneHeapUsage = new double[60];
-	
+
 	public double[] m_memoryFree = new double[60];
 
 	public double[] m_diskFree = new double[60];
@@ -57,7 +57,6 @@ public class DisplayHeartbeat {
 	private GraphBuilder m_builder;
 
 	public DisplayHeartbeat() {
-
 	}
 
 	public DisplayHeartbeat(GraphBuilder builder) {
@@ -87,64 +86,56 @@ public class DisplayHeartbeat {
 			m_pigeonTheads[minute] = period.getPigeonThreadCount();
 			m_catMessageProduced[minute] = period.getCatMessageProduced();
 			m_catMessageOverflow[minute] = period.getCatMessageOverflow();
-			period.setCatMessageSize(period.getCatMessageSize() / SIZE / SIZE);
+			period.setCatMessageSize(period.getCatMessageSize() / K / K);
 			m_catMessageSize[minute] = period.getCatMessageSize();
 			m_gcCount[minute] = period.getGcCount();
 
-			period.setHeapUsage(period.getHeapUsage() / SIZE / SIZE);
+			period.setHeapUsage(period.getHeapUsage() / K / K);
 			m_heapUsage[minute] = period.getHeapUsage();
 
-			period.setNoneHeapUsage(period.getNoneHeapUsage() / SIZE / SIZE);
+			period.setNoneHeapUsage(period.getNoneHeapUsage() / K / K);
 			m_noneHeapUsage[minute] = period.getNoneHeapUsage();
 
-			period.setDiskFree(period.getDiskFree() / SIZE / SIZE / SIZE);
+			period.setDiskFree(period.getDiskFree() / K / K / K);
 			m_diskFree[minute] = period.getDiskFree();
 
-			period.setMemoryFree(period.getMemoryFree()/SIZE/SIZE);
+			period.setMemoryFree(period.getMemoryFree() / K / K);
 			m_memoryFree[minute] = period.getMemoryFree();
-			
-			period.setDiskUseable(period.getDiskUseable() / SIZE / SIZE / SIZE);
+
+			period.setDiskUseable(period.getDiskUseable() / K / K / K);
 			m_diskUseable[minute] = period.getDiskUseable();
 			m_systemLoadAverage[minute] = period.getSystemLoadAverage();
 		}
-		m_newThreads =getAddedCount(m_totalThreads);
-		m_addGcCount=getAddedCount(m_gcCount);
-		m_addCatMessageProduced= getAddedCount(m_catMessageProduced);
-		m_addCatMessageSize=getAddedCount(m_catMessageSize);
-		m_addCatMessageOverflow= getAddedCount(m_catMessageOverflow);
-		
-		/*for (int i = 1; i <= 59; i++) {
-			double d = m_totalThreads[i] - m_totalThreads[i - 1];
-			if (d < 0) {
-				d = m_totalThreads[i];
-			}
-			m_newThreads[i] = d;
 
-			double gc = m_gcCount[i] - m_gcCount[i - 1];
-			if (gc < 0) {
-				d = m_gcCount[i];
-			}
-			m_addGcCount[i] = gc;
+		m_newThreads = getAddedCount(m_totalThreads);
+		m_addGcCount = getAddedCount(m_gcCount);
+		m_addCatMessageProduced = getAddedCount(m_catMessageProduced);
+		m_addCatMessageSize = getAddedCount(m_catMessageSize);
+		m_addCatMessageOverflow = getAddedCount(m_catMessageOverflow);
 
-			double addMessageCount = m_catMessageProduced[i] - m_catMessageProduced[i - 1];
-			if (addMessageCount < 0) {
-				addMessageCount = m_catMessageProduced[i];
-			}
-			m_addCatMessageProduced[i] = addMessageCount;
-
-			double addMessageSize = m_catMessageSize[i] - m_catMessageSize[i - 1];
-			if (addMessageSize < 0) {
-				addMessageSize = m_catMessageSize[i];
-			}
-			m_addCatMessageSize[i] = addMessageSize;
-
-			double addMessageFlow = m_catMessageOverflow[i] - m_catMessageOverflow[i - 1];
-			if (addMessageFlow < 0) {
-				addMessageFlow = m_catMessageOverflow[i];
-			}
-			m_addCatMessageOverflow[i] = addMessageFlow;
-
-		}*/
+		/*
+		 * for (int i = 1; i <= 59; i++) { double d = m_totalThreads[i] -
+		 * m_totalThreads[i - 1]; if (d < 0) { d = m_totalThreads[i]; }
+		 * m_newThreads[i] = d;
+		 * 
+		 * double gc = m_gcCount[i] - m_gcCount[i - 1]; if (gc < 0) { d =
+		 * m_gcCount[i]; } m_addGcCount[i] = gc;
+		 * 
+		 * double addMessageCount = m_catMessageProduced[i] -
+		 * m_catMessageProduced[i - 1]; if (addMessageCount < 0) { addMessageCount
+		 * = m_catMessageProduced[i]; } m_addCatMessageProduced[i] =
+		 * addMessageCount;
+		 * 
+		 * double addMessageSize = m_catMessageSize[i] - m_catMessageSize[i - 1];
+		 * if (addMessageSize < 0) { addMessageSize = m_catMessageSize[i]; }
+		 * m_addCatMessageSize[i] = addMessageSize;
+		 * 
+		 * double addMessageFlow = m_catMessageOverflow[i] -
+		 * m_catMessageOverflow[i - 1]; if (addMessageFlow < 0) { addMessageFlow =
+		 * m_catMessageOverflow[i]; } m_addCatMessageOverflow[i] = addMessageFlow;
+		 * 
+		 * }
+		 */
 		return this;
 	}
 
@@ -173,7 +164,7 @@ public class DisplayHeartbeat {
 	}
 
 	public String getPigeonTheadGraph() {
-		return m_builder.build(new HeartbeatPayload(5, "Piegeon Started Thread", "Minute", "Count", m_pigeonTheads));
+		return m_builder.build(new HeartbeatPayload(5, "Pigeon Started Thread", "Minute", "Count", m_pigeonTheads));
 	}
 
 	public String getCatMessageProducedGraph() {
@@ -195,27 +186,27 @@ public class DisplayHeartbeat {
 	}
 
 	public String getSystemLoadAverageGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "SystemLoad", "Minute", "", m_systemLoadAverage));
+		return m_builder.build(new HeartbeatPayload(1, "System Load Average", "Minute", "", m_systemLoadAverage));
 	}
 
 	public String getHeapUsageGraph() {
-		return m_builder.build(new HeartbeatPayload(0, "Heap Usage", "Minute", "MB", m_heapUsage));
+		return m_builder.build(new HeartbeatPayload(1, "Heap Usage", "Minute", "MB", m_heapUsage));
 	}
 
 	public String getNoneHeapUsageGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "None Heap Usage", "Minute", "MB", m_noneHeapUsage));
+		return m_builder.build(new HeartbeatPayload(2, "None Heap Usage", "Minute", "MB", m_noneHeapUsage));
 	}
 
 	public String getMemoryFreeGraph() {
-		return m_builder.build(new HeartbeatPayload(2, "Memory Free", "Minute", "MB", m_memoryFree));
+		return m_builder.build(new HeartbeatPayload(0, "Memory Free", "Minute", "MB", m_memoryFree));
 	}
-	
+
 	public String getDiskFreeGraph() {
 		return m_builder.build(new HeartbeatPayload(0, "Disk Free", "Minute", "GB", m_diskFree));
 	}
 
 	public String getDiskUseableGraph() {
-		return m_builder.build(new HeartbeatPayload(1, "Disk Useable", "Minute", "GB", m_diskUseable));
+		return m_builder.build(new HeartbeatPayload(1, "Disk Usable", "Minute", "GB", m_diskUseable));
 	}
 
 	private double[] getAddedCount(double[] source) {

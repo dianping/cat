@@ -192,7 +192,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 
 		if (m_future != null && m_future.getChannel().isOpen()) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(10 * 1024); // 10K
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8 * 1024); // 8K
 
 			m_codec.encode(tree, buf);
 
