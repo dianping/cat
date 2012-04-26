@@ -78,12 +78,12 @@
 					<webResources>
 						<resource>
 							<directory>src/main/resources</directory>
-							<filtering>true</filtering>
+							<filtering>false</filtering>
 							<targetPath>WEB-INF/classes</targetPath>
 						</resource>
 						<resource>
 							<directory>src/main/webapp</directory>
-							<filtering>true</filtering>
+							<filtering>false</filtering>
 							<includes>
 								<include>WEB-INF/web.xml</include>
 							</includes>
