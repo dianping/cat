@@ -10,11 +10,13 @@
 .sql-table .odd td {
 	background-color: #eee;
 	font-size: small;
+	text-align:right;
 }
 
 .sql-table .even td {
 	background-color: white;
 	font-size: small;
+	text-align:right;
 }
 
 .sql-title {

@@ -69,7 +69,9 @@ public class SqlReport {
 			m_sortBy = "avg";
 		}
 		Collections.sort(m_reportRecords, new SqlReportModelCompartor(m_sortBy));
-		m_reportRecords.add(1, addTotal());
+		if (m_reportRecords.size() > 0) {
+			m_reportRecords.add(0, addTotal());
+		}
 		return m_reportRecords;
 	}
 
@@ -94,6 +96,7 @@ public class SqlReport {
 		}
 		result.setAvg2Value(0);
 		result.setStatement("All");
+		result.setName("All(Records:" + m_reportRecords.size() + ")");
 		result.setTotalCount(total);
 		result.setFailureCount(failure);
 		result.setMaxValue(max);
@@ -140,6 +143,9 @@ public class SqlReport {
 			}
 			if (m_sorted.equals("longsql")) {
 				return (int) (record2.getLongSqls() - record1.getLongSqls());
+			}
+			if (m_sorted.equals("dbtime")) {
+				return (int) (record2.getSumValue() - record1.getSumValue());
 			}
 			if (m_sorted.equals("longsqlPercent")) {
 				return (int) (m2.getLongPercent() * 100 - m1.getLongPercent() * 100);
