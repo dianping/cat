@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -225,6 +226,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	@Override
 	public void flush() throws IOException {
 		m_writeLock.lock();
+
 		try {
 			m_writeDataFile.flush();
 			m_writeIndexFile.flush();
@@ -232,6 +234,8 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 			m_writeLock.unlock();
 			m_dirty.set(false);
 		}
+
+		LockSupport.parkNanos(1000 * 1000L); // wait 1 ms
 	}
 
 	@Override

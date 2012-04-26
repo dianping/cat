@@ -299,10 +299,13 @@ public class PlainTextMessageCodec implements MessageCodec {
 				return encodeLine(transaction, buf, 'A', Policy.WITH_DURATION);
 			} else {
 				int count = 0;
+				int len = children.size();
 
 				count += encodeLine(transaction, buf, 't', Policy.WITHOUT_STATUS);
 
-				for (Message child : children) {
+				for (int i = 0; i < len; i++) {
+					Message child = children.get(i);
+
 					count += encodeMessage(child, buf);
 				}
 

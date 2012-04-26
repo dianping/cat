@@ -143,6 +143,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 						DefaultMessageTree mt = new DefaultMessageTree();
 						mt.setMessageId(id);
 						Assert.assertTrue(bucket.storeById(id, mt));
+						
 						MessageTree target = bucket.findById(id);
 						Assert.assertEquals(id, target.getMessageId());
 					} catch (Throwable e) {
