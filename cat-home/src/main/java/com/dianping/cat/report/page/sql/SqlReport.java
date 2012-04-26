@@ -69,7 +69,7 @@ public class SqlReport {
 			m_sortBy = "avg";
 		}
 		Collections.sort(m_reportRecords, new SqlReportModelCompartor(m_sortBy));
-		m_reportRecords.add(1, addTotal());
+		m_reportRecords.add(0, addTotal());
 		return m_reportRecords;
 	}
 
@@ -94,6 +94,7 @@ public class SqlReport {
 		}
 		result.setAvg2Value(0);
 		result.setStatement("All");
+		result.setName("All(Records:" + m_reportRecords.size() + ")");
 		result.setTotalCount(total);
 		result.setFailureCount(failure);
 		result.setMaxValue(max);
