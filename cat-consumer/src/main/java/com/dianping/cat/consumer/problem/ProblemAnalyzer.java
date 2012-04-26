@@ -215,7 +215,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();
 
-					r.setName("event");
+					r.setName("problem");
 					r.setDomain(domain);
 					r.setPeriod(period);
 					r.setIp(ip);
