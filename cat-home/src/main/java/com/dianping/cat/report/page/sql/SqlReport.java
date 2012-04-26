@@ -86,28 +86,31 @@ public class SqlReport {
 		@Override
 		public int compare(SqlReportModel m1, SqlReportModel m2) {
 			SqlReportRecord record1 = m1.getRecord();
-
 			SqlReportRecord record2 = m2.getRecord();
+			
 			if (m_sorted.equals("name")) {
 				return record1.getName().compareTo(record2.getName());
 			}
 			if (m_sorted.equals("total")) {
-				return (int) (record1.getTotalCount() - record2.getTotalCount());
+				return (int) (record2.getTotalCount() - record1.getTotalCount());
 			}
 			if (m_sorted.equals("failure")) {
-				return (int) (record1.getFailureCount() - record2.getFailureCount());
+				return (int) (record2.getFailureCount() - record1.getFailureCount());
 			}
 			if (m_sorted.equals("failurePercent")) {
-				return (int) (m1.getFailurePercent() * 100 - m2.getFailurePercent() * 100);
+				return (int) (m2.getFailurePercent() * 100 - m1.getFailurePercent() * 100);
 			}
 			if (m_sorted.equals("avg")) {
-				return (int) (m1.getAvg() * 100 - m2.getAvg() * 100);
+				return (int) (m2.getAvg() * 100 - m1.getAvg() * 100);
+			}
+			if (m_sorted.equals("95Line")) {
+				return (int) (record2.getAvg2Value() * 100 - record1.getAvg2Value() * 100);
 			}
 			if (m_sorted.equals("longsql")) {
-				return (int) (record1.getLongSqls() - record2.getLongSqls());
+				return (int) (record2.getLongSqls() - record1.getLongSqls());
 			}
 			if (m_sorted.equals("longsqlPercent")) {
-				return (int) (m1.getLongPercent() * 100 - m2.getLongPercent() * 100);
+				return (int) (m2.getLongPercent() * 100 - m1.getLongPercent() * 100);
 			}
 			return 0;
 		}

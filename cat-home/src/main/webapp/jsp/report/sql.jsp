@@ -32,7 +32,7 @@
 		<th>Max(ms)</th>
 		<th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg(ms)</a></th>
 		<th>Std(ms)</th>
-		<th>95% Line</th>
+		<th><a href="?domain=${model.domain}&date=${model.date}&sort=95Line">95% Line</a></th>
 		<th>DB Time</th>
 		<th><a href="?domain=${model.domain}&date=${model.date}&sort=longsql">LongSQL</a></th>
 		<th><a href="?domain=${model.domain}&date=${model.date}&sort=longsqlPercent">Long%</a></th>
@@ -47,7 +47,7 @@
 			<td>${w:format(reportRecord.failurePercent,'0.00%')}</td>
 			<td>${w:format(reportRecord.record.minValue,'0.0')}</td>
 			<td>${w:format(reportRecord.record.maxValue,'0.0')}</td>
-			<td>${w:format(reportRecord.avg,'0.0')}<td>
+			<td>${w:format(reportRecord.avg,'0.0')}</td>
 			<td>${w:format(reportRecord.std,'0.0')}</td>
 			<td>${w:format(reportRecord.record.avg2Value,'0.0')}</td>
 			<td>${w:format(reportRecord.record.sumValue,'0.0')}</td>
