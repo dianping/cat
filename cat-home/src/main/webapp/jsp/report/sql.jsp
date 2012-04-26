@@ -33,25 +33,25 @@
 		<th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg(ms)</a></th>
 		<th>Std(ms)</th>
 		<th><a href="?domain=${model.domain}&date=${model.date}&sort=95Line">95% Line</a></th>
-		<th>DB Time</th>
+		<th><a href="?domain=${model.domain}&date=${model.date}&sort=dbtime">DB Time</th>
 		<th><a href="?domain=${model.domain}&date=${model.date}&sort=longsql">LongSQL</a></th>
 		<th><a href="?domain=${model.domain}&date=${model.date}&sort=longsqlPercent">Long%</a></th>
 		<th>Sample</th>
 	</tr>
 	<c:forEach var="reportRecord" items="${model.report.reportRecords}" varStatus="status">
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-			<td><a href="?op=graphs&id=${reportRecord.record.id}" onclick="return showGraphs(this,${status.index},'${reportRecord.record.id}');">[:: show ::]</a> 
+			<td style="text-align:left"><a href="?op=graphs&id=${reportRecord.record.id}" onclick="return showGraphs(this,${status.index},'${reportRecord.record.id}');">[:: show ::]</a> 
 				${reportRecord.record.name}</td>
-			<td>${w:format(reportRecord.record.totalCount,'0.0')}</td>
-			<td>${w:format(reportRecord.record.failureCount,'0.0')}</td>
+			<td>${w:format(reportRecord.record.totalCount,'0')}</td>
+			<td>${w:format(reportRecord.record.failureCount,'0')}</td>
 			<td>${w:format(reportRecord.failurePercent,'0.00%')}</td>
-			<td>${w:format(reportRecord.record.minValue,'0.0')}</td>
-			<td>${w:format(reportRecord.record.maxValue,'0.0')}</td>
+			<td>${w:format(reportRecord.record.minValue,'0')}</td>
+			<td>${w:format(reportRecord.record.maxValue,'0')}</td>
 			<td>${w:format(reportRecord.avg,'0.0')}</td>
 			<td>${w:format(reportRecord.std,'0.0')}</td>
 			<td>${w:format(reportRecord.record.avg2Value,'0.0')}</td>
-			<td>${w:format(reportRecord.record.sumValue,'0.0')}</td>
-			<td>${w:format(reportRecord.record.longSqls,'0.0')}</td>
+			<td>${w:format(reportRecord.record.sumValue,'0')}</td>
+			<td>${w:format(reportRecord.record.longSqls,'0')}</td>
 			<td>${w:format(reportRecord.longPercent,'0.00%')}</td>
 			<td><a href='cat/r/m/${reportRecord.record.sampleLink}/logview.html'>Link</a></td>
 		</tr>
