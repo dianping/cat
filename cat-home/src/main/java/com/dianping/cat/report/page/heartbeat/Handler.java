@@ -122,7 +122,8 @@ public class Handler implements PageHandler<Context> {
 			model.setCatMessageProducedGraph(displayHeartbeat.getCatMessageProducedGraph());
 			model.setCatMessageOverflowGraph(displayHeartbeat.getCatMessageOverflowGraph());
 			model.setCatMessageSizeGraph(displayHeartbeat.getCatMessageSizeGraph());
-			model.setGcCountGraph(displayHeartbeat.getGcCountGraph());
+			model.setNewGcCountGraph(displayHeartbeat.getNewGcCountGraph());
+			model.setOldGcCountGraph(displayHeartbeat.getOldGcCountGraph());
 			model.setHeapUsageGraph(displayHeartbeat.getHeapUsageGraph());
 			model.setNoneHeapUsageGraph(displayHeartbeat.getNoneHeapUsageGraph());
 			model.setDiskFreeGraph(displayHeartbeat.getDiskFreeGraph());
