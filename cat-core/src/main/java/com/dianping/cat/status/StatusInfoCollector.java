@@ -31,7 +31,7 @@ class StatusInfoCollector extends BaseVisitor {
 		m_statistics = statistics;
 	}
 
-	int countThreadsByPrefix(ThreadInfo[] threads, String... prefixes) {
+	private int countThreadsByPrefix(ThreadInfo[] threads, String... prefixes) {
 		int count = 0;
 
 		for (ThreadInfo thread : threads) {
@@ -45,31 +45,7 @@ class StatusInfoCollector extends BaseVisitor {
 		return count;
 	}
 
-	int getGcCount(List<GarbageCollectorMXBean> mxbeans) {
-		int count = 0;
-
-		for (GarbageCollectorMXBean mxbean : mxbeans) {
-			if (mxbean.isValid()) {
-				count += mxbean.getCollectionCount();
-			}
-		}
-
-		return count;
-	}
-
-	long getGcTime(List<GarbageCollectorMXBean> mxbeans) {
-		long time = 0;
-
-		for (GarbageCollectorMXBean mxbean : mxbeans) {
-			if (mxbean.isValid()) {
-				time += mxbean.getCollectionTime();
-			}
-		}
-
-		return time;
-	}
-
-	String getThreadDump(ThreadInfo[] threads) {
+	private String getThreadDump(ThreadInfo[] threads) {
 		StringBuilder sb = new StringBuilder(32768);
 		int index = 1;
 
@@ -125,14 +101,6 @@ class StatusInfoCollector extends BaseVisitor {
 	}
 
 	@Override
-	public void visitGc(GcInfo gc) {
-		List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
-
-		gc.setCount(getGcCount(beans));
-		gc.setTime(getGcTime(beans));
-	}
-
-	@Override
 	public void visitMemory(MemoryInfo memory) {
 		MemoryMXBean bean = ManagementFactory.getMemoryMXBean();
 		Runtime runtime = Runtime.getRuntime();
@@ -142,8 +110,18 @@ class StatusInfoCollector extends BaseVisitor {
 		memory.setFree(runtime.freeMemory());
 		memory.setHeapUsage(bean.getHeapMemoryUsage().getUsed());
 		memory.setNonHeapUsage(bean.getNonHeapMemoryUsage().getUsed());
+		
+		List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
+		for (GarbageCollectorMXBean mxbean : beans) {
+			if (mxbean.isValid()) {
+				GcInfo gc = new GcInfo();
+				gc.setName(mxbean.getName());
+				gc.setCount(mxbean.getCollectionCount());
+				gc.setTime(mxbean.getCollectionTime());
+				memory.addGc(gc);
+			}
+		}
 
-		memory.setGc(new GcInfo());
 		super.visitMemory(memory);
 	}
 

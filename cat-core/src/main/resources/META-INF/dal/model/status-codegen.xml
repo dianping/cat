@@ -41,11 +41,6 @@
     <attribute name="free" value-type="int" />
     <attribute name="heap-usage" value-type="int" />
     <attribute name="non-heap-usage" value-type="int" />
-    <entity-ref name="gc" />
-  </entity>
-  <entity name="gc">
-    <attribute name="count" value-type="int" />
-    <attribute name="time" value-type="int" />
   </entity>
   <entity name="thread">
     <attribute name="count" value-type="int" />

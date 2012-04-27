@@ -65,7 +65,8 @@
 <tr>
 	<td>
 		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
-		  ${model.gcCountGraph}
+		  ${model.newGcCountGraph}
+		  ${model.oldGcCountGraph}
 		  ${model.systemLoadAverageGraph}
 		</svg>
 	</td>
@@ -114,7 +115,8 @@
 		<th>StartedThead</th>
 		<th>CatThead</th>
 		<th>PigeonThead</th>
-		<th>GcCount</th>
+		<th>NewGcCount</th>
+		<th>OldGcCount</th>
 		<th>SystemLoad</th>
 		<th>HeapUsage</th>
 		<th>NoneHeapUsage</th>
@@ -134,7 +136,8 @@
 		<td>${item.totalStartedCount}</td>
 		<td>${item.catThreadCount}</td>
 		<td>${item.pigeonThreadCount}</td>
-		<td>${item.gcCount}</td>
+		<td>${item.newGcCount}</td>
+		<td>${item.oldGcCount}</td>
 		<td>${w:format(item.systemLoadAverage,'0.00')}</td>
 		<td>${w:format(item.heapUsage,'0.0MB')}</td>
 		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
