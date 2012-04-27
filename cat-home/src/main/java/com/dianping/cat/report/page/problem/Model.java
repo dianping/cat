@@ -34,6 +34,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private ProblemStatistics m_allStatistics;
 
+	private String m_mobileResponse;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -186,5 +188,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setThreshold(int threshold) {
 		m_threshold = threshold;
 	}
+
+	public String getMobileResponse() {
+   	return m_mobileResponse;
+   }
+
+	public void setMobileResponse(String mobileResponse) {
+   	m_mobileResponse = mobileResponse;
+   }
 
 }

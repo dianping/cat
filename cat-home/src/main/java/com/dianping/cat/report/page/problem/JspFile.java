@@ -6,7 +6,9 @@ public enum JspFile {
 
 	THREAD("/jsp/report/problemThread.jsp"),
 
-	DETAIL("/jsp/report/problemDetail.jsp")
+	DETAIL("/jsp/report/problemDetail.jsp"),
+	
+	MOBILE("/jsp/report/problem_mobile.jsp");
 	;
 
 	private String m_path;

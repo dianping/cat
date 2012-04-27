@@ -5,7 +5,7 @@ public enum JspFile {
 	
 	GRAPHS("/jsp/report/event_graphs.jsp"),
 
-	MOBILE("/jsp/report/mobile.jsp");
+	MOBILE("/jsp/report/event_mobile.jsp");
 	
 	private String m_path;
 

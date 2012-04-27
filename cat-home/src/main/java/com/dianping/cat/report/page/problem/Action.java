@@ -5,7 +5,9 @@ public enum Action implements com.site.web.mvc.Action {
 	
 	THREAD("thread"),
 	
-	DETAIL("detail");
+	DETAIL("detail"),
+	
+	MOBILE("mobile");
 	
 	private String m_name;
 
