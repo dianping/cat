@@ -3,7 +3,9 @@ package com.dianping.cat.consumer.dump;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -15,11 +17,15 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 import com.site.helper.Files;
-import com.site.helper.Formats;
 import com.site.helper.Files.AutoClose;
+import com.site.helper.Formats;
 import com.site.helper.Scanners;
 import com.site.helper.Scanners.FileMatcher;
 import com.site.helper.Threads;
@@ -93,8 +99,9 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			while (isActive()) {
+			Cat.setup("DumpUploader");
 
+			while (isActive()) {
 				try {
 					upload();
 				} catch (Exception e) {
@@ -108,6 +115,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 				}
 			}
 
+			Cat.reset();
 		}
 
 		@Override
@@ -133,8 +141,17 @@ public class DumpUploader implements Initializable, LogEnabled {
 			});
 
 			if (paths.size() > 0) {
+				MessageProducer cat = Cat.getProducer();
+				Transaction troot = cat.newTransaction("Task", "Dump-" + new SimpleDateFormat("mmss").format(new Date()));
+
+				troot.addData("files", paths);
+				troot.setStatus(Message.SUCCESS);
+
 				for (String path : paths) {
+					Transaction t = cat.newTransaction("Task", "Upload");
 					File file = new File(baseDir, path);
+
+					t.addData("file", path);
 
 					try {
 						FileInputStream fis = new FileInputStream(file);
@@ -149,6 +166,10 @@ public class DumpUploader implements Initializable, LogEnabled {
 						String size = Formats.forNumber().format(file.length(), "0.#", "B");
 						String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
 
+						t.addData("size", size);
+						t.addData("speed", speed);
+						t.setStatus(Message.SUCCESS);
+						
 						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.",
 						      file.getCanonicalPath(), path, size, speed));
 
@@ -156,11 +177,19 @@ public class DumpUploader implements Initializable, LogEnabled {
 							m_logger.warn("Can't delete file: " + file);
 						}
 					} catch (AccessControlException e) {
+						cat.logError(e);
+						t.setStatus(e);
 						m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
-					} catch (IOException e) {
+					} catch (Exception e) {
+						cat.logError(e);
+						t.setStatus(e);
 						m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
+					} finally {
+						t.complete();
 					}
 				}
+
+				troot.complete();
 			}
 		}
 	}

@@ -46,7 +46,11 @@ public class SqlGraphPayload extends AbstractGraphPayload {
 
 	@Override
 	public String getAxisXLabel(int index) {
-		return m_labels[index];
+		if (index < m_labels.length) {
+			return m_labels[index];
+		} else {
+			return "";
+		}
 	}
 
 	@Override
@@ -94,7 +98,7 @@ public class SqlGraphPayload extends AbstractGraphPayload {
 
 	public double sum() {
 		double result = 0;
-		for (int i = 0; i < m_size -1; i++) {
+		for (int i = 0; i < m_size - 1; i++) {
 			result += m_values[i];
 		}
 		return result;

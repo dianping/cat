@@ -2,7 +2,7 @@ package com.dianping.cat.report.graph;
 
 public class DefaultValueTranslater implements ValueTranslater {
 	@Override
-	public int getMaxValue(double[] values) {
+	public double getMaxValue(double[] values) {
 		double min = Integer.MAX_VALUE;
 		double max = Integer.MIN_VALUE;
 		int len = values.length;
@@ -20,17 +20,19 @@ public class DefaultValueTranslater implements ValueTranslater {
 		}
 
 		double maxLog = Math.log10(max);
-		int maxValue = (int) Math.pow(10, Math.ceil(maxLog));
+		double maxValue = Math.pow(10, Math.ceil(maxLog));
 
-		while (maxValue > max * 2) {
-			maxValue = maxValue / 2;
+		if (max > 0) {
+			while (maxValue >= max * 2) {
+				maxValue = maxValue / 2;
+			}
 		}
-		
+
 		return maxValue;
 	}
 
 	@Override
-	public int[] translate(int height, int maxValue, double[] values) {
+	public int[] translate(int height, double maxValue, double[] values) {
 		int len = values.length;
 		int[] result = new int[len];
 

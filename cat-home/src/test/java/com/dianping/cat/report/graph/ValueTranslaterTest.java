@@ -12,9 +12,15 @@ import com.site.lookup.ComponentTestCase;
 public class ValueTranslaterTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
-		ValueTranslater translater = lookup(ValueTranslater.class);
-		double[] values = { 123, 456, 247, 473, 976, 236 };
+		check(1000, 123, 456, 247, 473, 976, 236);
+		check(5, 1, 3, 5);
+		check(0.5, 0.1, 0.3, 0.4);
+		check(0.25, 0.01, 0.2, 0.1);
+	}
 
-		Assert.assertEquals(1000, translater.getMaxValue(values));
+	void check(double expected, double... values) throws Exception {
+		ValueTranslater translater = lookup(ValueTranslater.class);
+
+		Assert.assertEquals(expected, translater.getMaxValue(values));
 	}
 }

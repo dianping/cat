@@ -111,7 +111,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 				return data;
 			} catch (Exception e) {
-				m_logger.error(String.format("Error when reading file(%s)!", m_readDataFile), e);
+				m_logger.error(String.format("Error when reading file(%s)!", m_logicalPath), e);
 			} finally {
 				m_readLock.unlock();
 			}
@@ -143,7 +143,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 				return new Meta(data.getMessageId(), data.getThreadId(), offset, num);
 			} catch (Exception e) {
-				m_logger.error(String.format("Error when reading file(%s)!", m_readDataFile), e);
+				m_logger.error(String.format("Error when reading file(%s)!", m_logicalPath), e);
 			} finally {
 				m_readLock.unlock();
 			}

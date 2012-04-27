@@ -112,6 +112,7 @@ public class Handler implements PageHandler<Context> {
 			model.setIpAddress(ip);
 
 			DisplayHeartbeat displayHeartbeat = new DisplayHeartbeat(m_builder);
+			
 			model.setResult(displayHeartbeat.display(report, ip));
 			model.setActiveThreadGraph(displayHeartbeat.getActiceThreadGraph());
 			model.setDaemonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
@@ -126,8 +127,8 @@ public class Handler implements PageHandler<Context> {
 			model.setOldGcCountGraph(displayHeartbeat.getOldGcCountGraph());
 			model.setHeapUsageGraph(displayHeartbeat.getHeapUsageGraph());
 			model.setNoneHeapUsageGraph(displayHeartbeat.getNoneHeapUsageGraph());
-			model.setDiskFreeGraph(displayHeartbeat.getDiskFreeGraph());
-			model.setDiskUseableGraph(displayHeartbeat.getDiskUseableGraph());
+			model.setDisks(displayHeartbeat.getDisks());
+			model.setDisksGraph(displayHeartbeat.getDisksGraph());
 			model.setSystemLoadAverageGraph(displayHeartbeat.getSystemLoadAverageGraph());
 			model.setMemoryFreeGraph(displayHeartbeat.getMemoryFreeGraph());
 		} catch (Throwable e) {

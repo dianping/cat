@@ -11,10 +11,10 @@ public class DefaultGraphBuilder implements GraphBuilder {
 	@Override
 	public String build(GraphPayload payload) {
 		double[] values = payload.getValues();
-		int maxValue = m_translater.getMaxValue(values);
+		double maxValue = m_translater.getMaxValue(values);
 		XmlBuilder b = new XmlBuilder();
 
-		if (maxValue < payload.getRows()) {
+		if (maxValue == 0) {
 			maxValue = payload.getRows();
 		}
 
@@ -28,7 +28,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		return b.getResult().toString();
 	}
 
-	protected void buildBars(GraphPayload payload, XmlBuilder b, int maxValue, double[] values) {
+	protected void buildBars(GraphPayload payload, XmlBuilder b, double maxValue, double[] values) {
 		DecimalFormat format = new DecimalFormat("0.#");
 		int width = payload.getWidth();
 		int height = payload.getHeight();
@@ -125,7 +125,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		}
 
 		if (payload.isAxisXLabelSkipped()) {
-			p.moveTo(left, top + h).mark().v(9).m(xstep, -9).v(5).m(xstep, -5).repeat(cols / 2);
+			p.moveTo(left, top + h).mark().v(9).m(xstep, -9).v(5).m(xstep, -5).repeat(cols / 2 - 1);
 
 			if (cols % 2 == 0) {
 				p.v(9).m(xstep, -9);
@@ -144,7 +144,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		b.tag2("svg");
 	}
 
-	protected void buildHeader(GraphPayload payload, XmlBuilder b, int maxValue) {
+	protected void buildHeader(GraphPayload payload, XmlBuilder b, double maxValue) {
 		int offsetX = payload.getOffsetX();
 		int offsetY = payload.getOffsetY();
 		int height = payload.getHeight();
@@ -185,7 +185,8 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		String axisYTitle = payload.getAxisYTitle();
 
 		if (axisYTitle != null) {
-			int x = left - 20 - String.valueOf(maxValue).length() * 9;
+			String maxLabel = toCompactString(maxValue);
+			int x = left - 20 - maxLabel.length() * 9;
 			int y = (height - top - bottom + axisYTitle.length() * 9) / 2 + top;
 			String transform = "rotate(-90," + x + "," + y + ")";
 
@@ -199,6 +200,10 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		}
 
 		b.tag2("g");
+	}
+
+	private String toCompactString(double value) {
+		return new DecimalFormat("0.##").format(value);
 	}
 
 	protected void buildXLabels(GraphPayload payload, XmlBuilder b) {
@@ -247,7 +252,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		b.tag2("g");
 	}
 
-	protected void buildYLabels(GraphPayload payload, XmlBuilder b, int maxValue) {
+	protected void buildYLabels(GraphPayload payload, XmlBuilder b, double maxValue) {
 		int height = payload.getHeight();
 		int top = payload.getMarginTop();
 		int left = payload.getMarginLeft();
@@ -263,14 +268,14 @@ public class DefaultGraphBuilder implements GraphBuilder {
 				int x = left - 12;
 				int y = top + 4 + ystep * i;
 
-				b.tagWithText("text", maxValue - maxValue / rows * i, "x", x, "y", y, "font-size", "14");
+				b.tagWithText("text", toCompactString(maxValue - maxValue / rows * i), "x", x, "y", y, "font-size", "14");
 			}
 		} else {
 			for (int i = 0; i < rows; i++) {
 				int x = left - 9;
 				int y = top + 4 + ystep * i;
 
-				b.tagWithText("text", maxValue - maxValue / rows * i, "x", x, "y", y, "font-size", "14");
+				b.tagWithText("text", toCompactString(maxValue - maxValue / rows * i), "x", x, "y", y, "font-size", "14");
 			}
 		}
 

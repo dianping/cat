@@ -182,13 +182,15 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 			Logview l = m_logviewDao.createLocal();
 			Meta meta = bucket.getMeta(id);
 
-			l.setDataLength(meta.getLegnth());
-			l.setDataOffset(meta.getOffset());
-			l.setDataPath(path);
-			l.setCreationDate(date);
-			l.setMessageId(meta.getMessageId());
-			l.setTagThread(meta.getTagThread());
-			logviews.add(l);
+			if (meta != null) {
+				l.setDataLength(meta.getLegnth());
+				l.setDataOffset(meta.getOffset());
+				l.setDataPath(path);
+				l.setCreationDate(date);
+				l.setMessageId(meta.getMessageId());
+				l.setTagThread(meta.getTagThread());
+				logviews.add(l);
+			}
 		}
 
 		m_logviewDao.insert(logviews.toArray(new Logview[0]));

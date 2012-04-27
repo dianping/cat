@@ -20,9 +20,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_daemonThreadGraph;
 
-	private String m_diskFreeGraph;
+	private int m_disks;
 
-	private String m_diskUseableGraph;
+	private String m_disksGraph;
 
 	private String m_newGcCountGraph;
 
@@ -70,6 +70,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_catMessageSizeGraph;
 	}
 
+	public String getCatThreadGraph() {
+		return m_catThreadGraph;
+	}
+
 	public String getDaemonThreadGraph() {
 		return m_daemonThreadGraph;
 	}
@@ -79,12 +83,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Action.VIEW;
 	}
 
-	public String getDiskFreeGraph() {
-		return m_diskFreeGraph;
+	public int getDiskRows() {
+		return (m_disks + 2) / 3;
 	}
 
-	public String getDiskUseableGraph() {
-		return m_diskUseableGraph;
+	public String getDisksGraph() {
+		return m_disksGraph;
 	}
 
 	@Override
@@ -102,14 +106,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
-	}
-
-	public String getNewGcCountGraph() {
-		return m_newGcCountGraph;
-	}
-
-	public String getOldGcCountGraph() {
-		return m_oldGcCountGraph;
 	}
 
 	public String getHeapUsageGraph() {
@@ -132,8 +128,24 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public String getMemoryFreeGraph() {
+		return m_memoryFreeGraph;
+	}
+
+	public String getNewGcCountGraph() {
+		return m_newGcCountGraph;
+	}
+
 	public String getNoneHeapUsageGraph() {
 		return m_noneHeapUsageGraph;
+	}
+
+	public String getOldGcCountGraph() {
+		return m_oldGcCountGraph;
+	}
+
+	public String getPigeonThreadGraph() {
+		return m_pigeonThreadGraph;
 	}
 
 	public HeartbeatReport getReport() {
@@ -172,24 +184,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_catMessageSizeGraph = catMessageSizeGraph;
 	}
 
+	public void setCatThreadGraph(String catThreadGraph) {
+		m_catThreadGraph = catThreadGraph;
+	}
+
 	public void setDaemonThreadGraph(String daemonThreadGraph) {
 		m_daemonThreadGraph = daemonThreadGraph;
 	}
 
-	public void setDiskFreeGraph(String diskFreeGraph) {
-		m_diskFreeGraph = diskFreeGraph;
+	public void setDisks(int disks) {
+		m_disks = disks;
 	}
 
-	public void setDiskUseableGraph(String diskUseableGraph) {
-		m_diskUseableGraph = diskUseableGraph;
-	}
-
-	public void setNewGcCountGraph(String gcCountGraph) {
-		m_newGcCountGraph = gcCountGraph;
-	}
-
-	public void setOldGcCountGraph(String gcCountGraph) {
-		m_oldGcCountGraph = gcCountGraph;
+	public void setDisksGraph(String disksGraph) {
+		m_disksGraph = disksGraph;
 	}
 
 	public void setHeapUsageGraph(String heapUsageGraph) {
@@ -204,28 +212,28 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_ipAddress = ipAddress;
 	}
 
+	public void setMemoryFreeGraph(String memoryFreeGraph) {
+		m_memoryFreeGraph = memoryFreeGraph;
+	}
+
+	public void setNewGcCountGraph(String gcCountGraph) {
+		m_newGcCountGraph = gcCountGraph;
+	}
+
 	public void setNoneHeapUsageGraph(String noneHeapUsageGraph) {
 		m_noneHeapUsageGraph = noneHeapUsageGraph;
 	}
 
-	public void setReport(HeartbeatReport report) {
-		m_report = report;
-	}
-
-	public String getCatThreadGraph() {
-		return m_catThreadGraph;
-	}
-
-	public void setCatThreadGraph(String catThreadGraph) {
-		m_catThreadGraph = catThreadGraph;
-	}
-
-	public String getPigeonThreadGraph() {
-		return m_pigeonThreadGraph;
+	public void setOldGcCountGraph(String gcCountGraph) {
+		m_oldGcCountGraph = gcCountGraph;
 	}
 
 	public void setPigeonThreadGraph(String pigeonThreadGraph) {
 		m_pigeonThreadGraph = pigeonThreadGraph;
+	}
+
+	public void setReport(HeartbeatReport report) {
+		m_report = report;
 	}
 
 	public void setResult(DisplayHeartbeat result) {
@@ -242,14 +250,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setTotalThreadGraph(String totalThreadGraph) {
 		m_totalThreadGraph = totalThreadGraph;
-	}
-
-	public String getMemoryFreeGraph() {
-		return m_memoryFreeGraph;
-	}
-
-	public void setMemoryFreeGraph(String memoryFreeGraph) {
-		m_memoryFreeGraph = memoryFreeGraph;
 	}
 
 }

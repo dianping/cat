@@ -49,7 +49,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="380"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="380" xmlns="http://www.w3.org/2000/svg">
 		  ${model.activeThreadGraph}
 		  ${model.daemonThreadGraph}
 		  ${model.totalThreadGraph}
@@ -64,7 +64,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.newGcCountGraph}
 		  ${model.oldGcCountGraph}
 		  ${model.systemLoadAverageGraph}
@@ -76,7 +76,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.memoryFreeGraph}
 		  ${model.heapUsageGraph}
 		  ${model.noneHeapUsageGraph}
@@ -88,9 +88,8 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
-		  ${model.diskFreeGraph}
-		  ${model.diskUseableGraph}
+		<svg version="1.1" width="1400" height="${model.diskRows * 190 }" xmlns="http://www.w3.org/2000/svg">
+		  ${model.disksGraph}
 		</svg>
 	</td>
 </tr>
@@ -99,7 +98,7 @@
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="190"	xmlns="http://www.w3.org/2000/svg">
+		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.catMessageProducedGraph}
 		  ${model.catMessageOverflowGraph}
 		  ${model.catMessageSizeGraph}
@@ -122,13 +121,11 @@
 		<th>NoneHeapUsage</th>
 		<th>MemoryFree</th>
 		<th>DiskFree</th>
-		<th>DiskUseable</th>
 		<th>CatProduced</th>
 		<th>CatOverflow</th>
 		<th>CatSize</th>
 	</tr>
-	<c:forEach var="item" items="${model.result.periods}"
-				varStatus="status">
+	<c:forEach var="item" items="${model.result.periods}" varStatus="status">
 		<tr class="${status.index  mod 2==1 ? 'even' : 'odd'}">
 		<td>${item.minute}</td>
 		<td>${item.threadCount}</td>
@@ -142,8 +139,7 @@
 		<td>${w:format(item.heapUsage,'0.0MB')}</td>
 		<td>${w:format(item.noneHeapUsage,'0.0MB')}</td>
 		<td>${w:format(item.memoryFree,'0.0MB')}</td>
-		<td>${w:format(item.diskFree,'0.0GB')}</td>
-		<td>${w:format(item.diskUseable,'0.0GB')}</td>
+		<td><c:forEach var="disk" items="${item.disks}" varStatus="vs">${w:formatNumber(disk.free,'0.0', 'B')}<c:if test="${not vs.last}">/</c:if></c:forEach></td>
 		<td>${item.catMessageProduced}</td>
 		<td>${item.catMessageOverflow}</td>
 		<td>${w:format(item.catMessageSize,'0.0MB')}</td>

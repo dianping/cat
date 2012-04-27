@@ -13,6 +13,7 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder;
@@ -81,27 +82,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		return report;
 	}
 
-	private DiskVolumeInfo getDefaultDiskVolume(DiskInfo diskInfo) {
-		DiskVolumeInfo root = null;
-
-		for (DiskVolumeInfo volume : diskInfo.getDiskVolumes()) {
-			String id = volume.getId();
-
-			if (id.startsWith("/data")) { // for production
-				return volume;
-			} else if (id.equals("/")) {
-				root = volume;
-			}
-		}
-
-		if (root != null) {
-			return root;
-		} else {
-			// return first system volume for Windows
-			return diskInfo.getDiskVolumes().get(0);
-		}
-	}
-
 	@Override
 	public Set<String> getDomains() {
 		return m_reports.keySet();
@@ -137,7 +117,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			period.setCatMessageSize(catInfo.getBytes());
 
 			MemoryInfo memeryInfo = info.getMemory();
-			DiskInfo diskInfo = info.getDisk();
 
 			List<GcInfo> gcs = info.getMemory().getGcs();
 			for (GcInfo gc : gcs) {
@@ -147,16 +126,23 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 					period.setOldGcCount(gc.getCount());
 				}
 			}
+
 			period.setHeapUsage(memeryInfo.getHeapUsage());
 			period.setNoneHeapUsage(memeryInfo.getNonHeapUsage());
 			period.setMemoryFree(memeryInfo.getFree());
 			period.setSystemLoadAverage(info.getOs().getSystemLoadAverage());
 
-			if (diskInfo != null) {
-				DiskVolumeInfo volumeInfo = getDefaultDiskVolume(diskInfo);
+			DiskInfo diskInfo = info.getDisk();
 
-				period.setDiskFree(volumeInfo.getFree());
-				period.setDiskUseable(volumeInfo.getUsable());
+			if (diskInfo != null) {
+				for (DiskVolumeInfo volumeInfo : diskInfo.getDiskVolumes()) {
+					Disk disk = new Disk(volumeInfo.getId());
+
+					disk.setTotal(volumeInfo.getTotal());
+					disk.setFree(volumeInfo.getFree());
+					disk.setUsable(volumeInfo.getUsable());
+					period.addDisk(disk);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
