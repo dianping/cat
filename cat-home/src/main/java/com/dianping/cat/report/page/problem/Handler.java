@@ -17,6 +17,7 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -144,7 +145,13 @@ public class Handler implements PageHandler<Context> {
 			report = getAllIpReport(payload);
 			model.setReport(report);
 			model.setLongDate(payload.getDate());
-			model.setAllStatistics(new ProblemStatistics().displayByAllIps(report, payload));
+			ProblemStatistics allStatistics = new ProblemStatistics().displayByAllIps(report, payload);
+			model.setAllStatistics(allStatistics);
+			if (payload.getAction() == Action.MOBILE) {
+				Gson gson = new Gson();
+				String response = gson.toJson(allStatistics);
+				model.setMobileResponse(response);
+			}
 		} else {
 			switch (payload.getAction()) {
 			case GROUP:

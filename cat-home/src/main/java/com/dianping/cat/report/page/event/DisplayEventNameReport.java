@@ -14,9 +14,9 @@ import com.site.lookup.util.StringUtils;
 
 public class DisplayEventNameReport {
 
-	private List<EventModel> m_results = new ArrayList<EventModel>();
+	private List<EventNameModel> m_results = new ArrayList<EventNameModel>();
 
-	public List<EventModel> getResults() {
+	public List<EventNameModel> getResults() {
 		return m_results;
 	}
 
@@ -26,7 +26,7 @@ public class DisplayEventNameReport {
 			EventType names = types.get(type);
 			
 			for (Entry<String, EventName> entry : names.getNames().entrySet()) {
-				m_results.add(new EventModel(entry.getKey(), entry.getValue()));
+				m_results.add(new EventNameModel(entry.getKey(), entry.getValue()));
 			}
 		}
 		if (!StringUtils.isEmpty(sorted)) {
@@ -35,12 +35,12 @@ public class DisplayEventNameReport {
 		return this;
 	}
 
-	public static class EventModel {
+	public static class EventNameModel {
 		private String m_type;
 
 		private EventName m_detail;
 
-		public EventModel(String str, EventName detail) {
+		public EventNameModel(String str, EventName detail) {
 			m_type = str;
 			m_detail = detail;
 		}
@@ -54,7 +54,7 @@ public class DisplayEventNameReport {
 		}
 	}
 
-	public static class EventComparator implements Comparator<EventModel> {
+	public static class EventComparator implements Comparator<EventNameModel> {
 
 		private String m_sorted;
 
@@ -63,7 +63,7 @@ public class DisplayEventNameReport {
 		}
 
 		@Override
-		public int compare(EventModel m1, EventModel m2) {
+		public int compare(EventNameModel m1, EventNameModel m2) {
 			if (m_sorted.equals("name") || m_sorted.equals("type")) {
 				return m1.getType().compareTo(m2.getType());
 			}
