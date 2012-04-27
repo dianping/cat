@@ -94,7 +94,7 @@ public class SqlReport {
 			sum = sum + temp.getSumValue();
 			longSql = longSql + temp.getLongSqls();
 		}
-		result.setAvg2Value(0);
+		result.setAvg2Value(-1);
 		result.setStatement("All");
 		result.setName("All(Records:" + m_reportRecords.size() + ")");
 		result.setTotalCount(total);

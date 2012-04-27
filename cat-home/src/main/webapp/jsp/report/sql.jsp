@@ -49,7 +49,7 @@
 			<td>${w:format(reportRecord.record.maxValue,'0')}</td>
 			<td>${w:format(reportRecord.avg,'0.0')}</td>
 			<td>${w:format(reportRecord.std,'0.0')}</td>
-			<td>${w:format(reportRecord.record.avg2Value,'0.0')}</td>
+			<td>${reportRecord.record.avg2Value lt 0 ? '-' : w:format(reportRecord.record.avg2Value,'0.0')}</td>
 			<td>${w:format(reportRecord.record.sumValue,'0')}</td>
 			<td>${w:format(reportRecord.record.longSqls,'0')}</td>
 			<td>${w:format(reportRecord.longPercent,'0.00%')}</td>

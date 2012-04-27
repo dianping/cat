@@ -22,6 +22,7 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -145,8 +146,20 @@ public class Handler implements PageHandler<Context>, Initializable {
 		case GRAPHS:
 			showGraphs(model, payload);
 			break;
+		case MOBILE:
+			showReport(model, payload);
+			if (!StringUtils.isEmpty(payload.getType())) {
+				DisplayEventNameReport report = model.getDisplayNameReport();
+				Gson gson = new Gson();
+				String json = gson.toJson(report);
+				model.setMobileResponse(json);
+			} else {
+				DisplayEventTypeReport report = model.getDisplayTypeReport();
+				Gson gson = new Gson();
+				String json = gson.toJson(report);
+				model.setMobileResponse(json);
+			}
 		}
-
 		m_jspViewer.view(ctx, model);
 	}
 
@@ -203,7 +216,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 			if (!StringUtils.isEmpty(type)) {
 				model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, report));
 			} else {
-				model.setDisplayTypeReport(new DisplayEventReport().display(sorted, report));
+				model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, report));
 			}
 		} catch (Throwable e) {
 			Cat.getProducer().logError(e);

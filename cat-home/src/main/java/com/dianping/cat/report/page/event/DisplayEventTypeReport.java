@@ -11,15 +11,15 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.site.lookup.util.StringUtils;
 
-public class DisplayEventReport {
+public class DisplayEventTypeReport {
 
-	private List<EventModel> m_results = new ArrayList<EventModel>();
+	private List<EventTypeModel> m_results = new ArrayList<EventTypeModel>();
 
-	public List<EventModel> getResults() {
+	public List<EventTypeModel> getResults() {
 		return m_results;
 	}
 
-	public DisplayEventReport display(String sorted, EventReport report) {
+	public DisplayEventTypeReport display(String sorted, EventReport report) {
 		if(report==null){
 			return this;
 		}
@@ -27,7 +27,7 @@ public class DisplayEventReport {
 		Map<String, EventType> types = report.getTypes();
 		if (types != null) {
 			for (Entry<String, EventType> entry : types.entrySet()) {
-				m_results.add(new EventModel(entry.getKey(), entry.getValue()));
+				m_results.add(new EventTypeModel(entry.getKey(), entry.getValue()));
 			}
 		}
 		if (!StringUtils.isEmpty(sorted)) {
@@ -36,12 +36,12 @@ public class DisplayEventReport {
 		return this;
 	}
 
-	public static class EventModel {
+	public static class EventTypeModel {
 		private String m_type;
 
 		private EventType m_detail;
 
-		public EventModel(String str, EventType detail) {
+		public EventTypeModel(String str, EventType detail) {
 			m_type = str;
 			m_detail = detail;
 		}
@@ -55,7 +55,7 @@ public class DisplayEventReport {
 		}
 	}
 
-	public static class EventComparator implements Comparator<EventModel> {
+	public static class EventComparator implements Comparator<EventTypeModel> {
 
 		private String m_sorted;
 
@@ -64,7 +64,7 @@ public class DisplayEventReport {
 		}
 
 		@Override
-		public int compare(EventModel m1, EventModel m2) {
+		public int compare(EventTypeModel m1, EventTypeModel m2) {
 			if (m_sorted.equals("name") || m_sorted.equals("type")) {
 				return m1.getType().compareTo(m2.getType());
 			}

@@ -10,7 +10,7 @@ import com.dianping.cat.report.view.StringSortHelper;
 public class Model extends AbstractReportModel<Action, Context> {
 	private EventReport m_report;
 	
-	private DisplayEventReport m_displayTypeReport;
+	private DisplayEventTypeReport m_displayTypeReport;
 	
 	private DisplayEventNameReport m_displayNameReport;
 
@@ -23,6 +23,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_graph3;
 
 	private String m_graph4;
+
+	private String m_mobileResponse;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -100,11 +102,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_type = type;
 	}
 
-	public DisplayEventReport getDisplayTypeReport() {
+	public DisplayEventTypeReport getDisplayTypeReport() {
    	return m_displayTypeReport;
    }
 
-	public void setDisplayTypeReport(DisplayEventReport displayTypeReport) {
+	public void setDisplayTypeReport(DisplayEventTypeReport displayTypeReport) {
    	m_displayTypeReport = displayTypeReport;
    }
 
@@ -115,5 +117,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setDisplayNameReport(DisplayEventNameReport displayNameReport) {
    	m_displayNameReport = displayNameReport;
    }
-	
+
+	public String getMobileResponse() {
+   	return m_mobileResponse;
+   }
+
+	public void setMobileResponse(String mobileResponse) {
+   	m_mobileResponse = mobileResponse;
+   }
 }
