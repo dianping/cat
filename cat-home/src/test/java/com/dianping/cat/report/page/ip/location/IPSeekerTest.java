@@ -10,7 +10,7 @@ public class IPSeekerTest {
 	public void testGetIPLocationPref() throws IOException {
 		IPSeekerManager.initailize(new File("target/ip"));
 
-		String location = IPSeekerManager.getLocation("112.64.189.69");
+		String location = IPSeekerManager.getLocation("113.116.205.222");
 
 		System.out.println(location);
 
@@ -22,14 +22,14 @@ public class IPSeekerTest {
 
 		System.out.println(String.format("Done in %s ms for 100 IP lookup.", System.currentTimeMillis() - start));
 	}
-	
+
 	@Test
 	public void testGetIP() throws IOException {
-		IPSeekerManager.initailize(new File("target/ip"));
+		File file = new File(IPSeekerManager.class.getResource("qqwry.dat").getFile());
+		IPSeeker seeker = new IPSeeker(file.getAbsolutePath(), null);
+		IPLocation location = seeker.getIPLocation("113.116.205.222");
 
-		String location = IPSeekerManager.getLocation("119.164.79.85");
-
-		System.out.println(location);
+		System.out.println(location.getArea() + " " + location.getCountry());
 
 	}
 

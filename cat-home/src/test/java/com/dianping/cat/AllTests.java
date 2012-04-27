@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.page.ip.DisplayModelTest;
+import com.dianping.cat.report.page.ip.location.IPSeekerTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.model.event.EventModelServiceTest;
@@ -35,7 +36,9 @@ TransactionModelServiceTest.class,
 TransactionNameAggregatorTest.class,
 
 /* .report.page.transaction */
-TransactionReportMergerTest.class
+TransactionReportMergerTest.class,
+
+IPSeekerTest.class
 
 })
 public class AllTests {
