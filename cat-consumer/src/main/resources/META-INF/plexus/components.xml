@@ -9,7 +9,7 @@
 			<role-hint>realtime</role-hint>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
-				<extraTime>300000</extraTime>
+				<extraTime>180000</extraTime>
 				<analyzers>problem,transaction,event,ip,heartbeat,dump</analyzers>
 			</configuration>
 			<requirements>

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -144,11 +145,13 @@ public class DumpUploader implements Initializable, LogEnabled {
 				MessageProducer cat = Cat.getProducer();
 				Transaction root = cat.newTransaction("Task", "Dump-" + new SimpleDateFormat("mmss").format(new Date()));
 
+				Collections.sort(paths);
+
 				root.addData("files", paths);
 				root.setStatus(Message.SUCCESS);
 
 				for (String path : paths) {
-					Transaction t = cat.newTransaction("Task", "Upload");
+					Transaction t = cat.newTransaction("Task", "UploadDump");
 					File file = new File(baseDir, path);
 
 					t.addData("file", path);

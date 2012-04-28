@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.logview;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,11 +19,15 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.dal.Logview;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.message.LocalLogviewBucket;
 import com.dianping.cat.storage.message.LocalLogviewBucket.Meta;
@@ -96,7 +101,9 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 				LocalLogviewBucket bucket = (LocalLogviewBucket) m_bucketManager.getLogviewBucket(timestamp, domain);
 
 				try {
-					upload(timestamp, bucket);
+					if (Cat.isInitialized()) {
+						upload(timestamp, bucket);
+					}
 				} catch (Exception e) {
 					// add back since it's not done yet
 					m_todoList.offer(item);
@@ -120,19 +127,39 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		List<String> batchIds = new ArrayList<String>();
 		int batchSize = 50;
 
-		uploadData(bucket.getLogicalPath());
+		Cat.setup("LogviewUploader");
 
-		for (String id : bucket.getIds()) {
-			batchIds.add(id);
+		MessageProducer cat = Cat.getProducer();
+		Transaction root = cat.newTransaction("Task", "Logview-" + new SimpleDateFormat("mmss").format(new Date()));
 
-			if (batchIds.size() >= batchSize) {
-				uploadIndex(batchIds, timestamp, bucket);
-				batchIds.clear();
+		root.addData("logview", bucket.getLogicalPath());
+		root.setStatus(Message.SUCCESS);
+
+		try {
+			uploadData(bucket.getLogicalPath());
+
+			for (String id : bucket.getIds()) {
+				batchIds.add(id);
+
+				if (batchIds.size() >= batchSize) {
+					uploadIndex(batchIds, timestamp, bucket);
+					batchIds.clear();
+				}
 			}
-		}
 
-		if (batchIds.size() > 0) {
-			uploadIndex(batchIds, timestamp, bucket);
+			if (batchIds.size() > 0) {
+				uploadIndex(batchIds, timestamp, bucket);
+			}
+		} catch (DalException e) {
+			cat.logError(e);
+			root.setStatus(e);
+		} catch (RuntimeException e) {
+			cat.logError(e);
+			root.setStatus(e);
+			throw e;
+		} finally {
+			root.complete();
+			Cat.reset();
 		}
 	}
 
@@ -143,11 +170,18 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 			StringBuilder sb = new StringBuilder(32);
 			Path path = null;
 
+			MessageProducer cat = Cat.getProducer();
+			Transaction t = cat.newTransaction("Task", "UploadLogview");
+			
 			try {
 				FileSystem fs = m_fileSystemManager.getFileSystem("logview", sb);
 				String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				
 				path = new Path(sb.toString(), logicalPath + "-" + ipAddress);
 
+				t.addData("file", file);
+				t.addData("hdfs-path", path);
+				
 				FileInputStream fis = new FileInputStream(file);
 				FSDataOutputStream fdos = fs.create(path);
 
@@ -160,12 +194,22 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 				String size = Formats.forNumber().format(file.length(), "0.#", "B");
 				String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
 
+				t.addData("size", size);
+				t.addData("speed", speed);
+				t.setStatus(Message.SUCCESS);
+				
 				m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.",
 				      file.getCanonicalPath(), path, size, speed));
 			} catch (AccessControlException e) {
+				cat.logError(e);
+				t.setStatus(e);
 				m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
-			} catch (IOException e) {
+			} catch (Exception e) {
+				cat.logError(e);
+				t.setStatus(e);
 				m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
+			} finally {
+				t.complete();
 			}
 		}
 	}
