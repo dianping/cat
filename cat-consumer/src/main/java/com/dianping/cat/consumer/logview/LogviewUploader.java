@@ -130,7 +130,9 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		Cat.setup("LogviewUploader");
 
 		MessageProducer cat = Cat.getProducer();
-		Transaction root = cat.newTransaction("Task", "Logview-" + new SimpleDateFormat("mmss").format(new Date()));
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String ts = new SimpleDateFormat("mmss").format(new Date());
+		Transaction root = cat.newTransaction("Task", "Logview-" + ip + "-" + ts);
 
 		root.addData("logview", bucket.getLogicalPath());
 		root.setStatus(Message.SUCCESS);

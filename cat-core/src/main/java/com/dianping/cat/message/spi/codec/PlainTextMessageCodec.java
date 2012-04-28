@@ -1,6 +1,7 @@
 package com.dianping.cat.message.spi.codec;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,6 +10,8 @@ import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.message.Event;
@@ -24,7 +27,7 @@ import com.dianping.cat.message.spi.StringRope;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class PlainTextMessageCodec implements MessageCodec {
+public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	private static final String ID = "PT1"; // plain text version 1
 
 	private static final byte TAB = '\t'; // tab character
@@ -38,6 +41,8 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 	private DateHelper m_dateHelper = new DateHelper();
 
+	private Logger m_logger;
+
 	@Override
 	public MessageTree decode(ChannelBuffer buf) {
 		DefaultMessageTree tree = new DefaultMessageTree();
@@ -48,10 +53,14 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
+		buf.markReaderIndex();
+
 		decodeHeader(buf, tree);
 
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
+		} else {
+			m_logger.warn("Message received without root message!");
 		}
 	}
 
@@ -171,6 +180,9 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 			return stack.pop();
 		} else {
+			buf.resetReaderIndex();
+			m_logger.warn("Unknown identifier(" + identifier + ") of message: " + buf.toString(Charset.forName("utf-8")));
+
 			// unknown message, ignore it
 			return parent;
 		}
@@ -486,5 +498,10 @@ public class PlainTextMessageCodec implements MessageCodec {
 				return DEFAULT;
 			}
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

@@ -19,6 +19,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.Message;
@@ -143,7 +144,9 @@ public class DumpUploader implements Initializable, LogEnabled {
 				Cat.setup("DumpUploader");
 
 				MessageProducer cat = Cat.getProducer();
-				Transaction root = cat.newTransaction("Task", "Dump-" + new SimpleDateFormat("mmss").format(new Date()));
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				String ts = new SimpleDateFormat("mmss").format(new Date());
+				Transaction root = cat.newTransaction("Task", "Dump-" + ip + "-" + ts);
 
 				Collections.sort(paths);
 
