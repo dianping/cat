@@ -99,11 +99,11 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 		@Override
 		public void run() {
-			Cat.setup("DumpUploader");
-
 			while (isActive()) {
 				try {
-					upload();
+					if (Cat.isInitialized()) {
+						upload();
+					}
 				} catch (Exception e) {
 					m_logger.warn("Error when dumping message to HDFS.", e);
 				}
@@ -114,8 +114,6 @@ public class DumpUploader implements Initializable, LogEnabled {
 					e.printStackTrace();
 				}
 			}
-
-			Cat.reset();
 		}
 
 		@Override
@@ -141,11 +139,13 @@ public class DumpUploader implements Initializable, LogEnabled {
 			});
 
 			if (paths.size() > 0) {
-				MessageProducer cat = Cat.getProducer();
-				Transaction troot = cat.newTransaction("Task", "Dump-" + new SimpleDateFormat("mmss").format(new Date()));
+				Cat.setup("DumpUploader");
 
-				troot.addData("files", paths);
-				troot.setStatus(Message.SUCCESS);
+				MessageProducer cat = Cat.getProducer();
+				Transaction root = cat.newTransaction("Task", "Dump-" + new SimpleDateFormat("mmss").format(new Date()));
+
+				root.addData("files", paths);
+				root.setStatus(Message.SUCCESS);
 
 				for (String path : paths) {
 					Transaction t = cat.newTransaction("Task", "Upload");
@@ -169,7 +169,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 						t.addData("size", size);
 						t.addData("speed", speed);
 						t.setStatus(Message.SUCCESS);
-						
+
 						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.",
 						      file.getCanonicalPath(), path, size, speed));
 
@@ -189,7 +189,8 @@ public class DumpUploader implements Initializable, LogEnabled {
 					}
 				}
 
-				troot.complete();
+				root.complete();
+				Cat.reset();
 			}
 		}
 	}
