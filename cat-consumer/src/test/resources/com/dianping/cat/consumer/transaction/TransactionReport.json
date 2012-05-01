@@ -2,7 +2,7 @@
    "domain": "Cat",
    "startTime": "2012-02-16 23:00:00",
    "endTime": "2012-02-16 23:59:00",
-   "domains": [
+   "domain-names": [
       "Cat"
    ],
    "types": {

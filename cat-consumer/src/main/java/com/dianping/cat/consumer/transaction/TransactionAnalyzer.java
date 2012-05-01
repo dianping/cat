@@ -69,10 +69,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (report == null) {
 			report = new TransactionReport(domain);
 		}
+
 		report.getDomainNames().clear();
 		report.getDomainNames().addAll(m_reports.keySet());
 
-
+		report.accept(new StatisticsComputer());
 		return report;
 	}
 
@@ -253,7 +254,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				Set<String> domainNames = report.getDomainNames();
 				domainNames.clear();
 				domainNames.addAll(getDomains());
-				
+
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
@@ -265,7 +266,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (TransactionReport report : m_reports.values()) {
-					
+
 					Report r = m_reportDao.createLocal();
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();

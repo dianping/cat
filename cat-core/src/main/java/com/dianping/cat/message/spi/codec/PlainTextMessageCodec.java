@@ -59,8 +59,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
-		} else {
-			m_logger.warn("Message received without root message!");
 		}
 	}
 

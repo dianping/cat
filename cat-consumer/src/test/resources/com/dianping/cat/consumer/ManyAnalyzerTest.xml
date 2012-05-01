@@ -5,8 +5,7 @@
 			<role-hint>mockManyAnalyzers</role-hint>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
-				<consumerId>analyzers</consumerId>
-				<analyzerNames>mock1,mock2,mock3</analyzerNames>
+				<analyzers>mock1,mock2,mock3</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>

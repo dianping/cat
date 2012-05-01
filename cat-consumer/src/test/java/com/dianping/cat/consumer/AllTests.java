@@ -12,10 +12,6 @@ import com.dianping.cat.consumer.transaction.TransactionReportTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-ManyAnalyzerTest.class,
-
-OneAnalyzerTwoDurationTest.class,
-
 /* .ip */
 IpReportTest.class,
 

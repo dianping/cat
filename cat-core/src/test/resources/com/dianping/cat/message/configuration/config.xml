@@ -1,4 +1,5 @@
 <config mode="client" enabled="true" dev-mode="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+   <base-log-dir>target/catlog</base-log-dir>
    <servers>
       <server ip="192.168.8.21" port="2280" enabled="true"/>
       <server ip="192.168.8.22" port="2281" enabled="false"/>
@@ -11,5 +12,4 @@
       <property name="failure-base-dir">/data/appdatas/cat/report/failure/</property>
       <property name="transaction-base-dir">/data/appdatas/cat/report/transaction/</property>
    </properties>
-   <base-log-dir>target/catlog</base-log-dir>
 </config>

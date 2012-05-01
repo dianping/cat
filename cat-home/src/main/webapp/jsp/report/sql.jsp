@@ -53,7 +53,7 @@
 			<td>${w:format(reportRecord.record.sumValue,'0')}</td>
 			<td>${w:format(reportRecord.record.longSqls,'0')}</td>
 			<td>${w:format(reportRecord.longPercent,'0.00%')}</td>
-			<td><a href='cat/r/m/${reportRecord.record.sampleLink}/logview.html'>Link</a></td>
+			<td><a href='${model.logViewBaseUri}/${reportRecord.record.sampleLink}/logview.html'>Link</a></td>
 		</tr>
 		<tr class="graphs"><td colspan="10" align="center"><div id="${status.index}" style="display:none"></div></td></tr>
 	</c:forEach> 

@@ -5,8 +5,7 @@
 			<role-hint>mock</role-hint>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
-				<consumerId>mock</consumerId>
-				<analyzerNames>mock</analyzerNames>
+				<analyzers>mock</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>

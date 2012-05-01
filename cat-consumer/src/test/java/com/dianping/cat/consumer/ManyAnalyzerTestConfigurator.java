@@ -26,8 +26,7 @@ public class ManyAnalyzerTestConfigurator extends
 
 		all.add(C(MessageConsumer.class, "mockManyAnalyzers", RealtimeConsumer.class) //
 				.req(AnalyzerFactory.class)//
-				.config(E("consumerId").value("analyzers") //
-						, E("analyzerNames").value("mock1,mock2,mock3") //
+				.config(E("analyzers").value("mock1,mock2,mock3") //
 				));
 
 		all.add(C(MessageAnalyzer.class, "mock1", MockAnalyzer1.class) //
