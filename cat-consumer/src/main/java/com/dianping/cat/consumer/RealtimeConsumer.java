@@ -182,6 +182,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				MessageQueue queue = lookup(MessageQueue.class);
 				PeriodTask task = new PeriodTask(m_factory, analyzer, queue, startTime);
 
+				task.enableLogging(m_logger);
 				m_tasks.add(task);
 			}
 		}

@@ -69,7 +69,7 @@
 			<dependency>
 				<groupId>com.site.dal</groupId>
 				<artifactId>dal-jdbc</artifactId>
-				<version>1.0.2</version>
+				<version>1.0.3</version>
 			</dependency>
 			<dependency>
 				<groupId>com.site.app</groupId>
