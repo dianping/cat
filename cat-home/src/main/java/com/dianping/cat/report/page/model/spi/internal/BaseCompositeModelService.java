@@ -112,7 +112,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		}
 
 		try {
-			semaphore.tryAcquire(count, 5000, TimeUnit.MILLISECONDS);
+			semaphore.tryAcquire(count, 10000, TimeUnit.MILLISECONDS); // 10 seconds timeout
 		} catch (InterruptedException e) {
 			// ignore it
 			t.setStatus(e);
