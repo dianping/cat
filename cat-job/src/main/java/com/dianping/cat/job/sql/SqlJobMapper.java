@@ -11,7 +11,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 
-public class SqlJobMapper extends Mapper<Object, MessageTreeWritable, SqlStatementKey, SqlStatementValue> {
+public class SqlJobMapper extends Mapper<Object, MessageTreeWritable, UrlStatementKey, UrlStatementValue> {
 
 	public static final String DEFAULT_DOMAIN = "NoDomain";
 
@@ -39,7 +39,7 @@ public class SqlJobMapper extends Mapper<Object, MessageTreeWritable, SqlStateme
 		String type = transaction.getType();
 
 		if (type.equals("SQL")) {
-			SqlStatementKey statementKey = new SqlStatementKey();
+			UrlStatementKey statementKey = new UrlStatementKey();
 			String name = transaction.getName();
 			String statement = transaction.getData().toString();
 			long duration = transaction.getDurationInMillis();
@@ -52,7 +52,7 @@ public class SqlJobMapper extends Mapper<Object, MessageTreeWritable, SqlStateme
 			long transactionTime = transaction.getTimestamp();
 			long hour = transactionTime - transactionTime % (60 * 60 * 1000);
 			int minute = (int) Math.floor((double) (transactionTime - hour) /(60* 1000.0));
-			SqlStatementValue result = new SqlStatementValue(flag, duration, tree.getMessageId(), minute);
+			UrlStatementValue result = new UrlStatementValue(flag, duration, tree.getMessageId(), minute);
 			context.write(statementKey, result);
 		}
 

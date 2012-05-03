@@ -7,7 +7,7 @@ import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 
-public class SqlStatementValue implements Writable {
+public class UrlStatementValue implements Writable {
 
 	public int m_flag;
 
@@ -17,7 +17,7 @@ public class SqlStatementValue implements Writable {
 	
 	public Text m_sampleUrl;
 	
-	public SqlStatementValue(){
+	public UrlStatementValue(){
 		m_sampleUrl = new Text();
 	}
 
@@ -37,7 +37,7 @@ public class SqlStatementValue implements Writable {
    	return m_sampleUrl;
    }
 
-	public SqlStatementValue(int flag, double value ,String url ,int minute) {
+	public UrlStatementValue(int flag, double value ,String url ,int minute) {
 		m_flag = flag;
 		m_value = value;
 		m_minute = minute;

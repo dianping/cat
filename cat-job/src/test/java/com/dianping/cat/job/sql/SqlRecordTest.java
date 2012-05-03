@@ -22,7 +22,7 @@ public class SqlRecordTest {
 
 	@Test
 	public void testBlankReplace(){
-		SqlStatementKey key = new SqlStatementKey();
+		UrlStatementKey key = new UrlStatementKey();
 		String str = "sdf		123 	\nfddf	 43	fd";
 		str = key.replaceBlank(str);
 		String temp =str.replaceAll("\\s", "*");

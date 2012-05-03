@@ -7,14 +7,14 @@ import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 
-public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
+public class UrlStatementKey implements WritableComparable<UrlStatementKey> {
 	private Text m_name;
 
 	private Text m_domain;
 
 	private Text m_statement;
 
-	public SqlStatementKey() {
+	public UrlStatementKey() {
 		m_name = new Text();
 		m_statement = new Text();
 		m_domain = new Text();
@@ -24,7 +24,7 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 		return m_name;
 	}
 
-	public SqlStatementKey setName(Text name) {
+	public UrlStatementKey setName(Text name) {
 		m_name = name;
 		return this;
 	}
@@ -33,7 +33,7 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 		return m_domain;
 	}
 
-	public SqlStatementKey setDomain(Text domain) {
+	public UrlStatementKey setDomain(Text domain) {
 		this.m_domain = domain;
 		return this;
 	}
@@ -42,7 +42,7 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 		return m_statement;
 	}
 
-	public SqlStatementKey setStatement(Text statement) {
+	public UrlStatementKey setStatement(Text statement) {
 		this.m_statement = statement;
 		return this;
 	}
@@ -62,7 +62,7 @@ public class SqlStatementKey implements WritableComparable<SqlStatementKey> {
 	}
 
 	@Override
-	public int compareTo(SqlStatementKey key) {
+	public int compareTo(UrlStatementKey key) {
 		if (m_domain.toString().equals(key.getDomain().toString())) {
 			if (m_name.toString().equals(key.getName().toString())) {
 				return 0;
