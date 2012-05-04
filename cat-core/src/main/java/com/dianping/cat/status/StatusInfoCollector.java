@@ -84,8 +84,10 @@ class StatusInfoCollector extends BaseVisitor {
    public void visitDisk(DiskInfo disk) {
 		File[] roots = File.listRoots();
 		
-		for (File root: roots) {
-			disk.addDiskVolume(new DiskVolumeInfo(root.getAbsolutePath()));
+		if (roots != null) {
+			for (File root : roots) {
+				disk.addDiskVolume(new DiskVolumeInfo(root.getAbsolutePath()));
+			}
 		}
 		
 	   super.visitDisk(disk);
