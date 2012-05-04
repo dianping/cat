@@ -165,6 +165,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 				String json = gson.toJson(report);
 				model.setMobileResponse(json);
 			}
+		case MOBILE_GRAPHS:
+			MobileGraphs graphs = showMobileGraphs(model, payload);
+			if (graphs != null) {
+				Gson gson = new Gson();
+				model.setMobileResponse(gson.toJson(graphs));
+			}
 		}
 
 		m_jspViewer.view(ctx, model);
@@ -180,6 +186,22 @@ public class Handler implements PageHandler<Context>, Initializable {
 			m_map.put(k, i);
 			k <<= 1;
 		}
+	}
+
+	private MobileGraphs showMobileGraphs(Model model, Payload payload) {
+		TransactionName name;
+
+		if (payload.getName() == null || payload.getName().length() == 0) {
+			name = getAggregatedTransactionName(payload);
+		} else {
+			name = getTransactionName(payload);
+		}
+
+		if (name == null) {
+			return null;
+		}
+		MobileGraphs graphs = new MobileGraphs().display(name);
+		return graphs;
 	}
 
 	private void showGraphs(Model model, Payload payload) {

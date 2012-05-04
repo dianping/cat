@@ -5,7 +5,9 @@ public enum Action implements com.site.web.mvc.Action {
 
 	GRAPHS("graphs"),
 	
-	MOBILE("mobile");
+	MOBILE("mobile"),
+	
+	MOBILE_GRAPHS("mobile_graph");
 
 	private String m_name;
 
