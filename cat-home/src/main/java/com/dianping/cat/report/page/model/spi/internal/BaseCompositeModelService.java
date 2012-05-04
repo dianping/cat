@@ -91,6 +91,8 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			s_threadPool.submit(new Runnable() {
 				@Override
 				public void run() {
+					Cat.setup("model-service");
+					
 					try {
 						ModelResponse<T> response = service.invoke(request);
 
@@ -104,6 +106,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 						t.setStatus(e);
 					} finally {
 						semaphore.release();
+						Cat.reset();
 					}
 				}
 			});
