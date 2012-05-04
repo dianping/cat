@@ -7,7 +7,7 @@ public class MobileGraphItem {
 
 	private String[] m_xlabel = new String[X_SIZE];
 
-	private String[] m_ylable = new String[Y_SIZE];
+	private double[] m_ylable = new double[Y_SIZE];
 
 	private double[] m_value = new double[X_SIZE];
 
@@ -20,7 +20,7 @@ public class MobileGraphItem {
 		return m_xlabel;
 	}
 
-	public String[] getYlable() {
+	public double[] getYlable() {
 		return m_ylable;
 	}
 
@@ -33,7 +33,7 @@ public class MobileGraphItem {
 		return this;
 	}
 
-	public MobileGraphItem setYlable(String[] ylable) {
+	public MobileGraphItem setYlable(double[] ylable) {
 		m_ylable = ylable;
 		return this;
 	}

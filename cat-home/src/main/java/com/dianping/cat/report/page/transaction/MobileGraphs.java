@@ -1,6 +1,5 @@
 package com.dianping.cat.report.page.transaction;
 
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,8 +25,6 @@ public class MobileGraphs {
 
 	private transient ValueTranslater m_tansalater = new DefaultValueTranslater();
 
-	private transient DecimalFormat df = new DecimalFormat("#");
-
 	public MobileGraphs() {
 		int k = 1;
 
@@ -39,7 +36,7 @@ public class MobileGraphs {
 	}
 
 	public MobileGraphs display(TransactionName name) {
-		m_name =name;
+		m_name = name;
 		creatAverageGraph();
 		creatDurationGraph();
 		creatFailureGraph();
@@ -52,15 +49,15 @@ public class MobileGraphs {
 		m_avargerTime.setTitle("Average Duration Over Time");
 		m_avargerTime.setValue(averageValues);
 		String[] xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "60" };
-		String[] ylable = new String[6];
+		double[] ylable = new double[6];
 		m_avargerTime.setXlabel(xlabel);
 		m_avargerTime.setYlable(ylable);
 		double maxValue = m_tansalater.getMaxValue(averageValues);
 		for (int i = 0; i < 6; i++) {
 			if (i == 0) {
-				ylable[0] = "";
+				ylable[0] = 0;
 			} else {
-				ylable[i] = formateNumber(maxValue / 5 * i);
+				ylable[i] = maxValue / 5 * i;
 			}
 		}
 	}
@@ -70,15 +67,15 @@ public class MobileGraphs {
 		m_duration.setTitle("Duration Distribution");
 		m_duration.setValue(averageValues);
 		String[] xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "60" };
-		String[] ylable = new String[6];
+		double[] ylable = new double[6];
 		m_duration.setXlabel(xlabel);
 		m_duration.setYlable(ylable);
 		double maxValue = m_tansalater.getMaxValue(averageValues);
 		for (int i = 0; i < 6; i++) {
 			if (i == 0) {
-				ylable[0] = "";
+				ylable[0] = 0;
 			} else {
-				ylable[i] = formateNumber(maxValue / 5 * i);
+				ylable[i] = maxValue / 5 * i;
 			}
 		}
 	}
@@ -88,15 +85,15 @@ public class MobileGraphs {
 		m_failure.setTitle("Failures Over Time");
 		m_failure.setValue(averageValues);
 		String[] xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "60" };
-		String[] ylable = new String[6];
+		double[] ylable = new double[6];
 		m_failure.setXlabel(xlabel);
 		m_failure.setYlable(ylable);
 		double maxValue = m_tansalater.getMaxValue(averageValues);
 		for (int i = 0; i < 6; i++) {
 			if (i == 0) {
-				ylable[0] = "";
+				ylable[0] = 0;
 			} else {
-				ylable[i] = formateNumber(maxValue / 5 * i);
+				ylable[i] = maxValue / 5 * i;
 			}
 		}
 	}
@@ -106,24 +103,17 @@ public class MobileGraphs {
 		m_hit.setTitle("Hits Over Time");
 		m_hit.setValue(averageValues);
 		String[] xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "60" };
-		String[] ylable = new String[6];
+		double[] ylable = new double[6];
 		m_hit.setXlabel(xlabel);
 		m_hit.setYlable(ylable);
 		double maxValue = m_tansalater.getMaxValue(averageValues);
 		for (int i = 0; i < 6; i++) {
 			if (i == 0) {
-				ylable[0] = "";
+				ylable[0] = 0;
 			} else {
-				ylable[i] = formateNumber(maxValue / 5 * i);
+				ylable[i] = maxValue / 5 * i;
 			}
 		}
-	}
-
-	private String formateNumber(double number) {
-		if (number > 1000) {
-			return df.format((number / 1000)) + 'K';
-		}
-		return df.format(number);
 	}
 
 	private double[] loadAverageValues() {
@@ -148,7 +138,7 @@ public class MobileGraphs {
 
 			if (k != null) {
 				values[k] += duration.getCount();
-			} else{
+			} else {
 				values[12] = duration.getCount();
 			}
 		}
