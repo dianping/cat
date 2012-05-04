@@ -5,6 +5,7 @@ import static com.dianping.cat.message.Message.SUCCESS;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.locks.LockSupport;
 
 import org.junit.After;
 import org.junit.Before;
@@ -23,18 +24,18 @@ public class CatPerformanceTest {
 	private int threadNumber = 4;
 
 	private static int error = 0;
-	
+
 	@Before
-	public void before(){
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+	public void before() {
+
 	}
-	
+
 	@After
-	public void after(){
-		Cat.reset();
+	public void after() {
+
 	}
-	
-	private void creatInternal(){
+
+	private void creatInternal() {
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("URL2", "WebPage");
 		String id1 = cat.createMessageId();
@@ -60,9 +61,8 @@ public class CatPerformanceTest {
 			t.complete();
 		}
 	}
-	
+
 	private void creatOneTransaction() {
-		Cat.setup("");
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("URL4", "WebPage");
 		String id1 = cat.createMessageId();
@@ -87,13 +87,85 @@ public class CatPerformanceTest {
 		} finally {
 			t.complete();
 		}
+	}
+
+	@Test
+	@Ignore
+	public void justloop() throws InterruptedException {
+		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Cat.setup("");
+					while (true) {
+						creatOneTransaction();
+						LockSupport.parkNanos(10);
+					}
+				} finally {
+					Cat.reset();
+				}
+			}
+		}).start();
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				try {
+					Cat.setup("");
+					while (true) {
+						creatOneTransaction();
+						LockSupport.parkNanos(10);
+					}
+				} finally {
+					Cat.reset();
+				}
+			}
+		}).start();
+
+		Thread.sleep(1000000);
+
+	}
+
+	@Test
+	@Ignore
+	public void justloop2() throws InterruptedException {
+		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		Cat.setup("");
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (true) {
+					creatOneTransaction();
+				}
+			}
+		}).start();
+
+		new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				while (true) {
+					creatOneTransaction();
+				}
+			}
+		}).start();
+
 		Cat.reset();
+		Thread.sleep(1000000);
+
 	}
 
 	@Ignore
 	@Test
-	public void test() {
-		Cat.initialize(null);
+	public void test() throws InterruptedException {
+		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		Cat.setup("");
 		long time = System.currentTimeMillis();
 		for (int i = 0; i < count; i++) {
 			creatOneTransaction();
@@ -101,15 +173,18 @@ public class CatPerformanceTest {
 		long endtime = System.currentTimeMillis();
 
 		System.out.println("avg:" + (double) (endtime - time) / (double) count + "ms");
-		Cat.destroy();
+		Thread.sleep(1000000);
+		Cat.reset();
 	}
 
 	@Test
 	@Ignore
-	public void testManyThread() throws IOException {
+	public void testManyThread() throws IOException, InterruptedException {
+		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		Cat.setup("");
 		System.out.println("press any key to continue...");
 		System.in.read();
-		
+
 		CountDownLatch start = new CountDownLatch(threadNumber);
 		CountDownLatch end = new CountDownLatch(threadNumber);
 		for (int i = 0; i < threadNumber; i++) {
@@ -122,8 +197,10 @@ public class CatPerformanceTest {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		System.out.println("Done with errors: " + error);
+		Thread.sleep(10000);
+		Cat.reset();
 	}
 
 	class TestThread extends Thread {
@@ -146,12 +223,11 @@ public class CatPerformanceTest {
 			}
 			long time = System.currentTimeMillis();
 			for (int i = 0; i < count; i++) {
-					creatOneTransaction();
+				creatOneTransaction();
 			}
 			long endtime = System.currentTimeMillis();
 
-			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count
-			      + "ms");
+			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count + "ms");
 			m_end.countDown();
 		}
 	}

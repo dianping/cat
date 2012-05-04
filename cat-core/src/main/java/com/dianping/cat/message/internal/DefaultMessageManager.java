@@ -36,7 +36,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	// we don't use static modifier since MessageManager is a singleton in
 	// production actually
-	private InheritableThreadLocal<Context> m_context = new InheritableThreadLocal<Context>() {
+	private ThreadLocal<Context> m_context = new ThreadLocal<Context>() {
 		@Override
 		protected Context initialValue() {
 			return null;

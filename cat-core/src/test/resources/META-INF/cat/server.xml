@@ -1,0 +1,3 @@
+<config mode="server" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+	<bind port="2280" />
+</config>
