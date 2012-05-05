@@ -7,7 +7,7 @@ public enum Action implements com.site.web.mvc.Action {
 	
 	MOBILE("mobile"),
 	
-	MOBILE_GRAPHS("mobile_graph");
+	MOBILE_GRAPHS("mobile_graphs");
 
 	private String m_name;
 

@@ -42,10 +42,10 @@ public class MobileGraphItem {
 		if (value.length == X_SIZE) {
 			m_value = value;
 		} else if (value.length == X_SIZE - 1) {
-			m_xlabel[0] = String.valueOf(value[0]);
-			m_xlabel[X_SIZE - 1] = String.valueOf(value[X_SIZE - 2]);
+			m_value[0] = value[0];
+			m_value[X_SIZE - 1] = value[X_SIZE - 2];
 			for (int i = 1; i < X_SIZE - 1; i++) {
-				m_xlabel[i] = String.valueOf((value[i] + value[i - 1]) / 2);
+				m_value[i] = (value[i] + value[i - 1]) / 2;
 			}
 		}
 		return this;

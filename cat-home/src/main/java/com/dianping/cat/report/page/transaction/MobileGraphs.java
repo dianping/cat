@@ -25,6 +25,7 @@ public class MobileGraphs {
 
 	private transient ValueTranslater m_tansalater = new DefaultValueTranslater();
 
+	private transient String[] m_xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50","55","60" };
 	public MobileGraphs() {
 		int k = 1;
 
@@ -48,9 +49,9 @@ public class MobileGraphs {
 		double[] averageValues = loadAverageValues();
 		m_avargerTime.setTitle("Average Duration Over Time");
 		m_avargerTime.setValue(averageValues);
-		String[] xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "60" };
+		
 		double[] ylable = new double[6];
-		m_avargerTime.setXlabel(xlabel);
+		m_avargerTime.setXlabel(m_xlabel);
 		m_avargerTime.setYlable(ylable);
 		double maxValue = m_tansalater.getMaxValue(averageValues);
 		for (int i = 0; i < 6; i++) {
@@ -66,7 +67,7 @@ public class MobileGraphs {
 		double[] averageValues = loadDurationValues();
 		m_duration.setTitle("Duration Distribution");
 		m_duration.setValue(averageValues);
-		String[] xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "60" };
+		String[] xlabel = { "0", "1", "2", "4", "8", "16", "32", "64", "128", "256", "512", "1024" ,"2048" };
 		double[] ylable = new double[6];
 		m_duration.setXlabel(xlabel);
 		m_duration.setYlable(ylable);
@@ -84,9 +85,8 @@ public class MobileGraphs {
 		double[] averageValues = loadFailureValues();
 		m_failure.setTitle("Failures Over Time");
 		m_failure.setValue(averageValues);
-		String[] xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "60" };
 		double[] ylable = new double[6];
-		m_failure.setXlabel(xlabel);
+		m_failure.setXlabel(m_xlabel);
 		m_failure.setYlable(ylable);
 		double maxValue = m_tansalater.getMaxValue(averageValues);
 		for (int i = 0; i < 6; i++) {
@@ -102,9 +102,8 @@ public class MobileGraphs {
 		double[] averageValues = loadHitValues();
 		m_hit.setTitle("Hits Over Time");
 		m_hit.setValue(averageValues);
-		String[] xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "60" };
 		double[] ylable = new double[6];
-		m_hit.setXlabel(xlabel);
+		m_hit.setXlabel(m_xlabel);
 		m_hit.setYlable(ylable);
 		double maxValue = m_tansalater.getMaxValue(averageValues);
 		for (int i = 0; i < 6; i++) {

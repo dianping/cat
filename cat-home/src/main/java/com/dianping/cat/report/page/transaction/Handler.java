@@ -165,12 +165,14 @@ public class Handler implements PageHandler<Context>, Initializable {
 				String json = gson.toJson(report);
 				model.setMobileResponse(json);
 			}
+			break;
 		case MOBILE_GRAPHS:
 			MobileGraphs graphs = showMobileGraphs(model, payload);
 			if (graphs != null) {
 				Gson gson = new Gson();
 				model.setMobileResponse(gson.toJson(graphs));
 			}
+			break;
 		}
 
 		m_jspViewer.view(ctx, model);
