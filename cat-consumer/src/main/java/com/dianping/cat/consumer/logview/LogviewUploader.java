@@ -59,6 +59,8 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 
 	private boolean m_localMode = true;
 
+	private int m_batchSize = 100; // 100 logview per batch
+
 	private boolean m_active;
 
 	private Logger m_logger;
@@ -118,6 +120,10 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		}
 	}
 
+	public void setBatchSize(int batchSize) {
+		m_batchSize = batchSize;
+	}
+
 	@Override
 	public void shutdown() {
 		m_active = false;
@@ -125,7 +131,6 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 
 	private void upload(long timestamp, LocalLogviewBucket bucket) throws DalException {
 		List<String> batchIds = new ArrayList<String>();
-		int batchSize = 50;
 
 		Cat.setup("LogviewUploader");
 
@@ -133,6 +138,7 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		String ts = new SimpleDateFormat("mmss").format(new Date());
 		Transaction root = cat.newTransaction("Task", "Logview-" + ip + "-" + ts);
+		int count = 0;
 
 		root.addData("logview", bucket.getLogicalPath());
 		root.setStatus(Message.SUCCESS);
@@ -143,14 +149,14 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 			for (String id : bucket.getIds()) {
 				batchIds.add(id);
 
-				if (batchIds.size() >= batchSize) {
-					uploadIndex(batchIds, timestamp, bucket);
+				if (batchIds.size() >= m_batchSize) {
+					count += uploadIndex(batchIds, timestamp, bucket);
 					batchIds.clear();
 				}
 			}
 
 			if (batchIds.size() > 0) {
-				uploadIndex(batchIds, timestamp, bucket);
+				count += uploadIndex(batchIds, timestamp, bucket);
 			}
 		} catch (DalException e) {
 			cat.logError(e);
@@ -160,6 +166,7 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 			root.setStatus(e);
 			throw e;
 		} finally {
+			root.addData("count", count);
 			root.complete();
 			Cat.reset();
 		}
@@ -174,16 +181,16 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 
 			MessageProducer cat = Cat.getProducer();
 			Transaction t = cat.newTransaction("Task", "UploadLogview");
-			
+
 			try {
 				FileSystem fs = m_fileSystemManager.getFileSystem("logview", sb);
 				String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				
+
 				path = new Path(sb.toString(), logicalPath + "-" + ipAddress);
 
 				t.addData("file", file);
 				t.addData("hdfs-path", path);
-				
+
 				FileInputStream fis = new FileInputStream(file);
 				FSDataOutputStream fdos = fs.create(path);
 
@@ -199,7 +206,7 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 				t.addData("size", size);
 				t.addData("speed", speed);
 				t.setStatus(Message.SUCCESS);
-				
+
 				m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.",
 				      file.getCanonicalPath(), path, size, speed));
 			} catch (AccessControlException e) {
@@ -216,7 +223,7 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		}
 	}
 
-	private void uploadIndex(List<String> ids, long timestamp, LocalLogviewBucket bucket) throws DalException {
+	private int uploadIndex(List<String> ids, long timestamp, LocalLogviewBucket bucket) throws DalException {
 		int len = ids.size();
 		List<Logview> logviews = new ArrayList<Logview>();
 		Date date = new Date(timestamp);
@@ -240,6 +247,7 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		}
 
 		m_logviewDao.insert(logviews.toArray(new Logview[0]));
+		return logviews.size();
 	}
 
 	static class TodoList {

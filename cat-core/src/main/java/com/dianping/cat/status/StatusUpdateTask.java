@@ -5,6 +5,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -39,13 +40,24 @@ public class StatusUpdateTask implements Task, Initializable {
 		Cat.setup("StatusUpdateTask");
 
 		while (m_active) {
-			long start = MilliSecondTimer.currentTimeMillis();
 			MessageProducer cat = Cat.getProducer();
+			long start = MilliSecondTimer.currentTimeMillis();
 			Transaction t = cat.newTransaction("Task", "Status");
+			Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
 			StatusInfo status = new StatusInfo();
 
-			status.accept(new StatusInfoCollector(m_statistics));
-			cat.logHeartbeat("Heartbeat", m_ipAddress, Message.SUCCESS, status.toString());
+			try {
+				status.accept(new StatusInfoCollector(m_statistics));
+
+				h.addData(status.toString());
+				h.setStatus(Message.SUCCESS);
+			} catch (Throwable e) {
+				h.setStatus(e);
+				cat.logError(e);
+			} finally {
+				h.complete();
+			}
+
 			t.setStatus(Message.SUCCESS);
 			t.complete();
 

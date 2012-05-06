@@ -10,12 +10,6 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
 import com.site.helper.Files;
 
 public class TransactionReportTest {
-	/**
-	 * <range minute="5" count="123" sum="123456" avg="22.2" transactions="3"/>
-	 * <range minute="10" count="123" sum="12457" avg="222" transactions="3"/>
-	 * <duration value="128" count="34"/> <duration value="256" count="12"/>
-	 */
-
 	@Test
 	public void testXml() throws Exception {
 		DefaultXmlParser parser = new DefaultXmlParser();
@@ -38,5 +32,4 @@ public class TransactionReportTest {
 		Assert.assertEquals("XML is not well parsed or JSON is not well built!", expected.replace("\r", ""),
 		      json.replace("\r", ""));
 	}
-
 }
