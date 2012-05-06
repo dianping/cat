@@ -11,49 +11,49 @@ import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
 
 public class DisplayHeartbeat {
-	public static final int K = 1024;
+	private static final int K = 1024;
 
-	public List<Period> m_periods = new ArrayList<Period>();
+	private List<Period> m_periods = new ArrayList<Period>();
 
-	public double[] m_activeThreads = new double[60];
+	private double[] m_activeThreads = new double[60];
 
-	public double[] m_daemonThreads = new double[60];
+	private double[] m_daemonThreads = new double[60];
 
-	public double[] m_totalThreads = new double[60];
+	private double[] m_totalThreads = new double[60];
 
-	public double[] m_newThreads = new double[60];
+	private double[] m_newThreads = new double[60];
 
-	public double[] m_catThreads = new double[60];
+	private double[] m_catThreads = new double[60];
 
-	public double[] m_pigeonTheads = new double[60];
+	private double[] m_pigeonTheads = new double[60];
 
-	public double[] m_catMessageProduced = new double[60];
+	private double[] m_catMessageProduced = new double[60];
 
-	public double[] m_addCatMessageProduced = new double[60];
+	private double[] m_addCatMessageProduced = new double[60];
 
-	public double[] m_catMessageOverflow = new double[60];
+	private double[] m_catMessageOverflow = new double[60];
 
-	public double[] m_addCatMessageOverflow = new double[60];
+	private double[] m_addCatMessageOverflow = new double[60];
 
-	public double[] m_catMessageSize = new double[60];
+	private double[] m_catMessageSize = new double[60];
 
-	public double[] m_addCatMessageSize = new double[60];
+	private double[] m_addCatMessageSize = new double[60];
 
-	public double[] m_newGcCount = new double[60];
+	private double[] m_newGcCount = new double[60];
 
-	public double[] m_oldGcCount = new double[60];
+	private double[] m_oldGcCount = new double[60];
 
-	public double[] m_addNewGcCount = new double[60];
+	private double[] m_addNewGcCount = new double[60];
 
-	public double[] m_addOldGcCount = new double[60];
+	private double[] m_addOldGcCount = new double[60];
 
-	public double[] m_heapUsage = new double[60];
+	private double[] m_heapUsage = new double[60];
 
-	public double[] m_noneHeapUsage = new double[60];
+	private double[] m_noneHeapUsage = new double[60];
 
-	public double[] m_memoryFree = new double[60];
+	private double[] m_memoryFree = new double[60];
 
-	public double[] m_systemLoadAverage = new double[60];
+	private double[] m_systemLoadAverage = new double[60];
 
 	private GraphBuilder m_builder;
 
@@ -156,6 +156,90 @@ public class DisplayHeartbeat {
 		return result;
 	}
 
+	public double[] getActiveThreads() {
+   	return m_activeThreads;
+   }
+
+	public double[] getDaemonThreads() {
+   	return m_daemonThreads;
+   }
+
+	public double[] getTotalThreads() {
+   	return m_totalThreads;
+   }
+
+	public double[] getNewThreads() {
+   	return m_newThreads;
+   }
+
+	public double[] getCatThreads() {
+   	return m_catThreads;
+   }
+
+	public double[] getPigeonTheads() {
+   	return m_pigeonTheads;
+   }
+
+	public double[] getCatMessageProduced() {
+   	return m_catMessageProduced;
+   }
+
+	public double[] getAddCatMessageProduced() {
+   	return m_addCatMessageProduced;
+   }
+
+	public double[] getCatMessageOverflow() {
+   	return m_catMessageOverflow;
+   }
+
+	public double[] getAddCatMessageOverflow() {
+   	return m_addCatMessageOverflow;
+   }
+
+	public double[] getCatMessageSize() {
+   	return m_catMessageSize;
+   }
+
+	public double[] getAddCatMessageSize() {
+   	return m_addCatMessageSize;
+   }
+
+	public double[] getNewGcCount() {
+   	return m_newGcCount;
+   }
+
+	public double[] getOldGcCount() {
+   	return m_oldGcCount;
+   }
+
+	public double[] getAddNewGcCount() {
+   	return m_addNewGcCount;
+   }
+
+	public double[] getAddOldGcCount() {
+   	return m_addOldGcCount;
+   }
+
+	public double[] getHeapUsage() {
+   	return m_heapUsage;
+   }
+
+	public double[] getNoneHeapUsage() {
+   	return m_noneHeapUsage;
+   }
+
+	public double[] getMemoryFree() {
+   	return m_memoryFree;
+   }
+
+	public double[] getSystemLoadAverage() {
+   	return m_systemLoadAverage;
+   }
+
+	public GraphBuilder getBuilder() {
+   	return m_builder;
+   }
+
 	public String getCatMessageOverflowGraph() {
 		return m_builder.build(new HeartbeatPayload(1, "Cat Message Overflow / Minute", "Minute", "Count",
 		      m_addCatMessageOverflow));
@@ -186,6 +270,42 @@ public class DisplayHeartbeat {
 		} else {
 			return 0;
 		}
+	}
+
+	public List<String> getDiskNames() {
+		List<String> result = new ArrayList<String>();
+		
+		if (!m_periods.isEmpty()) {
+			List<Disk> disks = m_periods.get(0).getDisks();
+			int len = disks.size();
+			
+			for (int i = 0; i < len; i++) {
+				String path = disks.get(i).getPath();
+				result.add(path);
+			}
+		}
+		return result;
+	}
+
+	public List<double[]> getDiskValues() {
+		List<double[]> result = new ArrayList<double[]>();
+		if (!m_periods.isEmpty()) {
+			List<Disk> disks = m_periods.get(0).getDisks();
+			int len = disks.size();
+
+			for (int i = 0; i < len; i++) {
+				double[] values = new double[60];
+
+				for (Period period : m_periods) {
+					int minute = period.getMinute();
+					Disk disk = period.getDisks().get(i);
+
+					values[minute] = disk.getFree() / K / K / K;
+				}
+				result.add(values);
+			}
+		}
+		return result;
 	}
 
 	public String getDisksGraph() {

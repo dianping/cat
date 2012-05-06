@@ -159,10 +159,34 @@ public class Handler implements PageHandler<Context>, Initializable {
 				String json = gson.toJson(report);
 				model.setMobileResponse(json);
 			}
+			break;
+		case MOBILE_GRAPHS:
+			MobileEventGraphs graphs = showMobileGraphs(model, payload);
+			if (graphs != null) {
+				Gson gson = new Gson();
+				model.setMobileResponse(gson.toJson(graphs));
+			}
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
 
+	private MobileEventGraphs showMobileGraphs(Model model, Payload payload) {
+		EventName name;
+
+		if (payload.getName() == null || payload.getName().length() == 0) {
+			name = getAggregatedEventName(payload);
+		} else {
+			name = getEventName(payload);
+		}
+
+		if (name == null) {
+			return null;
+		}
+		MobileEventGraphs graphs = new MobileEventGraphs().display(name);
+		return graphs;
+	}
+	
 	@Override
 	public void initialize() throws InitializationException {
 		int k = 1;

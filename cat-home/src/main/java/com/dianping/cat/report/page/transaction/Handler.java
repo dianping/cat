@@ -167,7 +167,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 			}
 			break;
 		case MOBILE_GRAPHS:
-			MobileGraphs graphs = showMobileGraphs(model, payload);
+			MobileTransactionGraphs graphs = showMobileGraphs(model, payload);
 			if (graphs != null) {
 				Gson gson = new Gson();
 				model.setMobileResponse(gson.toJson(graphs));
@@ -190,7 +190,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 	}
 
-	private MobileGraphs showMobileGraphs(Model model, Payload payload) {
+	private MobileTransactionGraphs showMobileGraphs(Model model, Payload payload) {
 		TransactionName name;
 
 		if (payload.getName() == null || payload.getName().length() == 0) {
@@ -202,7 +202,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		if (name == null) {
 			return null;
 		}
-		MobileGraphs graphs = new MobileGraphs().display(name);
+		MobileTransactionGraphs graphs = new MobileTransactionGraphs().display(name);
 		return graphs;
 	}
 

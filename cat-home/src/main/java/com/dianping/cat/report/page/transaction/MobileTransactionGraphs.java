@@ -7,9 +7,10 @@ import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
+import com.dianping.cat.report.graph.MobileGraphItem;
 import com.dianping.cat.report.graph.ValueTranslater;
 
-public class MobileGraphs {
+public class MobileTransactionGraphs {
 
 	private MobileGraphItem m_duration = new MobileGraphItem();
 
@@ -25,18 +26,20 @@ public class MobileGraphs {
 
 	private transient ValueTranslater m_tansalater = new DefaultValueTranslater();
 
-	private transient String[] m_xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50","55","60" };
-	public MobileGraphs() {
+	private transient String[] m_xlabel = { "0", "5", "10", "15", "20", "25",
+			"30", "35", "40", "45", "50", "55", "60" };
+
+	public MobileTransactionGraphs() {
 		int k = 1;
 
 		m_map.put(0, 0);
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 13; i++) {
 			m_map.put(k, i);
 			k <<= 1;
 		}
 	}
 
-	public MobileGraphs display(TransactionName name) {
+	public MobileTransactionGraphs display(TransactionName name) {
 		m_name = name;
 		creatAverageGraph();
 		creatDurationGraph();
@@ -49,7 +52,7 @@ public class MobileGraphs {
 		double[] averageValues = loadAverageValues();
 		m_avargerTime.setTitle("Average Duration Over Time");
 		m_avargerTime.setValue(averageValues);
-		
+
 		double[] ylable = new double[6];
 		m_avargerTime.setXlabel(m_xlabel);
 		m_avargerTime.setYlable(ylable);
@@ -67,7 +70,8 @@ public class MobileGraphs {
 		double[] averageValues = loadDurationValues();
 		m_duration.setTitle("Duration Distribution");
 		m_duration.setValue(averageValues);
-		String[] xlabel = { "0", "1", "2", "4", "8", "16", "32", "64", "128", "256", "512", "1024" ,"2048" };
+		String[] xlabel = { "0", "1", "2", "4", "8", "16", "32", "64", "128",
+				"256", "512", "1024", "2048", "4096" };
 		double[] ylable = new double[6];
 		m_duration.setXlabel(xlabel);
 		m_duration.setYlable(ylable);
@@ -129,7 +133,7 @@ public class MobileGraphs {
 	}
 
 	protected double[] loadDurationValues() {
-		double[] values = new double[13];
+		double[] values = new double[14];
 
 		for (Duration duration : m_name.getDurations()) {
 			int d = duration.getValue();
@@ -138,7 +142,7 @@ public class MobileGraphs {
 			if (k != null) {
 				values[k] += duration.getCount();
 			} else {
-				values[12] = duration.getCount();
+				values[13] = duration.getCount();
 			}
 		}
 
@@ -169,5 +173,21 @@ public class MobileGraphs {
 		}
 
 		return values;
+	}
+
+	public MobileGraphItem getDuration() {
+		return m_duration;
+	}
+
+	public MobileGraphItem getHit() {
+		return m_hit;
+	}
+
+	public MobileGraphItem getAvargerTime() {
+		return m_avargerTime;
+	}
+
+	public MobileGraphItem getFailure() {
+		return m_failure;
 	}
 }
