@@ -71,7 +71,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setAction(Action.VIEW);
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.LOGVIEW);
 		model.setDomain(payload.getDomain());
 		model.setLongDate(payload.getDate());
@@ -79,7 +79,15 @@ public class Handler implements PageHandler<Context> {
 		String messageId = getMessageId(payload);
 		String logView = getLogView(messageId, payload.getDirection(), payload.getTag());
 
-		model.setTable(logView);
+		switch (payload.getAction()) {
+		case VIEW:
+			model.setTable(logView);
+			break;
+		case MOBILE:
+			model.setMobileResponse(logView);
+			break;
+		}
+
 		m_jspViewer.view(ctx, model);
 	}
 }

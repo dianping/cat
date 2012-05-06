@@ -28,6 +28,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@Override
 	public Action getAction() {
+		if (m_action == null) {
+			return Action.VIEW;
+		}
 		return m_action;
 	}
 
@@ -59,8 +62,8 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_showHeader;
 	}
 
-	public void setAction(Action action) {
-		m_action = action;
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	public void setPath(String[] path) {

@@ -10,6 +10,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_domain;
 
+	private String m_mobileResponse;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -40,4 +42,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTable(String table) {
 		m_table = table;
 	}
+
+	public String getMobileResponse() {
+   	return m_mobileResponse;
+   }
+
+	public void setMobileResponse(String mobileResponse) {
+   	m_mobileResponse = mobileResponse;
+   }
 }
