@@ -147,8 +147,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			}
 		}
 
-		m_future.getChannel().getCloseFuture().awaitUninterruptibly();
-		m_factory.releaseExternalResources();
+		if (m_future != null) {
+			m_future.getChannel().getCloseFuture().awaitUninterruptibly();
+		}
+
+		if (m_factory != null) {
+			m_factory.releaseExternalResources();
+		}
 	}
 
 	boolean checkWritable() {

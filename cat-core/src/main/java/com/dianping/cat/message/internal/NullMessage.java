@@ -10,93 +10,93 @@ import com.dianping.cat.message.Transaction;
 
 public enum NullMessage implements Transaction, Event, Heartbeat {
 	TRANSACTION,
-	
+
 	EVENT,
-	
+
 	HEARTBEAT;
 
 	@Override
-   public void addData(String keyValuePairs) {
-   }
+	public void addData(String keyValuePairs) {
+	}
 
 	@Override
-   public void addData(String key, Object value) {
-   }
+	public void addData(String key, Object value) {
+	}
 
 	@Override
-   public void complete() {
-   }
+	public void complete() {
+	}
 
 	@Override
-   public Object getData() {
-	   return null;
-   }
+	public Object getData() {
+		return null;
+	}
 
 	@Override
-   public String getName() {
-	  throw new UnsupportedOperationException();
-   }
-
-	@Override
-   public String getStatus() {
+	public String getName() {
 		throw new UnsupportedOperationException();
-   }
+	}
 
 	@Override
-   public long getTimestamp() {
+	public String getStatus() {
 		throw new UnsupportedOperationException();
-   }
+	}
 
 	@Override
-   public String getType() {
+	public long getTimestamp() {
 		throw new UnsupportedOperationException();
-   }
+	}
 
 	@Override
-   public boolean isCompleted() {
-	   return true;
-   }
+	public String getType() {
+		throw new UnsupportedOperationException();
+	}
 
 	@Override
-   public boolean isSuccess() {
-	   return true;
-   }
+	public boolean isCompleted() {
+		return true;
+	}
 
 	@Override
-   public void setStatus(String status) {
-   }
+	public boolean isSuccess() {
+		return true;
+	}
 
 	@Override
-   public void setStatus(Throwable e) {
-   }
+	public void setStatus(String status) {
+	}
 
 	@Override
-   public Transaction addChild(Message message) {
-	   return this;
-   }
+	public void setStatus(Throwable e) {
+	}
 
 	@Override
-   public List<Message> getChildren() {
-	   return Collections.emptyList();
-   }
+	public Transaction addChild(Message message) {
+		return this;
+	}
 
 	@Override
-   public boolean hasChildren() {
-	   return false;
-   }
+	public List<Message> getChildren() {
+		return Collections.emptyList();
+	}
 
 	@Override
-   public long getDurationInMillis() {
-	   return 0;
-   }
-	
+	public boolean hasChildren() {
+		return false;
+	}
+
+	@Override
+	public long getDurationInMillis() {
+		return 0;
+	}
+
 	@Override
 	public long getDurationInMicros() {
 		return 0;
 	}
 
 	@Override
-   public boolean isStandalone() {
-	   return true;
-   }
+	public boolean isStandalone() {
+		return true;
+	}
 }

@@ -51,7 +51,8 @@ public class Cat {
 	static Cat getInstance() {
 		synchronized (s_instance) {
 			if (!s_instance.m_initialized) {
-				throw new RuntimeException("Cat has not been initialized yet, please call Cat.initialize(...) first!");
+				initialize(null);
+				s_instance.m_logger.warn("Please call Cat.initialize(...) at application level first to enable it!");
 			}
 		}
 
@@ -85,7 +86,8 @@ public class Cat {
 					s_instance.setContainer(container);
 					s_instance.m_initialized = true;
 				} else {
-					throw new RuntimeException("Cat has already been initialized before!");
+					s_instance.m_logger.warn(String.format("Cat can't initialize again with config file(%s), IGNORED!", configFile));
+					return;
 				}
 			}
 		}
@@ -97,7 +99,7 @@ public class Cat {
 
 		if (config != null) {
 			instance.m_manager.initializeClient(config);
-			instance.m_logger.info("Cat client is initialized!");
+			instance.m_logger.info(String.format("Cat client is initialized with config file(%s)!", configFile));
 		} else {
 			instance.m_manager.initializeClient(null);
 			instance.m_logger.warn("Cat client is disabled due to no config file found!");
@@ -123,7 +125,7 @@ public class Cat {
 
 					globalConfig = new DefaultXmlParser().parse(xml);
 				} else {
-					getInstance().m_logger.warn(String.format("Global config file(%s) not found, IGNORED.", configFile));
+					s_instance.m_logger.warn(String.format("Global config file(%s) not found, IGNORED.", configFile));
 				}
 			}
 

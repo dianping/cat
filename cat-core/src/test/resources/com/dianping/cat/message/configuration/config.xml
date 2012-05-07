@@ -5,8 +5,8 @@
       <server ip="192.168.8.22" port="2281" enabled="false"/>
       <server ip="192.168.8.23" port="2280" enabled="true"/>
    </servers>
-   <domain id="Group" enabled="true"/>
-   <domain id="Review" ip="192.168.8.1" enabled="false"/>
+   <domain id="Group" max-threads="500" enabled="true"/>
+   <domain id="Review" ip="192.168.8.1" max-threads="500" enabled="false"/>
    <bind ip="192.168.8.21" port="2280"/>
    <properties>
       <property name="failure-base-dir">/data/appdatas/cat/report/failure/</property>

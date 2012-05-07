@@ -22,16 +22,16 @@ import com.dianping.cat.message.CatTestCase;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.io.InMemoryQueue;
-import com.dianping.cat.message.io.InMemorySender;
+import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Files;
+import com.site.helper.Reflects;
 
 @RunWith(JUnit4.class)
 public class MessageProducerTest extends CatTestCase {
-	private InMemoryQueue m_queue;
+	private DefaultMessageQueue m_queue;
 
 	@BeforeClass
 	public static void beforeClass() throws IOException {
@@ -54,9 +54,10 @@ public class MessageProducerTest extends CatTestCase {
 		Cat.setup(null);
 
 		TransportManager manager = Cat.lookup(TransportManager.class);
-		InMemoryQueue queue = ((InMemorySender) manager.getSender()).getQueue();
+		DefaultMessageQueue queue = Reflects.forField().getDeclaredFieldValue(manager.getSender().getClass(), "m_queue",
+		      manager.getSender());
 
-		queue.clear();
+		queue.initialize();
 		m_queue = queue;
 	}
 
@@ -89,7 +90,7 @@ public class MessageProducerTest extends CatTestCase {
 		// please stop CAT server when you run this test case
 		Assert.assertEquals("One message should be in the queue.", 1, m_queue.size());
 
-		MessageTree tree = m_queue.peek();
+		MessageTree tree = m_queue.poll();
 		Message m = tree.getMessage();
 
 		Assert.assertTrue(Transaction.class.isAssignableFrom(m.getClass()));
@@ -136,7 +137,7 @@ public class MessageProducerTest extends CatTestCase {
 		// please stop CAT server when you run this test case
 		Assert.assertEquals("One message should be in the queue.", 1, m_queue.size());
 
-		MessageTree tree = m_queue.peek();
+		MessageTree tree = m_queue.poll();
 
 		MessageCodec codec = Cat.lookup(MessageCodec.class, "plain-text");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(4 * 1024);

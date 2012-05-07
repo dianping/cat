@@ -1,5 +1,6 @@
 package com.dianping.cat.message.internal;
 
+import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -82,7 +83,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		if (m_manager != null) {
 			MessageSender sender = m_manager.getSender();
 
-			if (sender != null) {
+			if (sender != null && !shouldThrottle(tree)) {
 				sender.send(tree);
 
 				if (m_statistics != null) {
@@ -210,6 +211,16 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		m_context.set(ctx);
+	}
+
+	boolean shouldThrottle(MessageTree tree) {
+		if (tree.getMessage() != null && tree.getMessage().getName().equals("Heartbeat")) {
+			return false;
+		}
+
+		int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
+
+		return threadCount > m_domain.getMaxThreads();
 	}
 
 	@Override

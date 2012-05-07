@@ -17,6 +17,7 @@
   <entity name="domain">
     <attribute name="id" value-type="String" />
     <attribute name="ip" value-type="String" />
+    <attribute name="max-threads" value-type="int" />
     <attribute name="enabled" value-type="boolean" />
   </entity>
   <entity name="bind">
