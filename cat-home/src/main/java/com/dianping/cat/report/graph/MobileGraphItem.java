@@ -1,15 +1,12 @@
-package com.dianping.cat.report.page.transaction;
+package com.dianping.cat.report.graph;
 
 public class MobileGraphItem {
-	private static final int X_SIZE = 13;
 
-	private static final int Y_SIZE = 6;
+	private String[] m_xlabel;
 
-	private String[] m_xlabel = new String[X_SIZE];
+	private double[] m_ylable;
 
-	private double[] m_ylable = new double[Y_SIZE];
-
-	private double[] m_value = new double[X_SIZE];
+	private double[] m_value;
 
 	private String m_title;
 
@@ -39,15 +36,7 @@ public class MobileGraphItem {
 	}
 
 	public MobileGraphItem setValue(double[] value) {
-		if (value.length == X_SIZE) {
-			m_value = value;
-		} else if (value.length == X_SIZE - 1) {
-			m_xlabel[0] = String.valueOf(value[0]);
-			m_xlabel[X_SIZE - 1] = String.valueOf(value[X_SIZE - 2]);
-			for (int i = 1; i < X_SIZE - 1; i++) {
-				m_xlabel[i] = String.valueOf((value[i] + value[i - 1]) / 2);
-			}
-		}
+		m_value = value;
 		return this;
 	}
 
@@ -59,4 +48,14 @@ public class MobileGraphItem {
 		m_title = title;
 	}
 
+	public void setMaxValue(double maxValue) {
+		m_ylable = new double[6];
+		for (int i = 0; i < 6; i++) {
+			if (i == 0) {
+				m_ylable[0] = 0;
+			} else {
+				m_ylable[i] = maxValue / 5 * i;
+			}
+		}
+	}
 }

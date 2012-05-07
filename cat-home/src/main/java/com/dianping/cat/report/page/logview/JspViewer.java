@@ -16,6 +16,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			} else {
 				return JspFile.LOGVIEW_NO_HEADER.getPath();
 			}
+		case MOBILE:
+			return JspFile.MOBILE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

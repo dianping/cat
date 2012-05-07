@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.logview;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view");
+	VIEW("view"), MOBILE("mobile");
 
 	private String m_name;
 
