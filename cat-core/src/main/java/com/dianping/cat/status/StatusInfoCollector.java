@@ -81,17 +81,23 @@ class StatusInfoCollector extends BaseVisitor {
 	}
 
 	@Override
-   public void visitDisk(DiskInfo disk) {
+	public void visitDisk(DiskInfo disk) {
 		File[] roots = File.listRoots();
-		
+
 		if (roots != null) {
 			for (File root : roots) {
 				disk.addDiskVolume(new DiskVolumeInfo(root.getAbsolutePath()));
 			}
 		}
-		
-	   super.visitDisk(disk);
-   }
+
+		File data = new File("/data");
+
+		if (data.exists()) {
+			disk.addDiskVolume(new DiskVolumeInfo(data.getAbsolutePath()));
+		}
+
+		super.visitDisk(disk);
+	}
 
 	@Override
 	public void visitDiskVolume(DiskVolumeInfo diskVolume) {
@@ -112,7 +118,7 @@ class StatusInfoCollector extends BaseVisitor {
 		memory.setFree(runtime.freeMemory());
 		memory.setHeapUsage(bean.getHeapMemoryUsage().getUsed());
 		memory.setNonHeapUsage(bean.getNonHeapMemoryUsage().getUsed());
-		
+
 		List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
 		for (GarbageCollectorMXBean mxbean : beans) {
 			if (mxbean.isValid()) {
