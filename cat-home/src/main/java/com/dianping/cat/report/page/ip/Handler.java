@@ -23,6 +23,7 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -80,12 +81,18 @@ public class Handler implements PageHandler<Context> {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 
-		model.setAction(Action.VIEW);
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.IP);
 
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);
+			break;
+		case MOBILE:
+			showReport(model, payload);
+			Gson gson = new Gson();
+			MobileModel mobileModel = new MobileModel().setDisplayModels(model.getDisplayModels());
+			model.setMobileResponse(gson.toJson(mobileModel));
 			break;
 		}
 

@@ -153,5 +153,4 @@ public class SqlReport {
 			return 0;
 		}
 	}
-
 }

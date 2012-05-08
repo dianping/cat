@@ -18,8 +18,8 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public void setAction(Action action) {
-		m_action = action;
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	@Override
