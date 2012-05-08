@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.ip.model.entity.Ip;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.entity.Period;
 import com.dianping.cat.consumer.ip.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.ip.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.ip.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Event;
@@ -87,7 +87,7 @@ public class TopIpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements 
 	}
 
 	private void loadReports() {
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		Bucket<String> reportBucket = null;
 
 		try {

@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.model.heartbeat;
 
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -35,6 +35,6 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "heartbeat");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultXmlParser().parse(xml);
+		return xml == null ? null : new DefaultDomParser().parse(xml);
 	}
 }

@@ -17,7 +17,7 @@ import com.dianping.cat.configuration.server.entity.LongUrl;
 import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
-import com.dianping.cat.configuration.server.transform.DefaultXmlParser;
+import com.dianping.cat.configuration.server.transform.DefaultDomParser;
 import com.site.helper.Files;
 import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
@@ -167,7 +167,7 @@ public class ServerConfigManager implements LogEnabled {
 			m_logger.info(String.format("Loading configuration file(%s) ...", configFile.getCanonicalPath()));
 
 			String xml = Files.forIO().readFrom(configFile, "utf-8");
-			ServerConfig config = new DefaultXmlParser().parse(xml);
+			ServerConfig config = new DefaultDomParser().parse(xml);
 
 			// do validation
 			config.accept(new ServerConfigValidator());

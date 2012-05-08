@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -43,7 +43,7 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 	private EventReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		EventReportMerger merger = null;
 
 		for (Report report : reports) {
@@ -64,6 +64,6 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "event");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultXmlParser().parse(xml);
+		return xml == null ? null : new DefaultDomParser().parse(xml);
 	}
 }

@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Heartbeat;
@@ -92,7 +92,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		StatusInfo info = null;
 
 		try {
-			info = new com.dianping.cat.status.model.transform.DefaultXmlParser().parse(xml);
+			info = new com.dianping.cat.status.model.transform.DefaultDomParser().parse(xml);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
@@ -172,7 +172,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	private void loadReports() {
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		Bucket<String> reportBucket = null;
 
 		try {

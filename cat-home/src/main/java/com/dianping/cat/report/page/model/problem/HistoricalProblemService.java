@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultMerger;
-import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -44,7 +44,7 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	private ProblemReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		DefaultMerger merger = null;
 
 		for (Report report : reports) {
@@ -65,6 +65,6 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "problem");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultXmlParser().parse(xml);
+		return xml == null ? null : new DefaultDomParser().parse(xml);
 	}
 }

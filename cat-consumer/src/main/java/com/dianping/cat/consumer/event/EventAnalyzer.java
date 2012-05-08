@@ -18,7 +18,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.event.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Event;
@@ -83,7 +83,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	private void loadReports() {
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		Bucket<String> reportBucket = null;
 
 		try {

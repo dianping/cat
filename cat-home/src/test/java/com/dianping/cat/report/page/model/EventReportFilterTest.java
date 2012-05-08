@@ -5,14 +5,14 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.Handler.EventReportFilter;
 import com.site.helper.Files;
 
 public class EventReportFilterTest {
 	@Test
 	public void test() throws Exception {
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("event.xml"), "utf-8");
 		EventReport report = parser.parse(source);
 

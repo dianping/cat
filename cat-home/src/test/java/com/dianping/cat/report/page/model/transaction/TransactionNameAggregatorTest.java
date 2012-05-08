@@ -5,13 +5,13 @@ import org.junit.Test;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.site.helper.Files;
 
 public class TransactionNameAggregatorTest {
 	@Test
 	public void test() throws Exception {
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
 		TransactionReport report = parser.parse(source);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction-names.xml"), "utf-8");

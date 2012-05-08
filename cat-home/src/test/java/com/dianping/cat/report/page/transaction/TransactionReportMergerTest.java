@@ -6,7 +6,7 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 
 public class TransactionReportMergerTest {
@@ -14,8 +14,8 @@ public class TransactionReportMergerTest {
 	public void testTransactionReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportOld.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportNew.xml"), "utf-8");
-		TransactionReport reportOld = new DefaultXmlParser().parse(oldXml);
-		TransactionReport reportNew = new DefaultXmlParser().parse(newXml);
+		TransactionReport reportOld = new DefaultDomParser().parse(oldXml);
+		TransactionReport reportNew = new DefaultDomParser().parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportMergeResult.xml"),
 		      "utf-8");
 		TransactionReportMerger merger = new TransactionReportMerger(reportOld);

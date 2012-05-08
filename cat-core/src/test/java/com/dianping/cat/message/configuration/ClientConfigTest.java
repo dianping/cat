@@ -21,7 +21,7 @@ import com.dianping.cat.configuration.client.IEntity;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultXmlBuilder;
-import com.dianping.cat.configuration.client.transform.DefaultXmlParser;
+import com.dianping.cat.configuration.client.transform.DefaultDomParser;
 import com.site.helper.Files;
 
 public class ClientConfigTest {
@@ -51,14 +51,14 @@ public class ClientConfigTest {
 	private ClientConfig loadConfig(String configXml) throws IOException, SAXException {
 		InputStream in = getClass().getResourceAsStream(configXml);
 		String xml = Files.forIO().readFrom(in, "utf-8");
-		ClientConfig clientConfig = new DefaultXmlParser().parse(xml);
+		ClientConfig clientConfig = new DefaultDomParser().parse(xml);
 		
 		return clientConfig;
 	}
 
 	@Test
 	public void testConfig() throws Exception {
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("config.xml"), "utf-8");
 		ClientConfig root = parser.parse(source);
 		String xml = new DefaultXmlBuilder().buildXml(root);
@@ -91,7 +91,7 @@ public class ClientConfigTest {
 	public void testServer() throws Exception {
 		InputStream in = getClass().getResourceAsStream("server.xml");
 		String xml = Files.forIO().readFrom(in, "utf-8");
-		ClientConfig config = new DefaultXmlParser().parse(xml);
+		ClientConfig config = new DefaultDomParser().parse(xml);
 
 		Assert.assertEquals("server", config.getMode());
 		Assert.assertEquals("192.168.8.21", config.getBind().getIp());

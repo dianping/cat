@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.model.ip;
 
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
-import com.dianping.cat.consumer.ip.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.ip.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -34,6 +34,6 @@ public class LocalIpService extends BaseLocalModelService<IpReport> {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "ip");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultXmlParser().parse(xml);
+		return xml == null ? null : new DefaultDomParser().parse(xml);
 	}
 }

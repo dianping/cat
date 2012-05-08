@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.spi.internal.BaseRemoteModelService;
 
 public class RemoteProblemService extends BaseRemoteModelService<ProblemReport> {
@@ -15,6 +15,6 @@ public class RemoteProblemService extends BaseRemoteModelService<ProblemReport> 
 
 	@Override
 	protected ProblemReport buildModel(String xml) throws SAXException, IOException {
-		return new DefaultXmlParser().parse(xml);
+		return new DefaultDomParser().parse(xml);
 	}
 }

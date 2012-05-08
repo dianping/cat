@@ -14,7 +14,7 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.configuration.ClientConfigMerger;
 import com.dianping.cat.configuration.ClientConfigValidator;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
-import com.dianping.cat.configuration.client.transform.DefaultXmlParser;
+import com.dianping.cat.configuration.client.transform.DefaultDomParser;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.spi.MessageManager;
 import com.site.helper.Files;
@@ -123,7 +123,7 @@ public class Cat {
 				if (configFile.exists()) {
 					String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
 
-					globalConfig = new DefaultXmlParser().parse(xml);
+					globalConfig = new DefaultDomParser().parse(xml);
 				} else {
 					s_instance.m_logger.warn(String.format("Global config file(%s) not found, IGNORED.", configFile));
 				}
@@ -140,7 +140,7 @@ public class Cat {
 				if (in != null) {
 					String xml = Files.forIO().readFrom(in, "utf-8");
 
-					clientConfig = new DefaultXmlParser().parse(xml);
+					clientConfig = new DefaultDomParser().parse(xml);
 				}
 			}
 		} catch (Exception e) {

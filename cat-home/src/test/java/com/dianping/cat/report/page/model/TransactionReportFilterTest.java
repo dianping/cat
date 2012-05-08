@@ -5,14 +5,14 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.Handler.TransactionReportFilter;
 import com.site.helper.Files;
 
 public class TransactionReportFilterTest {
 	@Test
 	public void test() throws Exception {
-		DefaultXmlParser parser = new DefaultXmlParser();
+		DefaultDomParser parser = new DefaultDomParser();
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
 		TransactionReport report = parser.parse(source);
 

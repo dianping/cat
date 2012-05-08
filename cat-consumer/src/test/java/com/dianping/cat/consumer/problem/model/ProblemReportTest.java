@@ -6,13 +6,13 @@ import org.junit.Test;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.problem.model.transform.DefaultXmlParser;
+import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.site.helper.Files;
 
 public class ProblemReportTest {
    @Test
    public void testXml() throws Exception {
-      DefaultXmlParser parser = new DefaultXmlParser();
+      DefaultDomParser parser = new DefaultDomParser();
       String source = Files.forIO().readFrom(getClass().getResourceAsStream("problem-report.xml"), "utf-8");
       ProblemReport root = parser.parse(source);
       String xml = new DefaultXmlBuilder().buildXml(root);
@@ -23,7 +23,7 @@ public class ProblemReportTest {
 
    @Test
    public void testJson() throws Exception {
-      DefaultXmlParser parser = new DefaultXmlParser();
+      DefaultDomParser parser = new DefaultDomParser();
       String source = Files.forIO().readFrom(getClass().getResourceAsStream("problem-report.xml"), "utf-8");
       ProblemReport root = parser.parse(source);
       String json = new DefaultJsonBuilder().buildJson(root);
