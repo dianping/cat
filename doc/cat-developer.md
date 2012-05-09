@@ -1,10 +1,16 @@
 <head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"/></head>
 # 背景
-本文描述了CAT的概要结构, 以及如何使用cat分析应用程序的方法和最佳实践. 这篇文档是第1版, 我们会尽快增加更丰富的内容. 如果你有任何问题, 请联系CAT团队成员.
+本文描述了CAT的概要结构, 以及如何使用cat分析应用程序的方法和最佳实践. 这篇文档是第1版, 我们会及时更新本文档. 如果你有任何问题, 请联系CAT团队成员.
 
 ----------------------------------
 # 概要介绍 
-![arch overview](img/test.png)
+Cat实时分析部署结构:
+
+![arch overview](img/cat-realtime-overview.png)
+
+Cat离线分析部署结构:
+
+![arch overview](img/cat-offline-overview.png)
 
 -----------------------------------------------------
 # 环境设置
