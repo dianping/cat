@@ -6,11 +6,11 @@
 # 概要介绍 
 Cat实时分析部署结构:
 
-![arch overview](img/cat-realtime-overview.png)
+![arch overview](img/cat-realtime-overview.jpg)
 
 Cat离线分析部署结构:
 
-![arch overview](img/cat-offline-overview.png)
+![arch overview](img/cat-offline-overview.jpg)
 
 -----------------------------------------------------
 # 环境设置
@@ -103,12 +103,12 @@ Event表示所有其他不能归属到Transaction或者Heartbeat的消息. 包�
 ## 实现
 我们建议程序内部跨越边界访问的活动都需要记录下Cat消息. 另外, 三种基本消息Transaction, Event, Heartbeat何时使用, 请参见下图:
 
-![](img/cat-message-desicion.png)
+![](img/cat-message-desicion.jpg)
 
 ### Transaction
 当你准备要使用Transaction时,请遵循下图的流程:
 
-![](img/cat-transaction-desicion.png)
+![](img/cat-transaction-desicion.jpg)
 
 这里是Transaction的api:
 
@@ -131,7 +131,7 @@ com.dianping.cat.message.Transaction:
 ### Event
 当你准备要使用event时,请遵循下图的流程:
 
-![](img/cat-event-desicion.png)
+![](img/cat-event-desicion.jpg)
 
 这里是Event的api:
 
@@ -156,7 +156,7 @@ com.dianping.cat.message.Event:
 ### Heartbeat
 当你准备要使用heartbeat时,请遵循下图的流程:
 
-![](img/cat-heartbeat-desicion.png)
+![](img/cat-heartbeat-desicion.jpg)
 
 这里是Heartbeat的api:
 

@@ -1,12 +1,12 @@
 <p><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"/></head></p>
 <h1 id="++">背景</h1>
-<p>本文描述了CAT的概要结构, 以及如何使用cat分析应用程序的方法和最佳实践. 这篇文档是第1版, 我们会尽快增加更丰富的内容. 如果你有任何问题, 请联系CAT团队成员.</p>
+<p>本文描述了CAT的概要结构, 以及如何使用cat分析应用程序的方法和最佳实践. 这篇文档是第1版, 我们会及时更新本文档. 如果你有任何问题, 请联系CAT团队成员.</p>
 <hr />
 <h1 id="++++">概要介绍</h1>
 <p>Cat实时分析部署结构:</p>
-<p><img alt="arch overview" src="img/cat-realtime-overview.png" /></p>
+<p><img alt="arch overview" src="img/cat-realtime-overview.jpg" /></p>
 <p>Cat离线分析部署结构:</p>
-<p><img alt="arch overview" src="img/cat-offline-overview.png" /></p>
+<p><img alt="arch overview" src="img/cat-offline-overview.jpg" /></p>
 <hr />
 <h1 id="++++_1">环境设置</h1>
 <h2 id="++_1">依赖</h2>
@@ -80,10 +80,10 @@
 <p>建议使用以&amp;字符分割的name=value对组成的字符串列表. Transaction start没有data字段.</p>
 <h2 id="++_2">实现</h2>
 <p>我们建议程序内部跨越边界访问的活动都需要记录下Cat消息. 另外, 三种基本消息Transaction, Event, Heartbeat何时使用, 请参见下图:</p>
-<p><img alt="" src="img/cat-message-desicion.png" /></p>
+<p><img alt="" src="img/cat-message-desicion.jpg" /></p>
 <h3 id="transaction_1">Transaction</h3>
 <p>当你准备要使用Transaction时,请遵循下图的流程:</p>
-<p><img alt="" src="img/cat-transaction-desicion.png" /></p>
+<p><img alt="" src="img/cat-transaction-desicion.jpg" /></p>
 <p>这里是Transaction的api:</p>
 <p>com.dianping.cat.message.MessageProducer:</p>
 <pre><code class="java">        Transaction newTransaction(String type, String name);
@@ -101,7 +101,7 @@
 
 <h3 id="event_1">Event</h3>
 <p>当你准备要使用event时,请遵循下图的流程:</p>
-<p><img alt="" src="img/cat-event-desicion.png" /></p>
+<p><img alt="" src="img/cat-event-desicion.jpg" /></p>
 <p>这里是Event的api:</p>
 <p>com.dianping.cat.message.MessageProducer:</p>
 <pre><code class="java">        void logEvent(String type, String name, String status, String keyValuePairs);
@@ -121,7 +121,7 @@
 
 <h3 id="heartbeat_1">Heartbeat</h3>
 <p>当你准备要使用heartbeat时,请遵循下图的流程:</p>
-<p><img alt="" src="img/cat-heartbeat-desicion.png" /></p>
+<p><img alt="" src="img/cat-heartbeat-desicion.jpg" /></p>
 <p>这里是Heartbeat的api:</p>
 <p>com.dianping.cat.message.MessageProducer:</p>
 <pre><code class="java">        void logHeartbeat(String type, String name, String status, String keyValuePairs);
