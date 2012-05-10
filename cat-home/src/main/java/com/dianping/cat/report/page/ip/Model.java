@@ -14,6 +14,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private int m_hour;
 
+	private String m_mobileResponse;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -64,6 +66,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_report = report;
 	}
 	
+	public String getMobileResponse() {
+   	return m_mobileResponse;
+   }
+
+	public void setMobileResponse(String mobileResponse) {
+   	m_mobileResponse = mobileResponse;
+   }
+
 	public static class DisplayModel {
 		private String m_address;
 

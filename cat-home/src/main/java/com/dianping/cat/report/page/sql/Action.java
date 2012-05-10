@@ -3,7 +3,9 @@ package com.dianping.cat.report.page.sql;
 public enum Action implements com.site.web.mvc.Action {
 	VIEW("view"),
 	
-	GRAPHS("graphs");
+	GRAPHS("graphs"),
+	
+	MOBLIE("mobile");
 
 	private String m_name;
 

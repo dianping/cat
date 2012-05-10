@@ -1,5 +1,9 @@
-<h1 id="+++++">服务端配置</h1>
-<p>服务端配置文件位于/data/appdatas/cat/server.xml </p>
+<p><head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"/></head></p>
+<h1 id="++">背景</h1>
+<p>本文描述了如何部署和维护CAT. 如果你有任何问题, 请联系CAT团队成员.</p>
+<hr />
+<h1 id="++_1">部署</h1>
+<p>你需要增加这个文件:/data/appdatas/cat/server.xml</p>
 <pre><code class="xml">&lt;config local-mode=&quot;false&quot;&gt;
         &lt;storage local-base-dir=&quot;/data/appdatas/cat/bucket&quot;&gt;
                 &lt;hdfs id=&quot;logview&quot; max-size=&quot;128M&quot; server-uri=&quot;hdfs://10.1.1.169/user/cat&quot; base-dir=&quot;logview&quot;/&gt;
@@ -24,5 +28,12 @@
 &lt;/config&gt;
 </code></pre>
 
-<h1 id="+++++_1">客户端配置</h1>
-<p>/data/appdatas/cat/client.xml </p>
+<p>同时检查这几个地方:</p>
+<ul>
+<li>在remote-servers内增加新机器的ip</li>
+<li>检查 /data/appdatas/cat/cat.keytab 这个文件是否有效</li>
+<li>检查 hdfs://10.1.1.169/user/cat     这个hdfs目录是否有效</li>
+</ul>
+<hr />
+<h1 id="++++">数据清理</h1>
+<p>hdfs://10.1.1.169/user/cat/dump 下需要保留近3天的数据, 供分析报表使用. hdfs://10.1.1.169/user/cat/logview 下需要保留近1个月的数据, 供分析报表使用</p>

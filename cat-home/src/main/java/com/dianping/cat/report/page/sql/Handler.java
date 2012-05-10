@@ -12,6 +12,7 @@ import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
 import com.dianping.cat.job.sql.dal.SqlReportRecordEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.google.gson.Gson;
 import com.site.dal.jdbc.DalException;
 import com.site.dal.jdbc.Readset;
 import com.site.lookup.annotation.Inject;
@@ -45,16 +46,21 @@ public class Handler implements PageHandler<Context> {
 
 		model.setPage(ReportPage.SQL);
 		model.setDisplayDomain(payload.getDomain());
-
-		Action action = payload.getAction();
-		if (action == null || action == Action.VIEW) {
-			model.setAction(Action.VIEW);
+		model.setAction(payload.getAction());
+		switch (payload.getAction()) {
+		case VIEW:
 			showReport(model, payload);
-		} else {
-			model.setAction(Action.GRAPHS);
+			break;
+		case GRAPHS:
 			showGraphs(model, payload);
+			break;
+		case MOBLIE:
+			showReport(model, payload);
+			SqlReport report = model.getReport();
+			Gson gson = new Gson();
+			model.setMobileResponse(gson.toJson(report));
+			break;
 		}
-
 		m_jspViewer.view(ctx, model);
 	}
 

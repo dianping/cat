@@ -1,5 +1,11 @@
-# 服务端配置
-服务端配置文件位于/data/appdatas/cat/server.xml 
+<head><meta http-equiv="Content-Type" content="text/html;charset=utf-8"/></head>
+# 背景
+本文描述了如何部署和维护CAT. 如果你有任何问题, 请联系CAT团队成员.
+
+------------------------------------------------
+
+# 部署
+你需要增加这个文件:/data/appdatas/cat/server.xml
 
 ~~~~.xml
 <config local-mode="false">
@@ -26,9 +32,13 @@
 </config>
 ~~~~
 
+同时检查这几个地方:
 
+* 在remote-servers内增加新机器的ip
+* 检查 /data/appdatas/cat/cat.keytab 这个文件是否有效
+* 检查 hdfs://10.1.1.169/user/cat     这个hdfs目录是否有效
 
-# 客户端配置
-/data/appdatas/cat/client.xml 
+--------------------------------------------------------
 
-
+# 数据清理
+ hdfs://10.1.1.169/user/cat/dump 下需要保留近3天的数据, 供分析报表使用. hdfs://10.1.1.169/user/cat/logview 下需要保留近1个月的数据, 供分析报表使用
