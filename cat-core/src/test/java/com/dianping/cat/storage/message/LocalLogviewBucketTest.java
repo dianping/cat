@@ -14,7 +14,6 @@ import com.dianping.cat.storage.MesageTreeBucketTestCase;
 
 @RunWith(JUnit4.class)
 public class LocalLogviewBucketTest extends MesageTreeBucketTestCase {
-
 	@SuppressWarnings("unchecked")
 	protected Bucket<MessageTree> createBucket() throws Exception, IOException {
 		Bucket<MessageTree> bucket = lookup(Bucket.class, MessageTree.class.getName() + "-logview");

@@ -141,7 +141,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 				ChannelBuffer buf = ChannelBuffers.wrappedBuffer(bytes);
 				MessageTree data = m_codec.decode(buf);
 
-				return new Meta(data.getMessageId(), data.getThreadId(), offset, num);
+				return new Meta(data.getMessageId(), data.getThreadId(), offset + 1 + String.valueOf(num).length(), num);
 			} catch (Exception e) {
 				m_logger.error(String.format("Error when reading file(%s)!", m_logicalPath), e);
 			} finally {

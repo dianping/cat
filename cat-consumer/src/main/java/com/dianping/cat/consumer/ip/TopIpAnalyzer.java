@@ -139,7 +139,7 @@ public class TopIpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements 
 	}
 
 	private String getIpAddress(Transaction root) {
-		List<Message> children = ((Transaction) root).getChildren();
+		List<Message> children = root.getChildren();
 
 		for (Message child : children) {
 			if (child instanceof Event && child.getType().equals("URL") && child.getName().equals("ClientInfo")) {
@@ -148,10 +148,11 @@ public class TopIpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements 
 				int off = data.indexOf(TOKEN);
 
 				if (off >= 0) {
-					int pos = data.indexOf('&', off + TOKEN.length());
+					int length = TOKEN.length();
+					int pos = data.indexOf('&', off + length);
 
 					if (pos > 0) {
-						return data.substring(off + TOKEN.length(), pos);
+						return data.substring(off + length, pos);
 					}
 				}
 				break;

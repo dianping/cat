@@ -14,6 +14,7 @@ import com.dianping.cat.message.spi.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
 import com.dianping.cat.storage.BucketManagerTest;
 import com.dianping.cat.storage.message.LocalLogviewBucketTest;
+import com.dianping.cat.storage.message.LogviewBucketTest;
 import com.dianping.cat.storage.report.LocalReportBucketTest;
 
 @RunWith(Suite.class)
@@ -51,9 +52,10 @@ BucketManagerTest.class,
 
 LocalReportBucketTest.class,
 
-LocalLogviewBucketTest.class
+LocalLogviewBucketTest.class,
 
-
+/* .storage.message */
+LogviewBucketTest.class
 
 })
 public class AllTests {

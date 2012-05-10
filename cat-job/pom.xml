@@ -65,7 +65,8 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.dianping.cat.job.sql.SqlJobMain</mainClass>
+							<mainClass>com.dianping.cat.job.browser.BrowserAnalyzer</mainClass>
+							<!-- <mainClass>com.dianping.cat.job.sql.SqlJobMain</mainClass> -->
 						</manifest>
 					</archive>
 				</configuration>

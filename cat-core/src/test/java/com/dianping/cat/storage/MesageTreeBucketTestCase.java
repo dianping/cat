@@ -18,9 +18,9 @@ import com.site.lookup.ComponentTestCase;
 
 public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 
-	protected final static int threadNum = 10;// notice: max 9, for creating asc order id bellow
+	protected final static int threadNum = 10;// notes: max 9, for creating asc order id bellow
 
-	protected final static int timesPerThread = 1000; // notice: must be powers 10, fro creating asc order id bellow
+	protected final static int timesPerThread = 100; // notes: must be powers 10, for creating asc order id bellow
 
 	protected ExecutorService pool = null;
 
