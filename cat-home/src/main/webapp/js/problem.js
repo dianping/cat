@@ -18,7 +18,6 @@ $(document).keypress(function(e) {
 	}
 });
 
-
 $("#p_longUrl").val($("#thresholdInput").val()) ;
 
 function longTimeChange(date,domain,ip){

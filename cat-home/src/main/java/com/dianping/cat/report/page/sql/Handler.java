@@ -7,12 +7,14 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.helper.DateDeserializer;
 import com.dianping.cat.job.sql.dal.SqlReportRecord;
 import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
 import com.dianping.cat.job.sql.dal.SqlReportRecordEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.site.dal.jdbc.DalException;
 import com.site.dal.jdbc.Readset;
 import com.site.lookup.annotation.Inject;
@@ -47,6 +49,10 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.SQL);
 		model.setDisplayDomain(payload.getDomain());
 		model.setAction(payload.getAction());
+		// Last hour is default
+		if (payload.getPeriod().isCurrent()) {
+			payload.setHours(payload.getHours() - 1);
+		}
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);
@@ -57,9 +63,14 @@ public class Handler implements PageHandler<Context> {
 		case MOBLIE:
 			showReport(model, payload);
 			SqlReport report = model.getReport();
-			Gson gson = new Gson();
+			Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
 			model.setMobileResponse(gson.toJson(report));
 			break;
+		}
+		if (payload.getPeriod().isCurrent()) {
+			model.setCreatTime(new Date());
+		} else {
+			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
 		m_jspViewer.view(ctx, model);
 	}

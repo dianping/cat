@@ -28,6 +28,8 @@ public class ProblemStatistics {
 
 	private static final int ONE_SECOND = 1000;
 
+	private List<String> m_ips;
+	
 	public String getSubTitle() {
 		StringBuilder sb = new StringBuilder();
 		if (isEmpty(m_threadId) && isEmpty(m_groupName)) {
@@ -50,6 +52,14 @@ public class ProblemStatistics {
 		}
 		return sb.toString();
 	}
+
+	public List<String> getIps() {
+   	return m_ips;
+   }
+
+	public void setIps(List<String> ips) {
+   	m_ips = ips;
+   }
 
 	public ProblemStatistics displayByAllIps(ProblemReport report,Payload payload) {
 		m_threshold = payload.getLongTime();

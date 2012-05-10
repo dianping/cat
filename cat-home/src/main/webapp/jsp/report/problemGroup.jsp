@@ -15,7 +15,7 @@
 
 <a:report title="Problem Report"
 	navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}"
-	timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
+	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 

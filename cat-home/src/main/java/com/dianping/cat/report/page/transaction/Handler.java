@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -144,7 +145,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 		} else {
 			model.setLongDate(payload.getDate());
 		}
-
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);
@@ -174,8 +174,13 @@ public class Handler implements PageHandler<Context>, Initializable {
 			}
 			break;
 		}
-
+		if (payload.getPeriod().isCurrent()) {
+			model.setCreatTime(new Date());
+		} else {
+			model.setCreatTime(new Date(payload.getDate() + 60*60 *1000-1000));
+		}
 		m_jspViewer.view(ctx, model);
+
 	}
 
 	@Override

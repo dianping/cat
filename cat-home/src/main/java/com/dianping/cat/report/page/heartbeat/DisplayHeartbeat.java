@@ -157,88 +157,88 @@ public class DisplayHeartbeat {
 	}
 
 	public double[] getActiveThreads() {
-   	return m_activeThreads;
-   }
+		return m_activeThreads;
+	}
 
 	public double[] getDaemonThreads() {
-   	return m_daemonThreads;
-   }
+		return m_daemonThreads;
+	}
 
 	public double[] getTotalThreads() {
-   	return m_totalThreads;
-   }
+		return m_totalThreads;
+	}
 
 	public double[] getNewThreads() {
-   	return m_newThreads;
-   }
+		return m_newThreads;
+	}
 
 	public double[] getCatThreads() {
-   	return m_catThreads;
-   }
+		return m_catThreads;
+	}
 
 	public double[] getPigeonTheads() {
-   	return m_pigeonTheads;
-   }
+		return m_pigeonTheads;
+	}
 
 	public double[] getCatMessageProduced() {
-   	return m_catMessageProduced;
-   }
+		return m_catMessageProduced;
+	}
 
 	public double[] getAddCatMessageProduced() {
-   	return m_addCatMessageProduced;
-   }
+		return m_addCatMessageProduced;
+	}
 
 	public double[] getCatMessageOverflow() {
-   	return m_catMessageOverflow;
-   }
+		return m_catMessageOverflow;
+	}
 
 	public double[] getAddCatMessageOverflow() {
-   	return m_addCatMessageOverflow;
-   }
+		return m_addCatMessageOverflow;
+	}
 
 	public double[] getCatMessageSize() {
-   	return m_catMessageSize;
-   }
+		return m_catMessageSize;
+	}
 
 	public double[] getAddCatMessageSize() {
-   	return m_addCatMessageSize;
-   }
+		return m_addCatMessageSize;
+	}
 
 	public double[] getNewGcCount() {
-   	return m_newGcCount;
-   }
+		return m_newGcCount;
+	}
 
 	public double[] getOldGcCount() {
-   	return m_oldGcCount;
-   }
+		return m_oldGcCount;
+	}
 
 	public double[] getAddNewGcCount() {
-   	return m_addNewGcCount;
-   }
+		return m_addNewGcCount;
+	}
 
 	public double[] getAddOldGcCount() {
-   	return m_addOldGcCount;
-   }
+		return m_addOldGcCount;
+	}
 
 	public double[] getHeapUsage() {
-   	return m_heapUsage;
-   }
+		return m_heapUsage;
+	}
 
 	public double[] getNoneHeapUsage() {
-   	return m_noneHeapUsage;
-   }
+		return m_noneHeapUsage;
+	}
 
 	public double[] getMemoryFree() {
-   	return m_memoryFree;
-   }
+		return m_memoryFree;
+	}
 
 	public double[] getSystemLoadAverage() {
-   	return m_systemLoadAverage;
-   }
+		return m_systemLoadAverage;
+	}
 
 	public GraphBuilder getBuilder() {
-   	return m_builder;
-   }
+		return m_builder;
+	}
 
 	public String getCatMessageOverflowGraph() {
 		return m_builder.build(new HeartbeatPayload(1, "Cat Message Overflow / Minute", "Minute", "Count",
@@ -274,11 +274,11 @@ public class DisplayHeartbeat {
 
 	public List<String> getDiskNames() {
 		List<String> result = new ArrayList<String>();
-		
+
 		if (!m_periods.isEmpty()) {
 			List<Disk> disks = m_periods.get(0).getDisks();
 			int len = disks.size();
-			
+
 			for (int i = 0; i < len; i++) {
 				String path = disks.get(i).getPath();
 				result.add(path);
@@ -320,9 +320,13 @@ public class DisplayHeartbeat {
 
 				for (Period period : m_periods) {
 					int minute = period.getMinute();
-					Disk disk = period.getDisks().get(i);
+					List<Disk> ds = period.getDisks();
 
-					values[minute] = disk.getFree() / K / K / K;
+					if (ds.size() > i) {
+						Disk disk = ds.get(i);
+
+						values[minute] = disk.getFree() / K / K / K;
+					}
 				}
 
 				String path = disks.get(i).getPath();

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +96,11 @@ public class Handler implements PageHandler<Context> {
 			model.setMobileResponse(gson.toJson(mobileModel));
 			break;
 		}
-
+		if (payload.getPeriod().isCurrent()) {
+			model.setCreatTime(new Date());
+		} else {
+			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
+		}
 		m_jspViewer.view(ctx, model);
 	}
 
