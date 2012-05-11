@@ -1,5 +1,6 @@
 package com.dianping.cat.job;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Calendar;
@@ -14,6 +15,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import com.dianping.cat.hadoop.mapreduce.MessageTreeInputFormat;
+import com.site.helper.Files;
 
 public enum JobFactory {
 	INSTANCE;
@@ -55,7 +57,15 @@ public enum JobFactory {
 		job.setInputFormatClass(MessageTreeInputFormat.class);
 		job.setMapperClass(mapperClass);
 		job.setReducerClass(reducerClass);
-		job.setPartitionerClass(jobMeta.partitioner());
+
+		if (jobMeta.combiner() != JobMeta.NoCombiner.class) {
+			job.setCombinerClass(jobMeta.combiner());
+		}
+
+		if (jobMeta.partitioner() != JobMeta.DefaultPartitioner.class) {
+			job.setPartitionerClass(jobMeta.partitioner());
+		}
+
 		job.setNumReduceTasks(jobMeta.reducerNum());
 
 		job.setMapOutputKeyClass(mapperMeta.keyOut());
@@ -74,11 +84,16 @@ public enum JobFactory {
 		FileInputFormat.addInputPath(job, new Path(inPath));
 
 		// setup default output path
-		String outPath = getDefaultOutputPath(job);
+		String outPath = args.length > 1 ? args[1] : getDefaultOutputPath(job);
 		FileOutputFormat.setOutputPath(job, new Path(outPath));
+
+		if (!outPath.startsWith("hdfs://")) {
+			Files.forDir().delete(new File(outPath), true);
+		}
 
 		System.out.println("Input path: " + inPath);
 		System.out.println("Output path: " + outPath);
+
 		return job;
 	}
 

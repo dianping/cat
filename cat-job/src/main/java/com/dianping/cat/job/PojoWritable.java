@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 
 public abstract class PojoWritable implements WritableComparable<PojoWritable> {
@@ -95,7 +96,7 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
-		String str = in.readLine();
+		String str = Text.readString(in);
 
 		PojoCodec.INSTANCE.decode(getEntry(), this, str);
 	}
@@ -104,7 +105,14 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 	public void write(DataOutput out) throws IOException {
 		String str = PojoCodec.INSTANCE.encode(getEntry(), this);
 
-		out.write(str.getBytes("utf-8"));
+		Text.writeString(out, str);
+	}
+
+	@Override
+	public String toString() {
+		String str = PojoCodec.INSTANCE.encode(getEntry(), this);
+
+		return str;
 	}
 
 	static class Entry {
@@ -173,9 +181,14 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 							value = str;
 						}
 
-						field.set(pojo, value);
+						if (value != null) {
+							field.set(pojo, value);
+						}
 					} catch (Exception e) {
-						throw new RuntimeException(String.format("Error when setting value(%s) to %s!", value, field));
+						e.printStackTrace();
+						// throw new
+						// RuntimeException(String.format("Error when setting value(%s) to %s!",
+						// value, field), e);
 					}
 				}
 			}

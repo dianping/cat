@@ -25,7 +25,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 
-@JobMeta(name = "browser", mapper = BrowserAnalyzer.BrowserMapper.class, reducer = BrowserAnalyzer.BrowserReducer.class, partitioner = DefaultPartitioner.class, reducerNum = 3)
+@JobMeta(name = "browser", mapper = BrowserAnalyzer.BrowserMapper.class, reducer = BrowserAnalyzer.BrowserReducer.class, combiner = BrowserAnalyzer.BrowserReducer.class, partitioner = DefaultPartitioner.class, reducerNum = 1)
 public class BrowserAnalyzer extends Configured implements Tool {
 	public static void main(String[] args) throws Exception {
 		int exitCode = ToolRunner.run(new Configuration(), new BrowserAnalyzer(), args);
@@ -88,7 +88,7 @@ public class BrowserAnalyzer extends Configured implements Tool {
 
 		public Browser() {
 		}
-		
+
 		public Browser(String userAgent) {
 			init(userAgent);
 		}
@@ -177,8 +177,6 @@ public class BrowserAnalyzer extends Configured implements Tool {
 	public static class BrowserMapper extends Mapper<Object, MessageTreeWritable, Browser, BrowserStatatisics> {
 		private static final String TOKEN = "&Agent=";
 
-		private int m_total;
-
 		private String getUserAgent(Transaction root) {
 			List<Message> children = root.getChildren();
 
@@ -205,19 +203,13 @@ public class BrowserAnalyzer extends Configured implements Tool {
 			MessageTree tree = value.get();
 			Message root = tree.getMessage();
 
-			if (root instanceof Transaction && root.getName().equals("URL")) {
+			if (root instanceof Transaction && root.getType().equals("URL")) {
 				String userAgent = getUserAgent((Transaction) root);
 
 				if (userAgent != null) {
 					Browser browser = new Browser(userAgent);
 
 					context.write(browser, BrowserStatatisics.ONCE);
-					m_total++;
-
-					if (m_total % 1000 == 0) {
-						context.setStatus(m_total + " processed");
-						context.progress();
-					}
 				}
 			}
 		}
@@ -225,7 +217,7 @@ public class BrowserAnalyzer extends Configured implements Tool {
 
 	@ReducerMeta(keyIn = Browser.class, valueIn = BrowserStatatisics.class, keyOut = Browser.class, valueOut = BrowserStatatisics.class)
 	public static class BrowserReducer extends Reducer<Browser, BrowserStatatisics, Browser, BrowserStatatisics> {
-		protected void reduce(Browser browser, Iterable<BrowserStatatisics> stats, BrowserMapper.Context context)
+		protected void reduce(Browser browser, Iterable<BrowserStatatisics> stats, BrowserReducer.Context context)
 		      throws IOException, InterruptedException {
 			BrowserStatatisics all = new BrowserStatatisics();
 

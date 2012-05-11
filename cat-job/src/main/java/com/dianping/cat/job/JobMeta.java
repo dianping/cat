@@ -1,5 +1,6 @@
 package com.dianping.cat.job;
 
+import java.io.IOException;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,12 +21,22 @@ public @interface JobMeta {
 
 	Class<? extends Reducer<?, ?, ?, ?>> reducer();
 
+	Class<? extends Reducer<?, ?, ?, ?>> combiner() default NoCombiner.class;
+
 	int reducerNum() default 3;
 
 	public class DefaultPartitioner extends Partitioner<Object, Object> {
 		@Override
 		public int getPartition(Object key, Object value, int numPartitions) {
-			return (key.hashCode() & Integer.MAX_VALUE) % numPartitions;
+			throw new UnsupportedOperationException("This should not be called!");
+		}
+	}
+
+	public class NoCombiner extends Reducer<Object, Object, Object, Object> {
+		@Override
+		protected void reduce(Object key, Iterable<Object> values, Context context) throws IOException,
+		      InterruptedException {
+			throw new UnsupportedOperationException("This should not be called!");
 		}
 	}
 }

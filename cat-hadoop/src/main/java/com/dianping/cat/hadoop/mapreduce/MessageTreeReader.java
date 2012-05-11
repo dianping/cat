@@ -196,8 +196,10 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 			}
 
 			try {
-				m_codec.decode(buf, tree.get());
-				tree.complete();
+				if (count > 0) {
+					m_codec.decode(buf, tree.get());
+					tree.complete();
+				}
 			} catch (Throwable e) {
 				System.out.println("Error when parsing file: " + m_file);
 				e.printStackTrace(System.out);

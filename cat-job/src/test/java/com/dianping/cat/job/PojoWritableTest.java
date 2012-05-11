@@ -8,13 +8,56 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
+import org.apache.hadoop.io.Text;
 import org.junit.Test;
 
 public class PojoWritableTest {
+	private void checkCompareTo(PojoWritable writable) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+		DataOutputStream dos = new DataOutputStream(baos);
+
+		writable.write(dos);
+
+		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(baos.toByteArray()));
+		User user = new User();
+
+		Assert.assertTrue(writable.compareTo(user) != 0);
+
+		user.readFields(dis);
+
+		Assert.assertEquals(0, writable.compareTo(user));
+	}
+
+	private void checkRead(PojoWritable expected, String data) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+		DataOutputStream dos = new DataOutputStream(baos);
+
+		Text.writeString(dos, data);
+
+		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(baos.toByteArray()));
+		User user = new User();
+
+		user.readFields(dis);
+
+		Assert.assertEquals(0, expected.compareTo(user));
+	}
+
+	private void checkWrite(PojoWritable writable, String expected) throws IOException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+		DataOutputStream dos = new DataOutputStream(baos);
+
+		writable.write(dos);
+
+		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(baos.toByteArray()));
+		String actual = Text.readString(dis);
+
+		Assert.assertEquals(expected, actual);
+	}
+
 	@Test
-	public void testWrite() throws IOException {
-		checkWrite(new User("Alex Bob", 40, true), "Alex Bob|40|true");
-		checkWrite(new User("Alex", 30, false), "Alex|30|false");
+	public void testCompareTo() throws IOException {
+		checkCompareTo(new User("Alex Bob", 40, true));
+		checkCompareTo(new User("Alex", 30, false));
 	}
 
 	@Test
@@ -23,24 +66,10 @@ public class PojoWritableTest {
 		checkRead(new User("Alex", 30, false), "Alex|30|false");
 	}
 
-	private void checkRead(PojoWritable expected, String data) throws IOException {
-		DataInputStream dis = new DataInputStream(new ByteArrayInputStream(data.getBytes("utf-8")));
-		User user = new User();
-
-		user.readFields(dis);
-
-		Assert.assertEquals(0, expected.compareTo(user));
-	}
-
-	private void checkWrite(PojoWritable wirtable, String expected) throws IOException {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
-		DataOutputStream dos = new DataOutputStream(baos);
-
-		wirtable.write(dos);
-
-		String actual = baos.toString("utf-8");
-
-		Assert.assertEquals(expected, actual);
+	@Test
+	public void testWrite() throws IOException {
+		checkWrite(new User("Alex Bob", 40, true), "Alex Bob|40|true");
+		checkWrite(new User("Alex", 30, false), "Alex|30|false");
 	}
 
 	public static class User extends PojoWritable {
@@ -59,12 +88,12 @@ public class PojoWritableTest {
 			m_married = married;
 		}
 
-		public String getName() {
-			return m_name;
-		}
-
 		public int getAge() {
 			return m_age;
+		}
+
+		public String getName() {
+			return m_name;
 		}
 
 		public boolean isMarried() {
