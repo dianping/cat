@@ -1,6 +1,16 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.joblet.Joblet</role>
+			<role-hint>help</role-hint>
+			<implementation>com.dianping.cat.job.browser.HelpJoblet</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.joblet.Joblet</role>
+			<role-hint>browser</role-hint>
+			<implementation>com.dianping.cat.job.browser.BrowserJoblet</implementation>
+		</component>
+		<component>
 			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>

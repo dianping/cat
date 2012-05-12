@@ -9,12 +9,14 @@ import java.util.Date;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import com.dianping.cat.hadoop.mapreduce.MessageTreeInputFormat;
+import com.dianping.cat.joblet.Joblet;
+import com.dianping.cat.joblet.JobletMapper;
+import com.dianping.cat.joblet.JobletMeta;
+import com.dianping.cat.joblet.JobletReducer;
 import com.site.helper.Files;
 
 public enum JobFactory {
@@ -22,69 +24,64 @@ public enum JobFactory {
 
 	private String m_hdfsServer = "10.1.1.169";
 
-	public Job createJob(Object task, Configuration configuration, String[] args) throws IOException {
-		Class<?> taskClass = task.getClass();
-		JobMeta jobMeta = taskClass.getAnnotation(JobMeta.class);
+	public Job createJob(JobApp container, Configuration configuration, JobCmdLine cmdLine)
+	      throws IOException {
+		String name = cmdLine.getJobletName();
+		Joblet<?, ?> joblet = container.lookup(Joblet.class, name);
+		Class<?> jobletClass = joblet.getClass();
+		JobletMeta meta = jobletClass.getAnnotation(JobletMeta.class);
 
-		if (jobMeta == null) {
-			throw new IllegalStateException(String.format("%s should be annotated by %s!", taskClass, JobMeta.class));
+		if (meta == null) {
+			throw new IllegalStateException(String.format("%s should be annotated by %s!", jobletClass, JobletMeta.class));
 		}
 
-		Class<? extends Mapper<?, ?, ?, ?>> mapperClass = jobMeta.mapper();
-		Class<? extends Reducer<?, ?, ?, ?>> reducerClass = jobMeta.reducer();
-		MapperMeta mapperMeta = mapperClass.getAnnotation(MapperMeta.class);
-		ReducerMeta reducerMeta = reducerClass.getAnnotation(ReducerMeta.class);
+		Job job = new Job(configuration, meta.name());
 
-		if (mapperMeta == null) {
-			throw new RuntimeException(String.format("%s should be annotated by %s!", mapperClass, MapperMeta.class));
-		} else if (reducerMeta == null) {
-			throw new RuntimeException(String.format("%s should be annotated by %s!", reducerClass, ReducerMeta.class));
-		} else {
-			if (mapperMeta.keyOut() != reducerMeta.keyIn()) {
-				throw new RuntimeException(String.format(
-				      "The output key(%s) of mapper(%s) does not match the input key(%s) of reducer(%s)!",
-				      mapperMeta.keyOut(), mapperClass, reducerMeta.keyIn(), reducerClass));
-			} else if (mapperMeta.valueOut() != reducerMeta.valueIn()) {
-				throw new RuntimeException(String.format(
-				      "The output value(%s) of mapper(%s) does not match the input value(%s) of reducer(%s)!",
-				      mapperMeta.valueOut(), mapperClass, reducerMeta.valueIn(), reducerClass));
-			}
+		if (!joblet.initialize(cmdLine)) {
+			return null;
 		}
 
-		Job job = new Job(configuration, jobMeta.name());
+		job.getConfiguration().setClass("joblet.class", joblet.getClass(), Joblet.class);
 
-		job.setJarByClass(taskClass);
+		job.setJarByClass(jobletClass);
 		job.setInputFormatClass(MessageTreeInputFormat.class);
-		job.setMapperClass(mapperClass);
-		job.setReducerClass(reducerClass);
+		job.setMapperClass(JobletMapper.class);
+		job.setReducerClass(JobletReducer.class);
 
-		if (jobMeta.combiner() != JobMeta.NoCombiner.class) {
-			job.setCombinerClass(jobMeta.combiner());
+		if (meta.combine()) {
+			job.setCombinerClass(JobletReducer.class);
 		}
 
-		if (jobMeta.partitioner() != JobMeta.DefaultPartitioner.class) {
-			job.setPartitionerClass(jobMeta.partitioner());
+		if (meta.partitioner() != JobletMeta.DefaultPartitioner.class) {
+			job.setPartitionerClass(meta.partitioner());
 		}
 
-		job.setNumReduceTasks(jobMeta.reducerNum());
+		job.setNumReduceTasks(cmdLine.getPropertyInt("reducers", meta.reducerNum()));
 
-		job.setMapOutputKeyClass(mapperMeta.keyOut());
-		job.setMapOutputValueClass(mapperMeta.valueOut());
+		job.setMapOutputKeyClass(meta.keyClass());
+		job.setMapOutputValueClass(meta.valueClass());
 
-		job.setOutputKeyClass(reducerMeta.keyOut());
-		job.setOutputValueClass(reducerMeta.valueOut());
+		job.setOutputKeyClass(meta.keyClass());
+		job.setOutputValueClass(meta.valueClass());
 
-		validateDefaultConstructor(mapperMeta.keyOut());
-		validateDefaultConstructor(mapperMeta.valueOut());
-		validateDefaultConstructor(reducerMeta.keyOut());
-		validateDefaultConstructor(reducerMeta.valueOut());
+		validateDefaultConstructor(meta.keyClass());
+		validateDefaultConstructor(meta.valueClass());
 
 		// setup default input path
-		String inPath = args.length > 0 ? args[0] : getDefaultInputPath(job);
+		String inPath = cmdLine.getProperty("inputPath", getDefaultInputPath());
 		FileInputFormat.addInputPath(job, new Path(inPath));
 
 		// setup default output path
-		String outPath = args.length > 1 ? args[1] : getDefaultOutputPath(job);
+		String outPath = cmdLine.getProperty("outputPath", null);
+
+		if (outPath == null) {
+			if (!inPath.startsWith("hdfs://")) {
+				outPath = "target/" + job.getJobName() + "-out";
+			} else {
+				outPath = getDefaultOutputPath(job.getJobName());
+			}
+		}
+
 		FileOutputFormat.setOutputPath(job, new Path(outPath));
 
 		if (!outPath.startsWith("hdfs://")) {
@@ -93,11 +90,10 @@ public enum JobFactory {
 
 		System.out.println("Input path: " + inPath);
 		System.out.println("Output path: " + outPath);
-
 		return job;
 	}
 
-	private String getDefaultInputPath(Job job) {
+	private String getDefaultInputPath() {
 		MessageFormat inFormat = new MessageFormat("hdfs://{0}/user/cat/dump/{1,date,yyyyMMdd}/{2}");
 		String hour = getLastHour();
 		String inPath = inFormat.format(new Object[] { m_hdfsServer, new Date(), hour });
@@ -105,9 +101,9 @@ public enum JobFactory {
 		return inPath;
 	}
 
-	private String getDefaultOutputPath(Job job) {
+	private String getDefaultOutputPath(String name) {
 		MessageFormat outFormat = new MessageFormat("hdfs://{0}/user/cat/job/{1,date,yyyyMMdd}/{2}/{1,date,HHmmss}");
-		String outPath = outFormat.format(new Object[] { m_hdfsServer, new Date(), job.getJobName() });
+		String outPath = outFormat.format(new Object[] { m_hdfsServer, new Date(), name });
 
 		return outPath;
 	}

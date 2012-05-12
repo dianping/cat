@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.WritableComparable;
 
 public class MapWritable implements WritableComparable<MapWritable> {
@@ -121,7 +122,7 @@ public class MapWritable implements WritableComparable<MapWritable> {
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
-		String str = in.readLine();
+		String str = Text.readString(in);
 		KeyValueInput input = new KeyValueInput(str);
 
 		while (input.next()) {
@@ -143,9 +144,7 @@ public class MapWritable implements WritableComparable<MapWritable> {
 			output.add(key, value);
 		}
 
-		String str = output.toString();
-
-		out.write(str.getBytes("utf-8"));
+		Text.writeString(out, output.toString());
 	}
 
 	static class KeyValueInput {
