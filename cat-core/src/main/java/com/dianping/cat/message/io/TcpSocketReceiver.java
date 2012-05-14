@@ -43,6 +43,9 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 	@Inject
 	private MessageCodec m_codec;
+	
+	@Inject
+	private int m_queueSize = 100000;
 
 	private BlockingQueue<ChannelBuffer> m_queue;
 
@@ -72,7 +75,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 			address = new InetSocketAddress(m_host, m_port);
 		}
 
-		m_queue = new LinkedBlockingQueue<ChannelBuffer>();
+		m_queue = new LinkedBlockingQueue<ChannelBuffer>(m_queueSize);
 
 		ExecutorService bossExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Boss-" + address);
 		ExecutorService workerExecutor = Threads.forPool().getCachedThreadPool("Cat-TcpSocketReceiver-Worker");
@@ -133,6 +136,10 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 	public void setPort(int port) {
 		m_port = port;
+	}
+	
+	public void setQueueSize(int queueSize) {
+		m_queueSize = queueSize;
 	}
 
 	@Override
