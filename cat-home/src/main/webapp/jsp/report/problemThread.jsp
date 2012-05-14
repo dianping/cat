@@ -10,7 +10,7 @@
 <c:set var="report" value="${model.report}"/>
 <c:set var="threads" value="${report.machines[model.ipAddress].threads}"/>
 
-<a:report title="Problem Report" navUrlPrefix="op=thread&group=${model.groupName}&domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}" timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:report title="Problem Report" navUrlPrefix="op=thread&group=${model.groupName}&domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 

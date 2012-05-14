@@ -3,7 +3,9 @@ package com.dianping.cat.report.page.problem;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -137,21 +139,17 @@ public class Handler implements PageHandler<Context> {
 		model.setIpAddress(payload.getIpAddress());
 		model.setThreshold(payload.getLongTime());
 
-		ProblemReport report;
+		ProblemReport report = null;
 		String ip = payload.getIpAddress();
 
+		ProblemStatistics allStatistics = null;
 		if (ip == null || ip.length() == 0 || ip.equals("All")) {
 			model.setIpAddress("All");
 			report = getAllIpReport(payload);
 			model.setReport(report);
 			model.setLongDate(payload.getDate());
-			ProblemStatistics allStatistics = new ProblemStatistics().displayByAllIps(report, payload);
+			allStatistics = new ProblemStatistics().displayByAllIps(report, payload);
 			model.setAllStatistics(allStatistics);
-			if (payload.getAction() == Action.MOBILE) {
-				Gson gson = new Gson();
-				String response = gson.toJson(allStatistics);
-				model.setMobileResponse(response);
-			}
 		} else {
 			switch (payload.getAction()) {
 			case GROUP:
@@ -176,9 +174,31 @@ public class Handler implements PageHandler<Context> {
 			case DETAIL:
 				showDetail(model, payload);
 				break;
+			case MOBILE:
+				Gson gson = new Gson();
+				String response = gson.toJson(allStatistics);
+				model.setMobileResponse(response);
 			}
 		}
-
+		if (payload.getAction() == Action.MOBILE) {
+			Gson gson = new Gson();
+			if (ip == null || ip.length() == 0 || ip.equals("All")) {
+				allStatistics.setIps(new ArrayList<String>(report.getIps()));
+				String response = gson.toJson(allStatistics);
+				model.setMobileResponse(response);
+			} else {
+				report = showSummary(model, payload);
+				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model, payload));
+				ProblemStatistics statistics = model.getAllStatistics();
+				statistics.setIps(new ArrayList<String>(report.getIps()));
+				model.setMobileResponse(gson.toJson(statistics));
+			}
+		}
+		if (payload.getPeriod().isCurrent()) {
+			model.setCreatTime(new Date());
+		} else {
+			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
+		}
 		m_jspViewer.view(ctx, model);
 	}
 

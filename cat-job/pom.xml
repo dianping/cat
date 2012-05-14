@@ -34,7 +34,7 @@
 			<plugin>
 				<groupId>com.site.maven.plugins</groupId>
 				<artifactId>maven-codegen-plugin</artifactId>
-				<version>1.0.15</version>
+				<version>1.0.17</version>
 				<executions>
 					<execution>
 						<id>generate dal jdbc model</id>

@@ -12,7 +12,7 @@
 <a:report
 	title="SQL Report Created By Hadoop Job , One Hour Delay"
 	navUrlPrefix="domain=${model.domain}"
-	timestamp="${w:format(model.currentTime,'yyyy-MM-dd HH:mm:ss')}">
+	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>

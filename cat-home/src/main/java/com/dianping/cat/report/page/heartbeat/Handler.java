@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -97,7 +98,11 @@ public class Handler implements PageHandler<Context> {
 			model.setMobileResponse(json);
 			break;
 		}
-
+		if (payload.getPeriod().isCurrent()) {
+			model.setCreatTime(new Date());
+		} else {
+			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
+		}
 		m_jspViewer.view(ctx, model);
 	}
 

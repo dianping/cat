@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.event;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -166,6 +167,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 			}
 			break;
 		}
+		if (payload.getPeriod().isCurrent()) {
+			model.setCreatTime(new Date());
+		} else {
+			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
+		}
 		m_jspViewer.view(ctx, model);
 	}
 
@@ -184,7 +190,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		MobileEventGraphs graphs = new MobileEventGraphs().display(name);
 		return graphs;
 	}
-	
+
 	@Override
 	public void initialize() throws InitializationException {
 		int k = 1;

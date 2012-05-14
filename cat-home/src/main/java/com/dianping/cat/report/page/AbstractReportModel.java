@@ -18,6 +18,8 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	private long m_date;
 
 	private String m_displayDomain;
+	
+	private Date m_creatTime;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
@@ -87,4 +89,12 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		} else
 			return Integer.toString(hour);
 	}
+
+	public Date getCreatTime() {
+   	return m_creatTime;
+   }
+
+	public void setCreatTime(Date creatTime) {
+   	m_creatTime = creatTime;
+   }
 }
