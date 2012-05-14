@@ -16,8 +16,8 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Heartbeat;
@@ -87,7 +87,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		return m_reports.keySet();
 	}
 
-	private Period getHeartBeatInfo(Heartbeat heartbeat) {
+	private Period getHeartBeatInfo(Heartbeat heartbeat, long timestamp) {
 		String xml = (String) heartbeat.getData();
 		StatusInfo info = null;
 
@@ -99,12 +99,13 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		}
 
 		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(heartbeat.getTimestamp());
+		cal.setTimeInMillis(timestamp);
 		int minute = cal.get(Calendar.MINUTE);
 		Period period = new Period(minute);
 
 		try {
 			ThreadsInfo thread = info.getThread();
+
 			period.setThreadCount(thread.getCount());
 			period.setDaemonCount(thread.getDaemonCount());
 			period.setTotalStartedCount(thread.getTotalStartedCount());
@@ -202,6 +203,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 		if (message instanceof Transaction) {
 			int count = processTransaction(report, tree, (Transaction) message);
+
 			if (count > 0) {
 				storeMessage(tree);
 			}
@@ -210,7 +212,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	private int processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
 		String ip = tree.getIpAddress();
-		Period period = getHeartBeatInfo(heartbeat);
+		Period period = getHeartBeatInfo(heartbeat, tree.getMessage().getTimestamp());
 
 		if (period != null) {
 			report.findOrCreateMachine(ip).getPeriods().add(period);
