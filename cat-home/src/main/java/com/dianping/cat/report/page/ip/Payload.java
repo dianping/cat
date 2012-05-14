@@ -9,9 +9,12 @@ public class Payload extends AbstractReportPayload<Action> {
 	public Payload() {
 		super(ReportPage.IP);
 	}
-
+	
 	@FieldMeta("op")
 	private Action m_action;
+
+	@FieldMeta("ip")
+	private String m_ip;
 
 	@Override
 	public Action getAction() {
@@ -28,4 +31,12 @@ public class Payload extends AbstractReportPayload<Action> {
 			m_action = Action.VIEW;
 		}
 	}
+
+	public String getIp() {
+   	return m_ip;
+   }
+
+	public void setIp(String ip) {
+   	m_ip = ip;
+   }
 }

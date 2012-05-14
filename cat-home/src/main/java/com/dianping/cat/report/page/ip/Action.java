@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.ip;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view"), MOBILE("mobile");
+	VIEW("view"), MOBILE("mobile"), MOBILE_IP("mobileIp");
 
 	private String m_name;
 

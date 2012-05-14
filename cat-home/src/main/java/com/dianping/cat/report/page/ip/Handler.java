@@ -20,6 +20,7 @@ import com.dianping.cat.consumer.ip.model.entity.Period;
 import com.dianping.cat.consumer.ip.model.transform.BaseVisitor;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.ip.Model.DisplayModel;
+import com.dianping.cat.report.page.ip.location.IPSeekerManager;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -94,6 +95,12 @@ public class Handler implements PageHandler<Context> {
 			Gson gson = new Gson();
 			MobileModel mobileModel = new MobileModel().setDisplayModels(model.getDisplayModels());
 			model.setMobileResponse(gson.toJson(mobileModel));
+			break;
+		case MOBILE_IP:
+			String ip = payload.getIp();
+			String location = IPSeekerManager.getLocation(ip);
+			System.out.println(ip + ":" + location);
+			model.setMobileResponse(location);
 			break;
 		}
 		if (payload.getPeriod().isCurrent()) {
