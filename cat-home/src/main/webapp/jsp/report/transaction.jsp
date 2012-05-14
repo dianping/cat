@@ -27,7 +27,7 @@
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=failure">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th><th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th><th>Std(ms)</th></tr>
+			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th><th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th><th>Std(ms)</th><th>TPS</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -41,17 +41,21 @@
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
+					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
+			<input type="text" name="queryname" id="queryname">
+		    <input type="text" id="hiddenQuery" style="display:none" value="${model.queryName}"></input>
+		    <input  style="WIDTH: 60px" value="Search" onclick="selectByName('${model.date}','${model.domain}','${payload.type}')" type="submit">
 			<tr>
 			<th><a href="?op=graphs&domain=${report.domain}&date=${model.date}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=type">Name</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=failure">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th><th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg">Avg</a>(ms)</th><th>Std(ms)</th></tr>
+			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th><th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg">Avg</a>(ms)</th><th>Std(ms)</th><th>TPS</th></tr>
 			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
@@ -66,6 +70,7 @@
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
+					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 				<tr class="graphs"><td colspan="6"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>

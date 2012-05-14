@@ -111,12 +111,42 @@ public class Handler implements PageHandler<Context>, Initializable {
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
-
+			// set the tps for every transaction type
+			setTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
 		}
 	}
+	
+	private void setTps(Payload payload, TransactionReport report) {
+		if (payload != null && report != null) {
+			boolean isCurrent = payload.getPeriod().isCurrent();
+			for (TransactionType transType : report.getTypes().values()) {
+				long totalCount = transType.getTotalCount();
+				double tps = 0;
+				if (isCurrent) {
+					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+					tps = totalCount / seconds;
+				} else {
+					tps = totalCount / (double) 3600;
+				}
+				transType.setTps(tps);
+				for (TransactionName transName : transType.getNames().values()) {
+					long totalNameCount = transName.getTotalCount();
+					double nameTps = 0;
+					if (isCurrent) {
+						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+						nameTps = totalNameCount / seconds;
+					} else {
+						nameTps = totalNameCount / (double) 3600;
+					}
+					transName.setTps(nameTps);
+				}
+			}
+		}
+	}
+
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -246,9 +276,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 				String type = payload.getType();
 				String sorted = payload.getSortBy();
-
+				String queryName = payload.getQueryName();
+				if (queryName != null) {
+					model.setQueryName(queryName);
+				}
 				if (!StringUtils.isEmpty(type)) {
-					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, report));
+					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, report, queryName));
 				} else {
 					model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, report));
 				}

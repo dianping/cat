@@ -34,3 +34,12 @@ $(document).delegate('.graph_link', 'click', function(e){
 		cell.parentNode.style.display = 'none';
 	}	
 });
+
+$("#queryname").val($("#hiddenQuery").val()) ;
+
+function selectByName(date,domain,type){
+	var queryname=$("#queryname").val();
+	window.location.href="?domain="+domain+"&type="+type+"&date="+date+"&queryname="+queryname;
+}
+
+

@@ -17,6 +17,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("sort")
 	private String m_sortBy;
+	
+	@FieldMeta("queryname")
+	private String m_queryName;
 
 	public Payload() {
 		super(ReportPage.TRANSACTION);
@@ -34,6 +37,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	public String getType() {
 		return m_type;
 	}
+	
+	public String getQueryName(){
+		return m_queryName;
+	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
@@ -45,6 +52,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setType(String type) {
 		m_type = type;
+	}
+	
+	public void setQueryName(String queryName){
+		this.m_queryName=queryName;
 	}
 
 	@Override

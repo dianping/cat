@@ -23,14 +23,19 @@ public class DisplayTransactionNameReport {
 		return m_results;
 	}
 
-	public DisplayTransactionNameReport display(String sorted, String type, TransactionReport report) {
+	public DisplayTransactionNameReport display(String sorted, String type, TransactionReport report, String queryName) {
 		Map<String, TransactionType> types = report.getTypes();
 		if (types != null) {
 			TransactionType names = types.get(type);
 
 			if (names != null) {
 				for (Entry<String, TransactionName> entry : names.getNames().entrySet()) {
-					m_results.add(new TransactionNameModel(entry.getKey(), entry.getValue()));
+					String transTypeName = entry.getValue().getId();
+					boolean isAdd = (queryName == null || queryName.length() == 0 || transTypeName.toLowerCase().contains(
+					      queryName.trim().toLowerCase()));
+					if (isAdd) {
+						m_results.add(new TransactionNameModel(entry.getKey(), entry.getValue()));
+					}
 				}
 			}
 		}
