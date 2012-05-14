@@ -96,8 +96,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 			return n;
 		}
 
-		Cat.getManager().getThreadLocalMessageTree();
-
 		return null;
 	}
 
