@@ -2,13 +2,14 @@ package com.dianping.cat.message.internal;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Queue;
 import java.util.Stack;
 
 import junit.framework.Assert;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,7 +23,6 @@ import com.dianping.cat.message.CatTestCase;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -31,7 +31,7 @@ import com.site.helper.Reflects;
 
 @RunWith(JUnit4.class)
 public class MessageProducerTest extends CatTestCase {
-	private DefaultMessageQueue m_queue;
+	private Queue<MessageTree> m_queue;
 
 	@BeforeClass
 	public static void beforeClass() throws IOException {
@@ -46,24 +46,18 @@ public class MessageProducerTest extends CatTestCase {
 
 		Files.forIO().writeTo(configFile, clientConfig.toString());
 
+		Cat.destroy();
 		Cat.initialize(configFile);
 	}
 
 	@Before
 	public void before() throws Exception {
-		Cat.setup(null);
-
 		TransportManager manager = Cat.lookup(TransportManager.class);
-		DefaultMessageQueue queue = Reflects.forField().getDeclaredFieldValue(manager.getSender().getClass(), "m_queue",
+		Initializable queue = Reflects.forField().getDeclaredFieldValue(manager.getSender().getClass(), "m_queue",
 		      manager.getSender());
 
 		queue.initialize();
-		m_queue = queue;
-	}
-
-	@After
-	public void after() throws Exception {
-		Cat.reset();
+		m_queue = Reflects.forField().getDeclaredFieldValue(queue.getClass(), "m_queue", queue);
 	}
 
 	@Test

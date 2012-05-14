@@ -60,6 +60,5 @@ public abstract class CatTestCase extends ComponentTestCase {
 	@After
 	public void after() throws Exception {
 		Cat.reset();
-		Cat.destroy();
 	}
 }

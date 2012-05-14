@@ -53,6 +53,13 @@ public interface MessageManager {
 	public MessageTree getThreadLocalMessageTree();
 
 	/**
+	 * Check if the thread context is setup or not.
+	 * 
+	 * @return true if the thread context is setup, false otherwise
+	 */
+	public boolean hasContext();
+
+	/**
 	 * Initialize CAT client with given CAT configuration.
 	 * 
 	 * @param config

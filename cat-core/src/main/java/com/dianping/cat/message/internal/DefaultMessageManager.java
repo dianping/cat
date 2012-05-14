@@ -75,7 +75,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		Context ctx = getContext();
 
 		if (ctx != null && transaction.isStandalone()) {
-			ctx.end(this, transaction);
+			if (ctx.end(this, transaction)) {
+				m_context.remove();
+			}
 		}
 	}
 
@@ -138,6 +140,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public boolean hasContext() {
+		return m_context.get() != null;
 	}
 
 	@Override
@@ -269,7 +276,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			}
 		}
 
-		public void end(DefaultMessageManager manager, Transaction transaction) {
+		/**
+		 * return true means the transaction has been flushed.
+		 * 
+		 * @param manager
+		 * @param transaction
+		 * @return true if message is flushed, false otherwise
+		 */
+		public boolean end(DefaultMessageManager manager, Transaction transaction) {
 			if (!m_stack.isEmpty()) {
 				Transaction current = m_stack.pop();
 
@@ -289,8 +303,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					m_tree.setMessageId(null);
 					m_tree.setMessage(null);
 					manager.flush(tree);
+					return true;
 				}
 			}
+
+			return false;
 		}
 
 		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
