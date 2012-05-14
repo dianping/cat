@@ -14,7 +14,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
-import com.dianping.cat.hadoop.mapreduce.MessageTreeInputFormat;
+import com.dianping.cat.job.spi.mapreduce.MessageTreeInputFormat;
 
 public class UrlJobMain extends Configured implements Tool {
 

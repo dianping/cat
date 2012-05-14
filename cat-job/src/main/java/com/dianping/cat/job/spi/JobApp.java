@@ -1,4 +1,4 @@
-package com.dianping.cat.job;
+package com.dianping.cat.job.spi;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
@@ -7,6 +7,7 @@ import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 import org.codehaus.plexus.PlexusContainer;
 
+import com.dianping.cat.job.spi.joblet.Joblet;
 import com.site.lookup.ContainerLoader;
 import com.site.lookup.LookupException;
 
@@ -39,14 +40,27 @@ public class JobApp extends Configured implements Tool {
 
 	@Override
 	public int run(String[] args) throws Exception {
-		Job job = JobFactory.INSTANCE.createJob(this, getConf(), new JobCmdLine(args));
+		JobCmdLine cmdLine = new JobCmdLine(args);
+		String name = cmdLine.getJobletName();
+		Joblet<?, ?> joblet = lookup(Joblet.class, name);
+		Job job = JobFactory.INSTANCE.createJob(joblet, getConf(), cmdLine);
 
 		if (job == null) {
-			return -2;
-		} else if (job.waitForCompletion(true)) {
-			return 0;
-		} else {
 			return -1;
+		} else {
+			long start = System.currentTimeMillis();
+
+			try {
+				if (job.waitForCompletion(true)) {
+					return 0;
+				} else {
+					return -2;
+				}
+			} finally {
+				long end = System.currentTimeMillis();
+
+				System.out.println(String.format("Time used: %s ms", end - start));
+			}
 		}
 	}
 }

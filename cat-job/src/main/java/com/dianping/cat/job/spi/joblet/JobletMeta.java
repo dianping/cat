@@ -1,4 +1,4 @@
-package com.dianping.cat.joblet;
+package com.dianping.cat.job.spi.joblet;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,9 +1,9 @@
-package com.dianping.cat.joblet;
+package com.dianping.cat.job.spi.joblet;
 
 import java.io.IOException;
 
-import com.dianping.cat.hadoop.mapreduce.MessageTreeWritable;
-import com.dianping.cat.job.JobCmdLine;
+import com.dianping.cat.job.spi.JobCmdLine;
+import com.dianping.cat.job.spi.mapreduce.MessageTreeWritable;
 
 public interface Joblet<KEY, VALUE> {
 	public boolean initialize(JobCmdLine cmdLine);

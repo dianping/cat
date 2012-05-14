@@ -1,4 +1,4 @@
-package com.dianping.cat.job;
+package com.dianping.cat.job.spi;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,11 +12,11 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
-import com.dianping.cat.hadoop.mapreduce.MessageTreeInputFormat;
-import com.dianping.cat.joblet.Joblet;
-import com.dianping.cat.joblet.JobletMapper;
-import com.dianping.cat.joblet.JobletMeta;
-import com.dianping.cat.joblet.JobletReducer;
+import com.dianping.cat.job.spi.joblet.Joblet;
+import com.dianping.cat.job.spi.joblet.JobletMapper;
+import com.dianping.cat.job.spi.joblet.JobletMeta;
+import com.dianping.cat.job.spi.joblet.JobletReducer;
+import com.dianping.cat.job.spi.mapreduce.MessageTreeInputFormat;
 import com.site.helper.Files;
 
 public enum JobFactory {
@@ -24,10 +24,7 @@ public enum JobFactory {
 
 	private String m_hdfsServer = "10.1.1.169";
 
-	public Job createJob(JobApp container, Configuration configuration, JobCmdLine cmdLine)
-	      throws IOException {
-		String name = cmdLine.getJobletName();
-		Joblet<?, ?> joblet = container.lookup(Joblet.class, name);
+	public Job createJob(Joblet<?, ?> joblet, Configuration configuration, JobCmdLine cmdLine) throws IOException {
 		Class<?> jobletClass = joblet.getClass();
 		JobletMeta meta = jobletClass.getAnnotation(JobletMeta.class);
 

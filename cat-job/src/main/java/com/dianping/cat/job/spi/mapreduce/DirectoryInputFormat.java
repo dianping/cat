@@ -1,4 +1,4 @@
-package com.dianping.cat.hadoop.mapreduce;
+package com.dianping.cat.job.spi.mapreduce;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,48 +14,12 @@ import org.apache.hadoop.mapreduce.lib.input.InvalidInputException;
 import org.apache.hadoop.mapreduce.security.TokenCache;
 
 public abstract class DirectoryInputFormat<K, V> extends FileInputFormat<K, V> {
-
-	public List<FileStatus> listStatus(JobContext job) throws IOException {
-
-		List<FileStatus> result = new ArrayList<FileStatus>();
-		Path[] dirs = getInputPaths(job);
-		if (dirs.length == 0) {
-			throw new IOException("No input paths specified in job");
+	private static final PathFilter hiddenFileFilter = new PathFilter() {
+		public boolean accept(Path p) {
+			String name = p.getName();
+			return !name.startsWith("_") && !name.startsWith(".");
 		}
-
-		TokenCache.obtainTokensForNamenodes(job.getCredentials(), dirs, job.getConfiguration());
-
-		List<IOException> errors = new ArrayList<IOException>();
-		List<PathFilter> filters = new ArrayList<PathFilter>();
-		PathFilter jobFilter = getInputPathFilter(job);
-		if (jobFilter != null) {
-			filters.add(jobFilter);
-		}
-		// Add Default Hidden file
-		PathFilter inputFilter = new MultiPathFilter(filters);
-
-		filters.add(hiddenFileFilter);
-		for (int i = 0; i < dirs.length; ++i) {
-			Path p = dirs[i];
-			FileSystem fs = p.getFileSystem(job.getConfiguration());
-			FileStatus[] matches = fs.globStatus(p, inputFilter);
-			if (matches == null) {
-				errors.add(new IOException("Input path does not exist: " + p));
-			} else if (matches.length == 0) {
-				errors.add(new IOException("Input Pattern " + p + " matches 0 files"));
-			} else {
-
-				for (FileStatus globStat : matches) {
-					addFileStat(result, inputFilter, fs, globStat);
-				}
-			}
-		}
-
-		if (!errors.isEmpty()) {
-			throw new InvalidInputException(errors);
-		}
-		return result;
-	}
+	};
 
 	public void addFileStat(List<FileStatus> result, PathFilter inputFilter, FileSystem fs, FileStatus globStat)
 	      throws IOException {
@@ -69,12 +33,51 @@ public abstract class DirectoryInputFormat<K, V> extends FileInputFormat<K, V> {
 		}
 	}
 
-	private static final PathFilter hiddenFileFilter = new PathFilter() {
-		public boolean accept(Path p) {
-			String name = p.getName();
-			return !name.startsWith("_") && !name.startsWith(".");
+	public List<FileStatus> listStatus(JobContext job) throws IOException {
+		List<FileStatus> result = new ArrayList<FileStatus>();
+		Path[] dirs = getInputPaths(job);
+
+		if (dirs.length == 0) {
+			throw new IOException("No input paths specified in job");
 		}
-	};
+
+		TokenCache.obtainTokensForNamenodes(job.getCredentials(), dirs, job.getConfiguration());
+
+		List<IOException> errors = new ArrayList<IOException>();
+		List<PathFilter> filters = new ArrayList<PathFilter>();
+		PathFilter jobFilter = getInputPathFilter(job);
+
+		if (jobFilter != null) {
+			filters.add(jobFilter);
+		}
+
+		// Add Default Hidden file
+		PathFilter inputFilter = new MultiPathFilter(filters);
+
+		filters.add(hiddenFileFilter);
+
+		for (int i = 0; i < dirs.length; ++i) {
+			Path p = dirs[i];
+			FileSystem fs = p.getFileSystem(job.getConfiguration());
+			FileStatus[] matches = fs.globStatus(p, inputFilter);
+
+			if (matches == null) {
+				errors.add(new IOException("Input path does not exist: " + p));
+			} else if (matches.length == 0) {
+				errors.add(new IOException("Input Pattern " + p + " matches 0 files"));
+			} else {
+				for (FileStatus globStat : matches) {
+					addFileStat(result, inputFilter, fs, globStat);
+				}
+			}
+		}
+
+		if (!errors.isEmpty()) {
+			throw new InvalidInputException(errors);
+		}
+
+		return result;
+	}
 
 	private static class MultiPathFilter implements PathFilter {
 		private List<PathFilter> filters;

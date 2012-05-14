@@ -129,7 +129,7 @@ public class Handler implements PageHandler<Context> {
 			}
 
 			if (domain != null) {
-				reportRecords = m_dao.findAllByDomainAndDate(domain, transactiondate, domainSet);
+				reportRecords = m_dao.findAllByDomainAndDate(domain, transactiondate, SqlReportRecordEntity.READSET_FULL);
 			}
 			report.setDomain(domain).setDomains(domains).setReportRecords(sqlRecordModels);
 			report.setStartTime(new Date(startDate)).setEndTime(new Date(startDate + 60 * 60 * 1000 - 100));

@@ -1,4 +1,4 @@
-package com.dianping.cat.job;
+package com.dianping.cat.job.spi.mapreduce;
 
 import java.io.DataInput;
 import java.io.DataOutput;

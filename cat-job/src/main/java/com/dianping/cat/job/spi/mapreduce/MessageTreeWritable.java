@@ -1,4 +1,4 @@
-package com.dianping.cat.hadoop.mapreduce;
+package com.dianping.cat.job.spi.mapreduce;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -13,6 +13,14 @@ public class MessageTreeWritable implements Writable {
 	private MessageTree m_tree = new DefaultMessageTree();
 
 	private boolean m_completed;
+
+	public MessageTreeWritable() {
+	}
+
+	// for testing purpose
+	public MessageTreeWritable(MessageTree tree) {
+		m_tree = tree;
+	}
 
 	public void complete() {
 		m_completed = true;

@@ -1,26 +1,30 @@
-package com.dianping.cat.job.browser;
+package com.dianping.cat.job.joblet;
 
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
 import java.util.List;
 
-import com.dianping.cat.hadoop.mapreduce.MessageTreeWritable;
-import com.dianping.cat.job.JobCmdLine;
-import com.dianping.cat.job.PojoWritable;
-import com.dianping.cat.job.browser.BrowserJoblet.Browser;
-import com.dianping.cat.job.browser.BrowserJoblet.BrowserStatatisics;
-import com.dianping.cat.joblet.Joblet;
-import com.dianping.cat.joblet.JobletContext;
-import com.dianping.cat.joblet.JobletMeta;
+import com.dianping.cat.job.joblet.BrowserJoblet.Browser;
+import com.dianping.cat.job.joblet.BrowserJoblet.BrowserStat;
+import com.dianping.cat.job.spi.JobCmdLine;
+import com.dianping.cat.job.spi.joblet.Joblet;
+import com.dianping.cat.job.spi.joblet.JobletContext;
+import com.dianping.cat.job.spi.joblet.JobletMeta;
+import com.dianping.cat.job.spi.mapreduce.MessageTreeWritable;
+import com.dianping.cat.job.spi.mapreduce.PojoWritable;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.lookup.annotation.Inject;
 
-@JobletMeta(name = "browser", description = "Browser analysis", keyClass = Browser.class, valueClass = BrowserStatatisics.class, combine = true, reducerNum = 1)
-public class BrowserJoblet implements Joblet<Browser, BrowserStatatisics> {
+@JobletMeta(name = "browser", description = "Browser analysis", keyClass = Browser.class, valueClass = BrowserStat.class, combine = true, reducerNum = 1)
+public class BrowserJoblet implements Joblet<Browser, BrowserStat> {
 	private static final String TOKEN = "&Agent=";
+
+	@Inject
+	private BrowserOutputter m_outputter;
 
 	private String getUserAgent(Transaction root) {
 		List<Message> children = root.getChildren();
@@ -55,6 +59,10 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStatatisics> {
 			cmdLine.setProperty("outputPath", outputPath);
 		}
 
+		if (m_outputter == null) {
+			m_outputter = new DefaultBrowserOutputter();
+		}
+
 		return true;
 	}
 
@@ -69,21 +77,21 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStatatisics> {
 			if (userAgent != null) {
 				Browser browser = new Browser(userAgent);
 
-				context.write(browser, BrowserStatatisics.ONCE);
+				context.write(browser, BrowserStat.ONCE);
 			}
 		}
 	}
 
 	@Override
-	public void reduce(JobletContext context, Browser browser, Iterable<BrowserStatatisics> stats) throws IOException,
+	public void reduce(JobletContext context, Browser browser, Iterable<BrowserStat> stats) throws IOException,
 	      InterruptedException {
-		BrowserStatatisics all = new BrowserStatatisics();
+		BrowserStat all = new BrowserStat();
 
-		for (BrowserStatatisics stat : stats) {
+		for (BrowserStat stat : stats) {
 			all.add(stat.getCount());
 		}
 
-		context.write(browser, all);
+		m_outputter.out(context, browser, all);
 	}
 
 	/**
@@ -132,7 +140,7 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStatatisics> {
 		}
 
 		public Browser(String userAgent) {
-			init(userAgent);
+			parse(userAgent);
 		}
 
 		public String getChannel() {
@@ -179,12 +187,12 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStatatisics> {
 			return result;
 		}
 
-		private void init(String userAgent) {
+		private void parse(String userAgent) {
 			Object[] values = null;
 
 			try {
 				if (values == null) {
-					values = s_iosFormat.parse(userAgent);
+					values = s_androidFormat.parse(userAgent);
 				}
 			} catch (ParseException e) {
 				// ignore it
@@ -192,7 +200,7 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStatatisics> {
 
 			try {
 				if (values == null) {
-					values = s_androidFormat.parse(userAgent);
+					values = s_iosFormat.parse(userAgent);
 				}
 			} catch (ParseException e) {
 				// ignore it
@@ -215,12 +223,16 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStatatisics> {
 		}
 	}
 
-	public static class BrowserStatatisics extends PojoWritable {
-		public static final BrowserStatatisics ONCE = new BrowserStatatisics().add(1);
+	public static interface BrowserOutputter {
+		public void out(JobletContext context, Browser browser, BrowserStat all) throws IOException, InterruptedException;
+	}
+
+	public static class BrowserStat extends PojoWritable {
+		public static final BrowserStat ONCE = new BrowserStat().add(1);
 
 		private int m_count;
 
-		public BrowserStatatisics add(int count) {
+		public BrowserStat add(int count) {
 			m_count += count;
 			return this;
 		}
@@ -232,6 +244,13 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStatatisics> {
 		@Override
 		public int hashCode() {
 			return m_count;
+		}
+	}
+
+	public static class DefaultBrowserOutputter implements BrowserOutputter {
+		@Override
+		public void out(JobletContext context, Browser browser, BrowserStat all) throws IOException, InterruptedException {
+			context.write(browser, all);
 		}
 	}
 }

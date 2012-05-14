@@ -1,11 +1,11 @@
-package com.dianping.cat.joblet;
+package com.dianping.cat.job.spi.joblet;
 
 import java.io.IOException;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Mapper;
 
-import com.dianping.cat.hadoop.mapreduce.MessageTreeWritable;
+import com.dianping.cat.job.spi.mapreduce.MessageTreeWritable;
 
 public class JobletMapper extends Mapper<Object, MessageTreeWritable, Object, Object> {
 	private Joblet<Object, Object> m_joblet;

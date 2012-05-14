@@ -1,4 +1,4 @@
-package com.dianping.cat.job;
+package com.dianping.cat.job.spi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +107,7 @@ public class JobCmdLine {
 
 		if (value != null) {
 			try {
-				return Boolean.parseBoolean(value);
+				return "true".equals(value) || "yes".equals(value) || "1".equals(value);
 			} catch (NumberFormatException e) {
 				throw new IllegalArgumentException(String.format("Invalid value(%s) of property(%s), boolean expected!",
 				      value, name), e);

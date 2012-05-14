@@ -1,15 +1,15 @@
-package com.dianping.cat.job.browser;
+package com.dianping.cat.job.joblet;
 
 import java.io.IOException;
 import java.util.List;
 
 import org.apache.hadoop.io.Writable;
 
-import com.dianping.cat.hadoop.mapreduce.MessageTreeWritable;
-import com.dianping.cat.job.JobCmdLine;
-import com.dianping.cat.joblet.Joblet;
-import com.dianping.cat.joblet.JobletContext;
-import com.dianping.cat.joblet.JobletMeta;
+import com.dianping.cat.job.spi.JobCmdLine;
+import com.dianping.cat.job.spi.joblet.Joblet;
+import com.dianping.cat.job.spi.joblet.JobletContext;
+import com.dianping.cat.job.spi.joblet.JobletMeta;
+import com.dianping.cat.job.spi.mapreduce.MessageTreeWritable;
 import com.site.lookup.ContainerHolder;
 
 @JobletMeta(name = "help", description = "Print this help", keyClass = Writable.class, valueClass = Writable.class)
@@ -30,8 +30,8 @@ public class HelpJoblet extends ContainerHolder implements Joblet<Writable, Writ
 	public boolean initialize(JobCmdLine cmdLine) {
 		List<Joblet> joblets = super.lookupList(Joblet.class);
 
-		System.out.println("Syntax: hadoop jar <jar-file> <joblet>");
-		System.out.println("available joblets:");
+		System.out.println("Syntax: hadoop jar <jar-file> <joblet> [options]");
+		System.out.println("Available joblets:");
 
 		for (Joblet joblet : joblets) {
 			JobletMeta meta = joblet.getClass().getAnnotation(JobletMeta.class);

@@ -1,8 +1,12 @@
-package com.dianping.cat.job;
+package com.dianping.cat.job.spi.mapreduce;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -22,6 +26,10 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 
 		try {
 			for (Field field : entry.getFields()) {
+				if (!entry.isKey(field)) {
+					continue;
+				}
+
 				Object v1 = field.get(this);
 				Object v2 = field.get(o);
 
@@ -53,26 +61,13 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 		return 0;
 	}
 
-	/**
-	 * Default implementation. You should override this method for performance
-	 * reason.
-	 */
 	@Override
-	public int hashCode() {
-		Entry entry = getEntry();
-		int hash = 0;
-
-		try {
-			for (Field field : entry.getFields()) {
-				Object v1 = field.get(this);
-
-				hash = hash * 31 + (v1 == null ? 0 : v1.hashCode());
-			}
-		} catch (Exception e) {
-			// ignore it
+	public boolean equals(Object obj) {
+		if (obj instanceof PojoWritable) {
+			return compareTo((PojoWritable) obj) == 0;
+		} else {
+			return false;
 		}
-
-		return hash;
 	}
 
 	private Entry getEntry() {
@@ -94,18 +89,35 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 		return entry;
 	}
 
+	/**
+	 * Default implementation. You should override this method for performance
+	 * reason.
+	 */
+	@Override
+	public int hashCode() {
+		Entry entry = getEntry();
+		int hash = 0;
+
+		try {
+			for (Field field : entry.getFields()) {
+				if (entry.isKey(field)) {
+					Object v1 = field.get(this);
+
+					hash = hash * 31 + (v1 == null ? 0 : v1.hashCode());
+				}
+			}
+		} catch (Exception e) {
+			// ignore it
+		}
+
+		return hash;
+	}
+
 	@Override
 	public void readFields(DataInput in) throws IOException {
 		String str = Text.readString(in);
 
 		PojoCodec.INSTANCE.decode(getEntry(), this, str);
-	}
-
-	@Override
-	public void write(DataOutput out) throws IOException {
-		String str = PojoCodec.INSTANCE.encode(getEntry(), this);
-
-		Text.writeString(out, str);
 	}
 
 	@Override
@@ -115,14 +127,27 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 		return str;
 	}
 
+	@Override
+	public void write(DataOutput out) throws IOException {
+		String str = PojoCodec.INSTANCE.encode(getEntry(), this);
+
+		Text.writeString(out, str);
+	}
+
 	static class Entry {
 		private Class<?> m_clazz;
 
 		private List<Field> m_fields;
 
+		private Map<Field, Boolean> m_keys;
+
 		public Entry(Class<?> clazz) {
 			m_clazz = clazz;
 			m_fields = new ArrayList<Field>();
+			m_keys = new HashMap<Field, Boolean>();
+
+			List<Integer> orders = new ArrayList<Integer>();
+			boolean needsSort = false;
 
 			for (Field field : clazz.getDeclaredFields()) {
 				if (!Modifier.isStatic(field.getModifiers())) {
@@ -131,7 +156,25 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 					}
 
 					m_fields.add(field);
+
+					FieldMeta meta = field.getAnnotation(FieldMeta.class);
+
+					if (meta != null) {
+						m_keys.put(field, meta.key());
+						orders.add(meta.order());
+
+						if (!needsSort && meta.order() >= 0) {
+							needsSort = true;
+						}
+					} else {
+						orders.add(Integer.MAX_VALUE);
+						m_keys.put(field, true);
+					}
 				}
+			}
+
+			if (needsSort) {
+				sortFields(orders);
 			}
 		}
 
@@ -142,6 +185,48 @@ public abstract class PojoWritable implements WritableComparable<PojoWritable> {
 		public List<Field> getFields() {
 			return m_fields;
 		}
+
+		public boolean isKey(Field field) {
+			return m_keys.get(field);
+		}
+
+		private void sortFields(List<Integer> orders) {
+			int len = orders.size();
+
+			for (int i = 0; i < len; i++) {
+				int o1 = orders.get(i);
+				int index = 0;
+				int o = o1;
+
+				for (int j = i + 1; j < len; j++) {
+					int o2 = orders.get(j);
+
+					if (o > o2) {
+						index = j;
+						o = o2;
+					}
+				}
+
+				if (index > 0) {
+					orders.set(i, orders.get(index));
+					orders.set(index, o1);
+
+					Field f1 = m_fields.get(i);
+					Field f2 = m_fields.get(index);
+
+					m_fields.set(i, f2);
+					m_fields.set(index, f1);
+				}
+			}
+		}
+	}
+
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.FIELD)
+	protected static @interface FieldMeta {
+		boolean key() default true;
+
+		int order() default Integer.MAX_VALUE;
 	}
 
 	static enum PojoCodec {

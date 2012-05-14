@@ -1,4 +1,4 @@
-package com.dianping.cat.job;
+package com.dianping.cat.job.spi.mapreduce;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,8 +12,9 @@ import junit.framework.Assert;
 import org.apache.hadoop.io.Text;
 import org.junit.Test;
 
-import com.dianping.cat.job.MapWritable.KeyValueInput;
-import com.dianping.cat.job.MapWritable.KeyValueOutput;
+import com.dianping.cat.job.spi.mapreduce.MapWritable;
+import com.dianping.cat.job.spi.mapreduce.MapWritable.KeyValueInput;
+import com.dianping.cat.job.spi.mapreduce.MapWritable.KeyValueOutput;
 
 public class MapWritableTest {
 	private void checkCompareTo(MapWritable writable) throws IOException {

@@ -1,14 +1,49 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.joblet.Joblet</role>
-			<role-hint>help</role-hint>
-			<implementation>com.dianping.cat.job.browser.HelpJoblet</implementation>
+			<role>com.dianping.cat.job.spi.joblet.JobletRunner</role>
+			<implementation>com.dianping.cat.job.spi.joblet.JobletRunner</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.joblet.Joblet</role>
+			<role>com.dianping.cat.job.spi.joblet.Joblet</role>
+			<role-hint>help</role-hint>
+			<implementation>com.dianping.cat.job.joblet.HelpJoblet</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.spi.joblet.Joblet</role>
 			<role-hint>browser</role-hint>
-			<implementation>com.dianping.cat.job.browser.BrowserJoblet</implementation>
+			<implementation>com.dianping.cat.job.joblet.BrowserJoblet</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.job.joblet.BrowserJoblet$BrowserOutputter</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.joblet.BrowserJoblet$BrowserOutputter</role>
+			<implementation>com.dianping.cat.job.joblet.BrowserJoblet$DefaultBrowserOutputter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.spi.joblet.Joblet</role>
+			<role-hint>sql</role-hint>
+			<implementation>com.dianping.cat.job.joblet.SqlJoblet</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.job.joblet.SqlJoblet$SqlOutputter</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.joblet.SqlJoblet$SqlOutputter</role>
+			<implementation>com.dianping.cat.job.joblet.SqlJoblet$SqlDatabaseOutputter</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
