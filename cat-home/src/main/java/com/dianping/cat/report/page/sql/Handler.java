@@ -89,8 +89,8 @@ public class Handler implements PageHandler<Context> {
 			String failureOvertime = "";
 			// when id is 0, will analyze all the data under this domain
 			if (id == 0) {
-				List<SqlReportRecord> allRecords = m_dao.findAllByDomainAndDate(payload.getDomain(), new Date(payload
-				      .getDate()), SqlReportRecordEntity.READSET_FULL);
+				List<SqlReportRecord> allRecords = m_dao.findAllByDomainAndDate(payload.getDomain(),
+				      new Date(payload.getDate()), SqlReportRecordEntity.READSET_FULL);
 				List<String> durationDistributions = new ArrayList<String>();
 				List<String> durationOvertimes = new ArrayList<String>();
 				List<String> hitsovOvrtimes = new ArrayList<String>();
@@ -103,9 +103,9 @@ public class Handler implements PageHandler<Context> {
 				}
 				// summary all the result
 				durationDistribution = compute(durationDistributions);
-				durationOvertime = computeDuration(durationOvertimes, hitsovOvrtimes);
 				hitsovOvrtime = compute(hitsovOvrtimes);
 				failureOvertime = compute(failureOvertimes);
+				durationOvertime = computeDuration(durationOvertimes, hitsovOvrtimes);
 			} else {
 				SqlReportRecord record = m_dao.findByPK(id, SqlReportRecordEntity.READSET_FULL);
 				statement = record.getStatement();
@@ -179,7 +179,7 @@ public class Handler implements PageHandler<Context> {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// the computation of distribution is just a sum of all the date under the
 	// same domain and date
 	// String format key:value,key:value,... type of key and value int
@@ -204,28 +204,28 @@ public class Handler implements PageHandler<Context> {
 			String result = key + ":" + count + ",";
 			sb.append(result);
 		}
-		return sb.substring(0, sb.length()-1);
+		return sb.substring(0, sb.length() - 1);
 	}
 
 	// the computation of duration is:duration=(hit*duration)/hit
 	public String computeDuration(List<String> durationOvertimes, List<String> hitsovOvrtimes) {
-		int[] sum = new int[13];
+		double[] sum = new double[13];
 		int[] totalHit = new int[13];
-		int[] average = new int[13];
+		double[] average = new double[13];
 		for (int i = 0; i < durationOvertimes.size(); i++) {
 			String durations[] = durationOvertimes.get(i).split(",");
 			String hits[] = hitsovOvrtimes.get(i).split(",");
 			for (int j = 0; j <= 12; j++) {
 				String s_duration = durations[j].split(":")[1];
 				String s_hit = hits[j].split(":")[1];
-				int i_duration = Integer.parseInt(s_duration);
+				double i_duration = Double.parseDouble(s_duration);
 				int i_hit = Integer.parseInt(s_hit);
 				totalHit[j] += i_hit;
 				sum[j] += i_duration * i_hit;
 			}
 		}
 		for (int m = 0; m <= 12; m++) {
-			average[m] = totalHit[m] == 0 ? 0 : sum[m] / totalHit[m];
+			average[m] = totalHit[m] == 0 ? 0 : sum[m] /(double) totalHit[m];
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i <= 12; i++) {

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.DefaultMerger;
 import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
@@ -45,14 +44,14 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
 		DefaultDomParser parser = new DefaultDomParser();
-		DefaultMerger merger = null;
+		ProblemReportMerger merger = null;
 
 		for (Report report : reports) {
 			String xml = report.getContent();
 			ProblemReport model = parser.parse(xml);
 
 			if (merger == null) {
-				merger = new DefaultMerger(model);
+				merger = new ProblemReportMerger(model);
 			} else {
 				model.accept(merger);
 			}

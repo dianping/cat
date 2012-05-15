@@ -9,9 +9,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("ip")
-	private String m_ipAddress;
-
 	@FieldMeta("group")
 	private String m_groupName;
 
@@ -36,10 +33,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public String getIpAddress() {
-		return m_ipAddress;
-	}
-
 	public int getMinute() {
 		return m_minute;
 	}
@@ -50,10 +43,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.GROUP);
-	}
-
-	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
 	}
 
 	public void setMinute(int minute) {

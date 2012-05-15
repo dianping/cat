@@ -21,8 +21,8 @@ public class DisplayTransactionTypeReport {
 		return m_results;
 	}
 
-	public DisplayTransactionTypeReport display(String sorted, TransactionReport report) {
-		Map<String, TransactionType> types = report.getTypes();
+	public DisplayTransactionTypeReport display(String sorted,String ip, TransactionReport report) {
+		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
 		if (types != null) {
 			for (Entry<String, TransactionType> entry : types.entrySet()) {
 				m_results.add(new TransactionTypeModel(entry.getKey(), entry.getValue()));

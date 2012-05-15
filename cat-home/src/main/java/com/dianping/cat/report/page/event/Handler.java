@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -55,15 +56,18 @@ public class Handler implements PageHandler<Context>, Initializable {
 	private EventName getAggregatedEventName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
+		String ipAddress = payload.getIpAddress();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
 		      .setProperty("type", type) //
 		      .setProperty("name", "*") //
-		      .setProperty("all", "true");
+		      .setProperty("all", "true")//
+		      .setProperty("ip", ipAddress);
 		ModelResponse<EventReport> response = m_service.invoke(request);
+		String ip = payload.getIpAddress();
 		EventReport report = response.getModel();
-		EventType t = report == null ? null : report.findType(type);
+		EventType t = report == null ? null : report.getMachines().get(ip).findType(type);
 
 		if (t != null) {
 			EventName all = t.findName("ALL");
@@ -78,14 +82,17 @@ public class Handler implements PageHandler<Context>, Initializable {
 		String domain = payload.getDomain();
 		String type = payload.getType();
 		String name = payload.getName();
+		String ipAddress = payload.getIpAddress();
 		String date = String.valueOf(payload.getDate());
+		String ip = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
 		      .setProperty("type", payload.getType())//
-		      .setProperty("name", payload.getName());
+		      .setProperty("name", payload.getName())//
+		      .setProperty("ip", ipAddress);;
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
-		EventType t = report.findType(type);
+		EventType t = report.getMachines().get(ip).findType(type);
 
 		if (t != null) {
 			EventName n = t.findName(name);
@@ -102,10 +109,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private EventReport getReport(Payload payload) {
 		String domain = payload.getDomain();
+		String ipAddress = payload.getIpAddress();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
-		      .setProperty("type", payload.getType());
+		      .setProperty("type", payload.getType())//
+		      .setProperty("ip", ipAddress);;
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
@@ -134,6 +143,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 
+		String ip = payload.getIpAddress();
+		if (StringUtils.isEmpty(ip) || ip.equals(CatString.ALL_IP)) {
+			payload.setIpAddress(CatString.ALL_IP);
+		}
+		model.setIpAddress(payload.getIpAddress());
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.EVENT);
 		model.setDisplayDomain(payload.getDomain());
@@ -240,11 +254,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 			String type = payload.getType();
 			String sorted = payload.getSortBy();
+			String ip = payload.getIpAddress();
 
 			if (!StringUtils.isEmpty(type)) {
-				model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, report));
+				model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, ip, report));
 			} else {
-				model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, report));
+				model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, ip, report));
 			}
 		} catch (Throwable e) {
 			Cat.getProducer().logError(e);

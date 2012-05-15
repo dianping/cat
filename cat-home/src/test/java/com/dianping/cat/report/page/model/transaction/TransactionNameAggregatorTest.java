@@ -15,7 +15,7 @@ public class TransactionNameAggregatorTest {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
 		TransactionReport report = parser.parse(source);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction-names.xml"), "utf-8");
-		TransactionName all = new TransactionNameAggregator(report).mergesFor("URL");
+		TransactionName all = new TransactionNameAggregator(report).mergesFor("URL","");
 
 		Assert.assertEquals(expected.replace("\r", ""), all.toString().replace("\r", ""));
 	}

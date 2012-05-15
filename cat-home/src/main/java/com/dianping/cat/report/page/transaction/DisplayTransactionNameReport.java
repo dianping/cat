@@ -23,8 +23,8 @@ public class DisplayTransactionNameReport {
 		return m_results;
 	}
 
-	public DisplayTransactionNameReport display(String sorted, String type, TransactionReport report, String queryName) {
-		Map<String, TransactionType> types = report.getTypes();
+	public DisplayTransactionNameReport display(String sorted, String type, String ip,TransactionReport report, String queryName) {
+		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
 		if (types != null) {
 			TransactionType names = types.get(type);
 

@@ -20,8 +20,8 @@ public class DisplayEventNameReport {
 		return m_results;
 	}
 
-	public DisplayEventNameReport display(String sorted,String type,EventReport report) {
-		Map<String, EventType> types = report.getTypes();
+	public DisplayEventNameReport display(String sorted,String type,String ip, EventReport report) {
+		Map<String, EventType> types = report.getMachines().get(ip).getTypes();
 		if (types != null) {
 			EventType names = types.get(type);
 			

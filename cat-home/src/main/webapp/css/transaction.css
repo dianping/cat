@@ -7,6 +7,10 @@
 	text-align: left;
 }
 
+.machines {
+	font-size: small;
+}
+
 tr.odd td {
 	background-color: #eee;
 	font-size: small;

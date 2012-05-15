@@ -19,12 +19,12 @@ public class DisplayEventTypeReport {
 		return m_results;
 	}
 
-	public DisplayEventTypeReport display(String sorted, EventReport report) {
+	public DisplayEventTypeReport display(String sorted, String ip,EventReport report) {
 		if(report==null){
 			return this;
 		}
 		
-		Map<String, EventType> types = report.getTypes();
+		Map<String, EventType> types = report.getMachines().get(ip).getTypes();
 		if (types != null) {
 			for (Entry<String, EventType> entry : types.entrySet()) {
 				m_results.add(new EventTypeModel(entry.getKey(), entry.getValue()));

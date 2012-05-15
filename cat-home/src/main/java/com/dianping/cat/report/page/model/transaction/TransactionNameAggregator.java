@@ -89,10 +89,10 @@ public class TransactionNameAggregator extends DefaultMerger {
 		}
 	}
 
-	public TransactionName mergesFor(String typeName) {
+	public TransactionName mergesFor(String typeName, String ip) {
 		TransactionName name = new TransactionName("ALL");
 		TransactionReport report = getTransactionReport();
-		TransactionType type = report.findType(typeName);
+		TransactionType type = report.getMachines().get(ip).findType(typeName);
 
 		if (type != null) {
 			for (TransactionName n : type.getNames().values()) {

@@ -15,7 +15,7 @@ public class EventNameAggregatorTest {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("event.xml"), "utf-8");
 		EventReport report = parser.parse(source);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("event-names.xml"), "utf-8");
-		EventName all = new EventNameAggregator(report).mergesFor("URL");
+		EventName all = new EventNameAggregator(report).mergesFor("URL","");
 
 		Assert.assertEquals(expected.replace("\r", ""), all.toString().replace("\r", ""));
 	}

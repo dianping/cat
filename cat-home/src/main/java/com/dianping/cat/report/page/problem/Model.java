@@ -12,8 +12,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private int m_lastMinute; // last minute of current hour
 
-	private String m_ipAddress;
-
 	private int m_hour;
 
 	private String m_threadId;
@@ -87,10 +85,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_hour;
 	}
 
-	public String getIpAddress() {
-		return m_ipAddress;
-	}
-
 	public List<String> getIps() {
 		if (m_report == null) {
 			return new ArrayList<String>();
@@ -159,10 +153,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setHour(int hour) {
 		m_hour = hour;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
 	}
 
 	public void setLastMinute(int lastMinute) {

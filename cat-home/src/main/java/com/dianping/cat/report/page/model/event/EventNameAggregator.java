@@ -56,10 +56,10 @@ public class EventNameAggregator extends DefaultMerger {
 		visitRangeChildren(old, range);
 	}
 
-	public EventName mergesFor(String typeName) {
+	public EventName mergesFor(String typeName,String ip) {
 		EventName name = new EventName("ALL");
 		EventReport report = getEventReport();
-		EventType type = report.findType(typeName);
+		EventType type = report.getMachines().get(ip).findType(typeName);
 
 		if (type != null) {
 			for (EventName n : type.getNames().values()) {

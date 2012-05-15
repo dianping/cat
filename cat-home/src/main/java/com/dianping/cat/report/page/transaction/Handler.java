@@ -18,6 +18,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -57,14 +58,17 @@ public class Handler implements PageHandler<Context>, Initializable {
 		String domain = payload.getDomain();
 		String type = payload.getType();
 		String date = String.valueOf(payload.getDate());
+		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
 		      .setProperty("type", type) //
 		      .setProperty("name", "*") //
-		      .setProperty("all", "true");
+		      .setProperty("all", "true")//
+		      .setProperty("ip", ipAddress );
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
+		String ip = payload.getIpAddress();
 		TransactionReport report = response.getModel();
-		TransactionType t = report == null ? null : report.findType(type);
+		TransactionType t = report == null ? null : report.getMachines().get(ip).findType(type);
 
 		if (t != null) {
 			TransactionName all = t.findName("ALL");
@@ -79,14 +83,17 @@ public class Handler implements PageHandler<Context>, Initializable {
 		String domain = payload.getDomain();
 		String type = payload.getType();
 		String name = payload.getName();
+		String ip = payload.getIpAddress();
+		String ipAddress = payload.getIpAddress();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
 		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", payload.getName());
+		      .setProperty("name", payload.getName())//
+		      .setProperty("ip", ipAddress);
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
-		TransactionType t = report.findType(type);
+		TransactionType t = report.getMachines().get(ip).findType(type);
 
 		if (t != null) {
 			TransactionName n = t.findName(name);
@@ -104,10 +111,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 	private TransactionReport getReport(Payload payload) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
+		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
-		      .setProperty("type", payload.getType());
-
+		      .setProperty("type", payload.getType())//
+		      .setProperty("ip", ipAddress);
+		
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
@@ -118,11 +127,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
 		}
 	}
-	
+
 	private void setTps(Payload payload, TransactionReport report) {
 		if (payload != null && report != null) {
 			boolean isCurrent = payload.getPeriod().isCurrent();
-			for (TransactionType transType : report.getTypes().values()) {
+			String ip = payload.getIpAddress();
+			for (TransactionType transType : report.getMachines().get(ip).getTypes().values()) {
 				long totalCount = transType.getTotalCount();
 				double tps = 0;
 				if (isCurrent) {
@@ -147,7 +157,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 	}
 
-
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "t")
@@ -168,6 +177,12 @@ public class Handler implements PageHandler<Context>, Initializable {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 
+		String ip = payload.getIpAddress();
+		
+		if(ip==null||ip.length()==0||ip.equals(CatString.ALL_IP)){
+			payload.setIpAddress(CatString.ALL_IP);
+		}
+		model.setIpAddress(payload.getIpAddress());
 		model.setDisplayDomain(payload.getDomain());
 
 		if (payload.getPeriod().isFuture()) {
@@ -207,7 +222,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		if (payload.getPeriod().isCurrent()) {
 			model.setCreatTime(new Date());
 		} else {
-			model.setCreatTime(new Date(payload.getDate() + 60*60 *1000-1000));
+			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
 		m_jspViewer.view(ctx, model);
 
@@ -277,13 +292,15 @@ public class Handler implements PageHandler<Context>, Initializable {
 				String type = payload.getType();
 				String sorted = payload.getSortBy();
 				String queryName = payload.getQueryName();
+				String ip = payload.getIpAddress();
 				if (queryName != null) {
 					model.setQueryName(queryName);
 				}
 				if (!StringUtils.isEmpty(type)) {
-					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, report, queryName));
+					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report,
+					      queryName));
 				} else {
-					model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, report));
+					model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, report));
 				}
 			}
 		} catch (Throwable e) {

@@ -37,6 +37,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ServerConfigManager m_manager;
 
+	private static final String ALL_IP = "All";
+
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
 
@@ -78,6 +80,9 @@ public class Handler implements PageHandler<Context> {
 		      .setProperty("date", date) //
 		      .setProperty("ip", payload.getIpAddress()) //
 		      .setProperty("thread", payload.getThreadId());
+		if (!payload.getIpAddress().equals(ALL_IP)) {
+			request.setProperty("ip", payload.getIpAddress());
+		}
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_service.invoke(request);
@@ -144,7 +149,7 @@ public class Handler implements PageHandler<Context> {
 
 		ProblemStatistics allStatistics = null;
 		if (ip == null || ip.length() == 0 || ip.equals("All")) {
-			model.setIpAddress("All");
+			model.setIpAddress(ALL_IP);
 			report = getAllIpReport(payload);
 			model.setReport(report);
 			model.setLongDate(payload.getDate());

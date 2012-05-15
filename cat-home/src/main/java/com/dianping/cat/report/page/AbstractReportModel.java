@@ -21,6 +21,8 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	
 	private Date m_creatTime;
 
+	private String m_ipAddress;
+	
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	public AbstractReportModel(M ctx) {
@@ -96,5 +98,13 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public void setCreatTime(Date creatTime) {
    	m_creatTime = creatTime;
+   }
+
+	public String getIpAddress() {
+   	return m_ipAddress;
+   }
+
+	public void setIpAddress(String ipAddress) {
+   	m_ipAddress = ipAddress;
    }
 }

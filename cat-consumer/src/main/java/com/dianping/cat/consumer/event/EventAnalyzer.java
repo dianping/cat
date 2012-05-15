@@ -134,10 +134,13 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	private int processEvent(EventReport report, MessageTree tree, Event event) {
-		EventType type = report.findOrCreateType(event.getType());
+		String ip = tree.getIpAddress();
+		EventType type = report.findOrCreateMachine(ip).findOrCreateType(event.getType());
 		EventName name = type.findOrCreateName(event.getName());
 		String messageId = tree.getMessageId();
 		int count = 0;
+
+		report.addIp(tree.getIpAddress());
 
 		synchronized (type) {
 			type.incTotalCount();

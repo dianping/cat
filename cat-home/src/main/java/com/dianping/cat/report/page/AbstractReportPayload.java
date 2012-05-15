@@ -16,6 +16,9 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	private ReportPage m_page;
 
+	@FieldMeta("ip")
+	private String m_ipAddress;
+	
 	@FieldMeta("domain")
 	private String m_domain;
 
@@ -104,4 +107,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, m_defaultPage);
 	}
+
+	public String getIpAddress() {
+   	return m_ipAddress;
+   }
+
+	public void setIpAddress(String ipAddress) {
+   	m_ipAddress = ipAddress;
+   }
 }

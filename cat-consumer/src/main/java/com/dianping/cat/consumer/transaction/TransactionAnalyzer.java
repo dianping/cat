@@ -121,6 +121,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		Message message = tree.getMessage();
+		report.addIp(tree.getIpAddress());
 
 		if (message instanceof Transaction) {
 			int count = processTransaction(report, tree, (Transaction) message);
@@ -133,7 +134,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		TransactionType type = report.findOrCreateType(t.getType());
+		String ip = tree.getIpAddress();
+		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
 		TransactionName name = type.findOrCreateName(t.getName());
 		String messageId = tree.getMessageId();
 		int count = 0;

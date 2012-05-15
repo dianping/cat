@@ -2,25 +2,64 @@ package com.dianping.cat.report.page.model.transaction;
 
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
+import com.dianping.cat.helper.CatString;
 
 public class TransactionReportMerger extends DefaultMerger {
+	private boolean m_allIp = false;
+
+	public TransactionReportMerger setAllIp(boolean allIp) {
+		m_allIp = allIp;
+		return this;
+	}
+
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
 
 		transactionReport.accept(new StatisticsComputer());
 	}
-	
-	@Override
-   public void visitTransactionReport(TransactionReport transactionReport) {
-	   super.visitTransactionReport(transactionReport);
-		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
-   }
 
+	@Override
+	public void visitMachine(Machine machine) {
+		if (m_allIp) {
+			Machine newMachine = new Machine(CatString.ALL_IP);
+			for (TransactionType type : machine.getTypes().values()) {
+				newMachine.addType(type);
+			}
+			super.visitMachine(newMachine);
+		} else {
+			super.visitMachine(machine);
+		}
+	}
+
+	@Override
+	protected void mergeMachine(Machine old, Machine machine) {
+		if (m_allIp) {
+			Machine old2 = new Machine(CatString.ALL_IP);
+			Machine machine2 = new Machine(CatString.ALL_IP);
+			for (TransactionType type : old.getTypes().values()) {
+				old2.addType(type);
+			}
+			for (TransactionType type : machine.getTypes().values()) {
+				machine2.addType(type);
+			}
+			super.mergeMachine(old2, machine2);
+		} else {
+			super.mergeMachine(old, machine);
+		}
+	}
+
+	@Override
+	public void visitTransactionReport(TransactionReport transactionReport) {
+		super.visitTransactionReport(transactionReport);
+		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
+		getTransactionReport().getIps().addAll(transactionReport.getIps());
+	}
 
 	@Override
 	protected void mergeDuration(Duration old, Duration duration) {
