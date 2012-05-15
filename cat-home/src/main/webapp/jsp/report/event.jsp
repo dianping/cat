@@ -14,7 +14,7 @@
 
 <a:report
 	title="Event Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>"
-	navUrlPrefix="domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}"
+	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>

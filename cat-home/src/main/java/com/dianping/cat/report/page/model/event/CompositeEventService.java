@@ -33,7 +33,9 @@ public class CompositeEventService extends BaseCompositeModelService<EventReport
 		}
 		for (ModelResponse<EventReport> response : responses) {
 			EventReport model = response.getModel();
-			model.accept(merger);
+			if (model != null) {
+				model.accept(merger);
+			}
 		}
 
 		EventReport report = merger.getEventReport();

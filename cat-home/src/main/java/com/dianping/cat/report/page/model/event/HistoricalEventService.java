@@ -44,20 +44,15 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
 		DefaultDomParser parser = new DefaultDomParser();
-		EventReportMerger merger = null;
+		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
 			EventReport model = parser.parse(xml);
-
-			if (merger == null) {
-				merger = new EventReportMerger(model);
-			} else {
-				model.accept(merger);
-			}
+			model.accept(merger);
 		}
 
-		return merger == null ? null :merger.getEventReport();
+		return merger == null ? null : merger.getEventReport();
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

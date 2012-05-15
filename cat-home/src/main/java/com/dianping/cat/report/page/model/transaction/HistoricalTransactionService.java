@@ -44,17 +44,12 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
 		DefaultDomParser parser = new DefaultDomParser();
-		TransactionReportMerger merger = null;
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
 			TransactionReport model = parser.parse(xml);
-
-			if (merger == null) {
-				merger = new TransactionReportMerger(model);
-			} else {
-				model.accept(merger);
-			}
+			model.accept(merger);
 		}
 
 		return merger == null ? null : merger.getTransactionReport();

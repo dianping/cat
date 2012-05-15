@@ -35,7 +35,9 @@ public class CompositeTransactionService extends BaseCompositeModelService<Trans
 		for (ModelResponse<TransactionReport> response : responses) {
 			if (response != null) {
 				TransactionReport model = response.getModel();
-				model.accept(merger);
+				if (model != null) {
+					model.accept(merger);
+				}
 			}
 		}
 
