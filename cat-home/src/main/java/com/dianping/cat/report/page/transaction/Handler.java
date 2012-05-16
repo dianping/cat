@@ -65,7 +65,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("type", type) //
 		      .setProperty("name", "*") //
 		      .setProperty("all", "true")//
-		      .setProperty("ip", ipAddress );
+		      .setProperty("ip", ipAddress);
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		String ip = payload.getIpAddress();
 		TransactionReport report = response.getModel();
@@ -117,7 +117,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("date", date) //
 		      .setProperty("type", payload.getType())//
 		      .setProperty("ip", ipAddress);
-		
+
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
@@ -134,8 +134,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 			boolean isCurrent = payload.getPeriod().isCurrent();
 			String ip = payload.getIpAddress();
 			Machine machine = report.getMachines().get(ip);
-			if(machine==null){
-				return ;
+			if (machine == null) {
+				return;
 			}
 			for (TransactionType transType : machine.getTypes().values()) {
 				long totalCount = transType.getTotalCount();
@@ -183,8 +183,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 
 		String ip = payload.getIpAddress();
-		
-		if(ip==null||ip.length()==0||ip.equals(CatString.ALL_IP)){
+
+		if (ip == null || ip.length() == 0) {
 			payload.setIpAddress(CatString.ALL_IP);
 		}
 		model.setIpAddress(payload.getIpAddress());

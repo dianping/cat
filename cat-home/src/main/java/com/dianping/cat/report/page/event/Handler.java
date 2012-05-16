@@ -89,7 +89,8 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("date", date) //
 		      .setProperty("type", payload.getType())//
 		      .setProperty("name", payload.getName())//
-		      .setProperty("ip", ipAddress);;
+		      .setProperty("ip", ipAddress);
+		;
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
 		EventType t = report.getMachines().get(ip).findType(type);
@@ -114,7 +115,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
 		      .setProperty("type", payload.getType())//
-		      .setProperty("ip", ipAddress);;
+		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
@@ -144,7 +145,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 
 		String ip = payload.getIpAddress();
-		if (StringUtils.isEmpty(ip) || ip.equals(CatString.ALL_IP)) {
+		if (StringUtils.isEmpty(ip)) {
 			payload.setIpAddress(CatString.ALL_IP);
 		}
 		model.setIpAddress(payload.getIpAddress());

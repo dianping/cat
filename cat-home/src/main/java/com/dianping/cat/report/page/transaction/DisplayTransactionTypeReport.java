@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 
@@ -21,8 +22,12 @@ public class DisplayTransactionTypeReport {
 		return m_results;
 	}
 
-	public DisplayTransactionTypeReport display(String sorted,String ip, TransactionReport report) {
-		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
+	public DisplayTransactionTypeReport display(String sorted, String ip, TransactionReport report) {
+		Machine machine = report.getMachines().get(ip);
+		if (machine == null) {
+			return this;
+		}
+		Map<String, TransactionType> types = machine.getTypes();
 		if (types != null) {
 			for (Entry<String, TransactionType> entry : types.entrySet()) {
 				m_results.add(new TransactionTypeModel(entry.getKey(), entry.getValue()));
