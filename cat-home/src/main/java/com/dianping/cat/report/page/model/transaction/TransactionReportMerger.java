@@ -13,10 +13,11 @@ import com.dianping.cat.helper.CatString;
 public class TransactionReportMerger extends DefaultMerger {
 	private boolean m_allIp = false;
 
-	public TransactionReportMerger setAllIp(boolean allIp) {
-		m_allIp = allIp;
-		return this;
-	}
+	private boolean m_allName = false;
+
+	private String m_ip;
+
+	private String m_type;
 
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
@@ -25,28 +26,12 @@ public class TransactionReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	public void visitMachine(Machine machine) {
-		if (m_allIp) {
-			Machine newMachine = new Machine(CatString.ALL_IP);
-			for (TransactionType type : machine.getTypes().values()) {
-				newMachine.addType(type);
-			}
-			super.visitMachine(newMachine);
-		} else {
-			super.visitMachine(machine);
-		}
-	}
-
-	@Override
-	public void visitTransactionReport(TransactionReport transactionReport) {
-		super.visitTransactionReport(transactionReport);
-		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
-		getTransactionReport().getIps().addAll(transactionReport.getIps());
-	}
-
-	@Override
 	protected void mergeDuration(Duration old, Duration duration) {
 		old.setCount(old.getCount() + duration.getCount());
+	}
+
+	@Override
+	protected void mergeMachine(Machine old, Machine machine) {
 	}
 
 	@Override
@@ -91,6 +76,31 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
+	public Machine mergesForAllMachine() {
+		Machine machine = new Machine(CatString.ALL_IP);
+		TransactionReport report = getTransactionReport();
+		for (Machine temp : report.getMachines().values()) {
+			mergeMachine(machine, temp);
+			visitMachineChildren(machine, temp);
+		}
+		return machine;
+	}
+
+	public TransactionName mergesForAllName() {
+		TransactionName name = new TransactionName("ALL");
+		TransactionReport report = getTransactionReport();
+		TransactionType type = report.getMachines().get(m_ip).findType(m_type);
+
+		if (type != null) {
+			for (TransactionName n : type.getNames().values()) {
+				mergeName(name, n);
+				visitNameChildren(name, n);
+			}
+		}
+
+		return name;
+	}
+
 	public TransactionReport mergesFrom(TransactionReport report) {
 		report.accept(this);
 
@@ -114,8 +124,8 @@ public class TransactionReportMerger extends DefaultMerger {
 		if (other.getMax() > old.getMax()) {
 			old.setMax(other.getMax());
 		}
-
 		old.setSum(old.getSum() + other.getSum());
+
 		old.setSum2(old.getSum2() + other.getSum2());
 
 		if (old.getTotalCount() > 0) {
@@ -133,6 +143,26 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
+	public TransactionReportMerger setAllIp(boolean allIp) {
+		m_allIp = allIp;
+		return this;
+	}
+
+	public TransactionReportMerger setAllName(boolean allName) {
+		m_allName = allName;
+		return this;
+	}
+
+	public TransactionReportMerger setIp(String ip) {
+		m_ip = ip;
+		return this;
+	}
+
+	public TransactionReportMerger setType(String type) {
+		m_type = type;
+		return this;
+	}
+
 	protected double std(long count, double avg, double sum2, double max) {
 		double value = sum2 / count - avg * avg;
 
@@ -143,5 +173,18 @@ public class TransactionReportMerger extends DefaultMerger {
 		} else {
 			return Math.sqrt(value);
 		}
+	}
+
+	@Override
+	public void visitTransactionReport(TransactionReport transactionReport) {
+		super.visitTransactionReport(transactionReport);
+		if (m_allIp) {
+			getTransactionReport().addMachine(mergesForAllMachine());
+		}
+		if (m_allName) {
+			getTransactionReport().getMachines().get(m_ip).getTypes().get(m_type).addName(mergesForAllName());
+		}
+		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
+		getTransactionReport().getIps().addAll(transactionReport.getIps());
 	}
 }

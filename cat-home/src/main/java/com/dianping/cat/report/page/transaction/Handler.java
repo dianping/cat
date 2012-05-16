@@ -55,31 +55,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
-	private TransactionName getAggregatedTransactionName(Payload payload) {
-		String domain = payload.getDomain();
-		String type = payload.getType();
-		String date = String.valueOf(payload.getDate());
-		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
-		      .setProperty("type", type) //
-		      .setProperty("name", "*") //
-		      .setProperty("all", "true")//
-		      .setProperty("ip", ipAddress);
-		ModelResponse<TransactionReport> response = m_service.invoke(request);
-		String ip = payload.getIpAddress();
-		TransactionReport report = response.getModel();
-		TransactionType t = report == null ? null : report.getMachines().get(ip).findType(type);
-
-		if (t != null) {
-			TransactionName all = t.findName("ALL");
-
-			return all;
-		} else {
-			return null;
-		}
-	}
-
 	private TransactionName getTransactionName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
@@ -92,6 +67,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("type", payload.getType()) //
 		      .setProperty("name", payload.getName())//
 		      .setProperty("ip", ipAddress);
+		if (name == null || name.length() == 0) {
+			request.setProperty("name", "*");
+			request.setProperty("all", "true");
+			name = "ALL";
+		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();
 		TransactionType t = report.getMachines().get(ip).findType(type);
@@ -246,13 +226,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	private MobileTransactionGraphs showMobileGraphs(Model model, Payload payload) {
-		TransactionName name;
-
-		if (payload.getName() == null || payload.getName().length() == 0) {
-			name = getAggregatedTransactionName(payload);
-		} else {
-			name = getTransactionName(payload);
-		}
+		TransactionName name = getTransactionName(payload);
 
 		if (name == null) {
 			return null;
@@ -262,13 +236,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	private void showGraphs(Model model, Payload payload) {
-		TransactionName name;
-
-		if (payload.getName() == null || payload.getName().length() == 0) {
-			name = getAggregatedTransactionName(payload);
-		} else {
-			name = getTransactionName(payload);
-		}
+		TransactionName name = getTransactionName(payload);
 
 		if (name == null) {
 			return;

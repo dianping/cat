@@ -9,9 +9,7 @@ import com.dianping.cat.report.page.ip.location.IPSeekerTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.model.event.EventModelServiceTest;
-import com.dianping.cat.report.page.model.event.EventNameAggregatorTest;
 import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
-import com.dianping.cat.report.page.model.transaction.TransactionNameAggregatorTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 
 @RunWith(Suite.class)
@@ -28,12 +26,8 @@ TransactionReportFilterTest.class,
 /* .report.page.model.event */
 EventModelServiceTest.class,
 
-EventNameAggregatorTest.class,
-
 /* .report.page.model.transaction */
 TransactionModelServiceTest.class,
-
-TransactionNameAggregatorTest.class,
 
 /* .report.page.transaction */
 TransactionReportMergerTest.class,

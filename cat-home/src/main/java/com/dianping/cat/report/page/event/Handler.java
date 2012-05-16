@@ -53,31 +53,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
-	private EventName getAggregatedEventName(Payload payload) {
-		String domain = payload.getDomain();
-		String type = payload.getType();
-		String ipAddress = payload.getIpAddress();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
-		      .setProperty("type", type) //
-		      .setProperty("name", "*") //
-		      .setProperty("all", "true")//
-		      .setProperty("ip", ipAddress);
-		ModelResponse<EventReport> response = m_service.invoke(request);
-		String ip = payload.getIpAddress();
-		EventReport report = response.getModel();
-		EventType t = report == null ? null : report.getMachines().get(ip).findType(type);
-
-		if (t != null) {
-			EventName all = t.findName("ALL");
-
-			return all;
-		} else {
-			return null;
-		}
-	}
-
 	private EventName getEventName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
@@ -90,7 +65,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 		      .setProperty("type", payload.getType())//
 		      .setProperty("name", payload.getName())//
 		      .setProperty("ip", ipAddress);
-		;
+		if (name == null || name.length() == 0) {
+			request.setProperty("name", "*");
+			request.setProperty("all", "true");
+			name = "ALL";
+		}
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
 		EventType t = report.getMachines().get(ip).findType(type);
@@ -191,13 +170,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	private MobileEventGraphs showMobileGraphs(Model model, Payload payload) {
-		EventName name;
-
-		if (payload.getName() == null || payload.getName().length() == 0) {
-			name = getAggregatedEventName(payload);
-		} else {
-			name = getEventName(payload);
-		}
+		EventName name = getEventName(payload);
 
 		if (name == null) {
 			return null;
@@ -219,13 +192,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 	}
 
 	private void showGraphs(Model model, Payload payload) {
-		EventName name;
-
-		if (payload.getName() == null || payload.getName().length() == 0) {
-			name = getAggregatedEventName(payload);
-		} else {
-			name = getEventName(payload);
-		}
+		EventName name = getEventName(payload);
 
 		if (name == null) {
 			return;

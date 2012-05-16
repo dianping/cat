@@ -2,9 +2,7 @@ package com.dianping.cat.report.page.model.event;
 
 import java.util.List;
 
-import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -28,8 +26,14 @@ public class CompositeEventService extends BaseCompositeModelService<EventReport
 		}
 		EventReportMerger merger = new EventReportMerger(new EventReport(request.getDomain()));
 		String ip = request.getProperty("ip");
+		merger.setIp(ip);
 		if (ip.equals(CatString.ALL_IP)) {
 			merger.setAllIp(true);
+		}
+		String all = request.getProperty("all");
+		if ("true".equals(all)) {
+			merger.setAllName(true);
+			merger.setType(request.getProperty("type"));
 		}
 		for (ModelResponse<EventReport> response : responses) {
 			EventReport model = response.getModel();
@@ -38,20 +42,6 @@ public class CompositeEventService extends BaseCompositeModelService<EventReport
 			}
 		}
 
-		EventReport report = merger.getEventReport();
-		String all = request.getProperty("all");
-
-		if ("true".equals(all)) {
-			String type = request.getProperty("type");
-			EventNameAggregator aggregator = new EventNameAggregator(report);
-			EventName n = aggregator.mergesFor(type, ip);
-			EventType t = new EventType(type).addName(n);
-			EventReport result = new EventReport(request.getDomain());
-			result.findOrCreateMachine(ip).addType(t);
-
-			return result;
-		} else {
-			return report;
-		}
+		return  merger.getEventReport();
 	}
 }

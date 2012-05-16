@@ -46,6 +46,12 @@ public class MobileHeartbeatModel {
 
 	private transient ValueTranslater m_tansalater = new DefaultValueTranslater();
 
+	private void creatGraph(MobileGraphItem graph, double[] values, String title) {
+		graph.setTitle(title);
+		graph.setValue(values);
+		graph.setMaxValue(m_tansalater.getMaxValue(values));
+	}
+
 	public MobileHeartbeatModel display(Model model, DisplayHeartbeat heartbeat) {
 		if (heartbeat == null) {
 			return this;
@@ -78,154 +84,148 @@ public class MobileHeartbeatModel {
 		return this;
 	}
 
-	private void creatGraph(MobileGraphItem graph, double[] values, String title) {
-		graph.setTitle(title);
-		graph.setValue(values);
-		graph.setMaxValue(m_tansalater.getMaxValue(values));
-	}
-
-	public List<String> getIps() {
-		return m_ips;
-	}
-
-	public void setIps(List<String> ips) {
-		m_ips = ips;
-	}
-
-	public String getCurrentIp() {
-		return m_currentIp;
-	}
-
-	public void setCurrentIp(String currentIp) {
-		m_currentIp = currentIp;
-	}
-
 	public MobileGraphItem getActiveThreads() {
 		return m_activeThreads;
-	}
-
-	public void setActiveThreads(MobileGraphItem activeThreads) {
-		m_activeThreads = activeThreads;
-	}
-
-	public MobileGraphItem getDaemonThreads() {
-		return m_daemonThreads;
-	}
-
-	public void setDaemonThreads(MobileGraphItem daemonThreads) {
-		m_daemonThreads = daemonThreads;
-	}
-
-	public MobileGraphItem getTotalThreads() {
-		return m_totalThreads;
-	}
-
-	public void setTotalThreads(MobileGraphItem totalThreads) {
-		m_totalThreads = totalThreads;
-	}
-
-	public MobileGraphItem getNewThreads() {
-		return m_newThreads;
-	}
-
-	public void setNewThreads(MobileGraphItem newThreads) {
-		m_newThreads = newThreads;
-	}
-
-	public MobileGraphItem getCatThreads() {
-		return m_catThreads;
-	}
-
-	public void setCatThreads(MobileGraphItem catThreads) {
-		m_catThreads = catThreads;
-	}
-
-	public MobileGraphItem getPigeonTheads() {
-		return m_pigeonTheads;
-	}
-
-	public void setPigeonTheads(MobileGraphItem pigeonTheads) {
-		m_pigeonTheads = pigeonTheads;
-	}
-
-	public MobileGraphItem getAddCatMessageProduced() {
-		return m_addCatMessageProduced;
-	}
-
-	public void setAddCatMessageProduced(MobileGraphItem addCatMessageProduced) {
-		m_addCatMessageProduced = addCatMessageProduced;
 	}
 
 	public MobileGraphItem getAddCatMessageOverflow() {
 		return m_addCatMessageOverflow;
 	}
 
-	public void setAddCatMessageOverflow(MobileGraphItem addCatMessageOverflow) {
-		m_addCatMessageOverflow = addCatMessageOverflow;
+	public MobileGraphItem getAddCatMessageProduced() {
+		return m_addCatMessageProduced;
 	}
 
 	public MobileGraphItem getAddCatMessageSize() {
 		return m_addCatMessageSize;
 	}
 
-	public void setAddCatMessageSize(MobileGraphItem addCatMessageSize) {
-		m_addCatMessageSize = addCatMessageSize;
-	}
-
 	public MobileGraphItem getAddNewGcCount() {
 		return m_addNewGcCount;
-	}
-
-	public void setAddNewGcCount(MobileGraphItem addNewGcCount) {
-		m_addNewGcCount = addNewGcCount;
 	}
 
 	public MobileGraphItem getAddOldGcCount() {
 		return m_addOldGcCount;
 	}
 
-	public void setAddOldGcCount(MobileGraphItem addOldGcCount) {
-		m_addOldGcCount = addOldGcCount;
+	public MobileGraphItem getCatThreads() {
+		return m_catThreads;
 	}
 
-	public MobileGraphItem getHeapUsage() {
-		return m_heapUsage;
+	public String getCurrentIp() {
+		return m_currentIp;
 	}
 
-	public void setHeapUsage(MobileGraphItem heapUsage) {
-		m_heapUsage = heapUsage;
-	}
-
-	public MobileGraphItem getNoneHeapUsage() {
-		return m_noneHeapUsage;
-	}
-
-	public void setNoneHeapUsage(MobileGraphItem noneHeapUsage) {
-		m_noneHeapUsage = noneHeapUsage;
-	}
-
-	public MobileGraphItem getMemoryFree() {
-		return m_memoryFree;
-	}
-
-	public void setMemoryFree(MobileGraphItem memoryFree) {
-		m_memoryFree = memoryFree;
-	}
-
-	public MobileGraphItem getSystemLoadAverage() {
-		return m_systemLoadAverage;
-	}
-
-	public void setSystemLoadAverage(MobileGraphItem systemLoadAverage) {
-		m_systemLoadAverage = systemLoadAverage;
+	public MobileGraphItem getDaemonThreads() {
+		return m_daemonThreads;
 	}
 
 	public List<MobileGraphItem> getDisks() {
    	return m_disks;
    }
 
+	public MobileGraphItem getHeapUsage() {
+		return m_heapUsage;
+	}
+
+	public List<String> getIps() {
+		return m_ips;
+	}
+
+	public MobileGraphItem getMemoryFree() {
+		return m_memoryFree;
+	}
+
+	public MobileGraphItem getNewThreads() {
+		return m_newThreads;
+	}
+
+	public MobileGraphItem getNoneHeapUsage() {
+		return m_noneHeapUsage;
+	}
+
+	public MobileGraphItem getPigeonTheads() {
+		return m_pigeonTheads;
+	}
+
+	public MobileGraphItem getSystemLoadAverage() {
+		return m_systemLoadAverage;
+	}
+
+	public MobileGraphItem getTotalThreads() {
+		return m_totalThreads;
+	}
+
+	public void setActiveThreads(MobileGraphItem activeThreads) {
+		m_activeThreads = activeThreads;
+	}
+
+	public void setAddCatMessageOverflow(MobileGraphItem addCatMessageOverflow) {
+		m_addCatMessageOverflow = addCatMessageOverflow;
+	}
+
+	public void setAddCatMessageProduced(MobileGraphItem addCatMessageProduced) {
+		m_addCatMessageProduced = addCatMessageProduced;
+	}
+
+	public void setAddCatMessageSize(MobileGraphItem addCatMessageSize) {
+		m_addCatMessageSize = addCatMessageSize;
+	}
+
+	public void setAddNewGcCount(MobileGraphItem addNewGcCount) {
+		m_addNewGcCount = addNewGcCount;
+	}
+
+	public void setAddOldGcCount(MobileGraphItem addOldGcCount) {
+		m_addOldGcCount = addOldGcCount;
+	}
+
+	public void setCatThreads(MobileGraphItem catThreads) {
+		m_catThreads = catThreads;
+	}
+
+	public void setCurrentIp(String currentIp) {
+		m_currentIp = currentIp;
+	}
+
+	public void setDaemonThreads(MobileGraphItem daemonThreads) {
+		m_daemonThreads = daemonThreads;
+	}
+
 	public void setDisks(List<MobileGraphItem> disks) {
    	m_disks = disks;
    }
+
+	public void setHeapUsage(MobileGraphItem heapUsage) {
+		m_heapUsage = heapUsage;
+	}
+
+	public void setIps(List<String> ips) {
+		m_ips = ips;
+	}
+
+	public void setMemoryFree(MobileGraphItem memoryFree) {
+		m_memoryFree = memoryFree;
+	}
+
+	public void setNewThreads(MobileGraphItem newThreads) {
+		m_newThreads = newThreads;
+	}
+
+	public void setNoneHeapUsage(MobileGraphItem noneHeapUsage) {
+		m_noneHeapUsage = noneHeapUsage;
+	}
+
+	public void setPigeonTheads(MobileGraphItem pigeonTheads) {
+		m_pigeonTheads = pigeonTheads;
+	}
+
+	public void setSystemLoadAverage(MobileGraphItem systemLoadAverage) {
+		m_systemLoadAverage = systemLoadAverage;
+	}
+
+	public void setTotalThreads(MobileGraphItem totalThreads) {
+		m_totalThreads = totalThreads;
+	}
 
 }

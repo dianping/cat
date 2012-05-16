@@ -20,11 +20,11 @@ public class DisplayEventNameReport {
 		return m_results;
 	}
 
-	public DisplayEventNameReport display(String sorted,String type,String ip, EventReport report) {
+	public DisplayEventNameReport display(String sorted, String type, String ip, EventReport report) {
 		Map<String, EventType> types = report.getMachines().get(ip).getTypes();
 		if (types != null) {
 			EventType names = types.get(type);
-			
+
 			for (Entry<String, EventName> entry : names.getNames().entrySet()) {
 				m_results.add(new EventNameModel(entry.getKey(), entry.getValue()));
 			}
