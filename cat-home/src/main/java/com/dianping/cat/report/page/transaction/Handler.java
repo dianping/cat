@@ -14,6 +14,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -132,7 +133,11 @@ public class Handler implements PageHandler<Context>, Initializable {
 		if (payload != null && report != null) {
 			boolean isCurrent = payload.getPeriod().isCurrent();
 			String ip = payload.getIpAddress();
-			for (TransactionType transType : report.getMachines().get(ip).getTypes().values()) {
+			Machine machine = report.getMachines().get(ip);
+			if(machine==null){
+				return ;
+			}
+			for (TransactionType transType : machine.getTypes().values()) {
 				long totalCount = transType.getTotalCount();
 				double tps = 0;
 				if (isCurrent) {

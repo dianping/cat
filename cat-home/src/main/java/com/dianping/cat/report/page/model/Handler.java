@@ -147,7 +147,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.event.model.entity.Machine machine) {
-			if (m_ipAddress == null || m_ipAddress.endsWith(CatString.ALL_IP)) {
+			if (m_ipAddress == null || m_ipAddress.equals(CatString.ALL_IP)) {
 				super.visitMachine(machine);
 			} else if (machine.getIp().equals(m_ipAddress)) {
 				super.visitMachine(machine);
@@ -239,7 +239,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.transaction.model.entity.Machine machine) {
-			if (m_ipAddress == null || m_ipAddress.endsWith(CatString.ALL_IP)) {
+			if (m_ipAddress == null || m_ipAddress.equals(CatString.ALL_IP)) {
 				super.visitMachine(machine);
 			} else if (machine.getIp().equals(m_ipAddress)) {
 				super.visitMachine(machine);

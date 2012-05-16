@@ -38,23 +38,6 @@ public class TransactionReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void mergeMachine(Machine old, Machine machine) {
-		if (m_allIp) {
-			Machine old2 = new Machine(CatString.ALL_IP);
-			Machine machine2 = new Machine(CatString.ALL_IP);
-			for (TransactionType type : old.getTypes().values()) {
-				old2.addType(type);
-			}
-			for (TransactionType type : machine.getTypes().values()) {
-				machine2.addType(type);
-			}
-			super.mergeMachine(old2, machine2);
-		} else {
-			super.mergeMachine(old, machine);
-		}
-	}
-
-	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		super.visitTransactionReport(transactionReport);
 		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());

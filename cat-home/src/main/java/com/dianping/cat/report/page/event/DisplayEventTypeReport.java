@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.site.lookup.util.StringUtils;
 
 public class DisplayEventTypeReport {
@@ -19,12 +20,15 @@ public class DisplayEventTypeReport {
 		return m_results;
 	}
 
-	public DisplayEventTypeReport display(String sorted, String ip,EventReport report) {
-		if(report==null){
+	public DisplayEventTypeReport display(String sorted, String ip, EventReport report) {
+		if (report == null) {
 			return this;
 		}
-		
-		Map<String, EventType> types = report.getMachines().get(ip).getTypes();
+		Machine machine = report.getMachines().get(ip);
+		if (machine == null) {
+			return this;
+		}
+		Map<String, EventType> types = machine.getTypes();
 		if (types != null) {
 			for (Entry<String, EventType> entry : types.entrySet()) {
 				m_results.add(new EventTypeModel(entry.getKey(), entry.getValue()));
