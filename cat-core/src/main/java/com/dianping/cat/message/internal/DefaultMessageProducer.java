@@ -119,7 +119,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
-		
+
 		if (m_manager.isCatEnabled()) {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 
@@ -131,6 +131,11 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	public Transaction newTransaction(Transaction parent, String type, String name) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
 		if (m_manager.isCatEnabled() && parent != null) {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, m_manager);
 

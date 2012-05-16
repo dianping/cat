@@ -77,6 +77,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 		t.setStatus(Message.SUCCESS);
 		t.addData("request", request);
+		t.addData("thread",Thread.currentThread());
 
 		for (final ModelService<T> service : m_allServices) {
 			if (!service.isEligable(request)) {
