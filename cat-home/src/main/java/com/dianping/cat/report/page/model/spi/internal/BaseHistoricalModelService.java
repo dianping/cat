@@ -37,6 +37,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
 		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
+		t.addData("thread",Thread.currentThread());
 
 		try {
 			T model = buildModel(request);
