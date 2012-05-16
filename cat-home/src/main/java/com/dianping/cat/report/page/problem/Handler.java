@@ -95,11 +95,11 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void setDefaultThreshold(Model model, Payload payload) {
-		Map<String, Domain> domains = m_manager.getLongUrlDomains();
+		Map<String, Domain> domains = m_manager.getLongConfigDomains();
 		Domain d = domains.get(payload.getDomain());
 
 		if (d != null) {
-			int longUrlTime = d.getThreshold();
+			int longUrlTime = d.getUrlThreshold();
 
 			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
 			      && longUrlTime != 4000 && longUrlTime != 5000) {
@@ -131,11 +131,11 @@ public class Handler implements PageHandler<Context> {
 
 		setDefaultThreshold(model, payload);
 
-		Map<String, Domain> domains = m_manager.getLongUrlDomains();
+		Map<String, Domain> domains = m_manager.getLongConfigDomains();
 		Domain d = domains.get(payload.getDomain());
 
 		if (d != null && payload.getRealLongTime() == 0) {
-			payload.setLongTime(d.getThreshold());
+			payload.setLongTime(d.getUrlThreshold());
 		}
 
 		model.setAction(payload.getAction());

@@ -22,10 +22,12 @@
 		<attribute name="min" value-type="double" primitive="true" default-value="86400000" />
 		<attribute name="max" value-type="double" primitive="true" default-value="-1" />
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
+		<attribute name="avg2" value-type="double" primitive="true" format="0.00"/>
 		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
 		<entity-ref name="name" type="map" method-find-or-create="true" />
+		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true" />
 	</entity>
 	<entity name="name" class-name="TransactionName">
 		<attribute name="id" key="true" />
@@ -36,11 +38,13 @@
 		<attribute name="min" value-type="double" primitive="true" default-value="86400000" />
 		<attribute name="max" value-type="double" primitive="true" default-value="-1" />
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
+		<attribute name="avg2" value-type="double" primitive="true" format="0.00"/>
 		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
 		<entity-ref name="range" type="list" names="ranges" method-find-or-create="true" />
 		<entity-ref name="duration" type="list" names="durations" method-find-or-create="true" />
+		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true" />
 	</entity>
 	<entity name="range">
 		<attribute name="value" value-type="int" primitive="true" key="true" />
@@ -50,6 +54,10 @@
 		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
 	</entity>
 	<entity name="duration">
+		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+	<entity name="all-duration">
 		<attribute name="value" value-type="int" primitive="true" key="true" />
 		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 	</entity>

@@ -52,7 +52,10 @@
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th><th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th><th>Std(ms)</th><th>TPS</th></tr>
+			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&sort=95line">95Line</a>(ms)</th>
+			<th>Std(ms)</th><th>TPS</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -65,6 +68,7 @@
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
+					<td>${w:format(e.avg2,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -80,7 +84,10 @@
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th><th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg">Avg</a>(ms)</th><th>Std(ms)</th><th>TPS</th></tr>
+			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg">Avg</a>(ms)</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line">95Line</a>(ms)</th>
+			<th>Std(ms)</th><th>TPS</th></tr>
 			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
@@ -94,6 +101,7 @@
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
+					<td>${w:format(e.avg2,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>

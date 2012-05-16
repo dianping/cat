@@ -13,7 +13,7 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
-import com.dianping.cat.configuration.server.entity.LongUrl;
+import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
@@ -124,24 +124,36 @@ public class ServerConfigManager implements LogEnabled {
 		return null;
 	}
 
+	public int getLongSqlDefaultThreshold() {
+		if (m_config != null) {
+			LongConfig longConfig = m_config.getConsumer().getLongConfig();
+
+			if (longConfig != null && longConfig.getDefaultUrlThreshold() != null) {
+				return longConfig.getDefaultUrlThreshold();
+			}
+		}
+
+		return 1000; // 1 second
+	}
+	
 	public int getLongUrlDefaultThreshold() {
 		if (m_config != null) {
-			LongUrl longUrl = m_config.getConsumer().getLongUrl();
+			LongConfig longConfig = m_config.getConsumer().getLongConfig();
 
-			if (longUrl != null && longUrl.getDefaultThreshold() != null) {
-				return longUrl.getDefaultThreshold();
+			if (longConfig != null && longConfig.getDefaultSqlThreshold() != null) {
+				return longConfig.getDefaultSqlThreshold();
 			}
 		}
 
 		return 1000; // 1 second
 	}
 
-	public Map<String, Domain> getLongUrlDomains() {
+	public Map<String, Domain> getLongConfigDomains() {
 		if (m_config != null) {
-			LongUrl longUrl = m_config.getConsumer().getLongUrl();
+			LongConfig longConfig = m_config.getConsumer().getLongConfig();
 
-			if (longUrl != null) {
-				return longUrl.getDomains();
+			if (longConfig != null) {
+				return longConfig.getDomains();
 			}
 		}
 

@@ -49,7 +49,8 @@ public class TransactionReportMerger extends DefaultMerger {
 
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
-
+		old.setAvg2((old.getAvg2()+other.getAvg2())/2);
+		
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
@@ -125,9 +126,9 @@ public class TransactionReportMerger extends DefaultMerger {
 			old.setMax(other.getMax());
 		}
 		old.setSum(old.getSum() + other.getSum());
-
 		old.setSum2(old.getSum2() + other.getSum2());
-
+		old.setAvg2((old.getAvg2()+other.getAvg2())/2);
+		
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());

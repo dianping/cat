@@ -2,7 +2,7 @@ package com.dianping.cat.configuration;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.ConsumerConfig;
-import com.dianping.cat.configuration.server.entity.LongUrl;
+import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultValidator;
@@ -27,8 +27,8 @@ public class ServerConfigValidator extends DefaultValidator {
 
 	@Override
 	public void visitConsumer(ConsumerConfig consumer) {
-		if (consumer.getLongUrl() == null) {
-			consumer.setLongUrl(new LongUrl());
+		if (consumer.getLongConfig() == null) {
+			consumer.setLongConfig(new LongConfig());
 		}
 
 		super.visitConsumer(consumer);

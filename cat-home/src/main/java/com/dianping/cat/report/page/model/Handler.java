@@ -11,6 +11,7 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.IEntity;
+import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -255,6 +256,11 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			}
 		}
 
+		@Override
+		public void visitAllDuration(AllDuration duration){
+			
+		}
+		
 		@Override
 		public void visitName(TransactionName name) {
 			if (m_type == null) {
