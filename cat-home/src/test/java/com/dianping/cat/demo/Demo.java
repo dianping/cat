@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
