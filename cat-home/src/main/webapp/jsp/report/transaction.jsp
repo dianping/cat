@@ -68,7 +68,7 @@
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
-					<td>${w:format(e.avg2,'0.0')}</td>
+					<td>${w:format(e.line95Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -101,7 +101,7 @@
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
-					<td>${w:format(e.avg2,'0.0')}</td>
+					<td>${w:format(e.line95Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
