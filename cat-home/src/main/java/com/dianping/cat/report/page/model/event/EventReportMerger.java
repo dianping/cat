@@ -17,22 +17,23 @@ public class EventReportMerger extends DefaultMerger {
 	private String m_ip;
 
 	private String m_type;
-	
+
 	public EventReportMerger(EventReport eventReport) {
 		super(eventReport);
 
 		eventReport.accept(new StatisticsComputer());
 	}
-	
+
 	@Override
 	protected void mergeEventReport(EventReport old, EventReport eventReport) {
 		super.mergeEventReport(old, eventReport);
 
 	}
+
 	@Override
-   protected void mergeMachine(Machine old, Machine machine) {
-   }
-	
+	protected void mergeMachine(Machine old, Machine machine) {
+	}
+
 	@Override
 	protected void mergeName(EventName old, EventName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
@@ -57,7 +58,7 @@ public class EventReportMerger extends DefaultMerger {
 		old.setFails(old.getFails() + range.getFails());
 	}
 
-	public EventName mergesFor(String typeName,String ip) {
+	public EventName mergesFor(String typeName, String ip) {
 		EventName name = new EventName("ALL");
 		EventReport report = getEventReport();
 		EventType type = report.getMachines().get(ip).findType(typeName);
@@ -72,19 +73,19 @@ public class EventReportMerger extends DefaultMerger {
 		return name;
 	}
 
-	public Machine mergesForAllMachine() {
+	public Machine mergesForAllMachine(EventReport report) {
 		Machine machine = new Machine(CatString.ALL_IP);
-		EventReport report = getEventReport();
 		for (Machine temp : report.getMachines().values()) {
-			mergeMachine(machine, temp);
+			if (!machine.getIp().equals(CatString.ALL_IP)) {
+				mergeMachine(machine, temp);
+			}
 			visitMachineChildren(machine, temp);
 		}
 		return machine;
 	}
 
-	public EventName mergesForAllName() {
+	public EventName mergesForAllName(EventReport report) {
 		EventName name = new EventName("ALL");
-		EventReport report = getEventReport();
 		EventType type = report.getMachines().get(m_ip).findType(m_type);
 
 		if (type != null) {
@@ -127,26 +128,29 @@ public class EventReportMerger extends DefaultMerger {
 	}
 
 	public void setAllName(boolean allName) {
-   	m_allName = allName;
-   }
+		m_allName = allName;
+	}
 
 	public void setIp(String ip) {
-   	m_ip = ip;
-   }
+		m_ip = ip;
+	}
 
 	public void setType(String type) {
-   	m_type = type;
-   }
+		m_type = type;
+	}
 
 	@Override
 	public void visitEventReport(EventReport eventReport) {
-		super.visitEventReport(eventReport);
 		if (m_allIp) {
-			getEventReport().addMachine(mergesForAllMachine());
+			eventReport.addMachine(mergesForAllMachine(eventReport));
 		}
 		if (m_allName) {
-			getEventReport().getMachines().get(m_ip).getTypes().get(m_type).addName(mergesForAllName());
+			Machine machine = eventReport.getMachines().get(m_ip);
+			if (machine != null) {
+				machine.getTypes().get(m_type).addName(mergesForAllName(eventReport));
+			}
 		}
+		super.visitEventReport(eventReport);
 		getEventReport().getDomainNames().addAll(eventReport.getDomainNames());
 		getEventReport().getIps().addAll(eventReport.getIps());
 	}
