@@ -29,6 +29,9 @@
       <page name="sql" title="SQL" path="sql">
         <description>SQL Report</description>
       </page>
+      <page name="trend" title="Trend" path="trend">
+        <description>Trend</description>
+      </page>
     </module>
   </webapp>
 </wizard>
