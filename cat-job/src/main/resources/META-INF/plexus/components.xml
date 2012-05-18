@@ -18,12 +18,41 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.job.joblet.BrowserJoblet$BrowserOutputter</role>
+					<role-hint>report</role-hint>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.job.joblet.BrowserJoblet$BrowserOutputter</role>
-			<implementation>com.dianping.cat.job.joblet.BrowserJoblet$DefaultBrowserOutputter</implementation>
+			<role-hint>report</role-hint>
+			<implementation>com.dianping.cat.job.joblet.BrowserJoblet$OsTypeAndVersionReporter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.spi.joblet.Joblet</role>
+			<role-hint>location</role-hint>
+			<implementation>com.dianping.cat.job.joblet.LocationJoblet</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.job.joblet.LocationJoblet$LocationOutputter</role>
+					<role-hint>database</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.joblet.LocationJoblet$LocationOutputter</role>
+			<role-hint>database</role-hint>
+			<implementation>com.dianping.cat.job.joblet.LocationJoblet$LocationDatabaseDumper</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.job.sql.dal.LocationRecordDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.joblet.LocationJoblet$LocationOutputter</role>
+			<role-hint>report</role-hint>
+			<implementation>com.dianping.cat.job.joblet.LocationJoblet$LocationReporter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.job.spi.joblet.Joblet</role>
@@ -78,6 +107,26 @@
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>location</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>location</logical-table-name>
+				<physical-table-name>location</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>logview</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>logview</logical-table-name>
+				<physical-table-name>logview</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>sqlreport</role-hint>
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -85,6 +134,24 @@
 				<physical-table-name>sqlreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.sql.dal.LocationRecordDao</role>
+			<implementation>com.dianping.cat.job.sql.dal.LocationRecordDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.sql.dal.LogviewDao</role>
+			<implementation>com.dianping.cat.job.sql.dal.LogviewDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>

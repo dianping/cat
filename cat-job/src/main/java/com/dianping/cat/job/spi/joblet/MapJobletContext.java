@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class MapJobletContext implements JobletContext {
+public class MapJobletContext extends AbstractJobletContext {
 	private Map<Object, List<Object>> m_map = new TreeMap<Object, List<Object>>();
 
 	public Map<Object, List<Object>> getMap() {
@@ -18,10 +18,18 @@ public class MapJobletContext implements JobletContext {
 		List<Object> list = m_map.get(key);
 
 		if (list == null) {
-			list = new ArrayList<Object>();
-			m_map.put(key, list);
+			synchronized (m_map) {
+				list = m_map.get(key);
+
+				if (list == null) {
+					list = new ArrayList<Object>();
+					m_map.put(key, list);
+				}
+			}
 		}
 
-		list.add(value);
+		synchronized (list) {
+			list.add(value);
+		}
 	}
 }

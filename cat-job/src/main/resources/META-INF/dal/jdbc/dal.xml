@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.job.sql.dal" gen="true">
+	<entity name="location" class-name="LocationRecord" table="location" alias="l">
+		<member name="creation-date" insert-expr="NOW()" />
+		<query-defs>
+			<query name="insert" type="INSERT" batch="true">
+				<statement><![CDATA[
+				INSERT 
+				INTO <TABLE/>(<FIELDS/>) 
+				VALUES(<VALUES/>)
+				ON DUPLICATE KEY 
+					UPDATE <FIELD name='total'/> = ${total}
+				]]></statement>
+			</query>
+			<query name="find-all-by-transaction-date" type="SELECT" multiple="true">
+				<param name="transaction-date" />
+				<statement><![CDATA[
+				SELECT <FIELDS/> FROM <TABLE/> 
+				WHERE <FIELD name='transaction-date'/> >= ${transaction-date}
+					AND <FIELD name='transaction-date'/> < ADDTIME(${transaction-date}, '1:00:00')
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
 	<entity name="sqlreport" class-name="SqlReportRecord" table="SqlReport" alias="s">
 		<member name="creation-date" insert-expr="NOW()" />
 		<readsets>

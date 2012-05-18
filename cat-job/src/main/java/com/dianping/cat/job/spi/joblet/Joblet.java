@@ -11,4 +11,6 @@ public interface Joblet<KEY, VALUE> {
 	public void map(JobletContext context, MessageTreeWritable treeWritable) throws IOException, InterruptedException;
 
 	public void reduce(JobletContext context, KEY key, Iterable<VALUE> values) throws IOException, InterruptedException;
+
+	public void summary();
 }

@@ -12,6 +12,7 @@ import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
+import com.dianping.cat.job.JobApp;
 import com.dianping.cat.job.spi.joblet.Joblet;
 import com.dianping.cat.job.spi.joblet.JobletMapper;
 import com.dianping.cat.job.spi.joblet.JobletMeta;
@@ -38,9 +39,10 @@ public enum JobFactory {
 			return null;
 		}
 
+		job.getConfiguration().set("joblet.name", meta.name());
 		job.getConfiguration().setClass("joblet.class", joblet.getClass(), Joblet.class);
 
-		job.setJarByClass(jobletClass);
+		job.setJarByClass(JobApp.class); // never change it
 		job.setInputFormatClass(MessageTreeInputFormat.class);
 		job.setMapperClass(JobletMapper.class);
 		job.setReducerClass(JobletReducer.class);

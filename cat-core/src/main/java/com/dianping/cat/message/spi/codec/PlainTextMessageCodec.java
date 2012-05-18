@@ -179,7 +179,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			return stack.pop();
 		} else {
 			buf.resetReaderIndex();
-			m_logger.warn("Unknown identifier(" + identifier + ") of message: " + buf.toString(Charset.forName("utf-8")));
+			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: "
+			      + buf.toString(Charset.forName("utf-8")));
 
 			// unknown message, ignore it
 			return parent;

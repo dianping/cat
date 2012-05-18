@@ -1,8 +1,11 @@
 package com.dianping.cat.job.spi.mapreduce;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
@@ -69,6 +72,8 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 	}
 
 	public void initialize(InputSplit genericSplit, TaskAttemptContext context) throws IOException {
+		System.out.println("Current working directory:" + new File(".").getCanonicalPath());
+
 		FileSplit split = (FileSplit) genericSplit;
 		Configuration config = context.getConfiguration();
 
@@ -108,6 +113,39 @@ public class MessageTreeReader extends RecordReader<LongWritable, MessageTreeWri
 		}
 
 		m_pos = m_start;
+	}
+
+	protected void showJars() {
+		String classpath = System.getProperty("java.class.path");
+		String[] parts = classpath.split(":");
+
+		for (String part : parts) {
+			File file = new File(part);
+
+			if (file.isFile()) {
+				System.out.println("File: " + file);
+			} else if (file.isDirectory()) {
+				showFiles(file);
+			}
+		}
+	}
+
+	protected void showProperties() {
+		for (Map.Entry<Object, Object> e : System.getProperties().entrySet()) {
+			System.out.println(e.getKey() + ": " + e.getValue());
+		}
+	}
+
+	protected void showFiles(File file) {
+		String[] list = file.list();
+
+		if (list != null) {
+			System.out.println(file + ": " + Arrays.asList(list));
+
+			for (String item : list) {
+				showFiles(new File(file, item));
+			}
+		}
 	}
 
 	@Override

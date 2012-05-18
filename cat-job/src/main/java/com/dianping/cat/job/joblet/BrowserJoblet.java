@@ -3,7 +3,13 @@ package com.dianping.cat.job.joblet;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.job.joblet.BrowserJoblet.Browser;
 import com.dianping.cat.job.joblet.BrowserJoblet.BrowserStat;
@@ -17,10 +23,11 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 @JobletMeta(name = "browser", description = "Browser analysis", keyClass = Browser.class, valueClass = BrowserStat.class, combine = true, reducerNum = 1)
-public class BrowserJoblet implements Joblet<Browser, BrowserStat> {
+public class BrowserJoblet extends ContainerHolder implements Joblet<Browser, BrowserStat> {
 	private static final String TOKEN = "&Agent=";
 
 	@Inject
@@ -59,8 +66,10 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStat> {
 			cmdLine.setProperty("outputPath", outputPath);
 		}
 
-		if (m_outputter == null) {
-			m_outputter = new DefaultBrowserOutputter();
+		String outputter = cmdLine.getProperty("outputter", null);
+
+		if (outputter != null) {
+			m_outputter = lookup(BrowserOutputter.class, outputter);
 		}
 
 		return true;
@@ -91,7 +100,16 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStat> {
 			all.add(stat.getCount());
 		}
 
-		m_outputter.out(context, browser, all);
+		if (context.isInCombiner()) {
+			context.write(browser, all);
+		} else {
+			m_outputter.out(context, browser, all);
+		}
+	}
+
+	@Override
+	public void summary() {
+		System.out.println(m_outputter);
 	}
 
 	/**
@@ -251,6 +269,104 @@ public class BrowserJoblet implements Joblet<Browser, BrowserStat> {
 		@Override
 		public void out(JobletContext context, Browser browser, BrowserStat all) throws IOException, InterruptedException {
 			context.write(browser, all);
+		}
+	}
+
+	public static class OsTypeAndVersionReporter implements BrowserOutputter, Initializable {
+		private Map<String, Map<String, BrowserStat>> m_map = new TreeMap<String, Map<String, BrowserStat>>();
+
+		private Map<String, String> m_osTypeMapping = new HashMap<String, String>();
+
+		private String getCleanVersion(String version) {
+			int len = version == null ? 0 : version.length();
+			StringBuilder sb = new StringBuilder(len);
+
+			for (int i = 0; i < len; i++) {
+				char ch = version.charAt(i);
+
+				if (Character.isDigit(ch) || ch == '.') {
+					sb.append(ch);
+				} else {
+					break;
+				}
+			}
+
+			return sb.toString();
+		}
+
+		@Override
+		public void initialize() throws InitializationException {
+			m_osTypeMapping.put("iphone", "iPhone");
+			m_osTypeMapping.put("ipad", "iPad");
+			m_osTypeMapping.put("ipod", "iPod");
+			m_osTypeMapping.put("android", "Android");
+			m_osTypeMapping.put(null, "Others");
+		}
+
+		@Override
+		public void out(JobletContext context, Browser browser, BrowserStat stat) throws IOException,
+		      InterruptedException {
+			String osType = trim(browser.getOsType());
+			String osVersion = getCleanVersion(trim(browser.getOsVersion()));
+			String type = m_osTypeMapping.get(osType == null ? null : osType.toLowerCase());
+
+			if (type == null) {
+				type = m_osTypeMapping.get(null);
+			}
+
+			Map<String, BrowserStat> map = m_map.get(type);
+
+			if (map == null) {
+				map = new TreeMap<String, BrowserStat>();
+				m_map.put(type, map);
+			}
+
+			String key = osType + ":" + osVersion;
+			BrowserStat s = map.get(key);
+
+			if (s == null) {
+				s = new BrowserStat();
+				map.put(key, s);
+			}
+
+			s.add(stat.getCount());
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder sb = new StringBuilder(8192);
+
+			sb.append("Group by os type\n");
+
+			for (Map.Entry<String, Map<String, BrowserStat>> e : m_map.entrySet()) {
+				String key = e.getKey();
+				Map<String, BrowserStat> value = e.getValue();
+				int count = 0;
+
+				for (BrowserStat stat : value.values()) {
+					count += stat.getCount();
+				}
+
+				sb.append(String.format("%-8s %8s\n", key, count));
+			}
+
+			sb.append("\n");
+			sb.append("Group by os type and version\n");
+
+			for (Map.Entry<String, Map<String, BrowserStat>> e : m_map.entrySet()) {
+				String key = e.getKey();
+				Map<String, BrowserStat> value = e.getValue();
+
+				for (Map.Entry<String, BrowserStat> s : value.entrySet()) {
+					sb.append(String.format("%-8s %-18s %s\n", key, s.getKey(), s.getValue().getCount()));
+				}
+			}
+
+			return sb.toString();
+		}
+
+		private String trim(String str) {
+			return str == null ? str : str.trim();
 		}
 	}
 }
