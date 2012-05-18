@@ -679,5 +679,18 @@
 			<role>com.dianping.cat.report.page.trend.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.trend.JspViewer</implementation>
 		</component>
+		<component>
+			<role>com.dianping.cat.report.page.heatmap.Handler</role>
+			<implementation>com.dianping.cat.report.page.heatmap.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.heatmap.JspViewer</implementation>
+		</component>
 	</components>
 </plexus>

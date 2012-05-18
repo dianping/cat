@@ -23,7 +23,9 @@ public enum ReportPage implements Page {
 
    SQL("sql", "sql", "SQL", "SQL Report", true),
 
-   TREND("trend", "trend", "Trend", "Trend", true);
+   TREND("trend", "trend", "Trend", "Trend", true),
+
+   HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", true);
 
    private String m_name;
 

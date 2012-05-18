@@ -32,6 +32,9 @@
       <page name="trend" title="Trend" path="trend">
         <description>Trend</description>
       </page>
+      <page name="heatmap" title="Heatmap" path="heatmap">
+        <description>Heatmap</description>
+      </page>
     </module>
   </webapp>
 </wizard>
