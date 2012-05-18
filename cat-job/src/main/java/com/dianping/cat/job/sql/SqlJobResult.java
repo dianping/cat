@@ -15,7 +15,7 @@ import org.apache.hadoop.io.Writable;
 
 public class SqlJobResult implements Writable {
 
-	private static final double LONG_TIME = 50;
+	private static final double LONG_TIME = 500;
 
 	private static final char SPIT = '\t';
 
