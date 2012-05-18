@@ -4,6 +4,7 @@ import static com.dianping.cat.consumer.problem.ProblemType.ERROR;
 import static com.dianping.cat.consumer.problem.ProblemType.FAILURE;
 import static com.dianping.cat.consumer.problem.ProblemType.HEARTBEAT;
 import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
+import static com.dianping.cat.consumer.problem.ProblemType.LONG_SQL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.dianping.cat.consumer.problem.handler.ErrorHandler;
 import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.HeartbeatHandler;
+import com.dianping.cat.consumer.problem.handler.LongSqlHandler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.dal.LogviewDao;
@@ -63,8 +65,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
 		      .req(ServerConfigManager.class));
 
+		all.add(C(Handler.class, LONG_SQL.getName(), LongSqlHandler.class) //
+		      .req(ServerConfigManager.class));
+
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName() ,HEARTBEAT.getName() }, "m_handlers") //
+		      .req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName() ,LONG_SQL.getName() ,HEARTBEAT.getName() }, "m_handlers") //
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //

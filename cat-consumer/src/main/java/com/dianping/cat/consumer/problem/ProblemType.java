@@ -7,6 +7,8 @@ public enum ProblemType {
 	
 	HEARTBEAT("heartbeat"),
 
+	LONG_SQL("long-sql"),
+	
 	LONG_URL("long-url");
 
 	private String m_name;

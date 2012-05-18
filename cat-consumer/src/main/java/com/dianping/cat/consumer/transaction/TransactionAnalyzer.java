@@ -1,19 +1,27 @@
 package com.dianping.cat.consumer.transaction;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -47,6 +55,18 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private Logger m_logger;
 
+	private void clearAllDuration(TransactionReport report) {
+		Collection<Machine> machines = report.getMachines().values();
+		for (Machine machine : machines) {
+			for (TransactionType type : machine.getTypes().values()) {
+				type.getAllDurations().clear();
+				for (TransactionName name : type.getNames().values()) {
+					name.getAllDurations().clear();
+				}
+			}
+		}
+	}
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
@@ -55,6 +75,25 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	private double get95Line(Map<Integer, AllDuration> durations) {
+		int totalCount = 0;
+		
+		for (AllDuration duration : durations.values()) {
+			totalCount += duration.getCount();
+		}
+		
+		int index = totalCount * 5 / 100;
+		Map<Integer, AllDuration> result = getSortDuration(durations);
+
+		for (Entry<Integer, AllDuration> entry : result.entrySet()) {
+			index = index - entry.getValue().getCount();
+			if (index <= 0) {
+				return entry.getKey();
+			}
+		}
+		return 0;
 	}
 
 	@Override
@@ -74,7 +113,25 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		report.getDomainNames().addAll(m_reports.keySet());
 
 		report.accept(new StatisticsComputer());
+		set95Line(report);
 		return report;
+	}
+
+	private Map<Integer, AllDuration> getSortDuration(Map<Integer, AllDuration> map) {
+		Map<Integer, AllDuration> result = new LinkedHashMap<Integer, AllDuration>();
+		List<Entry<Integer, AllDuration>> entries = new ArrayList<Entry<Integer, AllDuration>>(map.entrySet());
+		Collections.sort(entries, new Comparator<Entry<Integer, AllDuration>>() {
+			@Override
+			public int compare(Entry<Integer, AllDuration> o1, Entry<Integer, AllDuration> o2) {
+				return o2.getKey() - o1.getKey();
+			}
+
+		});
+		for (Entry<Integer, AllDuration> entry : entries) {
+			result.put(entry.getKey(), entry.getValue());
+		}
+
+		return result;
 	}
 
 	@Override
@@ -121,6 +178,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		Message message = tree.getMessage();
+		report.addIp(tree.getIpAddress());
 
 		if (message instanceof Transaction) {
 			int count = processTransaction(report, tree, (Transaction) message);
@@ -133,7 +191,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		TransactionType type = report.findOrCreateType(t.getType());
+		String ip = tree.getIpAddress();
+		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
 		TransactionName name = type.findOrCreateName(t.getName());
 		String messageId = tree.getMessageId();
 		int count = 0;
@@ -169,16 +228,19 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			// update statistics
 			double duration = t.getDurationInMicros() / 1000d;
+			Integer allDuration = new Integer((int) duration);
 
 			name.setMax(Math.max(name.getMax(), duration));
 			name.setMin(Math.min(name.getMin(), duration));
 			name.setSum(name.getSum() + duration);
 			name.setSum2(name.getSum2() + duration * duration);
+			name.findOrCreateAllDuration(allDuration).incCount();
 
 			type.setMax(Math.max(type.getMax(), duration));
 			type.setMin(Math.min(type.getMin(), duration));
 			type.setSum(type.getSum() + duration);
 			type.setSum2(type.getSum2() + duration * duration);
+			type.findOrCreateAllDuration(allDuration).incCount();
 		}
 
 		processTransactionGrpah(name, t);
@@ -221,6 +283,24 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
+	private void set95Line(TransactionReport report) {
+		Collection<Machine> machines = report.getMachines().values();
+		for (Machine machine : machines) {
+			for (TransactionType type : machine.getTypes().values()) {
+				double typeValuevalue = get95Line(type.getAllDurations());
+				type.setLine95Value(typeValuevalue);
+				type.setLine95Count(1);
+				type.setLine95Sum(typeValuevalue);
+				for (TransactionName name : type.getNames().values()) {
+					double nameValue = get95Line(name.getAllDurations());
+					name.setLine95Value(nameValue);
+					name.setLine95Count(1);
+					name.setLine95Sum(nameValue);
+				}
+			}
+		}
+	}
+
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
 		m_extraTime = extraTime;
 		m_startTime = startTime;
@@ -255,6 +335,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				domainNames.clear();
 				domainNames.addAll(getDomains());
 
+				set95Line(report);
+				clearAllDuration(report);
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 

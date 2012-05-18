@@ -1,6 +1,6 @@
 var isCtrl = false;
 
-function showGraphs(anchor,target, id) {
+function showGraphs(anchor,target) {
 	if (isCtrl) return true;
 	
 	var cell = document.getElementById(target);
@@ -14,7 +14,7 @@ function showGraphs(anchor,target, id) {
 		} else { // <div>...</div>
 			$.ajax({
 				type: "get",
-				url: "?op=graphs&id="+id,
+				url: anchor.href,
 				success : function(data, textStatus) {
 					cell.innerHTML = data;
 				}

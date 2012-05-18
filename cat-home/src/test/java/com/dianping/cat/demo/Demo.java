@@ -12,6 +12,7 @@ import org.junit.runners.JUnit4;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -36,7 +37,7 @@ public class Demo extends ComponentTestCase {
 	}
 
 	@Test
-	public void demo() throws Exception {
+	public void testSingleTransaction() throws Exception {
 		MessageProducer cat = lookup(MessageProducer.class);
 		Transaction t = cat.newTransaction("URL", "FailureReportPage");
 
@@ -51,11 +52,27 @@ public class Demo extends ComponentTestCase {
 	}
 
 	@Test
-	public void demo2() throws Exception {
-		MessageProducer cat = lookup(MessageProducer.class);
-		Transaction t = cat.newTransaction("SQL3", "update-user");
-		Thread.sleep(10);
-		t.setStatus("error");
-		t.complete();
+	public void testNestTransaction() throws Exception {
+		DefaultMessageProducer cat = (DefaultMessageProducer) Cat.getProducer();
+		final Transaction f = cat.newTransaction("demo", "father");
+		Thread child = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				DefaultMessageProducer cat = (DefaultMessageProducer) Cat.getProducer();
+				Transaction t = cat.newTransaction(f, "demo", "child");
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				t.setStatus("child");
+				t.complete();
+			}
+		});
+		child.start();
+		child.join();
+		f.setStatus("father");
+		f.complete();
 	}
 }

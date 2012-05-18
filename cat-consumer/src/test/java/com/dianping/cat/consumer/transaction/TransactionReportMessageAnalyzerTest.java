@@ -72,7 +72,7 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 		}
 
 		TransactionReport report = analyzer.getReport("group");
-		TransactionType typeA = report.getTypes().get("A");
+		TransactionType typeA = report.getMachines().get("192.168.1.1").getTypes().get("A");
 		TransactionName n1 = typeA.getNames().get("n1");
 		assertEquals(1000, n1.getTotalCount());
 		assertEquals(500, n1.getFailCount());
@@ -82,7 +82,7 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 		assertEquals(1001.0, n1.getAvg());
 		assertEquals(1001000.0, n1.getSum());
 
-		TransactionType typeA1 = report.getTypes().get("A-1");
+		TransactionType typeA1 = report.getMachines().get("192.168.1.1").getTypes().get("A-1");
 		TransactionName n2 = typeA1.getNames().get("n2");
 		assertEquals(1000, n2.getTotalCount());
 		assertEquals(500, n2.getFailCount());

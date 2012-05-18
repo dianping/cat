@@ -53,6 +53,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
 	}
+	
+	public List<String> getIps() {
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getIps());
+		}
+	}
 
 	public String getGraph1() {
 		return m_graph1;

@@ -11,10 +11,12 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.IEntity;
+import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
@@ -58,11 +60,12 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		String report = payload.getReport();
 
 		if ("transaction".equals(report)) {
-			TransactionReportFilter filter = new TransactionReportFilter(payload.getType(), payload.getName());
+			TransactionReportFilter filter = new TransactionReportFilter(payload.getType(), payload.getName(),
+			      payload.getIpAddress());
 
 			return filter.buildXml((IEntity<?>) dataModel);
 		} else if ("event".equals(report)) {
-			EventReportFilter filter = new EventReportFilter(payload.getType(), payload.getName());
+			EventReportFilter filter = new EventReportFilter(payload.getType(), payload.getName(), payload.getIpAddress());
 
 			return filter.buildXml((com.dianping.cat.consumer.event.model.IEntity<?>) dataModel);
 		} else if ("problem".equals(report)) {
@@ -104,10 +107,10 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_problemService.invoke(request);
 			} else if ("logview".equals(report)) {
 				request.setProperty("messageId", payload.getMessageId());
-				if(!StringUtils.isEmpty(payload.getDirection())){
+				if (!StringUtils.isEmpty(payload.getDirection())) {
 					request.setProperty("direction", payload.getDirection());
 				}
-				if(!StringUtils.isEmpty(payload.getTag())){
+				if (!StringUtils.isEmpty(payload.getTag())) {
 					request.setProperty("tag", payload.getTag());
 				}
 				response = m_logviewService.invoke(request);
@@ -135,9 +138,23 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		private String m_name;
 
-		public EventReportFilter(String type, String name) {
+		private String m_ipAddress;
+
+		public EventReportFilter(String type, String name, String ip) {
 			m_type = type;
 			m_name = name;
+			m_ipAddress = ip;
+		}
+
+		@Override
+		public void visitMachine(com.dianping.cat.consumer.event.model.entity.Machine machine) {
+			if (m_ipAddress == null || m_ipAddress.equals(CatString.ALL_IP)) {
+				super.visitMachine(machine);
+			} else if (machine.getIp().equals(m_ipAddress)) {
+				super.visitMachine(machine);
+			} else {
+				// skip it
+			}
 		}
 
 		@Override
@@ -213,9 +230,23 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		private String m_name;
 
-		public TransactionReportFilter(String type, String name) {
+		private String m_ipAddress;
+
+		public TransactionReportFilter(String type, String name, String ip) {
 			m_type = type;
 			m_name = name;
+			m_ipAddress = ip;
+		}
+
+		@Override
+		public void visitMachine(com.dianping.cat.consumer.transaction.model.entity.Machine machine) {
+			if (m_ipAddress == null || m_ipAddress.equals(CatString.ALL_IP)) {
+				super.visitMachine(machine);
+			} else if (machine.getIp().equals(m_ipAddress)) {
+				super.visitMachine(machine);
+			} else {
+				// skip it
+			}
 		}
 
 		@Override
@@ -225,6 +256,11 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			}
 		}
 
+		@Override
+		public void visitAllDuration(AllDuration duration){
+			
+		}
+		
 		@Override
 		public void visitName(TransactionName name) {
 			if (m_type == null) {

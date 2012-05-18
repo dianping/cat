@@ -25,6 +25,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_graph4;
 	
 	private String m_mobileResponse;
+	
+	private String m_queryName;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -52,6 +54,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
+	}
+	
+	public List<String> getIps() {
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getIps());
+		}
+	}
+	
+	public String getQueryName() {
+		return m_queryName;
+	}
+
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
 	}
 
 	public String getGraph1() {

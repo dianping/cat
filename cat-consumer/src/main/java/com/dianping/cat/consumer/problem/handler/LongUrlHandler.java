@@ -20,7 +20,7 @@ public class LongUrlHandler implements Handler, Initializable {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private int m_defaultThreshold;
+	private int m_defaultUrlThreshold;
 
 	private Map<String, Integer> m_thresholds = new HashMap<String, Integer>();
 
@@ -32,7 +32,7 @@ public class LongUrlHandler implements Handler, Initializable {
 		if (message instanceof Transaction && "URL".equals(message.getType())) {
 			long duration = ((Transaction) message).getDurationInMillis();
 			Integer threshold = m_thresholds.get(tree.getDomain());
-			long value = threshold != null ? threshold.longValue() : m_defaultThreshold;
+			long value = threshold != null ? threshold.longValue() : m_defaultUrlThreshold;
 
 			if (duration > value) {
 				String messageId = tree.getMessageId();
@@ -56,13 +56,13 @@ public class LongUrlHandler implements Handler, Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		Map<String, Domain> domains = m_configManager.getLongUrlDomains();
+		Map<String, Domain> domains = m_configManager.getLongConfigDomains();
 
-		m_defaultThreshold = m_configManager.getLongUrlDefaultThreshold();
+		m_defaultUrlThreshold = m_configManager.getLongUrlDefaultThreshold();
 
 		for (Domain domain : domains.values()) {
-			if (domain.getThreshold() != null) {
-				m_thresholds.put(domain.getName(), domain.getThreshold());
+			if (domain.getUrlThreshold() != null) {
+				m_thresholds.put(domain.getName(), domain.getUrlThreshold());
 			}
 		}
 	}

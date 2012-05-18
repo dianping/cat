@@ -23,14 +23,19 @@ public class DisplayTransactionNameReport {
 		return m_results;
 	}
 
-	public DisplayTransactionNameReport display(String sorted, String type, TransactionReport report) {
-		Map<String, TransactionType> types = report.getTypes();
+	public DisplayTransactionNameReport display(String sorted, String type, String ip,TransactionReport report, String queryName) {
+		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
 		if (types != null) {
 			TransactionType names = types.get(type);
 
 			if (names != null) {
 				for (Entry<String, TransactionName> entry : names.getNames().entrySet()) {
-					m_results.add(new TransactionNameModel(entry.getKey(), entry.getValue()));
+					String transTypeName = entry.getValue().getId();
+					boolean isAdd = (queryName == null || queryName.length() == 0 || transTypeName.toLowerCase().contains(
+					      queryName.trim().toLowerCase()));
+					if (isAdd) {
+						m_results.add(new TransactionNameModel(entry.getKey(), entry.getValue()));
+					}
 				}
 			}
 		}
@@ -87,6 +92,9 @@ public class DisplayTransactionNameReport {
 			}
 			if (m_sorted.equals("avg")) {
 				return (int) (m2.getDetail().getAvg() * 100 - m1.getDetail().getAvg() * 100);
+			}
+			if (m_sorted.equals("95line")) {
+				return (int) (m2.getDetail().getLine95Value() * 100 - m1.getDetail().getLine95Value() * 100);
 			}
 			return 0;
 		}

@@ -4,7 +4,12 @@
 	<entity name="event-report" root="true">
 		<attribute name="domain" key="true" />
 		<element name="domain" value-type="String" type="set" names="domain-names" />
-		<entity-ref name="type" type="map" method-find-or-create="true" />
+		<element name="ip" value-type="String" type="set" names="ips" />
+		<entity-ref name="machine" type="map" names="machines" method-find-or-create="true" />
+	</entity>
+	<entity name="machine">
+		<attribute name="ip" value-type="String" key="true"/>
+		<entity-ref name="type" type="map" names="types" method-find-or-create="true" />
 	</entity>
 	<entity name="type" class-name="EventType">
 		<attribute name="id" key="true" />
