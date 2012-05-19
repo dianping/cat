@@ -13,7 +13,5 @@
 <jsp:body>
 
 <br>
-<br>
 </jsp:body>
-
 </a:report>

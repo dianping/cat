@@ -43,7 +43,7 @@ public class Handler implements PageHandler<Context> {
 			int latIndex = (int) Math.floor((record.getLat() - lat1) / latUnit);
 			int lngIndex = (int) Math.floor((record.getLng() - lng1) / lngUnit);
 
-			matrix[latIndex][lngIndex] += record.getTotal() * 100; // TODO
+			matrix[latIndex][lngIndex] += record.getTotal();
 		}
 
 		return new Result(matrix, lat1, lng1, latUnit, lngUnit);
@@ -54,6 +54,11 @@ public class Handler implements PageHandler<Context> {
 		double lat2 = payload.getLat2();
 		double lng1 = payload.getLng1();
 		double lng2 = payload.getLng2();
+
+		//TODO
+		Date start = model.getReport().getStartTime();
+		Date end = model.getReport().getEndTime();
+
 		Calendar cal = Calendar.getInstance();
 
 		cal.set(2012, 04, 10, 0, 0, 0);
@@ -82,8 +87,21 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 
+		// Last hour is default
+		if (payload.getPeriod().isCurrent()) {
+			payload.setHours(payload.getHours() - 1);
+		}
+
 		model.setAction(action);
 		model.setPage(ReportPage.HEATMAP);
+
+		if (payload.getPeriod().isFuture()) {
+			model.setLongDate(payload.getCurrentDate());
+		} else {
+			model.setLongDate(payload.getDate());
+		}
+		HeatMapReport report = new HeatMapReport(new Date(payload.getDate()), payload.getFlag());
+		model.setReport(report);
 
 		switch (action) {
 		case JSONP:

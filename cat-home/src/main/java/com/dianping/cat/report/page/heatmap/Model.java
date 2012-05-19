@@ -13,6 +13,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private int m_max;
 	
+	private HeatMapReport m_report;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -51,8 +53,12 @@ public class Model extends AbstractReportModel<Action, Context> {
    }
 
 	public HeatMapReport getReport() {
-		return new HeatMapReport();
-	}
+   	return m_report;
+   }
+
+	public void setReport(HeatMapReport report) {
+   	m_report = report;
+   }
 
 	public void setCb(String cb) {
 		m_cb = cb;
