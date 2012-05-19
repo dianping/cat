@@ -241,12 +241,11 @@ HeatCanvasOverlayView.prototype.onRemove = function() {
 	//google.maps.event.clearInstanceListeners(this.map);
 	this.heatmap.clear();
 	this.data = {};
+	this.dataOrdered = {};
 	$(this._div).remove();
 	if(this.callback){
 		this.callback.call(this);
-	}
-	console.log('clear');
-	
+	}	
 }
 
 HeatCanvasOverlayView.prototype.draw = function() {
@@ -360,7 +359,7 @@ HeatCanvasOverlayView.prototype.draw = function() {
 			//count++;
 			//position params to render image
 			var self=window.HeatOverlay;
-			if(!proj.getProjection) return;
+			if(!self.getProjection) return;
 			var proj = self.getProjection();
 			if(!self.getMap() || !self.getMap().getBounds()) return;
 		  // fit current viewport

@@ -41,7 +41,9 @@ var HeatCanvas = function(canvas,overlay){
 	this.height = this.canvas.height;
 
 	this.onRenderingStart = null;
-	this.onRenderingEnd = null;
+	this.onRenderingEnd = function(){
+	       $('#wait_logo').hide();
+	};
 	
 	this.overlay=overlay;
 

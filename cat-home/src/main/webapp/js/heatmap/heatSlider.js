@@ -66,22 +66,22 @@ var HeatSlider = function(canvas,rootElement){
 	this.bgImg = new Image();
 	this.bgImg.onload=function(){
 	}
-	this.bgImg.src = "images/rent08.png";
+	this.bgImg.src = "/cat/images/rent08.png";
 	
 	this.bgShadowImg = new Image();
 	this.bgShadowImg.onload=function(){
 	}
-	this.bgShadowImg.src = "images/rent09.png";		
+	this.bgShadowImg.src = "/cat/images/rent09.png";		
 	
 	this.smallBarImg=new Image();
 	this.smallBarImg.onload=function(){
 	}
-	this.smallBarImg.src = "images/rent03.png";
+	this.smallBarImg.src = "/cat/images/rent03.png";
 
 	this.largeBarImg=new Image();
 	this.largeBarImg.onload=function(){
 	}
-	this.largeBarImg.src = "images/rent04.png";
+	this.largeBarImg.src = "/cat/images/rent04.png";
 	
 }		
 
@@ -182,7 +182,7 @@ HeatSlider.prototype.disable =function(){
     	this.mainCanvas.onmousedown=null;
     	this.background.onmousedown=null;
 		var wait = document.getElementById('wait_logo');
-		wait.style.display = "inline";
+		//wait.style.display = "inline";
 
     }
     
@@ -191,7 +191,7 @@ HeatSlider.prototype.enable =function(){
     	this.mainCanvas.onmousedown=this.canvasMouseDownHandler;
     	this.background.onmousedown=this.bgMouseDownHandler;
 		var wait = document.getElementById('wait_logo');
-		wait.style.display = "none";
+		//wait.style.display = "none";
     }
 
 HeatSlider.prototype.draw =function(){
@@ -231,21 +231,21 @@ HeatSlider.prototype.draw =function(){
 					  if(this.values[0]<1000){adjustmin=3;}
 					  /*
 						this.mainCt.fillText(this.values[0],45+adjustmin,this.MAIN_CANVAS_HEIGHT-this.pSmall+50);
-						this.mainCt.fillText('元/月',45,this.MAIN_CANVAS_HEIGHT-this.pSmall+50+20);
+						this.mainCt.fillText('元/锟斤拷',45,this.MAIN_CANVAS_HEIGHT-this.pSmall+50+20);
 						*/
-						this.mainCt.fillText(this.values[0],45+adjustmin,512);
-						//this.mainCt.fillText('元/月',45,512+20);							
+						this.mainCt.fillText(this.values[0],40+adjustmin,512);
+						//this.mainCt.fillText('元/锟斤拷',45,512+20);							
 						
 						
 						var adjustmax=0;
 					  if(this.values[1]<1000){adjustmax=3;}		
 					  /*							
 					  this.mainCt.fillText(this.values[1], 45+adjustmax,this.MAIN_CANVAS_HEIGHT-this.pLarge-70);
-						this.mainCt.fillText('元/月',45,this.MAIN_CANVAS_HEIGHT-this.pLarge-70+20);		
+						this.mainCt.fillText('元/锟斤拷',45,this.MAIN_CANVAS_HEIGHT-this.pLarge-70+20);		
 					  */
             
-					  this.mainCt.fillText(this.values[1], 45+adjustmax,50);
-						//this.mainCt.fillText('元/月',45,50+20);		
+					  this.mainCt.fillText(this.values[1], 40+adjustmax,50);
+						//this.mainCt.fillText('元/锟斤拷',45,50+20);		
 						
             //draw control bar
             this.mainCt.drawImage(this.largeBarImg, -25, this.MAIN_CANVAS_HEIGHT-this.pLarge-this.largeBarImg.height/2+2, this.largeBarImg.width, this.largeBarImg.height);

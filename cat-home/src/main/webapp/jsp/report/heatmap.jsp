@@ -11,19 +11,28 @@
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-<res:useCss value="${res.css.local.heatmap_css}" target="head-css" />
-<res:useCss value="${res.css.local['jquery-autocomplete.css']}" target="head-css" />
-
-<res:useJs value="${res.js.local.heatmap['jquery-1.7.2.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap['gmap3.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap.heatcanvas_js}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap['heatcanvas-googlemaps.js']}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap['heatcanvas-worker.js']}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap['heatSlider.js']}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap['jquery-autocomplete.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap_js}" target="head-js" />
-<script type="text/javascript"
-	src="http://ditu.google.cn/maps/api/js?sensor=false&language=zh"></script>
+		<res:useCss value="${res.css.local.heatmap_css}" target="head-css" />
+		<res:useCss value="${res.css.local['jquery-autocomplete.css']}" target="head-css" />
+		
+		<script type="text/javascript" src="http://ditu.google.cn/maps/api/js?sensor=false&language=zh"></script>
+        <script type="text/javascript" src="/cat/js/heatmap/heatcanvas.js"></script>
+        <script type="text/javascript" src="/cat/js/heatmap/heatcanvas-googlemaps.js"></script>
+        <script type="text/javascript" src="/cat/js/heatmap/heatcanvas-worker.js"></script>
+        <script type="text/javascript" src="/cat/js/heatmap/heatSlider.js"></script>
+		<script type="text/javascript" src="/cat/js/heatmap/jquery-1.7.2.min.js"></script>
+		<script src="/cat/js/heatmap/gmap3.min.js"></script>
+		<script src="/cat/js/heatmap/jquery-autocomplete.min.js"></script>
+		<script src="/cat/js/heatmap.js"></script>
+<%-- 		
+		<res:useJs value="${res.js.local.heatmap['heatcanvas.js']}" target="bottom-js" />
+		<res:useJs value="${res.js.local.heatmap['heatcanvas-googlemaps.js']}" target="bottom-js" />
+		<res:useJs value="${res.js.local.heatmap['heatcanvas-worker.js']}" target="bottom-js" />
+		<res:useJs value="${res.js.local.heatmap['heatSlider.js']}" target="bottom-js" />
+		<res:useJs value="${res.js.local.heatmap['jquery-1.7.2.min.js']}" target="bottom-js" />
+		<res:useJs value="${res.js.local.heatmap['gmap3.min.js']}" target="bottom-js" />
+		<res:useJs value="${res.js.local.heatmap['jquery-autocomplete.min.js']}" target="bottom-js" />
+		<res:useJs value="${res.js.local.heatmap_js}" target="head-js" />
+ --%>		
     	<div class="wrapper">
 			<div class="searchbox">&nbsp;&nbsp;地址: <input type="text" id="address" size="60"
 			autocomplete="off">	&nbsp;&nbsp;热门城市：<span class="hotcities" id="hotcities"><a
@@ -33,7 +42,7 @@
 			data-latlng="30.593087,114.30535699999996">武汉</a><a href="#"
 			data-latlng="32.060255,118.796877">南京</a></span>
 		</div>
-			<img id="wait_logo" src="images/wait_logo.gif" width="100"
+			<img id="wait_logo" src="/cat/images/wait_logo.gif" width="100"
 			height="100"></img>
 	    	<div id="map"></div> 
 	    </div>   	
