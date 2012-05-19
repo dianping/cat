@@ -39,11 +39,13 @@ public class Handler implements PageHandler<Context> {
 		double lngUnit = Math.abs(lng1 - lng2) / xc;
 		int[][] matrix = new int[yc][xc];
 
-		for (LocationRecord record : records) {
-			int latIndex = (int) Math.floor((record.getLat() - lat1) / latUnit);
-			int lngIndex = (int) Math.floor((record.getLng() - lng1) / lngUnit);
+		if (xc > 0 && yc > 0) {
+			for (LocationRecord record : records) {
+				int latIndex = (int) Math.floor((record.getLat() - lat1) / latUnit);
+				int lngIndex = (int) Math.floor((record.getLng() - lng1) / lngUnit);
 
-			matrix[latIndex][lngIndex] += record.getTotal();
+				matrix[latIndex][lngIndex] += record.getTotal();
+			}
 		}
 
 		return new Result(matrix, lat1, lng1, latUnit, lngUnit);
@@ -93,9 +95,9 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setLongDate(payload.getDate());
 		}
-		
+
 		HeatMapReport report = new HeatMapReport(new Date(payload.getDate()), payload.getFlag());
-		
+
 		model.setReport(report);
 
 		switch (action) {
