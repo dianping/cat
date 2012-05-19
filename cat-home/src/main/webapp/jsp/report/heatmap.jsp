@@ -11,22 +11,19 @@
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<script type="text/javascript"
-	src="http://ditu.google.cn/maps/api/js?sensor=false&language=zh"></script>
-
 <res:useCss value="${res.css.local.heatmap_css}" target="head-css" />
 <res:useCss value="${res.css.local['jquery-autocomplete.css']}" target="head-css" />
 
+<res:useJs value="${res.js.local.heatmap['jquery-1.7.2.min.js']}" target="head-js" />
+<res:useJs value="${res.js.local.heatmap['gmap3.min.js']}" target="head-js" />
 <res:useJs value="${res.js.local.heatmap.heatcanvas_js}" target="head-js" />
 <res:useJs value="${res.js.local.heatmap['heatcanvas-googlemaps.js']}" target="head-js" />
 <res:useJs value="${res.js.local.heatmap['heatcanvas-worker.js']}" target="head-js" />
 <res:useJs value="${res.js.local.heatmap['heatSlider.js']}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap['jquery-1.7.2.min.js']}" target="head-js" />
-<res:useJs value="${res.js.local.heatmap['gmap3.min.js']}" target="head-js" />
 <res:useJs value="${res.js.local.heatmap['jquery-autocomplete.min.js']}" target="head-js" />
 <res:useJs value="${res.js.local.heatmap_js}" target="head-js" />
-
-  <body onload="init();">
+<script type="text/javascript"
+	src="http://ditu.google.cn/maps/api/js?sensor=false&language=zh"></script>
     	<div class="wrapper">
 			<div class="searchbox">&nbsp;&nbsp;地址: <input type="text" id="address" size="60"
 			autocomplete="off">	&nbsp;&nbsp;热门城市：<span class="hotcities" id="hotcities"><a
@@ -40,7 +37,8 @@
 			height="100"></img>
 	    	<div id="map"></div> 
 	    </div>   	
-    </body>
 <br>
+
+<res:useJs value="${res.js.local.heatmapbutton_js}" target="bottom-js" />
 </jsp:body>
 </a:report>
