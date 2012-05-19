@@ -86,7 +86,8 @@ public class Handler implements PageHandler<Context> {
 		if (payload.getPeriod().isCurrent()) {
 			payload.setHours(payload.getHours() - 1);
 		}
-
+		
+		model.setDisplay(payload.getDisplay());
 		model.setAction(action);
 		model.setPage(ReportPage.HEATMAP);
 
