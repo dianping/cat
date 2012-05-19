@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.heatmap;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view");
+	VIEW("view"),
+	
+	JSONP("jsonp");
 
 	private String m_name;
 

@@ -50,7 +50,8 @@ public class LocationJoblet extends ContainerHolder implements Joblet<Location, 
 					Number lat = (Number) parts[0];
 					Number lng = (Number) parts[1];
 
-					return new Location(lat.doubleValue(), lng.doubleValue(), root.getTimestamp());
+					return new Location(convertForPrecision(lat.doubleValue()), convertForPrecision(lng.doubleValue()),
+					      root.getTimestamp());
 				} catch (Exception e) {
 					// ignore it
 				}
@@ -60,6 +61,12 @@ public class LocationJoblet extends ContainerHolder implements Joblet<Location, 
 		}
 
 		return null;
+	}
+
+	private double convertForPrecision(double value) {
+		final double precise = 100000d;
+
+		return ((long) (value * precise)) / precise;
 	}
 
 	@Override
@@ -217,7 +224,7 @@ public class LocationJoblet extends ContainerHolder implements Joblet<Location, 
 		@Override
 		public void out(JobletContext context, Location location, LocationStat stat) throws IOException,
 		      InterruptedException {
-			if (m_records.size() >= 100) {
+			if (m_records.size() >= 200) {
 				flushToDatabase();
 			}
 

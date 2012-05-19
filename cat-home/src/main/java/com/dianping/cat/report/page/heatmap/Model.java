@@ -7,40 +7,22 @@ import java.util.Date;
 import com.dianping.cat.report.page.AbstractReportModel;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private LocationData m_data;
-
 	private String m_cb;
+
+	private String m_locationData;
+
+	private int m_max;
 	
+	public Model(Context ctx) {
+		super(ctx);
+	}
+
 	public String getCb() {
-   	return m_cb;
-   }
-
-	public void setCb(String cb) {
-   	m_cb = cb;
-   }
-
-	public LocationData getData() {
-		return m_data;
-	}
-
-	public void setData(LocationData data) {
-		m_data = data;
-	}
-
-	public String getLocationDetail() {
-		return m_data.getJsonString();
-	}
-
-	public HeatMapReport getReport() {
-		return new HeatMapReport();
+		return m_cb;
 	}
 
 	public Date getCreatTime() {
 		return new Date();
-	}
-
-	public Model(Context ctx) {
-		super(ctx);
 	}
 
 	@Override
@@ -59,4 +41,28 @@ public class Model extends AbstractReportModel<Action, Context> {
 		domains.add("MobileApi");
 		return domains;
 	}
+
+	public String getLocationData() {
+		return m_locationData;
+	}
+
+	public int getMax() {
+   	return m_max;
+   }
+
+	public HeatMapReport getReport() {
+		return new HeatMapReport();
+	}
+
+	public void setCb(String cb) {
+		m_cb = cb;
+	}
+
+	public void setLocationData(String locationData) {
+		m_locationData = locationData;
+	}
+
+	public void setMax(int max) {
+   	m_max = max;
+   }
 }

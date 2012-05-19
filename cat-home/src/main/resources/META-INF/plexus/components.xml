@@ -686,11 +686,23 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.job.sql.dal.LocationRecordDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.heatmap.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.sql.dal.LocationRecordDao</role>
+			<implementation>com.dianping.cat.job.sql.dal.LocationRecordDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>

@@ -39,7 +39,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// for Location Analyzer
 		all.add(C(Joblet.class, "location", LocationJoblet.class).is(PER_LOOKUP) //
 		      .req(LocationOutputter.class, "database"));
-		all.add(C(LocationOutputter.class, "database", LocationDatabaseDumper.class) //
+		all.add(C(LocationOutputter.class, "database", LocationDatabaseDumper.class).is(PER_LOOKUP) //
 		      .req(LocationRecordDao.class));
 		all.add(C(LocationOutputter.class, "report", LocationReporter.class));
 

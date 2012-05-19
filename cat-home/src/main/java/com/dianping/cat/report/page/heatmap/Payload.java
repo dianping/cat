@@ -6,21 +6,29 @@ import com.site.web.mvc.ActionContext;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
-
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("ne")
-	private String m_ne;
+	@FieldMeta("lat1")
+	private double m_lat1;
 
-	@FieldMeta("sw")
-	private String m_sw;
+	@FieldMeta("lat2")
+	private double m_lat2;
+
+	@FieldMeta("lng1")
+	private double m_lng1;
+
+	@FieldMeta("lng2")
+	private double m_lng2;
 
 	@FieldMeta("width")
-	private String m_width;
+	private int m_width;
 
 	@FieldMeta("height")
-	private String m_height;
+	private int m_height;
+
+	@FieldMeta("unit")
+	private int m_unit = 20;
 
 	@FieldMeta("cb")
 	private String m_cb;
@@ -34,51 +42,78 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public String getHeight() {
+	public String getCb() {
+		return m_cb;
+	}
+
+	public int getHeight() {
 		return m_height;
 	}
 
-	public String getNe() {
-		return m_ne;
+	public double getLat1() {
+		return m_lat1;
 	}
 
-	public String getSw() {
-		return m_sw;
+	public double getLat2() {
+		return m_lat2;
 	}
 
-	public String getWidth() {
+	public double getLng1() {
+		return m_lng1;
+	}
+
+	public double getLng2() {
+		return m_lng2;
+	}
+
+	public int getUnit() {
+		return m_unit;
+	}
+
+	public int getWidth() {
 		return m_width;
 	}
 
-	public void setAction(Action action) {
-		m_action = action;
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	public void setHeight(String height) {
+	public void setCb(String cb) {
+		m_cb = cb;
+	}
+
+	public void setHeight(int height) {
 		m_height = height;
 	}
 
-	public void setNe(String ne) {
-		m_ne = ne;
+	public void setLat1(double lat1) {
+		m_lat1 = lat1;
 	}
 
-	public void setSw(String sw) {
-		m_sw = sw;
+	public void setLat2(double lat2) {
+		m_lat2 = lat2;
 	}
 
-	public void setWidth(String width) {
+	public void setLng1(double lng1) {
+		m_lng1 = lng1;
+	}
+
+	public void setLng2(double lng2) {
+		m_lng2 = lng2;
+	}
+
+	public void setUnit(int unit) {
+		m_unit = unit;
+	}
+
+	public void setWidth(int width) {
 		m_width = width;
 	}
 
-	public String getCb() {
-   	return m_cb;
-   }
-
-	public void setCb(String cb) {
-   	m_cb = cb;
-   }
-
 	@Override
 	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.VIEW;
+		}
 	}
 }
