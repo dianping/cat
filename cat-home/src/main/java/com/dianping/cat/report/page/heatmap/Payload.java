@@ -36,6 +36,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("flag")
 	private int m_flag;
 
+	@FieldMeta("display")
+	private String m_display;
+
 	public Payload() {
 		super(ReportPage.HEATMAP);
 	}
@@ -119,6 +122,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setFlag(int flag) {
    	m_flag = flag;
+   }
+
+	public String getDisplay() {
+   	return m_display;
+   }
+
+	public void setDisplay(String display) {
+   	m_display = display;
    }
 
 	@Override

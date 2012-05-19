@@ -15,6 +15,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private HeatMapReport m_report;
 	
+	private String m_display;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -67,6 +69,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setLocationData(String locationData) {
 		m_locationData = locationData;
 	}
+
+	public String getDisplay() {
+   	return m_display;
+   }
+
+	public void setDisplay(String display) {
+   	m_display = display;
+   }
 
 	public void setMax(int max) {
    	m_max = max;
