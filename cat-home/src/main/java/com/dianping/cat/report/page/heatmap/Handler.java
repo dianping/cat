@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.heatmap;
 
 import java.io.IOException;
-import java.util.Calendar;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -54,17 +54,10 @@ public class Handler implements PageHandler<Context> {
 		double lat2 = payload.getLat2();
 		double lng1 = payload.getLng1();
 		double lng2 = payload.getLng2();
-
-		//TODO
 		Date start = model.getReport().getStartTime();
 		Date end = model.getReport().getEndTime();
 
-		Calendar cal = Calendar.getInstance();
-
-		cal.set(2012, 04, 10, 0, 0, 0);
-
-		Date transactionDate = cal.getTime();
-		List<LocationRecord> locations = m_dao.findAllByTransactionDate(transactionDate, lat1, lat2, lng1, lng2,
+		List<LocationRecord> locations = m_dao.findAllByTransactionDateLatLngRange(start, end, lat1, lat2, lng1, lng2,
 		      LocationRecordEntity.READSET_LAT_LNG_TOTAL);
 		Result result = aggregate(locations, payload);
 
@@ -100,7 +93,9 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setLongDate(payload.getDate());
 		}
+		
 		HeatMapReport report = new HeatMapReport(new Date(payload.getDate()), payload.getFlag());
+		
 		model.setReport(report);
 
 		switch (action) {
@@ -222,6 +217,7 @@ public class Handler implements PageHandler<Context> {
 		public String toString() {
 			StringBuilder sb = new StringBuilder(8192);
 			boolean first = true;
+			DecimalFormat format = new DecimalFormat("0.00000");
 
 			sb.append('[');
 
@@ -245,8 +241,8 @@ public class Handler implements PageHandler<Context> {
 						sb.append(',');
 					}
 
-					sb.append('[').append(lat);
-					sb.append(',').append(lng);
+					sb.append('[').append(format.format(lat));
+					sb.append(',').append(format.format(lng));
 					sb.append(',').append(count);
 					sb.append(']');
 				}

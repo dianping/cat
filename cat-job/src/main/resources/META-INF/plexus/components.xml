@@ -43,6 +43,7 @@
 			<role>com.dianping.cat.job.joblet.LocationJoblet$LocationOutputter</role>
 			<role-hint>database</role-hint>
 			<implementation>com.dianping.cat.job.joblet.LocationJoblet$LocationDatabaseDumper</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.job.sql.dal.LocationRecordDao</role>

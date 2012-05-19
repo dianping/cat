@@ -21,14 +21,19 @@ public class LocationRecordDaoTest extends ComponentTestCase {
 
 		Calendar cal = Calendar.getInstance();
 
-		cal.set(2012, 04, 10, 0, 0, 0);
+		// 2012-05-17
+		cal.set(2012, 04, 17, 11, 0, 0);
 
-		Date transactionDate = cal.getTime();
+		Date fromDate = cal.getTime();
 
-		List<LocationRecord> locations = dao.findAllByTransactionDate(transactionDate, 31.183556726728153,
+		cal.add(Calendar.HOUR_OF_DAY, 1);
+
+		Date toDate = cal.getTime();
+
+		List<LocationRecord> locations = dao.findAllByTransactionDateLatLngRange(fromDate, toDate, 31.183556726728153,
 		      31.286595237657263, 121.37105049658203, 121.57223763037109, LocationRecordEntity.READSET_LAT_LNG_TOTAL);
 
-		System.out.println(locations);
+		System.out.println(locations.size());
 	}
 
 	@Test
@@ -46,12 +51,12 @@ public class LocationRecordDaoTest extends ComponentTestCase {
 		// java.sql.BatchUpdateException: Data truncation: Out of range value for
 		// column 'lat' at row 1
 		LocationRecord r = dao.createLocal();
-		
+
 		r.setLat(81.08641);
 		r.setLng(-103.79883);
 		r.setTotal(1);
 		r.setTransactionDate(transactionDate);
-		
+
 		dao.insert(r);
 	}
 }

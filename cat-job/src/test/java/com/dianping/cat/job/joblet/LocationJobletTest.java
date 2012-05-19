@@ -61,14 +61,16 @@ public class LocationJobletTest extends ComponentTestCase {
 	@Test
 	public void testJoblet() throws Exception {
 		JobletRunner runner = lookup(JobletRunner.class);
-		// int exitCode = runner.run("location", "target/12",
-		// "-Doutputter=report");
+		int exitCode = runner.run("location", "target/12", "-Doutputter=report");
 
-		for (int i = 11; i < 24; i++) {
-			int exitCode = runner.run("location", "/Users/qmwu/data/20120517/" + (i < 10 ? "0" + i : "" + i));
+		Assert.assertEquals(0, exitCode);
 
-			Assert.assertEquals(0, exitCode);
-		}
+		// for (int i = 0; i < 8; i++) {
+		// int exitCode = runner.run("location", "/Users/qmwu/data/20120517/" + (i
+		// < 10 ? "0" + i : "" + i));
+		//
+		// Assert.assertEquals(0, exitCode);
+		// }
 	}
 
 	@Test

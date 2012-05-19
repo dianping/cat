@@ -2,8 +2,8 @@
 <entities>
   <entity name="location" table="location" alias="l">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
-    <member name="lat" field="lat" value-type="double" length="10" decimal="5" nullable="false" />
-    <member name="lng" field="lng" value-type="double" length="10" decimal="5" nullable="false" />
+    <member name="lat" field="lat" value-type="double" length="22" nullable="false" />
+    <member name="lng" field="lng" value-type="double" length="22" nullable="false" />
     <member name="total" field="total" value-type="int" length="10" nullable="false" />
     <member name="transaction-date" field="transaction_date" value-type="Date" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
