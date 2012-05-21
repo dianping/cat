@@ -7,6 +7,10 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.heatmap.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.heatmap.Model" scope="request" />
 
+<script type="text/javascript">
+var urlPrefix = "/cat/r/heatmap?domain=${model.domain}&date=${model.date}";
+</script>
+
 <script type="text/javascript" src="http://ditu.google.cn/maps/api/js?sensor=false&language=zh"></script>
 <script type="text/javascript" src="/cat/js/heatmap/heatcanvas.js"></script>
 <script type="text/javascript" src="/cat/js/heatmap/heatcanvas-googlemaps.js"></script>
@@ -19,7 +23,7 @@
 
 <link rel="stylesheet" href="/cat/css/jquery-autocomplete.css" />
 <link rel="stylesheet" href="/cat/css/heatmap.css" />
-		
+
 <c:choose>
 <c:when test="${model.display eq 'full'}">
     	<div class="wrapper">
