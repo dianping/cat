@@ -115,6 +115,10 @@ public class SqlJoblet implements Joblet<Sql, SqlStat> {
 		m_outputter.out(context, key, result);
 	}
 
+	@Override
+   public void summary() {
+   }
+
 	public static class Sql extends PojoWritable {
 		private String m_name;
 

@@ -287,9 +287,15 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		Collection<Machine> machines = report.getMachines().values();
 		for (Machine machine : machines) {
 			for (TransactionType type : machine.getTypes().values()) {
-				type.setAvg2(get95Line(type.getAllDurations()));
+				double typeValuevalue = get95Line(type.getAllDurations());
+				type.setLine95Value(typeValuevalue);
+				type.setLine95Count(1);
+				type.setLine95Sum(typeValuevalue);
 				for (TransactionName name : type.getNames().values()) {
-					name.setAvg2(get95Line(name.getAllDurations()));
+					double nameValue = get95Line(name.getAllDurations());
+					name.setLine95Value(nameValue);
+					name.setLine95Count(1);
+					name.setLine95Sum(nameValue);
 				}
 			}
 		}

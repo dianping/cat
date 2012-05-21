@@ -19,6 +19,10 @@ public class NavigationBar {
 
 		ReportPage.IP,
 
+		ReportPage.TREND,
+		
+		ReportPage.HEATMAP,
+		
 		ReportPage.SQL,
 
 		ReportPage.LOGVIEW

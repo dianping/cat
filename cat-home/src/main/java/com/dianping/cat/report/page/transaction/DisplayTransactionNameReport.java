@@ -94,7 +94,7 @@ public class DisplayTransactionNameReport {
 				return (int) (m2.getDetail().getAvg() * 100 - m1.getDetail().getAvg() * 100);
 			}
 			if (m_sorted.equals("95line")) {
-				return (int) (m2.getDetail().getAvg2() * 100 - m1.getDetail().getAvg2() * 100);
+				return (int) (m2.getDetail().getLine95Value() * 100 - m1.getDetail().getLine95Value() * 100);
 			}
 			return 0;
 		}

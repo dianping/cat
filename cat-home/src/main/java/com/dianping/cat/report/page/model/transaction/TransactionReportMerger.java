@@ -49,8 +49,12 @@ public class TransactionReportMerger extends DefaultMerger {
 
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
-		old.setAvg2((old.getAvg2()+other.getAvg2())/2);
-		
+
+		old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
+		old.setLine95Count(old.getLine95Count() + other.getLine95Count());
+		if (old.getLine95Count() > 0) {
+			old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
+		}
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
@@ -77,19 +81,19 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
-	public Machine mergesForAllMachine() {
+	public Machine mergesForAllMachine(TransactionReport report) {
 		Machine machine = new Machine(CatString.ALL_IP);
-		TransactionReport report = getTransactionReport();
 		for (Machine temp : report.getMachines().values()) {
-			mergeMachine(machine, temp);
-			visitMachineChildren(machine, temp);
+			if (!temp.getIp().equals(CatString.ALL_IP)) {
+				mergeMachine(machine, temp);
+				visitMachineChildren(machine, temp);
+			}
 		}
 		return machine;
 	}
 
-	public TransactionName mergesForAllName() {
+	public TransactionName mergesForAllName(TransactionReport report) {
 		TransactionName name = new TransactionName("ALL");
-		TransactionReport report = getTransactionReport();
 		TransactionType type = report.getMachines().get(m_ip).findType(m_type);
 
 		if (type != null) {
@@ -127,8 +131,12 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
-		old.setAvg2((old.getAvg2()+other.getAvg2())/2);
-		
+
+		old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
+		old.setLine95Count(old.getLine95Count() + other.getLine95Count());
+		if (old.getLine95Count() > 0) {
+			old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
+		}
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 			old.setAvg(old.getSum() / old.getTotalCount());
@@ -178,13 +186,16 @@ public class TransactionReportMerger extends DefaultMerger {
 
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
-		super.visitTransactionReport(transactionReport);
 		if (m_allIp) {
-			getTransactionReport().addMachine(mergesForAllMachine());
+			transactionReport.addMachine(mergesForAllMachine(transactionReport));
 		}
 		if (m_allName) {
-			getTransactionReport().getMachines().get(m_ip).getTypes().get(m_type).addName(mergesForAllName());
+			Machine machine = transactionReport.getMachines().get(m_ip);
+			if (machine != null) {
+				machine.getTypes().get(m_type).addName(mergesForAllName(transactionReport));
+			}
 		}
+		super.visitTransactionReport(transactionReport);
 		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
 		getTransactionReport().getIps().addAll(transactionReport.getIps());
 	}

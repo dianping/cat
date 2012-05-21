@@ -8,6 +8,12 @@ public class DefaultGraphBuilder implements GraphBuilder {
 	@Inject
 	private ValueTranslater m_translater;
 
+	private int m_type = BAR;
+
+	private static final int BAR = 1;
+
+	private static final int LINE = 2;
+
 	@Override
 	public String build(GraphPayload payload) {
 		double[] values = payload.getValues();
@@ -22,10 +28,76 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		buildCoordinate(payload, b);
 		buildYLabels(payload, b, maxValue);
 		buildXLabels(payload, b);
-		buildBars(payload, b, maxValue, values);
+		if (m_type == BAR) {
+			buildBars(payload, b, maxValue, values);
+		} else if (m_type == LINE) {
+			buildLines(payload, b, maxValue, values);
+		}
 		buildFooter(payload, b);
 
 		return b.getResult().toString();
+	}
+
+	protected void buildLines(GraphPayload payload, XmlBuilder b, double maxValue, double[] values) {
+		DecimalFormat format = new DecimalFormat("0.#");
+		int width = payload.getWidth();
+		int height = payload.getHeight();
+		int top = payload.getMarginTop();
+		int left = payload.getMarginLeft();
+		int bottom = payload.getMarginBottom();
+		int right = payload.getMarginRight();
+		int h = height - top - bottom;
+		int w = width - left - right;
+		int cols = payload.getColumns();
+		int xstep = w / cols;
+		int[] pixels = m_translater.translate(h, maxValue, values);
+		String idPrefix = payload.getIdPrefix();
+
+		b.tag1("g", "id", "bar", "fill", "red");
+
+		for (int i = 0; i < cols && i < pixels.length; i++) {
+			int pixel = pixels[i];
+
+			if (pixel <= 0) {
+				continue;
+			}
+
+			int x = left + xstep * i;
+			int y = top + h - pixel;
+
+			b.tag("rect", "id", idPrefix + i, "x", x, "y", y, "width", xstep - 1, "height", pixel);
+		}
+
+		b.tag2("g");
+
+		b.tag1("g", "id", "label");
+
+		for (int i = 0; i < cols && i < pixels.length; i++) {
+			int pixel = pixels[i];
+
+			if (pixel <= 0) {
+				continue;
+			}
+
+			double value = values[i];
+			int x = left + xstep * i;
+			int y = top - 6 + h - pixel;
+			String tip = format.format(value);
+
+			// adjust
+			if (x + tip.length() * 7 > width - right) {
+				x = width - right - tip.length() * 7;
+			}
+
+			b.tag1("text", "x", x, "y", y, "display", "none");
+
+			b.indent().add(tip).newLine();
+			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", idPrefix + i + ".mouseover",
+			      "end", idPrefix + i + ".mouseout");
+			b.tag2("text");
+		}
+
+		b.tag2("g");
 	}
 
 	protected void buildBars(GraphPayload payload, XmlBuilder b, double maxValue, double[] values) {
@@ -427,5 +499,11 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			newLine();
 			return this;
 		}
+	}
+
+	@Override
+	public void setGraphType(int GraphType) {
+		// TODO Auto-generated method stub
+
 	}
 }

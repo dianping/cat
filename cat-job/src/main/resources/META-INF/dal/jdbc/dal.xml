@@ -1,5 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities do-package="com.dianping.cat.job.sql.dal" gen="true">
+	<entity name="location" class-name="LocationRecord" table="location" alias="l">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="from-date" value-type="Date"/>
+		<var name="to-date" value-type="Date"/>
+		<var name="from-lat" value-type="double"/>
+		<var name="to-lat" value-type="double"/>
+		<var name="from-lng" value-type="double"/>
+		<var name="to-lng" value-type="double"/>
+		<readsets>
+			<readset name="LAT_LNG_TOTAL">
+				<member name="lat" />
+				<member name="lng" />
+				<member name="total" />
+			</readset>
+		</readsets>
+		<query-defs>
+			<query name="insert" type="INSERT" batch="true">
+				<statement><![CDATA[
+				INSERT 
+				INTO <TABLE/>(<FIELDS/>) 
+				VALUES(<VALUES/>)
+				ON DUPLICATE KEY 
+					UPDATE <FIELD name='total'/> = ${total}
+				]]></statement>
+			</query>
+			<query name="find-all-by-transaction-date-lat-lng-range" type="SELECT" multiple="true">
+				<param name="from-date" />
+				<param name="to-date" />
+				<param name="from-lat" />
+				<param name="to-lat" />
+				<param name="from-lng" />
+				<param name="to-lng" />
+				<statement><![CDATA[
+				SELECT <FIELDS/> FROM <TABLE/> 
+				WHERE (<FIELD name='transaction-date'/> BETWEEN ${from-date} AND ${to-date})
+					AND (<FIELD name='lat'/> BETWEEN ${from-lat} AND ${to-lat})
+					AND (<FIELD name='lng'/> BETWEEN ${from-lng} AND ${to-lng})
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
 	<entity name="sqlreport" class-name="SqlReportRecord" table="SqlReport" alias="s">
 		<member name="creation-date" insert-expr="NOW()" />
 		<readsets>

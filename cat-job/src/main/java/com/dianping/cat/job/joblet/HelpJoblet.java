@@ -14,17 +14,6 @@ import com.site.lookup.ContainerHolder;
 
 @JobletMeta(name = "help", description = "Print this help", keyClass = Writable.class, valueClass = Writable.class)
 public class HelpJoblet extends ContainerHolder implements Joblet<Writable, Writable> {
-	@Override
-	public void map(JobletContext context, MessageTreeWritable treeWritable) throws IOException, InterruptedException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void reduce(JobletContext context, Writable key, Iterable<Writable> values) throws IOException,
-	      InterruptedException {
-		throw new UnsupportedOperationException();
-	}
-
 	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean initialize(JobCmdLine cmdLine) {
@@ -43,6 +32,17 @@ public class HelpJoblet extends ContainerHolder implements Joblet<Writable, Writ
 		return false;
 	}
 
+	@Override
+	public void map(JobletContext context, MessageTreeWritable treeWritable) throws IOException, InterruptedException {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void reduce(JobletContext context, Writable key, Iterable<Writable> values) throws IOException,
+	      InterruptedException {
+		throw new UnsupportedOperationException();
+	}
+
 	private String space(int count) {
 		StringBuilder sb = new StringBuilder(count);
 
@@ -52,4 +52,8 @@ public class HelpJoblet extends ContainerHolder implements Joblet<Writable, Writ
 
 		return sb.toString();
 	}
+
+	@Override
+   public void summary() {
+   }
 }

@@ -1,0 +1,21 @@
+html { height: 100% }
+body { height: 100%; margin: 0; padding: 0 }
+#map { height: 100% ;}
+
+.hidden{display: none;}
+.wrapper{margin: 10px;}
+.searchbox{padding: 5px 0;}
+.hotcities a{margin:0 5px}
+#map{width:99%; height:700px;margin: 0; padding: 0;border: 1px solid #ccc;margin:0 auto}
+
+#wait_logo{
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    left: 50%;
+    top: 50%;
+    margin-top: -45px;
+    margin-left: -45px;
+    z-index : 10;
+    display:inline;
+}

@@ -4,4 +4,6 @@ import java.io.IOException;
 
 public interface JobletContext {
 	public void write(Object key, Object value) throws IOException, InterruptedException;
+	
+	public boolean isInCombiner();
 }

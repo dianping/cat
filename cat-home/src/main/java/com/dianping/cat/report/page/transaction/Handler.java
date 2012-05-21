@@ -175,6 +175,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		} else {
 			model.setLongDate(payload.getDate());
 		}
+		
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);

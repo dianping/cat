@@ -16,10 +16,6 @@ public class JobCmdLine {
 		}
 	}
 
-	public String getJobletName() {
-		return m_jobletName;
-	}
-
 	private String getArg(int index) {
 		if (index >= 0 && index < m_args.size()) {
 			return m_args.get(index);
@@ -96,6 +92,10 @@ public class JobCmdLine {
 		}
 
 		return defaultValue;
+	}
+
+	public String getJobletName() {
+		return m_jobletName;
 	}
 
 	public String getProperty(String name, String defaultValue) {

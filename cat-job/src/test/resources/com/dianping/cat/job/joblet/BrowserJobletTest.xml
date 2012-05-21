@@ -1,8 +1,0 @@
-<plexus>
-	<components>
-		<component>
-			<role>com.dianping.cat.job.joblet.BrowserJoblet$BrowserOutputter</role>
-			<implementation>com.dianping.cat.job.joblet.BrowserJobletTest$MockOutputter</implementation>
-		</component>
-	</components>
-</plexus>
