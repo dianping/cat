@@ -66,7 +66,7 @@
     				cb: 'renderMap',
     				op:'jsonp',
     				unit:60
-    			}, url = "http://192.168.62.167:2281/cat/r/heatmap?domain=&date=2012051712&"+decodeURIComponent($.param(data));
+    			}, url = urlPrefix+"&"+decodeURIComponent($.param(data));
     			//url = "data_sh.js";
     			$.getScript(url);
     		},'zoom_changed': function(){
