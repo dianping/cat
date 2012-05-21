@@ -2,6 +2,9 @@ package com.dianping.cat.demo;
 
 import java.io.File;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
 
 import org.junit.After;
 import org.junit.Before;
@@ -10,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
@@ -75,5 +77,55 @@ public class Demo extends ComponentTestCase {
 		child.join();
 		f.setStatus("father");
 		f.complete();
+	}
+
+	@Test
+	public void testThreadPoolNestTransaction() throws Exception {
+		final ExecutorService pool1 = Executors.newFixedThreadPool(2);
+		final ExecutorService pool2 = Executors.newFixedThreadPool(2);
+
+		final Semaphore ss = new Semaphore(0);
+		int count = 100;
+		for (int i = 0; i < count; i++) {
+			pool1.submit(new Runnable() {
+
+				@Override
+				public void run() {
+					final Semaphore semaphore = new Semaphore(0);
+					DefaultMessageProducer cat = (DefaultMessageProducer) Cat.getProducer();
+					final Transaction f = cat.newTransaction("father", "t");
+					pool2.submit(new Runnable() {
+						@Override
+						public void run() {
+							DefaultMessageProducer cat = (DefaultMessageProducer) Cat.getProducer();
+							Transaction t = cat.newTransaction(f, "child", "t");
+							try {
+								try {
+									Thread.sleep(1000);
+								} catch (InterruptedException e) {
+									e.printStackTrace();
+								}
+							} finally {
+								t.setStatus("child");
+								t.complete();
+								semaphore.release();
+							}
+						}
+					});
+					try {
+						semaphore.acquire(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					f.setStatus("father");
+					f.complete();
+					
+					ss.release();
+				}
+			});
+
+		}
+		
+		ss.acquire(count);
 	}
 }
