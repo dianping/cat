@@ -108,10 +108,10 @@ CREATE TABLE `task` (
   `producer` varchar(20) NOT NULL COMMENT '任务创建者ip',
   `consumer`  varchar(20) DEFAULT NULL COMMENT '任务执行者ip',
   `status`     tinyint(4) NOT NULL COMMENT '执行状态: 1/todo, 2/doing, 3/done 4/failed',
-  'failure_count'  tinyint(4) NOT NULL COMMENT '任务失败次数',
+  `failure_count`  tinyint(4) NOT NULL COMMENT '任务失败次数',
   `creation_date` timestamp NOT NULL COMMENT '任务创建时间',
-  `start_date`    timestamp DEFAULT NULL COMMENT '开始时间, 这次执行开始时间',
-  `end_date`      timestamp DEFAULT NULL COMMENT '结束时间, 这次执行结束时间',
+  `start_date`    timestamp NOT NULL COMMENT '开始时间, 这次执行开始时间',
+  `end_date`      timestamp NOT NULL COMMENT '结束时间, 这次执行结束时间',
   PRIMARY KEY (`id`)
 )  DEFAULT CHARSET=utf8 COMMENT='用于存放故障/事件信息';
 
