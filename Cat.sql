@@ -14,19 +14,56 @@ CREATE TABLE `logview` (
   KEY `tag_session` (`tag_session`),
   KEY `tag_request` (`tag_request`)
 ) DEFAULT CHARSET=utf8 COMMENT='logview用于存放错误的消息的索引，用来标志它在HDFS上的存放路径';
-
+果
 
 CREATE TABLE `report` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` tinyint(4) NOT NULL COMMENT '报表类型',
-  `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台机器',
+  `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
+  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
   `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
   `period` timestamp NOT NULL  COMMENT '报表时间段',
+  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
   `content` mediumtext NOT NULL COMMENT '报表内容',
   `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`)
-)  DEFAULT CHARSET=utf8 COMMENT='用于存放实时报表信息，处理之后的结果';
+)  DEFAULT CHARSET=utf8 COMMENT='用于存放以小时为单位的报表信息';
+
+CREATE TABLE `graph` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL COMMENT '报表名称',
+  `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台cat-client机器ip, 空串表示合并同domain所有ip',
+  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
+  `period` timestamp NOT NULL  COMMENT '报表时间段',
+  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
+  `content` mediumtext NOT NULL COMMENT '绘图内容',
+  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
+  PRIMARY KEY (`id`)
+)  DEFAULT CHARSET=utf8 COMMENT='用于存放以小时为单位的绘图数据';
+
+
+CREATE TABLE `dailyreport` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
+  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
+  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
+  `period` timestamp NOT NULL  COMMENT '报表时间段',
+  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
+  `content` mediumtext NOT NULL COMMENT '报表内容',
+  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
+  PRIMARY KEY (`id`)
+)  DEFAULT CHARSET=utf8 COMMENT='用于存放以天为单位的报表信息';
+
+CREATE TABLE `dailygraph` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL COMMENT '报表名称',
+  `ip` varchar(20) DEFAULT NULL COMMENT '报表来自于哪台cat-client机器ip, 空串表示合并同domain所有ip',
+  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
+  `period` timestamp NOT NULL  COMMENT '报表时间段',
+  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
+  `content` mediumtext NOT NULL COMMENT '绘图内容',
+  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
+  PRIMARY KEY (`id`)
+)  DEFAULT CHARSET=utf8 COMMENT='用于存放以天为单位的绘图数据';
 
 
 CREATE TABLE `sqlreport` (
@@ -52,4 +89,29 @@ CREATE TABLE `sqlreport` (
   PRIMARY KEY (`id`)
 ) DEFAULT CHARSET=utf8 COMMENT='用于存放Hadoop处理的SQL报表信息';
 
+
+CREATE TABLE `comment` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(50) NOT NULL COMMENT '报表Domain',
+  `author` varchar(32) NOT NULL  COMMENT '作者',
+  `content` varchar(1024) NOT NULL COMMENT '事件内容',
+  `happened` timestamp NOT NULL COMMENT '事件发生时间',
+  `status`     tinyint(4) NOT NULL COMMENT '执行状态: 0/active, 1/inactive',
+  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  PRIMARY KEY (`id`)
+)  DEFAULT CHARSET=utf8 COMMENT='用于存放故障/事件信息';
+
+
+CREATE TABLE `task` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `content`    varchar(512) NOT NULL COMMENT '任务描述: domain_name yyyy-mm-dd HH:MM:SS',
+  `producer` varchar(20) NOT NULL COMMENT '任务创建者ip',
+  `consumer`  varchar(20) DEFAULT NULL COMMENT '任务执行者ip',
+  `status`     tinyint(4) NOT NULL COMMENT '执行状态: 1/todo, 2/doing, 3/done 4/failed',
+  'failure_count'  tinyint(4) NOT NULL COMMENT '任务失败次数',
+  `creation_date` timestamp NOT NULL COMMENT '任务创建时间',
+  `start_date`    timestamp DEFAULT NULL COMMENT '开始时间, 这次执行开始时间',
+  `end_date`      timestamp DEFAULT NULL COMMENT '结束时间, 这次执行结束时间',
+  PRIMARY KEY (`id`)
+)  DEFAULT CHARSET=utf8 COMMENT='用于存放故障/事件信息';
 
