@@ -35,20 +35,20 @@ public class TestServer extends SimpleServerSupport {
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
-		JettyTestSupport.startServer(new Server());
+		JettyTestSupport.startServer(new TestServer());
 	}
 
 	public static void main(String[] args) throws Exception {
-		Server server = new Server();
+		TestServer server = new TestServer();
 
-		Server.beforeClass();
+		TestServer.beforeClass();
 
 		try {
 			server.before();
 			server.startServer();
 			server.after();
 		} finally {
-			Server.shutdownServer();
+			TestServer.shutdownServer();
 		}
 	}
 

@@ -19,7 +19,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.StringRope;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -185,14 +184,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 				count += helper.write(buf, "ms ");
 			}
 
-			if (data instanceof StringRope) {
-				StringRope rope = (StringRope) data;
-
-				count += rope.writeTo(buf, m_writer);
-			} else {
-				count += helper.writeRaw(buf, String.valueOf(data));
-			}
-
+			count += helper.writeRaw(buf, String.valueOf(data));
 			count += helper.td2(buf);
 		} else {
 			count += helper.td(buf, "");
