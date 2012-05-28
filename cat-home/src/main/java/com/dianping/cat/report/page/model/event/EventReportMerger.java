@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.event;
 
+import java.util.Map;
+
 import com.dianping.cat.consumer.event.StatisticsComputer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -142,12 +144,18 @@ public class EventReportMerger extends DefaultMerger {
 	@Override
 	public void visitEventReport(EventReport eventReport) {
 		if (m_allIp) {
-			eventReport.addMachine(mergesForAllMachine(eventReport));
+			Map<String, Machine> machines = eventReport.getMachines();
+			Machine allMachines = mergesForAllMachine(eventReport);
+			machines.clear();
+			eventReport.addMachine(allMachines);
 		}
 		if (m_allName) {
 			Machine machine = eventReport.getMachines().get(m_ip);
 			if (machine != null) {
-				machine.getTypes().get(m_type).addName(mergesForAllName(eventReport));
+				EventName mergesForAllName = mergesForAllName(eventReport);
+				EventType type = machine.getTypes().get(m_type);
+				type.getNames().clear();
+				type.addName(mergesForAllName);
 			}
 		}
 		super.visitEventReport(eventReport);

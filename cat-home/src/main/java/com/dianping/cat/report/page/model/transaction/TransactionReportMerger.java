@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.transaction;
 
+import java.util.Map;
+
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -24,12 +26,18 @@ public class TransactionReportMerger extends DefaultMerger {
 
 		transactionReport.accept(new StatisticsComputer());
 	}
+	
+	@Override
+   public void visitMachine(Machine machine) {
+	   super.visitMachine(machine);
+   }
 
 	@Override
 	protected void mergeDuration(Duration old, Duration duration) {
 		old.setCount(old.getCount() + duration.getCount());
 	}
 
+	
 	@Override
 	protected void mergeMachine(Machine old, Machine machine) {
 	}
@@ -98,8 +106,10 @@ public class TransactionReportMerger extends DefaultMerger {
 
 		if (type != null) {
 			for (TransactionName n : type.getNames().values()) {
-				mergeName(name, n);
-				visitNameChildren(name, n);
+				if (!n.getId().equals("ALL")) {
+					mergeName(name, n);
+					visitNameChildren(name, n);
+				}
 			}
 		}
 
@@ -187,14 +197,21 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		if (m_allIp) {
-			transactionReport.addMachine(mergesForAllMachine(transactionReport));
+			Map<String, Machine> machines = transactionReport.getMachines();
+			Machine allMachines = mergesForAllMachine(transactionReport);
+			machines.clear();
+			transactionReport.addMachine(allMachines);
 		}
 		if (m_allName) {
 			Machine machine = transactionReport.getMachines().get(m_ip);
 			if (machine != null) {
-				machine.getTypes().get(m_type).addName(mergesForAllName(transactionReport));
+				TransactionName mergesForAllName = mergesForAllName(transactionReport);
+				TransactionType type = machine.getTypes().get(m_type);
+				type.getNames().clear();
+				type.addName(mergesForAllName);
 			}
 		}
+		
 		super.visitTransactionReport(transactionReport);
 		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
 		getTransactionReport().getIps().addAll(transactionReport.getIps());
