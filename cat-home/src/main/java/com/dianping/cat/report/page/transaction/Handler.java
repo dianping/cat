@@ -78,7 +78,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 		if (t != null) {
 			TransactionName n = t.findName(name);
-
 			if (n != null) {
 				n.accept(m_computer);
 			}

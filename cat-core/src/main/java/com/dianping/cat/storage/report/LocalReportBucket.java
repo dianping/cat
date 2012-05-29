@@ -179,7 +179,11 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 			loadIndexes(indexFile);
 		}
 
-		dataFile.getParentFile().mkdirs();
+		final File dir = dataFile.getParentFile();
+		
+		if (!dir.exists() && !dir.mkdirs()) {
+			throw new IOException(String.format("Fail to create directory(%s)!", dir));
+		}
 
 		m_logicalPath = logicalPath;
 		m_writeDataFile = new BufferedOutputStream(new FileOutputStream(dataFile, true), 8192);

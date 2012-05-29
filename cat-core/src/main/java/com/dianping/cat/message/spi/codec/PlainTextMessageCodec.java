@@ -23,7 +23,6 @@ import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.StringRope;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
@@ -283,15 +282,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				count += helper.write(buf, TAB);
 			}
 
-			if (data instanceof StringRope) {
-				StringRope rope = (StringRope) data;
-
-				count += rope.writeTo(buf, m_writer);
-				count += helper.write(buf, TAB);
-			} else {
-				count += helper.writeRaw(buf, String.valueOf(data));
-				count += helper.write(buf, TAB);
-			}
+			count += helper.writeRaw(buf, String.valueOf(data));
+			count += helper.write(buf, TAB);
 		}
 
 		count += helper.write(buf, LF);

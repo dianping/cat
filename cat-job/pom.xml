@@ -32,9 +32,9 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>com.site.maven.plugins</groupId>
+				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
-				<version>1.1.0</version>
+				<version>1.1.1</version>
 				<executions>
 					<execution>
 						<id>generate dal jdbc model</id>

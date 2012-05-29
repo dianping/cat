@@ -3,9 +3,11 @@ package com.dianping.cat.report.page.transaction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -15,6 +17,8 @@ public class DisplayTransactionTypeReport {
 
 	private List<TransactionTypeModel> m_results = new ArrayList<TransactionTypeModel>();
 
+	private Set<String> m_ips = new HashSet<String>();
+	
 	public DisplayTransactionTypeReport() {
 	}
 
@@ -22,11 +26,17 @@ public class DisplayTransactionTypeReport {
 		return m_results;
 	}
 
+	public Set<String> getIps() {
+   	return m_ips;
+   }
+
 	public DisplayTransactionTypeReport display(String sorted, String ip, TransactionReport report) {
 		Machine machine = report.getMachines().get(ip);
 		if (machine == null) {
 			return this;
 		}
+		m_ips = report.getIps();
+		
 		Map<String, TransactionType> types = machine.getTypes();
 		if (types != null) {
 			for (Entry<String, TransactionType> entry : types.entrySet()) {
