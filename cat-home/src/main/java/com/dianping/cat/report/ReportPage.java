@@ -25,7 +25,9 @@ public enum ReportPage implements Page {
 
    TREND("trend", "trend", "Trend", "Trend", true),
 
-   HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", true);
+   HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", true),
+
+   DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", true);
 
    private String m_name;
 
