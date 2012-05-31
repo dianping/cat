@@ -18,7 +18,7 @@ $(document).keypress(function(e) {
 	}
 });
 
-$("#p_longUrl").val($("#thresholdInput").val()) ;
+$("#p_longUrl").val($("#thresholdInput").val());
 
 function longTimeChange(date,domain,ip){
 	var longtime=$("#p_longUrl").val();

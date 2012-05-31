@@ -22,7 +22,7 @@
       <mirror>
          <id>central</id>
          <mirrorOf>central</mirrorOf>
-         <url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/central/</url>
+         <url>http://192.168.8.45:8080/artifactory/dianping-releases</url>
       </mirror>
    </mirrors>
    <profiles>
@@ -30,18 +30,8 @@
          <id>dev</id>
          <repositories>
             <repository>
-               <id>central</id>
-               <url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/central/</url>
-               <releases>
-                  <enabled>true</enabled>
-               </releases>
-               <snapshots>
-                  <enabled>false</enabled>
-               </snapshots>
-            </repository>
-            <repository>
                <id>releases</id>
-               <url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/releases/</url>
+               <url>http://192.168.8.45:8080/artifactory/dianping-releases</url>
                <releases>
                   <enabled>true</enabled>
                </releases>
@@ -51,7 +41,7 @@
             </repository>
             <repository>
                <id>snapshots</id>
-               <url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/snapshots/</url>
+               <url>http://192.168.8.45:8080/artifactory/repositories/snapshots/</url>
                <releases>
                   <enabled>false</enabled>
                </releases>
@@ -61,7 +51,7 @@
             </repository>
             <repository>
                <id>thirdparty</id>
-               <url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/thirdparty/</url>
+               <url>http://192.168.8.45:8080/artifactory/thirdparty/</url>
                <releases>
                   <enabled>true</enabled>
                </releases>
@@ -101,12 +91,8 @@
          </repositories>
          <pluginRepositories>
             <pluginRepository>
-               <id>central</id>
-               <url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/central/</url>
-            </pluginRepository>
-            <pluginRepository>
                <id>releases</id>
-               <url>http://tech-wuqim.dianpingoa.com/nexus/content/repositories/releases/</url>
+               <url>http://192.168.8.45:8080/artifactory/releases/</url>
             </pluginRepository>
          </pluginRepositories>
       </profile>
@@ -118,6 +104,7 @@
       <pluginGroup>org.mortbay.jetty</pluginGroup>
       <pluginGroup>org.codehaus.mojo</pluginGroup>
       <pluginGroup>org.sonatype.maven.plugins</pluginGroup>
+      <pluginGroup>org.unidal.maven.plugins</pluginGroup>
       <pluginGroup>com.site.maven.plugins</pluginGroup>
       <pluginGroup>com.ebay.maven.plugins</pluginGroup>
    </pluginGroups>
