@@ -17,18 +17,19 @@ public class TaskConsumerTest {
 		final List<Integer> replayer = new ArrayList<Integer>();
 
 		@Override
-		protected Task findDoingTask() {
+		protected Task findDoingTask(String ip) {
 			replayer.add(1);
 			return null;
 		}
 
 		@Override
-		protected void updateDoingToDone(Task doing) {
+		protected boolean updateDoingToDone(Task doing) {
 			replayer.add(3);
+			return false;
 		}
 
 		@Override
-		protected void taskNotFindDuration() {
+		protected void taskNotFoundDuration() {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
@@ -39,7 +40,7 @@ public class TaskConsumerTest {
 		}
 
 		@Override
-		protected void mergeYesterdayReport() {
+		protected void mergeReport() {
 			replayer.add(6);
 		}
 
@@ -62,13 +63,14 @@ public class TaskConsumerTest {
 		}
 
 		@Override
-		protected void taskFailDuration() {
+		protected void taskRetryDuration() {
 			replayer.add(11);
 		}
 
 		@Override
-		protected void failTask(Task todo) {
+		protected boolean updateDoingToFailure(Task todo) {
 			replayer.add(5);
+			return false;
 		}
 	};
 
@@ -87,8 +89,8 @@ public class TaskConsumerTest {
 
 		TaskConsumerWrap consumer = new TaskConsumerWrap() {
 			@Override
-			protected Task findDoingTask() {
-				super.findDoingTask();
+			protected Task findDoingTask(String ip) {
+				super.findDoingTask(ip);
 				return taskList.size() == 0 ? null : taskList.remove(0);
 			}
 
@@ -99,9 +101,10 @@ public class TaskConsumerTest {
 			}
 
 			@Override
-			protected void updateDoingToDone(Task doing) {
+			protected boolean updateDoingToDone(Task doing) {
 				super.updateDoingToDone(doing);
 				doing.setStatus(STATUS_DONE);
+				return true;
 			}
 
 		};
@@ -132,8 +135,8 @@ public class TaskConsumerTest {
 
 		TaskConsumerWrap consumer = new TaskConsumerWrap() {
 			@Override
-			protected Task findDoingTask() {
-				super.findDoingTask();
+			protected Task findDoingTask(String ip) {
+				super.findDoingTask(ip);
 				return taskList.size() == 0 ? null : taskList.remove(0);
 			}
 
@@ -154,7 +157,7 @@ public class TaskConsumerTest {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testToDoTaskSuccess() throws InterruptedException {
+	public void testTodoTaskSuccess() throws InterruptedException {
 		final Task t = new Task();
 		t.setStatus(TaskConsumer.STATUS_TODO);
 
@@ -176,9 +179,10 @@ public class TaskConsumerTest {
 			}
 
 			@Override
-			protected void updateDoingToDone(Task doing) {
+			protected boolean updateDoingToDone(Task doing) {
 				super.updateDoingToDone(doing);
 				t.setStatus(TaskConsumer.STATUS_DONE);
+				return true;
 			}
 
 			@Override
@@ -204,7 +208,7 @@ public class TaskConsumerTest {
 	 * @throws InterruptedException
 	 */
 	@Test
-	public void testToDoTaskFail() throws InterruptedException {
+	public void testTodoTaskFail() throws InterruptedException {
 		final Task t = new Task();
 		t.setStatus(TaskConsumer.STATUS_TODO);
 
@@ -226,9 +230,10 @@ public class TaskConsumerTest {
 			}
 
 			@Override
-			protected void failTask(Task todo) {
-				super.failTask(todo);
+			protected boolean updateDoingToFailure(Task todo) {
+				super.updateDoingToFailure(todo);
 				todo.setStatus(STATUS_FAIL);
+				return true;
 			}
 
 		};

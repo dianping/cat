@@ -30,6 +30,8 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.Task;
+import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
@@ -44,6 +46,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Inject
 	private ReportDao m_reportDao;
+
+	@Inject
+	private TaskDao m_taskDao;
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
@@ -79,11 +84,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private double get95Line(Map<Integer, AllDuration> durations) {
 		int totalCount = 0;
-		
+
 		for (AllDuration duration : durations.values()) {
 			totalCount += duration.getCount();
 		}
-		
+
 		int index = totalCount * 5 / 100;
 		Map<Integer, AllDuration> result = getSortDuration(durations);
 
@@ -360,6 +365,15 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 					r.setContent(xml);
 
 					m_reportDao.insert(r);
+
+					Task task = m_taskDao.createLocal();
+					task.setCreationDate(new Date());
+					task.setProducer(ip);
+					task.setReportDomain(domain);
+					task.setReportName("transaction");
+					task.setReportPeriod(period);
+					task.setStatus(1); // status todo
+					m_taskDao.insert(task);
 				}
 			}
 
