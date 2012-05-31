@@ -50,19 +50,33 @@
 					WHERE <FIELD name='message-id'/> = ${message-id}
 				]]></statement>
 			</query>
-	        <query name="insert" type="INSERT" batch="true">
-	           <statement><![CDATA[
+			<query name="insert" type="INSERT" batch="true">
+				<statement><![CDATA[
 	           INSERT 
 	           INTO <TABLE/>(<FIELDS/>) 
 	           VALUES(<VALUES/>)
 	           ]]></statement>
-	        </query>
+			</query>
 		</query-defs>
 	</entity>
 	<entity name="report" table="report" alias="r">
 		<member name="creation-date" insert-expr="NOW()" />
-  		<query-defs>
-			<query name="find-all-by-period-domain-type-name" type="SELECT" multiple="true">
+		<query-defs>
+			<query name="find-all-by-period-domain-name" type="SELECT"
+				multiple="true">
+				<param name="period" />
+				<param name="domain" />
+				<param name="name" />				
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> = ${period}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>		
+			<query name="find-all-by-period-domain-type-name" type="SELECT"
+				multiple="true">
 				<param name="period" />
 				<param name="domain" />
 				<param name="type" />
@@ -76,7 +90,8 @@
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
-			<query name="find-all-by-period-type-name" type="SELECT" multiple="true">
+			<query name="find-all-by-period-type-name" type="SELECT"
+				multiple="true">
 				<param name="period" />
 				<param name="type" />
 				<param name="name" />
@@ -98,6 +113,56 @@
 							<FIELD name='creation-date'/> = NOW()
 				]]></statement>
 			</query>
+		</query-defs>
+	</entity>
+
+	<entity name="task" table="task" alias="t">
+		<query-defs>
+			<query name="find-by-status" type="SELECT">
+				<param name="status" />
+				<param name="consumer" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='status'/> = ${status}
+					<IF type='NOT_NULL' field='consumer'>
+						AND  <FIELD name='consumer'/> = ${consumer}
+					</IF>
+				]]></statement>
+			</query>
+
+			<query name="update-todo-to-doing" type="UPDATE">
+				<statement><![CDATA[
+					UPDATE <TABLE/>
+					SET <FIELD name='consumer'/>=${consumer}, 
+						<FIELD name='status'/>=2, 
+						<FIELD name='start-date'/>=${start-date}) 
+					WHERE <FIELD name='status'/> = 1
+					AND <FIELD name='id'/> = ${id};
+				]]></statement>
+			</query>
+
+			<query name="update-doing-to-done" type="UPDATE">
+				<statement><![CDATA[
+					UPDATE <TABLE/>
+					SET <FIELD name='status'/>=3, 
+						<FIELD name='end-date'/>=${end-date}) 
+					WHERE <FIELD name='status'/> = 2
+					AND <FIELD name='id'/> = ${id};
+				]]></statement>
+			</query>
+			
+			<query name="update-doing-to-fail" type="UPDATE">
+				<statement><![CDATA[
+					UPDATE <TABLE/>
+					SET <FIELD name='status'/>=4, 
+						<FIELD name='end-date'/>=${end-date},
+						<FIELD name='failure-count'/> = <FIELD name='failure-count'/> + 1) 
+					WHERE <FIELD name='status'/> = 2
+					AND <FIELD name='id'/> = ${id};
+				]]></statement>
+			</query>			
+
 		</query-defs>
 	</entity>
 </entities>

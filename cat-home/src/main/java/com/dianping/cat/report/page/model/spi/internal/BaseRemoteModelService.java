@@ -63,6 +63,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 			URL url = buildUrl(request);
 
 			t.addData("url", url);
+			t.addData("thread",Thread.currentThread());
 
 			String xml = Files.forIO().readFrom(url.openStream(), "utf-8");
 			int len = xml == null ? 0 : xml.length();

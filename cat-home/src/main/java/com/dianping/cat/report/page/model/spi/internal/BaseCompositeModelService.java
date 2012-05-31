@@ -104,7 +104,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 						responses.add(response);
 					} catch (Exception e) {
 						logError(e);
-						//t.setStatus(e);
+						t.setStatus(e);
 					} finally {
 						semaphore.release();
 						Cat.reset();
