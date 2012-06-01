@@ -52,8 +52,8 @@
 			<option value="week">周报表</option>
 			<option value="month">月报表</option>
 		</select>
-		StartTime<input type="text" id="datepicker" value="${model.queryDate}"onchange="onStartDateChange()" value="" size="10">
-		EndTime<input type="text" id="endDate" size="10" value=""></input></td>
+		StartTime<input type="text" id="datepicker" value="${model.queryDate}"onchange="onStartDateChange()" value="" size="15">
+		EndTime<input type="text" id="endDate" size="15" value=""></input></td>
 	</tr>
 	<tr>
 		<td>Custom

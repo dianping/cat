@@ -23,62 +23,59 @@ function searchReport(domain,graphType){
 }
 
 function formatDate(date) {   
-	date=date.split("-");
-	var date = new Date(date[0],date[1],date[2]);
     var myyear = date.getFullYear();     
     var mymonth = date.getMonth();     
     var myweekday = date.getDate();      
-         
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    var second=date.getSeconds();
+    
     if(mymonth < 10){     
         mymonth = "0" + mymonth;     
     }      
     if(myweekday < 10){     
         myweekday = "0" + myweekday;     
-    }     
-    return (myyear+"-"+mymonth + "-" + myweekday);      
+    }   
+    hour=hour<10?'0'+hour:hour;
+    minute=minute<10?'0'+minute:minute;
+    second=second<10?'0'+second:second;
+    return (myyear+"-"+mymonth + "-" + myweekday+" "+hour+":"+minute+":"+second);      
 }   
-    
+
+function maxDay(myDate)  
+{   
+    var ary = myDate.toArray();  
+    var date1 = (new Date(ary[0],ary[1]+1,1));  
+    var date2 = date1.dateAdd(1,'m',1);  
+    var result = dateDiff(date1.Format('yyyy-MM-dd'),date2.Format('yyyy-MM-dd'));  
+    return result;  
+}  
 
 function onStartDateChange(){
 	var start = $("#datepicker").val();
 	var type = $("#id_dateType").val();
 	
 	var startdate=new Date(start);
-	var nowDayOfWeek = startdate.getDay();             
+	var nowDayOfWeek = (startdate.getDay()-1+7)%7;             
 	var nowDay = startdate.getDate();              
 	var nowMonth = startdate.getMonth()+1;             
 	var nowYear = startdate.getYear();             
 	nowYear += (nowYear < 2000) ? 1900 : 0;  
 
 	if(type=='day'){
-		start=start.split("-");
-		var dD = new Date(start[0],start[1],start[2]);   
-		dD.setDate(dD.getDate()+1);
-		var endString = dD.getFullYear() + "-" + dD.getMonth() + "-" + dD.getDate();
-		$( "#endDate" ).val(formatDate(endString));
+		$( "#datepicker" ).val(formatDate(startdate));
+		$( "#endDate" ).val(formatDate(new Date(startdate.getTime()+24*60*60*1000)));
 	}else if(type=='week'){
-		if(nowDayOfWeek==0){
-			var weekStartDate = new Date(nowYear, nowMonth,nowDay-6);
-			var weekEndDate = new Date(nowYear, nowMonth, nowDay);
-			var startString=weekStartDate.getFullYear() + "-" + weekStartDate.getMonth() + "-" + weekStartDate.getDate();
-			var endString=weekEndDate.getFullYear() + "-" + weekEndDate.getMonth() + "-" + weekEndDate.getDate();
-			$( "#datepicker" ).val(formatDate(startString));
-			$( "#endDate" ).val(formatDate(endString));
-		}else{
-			var weekStartDate = new Date(nowYear, nowMonth,nowDay - nowDayOfWeek+1);
-			var weekEndDate = new Date(nowYear, nowMonth, nowDay + (7- nowDayOfWeek));
-			var startString=weekStartDate.getFullYear() + "-" + weekStartDate.getMonth() + "-" + weekStartDate.getDate();
-			var endString=weekEndDate.getFullYear() + "-" + weekEndDate.getMonth() + "-" + weekEndDate.getDate();
-			$( "#datepicker" ).val(formatDate(startString));
-			$( "#endDate" ).val(formatDate(endString));
-		}
+		var startDateLong = startdate.getTime();
+		var realStartTime = new Date( startdate.getTime() - nowDayOfWeek* 24*60*60*1000);
+		var realEndTime = new Date(realStartTime.getTime() + 7* 24*60*60*1000);
+		$( "#datepicker" ).val(formatDate(realStartTime));
+		$( "#endDate" ).val(formatDate(realEndTime));
 	}else if(type=='month'){
 		var monthStartDate = new Date(nowYear, nowMonth,1);
 		var monthEndDate = new Date(nowYear, nowMonth+1,1);
-		var startString=monthStartDate.getFullYear() + "-" + monthStartDate.getMonth() + "-" + monthStartDate.getDate();
-		var endString=monthEndDate.getFullYear() + "-" + monthEndDate.getMonth() + "-" + monthEndDate.getDate();
-		$( "#datepicker" ).val(formatDate(startString));
-		$( "#endDate" ).val(formatDate(endString));
+		$( "#datepicker" ).val(formatDate(monthStartDate));
+		$( "#endDate" ).val(formatDate(monthEndDate));
 	}
 }
 
