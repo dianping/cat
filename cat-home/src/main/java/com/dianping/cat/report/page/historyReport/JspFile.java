@@ -1,8 +1,9 @@
 package com.dianping.cat.report.page.historyReport;
 
 public enum JspFile {
-	VIEW("/jsp/report/historyReport.jsp"),
-
+	TRANSACTION("/jsp/report/historyTransactionReport.jsp"),
+	EVENT("/jsp/report/historyEventReport.jsp"),
+	PROBLEM("/jsp/report/historyProblemReport.jsp"),
 	;
 
 	private String m_path;

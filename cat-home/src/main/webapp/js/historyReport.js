@@ -15,8 +15,19 @@ function onStartDateChange(){
 $( "#startDate" ).datepicker({ changeMonth: true,changeYear: true,dateFormat: "yy-mm-dd"});
 $( "#endDate" ).datepicker({ changeMonth: true,changeYear: true,dateFormat: "yy-mm-dd"});
 
-function showSummarizedReport(){
+console.log(domain);
+console.log(type);
+$("#domain").val(domain) ;
+$("#reportType").val(type) ;
 
+function longTimeChange(domain,ip){
+	var longtime=$("#p_longUrl").val();
+	var start = $("#startDate").val();
+	var end = $("#endDate").val();
+	window.location.href="?op=problem&domain="+domain+"&ip="+ip+"&startDate="+start+"&endDate="+end+"&threshold="+longtime;
+}
+
+function showSummarizedReport(){
 	var start = $("#startDate").val();
 	var end = $("#endDate").val();
 	var type = $("#id_dateType").val();
