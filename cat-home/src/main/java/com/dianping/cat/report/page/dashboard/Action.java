@@ -15,7 +15,6 @@ public enum Action implements com.site.web.mvc.Action {
 				return action;
 			}
 		}
-
 		return defaultAction;
 	}
 

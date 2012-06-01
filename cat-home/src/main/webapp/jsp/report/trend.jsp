@@ -48,17 +48,25 @@
 		Report Type
 		<input type="text" id="hiddenDateType" style="display: none" value="${model.dateType}">
 		<select size="1" id="id_dateType">
-			<option value="day">日报表</option>
-			<option value="week">周报表</option>
-			<option value="month">月报表</option>
+			<option value="day">Day</option>
+			<option value="week">Week</option>
+			<option value="month">Month</option>
 		</select>
-		StartTime<input type="text" id="datepicker" value="${model.queryDate}"onchange="onStartDateChange()" value="" size="15">
-		EndTime<input type="text" id="endDate" size="15" value=""></input></td>
+		<td>
+		StartTime<input type="text" id="datepicker" value="${model.queryDate}"onchange="onStartDateChange()" value="" size="10">
+		EndTime<input type="text" id="endDate" size="10" value=""></input></td>
 	</tr>
 	<tr>
 		<td>Custom
 		<input type="text" id="hiddenSelfQueryOption" style="display: none" value="${model.selfQueryOption}"></input>
 		<select  id="id_selfDefinedType"  onchange="showSelfDefined()">
+			<option value="transaction">Transaction</option>
+			<option value="event">Event</option>
+			<option value="problem">Problem</option>
+		</select></td>
+		<td>ip:<input type='text' id="ip" value="${model.queryIP}"></input> 
+			Type:<input type='text' id="type" value="${model.queryType}"></input> 
+			<span id="status">Name:</span><input type='text' id="nameOrStatus" value="${model.queryName}" ></input>
 			<option value="transaction">transaction</option>
 			<option value="event">event</option>
 			<option value="problem">problem</option>

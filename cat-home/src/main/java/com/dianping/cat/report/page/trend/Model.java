@@ -13,6 +13,8 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	private String m_domain;
 
+	private List<String> m_domains;
+	
 	private String m_ip;
 
 	private String m_graphType;
@@ -104,8 +106,6 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public void setGraphType(String graphType) {
 		m_graphType = graphType;
 	}
-
-	private List<String> m_domains;
 
 	public Date getCreatTime() {
 		return new Date();

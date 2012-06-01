@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.trend;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -25,20 +26,22 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "trend")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
+		Payload payload = ctx.getPayload();
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.TREND);
-
-		Payload payload = ctx.getPayload();
-		
-		copyProperties(payload,model);
+		copyProperties(payload, model);
 		
 		String graphType = payload.getGraphType();
 		if (graphType == null || graphType.length() == 0) {
 			graphType = "URL";
 		}
 		model.setGraphType(graphType);
-
+		
+		String start = payload.getStartDate();
+		String end = payload.getEndDate();
+		
+		
 		GraphItem item = new GraphItem();
 		item.setTitles("This is a test!");
 		String[] xlable = new String[192];
@@ -60,31 +63,39 @@ public class Handler implements PageHandler<Context> {
 		model.setGraph(item.getJsonString());
 		m_jspViewer.view(ctx, model);
 	}
-	private void copyProperties(Payload payload,Model model){
-		String queryIP=payload.getQueryIP();
+
+	private List<String> getTransactionDetails() {
+		return null;
+	}
+
+	private List<String> getEventDetails() {
+		return null;
+	}
+
+	private void copyProperties(Payload payload, Model model) {
+		String queryIP = payload.getQueryIP();
 		if (queryIP != null) {
 			model.setQueryIP(payload.getQueryIP());
 		}
-		String queryType=payload.getQueryType();
+		String queryType = payload.getQueryType();
 		if (queryType != null) {
 			model.setQueryType(payload.getQueryType());
 		}
-		String queryName=payload.getQueryName();
+		String queryName = payload.getQueryName();
 		if (queryName != null) {
 			model.setQueryName(payload.getQueryName());
 		}
-		String dateType=payload.getDateType();
+		String dateType = payload.getDateType();
 		if (dateType != null) {
 			model.setDateType(payload.getDateType());
 		}
-		String queryDate=payload.getQueryDate();
+		String queryDate = payload.getQueryDate();
 		if (queryDate != null) {
 			model.setQueryDate(queryDate);
 		}
-		String QueryOption=payload.getSelfQueryOption();
+		String QueryOption = payload.getSelfQueryOption();
 		if (QueryOption != null) {
 			model.setSelfQueryOption(payload.getSelfQueryOption());
 		}
-		
 	}
 }

@@ -31,8 +31,11 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("dateType")
 	private String m_dateType;
 	
-	@FieldMeta("queryDate")
-	private String m_queryDate;
+	@FieldMeta("startDate")
+	private String m_startDate;
+
+	@FieldMeta("endDate")
+	private String m_endDate;
 	
 	@FieldMeta("selfQueryOption")
 	private String m_selfQueryOption;
@@ -48,11 +51,11 @@ public class Payload implements ActionPayload<ReportPage, Action> {
    }
 
 	public String getQueryDate() {
-   	return m_queryDate;
+   	return m_startDate;
    }
 
 	public void setQueryDate(String queryDate) {
-   	m_queryDate = queryDate;
+   	m_startDate = queryDate;
    }
 
 	public String getSelfQueryOption() {
@@ -137,6 +140,22 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.TREND);
 	}
+
+	public String getStartDate() {
+   	return m_startDate;
+   }
+
+	public void setStartDate(String startDate) {
+   	m_startDate = startDate;
+   }
+
+	public String getEndDate() {
+   	return m_endDate;
+   }
+
+	public void setEndDate(String endDate) {
+   	m_endDate = endDate;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
