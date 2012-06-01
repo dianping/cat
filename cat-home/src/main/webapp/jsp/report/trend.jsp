@@ -42,9 +42,9 @@
 		<td>
 		<input type="text" id="hiddenDateType" style="display: none" value="${model.dateType}">
 		<select size="1" id="id_dateType">
-			<option value="day">日报表</option>
-			<option value="week">周报表</option>
-			<option value="month">月报表</option>
+			<option value="day">Day</option>
+			<option value="week">Week</option>
+			<option value="month">Month</option>
 		</select></td>
 		<td>Choose Date<input type="text" id="datepicker" value="${model.queryDate}"></input></td>
 	</tr>
@@ -53,9 +53,9 @@
 		<td>
 		<input type="text" id="hiddenSelfQueryOption" style="display: none" value="${model.selfQueryOption}"></input>
 		<select  id="id_selfDefinedType"  onchange="showSelfDefined()">
-			<option value="transaction">transaction</option>
-			<option value="event">event</option>
-			<option value="problem">problem</option>
+			<option value="transaction">Transaction</option>
+			<option value="event">Event</option>
+			<option value="problem">Problem</option>
 		</select></td>
 		<td>ip:<input type='text' id="ip" value="${model.queryIP}"></input> 
 			Type:<input type='text' id="type" value="${model.queryType}"></input> 
