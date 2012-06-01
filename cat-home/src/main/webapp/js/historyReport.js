@@ -2,10 +2,12 @@ function onStartDateChange(){
 	var start = $("#startDate").val();
 	var type = $("#id_dateType").val();
 	if(type=='day'){
-		$( "#endDate" ).val("123");
+		$( "#endDate" ).val(start);
 	}else if(type=='week'){
-		$( "#endDate" ).val("1234");
+		var day = new Date(Date.parse(start.replace(/-/g, '/'))); //将日期值格式化
+		$( "#endDate" ).val(day.getDay());
 	}else if(type=='month'){
+		var end="";
 		$( "#endDate" ).val("12345");
 	}
 }

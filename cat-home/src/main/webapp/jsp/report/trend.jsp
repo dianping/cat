@@ -38,28 +38,34 @@
 
 <table style= "font-size: small">
 	<tr>
-		<td>Report Type</td>
 		<td>
+			Domain:
+			<select id="domain">
+			<option value="MobileApi">MobileApi</option>
+			<option value="TuangouApi">TuangouApi</option>
+			<option value="Cat">Cat</option>
+		</select>
+		Report Type
 		<input type="text" id="hiddenDateType" style="display: none" value="${model.dateType}">
 		<select size="1" id="id_dateType">
 			<option value="day">日报表</option>
 			<option value="week">周报表</option>
 			<option value="month">月报表</option>
-		</select></td>
-		<td>Choose Date<input type="text" id="datepicker" value="${model.queryDate}"></input></td>
+		</select>
+		StartTime<input type="text" id="datepicker" value="${model.queryDate}"onchange="onStartDateChange()" value="" size="10">
+		EndTime<input type="text" id="endDate" size="10" value=""></input></td>
 	</tr>
 	<tr>
-		<td>Custom</td>
-		<td>
+		<td>Custom
 		<input type="text" id="hiddenSelfQueryOption" style="display: none" value="${model.selfQueryOption}"></input>
 		<select  id="id_selfDefinedType"  onchange="showSelfDefined()">
 			<option value="transaction">transaction</option>
 			<option value="event">event</option>
 			<option value="problem">problem</option>
-		</select></td>
-		<td>ip:<input type='text' id="ip" value="${model.queryIP}"></input> 
-			Type:<input type='text' id="type" value="${model.queryType}"></input> 
-			<span id="status">Name:</span><input type='text' id="nameOrStatus" value="${model.queryName}" ></input>
+		</select>
+		ip:<input type='text' id="ip" value="${model.queryIP}" size="10"></input> 
+			Type:<input type='text' id="type" value="${model.queryType}" size="10"></input> 
+			<span id="status">Name:</span><input type='text' id="nameOrStatus" value="${model.queryName}" size="10"></input>
 			<input type="button" value="search" onclick="searchReport('${model.domain}','${model.graphType}')" /></td>
 	</tr>
 </table>

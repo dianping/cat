@@ -18,7 +18,7 @@
 <table>
 <tr>
 		<th>
-			Domain:
+			Domain
 			<select id="domain">
 			<option value="MobileApi">MobileApi</option>
 			<option value="TuangouApi">TuangouApi</option>
