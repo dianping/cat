@@ -59,7 +59,7 @@
 	</c:forEach> 
 </table>
 <br>
+<res:useJs value="${res.js.local.sql_js}" target="bottom-js" />
 </jsp:body>
 </a:report>
 
-<res:useJs value="${res.js.local.sql_js}" target="bottom-js" />

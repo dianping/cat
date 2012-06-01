@@ -3,49 +3,23 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.trend.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.trend.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.trend.Model"
-	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.trend.Context"	scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.trend.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.trend.Model"	scope="request" />
 
-<res:bean id="res" />
-<res:useCss value='${res.css.local.report_css}' target="head-css" />
-<res:useCss value='${res.css.local.trend_css}' target="head-css" />
-<res:useCss value='${res.css.local.jqueryUI_css}' target="head-css" />
-<res:useCss value='${res.css.local.calendar_css}' target="head-css" />
-<res:useJs value="${res.js.local.jqueryMin_js}" target="head-js" />
-<res:useJs value="${res.js.local.jqueryUIMin_js}" target="head-js" />
-<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
-<res:useJs value="${res.js.local.datepicker_js}" target="head-js" />
+<a:simpleReport	title="History Data Trend">
 
-<a:body>
-<div class="report">
-<table class="header">
-	<tr>
-		<td class="title">Trend Grapy</td>
-		<td class="timestamp">Generated: ${model.creatTime}</td>
-	</tr>
-</table>
+<jsp:body>
+	
+	<res:useCss value='${res.css.local.report_css}' target="head-css" />
+	<res:useCss value='${res.css.local.trend_css}' target="head-css" />
+	<res:useCss value='${res.css.local.jqueryUI_css}' target="head-css" />
+	<res:useCss value='${res.css.local.calendar_css}' target="head-css" />
+	<res:useJs value="${res.js.local.jqueryMin_js}" target="head-js" />
+	<res:useJs value="${res.js.local.jqueryUIMin_js}" target="head-js" />
+	<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
+	<res:useJs value="${res.js.local.datepicker_js}" target="head-js" />
 
-<table class="navbar">
-	<tr>
-		<td class="domain">
-		<div class="domain"><c:forEach var="domain"
-			items="${model.domains}">
-			<c:choose>
-				<c:when test="${model.domain eq domain}">
-					<a href="?domain=${domain}" class="current">[&nbsp;${domain}&nbsp;]</a>
-				</c:when>
-				<c:otherwise>
-					<a href="?domain=${domain}">[&nbsp;${domain}&nbsp;]</a>
-				</c:otherwise>
-			</c:choose>
-		</c:forEach></div>
-		</td>
-	</tr>
-</table>
 <table>
 	<tr style="text-align: left">
 		<th>Graph Types: <c:forEach var="graphItem" items="${model.graphTypes}" varStatus="status">[&nbsp;
@@ -62,7 +36,7 @@
 	</tr>
 </table>
 
-<table>
+<table style= "font-size: small">
 	<tr>
 		<td>Report Type</td>
 		<td>
@@ -90,14 +64,12 @@
 	</tr>
 </table>
 
-<div>the graph here!!</div>
-
-<table class="footer">
-	<tr>
-		<td>[ end ]</td>
-	</tr>
-</table>
-</div>
-
 <res:useJs value="${res.js.local.trend_js}" target="bottom-js" />
-</a:body>
+</jsp:body>
+
+</a:simpleReport>
+
+
+
+
+

@@ -77,7 +77,7 @@
 		<c:otherwise>
 			<input type="text" name="queryname" id="queryname">
 		    <input type="text" id="hiddenQuery" style="display:none" value="${model.queryName}"></input>
-		    <input  style="WIDTH: 60px" value="Search" onclick="selectByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+		    <input  style="WIDTH: 60px" value="Filter" onclick="selectByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			<tr>
 			<th><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type">Name</a></th>
