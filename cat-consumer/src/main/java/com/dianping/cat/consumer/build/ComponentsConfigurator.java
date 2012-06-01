@@ -48,56 +48,56 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
-		      .req(AnalyzerFactory.class, LogviewUploader.class) //
-		      .config(E("extraTime").value(property("extraTime", "180000"))//
-		            , E("analyzers").value("problem,transaction,event,ip,heartbeat,dump")));
+				.req(AnalyzerFactory.class, LogviewUploader.class) //
+				.config(E("extraTime").value(property("extraTime", "180000"))//
+						, E("analyzers").value("problem,transaction,event,ip,heartbeat,dump")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
-		
+
 		all.add(C(Handler.class, HEARTBEAT.getName(), HeartbeatHandler.class));
 
 		all.add(C(Handler.class, ERROR.getName(), ErrorHandler.class)//
-		      .config(E("errorType").value(errorTypes)));
+				.config(E("errorType").value(errorTypes)));
 
 		all.add(C(Handler.class, FAILURE.getName(), FailureHandler.class)//
-		      .config(E("failureType").value(failureTypes)));
+				.config(E("failureType").value(failureTypes)));
 
 		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
-		      .req(ServerConfigManager.class));
+				.req(ServerConfigManager.class));
 
 		all.add(C(Handler.class, LONG_SQL.getName(), LongSqlHandler.class) //
-		      .req(ServerConfigManager.class));
+				.req(ServerConfigManager.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName() ,LONG_SQL.getName() ,HEARTBEAT.getName() }, "m_handlers") //
-		      .req(BucketManager.class, ReportDao.class));
+				.req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName(), LONG_SQL.getName(), HEARTBEAT.getName() }, "m_handlers") //
+				.req(BucketManager.class, ReportDao.class, TaskDao.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
+				.req(BucketManager.class, ReportDao.class, TaskDao.class));
 
 		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
-		
+				.req(BucketManager.class, ReportDao.class, TaskDao.class));
+
 		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //
 				.req(BucketManager.class, ReportDao.class));
 
 		all.add(C(HeartbeatAnalyzer.class).is(PER_LOOKUP) //
-				.req(BucketManager.class, ReportDao.class));
+				.req(BucketManager.class, ReportDao.class, TaskDao.class));
 
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ServerConfigManager.class, MessagePathBuilder.class) //
-		      .req(DumpUploader.class, DumpChannelManager.class));
+				.req(ServerConfigManager.class, MessagePathBuilder.class) //
+				.req(DumpUploader.class, DumpChannelManager.class));
 
 		all.add(C(DumpChannel.class));
 		all.add(C(DumpChannelManager.class) //
-		      .req(MessageCodec.class, "plain-text"));
+				.req(MessageCodec.class, "plain-text"));
 
 		all.add(C(DumpUploader.class) //
-		      .req(ServerConfigManager.class, FileSystemManager.class)); //
+				.req(ServerConfigManager.class, FileSystemManager.class)); //
 		all.add(C(LogviewUploader.class) //
-		      .req(ServerConfigManager.class, FileSystemManager.class) //
-		      .req(BucketManager.class, LogviewDao.class));
+				.req(ServerConfigManager.class, FileSystemManager.class) //
+				.req(BucketManager.class, LogviewDao.class));
 
 		return all;
 	}

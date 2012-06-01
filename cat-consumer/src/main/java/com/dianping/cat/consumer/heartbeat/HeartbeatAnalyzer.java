@@ -20,6 +20,8 @@ import com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.Task;
+import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -42,6 +44,9 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	@Inject
 	private ReportDao m_reportDao;
+
+	@Inject
+	private TaskDao m_taskDao;
 
 	private Map<String, HeartbeatReport> m_reports = new HashMap<String, HeartbeatReport>();
 
@@ -295,6 +300,16 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 					r.setContent(xml);
 
 					m_reportDao.insert(r);
+
+					Task task = m_taskDao.createLocal();
+					task.setCreationDate(new Date());
+					task.setProducer(ip);
+					task.setReportDomain(domain);
+					task.setReportName("heartbeat");
+					task.setReportPeriod(period);
+					task.setStatus(1); // status todo
+					m_taskDao.insert(task);
+					m_logger.info("insert heartbeat task:" + task.toString());
 				}
 			}
 

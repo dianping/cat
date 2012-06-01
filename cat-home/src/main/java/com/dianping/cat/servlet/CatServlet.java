@@ -19,6 +19,7 @@ import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.report.page.ip.location.IPSeekerManager;
+import com.dianping.cat.report.task.TaskConsumer;
 import com.site.helper.Files;
 import com.site.helper.Threads;
 import com.site.helper.Threads.DefaultThreadListener;
@@ -55,10 +56,11 @@ public class CatServlet extends AbstractContainerServlet {
 			final DefaultMessageHandler handler = (DefaultMessageHandler) lookup(MessageHandler.class);
 
 			Threads.forGroup("Cat").start(handler);
+			
+			Threads.forGroup("Cat").start(lookup(TaskConsumer.class));
 		} catch (Exception e) {
 			m_exception = e;
-			throw new RuntimeException("Error when initializing CatServlet, "
-			      + "please make sure the environment was setup correctly!", e);
+			throw new RuntimeException("Error when initializing CatServlet, " + "please make sure the environment was setup correctly!", e);
 		}
 	}
 

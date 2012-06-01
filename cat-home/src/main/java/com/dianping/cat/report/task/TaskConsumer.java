@@ -3,9 +3,6 @@
  */
 package com.dianping.cat.report.task;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Task;
 
@@ -13,7 +10,7 @@ import com.dianping.cat.hadoop.dal.Task;
  * @author sean.wang
  * @since May 21, 2012
  */
-public abstract class TaskConsumer implements Runnable, LogEnabled {
+public abstract class TaskConsumer implements Runnable{
 	private static final int MAX_TODO_RETRY_TIMES = 3;
 
 	public static final int STATUS_TODO = 1;
@@ -28,16 +25,7 @@ public abstract class TaskConsumer implements Runnable, LogEnabled {
 
 	private volatile boolean stopped = false;
 
-	private Logger m_logger;
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
 	public void run() {
-		m_logger.info("TaskConsumer start running.");
-
 		findtask: while (running) {
 			String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 			Task task = findDoingTask(localIp); // find doing task
@@ -51,10 +39,8 @@ public abstract class TaskConsumer implements Runnable, LogEnabled {
 					while (!processTask(task)) {
 						retryTimes++;
 						if (retryTimes < MAX_TODO_RETRY_TIMES) {
-							m_logger.warn("TaskConsumer retry " + retryTimes + ", " + task.toString());
-							taskRetryDuration();
+							taskRetryDuration(task, retryTimes);
 						} else {
-							m_logger.error("TaskConsumer failed, " + task.toString());
 							updateDoingToFailure(task);
 							continue findtask;
 						}
@@ -67,13 +53,11 @@ public abstract class TaskConsumer implements Runnable, LogEnabled {
 			}
 		}
 		this.stopped = true;
-
-		m_logger.info("TaskConsumer stoped.");
 	}
 
 	protected abstract boolean updateDoingToFailure(Task todo);
 
-	protected abstract void taskRetryDuration();
+	protected abstract void taskRetryDuration(Task task, int retryTimes);
 
 	protected abstract void mergeReport();
 

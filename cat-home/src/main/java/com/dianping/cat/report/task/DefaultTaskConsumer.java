@@ -13,6 +13,10 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.locks.LockSupport;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.mortbay.log.Log;
+
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -36,7 +40,7 @@ import com.site.lookup.annotation.Inject;
  * @author sean.wang
  * @since May 28, 2012
  */
-public class DefaultTaskConsumer extends TaskConsumer {
+public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 	@Inject
 	private TaskDao taskDao;
@@ -53,10 +57,16 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	@Inject
 	private DailyreportDao dailyReportDao;
 
-	private long lastNotFindHour;
+	private long nextFindTimeMilli;
 
 	public DefaultTaskConsumer() {
-		new Thread(this).start();
+	}
+
+	private Logger m_logger;
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	/*
@@ -70,7 +80,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			task = this.taskDao.findByStatus(STATUS_DOING, ip, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Log.info("no doing task");
 		}
 		return task;
 	}
@@ -86,7 +96,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			task = this.taskDao.findByStatus(STATUS_TODO, null, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Log.info("no todo task");
 		}
 		return task;
 	}
@@ -240,8 +250,9 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	 * @see com.dianping.cat.report.task.TaskConsumer#todoTaskFailSleep()
 	 */
 	@Override
-	protected void taskRetryDuration() {
-		LockSupport.parkNanos(60 * 1000 * 1000 * 1000);// sleep 1 min
+	protected void taskRetryDuration(Task task, int retryTimes) {
+		m_logger.warn("TaskConsumer retry " + retryTimes + ", " + task.toString());
+		LockSupport.parkNanos(10L * 1000 * 1000 * 1000);// sleep 10 sec
 	}
 
 	/*
@@ -252,14 +263,15 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	@Override
 	protected void taskNotFoundDuration() {
 		Calendar cal = Calendar.getInstance();
-		this.lastNotFindHour = cal.get(Calendar.HOUR_OF_DAY);
-		while (true) {
-			int thisHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-			if (lastNotFindHour != thisHour && (10 <= cal.get(Calendar.MINUTE))) { // 10 indicate after task finished
-				break;
-			}
-			LockSupport.parkNanos(60 * 1000 * 1000 * 1000);// sleep 1 min
+		int min = cal.get(Calendar.MINUTE);
+		final int startFindMin = 10;
+		cal.set(Calendar.MINUTE, startFindMin);
+		cal.set(Calendar.SECOND, 0);
+		if (min >= startFindMin) {
+			cal.add(Calendar.HOUR, 1);// timeout, waiting for next hour
 		}
+		Log.info("waiting for next task until: " + cal.getTime());
+		LockSupport.parkUntil(cal.getTimeInMillis());
 	}
 
 	/*
@@ -286,6 +298,8 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	 */
 	@Override
 	protected boolean updateDoingToFailure(Task doing) {
+		m_logger.error("TaskConsumer failed, " + doing.toString());
+
 		doing.setStatus(STATUS_FAIL);
 		doing.setEndDate(new Date());
 		try {

@@ -21,6 +21,8 @@ import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.Task;
+import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -36,6 +38,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	@Inject
 	private ReportDao m_reportDao;
+
+	@Inject
+	private TaskDao m_taskDao;
 
 	private Map<String, EventReport> m_reports = new HashMap<String, EventReport>();
 
@@ -70,7 +75,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 		report.getDomainNames().clear();
 		report.getDomainNames().addAll(m_reports.keySet());
-		
+
 		return report;
 	}
 
@@ -242,7 +247,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 				Set<String> domainNames = report.getDomainNames();
 				domainNames.clear();
 				domainNames.addAll(getDomains());
-				
+
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
@@ -266,6 +271,16 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 					r.setContent(xml);
 
 					m_reportDao.insert(r);
+
+					Task task = m_taskDao.createLocal();
+					task.setCreationDate(new Date());
+					task.setProducer(ip);
+					task.setReportDomain(domain);
+					task.setReportName("event");
+					task.setReportPeriod(period);
+					task.setStatus(1); // status todo
+					m_taskDao.insert(task);
+					m_logger.info("insert event task:" + task.toString());
 				}
 			}
 
