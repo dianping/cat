@@ -19,6 +19,10 @@
       <name>report</name>
       <path>/WEB-INF/tags/report.tag</path>
    </tag-file>
+   <tag-file>
+      <name>simpleReport</name>
+      <path>/WEB-INF/tags/simpleReport.tag</path>
+   </tag-file>
    <function>
       <description>Build form action for given id</description>
       <name>action</name>

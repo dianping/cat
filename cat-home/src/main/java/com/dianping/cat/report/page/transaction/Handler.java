@@ -13,19 +13,20 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
-import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
+import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
+import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
+import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
 import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
@@ -281,177 +282,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 
 			Cat.getProducer().logError(e);
 			model.setException(e);
-		}
-	}
-
-	abstract class AbstractPayload extends AbstractGraphPayload {
-		private final TransactionName m_name;
-
-		public AbstractPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel);
-
-			m_name = name;
-		}
-
-		@Override
-		public String getAxisXLabel(int index) {
-			return String.valueOf(index * 5);
-		}
-
-		@Override
-		public int getDisplayHeight() {
-			return (int) (super.getDisplayHeight() * 0.7);
-		}
-
-		@Override
-		public int getDisplayWidth() {
-			return (int) (super.getDisplayWidth() * 0.7);
-		}
-
-		@Override
-		public String getIdPrefix() {
-			return m_name.getId() + "_" + super.getIdPrefix();
-		}
-
-		protected TransactionName getTransactionName() {
-			return m_name;
-		}
-
-		@Override
-		public int getWidth() {
-			return super.getWidth() + 120;
-		}
-
-		@Override
-		public boolean isStandalone() {
-			return false;
-		}
-	}
-
-	final class AverageTimePayload extends AbstractPayload {
-		public AverageTimePayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel, name);
-		}
-
-		@Override
-		public int getOffsetY() {
-			return getDisplayHeight() + 20;
-		}
-
-		@Override
-		protected double[] loadValues() {
-			double[] values = new double[12];
-
-			for (Range range : getTransactionName().getRanges()) {
-				int value = range.getValue();
-				int k = value / 5;
-
-				values[k] += range.getAvg();
-			}
-
-			return values;
-		}
-	}
-
-	final class DurationPayload extends AbstractPayload {
-		public DurationPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel, name);
-		}
-
-		@Override
-		public String getAxisXLabel(int index) {
-			if (index == 0) {
-				return "0";
-			}
-
-			int k = 1;
-
-			for (int i = 1; i < index; i++) {
-				k <<= 1;
-			}
-
-			return String.valueOf(k);
-		}
-
-		@Override
-		public boolean isAxisXLabelRotated() {
-			return true;
-		}
-
-		@Override
-		public boolean isAxisXLabelSkipped() {
-			return false;
-		}
-
-		@Override
-		protected double[] loadValues() {
-			double[] values = new double[17];
-
-			for (Duration duration : getTransactionName().getDurations()) {
-				int d = duration.getValue();
-				Integer k = m_map.get(d);
-
-				if (k != null) {
-					values[k] += duration.getCount();
-				}
-			}
-
-			return values;
-		}
-	}
-
-	final class FailurePayload extends AbstractPayload {
-		public FailurePayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel, name);
-		}
-
-		@Override
-		public int getOffsetX() {
-			return getDisplayWidth();
-		}
-
-		@Override
-		public int getOffsetY() {
-			return getDisplayHeight() + 20;
-		}
-
-		@Override
-		protected double[] loadValues() {
-			double[] values = new double[12];
-
-			for (Range range : getTransactionName().getRanges()) {
-				int value = range.getValue();
-				int k = value / 5;
-
-				values[k] += range.getFails();
-			}
-
-			return values;
-		}
-	}
-
-	final class HitPayload extends AbstractPayload {
-		public HitPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
-			super(title, axisXLabel, axisYLabel, name);
-		}
-
-		@Override
-		public int getOffsetX() {
-			return getDisplayWidth();
-		}
-
-		@Override
-		protected double[] loadValues() {
-			double[] values = new double[12];
-
-			for (Range range : getTransactionName().getRanges()) {
-				int value = range.getValue();
-				int k = value / 5;
-
-				values[k] += range.getCount();
-			}
-
-			return values;
 		}
 	}
 }

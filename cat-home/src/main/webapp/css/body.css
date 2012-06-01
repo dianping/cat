@@ -53,6 +53,9 @@ ul.tabs {
 	background: #ccddff;
 	border-bottom: 1px solid white;
 }
+table {
+	font-size: small;
+}
 
 tr.head {
 	background-color: #e8e8e8;
@@ -69,4 +72,52 @@ tr.head th {
 
 tr th {
 	background-color: #f2f2f2;
+	font-size:small;
+}
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align:right;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align:right;
+}
+a.error {
+	background-color: red;
+}
+
+a.failure {
+	background-color: #770000;
+}
+
+a.long-url {
+	background-color: blue;
+}
+
+a.long-sql {
+	background-color: #6699CC;
+}
+
+a.url{
+	background-color: #cc0000;
+}
+a.sql{
+	background-color: purple;
+}
+
+a.call{
+	background-color: #9966ff;
+}
+a.cache{
+	background-color: #aa3faa;
+}
+a.heartbeat{
+	background-color: #009933;
 }
