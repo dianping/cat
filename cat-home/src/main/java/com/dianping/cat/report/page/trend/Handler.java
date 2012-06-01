@@ -85,6 +85,5 @@ public class Handler implements PageHandler<Context> {
 		if (QueryOption != null) {
 			model.setSelfQueryOption(payload.getSelfQueryOption());
 		}
-		
 	}
 }

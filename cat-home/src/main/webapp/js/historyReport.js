@@ -13,8 +13,6 @@ function onStartDateChange(){
 $( "#startDate" ).datepicker({ changeMonth: true,changeYear: true,dateFormat: "yy-mm-dd"});
 $( "#endDate" ).datepicker({ changeMonth: true,changeYear: true,dateFormat: "yy-mm-dd"});
 
-console.log(domain);
-console.log(type);
 $("#domain").val(domain) ;
 $("#reportType").val(type) ;
 
