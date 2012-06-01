@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.historyReport;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view");
+	TRANSACTION("transaction"), EVENT("event"), PROBLEM("problem");
 
 	private String m_name;
 

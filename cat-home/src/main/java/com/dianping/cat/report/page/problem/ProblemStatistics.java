@@ -61,9 +61,9 @@ public class ProblemStatistics {
    	m_ips = ips;
    }
 
-	public ProblemStatistics displayByAllIps(ProblemReport report,Payload payload) {
-		m_threshold = payload.getLongTime();
-		s_linkCount = payload.getLinkCount();
+	public ProblemStatistics displayByAllIps(ProblemReport report,int threadhold, int linkCount) {
+		m_threshold = threadhold;
+		s_linkCount = linkCount;
 		if (report == null) {
 			return null;
 		}
@@ -83,14 +83,14 @@ public class ProblemStatistics {
 		return this;
 	}
 
-	public ProblemStatistics displayByIp(ProblemReport report, Model model, Payload payload) {
-		m_threshold = payload.getLongTime();
-		s_linkCount = payload.getLinkCount();
+	public ProblemStatistics displayByIp(ProblemReport report,String ip, int threadhold, int linkCount) {
+		m_threshold = threadhold;
+		s_linkCount = linkCount;
 		
 		if (report == null) {
 			return null;
 		}
-		Machine machine = report.getMachines().get(model.getIpAddress());
+		Machine machine = report.getMachines().get(ip);
 
 		if (machine == null) {
 			return null;

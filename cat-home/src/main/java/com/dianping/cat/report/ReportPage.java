@@ -29,7 +29,7 @@ public enum ReportPage implements Page {
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", true),
 
-   HISTORYREPORT("historyReport", "hr", "HistoryReport", "HistoryReport", true);
+   HISTORYREPORT("historyReport", "hr", "HistoryReport", "History Summary Report", true);
 
    private String m_name;
 

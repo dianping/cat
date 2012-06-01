@@ -153,7 +153,7 @@ public class Handler implements PageHandler<Context> {
 			report = getAllIpReport(payload);
 			model.setReport(report);
 			model.setLongDate(payload.getDate());
-			allStatistics = new ProblemStatistics().displayByAllIps(report, payload);
+			allStatistics = new ProblemStatistics().displayByAllIps(report,payload.getLongTime(),payload.getLinkCount());
 			model.setAllStatistics(allStatistics);
 		} else {
 			switch (payload.getAction()) {
@@ -162,7 +162,7 @@ public class Handler implements PageHandler<Context> {
 				if (report != null) {
 					model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
 				}
-				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model, payload));
+				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(),payload.getLinkCount()));
 				break;
 			case THREAD:
 				String groupName = payload.getGroupName();
@@ -174,7 +174,7 @@ public class Handler implements PageHandler<Context> {
 					model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
 				}
 
-				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model, payload));
+				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(),payload.getLinkCount()));
 				break;
 			case DETAIL:
 				showDetail(model, payload);
@@ -193,7 +193,7 @@ public class Handler implements PageHandler<Context> {
 				model.setMobileResponse(response);
 			} else {
 				report = showSummary(model, payload);
-				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model, payload));
+				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(),payload.getLinkCount()));
 				ProblemStatistics statistics = model.getAllStatistics();
 				statistics.setIps(new ArrayList<String>(report.getIps()));
 				model.setMobileResponse(gson.toJson(statistics));
