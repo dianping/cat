@@ -21,6 +21,8 @@ import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.Task;
+import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
@@ -35,6 +37,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Inject
 	private ReportDao m_reportDao;
+
+	@Inject
+	private TaskDao m_taskDao;
 
 	@Inject
 	private List<Handler> m_handlers;
@@ -198,7 +203,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				Set<String> domainNames = report.getDomainNames();
 				domainNames.clear();
 				domainNames.addAll(getDomains());
-				
+
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();
 
@@ -210,7 +215,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (ProblemReport report : m_reports.values()) {
-					
+
 					Report r = m_reportDao.createLocal();
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();
@@ -223,6 +228,16 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 					r.setContent(xml);
 
 					m_reportDao.insert(r);
+
+					Task task = m_taskDao.createLocal();
+					task.setCreationDate(new Date());
+					task.setProducer(ip);
+					task.setReportDomain(domain);
+					task.setReportName("problem");
+					task.setReportPeriod(period);
+					task.setStatus(1); // status todo
+					m_taskDao.insert(task);
+					m_logger.info("insert event task:" + task.toString());
 				}
 			}
 
