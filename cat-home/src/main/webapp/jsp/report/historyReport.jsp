@@ -5,7 +5,7 @@
 <table>
 <tr>
 		<th>
-			Domain:
+			Domain
 			<select id="domain">
 				<option value="MobileApi">MobileApi</option>
 				<option value="TuangouApi">TuangouApi</option>
@@ -29,7 +29,7 @@
 			</select>
 			StartTime<input type="text" id="startDate" size="10"
 					onchange="onStartDateChange()" value="${payload.startDate}">
-			EndTime  <input type="text" id="endDate" size="10" value="${payload.endDate}">
+			EndTime  <input type="text" id="endDate" size="10" readonly value="${payload.endDate}">
 		</th>
 		<th>
 			<input value="Go" onclick="showSummarizedReport()" type="submit">

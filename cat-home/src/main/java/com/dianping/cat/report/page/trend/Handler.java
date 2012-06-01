@@ -37,7 +37,10 @@ public class Handler implements PageHandler<Context> {
 			graphType = "URL";
 		}
 		model.setGraphType(graphType);
-
+		
+		String start = payload.getStartDate();
+		String end = payload.getEndDate();
+		
 		
 		GraphItem item = new GraphItem();
 		item.setTitles("This is a test!");
