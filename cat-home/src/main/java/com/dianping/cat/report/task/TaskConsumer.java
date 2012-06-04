@@ -3,6 +3,8 @@
  */
 package com.dianping.cat.report.task;
 
+import java.util.concurrent.locks.LockSupport;
+
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Task;
 
@@ -10,7 +12,7 @@ import com.dianping.cat.hadoop.dal.Task;
  * @author sean.wang
  * @since May 21, 2012
  */
-public abstract class TaskConsumer implements Runnable{
+public abstract class TaskConsumer implements Runnable {
 	private static final int MAX_TODO_RETRY_TIMES = 3;
 
 	public static final int STATUS_TODO = 1;
@@ -26,8 +28,9 @@ public abstract class TaskConsumer implements Runnable{
 	private volatile boolean stopped = false;
 
 	public void run() {
+		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		findtask: while (running) {
-			String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			LockSupport.parkNanos(2L * 1000 * 1000 * 1000);
 			Task task = findDoingTask(localIp); // find doing task
 			if (task == null) {
 				task = findTodoTask(); // find todo task
@@ -46,7 +49,7 @@ public abstract class TaskConsumer implements Runnable{
 						}
 					}
 					updateDoingToDone(task);
-					mergeReport();
+					mergeReport(task);
 				}
 			} else {
 				taskNotFoundDuration();
@@ -59,7 +62,7 @@ public abstract class TaskConsumer implements Runnable{
 
 	protected abstract void taskRetryDuration(Task task, int retryTimes);
 
-	protected abstract void mergeReport();
+	protected abstract void mergeReport(Task task);
 
 	protected abstract void taskNotFoundDuration();
 
