@@ -6,7 +6,7 @@ import com.site.web.mvc.ActionPayload;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
-	private ReportPage m_page;
+	private ReportPage m_page = ReportPage.HISTORYREPORT;
 
 	@FieldMeta("startDate")
 	private String m_startDate;
@@ -22,23 +22,23 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("ip")
 	private String m_ip;
-	
+
 	@FieldMeta("sort")
 	private String m_sortBy;
-	
+
 	@FieldMeta("type")
 	private String type;
 
 	@FieldMeta("threshold")
 	private int m_longTime;
-	
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.TRANSACTION);
 	}
 
 	@Override
 	public Action getAction() {
-		return m_action != null ? m_action : Action.TRANSACTION;
+		return m_action;
 	}
 
 	@Override
@@ -68,47 +68,49 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	public String getType() {
-   	return type;
-   }
+		return type;
+	}
 
 	public void setType(String type) {
-   	this.type = type;
-   }
+		this.type = type;
+	}
 
 	public String getDomain() {
-   	return m_domain;
-   }
+		return m_domain;
+	}
 
 	public void setDomain(String domain) {
-   	m_domain = domain;
-   }
+		m_domain = domain;
+	}
 
 	public String getIp() {
-   	return m_ip;
-   }
+		return m_ip;
+	}
 
 	public void setIp(String ip) {
 		m_ip = ip;
-   }
+	}
 
 	public String getSortBy() {
-   	return m_sortBy;
-   }
+		return m_sortBy;
+	}
 
 	public void setSortBy(String sortBy) {
-   	m_sortBy = sortBy;
-   }
+		m_sortBy = sortBy;
+	}
 
 	public int getLongTime() {
-   	return m_longTime;
-   }
+		return m_longTime;
+	}
 
 	public void setLongTime(int longTime) {
-   	m_longTime = longTime;
-   }
+		m_longTime = longTime;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
-		m_action = m_action != null ? m_action : Action.TRANSACTION;
+		if (m_action == null) {
+			m_action = Action.TRANSACTION;
+		}
 	}
 }

@@ -48,7 +48,9 @@ public class Handler implements PageHandler<Context> {
 		Date end = new Date();
 		String domain = payload.getDomain();
 
+		model.setPage(payload.getPage());
 		model.setAction(payload.getAction());
+
 		try {
 			start = sdf.parse(payload.getStartDate());
 			end = sdf.parse(payload.getEndDate());
