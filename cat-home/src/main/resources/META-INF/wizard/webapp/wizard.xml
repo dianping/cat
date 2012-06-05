@@ -38,9 +38,6 @@
       <page name="dashboard" title="Dashboard" path="dashboard">
         <description>Dashboard</description>
       </page>
-      <page name="historyReport" title="HistoryReport" path="hr">
-        <description>HistoryReport</description>
-      </page>
     </module>
   </webapp>
 </wizard>

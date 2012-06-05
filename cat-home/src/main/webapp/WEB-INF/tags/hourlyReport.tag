@@ -16,7 +16,7 @@
 		<tr>
 			<td class="title">${title}</td>
 			<td class="switch">Browse Mode:Hourly Report 
-				<a href="${model.baseUri}?op=history&domain=${model.domain}">[&nbsp;Switch&nbsp;]</a>
+				<a href="${model.baseUri}?op=history&domain=${model.domain}">[&nbsp;Switch&nbsp;]&nbsp;</a>
 			</td>
 		</tr>
 	</table>

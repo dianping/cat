@@ -1,14 +1,18 @@
 package com.dianping.cat.report.page.problem;
 
 public enum Action implements com.site.web.mvc.Action {
+	ALL("all"),
+
 	GROUP("group"),
-	
+
 	THREAD("thread"),
-	
+
 	DETAIL("detail"),
+
+	MOBILE("mobile"), 
 	
-	MOBILE("mobile");
-	
+	HISTORY("history");
+
 	private String m_name;
 
 	private Action(String name) {

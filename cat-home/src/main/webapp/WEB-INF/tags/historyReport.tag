@@ -16,7 +16,7 @@
 		<tr>
 			<td class="title">${title}</td>
 			<td class="switch">Browse Mode:History Summarize Report 
-				<a href="?domain=${model.domain}">[&nbsp;Switch&nbsp;]</a>
+				<a href="?domain=${model.domain}">[&nbsp;Switch&nbsp;]&nbsp;</a>
 			</td>
 		</tr>
 	</table>

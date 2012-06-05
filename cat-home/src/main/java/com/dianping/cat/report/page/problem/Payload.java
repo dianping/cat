@@ -90,7 +90,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.GROUP;
+			m_action = Action.ALL;
 		}
 	}
 }
