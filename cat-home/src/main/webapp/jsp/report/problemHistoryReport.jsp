@@ -11,12 +11,20 @@
 
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
+	<res:useCss value="${res.css.local.problem_css}" target="head-css"/>
+	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
 </br>
-
 <table class="machines">
 	<tr style="text-align:left">
-		<th>Machines: 
-			<c:forEach var="ip" items="${model.ips}">
+		<th>Machines: &nbsp;[&nbsp; <c:choose>
+				<c:when test="${model.ipAddress eq 'All'}">
+					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All"
+						class="current">All</a>
+				</c:when>
+				<c:otherwise>
+					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All">All</a>
+				</c:otherwise>
+			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
@@ -29,27 +37,26 @@
 				</c:choose>
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
-		</th><th>long-url <select size="1" id="p_longUrl">
+		</th>
+		<th>long-url <select size="1" id="p_longUrl">
 				<option value="1000">1.0 Sec</option>
 				<option value="1500">1.5 Sec</option>
 				<option value="2000">2.0 Sec</option>
 				<option value="3000">3.0 Sec</option>
 				<option value="4000">4.0 Sec</option>
 				<option value="5000">5.0 Sec</option>
-		</select> 
+		</select> <input style="WIDTH: 60px" value="Refresh"
+			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
+			type="submit">
 		<script>
 			var threshold='${model.threshold}';
 			$("#p_longUrl").val(threshold) ;
 
-			function longTimeChange((date,domain,ip){
+			function longTimeChange(date,domain,ip){
 				var longtime=$("#p_longUrl").val();
 				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime;
 			}
-			
 		</script>
-	<input style="WIDTH: 60px" value="Refresh"
-			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
-			type="submit">
 		</th>
 	</tr>
 </table>

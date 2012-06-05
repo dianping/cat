@@ -10,6 +10,7 @@
 <a:historyReport title="History Report">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
+	<res:useCss value="${res.css.local.transaction_css}" target="head-css"/>
 </br>
 
 <table class="machines">
@@ -34,19 +35,19 @@
 <table class="transaction">
 	<c:choose>
 		<c:when test="${empty payload.type}">
-		<tr><th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
+		<tr><th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=type">Type</a></th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total">Total Count</a></th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure">Failure Count</a></th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent">Failure%</a></th>
 			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=avg">Avg</a>(ms)</th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=95line">95Line</a>(ms)</th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=avg">Avg</a>(ms)</th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=95line">95Line</a>(ms)</th>
 			<th>Std(ms)</th><th>TPS</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align:left"><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
+					<td style="text-align:left"><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">${item.type}</a></td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
@@ -63,13 +64,13 @@
 		<c:otherwise>
 			<tr>
 			<th>
-			<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type">Name</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
+			<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type">Name</a></th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total">Total Count</a></th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure">Failure Count</a></th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
 			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=avg">Avg</a>(ms)</th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=95line">95Line</a>(ms)</th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=avg">Avg</a>(ms)</th>
+			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=95line">95Line</a>(ms)</th>
 			<th>Std(ms)</th><th>TPS</th></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>

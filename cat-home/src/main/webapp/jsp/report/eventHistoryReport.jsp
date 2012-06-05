@@ -17,11 +17,11 @@
 		<th>Machines:  <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}"
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${model.reportType}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${model.reportType}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -34,10 +34,10 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type"> Type</a></th>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
+			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=type"> Type</a></th>
+			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total">Total Count</a></th>
+			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure">Failure Count</a></th>
+			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent">Failure%</a></th>
 			<th>Sample Link</th>
 					</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
@@ -46,7 +46,7 @@
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td style="text-align: left"><a
-								href="?op=history&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
+								href="?op=history&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">${item.type}</a></td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
@@ -56,10 +56,10 @@
 		</c:when>
 		<c:otherwise>
 		<tr>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type"> Name</a></th>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
+			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type"> Name</a></th>
+			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total">Total Count</a></th>
+			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure">Failure Count</a></th>
+			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
 			<th>Sample Link</th>
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"

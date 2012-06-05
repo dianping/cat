@@ -41,7 +41,7 @@ public class Handler implements PageHandler<Context> {
 	private ServerConfigManager m_manager;
 
 	private Gson gson = new Gson();
-	
+
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
 
@@ -113,21 +113,28 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
 		ProblemReport report = null;
-		ProblemStatistics allStatistics = null;
+		ProblemStatistics problemStatistics = null;
+		String ip = model.getIpAddress();
 
 		switch (payload.getAction()) {
 		case ALL:
 			model.setIpAddress(CatString.ALL_IP);
 			report = getHourlyReport(payload);
 			model.setReport(report);
-			allStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(), payload.getLinkCount());
-			model.setAllStatistics(allStatistics);
+			problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(), payload.getLinkCount());
+			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY:
-			report = showSummarizeReport(model,payload);
-			allStatistics = new ProblemStatistics().displayByIp(report, model.getIpAddress(),payload.getLongTime(), payload.getLinkCount());
+			report = showSummarizeReport(model, payload);
+			if (ip.equals(CatString.ALL_IP)) {
+				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
+				      payload.getLinkCount());
+			} else {
+				problemStatistics = new ProblemStatistics().displayByIp(report, model.getIpAddress(),
+				      payload.getLongTime(), payload.getLinkCount());
+			}
 			model.setReport(report);
-			model.setAllStatistics(allStatistics);
+			model.setAllStatistics(problemStatistics);
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -152,12 +159,12 @@ public class Handler implements PageHandler<Context> {
 			showDetail(model, payload);
 			break;
 		case MOBILE:
-			String ip = model.getIpAddress();
 			if (ip.equals(CatString.ALL_IP)) {
 				report = getHourlyReport(payload);
-				allStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(), payload.getLinkCount());
-				allStatistics.setIps(new ArrayList<String>(report.getIps()));
-				String response = gson.toJson(allStatistics);
+				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
+				      payload.getLinkCount());
+				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
+				String response = gson.toJson(problemStatistics);
 				model.setMobileResponse(response);
 			} else {
 				report = showHourlyReport(model, payload);
@@ -172,6 +179,10 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private ProblemReport showSummarizeReport(Model model, Payload payload) {
+		String domain = model.getDomain();
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		//TODO
 		String oldXml;
 		try {
 			oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("problem.xml"), "utf-8");
@@ -198,8 +209,8 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		String ip = payload.getIpAddress();
-		if(StringUtils.isEmpty(ip)){
-			ip=CatString.ALL_IP;
+		if (StringUtils.isEmpty(ip)) {
+			ip = CatString.ALL_IP;
 		}
 		model.setIpAddress(ip);
 		model.setLongDate(payload.getDate());
@@ -212,9 +223,9 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
-		if(payload.getAction()==Action.HISTORY){
+		if (payload.getAction() == Action.HISTORY) {
 			String type = payload.getReportType();
-			if(type==null||type.length()==0){
+			if (type == null || type.length() == 0) {
 				payload.setReportType("day");
 			}
 			model.setReportType(payload.getReportType());

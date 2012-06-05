@@ -24,10 +24,6 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	private String m_ipAddress;
 	
-	private String m_startDate;
-	
-	private String m_endDate;
-	
 	private String m_reportType;
 	
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
@@ -123,22 +119,6 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public void setIpAddress(String ipAddress) {
    	m_ipAddress = ipAddress;
-   }
-
-	public String getStartDate() {
-   	return m_startDate;
-   }
-
-	public void setStartDate(String startDate) {
-   	m_startDate = startDate;
-   }
-
-	public String getEndDate() {
-   	return m_endDate;
-   }
-
-	public void setEndDate(String endDate) {
-   	m_endDate = endDate;
    }
 
 	public String getReportType() {
