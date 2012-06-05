@@ -471,6 +471,9 @@
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -749,19 +752,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.dashboard.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.historyReport.Handler</role>
-			<implementation>com.dianping.cat.report.page.historyReport.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.historyReport.JspViewer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.historyReport.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.historyReport.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>
