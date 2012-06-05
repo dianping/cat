@@ -159,12 +159,17 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 				TransactionReport transactionReport = mergeTransactionReports(reportDomain, reports);
 				TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
 				TransactionReport transactionReport2 = mergeTransactionReports(reportDomain, reports);
-				Machine allMachines = merger.mergesForAllMachine(transactionReport2);
+				com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger.mergesForAllMachine(transactionReport2);
 				transactionReport.addMachine(allMachines);
 				transactionReport.getIps().add("All");
 				content = transactionReport.toString();
 			} else if ("event".equals(reportName)) {
 				EventReport eventReport = mergeEventReports(reportDomain, reports);
+				EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
+				EventReport eventReport2 = mergeEventReports(reportDomain, reports);
+				com.dianping.cat.consumer.event.model.entity.Machine allMachines = merger.mergesForAllMachine(eventReport2);
+				eventReport.addMachine(allMachines);
+				eventReport.getIps().add("All");
 				content = eventReport.toString();
 			} else if ("heartbeat".equals(reportName)) {
 				HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
