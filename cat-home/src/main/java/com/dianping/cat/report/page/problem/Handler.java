@@ -6,18 +6,21 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
-
-import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.hadoop.dal.Dailyreport;
+import com.dianping.cat.hadoop.dal.DailyreportDao;
+import com.dianping.cat.hadoop.dal.DailyreportEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -39,6 +42,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_manager;
+
+	@Inject
+	private DailyreportDao dailyreportDao;
 
 	private Gson gson = new Gson();
 
@@ -64,7 +70,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date);
+				.setProperty("date", date);
 		if (!CatString.ALL_IP.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
@@ -88,8 +94,7 @@ public class Handler implements PageHandler<Context> {
 		if (d != null) {
 			int longUrlTime = d.getUrlThreshold();
 
-			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
-			      && longUrlTime != 4000 && longUrlTime != 5000) {
+			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000 && longUrlTime != 4000 && longUrlTime != 5000) {
 				double sec = (double) (longUrlTime) / (double) 1000;
 				NumberFormat nf = new DecimalFormat("#.##");
 				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
@@ -127,11 +132,9 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
 			if (ip.equals(CatString.ALL_IP)) {
-				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
-				      payload.getLinkCount());
+				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(), payload.getLinkCount());
 			} else {
-				problemStatistics = new ProblemStatistics().displayByIp(report, model.getIpAddress(),
-				      payload.getLongTime(), payload.getLinkCount());
+				problemStatistics = new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(), payload.getLinkCount());
 			}
 			model.setReport(report);
 			model.setAllStatistics(problemStatistics);
@@ -141,8 +144,7 @@ public class Handler implements PageHandler<Context> {
 			if (report != null) {
 				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
 			}
-			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
-			      payload.getLongTime(), payload.getLinkCount()));
+			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(), payload.getLinkCount()));
 			break;
 		case THREAD:
 			String groupName = payload.getGroupName();
@@ -152,8 +154,7 @@ public class Handler implements PageHandler<Context> {
 			if (report != null) {
 				model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
 			}
-			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
-			      payload.getLongTime(), payload.getLinkCount()));
+			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(), payload.getLinkCount()));
 			break;
 		case DETAIL:
 			showDetail(model, payload);
@@ -161,15 +162,13 @@ public class Handler implements PageHandler<Context> {
 		case MOBILE:
 			if (ip.equals(CatString.ALL_IP)) {
 				report = getHourlyReport(payload);
-				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
-				      payload.getLinkCount());
+				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(), payload.getLinkCount());
 				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
 				String response = gson.toJson(problemStatistics);
 				model.setMobileResponse(response);
 			} else {
 				report = showHourlyReport(model, payload);
-				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
-				      payload.getLongTime(), payload.getLinkCount()));
+				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(), payload.getLinkCount()));
 				ProblemStatistics statistics = model.getAllStatistics();
 				statistics.setIps(new ArrayList<String>(report.getIps()));
 				model.setMobileResponse(gson.toJson(statistics));
@@ -178,21 +177,28 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private com.dianping.cat.consumer.problem.model.transform.DefaultDomParser problemParser = new com.dianping.cat.consumer.problem.model.transform.DefaultDomParser();
+
 	private ProblemReport showSummarizeReport(Model model, Payload payload) {
 		String domain = model.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		//TODO
-		String oldXml;
+
+		ProblemReport problemReport = null;
 		try {
-			oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("problem.xml"), "utf-8");
-			ProblemReport reportOld = new com.dianping.cat.consumer.problem.model.transform.DefaultDomParser()
-			      .parse(oldXml);
-			return reportOld;
+
+			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem", DailyreportEntity.READSET_FULL);
+			ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
+			for (Dailyreport report : reports) {
+				String xml = report.getContent();
+				ProblemReport reportModel = problemParser.parse(xml);
+				reportModel.accept(merger);
+			}
+			problemReport = merger == null ? null : merger.getProblemReport();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return null;
+		return problemReport;
 	}
 
 	public void normalize(Model model, Payload payload) {
