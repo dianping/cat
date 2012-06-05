@@ -2,10 +2,9 @@ package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
-
-import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -14,13 +13,16 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
+import com.dianping.cat.hadoop.dal.Dailyreport;
+import com.dianping.cat.hadoop.dal.DailyreportDao;
+import com.dianping.cat.hadoop.dal.DailyreportEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
@@ -46,10 +48,13 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ServerConfigManager m_manager;
 
+	@Inject
+	private DailyreportDao dailyreportDao;
+
 	private StatisticsComputer m_computer = new StatisticsComputer();
-	
+
 	private Gson gson = new Gson();
-	
+
 	private TransactionName getTransactionName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
@@ -58,10 +63,10 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
-		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", payload.getName())//
-		      .setProperty("ip", ipAddress);
+				.setProperty("date", date) //
+				.setProperty("type", payload.getType()) //
+				.setProperty("name", payload.getName())//
+				.setProperty("ip", ipAddress);
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
@@ -88,9 +93,9 @@ public class Handler implements PageHandler<Context> {
 		String date = String.valueOf(payload.getDate());
 		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
-		      .setProperty("type", payload.getType())//
-		      .setProperty("ip", ipAddress);
+				.setProperty("date", date) //
+				.setProperty("type", payload.getType())//
+				.setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
@@ -154,7 +159,7 @@ public class Handler implements PageHandler<Context> {
 			showHourlyReport(model, payload);
 			break;
 		case HISTORY_REPORT:
-			showSummarizeReport(model,payload);
+			showSummarizeReport(model, payload);
 			break;
 		case GRAPHS:
 			showComputerGraphs(model, payload);
@@ -181,6 +186,8 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser transactionParser = new com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser();
+
 	private void showSummarizeReport(Model model, Payload payload) {
 		String type = payload.getType();
 		String sorted = payload.getSortBy();
@@ -189,33 +196,37 @@ public class Handler implements PageHandler<Context> {
 			ip = CatString.ALL_IP;
 		}
 		model.setIpAddress(ip);
-		
-		String oldXml;
-		TransactionReport report = null;
+
+		TransactionReport transactionReport = null;
 		try {
-			//TODO
 			Date start = payload.getHistoryStartDate();
 			Date end = payload.getHistoryEndDate();
 			String domain = model.getDomain();
-			oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportOld.xml"), "utf-8");
-			report= new DefaultDomParser().parse(oldXml);
+			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "transaction", DailyreportEntity.READSET_FULL);
+			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+			for (Dailyreport report : reports) {
+				String xml = report.getContent();
+				TransactionReport reportModel = transactionParser.parse(xml);
+				reportModel.accept(merger);
+			}
+			transactionReport = merger == null ? null : merger.getTransactionReport();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-		if (report == null) {
+
+		if (transactionReport == null) {
 			return;
 		}
-		model.setReport(report);
+		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {
-			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report, ""));
+			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, transactionReport, ""));
 		} else {
-			model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, report));
+			model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, transactionReport));
 		}
-   }
+	}
 
 	public void normalize(Model model, Payload payload) {
-	   model.setAction(payload.getAction());
+		model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
 
 		if (StringUtils.isEmpty(payload.getDomain())) {
@@ -229,28 +240,28 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setIpAddress(payload.getIpAddress());
 		model.setDisplayDomain(payload.getDomain());
-		
+
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());
 		} else {
 			model.setLongDate(payload.getDate());
 		}
-		
+
 		if (payload.getPeriod().isCurrent()) {
 			model.setCreatTime(new Date());
 		} else {
 			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
-		if(payload.getAction()==Action.HISTORY_REPORT){
+		if (payload.getAction() == Action.HISTORY_REPORT) {
 			String type = payload.getReportType();
-			if(type==null||type.length()==0){
+			if (type == null || type.length() == 0) {
 				payload.setReportType("day");
 			}
 			model.setReportType(payload.getReportType());
 			payload.computeStartDate();
 			model.setLongDate(payload.getDate());
 		}
-   }
+	}
 
 	private MobileTransactionGraphs showMobileGraphs(Model model, Payload payload) {
 		TransactionName name = getTransactionName(payload);
@@ -271,8 +282,7 @@ public class Handler implements PageHandler<Context> {
 
 		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
 		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
-		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
-		      "Average Duration (ms)", name));
+		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)", "Average Duration (ms)", name));
 		String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
 
 		model.setGraph1(graph1);
@@ -297,8 +307,7 @@ public class Handler implements PageHandler<Context> {
 					model.setQueryName(queryName);
 				}
 				if (!StringUtils.isEmpty(type)) {
-					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report,
-					      queryName));
+					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report, queryName));
 				} else {
 					model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, report));
 				}
