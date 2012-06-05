@@ -150,12 +150,18 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			m_logger.info("no daily report");
 		}
 
-		String content = null;
+		m_logger.info(String.format("start merge %s report %s in %s: ", reportDomain, reportName, reportPeriod));
 
+		String content = null;
 		try {
 			List<Report> reports = m_reportDao.findAllByDomainNameDuration(yesterdayZero, todayZero, reportDomain, reportName, ReportEntity.READSET_FULL);
 			if ("transaction".equals(reportName)) {
 				TransactionReport transactionReport = mergeTransactionReports(reportDomain, reports);
+				TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
+				TransactionReport transactionReport2 = mergeTransactionReports(reportDomain, reports);
+				Machine allMachines = merger.mergesForAllMachine(transactionReport2);
+				transactionReport.addMachine(allMachines);
+				transactionReport.getIps().add("All");
 				content = transactionReport.toString();
 			} else if ("event".equals(reportName)) {
 				EventReport eventReport = mergeEventReports(reportDomain, reports);
@@ -193,24 +199,26 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 	protected boolean processTask(Task doing) {
 		String reportName = doing.getReportName();
 		String reportDomain = doing.getReportDomain();
-		Date reportPeroid = doing.getReportPeriod();
+		Date reportPeriod = doing.getReportPeriod();
+
+		m_logger.info(String.format("start proecess %s task %s in %s: ", reportDomain, reportName, reportPeriod));
 
 		try {
 			List<Graph> graphs = null;
-			List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeroid, reportDomain, reportName, ReportEntity.READSET_FULL);
+			List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName, ReportEntity.READSET_FULL);
 
 			if ("transaction".equals(reportName)) {
 				TransactionReport transactionReport = mergeTransactionReports(reportDomain, reports);
-				graphs = splitTransactionReportToGraphs(reportPeroid, reportDomain, reportName, transactionReport);
+				graphs = splitTransactionReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
 			} else if ("event".equals(reportName)) {
 				EventReport eventReport = mergeEventReports(reportDomain, reports);
-				graphs = splitEventReportToGraphs(reportPeroid, reportDomain, reportName, eventReport);
+				graphs = splitEventReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
 			} else if ("heartbeat".equals(reportName)) {
 				HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
-				graphs = splitHeartbeatReportToGraphs(reportPeroid, reportDomain, reportName, heartbeatReport);
+				graphs = splitHeartbeatReportToGraphs(reportPeriod, reportDomain, reportName, heartbeatReport);
 			} else if ("problem".equals(reportName)) {
 				ProblemReport problemReport = mergeProblemReports(reportDomain, reports);
-				graphs = splitProblemReportToGraphs(reportPeroid, reportDomain, reportName, problemReport);
+				graphs = splitProblemReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
 			}
 
 			if (graphs != null) {
