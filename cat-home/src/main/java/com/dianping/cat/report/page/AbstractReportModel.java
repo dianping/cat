@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.view.HistoryNav;
 import com.dianping.cat.report.view.UrlNav;
 import com.site.web.mvc.Action;
 import com.site.web.mvc.ActionContext;
@@ -22,6 +23,12 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	private Date m_creatTime;
 
 	private String m_ipAddress;
+	
+	private String m_startDate;
+	
+	private String m_endDate;
+	
+	private String m_reportType;
 	
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
@@ -70,6 +77,16 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 		return UrlNav.values();
 	}
 
+	// required by report history tag
+	public HistoryNav[] getHistoryNavs(){
+		return HistoryNav.values();
+	}
+	
+	// required by current tag()
+	public HistoryNav getCurrentNav(){
+		return 	HistoryNav.getByName(m_reportType);
+	}
+	
 	public void setDisplayDomain(String displayDomain) {
 		m_displayDomain = displayDomain;
 	}
@@ -106,5 +123,29 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	public void setIpAddress(String ipAddress) {
    	m_ipAddress = ipAddress;
+   }
+
+	public String getStartDate() {
+   	return m_startDate;
+   }
+
+	public void setStartDate(String startDate) {
+   	m_startDate = startDate;
+   }
+
+	public String getEndDate() {
+   	return m_endDate;
+   }
+
+	public void setEndDate(String endDate) {
+   	m_endDate = endDate;
+   }
+
+	public String getReportType() {
+   	return m_reportType;
+   }
+
+	public void setReportType(String reportType) {
+   	m_reportType = reportType;
    }
 }

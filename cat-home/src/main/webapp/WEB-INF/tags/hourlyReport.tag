@@ -15,7 +15,9 @@
 	<table class="header">
 		<tr>
 			<td class="title">${title}</td>
-			<td class="timestamp">Generated: ${timestamp}</td>
+			<td class="switch">Browse Mode:Hourly Report 
+				<a href="${model.baseUri}?op=history&domain=${model.domain}">[&nbsp;Switch&nbsp;]</a>
+			</td>
 		</tr>
 	</table>
 

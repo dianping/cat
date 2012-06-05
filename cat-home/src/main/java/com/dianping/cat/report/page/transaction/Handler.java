@@ -2,13 +2,10 @@ package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -17,6 +14,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -35,11 +33,7 @@ import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
-/**
- * @author sean.wang
- * @since Feb 6, 2012
- */
-public class Handler implements PageHandler<Context>, Initializable {
+public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -52,10 +46,10 @@ public class Handler implements PageHandler<Context>, Initializable {
 	@Inject
 	private ServerConfigManager m_manager;
 
-	private Map<Integer, Integer> m_map = new HashMap<Integer, Integer>();
-
 	private StatisticsComputer m_computer = new StatisticsComputer();
-
+	
+	private Gson gson = new Gson();
+	
 	private TransactionName getTransactionName(Payload payload) {
 		String domain = payload.getDomain();
 		String type = payload.getType();
@@ -89,7 +83,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 	}
 
-	private TransactionReport getReport(Payload payload) {
+	private TransactionReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		String ipAddress = payload.getIpAddress();
@@ -101,7 +95,6 @@ public class Handler implements PageHandler<Context>, Initializable {
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
-			// set the tps for every transaction type
 			setTps(payload, report);
 			return report;
 		} else {
@@ -155,7 +148,74 @@ public class Handler implements PageHandler<Context>, Initializable {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setAction(payload.getAction());
+		normalize(model, payload);
+		switch (payload.getAction()) {
+		case HOURLY_REPORT:
+			showHourlyReport(model, payload);
+			break;
+		case HISTORY_REPORT:
+			showSummarizeReport(model,payload);
+			break;
+		case GRAPHS:
+			showComputerGraphs(model, payload);
+			break;
+		case MOBILE:
+			showHourlyReport(model, payload);
+			if (!StringUtils.isEmpty(payload.getType())) {
+				DisplayTransactionNameReport report = model.getDisplayNameReport();
+				String json = gson.toJson(report);
+				model.setMobileResponse(json);
+			} else {
+				DisplayTransactionTypeReport report = model.getDisplayTypeReport();
+				String json = gson.toJson(report);
+				model.setMobileResponse(json);
+			}
+			break;
+		case MOBILE_GRAPHS:
+			MobileTransactionGraphs graphs = showMobileGraphs(model, payload);
+			if (graphs != null) {
+				model.setMobileResponse(gson.toJson(graphs));
+			}
+			break;
+		}
+		m_jspViewer.view(ctx, model);
+	}
+
+	private void showSummarizeReport(Model model, Payload payload) {
+		String type = payload.getType();
+		String sorted = payload.getSortBy();
+		String ip = payload.getIpAddress();
+		if (ip == null) {
+			ip = CatString.ALL_IP;
+		}
+		model.setIpAddress(ip);
+		
+		String oldXml;
+		TransactionReport report = null;
+		try {
+			//TODO
+			Date start = payload.getHistoryStartDate();
+			Date end = payload.getHistoryEndDate();
+			String domain = model.getDomain();
+			oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportOld.xml"), "utf-8");
+			report= new DefaultDomParser().parse(oldXml);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if (report == null) {
+			return;
+		}
+		model.setReport(report);
+		if (!StringUtils.isEmpty(type)) {
+			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report, ""));
+		} else {
+			model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, report));
+		}
+   }
+
+	public void normalize(Model model, Payload payload) {
+	   model.setAction(payload.getAction());
 		model.setPage(ReportPage.TRANSACTION);
 
 		if (StringUtils.isEmpty(payload.getDomain())) {
@@ -169,62 +229,28 @@ public class Handler implements PageHandler<Context>, Initializable {
 		}
 		model.setIpAddress(payload.getIpAddress());
 		model.setDisplayDomain(payload.getDomain());
-
+		
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());
 		} else {
 			model.setLongDate(payload.getDate());
 		}
 		
-		switch (payload.getAction()) {
-		case VIEW:
-			showReport(model, payload);
-			break;
-		case GRAPHS:
-			showGraphs(model, payload);
-			break;
-		case MOBILE:
-			showReport(model, payload);
-			if (!StringUtils.isEmpty(payload.getType())) {
-				DisplayTransactionNameReport report = model.getDisplayNameReport();
-				Gson gson = new Gson();
-				String json = gson.toJson(report);
-				model.setMobileResponse(json);
-			} else {
-				DisplayTransactionTypeReport report = model.getDisplayTypeReport();
-				Gson gson = new Gson();
-				String json = gson.toJson(report);
-				model.setMobileResponse(json);
-			}
-			break;
-		case MOBILE_GRAPHS:
-			MobileTransactionGraphs graphs = showMobileGraphs(model, payload);
-			if (graphs != null) {
-				Gson gson = new Gson();
-				model.setMobileResponse(gson.toJson(graphs));
-			}
-			break;
-		}
 		if (payload.getPeriod().isCurrent()) {
 			model.setCreatTime(new Date());
 		} else {
 			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
-		m_jspViewer.view(ctx, model);
-
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		int k = 1;
-
-		m_map.put(0, 0);
-
-		for (int i = 0; i < 17; i++) {
-			m_map.put(k, i);
-			k <<= 1;
+		if(payload.getAction()==Action.HISTORY_REPORT){
+			String type = payload.getReportType();
+			if(type==null||type.length()==0){
+				payload.setReportType("day");
+			}
+			model.setReportType(payload.getReportType());
+			payload.computeStartDate();
+			model.setLongDate(payload.getDate());
 		}
-	}
+   }
 
 	private MobileTransactionGraphs showMobileGraphs(Model model, Payload payload) {
 		TransactionName name = getTransactionName(payload);
@@ -236,7 +262,7 @@ public class Handler implements PageHandler<Context>, Initializable {
 		return graphs;
 	}
 
-	private void showGraphs(Model model, Payload payload) {
+	private void showComputerGraphs(Model model, Payload payload) {
 		TransactionName name = getTransactionName(payload);
 
 		if (name == null) {
@@ -255,9 +281,9 @@ public class Handler implements PageHandler<Context>, Initializable {
 		model.setGraph4(graph4);
 	}
 
-	private void showReport(Model model, Payload payload) {
+	private void showHourlyReport(Model model, Payload payload) {
 		try {
-			TransactionReport report = getReport(payload);
+			TransactionReport report = getHourlyReport(payload);
 
 			if (report != null) {
 				report.accept(m_computer);

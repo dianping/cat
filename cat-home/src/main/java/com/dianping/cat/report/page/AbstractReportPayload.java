@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import com.dianping.cat.report.ReportPage;
@@ -18,7 +19,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	@FieldMeta("ip")
 	private String m_ipAddress;
-	
+
 	@FieldMeta("domain")
 	private String m_domain;
 
@@ -28,10 +29,90 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	@FieldMeta("hours")
 	private int m_hours;
 
+	@FieldMeta("reportType")
+	private String m_reportType;
+
+	@FieldMeta("nav")
+	private String m_nav;
+
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;
+	}
+
+	public void computeStartDate() {
+		m_date = getDate();
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(m_date);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		m_date = cal.getTimeInMillis();
+		int weekOfDay = cal.get(Calendar.DAY_OF_WEEK);
+
+		if ("month".equals(m_reportType)) {
+			cal.set(Calendar.DATE, 1);
+			m_date = cal.getTimeInMillis();
+		} else if ("week".equals(m_reportType)) {
+			m_date = m_date - (ONE_HOUR) * (weekOfDay - 1) * 24;
+			m_date = m_date + ONE_HOUR * 24;
+			cal.setTimeInMillis(m_date);
+		}
+
+		if ("last".equals(m_nav)) {
+			if ("month".equals(m_reportType)) {
+				cal.add(Calendar.HOUR, -1);
+				int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+				cal.add(Calendar.HOUR, 1);
+				m_date = m_date - maxDay * (ONE_HOUR * 24);
+			} else if ("week".equals(m_reportType)) {
+				m_date = m_date - 7 * (ONE_HOUR * 24);
+			} else {
+				m_date = m_date - (ONE_HOUR * 24);
+			}
+		} else if ("next".equals(m_nav)) {
+			long temp = 0;
+			if ("month".equals(m_reportType)) {
+				cal.add(Calendar.HOUR, 1);
+				int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+				cal.add(Calendar.HOUR, -1);
+				temp = m_date + maxDay * (ONE_HOUR * 24);
+			} else if ("week".equals(m_reportType)) {
+				temp = m_date + 7 * (ONE_HOUR * 24);
+			} else {
+				temp = m_date + (ONE_HOUR * 24);
+			}
+			if (temp <= getCurrentStartDay()) {
+				m_date = temp;
+			}
+		}
+	}
+
+	public Date getHistoryStartDate() {
+		return new Date(m_date);
+	}
+
+	public Date getHistoryEndDate() {
+		long temp = 0;
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(m_date);
+		if ("month".equals(m_reportType)) {
+			int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+			temp = m_date + maxDay * (ONE_HOUR * 24);
+		} else if ("week".equals(m_reportType)) {
+			temp = m_date + 8 * (ONE_HOUR * 24);
+		} else {
+			temp = m_date + (ONE_HOUR * 24);
+		}
+		cal.setTimeInMillis(temp);
+		return cal.getTime();
+	}
+
+	public long getCurrentStartDay() {
+		long timestamp = System.currentTimeMillis();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date(timestamp));
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		return cal.getTimeInMillis();
 	}
 
 	public long getCurrentDate() {
@@ -42,12 +123,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	public long getDate() {
 		long current = getCurrentDate();
-		
+
 		if (m_date <= 0) {
 			return current + m_hours * ONE_HOUR;
 		} else {
 			long result = m_date + m_hours * ONE_HOUR;
-			
+
 			if (result > current) {
 				return current;
 			}
@@ -109,10 +190,27 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	}
 
 	public String getIpAddress() {
-   	return m_ipAddress;
-   }
+		return m_ipAddress;
+	}
 
 	public void setIpAddress(String ipAddress) {
-   	m_ipAddress = ipAddress;
-   }
+		m_ipAddress = ipAddress;
+	}
+
+	public String getReportType() {
+		return m_reportType;
+	}
+
+	public void setReportType(String reportType) {
+		this.m_reportType = reportType;
+	}
+
+	public String getNav() {
+		return m_nav;
+	}
+
+	public void setNav(String nav) {
+		m_nav = nav;
+	}
+
 }

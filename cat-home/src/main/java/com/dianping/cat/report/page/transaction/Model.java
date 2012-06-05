@@ -27,14 +27,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_mobileResponse;
 	
 	private String m_queryName;
-
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.HOURLY_REPORT;
 	}
 
 	@Override
@@ -143,5 +143,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setMobileResponse(String mobileResponse) {
    	m_mobileResponse = mobileResponse;
    }
-	
+
 }

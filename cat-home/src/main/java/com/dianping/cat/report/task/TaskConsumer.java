@@ -26,6 +26,11 @@ public abstract class TaskConsumer implements Runnable{
 	private volatile boolean stopped = false;
 
 	public void run() {
+		try {
+	      Thread.sleep(1000*10);
+      } catch (InterruptedException e) {
+	      e.printStackTrace();
+      }
 		findtask: while (running) {
 			String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 			Task task = findDoingTask(localIp); // find doing task

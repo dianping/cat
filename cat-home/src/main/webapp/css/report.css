@@ -47,6 +47,12 @@
 	font-weight: bold;
 }
 
+.report .header .switch {
+	text-align: right;
+	font-size: small;
+	font-weight: bold;
+}
+
 .report .navbar .nav A {
 	text-decoration: none;
 	color: blue;
