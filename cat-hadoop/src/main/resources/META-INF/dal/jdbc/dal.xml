@@ -61,12 +61,29 @@
 	</entity>
 	<entity name="report" table="report" alias="r">
 		<member name="creation-date" insert-expr="NOW()" />
+		<var name="start-date" value-type="Date" />
+		<var name="end-date" value-type="Date" />
 		<query-defs>
+			<query name="find-all-by-domain-name-duration" type="SELECT"
+				multiple="true">
+				<param name="start-date" />
+				<param name="end-date" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> >= ${start-date}
+					AND <FIELD name='period'/> < ${end-date}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
 			<query name="find-all-by-period-domain-name" type="SELECT"
 				multiple="true">
 				<param name="period" />
 				<param name="domain" />
-				<param name="name" />				
+				<param name="name" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
@@ -74,7 +91,7 @@
 					AND <FIELD name='domain'/> = ${domain}
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
-			</query>		
+			</query>
 			<query name="find-all-by-period-domain-type-name" type="SELECT"
 				multiple="true">
 				<param name="period" />
@@ -118,7 +135,7 @@
 
 	<entity name="task" table="task" alias="t">
 		<query-defs>
-			<query name="find-by-status" type="SELECT">
+			<query name="find-by-status-consumer" type="SELECT">
 				<param name="status" />
 				<param name="consumer" />
 				<statement><![CDATA[
@@ -136,7 +153,7 @@
 					UPDATE <TABLE/>
 					SET <FIELD name='consumer'/>=${consumer}, 
 						<FIELD name='status'/>=2, 
-						<FIELD name='start-date'/>=${start-date}) 
+						<FIELD name='start-date'/>=${start-date}
 					WHERE <FIELD name='status'/> = 1
 					AND <FIELD name='id'/> = ${id};
 				]]></statement>
@@ -146,23 +163,55 @@
 				<statement><![CDATA[
 					UPDATE <TABLE/>
 					SET <FIELD name='status'/>=3, 
-						<FIELD name='end-date'/>=${end-date}) 
+						<FIELD name='end-date'/>=${end-date}
 					WHERE <FIELD name='status'/> = 2
 					AND <FIELD name='id'/> = ${id};
 				]]></statement>
 			</query>
-			
+
 			<query name="update-doing-to-fail" type="UPDATE">
 				<statement><![CDATA[
 					UPDATE <TABLE/>
 					SET <FIELD name='status'/>=4, 
 						<FIELD name='end-date'/>=${end-date},
-						<FIELD name='failure-count'/> = <FIELD name='failure-count'/> + 1) 
+						<FIELD name='failure-count'/> = <FIELD name='failure-count'/> + 1
 					WHERE <FIELD name='status'/> = 2
 					AND <FIELD name='id'/> = ${id};
 				]]></statement>
-			</query>			
+			</query>
 
+		</query-defs>
+	</entity>
+
+	<entity name="dailyreport" table="dailyreport" alias="dr">
+		<query-defs>
+			<query name="find-by-name-domain-period" type="SELECT">
+				<param name="period" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='period'/> = ${period}
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+
+	<entity name="graph" table="graph" alias="g">
+		<query-defs>
+			<query name="insert-or-update" type="INSERT">
+				<statement><![CDATA[
+					INSERT INTO <TABLE/>(<FIELDS/>) 
+					VALUES(<VALUES/>)
+					ON DUPLICATE KEY 
+					UPDATE 
+					<FIELD name='period'/> = ${period} 
+					<FIELD name='creation-date'/> = ${creation-date} 
+				]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 </entities>

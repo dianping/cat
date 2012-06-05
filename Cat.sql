@@ -39,6 +39,7 @@ CREATE TABLE `graph` (
   PRIMARY KEY (`id`)
 )  DEFAULT CHARSET=utf8 COMMENT='用于存放以小时为单位的绘图数据';
 
+CREATE UNIQUE INDEX graph_period_ip_domain_name ON graph (period, ip, domain, name);
 
 CREATE TABLE `dailyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
