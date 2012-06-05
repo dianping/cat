@@ -10,7 +10,6 @@
 <a:simpleReport	title="History Data Trend">
 
 <jsp:body>
-	
 	<res:useCss value='${res.css.local.report_css}' target="head-css" />
 	<res:useCss value='${res.css.local.trend_css}' target="head-css" />
 	<res:useCss value='${res.css.local.jqueryUI_css}' target="head-css" />

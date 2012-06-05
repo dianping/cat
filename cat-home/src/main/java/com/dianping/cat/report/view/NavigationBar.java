@@ -13,9 +13,9 @@ public class NavigationBar {
 
 		ReportPage.EVENT,
 		
-		ReportPage.HEARTBEAT,
-
 		ReportPage.PROBLEM,
+
+		ReportPage.HEARTBEAT,
 
 		ReportPage.IP,
 

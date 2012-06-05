@@ -9,7 +9,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.sql.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.sql.Model"	scope="request" />
 
-<a:report
+<a:noSwitchReport
 	title="SQL Report Created By Hadoop Job , One Hour Delay"
 	navUrlPrefix="domain=${model.domain}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
@@ -61,5 +61,5 @@
 <br>
 <res:useJs value="${res.js.local.sql_js}" target="bottom-js" />
 </jsp:body>
-</a:report>
+</a:noSwitchReport>
 

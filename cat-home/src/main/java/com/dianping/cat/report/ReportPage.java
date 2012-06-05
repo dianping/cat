@@ -17,7 +17,7 @@ public enum ReportPage implements Page {
 
    LOGVIEW("logview", "m", "Logview", "Log View Details", false),
 
-   IP("ip", "ip", "Top IP", "Top Visited IP", true),
+   IP("ip", "ip", "Top IP", "Top Visited IP", false),
 
    MODEL("model", "model", "Model", "Service Model", false),
 

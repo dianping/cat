@@ -20,6 +20,10 @@
       <path>/WEB-INF/tags/hourlyReport.tag</path>
    </tag-file>
    <tag-file>
+      <name>noSwitchReport</name>
+      <path>/WEB-INF/tags/noSwitchReport.tag</path>
+   </tag-file>
+   <tag-file>
       <name>simpleReport</name>
       <path>/WEB-INF/tags/simpleReport.tag</path>
    </tag-file>
