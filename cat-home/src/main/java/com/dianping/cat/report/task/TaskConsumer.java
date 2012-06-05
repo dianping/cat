@@ -28,11 +28,6 @@ public abstract class TaskConsumer implements Runnable {
 	private volatile boolean stopped = false;
 
 	public void run() {
-		try {
-	      Thread.sleep(1000*10);
-      } catch (InterruptedException e) {
-	      e.printStackTrace();
-      }
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		findtask: while (running) {
 			LockSupport.parkNanos(2L * 1000 * 1000 * 1000);
@@ -53,8 +48,9 @@ public abstract class TaskConsumer implements Runnable {
 							continue findtask;
 						}
 					}
-					updateDoingToDone(task);
-					mergeReport(task);
+					if (updateDoingToDone(task)) {
+						mergeReport(task);
+					}
 				}
 			} else {
 				taskNotFoundDuration();
