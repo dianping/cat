@@ -40,7 +40,7 @@ public class TaskConsumerTest {
 		}
 
 		@Override
-		protected void mergeReport() {
+		protected void mergeReport(Task task) {
 			replayer.add(6);
 		}
 
