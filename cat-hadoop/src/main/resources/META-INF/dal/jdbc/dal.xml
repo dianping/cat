@@ -208,7 +208,6 @@
 					VALUES(<VALUES/>)
 					ON DUPLICATE KEY 
 					UPDATE 
-					<FIELD name='period'/> = ${period} 
 					<FIELD name='creation-date'/> = ${creation-date} 
 				]]></statement>
 			</query>

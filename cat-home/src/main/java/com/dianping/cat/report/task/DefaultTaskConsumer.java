@@ -3,6 +3,7 @@
  */
 package com.dianping.cat.report.task;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -151,54 +153,20 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		String content = null;
 
 		try {
-
 			List<Report> reports = m_reportDao.findAllByDomainNameDuration(yesterdayZero, todayZero, reportDomain, reportName, ReportEntity.READSET_FULL);
 			if ("transaction".equals(reportName)) {
-				TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
-
-				for (Report report : reports) {
-					String xml = report.getContent();
-					TransactionReport model = transactionParser.parse(xml);
-					model.accept(merger);
-				}
-
-				TransactionReport transactionReport = merger == null ? null : merger.getTransactionReport();
+				TransactionReport transactionReport = mergeTransactionReports(reportDomain, reports);
 				content = transactionReport.toString();
 			} else if ("event".equals(reportName)) {
-				EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
-
-				for (Report report : reports) {
-					String xml = report.getContent();
-					EventReport model = eventParser.parse(xml);
-					model.accept(merger);
-				}
-
-				EventReport eventReport = merger == null ? null : merger.getEventReport();
+				EventReport eventReport = mergeEventReports(reportDomain, reports);
 				content = eventReport.toString();
 			} else if ("heartbeat".equals(reportName)) {
-				HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportDomain));
-
-				for (Report report : reports) {
-					String xml = report.getContent();
-					HeartbeatReport model = heartbeatParser.parse(xml);
-					model.accept(merger);
-				}
-
-				HeartbeatReport heartbeatReport = merger == null ? null : merger.getHeartbeatReport();
+				HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
 				content = heartbeatReport.toString();
 			} else if ("problem".equals(reportName)) {
-				ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(reportDomain));
-
-				for (Report report : reports) {
-					String xml = report.getContent();
-					ProblemReport model = problemParser.parse(xml);
-					model.accept(merger);
-				}
-
-				ProblemReport problemReport = merger == null ? null : merger.getProblemReport();
+				ProblemReport problemReport = mergeProblemReports(reportDomain, reports);
 				content = problemReport.toString();
 			}
-
 			Dailyreport report = m_dailyReportDao.createLocal();
 			report.setContent(content);
 			report.setCreationDate(new Date());
@@ -232,53 +200,16 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeroid, reportDomain, reportName, ReportEntity.READSET_FULL);
 
 			if ("transaction".equals(reportName)) {
-				TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
-
-				for (Report report : reports) {
-					String xml = report.getContent();
-					TransactionReport model = transactionParser.parse(xml);
-					model.accept(merger);
-				}
-
-				TransactionReport transactionReport = merger == null ? null : merger.getTransactionReport();
-
+				TransactionReport transactionReport = mergeTransactionReports(reportDomain, reports);
 				graphs = splitTransactionReportToGraphs(reportPeroid, reportDomain, reportName, transactionReport);
-
 			} else if ("event".equals(reportName)) {
-				EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
-
-				for (Report report : reports) {
-					String xml = report.getContent();
-					EventReport model = eventParser.parse(xml);
-					model.accept(merger);
-				}
-
-				EventReport eventReport = merger == null ? null : merger.getEventReport();
-
+				EventReport eventReport = mergeEventReports(reportDomain, reports);
 				graphs = splitEventReportToGraphs(reportPeroid, reportDomain, reportName, eventReport);
 			} else if ("heartbeat".equals(reportName)) {
-				HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportDomain));
-
-				for (Report report : reports) {
-					String xml = report.getContent();
-					HeartbeatReport model = heartbeatParser.parse(xml);
-					model.accept(merger);
-				}
-
-				HeartbeatReport heartbeatReport = merger == null ? null : merger.getHeartbeatReport();
-
+				HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
 				graphs = splitHeartbeatReportToGraphs(reportPeroid, reportDomain, reportName, heartbeatReport);
 			} else if ("problem".equals(reportName)) {
-				ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(reportDomain));
-
-				for (Report report : reports) {
-					String xml = report.getContent();
-					ProblemReport model = problemParser.parse(xml);
-					model.accept(merger);
-				}
-
-				ProblemReport problemReport = merger == null ? null : merger.getProblemReport();
-
+				ProblemReport problemReport = mergeProblemReports(reportDomain, reports);
 				graphs = splitProblemReportToGraphs(reportPeroid, reportDomain, reportName, problemReport);
 			}
 
@@ -293,6 +224,60 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			return false;
 		}
 		return true;
+	}
+
+	private ProblemReport mergeProblemReports(String reportDomain, List<Report> reports) throws SAXException, IOException {
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(reportDomain));
+
+		for (Report report : reports) {
+			String xml = report.getContent();
+			ProblemReport model = problemParser.parse(xml);
+			model.accept(merger);
+		}
+
+		ProblemReport problemReport = merger == null ? null : merger.getProblemReport();
+		return problemReport;
+	}
+
+	private HeartbeatReport mergeHeartbeatReports(String reportDomain, List<Report> reports) throws SAXException, IOException {
+		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportDomain));
+
+		for (Report report : reports) {
+			String xml = report.getContent();
+			HeartbeatReport model = heartbeatParser.parse(xml);
+			model.accept(merger);
+		}
+
+		HeartbeatReport heartbeatReport = merger == null ? null : merger.getHeartbeatReport();
+		return heartbeatReport;
+	}
+
+	private EventReport mergeEventReports(String reportDomain, List<Report> reports) throws SAXException, IOException {
+		EventReport eventReport;
+		EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
+
+		for (Report report : reports) {
+			String xml = report.getContent();
+			EventReport model = eventParser.parse(xml);
+			model.accept(merger);
+		}
+
+		eventReport = merger == null ? null : merger.getEventReport();
+		return eventReport;
+	}
+
+	private TransactionReport mergeTransactionReports(String reportDomain, List<Report> reports) throws SAXException, IOException {
+		TransactionReport transactionReport;
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
+
+		for (Report report : reports) {
+			String xml = report.getContent();
+			TransactionReport model = transactionParser.parse(xml);
+			model.accept(merger);
+		}
+
+		transactionReport = merger == null ? null : merger.getTransactionReport();
+		return transactionReport;
 	}
 
 	private List<Graph> splitEventReportToGraphs(Date reportPeroid, String reportDomain, String reportName, EventReport transactionReport) {
@@ -368,12 +353,32 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		}
 
 		Graph allGraph = new Graph();
-		allGraph.setIp(ips.iterator().next());
+		allGraph.setIp(null);
 		allGraph.setDomain(domainName);
 		allGraph.setName(reportName);
 		allGraph.setPeriod(reportPeroid);
 		allGraph.setType(3);
 		allGraph.setCreationDate(creationDate);
+
+		StringBuilder sb = new StringBuilder();
+		for (Entry<String, GraphLine> entry : allGraphCache.entrySet()) {
+			sb.append(entry.getKey());
+			sb.append('\t');
+			GraphLine value = entry.getValue();
+			sb.append(value.totalCount);
+			sb.append('\t');
+			sb.append(value.failCount);
+			sb.append('\t');
+			sb.append(value.min);
+			sb.append('\t');
+			sb.append(value.max);
+			sb.append('\t');
+			sb.append(value.sum);
+			sb.append('\t');
+			sb.append(value.sum2);
+			sb.append('\n');
+		}
+		allGraph.setContent(sb.toString());
 
 		graphs.add(allGraph);
 
