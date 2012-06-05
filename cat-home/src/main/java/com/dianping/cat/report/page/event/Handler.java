@@ -2,10 +2,9 @@ package com.dianping.cat.report.page.event;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
-
-import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -13,10 +12,13 @@ import com.dianping.cat.consumer.event.StatisticsComputer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
+import com.dianping.cat.hadoop.dal.Dailyreport;
+import com.dianping.cat.hadoop.dal.DailyreportDao;
+import com.dianping.cat.hadoop.dal.DailyreportEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -40,6 +42,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_manager;
+	
+	@Inject
+	private DailyreportDao dailyreportDao;
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
@@ -145,6 +150,8 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private com.dianping.cat.consumer.event.model.transform.DefaultDomParser eventParser = new com.dianping.cat.consumer.event.model.transform.DefaultDomParser();
+	
 	private void showSummarizeReport(Model model, Payload payload) {
 		String type = payload.getType();
 		String sorted = payload.getSortBy();
@@ -154,27 +161,31 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setIpAddress(ip);
 		
-		String oldXml;
-		EventReport report = null;
+		EventReport eventReport = null;
 		try {
-			//TODO
 			Date start = payload.getHistoryStartDate();
 			Date end = payload.getHistoryEndDate();
 			String domain = model.getDomain();
-			oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("event.xml"), "utf-8");
-			report= new DefaultDomParser().parse(oldXml);
+			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "event", DailyreportEntity.READSET_FULL);
+			EventReportMerger merger = new EventReportMerger(new EventReport(domain));
+			for (Dailyreport report : reports) {
+				String xml = report.getContent();
+				EventReport reportModel = eventParser.parse(xml);
+				reportModel.accept(merger);
+			}
+			eventReport = merger == null ? null : merger.getEventReport();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		if (report == null) {
+		if (eventReport == null) {
 			return;
 		}
-		model.setReport(report);
+		model.setReport(eventReport);
 		if (!StringUtils.isEmpty(type)) {
-			model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, ip, report));
+			model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, ip, eventReport));
 		} else {
-			model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, ip, report));
+			model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, ip, eventReport));
 		}	   
    }
 
