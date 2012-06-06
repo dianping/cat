@@ -11,7 +11,6 @@
 	var urlResponseTrend = ${model.urlResponseTrend};
 	var callResponseTrend = ${model.callResponseTrend};
 	var sqlResponseTrend = ${model.sqlResponseTrend};	
-	
 	var urlHitTrend = ${model.urlHitTrend};
 	var callHitTrend = ${model.callHitTrend};
 	var sqlHitTrend = ${model.sqlHitTrend};

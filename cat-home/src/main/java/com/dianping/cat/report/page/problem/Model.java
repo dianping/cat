@@ -36,6 +36,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_error;
 	
+	private String m_urlError;
+	
 	private String m_longUrl;
 	
 	private String m_longSql;
@@ -79,6 +81,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public String getError() {
+   	return m_error;
+   }
+
 	public GroupLevelInfo getGroupLevelInfo() {
 		return m_groupLevelInfo;
 	}
@@ -103,6 +109,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_lastMinute;
 	}
 
+	public String getLongSql() {
+   	return m_longSql;
+   }
+
+	public String getLongUrl() {
+   	return m_longUrl;
+   }
+
 	public int getMinuteLast() {
 		if (m_currentMinute == 0) {
 			return 0;
@@ -116,6 +130,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 		return m_currentMinute + 1;
 	}
+
+	public String getMobileResponse() {
+   	return m_mobileResponse;
+   }
 
 	public ProblemStatistics getProblemStatistics() {
 		return m_problemStatistics;
@@ -137,6 +155,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_threshold;
 	}
 
+	public String getUrlError() {
+   	return m_urlError;
+   }
+
 	public void setAllStatistics(ProblemStatistics allStatistics) {
 		m_allStatistics = allStatistics;
 	}
@@ -148,6 +170,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setDefaultThreshold(String defaultThreshold) {
 		m_defaultThreshold = defaultThreshold;
 	}
+
+	public void setError(String error) {
+   	m_error = error;
+   }
 
 	public void setGroupLevelInfo(GroupLevelInfo groupLevelInfo) {
 		m_groupLevelInfo = groupLevelInfo;
@@ -164,6 +190,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setLastMinute(int lastMinute) {
 		m_lastMinute = lastMinute;
 	}
+
+	public void setLongSql(String longSql) {
+   	m_longSql = longSql;
+   }
+
+	public void setLongUrl(String longUrl) {
+   	m_longUrl = longUrl;
+   }
+
+	public void setMobileResponse(String mobileResponse) {
+   	m_mobileResponse = mobileResponse;
+   }
 
 	public void setProblemStatistics(ProblemStatistics problemStatistics) {
 		m_problemStatistics = problemStatistics;
@@ -185,12 +223,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_threshold = threshold;
 	}
 
-	public String getMobileResponse() {
-   	return m_mobileResponse;
-   }
-
-	public void setMobileResponse(String mobileResponse) {
-   	m_mobileResponse = mobileResponse;
+	public void setUrlError(String urlError) {
+   	m_urlError = urlError;
    }
 
 }

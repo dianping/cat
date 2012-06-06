@@ -227,7 +227,6 @@ public class Handler implements PageHandler<Context> {
 		}
 		item.addValue(ylable1);
 		model.setUrlHitTrend(item.getJsonString());
-
 		
 		// For Call
 		item.setTitles(" Call Response Trend");
@@ -247,7 +246,6 @@ public class Handler implements PageHandler<Context> {
 		}
 		item.addValue(ylable1);
 		model.setCallHitTrend(item.getJsonString());
-
 		
 		item.setTitles(" SQL Response Trend");
 		item.getValues().clear();
