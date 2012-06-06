@@ -65,10 +65,10 @@ CREATE TABLE `comment` (
 
 CREATE TABLE `task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `producer` varchar(20) NOT NULL COMMENT '任务创建者ip',
-  `consumer`  varchar(20) NULL COMMENT '任务执行者ip',
-  `failure_count`  tinyint(4) NOT NULL COMMENT '任务失败次数',
-  `report_name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
+  `producer`      varchar(20) NOT NULL COMMENT '任务创建者ip',
+  `consumer`      varchar(20) NULL COMMENT '任务执行者ip',
+  `failure_count` tinyint(4) NOT NULL COMMENT '任务失败次数',
+  `report_name`   varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
   `report_domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',  
   `report_period` datetime NOT NULL  COMMENT '报表时间',
   `status`        tinyint(4) NOT NULL COMMENT '执行状态: 1/todo, 2/doing, 3/done 4/failed',  
@@ -78,10 +78,12 @@ CREATE TABLE `task` (
   PRIMARY KEY (`id`)
 )  DEFAULT CHARSET=utf8 COMMENT='用于存放故障/事件信息';
 
+CREATE UNIQUE INDEX task_period_domain_name ON task (report_period, report_domain, report_name);
+
 CREATE TABLE `graph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(20) NULL COMMENT '报表来自于哪台cat-client机器ip, 空串表示合并同domain所有ip',
+  `ip` varchar(20) NULL COMMENT '报表来自于哪台cat-client机器ip, NULL表示合并同domain所有ip',
   `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',

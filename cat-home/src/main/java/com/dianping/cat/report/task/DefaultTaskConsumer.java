@@ -150,7 +150,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			m_logger.info("no daily report");
 		}
 
-		m_logger.info(String.format("start merge %s report %s in %s: ", reportDomain, reportName, reportPeriod));
+		m_logger.info(String.format("start merge %s report:%s from %s to %s: ", reportName, reportDomain, yesterdayZero, todayZero));
 
 		String content = null;
 		try {
@@ -228,7 +228,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 			if (graphs != null) {
 				for (Graph graph : graphs) {
-					this.graphDao.insertOrUpdate(graph); // use mysql unique index and insert on duplicate
+					this.graphDao.insert(graph); // use mysql unique index and insert on duplicate
 				}
 			}
 
