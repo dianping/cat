@@ -56,7 +56,7 @@ public class LocalLogViewService extends BaseLocalModelService<String> {
 		}
 
 		if (tree != null) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8096);
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 			m_codec.encode(tree, buf);
 			buf.readInt(); // get rid of length

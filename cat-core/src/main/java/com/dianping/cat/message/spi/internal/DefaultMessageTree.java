@@ -166,7 +166,7 @@ public class DefaultMessageTree implements MessageTree {
 	@Override
 	public String toString() {
 		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8096);
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
 		codec.encode(this, buf);
 		buf.readInt(); // get rid of length
