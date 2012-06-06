@@ -11,8 +11,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	public void setAction(Action action) {
-		m_action = action;
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	@Override
@@ -32,5 +32,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
+		if(m_action==null){
+			m_action=Action.VIEW;
+		}
 	}
 }
