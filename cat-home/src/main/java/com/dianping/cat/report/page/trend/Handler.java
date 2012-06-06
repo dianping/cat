@@ -38,29 +38,7 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setGraphType(graphType);
 		
-		String start = payload.getStartDate();
-		String end = payload.getEndDate();
-		
-		
-		GraphItem item = new GraphItem();
-		item.setTitles("This is a test!");
-		String[] xlable = new String[192];
-		double[] ylable1 = new double[192];
-		double[] ylable2 = new double[192];
-		double[] ylable3 = new double[192];
-		for (int i = 0; i < 192; i++) {
-			xlable[i] = String.valueOf(i);
-			ylable1[i] = Math.random() * 192;
-			ylable2[i] = Math.random() * 192;
-			ylable3[i] = Math.random() * 192;
-		}
-		item.setXlabel(xlable);
-		item.setYlable(new double[] { 0, 2, 4, 6, 8, 10 });
-		item.addValue(ylable1);
-		item.addValue(ylable2);
-		item.addValue(ylable3);
-		item.addSubTitle("test1").addSubTitle("test2").addSubTitle("test3");
-		model.setGraph(item.getJsonString());
+
 		m_jspViewer.view(ctx, model);
 	}
 

@@ -15,6 +15,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
@@ -46,6 +47,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DailyreportDao dailyreportDao;
 
+	private DefaultDomParser problemParser = new DefaultDomParser();
+	
 	private Gson gson = new Gson();
 
 	private int getHour(long date) {
@@ -177,7 +180,6 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private com.dianping.cat.consumer.problem.model.transform.DefaultDomParser problemParser = new com.dianping.cat.consumer.problem.model.transform.DefaultDomParser();
 
 	private ProblemReport showSummarizeReport(Model model, Payload payload) {
 		String domain = model.getDomain();

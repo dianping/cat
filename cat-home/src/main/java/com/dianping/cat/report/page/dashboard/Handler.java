@@ -4,7 +4,9 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.model.spi.ModelService;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
@@ -15,6 +17,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
+	@Inject(type = ModelService.class, value = "transaction")
+	private ModelService<TransactionReport> m_service;
+	
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "dashboard")

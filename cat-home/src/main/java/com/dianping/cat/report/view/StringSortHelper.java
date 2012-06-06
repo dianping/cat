@@ -57,11 +57,17 @@ public class StringSortHelper {
 	public static class DomainComparator implements Comparator<String> {
 		@Override
 		public int compare(String d1, String d2) {
-			if (d1.equals("Cat")) {
+			if ("Cat".equals(d1)) {
 				return 1;
 			}
-			if (d2.equals("Cat")) {
+			if ("Cat".equals(d2)) {
 				return -1;
+			}
+			if ("All".equals(d1)) {
+				return -1;
+			}
+			if ("All".equals(d2)) {
+				return +1;
 			}
 			return d1.compareTo(d2);
 		}

@@ -16,7 +16,7 @@
 		<tr>
 			<td class="title">${title}</td>
 			<td class="switch">Browse Mode:History Summarize Report 
-				<a href="?domain=${model.domain}">[&nbsp;Switch&nbsp;]&nbsp;</a>
+				[&nbsp;<a href="?domain=${model.domain}&date=${model.date}">Hourly Mode</a>&nbsp;]&nbsp;
 			</td>
 		</tr>
 	</table>
@@ -37,8 +37,8 @@
 				</div>
 			</td>
 			<td class="nav">
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&date=${model.date}&reportType=${model.reportType}&nav=last">${model.currentNav.last}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&date=${model.date}&reportType=${model.reportType}&nav=next">${model.currentNav.next}</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
 					&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&reportType=${model.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
 			</td>
 		</tr>

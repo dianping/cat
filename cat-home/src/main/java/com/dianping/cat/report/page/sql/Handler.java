@@ -55,7 +55,7 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		// Last hour is default
 		if (payload.getPeriod().isCurrent()) {
-			payload.setHours(payload.getHours() - 1);
+			payload.setStep(payload.getStep() - 1);
 		}
 		switch (payload.getAction()) {
 		case VIEW:

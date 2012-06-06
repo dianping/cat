@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
@@ -27,6 +28,7 @@ import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
+import com.dianping.cat.report.page.trend.GraphItem;
 import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
@@ -53,6 +55,8 @@ public class Handler implements PageHandler<Context> {
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
+	private DefaultDomParser transactionParser = new DefaultDomParser();
+
 	private Gson gson = new Gson();
 
 	private TransactionName getTransactionName(Payload payload) {
@@ -63,10 +67,10 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-				.setProperty("date", date) //
-				.setProperty("type", payload.getType()) //
-				.setProperty("name", payload.getName())//
-				.setProperty("ip", ipAddress);
+		      .setProperty("date", date) //
+		      .setProperty("type", payload.getType()) //
+		      .setProperty("name", payload.getName())//
+		      .setProperty("ip", ipAddress);
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
@@ -93,9 +97,9 @@ public class Handler implements PageHandler<Context> {
 		String date = String.valueOf(payload.getDate());
 		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-				.setProperty("date", date) //
-				.setProperty("type", payload.getType())//
-				.setProperty("ip", ipAddress);
+		      .setProperty("date", date) //
+		      .setProperty("type", payload.getType())//
+		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
@@ -160,6 +164,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_REPORT:
 			showSummarizeReport(model, payload);
+			buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
 			showComputerGraphs(model, payload);
@@ -186,7 +191,52 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser transactionParser = new com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser();
+	private void buildTrendGraph(Model model, Payload payload) {
+		Date start = payload.getHistoryEndDate();
+		Date end = payload.getHistoryEndDate();
+		String domain = model.getDomain();
+
+		long current = System.currentTimeMillis();
+		current = current - current % (3600 * 1000);
+
+		long date = current - 24 * 3600 * 1000;
+		start = new Date(date);
+		end = new Date(current);
+		int size = (int) (current - date) / (3600 * 1000);
+
+		GraphItem item = new GraphItem();
+		item.setStart(start);
+		item.setSize(size);
+
+		//TO GET The Data from database
+		//TODO
+		// For URL
+		item.setTitles(" URL Response Trend");
+		double[] ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setUrlTrend(item.getJsonString());
+
+		// For Call
+		item.getValues().clear();
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setCallTrend(item.getJsonString());
+
+		item.setTitles(" SQL Response Trend");
+		item.getValues().clear();
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setSqlTrend(item.getJsonString());
+	}
 
 	private void showSummarizeReport(Model model, Payload payload) {
 		String type = payload.getType();
@@ -202,7 +252,8 @@ public class Handler implements PageHandler<Context> {
 			Date start = payload.getHistoryStartDate();
 			Date end = payload.getHistoryEndDate();
 			String domain = model.getDomain();
-			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "transaction", DailyreportEntity.READSET_FULL);
+			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
+			      DailyreportEntity.READSET_FULL);
 			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 			for (Dailyreport report : reports) {
 				String xml = report.getContent();
@@ -282,7 +333,8 @@ public class Handler implements PageHandler<Context> {
 
 		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
 		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
-		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)", "Average Duration (ms)", name));
+		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
+		      "Average Duration (ms)", name));
 		String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
 
 		model.setGraph1(graph1);
@@ -307,7 +359,8 @@ public class Handler implements PageHandler<Context> {
 					model.setQueryName(queryName);
 				}
 				if (!StringUtils.isEmpty(type)) {
-					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report, queryName));
+					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report,
+					      queryName));
 				} else {
 					model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, report));
 				}

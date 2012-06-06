@@ -70,9 +70,6 @@
 			<option value="event">event</option>
 			<option value="problem">problem</option>
 		</select>
-		ip:<input type='text' id="ip" value="${model.queryIP}" size="10"></input> 
-			Type:<input type='text' id="type" value="${model.queryType}" size="10"></input> 
-			<span id="status">Name:</span><input type='text' id="nameOrStatus" value="${model.queryName}" size="10"></input>
 			<input type="button" value="search" onclick="searchReport('${model.domain}','${model.graphType}')" /></td>
 	</tr>
 </table>

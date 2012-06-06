@@ -27,6 +27,8 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	private String m_reportType;
 	
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+	
+	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
 
 	public AbstractReportModel(M ctx) {
 		super(ctx);
@@ -43,6 +45,9 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	// required by report tag
 	public String getDate() {
+		if(m_reportType!=null&&m_reportType.length()>0){
+			return m_dayFormat.format(new Date(m_date));
+		}
 		return m_dateFormat.format(new Date(m_date));
 	}
 
