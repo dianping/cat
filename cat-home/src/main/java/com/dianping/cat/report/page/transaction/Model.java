@@ -28,11 +28,17 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_queryName;
 	
-	private String m_urlTrend;
+	private String m_urlResponseTrend;
 	
-	private String m_callTrend;
+	private String m_urlHitTrend;
 	
-	private String m_sqlTrend;
+	private String m_callResponseTrend;
+
+	private String m_callHitTrend;
+	
+	private String m_sqlResponseTrend;
+	
+	private String m_sqlHitTrend;
 	
 	public Model(Context ctx) {
 		super(ctx);
@@ -150,28 +156,51 @@ public class Model extends AbstractReportModel<Action, Context> {
    	m_mobileResponse = mobileResponse;
    }
 
-	public String getUrlTrend() {
-   	return m_urlTrend;
+	public String getUrlResponseTrend() {
+   	return m_urlResponseTrend;
    }
 
-	public void setUrlTrend(String urlTrend) {
-   	m_urlTrend = urlTrend;
+	public void setUrlResponseTrend(String urlResponseTrend) {
+   	m_urlResponseTrend = urlResponseTrend;
    }
 
-	public String getCallTrend() {
-   	return m_callTrend;
+	public String getUrlHitTrend() {
+   	return m_urlHitTrend;
    }
 
-	public void setCallTrend(String callTrend) {
-   	m_callTrend = callTrend;
+	public void setUrlHitTrend(String urlHitTrend) {
+   	m_urlHitTrend = urlHitTrend;
    }
 
-	public String getSqlTrend() {
-   	return m_sqlTrend;
+	public String getCallResponseTrend() {
+   	return m_callResponseTrend;
    }
 
-	public void setSqlTrend(String sqlTrend) {
-   	m_sqlTrend = sqlTrend;
+	public void setCallResponseTrend(String callResponseTrend) {
+   	m_callResponseTrend = callResponseTrend;
    }
 
+	public String getCallHitTrend() {
+   	return m_callHitTrend;
+   }
+
+	public void setCallHitTrend(String callHitTrend) {
+   	m_callHitTrend = callHitTrend;
+   }
+
+	public String getSqlResponseTrend() {
+   	return m_sqlResponseTrend;
+   }
+
+	public void setSqlResponseTrend(String sqlResponseTrend) {
+   	m_sqlResponseTrend = sqlResponseTrend;
+   }
+
+	public String getSqlHitTrend() {
+   	return m_sqlHitTrend;
+   }
+
+	public void setSqlHitTrend(String sqlHitTrend) {
+   	m_sqlHitTrend = sqlHitTrend;
+   }
 }

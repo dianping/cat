@@ -45,17 +45,7 @@ tr.link td {
 	font-weight: normal;
 }
 
-#urlTrend {
-	width: 550px;
-	height: 300px;
-	margin: 4px auto;
-}
-#callTrend {
-	width: 550px;
-	height: 300px;
-	margin: 4px auto;
-}
-#sqlTrend {
+.graph {
 	width: 550px;
 	height: 300px;
 	margin: 4px auto;

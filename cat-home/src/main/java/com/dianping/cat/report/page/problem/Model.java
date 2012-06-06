@@ -34,6 +34,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_mobileResponse;
 	
+	private String m_error;
+	
+	private String m_longUrl;
+	
+	private String m_longSql;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}

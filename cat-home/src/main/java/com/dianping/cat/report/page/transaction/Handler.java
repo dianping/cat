@@ -217,17 +217,38 @@ public class Handler implements PageHandler<Context> {
 			ylable1[i] = Math.random() * 192;
 		}
 		item.addValue(ylable1);
-		model.setUrlTrend(item.getJsonString());
+		model.setUrlResponseTrend(item.getJsonString());
 
-		// For Call
+		item.setTitles(" URL Hit Trend");
 		item.getValues().clear();
 		ylable1 = new double[size];
 		for (int i = 0; i < size; i++) {
 			ylable1[i] = Math.random() * 192;
 		}
 		item.addValue(ylable1);
-		model.setCallTrend(item.getJsonString());
+		model.setUrlHitTrend(item.getJsonString());
 
+		
+		// For Call
+		item.setTitles(" Call Response Trend");
+		item.getValues().clear();
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setCallResponseTrend(item.getJsonString());
+		
+		item.setTitles(" Call Hit Trend");
+		item.getValues().clear();
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setCallHitTrend(item.getJsonString());
+
+		
 		item.setTitles(" SQL Response Trend");
 		item.getValues().clear();
 		ylable1 = new double[size];
@@ -235,7 +256,17 @@ public class Handler implements PageHandler<Context> {
 			ylable1[i] = Math.random() * 192;
 		}
 		item.addValue(ylable1);
-		model.setSqlTrend(item.getJsonString());
+		model.setSqlResponseTrend(item.getJsonString());
+		
+		item.setTitles(" SQL Hit Trend");
+		item.getValues().clear();
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setSqlHitTrend(item.getJsonString());
+
 	}
 
 	private void showSummarizeReport(Model model, Payload payload) {

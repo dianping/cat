@@ -91,6 +91,9 @@ function graph(container, data) {
 	});
 }
 
-graph(document.getElementById("urlTrend"), urlTrend);
-graph(document.getElementById("sqlTrend"), sqlTrend);
-graph(document.getElementById("callTrend"), callTrend);
+graph(document.getElementById("urlHitTrend"), urlHitTrend);
+graph(document.getElementById("sqlHitTrend"), sqlHitTrend);
+graph(document.getElementById("callHitTrend"), callHitTrend);
+graph(document.getElementById("urlResponseTrend"), urlResponseTrend);
+graph(document.getElementById("sqlResponseTrend"), sqlResponseTrend);
+graph(document.getElementById("callResponseTrend"), callResponseTrend);

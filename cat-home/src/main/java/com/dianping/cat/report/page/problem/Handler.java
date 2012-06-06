@@ -141,6 +141,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReport(report);
 			model.setAllStatistics(problemStatistics);
+			buildTrendGraph(model, payload); 
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -180,6 +181,11 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+
+	private void buildTrendGraph(Model model, Payload payload) {
+	   // TODO Auto-generated method stub
+	   
+   }
 
 	private ProblemReport showSummarizeReport(Model model, Payload payload) {
 		String domain = model.getDomain();

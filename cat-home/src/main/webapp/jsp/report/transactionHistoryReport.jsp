@@ -8,9 +8,13 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 
 <script>
-	var urlTrend = ${model.urlTrend};
-	var callTrend = ${model.callTrend};
-	var sqlTrend = ${model.sqlTrend};
+	var urlResponseTrend = ${model.urlResponseTrend};
+	var callResponseTrend = ${model.callResponseTrend};
+	var sqlResponseTrend = ${model.sqlResponseTrend};	
+	
+	var urlHitTrend = ${model.urlHitTrend};
+	var callHitTrend = ${model.callHitTrend};
+	var sqlHitTrend = ${model.sqlHitTrend};
 </script>
 
 <a:historyReport title="History Report">
@@ -120,11 +124,16 @@
 
 <table>
 	<tr>
-		<td><div id="urlTrend"></div>	</td>
-		<td><div id="callTrend"></div>	</td>
+		<td><div id="urlResponseTrend" class="graph"></div>	</td>
+		<td><div id="urlHitTrend" class="graph"></div>	</td>
 	</tr>
-	<tr>
-		<td><div id="sqlTrend"></div>	</td>
+		<tr>
+		<td><div id="callResponseTrend" class="graph"></div>	</td>
+		<td><div id="callHitTrend" class="graph"></div>	</td>
+	</tr>
+		<tr>
+		<td><div id="sqlResponseTrend" class="graph"></div>	</td>
+		<td><div id="sqlHitTrend" class="graph"></div>	</td>
 	</tr>
 </table>
 
