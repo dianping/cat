@@ -28,17 +28,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_queryName;
 	
-	private String m_urlResponseTrend;
+	private String m_responseTrend;
 	
-	private String m_urlHitTrend;
-	
-	private String m_callResponseTrend;
-
-	private String m_callHitTrend;
-	
-	private String m_sqlResponseTrend;
-	
-	private String m_sqlHitTrend;
+	private String m_hitTrend;
 	
 	public Model(Context ctx) {
 		super(ctx);
@@ -156,51 +148,20 @@ public class Model extends AbstractReportModel<Action, Context> {
    	m_mobileResponse = mobileResponse;
    }
 
-	public String getUrlResponseTrend() {
-   	return m_urlResponseTrend;
+	public String getResponseTrend() {
+   	return m_responseTrend;
    }
 
-	public void setUrlResponseTrend(String urlResponseTrend) {
-   	m_urlResponseTrend = urlResponseTrend;
+	public void setResponseTrend(String responseTrend) {
+   	m_responseTrend = responseTrend;
    }
 
-	public String getUrlHitTrend() {
-   	return m_urlHitTrend;
+	public String getHitTrend() {
+   	return m_hitTrend;
    }
 
-	public void setUrlHitTrend(String urlHitTrend) {
-   	m_urlHitTrend = urlHitTrend;
+	public void setHitTrend(String hitTrend) {
+   	m_hitTrend = hitTrend;
    }
-
-	public String getCallResponseTrend() {
-   	return m_callResponseTrend;
-   }
-
-	public void setCallResponseTrend(String callResponseTrend) {
-   	m_callResponseTrend = callResponseTrend;
-   }
-
-	public String getCallHitTrend() {
-   	return m_callHitTrend;
-   }
-
-	public void setCallHitTrend(String callHitTrend) {
-   	m_callHitTrend = callHitTrend;
-   }
-
-	public String getSqlResponseTrend() {
-   	return m_sqlResponseTrend;
-   }
-
-	public void setSqlResponseTrend(String sqlResponseTrend) {
-   	m_sqlResponseTrend = sqlResponseTrend;
-   }
-
-	public String getSqlHitTrend() {
-   	return m_sqlHitTrend;
-   }
-
-	public void setSqlHitTrend(String sqlHitTrend) {
-   	m_sqlHitTrend = sqlHitTrend;
-   }
+	
 }

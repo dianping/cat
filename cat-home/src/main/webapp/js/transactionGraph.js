@@ -90,5 +90,6 @@ function graph(container, data) {
 		graph = drawGraph();
 	});
 }
-graph(document.getElementById('responseTrend'),responseTrend);
-graph(document.getElementById('hitTrend'),hitTrend);
+
+graph(document.getElementById("responseTrend"), responseTrend);
+graph(document.getElementById("hitTrend"), hitTrend);

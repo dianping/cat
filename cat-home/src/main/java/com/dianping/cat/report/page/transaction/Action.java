@@ -2,14 +2,16 @@ package com.dianping.cat.report.page.transaction;
 
 public enum Action implements com.site.web.mvc.Action {
 	HOURLY_REPORT("view"),
-
+	
 	GRAPHS("graphs"),
 
 	MOBILE("mobile"),
 
 	MOBILE_GRAPHS("mobile_graphs"),
 
-	HISTORY_REPORT("history");
+	HISTORY_REPORT("history"),
+	
+	HITORY_GRAPH("historyGraph");
 	
 	private String m_name;
 

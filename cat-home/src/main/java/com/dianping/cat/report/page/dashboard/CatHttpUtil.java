@@ -9,7 +9,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-public class CatHttp {
+public class CatHttpUtil {
 
 	private static Gson gson = new Gson();
 

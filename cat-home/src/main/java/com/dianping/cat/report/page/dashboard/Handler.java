@@ -6,8 +6,6 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
-import org.mortbay.util.ajax.JSON;
-
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.ReportPage;
@@ -47,7 +45,6 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.DASHBOARD);
 		String domain = "Cat";
 		TransactionReport report = getHourlyReport(domain);
-		System.out.println(report);
 		 
 		TransactionType detail = report.getMachines().get("All").getTypes().get("URL");
 		detail.getTotalCount();

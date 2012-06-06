@@ -7,20 +7,10 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.transaction.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 
-<script>
-	var urlResponseTrend = ${model.urlResponseTrend};
-	var callResponseTrend = ${model.callResponseTrend};
-	var sqlResponseTrend = ${model.sqlResponseTrend};	
-	var urlHitTrend = ${model.urlHitTrend};
-	var callHitTrend = ${model.callHitTrend};
-	var sqlHitTrend = ${model.sqlHitTrend};
-</script>
-
 <a:historyReport title="History Report">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.transaction_css}" target="head-css" />
-	<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
 </br>
 
 <table class="machines">
@@ -64,8 +54,9 @@
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align: left"><a
-								href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">${item.type}</a></td>
+					<td style="text-align: left">
+							<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">[:: show ::]</a>
+							<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">${item.type}</a></td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
@@ -78,6 +69,7 @@
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
+				<tr class="graphs"><td colspan="10"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
@@ -101,7 +93,8 @@
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align: left">${e.id}</td>
+					<td style="text-align: left"><a href="?op=historyGraphs&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+					${e.id}</td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
@@ -114,6 +107,7 @@
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
+				<tr class="graphs"><td colspan="10"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
@@ -121,22 +115,7 @@
 
 </br>
 
-<table>
-	<tr>
-		<td><div id="urlResponseTrend" class="graph"></div>	</td>
-		<td><div id="urlHitTrend" class="graph"></div>	</td>
-	</tr>
-		<tr>
-		<td><div id="callResponseTrend" class="graph"></div>	</td>
-		<td><div id="callHitTrend" class="graph"></div>	</td>
-	</tr>
-		<tr>
-		<td><div id="sqlResponseTrend" class="graph"></div>	</td>
-		<td><div id="sqlHitTrend" class="graph"></div>	</td>
-	</tr>
-</table>
-
-<res:useJs value="${res.js.local.transactionHistory_js}" target="bottom-js" />
+<res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
 </jsp:body>
 
 </a:historyReport>

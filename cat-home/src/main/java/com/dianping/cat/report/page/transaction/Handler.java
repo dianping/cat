@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.transaction;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -164,6 +165,8 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_REPORT:
 			showSummarizeReport(model, payload);
+			break;
+		case HITORY_GRAPH:
 			buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
@@ -192,10 +195,13 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildTrendGraph(Model model, Payload payload) {
-		Date start = payload.getHistoryEndDate();
+		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		String domain = model.getDomain();
-
+		String ip = model.getIpAddress();
+		String type = model.getType();
+		String name = payload.getName();
+		
 		long current = System.currentTimeMillis();
 		current = current - current % (3600 * 1000);
 
@@ -214,10 +220,11 @@ public class Handler implements PageHandler<Context> {
 		item.setTitles(" URL Response Trend");
 		double[] ylable1 = new double[size];
 		for (int i = 0; i < size; i++) {
+			//TODO
 			ylable1[i] = Math.random() * 192;
 		}
 		item.addValue(ylable1);
-		model.setUrlResponseTrend(item.getJsonString());
+		model.setResponseTrend(item.getJsonString());
 
 		item.setTitles(" URL Hit Trend");
 		item.getValues().clear();
@@ -226,44 +233,7 @@ public class Handler implements PageHandler<Context> {
 			ylable1[i] = Math.random() * 192;
 		}
 		item.addValue(ylable1);
-		model.setUrlHitTrend(item.getJsonString());
-		
-		// For Call
-		item.setTitles(" Call Response Trend");
-		item.getValues().clear();
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setCallResponseTrend(item.getJsonString());
-		
-		item.setTitles(" Call Hit Trend");
-		item.getValues().clear();
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setCallHitTrend(item.getJsonString());
-		
-		item.setTitles(" SQL Response Trend");
-		item.getValues().clear();
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setSqlResponseTrend(item.getJsonString());
-		
-		item.setTitles(" SQL Hit Trend");
-		item.getValues().clear();
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setSqlHitTrend(item.getJsonString());
+		model.setHitTrend(item.getJsonString());
 
 	}
 
@@ -306,7 +276,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public void normalize(Model model, Payload payload) {
-		model.setAction(payload.getAction());
+		Action action = payload.getAction();
+		model.setAction(action);
 		model.setPage(ReportPage.TRANSACTION);
 
 		if (StringUtils.isEmpty(payload.getDomain())) {
@@ -332,7 +303,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
-		if (payload.getAction() == Action.HISTORY_REPORT) {
+		if (action == Action.HISTORY_REPORT||action==Action.HITORY_GRAPH) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {
 				payload.setReportType("day");
@@ -401,4 +372,16 @@ public class Handler implements PageHandler<Context> {
 			model.setException(e);
 		}
 	}
+
+	
+	public Map<String,double[]> getDetailInfo(Model model,Payload payload){
+		Date start = payload.getHistoryEndDate();
+		Date end = payload.getHistoryEndDate();
+		String domain = model.getDomain();
+		String type = payload.getType();
+		String name = payload.getName();
+		String ip = model.getIpAddress();
+		return null;
+	}
+	
 }

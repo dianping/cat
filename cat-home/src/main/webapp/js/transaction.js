@@ -35,8 +35,6 @@ $(document).delegate('.graph_link', 'click', function(e){
 	}	
 });
 
-$("#queryname").val($("#hiddenQuery").val()) ;
-
 function selectByName(date,domain,ip,type){
 	var queryname=$("#queryname").val();
 	window.location.href="?domain="+domain+"&type="+type+"&date="+date+"&queryname="+queryname+"&ip="+ip;

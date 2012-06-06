@@ -9,7 +9,9 @@ public enum JspFile {
 	
 	MOBILE_GRAPHS("/jsp/report/transactionMobile.jsp"),
 	
-	HISTORY_REPORT("/jsp/report/transactionHistoryReport.jsp");
+	HISTORY_REPORT("/jsp/report/transactionHistoryReport.jsp"),
+	
+	HISTORY_GRAPH("/jsp/report/transactionHistoryGraphs.jsp");
 	
 	private String m_path;
 
