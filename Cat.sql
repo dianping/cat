@@ -116,3 +116,14 @@ CREATE TABLE `dailygraph` (
   PRIMARY KEY (`id`)
 )  DEFAULT CHARSET=utf8 COMMENT='用于存放以天为单位的绘图数据';
 
+CREATE TABLE `location` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `lat` double NOT NULL,
+  `lng` double NOT NULL,
+  `total` int(11) NOT NULL,
+  `transaction_date` datetime NOT NULL,
+  `creation_date` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) DEFAULT CHARSET=utf8 COMMENT='热点数据';
+
+CREATE UNIQUE INDEX transaction_date_lat_lng ON location (transaction_date, lat, lng); 
