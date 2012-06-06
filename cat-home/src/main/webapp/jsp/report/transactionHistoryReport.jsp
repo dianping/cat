@@ -136,8 +136,7 @@
 	</tr>
 </table>
 
-<res:useJs value="${res.js.local.transactionHistory_js}"
-			target="1bottom-js" />
+<res:useJs value="${res.js.local.transactionHistory_js}" target="bottom-js" />
 </jsp:body>
 
 </a:historyReport>

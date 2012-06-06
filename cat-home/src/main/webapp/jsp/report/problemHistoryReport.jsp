@@ -7,12 +7,20 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.problem.Payload"	scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.problem.Model" scope="request" />
 
+<script>
+	var errorTrend = ${model.errorTrend};
+	var urlErrorTrend = ${model.urlErrorTrend};
+	var longUrlTrend = ${model.longUrlTrend};	
+	var longSqlTrend = ${model.longSqlTrend};
+</script>
+
 <a:historyReport title="History Report">
 
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.problem_css}" target="head-css"/>
 	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+	<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
 </br>
 <table class="machines">
 	<tr style="text-align:left">
@@ -97,7 +105,20 @@
 	</tr>
 	</c:forEach>
 </table>
+</br>
 
+<table>
+	<tr>
+		<td><div id="errorTrend" class="graph"></div>	</td>
+		<td><div id="urlErrorTrend" class="graph"></div>	</td>
+	</tr>
+		<tr>
+		<td><div id="longUrlTrend" class="graph"></div>	</td>
+		<td><div id="longSqlTrend" class="graph"></div>	</td>
+	</tr>
+</table>
+
+<res:useJs value="${res.js.local.problemHistory_js}" target="bottom-js" />
 </jsp:body>
 
 </a:historyReport>

@@ -26,6 +26,7 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.trend.GraphItem;
 import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
@@ -183,8 +184,60 @@ public class Handler implements PageHandler<Context> {
 
 
 	private void buildTrendGraph(Model model, Payload payload) {
-	   // TODO Auto-generated method stub
-	   
+		Date start = payload.getHistoryEndDate();
+		Date end = payload.getHistoryEndDate();
+		String domain = model.getDomain();
+
+		long current = System.currentTimeMillis();
+		current = current - current % (3600 * 1000);
+
+		long date = current - 24 * 3600 * 1000;
+		start = new Date(date);
+		end = new Date(current);
+		int size = (int) (current - date) / (3600 * 1000);
+
+		GraphItem item = new GraphItem();
+		item.setStart(start);
+		item.setSize(size);
+
+		//TO GET The Data from database
+		//TODO
+		// For URL
+		item.setTitles(" Error Count Trend");
+		double[] ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setErrorTrend(item.getJsonString());
+
+		item.setTitles(" URL Error Trend");
+		item.getValues().clear();
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setUrlErrorTrend(item.getJsonString());
+		
+		// For Call
+		item.setTitles(" Long URL Trend");
+		item.getValues().clear();
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setLongUrlTrend(item.getJsonString());
+		
+		item.setTitles(" Long SQL Trend");
+		item.getValues().clear();
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setLongSqlTrend(item.getJsonString());	   
    }
 
 	private ProblemReport showSummarizeReport(Model model, Payload payload) {

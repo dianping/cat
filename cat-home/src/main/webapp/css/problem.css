@@ -95,3 +95,8 @@ a.heartbeat{
 	cursor: pointer;
 	background-color: #06C;
 }
+.graph {
+	width: 550px;
+	height: 300px;
+	margin: 4px auto;
+}
