@@ -11,20 +11,21 @@
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.transaction_css}" target="head-css" />
+	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['transactionGraph_js']}" target="head-js"/>
 </br>
-
 <table class="machines">
 	<tr style="text-align: left">
 		<th>Machines:
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a		href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${model.reportType}"
+						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${model.reportType}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a
-									href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${model.reportType}">${ip}</a>
+						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${model.reportType}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -55,13 +56,12 @@
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td style="text-align: left">
-							<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">[:: show ::]</a>
+							<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
 							<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">${item.type}</a></td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
-					<td><a
-								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
+					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>
@@ -93,13 +93,12 @@
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align: left"><a href="?op=historyGraphs&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+					<td style="text-align: left"><a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
 					${e.id}</td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
-					<td><a
-								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
+					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
 					<td>${w:format(e.avg,'0.0')}</td>

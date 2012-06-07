@@ -199,9 +199,9 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		String domain = model.getDomain();
 		String ip = model.getIpAddress();
-		String type = model.getType();
+		String type = payload.getType();
 		String name = payload.getName();
-		
+		String display = name != null ? name : type;
 		long current = System.currentTimeMillis();
 		current = current - current % (3600 * 1000);
 
@@ -214,19 +214,19 @@ public class Handler implements PageHandler<Context> {
 		item.setStart(start);
 		item.setSize(size);
 
-		//TO GET The Data from database
-		//TODO
+		// TO GET The Data from database
+		// TODO
 		// For URL
-		item.setTitles(" URL Response Trend");
+		item.setTitles(display + " Response Trend");
 		double[] ylable1 = new double[size];
 		for (int i = 0; i < size; i++) {
-			//TODO
+			// TODO
 			ylable1[i] = Math.random() * 192;
 		}
 		item.addValue(ylable1);
 		model.setResponseTrend(item.getJsonString());
 
-		item.setTitles(" URL Hit Trend");
+		item.setTitles(display + " Hit Trend");
 		item.getValues().clear();
 		ylable1 = new double[size];
 		for (int i = 0; i < size; i++) {
@@ -303,7 +303,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
-		if (action == Action.HISTORY_REPORT||action==Action.HITORY_GRAPH) {
+		if (action == Action.HISTORY_REPORT || action == Action.HITORY_GRAPH) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {
 				payload.setReportType("day");
@@ -373,15 +373,15 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	
-	public Map<String,double[]> getDetailInfo(Model model,Payload payload){
+	public Map<String, double[]> getDetailInfo(Model model, Payload payload) {
 		Date start = payload.getHistoryEndDate();
 		Date end = payload.getHistoryEndDate();
 		String domain = model.getDomain();
+		String ip = model.getIpAddress();
 		String type = payload.getType();
 		String name = payload.getName();
-		String ip = model.getIpAddress();
+
 		return null;
 	}
-	
+
 }

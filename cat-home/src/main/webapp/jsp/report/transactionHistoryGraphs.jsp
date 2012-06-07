@@ -1,9 +1,4 @@
-<%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
-<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.transaction.Context" scope="request" />
-<jsp:useBean id="payload"	type="com.dianping.cat.report.page.transaction.Payload" scope="request" />
+<%@ page contentType="text/html; charset=utf-8"%>
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <style type="text/css">
 .graph {
@@ -14,15 +9,21 @@
 </style>
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/cat/js/flotr2.js"></script>
-<script>
-	var responseTrend = ${model.responseTrend};
-	var hitTrend = ${model.hitTrend};
-</script>
+<script type="text/javascript" src="/cat/js/transactionGraph.js"></script>
 
 <table>
 	<tr>
-		<td><div id="responseTrend" class="graph"></div>	</td>
-		<td><div id="hitTrend" class="graph"></div>	</td>
+		<td><div id="responseTrend" class="graph"></div></td>
+		<td><div id="hitTrend" class="graph"></div></td>
 	</tr>
+	<tr><td  style="display:none">
+		<div id ="responseTrendMeta">${model.responseTrend}</div>
+		<div id ="hitTrendMeta">${model.hitTrend}</div>
+	</td></tr>
 </table>
-<script type="text/javascript" src="/cat/js/transactionGraph.js"></script>
+<script type="text/javascript">
+	var responseTrendData = ${model.responseTrend};
+	var hitTrendData = ${model.hitTrend};
+	graph(document.getElementById('responseTrend'), responseTrendData);
+	graph(document.getElementById('hitTrend'), hitTrendData);
+</script>

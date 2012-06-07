@@ -15,8 +15,7 @@ function formatDate(date) {
 	hour = hour < 10 ? '0' + hour : hour;
 	minute = minute < 10 ? '0' + minute : minute;
 	second = second < 10 ? '0' + second : second;
-	return (myyear + "-" + mymonth + "-" + myweekday + " " + hour + ":"
-			+ minute + ":" + second);
+	return  mymonth + "-" + myweekday + " " + hour +":"+minute;
 }
 
 function graph(container, data) {
@@ -61,7 +60,6 @@ function graph(container, data) {
 					+ formatDate(new Date(opts.xaxis.min - hour * 8)) + " To"
 					+ formatDate(new Date(opts.xaxis.max - hour * 8));
 		} else {
-			console.log("null!!!")
 		}
 		// Return a new graph.
 		return Flotr.draw(container, [ d1 ], o);
@@ -90,6 +88,3 @@ function graph(container, data) {
 		graph = drawGraph();
 	});
 }
-
-graph(document.getElementById("responseTrend"), responseTrend);
-graph(document.getElementById("hitTrend"), hitTrend);
