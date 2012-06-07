@@ -49,7 +49,7 @@ public class Handler implements PageHandler<Context> {
 		TransactionType detail = report.getMachines().get("All").getTypes().get("URL");
 		detail.getTotalCount();
 		Map<String,String> data = new HashMap<String,String>();
-		data.put(domain+"-Url-Total", String.valueOf(detail.getTotalCount()));
+		data.put(domain+"UrlTotal", String.valueOf(detail.getTotalCount()));
 		model.setData(m_gson.toJson(data));
 		m_jspViewer.view(ctx, model);
 	}

@@ -69,7 +69,7 @@
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="10"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="11"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
@@ -106,7 +106,7 @@
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="10"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="11"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
