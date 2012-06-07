@@ -5,8 +5,8 @@
     <member name="domain" field="domain" value-type="String" length="50" nullable="false" />
     <member name="author" field="author" value-type="String" length="32" nullable="false" />
     <member name="content" field="content" value-type="String" length="1024" nullable="false" />
-    <member name="happened" field="happened" value-type="Date" nullable="false" />
     <member name="status" field="status" value-type="int" length="3" nullable="false" />
+    <member name="happened" field="happened" value-type="Date" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
@@ -41,10 +41,12 @@
     <member name="domain" field="domain" value-type="String" length="20" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
-    <member name="content" field="content" value-type="String" length="16777215" nullable="false" />
+    <member name="detail-content" field="detail_content" value-type="String" length="16777215" nullable="false" />
+    <member name="summary-content" field="summary_content" value-type="String" length="16777215" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
+    <index name="dailygraph_period_ip_domain_name" unique="true" members="period ASC, ip ASC, domain ASC, name ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -111,10 +113,12 @@
     <member name="domain" field="domain" value-type="String" length="20" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
-    <member name="content" field="content" value-type="String" length="16777215" nullable="false" />
+    <member name="detail-content" field="detail_content" value-type="String" length="16777215" nullable="false" />
+    <member name="summary-content" field="summary_content" value-type="String" length="16777215" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
+    <index name="graph_period_ip_domain_name" unique="true" members="period ASC, ip ASC, domain ASC, name ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -139,7 +143,41 @@
       </query>
     </query-defs>
   </entity>
-  <entity name="logview" table="logview" alias="l">
+  <entity name="location" table="location" alias="l">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="lat" field="lat" value-type="double" length="22" nullable="false" />
+    <member name="lng" field="lng" value-type="double" length="22" nullable="false" />
+    <member name="total" field="total" value-type="int" length="10" nullable="false" />
+    <member name="transaction-date" field="transaction_date" value-type="Date" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="transaction_date_lat_lng" unique="true" members="transaction_date ASC, lat ASC, lng ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="logview" table="logview" alias="l2">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="message-id" field="message_id" value-type="String" length="64" nullable="false" />
     <member name="data-path" field="data_path" value-type="String" length="200" nullable="false" />
@@ -264,16 +302,17 @@
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="producer" field="producer" value-type="String" length="20" nullable="false" />
     <member name="consumer" field="consumer" value-type="String" length="20" />
-    <member name="status" field="status" value-type="int" length="3" nullable="false" />
     <member name="failure-count" field="failure_count" value-type="int" length="3" nullable="false" />
     <member name="report-name" field="report_name" value-type="String" length="20" nullable="false" />
     <member name="report-domain" field="report_domain" value-type="String" length="20" nullable="false" />
     <member name="report-period" field="report_period" value-type="Date" nullable="false" />
+    <member name="status" field="status" value-type="int" length="3" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
-    <member name="start-date" field="start_date" value-type="Date" nullable="false" />
-    <member name="end-date" field="end_date" value-type="Date" nullable="false" />
+    <member name="start-date" field="start_date" value-type="Date" />
+    <member name="end-date" field="end_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
+    <index name="task_period_domain_name" unique="true" members="report_period ASC, report_domain ASC, report_name ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>

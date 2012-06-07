@@ -6,11 +6,11 @@ package com.dianping.cat.report.task;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -311,7 +311,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 	private List<Graph> splitTransactionReportToGraphs(Date reportPeroid, String domainName, String reportName, TransactionReport transactionReport) {
 		Set<String> ips = transactionReport.getIps();
 		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); // all and every machine
-		Map<String, GraphLine> allGraphCache = new HashMap<String, GraphLine>();
+		Map<String, GraphLine> allDetailCache = new TreeMap<String, GraphLine>();
+		Map<String, GraphLine> allSummaryCache = new TreeMap<String, GraphLine>();
 		Date creationDate = new Date();
 		for (String ip : ips) {
 			Graph graph = new Graph();
@@ -323,45 +324,75 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			graph.setCreationDate(creationDate);
 			Machine machine = transactionReport.getMachines().get(ip);
 			Map<String, TransactionType> types = machine.getTypes();
-			StringBuilder contentBuilder = new StringBuilder();
+			StringBuilder detailBuilder = new StringBuilder();
+			StringBuilder summaryBuilder = new StringBuilder();
 			for (Entry<String, TransactionType> transactionEntry : types.entrySet()) {
 				TransactionType transactionType = transactionEntry.getValue();
+				summaryBuilder.append(transactionType.getId());
+				summaryBuilder.append('\t');
+				summaryBuilder.append(transactionType.getTotalCount());
+				summaryBuilder.append('\t');
+				summaryBuilder.append(transactionType.getFailCount());
+				summaryBuilder.append('\t');
+				summaryBuilder.append(transactionType.getMin());
+				summaryBuilder.append('\t');
+				summaryBuilder.append(transactionType.getMax());
+				summaryBuilder.append('\t');
+				summaryBuilder.append(transactionType.getSum());
+				summaryBuilder.append('\t');
+				summaryBuilder.append(transactionType.getSum2());
+				summaryBuilder.append('\n');
+
+				String summaryKey = transactionType.getId();
+				GraphLine summaryLine = allSummaryCache.get(summaryKey);
+				if (summaryLine == null) {
+					summaryLine = new GraphLine();
+					allSummaryCache.put(summaryKey, summaryLine);
+				}
+
+				summaryLine.totalCount += transactionType.getTotalCount();
+				summaryLine.failCount += transactionType.getFailCount();
+				summaryLine.min += transactionType.getMin();
+				summaryLine.max += transactionType.getMax();
+				summaryLine.sum += transactionType.getSum();
+				summaryLine.sum2 += transactionType.getSum2();
 				Map<String, TransactionName> names = transactionType.getNames();
 				for (Entry<String, TransactionName> nameEntry : names.entrySet()) {
 					TransactionName transactionName = nameEntry.getValue();
-					contentBuilder.append(transactionType.getId());
-					contentBuilder.append('\t');
-					contentBuilder.append(transactionName.getId());
-					contentBuilder.append('\t');
-					contentBuilder.append(transactionName.getTotalCount());
-					contentBuilder.append('\t');
-					contentBuilder.append(transactionName.getFailCount());
-					contentBuilder.append('\t');
-					contentBuilder.append(transactionName.getMin());
-					contentBuilder.append('\t');
-					contentBuilder.append(transactionName.getMax());
-					contentBuilder.append('\t');
-					contentBuilder.append(transactionName.getSum());
-					contentBuilder.append('\t');
-					contentBuilder.append(transactionName.getSum2());
-					contentBuilder.append('\n');
+					detailBuilder.append(transactionType.getId());
+					detailBuilder.append('\t');
+					detailBuilder.append(transactionName.getId());
+					detailBuilder.append('\t');
+					detailBuilder.append(transactionName.getTotalCount());
+					detailBuilder.append('\t');
+					detailBuilder.append(transactionName.getFailCount());
+					detailBuilder.append('\t');
+					detailBuilder.append(transactionName.getMin());
+					detailBuilder.append('\t');
+					detailBuilder.append(transactionName.getMax());
+					detailBuilder.append('\t');
+					detailBuilder.append(transactionName.getSum());
+					detailBuilder.append('\t');
+					detailBuilder.append(transactionName.getSum2());
+					detailBuilder.append('\n');
 
 					String key = transactionType.getId() + "\t" + transactionName.getId();
-					GraphLine graphLine = allGraphCache.get(key);
-					if (graphLine == null) {
-						graphLine = new GraphLine();
-						allGraphCache.put(key, graphLine);
+					GraphLine detailLine = allDetailCache.get(key);
+					if (detailLine == null) {
+						detailLine = new GraphLine();
+						allDetailCache.put(key, detailLine);
 					}
 
-					graphLine.totalCount += transactionName.getTotalCount();
-					graphLine.failCount += transactionName.getFailCount();
-					graphLine.min += transactionName.getMin();
-					graphLine.max += transactionName.getMax();
-					graphLine.sum += transactionName.getSum();
-					graphLine.sum2 += transactionName.getSum2();
+					detailLine.totalCount += transactionName.getTotalCount();
+					detailLine.failCount += transactionName.getFailCount();
+					detailLine.min += transactionName.getMin();
+					detailLine.max += transactionName.getMax();
+					detailLine.sum += transactionName.getSum();
+					detailLine.sum2 += transactionName.getSum2();
 				}
 			}
-			graph.setContent(contentBuilder.toString());
+			graph.setDetailContent(detailBuilder.toString());
+			graph.setSummaryContent(summaryBuilder.toString());
 			graphs.add(graph);
 		}
 
@@ -373,25 +404,45 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		allGraph.setType(3);
 		allGraph.setCreationDate(creationDate);
 
-		StringBuilder sb = new StringBuilder();
-		for (Entry<String, GraphLine> entry : allGraphCache.entrySet()) {
-			sb.append(entry.getKey());
-			sb.append('\t');
+		StringBuilder detailSb = new StringBuilder();
+		for (Entry<String, GraphLine> entry : allDetailCache.entrySet()) {
+			detailSb.append(entry.getKey());
+			detailSb.append('\t');
 			GraphLine value = entry.getValue();
-			sb.append(value.totalCount);
-			sb.append('\t');
-			sb.append(value.failCount);
-			sb.append('\t');
-			sb.append(value.min);
-			sb.append('\t');
-			sb.append(value.max);
-			sb.append('\t');
-			sb.append(value.sum);
-			sb.append('\t');
-			sb.append(value.sum2);
-			sb.append('\n');
+			detailSb.append(value.totalCount);
+			detailSb.append('\t');
+			detailSb.append(value.failCount);
+			detailSb.append('\t');
+			detailSb.append(value.min);
+			detailSb.append('\t');
+			detailSb.append(value.max);
+			detailSb.append('\t');
+			detailSb.append(value.sum);
+			detailSb.append('\t');
+			detailSb.append(value.sum2);
+			detailSb.append('\n');
 		}
-		allGraph.setContent(sb.toString());
+		allGraph.setDetailContent(detailSb.toString());
+
+		StringBuilder summarySb = new StringBuilder();
+		for (Entry<String, GraphLine> entry : allSummaryCache.entrySet()) {
+			summarySb.append(entry.getKey());
+			summarySb.append('\t');
+			GraphLine value = entry.getValue();
+			summarySb.append(value.totalCount);
+			summarySb.append('\t');
+			summarySb.append(value.failCount);
+			summarySb.append('\t');
+			summarySb.append(value.min);
+			summarySb.append('\t');
+			summarySb.append(value.max);
+			summarySb.append('\t');
+			summarySb.append(value.sum);
+			summarySb.append('\t');
+			summarySb.append(value.sum2);
+			summarySb.append('\n');
+		}
+		allGraph.setSummaryContent(summarySb.toString());
 
 		graphs.add(allGraph);
 
