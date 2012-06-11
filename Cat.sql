@@ -87,7 +87,8 @@ CREATE TABLE `graph` (
   `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
-  `content` mediumtext NOT NULL COMMENT '绘图内容',
+  `detail_content` mediumtext NOT NULL COMMENT '详细绘图内容',
+  `summary_content` mediumtext NOT NULL COMMENT '概要绘图内容',
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`)
 )  DEFAULT CHARSET=utf8 COMMENT='用于存放以小时为单位的绘图数据';
@@ -113,10 +114,13 @@ CREATE TABLE `dailygraph` (
   `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
-  `content` mediumtext NOT NULL COMMENT '绘图内容',
+  `detail_content` mediumtext NOT NULL COMMENT '详细绘图内容',
+  `summary_content` mediumtext NOT NULL COMMENT '概要绘图内容',
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`)
 )  DEFAULT CHARSET=utf8 COMMENT='用于存放以天为单位的绘图数据';
+
+CREATE UNIQUE INDEX dailygraph_period_ip_domain_name ON dailygraph (period, ip, domain, name);
 
 CREATE TABLE `location` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
