@@ -25,6 +25,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_graph4;
 
 	private String m_mobileResponse;
+	
+	private String m_hitTrend;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -133,4 +135,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setMobileResponse(String mobileResponse) {
    	m_mobileResponse = mobileResponse;
    }
+
+	public String getHitTrend() {
+   	return m_hitTrend;
+   }
+
+	public void setHitTrend(String hitTrend) {
+   	m_hitTrend = hitTrend;
+   }
+	
+	
 }

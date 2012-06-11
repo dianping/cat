@@ -166,7 +166,7 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_REPORT:
 			showSummarizeReport(model, payload);
 			break;
-		case HITORY_GRAPH:
+		case HISTORY_GRAPH:
 			buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
@@ -303,7 +303,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
-		if (action == Action.HISTORY_REPORT || action == Action.HITORY_GRAPH) {
+		if (action == Action.HISTORY_REPORT || action == Action.HISTORY_GRAPH) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {
 				payload.setReportType("day");

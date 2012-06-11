@@ -11,7 +11,7 @@ public enum Action implements com.site.web.mvc.Action {
 
 	HISTORY_REPORT("history"),
 	
-	HITORY_GRAPH("historyGraph");
+	HISTORY_GRAPH("historyGraph");
 	
 	private String m_name;
 

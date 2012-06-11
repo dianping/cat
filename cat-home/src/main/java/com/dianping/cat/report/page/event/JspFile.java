@@ -4,6 +4,8 @@ public enum JspFile {
 	HOURLY_REPORT("/jsp/report/event.jsp"),
 
 	HISTORY_REPORT("/jsp/report/eventHistoryReport.jsp"),
+	
+	HISTORY_GRAPH("/jsp/report/eventHistoryGraphs.jsp"),
 
 	GRAPHS("/jsp/report/event_graphs.jsp"),
 

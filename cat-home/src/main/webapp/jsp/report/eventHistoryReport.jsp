@@ -11,6 +11,9 @@
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.event_css}" target="head-css" />
+	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['transactionGraph_js']}" target="head-js"/>
 </br>
 <table class="machines">
 	<tr style="text-align: left">
@@ -45,13 +48,15 @@
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align: left"><a
-								href="?op=history&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">${item.type}</a></td>
+					<td style="text-align: left">
+					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
+					<a href="?op=history&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}">${item.type}</a></td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
 				</tr>
+				<tr class="graphs"><td colspan="5"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
@@ -67,16 +72,20 @@
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align: left">${e.id}</td>
+					<td style="text-align: left">
+					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
+					${e.id}</td>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}">Log View</a></td>
 				</tr>
+				<tr class="graphs"><td colspan="5"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
 </table>
 
+<res:useJs value="${res.js.local.event_js}" target="bottom-js" />
 </jsp:body>
 </a:historyReport>

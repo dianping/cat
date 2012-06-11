@@ -22,6 +22,7 @@ import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.trend.GraphItem;
 import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
@@ -121,6 +122,9 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_REPORT:
 			showSummarizeReport(model,payload);
 			break;
+		case HISTORY_GRAPH:
+			buildTrendGraph(model, payload);
+			break;
 		case GRAPHS:
 			showGraphs(model, payload);
 			break;
@@ -149,6 +153,41 @@ public class Handler implements PageHandler<Context> {
 
 		m_jspViewer.view(ctx, model);
 	}
+
+	private void buildTrendGraph(Model model, Payload payload) {
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		String domain = model.getDomain();
+		String ip = model.getIpAddress();
+		String type = payload.getType();
+		String name = payload.getName();
+		String display = name != null ? name : type;
+		System.out.println(start +" "+end +" "+domain+" "+ip +" "+ type +" "+name);
+		long current = System.currentTimeMillis();
+		current = current - current % (3600 * 1000);
+
+		long date = current - 24 * 3600 * 1000;
+		start = new Date(date);
+		end = new Date(current);
+		int size = (int) (current - date) / (3600 * 1000);
+
+		GraphItem item = new GraphItem();
+		item.setStart(start);
+		item.setSize(size);
+
+		// TO GET The Data from database
+		// TODO
+		// For URL
+		item.setTitles(display + " Response Trend");
+		double[] ylable1 = new double[size];
+		item.setTitles(display + " Hit Trend");
+		ylable1 = new double[size];
+		for (int i = 0; i < size; i++) {
+			ylable1[i] = Math.random() * 192;
+		}
+		item.addValue(ylable1);
+		model.setHitTrend(item.getJsonString());	   
+   }
 
 	private com.dianping.cat.consumer.event.model.transform.DefaultDomParser eventParser = new com.dianping.cat.consumer.event.model.transform.DefaultDomParser();
 	
@@ -207,7 +246,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
-		if(payload.getAction()==Action.HISTORY_REPORT){
+		if(payload.getAction()==Action.HISTORY_REPORT||payload.getAction()==Action.HISTORY_GRAPH){
 			String type = payload.getReportType();
 			if(type==null||type.length()==0){
 				payload.setReportType("day");
