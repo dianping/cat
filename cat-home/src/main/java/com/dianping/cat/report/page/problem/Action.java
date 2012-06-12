@@ -11,7 +11,9 @@ public enum Action implements com.site.web.mvc.Action {
 
 	MOBILE("mobile"), 
 	
-	HISTORY("history");
+	HISTORY("history"),
+	
+	HISTORY_GRAPH("historyGraph");
 
 	private String m_name;
 

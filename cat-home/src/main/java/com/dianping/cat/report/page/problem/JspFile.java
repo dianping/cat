@@ -12,7 +12,9 @@ public enum JspFile {
 	
 	MOBILE("/jsp/report/problem_mobile.jsp"),
 	
-	HISTORY("/jsp/report/problemHistoryReport.jsp"),;
+	HISTORY("/jsp/report/problemHistoryReport.jsp"),
+	
+	HISTORY_GRAPH("/jsp/report/problemHistoryGraph.jsp");
 	
 
 	private String m_path;

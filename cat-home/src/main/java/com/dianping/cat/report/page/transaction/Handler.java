@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +20,9 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
+import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.hadoop.dal.GraphDao;
+import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -31,6 +36,7 @@ import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
 import com.dianping.cat.report.page.trend.GraphItem;
 import com.google.gson.Gson;
+import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -39,6 +45,9 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
+
+	public static final long ONE_HOUR = 3600 * 1000L;
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -53,6 +62,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private DailyreportDao dailyreportDao;
+
+	@Inject
+	private GraphDao graphDao;
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
@@ -197,44 +209,34 @@ public class Handler implements PageHandler<Context> {
 	private void buildTrendGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		String domain = model.getDomain();
-		String ip = model.getIpAddress();
 		String type = payload.getType();
 		String name = payload.getName();
 		String display = name != null ? name : type;
-		long current = System.currentTimeMillis();
-		current = current - current % (3600 * 1000);
 
-		long date = current - 24 * 3600 * 1000;
-		start = new Date(date);
-		end = new Date(current);
-		int size = (int) (current - date) / (3600 * 1000);
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
 
 		GraphItem item = new GraphItem();
 		item.setStart(start);
 		item.setSize(size);
 
-		// TO GET The Data from database
-		// TODO
-		// For URL
 		item.setTitles(display + " Response Trend");
-		double[] ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			// TODO
-			ylable1[i] = Math.random() * 192;
+		Map<String, double[]> graphData = getGraphData(model, payload);
+		double[] sum = graphData.get("sum");
+		double[] totalCount = graphData.get("total_count");
+		double[] avg = new double[sum.length];
+		for (int i = 1; i < sum.length; i++) {
+			if (totalCount[i] > 0) {
+				avg[i] = sum[i] / totalCount[i];
+			}
 		}
-		item.addValue(ylable1);
+		item.addValue(avg);
 		model.setResponseTrend(item.getJsonString());
 
 		item.setTitles(display + " Hit Trend");
 		item.getValues().clear();
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setHitTrend(item.getJsonString());
 
+		item.addValue(totalCount);
+		model.setHitTrend(item.getJsonString());
 	}
 
 	private void showSummarizeReport(Model model, Payload payload) {
@@ -373,15 +375,95 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public Map<String, double[]> getDetailInfo(Model model, Payload payload) {
-		Date start = payload.getHistoryEndDate();
+	public Map<String, double[]> getGraphData(Model model, Payload payload) {
+		Date start = new Date(payload.getDate());
 		Date end = payload.getHistoryEndDate();
 		String domain = model.getDomain();
-		String ip = model.getIpAddress();
 		String type = payload.getType();
 		String name = payload.getName();
+		String ip = model.getIpAddress();
+		List<Graph> graphs = new ArrayList<Graph>();
 
-		return null;
+		try {
+			graphs = this.graphDao.findByDomainNameIpDuration(start, end, ip, domain, "transaction",
+			      GraphEntity.READSET_FULL);
+		} catch (DalException e) {
+			e.printStackTrace();
+		}
+
+		Map<String, double[]> result = buildGraphDates(start, end, type, name, graphs);
+		return result;
 	}
 
+	Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
+		Map<String, double[]> result = new HashMap<String, double[]>();
+		List<Date> periods = new ArrayList<Date>();
+		for (long i = start.getTime(); i < end.getTime(); i = i + ONE_HOUR) {
+			periods.add(new Date(i));
+		}
+
+		int size = periods.size();
+		double[] total_count = new double[size];
+		double[] failure_count = new double[size];
+		double[] min = new double[size];
+		double[] max = new double[size];
+		double[] sum = new double[size];
+		double[] sum2 = new double[size];
+
+		if (!isEmpty(type) && isEmpty(name)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = periods.indexOf(graph.getPeriod());
+				String summaryContent = graph.getSummaryContent();
+				String[] allLines = summaryContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
+						total_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
+						failure_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
+						min[indexOfperiod] = Double.valueOf(records[SummaryOrder.MIN.ordinal()]);
+						max[indexOfperiod] = Double.valueOf(records[SummaryOrder.MAX.ordinal()]);
+						sum[indexOfperiod] = Double.valueOf(records[SummaryOrder.SUM.ordinal()]);
+						sum2[indexOfperiod] = Double.valueOf(records[SummaryOrder.SUM2.ordinal()]);
+					}
+				}
+			}
+		} else if (!isEmpty(type) && !isEmpty(name)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = periods.indexOf(graph.getPeriod());
+				String detailContent = graph.getDetailContent();
+				String[] allLines = detailContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
+						total_count[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
+						failure_count[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
+						min[indexOfperiod] = Double.valueOf(records[DetailOrder.MIN.ordinal()]);
+						max[indexOfperiod] = Double.valueOf(records[DetailOrder.MAX.ordinal()]);
+						sum[indexOfperiod] = Double.valueOf(records[DetailOrder.SUM.ordinal()]);
+						sum2[indexOfperiod] = Double.valueOf(records[DetailOrder.SUM2.ordinal()]);
+					}
+				}
+			}
+		}
+
+		result.put("total_count", total_count);
+		result.put("failure_count", failure_count);
+		result.put("min", min);
+		result.put("max", max);
+		result.put("sum", sum);
+		result.put("sum2", sum2);
+		return result;
+	}
+
+	private boolean isEmpty(String content) {
+		return content == null || content.equals("");
+	}
+
+	public enum SummaryOrder {
+		TYPE, TOTAL_COUNT, FAILURE_COUNT, MIN, MAX, SUM, SUM2
+	}
+
+	public enum DetailOrder {
+		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT, MIN, MAX, SUM, SUM2
+	}
 }

@@ -9,7 +9,7 @@
 </style>
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/cat/js/flotr2.js"></script>
-<script type="text/javascript" src="/cat/js/graph.js"></script>
+<script type="text/javascript" src="/cat/js/transactionGraph.js"></script>
 
 <table>
 	<tr>

@@ -237,9 +237,12 @@
 						(<VALUES/>) 
 				]]></statement>
 			</query>
-			<query name="find-by-domain-name-ip-duration" type="SELECT">
+			<query name="find-by-domain-name-ip-duration" type="SELECT" multiple="true">
 				<param name="start-date" />
 				<param name="end-date" />
+				<param name="ip" />
+				<param name="domain" />
+				<param name="name" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
@@ -250,9 +253,17 @@
 					</IF>
 					AND <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}
+					ORDER BY <FIELD name='period'/> ASC 
 				]]></statement>
 			</query>
 		</query-defs>
 	</entity>
 </entities>
+
+
+
+
+
+
+
 

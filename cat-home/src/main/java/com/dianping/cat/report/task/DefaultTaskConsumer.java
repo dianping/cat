@@ -396,7 +396,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			graphs.add(graph);
 		}
 
-		Graph allGraph = new Graph();
+		Graph allGraph = new Graph();  
 		allGraph.setIp(null);
 		allGraph.setDomain(domainName);
 		allGraph.setName(reportName);
