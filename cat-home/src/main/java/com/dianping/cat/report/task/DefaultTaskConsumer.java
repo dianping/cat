@@ -172,8 +172,9 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 				eventReport.getIps().add("All");
 				content = eventReport.toString();
 			} else if ("heartbeat".equals(reportName)) {
-				HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
-				content = heartbeatReport.toString();
+				// TODO
+				// HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
+				// content = heartbeatReport.toString();
 			} else if ("problem".equals(reportName)) {
 				ProblemReport problemReport = mergeProblemReports(reportDomain, reports);
 				content = problemReport.toString();
@@ -219,8 +220,9 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 				EventReport eventReport = mergeEventReports(reportDomain, reports);
 				graphs = splitEventReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
 			} else if ("heartbeat".equals(reportName)) {
-				HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
-				graphs = splitHeartbeatReportToGraphs(reportPeriod, reportDomain, reportName, heartbeatReport);
+				// TODO
+				// HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
+				// graphs = splitHeartbeatReportToGraphs(reportPeriod, reportDomain, reportName, heartbeatReport);
 			} else if ("problem".equals(reportName)) {
 				ProblemReport problemReport = mergeProblemReports(reportDomain, reports);
 				graphs = splitProblemReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
