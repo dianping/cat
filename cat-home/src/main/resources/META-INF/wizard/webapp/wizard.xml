@@ -29,9 +29,6 @@
       <page name="sql" title="SQL" path="sql">
         <description>SQL Report</description>
       </page>
-      <page name="trend" title="Trend" path="trend">
-        <description>Trend</description>
-      </page>
       <page name="heatmap" title="Heatmap" path="heatmap">
         <description>Heatmap</description>
       </page>

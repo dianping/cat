@@ -28,8 +28,8 @@ public class HeartbeatHandler implements Handler {
 	}
 
 	private int processHeartbeat(Segment segment, Heartbeat heartbeat, MessageTree tree) {
-		Entry entry = new Entry(tree.getMessageId());
-
+		Entry entry = new Entry();
+		entry.setMessageId(tree.getMessageId());
 		entry.setStatus(heartbeat.getName());
 		entry.setType(ProblemType.HEARTBEAT.getName());
 		segment.addEntry(entry);
