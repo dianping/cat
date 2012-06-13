@@ -35,9 +35,9 @@ public class FailureHandler implements Handler {
 		int count = 0;
 		String status = transaction.getStatus();
 		if (!status.equals(Transaction.SUCCESS)) {
-			String messageId = tree.getMessageId();
-			Entry entry = new Entry(messageId);
-
+			Entry entry = new Entry();
+			entry.setMessageId(tree.getMessageId());
+			
 			String type = transaction.getType();
 			if (m_failureTypes.contains(type)) {
 				entry.setType(transaction.getType().toLowerCase());
