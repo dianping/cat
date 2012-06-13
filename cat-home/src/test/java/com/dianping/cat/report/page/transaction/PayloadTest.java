@@ -80,7 +80,6 @@ public class PayloadTest {
 		String lastTwo = sdf.format(lastTwoDay);
 		String lastOne = sdf.format(lastOneDay);
 		String current = sdf.format(currentDay);
-		String next = sdf.format(new Date(temp + ONE_DAY));
 		payload.setDate(sdf.format(input));
 
 		payload.setStep(-1);

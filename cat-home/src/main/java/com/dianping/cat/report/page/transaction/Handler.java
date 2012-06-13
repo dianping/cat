@@ -47,6 +47,8 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 
 	public static final long ONE_HOUR = 3600 * 1000L;
+	
+	public static final double NOTEXIST=-2;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -271,7 +273,9 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {
-			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, transactionReport, ""));
+			model
+			      .setDisplayNameReport(new DisplayTransactionNameReport()
+			            .display(sorted, type, ip, transactionReport, ""));
 		} else {
 			model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, transactionReport));
 		}
@@ -382,10 +386,11 @@ public class Handler implements PageHandler<Context> {
 		String type = payload.getType();
 		String name = payload.getName();
 		String ip = model.getIpAddress();
+		String queryIP = "All".equals(ip) == true ? "all" : ip;
 		List<Graph> graphs = new ArrayList<Graph>();
 
 		try {
-			graphs = this.graphDao.findByDomainNameIpDuration(start, end, ip, domain, "transaction",
+			graphs = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "transaction",
 			      GraphEntity.READSET_FULL);
 		} catch (DalException e) {
 			e.printStackTrace();
@@ -397,22 +402,27 @@ public class Handler implements PageHandler<Context> {
 
 	Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		List<Date> periods = new ArrayList<Date>();
-		for (long i = start.getTime(); i < end.getTime(); i = i + ONE_HOUR) {
-			periods.add(new Date(i));
-		}
-
-		int size = periods.size();
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
 		double[] total_count = new double[size];
 		double[] failure_count = new double[size];
 		double[] min = new double[size];
 		double[] max = new double[size];
 		double[] sum = new double[size];
 		double[] sum2 = new double[size];
+		
+		//set the default value
+		for (int i = 0; i < size; i++) {
+			total_count[i]=NOTEXIST;
+			failure_count[i]=NOTEXIST;
+			min[i]=NOTEXIST;
+			max[i]=NOTEXIST;
+			sum[i]=NOTEXIST;
+			sum2[i]=NOTEXIST;
+      }
 
 		if (!isEmpty(type) && isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = periods.indexOf(graph.getPeriod());
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
@@ -429,7 +439,7 @@ public class Handler implements PageHandler<Context> {
 			}
 		} else if (!isEmpty(type) && !isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = periods.indexOf(graph.getPeriod());
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
