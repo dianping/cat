@@ -1,8 +1,11 @@
 package com.dianping.cat.report.page.event;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -15,6 +18,9 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
+import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.hadoop.dal.GraphDao;
+import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -32,6 +38,9 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
+	public static final long ONE_HOUR = 3600 * 1000L;
+	
+	public static final double NOTEXIST=-2;
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -46,6 +55,9 @@ public class Handler implements PageHandler<Context> {
 	
 	@Inject
 	private DailyreportDao dailyreportDao;
+	
+	@Inject
+	private GraphDao graphDao;
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
 
@@ -155,6 +167,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildTrendGraph(Model model, Payload payload) {
+		Map<String, double[]> dates=this.getGraphData(model, payload);
+		System.out.println(dates);
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		String domain = model.getDomain();
@@ -310,4 +324,82 @@ public class Handler implements PageHandler<Context> {
 			model.setException(e);
 		}
 	}
+	
+	public Map<String, double[]> getGraphData(Model model,Payload payload){
+		Date start = new Date(payload.getDate());
+		Date end = payload.getHistoryEndDate();
+		String domain = model.getDomain();
+		String type = payload.getType();
+		String name = payload.getName();
+		String ip = model.getIpAddress();
+		String queryIP = "All".equals(ip) == true ? "all" : ip;
+		List<Graph> events=new ArrayList<Graph>();
+		try {
+			events=this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event", GraphEntity.READSET_FULL);
+      } catch (Exception e) {
+	      // TODO: handle exception
+      	e.printStackTrace();
+      }
+      Map<String, double[]> result = buildGraphDates(start, end, type, name, events);
+		return result;
+	}
+	
+	
+	Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
+		Map<String, double[]> result = new HashMap<String, double[]>();
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
+		double[] total_count = new double[size];
+		double[] failure_count = new double[size];
+		
+		//set the default value
+		for (int i = 0; i < size; i++) {
+			total_count[i]=NOTEXIST;
+			failure_count[i]=NOTEXIST;
+      }
+
+		if (!isEmpty(type) && isEmpty(name)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
+				String summaryContent = graph.getSummaryContent();
+				String[] allLines = summaryContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
+						total_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
+						failure_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
+					}
+				}
+			}
+		} else if (!isEmpty(type) && !isEmpty(name)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
+				String detailContent = graph.getDetailContent();
+				String[] allLines = detailContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
+						total_count[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
+						failure_count[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
+					}
+				}
+			}
+		}
+		result.put("total_count", total_count);
+		result.put("failure_count", failure_count);
+		return result;
+	}
+	
+	private boolean isEmpty(String content) {
+		return content == null || content.equals("");
+	}
+	
+	public enum SummaryOrder {
+		TYPE, TOTAL_COUNT, FAILURE_COUNT
+	}
+
+	public enum DetailOrder {
+		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT
+	}
+	
+	
 }

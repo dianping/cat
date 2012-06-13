@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +49,6 @@ public class GraphDateTest {
 	      // TODO Auto-generated catch block
 	      e.printStackTrace();
       }
-     
 	}
 	
 	@Test
@@ -107,9 +105,7 @@ public class GraphDateTest {
 	      // TODO Auto-generated catch block
 	      e.printStackTrace();
       }
-     
 	}
-	
 	
 	private List<Graph> buildGraph(Date start,Date end){
 		List<Graph> graphs = new ArrayList<Graph>();
@@ -136,5 +132,4 @@ public class GraphDateTest {
 		}
 		return graphs;
 	}
-
 }
