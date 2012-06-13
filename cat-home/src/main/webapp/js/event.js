@@ -63,8 +63,10 @@ $(document).delegate('.history_graph_link', 'click', function(e){
 					cell.parentNode.style.display = 'block';
 					cell.innerHTML = response;
 
-					var data = $('#hitTrendMeta',cell).text();
-					graph($('#hitTrend',cell)[0],eval('('+data+')'));
+					var hitData = $('#hitTrendMeta',cell).text();
+					graph($('#hitTrend',cell)[0],eval('('+hitData+')'));
+					var failureData = $('#failureTrendMeta',cell).text();
+					graph($('#failureTrend',cell)[0],eval('('+failureData+')'));
 				}
 			});
 		}

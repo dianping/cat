@@ -234,8 +234,8 @@ public class Handler implements PageHandler<Context> {
 		item.addValue(avg);
 		model.setResponseTrend(item.getJsonString());
 
-		item.setTitles(display + " Hit Trend");
 		item.getValues().clear();
+		item.setTitles(display + " Hit Trend");
 
 		item.addValue(totalCount);
 		model.setHitTrend(item.getJsonString());

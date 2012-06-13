@@ -167,40 +167,30 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildTrendGraph(Model model, Payload payload) {
-		Map<String, double[]> dates=this.getGraphData(model, payload);
-		System.out.println(dates);
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		String domain = model.getDomain();
-		String ip = model.getIpAddress();
 		String type = payload.getType();
 		String name = payload.getName();
 		String display = name != null ? name : type;
-		System.out.println(start +" "+end +" "+domain+" "+ip +" "+ type +" "+name);
-		long current = System.currentTimeMillis();
-		current = current - current % (3600 * 1000);
 
-		long date = current - 24 * 3600 * 1000;
-		start = new Date(date);
-		end = new Date(current);
-		int size = (int) (current - date) / (3600 * 1000);
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
 
 		GraphItem item = new GraphItem();
 		item.setStart(start);
 		item.setSize(size);
 
-		// TO GET The Data from database
-		// TODO
-		// For URL
-		item.setTitles(display + " Response Trend");
-		double[] ylable1 = new double[size];
+		Map<String, double[]> graphData = getGraphData(model, payload);
+		double[] failureCount = graphData.get("failure_count");
+		double[] totalCount = graphData.get("total_count");
+		
 		item.setTitles(display + " Hit Trend");
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setHitTrend(item.getJsonString());	   
+		item.addValue(totalCount);
+		model.setHitTrend(item.getJsonString());
+		
+		item.getValues().clear();
+		item.setTitles(display + " Failure Trend");
+		item.addValue(failureCount);
+		model.setFailureTrend(item.getJsonString());
    }
 
 	private com.dianping.cat.consumer.event.model.transform.DefaultDomParser eventParser = new com.dianping.cat.consumer.event.model.transform.DefaultDomParser();

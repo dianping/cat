@@ -14,12 +14,18 @@
 <table>
 	<tr>
 		<td><div id="hitTrend" class="graph"></div></td>
+		<td><div id="failureTrend" class="graph"></div></td>
 	</tr>
 	<tr><td  style="display:none">
 		<div id ="hitTrendMeta">${model.hitTrend}</div>
+		<div id ="failureTrendMeta">${model.failureTrend}</div>
 	</td></tr>
 </table>
+
+
 <script type="text/javascript">
 	var hitTrendData = ${model.hitTrend};
 	graph(document.getElementById('hitTrend'), hitTrendData);
+	var failureTrendData = ${model.failureTrend};
+	graph(document.getElementById('failureTrend'), failureTrendData);
 </script>

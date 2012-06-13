@@ -27,6 +27,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_mobileResponse;
 	
 	private String m_hitTrend;
+	
+	private String m_failureTrend;
+
+	public String getFailureTrend() {
+   	return m_failureTrend;
+   }
+
+	public void setFailureTrend(String failureTrend) {
+   	m_failureTrend = failureTrend;
+   }
 
 	public Model(Context ctx) {
 		super(ctx);

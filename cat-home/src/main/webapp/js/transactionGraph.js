@@ -50,12 +50,6 @@ function graph(container, data) {
 		o = Flotr._.extend(Flotr._.clone(options), opts || {});
 
 		if (opts != null && opts.xaxis != null) {
-			console.log(opts.xaxis.min);
-			console.log(new Date(opts.xaxis.min));
-			console.log(formatDate(new Date(opts.xaxis.min)))
-			console.log(opts.xaxis.max);
-			console.log(new Date(opts.xaxis.max));
-			console.log(formatDate(new Date(opts.xaxis.max)))
 			o.title = data.titles + " From "
 					+ formatDate(new Date(opts.xaxis.min - hour * 8)) + " To"
 					+ formatDate(new Date(opts.xaxis.max - hour * 8));
