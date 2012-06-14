@@ -142,7 +142,9 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReport(report);
 			model.setAllStatistics(problemStatistics);
-			buildTrendGraph(model, payload); 
+			break;
+		case HISTORY_GRAPH:
+			buildTrendGraph(model, payload);
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -334,11 +336,8 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setLastMinute(59);
 		}
-
 		model.setHour(getHour(model.getLongDate()));
-
 		ProblemReport report = getHourlyReport(payload);
-
 		if (report != null) {
 			String ip = getIpAddress(report, payload);
 

@@ -82,9 +82,11 @@
 		varStatus="typeIndex">
 		<tr>
 			<td rowspan="${w:size(statistics.value.status)}"
-				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top"><a
-				href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
-				&nbsp;&nbsp;${statistics.value.type}</td>
+				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">
+				<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
+				<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
+				&nbsp;&nbsp;${statistics.value.type}
+			</td>
 			<td rowspan="${w:size(statistics.value.status)}"
 				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">${statistics.value.count}</td>
 			<c:forEach var="status" items="${statistics.value.status}"
