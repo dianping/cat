@@ -7,13 +7,6 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.problem.Payload"	scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.problem.Model" scope="request" />
 
-<script>
-	var errorTrend = ${model.errorTrend};
-	var urlErrorTrend = ${model.urlErrorTrend};
-	var longUrlTrend = ${model.longUrlTrend};	
-	var longSqlTrend = ${model.longSqlTrend};
-</script>
-
 <a:historyReport title="History Report">
 
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -81,44 +74,39 @@
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
 		<tr>
-			<td rowspan="${w:size(statistics.value.status)}"
+			<td rowspan="${w:size(statistics.value.status)*2}"
 				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">
-				<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
-				<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
+				<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
+				&nbsp;<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
 				&nbsp;&nbsp;${statistics.value.type}
 			</td>
-			<td rowspan="${w:size(statistics.value.status)}"
+			<td rowspan="${w:size(statistics.value.status)*2}"
 				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">${statistics.value.count}</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
 				<c:if test="${index.index != 0}">
 					<tr>
 				</c:if>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.status}</td>
+				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">
+					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
+					&nbsp;${status.value.status}
+				</td>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.count}</td>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}"><c:forEach
 						var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="${model.logViewBaseUri}/${links}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
+						
 				<c:if test="${index.index != 0}">
-		</tr>
-		</c:if>
-	</c:forEach>
-	</tr>
+				</tr>
+				</c:if>
+				<tr><td colspan="3"> <div id="${statistics.value.type}${status.value.status}" style="display:none"></div></td></tr>
+			</c:forEach>
+			</tr>
+		<tr class="graphs"><td colspan="5"><div id="${typeIndex.index}" style="display:none"></div></td></tr>
 	</c:forEach>
 </table>
 </br>
-
-<table>
-	<tr>
-		<td><div id="errorTrend" class="graph"></div>	</td>
-		<td><div id="urlErrorTrend" class="graph"></div>	</td>
-	</tr>
-		<tr>
-		<td><div id="longUrlTrend" class="graph"></div>	</td>
-		<td><div id="longSqlTrend" class="graph"></div>	</td>
-	</tr>
-</table>
 
 <res:useJs value="${res.js.local.problemHistory_js}" target="bottom-js" />
 </jsp:body>

@@ -21,11 +21,12 @@ function formatDate(date) {
 
 function graph(container, data) {
 	var hour = 1000 * 3600;
+	var minute = 1000*60;
 	var real = data.values[0];
 	var d1 = [], start = new Date(data.start).getTime(), options, graph, i, x, o;
 
 	for (i = 0; i < data.size; i++) {
-		x = start + (i * hour);
+		x = start + (i * minute);
 		d1.push([ x + hour * 8, real[i] ]);
 	}
 
@@ -40,7 +41,7 @@ function graph(container, data) {
 		HtmlText : false,
 		title : data.titles + " From " + formatDate(new Date(data.start))
 				+ " To "
-				+ formatDate(new Date(start + data.size * 1000 * 3600))
+				+ formatDate(new Date(start + data.size * 1000 * 60))
 
 	};
 
@@ -61,7 +62,6 @@ function graph(container, data) {
 					+ formatDate(new Date(opts.xaxis.min - hour * 8)) + " To"
 					+ formatDate(new Date(opts.xaxis.max - hour * 8));
 		} else {
-			console.log("null!!!")
 		}
 		// Return a new graph.
 		return Flotr.draw(container, [ d1 ], o);
@@ -91,7 +91,88 @@ function graph(container, data) {
 	});
 }
 
-graph(document.getElementById("errorTrend"), errorTrend);
-graph(document.getElementById("urlErrorTrend"), urlErrorTrend);
-graph(document.getElementById("longSqlTrend"), longSqlTrend);
-graph(document.getElementById("longUrlTrend"), longUrlTrend);
+$(document).delegate('.history_graph_link', 'click', function(e){
+	var anchor = this,
+		el = $(anchor),
+		id = Number(el.attr('data-status')) || 0;
+	
+	console.log("id: " + id)
+	if(e.ctrlKey || e.metaKey){
+		return true;
+	}else{
+		e.preventDefault();
+	}
+	
+	var cell = document.getElementById(id);
+	var text = el.html();
+	
+	if (text == '[:: show ::]') {
+		anchor.innerHTML = '[:: hide ::]';
+
+		if (cell.nodeName == 'IMG') { // <img src='...'/>
+			cell.src=anchor.href;
+		} else { // <div>...</div>
+			$.ajax({
+				type: "get",
+				url: anchor.href,
+				success : function(response, textStatus) {
+					cell.style.display = 'block';
+					cell.parentNode.style.display = 'block';
+					cell.innerHTML = response;
+					
+					var data = $('#errorTrendMeta',cell).text();
+					graph($('#errorTrend',cell)[0],eval('('+data+')'));
+				}
+			});
+		}
+	} else {
+		anchor.innerHTML = '[:: show ::]';
+		cell.style.display = 'none';		
+		cell.parentNode.style.display = 'none';
+	}	
+});
+
+$(document).delegate('.problem_status_graph_link', 'click', function(e){
+	var anchor = this,
+		el = $(anchor),
+		id = el.attr('data-status');
+	
+	console.log("id: " + id)
+	if(e.ctrlKey || e.metaKey){
+		return true;
+	}else{
+		e.preventDefault();
+	}
+	
+	var cell = document.getElementById(id);
+	var text = el.html();
+	
+	if (text == '[:: show ::]') {
+		anchor.innerHTML = '[:: hide ::]';
+
+		if (cell.nodeName == 'IMG') { // <img src='...'/>
+			cell.src=anchor.href;
+		} else { // <div>...</div>
+			$.ajax({
+				type: "get",
+				url: anchor.href,
+				success : function(response, textStatus) {
+					cell.style.display = 'block';
+					cell.parentNode.style.display = 'block';
+					cell.innerHTML = response;
+					
+					var data = $('#errorTrendMeta',cell).text();
+					graph($('#errorTrend',cell)[0],eval('('+data+')'));
+				}
+			});
+		}
+	} else {
+		anchor.innerHTML = '[:: show ::]';
+		cell.style.display = 'none';		
+		cell.parentNode.style.display = 'none';
+	}	
+});
+//graph(document.getElementById("errorTrend"), errorTrend);
+//graph(document.getElementById("urlErrorTrend"), urlErrorTrend);
+//graph(document.getElementById("longSqlTrend"), longSqlTrend);
+//graph(document.getElementById("longUrlTrend"), longUrlTrend);

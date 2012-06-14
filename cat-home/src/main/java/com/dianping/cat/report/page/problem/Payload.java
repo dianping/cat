@@ -24,6 +24,12 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("linkCount")
 	private int m_linkCount;
 
+	@FieldMeta("type")
+	private String m_type;
+	
+	@FieldMeta("status")
+	private String m_status;
+	
 	public Payload() {
 		super(ReportPage.PROBLEM);
 	}
@@ -86,6 +92,22 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setLinkCount(int linkSize) {
 		m_linkCount = linkSize;
 	}
+
+	public String getType() {
+   	return m_type;
+   }
+
+	public void setType(String type) {
+   	m_type = type;
+   }
+
+	public String getStatus() {
+   	return m_status;
+   }
+
+	public void setStatus(String status) {
+   	m_status = status;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

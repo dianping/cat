@@ -33,14 +33,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private ProblemStatistics m_allStatistics;
 
 	private String m_mobileResponse;
-	
-	private String m_errorTrend;
-	
-	private String m_urlErrorTrend;
-	
-	private String m_longUrlTrend;
-	
-	private String m_longSqlTrend;
+
+	private String m_errorsTrend;
 	
 	public Model(Context ctx) {
 		super(ctx);
@@ -195,35 +189,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_threshold = threshold;
 	}
 
-	public String getErrorTrend() {
-   	return m_errorTrend;
+	public String getErrorsTrend() {
+   	return m_errorsTrend;
    }
 
-	public void setErrorTrend(String errorTrend) {
-   	m_errorTrend = errorTrend;
+	public void setErrorsTrend(String errorsTrend) {
+   	m_errorsTrend = errorsTrend;
    }
-
-	public String getUrlErrorTrend() {
-   	return m_urlErrorTrend;
-   }
-
-	public void setUrlErrorTrend(String urlErrorTrend) {
-   	m_urlErrorTrend = urlErrorTrend;
-   }
-
-	public String getLongUrlTrend() {
-   	return m_longUrlTrend;
-   }
-
-	public void setLongUrlTrend(String longUrlTrend) {
-   	m_longUrlTrend = longUrlTrend;
-   }
-
-	public String getLongSqlTrend() {
-   	return m_longSqlTrend;
-   }
-
-	public void setLongSqlTrend(String longSqlTrend) {
-   	m_longSqlTrend = longSqlTrend;
-   }
+	
 }

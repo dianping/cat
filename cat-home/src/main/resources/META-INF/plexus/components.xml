@@ -414,6 +414,9 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -423,6 +426,15 @@
 		<component>
 			<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 			<implementation>com.dianping.cat.hadoop.dal.DailyreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.GraphDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -458,15 +470,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.transaction.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.hadoop.dal.GraphDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.GraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>

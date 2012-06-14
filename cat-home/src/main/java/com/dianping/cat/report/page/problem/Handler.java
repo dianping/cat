@@ -3,9 +3,11 @@ package com.dianping.cat.report.page.problem;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +21,9 @@ import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
+import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.hadoop.dal.GraphDao;
+import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
@@ -28,6 +33,7 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.trend.GraphItem;
 import com.google.gson.Gson;
+import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -36,6 +42,11 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
+
+	public static final long ONE_HOUR = 3600 * 1000L;
+
+	private static final String ERROR = "errors";
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -48,8 +59,11 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DailyreportDao dailyreportDao;
 
+	@Inject
+	private GraphDao graphDao;
+
 	private DefaultDomParser problemParser = new DefaultDomParser();
-	
+
 	private Gson gson = new Gson();
 
 	private int getHour(long date) {
@@ -74,7 +88,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-				.setProperty("date", date);
+		      .setProperty("date", date);
 		if (!CatString.ALL_IP.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
@@ -98,7 +112,8 @@ public class Handler implements PageHandler<Context> {
 		if (d != null) {
 			int longUrlTime = d.getUrlThreshold();
 
-			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000 && longUrlTime != 4000 && longUrlTime != 5000) {
+			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
+			      && longUrlTime != 4000 && longUrlTime != 5000) {
 				double sec = (double) (longUrlTime) / (double) 1000;
 				NumberFormat nf = new DecimalFormat("#.##");
 				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
@@ -130,15 +145,18 @@ public class Handler implements PageHandler<Context> {
 			model.setIpAddress(CatString.ALL_IP);
 			report = getHourlyReport(payload);
 			model.setReport(report);
-			problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(), payload.getLinkCount());
+			problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
+			      payload.getLinkCount());
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
 			if (ip.equals(CatString.ALL_IP)) {
-				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(), payload.getLinkCount());
+				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
+				      payload.getLinkCount());
 			} else {
-				problemStatistics = new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(), payload.getLinkCount());
+				problemStatistics = new ProblemStatistics().displayByIp(report, model.getIpAddress(),
+				      payload.getLongTime(), payload.getLinkCount());
 			}
 			model.setReport(report);
 			model.setAllStatistics(problemStatistics);
@@ -151,7 +169,8 @@ public class Handler implements PageHandler<Context> {
 			if (report != null) {
 				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
 			}
-			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(), payload.getLinkCount()));
+			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
+			      payload.getLongTime(), payload.getLinkCount()));
 			break;
 		case THREAD:
 			String groupName = payload.getGroupName();
@@ -161,7 +180,8 @@ public class Handler implements PageHandler<Context> {
 			if (report != null) {
 				model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
 			}
-			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(), payload.getLinkCount()));
+			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
+			      payload.getLongTime(), payload.getLinkCount()));
 			break;
 		case DETAIL:
 			showDetail(model, payload);
@@ -169,13 +189,15 @@ public class Handler implements PageHandler<Context> {
 		case MOBILE:
 			if (ip.equals(CatString.ALL_IP)) {
 				report = getHourlyReport(payload);
-				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(), payload.getLinkCount());
+				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
+				      payload.getLinkCount());
 				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
 				String response = gson.toJson(problemStatistics);
 				model.setMobileResponse(response);
 			} else {
 				report = showHourlyReport(model, payload);
-				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(), payload.getLongTime(), payload.getLinkCount()));
+				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
+				      payload.getLongTime(), payload.getLinkCount()));
 				ProblemStatistics statistics = model.getAllStatistics();
 				statistics.setIps(new ArrayList<String>(report.getIps()));
 				model.setMobileResponse(gson.toJson(statistics));
@@ -184,63 +206,20 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-
 	private void buildTrendGraph(Model model, Payload payload) {
-		Date start = payload.getHistoryEndDate();
+		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		String domain = model.getDomain();
-
-		long current = System.currentTimeMillis();
-		current = current - current % (3600 * 1000);
-
-		long date = current - 24 * 3600 * 1000;
-		start = new Date(date);
-		end = new Date(current);
-		int size = (int) (current - date) / (3600 * 1000);
+		int size = (int) (end.getTime() - start.getTime()) / (3600 * 1000) * 60;
 
 		GraphItem item = new GraphItem();
 		item.setStart(start);
+
+		double[] data = getGraphData(model, payload).get(ERROR);
+		item.setTitles(payload.getType());
+		item.addValue(data);
 		item.setSize(size);
-
-		//TO GET The Data from database
-		//TODO
-		// For URL
-		item.setTitles(" Error Count Trend");
-		double[] ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setErrorTrend(item.getJsonString());
-
-		item.setTitles(" URL Error Trend");
-		item.getValues().clear();
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setUrlErrorTrend(item.getJsonString());
-		
-		// For Call
-		item.setTitles(" Long URL Trend");
-		item.getValues().clear();
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setLongUrlTrend(item.getJsonString());
-		
-		item.setTitles(" Long SQL Trend");
-		item.getValues().clear();
-		ylable1 = new double[size];
-		for (int i = 0; i < size; i++) {
-			ylable1[i] = Math.random() * 192;
-		}
-		item.addValue(ylable1);
-		model.setLongSqlTrend(item.getJsonString());	   
-   }
+		model.setErrorsTrend(item.getJsonString());
+	}
 
 	private ProblemReport showSummarizeReport(Model model, Payload payload) {
 		String domain = model.getDomain();
@@ -250,7 +229,8 @@ public class Handler implements PageHandler<Context> {
 		ProblemReport problemReport = null;
 		try {
 
-			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem", DailyreportEntity.READSET_FULL);
+			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem",
+			      DailyreportEntity.READSET_FULL);
 			ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 			for (Dailyreport report : reports) {
 				String xml = report.getContent();
@@ -262,6 +242,26 @@ public class Handler implements PageHandler<Context> {
 			e.printStackTrace();
 		}
 		return problemReport;
+	}
+
+	public Map<String, double[]> getGraphData(Model model, Payload payload) {
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		String domain = model.getDomain();
+		String type = payload.getType();
+		String status = payload.getStatus();
+		String ip = model.getIpAddress();
+		String queryIP = "All".equals(ip) == true ? "all" : ip;
+		List<Graph> graphs = new ArrayList<Graph>();
+
+		try {
+			graphs = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "problem",
+			      GraphEntity.READSET_FULL);
+		} catch (DalException e) {
+			e.printStackTrace();
+		}
+		Map<String, double[]> result = buildGraphDates(start, end, type, status, graphs);
+		return result;
 	}
 
 	public void normalize(Model model, Payload payload) {
@@ -345,5 +345,62 @@ public class Handler implements PageHandler<Context> {
 			model.setReport(report);
 		}
 		return report;
+	}
+
+	private Map<String, double[]> buildGraphDates(Date start, Date end, String type, String status, List<Graph> graphs) {
+		Map<String, double[]> result = new HashMap<String, double[]>();
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR) * 60;
+		double[] errors = new double[size];
+
+		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(status)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 60);
+				String summaryContent = graph.getSummaryContent();
+				String[] allLines = summaryContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					String dbType = records[SummaryOrder.TYPE.ordinal()];
+					if (dbType.equals(type)) {
+						String[] values = records[SummaryOrder.DETAIL.ordinal()].split(",");
+						for (int k = 0; k < values.length; k++) {
+							errors[indexOfperiod + k] = Double.parseDouble(values[k]);
+						}
+					}
+				}
+			}
+		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(status)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 60);
+				String detailContent = graph.getDetailContent();
+				String[] allLines = detailContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					String dbStatus = records[DetailOrder.STATUS.ordinal()];
+					String dbType = records[DetailOrder.TYPE.ordinal()];
+					if (status.equals(dbStatus) && type.equals(dbType)) {
+						String[] values = records[DetailOrder.DETAIL.ordinal()].split(",");
+						for (int k = 0; k < values.length; k++) {
+							errors[indexOfperiod + k] = Double.parseDouble(values[k]);
+						}
+					}
+				}
+			}
+		}
+//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//		for (int i = 0; i < errors.length; i++) {
+//			if (errors[i] > 0) {
+//				System.out.println(sdf.format(new Date(start.getTime() + i * 1000)) + ":" + errors[i]);
+//			}
+//		}
+		result.put(ERROR, errors);
+		return result;
+	}
+	
+	public enum SummaryOrder {
+		TYPE, TOTAL_COUNT, DETAIL
+	}
+
+	public enum DetailOrder {
+		TYPE, STATUS, TOTAL_COUNT, DETAIL
 	}
 }

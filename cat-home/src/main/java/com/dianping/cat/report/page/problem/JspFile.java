@@ -14,7 +14,7 @@ public enum JspFile {
 	
 	HISTORY("/jsp/report/problemHistoryReport.jsp"),
 	
-	HISTORY_GRAPH("/jsp/report/problemHistoryGraph.jsp");
+	HISTORY_GRAPH("/jsp/report/problemHistoryGraphs.jsp");
 	
 
 	private String m_path;
