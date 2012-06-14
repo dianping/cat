@@ -46,7 +46,7 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 
 			try {
 				consumer.consume(tree);
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				m_logger.error("Error when consuming message in " + consumer + "! tree: " + tree, e);
 			}
 		}

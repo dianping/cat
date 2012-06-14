@@ -1,4 +1,6 @@
 <problem-report domain="Cat" startTime="2012-04-29 15:00:00" endTime="2012-04-29 15:59:59">
+   <domain>Cat</domain>
+   <ip>192.168.63.66</ip>
    <machine ip="192.168.63.66">
       <thread group-name="Cat" name="Cat-StatusUpdateTask" id="31">
          <segment id="39">
@@ -44,6 +46,4 @@
          </segment>
       </thread>
    </machine>
-   <domain>Cat</domain>
-   <ip>192.168.63.66</ip>
 </problem-report>
