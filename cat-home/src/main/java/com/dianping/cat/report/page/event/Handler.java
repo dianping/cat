@@ -40,7 +40,7 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 	public static final long ONE_HOUR = 3600 * 1000L;
 	
-	public static final double NOTEXIST=-2;
+	public static final double NOTEXIST=0;
 	@Inject
 	private JspViewer m_jspViewer;
 
