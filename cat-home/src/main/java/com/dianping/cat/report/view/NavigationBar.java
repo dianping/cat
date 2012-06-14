@@ -13,16 +13,12 @@ public class NavigationBar {
 
 		ReportPage.EVENT,
 		
-		ReportPage.HEARTBEAT,
-
 		ReportPage.PROBLEM,
+
+		ReportPage.HEARTBEAT,
 
 		ReportPage.IP,
 
-		ReportPage.HISTORYREPORT,
-		
-		ReportPage.TREND,
-		
 		ReportPage.HEATMAP,
 		
 		ReportPage.SQL,

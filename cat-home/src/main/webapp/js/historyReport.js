@@ -109,12 +109,6 @@ $( "#startDate" ).datepicker({ changeMonth: true,changeYear: true,dateFormat: "y
 $("#domain").val(domain) ;
 $("#reportType").val(type) ;
 
-function longTimeChange(domain,ip){
-	var longtime=$("#p_longUrl").val();
-	var start = $("#startDate").val();
-	var end = $("#endDate").val();
-	window.location.href="?op=problem&domain="+domain+"&ip="+ip+"&startDate="+start+"&endDate="+end+"&threshold="+longtime;
-}
 
 function showSummarizedReport(){
 

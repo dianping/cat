@@ -84,7 +84,7 @@ public class Handler implements PageHandler<Context> {
 
 		// Last hour is default
 		if (payload.getPeriod().isCurrent()) {
-			payload.setHours(payload.getHours() - 1);
+			payload.setStep(payload.getStep() - 1);
 		}
 		
 		model.setDisplay(payload.getDisplay());

@@ -79,7 +79,7 @@ tr.odd td {
 	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align:right;
+	text-align:left;
 }
 
 tr.even td {
@@ -87,7 +87,7 @@ tr.even td {
 	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align:right;
+	text-align:left;
 }
 a.error {
 	background-color: red;

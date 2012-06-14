@@ -16,7 +16,7 @@ tr.odd td {
 	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align:right;
+	text-align: right;
 }
 
 tr.even td {
@@ -24,7 +24,7 @@ tr.even td {
 	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align:right;
+	text-align: right;
 }
 
 tr.link td {
@@ -41,6 +41,12 @@ tr.link td {
 	color: red;
 }
 
-.graph_link{
+.graph_link {
 	font-weight: normal;
+}
+
+.graph {
+	width: 550px;
+	height: 250px;
+	margin: 4px auto;
 }

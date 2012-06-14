@@ -20,7 +20,7 @@
 		<entity-ref name="entry" type="list" names="entries" />
 	</entity>
 	<entity name="entry">
-    	<attribute name="message-id" value-type="String" key="true" />
+    	<attribute name="message-id" value-type="String"/>
 		<attribute name="duration" value-type="int" primitive="true" />
 	</entity>
 </model>

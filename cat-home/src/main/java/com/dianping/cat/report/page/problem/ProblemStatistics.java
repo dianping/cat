@@ -24,7 +24,7 @@ public class ProblemStatistics {
 
 	private int m_threshold = ONE_SECOND;
 
-	public static int s_linkCount = 40;
+	public static int s_linkCount = 60;
 
 	private static final int ONE_SECOND = 1000;
 

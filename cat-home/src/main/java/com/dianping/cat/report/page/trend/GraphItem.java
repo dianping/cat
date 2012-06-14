@@ -1,22 +1,27 @@
 package com.dianping.cat.report.page.trend;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gson.Gson;
 
 public class GraphItem {
 
-	private String[] xlabel;
-
 	private double[] ylable;
 
 	private String titles;
-
+	
+	private String start;
+	
+	private int size;
+	
 	private List<String> subTitles = new ArrayList<String>();
 
 	private List<double[]> values = new ArrayList<double[]>();
 
+	private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 	public GraphItem() {
 	}
 
@@ -35,13 +40,25 @@ public class GraphItem {
 		return gson.toJson(this);
 	}
 
-	public String[] getXlabel() {
-		return xlabel;
-	}
+	public String getStart() {
+   	return start;
+   }
 
-	public void setXlabel(String[] xlabel) {
-		this.xlabel = xlabel;
-	}
+	public void setStart(Date start) {
+   	this.start = sdf.format(start);
+   }
+
+	public int getSize() {
+   	return size;
+   }
+
+	public void setSize(int size) {
+   	this.size = size;
+   }
+
+	public void setStart(String start) {
+   	this.start = start;
+   }
 
 	public double[] getYlable() {
 		return ylable;

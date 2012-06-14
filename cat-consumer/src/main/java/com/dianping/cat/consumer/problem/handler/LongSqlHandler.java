@@ -35,8 +35,9 @@ public class LongSqlHandler implements Handler, Initializable {
 			long value = threshold != null ? threshold.longValue() : m_defaultSqlThreshold;
 			
 			if (duration > value) {
-				String messageId = tree.getMessageId();
-				Entry entry = new Entry(messageId);
+				String messageId = tree.getMessageId();		
+				Entry entry = new Entry();
+				entry.setMessageId(messageId);
 
 				entry.setStatus(transaction.getName());
 				entry.setType(ProblemType.LONG_SQL.getName());

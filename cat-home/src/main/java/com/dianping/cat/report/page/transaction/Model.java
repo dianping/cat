@@ -28,6 +28,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_queryName;
 	
+	private String m_responseTrend;
+	
+	private String m_hitTrend;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -144,4 +148,20 @@ public class Model extends AbstractReportModel<Action, Context> {
    	m_mobileResponse = mobileResponse;
    }
 
+	public String getResponseTrend() {
+   	return m_responseTrend;
+   }
+
+	public void setResponseTrend(String responseTrend) {
+   	m_responseTrend = responseTrend;
+   }
+
+	public String getHitTrend() {
+   	return m_hitTrend;
+   }
+
+	public void setHitTrend(String hitTrend) {
+   	m_hitTrend = hitTrend;
+   }
+	
 }

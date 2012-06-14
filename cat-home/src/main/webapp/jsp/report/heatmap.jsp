@@ -44,7 +44,7 @@ var urlPrefix = "/cat/r/heatmap?domain=${model.domain}&date=${model.date}";
 </c:when>
 <c:otherwise>
 
-<a:report title="HeatMap Report" navUrlPrefix="domain=${model.domain}"
+<a:noSwitchReport title="HeatMap Report" navUrlPrefix="domain=${model.domain}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
@@ -75,6 +75,6 @@ var urlPrefix = "/cat/r/heatmap?domain=${model.domain}&date=${model.date}";
 
 <res:useJs value="${res.js.local.heatmapbutton_js}" target="bottom-js" />
 </jsp:body>
-</a:report>
+</a:noSwitchReport>
 </c:otherwise>
 </c:choose>

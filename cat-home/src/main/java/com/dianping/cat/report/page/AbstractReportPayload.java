@@ -26,16 +26,15 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	@FieldMeta("date")
 	private long m_date;
 
-	@FieldMeta("hours")
-	private int m_hours;
-
 	@FieldMeta("reportType")
 	private String m_reportType;
 
-	@FieldMeta("nav")
-	private String m_nav;
+	@FieldMeta("step")
+	private int m_step;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+
+	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
 
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;
@@ -58,31 +57,37 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			cal.setTimeInMillis(m_date);
 		}
 
-		if ("last".equals(m_nav)) {
+		if (m_step < 0) {
 			if ("month".equals(m_reportType)) {
-				cal.add(Calendar.HOUR, -1);
-				int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-				cal.add(Calendar.HOUR, 1);
-				m_date = m_date - maxDay * (ONE_HOUR * 24);
+				cal.add(Calendar.MONTH, m_step);
+				m_date = cal.getTimeInMillis();
 			} else if ("week".equals(m_reportType)) {
-				m_date = m_date - 7 * (ONE_HOUR * 24);
-			} else {
-				m_date = m_date - (ONE_HOUR * 24);
+				m_date = m_date + 7 * (ONE_HOUR * 24) * m_step;
+			} else if ("day".equals(m_reportType)) {
+				m_date = m_date + (ONE_HOUR * 24) * m_step;
 			}
-		} else if ("next".equals(m_nav)) {
+		} else {
 			long temp = 0;
 			if ("month".equals(m_reportType)) {
-				cal.add(Calendar.HOUR, 1);
-				int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-				cal.add(Calendar.HOUR, -1);
-				temp = m_date + maxDay * (ONE_HOUR * 24);
+				cal.add(Calendar.MONTH, m_step);
+				temp = cal.getTimeInMillis();
 			} else if ("week".equals(m_reportType)) {
-				temp = m_date + 7 * (ONE_HOUR * 24);
-			} else {
-				temp = m_date + (ONE_HOUR * 24);
+				temp = m_date + 7 * (ONE_HOUR * 24) * m_step;
+			} else if ("day".equals(m_reportType)) {
+				temp = m_date + (ONE_HOUR * 24) * m_step;
 			}
 			if (temp <= getCurrentStartDay()) {
 				m_date = temp;
+			}
+		}
+		// yestoday is default
+		if ("day".equals(m_reportType)) {
+			Calendar today = Calendar.getInstance();
+			long current = getCurrentDate();
+			today.setTimeInMillis(current);
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			if (m_date == today.getTimeInMillis()) {
+				m_date = m_date - 24 * ONE_HOUR;
 			}
 		}
 	}
@@ -124,10 +129,15 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	public long getDate() {
 		long current = getCurrentDate();
 
+		long extra = m_step * ONE_HOUR;
+		if (m_reportType != null
+		      && (m_reportType.equals("day") || m_reportType.equals("month") || m_reportType.equals("week"))) {
+			extra = 0;
+		}
 		if (m_date <= 0) {
-			return current + m_hours * ONE_HOUR;
+			return current + extra;
 		} else {
-			long result = m_date + m_hours * ONE_HOUR;
+			long result = m_date + extra;
 
 			if (result > current) {
 				return current;
@@ -144,10 +154,6 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		return m_domain;
 	}
 
-	public int getHours() {
-		return m_hours;
-	}
-
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -162,8 +168,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			m_date = getCurrentDate();
 		} else {
 			try {
-				Date temp = m_dateFormat.parse(date);
-
+				Date temp = null;
+				if (date != null && date.length() == 10) {
+					temp = m_dateFormat.parse(date);
+				} else {
+					temp = m_dayFormat.parse(date);
+				}
 				m_date = temp.getTime();
 			} catch (Exception e) {
 				// ignore it
@@ -174,10 +184,6 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	public void setDomain(String domain) {
 		m_domain = domain;
-	}
-
-	public void setHours(int hours) {
-		m_hours = hours;
 	}
 
 	public void setPage(ReportPage page) {
@@ -205,12 +211,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		this.m_reportType = reportType;
 	}
 
-	public String getNav() {
-		return m_nav;
+	public int getStep() {
+		return m_step;
 	}
 
-	public void setNav(String nav) {
-		m_nav = nav;
+	public void setStep(int nav) {
+		m_step = nav;
 	}
 
 }

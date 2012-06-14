@@ -1,13 +1,17 @@
 package com.dianping.cat.report.page.event;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view"),
+	HOURLY_REPORT("view"),
+
+	HISTORY_REPORT("history"),
 
 	GRAPHS("graphs"),
-	
+
 	MOBILE("mobile"),
+
+	MOBILE_GRAPHS("mobile_graphs"), 
 	
-	MOBILE_GRAPHS("mobile_graphs");
+	HISTORY_GRAPH("historyGraph");
 
 	private String m_name;
 

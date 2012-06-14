@@ -17,19 +17,15 @@ public enum ReportPage implements Page {
 
    LOGVIEW("logview", "m", "Logview", "Log View Details", false),
 
-   IP("ip", "ip", "Top IP", "Top Visited IP", true),
+   IP("ip", "ip", "Top IP", "Top Visited IP", false),
 
    MODEL("model", "model", "Model", "Service Model", false),
 
    SQL("sql", "sql", "SQL", "SQL Report", true),
 
-   TREND("trend", "trend", "Trend", "Trend", true),
-
    HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", true),
 
-   DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", true),
-
-   HISTORYREPORT("historyReport", "hr", "HistoryReport", "History Summary Report", true);
+   DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", true);
 
    private String m_name;
 

@@ -135,6 +135,14 @@
 
 	<entity name="task" table="task" alias="t">
 		<query-defs>
+			<query name="insert" type="INSERT">
+				<statement><![CDATA[
+				INSERT IGNORE INTO <TABLE/>
+					(<FIELDS/>) 
+				VALUES
+					(<VALUES/>)
+				]]></statement>
+			</query>
 			<query name="find-by-status-consumer" type="SELECT">
 				<param name="status" />
 				<param name="consumer" />
@@ -184,7 +192,24 @@
 	</entity>
 
 	<entity name="dailyreport" table="dailyreport" alias="dr">
+		<var name="start-date" value-type="Date" />
+		<var name="end-date" value-type="Date" />
 		<query-defs>
+			<query name="find-all-by-domain-name-duration" type="SELECT"
+				multiple="true">
+				<param name="start-date" />
+				<param name="end-date" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> >= ${start-date}
+					AND <FIELD name='period'/> < ${end-date}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name}
+					]]></statement>
+			</query>
 			<query name="find-by-name-domain-period" type="SELECT">
 				<param name="period" />
 				<param name="domain" />
@@ -201,17 +226,44 @@
 	</entity>
 
 	<entity name="graph" table="graph" alias="g">
+		<var name="start-date" value-type="Date" />
+		<var name="end-date" value-type="Date" />
 		<query-defs>
-			<query name="insert-or-update" type="INSERT">
+			<query name="insert" type="INSERT">
 				<statement><![CDATA[
-					INSERT INTO <TABLE/>(<FIELDS/>) 
-					VALUES(<VALUES/>)
-					ON DUPLICATE KEY 
-					UPDATE 
-					<FIELD name='creation-date'/> = ${creation-date} 
+					INSERT IGNORE INTO <TABLE/>
+						(<FIELDS/>) 
+					VALUES
+						(<VALUES/>) 
+				]]></statement>
+			</query>
+			<query name="find-by-domain-name-ip-duration" type="SELECT" multiple="true">
+				<param name="start-date" />
+				<param name="end-date" />
+				<param name="ip" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					AND <FIELD name='domain'/> = ${domain}
+					<IF type='NOT_NULL' field='ip'>
+						AND  <FIELD name='ip'/> = ${ip}
+					</IF>
+					AND <FIELD name='period'/> >= ${start-date}
+					AND <FIELD name='period'/> < ${end-date}
+					ORDER BY <FIELD name='period'/> ASC 
 				]]></statement>
 			</query>
 		</query-defs>
 	</entity>
 </entities>
+
+
+
+
+
+
+
 

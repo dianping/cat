@@ -35,18 +35,13 @@ public class LongUrlHandler implements Handler, Initializable {
 			long value = threshold != null ? threshold.longValue() : m_defaultUrlThreshold;
 
 			if (duration > value) {
-				String messageId = tree.getMessageId();
+				Entry entry = new Entry();
+				entry.setMessageId(tree.getMessageId());
+				entry.setStatus(message.getName());
+				entry.setType(ProblemType.LONG_URL.getName());
+				entry.setDuration((int) duration);
 
-				if (segment.findEntry(messageId) == null) {
-					Entry entry = new Entry(messageId);
-
-					entry.setStatus(message.getName());
-					entry.setType(ProblemType.LONG_URL.getName());
-					entry.setDuration((int) duration);
-
-					segment.addEntry(entry);
-				}
-
+				segment.addEntry(entry);
 				count++;
 			}
 		}

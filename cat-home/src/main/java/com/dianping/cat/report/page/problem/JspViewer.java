@@ -9,6 +9,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
+		case ALL:
+			return JspFile.ALL.getPath();
 		case GROUP:
 			return JspFile.GROUP.getPath();
 		case THREAD:
@@ -17,6 +19,10 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.DETAIL.getPath();
 		case MOBILE:
 			return JspFile.MOBILE.getPath();
+		case HISTORY:
+			return JspFile.HISTORY.getPath();
+		case HISTORY_GRAPH:
+			return JspFile.HISTORY_GRAPH.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

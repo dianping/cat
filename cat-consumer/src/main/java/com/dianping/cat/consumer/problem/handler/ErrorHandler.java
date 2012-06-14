@@ -37,22 +37,19 @@ public class ErrorHandler implements Handler {
 		int count = 0;
 
 		if (!message.getStatus().equals(Message.SUCCESS) && m_errorTypes.contains(message.getType())) {
-			String messageId = tree.getMessageId();
+			Entry entry = new Entry();
+			entry.setMessageId(tree.getMessageId());
 
-			if (segment.findEntry(messageId) == null) {
-				Entry entry = new Entry(messageId);
+			entry.setStatus(message.getName());
+			entry.setType(ProblemType.ERROR.getName());
 
-				entry.setStatus(message.getName());
-				entry.setType(ProblemType.ERROR.getName());
+			if (message instanceof Transaction) {
+				long duration = ((Transaction) message).getDurationInMillis();
 
-				if (message instanceof Transaction) {
-					long duration = ((Transaction) message).getDurationInMillis();
-
-					entry.setDuration((int) duration);
-				}
-
-				segment.addEntry(entry);
+				entry.setDuration((int) duration);
 			}
+
+			segment.addEntry(entry);
 
 			count++;
 		}

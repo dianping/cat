@@ -10,6 +10,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <c:set var="report" value="${model.report}"/>
 
+
 <a:report title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -75,8 +76,7 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-			<input type="text" name="queryname" id="queryname">
-		    <input type="text" id="hiddenQuery" style="display:none" value="${model.queryName}"></input>
+			<input type="text" name="queryname" id="queryname"  value="${model.queryName}">
 		    <input  style="WIDTH: 60px" value="Filter" onclick="selectByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			<tr>
 			<th><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
@@ -105,7 +105,7 @@
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="10"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="11"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>

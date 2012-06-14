@@ -25,6 +25,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_graph4;
 
 	private String m_mobileResponse;
+	
+	private String m_hitTrend;
+	
+	private String m_failureTrend;
+
+	public String getFailureTrend() {
+   	return m_failureTrend;
+   }
+
+	public void setFailureTrend(String failureTrend) {
+   	m_failureTrend = failureTrend;
+   }
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -32,7 +44,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.HOURLY_REPORT;
 	}
 
 	@Override
@@ -133,4 +145,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setMobileResponse(String mobileResponse) {
    	m_mobileResponse = mobileResponse;
    }
+
+	public String getHitTrend() {
+   	return m_hitTrend;
+   }
+
+	public void setHitTrend(String hitTrend) {
+   	m_hitTrend = hitTrend;
+   }
+	
+	
 }
