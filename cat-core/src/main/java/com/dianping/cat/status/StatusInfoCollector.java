@@ -120,9 +120,11 @@ class StatusInfoCollector extends BaseVisitor {
 		memory.setNonHeapUsage(bean.getNonHeapMemoryUsage().getUsed());
 
 		List<GarbageCollectorMXBean> beans = ManagementFactory.getGarbageCollectorMXBeans();
+
 		for (GarbageCollectorMXBean mxbean : beans) {
 			if (mxbean.isValid()) {
 				GcInfo gc = new GcInfo();
+
 				gc.setName(mxbean.getName());
 				gc.setCount(mxbean.getCollectionCount());
 				gc.setTime(mxbean.getCollectionTime());
@@ -148,7 +150,7 @@ class StatusInfoCollector extends BaseVisitor {
 
 		os.setArch(bean.getArch());
 		os.setName(bean.getName());
-		os.setVersion(bean.getName());
+		os.setVersion(bean.getVersion());
 		os.setAvailableProcessors(bean.getAvailableProcessors());
 		os.setSystemLoadAverage(bean.getSystemLoadAverage());
 
