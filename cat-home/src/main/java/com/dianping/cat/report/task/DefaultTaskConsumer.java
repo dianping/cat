@@ -262,19 +262,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		return problemReport;
 	}
 
-	private HeartbeatReport mergeHeartbeatReports(String reportDomain, List<Report> reports) throws SAXException, IOException {
-		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportDomain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			HeartbeatReport model = heartbeatParser.parse(xml);
-			model.accept(merger);
-		}
-
-		HeartbeatReport heartbeatReport = merger == null ? null : merger.getHeartbeatReport();
-		return heartbeatReport;
-	}
-
 	private EventReport mergeEventReports(String reportDomain, List<Report> reports) throws SAXException, IOException {
 		EventReport eventReport;
 		EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));

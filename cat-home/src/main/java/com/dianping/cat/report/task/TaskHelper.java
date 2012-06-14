@@ -60,7 +60,7 @@ public class TaskHelper {
 		bufSize *= 4;
 		StringBuilder buf = new StringBuilder(bufSize);
 
-		for (int i = startIndex; i < endIndex; i++) {
+		for (int i = startIndex; i <= endIndex; i++) {
 			buf.append(array[i]);
 			if (i < endIndex) {
 				buf.append(separator);
