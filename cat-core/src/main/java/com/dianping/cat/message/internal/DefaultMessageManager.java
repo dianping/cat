@@ -221,7 +221,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	boolean shouldThrottle(MessageTree tree) {
-		if (tree.getMessage() != null && tree.getMessage().getName().equals("Heartbeat")) {
+		if (tree.getMessage() != null && "Heartbeat".equals(tree.getMessage().getName())) {
 			return false;
 		}
 

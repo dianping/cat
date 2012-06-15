@@ -22,8 +22,8 @@ public abstract class AbstractMessage implements Message {
 	private boolean m_completed;
 
 	public AbstractMessage(String type, String name) {
-		m_type = type;
-		m_name = name;
+		m_type = String.valueOf(type);
+		m_name = String.valueOf(name);
 		m_timestampInMicros = MilliSecondTimer.currentTimeMicros();
 	}
 
