@@ -13,7 +13,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.locks.LockSupport;
 
-import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.xml.sax.SAXException;
@@ -22,7 +21,9 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
@@ -47,7 +48,6 @@ import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.site.dal.jdbc.DalException;
-import com.site.helper.Joiners;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -69,7 +69,9 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		double sum2;
 
-		public int[] minuteCounts;
+		int[] minuteCounts;
+
+		double[] minuteNumbers;
 	}
 
 	@Inject
@@ -180,9 +182,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 				eventReport.getIps().add("All");
 				content = eventReport.toString();
 			} else if ("heartbeat".equals(reportName)) {
-				// TODO
-				// HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
-				// content = heartbeatReport.toString();
+				return;
 			} else if ("problem".equals(reportName)) {
 				ProblemReport problemReport = mergeProblemReports(reportDomain, reports);
 				content = problemReport.toString();
@@ -228,9 +228,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 				EventReport eventReport = mergeEventReports(reportDomain, reports);
 				graphs = splitEventReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
 			} else if ("heartbeat".equals(reportName)) {
-				// TODO
-				// HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
-				// graphs = splitHeartbeatReportToGraphs(reportPeriod, reportDomain, reportName, heartbeatReport);
+				HeartbeatReport heartbeatReport = mergeHeartbeatReports(reportDomain, reports);
+				graphs = splitHeartbeatReportToGraphs(reportPeriod, reportDomain, reportName, heartbeatReport);
 			} else if ("problem".equals(reportName)) {
 				ProblemReport problemReport = mergeProblemReports(reportDomain, reports);
 				graphs = splitProblemReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
@@ -247,6 +246,19 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			return false;
 		}
 		return true;
+	}
+
+	private HeartbeatReport mergeHeartbeatReports(String reportDomain, List<Report> reports) throws SAXException, IOException {
+		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportDomain));
+
+		for (Report report : reports) {
+			String xml = report.getContent();
+			HeartbeatReport model = heartbeatParser.parse(xml);
+			model.accept(merger);
+		}
+
+		HeartbeatReport heartbeatReport = merger == null ? null : merger.getHeartbeatReport();
+		return heartbeatReport;
 	}
 
 	private ProblemReport mergeProblemReports(String reportDomain, List<Report> reports) throws SAXException, IOException {
@@ -392,9 +404,149 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		return graphs;
 	}
 
-	private List<Graph> splitHeartbeatReportToGraphs(Date reportPeroid, String reportDomain, String reportName, HeartbeatReport heartbeatReport) {
-		// TODO Auto-generated method stub
-		return null;
+	private List<Graph> splitHeartbeatReportToGraphs(Date reportPeroid, String domainName, String reportName, HeartbeatReport heartbeatReport) {
+		Set<String> ips = heartbeatReport.getIps();
+		List<Graph> graphs = new ArrayList<Graph>(ips.size());
+
+		for (String ip : ips) {
+			Graph graph = new Graph();
+			graph.setIp(ip);
+			graph.setDomain(domainName);
+			graph.setName(reportName);
+			graph.setPeriod(reportPeroid);
+			graph.setType(3);
+			com.dianping.cat.consumer.heartbeat.model.entity.Machine machine = heartbeatReport.getMachines().get(ip);
+			List<Period> periods = machine.getPeriods();
+
+			Map<String, GraphLine> detailCache = new TreeMap<String, GraphLine>();
+
+			for (Period period : periods) {
+				int minute = period.getMinute();
+
+				String key = "CatMessageSize";
+				Number value = period.getCatMessageSize();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "CatMessageOverflow";
+				value = period.getCatMessageOverflow();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "CatMessageProduced";
+				value = period.getCatMessageProduced();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				List<Disk> disks = period.getDisks();
+				for (Disk d : disks) {
+					key = "Disk " + d.getPath();
+					value = d.getFree();
+					cacheHeartbeatColumn(detailCache, minute, value, key);
+				}
+
+				key = "MemoryFree";
+				value = period.getMemoryFree();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "HeapUsage";
+				value = period.getHeapUsage();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "NoneHeapUsage";
+				value = period.getNoneHeapUsage();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "SystemLoadAverage";
+				value = period.getSystemLoadAverage();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "OldGcCount";
+				value = period.getOldGcCount();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "NewGcCount";
+				value = period.getNewGcCount();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "PigeonStartedThread";
+				value = period.getPigeonThreadCount();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "CatThreadCount";
+				value = period.getCatThreadCount();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "TotalStartedThread";
+				value = period.getTotalStartedCount();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "DaemonThread";
+				value = period.getDaemonCount();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+
+				key = "ActiveThread";
+				value = period.getThreadCount();
+				cacheHeartbeatColumn(detailCache, minute, value, key);
+			}
+
+			for (Entry<String, GraphLine> entry : detailCache.entrySet()) {
+				GraphLine line = entry.getValue();
+				double[] numbers = line.minuteNumbers;
+				double minValue = numbers[0];
+				double maxValue = minValue;
+				double sum = minValue;
+				double sum2 = sum * sum;
+
+				for (int i = 1; i < numbers.length; i++) {
+					double n = numbers[i];
+					if (n > maxValue) {
+						maxValue = n;
+					}
+					if (n < minValue) {
+						minValue = n;
+					}
+					sum += n;
+					sum2 += n * n;
+				}
+
+				line.min = minValue;
+				line.max = maxValue;
+				line.sum = sum;
+				line.sum2 = sum2;
+			}
+
+			StringBuilder sb = new StringBuilder(64 * detailCache.size());
+			for (Entry<String, GraphLine> entry : detailCache.entrySet()) {
+				GraphLine value = entry.getValue();
+				sb.append(entry.getKey());
+				sb.append('\t');
+				sb.append(value.min);
+				sb.append('\t');
+				sb.append(value.max);
+				sb.append('\t');
+				sb.append(value.sum);
+				sb.append('\t');
+				sb.append(value.sum2);
+				sb.append('\t');
+				sb.append(TaskHelper.join(value.minuteNumbers, ','));
+				sb.append('\n');
+			}
+
+			graph.setDetailContent(sb.toString());
+			graph.setCreationDate(new Date());
+
+			graphs.add(graph);
+
+		}
+		return graphs;
+	}
+
+	private void cacheHeartbeatColumn(Map<String, GraphLine> detailCache, int minute, Number value, String key) {
+		GraphLine detailLine = detailCache.get(key);
+		if (detailLine == null) {
+			detailLine = new GraphLine();
+			detailLine.minuteNumbers = new double[60];
+			detailCache.put(key, detailLine);
+		}
+		detailLine.minuteNumbers[minute] = value.doubleValue();
 	}
 
 	private List<Graph> splitProblemReportToGraphs(Date reportPeroid, String domainName, String reportName, ProblemReport problemReport) {
