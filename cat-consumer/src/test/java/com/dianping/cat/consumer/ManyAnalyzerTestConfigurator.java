@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.consumer.AnalyzerFactory;
-import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer1;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer2;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer3;
@@ -28,7 +26,7 @@ public class ManyAnalyzerTestConfigurator extends
 				.req(AnalyzerFactory.class)//
 				.config(E("analyzers").value("mock1,mock2,mock3") //
 				));
-
+		
 		all.add(C(MessageAnalyzer.class, "mock1", MockAnalyzer1.class) //
 				.is(PER_LOOKUP));
 		all.add(C(MessageAnalyzer.class, "mock2", MockAnalyzer2.class) //

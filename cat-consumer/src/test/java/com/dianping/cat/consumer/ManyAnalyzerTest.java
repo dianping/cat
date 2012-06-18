@@ -27,13 +27,14 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 	public void test() throws Exception {
 		MessageConsumer consumer = lookup(MessageConsumer.class, "mockManyAnalyzers");
 
+		Thread.sleep(100);
 		for (int i = 0; i < 100; i++) {
 			DefaultMessageTree tree = new DefaultMessageTree();
 			tree.setMessage(new MockMessage());
 			consumer.consume(tree);
 		}
 
-		Thread.sleep(1000 * 2);
+		Thread.sleep(100);
 
 		Assert.assertEquals(100, s_count1);
 		Assert.assertEquals(200, s_count2);
@@ -57,9 +58,9 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-      public Set<String> getDomains() {
-	      return null;
-      }
+		public Set<String> getDomains() {
+			return null;
+		}
 	}
 
 	public static class MockAnalyzer2 extends AbstractMessageAnalyzer<AnalyzerResult> {
@@ -79,9 +80,9 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-      public Set<String> getDomains() {
-	      return null;
-      }
+		public Set<String> getDomains() {
+			return null;
+		}
 	}
 
 	public static class MockAnalyzer3 extends AbstractMessageAnalyzer<AnalyzerResult> {
@@ -101,9 +102,9 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-      public Set<String> getDomains() {
-	      return null;
-      }
+		public Set<String> getDomains() {
+			return null;
+		}
 	}
 
 	public static class AnalyzerResult {
@@ -113,16 +114,21 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 	static class MockMessage extends AbstractMessage {
 		public MockMessage() {
 			super(null, null);
-
+			setTimestamp(getTimestamp());
 		}
 
 		@Override
 		public long getTimestamp() {
-			return System.currentTimeMillis() - 10 * 1000;
+			return System.currentTimeMillis();
 		}
 
 		@Override
 		public void complete() {
+		}
+
+		@Override
+		public String toString() {
+			return "MockMessage";
 		}
 	}
 }

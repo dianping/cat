@@ -48,7 +48,7 @@ public class Handler implements PageHandler<Context> {
 
 	public static final long ONE_HOUR = 3600 * 1000L;
 	
-	public static final double NOTEXIST=-2;
+	public static final double NOTEXIST=0;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -221,7 +221,7 @@ public class Handler implements PageHandler<Context> {
 		item.setStart(start);
 		item.setSize(size);
 
-		item.setTitles(display + " Response Trend");
+		item.setTitles(display + " Response Time");
 		Map<String, double[]> graphData = getGraphData(model, payload);
 		double[] sum = graphData.get("sum");
 		double[] totalCount = graphData.get("total_count");
@@ -235,7 +235,7 @@ public class Handler implements PageHandler<Context> {
 		model.setResponseTrend(item.getJsonString());
 
 		item.getValues().clear();
-		item.setTitles(display + " Hit Trend");
+		item.setTitles(display + " Hits");
 
 		item.addValue(totalCount);
 		model.setHitTrend(item.getJsonString());

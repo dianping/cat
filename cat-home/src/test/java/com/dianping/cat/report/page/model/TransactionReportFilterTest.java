@@ -16,7 +16,7 @@ public class TransactionReportFilterTest {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
 		TransactionReport report = parser.parse(source);
 
-		TransactionReportFilter f1 = new TransactionReportFilter(null, null,null);
+		TransactionReportFilter f1 = new TransactionReportFilter(null, null,"10.1.77.193");
 		String expected1 = Files.forIO().readFrom(getClass().getResourceAsStream("transaction-type.xml"), "utf-8");
 
 		Assert.assertEquals(expected1.replaceAll("\r", ""), f1.buildXml(report).replaceAll("\r", ""));
