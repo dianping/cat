@@ -14,9 +14,7 @@
 	type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:noSwitchReport title="Heartbeat Report"
-	navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}"
-	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
@@ -148,4 +146,4 @@
 </table>
 
 </jsp:body>
-</a:noSwitchReport>
+</a:report>

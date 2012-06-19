@@ -506,6 +506,9 @@
 			<implementation>com.dianping.cat.report.page.heartbeat.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
 				</requirement>
 				<requirement>

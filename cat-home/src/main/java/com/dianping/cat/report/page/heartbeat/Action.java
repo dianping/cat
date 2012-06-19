@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.heartbeat;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view"), MOBILE("mobile");
+	VIEW("view"), MOBILE("mobile"),HISTORY("history");
 
 	private String m_name;
 
