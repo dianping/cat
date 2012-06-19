@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.ReportPage;
@@ -60,10 +61,14 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				report = getHourlyReport(domain);
 			}
-			TransactionType detail = report.getMachines().get("All").getTypes().get("URL");
-
-			data.put(domain + "UrlTotal", String.valueOf(detail.getTotalCount()));
-			data.put(domain + "UrlResponse", String.valueOf(detail.getAvg()));
+			Machine machine = report.getMachines().get("All");
+			if (machine != null) {
+				TransactionType detail = machine.getTypes().get("URL");
+				if (detail != null) {
+					data.put(domain + "UrlTotal", String.valueOf(detail.getTotalCount()));
+					data.put(domain + "UrlResponse", String.valueOf(detail.getAvg()));
+				}
+			}
 		}
 
 		model.setData(m_gson.toJson(data));
