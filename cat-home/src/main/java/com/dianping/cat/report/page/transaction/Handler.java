@@ -239,6 +239,11 @@ public class Handler implements PageHandler<Context> {
 
 		item.addValue(totalCount);
 		model.setHitTrend(item.getJsonString());
+
+		item.getValues().clear();
+		item.setTitles(display+ " Error");
+		item.addValue(graphData.get("failure_count"));
+		model.setErrorTrend(item.getJsonString());
 	}
 
 	private void showSummarizeReport(Model model, Payload payload) {

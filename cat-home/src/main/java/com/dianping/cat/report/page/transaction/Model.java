@@ -32,6 +32,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_hitTrend;
 	
+	private String m_errorTrend;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -163,5 +165,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setHitTrend(String hitTrend) {
    	m_hitTrend = hitTrend;
    }
-	
+
+	public String getErrorTrend() {
+   	return m_errorTrend;
+   }
+
+	public void setErrorTrend(String errorTrend) {
+   	m_errorTrend = errorTrend;
+   }
 }
