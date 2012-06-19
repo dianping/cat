@@ -32,6 +32,8 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		MessageConsumer consumer = lookup(MessageConsumer.class, "mock");
+
+		Thread.sleep(1000);
 		for (int i = 0; i < 100; i++) {
 			DefaultMessageTree tree = new DefaultMessageTree();
 			tree.setMessage(new MockMessage(-1));
@@ -44,10 +46,10 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 			consumer.consume(tree);
 		}
 
-		Thread.sleep(1000 * 2);
-		Assert.assertEquals(100, s_count1);
-		Assert.assertEquals(200, s_count2);
-		Assert.assertEquals(2, s_period);
+		Thread.sleep(1000);
+		Assert.assertEquals(0, s_count1);
+		Assert.assertEquals(400, s_count2);
+		Assert.assertEquals(1, s_period);
 	}
 
 	public static class MockAnalyzer extends AbstractMessageAnalyzer<AnalyzerResult> {
@@ -76,9 +78,9 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		}
 
 		@Override
-      public Set<String> getDomains() {
-	      return null;
-      }
+		public Set<String> getDomains() {
+			return null;
+		}
 	}
 
 	public static class AnalyzerResult {
@@ -86,17 +88,23 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 	}
 
 	static class MockMessage extends AbstractMessage {
-		private int type;
+		private int m_type;
 
 		public MockMessage(int type) {
 			super(null, null);
-			this.type = type;
+			m_type = type;
+			setTimestamp(getTimestamp());
 		}
+
+		public int getIntType() {
+      	return m_type;
+      }
 
 		@Override
 		public long getTimestamp() {
-			if (type == -1)
-				return System.currentTimeMillis() - 60 * 60 * 1000;
+//			if (m_type == -1) {
+//				return System.currentTimeMillis() - 60 * 60 * 1000;
+//			}
 			return System.currentTimeMillis();
 		}
 

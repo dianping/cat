@@ -1,47 +1,22 @@
-<transaction-report domain="Cat" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
+<transaction-report domain="Cat" startTime="2012-06-18 14:00:00" endTime="2012-06-18 14:59:59">
    <domain>Cat</domain>
-   <type id="URL" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="194.0" avg="47.1" sum="518.0" sum2="73942.0" std="67.1">
-      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      <name id="home" totalCount="1" failCount="0" failPercent="0.00" min="175.0" max="175.0" avg="175.0" sum="175.0" sum2="30625.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-         <range value="5" count="123" sum="123456.0" avg="22.2" fails="3"/>
-         <range value="10" count="123" sum="12457.0" avg="222.0" fails="3"/>
-         <duration value="128" count="34"/>
-         <duration value="256" count="12"/>
-      </name>
-      <name id="service" totalCount="8" failCount="0" failPercent="0.00" min="1.0" max="58.0" avg="13.0" sum="104.0" sum2="3952.0" std="18.0">
-         <successMessageUrl>20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html</successMessageUrl>
-         <failMessageUrl>20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html</failMessageUrl>
-      </name>
-      <name id="t" totalCount="1" failCount="0" failPercent="0.00" min="193.0" max="193.0" avg="193.0" sum="193.0" sum2="37249.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/8e7c91a0-7549-4b13-b43b-252b2a6ef4bb.html</successMessageUrl>
-      </name>
-      <name id="ip" totalCount="1" failCount="0" failPercent="0.00" min="46.0" max="46.0" avg="46.0" sum="46.0" sum2="2116.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/2029c32e-b692-4e43-8eaf-96b8d6c846a2.html</successMessageUrl>
-      </name>
-   </type>
-   <type id="MVC" totalCount="33" failCount="0" failPercent="0.00" min="0.0" max="191.0" avg="15.1" sum="499.0" sum2="68377.0" std="42.9">
-      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      <name id="InboundPhase" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="17.0" avg="1.5" sum="17.0" sum2="289.0" std="4.9">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="TransitionPhase" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="OutboundPhase" totalCount="11" failCount="0" failPercent="0.00" min="1.0" max="191.0" avg="43.8" sum="482.0" sum2="68088.0" std="65.3">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-   </type>
-   <type id="NEW1" totalCount="33" failCount="0" failPercent="0.00" min="0.0" max="191.0" avg="15.1" sum="499.0" sum2="68377.0" std="42.9">
-      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      <name id="InboundPhase" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="17.0" avg="1.5" sum="17.0" sum2="289.0" std="4.9">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="TransitionPhase" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="OutboundPhase" totalCount="11" failCount="0" failPercent="0.00" min="1.0" max="191.0" avg="43.8" sum="482.0" sum2="68088.0" std="65.3">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-   </type>
+   <ip>192.168.165.1</ip>
+   <machine ip="192.168.165.1">
+      <type id="Task" totalCount="1" failCount="0" failPercent="0.00" min="335.782" max="335.782" avg="335.8" sum="335.8" sum2="112749.6" std="0.0" tps="0.00" line95Value="335.00" line95Sum="335.00" line95Count="1">
+      </type>
+      <type id="SQL" totalCount="7" failCount="0" failPercent="0.00" min="54.405" max="1842.509" avg="622.0" sum="4354.3" sum2="6512117.3" std="737.1" tps="0.00" line95Value="1842.00" line95Sum="1842.00" line95Count="1">
+         <successMessageUrl>Cat-c0a8a501-1340002646868-0</successMessageUrl>
+      </type>
+      <type id="URL" totalCount="19" failCount="1" failPercent="5.26" min="4.864" max="4693.388" avg="572.6" sum="10878.8" sum2="31142053.9" std="1145.1" tps="0.00" line95Value="4693.00" line95Sum="4693.00" line95Count="1">
+         <successMessageUrl>Cat-c0a8a501-1340002652960-0</successMessageUrl>
+         <failMessageUrl>Cat-c0a8a501-1340002659680-0</failMessageUrl>
+      </type>
+      <type id="MVC" totalCount="57" failCount="1" failPercent="1.75" min="0.0090" max="3951.904" avg="174.1" sum="9921.4" sum2="24096052.4" std="626.5" tps="0.00" line95Value="1788.00" line95Sum="1788.00" line95Count="1">
+         <successMessageUrl>Cat-c0a8a501-1340002652960-0</successMessageUrl>
+         <failMessageUrl>Cat-c0a8a501-1340002659680-0</failMessageUrl>
+      </type>
+      <type id="ModelService" totalCount="14" failCount="0" failPercent="0.00" min="1.851" max="110.85" avg="49.3" sum="689.7" sum2="57274.6" std="40.8" tps="0.00" line95Value="110.00" line95Sum="110.00" line95Count="1">
+         <successMessageUrl>Cat-c0a8a501-1340002676112-0</successMessageUrl>
+      </type>
+   </machine>
 </transaction-report>

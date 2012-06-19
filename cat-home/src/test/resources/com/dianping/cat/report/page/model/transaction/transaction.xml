@@ -1,50 +1,54 @@
-<transaction-report domain="Cat" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
-   <domain>Cat</domain>
-   <type id="URL" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="194.0" avg="47.1" sum="518.0" sum2="73942.0" std="67.1">
-      <name id="home" totalCount="1" failCount="0" failPercent="0.00" min="175.0" max="175.0" avg="175.0" sum="175.0" sum2="30625.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-	     <range value="5" count="123" sum="123456" avg="22.2" transactions="3"/>
-	   	 <range value="15" count="123" sum="12457" avg="222" transactions="3"/>
-	   	 <duration value="128" count="34"/>
-	   	 <duration value="256" count="12"/>
-      </name>
-      <name id="service" totalCount="8" failCount="0" failPercent="0.00" min="1.0" max="58.0" avg="13.0" sum="104.0" sum2="3952.0" std="18.0">
-         <successMessageUrl>20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html</successMessageUrl>
-	     <range value="5" count="13" sum="1236" avg="22.2" transactions="0"/>
-	   	 <range value="10" count="12" sum="457" avg="222" transactions="1"/>
-	   	 <duration value="64" count="31"/>
-	   	 <duration value="256" count="13"/>
-      </name>
-      <name id="t" totalCount="1" failCount="0" failPercent="0.00" min="193.0" max="193.0" avg="193.0" sum="193.0" sum2="37249.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/8e7c91a0-7549-4b13-b43b-252b2a6ef4bb.html</successMessageUrl>
-      </name>
-      <name id="ip" totalCount="1" failCount="0" failPercent="0.00" min="46.0" max="46.0" avg="46.0" sum="46.0" sum2="2116.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/2029c32e-b692-4e43-8eaf-96b8d6c846a2.html</successMessageUrl>
-      </name>
-      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-   </type>
-   <type id="MVC" totalCount="33" failCount="0" failPercent="0.00" min="0.0" max="191.0" avg="15.1" sum="499.0" sum2="68377.0" std="42.9">
-      <name id="InboundPhase" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="17.0" avg="1.5" sum="17.0" sum2="289.0" std="4.9">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="TransitionPhase" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="OutboundPhase" totalCount="11" failCount="0" failPercent="0.00" min="1.0" max="191.0" avg="43.8" sum="482.0" sum2="68088.0" std="65.3">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-   </type>
-   <type id="NEW1" totalCount="33" failCount="0" failPercent="0.00" min="0.0" max="191.0" avg="15.1" sum="499.0" sum2="68377.0" std="42.9">
-      <name id="InboundPhase" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="17.0" avg="1.5" sum="17.0" sum2="289.0" std="4.9">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="TransitionPhase" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="4.9E-324" avg="0.0" sum="0.0" sum2="0.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="OutboundPhase" totalCount="11" failCount="0" failPercent="0.00" min="1.0" max="191.0" avg="43.8" sum="482.0" sum2="68088.0" std="65.3">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-   </type>
+<transaction-report domain="MobileApi" startTime="2012-06-18 16:00:00"
+	endTime="2012-06-18 16:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<ip>10.1.77.193</ip>
+	<machine ip="10.1.77.193">
+		<type id="Result" totalCount="208" failCount="0" failPercent="0.00"
+			min="0.225" max="673.736" avg="7.8" sum="1618.0" sum2="490858.8" std="48.0"
+			tps="0.00" line95Value="44.00" line95Sum="44.00" line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403188-1
+			</successMessageUrl>
+		</type>
+		<type id="URL" totalCount="65" failCount="0" failPercent="0.00"
+			min="1.492" max="92376.562" avg="2942.2" sum="191246.2" sum2="9818761147.4"
+			std="11933.2" tps="0.00" line95Value="19399.00" line95Sum="19399.00"
+			line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="Action" totalCount="65" failCount="0" failPercent="0.00"
+			min="0.203" max="72901.539" avg="2534.1" sum="164717.0" sum2="6558693118.2"
+			std="9720.1" tps="0.00" line95Value="19395.00" line95Sum="19395.00"
+			line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="Call" totalCount="212" failCount="0" failPercent="0.00"
+			min="3.355" max="3143.928" avg="110.1" sum="23337.1" sum2="26978744.0"
+			std="339.3" tps="0.00" line95Value="562.00" line95Sum="562.00"
+			line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="SQL" totalCount="7858" failCount="0" failPercent="0.00"
+			min="0.222" max="125.143" avg="0.9" sum="7173.8" sum2="103546.3" std="3.5"
+			tps="0.00" line95Value="1.00" line95Sum="1.00" line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="Response" totalCount="65" failCount="0" failPercent="0.00"
+			min="0.027" max="78.726" avg="8.3" sum="538.7" sum2="13094.9" std="11.5"
+			tps="0.00" line95Value="22.00" line95Sum="22.00" line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="Task" totalCount="42" failCount="0" failPercent="0.00"
+			min="82.755" max="560.798" avg="304.4" sum="12786.7" sum2="4510647.4"
+			std="121.3" tps="0.00" line95Value="506.00" line95Sum="506.00"
+			line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006430840-0
+			</successMessageUrl>
+		</type>
+	</machine>
 </transaction-report>
