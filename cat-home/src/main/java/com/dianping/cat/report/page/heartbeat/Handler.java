@@ -189,7 +189,7 @@ public class Handler implements PageHandler<Context> {
 	private void showHeartBeatGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR *60);
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 60);
 		Map<String, double[]> graphData = getHeartBeatData(model, payload);
 
 		model.setActiveThreadGraph(getGraphItem("Thread (Count) ", "ActiveThread", start, size, graphData)
@@ -216,15 +216,15 @@ public class Handler implements PageHandler<Context> {
 		      .getJsonString());
 		model.setDiskRootGraph(getGraphItem("Disk (GB) /", "Disk /", start, size, graphData).getJsonString());
 		model.setDiskDataGraph(getGraphItem("Disk (GB) /data", "Disk /data", start, size, graphData).getJsonString());
-		model.setCatMessageProducedGraph(getGraphItem("Cat Message Produced (Count) / Minute", "CatMessageProduced", start, size,
-		      graphData).getJsonString());
-		model.setCatMessageOverflowGraph(getGraphItem("Cat Message Overflow (Count) / Minute", "CatMessageOverflow", start, size,
-		      graphData).getJsonString());
+		model.setCatMessageProducedGraph(getGraphItem("Cat Message Produced (Count) / Minute", "CatMessageProduced",
+		      start, size, graphData).getJsonString());
+		model.setCatMessageOverflowGraph(getGraphItem("Cat Message Overflow (Count) / Minute", "CatMessageOverflow",
+		      start, size, graphData).getJsonString());
 		model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
 		      graphData).getJsonString());
 	}
 
-	private Map<String, double[]> getHeartBeatData(Model model, Payload payload) {
+	public Map<String, double[]> getHeartBeatData(Model model, Payload payload) {
 		Date start = new Date(payload.getDate());
 		Date end = payload.getHistoryEndDate();
 		String ip = model.getIpAddress();
@@ -241,7 +241,7 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	private Map<String, double[]> buildHeartbeatDates(Date start, Date end, List<Graph> graphs) {
+	public Map<String, double[]> buildHeartbeatDates(Date start, Date end, List<Graph> graphs) {
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
 		Map<String, String[]> hourlyDate = gethourlyDate(graphs, start, size);
 		return getHeartBeatDatesEveryMinute(hourlyDate, size);
@@ -315,8 +315,9 @@ public class Handler implements PageHandler<Context> {
 
 	// illegal
 	private boolean illegalData(String oneHourData) {
-		return oneHourData == null || oneHourData.length() == 0 ;
-		//return oneHourData == null || oneHourData.length() == 0 || oneHourData.split(",").length != 60;
+		return oneHourData == null || oneHourData.length() == 0;
+		// return oneHourData == null || oneHourData.length() == 0 ||
+		// oneHourData.split(",").length != 60;
 	}
 
 	private void formatHeartBeat(Map<String, double[]> result) {
