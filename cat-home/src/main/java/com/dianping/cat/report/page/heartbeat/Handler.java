@@ -28,6 +28,7 @@ import com.dianping.cat.report.page.trend.GraphItem;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.google.gson.Gson;
 import com.site.dal.jdbc.DalException;
+import com.site.dal.jdbc.Readset;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -115,11 +116,6 @@ public class Handler implements PageHandler<Context> {
 			showHeartBeatGraph(model, payload);
 			break;
 		}
-		if (payload.getPeriod().isCurrent()) {
-			model.setCreatTime(new Date());
-		} else {
-			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
-		}
 		m_jspViewer.view(ctx, model);
 	}
 
@@ -130,9 +126,9 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HEARTBEAT);
 		model.setIpAddress(payload.getIpAddress());
-		
+
 		Action action = payload.getAction();
-		if (action == Action.HISTORY ) {
+		if (action == Action.HISTORY) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {
 				payload.setReportType("day");
@@ -140,6 +136,38 @@ public class Handler implements PageHandler<Context> {
 			model.setReportType(payload.getReportType());
 			payload.computeStartDate();
 			model.setLongDate(payload.getDate());
+
+			HeartbeatReport report = new HeartbeatReport();
+			model.setReport(report);
+			try {
+				Date historyStartDate = payload.getHistoryStartDate();
+				Date historyEndDate = payload.getHistoryEndDate();
+				List<Graph> domains = graphDao.findDomainByNameDuration(historyStartDate, historyEndDate, "heartbeat",
+				      GraphEntity.READSET_DOMAIN);
+				String domain = payload.getDomain();
+				List<Graph> ips = graphDao.findIpByDomainNameDuration(historyStartDate, historyEndDate, domain,
+				      "heartbeat", GraphEntity.READSET_IP);
+				Set<String> reportDomains = report.getDomainNames();
+				Set<String> reportIps = report.getIps();
+
+				for (Graph graph : domains) {
+					reportDomains.add(graph.getDomain());
+				}
+				System.out.println(ips.size()+"  ");
+				for (Graph graph : ips) {
+					reportIps.add(graph.getIp());
+					System.out.println(graph.getIp());
+				}
+				report.setDomain(payload.getDomain());
+				model.setDisplayDomain(payload.getDomain());
+				String ip = payload.getIpAddress();
+				if (StringUtils.isEmpty(ip)) {
+					ip = model.getIps().get(0);
+				}
+				model.setIpAddress(payload.getIpAddress());
+			} catch (DalException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -152,124 +180,122 @@ public class Handler implements PageHandler<Context> {
 		item.setStart(start);
 		item.setSize(size);
 		Map<String, double[]> graphData = getHeartBeatData(model, payload);
-		
-		//Active Thread
+
+		// Active Thread
 		item.setTitles("Active Thread");
 		double[] activeThread = graphData.get("ActiveThread");
 		item.addValue(activeThread);
 		model.setActiveThreadGraph(item.getJsonString());
 
 		item.getValues().clear();
-		
-		//Daemon Thread
+
+		// Daemon Thread
 		item.setTitles("Daemon Thread");
 		double[] daemonThread = graphData.get("DaemonThread");
 		item.addValue(daemonThread);
 		model.setDaemonThreadGraph(item.getJsonString());
 
 		item.getValues().clear();
-		
-		//Total Started Thread
+
+		// Total Started Thread
 		item.setTitles("Total Started Thread");
 		double[] totalStartedThread = graphData.get("TotalStartedThread");
 		item.addValue(totalStartedThread);
 		model.setTotalThreadGraph(item.getJsonString());
 
 		item.getValues().clear();
-		
+
 		item.setTitles("Started Thread");
 		double[] startedThread = graphData.get("StartedThread");
 		item.addValue(startedThread);
 		model.setStartedThreadGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Cat Started Thread");
 		double[] catThreadCount = graphData.get("CatThreadCount");
 		item.addValue(catThreadCount);
 		model.setCatThreadGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Pigeon Started Thread");
 		double[] pigeonStartedThread = graphData.get("PigeonStartedThread");
 		item.addValue(pigeonStartedThread);
 		model.setPigeonThreadGraph(item.getJsonString());
-		
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("NewGc Count");
 		double[] newGcCount = graphData.get("NewGcCount");
 		item.addValue(newGcCount);
 		model.setNewGcCountGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("OldGc Count");
 		double[] oldGcCount = graphData.get("OldGcCount");
 		item.addValue(oldGcCount);
 		model.setOldGcCountGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("System Load Average");
 		double[] systemLoadAverage = graphData.get("SystemLoadAverage");
 		item.addValue(systemLoadAverage);
 		model.setSystemLoadAverageGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Memory Free");
 		double[] memoryFree = graphData.get("MemoryFree");
 		item.addValue(memoryFree);
 		model.setMemoryFreeGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Heap Usage");
 		double[] heapUsage = graphData.get("HeapUsage");
 		item.addValue(heapUsage);
 		model.setHeapUsageGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("None Heap Usage");
 		double[] noneHeapUsage = graphData.get("NoneHeapUsage");
 		item.addValue(noneHeapUsage);
 		model.setNoneHeapUsageGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Disk /");
 		double[] diskRoot = graphData.get("Disk /");
 		item.addValue(diskRoot);
 		model.setDiskRootGraph(item.getJsonString());
-		
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Disk /data");
 		double[] diskData = graphData.get("Disk /data");
 		item.addValue(diskData);
 		model.setDiskDataGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Cat Message Produced / Minute");
 		double[] catMessageProduced = graphData.get("CatMessageProduced");
 		item.addValue(catMessageProduced);
 		model.setCatMessageProducedGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Cat Message Overflow / Minute");
 		double[] catMessageOverflow = graphData.get("CatMessageOverflow");
 		item.addValue(catMessageOverflow);
 		model.setCatMessageOverflowGraph(item.getJsonString());
-		
+
 		item.getValues().clear();
-		
+
 		item.setTitles("Cat Message Size / Minute");
 		double[] catMessageSize = graphData.get("CatMessageSize");
 		item.addValue(catMessageSize);
@@ -282,9 +308,13 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		String ip = model.getIpAddress();
 		String domain = payload.getDomain();
+
+		System.out.println("ip>>>>" + ip);
+
 		List<Graph> graphs = new ArrayList<Graph>();
 		try {
-			graphs = this.graphDao.findByDomainNameIpDuration(start, end, ip, domain, "heartbeat",GraphEntity.READSET_FULL);
+			graphs = this.graphDao.findByDomainNameIpDuration(start, end, ip, domain, "heartbeat",
+			      GraphEntity.READSET_FULL);
 		} catch (DalException e) {
 			e.printStackTrace();
 		}
@@ -294,11 +324,11 @@ public class Handler implements PageHandler<Context> {
 
 	private Map<String, double[]> buildHeartbeatDates(Date start, Date end, List<Graph> graphs) {
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
-		Map<String, String[]> hourlyDate = gethourlyDate(graphs, start,size);
+		Map<String, String[]> hourlyDate = gethourlyDate(graphs, start, size);
 		return getHeartBeatDatesEveryMinute(hourlyDate, size);
 	}
 
-	private Map<String, String[]> gethourlyDate(List<Graph> graphs, Date start,int size) {
+	private Map<String, String[]> gethourlyDate(List<Graph> graphs, Date start, int size) {
 		Map<String, String[]> heartBeats = new HashMap<String, String[]>();
 		for (Graph graph : graphs) {
 			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
@@ -312,13 +342,13 @@ public class Handler implements PageHandler<Context> {
 				String[] singlePeriod = null;
 				if (!isExist) {
 					singlePeriod = new String[size];
-					for(int index=0;index<size;index++){
-						singlePeriod[index]="";
+					for (int index = 0; index < size; index++) {
+						singlePeriod[index] = "";
 					}
 				} else {
 					singlePeriod = heartBeats.get(name);
 				}
-				singlePeriod[indexOfperiod]=countPerHour;
+				singlePeriod[indexOfperiod] = countPerHour;
 				heartBeats.put(name, singlePeriod);
 			}
 		}
@@ -327,7 +357,7 @@ public class Handler implements PageHandler<Context> {
 
 	@SuppressWarnings("unchecked")
 	public Map<String, double[]> getHeartBeatDatesEveryMinute(Map<String, String[]> heartBeats, final int size) {
-		if(isEmptyMap(heartBeats)||size<=0){
+		if (isEmptyMap(heartBeats) || size <= 0) {
 			return Collections.EMPTY_MAP;
 		}
 		Map<String, double[]> result = new HashMap<String, double[]>();
@@ -346,17 +376,17 @@ public class Handler implements PageHandler<Context> {
 			for (int i = 0; i < allPeriods.length; i++) {
 				double[] datePerHour = new double[minutesPerHour];
 				String oneHour = allPeriods[i];
-				if(!illegalData(oneHour)){
+				if (!illegalData(oneHour)) {
 					String[] dateInMinutes = oneHour.split(",");
 					for (int j = 0; j < dateInMinutes.length; j++) {
 						datePerHour[j] = Double.parseDouble(dateInMinutes[j]);
 					}
-				}else{
-					datePerHour=emptyArray;
+				} else {
+					datePerHour = emptyArray;
 				}
 				for (int m = 0; m < minutesPerHour; m++) {
 					int index = i * minutesPerHour + m;
-						allDatePerMinutes[index] = datePerHour[m];
+					allDatePerMinutes[index] = datePerHour[m];
 				}
 			}
 			result.put(name, allDatePerMinutes);
@@ -364,15 +394,15 @@ public class Handler implements PageHandler<Context> {
 		formatHeartBeat(result);
 		return result;
 	}
-	
-	//illegal
-	private boolean illegalData(String oneHourData){
-		return isEmpty(oneHourData)||oneHourData.split(",").length!=60;
+
+	// illegal
+	private boolean illegalData(String oneHourData) {
+		return isEmpty(oneHourData) || oneHourData.split(",").length != 60;
 	}
-	
+
 	@SuppressWarnings("unchecked")
-   public boolean isEmptyMap(Map map){
-		return map==null||map.size()==0;
+	public boolean isEmptyMap(Map map) {
+		return map == null || map.size() == 0;
 	}
 
 	private void formatHeartBeat(Map<String, double[]> result) {
