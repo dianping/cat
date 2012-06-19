@@ -17,8 +17,11 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class TransactionAnalyzerTest extends ComponentTestCase {
+	private long timestamp;
+
 	@Test
 	public void testProcessTransaction() throws Exception {
+		timestamp = System.currentTimeMillis() - System.currentTimeMillis() % (3600 * 1000);
 		TransactionAnalyzer analyzer = lookup(TransactionAnalyzer.class);
 		TransactionReport report = new TransactionReport("Test");
 
@@ -46,7 +49,8 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 
 			t.complete();
 			t.setDurationInMillis(i * 2);
-
+			t.setTimestamp(timestamp + 1000);
+			t2.setTimestamp(timestamp + 2000);
 			tree.setMessage(t);
 
 			analyzer.processTransaction(report, tree, t);

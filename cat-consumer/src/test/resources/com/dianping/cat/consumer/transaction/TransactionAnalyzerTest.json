@@ -40,7 +40,7 @@
                      "line95Count": 0,
                      "ranges": [
                         {
-                           "value": 50,
+                           "value": 0,
                            "count": 500,
                            "sum": 500000.0,
                            "avg": "1000.0",
@@ -108,7 +108,7 @@
                      "line95Count": 0,
                      "ranges": [
                         {
-                           "value": 50,
+                           "value": 0,
                            "count": 500,
                            "sum": 501000.0,
                            "avg": "1002.0",
@@ -197,7 +197,7 @@
                      "line95Count": 0,
                      "ranges": [
                         {
-                           "value": 50,
+                           "value": 0,
                            "count": 334,
                            "sum": 167167.0,
                            "avg": "500.5",
@@ -266,7 +266,7 @@
                      "line95Count": 0,
                      "ranges": [
                         {
-                           "value": 50,
+                           "value": 0,
                            "count": 333,
                            "sum": 166500.0,
                            "avg": "500.0",
@@ -331,7 +331,7 @@
                      "line95Count": 0,
                      "ranges": [
                         {
-                           "value": 50,
+                           "value": 0,
                            "count": 333,
                            "sum": 166833.0,
                            "avg": "501.0",

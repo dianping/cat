@@ -33,7 +33,7 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 	public void test() throws Exception {
 		MessageConsumer consumer = lookup(MessageConsumer.class, "mock");
 
-		Thread.sleep(100);
+		Thread.sleep(1000);
 		for (int i = 0; i < 100; i++) {
 			DefaultMessageTree tree = new DefaultMessageTree();
 			tree.setMessage(new MockMessage(-1));
@@ -46,7 +46,7 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 			consumer.consume(tree);
 		}
 
-		Thread.sleep(100 * 2);
+		Thread.sleep(1000);
 		Assert.assertEquals(0, s_count1);
 		Assert.assertEquals(400, s_count2);
 		Assert.assertEquals(1, s_period);

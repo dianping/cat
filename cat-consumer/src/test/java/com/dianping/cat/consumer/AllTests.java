@@ -33,7 +33,7 @@ ProblemReportTest.class,
 
 FormatTest.class, GsonTest.class,
 
-NumberFormatTest.class,
+NumberFormatTest.class
 
 })
 public class AllTests {
