@@ -237,7 +237,8 @@
 						(<VALUES/>) 
 				]]></statement>
 			</query>
-			<query name="find-by-domain-name-ip-duration" type="SELECT" multiple="true">
+			<query name="find-by-domain-name-ip-duration" type="SELECT"
+				multiple="true">
 				<param name="start-date" />
 				<param name="end-date" />
 				<param name="ip" />
@@ -256,6 +257,38 @@
 					ORDER BY <FIELD name='period'/> ASC 
 				]]></statement>
 			</query>
+			<query name="find-ip-by-domain-name-duration" type="SELECT"
+				multiple="true">
+				<param name="start-date" />
+				<param name="end-date" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT DISTINCT
+					    <FIELD name='ip'/>
+					FROM
+					    <TABLE/> 
+					WHERE <FIELD name='domain'/> = ${domain} 
+					AND <FIELD name='name'/> = ${name}
+					AND <FIELD name='period'/> >= ${start-date}
+					AND <FIELD name='period'/> < ${end-date}			
+				]]></statement>
+			</query>
+			<query name="find-domain-by-name-duration" type="SELECT"
+				multiple="true">
+				<param name="start-date" />
+				<param name="end-date" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT DISTINCT
+					    <FIELD name='domain'/>
+					FROM
+					    <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					AND <FIELD name='period'/> >= ${start-date}
+					AND <FIELD name='period'/> < ${end-date}			
+				]]></statement>
+			</query>			
 		</query-defs>
 	</entity>
 </entities>
