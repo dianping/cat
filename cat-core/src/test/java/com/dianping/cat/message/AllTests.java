@@ -33,7 +33,7 @@ ClientConfigTest.class,
 /* .internal */
 MessageIdFactoryTest.class,
 
-MessageProducerTest.class,
+//MessageProducerTest.class,
 
 MillisSecondTimerTest.class,
 

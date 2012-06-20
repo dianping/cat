@@ -83,7 +83,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 	@Inject
 	private ReportDao m_reportDao;
 
-	@Inject
+	@SuppressWarnings("unused")
+   @Inject
 	private DailygraphDao m_dailyGraphDao;
 
 	@Inject

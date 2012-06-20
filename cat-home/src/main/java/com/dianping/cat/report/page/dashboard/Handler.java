@@ -49,14 +49,14 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.DASHBOARD);
-		TransactionReport catReport = getHourlyReport("cat");
+		TransactionReport catReport = getHourlyReport("Cat");
 		Set<String> domains = catReport.getDomainNames();
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("timestamp", sdf.format(new Date()));
 
+		TransactionReport report = null;
 		for (String domain : domains) {
-			TransactionReport report = null;
-			if (domain.equals("cat")) {
+			if (domain.equals("Cat")) {
 				report = catReport;
 			} else {
 				report = getHourlyReport(domain);
