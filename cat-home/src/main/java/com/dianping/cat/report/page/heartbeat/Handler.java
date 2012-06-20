@@ -229,19 +229,19 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		String ip = model.getIpAddress();
 		String domain = payload.getDomain();
-
 		List<Graph> graphs = new ArrayList<Graph>();
+		
 		try {
 			graphs = this.graphDao.findByDomainNameIpDuration(start, end, ip, domain, "heartbeat",
 			      GraphEntity.READSET_FULL);
 		} catch (DalException e) {
 			e.printStackTrace();
-		}
-		Map<String, double[]> result = buildHeartbeatDates(start, end, graphs);
+		} 
+		Map<String, double[]> result = buildHeartbeatDatas(start, end, graphs);
 		return result;
 	}
 
-	public Map<String, double[]> buildHeartbeatDates(Date start, Date end, List<Graph> graphs) {
+	public Map<String, double[]> buildHeartbeatDatas(Date start, Date end, List<Graph> graphs) {
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
 		Map<String, String[]> hourlyDate = gethourlyDate(graphs, start, size);
 		return getHeartBeatDatesEveryMinute(hourlyDate, size);
@@ -253,19 +253,20 @@ public class Handler implements PageHandler<Context> {
 			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
 			String detailContent = graph.getDetailContent();
 			String[] alldates = detailContent.split("\n");
+			
 			for (int i = 0; i < alldates.length; i++) {
 				String[] records = alldates[i].split("\t");
 				String name = records[DetailOrder.NAME.ordinal()];
 				String countPerHour = records[DetailOrder.COUNT_IN_MINUTES.ordinal()];
-				boolean isExist = heartBeats.get(name) == null ? false : true;
 				String[] singlePeriod = null;
-				if (!isExist) {
+				String[] strings = heartBeats.get(name);
+				if(strings==null){
 					singlePeriod = new String[size];
 					for (int index = 0; index < size; index++) {
 						singlePeriod[index] = "";
 					}
-				} else {
-					singlePeriod = heartBeats.get(name);
+				}else{
+					singlePeriod = strings;
 				}
 				singlePeriod[indexOfperiod] = countPerHour;
 				heartBeats.put(name, singlePeriod);
@@ -275,32 +276,24 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public Map<String, double[]> getHeartBeatDatesEveryMinute(Map<String, String[]> heartBeats, final int size) {
-		if (heartBeats == null || heartBeats.size() == 0 || size <= 0) {
-			return new HashMap<String, double[]>();
-		}
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		final int minutesPerHour = 60;
 		int sizeOfHeartBeat = size * minutesPerHour;
-		double[] emptyArray = new double[sizeOfHeartBeat];
-		for (int i = 0; i < emptyArray.length; i++) {
-			emptyArray[i] = 0;
-		}
 		Iterator<Entry<String, String[]>> iterator = heartBeats.entrySet().iterator();
+		
 		while (iterator.hasNext()) {
 			Entry<String, String[]> entry = iterator.next();
 			String name = (String) entry.getKey();
 			double[] allDatePerMinutes = new double[sizeOfHeartBeat];
-			String[] allPeriods = (String[]) entry.getValue();
+			String[] allPeriods = entry.getValue();
 			for (int i = 0; i < allPeriods.length; i++) {
 				double[] datePerHour = new double[minutesPerHour];
 				String oneHour = allPeriods[i];
-				if (!illegalData(oneHour)) {
+				if (!"".equals(oneHour)) {
 					String[] dateInMinutes = oneHour.split(",");
 					for (int j = 0; j < dateInMinutes.length; j++) {
 						datePerHour[j] = Double.parseDouble(dateInMinutes[j]);
 					}
-				} else {
-					datePerHour = emptyArray;
 				}
 				for (int m = 0; m < minutesPerHour; m++) {
 					int index = i * minutesPerHour + m;
@@ -313,75 +306,40 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	// illegal
-	private boolean illegalData(String oneHourData) {
-		return oneHourData == null || oneHourData.length() == 0;
-		// return oneHourData == null || oneHourData.length() == 0 ||
-		// oneHourData.split(",").length != 60;
-	}
-
 	private void formatHeartBeat(Map<String, double[]> result) {
 		double[] totalStartedThread = result.get("TotalStartedThread");
 		if (totalStartedThread != null) {
 			result.put("StartedThread", getAddedCount(totalStartedThread));
 		}
-		double[] newGcCount = result.get("NewGcCount");
-		if (totalStartedThread != null) {
-			result.put("NewGcCount", getAddedCount(newGcCount));
-		}
-		double[] oldGcCount = result.get("OldGcCount");
-		if (totalStartedThread != null) {
-			result.put("OldGcCount", getAddedCount(oldGcCount));
-		}
-		double[] catMessageProduced = result.get("CatMessageProduced");
-		if (totalStartedThread != null) {
-			result.put("CatMessageProduced", getAddedCount(catMessageProduced));
-		}
-		double[] catMessageSize = result.get("CatMessageSize");
-		if (totalStartedThread != null) {
-			double[] addedCount = getAddedCount(catMessageSize);
-			for (int i = 0; i < addedCount.length; i++) {
-				addedCount[i] = addedCount[i] / K / K;
-			}
-			result.put("CatMessageSize", addedCount);
-		}
-		double[] catMessageOverflow = result.get("CatMessageOverflow");
-		if (totalStartedThread != null) {
-			result.put("CatMessageOverflow", getAddedCount(catMessageOverflow));
-		}
-		// CatMessageSize HeapUsage NoneHeapUsage MemoryFree
-		double[] heapUsage = result.get("HeapUsage");
-		if (heapUsage != null) {
-			for (int i = 0; i < heapUsage.length; i++) {
-				heapUsage[i] = heapUsage[i] / K / K;
-			}
-		}
-		double[] noneHeapUsage = result.get("NoneHeapUsage");
-		if (noneHeapUsage != null) {
-			for (int i = 0; i < noneHeapUsage.length; i++) {
-				noneHeapUsage[i] = noneHeapUsage[i] / K / K;
-			}
-		}
-		double[] memoryFree = result.get("MemoryFree");
-		if (memoryFree != null) {
-			for (int i = 0; i < memoryFree.length; i++) {
-				memoryFree[i] = memoryFree[i] / K / K;
-			}
-		}
-		double[] diskRoot = result.get("Disk /");
-		if (diskRoot != null) {
-			for (int i = 0; i < diskRoot.length; i++) {
-				diskRoot[i] = diskRoot[i] / K / K / K;
-			}
-		}
-		double[] diskData = result.get("Disk /data");
-		if (diskData != null) {
-			for (int i = 0; i < diskData.length; i++) {
-				diskData[i] = diskData[i] / K / K / K;
-			}
-		}
+		
+		String[]addedDatas={"NewGcCount","OldGcCount","CatMessageProduced","CatMessageSize","CatMessageOverflow"};
+		
+		organiseAddedData(result,addedDatas);
+		
+		String[]divideByKDates={"CatMessageSize","HeapUsage","NoneHeapUsage","MemoryFree","Disk /","Disk /data"};
+		
+		divideByK(result,divideByKDates);
+	
 	}
+	
+	private void divideByK(Map<String, double[]> result, String[] divideByKDates) {
+	  
+		for(String name:divideByKDates){
+			double[]data=result.get(name);
+			int divisor=name.startsWith("Disk")?K*K*K:K*K;
+			for (int i = 0; i < data.length; i++) {
+				data[i] = data[i] /divisor;
+			}
+		}
+		
+   }
 
+	private void organiseAddedData(Map<String, double[]> result, String[] addedNames) {
+		for(String addedName:addedNames){
+			result.put(addedName, getAddedCount(result.get(addedName)));
+		}
+   }
+	
 	private double[] getAddedCount(double[] source) {
 		int size = source.length;
 		double[] result = new double[size];
@@ -459,4 +417,5 @@ public class Handler implements PageHandler<Context> {
 	public enum DetailOrder {
 		NAME, MIN, MAX, SUM, SUM2, COUNT_IN_MINUTES
 	}
+
 }
