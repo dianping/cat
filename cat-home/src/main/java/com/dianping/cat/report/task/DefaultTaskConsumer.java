@@ -6,6 +6,7 @@ package com.dianping.cat.report.task;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -147,25 +148,60 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 	 */
 	@Override
 	protected void mergeReport(Task task) {
-		String reportName = task.getReportName();
-		String reportDomain = task.getReportDomain();
 		Date reportPeriod = task.getReportPeriod();
-		Date yesterdayZero = TaskHelper.yesterdayZero(reportPeriod);
-		Date todayZero = TaskHelper.todayZero(reportPeriod);
+		Date startDate = TaskHelper.yesterdayZero(reportPeriod);
+		Date endDate = TaskHelper.todayZero(reportPeriod);
+
+		List<Report> domainNames = null;
 		try {
-			Dailyreport report = m_dailyReportDao.findByNameDomainPeriod(yesterdayZero, reportDomain, reportName, DailyreportEntity.READSET_FULL);
-			if (report != null) {
-				return;
-			}
+			domainNames = m_reportDao.findAllByDomainNameDuration(startDate, endDate, null, null, ReportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
-			m_logger.info("no daily report");
+			m_logger.error("domainNames", e);
 		}
 
-		m_logger.info(String.format("start merge %s report:%s from %s to %s: ", reportName, reportDomain, yesterdayZero, todayZero));
+		if (domainNames == null || domainNames.size() == 0) {
+			return; // no hourly report
+		}
 
+		Set<String> domainSet = new HashSet<String>();
+		Set<String> nameSet = new HashSet<String>();
+		for (Report domainName : domainNames) {
+			domainSet.add(domainName.getDomain());
+			if (!"heartbeat".equals(domainName.getName())) { // ignore heartbeat daily report merge
+				nameSet.add(domainName.getName());
+			}
+		}
+
+		List<Dailyreport> dailyDomainNames = null;
+		try {
+			dailyDomainNames = m_dailyReportDao.findAllByPeriod(startDate, DailyreportEntity.READSET_DOMAIN_NAME);
+		} catch (DalException e) {
+			m_logger.error("dailyDomainNames", e);
+		}
+		Set<String> dailySet = new HashSet<String>();
+		for (Dailyreport domainName : dailyDomainNames) {
+			dailySet.add(domainName.getDomain() + "\t" + domainName.getName());
+		}
+
+		for (String domain : domainSet) { // iterate domains
+			for (String name : nameSet) { // iterate report names
+				String key = domain + "\t" + name;
+				if (dailySet.contains(key)) {
+					continue; // ignore exist daily report
+				}
+				
+				m_logger.info(String.format("Starting merge domain:%s report:%s from %s to %s: ", domain, name, startDate, endDate));
+
+				mergeDomainDailyReport(domain, name, startDate, endDate);
+			}
+		}
+
+	}
+
+	private void mergeDomainDailyReport(String reportDomain, String reportName, Date startDate, Date endDate) {
 		String content = null;
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(yesterdayZero, todayZero, reportDomain, reportName, ReportEntity.READSET_FULL);
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(startDate, endDate, reportDomain, reportName, ReportEntity.READSET_FULL);
 			if ("transaction".equals(reportName)) {
 				TransactionReport transactionReport = mergeTransactionReports(reportDomain, reports);
 				TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
@@ -194,7 +230,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			report.setDomain(reportDomain);
 			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			report.setName(reportName);
-			report.setPeriod(yesterdayZero);
+			report.setPeriod(startDate);
 			report.setType(1);
 
 			m_dailyReportDao.insert(report);
@@ -202,7 +238,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	/*
