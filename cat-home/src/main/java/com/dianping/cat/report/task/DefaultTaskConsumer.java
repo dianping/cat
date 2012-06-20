@@ -93,14 +93,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 	private Logger m_logger;
 
-	private com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser transactionParser = new com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser();
-
-	private com.dianping.cat.consumer.event.model.transform.DefaultDomParser eventParser = new com.dianping.cat.consumer.event.model.transform.DefaultDomParser();
-
-	private com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser heartbeatParser = new com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser();
-
-	private com.dianping.cat.consumer.problem.model.transform.DefaultDomParser problemParser = new com.dianping.cat.consumer.problem.model.transform.DefaultDomParser();
-
 	public DefaultTaskConsumer() {
 	}
 
@@ -289,7 +281,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		for (Report report : reports) {
 			String xml = report.getContent();
-			HeartbeatReport model = heartbeatParser.parse(xml);
+			HeartbeatReport model = com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser.parse(xml);
 			model.accept(merger);
 		}
 
@@ -302,7 +294,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		for (Report report : reports) {
 			String xml = report.getContent();
-			ProblemReport model = problemParser.parse(xml);
+			ProblemReport model = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
 			model.accept(merger);
 		}
 
@@ -316,7 +308,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		for (Report report : reports) {
 			String xml = report.getContent();
-			EventReport model = eventParser.parse(xml);
+			EventReport model = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
 			model.accept(merger);
 		}
 
@@ -330,7 +322,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		for (Report report : reports) {
 			String xml = report.getContent();
-			TransactionReport model = transactionParser.parse(xml);
+			TransactionReport model = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(xml);
 			model.accept(merger);
 		}
 

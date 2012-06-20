@@ -19,7 +19,7 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
-import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
@@ -125,7 +125,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	private void loadReports() {
-		DefaultDomParser parser = new DefaultDomParser();
 		Bucket<String> bucket = null;
 
 		try {
@@ -133,7 +132,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 			for (String id : bucket.getIds()) {
 				String xml = bucket.findById(id);
-				ProblemReport report = parser.parse(xml);
+				ProblemReport report = DefaultSaxParser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}

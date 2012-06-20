@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.model.problem;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -35,6 +35,6 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "problem");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultDomParser().parse(xml);
+		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

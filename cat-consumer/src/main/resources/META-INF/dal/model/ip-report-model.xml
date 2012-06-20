@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.consumer.ip.model" enable-merger="true" enable-json-builder="true"
-	enable-xml-parser="true" enable-base-visitor="true">
+	enable-xml-parser="true"  enable-sax-parser="true" enable-base-visitor="true">
 	<entity name="ip-report" root="true">
 		<attribute name="domain" key="true" />
 		<element name="domain" value-type="String" type="set" names="domain-names" />

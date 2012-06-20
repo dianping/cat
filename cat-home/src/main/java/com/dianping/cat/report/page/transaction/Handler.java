@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
@@ -69,8 +69,6 @@ public class Handler implements PageHandler<Context> {
 	private GraphDao graphDao;
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
-
-	private DefaultDomParser transactionParser = new DefaultDomParser();
 
 	private Gson gson = new Gson();
 
@@ -265,7 +263,7 @@ public class Handler implements PageHandler<Context> {
 			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 			for (Dailyreport report : reports) {
 				String xml = report.getContent();
-				TransactionReport reportModel = transactionParser.parse(xml);
+				TransactionReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			}
 			transactionReport = merger == null ? null : merger.getTransactionReport();
