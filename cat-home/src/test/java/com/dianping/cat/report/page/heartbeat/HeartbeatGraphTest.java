@@ -31,7 +31,7 @@ public class HeartbeatGraphTest extends ComponentTestCase {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
-		Map<String, double[]> result = handler.buildHeartbeatDates(start, end, graphs);
+		Map<String, double[]> result = handler.buildHeartbeatDatas(start, end, graphs);
 
 		System.out.println(result.size());
 		for (Entry<String, double[]> entry : result.entrySet()) {
