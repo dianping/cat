@@ -40,7 +40,7 @@ public class PayloadTest {
 		String currentHour = sdf.format(new Date(now - ONE_HOUR));
 
 		payload.setDate(currentHour);
-		checkDate(payload, 2, now + ONE_HOUR, ModelPeriod.FUTURE);
+		checkDate(payload, 2, now, ModelPeriod.CURRENT);
 		checkDate(payload, 1, now, ModelPeriod.CURRENT);
 		checkDate(payload, 0, now - ONE_HOUR, ModelPeriod.LAST);
 		checkDate(payload, -1, now - 2 * ONE_HOUR, ModelPeriod.HISTORICAL);
@@ -48,7 +48,7 @@ public class PayloadTest {
 
 		currentHour = sdf.format(new Date(now - 2 * ONE_HOUR));
 		payload.setDate(currentHour);
-		checkDate(payload, 3, now + ONE_HOUR, ModelPeriod.FUTURE);
+		checkDate(payload, 3, now, ModelPeriod.CURRENT);
 		checkDate(payload, 2, now, ModelPeriod.CURRENT);
 		checkDate(payload, 1, now - ONE_HOUR, ModelPeriod.LAST);
 		checkDate(payload, 0, now - 2 * ONE_HOUR, ModelPeriod.HISTORICAL);
@@ -100,7 +100,7 @@ public class PayloadTest {
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
 		checkDate(current, payload.getHistoryEndDate());
-		
+
 		payload.setStep(1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
@@ -124,7 +124,7 @@ public class PayloadTest {
 
 		int weekOfDay = cal.get(Calendar.DAY_OF_WEEK);
 		temp = temp - 24 * (weekOfDay - 1) * ONE_HOUR;
-		temp = temp+24*ONE_HOUR;
+		temp = temp + 24 * ONE_HOUR;
 		Date lastTwoWeek = new Date(temp - 7 * 2 * ONE_DAY);
 		Date lastOneWeek = new Date(temp - 7 * ONE_DAY);
 		Date currentWeek = new Date(temp);
@@ -167,7 +167,7 @@ public class PayloadTest {
 		String lastTwo = "2012040100";
 		String lastOne = "2012050100";
 		String current = "2012060100";
-		
+
 		payload.setDate(sdf.format(input));
 
 		payload.setStep(-1);

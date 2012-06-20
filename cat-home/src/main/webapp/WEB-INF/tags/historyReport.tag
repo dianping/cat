@@ -37,9 +37,9 @@
 				</div>
 			</td>
 			<td class="nav">
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&reportType=${model.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
 			</td>
 		</tr>
 		<tr>
@@ -48,10 +48,10 @@
 				<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>
 						<c:when test="${nav.title eq model.reportType}">
-								&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
+								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
 						</c:when>
 						<c:otherwise>
-								&nbsp;&nbsp;[ <a href="?op=history&domain=${domain}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]&nbsp;&nbsp;
+								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]&nbsp;&nbsp;
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>

@@ -55,6 +55,12 @@ function graph(container, data) {
 		o = Flotr._.extend(Flotr._.clone(options), opts || {});
 
 		if (opts != null && opts.xaxis != null) {
+			console.log(opts.xaxis.min);
+			console.log(new Date(opts.xaxis.min));
+			console.log(formatDate(new Date(opts.xaxis.min)))
+			console.log(opts.xaxis.max);
+			console.log(new Date(opts.xaxis.max));
+			console.log(formatDate(new Date(opts.xaxis.max)))
 			o.title = data.titles + " From "
 					+ formatDate(new Date(opts.xaxis.min - hour * 8)) + " To"
 					+ formatDate(new Date(opts.xaxis.max - hour * 8));
@@ -87,85 +93,3 @@ function graph(container, data) {
 		graph = drawGraph();
 	});
 }
-
-$(document).delegate('.history_graph_link', 'click', function(e){
-	var anchor = this,
-		el = $(anchor),
-		id = Number(el.attr('data-status')) || 0;
-	
-	console.log("id: " + id)
-	if(e.ctrlKey || e.metaKey){
-		return true;
-	}else{
-		e.preventDefault();
-	}
-	
-	var cell = document.getElementById(id);
-	var text = el.html();
-	
-	if (text == '[:: show ::]') {
-		anchor.innerHTML = '[:: hide ::]';
-
-		if (cell.nodeName == 'IMG') { // <img src='...'/>
-			cell.src=anchor.href;
-		} else { // <div>...</div>
-			$.ajax({
-				type: "get",
-				url: anchor.href,
-				success : function(response, textStatus) {
-					cell.style.display = 'block';
-					cell.parentNode.style.display = 'block';
-					cell.innerHTML = response;
-					
-					var data = $('#errorTrendMeta',cell).text();
-					graph($('#errorTrend',cell)[0],eval('('+data+')'));
-				}
-			});
-		}
-	} else {
-		anchor.innerHTML = '[:: show ::]';
-		cell.style.display = 'none';		
-		cell.parentNode.style.display = 'none';
-	}	
-});
-
-$(document).delegate('.problem_status_graph_link', 'click', function(e){
-	var anchor = this,
-		el = $(anchor),
-		id = el.attr('data-status');
-	
-	console.log("id: " + id)
-	if(e.ctrlKey || e.metaKey){
-		return true;
-	}else{
-		e.preventDefault();
-	}
-	
-	var cell = document.getElementById(id);
-	var text = el.html();
-	
-	if (text == '[:: show ::]') {
-		anchor.innerHTML = '[:: hide ::]';
-
-		if (cell.nodeName == 'IMG') { // <img src='...'/>
-			cell.src=anchor.href;
-		} else { // <div>...</div>
-			$.ajax({
-				type: "get",
-				url: anchor.href,
-				success : function(response, textStatus) {
-					cell.style.display = 'block';
-					cell.parentNode.style.display = 'block';
-					cell.innerHTML = response;
-					
-					var data = $('#errorTrendMeta',cell).text();
-					graph($('#errorTrend',cell)[0],eval('('+data+')'));
-				}
-			});
-		}
-	} else {
-		anchor.innerHTML = '[:: show ::]';
-		cell.style.display = 'none';		
-		cell.parentNode.style.display = 'none';
-	}	
-});

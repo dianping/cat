@@ -1,350 +1,383 @@
 {
    "domain": "Test",
-   "types": {
-      "A": {
-         "id": "A",
-         "totalCount": 1000,
-         "failCount": 500,
-         "failPercent": "50.00",
-         "min": 2.0,
-         "max": 2000.0,
-         "avg": "1001.0",
-         "sum": "1001000.0",
-         "sum2": "1335334000.0",
-         "std": "577.3",
-         "successMessageUrl": "1",
-         "failMessageUrl": "2",
-         "names": {
-            "n1": {
-               "id": "n1",
-               "totalCount": 500,
-               "failCount": 0,
-               "failPercent": "0.00",
+   "machines": {
+      "192.168.1.1": {
+         "ip": "192.168.1.1",
+         "types": {
+            "A": {
+               "id": "A",
+               "totalCount": 1000,
+               "failCount": 500,
+               "failPercent": "50.00",
                "min": 2.0,
-               "max": 1998.0,
-               "avg": "1000.0",
-               "sum": "500000.0",
-               "sum2": "666666000.0",
+               "max": 2000.0,
+               "avg": "1001.0",
+               "sum": "1001000.0",
+               "sum2": "1335334000.0",
                "std": "577.3",
                "successMessageUrl": "1",
-               "ranges": [
-                  {
-                     "value": 50,
-                     "count": 500,
-                     "sum": 500000.0,
-                     "avg": "1000.0",
-                     "fails": 0
-                  }
-               ],
-               "durations": [
-                  {
-                     "value": 2,
-                     "count": 1
-                  },
-                  {
-                     "value": 8,
-                     "count": 1
-                  },
-                  {
-                     "value": 16,
-                     "count": 2
-                  },
-                  {
-                     "value": 32,
-                     "count": 4
-                  },
-                  {
-                     "value": 64,
-                     "count": 8
-                  },
-                  {
-                     "value": 128,
-                     "count": 16
-                  },
-                  {
-                     "value": 256,
-                     "count": 32
-                  },
-                  {
-                     "value": 512,
-                     "count": 64
-                  },
-                  {
-                     "value": 1024,
-                     "count": 128
-                  },
-                  {
-                     "value": 2048,
-                     "count": 244
-                  }
-               ]
-            },
-            "n0": {
-               "id": "n0",
-               "totalCount": 500,
-               "failCount": 500,
-               "failPercent": "100.00",
-               "min": 4.0,
-               "max": 2000.0,
-               "avg": "1002.0",
-               "sum": "501000.0",
-               "sum2": "668668000.0",
-               "std": "577.3",
                "failMessageUrl": "2",
-               "ranges": [
-                  {
-                     "value": 50,
-                     "count": 500,
-                     "sum": 501000.0,
+               "tps": "0.00",
+               "line95Value": "0.00",
+               "line95Sum": "0.00",
+               "line95Count": 0,
+               "names": {
+                  "n1": {
+                     "id": "n1",
+                     "totalCount": 500,
+                     "failCount": 0,
+                     "failPercent": "0.00",
+                     "min": 2.0,
+                     "max": 1998.0,
+                     "avg": "1000.0",
+                     "sum": "500000.0",
+                     "sum2": "666666000.0",
+                     "std": "577.3",
+                     "successMessageUrl": "1",
+                     "tps": "0.00",
+                     "line95Value": "0.00",
+                     "line95Sum": "0.00",
+                     "line95Count": 0,
+                     "ranges": [
+                        {
+                           "value": 0,
+                           "count": 500,
+                           "sum": 500000.0,
+                           "avg": "1000.0",
+                           "fails": 0
+                        }
+                     ],
+                     "durations": [
+                        {
+                           "value": 2,
+                           "count": 1
+                        },
+                        {
+                           "value": 8,
+                           "count": 1
+                        },
+                        {
+                           "value": 16,
+                           "count": 2
+                        },
+                        {
+                           "value": 32,
+                           "count": 4
+                        },
+                        {
+                           "value": 64,
+                           "count": 8
+                        },
+                        {
+                           "value": 128,
+                           "count": 16
+                        },
+                        {
+                           "value": 256,
+                           "count": 32
+                        },
+                        {
+                           "value": 512,
+                           "count": 64
+                        },
+                        {
+                           "value": 1024,
+                           "count": 128
+                        },
+                        {
+                           "value": 2048,
+                           "count": 244
+                        }
+                     ]
+                  },
+                  "n0": {
+                     "id": "n0",
+                     "totalCount": 500,
+                     "failCount": 500,
+                     "failPercent": "100.00",
+                     "min": 4.0,
+                     "max": 2000.0,
                      "avg": "1002.0",
-                     "fails": 500
+                     "sum": "501000.0",
+                     "sum2": "668668000.0",
+                     "std": "577.3",
+                     "failMessageUrl": "2",
+                     "tps": "0.00",
+                     "line95Value": "0.00",
+                     "line95Sum": "0.00",
+                     "line95Count": 0,
+                     "ranges": [
+                        {
+                           "value": 0,
+                           "count": 500,
+                           "sum": 501000.0,
+                           "avg": "1002.0",
+                           "fails": 500
+                        }
+                     ],
+                     "durations": [
+                        {
+                           "value": 4,
+                           "count": 1
+                        },
+                        {
+                           "value": 8,
+                           "count": 1
+                        },
+                        {
+                           "value": 16,
+                           "count": 2
+                        },
+                        {
+                           "value": 32,
+                           "count": 4
+                        },
+                        {
+                           "value": 64,
+                           "count": 8
+                        },
+                        {
+                           "value": 128,
+                           "count": 16
+                        },
+                        {
+                           "value": 256,
+                           "count": 32
+                        },
+                        {
+                           "value": 512,
+                           "count": 64
+                        },
+                        {
+                           "value": 1024,
+                           "count": 128
+                        },
+                        {
+                           "value": 2048,
+                           "count": 244
+                        }
+                     ]
                   }
-               ],
-               "durations": [
-                  {
-                     "value": 4,
-                     "count": 1
-                  },
-                  {
-                     "value": 8,
-                     "count": 1
-                  },
-                  {
-                     "value": 16,
-                     "count": 2
-                  },
-                  {
-                     "value": 32,
-                     "count": 4
-                  },
-                  {
-                     "value": 64,
-                     "count": 8
-                  },
-                  {
-                     "value": 128,
-                     "count": 16
-                  },
-                  {
-                     "value": 256,
-                     "count": 32
-                  },
-                  {
-                     "value": 512,
-                     "count": 64
-                  },
-                  {
-                     "value": 1024,
-                     "count": 128
-                  },
-                  {
-                     "value": 2048,
-                     "count": 244
-                  }
-               ]
-            }
-         }
-      },
-      "A-1": {
-         "id": "A-1",
-         "totalCount": 1000,
-         "failCount": 500,
-         "failPercent": "50.00",
-         "min": 1.0,
-         "max": 1000.0,
-         "avg": "500.5",
-         "sum": "500500.0",
-         "sum2": "333833500.0",
-         "std": "288.7",
-         "successMessageUrl": "1",
-         "failMessageUrl": "2",
-         "names": {
-            "n1": {
-               "id": "n1",
-               "totalCount": 334,
-               "failCount": 167,
+               }
+            },
+            "A-1": {
+               "id": "A-1",
+               "totalCount": 1000,
+               "failCount": 500,
                "failPercent": "50.00",
                "min": 1.0,
                "max": 1000.0,
                "avg": "500.5",
-               "sum": "167167.0",
-               "sum2": "111611611.0",
-               "std": "289.3",
+               "sum": "500500.0",
+               "sum2": "333833500.0",
+               "std": "288.7",
                "successMessageUrl": "1",
-               "failMessageUrl": "4",
-               "ranges": [
-                  {
-                     "value": 50,
-                     "count": 334,
-                     "sum": 167167.0,
-                     "avg": "500.5",
-                     "fails": 167
-                  }
-               ],
-               "durations": [
-                  {
-                     "value": 1,
-                     "count": 1
-                  },
-                  {
-                     "value": 4,
-                     "count": 1
-                  },
-                  {
-                     "value": 8,
-                     "count": 1
-                  },
-                  {
-                     "value": 16,
-                     "count": 3
-                  },
-                  {
-                     "value": 32,
-                     "count": 5
-                  },
-                  {
-                     "value": 64,
-                     "count": 11
-                  },
-                  {
-                     "value": 128,
-                     "count": 21
-                  },
-                  {
-                     "value": 256,
-                     "count": 43
-                  },
-                  {
-                     "value": 512,
-                     "count": 85
-                  },
-                  {
-                     "value": 1024,
-                     "count": 163
-                  }
-               ]
-            },
-            "n2": {
-               "id": "n2",
-               "totalCount": 333,
-               "failCount": 167,
-               "failPercent": "50.15",
-               "min": 2.0,
-               "max": 998.0,
-               "avg": "500.0",
-               "sum": "166500.0",
-               "sum2": "110944278.0",
-               "std": "288.4",
-               "successMessageUrl": "5",
                "failMessageUrl": "2",
-               "ranges": [
-                  {
-                     "value": 50,
-                     "count": 333,
-                     "sum": 166500.0,
+               "tps": "0.00",
+               "line95Value": "0.00",
+               "line95Sum": "0.00",
+               "line95Count": 0,
+               "names": {
+                  "n1": {
+                     "id": "n1",
+                     "totalCount": 334,
+                     "failCount": 167,
+                     "failPercent": "50.00",
+                     "min": 1.0,
+                     "max": 1000.0,
+                     "avg": "500.5",
+                     "sum": "167167.0",
+                     "sum2": "111611611.0",
+                     "std": "289.3",
+                     "successMessageUrl": "1",
+                     "failMessageUrl": "4",
+                     "tps": "0.00",
+                     "line95Value": "0.00",
+                     "line95Sum": "0.00",
+                     "line95Count": 0,
+                     "ranges": [
+                        {
+                           "value": 0,
+                           "count": 334,
+                           "sum": 167167.0,
+                           "avg": "500.5",
+                           "fails": 167
+                        }
+                     ],
+                     "durations": [
+                        {
+                           "value": 1,
+                           "count": 1
+                        },
+                        {
+                           "value": 4,
+                           "count": 1
+                        },
+                        {
+                           "value": 8,
+                           "count": 1
+                        },
+                        {
+                           "value": 16,
+                           "count": 3
+                        },
+                        {
+                           "value": 32,
+                           "count": 5
+                        },
+                        {
+                           "value": 64,
+                           "count": 11
+                        },
+                        {
+                           "value": 128,
+                           "count": 21
+                        },
+                        {
+                           "value": 256,
+                           "count": 43
+                        },
+                        {
+                           "value": 512,
+                           "count": 85
+                        },
+                        {
+                           "value": 1024,
+                           "count": 163
+                        }
+                     ]
+                  },
+                  "n2": {
+                     "id": "n2",
+                     "totalCount": 333,
+                     "failCount": 167,
+                     "failPercent": "50.15",
+                     "min": 2.0,
+                     "max": 998.0,
                      "avg": "500.0",
-                     "fails": 167
-                  }
-               ],
-               "durations": [
-                  {
-                     "value": 2,
-                     "count": 1
+                     "sum": "166500.0",
+                     "sum2": "110944278.0",
+                     "std": "288.4",
+                     "successMessageUrl": "5",
+                     "failMessageUrl": "2",
+                     "tps": "0.00",
+                     "line95Value": "0.00",
+                     "line95Sum": "0.00",
+                     "line95Count": 0,
+                     "ranges": [
+                        {
+                           "value": 0,
+                           "count": 333,
+                           "sum": 166500.0,
+                           "avg": "500.0",
+                           "fails": 167
+                        }
+                     ],
+                     "durations": [
+                        {
+                           "value": 2,
+                           "count": 1
+                        },
+                        {
+                           "value": 8,
+                           "count": 2
+                        },
+                        {
+                           "value": 16,
+                           "count": 2
+                        },
+                        {
+                           "value": 32,
+                           "count": 6
+                        },
+                        {
+                           "value": 64,
+                           "count": 10
+                        },
+                        {
+                           "value": 128,
+                           "count": 22
+                        },
+                        {
+                           "value": 256,
+                           "count": 42
+                        },
+                        {
+                           "value": 512,
+                           "count": 86
+                        },
+                        {
+                           "value": 1024,
+                           "count": 162
+                        }
+                     ]
                   },
-                  {
-                     "value": 8,
-                     "count": 2
-                  },
-                  {
-                     "value": 16,
-                     "count": 2
-                  },
-                  {
-                     "value": 32,
-                     "count": 6
-                  },
-                  {
-                     "value": 64,
-                     "count": 10
-                  },
-                  {
-                     "value": 128,
-                     "count": 22
-                  },
-                  {
-                     "value": 256,
-                     "count": 42
-                  },
-                  {
-                     "value": 512,
-                     "count": 86
-                  },
-                  {
-                     "value": 1024,
-                     "count": 162
-                  }
-               ]
-            },
-            "n0": {
-               "id": "n0",
-               "totalCount": 333,
-               "failCount": 166,
-               "failPercent": "49.85",
-               "min": 3.0,
-               "max": 999.0,
-               "avg": "501.0",
-               "sum": "166833.0",
-               "sum2": "111277611.0",
-               "std": "288.4",
-               "successMessageUrl": "3",
-               "failMessageUrl": "6",
-               "ranges": [
-                  {
-                     "value": 50,
-                     "count": 333,
-                     "sum": 166833.0,
+                  "n0": {
+                     "id": "n0",
+                     "totalCount": 333,
+                     "failCount": 166,
+                     "failPercent": "49.85",
+                     "min": 3.0,
+                     "max": 999.0,
                      "avg": "501.0",
-                     "fails": 166
+                     "sum": "166833.0",
+                     "sum2": "111277611.0",
+                     "std": "288.4",
+                     "successMessageUrl": "3",
+                     "failMessageUrl": "6",
+                     "tps": "0.00",
+                     "line95Value": "0.00",
+                     "line95Sum": "0.00",
+                     "line95Count": 0,
+                     "ranges": [
+                        {
+                           "value": 0,
+                           "count": 333,
+                           "sum": 166833.0,
+                           "avg": "501.0",
+                           "fails": 166
+                        }
+                     ],
+                     "durations": [
+                        {
+                           "value": 4,
+                           "count": 1
+                        },
+                        {
+                           "value": 8,
+                           "count": 1
+                        },
+                        {
+                           "value": 16,
+                           "count": 3
+                        },
+                        {
+                           "value": 32,
+                           "count": 5
+                        },
+                        {
+                           "value": 64,
+                           "count": 11
+                        },
+                        {
+                           "value": 128,
+                           "count": 21
+                        },
+                        {
+                           "value": 256,
+                           "count": 43
+                        },
+                        {
+                           "value": 512,
+                           "count": 85
+                        },
+                        {
+                           "value": 1024,
+                           "count": 163
+                        }
+                     ]
                   }
-               ],
-               "durations": [
-                  {
-                     "value": 4,
-                     "count": 1
-                  },
-                  {
-                     "value": 8,
-                     "count": 1
-                  },
-                  {
-                     "value": 16,
-                     "count": 3
-                  },
-                  {
-                     "value": 32,
-                     "count": 5
-                  },
-                  {
-                     "value": 64,
-                     "count": 11
-                  },
-                  {
-                     "value": 128,
-                     "count": 21
-                  },
-                  {
-                     "value": 256,
-                     "count": 43
-                  },
-                  {
-                     "value": 512,
-                     "count": 85
-                  },
-                  {
-                     "value": 1024,
-                     "count": 163
-                  }
-               ]
+               }
             }
          }
       }

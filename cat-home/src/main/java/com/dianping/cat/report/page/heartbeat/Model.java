@@ -23,6 +23,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private int m_disks;
 
 	private String m_disksGraph;
+	
+	private String m_diskRootGraph;
+	
+	private String m_diskDataGraph;
 
 	private String m_newGcCountGraph;
 
@@ -260,4 +264,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setMobileResponse(String mobileResponse) {
    	m_mobileResponse = mobileResponse;
    }
+
+	public String getDiskRootGraph() {
+   	return m_diskRootGraph;
+   }
+
+	public void setDiskRootGraph(String diskRootGraph) {
+   	m_diskRootGraph = diskRootGraph;
+   }
+
+	public String getDiskDataGraph() {
+   	return m_diskDataGraph;
+   }
+
+	public void setDiskDataGraph(String diskDataGraph) {
+   	m_diskDataGraph = diskDataGraph;
+   }
+
 }

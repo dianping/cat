@@ -6,16 +6,12 @@ function formatDate(date) {
 	var minute = date.getMinutes();
 	var second = date.getSeconds();
 
-	if (mymonth < 10) {
-		mymonth = "0" + mymonth;
-	}
-	if (myweekday < 10) {
-		myweekday = "0" + myweekday;
-	}
+	mymonth = mymonth < 10 ? '0' + mymonth : mymonth;
+	myweekday = myweekday < 10 ? '0' + myweekday : myweekday;
 	hour = hour < 10 ? '0' + hour : hour;
 	minute = minute < 10 ? '0' + minute : minute;
 	second = second < 10 ? '0' + second : second;
-	return  mymonth + "-" + myweekday + " " + hour +":"+minute;
+	return mymonth + "-" + myweekday + " " + hour + ":" + minute;
 }
 
 function graph(container, data) {
@@ -32,6 +28,9 @@ function graph(container, data) {
 		xaxis : {
 			mode : 'time',
 			labelsAngle : 15
+		},
+		yaxis : {
+			min : 0
 		},
 		selection : {
 			mode : 'x'

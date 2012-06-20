@@ -112,29 +112,6 @@ public class DisplayHeartbeat {
 		m_addCatMessageSize = getAddedCount(m_catMessageSize);
 		m_addCatMessageOverflow = getAddedCount(m_catMessageOverflow);
 
-		/*
-		 * for (int i = 1; i <= 59; i++) { double d = m_totalThreads[i] -
-		 * m_totalThreads[i - 1]; if (d < 0) { d = m_totalThreads[i]; }
-		 * m_newThreads[i] = d;
-		 * 
-		 * double gc = m_gcCount[i] - m_gcCount[i - 1]; if (gc < 0) { d =
-		 * m_gcCount[i]; } m_addGcCount[i] = gc;
-		 * 
-		 * double addMessageCount = m_catMessageProduced[i] -
-		 * m_catMessageProduced[i - 1]; if (addMessageCount < 0) { addMessageCount
-		 * = m_catMessageProduced[i]; } m_addCatMessageProduced[i] =
-		 * addMessageCount;
-		 * 
-		 * double addMessageSize = m_catMessageSize[i] - m_catMessageSize[i - 1];
-		 * if (addMessageSize < 0) { addMessageSize = m_catMessageSize[i]; }
-		 * m_addCatMessageSize[i] = addMessageSize;
-		 * 
-		 * double addMessageFlow = m_catMessageOverflow[i] -
-		 * m_catMessageOverflow[i - 1]; if (addMessageFlow < 0) { addMessageFlow =
-		 * m_catMessageOverflow[i]; } m_addCatMessageOverflow[i] = addMessageFlow;
-		 * 
-		 * }
-		 */
 		return this;
 	}
 

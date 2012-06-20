@@ -1,7 +1,13 @@
 package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -9,14 +15,19 @@ import javax.servlet.ServletException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.hadoop.dal.GraphDao;
+import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.trend.GraphItem;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.google.gson.Gson;
+import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -25,6 +36,14 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
+
+	public static final long ONE_HOUR = 3600 * 1000L;
+
+	public static final int K = 1024;
+
+	@Inject
+	private GraphDao graphDao;
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -76,7 +95,31 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+		DisplayHeartbeat heartbeat = null;
 
+		normalize(model, payload);
+		switch (payload.getAction()) {
+		case VIEW:
+			heartbeat = showReport(model, payload);
+			setHeartbeatGraphInfo(model, heartbeat);
+			break;
+		case MOBILE:
+			heartbeat = showReport(model, payload);
+			MobileHeartbeatModel mobileModel = setMobileModel(model, heartbeat);
+			String json = new Gson().toJson(mobileModel);
+
+			model.setMobileResponse(json);
+			break;
+		case HISTORY:
+			if (model.getIpAddress() != null) {
+				showHeartBeatGraph(model, payload);
+			}
+			break;
+		}
+		m_jspViewer.view(ctx, model);
+	}
+
+	private void normalize(Model model, Payload payload) {
 		if (StringUtils.isEmpty(payload.getDomain())) {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
@@ -84,26 +127,232 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.HEARTBEAT);
 		model.setIpAddress(payload.getIpAddress());
 
-		DisplayHeartbeat heartbeat = null;
-		switch (payload.getAction()) {
-		case VIEW:
-			heartbeat = showReport(model, payload);
-			setModel(model, heartbeat);
-			break;
-		case MOBILE:
-			heartbeat = showReport(model, payload);
-			MobileHeartbeatModel mobileModel = setMobileModel(model, heartbeat);
-			Gson gson = new Gson();
-			String json = gson.toJson(mobileModel);
-			model.setMobileResponse(json);
-			break;
+		Action action = payload.getAction();
+		if (action == Action.HISTORY) {
+			String type = payload.getReportType();
+
+			if (type == null || type.length() == 0) {
+				payload.setReportType("day");
+			}
+			model.setReportType(payload.getReportType());
+			payload.computeStartDate();
+			model.setLongDate(payload.getDate());
+
+			HeartbeatReport report = new HeartbeatReport();
+
+			model.setReport(report);
+			try {
+				Date historyStartDate = payload.getHistoryStartDate();
+				Date historyEndDate = payload.getHistoryEndDate();
+				List<Graph> domains = graphDao.findDomainByNameDuration(historyStartDate, historyEndDate, "heartbeat",
+				      GraphEntity.READSET_DOMAIN);
+				String domain = payload.getDomain();
+				List<Graph> ips = graphDao.findIpByDomainNameDuration(historyStartDate, historyEndDate, domain,
+				      "heartbeat", GraphEntity.READSET_IP);
+				Set<String> reportDomains = report.getDomainNames();
+				Set<String> reportIps = report.getIps();
+
+				for (Graph graph : domains) {
+					reportDomains.add(graph.getDomain());
+				}
+				for (Graph graph : ips) {
+					reportIps.add(graph.getIp());
+				}
+				report.setDomain(payload.getDomain());
+				model.setDisplayDomain(payload.getDomain());
+
+				String ip = payload.getIpAddress();
+				if (StringUtils.isEmpty(ip)) {
+					List<String> ips2 = model.getIps();
+					if (ips2.size() > 0) {
+						ip = ips2.get(0);
+					}
+				}
+				model.setIpAddress(ip);
+			} catch (DalException e) {
+				e.printStackTrace();
+			}
 		}
-		if (payload.getPeriod().isCurrent()) {
-			model.setCreatTime(new Date());
-		} else {
-			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
+	}
+
+	private GraphItem getGraphItem(String title, String key, Date start, int size, Map<String, double[]> graphData) {
+		GraphItem item = new GraphItem();
+		item.setStart(start);
+		item.setSize(size);
+		item.setTitles(title);
+		double[] activeThread = graphData.get(key);
+		item.addValue(activeThread);
+		return item;
+	}
+
+	// show the graph of heartbeat
+	private void showHeartBeatGraph(Model model, Payload payload) {
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 60);
+		Map<String, double[]> graphData = getHeartBeatData(model, payload);
+
+		model.setActiveThreadGraph(getGraphItem("Thread (Count) ", "ActiveThread", start, size, graphData)
+		      .getJsonString());
+		model.setDaemonThreadGraph(getGraphItem("Daemon Thread (Count) ", "DaemonThread", start, size, graphData)
+		      .getJsonString());
+		model.setTotalThreadGraph(getGraphItem("Total Started Thread (Count) ", "TotalStartedThread", start, size,
+		      graphData).getJsonString());
+		model.setStartedThreadGraph(getGraphItem("Started Thread (Count) ", "StartedThread", start, size, graphData)
+		      .getJsonString());
+		model.setCatThreadGraph(getGraphItem("Cat Started Thread (Count) ", "CatThreadCount", start, size, graphData)
+		      .getJsonString());
+		model.setPigeonThreadGraph(getGraphItem("Pigeon Started Thread (Count) ", "PigeonStartedThread", start, size,
+		      graphData).getJsonString());
+		model.setNewGcCountGraph(getGraphItem("NewGc Count (Count) ", "NewGcCount", start, size, graphData)
+		      .getJsonString());
+		model.setOldGcCountGraph(getGraphItem("OldGc Count (Count) ", "OldGcCount", start, size, graphData)
+		      .getJsonString());
+		model.setSystemLoadAverageGraph(getGraphItem("System Load Average ", "SystemLoadAverage", start, size, graphData)
+		      .getJsonString());
+		model.setMemoryFreeGraph(getGraphItem("Memory Free (MB) ", "MemoryFree", start, size, graphData).getJsonString());
+		model.setHeapUsageGraph(getGraphItem("Heap Usage (MB) ", "HeapUsage", start, size, graphData).getJsonString());
+		model.setNoneHeapUsageGraph(getGraphItem("None Heap Usage (MB) ", "NoneHeapUsage", start, size, graphData)
+		      .getJsonString());
+		model.setDiskRootGraph(getGraphItem("Disk (GB) /", "Disk /", start, size, graphData).getJsonString());
+		model.setDiskDataGraph(getGraphItem("Disk (GB) /data", "Disk /data", start, size, graphData).getJsonString());
+		model.setCatMessageProducedGraph(getGraphItem("Cat Message Produced (Count) / Minute", "CatMessageProduced",
+		      start, size, graphData).getJsonString());
+		model.setCatMessageOverflowGraph(getGraphItem("Cat Message Overflow (Count) / Minute", "CatMessageOverflow",
+		      start, size, graphData).getJsonString());
+		model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
+		      graphData).getJsonString());
+	}
+
+	public Map<String, double[]> getHeartBeatData(Model model, Payload payload) {
+		Date start = new Date(payload.getDate());
+		Date end = payload.getHistoryEndDate();
+		String ip = model.getIpAddress();
+		String domain = payload.getDomain();
+		List<Graph> graphs = new ArrayList<Graph>();
+		
+		try {
+			graphs = this.graphDao.findByDomainNameIpDuration(start, end, ip, domain, "heartbeat",
+			      GraphEntity.READSET_FULL);
+		} catch (DalException e) {
+			e.printStackTrace();
+		} 
+		Map<String, double[]> result = buildHeartbeatDatas(start, end, graphs);
+		return result;
+	}
+
+	public Map<String, double[]> buildHeartbeatDatas(Date start, Date end, List<Graph> graphs) {
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
+		Map<String, String[]> hourlyDate = gethourlyDate(graphs, start, size);
+		return getHeartBeatDatesEveryMinute(hourlyDate, size);
+	}
+
+	private Map<String, String[]> gethourlyDate(List<Graph> graphs, Date start, int size) {
+		Map<String, String[]> heartBeats = new HashMap<String, String[]>();
+		for (Graph graph : graphs) {
+			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
+			String detailContent = graph.getDetailContent();
+			String[] alldates = detailContent.split("\n");
+			
+			for (int i = 0; i < alldates.length; i++) {
+				String[] records = alldates[i].split("\t");
+				String name = records[DetailOrder.NAME.ordinal()];
+				String countPerHour = records[DetailOrder.COUNT_IN_MINUTES.ordinal()];
+				String[] singlePeriod = null;
+				String[] strings = heartBeats.get(name);
+				if(strings==null){
+					singlePeriod = new String[size];
+					for (int index = 0; index < size; index++) {
+						singlePeriod[index] = "";
+					}
+				}else{
+					singlePeriod = strings;
+				}
+				singlePeriod[indexOfperiod] = countPerHour;
+				heartBeats.put(name, singlePeriod);
+			}
 		}
-		m_jspViewer.view(ctx, model);
+		return heartBeats;
+	}
+
+	public Map<String, double[]> getHeartBeatDatesEveryMinute(Map<String, String[]> heartBeats, final int size) {
+		Map<String, double[]> result = new HashMap<String, double[]>();
+		final int minutesPerHour = 60;
+		int sizeOfHeartBeat = size * minutesPerHour;
+		Iterator<Entry<String, String[]>> iterator = heartBeats.entrySet().iterator();
+		
+		while (iterator.hasNext()) {
+			Entry<String, String[]> entry = iterator.next();
+			String name = (String) entry.getKey();
+			double[] allDatePerMinutes = new double[sizeOfHeartBeat];
+			String[] allPeriods = entry.getValue();
+			for (int i = 0; i < allPeriods.length; i++) {
+				double[] datePerHour = new double[minutesPerHour];
+				String oneHour = allPeriods[i];
+				if (!"".equals(oneHour)) {
+					String[] dateInMinutes = oneHour.split(",");
+					for (int j = 0; j < dateInMinutes.length; j++) {
+						datePerHour[j] = Double.parseDouble(dateInMinutes[j]);
+					}
+				}
+				for (int m = 0; m < minutesPerHour; m++) {
+					int index = i * minutesPerHour + m;
+					allDatePerMinutes[index] = datePerHour[m];
+				}
+			}
+			result.put(name, allDatePerMinutes);
+		}
+		formatHeartBeat(result);
+		return result;
+	}
+
+	private void formatHeartBeat(Map<String, double[]> result) {
+		double[] totalStartedThread = result.get("TotalStartedThread");
+		if (totalStartedThread != null) {
+			result.put("StartedThread", getAddedCount(totalStartedThread));
+		}
+		
+		String[]addedDatas={"NewGcCount","OldGcCount","CatMessageProduced","CatMessageSize","CatMessageOverflow"};
+		
+		organiseAddedData(result,addedDatas);
+		
+		String[]divideByKDates={"CatMessageSize","HeapUsage","NoneHeapUsage","MemoryFree","Disk /","Disk /data"};
+		
+		divideByK(result,divideByKDates);
+	
+	}
+	
+	private void divideByK(Map<String, double[]> result, String[] divideByKDates) {
+	  
+		for(String name:divideByKDates){
+			double[]data=result.get(name);
+			int divisor=name.startsWith("Disk")?K*K*K:K*K;
+			for (int i = 0; i < data.length; i++) {
+				data[i] = data[i] /divisor;
+			}
+		}
+		
+   }
+
+	private void organiseAddedData(Map<String, double[]> result, String[] addedNames) {
+		for(String addedName:addedNames){
+			result.put(addedName, getAddedCount(result.get(addedName)));
+		}
+   }
+	
+	private double[] getAddedCount(double[] source) {
+		int size = source.length;
+		double[] result = new double[size];
+		for (int i = 1; i <= size - 1; i++) {
+			if (source[i - 1] > 0) {
+				double d = source[i] - source[i - 1];
+				if (d < 0) {
+					d = source[i];
+				}
+				result[i] = d;
+			}
+		}
+		return result;
 	}
 
 	private MobileHeartbeatModel setMobileModel(Model model, DisplayHeartbeat heartbeat) {
@@ -140,7 +389,7 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
-	private void setModel(Model model, DisplayHeartbeat displayHeartbeat) {
+	private void setHeartbeatGraphInfo(Model model, DisplayHeartbeat displayHeartbeat) {
 		if (displayHeartbeat == null) {
 			return;
 		}
@@ -163,4 +412,10 @@ public class Handler implements PageHandler<Context> {
 		model.setSystemLoadAverageGraph(displayHeartbeat.getSystemLoadAverageGraph());
 		model.setMemoryFreeGraph(displayHeartbeat.getMemoryFreeGraph());
 	}
+
+	// the detail order of heartbeat is:name min max sum sum2 count_in_minutes
+	public enum DetailOrder {
+		NAME, MIN, MAX, SUM, SUM2, COUNT_IN_MINUTES
+	}
+
 }

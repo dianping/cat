@@ -66,6 +66,7 @@ public class TransactionReportMergerTest {
 		merger.setAllName(true);
 		merger.setType("URL");
 		
+		System.out.println("");
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 		

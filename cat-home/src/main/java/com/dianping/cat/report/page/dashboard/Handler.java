@@ -1,11 +1,15 @@
 package com.dianping.cat.report.page.dashboard;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.report.ReportPage;
@@ -26,9 +30,11 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_service;
-	
+
 	private Gson m_gson = new Gson();
-	
+
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "dashboard")
@@ -43,17 +49,32 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.DASHBOARD);
-		String domain = "Cat";
-		TransactionReport report = getHourlyReport(domain);
-		 
-		TransactionType detail = report.getMachines().get("All").getTypes().get("URL");
-		detail.getTotalCount();
-		Map<String,String> data = new HashMap<String,String>();
-		data.put(domain+"UrlTotal", String.valueOf(detail.getTotalCount()));
+		TransactionReport catReport = getHourlyReport("cat");
+		Set<String> domains = catReport.getDomainNames();
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("timestamp", sdf.format(new Date()));
+
+		for (String domain : domains) {
+			TransactionReport report = null;
+			if (domain.equals("cat")) {
+				report = catReport;
+			} else {
+				report = getHourlyReport(domain);
+			}
+			Machine machine = report.getMachines().get("All");
+			if (machine != null) {
+				TransactionType detail = machine.getTypes().get("URL");
+				if (detail != null) {
+					data.put(domain + "UrlTotal", String.valueOf(detail.getTotalCount()));
+					data.put(domain + "UrlResponse", String.valueOf(detail.getAvg()));
+				}
+			}
+		}
+
 		model.setData(m_gson.toJson(data));
 		m_jspViewer.view(ctx, model);
 	}
-	
+
 	private TransactionReport getHourlyReport(String domain) {
 		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
 		      .setProperty("ip", "All");

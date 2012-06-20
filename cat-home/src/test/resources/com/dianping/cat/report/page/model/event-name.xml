@@ -1,17 +1,17 @@
-<event-report domain="Cat" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
+<event-report domain="MobileApi" startTime="2012-06-18 14:00:00" endTime="2012-06-18 14:59:59">
    <domain>Cat</domain>
-   <type id="URL" totalCount="11" failCount="0" failPercent="0.00">
-      <name id="home" totalCount="1" failCount="0" failPercent="0.00">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="service" totalCount="8" failCount="0" failPercent="0.00">
-         <successMessageUrl>20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html</successMessageUrl>
-      </name>
-      <name id="t" totalCount="1" failCount="0" failPercent="0.00">
-         <successMessageUrl>20120216/23/Cat/8e7c91a0-7549-4b13-b43b-252b2a6ef4bb.html</successMessageUrl>
-      </name>
-      <name id="ip" totalCount="1" failCount="0" failPercent="0.00">
-         <successMessageUrl>20120216/23/Cat/2029c32e-b692-4e43-8eaf-96b8d6c846a2.html</successMessageUrl>
-      </name>
-   </type>
+   <domain>MobileApi</domain>
+   <ip>10.1.77.193</ip>
+   <machine ip="10.1.77.193">
+      <type id="URL" totalCount="24" failCount="0" failPercent="0.00">
+         <name id="ClientInfo" totalCount="12" failCount="0" failPercent="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+				</successMessageUrl>
+         </name>
+         <name id="Payload" totalCount="12" failCount="0" failPercent="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+				</successMessageUrl>
+         </name>
+      </type>
+   </machine>
 </event-report>

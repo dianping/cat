@@ -68,6 +68,9 @@ $(document).delegate('.history_graph_link', 'click', function(e){
 
 					data = $('#hitTrendMeta',cell).text();
 					graph($('#hitTrend',cell)[0],eval('('+data+')'));
+					
+					data = $('#errorTrendMeta',cell).text();
+					graph($('#errorTrend',cell)[0],eval('('+data+')'));
 				}
 			});
 		}

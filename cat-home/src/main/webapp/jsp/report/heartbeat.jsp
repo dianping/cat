@@ -6,17 +6,12 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<jsp:useBean id="ctx"
-	type="com.dianping.cat.report.page.heartbeat.Context" scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.heartbeat.Payload" scope="request" />
-<jsp:useBean id="model"
-	type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
+<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.heartbeat.Context" scope="request" />
+<jsp:useBean id="payload"	type="com.dianping.cat.report.page.heartbeat.Payload" scope="request" />
+<jsp:useBean id="model"	type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:noSwitchReport title="Heartbeat Report"
-	navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}"
-	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
@@ -148,4 +143,4 @@
 </table>
 
 </jsp:body>
-</a:noSwitchReport>
+</a:report>

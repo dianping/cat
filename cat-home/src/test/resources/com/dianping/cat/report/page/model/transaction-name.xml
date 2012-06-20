@@ -1,17 +1,37 @@
-<transaction-report domain="Cat" startTime="2012-02-16 23:00:00" endTime="2012-02-16 23:59:00">
+<transaction-report domain="MobileApi" startTime="2012-06-18 14:00:00" endTime="2012-06-18 14:59:59">
    <domain>Cat</domain>
-   <type id="URL" totalCount="11" failCount="0" failPercent="0.00" min="0.0" max="194.0" avg="47.1" sum="518.0" sum2="73942.0" std="67.1">
-      <name id="home" totalCount="1" failCount="0" failPercent="0.00" min="175.0" max="175.0" avg="175.0" sum="175.0" sum2="30625.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
-      </name>
-      <name id="service" totalCount="8" failCount="0" failPercent="0.00" min="1.0" max="58.0" avg="13.0" sum="104.0" sum2="3952.0" std="18.0">
-         <successMessageUrl>20120216/23/Cat/b10bdefb-1eca-45e1-a9c3-52367078b5a2.html</successMessageUrl>
-      </name>
-      <name id="t" totalCount="1" failCount="0" failPercent="0.00" min="193.0" max="193.0" avg="193.0" sum="193.0" sum2="37249.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/8e7c91a0-7549-4b13-b43b-252b2a6ef4bb.html</successMessageUrl>
-      </name>
-      <name id="ip" totalCount="1" failCount="0" failPercent="0.00" min="46.0" max="46.0" avg="46.0" sum="46.0" sum2="2116.0" std="0.0">
-         <successMessageUrl>20120216/23/Cat/2029c32e-b692-4e43-8eaf-96b8d6c846a2.html</successMessageUrl>
-      </name>
-   </type>
+   <domain>MobileApi</domain>
+   <ip>10.1.77.193</ip>
+   <machine ip="10.1.77.193">
+      <type id="URL" totalCount="12" failCount="0" failPercent="0.00" min="2.354" max="2164.387" avg="0.0" sum="2689.6" sum2="4772307.3" std="0.0" tps="0.00" line95Value="2164.00" line95Sum="2164.00" line95Count="1">
+         <name id="/config.bin" totalCount="2" failCount="0" failPercent="0.00" min="2.354" max="2.725" avg="0.0" sum="5.1" sum2="13.0" std="0.0" tps="0.00" line95Value="2.00" line95Sum="2.00" line95Count="1">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+				</successMessageUrl>
+         </name>
+         <name id="/hotregion.bin" totalCount="2" failCount="0" failPercent="0.00" min="2.908" max="8.311" avg="0.0" sum="11.2" sum2="77.5" std="0.0" tps="0.00" line95Value="8.00" line95Sum="8.00" line95Count="1">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960753-0
+				</successMessageUrl>
+         </name>
+         <name id="/category.bin" totalCount="2" failCount="0" failPercent="0.00" min="12.934" max="13.056" avg="0.0" sum="26.0" sum2="337.7" std="0.0" tps="0.00" line95Value="13.00" line95Sum="13.00" line95Count="1">
+            <successMessageUrl>MobileApi-0a014dc1-1339999960794-0
+				</successMessageUrl>
+         </name>
+         <name id="/city.bin" totalCount="1" failCount="0" failPercent="0.00" min="38.21" max="38.21" avg="0.0" sum="38.2" sum2="1460.0" std="0.0" tps="0.00" line95Value="38.00" line95Sum="38.00" line95Count="1">
+            <successMessageUrl>MobileApi-0a014dc1-1339999961753-0
+				</successMessageUrl>
+         </name>
+         <name id="/location.bin" totalCount="1" failCount="0" failPercent="0.00" min="249.694" max="249.694" avg="0.0" sum="249.7" sum2="62347.1" std="0.0" tps="0.00" line95Value="249.00" line95Sum="249.00" line95Count="1">
+            <successMessageUrl>MobileApi-0a014dc1-1339999968913-0
+				</successMessageUrl>
+         </name>
+         <name id="/locatecategory.bin" totalCount="1" failCount="0" failPercent="0.00" min="5.392" max="5.392" avg="0.0" sum="5.4" sum2="29.1" std="0.0" tps="0.00" line95Value="5.00" line95Sum="5.00" line95Count="1">
+            <successMessageUrl>MobileApi-0a014dc1-1339999994494-0
+				</successMessageUrl>
+         </name>
+         <name id="/localshop.bin" totalCount="3" failCount="0" failPercent="0.00" min="42.469" max="2164.387" avg="0.0" sum="2354.1" sum2="4708042.8" std="0.0" tps="0.00" line95Value="2164.00" line95Sum="2164.00" line95Count="1">
+            <successMessageUrl>MobileApi-0a014dc1-1340000001993-0
+				</successMessageUrl>
+         </name>
+      </type>
+   </machine>
 </transaction-report>
