@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.model.transaction;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -35,6 +35,6 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultDomParser().parse(xml);
+		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

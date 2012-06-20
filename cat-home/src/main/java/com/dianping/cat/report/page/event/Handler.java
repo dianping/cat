@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.event.StatisticsComputer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
@@ -193,8 +194,6 @@ public class Handler implements PageHandler<Context> {
 		model.setFailureTrend(item.getJsonString());
    }
 
-	private com.dianping.cat.consumer.event.model.transform.DefaultDomParser eventParser = new com.dianping.cat.consumer.event.model.transform.DefaultDomParser();
-	
 	private void showSummarizeReport(Model model, Payload payload) {
 		String type = payload.getType();
 		String sorted = payload.getSortBy();
@@ -213,7 +212,7 @@ public class Handler implements PageHandler<Context> {
 			EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 			for (Dailyreport report : reports) {
 				String xml = report.getContent();
-				EventReport reportModel = eventParser.parse(xml);
+				EventReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			}
 			eventReport = merger == null ? null : merger.getEventReport();

@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
@@ -178,7 +179,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	private void loadReports() {
-		DefaultDomParser parser = new DefaultDomParser();
 		Bucket<String> reportBucket = null;
 
 		try {
@@ -186,7 +186,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 			for (String id : reportBucket.getIds()) {
 				String xml = reportBucket.findById(id);
-				HeartbeatReport report = parser.parse(xml);
+				HeartbeatReport report = DefaultSaxParser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}

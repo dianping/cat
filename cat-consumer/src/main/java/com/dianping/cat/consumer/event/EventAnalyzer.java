@@ -17,8 +17,8 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
+import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.Task;
@@ -88,7 +88,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	private void loadReports() {
-		DefaultDomParser parser = new DefaultDomParser();
 		Bucket<String> reportBucket = null;
 
 		try {
@@ -96,7 +95,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 			for (String id : reportBucket.getIds()) {
 				String xml = reportBucket.findById(id);
-				EventReport report = parser.parse(xml);
+				EventReport report = DefaultSaxParser.parse(xml);
 
 				m_reports.put(report.getDomain(), report);
 			}

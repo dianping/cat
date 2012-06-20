@@ -16,7 +16,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
@@ -60,8 +60,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GraphDao graphDao;
-
-	private DefaultDomParser problemParser = new DefaultDomParser();
 
 	private Gson gson = new Gson();
 
@@ -235,7 +233,7 @@ public class Handler implements PageHandler<Context> {
 			ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 			for (Dailyreport report : reports) {
 				String xml = report.getContent();
-				ProblemReport reportModel = problemParser.parse(xml);
+				ProblemReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			}
 			problemReport = merger == null ? null : merger.getProblemReport();
