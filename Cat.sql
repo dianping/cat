@@ -107,6 +107,8 @@ CREATE TABLE `dailyreport` (
   PRIMARY KEY (`id`)
 )  DEFAULT CHARSET=utf8 COMMENT='用于存放以天为单位的报表信息';
 
+CREATE UNIQUE INDEX dailyreport_period_domain_name ON dailyreport (period, domain, name);
+
 CREATE TABLE `dailygraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
