@@ -208,7 +208,7 @@ public class Handler implements PageHandler<Context> {
 	private void buildTrendGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		int size = (int) (end.getTime() - start.getTime()) / (3600 * 1000) * 60;
+		int size = (int)((end.getTime() - start.getTime()) / (60 * 1000));
 
 		GraphItem item = new GraphItem();
 		item.setStart(start);
@@ -385,16 +385,17 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 		}
-//		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//		for (int i = 0; i < errors.length; i++) {
-//			if (errors[i] > 0) {
-//				System.out.println(sdf.format(new Date(start.getTime() + i * 1000)) + ":" + errors[i]);
-//			}
-//		}
+		// SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		// for (int i = 0; i < errors.length; i++) {
+		// if (errors[i] > 0) {
+		// System.out.println(sdf.format(new Date(start.getTime() + i * 1000)) +
+		// ":" + errors[i]);
+		// }
+		// }
 		result.put(ERROR, errors);
 		return result;
 	}
-	
+
 	public enum SummaryOrder {
 		TYPE, TOTAL_COUNT, DETAIL
 	}
