@@ -137,9 +137,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					}
 				} else {
 					try {
-						Thread.sleep(5);
+						Thread.sleep(2);
 					} catch (Exception e) {
 						break;
+					}
+					
+					if (m_future == null || !m_future.getChannel().isOpen()) {
+						reconnect();
 					}
 				}
 			} catch (Throwable t) {
