@@ -5,7 +5,7 @@
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
 	<version>0.3.0</version>
-	<name>Tracking</name>
+	<name>CAT</name>
 	<packaging>pom</packaging>
 	<modules>
 		<module>cat-core</module>

@@ -30,7 +30,7 @@ public abstract class TaskConsumer implements Runnable {
 	public void run() {
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		findtask: while (running) {
-			LockSupport.parkNanos(2L * 1000 * 1000 * 1000);
+			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between tasks
 			Task task = findDoingTask(localIp); // find doing task
 			if (task == null) {
 				task = findTodoTask(); // find todo task

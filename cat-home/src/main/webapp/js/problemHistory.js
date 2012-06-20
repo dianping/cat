@@ -27,12 +27,13 @@ function graph(container, data) {
 
 	for (i = 0; i < data.size; i++) {
 		x = start + (i * minute);
-		d1.push([ x + hour * 8, real[i] ]);
+		d1.push([ x , real[i] ]);
 	}
 
 	options = {
 		xaxis : {
 			mode : 'time',
+			timeMode:'local',
 			labelsAngle : 15
 		},		
 		yaxis : {
@@ -42,9 +43,7 @@ function graph(container, data) {
 			mode : 'x'
 		},
 		HtmlText : false,
-		title : data.titles + " From " + formatDate(new Date(data.start))
-				+ " To "
-				+ formatDate(new Date(start + data.size * 1000 * 60))
+		title : data.titles
 
 	};
 
@@ -56,8 +55,8 @@ function graph(container, data) {
 
 		if (opts != null && opts.xaxis != null) {
 			o.title = data.titles + " From "
-					+ formatDate(new Date(opts.xaxis.min - hour * 8)) + " To"
-					+ formatDate(new Date(opts.xaxis.max - hour * 8));
+					+ formatDate(new Date(opts.xaxis.min)) + " To"
+					+ formatDate(new Date(opts.xaxis.max));
 		} else {
 		}
 		// Return a new graph.
@@ -73,6 +72,7 @@ function graph(container, data) {
 				min : area.x1,
 				max : area.x2,
 				mode : 'time',
+				timeMode:'local',
 				labelsAngle : 15
 			},
 			yaxis : {
