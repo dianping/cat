@@ -214,7 +214,9 @@ public class Handler implements PageHandler<Context> {
 		item.setStart(start);
 
 		double[] data = getGraphData(model, payload).get(ERROR);
-		item.setTitles(payload.getType());
+		String type = payload.getType();
+		String status = payload.getStatus();
+		item.setTitles(StringUtils.isEmpty(status) ? type : status);
 		item.addValue(data);
 		item.setSize(size);
 		model.setErrorsTrend(item.getJsonString());

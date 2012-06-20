@@ -6,7 +6,6 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.message.configuration.ClientConfigTest;
 import com.dianping.cat.message.internal.MessageIdFactoryTest;
-import com.dianping.cat.message.internal.MessageProducerTest;
 import com.dianping.cat.message.internal.MillisSecondTimerTest;
 import com.dianping.cat.message.io.InMemoryTest;
 import com.dianping.cat.message.io.TcpSocketTest;
