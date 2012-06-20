@@ -63,25 +63,19 @@ public class GraphDateTest {
 			String type = "Result";
 			String name = "cacheService:cacheConfigService_1.0.0:getKeyConfigurations";
 			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, name, graphs);
-			double[] total_count = { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
-			double[] failure_count = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-			double[] min = { 6.83, 6.83, 6.83, 6.83, 6.83, 6.83, 6.83, 6.83, 6.83, 6.83 };
-			double[] max = { 7.583, 7.583, 7.583, 7.583, 7.583, 7.583, 7.583, 7.583, 7.583, 7.583 };
-			double[] sum = { 43.2, 43.2, 43.2, 43.2, 43.2, 43.2, 43.2, 43.2, 43.2, 43.2 };
-			double[] sum2 = { 311.0, 311.0, 311.0, 311.0, 311.0, 311.0, 311.0, 311.0, 311.0, 311.0 };
 			double[] expectTotalCount = graphDates.get("total_count");
 			double[] expectFailureCount = graphDates.get("failure_count");
 			double[] expectMin = graphDates.get("min");
 			double[] expectMax = graphDates.get("max");
 			double[] expectSum2 = graphDates.get("sum2");
 			double[] expectSum = graphDates.get("sum");
-
-			Assert.assertEquals(true, Arrays.equals(total_count, expectTotalCount));
-			Assert.assertEquals(true, Arrays.equals(failure_count, expectFailureCount));
-			Assert.assertEquals(true, Arrays.equals(min, expectMin));
-			Assert.assertEquals(true, Arrays.equals(max, expectMax));
-			Assert.assertEquals(true, Arrays.equals(sum, expectSum));
-			Assert.assertEquals(true, Arrays.equals(sum2, expectSum2));
+			
+			assertArray(6,expectTotalCount);
+			assertArray(0,expectFailureCount);
+			assertArray(6.83,expectMin);
+			assertArray(7.583,expectMax);
+			assertArray(43.2,expectSum2);
+			assertArray(311.0,expectSum);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -98,10 +92,8 @@ public class GraphDateTest {
 			String type = "Result";
 			String name = "Result";
 			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, name, graphs);
-			double[] expectSum = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 			double[] sum = graphDates.get("sum");
-
-			Assert.assertEquals(true, Arrays.equals(sum, expectSum));
+			assertArray(0,sum);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
