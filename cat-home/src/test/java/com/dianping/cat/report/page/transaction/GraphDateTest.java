@@ -18,39 +18,36 @@ public class GraphDateTest {
 
 	public static final long ONE_HOUR = 3600 * 1000L;
 
+	public SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
+
+	public void assertArray(double expected, double[] real) {
+		for (int i = 0; i < real.length; i++) {
+			Assert.assertEquals(expected, real[i]);
+		}
+	}
+
 	@Test
 	public void testBuildGraphDatesByType() {
 		Handler handler = new Handler();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHH");
 		try {
-			Date start = sf.parse("2012060612");
-			Date end = sf.parse("2012060622");
+			Date start = sf.parse("20120601");
+			Date end = sf.parse("20120607");
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "URL";
 			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, null, graphs);
-			double[] total_count = { 15, 15, 15, 15, 15, 15, 15, 15, 15, 15 };
-			double[] failure_count = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-			double[] min = { 11.836555, 11.836555, 11.836555, 11.836555, 11.836555, 11.836555, 11.836555, 11.836555,
-			      11.836555, 11.836555 };
-			double[] max = { 225244.724, 225244.724, 225244.724, 225244.724, 225244.724, 225244.724, 225244.724,
-			      225244.724, 225244.724, 225244.724 };
-			double[] sum = { 234038.7, 234038.7, 234038.7, 234038.7, 234038.7, 234038.7, 234038.7, 234038.7, 234038.7,
-			      234038.7 };
-			double[] sum2 = { 5.07448582695E10, 5.07448582695E10, 5.07448582695E10, 5.07448582695E10, 5.07448582695E10,
-			      5.07448582695E10, 5.07448582695E10, 5.07448582695E10, 5.07448582695E10, 5.07448582695E10 };
 			double[] expectTotalCount = graphDates.get("total_count");
 			double[] expectFailureCount = graphDates.get("failure_count");
 			double[] expectMin = graphDates.get("min");
 			double[] expectMax = graphDates.get("max");
 			double[] expectSum2 = graphDates.get("sum2");
 			double[] expectSum = graphDates.get("sum");
-			
-			Assert.assertEquals(true, Arrays.equals(total_count, expectTotalCount));
-			Assert.assertEquals(true, Arrays.equals(failure_count, expectFailureCount));
-			Assert.assertEquals(true, Arrays.equals(min, expectMin));
-			Assert.assertEquals(true, Arrays.equals(max, expectMax));
-			Assert.assertEquals(true, Arrays.equals(sum, expectSum));
-			Assert.assertEquals(true, Arrays.equals(sum2, expectSum2));
+
+			assertArray(15,expectTotalCount);
+			assertArray(0,expectFailureCount);
+			assertArray(11.836555,expectMin);
+			assertArray(225244.724,expectMax);
+			assertArray(5.07448582695E10,expectSum2);
+			assertArray(234038.7,expectSum);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -59,16 +56,15 @@ public class GraphDateTest {
 	@Test
 	public void testBuildGraphDatesByTypeAndName() {
 		Handler handler = new Handler();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHH");
 		try {
-			Date start = sf.parse("2012060612");
-			Date end = sf.parse("2012060622");
+			Date start = sf.parse("20120606");
+			Date end = sf.parse("20120606");
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "Result";
 			String name = "cacheService:cacheConfigService_1.0.0:getKeyConfigurations";
 			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, name, graphs);
-			double[] total_count = { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
-			double[] failure_count = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+			double[] total_count = { 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6 };
+			double[] failure_count = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 			double[] min = { 6.83, 6.83, 6.83, 6.83, 6.83, 6.83, 6.83, 6.83, 6.83, 6.83 };
 			double[] max = { 7.583, 7.583, 7.583, 7.583, 7.583, 7.583, 7.583, 7.583, 7.583, 7.583 };
 			double[] sum = { 43.2, 43.2, 43.2, 43.2, 43.2, 43.2, 43.2, 43.2, 43.2, 43.2 };
@@ -79,7 +75,7 @@ public class GraphDateTest {
 			double[] expectMax = graphDates.get("max");
 			double[] expectSum2 = graphDates.get("sum2");
 			double[] expectSum = graphDates.get("sum");
-			
+
 			Assert.assertEquals(true, Arrays.equals(total_count, expectTotalCount));
 			Assert.assertEquals(true, Arrays.equals(failure_count, expectFailureCount));
 			Assert.assertEquals(true, Arrays.equals(min, expectMin));
@@ -95,17 +91,16 @@ public class GraphDateTest {
 	@Test
 	public void testBuildGraphDatesEmpty() {
 		Handler handler = new Handler();
-		SimpleDateFormat sf = new SimpleDateFormat("yyyyMMddHH");
 		try {
-			Date start = sf.parse("2012060612");
-			Date end = sf.parse("2012060622");
+			Date start = sf.parse("20120606");
+			Date end = sf.parse("20120607");
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "Result";
 			String name = "Result";
 			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, name, graphs);
 			double[] expectSum = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 			double[] sum = graphDates.get("sum");
-			
+
 			Assert.assertEquals(true, Arrays.equals(sum, expectSum));
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -127,17 +122,13 @@ public class GraphDateTest {
 		      + "\n"
 		      + "Result	cacheService:cacheConfigService_1.0.0:getCacheConfigurations	6	0	28.769	64.718	302.0	16596.8"
 		      + "\n" + "Result	cacheService:cacheConfigService_1.0.0:getKeyConfigurations	6	0	6.83	7.583	43.2	311.0";
-		List<Date> periods = new ArrayList<Date>();
-		
+
 		for (long i = start.getTime(); i < end.getTime(); i = i + ONE_HOUR) {
-			periods.add(new Date(i));
-		}
-		for (int i = 0; i < 10; i++) {
 			Graph graph = new Graph();
 			graph.setDetailContent(detail);
 			graph.setSummaryContent(summary);
 			graphs.add(graph);
-			graph.setPeriod(periods.get(i));
+			graph.setPeriod(new Date(i));
 		}
 		return graphs;
 	}
