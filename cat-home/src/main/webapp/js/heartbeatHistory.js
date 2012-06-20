@@ -60,8 +60,8 @@ function graph(container, data) {
 			console.log(opts.xaxis.max);
 			console.log(new Date(opts.xaxis.max));
 			console.log(formatDate(new Date(opts.xaxis.max)))
-			o.title = data.titles + " From "
-					+ formatDate(new Date(opts.xaxis.min)) + " To"
+			o.title = " From "
+					+ formatDate(new Date(opts.xaxis.min)) + " To "
 					+ formatDate(new Date(opts.xaxis.max));
 		} else {
 		}

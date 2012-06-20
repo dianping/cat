@@ -224,6 +224,7 @@ public class Handler implements PageHandler<Context> {
 		if (eventReport == null) {
 			return;
 		}
+		eventReport.setDomain(model.getDisplayDomain());
 		model.setReport(eventReport);
 		if (!StringUtils.isEmpty(type)) {
 			model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, ip, eventReport));
@@ -257,6 +258,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReportType(payload.getReportType());
 			payload.computeStartDate();
+			payload.defaultIsYesterday();
 			model.setLongDate(payload.getDate());
 		}
    }

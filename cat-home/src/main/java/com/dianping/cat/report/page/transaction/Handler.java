@@ -221,7 +221,7 @@ public class Handler implements PageHandler<Context> {
 		item.setStart(start);
 		item.setSize(size);
 
-		item.setTitles(display + " Response Time");
+		item.setTitles(display + " Response Time (ms)");
 		Map<String, double[]> graphData = getGraphData(model, payload);
 		double[] sum = graphData.get("sum");
 		double[] totalCount = graphData.get("total_count");
@@ -235,13 +235,13 @@ public class Handler implements PageHandler<Context> {
 		model.setResponseTrend(item.getJsonString());
 
 		item.getValues().clear();
-		item.setTitles(display + " Hits");
+		item.setTitles(display + " Hits (count)");
 
 		item.addValue(totalCount);
 		model.setHitTrend(item.getJsonString());
 
 		item.getValues().clear();
-		item.setTitles(display+ " Error");
+		item.setTitles(display+ " Error (count)");
 		item.addValue(graphData.get("failure_count"));
 		model.setErrorTrend(item.getJsonString());
 	}
@@ -321,6 +321,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReportType(payload.getReportType());
 			payload.computeStartDate();
+			payload.defaultIsYesterday();
 			model.setLongDate(payload.getDate());
 		}
 	}
