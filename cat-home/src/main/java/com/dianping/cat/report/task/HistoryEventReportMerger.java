@@ -1,7 +1,7 @@
 package com.dianping.cat.report.task;
 
+import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 
 public class HistoryEventReportMerger extends EventReportMerger{
@@ -11,12 +11,15 @@ public class HistoryEventReportMerger extends EventReportMerger{
    }
 
 	@Override
-   public void visitRange(Range range) {
-	   //super.visitRange(range);
+   protected void mergeName(EventName old, EventName other) {
+		old.getRanges().clear();
+		other.getRanges().clear();
+	   super.mergeName(old, other);
    }
 
 	@Override
-   protected void visitRangeChildren(Range old, Range range) {
-	   //super.visitRangeChildren(old, range);
+   public void visitName(EventName name) {
+		name.getRanges().clear();
+	   super.visitName(name);
    }
 }

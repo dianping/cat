@@ -1,8 +1,6 @@
 package com.dianping.cat.report.task;
 
-import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
-import com.dianping.cat.consumer.transaction.model.entity.Duration;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 
@@ -13,18 +11,21 @@ public class HistoryTransactionReportMerger extends TransactionReportMerger {
    }
 
 	@Override
-   public void visitAllDuration(AllDuration allDuration) {
-		//super.visitAllDuration(allDuration);
+   public void visitName(TransactionName name) {
+		name.getDurations().clear();
+		name.getRanges().clear();
+	   super.visitName(name);
    }
 
 	@Override
-   public void visitDuration(Duration duration) {
-		//super.visitDuration(duration);
-   }
-
-	@Override
-   public void visitRange(Range range) {
-	  // super.visitRange(range);
+   protected void mergeName(TransactionName old, TransactionName other) {
+		old.getDurations().clear();
+		old.getRanges().clear();
+		
+		other.getDurations().clear();
+		other.getRanges().clear();
+		
+	   super.mergeName(old, other);
    }
 	
 }
