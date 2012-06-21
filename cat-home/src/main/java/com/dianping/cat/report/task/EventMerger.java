@@ -22,7 +22,7 @@ public class EventMerger implements ReportMerger<EventReport> {
 	@Override
 	public EventReport merge(String reportDomain, List<Report> reports) {
 		EventReport eventReport;
-		EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
+		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
@@ -45,7 +45,7 @@ public class EventMerger implements ReportMerger<EventReport> {
 	@Override
 	public String mergeAll(String reportDomain, List<Report> reports) {
 		EventReport eventReport = merge(reportDomain, reports);
-		EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
+		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
 		EventReport eventReport2 = merge(reportDomain, reports);
 		com.dianping.cat.consumer.event.model.entity.Machine allMachines = merger.mergesForAllMachine(eventReport2);
 		eventReport.addMachine(allMachines);

@@ -21,7 +21,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 
 	public String mergeAll(String reportDomain, List<Report> reports) {
 		TransactionReport transactionReport = merge(reportDomain, reports);
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
+		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
 		TransactionReport transactionReport2 = merge(reportDomain, reports);
 		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger.mergesForAllMachine(transactionReport2);
 		transactionReport.addMachine(allMachines);
@@ -32,7 +32,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 
 	public TransactionReport merge(String reportDomain, List<Report> reports) {
 		TransactionReport transactionReport;
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
+		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
