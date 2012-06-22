@@ -1,7 +1,5 @@
 package com.dianping.cat.report.page.model.transaction;
 
-import java.util.Map;
-
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -21,23 +19,21 @@ public class TransactionReportMerger extends DefaultMerger {
 
 	private String m_type;
 
+	private Machine m_allMachines;
+
+	private TransactionName m_allNames;
+
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
 
 		transactionReport.accept(new StatisticsComputer());
 	}
-	
-	@Override
-   public void visitMachine(Machine machine) {
-	   super.visitMachine(machine);
-   }
 
 	@Override
 	protected void mergeDuration(Duration old, Duration duration) {
 		old.setCount(old.getCount() + duration.getCount());
 	}
 
-	
 	@Override
 	protected void mergeMachine(Machine old, Machine machine) {
 	}
@@ -91,40 +87,14 @@ public class TransactionReportMerger extends DefaultMerger {
 
 	public Machine mergesForAllMachine(TransactionReport report) {
 		Machine machine = new Machine(CatString.ALL_IP);
-		for (Machine temp : report.getMachines().values()) {
-			if (!temp.getIp().equals(CatString.ALL_IP)) {
-				mergeMachine(machine, temp);
-				visitMachineChildren(machine, temp);
+
+		for (Machine m : report.getMachines().values()) {
+			if (!m.getIp().equals(CatString.ALL_IP)) {
+				visitMachineChildren(machine, m);
 			}
 		}
+
 		return machine;
-	}
-
-	public TransactionName mergesForAllName(TransactionReport report) {
-		TransactionName name = new TransactionName("ALL");
-		TransactionType type = report.getMachines().get(m_ip).findType(m_type);
-
-		if (type != null) {
-			for (TransactionName n : type.getNames().values()) {
-				if (!n.getId().equals("ALL")) {
-					mergeName(name, n);
-					visitNameChildren(name, n);
-				}
-			}
-		}
-
-		return name;
-	}
-
-	public TransactionReport mergesFrom(TransactionReport report) {
-		report.accept(this);
-
-		return getTransactionReport();
-	}
-
-	@Override
-	protected void mergeTransactionReport(TransactionReport old, TransactionReport transactionReport) {
-		super.mergeTransactionReport(old, transactionReport);
 	}
 
 	@Override
@@ -195,25 +165,44 @@ public class TransactionReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	public void visitTransactionReport(TransactionReport transactionReport) {
+	public void visitMachine(Machine machine) {
 		if (m_allIp) {
-			Map<String, Machine> machines = transactionReport.getMachines();
-			Machine allMachines = mergesForAllMachine(transactionReport);
-			machines.clear();
-			transactionReport.addMachine(allMachines);
+			visitMachineChildren(m_allMachines, machine);
+		} else {
+			super.visitMachine(machine);
 		}
+	}
+
+	@Override
+	public void visitName(TransactionName name) {
 		if (m_allName) {
-			Machine machine = transactionReport.getMachines().get(m_ip);
-			if (machine != null) {
-				TransactionName mergesForAllName = mergesForAllName(transactionReport);
-				TransactionType type = machine.getTypes().get(m_type);
-				type.getNames().clear();
-				type.addName(mergesForAllName);
-			}
+			visitNameChildren(m_allNames, name);
+		} else {
+			super.visitName(name);
 		}
-		
+	}
+
+	@Override
+	public void visitTransactionReport(TransactionReport transactionReport) {
+		TransactionReport report = getTransactionReport();
+
+		if (m_allIp) {
+			m_allMachines = report.findOrCreateMachine(CatString.ALL_IP);
+		}
+
+		if (m_allName) {
+			m_allNames = report.findOrCreateMachine(m_ip).findOrCreateType(m_type).findOrCreateName("ALL");
+		}
+
 		super.visitTransactionReport(transactionReport);
-		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
-		getTransactionReport().getIps().addAll(transactionReport.getIps());
+		report.getDomainNames().addAll(transactionReport.getDomainNames());
+		report.getIps().addAll(transactionReport.getIps());
+	}
+
+	@Override
+	public void visitType(TransactionType type) {
+		if (!m_allName || m_allName && m_type.equals(type.getId())) {
+			super.visitType(type);
+		}
 	}
 }
