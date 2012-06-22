@@ -35,7 +35,7 @@
 </table>
 <br>
 
-<table class="graph">
+<table>
 <tr>
 	<th	colspan="3">Thread Info</th>
 </tr>

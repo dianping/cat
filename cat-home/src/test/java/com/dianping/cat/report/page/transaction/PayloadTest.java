@@ -77,9 +77,11 @@ public class PayloadTest {
 		Date lastTwoDay = new Date(temp - 2 * ONE_DAY);
 		Date lastOneDay = new Date(temp - ONE_DAY);
 		Date currentDay = new Date(temp);
+		Date nextDay = new Date(temp+ONE_DAY);
 		String lastTwo = sdf.format(lastTwoDay);
 		String lastOne = sdf.format(lastOneDay);
 		String current = sdf.format(currentDay);
+		String next = sdf.format(nextDay);
 		payload.setDate(sdf.format(input));
 
 		payload.setStep(-1);
@@ -98,13 +100,13 @@ public class PayloadTest {
 
 		payload.setStep(1);
 		payload.computeStartDate();
-		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(current, payload.getHistoryEndDate());
+		checkDate(current, payload.getHistoryStartDate());
+		checkDate(next, payload.getHistoryEndDate());
 
 		payload.setStep(1);
 		payload.computeStartDate();
-		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(current, payload.getHistoryEndDate());
+		checkDate(current, payload.getHistoryStartDate());
+		checkDate(next, payload.getHistoryEndDate());
 	}
 
 	@Test

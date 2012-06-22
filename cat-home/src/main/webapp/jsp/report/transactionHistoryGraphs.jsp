@@ -2,8 +2,8 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <style type="text/css">
 .graph {
-	width: 550px;
-	height: 250px;
+	width: 450px;
+	height: 200px;
 	margin: 4px auto;
 }
 </style>
@@ -15,8 +15,8 @@
 	<tr>
 		<td><div id="responseTrend" class="graph"></div></td>
 		<td><div id="hitTrend" class="graph"></div></td>
+		<td><div id="errorTrend" class="graph"></div></td>
 	</tr>
-	<tr><td><div id="errorTrend" class="graph"></div></td></tr>
 	
 	<tr><td  style="display:none">
 		<div id ="responseTrendMeta">${model.responseTrend}</div>

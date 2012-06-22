@@ -48,8 +48,8 @@ function graph(container, data) {
 		o = Flotr._.extend(Flotr._.clone(options), opts || {});
 
 		if (opts != null && opts.xaxis != null) {
-			o.title = data.titles + " From "
-					+ formatDate(new Date(opts.xaxis.min)) + " To"
+			o.title = " From "
+					+ formatDate(new Date(opts.xaxis.min)) + " To "
 					+ formatDate(new Date(opts.xaxis.max));
 		} else {
 		}

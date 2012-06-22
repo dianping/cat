@@ -24,9 +24,8 @@ public class DisplayEventNameReport {
 		Map<String, EventType> types = report.getMachines().get(ip).getTypes();
 		if (types != null) {
 			EventType names = types.get(type);
-
-			for (Entry<String, EventName> entry : names.getNames().entrySet()) {
-				m_results.add(new EventNameModel(entry.getKey(), entry.getValue()));
+				for (Entry<String, EventName> entry : names.getNames().entrySet()) {
+					m_results.add(new EventNameModel(entry.getKey(), entry.getValue()));
 			}
 		}
 		if (!StringUtils.isEmpty(sorted)) {
