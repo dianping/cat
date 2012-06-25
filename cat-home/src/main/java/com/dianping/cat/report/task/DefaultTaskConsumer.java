@@ -129,7 +129,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		List<Dailyreport> dailyDomainNames = null;
 		try {
-			dailyDomainNames = m_dailyReportDao.findAllByPeriod(startDate, DailyreportEntity.READSET_DOMAIN_NAME);
+			dailyDomainNames = m_dailyReportDao.findAllByPeriod(startDate, endDate,DailyreportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			m_logger.error("dailyDomainNames", e);
 		}

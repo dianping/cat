@@ -27,6 +27,7 @@ public class TaskHelper {
 
 	public static Date yesterdayZero(Date reportPeriod) {
 		Calendar cal = Calendar.getInstance();
+		cal.setTime(reportPeriod);
 		cal.add(Calendar.DAY_OF_YEAR, -1);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
@@ -37,13 +38,14 @@ public class TaskHelper {
 
 	public static Date todayZero(Date reportPeriod) {
 		Calendar cal = Calendar.getInstance();
+		cal.setTime(reportPeriod);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
 	}
-	
+
 	public static String join(double[] array, char separator) {
 		return join(array, separator, 0, array.length - 1);
 	}
@@ -93,7 +95,7 @@ public class TaskHelper {
 		}
 		return buf.toString();
 	}
-	
+
 	public static String join(Number[] array, char separator) {
 		return join(array, separator, 0, array.length - 1);
 	}

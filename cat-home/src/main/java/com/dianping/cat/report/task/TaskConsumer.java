@@ -63,6 +63,7 @@ public abstract class TaskConsumer implements Runnable {
 				} else {
 					taskNotFoundDuration();
 				}
+				t.setStatus(Transaction.SUCCESS);
 			} catch (Throwable e) {
 				e.printStackTrace();
 				t.setStatus(e);
