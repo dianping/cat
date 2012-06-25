@@ -129,7 +129,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		List<Dailyreport> dailyDomainNames = null;
 		try {
-			dailyDomainNames = m_dailyReportDao.findAllByPeriod(startDate, DailyreportEntity.READSET_DOMAIN_NAME);
+			dailyDomainNames = m_dailyReportDao.findAllByPeriod(startDate, endDate,DailyreportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			m_logger.error("dailyDomainNames", e);
 		}
@@ -172,8 +172,9 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			} else if ("heartbeat".equals(reportName)) {
 				return;
 			} else if ("problem".equals(reportName)) {
-				ProblemReport problemReport = m_problemMerger.merge(reportDomain, reports);
-				content = problemReport.toString();
+				//ProblemReport problemReport = m_problemMerger.merge(reportDomain, reports);
+				//content = problemReport.toString();
+				return;
 			}
 			Dailyreport report = m_dailyReportDao.createLocal();
 			report.setContent(content);

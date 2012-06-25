@@ -16,14 +16,14 @@ public class HistoryTransactionMergerTest {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
 		TransactionReport report1 = new DefaultDomParser().parse(oldXml);
 		TransactionReport report2 = new DefaultDomParser().parse(oldXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("result.xml"),
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transactionResult.xml"),
 		      "utf-8");
 		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(report1.getDomain()));
 
-		merger.mergesFrom(report1);
-		merger.mergesFrom(report2);
+		report1.accept(merger);
+		report2.accept(merger);
 
-		String actual = new DefaultXmlBuilder().buildXml(report1);
+		String actual = new DefaultXmlBuilder().buildXml(merger.getTransactionReport());
 
 		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
 

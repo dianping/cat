@@ -251,11 +251,13 @@
 				]]></statement>
 			</query>
 			<query name="find-all-by-period" type="SELECT" multiple="true">
-				<param name="period" />
+				<param name="start-date" />
+				<param name="end-date" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}				
+					WHERE <FIELD name='period'/> >= ${start-date}
+					AND <FIELD name='period'/> < ${end-date}			
 				]]></statement>
 			</query>
 		</query-defs>
