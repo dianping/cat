@@ -28,6 +28,8 @@ import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.HeartbeatHandler;
 import com.dianping.cat.consumer.problem.handler.LongSqlHandler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
+import com.dianping.cat.consumer.remote.RemoteIdAnalyzer;
+import com.dianping.cat.consumer.remote.RemoteIdUploader;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
@@ -50,7 +52,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 				.req(AnalyzerFactory.class, LogviewUploader.class) //
 				.config(E("extraTime").value(property("extraTime", "180000"))//
-						, E("analyzers").value("problem,transaction,event,ip,heartbeat,dump")));
+						, E("analyzers").value("problem,transaction,event,ip,heartbeat,dump,remoteId")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
@@ -88,6 +90,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 				.req(ServerConfigManager.class, MessagePathBuilder.class) //
 				.req(DumpUploader.class, DumpChannelManager.class));
+		all.add(C(RemoteIdAnalyzer.class).is(PER_LOOKUP) //
+				.req(ServerConfigManager.class, MessagePathBuilder.class) //
+				.req(RemoteIdUploader.class));	
 
 		all.add(C(DumpChannel.class));
 		all.add(C(DumpChannelManager.class) //
@@ -95,6 +100,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DumpUploader.class) //
 				.req(ServerConfigManager.class, FileSystemManager.class)); //
+		all.add(C(RemoteIdUploader.class) //
+				.req(ServerConfigManager.class, FileSystemManager.class) //
+				.req( MessagePathBuilder.class));
 		all.add(C(LogviewUploader.class) //
 				.req(ServerConfigManager.class, FileSystemManager.class) //
 				.req(BucketManager.class, LogviewDao.class));

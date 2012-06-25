@@ -10,7 +10,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,ip,heartbeat,dump</analyzers>
+				<analyzers>problem,transaction,event,ip,heartbeat,dump,remoteId</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -170,6 +170,22 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.remote.RemoteIdAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.remote.RemoteIdAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.remote.RemoteIdUploader</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.dump.DumpChannel</role>
 			<implementation>com.dianping.cat.consumer.dump.DumpChannel</implementation>
 		</component>
@@ -192,6 +208,21 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.remote.RemoteIdUploader</role>
+			<implementation>com.dianping.cat.consumer.remote.RemoteIdUploader</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

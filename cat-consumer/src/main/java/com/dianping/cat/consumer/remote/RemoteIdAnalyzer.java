@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -25,6 +24,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
@@ -32,12 +32,15 @@ import com.site.lookup.annotation.Inject;
  * @author sean.wang
  * @since Jun 21, 2012
  */
-public class RemoteAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
+public class RemoteIdAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
 	@Inject
-	private RemoteUploader m_uploader;
+	private RemoteIdUploader m_uploader;
+
+	@Inject
+	private MessagePathBuilder m_builder;
 
 	private Logger m_logger;
 
@@ -95,11 +98,12 @@ public class RemoteAnalyzer extends AbstractMessageAnalyzer<Object> implements I
 		if (!m_localMode) {
 			String m_baseDir = m_configManager.getHdfsLocalBaseDir("dump");
 			String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/message-{1}");
-			String path = format.format(new Object[] { new Date(), ipAddress });
-			File file = new File(m_baseDir, path + ".remote");
+			String path = m_builder.getMessageRemoteIdPath(ipAddress, new Date());
+			File file = new File(m_baseDir, path);
 			try {
-				file.createNewFile();
+				if (!file.exists()) {
+					file.createNewFile();
+				}
 				m_output = new FileOutputStream(file);
 			} catch (IOException e) {
 				m_logger.error("", e);
@@ -131,7 +135,7 @@ public class RemoteAnalyzer extends AbstractMessageAnalyzer<Object> implements I
 		Transaction t = (Transaction) tree.getMessage();
 		doTransactionChilds(remoteIds, t);
 
-		if (remoteIds.size() < 0) {
+		if (remoteIds.size() == 0) {
 			return;
 		}
 
@@ -151,17 +155,33 @@ public class RemoteAnalyzer extends AbstractMessageAnalyzer<Object> implements I
 		} else {
 			sb.append('1');
 		}
+		sb.append('\n');
+
+		try {
+			m_output.write(sb.toString().getBytes());
+		} catch (IOException e) {
+			m_logger.error("write message id record", e);
+		}
 
 	}
+
+	public static final String PIGEON_REQUEST_NAME = "PigeonRequest";
+
+	public static final String PIGEON_RESPONSE_NAME = "PigeonRespone";
+
+	public static final String PIGEON_REQUEST_TYPE = "RemoteCall";
 
 	protected void doTransactionChilds(List<String> remoteIds, Transaction t) {
 		if (!t.hasChildren()) {
 			return;
 		}
 		for (Message m : t.getChildren()) {
-			if (m instanceof Event && m.getType().equals("") && m.getName().equals("")) { // pigeon
+			if (m instanceof Event && // is event
+					PIGEON_REQUEST_TYPE.equals(m.getType()) && (PIGEON_REQUEST_NAME.equals(m.getName()) // is pigeon request
+					|| PIGEON_RESPONSE_NAME.equals(m.getName()))) { // is pigeon response
 				Event e = (Event) m;
-				remoteIds.add(null);
+				String requestMessageId = (String) e.getData();
+				remoteIds.add(requestMessageId);
 			} else if (m instanceof Transaction) {
 				doTransactionChilds(remoteIds, t);
 			}
