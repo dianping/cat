@@ -21,14 +21,6 @@ import com.dianping.cat.report.task.TaskHelperTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-/* .report.page.ip */
-DisplayModelTest.class,
-
-/* .report.page.model */
-EventReportFilterTest.class,
-
-TransactionReportFilterTest.class,
-
 /* .report.page.model.event */
 EventModelServiceTest.class,
 
