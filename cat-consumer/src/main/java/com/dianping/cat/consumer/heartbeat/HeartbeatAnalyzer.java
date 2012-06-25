@@ -16,7 +16,6 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;

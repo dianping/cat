@@ -148,6 +148,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 				m_logger.info(String.format("Starting merge domain:%s report:%s from %s to %s: ", domain, name, startDate, endDate));
 
 				mergeDomainDailyReport(domain, name, startDate, endDate);
+				
+				m_logger.info(String.format("finish merge domain:%s report:%s from %s to %s: ", domain, name, startDate, endDate));
 			}
 		}
 
