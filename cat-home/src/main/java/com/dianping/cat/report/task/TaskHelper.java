@@ -14,12 +14,11 @@ public class TaskHelper {
 
 	public static Date nextTaskTime() {
 		Calendar cal = Calendar.getInstance();
-		int min = cal.get(Calendar.MINUTE);
 		final int startFindMin = 10;
 		cal.set(Calendar.MINUTE, startFindMin);
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
-		if (min >= startFindMin) {
+		if (cal.get(Calendar.MINUTE) >= startFindMin) {
 			cal.add(Calendar.HOUR, 1);// timeout, waiting for next hour
 		}
 		return cal.getTime();
