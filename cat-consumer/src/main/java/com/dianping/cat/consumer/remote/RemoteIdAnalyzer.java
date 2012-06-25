@@ -54,6 +54,8 @@ public class RemoteIdAnalyzer extends AbstractMessageAnalyzer<Object> implements
 
 	private long m_duration;
 
+	private File m_file;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -64,6 +66,17 @@ public class RemoteIdAnalyzer extends AbstractMessageAnalyzer<Object> implements
 		if (m_output != null) {
 			try {
 				m_output.close();
+				String m_baseDir = m_configManager.getHdfsLocalBaseDir("dump");
+				String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				String path = m_builder.getMessageRemoteIdPath(ipAddress, new Date());
+
+				File outbox = new File(m_baseDir, "outbox");
+				outbox.mkdirs();
+
+				File target = new File(outbox, path);
+				target.getParentFile().mkdirs();
+				m_file.renameTo(target);
+
 			} catch (IOException e) {
 				m_logger.error("doCheckpoint", e);
 			}
@@ -99,12 +112,17 @@ public class RemoteIdAnalyzer extends AbstractMessageAnalyzer<Object> implements
 			String m_baseDir = m_configManager.getHdfsLocalBaseDir("dump");
 			String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 			String path = m_builder.getMessageRemoteIdPath(ipAddress, new Date());
-			File file = new File(m_baseDir, path);
+
+			File draft = new File(m_baseDir, "draft");
+			draft.mkdirs();
+
+			m_file = new File(draft, path);
 			try {
-				if (!file.exists()) {
-					file.createNewFile();
+				if (!m_file.exists()) {
+					m_file.getParentFile().mkdirs();
+					m_file.createNewFile();
 				}
-				m_output = new FileOutputStream(file);
+				m_output = new FileOutputStream(m_file);
 			} catch (IOException e) {
 				m_logger.error("", e);
 			}
@@ -183,7 +201,7 @@ public class RemoteIdAnalyzer extends AbstractMessageAnalyzer<Object> implements
 				String requestMessageId = (String) e.getData();
 				remoteIds.add(requestMessageId);
 			} else if (m instanceof Transaction) {
-				doTransactionChilds(remoteIds, t);
+				doTransactionChilds(remoteIds, (Transaction)m);
 			}
 		}
 	}
