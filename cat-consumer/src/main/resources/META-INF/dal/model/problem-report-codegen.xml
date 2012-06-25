@@ -8,6 +8,12 @@
   </entity>
   <entity name="machine">
     <attribute name="ip" value-type="String" />
+    <entity-ref name="entry" type="list" names="entries" />
+  </entity>
+  <entity name="entry">
+    <attribute name="type" value-type="String" />
+    <attribute name="status" value-type="String" />
+    <entity-ref name="duration" type="list" names="durations" />
     <entity-ref name="thread" type="list" names="threads" />
   </entity>
   <entity name="thread">
@@ -18,14 +24,13 @@
   </entity>
   <entity name="segment">
     <attribute name="id" value-type="int" />
-    <attribute name="name" value-type="int" />
-    <entity-ref name="entry" type="list" names="entries" />
+    <attribute name="count" value-type="int" />
+    <element name="message" value-type="String" type="list" names="messages"/>
   </entity>
-  <entity name="entry">
-    <attribute name="type" value-type="String" />
-    <attribute name="message-id" value-type="String" />
-    <attribute name="status" value-type="String" />
-    <attribute name="duration" value-type="int" />
+  <entity name="duration">
+    <attribute name="value" value-type="int" />
+    <attribute name="count" value-type="int" />
+    <element name="message" value-type="String" type="list" names="messages"/>
   </entity>
 </model>
 

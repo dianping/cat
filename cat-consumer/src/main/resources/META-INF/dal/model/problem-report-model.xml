@@ -9,7 +9,10 @@
 	</entity>
 	<entity name="machine">
 		<attribute name="ip" value-type="String" key="true"/>
+	</entity>
+	<entity name="entry">
 		<entity-ref name="thread" type="map" names="threads" method-find-or-create="true" />
+		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
 	</entity>
 	<entity name="thread" class-name="java-thread">
 		<attribute name="id" value-type="String" key="true" />
@@ -17,11 +20,10 @@
 	</entity>
 	<entity name="segment">
 		<attribute name="id" value-type="int" key="true" />
-		<entity-ref name="entry" type="list" names="entries" />
+	    <attribute name="count" value-type="int" primitive="true" method-inc="true" />
 	</entity>
-	<entity name="entry">
-    	<attribute name="message-id" value-type="String"/>
-		<attribute name="duration" value-type="int" primitive="true" />
-	</entity>
+  <entity name="duration">
+    <attribute name="value" value-type="int" primitive="true" key="true"/>
+    <attribute name="count" value-type="int" primitive="true" method-inc="true" />
+  </entity>
 </model>
-
