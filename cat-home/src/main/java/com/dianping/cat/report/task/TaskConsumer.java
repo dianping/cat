@@ -8,7 +8,6 @@ import java.util.concurrent.locks.LockSupport;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Task;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
 /**
