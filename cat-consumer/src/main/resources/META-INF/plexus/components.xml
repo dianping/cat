@@ -183,7 +183,14 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.remote.RemoteIdUploader</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.remote.RemoteIdChannelManager</role>
+				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.remote.RemoteIdChannelManager</role>
+			<implementation>com.dianping.cat.consumer.remote.RemoteIdChannelManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.dump.DumpChannel</role>

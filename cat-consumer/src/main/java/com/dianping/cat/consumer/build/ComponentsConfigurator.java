@@ -29,6 +29,7 @@ import com.dianping.cat.consumer.problem.handler.HeartbeatHandler;
 import com.dianping.cat.consumer.problem.handler.LongSqlHandler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.remote.RemoteIdAnalyzer;
+import com.dianping.cat.consumer.remote.RemoteIdChannelManager;
 import com.dianping.cat.consumer.remote.RemoteIdUploader;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.dal.LogviewDao;
@@ -92,7 +93,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 				.req(DumpUploader.class, DumpChannelManager.class));
 		all.add(C(RemoteIdAnalyzer.class).is(PER_LOOKUP) //
 				.req(ServerConfigManager.class, MessagePathBuilder.class) //
-				.req(RemoteIdUploader.class));	
+				.req(RemoteIdUploader.class, RemoteIdChannelManager.class));	
+		all.add(C(RemoteIdChannelManager.class));
 
 		all.add(C(DumpChannel.class));
 		all.add(C(DumpChannelManager.class) //
