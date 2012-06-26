@@ -5,6 +5,7 @@ package com.dianping.cat.consumer.remote;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -31,10 +32,13 @@ public class RemoteIdChannel {
 
 	private OutputStream m_output;
 
-	public RemoteIdChannel(File baseDir, String path, long startTime) {
+	public RemoteIdChannel(File baseDir, String path, long startTime) throws FileNotFoundException {
 		m_startTime = startTime;
 		m_file = new File(baseDir, path);
 		m_path = path;
+
+		m_file.getParentFile().mkdirs();
+		m_output = new FileOutputStream(m_file);
 	}
 
 	public long getStartTime() {
