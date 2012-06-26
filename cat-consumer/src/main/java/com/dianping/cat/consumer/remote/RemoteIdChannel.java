@@ -73,6 +73,7 @@ public class RemoteIdChannel {
 	public void write(MessageTree tree) throws IOException {
 		List<String> remoteIds = new ArrayList<String>();
 		Transaction t = (Transaction) tree.getMessage();
+		
 		doTransactionChilds(remoteIds, t);
 
 		if (remoteIds.size() == 0) {

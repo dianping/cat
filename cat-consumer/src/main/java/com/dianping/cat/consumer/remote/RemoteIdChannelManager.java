@@ -87,7 +87,7 @@ public class RemoteIdChannelManager extends ContainerHolder implements Initializ
 		m_baseDir = configManager.getHdfsLocalBaseDir("dump");
 	}
 
-	private RemoteIdChannel makeChannel(String key, String path, boolean forceNew, long startTime) throws IOException {
+	private RemoteIdChannel makeChannel(String key, String path, long startTime) throws IOException {
 		RemoteIdChannel channel = new RemoteIdChannel(new File(m_baseDir, "draft"), path, startTime);
 
 		m_logger.info(String.format("new RemoteIdChannel %s", path));
@@ -104,7 +104,7 @@ public class RemoteIdChannelManager extends ContainerHolder implements Initializ
 				channel = m_channels.get(path);
 
 				if (channel == null) {
-					channel = makeChannel(path, path, false, startTime);
+					channel = makeChannel(path, path, startTime);
 				}
 			}
 		}
