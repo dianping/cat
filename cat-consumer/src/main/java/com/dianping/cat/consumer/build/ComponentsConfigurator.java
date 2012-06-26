@@ -96,7 +96,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 				.req(RemoteIdUploader.class, RemoteIdChannelManager.class));	
 		all.add(C(RemoteIdChannelManager.class));
 
-		all.add(C(DumpChannel.class));
 		all.add(C(DumpChannelManager.class) //
 				.req(MessageCodec.class, "plain-text"));
 
