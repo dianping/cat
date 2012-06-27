@@ -126,7 +126,9 @@ public class ThreadLevelInfo {
 		if (machine == null) {
 			return null;
 		}
-		Map<String, JavaThread> threads = machine.getThreads();
+		//TODO
+		//Map<String, JavaThread> threads = machine.getThreads();
+		Map<String, JavaThread> threads =null;
 
 		for (java.util.Map.Entry<String, JavaThread> entry : threads.entrySet()) {
 			JavaThread thread = entry.getValue();
@@ -248,11 +250,11 @@ public class ThreadLevelInfo {
 		
 		public void add(Map<Integer, Segment> segments) {
 			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
-				List<Entry> entries = entry.getValue().getEntries();
-				for (Entry temp : entries) {
-
-					findOrCreat(entry.getKey()).add(temp.getType());
-				}
+//				List<Entry> entries = entry.getValue().getEntries();
+//				for (Entry temp : entries) {
+//
+//					findOrCreat(entry.getKey()).add(temp.getType());
+//				}
 			}
 		}
 

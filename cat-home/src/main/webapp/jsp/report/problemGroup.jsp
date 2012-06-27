@@ -11,7 +11,6 @@
 <jsp:useBean id="model"
 	type="com.dianping.cat.report.page.problem.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
-<c:set var="threads" value="${report.machines[model.ipAddress].threads}" />
 
 <a:report title="Problem Report"
 	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}"
@@ -26,7 +25,7 @@
 
 <%@ include file="problemTable.jsp"%>
 
-<c:if test="${model.ipAddress ne 'All'}">
+<!--<c:if test="${model.ipAddress ne 'All'}">
 <table class="problem">
 	<tr>
 		<td title="time\group">T\G</td>
@@ -46,7 +45,7 @@
 	</c:forEach>
 </table>
 <br>
-</c:if>
+</c:if>-->
 
 <table class="legend">
 </table>

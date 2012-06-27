@@ -69,7 +69,8 @@ public class GroupLevelInfo {
 		if (machine == null) {
 			return null;
 		}
-		Map<String, JavaThread> threads = machine.getThreads();
+		Map<String, JavaThread> threads = null;
+	//	Map<String, JavaThread> threads = machine.getThreads();
 		for (java.util.Map.Entry<String, JavaThread> entry : threads.entrySet()) {
 			JavaThread thread = entry.getValue();
 
@@ -134,12 +135,12 @@ public class GroupLevelInfo {
 		}
 
 		public void add(Map<Integer, Segment> segments) {
-			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
-				List<Entry> entries = entry.getValue().getEntries();
-				for (Entry temp : entries) {
-					findOrCreat(entry.getKey()).add(temp.getType());
-				}
-			}
+//			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
+//				List<Entry> entries = entry.getValue().getEntries();
+//				for (Entry temp : entries) {
+//					findOrCreat(entry.getKey()).add(temp.getType());
+//				}
+//			}
 		}
 
 		public Map<Integer, TreeSet<String>> getStatistics() {

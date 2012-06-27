@@ -19,11 +19,12 @@ public class TransactionReportMergerTest {
 		TransactionReport reportNew = new DefaultDomParser().parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionReportMergeResult.xml"),
 		      "utf-8");
-		TransactionReportMerger merger = new TransactionReportMerger(reportOld);
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportOld.getDomain()));
 
+		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), reportOld.toString().replace("\r", ""));
+		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), merger.getTransactionReport().toString().replace("\r", ""));
 		Assert.assertEquals("Source report is changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
 	}
 

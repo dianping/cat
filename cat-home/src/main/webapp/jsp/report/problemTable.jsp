@@ -14,11 +14,11 @@
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=group&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}"
+						<a href="?op=all&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=group&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}">${ip}</a>
+						<a href="?op=all&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;

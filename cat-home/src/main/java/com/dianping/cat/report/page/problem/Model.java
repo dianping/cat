@@ -23,6 +23,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_groupName;
 
 	private String m_defaultThreshold;
+	
+	private String m_defaultSqlThreshold;
 
 	private GroupLevelInfo m_groupLevelInfo;
 
@@ -196,5 +198,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setErrorsTrend(String errorsTrend) {
    	m_errorsTrend = errorsTrend;
    }
+
+	public String getDefaultSqlThreshold() {
+   	return m_defaultSqlThreshold;
+   }
+
+	public void setDefaultSqlThreshold(String defaultSqlThreshold) {
+   	m_defaultSqlThreshold = defaultSqlThreshold;
+   }
+	
 	
 }

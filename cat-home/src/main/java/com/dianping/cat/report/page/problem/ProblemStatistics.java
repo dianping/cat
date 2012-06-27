@@ -7,191 +7,132 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.MapUtils;
 
-public class ProblemStatistics {
+public class ProblemStatistics extends BaseVisitor {
 
 	private Map<String, TypeStatistics> m_status = new TreeMap<String, TypeStatistics>();
 
-	private String m_groupName;
+	private boolean m_allIp = false;
 
-	private String m_threadId;
+	private String m_ip = "";
 
-	private int m_threshold = ONE_SECOND;
+	private int m_urlThreshold = 1000;
 
-	public static int s_linkCount = 60;
-
-	private static final int ONE_SECOND = 1000;
+	private int m_sqlThreshold = 100;
 
 	private List<String> m_ips;
-	
-	public String getSubTitle() {
-		StringBuilder sb = new StringBuilder();
-		if (isEmpty(m_threadId) && isEmpty(m_groupName)) {
-			return "All Thread Groups";
-		} else if (!isEmpty(m_groupName) && isEmpty(m_threadId)) {
-			return "All Threads in Group:" + m_groupName;
-		} else if (!isEmpty(m_groupName) && !isEmpty(m_threadId)) {
-			return "Thread :" + m_threadId;
-		}
-		return sb.toString();
-	}
-
-	public String getUrl() {
-		StringBuilder sb = new StringBuilder();
-		if (!isEmpty(m_groupName)) {
-			sb.append("&group=").append(m_groupName);
-		}
-		if (!isEmpty(m_threadId)) {
-			sb.append("&thread=").append(m_threadId);
-		}
-		return sb.toString();
-	}
 
 	public List<String> getIps() {
-   	return m_ips;
-   }
+		return m_ips;
+	}
 
 	public void setIps(List<String> ips) {
-   	m_ips = ips;
-   }
-
-	public ProblemStatistics displayByAllIps(ProblemReport report,int threadhold, int linkCount) {
-		m_threshold = threadhold;
-		s_linkCount = linkCount;
-		if (report == null) {
-			return null;
-		}
-		for (Machine machine : report.getMachines().values()) {
-			//All Ip
-			Map<String, JavaThread> threads = machine.getThreads();
-			for (JavaThread thread : threads.values()) {
-				for (Segment segment : thread.getSegments().values()) {
-					if (segment == null) {
-						continue;
-					}
-					List<Entry> entries = segment.getEntries();
-					statisticsEntries(entries, m_threshold);
-				}
-			}
-		}
-		return this;
-	}
-
-	public ProblemStatistics displayByIp(ProblemReport report,String ip, int threadhold, int linkCount) {
-		m_threshold = threadhold;
-		s_linkCount = linkCount;
-		
-		if (report == null) {
-			return null;
-		}
-		Machine machine = report.getMachines().get(ip);
-
-		if (machine == null) {
-			return null;
-		}
-		// All Level
-		Map<String, JavaThread> threads = machine.getThreads();
-		for (JavaThread thread : threads.values()) {
-			for (Segment segment : thread.getSegments().values()) {
-				if (segment == null) {
-					continue;
-				}
-				List<Entry> entries = segment.getEntries();
-				statisticsEntries(entries, m_threshold);
-			}
-		}
-
-		return this;
-	}
-
-	public ProblemStatistics displayByGroupOrThread(ProblemReport report, Model model,Payload payload) {
-		Machine machine = report.getMachines().get(model.getIpAddress());
-		m_threshold = payload.getLongTime();
-		s_linkCount = payload.getLinkCount();
-		
-		if (machine == null) {
-			return null;
-		}
-
-		m_groupName = model.getGroupName();
-		m_threadId = model.getThreadId();
-
-		if (isEmpty(m_threadId) && isEmpty(m_groupName)) {
-			// Min Level
-			Map<String, JavaThread> threads = machine.getThreads();
-			for (JavaThread thread : threads.values()) {
-				Segment segment = thread.getSegments().get(model.getCurrentMinute());
-				if (segment == null) {
-					continue;
-				}
-				List<Entry> entries = segment.getEntries();
-				statisticsEntries(entries, m_threshold);
-			}
-
-		} else if (!isEmpty(m_groupName) && isEmpty(m_threadId)) {
-			// Group Level Show
-			Map<String, JavaThread> threads = machine.getThreads();
-			for (JavaThread thread : threads.values()) {
-				if (thread.getGroupName().equals(m_groupName)) {
-					Segment segment = thread.getSegments().get(model.getCurrentMinute());
-					if (segment == null) {
-						continue;
-					}
-					List<Entry> entries = segment.getEntries();
-					statisticsEntries(entries, m_threshold);
-				}
-			}
-
-		} else if (!isEmpty(m_groupName) && !isEmpty(m_threadId)) {
-			// Thread Level Show
-			JavaThread thread = machine.getThreads().get(model.getThreadId());
-			if (thread == null) {
-				return null;
-			}
-			Segment segment = thread.getSegments().get(model.getCurrentMinute());
-			if (segment == null) {
-				return null;
-			}
-			List<Entry> entries = segment.getEntries();
-			statisticsEntries(entries, m_threshold);
-		}
-
-		return this;
-	}
-
-	private void statisticsEntries(List<Entry> entries, int longTime) {
-		for (Entry entry : entries) {
-			String type = entry.getType();
-			TypeStatistics staticstics = m_status.get(type);
-
-			if (type.equals("long-url") && entry.getDuration() < longTime) {
-				// Skip the duration which duration less than longTime
-				continue;
-			}
-
-			if (staticstics != null) {
-				staticstics.add(entry, m_groupName, m_threadId);
-			} else {
-				m_status.put(type, new TypeStatistics(entry, m_groupName, m_threadId));
-			}
-		}
-	}
-
-	private boolean isEmpty(String str) {
-		if (str == null || str.length() == 0) {
-			return true;
-		}
-		return false;
+		m_ips = ips;
 	}
 
 	public Map<String, TypeStatistics> getStatus() {
 		return m_status;
+	}
+
+	public ProblemStatistics setAllIp(boolean allIp) {
+		m_allIp = allIp;
+		return this;
+	}
+
+	public ProblemStatistics setIp(String ip) {
+		m_ip = ip;
+		return this;
+	}
+
+	public ProblemStatistics setUrlThreshold(int urlThreshold) {
+		m_urlThreshold = urlThreshold;
+		return this;
+	}
+
+	public ProblemStatistics setSqlThreshold(int sqlThreshold) {
+		m_sqlThreshold = sqlThreshold;
+		return this;
+	}
+
+	@Override
+	public void visitDuration(Duration duration) {
+		super.visitDuration(duration);
+	}
+
+	@Override
+	public void visitEntry(Entry entry) {
+		super.visitEntry(entry);
+	}
+
+	@Override
+	public void visitMachine(Machine machine) {
+		if (m_allIp == true || m_ip.equals(machine.getIp())) {
+			List<Entry> entries = machine.getEntries();
+			for (Entry entry : entries) {
+				statisticsDuration(entry);
+			}
+		}
+		super.visitMachine(machine);
+
+	}
+
+	@Override
+	public void visitProblemReport(ProblemReport problemReport) {
+		System.out.println(problemReport);
+		super.visitProblemReport(problemReport);
+	}
+
+	@Override
+	public void visitSegment(Segment segment) {
+		super.visitSegment(segment);
+	}
+
+	@Override
+	public void visitThread(JavaThread thread) {
+		super.visitThread(thread);
+	}
+
+	private void statisticsDuration(Entry entry) {
+		String type = entry.getType();
+		String status = entry.getStatus();
+		List<Duration> durations = getDurationsByType(type, entry);
+		for (Duration duration : durations) {
+			TypeStatistics statusValue = m_status.get(type);
+
+			if (statusValue == null) {
+				statusValue = new TypeStatistics(type);
+				m_status.put(type, statusValue);
+			}
+			statusValue.statics(status, duration);
+		}
+	}
+
+	private List<Duration> getDurationsByType(String type, Entry entry) {
+		List<Duration> durations = new ArrayList<Duration>();
+		if ("long-url".equals(type)) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+				if (temp.getKey() >= m_urlThreshold) {
+					durations.add(temp.getValue());
+				}
+			}
+		} else if ("long-sql".equals(type)) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+				if (temp.getKey() >= m_sqlThreshold) {
+					durations.add(temp.getValue());
+				}
+			}
+		} else {
+			durations.add(entry.getDurations().get(0));
+		}
+		return durations;
 	}
 
 	public static class TypeStatistics {
@@ -201,21 +142,19 @@ public class ProblemStatistics {
 
 		private Map<String, StatusStatistics> m_status = new LinkedHashMap<String, StatusStatistics>();
 
-		public TypeStatistics(Entry entry, String groupName, String threadName) {
-			m_type = entry.getType();
-			add(entry, groupName, threadName);
+		public TypeStatistics(String type) {
+			m_type = type;
 		}
 
-		public void add(Entry entry, String groupName, String threadId) {
-			m_count++;
-			String status = entry.getStatus();
-			StatusStatistics statusStatistics = m_status.get(status);
-
-			if (statusStatistics == null) {
-				m_status.put(status, new StatusStatistics(entry, groupName, threadId ));
-			} else {
-				statusStatistics.add(entry, groupName, threadId );
+		public void statics(String status, Duration duration) {
+			m_count += duration.getCount();
+			StatusStatistics value = m_status.get(status);
+			if (value == null) {
+				value = new StatusStatistics(status);
+				m_status.put(status, value);
 			}
+			value.statics(duration);
+
 		}
 
 		public int getCount() {
@@ -260,16 +199,18 @@ public class ProblemStatistics {
 
 		private List<String> m_links = new ArrayList<String>();
 
-		public StatusStatistics(Entry entry, String groupName, String threadId ) {
-			m_status = entry.getStatus();
-			add(entry, groupName, threadId);
+		private StatusStatistics(String status) {
+			m_status = status;
 		}
 
-		public void add(Entry entry, String groupName, String threadId) {
-			if (m_links.size() < s_linkCount) {
-				m_links.add(entry.getMessageId());
+		public void statics(Duration duration) {
+			m_count += duration.getCount();
+			if (m_links.size() < 60) {
+				m_links.addAll(duration.getMessages());
+				if (m_links.size() > 60) {
+					m_links = m_links.subList(0, 60);
+				}
 			}
-			m_count++;
 		}
 
 		public String getStatus() {

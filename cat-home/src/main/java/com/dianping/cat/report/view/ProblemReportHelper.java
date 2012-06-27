@@ -21,13 +21,14 @@ public class ProblemReportHelper {
 		StringBuilder sb = new StringBuilder(256);
 		Map<String, String> map = new HashMap<String, String>();
 
-		for (Entry entry : segment.getEntries()) {
-			String type = entry.getType();
-
-			if (!map.containsKey(type)) {
-				map.put(type, entry.getMessageId());
-			}
-		}
+		//TODO
+//		for (Entry entry : segment.getEntries()) {
+//			String type = entry.getType();
+//
+//			if (!map.containsKey(type)) {
+//				map.put(type, entry.getMessageId());
+//			}
+//		}
 
 		for (ProblemType type : ProblemType.values()) {
 			String name = type.getName();
