@@ -63,6 +63,10 @@ public class Handler implements PageHandler<Context> {
 
 	private Gson gson = new Gson();
 
+	private static final String VIEW = "view";
+
+	private static final String DETAIL = "detail";
+
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
 
@@ -81,11 +85,11 @@ public class Handler implements PageHandler<Context> {
 		return ip;
 	}
 
-	private ProblemReport getHourlyReport(Payload payload) {
+	private ProblemReport getHourlyReport(Payload payload, String type) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date);
+		      .setProperty("date", date).setProperty("type", type);
 		if (!CatString.ALL_IP.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
@@ -123,15 +127,15 @@ public class Handler implements PageHandler<Context> {
 
 			int longSqlTime = d.getSqlThreshold();
 			if (payload.getSqlLongTime() == 0) {
-				payload.setSqlLongTime(longUrlTime);
+				payload.setSqlLongTime(longSqlTime);
 			}
 
 			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
-				double sec = (double) (longUrlTime) / (double) 1000;
-				NumberFormat nf = new DecimalFormat("#.##");
-				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
+				double sec = (double) (longSqlTime);
+				NumberFormat nf = new DecimalFormat("#");
+				String option = "<option value=\"" + longSqlTime + "\"" + ">" + nf.format(sec) + " ms</option>";
 
-				model.setDefaultThreshold(option);
+				model.setDefaultSqlThreshold(option);
 			}
 		}
 	}
@@ -156,7 +160,7 @@ public class Handler implements PageHandler<Context> {
 		int sqlThreshold = payload.getSqlLongTime();
 		switch (payload.getAction()) {
 		case VIEW:
-			report = getHourlyReport(payload);
+			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
 			if (ip.equals(CatString.ALL_IP)) {
 				problemStatistics.setAllIp(true);
@@ -188,29 +192,21 @@ public class Handler implements PageHandler<Context> {
 			if (report != null) {
 				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
 			}
-			problemStatistics.setIp(model.getIpAddress()).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
-			problemStatistics.visitProblemReport(report);
 			break;
 		case THREAD:
-			String groupName = payload.getGroupName();
 			report = showHourlyReport(model, payload);
+			String groupName = payload.getGroupName();
 			model.setGroupName(groupName);
-
 			if (report != null) {
-				// model.setThreadLevelInfo(new ThreadLevelInfo(model,
-				// groupName).display(report));
+				model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
 			}
-
-			problemStatistics = new ProblemStatistics();
-			problemStatistics.setIp(model.getIpAddress()).setSqlThreshold(sqlThreshold).setUrlThreshold(1000);
-			problemStatistics.visitProblemReport(report);
 			break;
 		case DETAIL:
 			showDetail(model, payload);
 			break;
 		case MOBILE:
 			if (ip.equals(CatString.ALL_IP)) {
-				report = getHourlyReport(payload);
+				report = getHourlyReport(payload, VIEW);
 
 				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000);
 				problemStatistics.visitProblemReport(report);
@@ -226,6 +222,7 @@ public class Handler implements PageHandler<Context> {
 				statistics.setIps(new ArrayList<String>(report.getIps()));
 				model.setMobileResponse(gson.toJson(statistics));
 			}
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
@@ -313,6 +310,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.PROBLEM);
 		model.setDisplayDomain(payload.getDomain());
 		model.setThreshold(payload.getLongTime());
+		model.setSqlThreshold(payload.getSqlLongTime());
 		if (payload.getPeriod().isCurrent()) {
 			model.setCreatTime(new Date());
 		} else {
@@ -338,14 +336,17 @@ public class Handler implements PageHandler<Context> {
 		model.setCurrentMinute(payload.getMinute());
 		model.setThreadId(payload.getThreadId());
 
-		ProblemReport report = getHourlyReport(payload);
+		ProblemReport report = getHourlyReport(payload, DETAIL);
 
 		if (report == null) {
 			return;
 		}
 		model.setReport(report);
-		// model.setProblemStatistics(new
-		// ProblemStatistics().displayByGroupOrThread(report, model, payload));
+		DetailStatistics detail = new DetailStatistics();
+		detail.setIp(ipAddress).setMinute(payload.getMinute());
+		detail.setGroupName(payload.getGroupName()).setThreadId(payload.getThreadId());
+		detail.visitProblemReport(report);
+		model.setDetailStatistics(detail);
 	}
 
 	private ProblemReport showHourlyReport(Model model, Payload payload) {
@@ -365,7 +366,7 @@ public class Handler implements PageHandler<Context> {
 			model.setLastMinute(59);
 		}
 		model.setHour(getHour(model.getLongDate()));
-		ProblemReport report = getHourlyReport(payload);
+		ProblemReport report = getHourlyReport(payload, DETAIL);
 		if (report != null) {
 			String ip = getIpAddress(report, payload);
 

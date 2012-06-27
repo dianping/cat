@@ -57,7 +57,6 @@ public class Cat {
 	public static MessageProducer getProducer() {
 		if (!isInitialized()) {
 			initializeForDev();
-			System.out.println(">>>>>>>>>>>>>>>>>>> for Dev");
 		}
 
 		return getInstance().m_producer;

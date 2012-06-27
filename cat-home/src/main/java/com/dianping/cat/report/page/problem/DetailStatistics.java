@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -15,123 +14,110 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.MapUtils;
+import com.site.lookup.util.StringUtils;
 
-public class ProblemStatistics extends BaseVisitor {
+public class DetailStatistics extends BaseVisitor {
 
 	private Map<String, TypeStatistics> m_status = new TreeMap<String, TypeStatistics>();
 
-	private boolean m_allIp = false;
-
 	private String m_ip = "";
 
-	private int m_urlThreshold = 1000;
+	private int m_minute;
 
-	private int m_sqlThreshold = 100;
+	private String m_groupName;
 
-	private List<String> m_ips;
+	private String m_threadId;
 
-	public List<String> getIps() {
-		return m_ips;
+	private boolean isContents(String groupName, String threadId) {
+		if (m_groupName != null && m_groupName.equals(groupName) == false) {
+			return false;
+		}
+		if (m_threadId != null && m_threadId.equals(threadId) == false) {
+			return false;
+		}
+		return true;
 	}
 
-	public void setIps(List<String> ips) {
-		m_ips = ips;
+	public DetailStatistics setMinute(int minute) {
+		m_minute = minute;
+		return this;
+	}
+
+	public DetailStatistics setGroupName(String groupName) {
+		m_groupName = groupName;
+		return this;
+	}
+
+	public DetailStatistics setThreadId(String threadId) {
+		m_threadId = threadId;
+		return this;
+	}
+
+	public String getSubTitle() {
+		StringBuilder sb = new StringBuilder();
+		if (StringUtils.isEmpty(m_threadId) && StringUtils.isEmpty(m_groupName)) {
+			return "All Thread Groups";
+		} else if (!StringUtils.isEmpty(m_groupName) && StringUtils.isEmpty(m_threadId)) {
+			return "All Threads in Group:" + m_groupName;
+		} else if (!StringUtils.isEmpty(m_groupName) && !StringUtils.isEmpty(m_threadId)) {
+			return "Thread :" + m_threadId;
+		}
+		return sb.toString();
+	}
+
+	public String getUrl() {
+		StringBuilder sb = new StringBuilder();
+		if (!StringUtils.isEmpty(m_groupName)) {
+			sb.append("&group=").append(m_groupName);
+		}
+		if (!StringUtils.isEmpty(m_threadId)) {
+			sb.append("&thread=").append(m_threadId);
+		}
+		return sb.toString();
 	}
 
 	public Map<String, TypeStatistics> getStatus() {
 		return m_status;
 	}
 
-	public ProblemStatistics setAllIp(boolean allIp) {
-		m_allIp = allIp;
-		return this;
-	}
-
-	public ProblemStatistics setIp(String ip) {
+	public DetailStatistics setIp(String ip) {
 		m_ip = ip;
 		return this;
 	}
 
-	public ProblemStatistics setUrlThreshold(int urlThreshold) {
-		m_urlThreshold = urlThreshold;
-		return this;
-	}
-
-	public ProblemStatistics setSqlThreshold(int sqlThreshold) {
-		m_sqlThreshold = sqlThreshold;
-		return this;
-	}
-
-	@Override
-	public void visitDuration(Duration duration) {
-		super.visitDuration(duration);
-	}
-
-	@Override
-	public void visitEntry(Entry entry) {
-		super.visitEntry(entry);
-	}
-
 	@Override
 	public void visitMachine(Machine machine) {
-		if (m_allIp == true || m_ip.equals(machine.getIp())) {
+		if (machine.getIp().equals(m_ip)) {
 			List<Entry> entries = machine.getEntries();
 			for (Entry entry : entries) {
-				statisticsDuration(entry);
+				Map<String, JavaThread> threads = entry.getThreads();
+				for (JavaThread thread : threads.values()) {
+					String threadId = thread.getId();
+					String groupName = thread.getGroupName();
+					if (isContents(groupName, threadId)) {
+						Segment segment = thread.getSegments().get(m_minute);
+						if (segment != null) {
+							statisticsSegment(segment, entry.getType(), entry.getStatus());
+						}
+					}
+				}
 			}
 		}
-		super.visitMachine(machine);
+	}
 
+	private void statisticsSegment(Segment segment, String type, String status) {
+		TypeStatistics statusValue = m_status.get(type);
+
+		if (statusValue == null) {
+			statusValue = new TypeStatistics(type);
+			m_status.put(type, statusValue);
+		}
+		statusValue.statics(status, segment);
 	}
 
 	@Override
 	public void visitProblemReport(ProblemReport problemReport) {
 		super.visitProblemReport(problemReport);
-	}
-
-	@Override
-	public void visitSegment(Segment segment) {
-		super.visitSegment(segment);
-	}
-
-	@Override
-	public void visitThread(JavaThread thread) {
-		super.visitThread(thread);
-	}
-
-	private void statisticsDuration(Entry entry) {
-		String type = entry.getType();
-		String status = entry.getStatus();
-		List<Duration> durations = getDurationsByType(type, entry);
-		for (Duration duration : durations) {
-			TypeStatistics statusValue = m_status.get(type);
-
-			if (statusValue == null) {
-				statusValue = new TypeStatistics(type);
-				m_status.put(type, statusValue);
-			}
-			statusValue.statics(status, duration);
-		}
-	}
-
-	private List<Duration> getDurationsByType(String type, Entry entry) {
-		List<Duration> durations = new ArrayList<Duration>();
-		if ("long-url".equals(type)) {
-			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
-				if (temp.getKey() >= m_urlThreshold) {
-					durations.add(temp.getValue());
-				}
-			}
-		} else if ("long-sql".equals(type)) {
-			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
-				if (temp.getKey() >= m_sqlThreshold) {
-					durations.add(temp.getValue());
-				}
-			}
-		} else {
-			durations.add(entry.getDurations().get(0));
-		}
-		return durations;
 	}
 
 	public static class TypeStatistics {
@@ -145,15 +131,14 @@ public class ProblemStatistics extends BaseVisitor {
 			m_type = type;
 		}
 
-		public void statics(String status, Duration duration) {
-			m_count += duration.getCount();
+		public void statics(String status, Segment segment) {
+			m_count += segment.getCount();
 			StatusStatistics value = m_status.get(status);
 			if (value == null) {
 				value = new StatusStatistics(status);
 				m_status.put(status, value);
 			}
-			value.statics(duration);
-
+			value.statics(segment);
 		}
 
 		public int getCount() {
@@ -202,10 +187,10 @@ public class ProblemStatistics extends BaseVisitor {
 			m_status = status;
 		}
 
-		public void statics(Duration duration) {
-			m_count += duration.getCount();
+		public void statics(Segment segment) {
+			m_count += segment.getCount();
 			if (m_links.size() < 60) {
-				m_links.addAll(duration.getMessages());
+				m_links.addAll(segment.getMessages());
 				if (m_links.size() > 60) {
 					m_links = m_links.subList(0, 60);
 				}

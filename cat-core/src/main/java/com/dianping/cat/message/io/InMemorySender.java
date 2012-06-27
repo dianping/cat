@@ -31,7 +31,6 @@ public class InMemorySender implements MessageSender {
 	}
 
 	public void setQueue(InMemoryQueue queue) {
-		System.out.println("sdfsdf");
 		m_queue = queue;
 	}
 

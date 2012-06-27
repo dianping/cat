@@ -69,14 +69,17 @@ public class GroupLevelInfo {
 		if (machine == null) {
 			return null;
 		}
-		Map<String, JavaThread> threads = null;
-	//	Map<String, JavaThread> threads = machine.getThreads();
-		for (java.util.Map.Entry<String, JavaThread> entry : threads.entrySet()) {
-			JavaThread thread = entry.getValue();
+		List<Entry> entries = machine.getEntries();
+		for (Entry temp : entries) {
+			Map<String, JavaThread> threads = temp.getThreads();
 
-			String groupName = thread.getGroupName();
-			GroupStatistics statistics = findOrCreatGroupStatistics(groupName, m_minutes);
-			statistics.add(thread.getSegments());
+			for (java.util.Map.Entry<String, JavaThread> entry : threads.entrySet()) {
+				JavaThread thread = entry.getValue();
+
+				String groupName = thread.getGroupName();
+				GroupStatistics statistics = findOrCreatGroupStatistics(groupName, m_minutes);
+				statistics.add(thread.getSegments(), temp.getType());
+			}
 		}
 		long currentTimeMillis = System.currentTimeMillis();
 		long currentHours = currentTimeMillis - currentTimeMillis % (60 * 60 * 1000);
@@ -134,13 +137,10 @@ public class GroupLevelInfo {
 			return result;
 		}
 
-		public void add(Map<Integer, Segment> segments) {
-//			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
-//				List<Entry> entries = entry.getValue().getEntries();
-//				for (Entry temp : entries) {
-//					findOrCreat(entry.getKey()).add(temp.getType());
-//				}
-//			}
+		public void add(Map<Integer, Segment> segments, String type) {
+			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
+				findOrCreat(entry.getKey()).add(type);
+			}
 		}
 
 		public Map<Integer, TreeSet<String>> getStatistics() {

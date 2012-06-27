@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
+import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.transaction.model.IEntity;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
@@ -71,7 +72,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 			return filter.buildXml((com.dianping.cat.consumer.event.model.IEntity<?>) dataModel);
 		} else if ("problem".equals(report)) {
-			ProblemReportFilter filter = new ProblemReportFilter(ipAddress, payload.getThreadId());
+			ProblemReportFilter filter = new ProblemReportFilter(ipAddress, payload.getThreadId(), payload.getType());
 
 			return filter.buildXml((com.dianping.cat.consumer.problem.model.IEntity<?>) dataModel);
 		} else if ("heartbeat".equals(report)) {
@@ -210,9 +211,13 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		private String m_threadId;
 
-		public ProblemReportFilter(String ipAddress, String threadId) {
+		// view is show the summary,detail show the thread info
+		private String m_type;
+
+		public ProblemReportFilter(String ipAddress, String threadId, String type) {
 			m_ipAddress = ipAddress;
 			m_threadId = threadId;
+			m_type = type;
 		}
 
 		@Override
@@ -227,13 +232,29 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		@Override
-		public void visitThread(JavaThread thread) {
-			if (m_threadId == null) {
-				super.visitThread(thread);
-			} else if (thread.getId().equals(m_threadId)) {
-				super.visitThread(thread);
-			} else {
+		public void visitDuration(com.dianping.cat.consumer.problem.model.entity.Duration duration) {
+			if ("view".equals(m_type)) {
+				super.visitDuration(duration);
+			} else if ("graph".equals(m_type)) {
 				// skip it
+			} else {
+				super.visitDuration(duration);
+			}
+		}
+
+		@Override
+		public void visitSegment(Segment segment) {
+			super.visitSegment(segment);
+		}
+
+		@Override
+		public void visitThread(JavaThread thread) {
+			if ("graph".equals(m_type)) {
+				super.visitThread(thread);
+			} else if ("view".equals(m_type)) {
+				// skip it
+			} else {
+				super.visitThread(thread);
 			}
 		}
 	}
