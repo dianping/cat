@@ -34,12 +34,7 @@
 	</tr>
 </table>
 <br>
-
-<<<<<<< HEAD
 <table class="graph" id="graph">
-=======
-<table>
->>>>>>> a2555d2628b5beb3565527775a1b9375e1fce461
 <tr>
 	<th	colspan="3">Thread Info</th>
 </tr>
