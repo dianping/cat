@@ -17,7 +17,6 @@ import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.sql.TestComputeStr;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
-import com.dianping.cat.report.page.transaction.TransactionGraphDateTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 import com.dianping.cat.report.task.HistoryEventMergerTest;
 import com.dianping.cat.report.task.HistoryTransactionMergerTest;
@@ -34,13 +33,13 @@ EventModelServiceTest.class, EventGraphDataTest.class,
 TransactionModelServiceTest.class,
 
 /* .report.page.transaction */
-TransactionReportMergerTest.class, TransactionGraphDateTest.class,
+TransactionReportMergerTest.class,
 
 /* .report.graph */
 ValueTranslaterTest.class,
 
 /* .report.page.ip */
-DisplayModelTest.class, 
+DisplayModelTest.class,
 
 /* .report.page.heartbeart */
 HeartbeatGraphTest.class,
@@ -54,10 +53,10 @@ TestComputeStr.class,
 /* . report.page.transcation */
 PayloadTest.class, TransactionReportMergerTest.class,
 
-/*graph test*/
-EventGraphDataTest.class,HeartbeatGraphDataTest.class,
+/* graph test */
+EventGraphDataTest.class, HeartbeatGraphDataTest.class,
 
-ProblemGraphDataTest.class,TransactionGraphDataTest.class,
+ProblemGraphDataTest.class, TransactionGraphDataTest.class,
 
 /* .report.task */
 TaskConsumerTest.class, TaskHelperTest.class,
