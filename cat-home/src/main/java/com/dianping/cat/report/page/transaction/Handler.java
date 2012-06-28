@@ -405,7 +405,7 @@ public class Handler implements PageHandler<Context> {
 		return result;
 	}
 
-	protected Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
+	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
 		double[] total_count = new double[size];

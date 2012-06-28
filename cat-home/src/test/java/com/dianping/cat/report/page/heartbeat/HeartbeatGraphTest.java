@@ -53,11 +53,6 @@ public class HeartbeatGraphTest extends ComponentTestCase {
 
 	private Graph creatGraph(Date start) throws IOException {
 		Graph graph = new Graph();
-		graph.setCreationDate(start);
-		graph.setDomain("Test");
-		graph.setEndDate(new Date(start.getTime() + 3600 * 1000));
-		graph.setIp("192.168.32.68");
-		graph.setName("heartbeat");
 		graph.setPeriod(start);
 		graph.setDetailContent(getContent());
 		return graph;

@@ -40,7 +40,6 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 	public static final long ONE_HOUR = 3600 * 1000L;
 	
-	public static final double NOTEXIST=0;
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -335,17 +334,11 @@ public class Handler implements PageHandler<Context> {
 	}
 	
 	
-	Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
+	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
 		double[] total_count = new double[size];
 		double[] failure_count = new double[size];
-		
-		//set the default value
-		for (int i = 0; i < size; i++) {
-			total_count[i]=NOTEXIST;
-			failure_count[i]=NOTEXIST;
-      }
 
 		if (!isEmpty(type) && isEmpty(name)) {
 			for (Graph graph : graphs) {

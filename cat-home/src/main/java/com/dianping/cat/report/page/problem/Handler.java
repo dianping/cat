@@ -348,7 +348,7 @@ public class Handler implements PageHandler<Context> {
 		return report;
 	}
 
-	private Map<String, double[]> buildGraphDates(Date start, Date end, String type, String status, List<Graph> graphs) {
+	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String status, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR) * 60;
 		double[] errors = new double[size];
