@@ -5,15 +5,18 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.graph.ValueTranslaterTest;
+import com.dianping.cat.report.page.event.EventGraphDataTest;
+import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.ip.DisplayModelTest;
 import com.dianping.cat.report.page.ip.location.IPSeekerTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.model.event.EventModelServiceTest;
 import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
+import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.sql.TestComputeStr;
-import com.dianping.cat.report.page.model.transaction.GraphDataTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
+import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
@@ -42,7 +45,10 @@ EventReportFilterTest.class, TransactionReportFilterTest.class,
 TestComputeStr.class,
 
 /* . report.page.transcation */
-GraphDataTest.class, PayloadTest.class, TransactionReportMergerTest.class,
+PayloadTest.class, TransactionReportMergerTest.class,
+/*graph test*/
+EventGraphDataTest.class,HeartbeatGraphDataTest.class,
+ProblemGraphDataTest.class,TransactionGraphDataTest.class,
 
 /* .report.task */
 TaskConsumerTest.class, TaskHelperTest.class })
