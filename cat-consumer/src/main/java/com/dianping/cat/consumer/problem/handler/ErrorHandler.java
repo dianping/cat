@@ -6,50 +6,42 @@ import java.util.Set;
 
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
-public class ErrorHandler implements Handler {
+public class ErrorHandler extends Handler {
 	@Inject
 	private Set<String> m_errorTypes;
 
 	@Override
-	public int handle(Segment segment, MessageTree tree) {
+	public int handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 		int count = 0;
 
 		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 
-			count += processTransaction(segment, transaction, tree);
+			count += processTransaction(machine, transaction, tree);
 		} else {
-			count += processMessage(segment, message, tree);
+			count += processMessage(machine, message, tree);
 		}
 
 		return count;
 	}
 
-	private int processMessage(Segment segment, Message message, MessageTree tree) {
+	private int processMessage(Machine machine, Message message, MessageTree tree) {
 		int count = 0;
 
 		if (!message.getStatus().equals(Message.SUCCESS) && m_errorTypes.contains(message.getType())) {
-			Entry entry = new Entry();
-			entry.setMessageId(tree.getMessageId());
+			String type = ProblemType.ERROR.getName();
+			String status = message.getName();
 
-			entry.setStatus(message.getName());
-			entry.setType(ProblemType.ERROR.getName());
-
-			if (message instanceof Transaction) {
-				long duration = ((Transaction) message).getDurationInMillis();
-
-				entry.setDuration((int) duration);
-			}
-
-			segment.addEntry(entry);
+			Entry entry = findOrCreatEntry(machine, type, status);
+			updateEntry(tree, entry, 0);
 
 			count++;
 		}
@@ -57,19 +49,19 @@ public class ErrorHandler implements Handler {
 		return count;
 	}
 
-	private int processTransaction(Segment segment, Transaction transaction, MessageTree tree) {
+	private int processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
 		List<Message> children = transaction.getChildren();
 		int count = 0;
 
-		count += processMessage(segment, transaction, tree);
+		count += processMessage(machine, transaction, tree);
 
 		for (Message message : children) {
 			if (message instanceof Transaction) {
 				Transaction temp = (Transaction) message;
 
-				count += processTransaction(segment, temp, tree);
+				count += processTransaction(machine, temp, tree);
 			} else {
-				count += processMessage(segment, message, tree);
+				count += processMessage(machine, message, tree);
 			}
 		}
 

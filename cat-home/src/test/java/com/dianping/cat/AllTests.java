@@ -12,7 +12,7 @@ import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.model.event.EventModelServiceTest;
 import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
 import com.dianping.cat.report.page.sql.TestComputeStr;
-import com.dianping.cat.report.page.transaction.GraphDateTest;
+import com.dianping.cat.report.page.model.transaction.GraphDataTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
@@ -42,7 +42,7 @@ EventReportFilterTest.class, TransactionReportFilterTest.class,
 TestComputeStr.class,
 
 /* . report.page.transcation */
-GraphDateTest.class, PayloadTest.class, TransactionReportMergerTest.class,
+GraphDataTest.class, PayloadTest.class, TransactionReportMergerTest.class,
 
 /* .report.task */
 TaskConsumerTest.class, TaskHelperTest.class })

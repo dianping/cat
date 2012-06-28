@@ -20,9 +20,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private int m_threshold;
 
+	private int m_sqlThreshold;
+	
 	private String m_groupName;
 
 	private String m_defaultThreshold;
+	
+	private String m_defaultSqlThreshold;
 
 	private GroupLevelInfo m_groupLevelInfo;
 
@@ -31,6 +35,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private ProblemStatistics m_problemStatistics;
 
 	private ProblemStatistics m_allStatistics;
+	
+	private DetailStatistics m_detailStatistics;
 
 	private String m_mobileResponse;
 
@@ -195,6 +201,30 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setErrorsTrend(String errorsTrend) {
    	m_errorsTrend = errorsTrend;
+   }
+
+	public String getDefaultSqlThreshold() {
+   	return m_defaultSqlThreshold;
+   }
+
+	public void setDefaultSqlThreshold(String defaultSqlThreshold) {
+   	m_defaultSqlThreshold = defaultSqlThreshold;
+   }
+
+	public int getSqlThreshold() {
+   	return m_sqlThreshold;
+   }
+
+	public void setSqlThreshold(int sqlThreshold) {
+   	m_sqlThreshold = sqlThreshold;
+   }
+
+	public DetailStatistics getDetailStatistics() {
+   	return m_detailStatistics;
+   }
+
+	public void setDetailStatistics(DetailStatistics detailStatistics) {
+   	m_detailStatistics = detailStatistics;
    }
 	
 }

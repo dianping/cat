@@ -63,6 +63,10 @@ public class Handler implements PageHandler<Context> {
 
 	private Gson gson = new Gson();
 
+	private static final String VIEW = "view";
+
+	private static final String DETAIL = "detail";
+
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
 
@@ -81,11 +85,11 @@ public class Handler implements PageHandler<Context> {
 		return ip;
 	}
 
-	private ProblemReport getHourlyReport(Payload payload) {
+	private ProblemReport getHourlyReport(Payload payload, String type) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date);
+		      .setProperty("date", date).setProperty("type", type);
 		if (!CatString.ALL_IP.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
@@ -108,6 +112,9 @@ public class Handler implements PageHandler<Context> {
 
 		if (d != null) {
 			int longUrlTime = d.getUrlThreshold();
+			if (payload.getLongTime() == 0) {
+				payload.setLongTime(longUrlTime);
+			}
 
 			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
 			      && longUrlTime != 4000 && longUrlTime != 5000) {
@@ -116,6 +123,19 @@ public class Handler implements PageHandler<Context> {
 				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
 
 				model.setDefaultThreshold(option);
+			}
+
+			int longSqlTime = d.getSqlThreshold();
+			if (payload.getSqlLongTime() == 0) {
+				payload.setSqlLongTime(longSqlTime);
+			}
+
+			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
+				double sec = (double) (longSqlTime);
+				NumberFormat nf = new DecimalFormat("#");
+				String option = "<option value=\"" + longSqlTime + "\"" + ">" + nf.format(sec) + " ms</option>";
+
+				model.setDefaultSqlThreshold(option);
 			}
 		}
 	}
@@ -134,26 +154,32 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
 		ProblemReport report = null;
-		ProblemStatistics problemStatistics = null;
+		ProblemStatistics problemStatistics = new ProblemStatistics();
 		String ip = model.getIpAddress();
-
+		int urlThreshold = payload.getLongTime();
+		int sqlThreshold = payload.getSqlLongTime();
 		switch (payload.getAction()) {
-		case ALL:
-			model.setIpAddress(CatString.ALL_IP);
-			report = getHourlyReport(payload);
+		case VIEW:
+			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
-			problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
-			      payload.getLinkCount());
+			if (ip.equals(CatString.ALL_IP)) {
+				problemStatistics.setAllIp(true);
+			} else {
+				problemStatistics.setIp(ip);
+			}
+			problemStatistics.setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
+			problemStatistics.visitProblemReport(report);
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
 			if (ip.equals(CatString.ALL_IP)) {
-				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
-				      payload.getLinkCount());
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
+				problemStatistics.visitProblemReport(report);
 			} else {
-				problemStatistics = new ProblemStatistics().displayByIp(report, model.getIpAddress(),
-				      payload.getLongTime(), payload.getLinkCount());
+
+				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
+				problemStatistics.visitProblemReport(report);
 			}
 			model.setReport(report);
 			model.setAllStatistics(problemStatistics);
@@ -166,39 +192,37 @@ public class Handler implements PageHandler<Context> {
 			if (report != null) {
 				model.setGroupLevelInfo(new GroupLevelInfo(model).display(report));
 			}
-			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
-			      payload.getLongTime(), payload.getLinkCount()));
 			break;
 		case THREAD:
-			String groupName = payload.getGroupName();
 			report = showHourlyReport(model, payload);
+			String groupName = payload.getGroupName();
 			model.setGroupName(groupName);
-
 			if (report != null) {
 				model.setThreadLevelInfo(new ThreadLevelInfo(model, groupName).display(report));
 			}
-			model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
-			      payload.getLongTime(), payload.getLinkCount()));
 			break;
 		case DETAIL:
 			showDetail(model, payload);
 			break;
 		case MOBILE:
 			if (ip.equals(CatString.ALL_IP)) {
-				report = getHourlyReport(payload);
-				problemStatistics = new ProblemStatistics().displayByAllIps(report, payload.getLongTime(),
-				      payload.getLinkCount());
+				report = getHourlyReport(payload, VIEW);
+
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000);
+				problemStatistics.visitProblemReport(report);
 				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
 				String response = gson.toJson(problemStatistics);
 				model.setMobileResponse(response);
 			} else {
 				report = showHourlyReport(model, payload);
-				model.setAllStatistics(new ProblemStatistics().displayByIp(report, model.getIpAddress(),
-				      payload.getLongTime(), payload.getLinkCount()));
+
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000);
+				problemStatistics.visitProblemReport(report);
 				ProblemStatistics statistics = model.getAllStatistics();
 				statistics.setIps(new ArrayList<String>(report.getIps()));
 				model.setMobileResponse(gson.toJson(statistics));
 			}
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
@@ -286,6 +310,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.PROBLEM);
 		model.setDisplayDomain(payload.getDomain());
 		model.setThreshold(payload.getLongTime());
+		model.setSqlThreshold(payload.getSqlLongTime());
 		if (payload.getPeriod().isCurrent()) {
 			model.setCreatTime(new Date());
 		} else {
@@ -311,13 +336,17 @@ public class Handler implements PageHandler<Context> {
 		model.setCurrentMinute(payload.getMinute());
 		model.setThreadId(payload.getThreadId());
 
-		ProblemReport report = getHourlyReport(payload);
+		ProblemReport report = getHourlyReport(payload, DETAIL);
 
 		if (report == null) {
 			return;
 		}
 		model.setReport(report);
-		model.setProblemStatistics(new ProblemStatistics().displayByGroupOrThread(report, model, payload));
+		DetailStatistics detail = new DetailStatistics();
+		detail.setIp(ipAddress).setMinute(payload.getMinute());
+		detail.setGroupName(payload.getGroupName()).setThreadId(payload.getThreadId());
+		detail.visitProblemReport(report);
+		model.setDetailStatistics(detail);
 	}
 
 	private ProblemReport showHourlyReport(Model model, Payload payload) {
@@ -337,7 +366,7 @@ public class Handler implements PageHandler<Context> {
 			model.setLastMinute(59);
 		}
 		model.setHour(getHour(model.getLongDate()));
-		ProblemReport report = getHourlyReport(payload);
+		ProblemReport report = getHourlyReport(payload, DETAIL);
 		if (report != null) {
 			String ip = getIpAddress(report, payload);
 
@@ -347,7 +376,7 @@ public class Handler implements PageHandler<Context> {
 		return report;
 	}
 
-	private Map<String, double[]> buildGraphDates(Date start, Date end, String type, String status, List<Graph> graphs) {
+	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String status, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR) * 60;
 		double[] errors = new double[size];

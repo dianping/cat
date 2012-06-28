@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.problem;
 
 public enum Action implements com.site.web.mvc.Action {
-	ALL("all"),
+	VIEW("view"),
 
 	GROUP("group"),
 

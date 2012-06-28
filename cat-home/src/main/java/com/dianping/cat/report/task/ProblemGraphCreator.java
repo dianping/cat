@@ -39,52 +39,53 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 			graph.setPeriod(reportPeriod);
 			graph.setType(3);
 			com.dianping.cat.consumer.problem.model.entity.Machine machine = report.getMachines().get(ip);
-			Map<String, JavaThread> types = machine.getThreads();
+			//Map<String, JavaThread> types = machine.getThreads();
+			Map<String, JavaThread> types = null;
 
 			for (Entry<String, JavaThread> transactionEntry : types.entrySet()) {
 				JavaThread thread = transactionEntry.getValue();
 				for (Entry<Integer, Segment> segmentEntry : thread.getSegments().entrySet()) {
 					Segment segment = segmentEntry.getValue();
 					int minute = segment.getId();
-					for (com.dianping.cat.consumer.problem.model.entity.Entry entry : segment.getEntries()) {
-						String summaryKey = entry.getType();
-						GraphLine summaryLine = summaryCache.get(summaryKey);
-						if (summaryLine == null) {
-							summaryLine = new GraphLine();
-							summaryLine.minuteCounts = new int[60];
-							summaryCache.put(summaryKey, summaryLine);
-						}
-						summaryLine.totalCount++;
-						summaryLine.minuteCounts[minute]++;
-
-						GraphLine allSummaryLine = allSummaryCache.get(summaryKey);
-						if (allSummaryLine == null) {
-							allSummaryLine = new GraphLine();
-							allSummaryLine.minuteCounts = new int[60];
-							allSummaryCache.put(summaryKey, allSummaryLine);
-						}
-						allSummaryLine.totalCount++;
-						allSummaryLine.minuteCounts[minute]++;
-
-						String detailKey = entry.getType() + "\t" + entry.getStatus();
-						GraphLine detailLine = detailCache.get(detailKey);
-						if (detailLine == null) {
-							detailLine = new GraphLine();
-							detailLine.minuteCounts = new int[60];
-							detailCache.put(detailKey, detailLine);
-						}
-						detailLine.totalCount++;
-						detailLine.minuteCounts[minute]++;
-
-						GraphLine allDetailLine = allDetailCache.get(detailKey);
-						if (allDetailLine == null) {
-							allDetailLine = new GraphLine();
-							allDetailLine.minuteCounts = new int[60];
-							allDetailCache.put(detailKey, allDetailLine);
-						}
-						allDetailLine.totalCount++;
-						allDetailLine.minuteCounts[minute]++;
-					}
+//					for (com.dianping.cat.consumer.problem.model.entity.Entry entry : segment.getEntries()) {
+//						String summaryKey = entry.getType();
+//						GraphLine summaryLine = summaryCache.get(summaryKey);
+//						if (summaryLine == null) {
+//							summaryLine = new GraphLine();
+//							summaryLine.minuteCounts = new int[60];
+//							summaryCache.put(summaryKey, summaryLine);
+//						}
+//						summaryLine.totalCount++;
+//						summaryLine.minuteCounts[minute]++;
+//
+//						GraphLine allSummaryLine = allSummaryCache.get(summaryKey);
+//						if (allSummaryLine == null) {
+//							allSummaryLine = new GraphLine();
+//							allSummaryLine.minuteCounts = new int[60];
+//							allSummaryCache.put(summaryKey, allSummaryLine);
+//						}
+//						allSummaryLine.totalCount++;
+//						allSummaryLine.minuteCounts[minute]++;
+//
+//						String detailKey = entry.getType() + "\t" + entry.getStatus();
+//						GraphLine detailLine = detailCache.get(detailKey);
+//						if (detailLine == null) {
+//							detailLine = new GraphLine();
+//							detailLine.minuteCounts = new int[60];
+//							detailCache.put(detailKey, detailLine);
+//						}
+//						detailLine.totalCount++;
+//						detailLine.minuteCounts[minute]++;
+//
+//						GraphLine allDetailLine = allDetailCache.get(detailKey);
+//						if (allDetailLine == null) {
+//							allDetailLine = new GraphLine();
+//							allDetailLine.minuteCounts = new int[60];
+//							allDetailCache.put(detailKey, allDetailLine);
+//						}
+//						allDetailLine.totalCount++;
+//						allDetailLine.minuteCounts[minute]++;
+//					}
 				}
 
 			}

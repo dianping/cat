@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -71,7 +72,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date);
+		      .setProperty("date", date).setProperty("ip", payload.getIpAddress());
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
@@ -191,7 +192,7 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 60);
 		Map<String, double[]> graphData = getHeartBeatData(model, payload);
-
+		
 		model.setActiveThreadGraph(getGraphItem("Thread (Count) ", "ActiveThread", start, size, graphData)
 		      .getJsonString());
 		model.setDaemonThreadGraph(getGraphItem("Daemon Thread (Count) ", "DaemonThread", start, size, graphData)
@@ -214,14 +215,35 @@ public class Handler implements PageHandler<Context> {
 		model.setHeapUsageGraph(getGraphItem("Heap Usage (MB) ", "HeapUsage", start, size, graphData).getJsonString());
 		model.setNoneHeapUsageGraph(getGraphItem("None Heap Usage (MB) ", "NoneHeapUsage", start, size, graphData)
 		      .getJsonString());
-		model.setDiskRootGraph(getGraphItem("Disk (GB) /", "Disk /", start, size, graphData).getJsonString());
-		model.setDiskDataGraph(getGraphItem("Disk (GB) /data", "Disk /data", start, size, graphData).getJsonString());
 		model.setCatMessageProducedGraph(getGraphItem("Cat Message Produced (Count) / Minute", "CatMessageProduced",
 		      start, size, graphData).getJsonString());
 		model.setCatMessageOverflowGraph(getGraphItem("Cat Message Overflow (Count) / Minute", "CatMessageOverflow",
 		      start, size, graphData).getJsonString());
 		model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
 		      graphData).getJsonString());
+		List<GraphItem> diskInfo=getDiskInfo(graphData,start,size);
+		model.setDisks(diskInfo.size());
+		model.setDiskHistoryGraph(new Gson().toJson(diskInfo));
+	}
+	
+	private ArrayList<GraphItem> getDiskInfo(Map<String, double[]> graphData,Date start, int size){
+		ArrayList<GraphItem> diskInfo=new ArrayList<GraphItem>();
+		
+		Iterator<Entry<String, double[]>> iterator = graphData.entrySet().iterator();
+		while (iterator.hasNext()) {
+			Entry<String, double[]> entry = iterator.next();
+			String name = (String) entry.getKey();
+			if(name.startsWith("Disk")){
+				double[]data=graphData.get(name);
+				for (int i = 0; i < data.length; i++) {
+	            data[i]=data[i]/(K*K*K);
+            }
+				String title=name+"[GB]";
+				GraphItem disk=getGraphItem(title,name,start,size,graphData);
+				diskInfo.add(disk);
+			}
+		}
+		return diskInfo;
 	}
 
 	public Map<String, double[]> getHeartBeatData(Model model, Payload payload) {
@@ -243,25 +265,22 @@ public class Handler implements PageHandler<Context> {
 
 	public Map<String, double[]> buildHeartbeatDatas(Date start, Date end, List<Graph> graphs) {
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
-		Map<String, String[]> hourlyDate = gethourlyDate(graphs, start, size);
+		Map<String, String[]> hourlyDate = getHourlyDate(graphs, start, size);
 		return getHeartBeatDatesEveryMinute(hourlyDate, size);
 	}
 	
 	private Map<String, String[]> initial(int size){
 		Map<String, String[]> heartBeats = new HashMap<String, String[]>();
-		String[]names={"ActiveThread","CatMessageOverflow","CatMessageProduced","CatMessageSize","CatThreadCount","DaemonThread","Disk /","Disk /data"
+		String[]names={"ActiveThread","CatMessageOverflow","CatMessageProduced","CatMessageSize","CatThreadCount","DaemonThread"
 				,"HeapUsage","MemoryFree","NewGcCount","NoneHeapUsage","OldGcCount","PigeonStartedThread","SystemLoadAverage","TotalStartedThread","StartedThread"};
 		for(String name:names){
-			String[] singlePeriod = new String[size];
-			for (int index = 0; index < size; index++) {
-				singlePeriod[index] ="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
-			}
+			String[] singlePeriod = initialData(size);
 			heartBeats.put(name, singlePeriod);
 		}
 		return heartBeats;
 	}
 	
-	private Map<String, String[]> gethourlyDate(List<Graph> graphs, Date start, int size) {
+	private Map<String, String[]> getHourlyDate(List<Graph> graphs, Date start, int size) {
 		Map<String, String[]> heartBeats = initial(size);
 		for (Graph graph : graphs) {
 			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
@@ -274,14 +293,27 @@ public class Handler implements PageHandler<Context> {
 				String countPerHour = records[DetailOrder.COUNT_IN_MINUTES.ordinal()];
 				String[] singlePeriod = heartBeats.get(name);
 				if(singlePeriod==null){
-					continue;
+					singlePeriod=initialData(size);
+					heartBeats.put(name,singlePeriod);
 				}
 				singlePeriod[indexOfperiod] = countPerHour;
-//				heartBeats.put(name, singlePeriod);
 			}
 		}
 		return heartBeats;
 	}
+	private String[]initialData(int size){
+		String[] singlePeriod = new String[size];
+		for (int index = 0; index < size; index++) {
+			StringBuilder sb=new StringBuilder();
+			for (int i = 0; i < 60; i++) {
+		      sb.append("0,");
+	      }
+			String hourData=sb.substring(0, sb.length()-1);
+			singlePeriod[index] =hourData;
+		}
+		return singlePeriod;
+	}
+	
 
 	public Map<String, double[]> getHeartBeatDatesEveryMinute(Map<String, String[]> heartBeats, final int size) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
@@ -318,7 +350,7 @@ public class Handler implements PageHandler<Context> {
 			result.put("StartedThread", getAddedCount(totalStartedThread));
 		}
 		String[] addedDatas = { "NewGcCount", "OldGcCount", "CatMessageProduced", "CatMessageSize", "CatMessageOverflow" };
-		String[] divideByKDates = { "CatMessageSize", "HeapUsage", "NoneHeapUsage", "MemoryFree", "Disk /", "Disk /data" };
+		String[] divideByKDates = { "CatMessageSize", "HeapUsage", "NoneHeapUsage", "MemoryFree"};
 
 		organiseAddedData(result, addedDatas);
 		divideByK(result, divideByKDates);
@@ -328,11 +360,11 @@ public class Handler implements PageHandler<Context> {
 
 		for (String name : divideByKDates) {
 			double[] data = result.get(name);
-			int divisor = name.startsWith("Disk") ? K * K * K : K * K;
 			for (int i = 0; i < data.length; i++) {
-				data[i] = data[i] / divisor;
+				data[i] = data[i] /(K*K);
 			}
 		}
+		
 	}
 
 	private void organiseAddedData(Map<String, double[]> result, String[] addedNames) {

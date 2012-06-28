@@ -6,49 +6,47 @@ import java.util.Set;
 
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Splitters;
 import com.site.lookup.annotation.Inject;
 
-public class FailureHandler implements Handler {
+public class FailureHandler extends Handler {
 	@Inject
 	private Set<String> m_failureTypes;
 
 	@Override
-	public int handle(Segment segment, MessageTree tree) {
+	public int handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 		int count = 0;
 
 		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 
-			count += processTransaction(segment, transaction, tree);
+			count += processTransaction(machine, transaction, tree);
 		}
 
 		return count;
 	}
 
-	private int processTransaction(Segment segment, Transaction transaction, MessageTree tree) {
+	private int processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
 		int count = 0;
-		String status = transaction.getStatus();
-		if (!status.equals(Transaction.SUCCESS)) {
-			Entry entry = new Entry();
-			entry.setMessageId(tree.getMessageId());
-			
+		String transactionStatus = transaction.getStatus();
+		if (!transactionStatus.equals(Transaction.SUCCESS)) {
 			String type = transaction.getType();
+			String status = "";
 			if (m_failureTypes.contains(type)) {
-				entry.setType(transaction.getType().toLowerCase());
-				entry.setStatus(transaction.getName());
+				type = transaction.getType().toLowerCase();
+				status = transaction.getName();
 			} else {
-				entry.setType(ProblemType.FAILURE.getName());
-				entry.setStatus(transaction.getType() + ":" + transaction.getName());
+				type = ProblemType.FAILURE.getName();
+				status = transaction.getType() + ":" + transaction.getName();
 			}
 
-			entry.setDuration((int) transaction.getDurationInMillis());
-			segment.addEntry(entry);
+			Entry entry = findOrCreatEntry(machine, type, status);
+			updateEntry(tree, entry, 0);
 
 			count++;
 		}
@@ -59,7 +57,7 @@ public class FailureHandler implements Handler {
 			if (message instanceof Transaction) {
 				Transaction temp = (Transaction) message;
 
-				count += processTransaction(segment, temp, tree);
+				count += processTransaction(machine, temp, tree);
 			}
 		}
 

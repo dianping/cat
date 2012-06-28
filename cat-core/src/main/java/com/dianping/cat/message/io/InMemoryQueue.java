@@ -26,7 +26,7 @@ public class InMemoryQueue implements LogEnabled, Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_queueSize <= 0) {
-			m_queue = new LinkedBlockingQueue<MessageTree>();
+			m_queue = new LinkedBlockingQueue<MessageTree>(1000);
 		} else {
 			m_queue = new LinkedBlockingQueue<MessageTree>(m_queueSize);
 		}
