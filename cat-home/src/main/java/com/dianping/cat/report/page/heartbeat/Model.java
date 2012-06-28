@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.report.page.AbstractReportModel;
@@ -21,13 +22,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_daemonThreadGraph;
 
 	private int m_disks;
+	
+	private String m_diskHistoryGraph;
 
 	private String m_disksGraph;
 	
-	private String m_diskRootGraph;
-	
-	private String m_diskDataGraph;
-
 	private String m_newGcCountGraph;
 
 	private String m_oldGcCountGraph;
@@ -200,6 +199,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setDisks(int disks) {
 		m_disks = disks;
 	}
+	
+	public int getDisks() {
+   	return m_disks;
+   }
 
 	public void setDisksGraph(String disksGraph) {
 		m_disksGraph = disksGraph;
@@ -265,20 +268,12 @@ public class Model extends AbstractReportModel<Action, Context> {
    	m_mobileResponse = mobileResponse;
    }
 
-	public String getDiskRootGraph() {
-   	return m_diskRootGraph;
+	public String getDiskHistoryGraph() {
+   	return m_diskHistoryGraph;
    }
 
-	public void setDiskRootGraph(String diskRootGraph) {
-   	m_diskRootGraph = diskRootGraph;
-   }
-
-	public String getDiskDataGraph() {
-   	return m_diskDataGraph;
-   }
-
-	public void setDiskDataGraph(String diskDataGraph) {
-   	m_diskDataGraph = diskDataGraph;
+	public void setDiskHistoryGraph(String diskHistoryGraph) {
+   	m_diskHistoryGraph = diskHistoryGraph;
    }
 
 }

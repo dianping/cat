@@ -34,8 +34,7 @@
 	</tr>
 </table>
 <br>
-
-<table>
+<table class="graph" id="graph">
 <tr>
 	<th	colspan="3">Thread Info</th>
 </tr>
@@ -64,42 +63,19 @@
 <tr>
 	<th colspan="3">Memery Info</th>
 </tr>
-<tr>
-	
+<tr id="memoryGraph">
 	<td><div id="MemoryFree" class="graph"></div></td>
 	<td><div id="HeapUsage" class="graph"></div></td>
 	<td><div id="NoneHeapUsage" class="graph"></div></td>
 </tr>
-<tr>
-	<td  style="display:none">
-		<div id ="MemoryFreeData">${model.memoryFreeGraph}</div>
-		<div id ="HeapUsageData">${model.heapUsageGraph}</div>
-		<div id ="NoneHeapUsageData">${model.noneHeapUsageGraph}</div>
-	</td>
-</tr>
-<tr>
-	<th colspan="3">Disk Info</th>
-</tr>
-<tr>
-	
-	<td><div id="diskRoot" class="graph"></div></td>
-	<td><div id="diskData" class="graph"></div></td>
-</tr>
+
 <tr>
 	<th colspan="3">Cat Message Info</th>
 </tr>
 <tr>
-	
 	<td><div id="CatMessageProduced" class="graph"></div></td>
 	<td><div id="CatMessageOverflow" class="graph"></div></td>
 	<td><div id="CatMessageSize" class="graph"></div></td>
-</tr>
-<tr>
-	<td  style="display:none">
-		<div id ="CatMessageProducedData">${model.catMessageProducedGraph}</div>
-		<div id ="CatMessageOverflowData">${model.catMessageOverflowGraph}</div>
-		<div id ="CatMessageSizeData">${model.catMessageSizeGraph}</div>
-	</td>
 </tr>
 </table>
 <script>
@@ -139,12 +115,8 @@
 	//12
 	var noneHeapUsageGraphData = ${model.noneHeapUsageGraph};
 	graph(document.getElementById('NoneHeapUsage'), noneHeapUsageGraphData);
-	//13
-	var diskRootGraphData = ${model.diskRootGraph};
-	graph(document.getElementById('diskRoot'), diskRootGraphData);
-	//14
-	var diskDataGraphData = ${model.diskDataGraph};
-	graph(document.getElementById('diskData'), diskDataGraphData);
+	//19
+	
 	//16
 	var catMessageProducedGraphData = ${model.catMessageProducedGraph};
 	graph(document.getElementById('CatMessageProduced'), catMessageProducedGraphData);
@@ -154,8 +126,12 @@
 	//18
 	var catMessageSizeGraphData = ${model.catMessageSizeGraph};
 	graph(document.getElementById('CatMessageSize'), catMessageSizeGraphData);
+
+	var diskHistoryGraph=${model.diskHistoryGraph};
+	var size=${model.disks};
+	disksGraph(size,diskHistoryGraph);
+	
 </script>
-<res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
 </jsp:body>
 
 </a:historyReport>
