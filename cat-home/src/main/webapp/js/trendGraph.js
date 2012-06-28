@@ -1,19 +1,3 @@
-function formatDate(date) {
-	var myyear = date.getFullYear();
-	var mymonth = date.getMonth();
-	var myweekday = date.getDate();
-	var hour = date.getHours();
-	var minute = date.getMinutes();
-	var second = date.getSeconds();
-
-	mymonth = mymonth < 10 ? '0' + mymonth : mymonth;
-	myweekday = myweekday < 10 ? '0' + myweekday : myweekday;
-	hour = hour < 10 ? '0' + hour : hour;
-	minute = minute < 10 ? '0' + minute : minute;
-	second = second < 10 ? '0' + second : second;
-	return mymonth + "-" + myweekday + " " + hour + ":" + minute;
-}
-
 function graph(container, data) {
 	var hour = 1000 * 3600;
 	var real = data.values[0];

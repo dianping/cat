@@ -23,9 +23,12 @@ import com.dianping.cat.hadoop.dal.Graph;
 public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 
 	@Override
-	public List<Graph> splitReportToGraphs(Date reportPeriod, String reportDomain, String reportName, ProblemReport report) {
+	public List<Graph> splitReportToGraphs(Date reportPeriod, String reportDomain, String reportName,
+	      ProblemReport report) {
 		Set<String> ips = report.getIps();
-		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); // all and every machine
+		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); // all and
+																					  // every
+																					  // machine
 		Map<String, GraphLine> allDetailCache = new TreeMap<String, GraphLine>();
 		Map<String, GraphLine> allSummaryCache = new TreeMap<String, GraphLine>();
 
@@ -39,55 +42,58 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 			graph.setPeriod(reportPeriod);
 			graph.setType(3);
 			com.dianping.cat.consumer.problem.model.entity.Machine machine = report.getMachines().get(ip);
-			//Map<String, JavaThread> types = machine.getThreads();
-			Map<String, JavaThread> types = null;
 
-			for (Entry<String, JavaThread> transactionEntry : types.entrySet()) {
-				JavaThread thread = transactionEntry.getValue();
-				for (Entry<Integer, Segment> segmentEntry : thread.getSegments().entrySet()) {
-					Segment segment = segmentEntry.getValue();
-					int minute = segment.getId();
-//					for (com.dianping.cat.consumer.problem.model.entity.Entry entry : segment.getEntries()) {
-//						String summaryKey = entry.getType();
-//						GraphLine summaryLine = summaryCache.get(summaryKey);
-//						if (summaryLine == null) {
-//							summaryLine = new GraphLine();
-//							summaryLine.minuteCounts = new int[60];
-//							summaryCache.put(summaryKey, summaryLine);
-//						}
-//						summaryLine.totalCount++;
-//						summaryLine.minuteCounts[minute]++;
-//
-//						GraphLine allSummaryLine = allSummaryCache.get(summaryKey);
-//						if (allSummaryLine == null) {
-//							allSummaryLine = new GraphLine();
-//							allSummaryLine.minuteCounts = new int[60];
-//							allSummaryCache.put(summaryKey, allSummaryLine);
-//						}
-//						allSummaryLine.totalCount++;
-//						allSummaryLine.minuteCounts[minute]++;
-//
-//						String detailKey = entry.getType() + "\t" + entry.getStatus();
-//						GraphLine detailLine = detailCache.get(detailKey);
-//						if (detailLine == null) {
-//							detailLine = new GraphLine();
-//							detailLine.minuteCounts = new int[60];
-//							detailCache.put(detailKey, detailLine);
-//						}
-//						detailLine.totalCount++;
-//						detailLine.minuteCounts[minute]++;
-//
-//						GraphLine allDetailLine = allDetailCache.get(detailKey);
-//						if (allDetailLine == null) {
-//							allDetailLine = new GraphLine();
-//							allDetailLine.minuteCounts = new int[60];
-//							allDetailCache.put(detailKey, allDetailLine);
-//						}
-//						allDetailLine.totalCount++;
-//						allDetailLine.minuteCounts[minute]++;
-//					}
+			for (com.dianping.cat.consumer.problem.model.entity.Entry entry : machine.getEntries()) {
+				Map<String, JavaThread> threads = entry.getThreads();
+				String type = entry.getType();
+				String status = entry.getStatus();
+
+				for (Entry<String, JavaThread> problemEntry : threads.entrySet()) {
+					JavaThread thread = problemEntry.getValue();
+
+					for (Entry<Integer, Segment> segmentEntry : thread.getSegments().entrySet()) {
+						Segment segment = segmentEntry.getValue();
+						int minute = segment.getId();
+						String summaryKey = type;
+						
+						GraphLine summaryLine = summaryCache.get(summaryKey);
+						if (summaryLine == null) {
+							summaryLine = new GraphLine();
+							summaryLine.minuteCounts = new int[60];
+							summaryCache.put(summaryKey, summaryLine);
+						}
+						summaryLine.totalCount++;
+						summaryLine.minuteCounts[minute]++;
+
+						GraphLine allSummaryLine = allSummaryCache.get(summaryKey);
+						if (allSummaryLine == null) {
+							allSummaryLine = new GraphLine();
+							allSummaryLine.minuteCounts = new int[60];
+							allSummaryCache.put(summaryKey, allSummaryLine);
+						}
+						allSummaryLine.totalCount++;
+						allSummaryLine.minuteCounts[minute]++;
+
+						String detailKey = type + "\t" + status;
+						GraphLine detailLine = detailCache.get(detailKey);
+						if (detailLine == null) {
+							detailLine = new GraphLine();
+							detailLine.minuteCounts = new int[60];
+							detailCache.put(detailKey, detailLine);
+						}
+						detailLine.totalCount++;
+						detailLine.minuteCounts[minute]++;
+
+						GraphLine allDetailLine = allDetailCache.get(detailKey);
+						if (allDetailLine == null) {
+							allDetailLine = new GraphLine();
+							allDetailLine.minuteCounts = new int[60];
+							allDetailCache.put(detailKey, allDetailLine);
+						}
+						allDetailLine.totalCount++;
+						allDetailLine.minuteCounts[minute]++;
+					}
 				}
-
 			}
 
 			StringBuilder summaryBuilder = new StringBuilder();

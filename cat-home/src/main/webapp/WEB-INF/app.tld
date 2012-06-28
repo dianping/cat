@@ -5,7 +5,6 @@
    <description>Application Specific JSP Tag Library</description>
    <tlib-version>1.0</tlib-version>
    <short-name>a</short-name>
-   
    <tag>
 		<name>errors</name>
 		<tag-class>com.dianping.cat.report.view.ErrorsTag</tag-class>
@@ -51,13 +50,6 @@
       <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
       <function-signature>String uri2(com.site.web.mvc.ViewModel, java.lang.Object, java.lang.String)</function-signature>
       <example>${a:uri2(model, 123, 'a=1&amp;b=2')}</example>
-   </function>
-   <function>
-      <description>show legends for problem summary report</description>
-      <name>showLegends</name>
-      <function-class>com.dianping.cat.report.view.ProblemReportHelper</function-class>
-      <function-signature>String showLegends(com.dianping.cat.consumer.problem.model.entity.JavaThread, int, java.lang.String, java.lang.String, long)</function-signature>
-      <example>${a:showLegends(thread, minute, domain, ip, date)}</example>
    </function>
    <function>
       <description>ip location</description>
