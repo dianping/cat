@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.consumer.heartbeat.model" enable-merger="true" enable-json-builder="true"
-	enable-xml-parser="true" enable-base-visitor="true">
+	enable-xml-parser="true"  enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true">
     <entity name="heartbeat-report" root="true">
     <attribute name="domain" value-type="String" key="true"/>
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
@@ -22,20 +22,20 @@
     <attribute name="pigeon-thread-count" value-type="int" primitive="true" />
     <attribute name="new-gc-count" value-type="long" primitive="true" />
     <attribute name="old-gc-count" value-type="long" primitive="true" />
-    <attribute name="memory-free" value-type="double" primitive="true" />
-    <attribute name="heap-usage" value-type="double" primitive="true" />
-    <attribute name="none-heap-usage" value-type="double" primitive="true" />
+    <attribute name="memory-free" value-type="double" primitive="true" format="0.0"/>
+    <attribute name="heap-usage" value-type="double" primitive="true" format="0.0"/>
+    <attribute name="none-heap-usage" value-type="double" primitive="true" format="0.0"/>
     <attribute name="system-load-average" value-type="double" primitive="true" />
     <attribute name="cat-message-produced" value-type="long" primitive="true" />
     <attribute name="cat-message-overflow" value-type="long" primitive="true" />
-    <attribute name="cat-message-size" value-type="double" primitive="true" />
+    <attribute name="cat-message-size" value-type="double" primitive="true" format="0.0"/>
     <entity-ref name="disk" type="list" names="disks"/>
   </entity>
   <entity name="disk">
     <attribute name="path" value-type="String" key="true"/>
-    <attribute name="total" value-type="double" primitive="true" />
-    <attribute name="free" value-type="double" primitive="true" />
-    <attribute name="usable" value-type="double" primitive="true" />
+    <attribute name="total" value-type="double" primitive="true" format="0.0"/>
+    <attribute name="free" value-type="double" primitive="true" format="0.0"/>
+    <attribute name="usable" value-type="double" primitive="true" format="0.0"/>
   </entity>
 </model>
 

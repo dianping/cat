@@ -1,5 +1,25 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=utf-8"%>
+<%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
+<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.problem.Context" scope="request" />
+<jsp:useBean id="payload"	type="com.dianping.cat.report.page.problem.Payload" scope="request" />
+<jsp:useBean id="model"	type="com.dianping.cat.report.page.problem.Model" scope="request" />
+<c:set var="report" value="${model.report}" />
+
+<a:report title="Problem Report"
+	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}"
+	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+
+	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+
+	<jsp:body>
+
+<res:useCss value="${res.css.local.problem_css}" target="head-css" />
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+
 <table class="machines">
 	<tr style="text-align:left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
@@ -14,11 +34,11 @@
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=group&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}"
+						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=group&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}">${ip}</a>
+						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -33,7 +53,27 @@
 				<option value="3000">3.0 Sec</option>
 				<option value="4000">4.0 Sec</option>
 				<option value="5000">5.0 Sec</option>
-		</select> <input style="WIDTH: 60px" value="Refresh"
+		</select> long-sql
+		<select size="1" id="p_longSql">
+				${model.defaultSqlThreshold}
+				<option value="100">100 ms</option>
+				<option value="500">500 ms</option>
+				<option value="1000">1000 ms</option>
+		</select>
+		<script>
+			var threshold='${model.threshold}';
+			$("#p_longUrl").val(threshold) ;
+			
+			var sqlThreshold='${model.sqlThreshold}';
+			$("#p_longSql").val(sqlThreshold) ;
+			function longTimeChange(date,domain,ip){
+				var longtime=$("#p_longUrl").val();
+				var longSqlTime=$("#p_longSql").val();
+				window.location.href="?op=view&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime;
+			}
+		</script>
+		
+		<input style="WIDTH: 60px" value="Refresh"
 			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
 			type="submit">
 		</th>
@@ -77,3 +117,18 @@
 	</c:forEach>
 </table>
 <br>
+
+<c:if test="${model.ipAddress ne 'All'}">
+<a href="?domain=${model.domain}&date=${model.date}&op=group" onclick="return requestGroupInfo(this)">ProblemGraphInThread</a>
+
+<div id="machineThreadGroupInfo"></div>
+<br>
+</c:if>
+
+<table class="legend">
+</table>
+
+<res:useJs value="${res.js.local.problem_js}" target="buttom-js" />
+</jsp:body>
+
+</a:report>

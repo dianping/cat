@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.dashboard;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +32,6 @@ public class Handler implements PageHandler<Context> {
 
 	private Gson m_gson = new Gson();
 
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "dashboard")
@@ -52,7 +49,7 @@ public class Handler implements PageHandler<Context> {
 		TransactionReport catReport = getHourlyReport("Cat");
 		Set<String> domains = catReport.getDomainNames();
 		Map<String, String> data = new HashMap<String, String>();
-		data.put("timestamp", sdf.format(new Date()));
+		data.put("timestamp", String.valueOf(new Date().getTime()));
 
 		TransactionReport report = null;
 		for (String domain : domains) {

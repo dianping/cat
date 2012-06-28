@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.model.event;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -35,6 +35,6 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "event");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultDomParser().parse(xml);
+		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

@@ -23,7 +23,7 @@ public enum ReportPage implements Page {
 
    SQL("sql", "sql", "SQL", "SQL Report", true),
 
-   HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", true),
+   HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", false),
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", true);
 

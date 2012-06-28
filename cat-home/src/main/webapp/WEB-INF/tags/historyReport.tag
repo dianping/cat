@@ -16,7 +16,7 @@
 		<tr>
 			<td class="title">${title}</td>
 			<td class="switch">Browse Mode:History Summarize Report 
-				[&nbsp;<a href="?domain=${model.domain}&date=${model.date}">Hourly Mode</a>&nbsp;]&nbsp;
+				[&nbsp;<a href="?domain=${model.domain}">Hourly Mode</a>&nbsp;]&nbsp;
 			</td>
 		</tr>
 	</table>

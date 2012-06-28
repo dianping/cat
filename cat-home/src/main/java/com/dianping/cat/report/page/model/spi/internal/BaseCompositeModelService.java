@@ -22,7 +22,7 @@ import com.site.lookup.annotation.Inject;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {
-	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 10);
+	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 50);
 
 	@Inject
 	private List<ModelService<T>> m_services;

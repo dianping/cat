@@ -126,20 +126,24 @@ public class ThreadLevelInfo {
 		if (machine == null) {
 			return null;
 		}
-		Map<String, JavaThread> threads = machine.getThreads();
 
-		for (java.util.Map.Entry<String, JavaThread> entry : threads.entrySet()) {
-			JavaThread thread = entry.getValue();
-			String groupName = thread.getGroupName();
-			String threadId = thread.getId();
-			GroupStatistics statistics = findOrCreatGroupStatistics(groupName, m_minutes);
+		List<Entry> entries = machine.getEntries();
+		for (Entry temp : entries) {
+			Map<String, JavaThread> threads = temp.getThreads();
 
-			if (groupName.equals(m_groupName)) {
-				statistics.add(threadId, thread.getSegments(), m_minutes);
-				findOrCreatThreadInfo(groupName, threadId);
-			} else {
-				statistics.add(groupName, thread.getSegments(), m_minutes);
-				findOrCreatThreadInfo(groupName, groupName);
+			for (java.util.Map.Entry<String, JavaThread> entry : threads.entrySet()) {
+				JavaThread thread = entry.getValue();
+				String groupName = thread.getGroupName();
+				String threadId = thread.getId();
+				GroupStatistics statistics = findOrCreatGroupStatistics(groupName, m_minutes);
+
+				if (groupName.equals(m_groupName)) {
+					statistics.add(threadId, thread.getSegments(), m_minutes, temp.getType());
+					findOrCreatThreadInfo(groupName, threadId);
+				} else {
+					statistics.add(groupName, thread.getSegments(), m_minutes, temp.getType());
+					findOrCreatThreadInfo(groupName, groupName);
+				}
 			}
 		}
 		long currentTimeMillis = System.currentTimeMillis();
@@ -202,8 +206,8 @@ public class ThreadLevelInfo {
 
 		private Map<String, TheadStatistics> m_statistics = new LinkedHashMap<String, TheadStatistics>();
 
-		public void add(String threadId, Map<Integer, Segment> segments, int minute) {
-			findOrCreatTheadStatistics(threadId, minute).add(segments);
+		public void add(String threadId, Map<Integer, Segment> segments, int minute, String type) {
+			findOrCreatTheadStatistics(threadId, minute).add(segments, type);
 		}
 
 		public Map<String, TheadStatistics> getStatistics() {
@@ -245,14 +249,10 @@ public class ThreadLevelInfo {
 			}
 			return result;
 		}
-		
-		public void add(Map<Integer, Segment> segments) {
-			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
-				List<Entry> entries = entry.getValue().getEntries();
-				for (Entry temp : entries) {
 
-					findOrCreat(entry.getKey()).add(temp.getType());
-				}
+		public void add(Map<Integer, Segment> segments, String type) {
+			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
+				findOrCreat(entry.getKey()).add(type);
 			}
 		}
 

@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.problem;
 
 public enum JspFile {
 
-	ALL("/jsp/report/problemGroup.jsp"),
+	ALL("/jsp/report/problemStatics.jsp"),
 
 	GROUP("/jsp/report/problemGroup.jsp"),
 

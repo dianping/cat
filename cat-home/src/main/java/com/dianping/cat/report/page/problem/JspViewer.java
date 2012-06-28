@@ -9,7 +9,7 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case ALL:
+		case VIEW:
 			return JspFile.ALL.getPath();
 		case GROUP:
 			return JspFile.GROUP.getPath();

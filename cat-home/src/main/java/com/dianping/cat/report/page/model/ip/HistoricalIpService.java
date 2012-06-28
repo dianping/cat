@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
-import com.dianping.cat.consumer.ip.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.ip.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -43,12 +43,11 @@ public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 	private IpReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
-		DefaultDomParser parser = new DefaultDomParser();
 		IpReportMerger merger = null;
 
 		for (Report report : reports) {
 			String xml = report.getContent();
-			IpReport model = parser.parse(xml);
+			IpReport model = DefaultSaxParser.parse(xml);
 
 			if (merger == null) {
 				merger = new IpReportMerger(model);
@@ -64,6 +63,6 @@ public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "ip");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultDomParser().parse(xml);
+		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

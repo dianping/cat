@@ -5,8 +5,11 @@ package com.dianping.cat.report.task;
 
 import java.util.concurrent.locks.LockSupport;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Task;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 
 /**
  * @author sean.wang
@@ -30,30 +33,42 @@ public abstract class TaskConsumer implements Runnable {
 	public void run() {
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		findtask: while (running) {
-			LockSupport.parkNanos(2L * 1000 * 1000 * 1000);
-			Task task = findDoingTask(localIp); // find doing task
-			if (task == null) {
-				task = findTodoTask(); // find todo task
-			}
-			if (task != null) {
-				task.setConsumer(localIp);
-				if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) { // confirm doing status
-					int retryTimes = 0;
-					while (!processTask(task)) {
-						retryTimes++;
-						if (retryTimes < MAX_TODO_RETRY_TIMES) {
-							taskRetryDuration(task, retryTimes);
-						} else {
-							updateDoingToFailure(task);
-							continue findtask;
+			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between
+			Transaction t = Cat.getProducer().newTransaction("Task", "MergeJob-" + localIp);
+			try {
+				// tasks
+				Task task = findDoingTask(localIp); // find doing task
+				if (task == null) {
+					task = findTodoTask(); // find todo task
+				}
+				if (task != null) {
+					task.setConsumer(localIp);
+					if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) { // confirm
+						                                                                             // doing
+						                                                                             // status
+						int retryTimes = 0;
+						while (!processTask(task)) {
+							retryTimes++;
+							if (retryTimes < MAX_TODO_RETRY_TIMES) {
+								taskRetryDuration(task, retryTimes);
+							} else {
+								updateDoingToFailure(task);
+								continue findtask;
+							}
+						}
+						if (updateDoingToDone(task)) {
+							mergeReport(task);
 						}
 					}
-					if (updateDoingToDone(task)) {
-						mergeReport(task);
-					}
+				} else {
+					taskNotFoundDuration();
 				}
-			} else {
-				taskNotFoundDuration();
+				t.setStatus(Transaction.SUCCESS);
+			} catch (Throwable e) {
+				e.printStackTrace();
+				t.setStatus(e);
+			} finally {
+				t.complete();
 			}
 		}
 		this.stopped = true;

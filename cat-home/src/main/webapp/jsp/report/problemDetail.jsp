@@ -13,13 +13,13 @@
 <c:set var="report" value="${model.report}" />
 <table class="problem">
 	<tr>
-		<th colspan="5">${model.problemStatistics.subTitle}</th>
+		<th colspan="5">${model.detailStatistics.subTitle}</th>
 	</tr>
 	<tr>
 		<td colspan="5"><a
-			href="?op=detail&domain=${model.domain}&ip=${model.ipAddress}&minute=${model.minuteLast}&date=${model.date}${model.problemStatistics.url}"
+			href="?op=detail&domain=${model.domain}&ip=${model.ipAddress}&minute=${model.minuteLast}&date=${model.date}${model.detailStatistics.url}"
 			class="minute" onclick="return show(this);">上一分钟</a> &nbsp;&nbsp; <a
-			href="?op=detail&domain=${model.domain}&ip=${model.ipAddress}&minute=${model.minuteNext}&date=${model.date}${model.problemStatistics.url}"
+			href="?op=detail&domain=${model.domain}&ip=${model.ipAddress}&minute=${model.minuteNext}&date=${model.date}${model.detailStatistics.url}"
 			class="minute" onclick="return show(this);">下一分钟</a>
 			&nbsp;&nbsp;&nbsp;CurrentMinute: ${model.currentMinute}
 		</td>
@@ -31,7 +31,7 @@
 		<th>Count</th>
 		<th>SampleLinks</th>
 	</tr>
-	<c:forEach var="statistics" items="${model.problemStatistics.status}" varStatus="typeIndex">
+	<c:forEach var="statistics" items="${model.detailStatistics.status}" varStatus="typeIndex">
 		<tr>
 			<td rowspan="${w:size(statistics.value.status)}" class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'}"><a href="#"
 						class="${statistics.value.type}">&nbsp;&nbsp;</a>

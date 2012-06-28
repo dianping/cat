@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.model;
 
 import java.io.IOException;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -8,8 +9,10 @@ import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
+import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.transaction.model.IEntity;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
@@ -27,6 +30,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
+import com.dianping.cat.report.view.StringSortHelper;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
@@ -58,20 +62,30 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
-
+		String ipAddress = payload.getIpAddress();
 		if ("transaction".equals(report)) {
-			TransactionReportFilter filter = new TransactionReportFilter(payload.getType(), payload.getName(),
-			      payload.getIpAddress());
+			TransactionReportFilter filter = new TransactionReportFilter(payload.getType(), payload.getName(), ipAddress);
 
 			return filter.buildXml((IEntity<?>) dataModel);
 		} else if ("event".equals(report)) {
-			EventReportFilter filter = new EventReportFilter(payload.getType(), payload.getName(), payload.getIpAddress());
+			EventReportFilter filter = new EventReportFilter(payload.getType(), payload.getName(), ipAddress);
 
 			return filter.buildXml((com.dianping.cat.consumer.event.model.IEntity<?>) dataModel);
 		} else if ("problem".equals(report)) {
-			ProblemReportFilter filter = new ProblemReportFilter(payload.getIpAddress(), payload.getThreadId());
+			ProblemReportFilter filter = new ProblemReportFilter(ipAddress, payload.getThreadId(), payload.getType());
 
 			return filter.buildXml((com.dianping.cat.consumer.problem.model.IEntity<?>) dataModel);
+		} else if ("heartbeat".equals(report)) {
+			if (StringUtils.isEmpty(ipAddress)) {
+				HeartbeatReport reportModel = (HeartbeatReport) dataModel;
+				Set<String> ips = reportModel.getIps();
+				if (ips.size() > 0) {
+					ipAddress = StringSortHelper.sort(ips).get(0);
+				}
+			}
+			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
+
+			return filter.buildXml((com.dianping.cat.consumer.heartbeat.model.IEntity<?>) dataModel);
 		} else {
 			return String.valueOf(dataModel);
 		}
@@ -197,9 +211,13 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		private String m_threadId;
 
-		public ProblemReportFilter(String ipAddress, String threadId) {
+		// view is show the summary,detail show the thread info
+		private String m_type;
+
+		public ProblemReportFilter(String ipAddress, String threadId, String type) {
 			m_ipAddress = ipAddress;
 			m_threadId = threadId;
+			m_type = type;
 		}
 
 		@Override
@@ -214,13 +232,29 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		@Override
-		public void visitThread(JavaThread thread) {
-			if (m_threadId == null) {
-				super.visitThread(thread);
-			} else if (thread.getId().equals(m_threadId)) {
-				super.visitThread(thread);
-			} else {
+		public void visitDuration(com.dianping.cat.consumer.problem.model.entity.Duration duration) {
+			if ("view".equals(m_type)) {
+				super.visitDuration(duration);
+			} else if ("graph".equals(m_type)) {
 				// skip it
+			} else {
+				super.visitDuration(duration);
+			}
+		}
+
+		@Override
+		public void visitSegment(Segment segment) {
+			super.visitSegment(segment);
+		}
+
+		@Override
+		public void visitThread(JavaThread thread) {
+			if ("graph".equals(m_type)) {
+				super.visitThread(thread);
+			} else if ("view".equals(m_type)) {
+				// skip it
+			} else {
+				super.visitThread(thread);
 			}
 		}
 	}
@@ -257,10 +291,10 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		@Override
-		public void visitAllDuration(AllDuration duration){
-			
+		public void visitAllDuration(AllDuration duration) {
+
 		}
-		
+
 		@Override
 		public void visitName(TransactionName name) {
 			if (m_type == null) {
@@ -292,6 +326,21 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitType(type);
 			} else {
 				// skip it
+			}
+		}
+	}
+
+	static class HeartBeatReportFilter extends com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder {
+		private String m_ip;
+
+		public HeartBeatReportFilter(String ip) {
+			m_ip = ip;
+		}
+
+		@Override
+		public void visitMachine(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine) {
+			if (machine.getIp().equals(m_ip)) {
+				super.visitMachine(machine);
 			}
 		}
 	}

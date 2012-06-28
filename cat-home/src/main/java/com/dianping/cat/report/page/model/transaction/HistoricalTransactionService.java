@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -43,12 +43,11 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	private TransactionReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
-		DefaultDomParser parser = new DefaultDomParser();
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
-			TransactionReport model = parser.parse(xml);
+			TransactionReport model = DefaultSaxParser.parse(xml);
 			model.accept(merger);
 		}
 
@@ -59,6 +58,6 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultDomParser().parse(xml);
+		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

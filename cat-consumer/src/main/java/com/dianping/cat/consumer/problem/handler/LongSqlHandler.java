@@ -11,38 +11,37 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
-import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
-public class LongSqlHandler implements Handler, Initializable {
+public class LongSqlHandler extends Handler implements Initializable {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private int m_defaultSqlThreshold;
+	// private int m_defaultSqlThreshold;
 
 	private Map<String, Integer> m_thresholds = new HashMap<String, Integer>();
 
-	private int processTransaction(Segment segment, Transaction transaction, MessageTree tree) {
+	private int[] m_defaultLongSqlDuration = { 100, 500, 1000 };
+
+	private int processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
 		int count = 0;
-		String type = transaction.getType();
+		String transactionType = transaction.getType();
 
-		if (type.equals("SQL")) {
+		if (transactionType.equals("SQL")) {
 			long duration = transaction.getDurationInMillis();
-			Integer threshold = m_thresholds.get(tree.getDomain());
-			long value = threshold != null ? threshold.longValue() : m_defaultSqlThreshold;
-			
-			if (duration > value) {
-				String messageId = tree.getMessageId();		
-				Entry entry = new Entry();
-				entry.setMessageId(messageId);
+			String domain = tree.getDomain();
 
-				entry.setStatus(transaction.getName());
-				entry.setType(ProblemType.LONG_SQL.getName());
-				entry.setDuration((int) duration);
-				segment.addEntry(entry);
+			long nomarizeDuration = getDuration(duration, domain);
+			if (nomarizeDuration > 0) {
+				String type = ProblemType.LONG_SQL.getName();
+				String status = transaction.getName();
+
+				Entry entry = findOrCreatEntry(machine, type, status);
+				updateEntry(tree, entry ,(int)nomarizeDuration);
 				count++;
 			}
 		}
@@ -53,21 +52,21 @@ public class LongSqlHandler implements Handler, Initializable {
 			if (message instanceof Transaction) {
 				Transaction temp = (Transaction) message;
 
-				count += processTransaction(segment, temp, tree);
+				count += processTransaction(machine, temp, tree);
 			}
 		}
 		return count;
 	}
 
 	@Override
-	public int handle(Segment segment, MessageTree tree) {
+	public int handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 		int count = 0;
 
 		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 
-			count = processTransaction(segment, transaction, tree);
+			count = processTransaction(machine, transaction, tree);
 		}
 
 		return count;
@@ -77,12 +76,25 @@ public class LongSqlHandler implements Handler, Initializable {
 	public void initialize() throws InitializationException {
 		Map<String, Domain> domains = m_configManager.getLongConfigDomains();
 
-		m_defaultSqlThreshold = m_configManager.getLongSqlDefaultThreshold();
+		// m_defaultSqlThreshold = m_configManager.getLongSqlDefaultThreshold();
 
 		for (Domain domain : domains.values()) {
 			if (domain.getSqlThreshold() != null) {
 				m_thresholds.put(domain.getName(), domain.getSqlThreshold());
 			}
 		}
+	}
+
+	public int getDuration(long duration, String domain) {
+		for (int i = m_defaultLongSqlDuration.length - 1; i >= 0; i--) {
+			if (duration >= m_defaultLongSqlDuration[i]) {
+				return m_defaultLongSqlDuration[i];
+			}
+		}
+		Integer value = m_thresholds.get(domain);
+		if (duration >= value) {
+			return value;
+		}
+		return -1;
 	}
 }

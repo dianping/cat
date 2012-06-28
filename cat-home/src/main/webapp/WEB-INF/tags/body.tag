@@ -13,9 +13,7 @@
 		<res:useCss value='${res.css.local.body_css}' target="head-css"/>
 	</head>
 	<body>
-		<h1>
-			${model.page.description}
-		</h1>
+		<table style="height:10px"></table>
 		<ul class="tabs">
 			<c:forEach var="page" items="${navBar.visiblePages}">
 				<c:if test="${page.standalone}">

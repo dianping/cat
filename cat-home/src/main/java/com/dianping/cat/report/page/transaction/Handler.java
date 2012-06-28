@@ -16,7 +16,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
@@ -69,8 +69,6 @@ public class Handler implements PageHandler<Context> {
 	private GraphDao graphDao;
 
 	private StatisticsComputer m_computer = new StatisticsComputer();
-
-	private DefaultDomParser transactionParser = new DefaultDomParser();
 
 	private Gson gson = new Gson();
 
@@ -221,7 +219,7 @@ public class Handler implements PageHandler<Context> {
 		item.setStart(start);
 		item.setSize(size);
 
-		item.setTitles(display + " Response Time");
+		item.setTitles(display + " Response Time (ms)");
 		Map<String, double[]> graphData = getGraphData(model, payload);
 		double[] sum = graphData.get("sum");
 		double[] totalCount = graphData.get("total_count");
@@ -235,13 +233,13 @@ public class Handler implements PageHandler<Context> {
 		model.setResponseTrend(item.getJsonString());
 
 		item.getValues().clear();
-		item.setTitles(display + " Hits");
+		item.setTitles(display + " Hits (count)");
 
 		item.addValue(totalCount);
 		model.setHitTrend(item.getJsonString());
 
 		item.getValues().clear();
-		item.setTitles(display+ " Error");
+		item.setTitles(display+ " Error (count)");
 		item.addValue(graphData.get("failure_count"));
 		model.setErrorTrend(item.getJsonString());
 	}
@@ -265,7 +263,7 @@ public class Handler implements PageHandler<Context> {
 			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 			for (Dailyreport report : reports) {
 				String xml = report.getContent();
-				TransactionReport reportModel = transactionParser.parse(xml);
+				TransactionReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			}
 			transactionReport = merger == null ? null : merger.getTransactionReport();
@@ -321,6 +319,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReportType(payload.getReportType());
 			payload.computeStartDate();
+			payload.defaultIsYesterday();
 			model.setLongDate(payload.getDate());
 		}
 	}

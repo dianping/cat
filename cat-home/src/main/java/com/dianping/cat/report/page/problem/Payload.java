@@ -21,6 +21,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("threshold")
 	private int m_longTime;
 
+	@FieldMeta("sqlThreshold")
+	private int m_sqlLongTime;
+
 	@FieldMeta("linkCount")
 	private int m_linkCount;
 
@@ -48,7 +51,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.GROUP);
+		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	public void setMinute(int minute) {
@@ -108,11 +111,20 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setStatus(String status) {
    	m_status = status;
    }
+	
+
+	public int getSqlLongTime() {
+   	return m_sqlLongTime;
+   }
+
+	public void setSqlLongTime(int sqlLongTime) {
+   	m_sqlLongTime = sqlLongTime;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.ALL;
+			m_action = Action.VIEW;
 		}
 	}
 }

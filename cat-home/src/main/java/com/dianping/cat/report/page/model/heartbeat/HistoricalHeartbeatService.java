@@ -3,8 +3,8 @@ package com.dianping.cat.report.page.model.heartbeat;
 import java.util.Date;
 import java.util.List;
 
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -43,12 +43,11 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	private HeartbeatReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
-		DefaultDomParser parser = new DefaultDomParser();
 		HeartbeatReportMerger merger = null;
 
 		for (Report report : reports) {
 			String xml = report.getContent();
-			HeartbeatReport model = parser.parse(xml);
+			HeartbeatReport model = DefaultSaxParser.parse(xml);
 
 			if (merger == null) {
 				merger = new HeartbeatReportMerger(model);
@@ -64,6 +63,6 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "heartbeat");
 		String xml = bucket.findById(domain);
 
-		return xml == null ? null : new DefaultDomParser().parse(xml);
+		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

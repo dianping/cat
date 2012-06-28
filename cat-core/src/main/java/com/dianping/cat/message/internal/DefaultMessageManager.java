@@ -221,10 +221,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	boolean shouldThrottle(MessageTree tree) {
+		if(!isCatEnabled()){
+			return true;
+		}
+		
 		if (tree.getMessage() != null && "Heartbeat".equals(tree.getMessage().getName())) {
 			return false;
 		}
-
+		
 		int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
 
 		return threadCount > m_domain.getMaxThreads();
