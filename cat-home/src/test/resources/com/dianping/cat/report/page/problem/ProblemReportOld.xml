@@ -263,6 +263,11 @@
                <message>Cat-c0a8a501-1340700810268-0</message>
             </segment>
          </thread>
+         <thread group-name="main1" name="btpool0-2" id="35">
+            <segment id="53" count="1">
+               <message>Cat-c0a8a501-1340700810268-0</message>
+            </segment>
+         </thread>
       </entry>
    </machine>
 </problem-report>

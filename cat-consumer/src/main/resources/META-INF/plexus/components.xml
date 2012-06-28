@@ -193,10 +193,6 @@
 			<implementation>com.dianping.cat.consumer.remote.RemoteIdChannelManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.dump.DumpChannel</role>
-			<implementation>com.dianping.cat.consumer.dump.DumpChannel</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.dump.DumpChannelManager</role>
 			<implementation>com.dianping.cat.consumer.dump.DumpChannelManager</implementation>
 			<requirements>

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.dianping.cat.hadoop.dal.Graph;
 
-public class GraphDateTest {
+public class TransactionGraphDateTest {
 
 	public static final long ONE_HOUR = 3600 * 1000L;
 

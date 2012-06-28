@@ -27,8 +27,8 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 	      ProblemReport report) {
 		Set<String> ips = report.getIps();
 		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); // all and
-																					  // every
-																					  // machine
+		                                                           // every
+		                                                           // machine
 		Map<String, GraphLine> allDetailCache = new TreeMap<String, GraphLine>();
 		Map<String, GraphLine> allSummaryCache = new TreeMap<String, GraphLine>();
 
@@ -54,16 +54,17 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 					for (Entry<Integer, Segment> segmentEntry : thread.getSegments().entrySet()) {
 						Segment segment = segmentEntry.getValue();
 						int minute = segment.getId();
+						int count = segment.getMessages().size();
 						String summaryKey = type;
-						
+
 						GraphLine summaryLine = summaryCache.get(summaryKey);
 						if (summaryLine == null) {
 							summaryLine = new GraphLine();
 							summaryLine.minuteCounts = new int[60];
 							summaryCache.put(summaryKey, summaryLine);
 						}
-						summaryLine.totalCount++;
-						summaryLine.minuteCounts[minute]++;
+						summaryLine.totalCount = summaryLine.totalCount + count;
+						summaryLine.minuteCounts[minute] = summaryLine.minuteCounts[minute] + count;
 
 						GraphLine allSummaryLine = allSummaryCache.get(summaryKey);
 						if (allSummaryLine == null) {
@@ -71,8 +72,8 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 							allSummaryLine.minuteCounts = new int[60];
 							allSummaryCache.put(summaryKey, allSummaryLine);
 						}
-						allSummaryLine.totalCount++;
-						allSummaryLine.minuteCounts[minute]++;
+						allSummaryLine.totalCount = allSummaryLine.totalCount + count;
+						allSummaryLine.minuteCounts[minute] = allSummaryLine.minuteCounts[minute] + count;
 
 						String detailKey = type + "\t" + status;
 						GraphLine detailLine = detailCache.get(detailKey);
@@ -81,8 +82,8 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 							detailLine.minuteCounts = new int[60];
 							detailCache.put(detailKey, detailLine);
 						}
-						detailLine.totalCount++;
-						detailLine.minuteCounts[minute]++;
+						detailLine.totalCount = detailLine.totalCount + count;
+						detailLine.minuteCounts[minute] = detailLine.minuteCounts[minute] + count;
 
 						GraphLine allDetailLine = allDetailCache.get(detailKey);
 						if (allDetailLine == null) {
@@ -90,8 +91,8 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 							allDetailLine.minuteCounts = new int[60];
 							allDetailCache.put(detailKey, allDetailLine);
 						}
-						allDetailLine.totalCount++;
-						allDetailLine.minuteCounts[minute]++;
+						allDetailLine.totalCount = allDetailLine.totalCount + count;
+						allDetailLine.minuteCounts[minute] = allDetailLine.minuteCounts[minute] + count;
 					}
 				}
 			}

@@ -37,10 +37,16 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	@Override
 	public void run() {
+		MessageProducer cat = Cat.getProducer();
+		Transaction reboot = cat.newTransaction("Machine", "Reboot");
+		
+		reboot.setStatus(Message.SUCCESS);
+		cat.logEvent("Machine", "Reboot", Message.SUCCESS, "");
+		reboot.complete();
+
 		Cat.setup("StatusUpdateTask");
 
 		while (m_active) {
-			MessageProducer cat = Cat.getProducer();
 			long start = MilliSecondTimer.currentTimeMillis();
 			Transaction t = cat.newTransaction("Task", "Status");
 			Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);

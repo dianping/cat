@@ -69,6 +69,9 @@ public class LongUrlHandler extends Handler implements Initializable {
 			}
 		}
 		Integer value = m_thresholds.get(domain);
+		if (value == null) {
+			return -1;
+		}
 		if (duration >= value) {
 			return value;
 		}

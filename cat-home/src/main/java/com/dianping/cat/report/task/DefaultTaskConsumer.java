@@ -174,8 +174,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			} else if ("heartbeat".equals(reportName)) {
 				return;
 			} else if ("problem".equals(reportName)) {
-				//ProblemReport problemReport = m_problemMerger.merge(reportDomain, reports);
-				//content = problemReport.toString();
+				ProblemReport problemReport = m_problemMerger.merge(reportDomain, reports);
+				content = problemReport.toString();
 				return;
 			}
 			Dailyreport report = m_dailyReportDao.createLocal();

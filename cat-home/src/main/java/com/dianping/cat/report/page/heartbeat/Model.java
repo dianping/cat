@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.report.page.AbstractReportModel;

@@ -41,7 +41,7 @@ public class LongSqlHandler extends Handler implements Initializable {
 				String status = transaction.getName();
 
 				Entry entry = findOrCreatEntry(machine, type, status);
-				updateEntry(tree, entry ,(int)nomarizeDuration);
+				updateEntry(tree, entry, (int) nomarizeDuration);
 				count++;
 			}
 		}
@@ -92,6 +92,9 @@ public class LongSqlHandler extends Handler implements Initializable {
 			}
 		}
 		Integer value = m_thresholds.get(domain);
+		if (value == null) {
+			return -1;
+		}
 		if (duration >= value) {
 			return value;
 		}
