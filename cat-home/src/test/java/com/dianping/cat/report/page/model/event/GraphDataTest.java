@@ -35,7 +35,7 @@ public class GraphDataTest {
 			graphs.add(creatGraph(addtime));
 		}
 		Map<String, double[]> graphDatas=handler.buildGraphDates(start, end, "URL", "", graphs);
-		double[] total_count=graphDatas.get("errors");
+		//double[] total_count=graphDatas.get("errors");
 	}
 	
 	@Test

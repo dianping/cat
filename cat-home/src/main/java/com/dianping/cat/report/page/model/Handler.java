@@ -209,14 +209,11 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	static class ProblemReportFilter extends com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
-		private String m_threadId;
-
 		// view is show the summary,detail show the thread info
 		private String m_type;
 
 		public ProblemReportFilter(String ipAddress, String threadId, String type) {
 			m_ipAddress = ipAddress;
-			m_threadId = threadId;
 			m_type = type;
 		}
 

@@ -19,10 +19,10 @@ public class HistoryEventMergerTest {
 		      "utf-8");
 		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(report1.getDomain()));
 
-		merger.mergesFrom(report1);
-		merger.mergesFrom(report2);
-
-		String actual = new DefaultXmlBuilder().buildXml(report1);
+		report1.accept(merger);
+		report2.accept(merger);
+		
+		String actual = new DefaultXmlBuilder().buildXml(merger.getEventReport());
 
 		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
 
