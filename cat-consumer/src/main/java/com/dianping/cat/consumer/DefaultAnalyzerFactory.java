@@ -5,6 +5,7 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.ip.TopIpAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.remote.RemoteIdAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.site.lookup.ContainerHolder;
@@ -32,7 +33,13 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;
-		} else if (name.equals("ip")) {
+		} else if (name.equals("remoteId")) {
+			RemoteIdAnalyzer analyzer = lookup(RemoteIdAnalyzer.class);
+
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
+			return analyzer;
+		} 
+		else if (name.equals("ip")) {
 			TopIpAnalyzer analyzer = lookup(TopIpAnalyzer.class);
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);

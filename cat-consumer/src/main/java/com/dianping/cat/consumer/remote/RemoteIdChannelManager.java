@@ -1,12 +1,11 @@
-package com.dianping.cat.consumer.dump;
+package com.dianping.cat.consumer.remote;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -15,19 +14,15 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.spi.MessageCodec;
 import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
 
-public class DumpChannelManager extends ContainerHolder implements Initializable, LogEnabled {
-	@Inject
-	private MessageCodec m_codec;
+/**
+ * @author sean.wang
+ * @since Jun 26, 2012
+ */
+public class RemoteIdChannelManager extends ContainerHolder implements Initializable, LogEnabled {
 
-	private Map<String, DumpChannel> m_channels = new HashMap<String, DumpChannel>();
-
-	private long m_maxSize;
-
-	private long m_lastChunkAdjust = 100 * 1024L; // 100K
+	private Map<String, RemoteIdChannel> m_channels = new HashMap<String, RemoteIdChannel>();
 
 	private String m_baseDir;
 
@@ -35,10 +30,9 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 
 	public void closeAllChannels() {
 		synchronized (m_channels) {
-			for (DumpChannel channel : m_channels.values()) {
+			for (RemoteIdChannel channel : m_channels.values()) {
 				closeChannel(channel);
 			}
-
 			m_channels.clear();
 		}
 	}
@@ -47,27 +41,27 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 		Set<String> closedKeySet = new HashSet<String>();
 
 		synchronized (m_channels) {
-			for (Map.Entry<String, DumpChannel> entry : m_channels.entrySet()) {
+			for (Entry<String, RemoteIdChannel> entry : m_channels.entrySet()) {
 				String key = entry.getKey();
-				DumpChannel channel = entry.getValue();
+				RemoteIdChannel channel = entry.getValue();
 
 				if (channel.getStartTime() <= startTime) {
 					closedKeySet.add(key); // add closed channel key
 					closeChannel(channel);
 				} else {
-					m_logger.info(String.format("still open DumpChannel:%s in %s", channel.getFile().getAbsolutePath(), startTime));
+					m_logger.info(String.format("still open RemoteIdChannel:%s in %s", channel.getFile().getAbsolutePath(), startTime));
 				}
 			}
 
 			for (String key : closedKeySet) { // remove closed channel
-				DumpChannel channel = m_channels.remove(key);
+				RemoteIdChannel channel = m_channels.remove(key);
 
-				m_logger.info(String.format("close&remove DumpChannel:%s in %s", channel.getFile().getAbsolutePath(), startTime));
+				m_logger.info(String.format("close&remove RemoteIdChannel:%s in %s", channel.getFile().getAbsolutePath(), startTime));
 			}
 		}
 	}
 
-	public void closeChannel(DumpChannel channel) {
+	public void closeChannel(RemoteIdChannel channel) {
 		channel.close();
 
 		File outbox = new File(m_baseDir, "outbox");
@@ -91,42 +85,27 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 		ServerConfigManager configManager = lookup(ServerConfigManager.class);
 
 		m_baseDir = configManager.getHdfsLocalBaseDir("dump");
-		m_maxSize = configManager.getHdfsFileMaxSize("dump");
 	}
 
-	private DumpChannel makeChannel(String key, String path, boolean forceNew, long startTime) throws IOException {
-		String file;
+	private RemoteIdChannel makeChannel(String key, String path, long startTime) throws IOException {
+		RemoteIdChannel channel = new RemoteIdChannel(new File(m_baseDir, "draft"), path, startTime);
 
-		if (forceNew) {
-			SimpleDateFormat format = new SimpleDateFormat("mm");
-
-			file = path + "-" + format.format(new Date()) + ".gz";
-		} else {
-			file = path + ".gz";
-		}
-
-		DumpChannel channel = new DumpChannel(m_codec, new File(m_baseDir, "draft"), file, m_maxSize, m_lastChunkAdjust, startTime);
-		m_logger.info(String.format("new DumpChannel %s", file));
+		m_logger.info(String.format("new RemoteIdChannel %s", path));
 
 		m_channels.put(key, channel);
-
 		return channel;
 	}
 
-	public DumpChannel openChannel(String path, boolean forceNew, long startTime) throws IOException {
-		DumpChannel channel = m_channels.get(path);
+	public RemoteIdChannel openChannel(String path, long startTime) throws IOException {
+		RemoteIdChannel channel = m_channels.get(path);
 
 		if (channel == null) {
 			synchronized (m_channels) {
 				channel = m_channels.get(path);
 
 				if (channel == null) {
-					channel = makeChannel(path, path, false, startTime);
+					channel = makeChannel(path, path, startTime);
 				}
-			}
-		} else if (forceNew) {
-			synchronized (m_channels) {
-				channel = makeChannel(path, path, true, startTime);
 			}
 		}
 
