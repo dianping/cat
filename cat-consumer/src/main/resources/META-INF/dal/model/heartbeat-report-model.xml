@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.consumer.heartbeat.model" enable-merger="true" enable-json-builder="true"
-	enable-xml-parser="true"  enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true">
+	enable-xml-parser="true"  enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true"
+	enable-native-builder="true" enable-native-parser="true">
     <entity name="heartbeat-report" root="true">
     <attribute name="domain" value-type="String" key="true"/>
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />

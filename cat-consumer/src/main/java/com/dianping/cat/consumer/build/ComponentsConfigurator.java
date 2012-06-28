@@ -3,8 +3,8 @@ package com.dianping.cat.consumer.build;
 import static com.dianping.cat.consumer.problem.ProblemType.ERROR;
 import static com.dianping.cat.consumer.problem.ProblemType.FAILURE;
 import static com.dianping.cat.consumer.problem.ProblemType.HEARTBEAT;
-import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
 import static com.dianping.cat.consumer.problem.ProblemType.LONG_SQL;
+import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,6 @@ import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
-import com.dianping.cat.consumer.dump.DumpChannel;
 import com.dianping.cat.consumer.dump.DumpChannelManager;
 import com.dianping.cat.consumer.dump.DumpUploader;
 import com.dianping.cat.consumer.event.EventAnalyzer;
