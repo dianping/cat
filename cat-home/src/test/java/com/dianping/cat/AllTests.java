@@ -7,7 +7,6 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
-import com.dianping.cat.report.page.heartbeat.HeartbeatGraphTest;
 import com.dianping.cat.report.page.ip.DisplayModelTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
@@ -42,7 +41,7 @@ ValueTranslaterTest.class,
 DisplayModelTest.class,
 
 /* .report.page.heartbeart */
-HeartbeatGraphTest.class,
+HeartbeatGraphDataTest.class,
 
 /* .report.page.model */
 EventReportFilterTest.class, TransactionReportFilterTest.class,
