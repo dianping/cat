@@ -5,6 +5,7 @@ package com.dianping.cat.report.task;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.xml.sax.SAXException;
 
@@ -19,13 +20,15 @@ import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
  */
 public class TransactionMerger implements ReportMerger<TransactionReport> {
 
-	public String mergeAll(String reportDomain, List<Report> reports) {
+	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domainSet) {
 		TransactionReport transactionReport = merge(reportDomain, reports);
 		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
 		TransactionReport transactionReport2 = merge(reportDomain, reports);
-		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger.mergesForAllMachine(transactionReport2);
+		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
+		      .mergesForAllMachine(transactionReport2);
 		transactionReport.addMachine(allMachines);
 		transactionReport.getIps().add("All");
+		transactionReport.getDomainNames().addAll(domainSet);
 		String content = transactionReport.toString();
 		return content;
 	}

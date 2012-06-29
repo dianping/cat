@@ -5,6 +5,7 @@ package com.dianping.cat.report.task;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.xml.sax.SAXException;
 
@@ -35,7 +36,6 @@ public class EventMerger implements ReportMerger<EventReport> {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		eventReport = merger == null ? null : merger.getEventReport();
@@ -43,13 +43,14 @@ public class EventMerger implements ReportMerger<EventReport> {
 	}
 
 	@Override
-	public String mergeAll(String reportDomain, List<Report> reports) {
+	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
 		EventReport eventReport = merge(reportDomain, reports);
 		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
 		EventReport eventReport2 = merge(reportDomain, reports);
 		com.dianping.cat.consumer.event.model.entity.Machine allMachines = merger.mergesForAllMachine(eventReport2);
 		eventReport.addMachine(allMachines);
 		eventReport.getIps().add("All");
+		eventReport.getDomainNames().addAll(domains);
 		String content = eventReport.toString();
 		return content;
 	}

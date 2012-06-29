@@ -5,6 +5,7 @@ package com.dianping.cat.report.task;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.xml.sax.SAXException;
 
@@ -34,7 +35,6 @@ public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 		}
 
 		HeartbeatReport heartbeatReport = merger == null ? null : merger.getHeartbeatReport();
@@ -42,8 +42,8 @@ public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 	}
 
 	@Override
-	public String mergeAll(String reportDomain, List<Report> reports) {
-		// TODO Auto-generated method stub
+	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
+		//
 		return null;
 	}
 

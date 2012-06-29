@@ -64,11 +64,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		m_logger = logger;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#findDoingTask()
-	 */
 	@Override
 	protected Task findDoingTask(String ip) {
 		Task task = null;
@@ -80,11 +75,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		return task;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#findTodoTask()
-	 */
 	@Override
 	protected Task findTodoTask() {
 		Task task = null;
@@ -96,11 +86,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		return task;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#mergeYesterdayReport()
-	 */
 	@Override
 	protected void mergeReport(Task task) {
 		Date reportPeriod = task.getReportPeriod();
@@ -109,7 +94,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		List<Report> domainNames = null;
 		try {
-			domainNames = m_reportDao.findAllByDomainNameDuration(startDate, endDate, null, null, ReportEntity.READSET_DOMAIN_NAME);
+			domainNames = m_reportDao.findAllByDomainNameDuration(startDate, endDate, null, null,
+			      ReportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			m_logger.error("domainNames", e);
 		}
@@ -122,14 +108,15 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		Set<String> nameSet = new HashSet<String>();
 		for (Report domainName : domainNames) {
 			domainSet.add(domainName.getDomain());
-			if (!"heartbeat".equals(domainName.getName())) { // ignore heartbeat daily report merge
+			// ignore heartbeat and ip daily report merge
+			if (!"heartbeat".equals(domainName.getName()) && !"ip".equals(domainName.getName())) {
 				nameSet.add(domainName.getName());
 			}
 		}
 
 		List<Dailyreport> dailyDomainNames = null;
 		try {
-			dailyDomainNames = m_dailyReportDao.findAllByPeriod(startDate, endDate,DailyreportEntity.READSET_DOMAIN_NAME);
+			dailyDomainNames = m_dailyReportDao.findAllByPeriod(startDate, endDate, DailyreportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			m_logger.error("dailyDomainNames", e);
 		}
@@ -145,14 +132,15 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 					continue; // ignore exist daily report
 				}
 
-				m_logger.info(String.format("Starting merge domain:%s report:%s from %s to %s: ", domain, name, startDate, endDate));
+				m_logger.info(String.format("Starting merge domain:%s daily report:%s from %s to %s: ", domain, name,
+				      startDate, endDate));
 
-				mergeDomainDailyReport(domain, name, startDate, endDate);
-				
-				m_logger.info(String.format("finish merge domain:%s report:%s from %s to %s: ", domain, name, startDate, endDate));
+				mergeDomainDailyReport(domain, name, startDate, endDate, domainSet);
+
+				m_logger.info(String.format("finish merge domain:%s daily report:%s from %s to %s: ", domain, name,
+				      startDate, endDate));
 			}
 		}
-
 	}
 
 	private TransactionMerger m_transactionMerger = new TransactionMerger();
@@ -163,19 +151,22 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 	private HeartbeatMerger m_heartbeatMerger = new HeartbeatMerger();
 
-	private void mergeDomainDailyReport(String reportDomain, String reportName, Date startDate, Date endDate) {
+	private void mergeDomainDailyReport(String reportDomain, String reportName, Date startDate, Date endDate,
+	      Set<String> domainSet) {
 		String content = null;
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(startDate, endDate, reportDomain, reportName, ReportEntity.READSET_FULL);
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(startDate, endDate, reportDomain, reportName,
+			      ReportEntity.READSET_FULL);
 			if ("transaction".equals(reportName)) {
-				content = m_transactionMerger.mergeAll(reportDomain, reports);
+				content = m_transactionMerger.mergeAll(reportDomain, reports, domainSet);
 			} else if ("event".equals(reportName)) {
-				content = m_eventMerger.mergeAll(reportDomain, reports);
+				content = m_eventMerger.mergeAll(reportDomain, reports, domainSet);
 			} else if ("heartbeat".equals(reportName)) {
+				// do nothing
 				return;
 			} else if ("problem".equals(reportName)) {
-				ProblemReport problemReport = m_problemMerger.merge(reportDomain, reports);
-				content = problemReport.toString();
+				content = m_problemMerger.mergeAll(reportDomain, reports, domainSet);
+			} else {
 				return;
 			}
 			Dailyreport report = m_dailyReportDao.createLocal();
@@ -187,6 +178,7 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			report.setPeriod(startDate);
 			report.setType(1);
 
+			System.out.println(report.getDomain() + " >>>>>>>>" + report.getName());
 			m_dailyReportDao.insert(report);
 
 		} catch (Exception e) {
@@ -202,11 +194,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 	private ProblemGraphCreator m_problemGraphCreator = new ProblemGraphCreator();
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#doTodoTask(com.dianping.cat.hadoop.dal.Task)
-	 */
 	@Override
 	protected boolean processTask(Task doing) {
 		String reportName = doing.getReportName();
@@ -217,17 +204,20 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 		try {
 			List<Graph> graphs = null;
-			List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName, ReportEntity.READSET_FULL);
+			List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+			      ReportEntity.READSET_FULL);
 
 			if ("transaction".equals(reportName)) {
 				TransactionReport transactionReport = m_transactionMerger.merge(reportDomain, reports);
-				graphs = m_transactionGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+				graphs = m_transactionGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName,
+				      transactionReport);
 			} else if ("event".equals(reportName)) {
 				EventReport eventReport = m_eventMerger.merge(reportDomain, reports);
 				graphs = m_eventGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
 			} else if ("heartbeat".equals(reportName)) {
 				HeartbeatReport heartbeatReport = m_heartbeatMerger.merge(reportDomain, reports);
-				graphs = m_heartbeatGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, heartbeatReport);
+				graphs = m_heartbeatGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName,
+				      heartbeatReport);
 			} else if ("problem".equals(reportName)) {
 				ProblemReport problemReport = m_problemMerger.merge(reportDomain, reports);
 				graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
@@ -235,7 +225,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 
 			if (graphs != null) {
 				for (Graph graph : graphs) {
-					this.graphDao.insert(graph); // use mysql unique index and insert on duplicate
+					this.graphDao.insert(graph); // use mysql unique index and insert
+					                             // on duplicate
 				}
 			}
 		} catch (Exception e) {
@@ -245,12 +236,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		return true;
 	}
 
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#taskNotFindSleep()
-	 */
 	@Override
 	protected void taskNotFoundDuration() {
 		Date awakeTime = TaskHelper.nextTaskTime();
@@ -258,22 +243,12 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		LockSupport.parkUntil(awakeTime.getTime());
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#todoTaskFailSleep()
-	 */
 	@Override
 	protected void taskRetryDuration(Task task, int retryTimes) {
 		m_logger.warn("TaskConsumer retry " + retryTimes + ", " + task.toString());
 		LockSupport.parkNanos(10L * 1000 * 1000 * 1000);// sleep 10 sec
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#changeDoingStatus(com.dianping.cat.hadoop.dal.Task)
-	 */
 	@Override
 	protected boolean updateDoingToDone(Task doing) {
 		doing.setStatus(STATUS_DONE);
@@ -289,11 +264,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#failTodoTask(com.dianping.cat.hadoop.dal.Task)
-	 */
 	@Override
 	protected boolean updateDoingToFailure(Task doing) {
 		doing.setStatus(STATUS_FAIL);
@@ -309,11 +279,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.report.task.TaskConsumer#updateTodoStatus(com.dianping.cat.hadoop.dal.Task)
-	 */
 	@Override
 	protected boolean updateTodoToDoing(Task todo) {
 		todo.setStatus(STATUS_DOING);

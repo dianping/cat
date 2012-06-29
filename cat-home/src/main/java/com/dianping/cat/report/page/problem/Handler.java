@@ -388,6 +388,9 @@ public class Handler implements PageHandler<Context> {
 				String[] allLines = summaryContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
+					if (records.length < SummaryOrder.values().length) {
+						continue;
+					}
 					String dbType = records[SummaryOrder.TYPE.ordinal()];
 					if (dbType.equals(type)) {
 						String[] values = records[SummaryOrder.DETAIL.ordinal()].split(",");
@@ -404,6 +407,9 @@ public class Handler implements PageHandler<Context> {
 				String[] allLines = detailContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
+					if (records.length < DetailOrder.values().length) {
+						continue;
+					}
 					String dbStatus = records[DetailOrder.STATUS.ordinal()];
 					String dbType = records[DetailOrder.TYPE.ordinal()];
 					if (status.equals(dbStatus) && type.equals(dbType)) {

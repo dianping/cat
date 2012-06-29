@@ -5,6 +5,7 @@ package com.dianping.cat.report.task;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.xml.sax.SAXException;
 
@@ -41,8 +42,9 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 	}
 
 	@Override
-	public String mergeAll(String reportDomain, List<Report> reports) {
-		return null;
+	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
+		ProblemReport report = merge(reportDomain, reports);
+		report.getDomainNames().addAll(domains);
+		return report.toString();
 	}
-
 }

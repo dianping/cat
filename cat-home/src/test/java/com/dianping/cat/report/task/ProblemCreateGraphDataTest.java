@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Graph;
 
-public class ProblemGraphDataTest {
+public class ProblemCreateGraphDataTest {
 
 	@Test
 	public void testGraph() throws Exception {
