@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -32,15 +33,17 @@ public class HeartbeatGraphDataTest extends ComponentTestCase {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
+		int size=(int) ((end.getTime()-start.getTime())/(1000*3600));
 		Map<String, double[]> result = handler.buildHeartbeatDatas(start, end, graphs);
 		double[] ActiveThread=result.get("ActiveThread");
-		assertArray(10,ActiveThread);
-	}
-	
-	public void assertArray(double expected, double[] real) {
-		for (int i = 0; i < real.length; i++) {
-			Assert.assertEquals(expected, real[i]);
+		double[]oneHourData={112.0,112.0,112.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,105.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,106.0,113.0,113.0,113.0};
+		double[] expectActiveThread=new double[size*60];
+		for(int i=0;i<size;i++){
+			for(int j=0;j<oneHourData.length;j++){
+				expectActiveThread[i*60+j]=oneHourData[j];
+			}
 		}
+		Assert.assertEquals(true,Arrays.equals(ActiveThread, expectActiveThread));
 	}
 	
 	private Graph creatGraph(Date start) throws IOException {
