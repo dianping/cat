@@ -40,25 +40,37 @@
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>
-		<th>long-url <select size="1" id="p_longUrl">
+		<th>long-url <input id="thresholdInput" style="display: none"
+			value="${model.threshold}"> <select size="1" id="p_longUrl">
+				${model.defaultThreshold}
+				<option value="500">0.5 Sec</option>
 				<option value="1000">1.0 Sec</option>
 				<option value="1500">1.5 Sec</option>
 				<option value="2000">2.0 Sec</option>
 				<option value="3000">3.0 Sec</option>
 				<option value="4000">4.0 Sec</option>
 				<option value="5000">5.0 Sec</option>
-		</select> <input style="WIDTH: 60px" value="Refresh"
-			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
-			type="submit">
+		</select> long-sql
+		<select size="1" id="p_longSql">
+				${model.defaultSqlThreshold}
+				<option value="100">100 ms</option>
+				<option value="500">500 ms</option>
+				<option value="1000">1000 ms</option>
+		</select>
 		<script>
 			var threshold='${model.threshold}';
 			$("#p_longUrl").val(threshold) ;
-
+			
+			var sqlThreshold='${model.sqlThreshold}';
+			$("#p_longSql").val(sqlThreshold) ;
 			function longTimeChange(date,domain,ip){
 				var longtime=$("#p_longUrl").val();
-				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime;
+				var longSqlTime=$("#p_longSql").val();
+				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime;
 			}
-		</script>
+		</script><input style="WIDTH: 60px" value="Refresh"
+			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
+			type="submit">
 		</th>
 	</tr>
 </table>

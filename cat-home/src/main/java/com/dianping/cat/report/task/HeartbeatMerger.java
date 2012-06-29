@@ -43,8 +43,6 @@ public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 
 	@Override
 	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
-		//
 		return null;
 	}
-
 }
