@@ -28,11 +28,11 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 <br>
 <table class='version'>
 	<tr class="odd"><td>版本</td><td>说明</td></tr>
-	<tr class="even"><td>0.3.1</td><td>1、优化了CAT的在业务testcase的优化，自动延迟初始化</td></tr>
-	<tr class="odd"><td>0.3.0</td><td>1、优化了CAT在Transaction Name的Nullpoint异常，由于SQL监控的名称可能为Null</td></tr>
-	<tr class="even"><td>0.2.5</td><td>1、监控新增 oldgc和newgc
+	<tr class="even"><td>0.3.1</td><td>1、修复CAT在业务testcase的使用，支持业务运行Testcase在Console上看到运行情况。</td></tr>
+	<tr class="odd"><td>0.3.0</td><td>1、修复CAT在Transaction Name的Nullpoint异常。</td></tr>
+	<tr class="even"><td>0.2.5</td><td>1、心跳消息监控新增oldgc和newgc
 						  2、更新了ThreadLocal的线程模型（修复了一些无头消息和部分错乱消息）
-                          3、将CAT的线程开关提升到500</td></tr>
+                       	</td></tr>
 </table>
 <br>
 <br>
