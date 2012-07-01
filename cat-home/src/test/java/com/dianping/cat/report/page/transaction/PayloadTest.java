@@ -77,7 +77,7 @@ public class PayloadTest {
 		Date lastTwoDay = new Date(temp - 2 * ONE_DAY);
 		Date lastOneDay = new Date(temp - ONE_DAY);
 		Date currentDay = new Date(temp);
-		Date nextDay = new Date(temp+ONE_DAY);
+		Date nextDay = new Date(temp + ONE_DAY);
 		String lastTwo = sdf.format(lastTwoDay);
 		String lastOne = sdf.format(lastOneDay);
 		String current = sdf.format(currentDay);
@@ -125,14 +125,22 @@ public class PayloadTest {
 		temp = cal.getTimeInMillis();
 
 		int weekOfDay = cal.get(Calendar.DAY_OF_WEEK);
+
 		temp = temp - 24 * (weekOfDay - 1) * ONE_HOUR;
 		temp = temp + 24 * ONE_HOUR;
+		if (temp > System.currentTimeMillis()) {
+			temp = temp - 7 * ONE_DAY;
+		}
 		Date lastTwoWeek = new Date(temp - 7 * 2 * ONE_DAY);
 		Date lastOneWeek = new Date(temp - 7 * ONE_DAY);
 		Date currentWeek = new Date(temp);
 		String lastTwo = sdf.format(lastTwoWeek);
 		String lastOne = sdf.format(lastOneWeek);
 		String current = sdf.format(currentWeek);
+		System.out.println(lastTwo);
+		System.out.println(lastOne);
+		System.out.println(current);
+
 		payload.setDate(sdf.format(input));
 
 		payload.setStep(-1);
@@ -150,6 +158,7 @@ public class PayloadTest {
 		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 8 * ONE_DAY)), payload.getHistoryEndDate());
 
 		payload.computeStartDate();
+		payload.setStep(1);
 		checkDate(current, payload.getHistoryStartDate());
 		checkDate(sdf.format(currentWeek.getTime() + 8 * ONE_DAY), payload.getHistoryEndDate());
 
@@ -166,9 +175,16 @@ public class PayloadTest {
 		Date date = new Date();
 		long temp = date.getTime() - date.getTime() % (ONE_HOUR);
 		Date input = new Date(temp);
-		String lastTwo = "2012040100";
-		String lastOne = "2012050100";
-		String current = "2012060100";
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(temp);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		String current = sdf.format(cal.getTime());
+		cal.add(Calendar.MONTH, -1);
+		String lastOne = sdf.format(cal.getTime());
+		cal.add(Calendar.MONTH, -1);
+		String lastTwo = sdf.format(cal.getTime());
 
 		payload.setDate(sdf.format(input));
 

@@ -54,6 +54,9 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		} else if ("week".equals(m_reportType)) {
 			m_date = m_date - (ONE_HOUR) * (weekOfDay - 1) * 24;
 			m_date = m_date + ONE_HOUR * 24;
+			if (m_date > System.currentTimeMillis()) {
+				m_date = m_date - 7 * 24 * ONE_HOUR;
+			}
 			cal.setTimeInMillis(m_date);
 		}
 
@@ -80,20 +83,20 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 				m_date = temp;
 			}
 		}
-		
+
 	}
-	
+
 	// yestoday is default
-	public void defaultIsYesterday(){
-			if ("day".equals(m_reportType)) {
-				Calendar today = Calendar.getInstance();
-				long current = getCurrentDate();
-				today.setTimeInMillis(current);
-				today.set(Calendar.HOUR_OF_DAY, 0);
-				if (m_date == today.getTimeInMillis()) {
-					m_date = m_date - 24 * ONE_HOUR;
-				}
+	public void defaultIsYesterday() {
+		if ("day".equals(m_reportType)) {
+			Calendar today = Calendar.getInstance();
+			long current = getCurrentDate();
+			today.setTimeInMillis(current);
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			if (m_date == today.getTimeInMillis()) {
+				m_date = m_date - 24 * ONE_HOUR;
 			}
+		}
 	}
 
 	public Date getHistoryStartDate() {
