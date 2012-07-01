@@ -37,7 +37,7 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 			}
 		}
 
-		ProblemReport problemReport = merger == null ? null : merger.getProblemReport();
+		ProblemReport problemReport = merger.getProblemReport();
 		return problemReport;
 	}
 

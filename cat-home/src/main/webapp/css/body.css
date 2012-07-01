@@ -7,7 +7,9 @@ body {
 	padding: 0;
 }
 
-html { margin: 0 }
+html {
+	margin: 0
+}
 
 a {
 	text-decoration: none;
@@ -53,6 +55,7 @@ ul.tabs {
 	background: #ccddff;
 	border-bottom: 1px solid white;
 }
+
 table {
 	font-size: small;
 }
@@ -72,14 +75,15 @@ tr.head th {
 
 tr th {
 	background-color: #f2f2f2;
-	font-size:small;
+	font-size: small;
 }
+
 tr.odd td {
 	background-color: #eee;
 	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align:left;
+	text-align: left;
 }
 
 tr.even td {
@@ -87,8 +91,9 @@ tr.even td {
 	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
-	text-align:left;
+	text-align: left;
 }
+
 a.error {
 	background-color: red;
 }
@@ -105,19 +110,32 @@ a.long-sql {
 	background-color: #6699CC;
 }
 
-a.url{
+a.url {
 	background-color: #cc0000;
 }
-a.sql{
+
+a.sql {
 	background-color: purple;
 }
 
-a.call{
+a.call {
 	background-color: #9966ff;
 }
-a.cache{
+
+a.cache {
 	background-color: #aa3faa;
 }
-a.heartbeat{
+
+a.heartbeat {
 	background-color: #009933;
+}
+
+.version {
+	border: 1px solid #000000;
+	text-align: left;
+	width:80%;
+	border-radius: 6px;
+	display: table;
+	border-collapse: separate;
+	border-spacing: 2px;
 }

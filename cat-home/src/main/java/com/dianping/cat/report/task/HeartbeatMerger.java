@@ -37,7 +37,7 @@ public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 			}
 		}
 
-		HeartbeatReport heartbeatReport = merger == null ? null : merger.getHeartbeatReport();
+		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
 		return heartbeatReport;
 	}
 

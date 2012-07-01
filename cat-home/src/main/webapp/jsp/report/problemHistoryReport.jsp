@@ -20,21 +20,21 @@
 	<tr style="text-align:left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All"
+					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All&reportType=${model.reportType}"
 						class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All">All</a>
+					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All&reportType=${model.reportType}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}"
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&reportType=${model.reportType}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&reportType=${model.reportType}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;

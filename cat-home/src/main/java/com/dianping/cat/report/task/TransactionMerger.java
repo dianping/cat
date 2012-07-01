@@ -34,7 +34,6 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 	}
 
 	public TransactionReport merge(String reportDomain, List<Report> reports) {
-		TransactionReport transactionReport;
 		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
 
 		for (Report report : reports) {
@@ -51,7 +50,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 
 		}
 
-		transactionReport = merger == null ? null : merger.getTransactionReport();
+		TransactionReport transactionReport = merger.getTransactionReport();
 		return transactionReport;
 	}
 }
