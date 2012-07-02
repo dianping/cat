@@ -179,6 +179,7 @@ public class PayloadTest {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(temp);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		String current = sdf.format(cal.getTime());
 		cal.add(Calendar.MONTH, -1);
