@@ -22,7 +22,7 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 
 	@Override
 	public ProblemReport merge(String reportDomain, List<Report> reports) {
-		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(reportDomain));
+		ProblemReportMerger merger = new HistoryProblemReportMerger(new ProblemReport(reportDomain));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
