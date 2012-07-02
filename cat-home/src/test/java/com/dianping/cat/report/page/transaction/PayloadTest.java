@@ -137,9 +137,6 @@ public class PayloadTest {
 		String lastTwo = sdf.format(lastTwoWeek);
 		String lastOne = sdf.format(lastOneWeek);
 		String current = sdf.format(currentWeek);
-		System.out.println(lastTwo);
-		System.out.println(lastOne);
-		System.out.println(current);
 
 		payload.setDate(sdf.format(input));
 
