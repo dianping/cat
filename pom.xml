@@ -160,6 +160,7 @@
 					<version>2.8</version>
 					<configuration>
 						<downloadSources>true</downloadSources>
+						<ajdtVersion>none</ajdtVersion>  
 						<additionalConfig>
 							<file>
 								<name>.settings/org.eclipse.jdt.core.prefs</name>
