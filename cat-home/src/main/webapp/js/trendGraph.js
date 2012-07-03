@@ -7,7 +7,6 @@ function graph(container, data) {
 		x = start + (i * hour);
 		d1.push([ x , real[i] ]);
 	}
-
 	options = {
 		xaxis : {
 			mode : 'time',
@@ -24,7 +23,6 @@ function graph(container, data) {
 		title : data.titles 
 
 	};
-
 	// Draw graph with default options, overwriting with passed options
 	function drawGraph(opts) {
 

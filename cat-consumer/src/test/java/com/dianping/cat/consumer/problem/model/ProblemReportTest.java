@@ -6,8 +6,6 @@ import org.junit.Test;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultJsonBuilder;
-import com.dianping.cat.consumer.problem.model.transform.DefaultNativeBuilder;
-import com.dianping.cat.consumer.problem.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.site.helper.Files;
 
@@ -22,10 +20,10 @@ public class ProblemReportTest {
 
 		Assert.assertEquals(expected.replace("\r", ""), xml.replace("\r", ""));
 
-		byte[] data = DefaultNativeBuilder.build(root);
-		ProblemReport report = DefaultNativeParser.parse(data);
+		//byte[] data = DefaultNativeBuilder.build(root);
+		//ProblemReport report = DefaultNativeParser.parse(data);
 
-		Assert.assertEquals(root.toString(), report.toString());
+		//Assert.assertEquals(root.toString(), report.toString());
 	}
 
 	@Test

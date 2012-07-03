@@ -64,9 +64,10 @@
 			var sqlThreshold='${model.sqlThreshold}';
 			$("#p_longSql").val(sqlThreshold) ;
 			function longTimeChange(date,domain,ip){
+				var reportType = '${model.reportType}';
 				var longtime=$("#p_longUrl").val();
 				var longSqlTime=$("#p_longSql").val();
-				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime;
+				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime+'&reportType='+reportType;
 			}
 		</script><input style="WIDTH: 60px" value="Refresh"
 			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"

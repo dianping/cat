@@ -83,7 +83,6 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 				m_date = temp;
 			}
 		}
-
 	}
 
 	// yestoday is default

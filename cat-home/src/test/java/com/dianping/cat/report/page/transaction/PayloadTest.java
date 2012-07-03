@@ -137,9 +137,6 @@ public class PayloadTest {
 		String lastTwo = sdf.format(lastTwoWeek);
 		String lastOne = sdf.format(lastOneWeek);
 		String current = sdf.format(currentWeek);
-		System.out.println(lastTwo);
-		System.out.println(lastOne);
-		System.out.println(current);
 
 		payload.setDate(sdf.format(input));
 
@@ -179,6 +176,7 @@ public class PayloadTest {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(temp);
+		cal.set(Calendar.DAY_OF_MONTH, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		String current = sdf.format(cal.getTime());
 		cal.add(Calendar.MONTH, -1);
