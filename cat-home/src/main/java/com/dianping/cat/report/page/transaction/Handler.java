@@ -224,7 +224,7 @@ public class Handler implements PageHandler<Context> {
 		double[] sum = graphData.get("sum");
 		double[] totalCount = graphData.get("total_count");
 		double[] avg = new double[sum.length];
-		for (int i = 1; i < sum.length; i++) {
+		for (int i = 0; i < sum.length; i++) {
 			if (totalCount[i] > 0) {
 				avg[i] = sum[i] / totalCount[i];
 			}
