@@ -40,7 +40,7 @@ import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	public static final long ONE_HOUR = 3600 * 1000L;
-	
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -52,10 +52,10 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_manager;
-	
+
 	@Inject
 	private DailyreportDao dailyreportDao;
-	
+
 	@Inject
 	private GraphDao graphDao;
 
@@ -132,7 +132,7 @@ public class Handler implements PageHandler<Context> {
 			showHourlyReport(model, payload);
 			break;
 		case HISTORY_REPORT:
-			showSummarizeReport(model,payload);
+			showSummarizeReport(model, payload);
 			break;
 		case HISTORY_GRAPH:
 			buildTrendGraph(model, payload);
@@ -173,7 +173,7 @@ public class Handler implements PageHandler<Context> {
 		String name = payload.getName();
 		String display = name != null ? name : type;
 
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 12);
 
 		GraphItem item = new GraphItem();
 		item.setStart(start);
@@ -182,16 +182,16 @@ public class Handler implements PageHandler<Context> {
 		Map<String, double[]> graphData = getGraphData(model, payload);
 		double[] failureCount = graphData.get("failure_count");
 		double[] totalCount = graphData.get("total_count");
-		
+
 		item.setTitles(display + " Hit Trend");
 		item.addValue(totalCount);
 		model.setHitTrend(item.getJsonString());
-		
+
 		item.getValues().clear();
 		item.setTitles(display + " Failure Trend");
 		item.addValue(failureCount);
 		model.setFailureTrend(item.getJsonString());
-   }
+	}
 
 	private void showSummarizeReport(Model model, Payload payload) {
 		String type = payload.getType();
@@ -201,13 +201,14 @@ public class Handler implements PageHandler<Context> {
 			ip = CatString.ALL_IP;
 		}
 		model.setIpAddress(ip);
-		
+
 		EventReport eventReport = null;
 		try {
 			Date start = payload.getHistoryStartDate();
 			Date end = payload.getHistoryEndDate();
 			String domain = model.getDomain();
-			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "event", DailyreportEntity.READSET_FULL);
+			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "event",
+			      DailyreportEntity.READSET_FULL);
 			EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 			for (Dailyreport report : reports) {
 				String xml = report.getContent();
@@ -218,7 +219,7 @@ public class Handler implements PageHandler<Context> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		if (eventReport == null) {
 			return;
 		}
@@ -228,11 +229,11 @@ public class Handler implements PageHandler<Context> {
 			model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, ip, eventReport));
 		} else {
 			model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, ip, eventReport));
-		}	   
-   }
+		}
+	}
 
 	public void normalize(Model model, Payload payload) {
-	   if (StringUtils.isEmpty(payload.getDomain())) {
+		if (StringUtils.isEmpty(payload.getDomain())) {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 
@@ -249,9 +250,9 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
 		}
-		if(payload.getAction()==Action.HISTORY_REPORT||payload.getAction()==Action.HISTORY_GRAPH){
+		if (payload.getAction() == Action.HISTORY_REPORT || payload.getAction() == Action.HISTORY_GRAPH) {
 			String type = payload.getReportType();
-			if(type==null||type.length()==0){
+			if (type == null || type.length() == 0) {
 				payload.setReportType("day");
 			}
 			model.setReportType(payload.getReportType());
@@ -259,7 +260,7 @@ public class Handler implements PageHandler<Context> {
 			payload.defaultIsYesterday();
 			model.setLongDate(payload.getDate());
 		}
-   }
+	}
 
 	private MobileEventGraphs showMobileGraphs(Model model, Payload payload) {
 		EventName name = getEventName(payload);
@@ -314,8 +315,8 @@ public class Handler implements PageHandler<Context> {
 			model.setException(e);
 		}
 	}
-	
-	public Map<String, double[]> getGraphData(Model model,Payload payload){
+
+	public Map<String, double[]> getGraphData(Model model, Payload payload) {
 		Date start = new Date(payload.getDate());
 		Date end = payload.getHistoryEndDate();
 		String domain = model.getDomain();
@@ -323,47 +324,57 @@ public class Handler implements PageHandler<Context> {
 		String name = payload.getName();
 		String ip = model.getIpAddress();
 		String queryIP = "All".equals(ip) == true ? "all" : ip;
-		List<Graph> events=new ArrayList<Graph>();
+		List<Graph> events = new ArrayList<Graph>();
 		try {
-			events=this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event", GraphEntity.READSET_FULL);
-      } catch (Exception e) {
-	      // TODO: handle exception
-      	e.printStackTrace();
-      }
-      Map<String, double[]> result = buildGraphDates(start, end, type, name, events);
+			events = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event",
+			      GraphEntity.READSET_FULL);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		Map<String, double[]> result = buildGraphDates(start, end, type, name, events);
 		return result;
 	}
-	
-	
+
 	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 12);
 		double[] total_count = new double[size];
 		double[] failure_count = new double[size];
 
 		if (!isEmpty(type) && isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 12);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						total_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
-						failure_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
+						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
+						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
+
+						// total_count[indexOfperiod] =
+						// Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
+						// failure_count[indexOfperiod] =
+						// Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
 					}
 				}
 			}
 		} else if (!isEmpty(type) && !isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR* 12);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
-						total_count[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
-						failure_count[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
+
+						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
+						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
+
+						// total_count[indexOfperiod] =
+						// Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
+						// failure_count[indexOfperiod] =
+						// Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
 					}
 				}
 			}
@@ -372,11 +383,24 @@ public class Handler implements PageHandler<Context> {
 		result.put("failure_count", failure_count);
 		return result;
 	}
-	
+
+	private void appendArray(double[] src, int index, String str, int size) {
+		String[] values = str.split(",");
+		if (values.length < size) {
+			for (int i = 0; i < size; i++) {
+				src[index + i] = Double.valueOf(str);
+			}
+		} else {
+			for (int i = 0; i < size; i++) {
+				src[index + i] = Double.valueOf(values[i]);
+			}
+		}
+	}
+
 	private boolean isEmpty(String content) {
 		return content == null || content.equals("");
 	}
-	
+
 	public enum SummaryOrder {
 		TYPE, TOTAL_COUNT, FAILURE_COUNT
 	}
@@ -384,6 +408,5 @@ public class Handler implements PageHandler<Context> {
 	public enum DetailOrder {
 		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT
 	}
-	
-	
+
 }

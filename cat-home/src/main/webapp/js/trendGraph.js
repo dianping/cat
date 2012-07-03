@@ -1,16 +1,18 @@
 function graph(container, data) {
-	var hour = 1000 * 3600;
+	var minute = 1000 * 60;
 	var real = data.values[0];
 	var d1 = [], start = new Date(data.start).getTime(), options, graph, i, x, o;
-    console.log(new Date(data.start));
+	console.log(new Date(data.start));
 	for (i = 0; i < data.size; i++) {
-		x = start + (i * hour);
-		d1.push([ x , real[i] ]);
+		x = start + (i * minute * 5);
+		if (real[i] > -1) {
+			d1.push([ x, real[i] ]);
+		}
 	}
 	options = {
 		xaxis : {
 			mode : 'time',
-			timeMode:'local',
+			timeMode : 'local',
 			labelsAngle : 15
 		},
 		yaxis : {
@@ -20,7 +22,7 @@ function graph(container, data) {
 			mode : 'x'
 		},
 		HtmlText : false,
-		title : data.titles 
+		title : data.titles
 
 	};
 	// Draw graph with default options, overwriting with passed options
@@ -30,8 +32,7 @@ function graph(container, data) {
 		o = Flotr._.extend(Flotr._.clone(options), opts || {});
 
 		if (opts != null && opts.xaxis != null) {
-			o.title = " From "
-					+ formatDate(new Date(opts.xaxis.min)) + " To "
+			o.title = " From " + formatDate(new Date(opts.xaxis.min)) + " To "
 					+ formatDate(new Date(opts.xaxis.max));
 		} else {
 		}
@@ -48,7 +49,7 @@ function graph(container, data) {
 				min : area.x1,
 				max : area.x2,
 				mode : 'time',
-				timeMode:'local',
+				timeMode : 'local',
 				labelsAngle : 15
 			},
 			yaxis : {
