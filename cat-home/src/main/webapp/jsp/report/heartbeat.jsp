@@ -21,7 +21,7 @@
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
 
 <table class="machines">
-<th>Machines: 
+<th style="text-align:left">Machines: 
 		<c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>

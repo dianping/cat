@@ -9,6 +9,7 @@ public class HeartbeatReportMerger extends DefaultMerger {
    }
 
 	
+	
 	@Override
    public void visitHeartbeatReport(HeartbeatReport heartbeatReport) {
 	   super.visitHeartbeatReport(heartbeatReport);

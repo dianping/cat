@@ -37,14 +37,12 @@ public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 			}
 		}
 
-		HeartbeatReport heartbeatReport = merger == null ? null : merger.getHeartbeatReport();
+		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
 		return heartbeatReport;
 	}
 
 	@Override
 	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
-		//
 		return null;
 	}
-
 }

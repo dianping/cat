@@ -22,7 +22,6 @@ public class EventMerger implements ReportMerger<EventReport> {
 
 	@Override
 	public EventReport merge(String reportDomain, List<Report> reports) {
-		EventReport eventReport;
 		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
 
 		for (Report report : reports) {
@@ -38,7 +37,7 @@ public class EventMerger implements ReportMerger<EventReport> {
 			}
 		}
 
-		eventReport = merger == null ? null : merger.getEventReport();
+		EventReport eventReport = merger.getEventReport();
 		return eventReport;
 	}
 
