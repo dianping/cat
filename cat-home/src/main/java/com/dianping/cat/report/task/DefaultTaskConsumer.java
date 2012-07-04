@@ -161,9 +161,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 				content = m_transactionMerger.mergeAll(reportDomain, reports, domainSet);
 			} else if ("event".equals(reportName)) {
 				content = m_eventMerger.mergeAll(reportDomain, reports, domainSet);
-			} else if ("heartbeat".equals(reportName)) {
-				// do nothing
-				return;
 			} else if ("problem".equals(reportName)) {
 				content = m_problemMerger.mergeAll(reportDomain, reports, domainSet);
 			} else {
@@ -178,7 +175,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			report.setPeriod(startDate);
 			report.setType(1);
 
-			System.out.println(report.getDomain() + " >>>>>>>>" + report.getName());
 			m_dailyReportDao.insert(report);
 
 		} catch (Exception e) {

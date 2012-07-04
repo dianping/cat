@@ -162,4 +162,6 @@ public class EventReportMerger extends DefaultMerger {
 		getEventReport().getDomainNames().addAll(eventReport.getDomainNames());
 		getEventReport().getIps().addAll(eventReport.getIps());
 	}
+	
+	
 }
