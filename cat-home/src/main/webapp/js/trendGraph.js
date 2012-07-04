@@ -5,9 +5,7 @@ function graph(container, data) {
 	console.log(new Date(data.start));
 	for (i = 0; i < data.size; i++) {
 		x = start + (i * minute * 5);
-		if (real[i] > -1) {
-			d1.push([ x, real[i] ]);
-		}
+		d1.push([ x, real[i] ]);
 	}
 	options = {
 		xaxis : {

@@ -287,28 +287,32 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (HeartbeatReport report : m_reports.values()) {
-					Report r = m_reportDao.createLocal();
-					String xml = builder.buildXml(report);
-					String domain = report.getDomain();
+					try {
+	               Report r = m_reportDao.createLocal();
+	               String xml = builder.buildXml(report);
+	               String domain = report.getDomain();
 
-					r.setName("heartbeat");
-					r.setDomain(domain);
-					r.setPeriod(period);
-					r.setIp(ip);
-					r.setType(1);
-					r.setContent(xml);
+	               r.setName("heartbeat");
+	               r.setDomain(domain);
+	               r.setPeriod(period);
+	               r.setIp(ip);
+	               r.setType(1);
+	               r.setContent(xml);
 
-					m_reportDao.insert(r);
+	               m_reportDao.insert(r);
 
-					Task task = m_taskDao.createLocal();
-					task.setCreationDate(new Date());
-					task.setProducer(ip);
-					task.setReportDomain(domain);
-					task.setReportName("heartbeat");
-					task.setReportPeriod(period);
-					task.setStatus(1); // status todo
-					m_taskDao.insert(task);
-					m_logger.info("insert heartbeat task:" + task.toString());
+	               Task task = m_taskDao.createLocal();
+	               task.setCreationDate(new Date());
+	               task.setProducer(ip);
+	               task.setReportDomain(domain);
+	               task.setReportName("heartbeat");
+	               task.setReportPeriod(period);
+	               task.setStatus(1); // status todo
+	               m_taskDao.insert(task);
+	               m_logger.info("insert heartbeat task:" + task.toString());
+               } catch (Exception e) {
+	               e.printStackTrace();
+               }
 				}
 			}
 

@@ -30,7 +30,6 @@ public class ProblemReportMergerTest {
 		      .replace("\r", ""));
 		Assert.assertEquals("Source report is changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
 	}
-
 	@Test
 	public void testProblemReportMergeAll() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemReportOld.xml"), "utf-8");

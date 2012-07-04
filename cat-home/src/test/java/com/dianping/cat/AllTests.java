@@ -13,6 +13,7 @@ import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.model.event.EventModelServiceTest;
 import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
+import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
 import com.dianping.cat.report.page.sql.TestComputeStr;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
@@ -20,6 +21,8 @@ import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
 import com.dianping.cat.report.task.EventGraphCreatorTest;
 import com.dianping.cat.report.task.HistoryEventMergerTest;
 import com.dianping.cat.report.task.HistoryTransactionMergerTest;
+import com.dianping.cat.report.task.ProblemCreateGraphDataTest;
+import com.dianping.cat.report.task.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.TransactionGraphCreatorTest;
@@ -59,14 +62,16 @@ EventGraphDataTest.class, HeartbeatGraphDataTest.class,
 
 ProblemGraphDataTest.class, TransactionGraphDataTest.class,
 
+ProblemReportMergerTest.class,
+
 /* .report.task */
 TaskConsumerTest.class, TaskHelperTest.class,
 
 HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
 
-ProblemGraphDataTest.class ,
+ProblemCreateGraphDataTest.class,ProblemGraphCreatorTest.class,
 
-TransactionGraphCreatorTest.class,EventGraphCreatorTest.class})
+TransactionGraphCreatorTest.class, EventGraphCreatorTest.class })
 public class AllTests {
 
 }

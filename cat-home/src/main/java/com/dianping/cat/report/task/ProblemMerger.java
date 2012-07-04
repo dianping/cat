@@ -20,8 +20,8 @@ import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
  */
 public class ProblemMerger implements ReportMerger<ProblemReport> {
 
-	@Override
-	public ProblemReport merge(String reportDomain, List<Report> reports) {
+	private ProblemReport mergeForDaily(String reportDomain, List<Report> reports) {
+		//Theadsinfo is no use
 		ProblemReportMerger merger = new HistoryProblemReportMerger(new ProblemReport(reportDomain));
 
 		for (Report report : reports) {
@@ -42,8 +42,29 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 	}
 
 	@Override
+	public ProblemReport merge(String reportDomain, List<Report> reports) {
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(reportDomain));
+
+		for (Report report : reports) {
+			String xml = report.getContent();
+			ProblemReport model;
+			try {
+				model = DefaultSaxParser.parse(xml);
+				model.accept(merger);
+			} catch (SAXException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		ProblemReport problemReport = merger.getProblemReport();
+		return problemReport;
+	}
+	
+	@Override
 	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
-		ProblemReport report = merge(reportDomain, reports);
+		ProblemReport report = mergeForDaily(reportDomain, reports);
 		report.getDomainNames().addAll(domains);
 		return report.toString();
 	}

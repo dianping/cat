@@ -132,9 +132,13 @@ a.heartbeat {
 
 .version {
 	text-align: left;
-	width:80%;
+	width: 80%;
 	border-radius: 6px;
 	display: table;
 	border-collapse: separate;
 	border-spacing: 2px;
+}
+
+.right {
+	text-align: right;
 }
