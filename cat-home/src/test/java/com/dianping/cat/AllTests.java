@@ -78,5 +78,4 @@ TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphM
 
 TransactionDailyGraphMergerTest.class,ProblemDailyGraphMergerTest.class})
 public class AllTests {
-
 }

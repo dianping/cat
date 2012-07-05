@@ -30,6 +30,7 @@ public class ProblemReportMergerTest {
 		      .replace("\r", ""));
 		Assert.assertEquals("Source report is changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
 	}
+
 	@Test
 	public void testProblemReportMergeAll() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemReportOld.xml"), "utf-8");
@@ -58,7 +59,6 @@ public class ProblemReportMergerTest {
 			reportOld.accept(merger);
 		}
 		ProblemReport problemReport = merger.getProblemReport();
-		System.out.println(problemReport.toString());
 		for (Machine machine : problemReport.getMachines().values()) {
 			List<Entry> entries = machine.getEntries();
 			for (Entry entry : entries) {
@@ -66,6 +66,6 @@ public class ProblemReportMergerTest {
 				Assert.assertEquals(0, size);
 			}
 		}
-		System.out.println("size:" + (double)problemReport.toString().length()/1024/1024);
+		Assert.assertEquals(true, (double) problemReport.toString().length() / 1024 / 1024 < 1);
 	}
 }

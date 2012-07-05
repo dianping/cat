@@ -101,6 +101,5 @@ public class EventGraphCreatorTest {
 		double total;
 
 		double fail;
-
 	}
 }

@@ -27,28 +27,24 @@ public class EventDailyGraphMergerTest {
 	public void setUp() {
 		m_domains.add("MobileApi");
 		m_domains.add("MobileApi1");
-		
+		for (int i = 0; i < 5; i++) {
+			reports.add(creatReport());
+		}
 	}
 
 	@Test
 	public void testForMergerDaily() throws Exception {
-		for (int i = 0; i < 5; i++) {
-			reports.add(creatReport());
-		}
 		EventReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
-		
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("EventMergerDaily.xml"), "utf-8");
+		
 		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
 	}
 
 	@Test
 	public void testForMegerGraph() throws Exception {
-	
-		for (int i = 0; i < 5; i++) {
-			reports.add(creatReport());
-		}
 		EventReport report = m_meger.mergeForGraph(m_reportDomain, reports);
 		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("EventMergerGraph.xml"), "utf-8");
+		
 		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
 	}
 
