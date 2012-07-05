@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.report.page.event.Handler.DetailOrder;
 import com.dianping.cat.report.page.event.Handler.SummaryOrder;
@@ -22,7 +22,7 @@ public class EventGraphCreatorTest {
 	public void test() throws Exception {
 		EventGraphCreator creator = new EventGraphCreator();
 		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("eventCreator.xml"), "utf-8");
-		EventReport report = new DefaultDomParser().parse(xml);
+		EventReport report = DefaultSaxParser.parse(xml);
 		Date date = new Date();
 		List<Graph> graphs = creator.splitReportToGraphs(date, "MobileApi", "event", report);
 		Map<String, Range> result = new HashMap<String, Range>();

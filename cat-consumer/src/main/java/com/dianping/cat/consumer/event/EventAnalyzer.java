@@ -281,8 +281,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	               task.setStatus(1); // status todo
 	               m_taskDao.insert(task);
 	               m_logger.info("insert event task:" + task.toString());
-               } catch (Exception e) {
-	               e.printStackTrace();
+               } catch (Throwable e) {
+         			Cat.getProducer().logError(e);
                }
 				}
 			}

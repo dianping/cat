@@ -310,8 +310,8 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	               task.setStatus(1); // status todo
 	               m_taskDao.insert(task);
 	               m_logger.info("insert heartbeat task:" + task.toString());
-               } catch (Exception e) {
-	               e.printStackTrace();
+               } catch (Throwable e) {
+         			Cat.getProducer().logError(e);
                }
 				}
 			}

@@ -18,13 +18,16 @@ import com.dianping.cat.report.page.sql.TestComputeStr;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
+import com.dianping.cat.report.task.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.EventGraphCreatorTest;
 import com.dianping.cat.report.task.HistoryEventMergerTest;
 import com.dianping.cat.report.task.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.ProblemCreateGraphDataTest;
+import com.dianping.cat.report.task.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
+import com.dianping.cat.report.task.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.TransactionGraphCreatorTest;
 
 @RunWith(Suite.class)
@@ -69,9 +72,11 @@ TaskConsumerTest.class, TaskHelperTest.class,
 
 HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
 
-ProblemCreateGraphDataTest.class,ProblemGraphCreatorTest.class,
+ProblemCreateGraphDataTest.class, ProblemGraphCreatorTest.class,
 
-TransactionGraphCreatorTest.class, EventGraphCreatorTest.class })
+TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
+
+TransactionDailyGraphMergerTest.class,ProblemDailyGraphMergerTest.class})
 public class AllTests {
 
 }

@@ -375,8 +375,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	               task.setStatus(1); // status todo
 	               m_taskDao.insert(task);
 	               m_logger.info("insert transaction task:" + task.toString());
-               } catch (Exception e) {
-	               e.printStackTrace();
+               } catch (Throwable e) {
+         			Cat.getProducer().logError(e);
                }
 				}
 			}

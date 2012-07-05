@@ -14,16 +14,15 @@ import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 
-/**
- * @author sean.wang
- * @since Jun 20, 2012
- */
 public class EventMerger implements ReportMerger<EventReport> {
 
-	@Override
-	public EventReport merge(String reportDomain, List<Report> reports) {
-		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
-
+	private EventReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
+		EventReportMerger merger = null;
+		if (isDaily) {
+			merger = new HistoryEventReportMerger(new EventReport(reportDomain));
+		} else {
+			merger = new EventReportMerger(new EventReport(reportDomain));
+		}
 		for (Report report : reports) {
 			String xml = report.getContent();
 			EventReport model;
@@ -42,16 +41,25 @@ public class EventMerger implements ReportMerger<EventReport> {
 	}
 
 	@Override
-	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
-		EventReport eventReport = merge(reportDomain, reports);
-		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
-		EventReport eventReport2 = merge(reportDomain, reports);
+	public EventReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+		EventReport eventReport = merge(reportDomain, reports, true);
+		HistoryEventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
+		EventReport eventReport2 = merge(reportDomain, reports, true);
 		com.dianping.cat.consumer.event.model.entity.Machine allMachines = merger.mergesForAllMachine(eventReport2);
 		eventReport.addMachine(allMachines);
 		eventReport.getIps().add("All");
 		eventReport.getDomainNames().addAll(domains);
-		String content = eventReport.toString();
-		return content;
+		return eventReport;
 	}
 
+	@Override
+	public EventReport mergeForGraph(String reportDomain, List<Report> reports) {
+		EventReport eventReport = merge(reportDomain, reports, false);
+		EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
+		EventReport eventReport2 = merge(reportDomain, reports, false);
+		com.dianping.cat.consumer.event.model.entity.Machine allMachines = merger.mergesForAllMachine(eventReport2);
+		eventReport.addMachine(allMachines);
+		eventReport.getIps().add("All");
+		return eventReport;
+	}
 }

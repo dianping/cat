@@ -158,11 +158,11 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			List<Report> reports = m_reportDao.findAllByDomainNameDuration(startDate, endDate, reportDomain, reportName,
 			      ReportEntity.READSET_FULL);
 			if ("transaction".equals(reportName)) {
-				content = m_transactionMerger.mergeAll(reportDomain, reports, domainSet);
+				content = m_transactionMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 			} else if ("event".equals(reportName)) {
-				content = m_eventMerger.mergeAll(reportDomain, reports, domainSet);
+				content = m_eventMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 			} else if ("problem".equals(reportName)) {
-				content = m_problemMerger.mergeAll(reportDomain, reports, domainSet);
+				content = m_problemMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 			} else {
 				return;
 			}
@@ -204,18 +204,18 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 			      ReportEntity.READSET_FULL);
 
 			if ("transaction".equals(reportName)) {
-				TransactionReport transactionReport = m_transactionMerger.merge(reportDomain, reports);
+				TransactionReport transactionReport = m_transactionMerger.mergeForGraph(reportDomain, reports);
 				graphs = m_transactionGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName,
 				      transactionReport);
 			} else if ("event".equals(reportName)) {
-				EventReport eventReport = m_eventMerger.merge(reportDomain, reports);
+				EventReport eventReport = m_eventMerger.mergeForGraph(reportDomain, reports);
 				graphs = m_eventGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
 			} else if ("heartbeat".equals(reportName)) {
-				HeartbeatReport heartbeatReport = m_heartbeatMerger.merge(reportDomain, reports);
+				HeartbeatReport heartbeatReport = m_heartbeatMerger.mergeForGraph(reportDomain, reports);
 				graphs = m_heartbeatGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName,
 				      heartbeatReport);
 			} else if ("problem".equals(reportName)) {
-				ProblemReport problemReport = m_problemMerger.merge(reportDomain, reports);
+				ProblemReport problemReport = m_problemMerger.mergeForGraph(reportDomain, reports);
 				graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
 			}
 
