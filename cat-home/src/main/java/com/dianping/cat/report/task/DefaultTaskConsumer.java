@@ -120,11 +120,13 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		} catch (DalException e) {
 			m_logger.error("dailyDomainNames", e);
 		}
-		Set<String> dailySet = new HashSet<String>();
-		for (Dailyreport domainName : dailyDomainNames) {
-			dailySet.add(domainName.getDomain() + "\t" + domainName.getName());
-		}
 
+		Set<String> dailySet = new HashSet<String>();
+		if (dailyDomainNames != null) {
+			for (Dailyreport domainName : dailyDomainNames) {
+				dailySet.add(domainName.getDomain() + "\t" + domainName.getName());
+			}
+		}
 		for (String domain : domainSet) { // iterate domains
 			for (String name : nameSet) { // iterate report names
 				String key = domain + "\t" + name;
