@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.transaction;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
@@ -50,8 +51,18 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 			TransactionReport model = DefaultSaxParser.parse(xml);
 			model.accept(merger);
 		}
+		TransactionReport transactionReport = merger.getTransactionReport();
+		
+		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
+		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
 
-		return merger == null ? null : merger.getTransactionReport();
+		if (transactionReport != null && historyReports != null) {
+			Set<String> domainNames = transactionReport.getDomainNames();
+			for (Report report : historyReports) {
+				domainNames.add(report.getDomain());
+			}
+		}
+		return merger == null ? null : transactionReport;
 	}
 
 	private TransactionReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

@@ -36,17 +36,11 @@ public class TransactionGraphDataTest {
 			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, null, graphs);
 			double[] expectTotalCount = graphDates.get("total_count");
 			double[] expectFailureCount = graphDates.get("failure_count");
-			double[] expectMin = graphDates.get("min");
-			double[] expectMax = graphDates.get("max");
-			double[] expectSum2 = graphDates.get("sum2");
 			double[] expectSum = graphDates.get("sum");
 
-			assertArray(15,expectTotalCount);
-			assertArray(0,expectFailureCount);
-			assertArray(11.836555,expectMin);
-			assertArray(225244.724,expectMax);
-			assertArray(5.07448582695E10,expectSum2);
-			assertArray(234038.7,expectSum);
+			assertArray(15, expectTotalCount);
+			assertArray(0, expectFailureCount);
+			assertArray(234038.7, expectSum);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -64,17 +58,11 @@ public class TransactionGraphDataTest {
 			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, name, graphs);
 			double[] expectTotalCount = graphDates.get("total_count");
 			double[] expectFailureCount = graphDates.get("failure_count");
-			double[] expectMin = graphDates.get("min");
-			double[] expectMax = graphDates.get("max");
-			double[] expectSum2 = graphDates.get("sum2");
 			double[] expectSum = graphDates.get("sum");
-			
-			assertArray(6,expectTotalCount);
-			assertArray(0,expectFailureCount);
-			assertArray(6.83,expectMin);
-			assertArray(7.583,expectMax);
-			assertArray(43.2,expectSum2);
-			assertArray(311.0,expectSum);
+
+			assertArray(6, expectTotalCount);
+			assertArray(0, expectFailureCount);
+			assertArray(311.0, expectSum);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -92,7 +80,7 @@ public class TransactionGraphDataTest {
 			String name = "Result";
 			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, name, graphs);
 			double[] sum = graphDates.get("sum");
-			assertArray(0,sum);
+			assertArray(-1.0, sum);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

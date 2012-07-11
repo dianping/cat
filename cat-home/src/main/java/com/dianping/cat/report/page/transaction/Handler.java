@@ -47,8 +47,8 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 
 	public static final long ONE_HOUR = 3600 * 1000L;
-	
-	public static final double NOTEXIST=0;
+
+	public static final double NOTEXIST = -1;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -213,7 +213,7 @@ public class Handler implements PageHandler<Context> {
 		String name = payload.getName();
 		String display = name != null ? name : type;
 
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) * 12 / ONE_HOUR);
 
 		GraphItem item = new GraphItem();
 		item.setStart(start);
@@ -224,7 +224,7 @@ public class Handler implements PageHandler<Context> {
 		double[] sum = graphData.get("sum");
 		double[] totalCount = graphData.get("total_count");
 		double[] avg = new double[sum.length];
-		for (int i = 1; i < sum.length; i++) {
+		for (int i = 0; i < sum.length; i++) {
 			if (totalCount[i] > 0) {
 				avg[i] = sum[i] / totalCount[i];
 			}
@@ -239,7 +239,7 @@ public class Handler implements PageHandler<Context> {
 		model.setHitTrend(item.getJsonString());
 
 		item.getValues().clear();
-		item.setTitles(display+ " Error (count)");
+		item.setTitles(display + " Error (count)");
 		item.addValue(graphData.get("failure_count"));
 		model.setErrorTrend(item.getJsonString());
 	}
@@ -276,9 +276,7 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {
-			model
-			      .setDisplayNameReport(new DisplayTransactionNameReport()
-			            .display(sorted, type, ip, transactionReport, ""));
+			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, transactionReport, ""));
 		} else {
 			model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, transactionReport));
 		}
@@ -406,55 +404,55 @@ public class Handler implements PageHandler<Context> {
 
 	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) * 12 / ONE_HOUR);
 		double[] total_count = new double[size];
 		double[] failure_count = new double[size];
-		double[] min = new double[size];
-		double[] max = new double[size];
 		double[] sum = new double[size];
-		double[] sum2 = new double[size];
-		
-		//set the default value
+
+		// set the default value
 		for (int i = 0; i < size; i++) {
-			total_count[i]=NOTEXIST;
-			failure_count[i]=NOTEXIST;
-			min[i]=NOTEXIST;
-			max[i]=NOTEXIST;
-			sum[i]=NOTEXIST;
-			sum2[i]=NOTEXIST;
-      }
+			total_count[i] = NOTEXIST;
+			failure_count[i] = NOTEXIST;
+			sum[i] = NOTEXIST;
+		}
 
 		if (!isEmpty(type) && isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / ONE_HOUR);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						total_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
-						failure_count[indexOfperiod] = Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
-						min[indexOfperiod] = Double.valueOf(records[SummaryOrder.MIN.ordinal()]);
-						max[indexOfperiod] = Double.valueOf(records[SummaryOrder.MAX.ordinal()]);
-						sum[indexOfperiod] = Double.valueOf(records[SummaryOrder.SUM.ordinal()]);
-						sum2[indexOfperiod] = Double.valueOf(records[SummaryOrder.SUM2.ordinal()]);
+						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
+						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
+						appendArray(sum, indexOfperiod, records[SummaryOrder.SUM.ordinal()], 12);
+						// total_count[indexOfperiod] =
+						// Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
+						// failure_count[indexOfperiod] =
+						// Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
+						// sum[indexOfperiod] =
+						// Double.valueOf(records[SummaryOrder.SUM.ordinal()]);
 					}
 				}
 			}
 		} else if (!isEmpty(type) && !isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / ONE_HOUR);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
-						total_count[indexOfperiod] = Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
-						failure_count[indexOfperiod] = Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
-						min[indexOfperiod] = Double.valueOf(records[DetailOrder.MIN.ordinal()]);
-						max[indexOfperiod] = Double.valueOf(records[DetailOrder.MAX.ordinal()]);
-						sum[indexOfperiod] = Double.valueOf(records[DetailOrder.SUM.ordinal()]);
-						sum2[indexOfperiod] = Double.valueOf(records[DetailOrder.SUM2.ordinal()]);
+						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
+						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
+						appendArray(sum, indexOfperiod, records[DetailOrder.SUM.ordinal()], 12);
+						// total_count[indexOfperiod] =
+						// Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
+						// failure_count[indexOfperiod] =
+						// Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
+						// sum[indexOfperiod] =
+						// Double.valueOf(records[DetailOrder.SUM.ordinal()]);
 					}
 				}
 			}
@@ -462,11 +460,21 @@ public class Handler implements PageHandler<Context> {
 
 		result.put("total_count", total_count);
 		result.put("failure_count", failure_count);
-		result.put("min", min);
-		result.put("max", max);
 		result.put("sum", sum);
-		result.put("sum2", sum2);
 		return result;
+	}
+
+	private void appendArray(double[] src, int index, String str, int size) {
+		String[] values = str.split(",");
+		if (values.length < size) {
+			for (int i = 0; i < size; i++) {
+				src[index + i] = Double.valueOf(str);
+			}
+		} else {
+			for (int i = 0; i < size; i++) {
+				src[index + i] = Double.valueOf(values[i]);
+			}
+		}
 	}
 
 	private boolean isEmpty(String content) {

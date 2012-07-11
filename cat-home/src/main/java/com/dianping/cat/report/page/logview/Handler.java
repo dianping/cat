@@ -23,7 +23,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "logview")
 	private ModelService<String> m_service;
 
-	private String getLogView(String messageId, Boolean direction, String tag) {
+	private String getLogView(String messageId, String direction, String tag) {
 		if (messageId != null) {
 			MessageId id = MessageId.parse(messageId);
 			ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());

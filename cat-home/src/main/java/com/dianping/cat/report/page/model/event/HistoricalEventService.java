@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.event;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
@@ -50,8 +51,18 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 			EventReport model = DefaultSaxParser.parse(xml);
 			model.accept(merger);
 		}
+		EventReport eventReport = merger.getEventReport();
+		
+		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
+		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
 
-		return merger == null ? null : merger.getEventReport();
+		if (eventReport != null && historyReports != null) {
+			Set<String> domainNames = eventReport.getDomainNames();
+			for (Report report : historyReports) {
+				domainNames.add(report.getDomain());
+			}
+		}
+		return merger == null ? null : eventReport;
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

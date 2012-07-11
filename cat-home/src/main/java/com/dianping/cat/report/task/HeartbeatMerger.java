@@ -20,8 +20,7 @@ import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
  */
 public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 
-	@Override
-	public HeartbeatReport merge(String reportDomain, List<Report> reports) {
+	public HeartbeatReport mergeForGraph(String reportDomain, List<Report> reports) {
 		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportDomain));
 
 		for (Report report : reports) {
@@ -41,8 +40,7 @@ public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 		return heartbeatReport;
 	}
 
-	@Override
-	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
+	public HeartbeatReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
 		return null;
 	}
 }

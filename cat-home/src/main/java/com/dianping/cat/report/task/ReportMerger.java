@@ -14,7 +14,7 @@ import com.dianping.cat.hadoop.dal.Report;
  */
 public interface ReportMerger<E> {
 
-	public E merge(String reportDomain, List<Report> reports);
-
-	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains);
+	public E mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains);
+	
+	public E mergeForGraph(String reportDomain, List<Report> reports);
 }

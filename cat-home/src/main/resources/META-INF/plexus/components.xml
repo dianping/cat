@@ -769,5 +769,18 @@
 			<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.dashboard.JspViewer</implementation>
 		</component>
+		<component>
+			<role>com.dianping.cat.report.page.task.Handler</role>
+			<implementation>com.dianping.cat.report.page.task.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.task.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.task.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.task.JspViewer</implementation>
+		</component>
 	</components>
 </plexus>

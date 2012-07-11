@@ -114,7 +114,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		future.awaitUninterruptibly();
 
 		if (!future.isSuccess()) {
-			m_logger.error("Error when reconnecting to " + m_serverAddress, future.getCause());
+			//m_logger.error("Error when reconnecting to " + m_serverAddress, future.getCause());
 		} else {
 			m_future = future;
 			m_logger.info("Reconnected to CAT server at " + m_serverAddress);

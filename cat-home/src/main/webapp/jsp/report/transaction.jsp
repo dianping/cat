@@ -50,13 +50,13 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 		<tr><th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&sort=95line">95Line</a>(ms)</th>
-			<th>Std(ms)</th><th>TPS</th></tr>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
+			<th class="right">Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=95line">95Line</a>(ms)</th>
+			<th class="right">Std(ms)</th><th>TPS</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -81,13 +81,13 @@
 			<tr>
 			<th><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type">Name</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg">Avg</a>(ms)</th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line">95Line</a>(ms)</th>
-			<th>Std(ms)</th><th>TPS</th></tr>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
+			<th  class="right">Sample Link</th><th>Min(ms)</th><th>Max(ms)</th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg">Avg</a>(ms)</th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line">95Line</a>(ms)</th>
+			<th class="right">Std(ms)</th><th>TPS</th></tr>
 			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.3.2</version>
+	<version>0.3.3</version>
 	<name>CAT</name>
 	<packaging>pom</packaging>
 	<modules>
@@ -160,6 +160,7 @@
 					<version>2.8</version>
 					<configuration>
 						<downloadSources>true</downloadSources>
+						<ajdtVersion>none</ajdtVersion>  
 						<additionalConfig>
 							<file>
 								<name>.settings/org.eclipse.jdt.core.prefs</name>

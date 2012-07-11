@@ -38,10 +38,10 @@ public class StatusUpdateTask implements Task, Initializable {
 	@Override
 	public void run() {
 		MessageProducer cat = Cat.getProducer();
-		Transaction reboot = cat.newTransaction("Machine", "Reboot");
+		Transaction reboot = cat.newTransaction("System", "Reboot");
 		
 		reboot.setStatus(Message.SUCCESS);
-		cat.logEvent("Machine", "Reboot", Message.SUCCESS, "");
+		cat.logEvent("System", "Reboot", Message.SUCCESS, "");
 		reboot.complete();
 
 		Cat.setup("StatusUpdateTask");

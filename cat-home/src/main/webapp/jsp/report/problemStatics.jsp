@@ -119,7 +119,7 @@
 <br>
 
 <c:if test="${model.ipAddress ne 'All'}">
-<a href="?domain=${model.domain}&date=${model.date}&op=group" onclick="return requestGroupInfo(this)">Threads Details</a>
+<a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=group" onclick="return requestGroupInfo(this)">Threads Details</a>
 
 <div id="machineThreadGroupInfo"></div>
 <br>

@@ -32,7 +32,16 @@ public enum NetworkInterfaceManager {
 								if (local == null) {
 									local = address;
 								} else if (local.isLoopbackAddress() && address.isSiteLocalAddress()) {
+									// site local address has higher priority than
+									// loopback address
 									local = address;
+								} else if (local.isSiteLocalAddress() && address.isSiteLocalAddress()) {
+									// site local address with a host name has higher
+									// priority than one without host name
+									if (local.getHostName().equals(local.getHostAddress())
+									      && !address.getHostName().equals(address.getHostAddress())) {
+										local = address;
+									}
 								}
 							}
 						}

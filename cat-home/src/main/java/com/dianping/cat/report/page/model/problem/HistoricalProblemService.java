@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.problem;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
@@ -55,8 +56,18 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 				model.accept(merger);
 			}
 		}
+		ProblemReport problemReport = merger.getProblemReport();
 
-		return merger == null ? null : merger.getProblemReport();
+		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
+		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+
+		if (problemReport != null && historyReports != null) {
+			Set<String> domainNames = problemReport.getDomainNames();
+			for (Report report : historyReports) {
+				domainNames.add(report.getDomain());
+			}
+		}
+		return merger == null ? null : problemReport;
 	}
 
 	private ProblemReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

@@ -27,8 +27,9 @@ com.dianping.cat.report.page.sql.Handler.class,
 
 com.dianping.cat.report.page.heatmap.Handler.class,
 
-com.dianping.cat.report.page.dashboard.Handler.class
+com.dianping.cat.report.page.dashboard.Handler.class,
 
+com.dianping.cat.report.page.task.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

@@ -20,10 +20,26 @@ import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
  */
 public class ProblemMerger implements ReportMerger<ProblemReport> {
 
-	@Override
-	public ProblemReport merge(String reportDomain, List<Report> reports) {
-		ProblemReportMerger merger = new HistoryProblemReportMerger(new ProblemReport(reportDomain));
+	public ProblemReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+		ProblemReport report = merge(reportDomain, reports, true);
+		report.getDomainNames().addAll(domains);
+		return report;
+	}
 
+	@Override
+	public ProblemReport mergeForGraph(String reportDomain, List<Report> reports) {
+		ProblemReport report = merge(reportDomain, reports, false);
+		return report;
+	}
+
+	private ProblemReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
+
+		ProblemReportMerger merger = null;
+		if (isDaily) {
+			merger = new HistoryProblemReportMerger(new ProblemReport(reportDomain));
+		} else {
+			merger = new ProblemReportMerger(new ProblemReport(reportDomain));
+		}
 		for (Report report : reports) {
 			String xml = report.getContent();
 			ProblemReport model;
@@ -39,12 +55,5 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 
 		ProblemReport problemReport = merger.getProblemReport();
 		return problemReport;
-	}
-
-	@Override
-	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domains) {
-		ProblemReport report = merge(reportDomain, reports);
-		report.getDomainNames().addAll(domains);
-		return report.toString();
 	}
 }

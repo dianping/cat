@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -31,6 +32,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	@FieldMeta("step")
 	private int m_step;
+
+	@FieldMeta("customStart")
+	private String m_customStart;
+
+	@FieldMeta("customEnd")
+	private String m_customEnd;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
@@ -99,10 +106,23 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	}
 
 	public Date getHistoryStartDate() {
+		if (m_customStart != null) {
+			try {
+				return m_dayFormat.parse(m_customStart);
+			} catch (ParseException e) {
+			}
+		}
 		return new Date(m_date);
 	}
 
 	public Date getHistoryEndDate() {
+		if (m_customEnd != null) {
+			try {
+				return m_dayFormat.parse(m_customEnd);
+			} catch (ParseException e) {
+			}
+		}
+
 		long temp = 0;
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(m_date);
@@ -223,6 +243,14 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	public void setStep(int nav) {
 		m_step = nav;
+	}
+
+	public void setCustomStart(String customStart) {
+		m_customStart = customStart;
+	}
+
+	public void setCustomEnd(String customEnd) {
+		m_customEnd = customEnd;
 	}
 
 }

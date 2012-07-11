@@ -12,10 +12,8 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.handler.Handler;
-import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;
@@ -89,7 +87,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	public ProblemReport getReport(String domain) {
 		ProblemReport report = m_reports.get(domain);
-		compactReport(report);
 
 		if (report == null) {
 			report = new ProblemReport(domain);
@@ -187,7 +184,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "problem");
 
 			for (ProblemReport report : m_reports.values()) {
-				compactReport(report);
 				Set<String> domainNames = report.getDomainNames();
 				domainNames.clear();
 				domainNames.addAll(getDomains());
@@ -203,29 +199,32 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				for (ProblemReport report : m_reports.values()) {
+					try {
+	               Report r = m_reportDao.createLocal();
+	               String xml = builder.buildXml(report);
+	               String domain = report.getDomain();
 
-					Report r = m_reportDao.createLocal();
-					String xml = builder.buildXml(report);
-					String domain = report.getDomain();
+	               r.setName("problem");
+	               r.setDomain(domain);
+	               r.setPeriod(period);
+	               r.setIp(ip);
+	               r.setType(1);
+	               r.setContent(xml);
 
-					r.setName("problem");
-					r.setDomain(domain);
-					r.setPeriod(period);
-					r.setIp(ip);
-					r.setType(1);
-					r.setContent(xml);
+	               m_reportDao.insert(r);
 
-					m_reportDao.insert(r);
-
-					Task task = m_taskDao.createLocal();
-					task.setCreationDate(new Date());
-					task.setProducer(ip);
-					task.setReportDomain(domain);
-					task.setReportName("problem");
-					task.setReportPeriod(period);
-					task.setStatus(1); // status todo
-					m_taskDao.insert(task);
-					m_logger.info("insert event task:" + task.toString());
+	               Task task = m_taskDao.createLocal();
+	               task.setCreationDate(new Date());
+	               task.setProducer(ip);
+	               task.setReportDomain(domain);
+	               task.setReportName("problem");
+	               task.setReportPeriod(period);
+	               task.setStatus(1); // status todo
+	               m_taskDao.insert(task);
+	               m_logger.info("insert event task:" + task.toString());
+               } catch (Throwable e) {
+         			Cat.getProducer().logError(e);
+               }
 				}
 			}
 
@@ -241,40 +240,5 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
-	}
-
-	static class CompactVistor extends BaseVisitor {
-		@Override
-	   public void visitMachine(Machine machine) {
-//			Set<String> tobeRemoved = new HashSet<String>();
-//			for (JavaThread thread : machine.getThreads().values()) {
-//	         visitThread(thread);
-//	         
-//	         if (thread.getSegments().isEmpty()) {
-//	         	tobeRemoved.add(thread.getId());
-//	         }
-//	      }
-//			for (String minute : tobeRemoved) {
-//				machine.removeThread(minute);
-//			}
-		}
-		
-		@Override
-		public void visitThread(JavaThread thread) {
-//			Set<Integer> tobeRemoved = new HashSet<Integer>();
-//			for (Segment segment : thread.getSegments().values()) {
-//				if(segment.getEntries().isEmpty()){
-//					tobeRemoved.add(segment.getId());
-//				}
-//			}
-//			for (Integer minute : tobeRemoved) {
-//				thread.removeSegment(minute);
-//			}
-		}
-	}
-
-	private void compactReport(ProblemReport report) {
-		CompactVistor vistor = new CompactVistor();
-		vistor.visitProblemReport(report);
 	}
 }

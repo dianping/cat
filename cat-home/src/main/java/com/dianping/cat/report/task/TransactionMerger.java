@@ -20,22 +20,36 @@ import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
  */
 public class TransactionMerger implements ReportMerger<TransactionReport> {
 
-	public String mergeAll(String reportDomain, List<Report> reports, Set<String> domainSet) {
-		TransactionReport transactionReport = merge(reportDomain, reports);
-		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
-		TransactionReport transactionReport2 = merge(reportDomain, reports);
+	public TransactionReport mergeForGraph(String reportDomain, List<Report> reports) {
+		TransactionReport transactionReport = merge(reportDomain, reports, false);
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
+		TransactionReport transactionReport2 = merge(reportDomain, reports, false);
+		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
+		      .mergesForAllMachine(transactionReport2);
+		transactionReport.addMachine(allMachines);
+		transactionReport.getIps().add("All");
+		return transactionReport;
+	}
+
+	public TransactionReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domainSet) {
+		TransactionReport transactionReport = merge(reportDomain, reports, true);
+		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
+		TransactionReport transactionReport2 = merge(reportDomain, reports, true);
 		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
 		      .mergesForAllMachine(transactionReport2);
 		transactionReport.addMachine(allMachines);
 		transactionReport.getIps().add("All");
 		transactionReport.getDomainNames().addAll(domainSet);
-		String content = transactionReport.toString();
-		return content;
+		return transactionReport;
 	}
 
-	public TransactionReport merge(String reportDomain, List<Report> reports) {
-		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
-
+	private TransactionReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
+		TransactionReportMerger merger = null;
+		if (isDaily) {
+			merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
+		} else {
+			merger = new TransactionReportMerger(new TransactionReport(reportDomain));
+		}
 		for (Report report : reports) {
 			String xml = report.getContent();
 			TransactionReport model;
@@ -47,7 +61,6 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
 		}
 
 		TransactionReport transactionReport = merger.getTransactionReport();

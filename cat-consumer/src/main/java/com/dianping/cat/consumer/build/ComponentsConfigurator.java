@@ -52,7 +52,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 				.req(AnalyzerFactory.class, LogviewUploader.class) //
 				.config(E("extraTime").value(property("extraTime", "180000"))//
-						, E("analyzers").value("problem,transaction,event,ip,heartbeat,dump,remoteId")));
+						, E("analyzers").value("problem,transaction,event,heartbeat,dump,remoteId")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
@@ -90,9 +90,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 				.req(ServerConfigManager.class, MessagePathBuilder.class) //
 				.req(DumpUploader.class, DumpChannelManager.class));
+		
 		all.add(C(RemoteIdAnalyzer.class).is(PER_LOOKUP) //
 				.req(ServerConfigManager.class, MessagePathBuilder.class) //
 				.req(RemoteIdUploader.class, RemoteIdChannelManager.class));	
+		
 		all.add(C(RemoteIdChannelManager.class));
 
 		all.add(C(DumpChannelManager.class) //

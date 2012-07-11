@@ -35,6 +35,9 @@
       <page name="dashboard" title="Dashboard" path="dashboard">
         <description>Dashboard</description>
       </page>
+      <page name="task" title="Task" path="task">
+        <description>Task</description>
+      </page>
     </module>
   </webapp>
 </wizard>

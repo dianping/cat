@@ -8,35 +8,11 @@
 		<type id="RemoteCall" totalCount="4" failCount="0" failPercent="0.00">
 			<successMessageUrl>MobileApi-0a014dbf-1340004471358-0
 			</successMessageUrl>
-			<range value="0" count="10453" fails="0" />
-			<range value="5" count="10229" fails="0" />
-			<range value="10" count="9411" fails="0" />
-			<range value="15" count="9230" fails="0" />
-			<range value="20" count="8420" fails="0" />
-			<range value="25" count="7847" fails="0" />
-			<range value="30" count="7666" fails="0" />
-			<range value="35" count="7375" fails="0" />
-			<range value="40" count="7007" fails="0" />
-			<range value="45" count="6648" fails="0" />
-			<range value="50" count="6553" fails="0" />
-			<range value="55" count="6460" fails="0" />
 		</type>
 		<type id="PigeonRespone" totalCount="2" failCount="0"
 			failPercent="0.00">
 			<successMessageUrl>MobileApi-0a014dbf-1340004471574-0
 			</successMessageUrl>
-			<range value="0" count="10453" fails="0" />
-			<range value="5" count="10229" fails="0" />
-			<range value="10" count="9411" fails="0" />
-			<range value="15" count="9230" fails="0" />
-			<range value="20" count="8420" fails="0" />
-			<range value="25" count="7847" fails="0" />
-			<range value="30" count="7666" fails="0" />
-			<range value="35" count="7375" fails="0" />
-			<range value="40" count="7007" fails="0" />
-			<range value="45" count="6648" fails="0" />
-			<range value="50" count="6553" fails="0" />
-			<range value="55" count="6460" fails="0" />
 		</type>
 	</machine>
 </event-report>

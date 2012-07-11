@@ -16,7 +16,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 			if (tree != null) {
 				try {
 					process(tree);
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			}
@@ -28,7 +28,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 			if (tree != null) {
 				try {
 					process(tree);
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					e.printStackTrace();
 				}
 			} else {

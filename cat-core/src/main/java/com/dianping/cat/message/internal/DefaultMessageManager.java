@@ -106,10 +106,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			if (ctx != null) {
 				return ctx;
-			} else if (m_clientConfig.isDevMode()) {
-				throw new RuntimeException("Cat has not been initialized successfully, "
-				      + "please call Cal.setup(...) first for each thread.");
-			}
+			} 
 		}
 
 		return null;

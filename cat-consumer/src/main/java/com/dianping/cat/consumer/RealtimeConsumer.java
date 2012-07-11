@@ -33,8 +33,7 @@ import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 /**
- * This is the real time consumer process framework. All analyzers share the
- * message decoding once, thereof reduce the overhead.
+ * This is the real time consumer process framework.
  * <p>
  * 
  * @author yong.you
