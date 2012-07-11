@@ -35,14 +35,26 @@ public class Cat {
 
 	private static Cat s_instance = new Cat();
 
+	public volatile State m_initialized = State.CREATED;
+
+	private MessageProducer m_producer;
+
+	private MessageManager m_manager;
+
+	private PlexusContainer m_container;
+
+	private Cat() {
+	}
+
 	public static void destroy() {
+		s_instance.m_container.dispose();
 		s_instance = new Cat();
 	}
 
-	public static Cat getInstance(){
+	public static Cat getInstance() {
 		return s_instance;
 	}
-	
+
 	public static MessageManager getManager() {
 		return s_instance.m_manager;
 	}
@@ -52,8 +64,8 @@ public class Cat {
 			synchronized (s_instance) {
 				initialize(new File(CAT_GLOBAL_XML));
 				if (s_instance.m_initialized == State.INITIALIZED) {
-					log("WARN", "Cat is lazy loading !");
 					s_instance.m_initialized = State.LAZY_INITIALIZED;
+					log("WARN", "Cat is lazy initialized!");
 				}
 			}
 		}
@@ -87,15 +99,16 @@ public class Cat {
 		}
 
 		ClientConfig config = loadClientConfig(configFile);
-		Cat instance = s_instance;
-
 		log("INFO", "Current working directory is " + System.getProperty("user.dir"));
-
+		
 		if (config != null) {
-			instance.m_manager.initializeClient(config);
-			log("INFO", String.format("Cat client is initialized with config file(%s)!", configFile));
+			config.accept(new ClientConfigValidator());
+		}
+		if (config != null) {
+			s_instance.m_manager.initializeClient(config);
+			log("INFO", String.format("Cat client initialization is done !"));
 		} else {
-			instance.m_manager.initializeClient(null);
+			s_instance.m_manager.initializeClient(null);
 			log("WARN", "Cat client is disabled due to no config file found!");
 		}
 	}
@@ -119,6 +132,7 @@ public class Cat {
 					String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
 
 					globalConfig = new DefaultDomParser().parse(xml);
+					log("INFO", String.format("Global config file(%s) found.", configFile));
 				} else {
 					log("WARN", String.format("Global config file(%s) not found, IGNORED.", configFile));
 				}
@@ -147,34 +161,13 @@ public class Cat {
 			globalConfig.accept(new ClientConfigMerger(clientConfig));
 		}
 
-		// do validation
-		if (clientConfig != null) {
-			clientConfig.accept(new ClientConfigValidator());
-		} else if (globalConfig != null) { // for test purpose
-			return globalConfig;
-		}
-
 		return clientConfig;
 	}
 
 	static void log(String severity, String message) {
-		Logger logger = s_instance.m_logger;
+		MessageFormat format = new MessageFormat("[{0,date,MM-dd HH:mm:ss.sss}] [{1}] [{2}] {3}");
 
-		if (logger != null) {
-			if ("INFO".equals(severity)) {
-				logger.info(message);
-			} else if ("WARN".equals(severity)) {
-				logger.warn(message);
-			} else if ("ERROR".equals(severity)) {
-				logger.error(message);
-			} else {
-				throw new RuntimeException("Unsupported log severity: " + severity);
-			}
-		} else {
-			MessageFormat format = new MessageFormat("[{0,date,MM-dd HH:mm:ss.sss}] [{1}] [{2}] {3}");
-
-			System.out.println(format.format(new Object[] { new Date(), severity, "Cat", message }));
-		}
+		System.out.println(format.format(new Object[] { new Date(), severity, "Cat", message }));
 	}
 
 	public static <T> T lookup(Class<T> role) throws ComponentLookupException {
@@ -200,22 +193,6 @@ public class Cat {
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
 	}
 
-	public enum State {
-		CREATED, INITIALIZED, LAZY_INITIALIZED
-	}
-
-	public volatile State m_initialized = State.CREATED;
-
-	private MessageProducer m_producer;
-
-	private MessageManager m_manager;
-
-	private PlexusContainer m_container;
-
-	private Logger m_logger;
-
-	private Cat() {
-	}
 
 	private boolean isCatServerFound(PlexusContainer container) {
 		try {
@@ -226,10 +203,11 @@ public class Cat {
 	}
 
 	void setContainer(PlexusContainer container) {
+		final Logger logger ;
 		m_container = container;
 
 		try {
-			m_logger = container.getLoggerManager().getLoggerForComponent(MessageManager.class.getName());
+			logger = container.getLoggerManager().getLoggerForComponent(MessageManager.class.getName());
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get instance of Logger, "
 			      + "please make sure the environment was setup correctly!", e);
@@ -239,27 +217,27 @@ public class Cat {
 			Threads.addListener(new DefaultThreadListener() {
 				@Override
 				public void onThreadGroupCreated(ThreadGroup group, String name) {
-					m_logger.info(String.format("Thread group(%s) created.", name));
+					logger.info(String.format("Thread group(%s) created.", name));
 				}
 
 				@Override
 				public void onThreadPoolCreated(ExecutorService pool, String name) {
-					m_logger.info(String.format("Thread pool(%s) created.", name));
+					logger.info(String.format("Thread pool(%s) created.", name));
 				}
 
 				@Override
 				public void onThreadStarting(Thread thread, String name) {
-					m_logger.info(String.format("Starting thread(%s) ...", name));
+					logger.info(String.format("Starting thread(%s) ...", name));
 				}
 
 				@Override
 				public void onThreadStopping(Thread thread, String name) {
-					m_logger.info(String.format("Stopping thread(%s).", name));
+					logger.info(String.format("Stopping thread(%s).", name));
 				}
 
 				@Override
 				public boolean onUncaughtException(Thread thread, Throwable e) {
-					m_logger.error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
+					logger.error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
 					return true;
 				}
 			});
@@ -278,5 +256,9 @@ public class Cat {
 			throw new RuntimeException("Unable to get instance of MessageProducer, "
 			      + "please make sure the environment was setup correctly!", e);
 		}
+	}
+
+	public enum State {
+		CREATED, INITIALIZED, LAZY_INITIALIZED
 	}
 }

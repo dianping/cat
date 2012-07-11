@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.CatTest;
 import com.dianping.cat.message.configuration.ClientConfigTest;
 import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MillisSecondTimerTest;
@@ -18,6 +19,7 @@ import com.dianping.cat.storage.report.LocalReportBucketTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+CatTest.class,
 
 /* <default> */
 EventTest.class,
