@@ -2,9 +2,10 @@ package com.dianping.cat.report.page.model.heartbeat;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
-import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -55,8 +56,19 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 				model.accept(merger);
 			}
 		}
+		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
 
-		return merger == null ? null : merger.getHeartbeatReport();
+		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
+		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+
+		if (heartbeatReport != null && historyReports != null) {
+			Set<String> domainNames = heartbeatReport.getDomainNames();
+			for (Report report : historyReports) {
+				domainNames.add(report.getDomain());
+			}
+		}
+
+		return merger == null ? null : heartbeatReport;
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

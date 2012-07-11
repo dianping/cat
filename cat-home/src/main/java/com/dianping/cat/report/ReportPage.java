@@ -25,7 +25,9 @@ public enum ReportPage implements Page {
 
    HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", false),
 
-   DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", true);
+   DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", true),
+
+   TASK("task", "task", "Task", "Task", true);
 
    private String m_name;
 

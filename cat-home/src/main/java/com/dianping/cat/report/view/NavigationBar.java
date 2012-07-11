@@ -23,6 +23,8 @@ public class NavigationBar {
 		
 		ReportPage.SQL,
 
+		ReportPage.TASK,
+		
 		ReportPage.LOGVIEW
 
 		};

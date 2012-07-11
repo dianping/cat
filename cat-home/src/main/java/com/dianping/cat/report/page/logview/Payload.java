@@ -34,11 +34,11 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public Boolean getDirection() {
+	public String getDirection() {
 		if (m_tag1 != null) {
-			return false;
+			return "false";
 		} else if (m_tag2 != null) {
-			return true;
+			return "true";
 		} else {
 			return null;
 		}

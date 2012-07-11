@@ -23,7 +23,6 @@
 </xs:sequence>
 <xs:attribute name="mode" type="xs:string" use="required"/>
 <xs:attribute name="enabled" type="xs:boolean"/>
-<xs:attribute name="dev-mode" type="xs:boolean"/>
 <xs:anyAttribute processContents="lax"/>
 </xs:complexType>
 <xs:complexType name="ServerType">

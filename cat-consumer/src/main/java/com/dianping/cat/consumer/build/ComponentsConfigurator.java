@@ -90,9 +90,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 				.req(ServerConfigManager.class, MessagePathBuilder.class) //
 				.req(DumpUploader.class, DumpChannelManager.class));
+		
 		all.add(C(RemoteIdAnalyzer.class).is(PER_LOOKUP) //
 				.req(ServerConfigManager.class, MessagePathBuilder.class) //
 				.req(RemoteIdUploader.class, RemoteIdChannelManager.class));	
+		
 		all.add(C(RemoteIdChannelManager.class));
 
 		all.add(C(DumpChannelManager.class) //

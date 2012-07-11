@@ -1,7 +1,6 @@
 package com.dianping.cat;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.Date;
@@ -17,7 +16,6 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.configuration.ClientConfigMerger;
 import com.dianping.cat.configuration.ClientConfigValidator;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
-import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultDomParser;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.spi.MessageManager;
@@ -33,33 +31,34 @@ import com.site.helper.Threads.DefaultThreadListener;
 public class Cat {
 	public static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
 
+	public static final String CAT_GLOBAL_XML = "/data/appdatas/cat/client.xml";
+
 	private static Cat s_instance = new Cat();
 
 	public static void destroy() {
 		s_instance = new Cat();
 	}
 
-	static Cat getInstance() {
-		synchronized (s_instance) {
-			if (!s_instance.m_initialized) {
-				initialize(null);
-				log("WARN", "Please call Cat.initialize(...) at application level first to enable it!");
-			}
-		}
-
+	public static Cat getInstance(){
 		return s_instance;
 	}
-
+	
 	public static MessageManager getManager() {
-		return getInstance().m_manager;
+		return s_instance.m_manager;
 	}
 
 	public static MessageProducer getProducer() {
 		if (!isInitialized()) {
-			initializeForDev();
+			synchronized (s_instance) {
+				initialize(new File(CAT_GLOBAL_XML));
+				if (s_instance.m_initialized == State.INITIALIZED) {
+					log("WARN", "Cat is lazy loading !");
+					s_instance.m_initialized = State.LAZY_INITIALIZED;
+				}
+			}
 		}
 
-		return getInstance().m_producer;
+		return s_instance.m_producer;
 	}
 
 	// this should be called during application initialization time
@@ -77,9 +76,9 @@ public class Cat {
 	public static void initialize(PlexusContainer container, File configFile) {
 		if (container != null) {
 			synchronized (s_instance) {
-				if (!s_instance.m_initialized) {
+				if (s_instance.m_initialized == State.CREATED) {
 					s_instance.setContainer(container);
-					s_instance.m_initialized = true;
+					s_instance.m_initialized = State.INITIALIZED;
 				} else {
 					log("WARN", String.format("Cat can't initialize again with config file(%s), IGNORED!", configFile));
 					return;
@@ -88,7 +87,7 @@ public class Cat {
 		}
 
 		ClientConfig config = loadClientConfig(configFile);
-		Cat instance = getInstance();
+		Cat instance = s_instance;
 
 		log("INFO", "Current working directory is " + System.getProperty("user.dir"));
 
@@ -101,42 +100,9 @@ public class Cat {
 		}
 	}
 
-	static void initializeForDev() {
-		// this is a hack way to make Cat work without initialization
-		// explicitly
-		// especially from within unit test
-		synchronized (s_instance) {
-			if (!isInitialized()) {
-				File configFile = new File("/data/appdatas/cat/client.xml");
-
-				if (!configFile.exists()) {
-					ClientConfig config = new ClientConfig();
-
-					config.setMode("client");
-					config.addServer(new Server().setIp("192.168.7.43").setPort(2280));
-
-					configFile.getParentFile().mkdirs();
-
-					try {
-						File tempConfigFile = File.createTempFile("cat-client.", ".xml");
-
-						Files.forIO().writeTo(tempConfigFile, config.toString());
-						configFile = tempConfigFile;
-						tempConfigFile.deleteOnExit();
-					} catch (IOException e) {
-						log("WARN", String.format("Error when creating file(%s). Message: %s", configFile, e));
-					}
-				}
-
-				log("INFO", "CAT lazy initialization ...");
-
-				initialize(configFile);
-			}
-		}
-	}
-
 	public static boolean isInitialized() {
-		return s_instance.m_initialized;
+		return s_instance.m_initialized != State.CREATED;
+		// return s_instance.m_initialized;
 	}
 
 	static ClientConfig loadClientConfig(File configFile) {
@@ -217,24 +183,28 @@ public class Cat {
 
 	@SuppressWarnings("unchecked")
 	public static <T> T lookup(Class<T> role, String hint) throws ComponentLookupException {
-		return (T) getInstance().m_container.lookup(role, hint);
+		return (T) s_instance.m_container.lookup(role, hint);
 	}
 
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
-		getInstance().m_manager.reset();
+		s_instance.m_manager.reset();
 	}
 
 	// this should be called when a thread starts to create some thread local
 	// data
 	public static void setup(String sessionToken) {
-		MessageManager manager = getInstance().m_manager;
+		MessageManager manager = s_instance.m_manager;
 
 		manager.setup();
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
 	}
 
-	private volatile boolean m_initialized;
+	public enum State {
+		CREATED, INITIALIZED, LAZY_INITIALIZED
+	}
+
+	public volatile State m_initialized = State.CREATED;
 
 	private MessageProducer m_producer;
 
