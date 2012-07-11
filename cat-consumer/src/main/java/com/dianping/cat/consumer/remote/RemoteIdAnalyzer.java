@@ -37,7 +37,7 @@ public class RemoteIdAnalyzer extends AbstractMessageAnalyzer<Object> implements
 	@Inject
 	private RemoteIdChannelManager m_manager;
 
-	private Logger m_logger;
+	private static Logger m_logger;
 
 	private boolean m_localMode = true;
 
