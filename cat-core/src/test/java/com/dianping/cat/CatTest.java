@@ -24,6 +24,7 @@ public class CatTest {
 		Assert.assertEquals(true,Cat.isInitialized());
 		Assert.assertEquals(State.LAZY_INITIALIZED,Cat.getInstance().m_initialized);
 		Cat.destroy();
+		System.out.println();
 	}
 	
 	@Test
@@ -41,5 +42,24 @@ public class CatTest {
 		Assert.assertEquals(true,Cat.isInitialized());
 		Assert.assertEquals(State.INITIALIZED,Cat.getInstance().m_initialized);
 		Cat.destroy();
+		System.out.println();
+	}
+	
+	@Test
+	public void testWithoutGlobalConfigInitialize() throws InterruptedException{
+		Cat.initialize(new File("/data/appdatas/cat/clientNoExist.xml"));
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction("TestType", "TestName");
+
+		t.addData("data here");
+		t.setStatus("TestStatus");
+		t.complete();
+
+		Thread.sleep(100);
+		
+		Assert.assertEquals(true,Cat.isInitialized());
+		Assert.assertEquals(State.INITIALIZED,Cat.getInstance().m_initialized);
+		Cat.destroy();
+		System.out.println();
 	}
 }

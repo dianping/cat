@@ -106,7 +106,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			if (ctx != null) {
 				return ctx;
-			} 
+			}
 		}
 
 		return null;
@@ -175,7 +175,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_factory.initialize(m_domain.getId());
 
 		// start status update task
-		Threads.forGroup("Cat").start(m_statusUpdateTask);
+		if (m_clientConfig.isEnabled()) {
+			Threads.forGroup("Cat").start(m_statusUpdateTask);
+		}
 	}
 
 	@Override
@@ -218,14 +220,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	boolean shouldThrottle(MessageTree tree) {
-		if(!isCatEnabled()){
+		if (!isCatEnabled()) {
 			return true;
 		}
-		
+
 		if (tree.getMessage() != null && "Heartbeat".equals(tree.getMessage().getName())) {
 			return false;
 		}
-		
+
 		int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
 
 		return threadCount > m_domain.getMaxThreads();

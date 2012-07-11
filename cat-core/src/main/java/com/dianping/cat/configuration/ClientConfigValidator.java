@@ -1,5 +1,8 @@
 package com.dianping.cat.configuration;
 
+import java.text.MessageFormat;
+import java.util.Date;
+
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
@@ -18,12 +21,10 @@ public class ClientConfigValidator extends DefaultValidator {
 			throw new RuntimeException(String.format("Attribute(%s) of /config is required in config: %s", "mode", config));
 		} else if (config.getServers().size() == 0) {
 			config.setEnabled(false);
-			System.out.println("[WARN] CAT client was disabled due to no CAT servers configured!");
+			log("WARN", "CAT client was disabled due to no CAT servers configured!");
 		} else if (config.getEnabled() != null && !config.isEnabled()) {
-			System.out.println("[WARN] CAT client was globally disabled!");
-		} else if (config.getEnabled() == null) {
-			config.setEnabled(true);
-		}
+			log("WARN", "CAT client was globally disabled!");
+		} 
 
 		m_config = config;
 		super.visitConfig(config);
@@ -44,8 +45,14 @@ public class ClientConfigValidator extends DefaultValidator {
 
 		if (!domain.isEnabled() && m_config.isEnabled()) {
 			m_config.setEnabled(false);
-			System.out.println("[WARN] CAT client was disabled in domain(" + domain.getId() + ") explicitly!");
+			log("WARN", "CAT client was disabled in domain(" + domain.getId() + ") explicitly!");
 		}
+	}
+
+	private void log(String severity, String message) {
+		MessageFormat format = new MessageFormat("[{0,date,MM-dd HH:mm:ss.sss}] [{1}] [{2}] {3}");
+
+		System.out.println(format.format(new Object[] { new Date(), severity, "Cat", message }));
 	}
 
 	@Override
