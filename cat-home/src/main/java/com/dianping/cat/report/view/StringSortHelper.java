@@ -23,7 +23,7 @@ public class StringSortHelper {
 			return sort(result);
 		}
 	}
-	
+
 	public static List<String> sortDomain(List<String> lists) {
 		Collections.sort(lists, new DomainComparator());
 		return lists;
@@ -57,6 +57,14 @@ public class StringSortHelper {
 	public static class DomainComparator implements Comparator<String> {
 		@Override
 		public int compare(String d1, String d2) {
+			if (d1 == null && d2 == null) {
+				return 0;
+			} else if (d1 == null) {
+				return 1;
+			} else if (d2 == null) {
+				return -1;
+			}
+
 			if ("Cat".equals(d1)) {
 				return 1;
 			}
@@ -69,6 +77,7 @@ public class StringSortHelper {
 			if ("All".equals(d2)) {
 				return +1;
 			}
+
 			return d1.compareTo(d2);
 		}
 	}
