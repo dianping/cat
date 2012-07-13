@@ -73,9 +73,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		if (report == null) {
 			report = new EventReport(domain);
 		}
-		report.getDomainNames().clear();
-		report.getDomainNames().addAll(m_reports.keySet());
 
+		report.getDomainNames().addAll(m_reports.keySet());
 		return report;
 	}
 

@@ -91,7 +91,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		if (report == null) {
 			report = new ProblemReport(domain);
 		}
-		report.getDomainNames().clear();
 		report.getDomainNames().addAll(m_reports.keySet());
 
 		return report;

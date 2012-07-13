@@ -114,7 +114,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			report = new TransactionReport(domain);
 		}
 
-		report.getDomainNames().clear();
 		report.getDomainNames().addAll(m_reports.keySet());
 
 		report.accept(new StatisticsComputer());
