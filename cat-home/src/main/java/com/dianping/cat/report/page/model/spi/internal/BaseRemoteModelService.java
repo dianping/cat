@@ -73,9 +73,11 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 				T report = buildModel(xml);
 
 				response.setModel(report);
+				t.setStatus(Message.SUCCESS);
+			} else {
+				t.setStatus("NoReport");
 			}
 
-			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
 			logError(e);
 			t.setStatus(e);
