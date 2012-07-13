@@ -1,12 +1,15 @@
 package com.dianping.cat.storage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.storage.message.LocalLogviewBucket;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
@@ -75,6 +78,23 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		}
 
 		return (Bucket<T>) bucket;
+	}
+
+	@Override
+	public List<Bucket<MessageTree>> getLogviewBuckets(long timestamp, String excludeDomain) throws IOException {
+		long t = timestamp - timestamp % (60 * 60 * 1000L);
+		List<Bucket<MessageTree>> buckets = new ArrayList<Bucket<MessageTree>>();
+		
+		for (Bucket<?> bucket : m_map.values()) {
+			if (bucket instanceof LocalLogviewBucket) {
+				LocalLogviewBucket logview = (LocalLogviewBucket) bucket;
+				
+				if (logview.getTimestamp() == t && !logview.getDomain().equals(excludeDomain)) {
+					buckets.add(logview);
+				}
+			}
+		}
+		return buckets;
 	}
 
 	@Override
