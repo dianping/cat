@@ -44,17 +44,12 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 	private HeartbeatReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
-		HeartbeatReportMerger merger = null;
+		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(domain));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
 			HeartbeatReport model = DefaultSaxParser.parse(xml);
-
-			if (merger == null) {
-				merger = new HeartbeatReportMerger(model);
-			} else {
-				model.accept(merger);
-			}
+			model.accept(merger);
 		}
 		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
 

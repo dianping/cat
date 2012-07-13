@@ -44,17 +44,12 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	private ProblemReport getReportFromDatabase(long timestamp, String domain) throws Exception {
 		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
 		      ReportEntity.READSET_FULL);
-		ProblemReportMerger merger = null;
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
 			ProblemReport model = DefaultSaxParser.parse(xml);
-
-			if (merger == null) {
-				merger = new ProblemReportMerger(model);
-			} else {
-				model.accept(merger);
-			}
+			model.accept(merger);
 		}
 		ProblemReport problemReport = merger.getProblemReport();
 

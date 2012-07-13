@@ -7,6 +7,11 @@
 	text-align: left;
 }
 
+
+.event tr th.right {
+	text-align: right;
+}
+
 .machines {
 	font-size: small;
 }

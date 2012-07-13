@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.model.logview;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
@@ -40,6 +42,32 @@ public class LocalLogViewService extends BaseLocalModelService<String> {
 		Bucket<MessageTree> bucket = m_bucketManager.getLogviewBucket(id.getTimestamp(), id.getDomain());
 		MessageTree tree = null;
 
+		tree = getLogviewFromBucket(bucket, messageId, direction, tag);
+
+		if (tree == null) {
+			List<Bucket<MessageTree>> buckets = m_bucketManager.getLogviewBuckets(id.getTimestamp(),id.getDomain());
+			for (Bucket<MessageTree> b : buckets) {
+				tree = getLogviewFromBucket(b, messageId, direction, tag);
+				if (tree != null) {
+					break;
+				}
+			}
+		}
+
+		if (tree != null) {
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
+
+			m_codec.encode(tree, buf);
+			buf.readInt(); // get rid of length
+			return buf.toString(Charset.forName("utf-8"));
+		} else {
+			return null;
+		}
+	}
+
+	private MessageTree getLogviewFromBucket(Bucket<MessageTree> bucket, String messageId, String direction, String tag)
+	      throws IOException {
+		MessageTree tree = null;
 		if (tag != null && direction != null) {
 			Boolean d = Boolean.valueOf(direction);
 
@@ -54,15 +82,6 @@ public class LocalLogViewService extends BaseLocalModelService<String> {
 		if (tree == null) {
 			tree = bucket.findById(messageId);
 		}
-
-		if (tree != null) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-
-			m_codec.encode(tree, buf);
-			buf.readInt(); // get rid of length
-			return buf.toString(Charset.forName("utf-8"));
-		} else {
-			return null;
-		}
+		return tree;
 	}
 }

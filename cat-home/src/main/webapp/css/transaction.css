@@ -7,6 +7,10 @@
 	text-align: left;
 }
 
+.transaction tr th.right {
+	text-align: right;
+}
+
 .machines {
 	font-size: small;
 }
