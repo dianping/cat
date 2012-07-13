@@ -70,18 +70,20 @@ public class RemoteIdChannel {
 		}
 	}
 
+	private static class BooleanWrap {
+		private boolean boo;
+	}
+
 	public void write(MessageTree tree) throws IOException {
 		List<String> remoteIds = new ArrayList<String>();
 		Transaction t = (Transaction) tree.getMessage();
-		
-		doTransactionChilds(remoteIds, t);
 
-		if (remoteIds.size() == 0) {
-			return;
-		}
+		BooleanWrap booWrap = new BooleanWrap();
+		booWrap.boo = true; // default success
+		doTransactionChilds(remoteIds, t, booWrap);
 
 		StringBuilder sb = new StringBuilder((remoteIds.size() + 1) * remoteIds.get(0).length() + 32);
-		if (t.isSuccess()) {
+		if (booWrap.boo) {
 			sb.append('0');
 		} else {
 			sb.append('1');
@@ -107,19 +109,27 @@ public class RemoteIdChannel {
 
 	public static final String PIGEON_REQUEST_TYPE = "RemoteCall";
 
-	private void doTransactionChilds(List<String> remoteIds, Transaction t) {
+	private void doTransactionChilds(List<String> remoteIds, Transaction t, BooleanWrap booWrap) {
 		if (!t.hasChildren()) {
 			return;
 		}
 		for (Message m : t.getChildren()) {
-			if (m instanceof Event && // is event
-					PIGEON_REQUEST_TYPE.equals(m.getType()) && (PIGEON_REQUEST_NAME.equals(m.getName()) // is pigeon request
-					|| PIGEON_RESPONSE_NAME.equals(m.getName()))) { // is pigeon response
+			if (m instanceof Event) {
 				Event e = (Event) m;
-				String requestMessageId = (String) e.getData();
-				remoteIds.add(requestMessageId);
+				if (!e.isSuccess()) {
+					booWrap.boo = false;
+				}
+				if (PIGEON_REQUEST_TYPE.equals(m.getType()) && (PIGEON_REQUEST_NAME.equals(m.getName()) // is pigeon request
+						|| PIGEON_RESPONSE_NAME.equals(m.getName()))) { // is pigeon response
+					String requestMessageId = (String) e.getData();
+					remoteIds.add(requestMessageId);
+				}
 			} else if (m instanceof Transaction) {
-				doTransactionChilds(remoteIds, (Transaction) m);
+				Transaction tt = (Transaction) m;
+				if (!tt.isSuccess()) {
+					booWrap.boo = false;
+				}
+				doTransactionChilds(remoteIds, tt, booWrap);
 			}
 		}
 	}

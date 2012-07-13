@@ -1,6 +1,7 @@
 package com.dianping.cat.message.io;
 
 import java.net.InetSocketAddress;
+import java.nio.charset.Charset;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -43,7 +44,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 	@Inject
 	private MessageCodec m_codec;
-	
+
 	@Inject
 	private int m_queueSize = 100000;
 
@@ -109,9 +110,16 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 				ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
 
 				if (buf != null) {
-					MessageTree tree = m_codec.decode(buf);
+					try {
+						MessageTree tree = m_codec.decode(buf);
 
-					handler.handle(tree);
+						handler.handle(tree);
+					} catch (Throwable e) {
+						buf.resetReaderIndex();
+
+						String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
+						m_logger.error("Error when handling message! Raw buffer: " + raw, e);
+					}
 				} else if (!isActive()) {
 					break;
 				}
@@ -137,7 +145,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 	public void setPort(int port) {
 		m_port = port;
 	}
-	
+
 	public void setQueueSize(int queueSize) {
 		m_queueSize = queueSize;
 	}
