@@ -94,15 +94,26 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 		m_active = true;
 
 		while (m_active) {
-			try {
-				MessageTree tree = m_queue.poll();
+			ChannelFuture future = m_manager.getChannel();
 
-				if (tree != null) {
-					sendInternal(tree);
-					tree.setMessage(null);
+			if (checkWritable(future)) {
+				try {
+					MessageTree tree = m_queue.poll();
+
+					if (tree != null) {
+						sendInternal(tree);
+						tree.setMessage(null);
+					}
+				} catch (Throwable t) {
+					m_logger.error("Error when sending message over TCP socket!", t);
 				}
-			} catch (Throwable t) {
-				m_logger.error("Error when sending message over TCP socket!", t);
+			} else {
+				try {
+					Thread.sleep(5);
+				} catch (Exception e) {
+					// ignore it
+					m_active = false;
+				}
 			}
 		}
 
@@ -128,28 +139,16 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 
 	private void sendInternal(MessageTree tree) {
 		ChannelFuture future = m_manager.getChannel();
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(10 * 1024); // 10K
 
-		if (checkWritable(future)) {
-			if (future != null && future.getChannel().isOpen()) {
-				ChannelBuffer buf = ChannelBuffers.dynamicBuffer(10 * 1024); // 10K
+		m_codec.encode(tree, buf);
 
-				m_codec.encode(tree, buf);
+		int size = buf.readableBytes();
 
-				int size = buf.readableBytes();
+		future.getChannel().write(buf);
 
-				future.getChannel().write(buf);
-
-				if (m_statistics != null) {
-					m_statistics.onBytes(size);
-				}
-			}
-		} else {
-			try {
-				Thread.sleep(5);
-			} catch (Exception e) {
-				// ignore it
-				m_active = false;
-			}
+		if (m_statistics != null) {
+			m_statistics.onBytes(size);
 		}
 	}
 
