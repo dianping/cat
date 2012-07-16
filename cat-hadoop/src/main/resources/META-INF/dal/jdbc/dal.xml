@@ -144,6 +144,16 @@
 	</entity>
 
 	<entity name="task" table="task" alias="t">
+		<readsets>
+			<readset name="REPORT_NAME">
+				<member name="report_name" />
+			</readset>
+		</readsets>
+		<readsets>
+			<readset name="REPORT_DOMAIN">
+				<member name="report_domain" />
+			</readset>
+		</readsets>
 		<query-defs>
 			<query name="insert" type="INSERT">
 				<statement><![CDATA[
@@ -197,7 +207,19 @@
 					AND <FIELD name='id'/> = ${id};
 				]]></statement>
 			</query>
-
+			
+			<query name="find-all-report-name" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT DISTINCT <FIELDS/> FROM <TABLE/> 
+				]]></statement>
+			</query>
+			
+			<query name="find-all-report-domain" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT DISTINCT <FIELDS/> FROM <TABLE/> 
+				]]></statement>
+			</query>
+			
 		</query-defs>
 	</entity>
 
