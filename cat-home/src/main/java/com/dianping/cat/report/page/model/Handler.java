@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -142,6 +143,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			model.setModelInXml(dataModel == null ? "" : doFilter(payload, dataModel));
 		} catch (Throwable e) {
 			model.setException(e);
+			Cat.getProducer().logError(e);
 		}
 
 		m_jspViewer.view(ctx, model);

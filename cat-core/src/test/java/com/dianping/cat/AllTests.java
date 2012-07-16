@@ -1,10 +1,13 @@
-package com.dianping.cat.message;
+package com.dianping.cat;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.CatTest;
+import com.dianping.cat.log4j.CatAppenderTest;
+import com.dianping.cat.message.EventTest;
+import com.dianping.cat.message.HeartbeatTest;
+import com.dianping.cat.message.TransactionTest;
 import com.dianping.cat.message.configuration.ClientConfigTest;
 import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MillisSecondTimerTest;
@@ -19,9 +22,14 @@ import com.dianping.cat.storage.report.LocalReportBucketTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
-CatTest.class,
 
 /* <default> */
+CatTest.class,
+
+/* .log4j */
+CatAppenderTest.class,
+
+/* .message */
 EventTest.class,
 
 HeartbeatTest.class,
@@ -33,8 +41,6 @@ ClientConfigTest.class,
 
 /* .internal */
 MessageIdFactoryTest.class,
-
-//MessageProducerTest.class,
 
 MillisSecondTimerTest.class,
 

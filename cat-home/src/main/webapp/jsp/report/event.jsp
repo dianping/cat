@@ -57,13 +57,13 @@
 			<tr>
 			<th><a
 							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type"> Type</a></th>
-			<th><a
+			<th class="right"><a
 							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-			<th><a
+			<th class="right"><a
 							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-			<th><a
+			<th class="right"><a
 							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th>
+			<th class="right">Sample Link</th>
 					</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
@@ -84,10 +84,10 @@
 		<tr>
 			<th><a	href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a		href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type"> Name</a></th>
-			<th><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
-			<th><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
-			<th><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
+			<th class="right">Sample Link</th>
 					</tr>
 			
 			<tr class="graphs">

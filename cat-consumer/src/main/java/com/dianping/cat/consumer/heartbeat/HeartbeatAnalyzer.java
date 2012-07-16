@@ -163,7 +163,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		if (report == null) {
 			report = new HeartbeatReport(domain);
 		}
-		report.getDomainNames().clear();
 		report.getDomainNames().addAll(m_reports.keySet());
 
 		return report;

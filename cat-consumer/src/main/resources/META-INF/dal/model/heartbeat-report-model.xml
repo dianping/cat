@@ -21,6 +21,7 @@
     <attribute name="total-started-count" value-type="int" primitive="true" />
     <attribute name="cat-thread-count" value-type="int" primitive="true" />
     <attribute name="pigeon-thread-count" value-type="int" primitive="true" />
+    <attribute name="http-thread-count" value-type="int" primitive="true" />
     <attribute name="new-gc-count" value-type="long" primitive="true" />
     <attribute name="old-gc-count" value-type="long" primitive="true" />
     <attribute name="memory-free" value-type="long" primitive="true" />

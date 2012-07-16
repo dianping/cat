@@ -82,7 +82,7 @@ public class RemoteIdChannel {
 		booWrap.boo = true; // default success
 		doTransactionChilds(remoteIds, t, booWrap);
 
-		StringBuilder sb = new StringBuilder((remoteIds.size() + 1) * remoteIds.get(0).length() + 32);
+		StringBuilder sb = new StringBuilder((remoteIds.size() + 1) * 32);
 		if (booWrap.boo) {
 			sb.append('0');
 		} else {

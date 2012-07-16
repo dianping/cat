@@ -61,7 +61,7 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 	@Override
 	public void initialize() throws InitializationException {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		
+
 		m_defaultDomain = manager.getConsoleDefaultDomain();
 	}
 
@@ -71,10 +71,19 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
 
 		try {
-			T report = getReport(request, request.getPeriod(), request.getDomain());
+			ModelPeriod period = request.getPeriod();
+			String domain = request.getDomain();
+			T report = getReport(request, period, domain);
 
-			response.setModel(report);
-			t.setStatus(Message.SUCCESS);
+			t.addData("period", period);
+			t.addData("domain", domain);
+
+			if (report != null) {
+				response.setModel(report);
+				t.setStatus(Message.SUCCESS);
+			} else {
+				t.setStatus("NoReportFound");
+			}
 		} catch (Exception e) {
 			logError(e);
 			t.setStatus(e);

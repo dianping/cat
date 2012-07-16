@@ -68,6 +68,10 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 	private String m_logicalPath;
 
+	private long m_timestamp;
+	
+	private String m_domain;
+
 	@Override
 	public void close() throws IOException {
 		m_writeLock.lock();
@@ -118,71 +122,6 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		}
 
 		return null;
-	}
-
-	public Meta getMeta(String id) {
-		Long offset = m_idToOffsets.get(id);
-
-		if (offset != null) {
-			m_readLock.lock();
-
-			try {
-				if (m_dirty.get()) {
-					flush(); // flush first if any read requesting
-				}
-
-				m_readDataFile.seek(offset);
-
-				int num = Integer.parseInt(m_readDataFile.readLine());
-				byte[] bytes = new byte[num];
-
-				m_readDataFile.readFully(bytes);
-
-				ChannelBuffer buf = ChannelBuffers.wrappedBuffer(bytes);
-				MessageTree data = m_codec.decode(buf);
-
-				return new Meta(data.getMessageId(), data.getThreadId(), offset + 1 + String.valueOf(num).length(), num);
-			} catch (Exception e) {
-				m_logger.error(String.format("Error when reading file(%s)!", m_logicalPath), e);
-			} finally {
-				m_readLock.unlock();
-			}
-		}
-
-		return null;
-	}
-
-	public static class Meta {
-		private String m_messageId;
-
-		private String m_tagThread;
-
-		private long m_offset;
-
-		private int m_legnth;
-
-		public Meta(String messageId, String tagThread, long offset, int length) {
-			m_messageId = messageId;
-			m_tagThread = tagThread;
-			m_offset = offset;
-			m_legnth = length;
-		}
-
-		public String getMessageId() {
-			return m_messageId;
-		}
-
-		public String getTagThread() {
-			return m_tagThread;
-		}
-
-		public long getOffset() {
-			return m_offset;
-		}
-
-		public int getLegnth() {
-			return m_legnth;
-		}
 	}
 
 	@Override
@@ -238,6 +177,14 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		LockSupport.parkNanos(1000 * 1000L); // wait 1 ms
 	}
 
+	public String getBaseDir() {
+		return m_baseDir;
+	}
+
+	public String getDomain() {
+   	return m_domain;
+   }
+
 	@Override
 	public Collection<String> getIds() {
 		return m_idToOffsets.keySet();
@@ -247,12 +194,46 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 		return m_logicalPath;
 	}
 
-	public String getBaseDir() {
-		return m_baseDir;
+	public Meta getMeta(String id) {
+		Long offset = m_idToOffsets.get(id);
+
+		if (offset != null) {
+			m_readLock.lock();
+
+			try {
+				if (m_dirty.get()) {
+					flush(); // flush first if any read requesting
+				}
+
+				m_readDataFile.seek(offset);
+
+				int num = Integer.parseInt(m_readDataFile.readLine());
+				byte[] bytes = new byte[num];
+
+				m_readDataFile.readFully(bytes);
+
+				ChannelBuffer buf = ChannelBuffers.wrappedBuffer(bytes);
+				MessageTree data = m_codec.decode(buf);
+
+				return new Meta(data.getMessageId(), data.getThreadId(), offset + 1 + String.valueOf(num).length(), num);
+			} catch (Exception e) {
+				m_logger.error(String.format("Error when reading file(%s)!", m_logicalPath), e);
+			} finally {
+				m_readLock.unlock();
+			}
+		}
+
+		return null;
+	}
+
+	public long getTimestamp() {
+		return m_timestamp;
 	}
 
 	@Override
 	public void initialize(Class<?> type, String domain, Date timestamp) throws IOException {
+		m_timestamp = timestamp.getTime();
+		m_domain = domain;
 		m_baseDir = m_configManager.getHdfsLocalBaseDir("logview");
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
@@ -362,6 +343,39 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 
 		if (!ids.contains(id)) {
 			ids.add(id);
+		}
+	}
+
+	public static class Meta {
+		private String m_messageId;
+
+		private String m_tagThread;
+
+		private long m_offset;
+
+		private int m_legnth;
+
+		public Meta(String messageId, String tagThread, long offset, int length) {
+			m_messageId = messageId;
+			m_tagThread = tagThread;
+			m_offset = offset;
+			m_legnth = length;
+		}
+
+		public int getLegnth() {
+			return m_legnth;
+		}
+
+		public String getMessageId() {
+			return m_messageId;
+		}
+
+		public long getOffset() {
+			return m_offset;
+		}
+
+		public String getTagThread() {
+			return m_tagThread;
 		}
 	}
 }
