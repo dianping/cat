@@ -107,12 +107,12 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 					m_logger.warn("Error when dumping remoteIds to HDFS.", e);
 				}
 
-			}
+				try {
+					Thread.sleep(sleepPeriod);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 
-			try {
-				Thread.sleep(sleepPeriod);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
 			}
 		}
 
@@ -132,9 +132,10 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 		}
 
 		private void upload() {
+			File outbox = new File(m_baseDir, "outbox");
 			String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 			String path = m_builder.getMessageRemoteIdPath(ipAddress, new Date());
-			File file = new File(m_baseDir, path);
+			File file = new File(outbox, path);
 			if (!file.exists()) {
 				return;
 			}
