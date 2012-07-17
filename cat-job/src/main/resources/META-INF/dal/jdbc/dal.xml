@@ -76,6 +76,7 @@
 					AND <FIELD name='transaction-date'/> < ADDTIME(${transaction-date}, '1:00:00')
 				]]></statement>
 			</query>
+			
 		</query-defs>
 	</entity>
 </entities>
