@@ -17,6 +17,8 @@ public class NavigationBar {
 
 		ReportPage.HEARTBEAT,
 
+		ReportPage.MATRIX,
+		
 		ReportPage.IP,
 
 		ReportPage.HEATMAP,

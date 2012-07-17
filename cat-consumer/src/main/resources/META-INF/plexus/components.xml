@@ -10,7 +10,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,heartbeat,dump,remoteId</analyzers>
+				<analyzers>problem,transaction,event,heartbeat,matrix,dump,remoteId</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -108,6 +108,22 @@
 		<component>
 			<role>com.dianping.cat.consumer.event.EventAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.event.EventAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.matrix.MatrixAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.matrix.MatrixAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>

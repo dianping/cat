@@ -20,7 +20,7 @@
       <page name="logview" title="Logview" path="m" standalone="false">
         <description>Log View Details</description>
       </page>
-      <page name="ip" title="Top IP">
+      <page name="ip" title="Top IP" standalone="false">
         <description>Top Visited IP</description>
       </page>
       <page name="model" title="Model" path="model" standalone="false">
@@ -29,14 +29,17 @@
       <page name="sql" title="SQL" path="sql">
         <description>SQL Report</description>
       </page>
-      <page name="heatmap" title="Heatmap" path="heatmap">
+      <page name="heatmap" title="Heatmap" path="heatmap" standalone="false">
         <description>Heatmap</description>
       </page>
-      <page name="dashboard" title="Dashboard" path="dashboard">
+      <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
         <description>Dashboard</description>
       </page>
       <page name="task" title="Task" path="task">
         <description>Task</description>
+      </page>
+      <page name="matrix" title="Matrix" path="matrix">
+        <description>Matrix</description>
       </page>
     </module>
   </webapp>

@@ -7,7 +7,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
 import com.dianping.cat.report.task.HistoryEventReportMerger;
 
-public class EventReportMerger {
+public class EventReportMergerTest {
 
 	@Test
 	public void test() throws Exception{

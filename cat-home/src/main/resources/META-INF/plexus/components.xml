@@ -213,6 +213,47 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>matrix-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.matrix.LocalMatrixService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>matrix-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.matrix.HistoricalMatrixService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>matrix</role-hint>
+			<implementation>com.dianping.cat.report.page.model.matrix.CompositeMatrixService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>matrix-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>ip-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
 			<requirements>
@@ -604,6 +645,11 @@
 					<role-hint>heartbeat-local</role-hint>
 					<field-name>m_heartbeatService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>matrix-local</role-hint>
+					<field-name>m_matrixService</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -699,6 +745,20 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.matrix.LocalMatrixService</role>
+			<implementation>com.dianping.cat.report.page.model.matrix.LocalMatrixService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.sql.Handler</role>
 			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
@@ -781,6 +841,27 @@
 		<component>
 			<role>com.dianping.cat.report.page.task.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.task.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.matrix.Handler</role>
+			<implementation>com.dianping.cat.report.page.matrix.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>matrix</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.matrix.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.matrix.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>

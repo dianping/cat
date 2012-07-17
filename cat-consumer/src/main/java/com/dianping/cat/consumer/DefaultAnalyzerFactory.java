@@ -4,6 +4,7 @@ import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.ip.TopIpAnalyzer;
+import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.remote.RemoteIdAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -46,6 +47,11 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			return analyzer;
 		} else if (name.equals("heartbeat")) {
 			HeartbeatAnalyzer analyzer = lookup(HeartbeatAnalyzer.class);
+
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
+			return analyzer;
+		} else if (name.equals("matrix")) {
+			MatrixAnalyzer analyzer = lookup(MatrixAnalyzer.class);
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;

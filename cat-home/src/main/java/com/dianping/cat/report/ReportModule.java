@@ -29,7 +29,9 @@ com.dianping.cat.report.page.heatmap.Handler.class,
 
 com.dianping.cat.report.page.dashboard.Handler.class,
 
-com.dianping.cat.report.page.task.Handler.class
+com.dianping.cat.report.page.task.Handler.class,
+
+com.dianping.cat.report.page.matrix.Handler.class
 })
 public class ReportModule extends AbstractModule {
 
