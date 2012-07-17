@@ -120,7 +120,7 @@ public class RemoteIdChannel {
 					booWrap.boo = false;
 				}
 				if (PIGEON_REQUEST_TYPE.equals(m.getType()) && (PIGEON_REQUEST_NAME.equals(m.getName()) // is pigeon request
-						|| PIGEON_RESPONSE_NAME.equals(m.getName()))) { // is pigeon response
+						)) {
 					String requestMessageId = (String) e.getData();
 					remoteIds.add(requestMessageId);
 				}
@@ -133,5 +133,4 @@ public class RemoteIdChannel {
 			}
 		}
 	}
-
 }
