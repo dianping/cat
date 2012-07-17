@@ -47,11 +47,6 @@ public class RemoteIdAnalyzer extends AbstractMessageAnalyzer<Object> implements
 
 	private long m_duration;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.message.spi.MessageAnalyzer#doCheckpoint(boolean)
-	 */
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd) {
@@ -64,11 +59,6 @@ public class RemoteIdAnalyzer extends AbstractMessageAnalyzer<Object> implements
 		m_logger = logger;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.message.spi.MessageAnalyzer#getDomains()
-	 */
 	@Override
 	public Set<String> getDomains() {
 		return Collections.emptySet();

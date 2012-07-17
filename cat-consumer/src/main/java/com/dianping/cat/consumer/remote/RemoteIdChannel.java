@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.dianping.cat.consumer.remote;
 
 import java.io.File;

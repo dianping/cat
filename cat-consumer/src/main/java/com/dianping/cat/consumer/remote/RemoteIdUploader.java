@@ -189,5 +189,4 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 			Cat.reset();
 		}
 	}
-
 }
