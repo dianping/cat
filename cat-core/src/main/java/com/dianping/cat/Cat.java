@@ -100,7 +100,7 @@ public class Cat {
 
 		ClientConfig config = loadClientConfig(configFile);
 		log("INFO", "Current working directory is " + System.getProperty("user.dir"));
-		
+
 		if (config != null) {
 			config.accept(new ClientConfigValidator());
 		}
@@ -174,7 +174,6 @@ public class Cat {
 		return lookup(role, null);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static <T> T lookup(Class<T> role, String hint) throws ComponentLookupException {
 		return (T) s_instance.m_container.lookup(role, hint);
 	}
@@ -193,7 +192,6 @@ public class Cat {
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
 	}
 
-
 	private boolean isCatServerFound(PlexusContainer container) {
 		try {
 			return container.getContext().get("Cat.ThreadListener") != null;
@@ -203,11 +201,12 @@ public class Cat {
 	}
 
 	void setContainer(PlexusContainer container) {
-		final Logger logger ;
+		final Logger logger;
 		m_container = container;
 
 		try {
-			logger = container.getLoggerManager().getLoggerForComponent(MessageManager.class.getName());
+			logger = ((DefaultPlexusContainer) container).getLoggerManager().getLoggerForComponent(
+			      MessageManager.class.getName());
 		} catch (Exception e) {
 			throw new RuntimeException("Unable to get instance of Logger, "
 			      + "please make sure the environment was setup correctly!", e);
