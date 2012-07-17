@@ -39,7 +39,7 @@
 			<dependency>
 				<groupId>com.site.common</groupId>
 				<artifactId>lookup</artifactId>
-				<version>1.0.9</version>
+				<version>1.1.1</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -54,12 +54,12 @@
 			<dependency>
 				<groupId>com.site.common</groupId>
 				<artifactId>test-framework</artifactId>
-				<version>1.0.1</version>
+				<version>1.0.2</version>
 			</dependency>
 			<dependency>
 				<groupId>com.site.common</groupId>
 				<artifactId>web-framework</artifactId>
-				<version>1.0.12</version>
+				<version>1.0.14</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.webres</groupId>
@@ -79,17 +79,17 @@
 			<dependency>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty</artifactId>
-				<version>6.1.9</version>
+				<version>6.1.14</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-util</artifactId>
-				<version>6.1.9</version>
+				<version>6.1.14</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jsp-2.1</artifactId>
-				<version>6.1.9</version>
+				<version>6.1.14</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
