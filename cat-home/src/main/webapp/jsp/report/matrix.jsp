@@ -17,12 +17,15 @@
 		
 		<th class="left" rowspan="2">Type</th>
 		<th class="left" rowspan="2"><a href="?/date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
-		<th rowspan="2"><a href="?/date=${model.date}&domain=${model.domain}&sort=Count">Total<br/>Hits</a></th>
-		<th rowspan="2"><a href="?/date=${model.date}&domain=${model.domain}&sort=Time">Avg<br/>Duration(ms)</a></th>
+		<th rowspan="2" title="所有请求中总次数"><a href="?/date=${model.date}&domain=${model.domain}&sort=Count">Total<br/>Hits</a></th>
+		<th rowspan="2" title="所有请求中平均响应时间"><a href="?/date=${model.date}&domain=${model.domain}&sort=Time">Avg<br/>Duration(ms)</a></th>
 		<th rowspan="2">Sample Link</th>
-		<th colspan="5">Call(Count And Cost)</th>
-		<th colspan="5">SQL(Count And Cost)</th>
-		<th colspan="5">Cache(Count And Cost)</th>
+		<th colspan="3" title="一次请求中远程调用次数统计">Call Ratio</th>
+		<th colspan="2" title="一次请求中远程调用时间统计">Call Cost</th>
+		<th colspan="3" title="一次请求中数据库调用次数统计">SQL Ratio</th>
+		<th colspan="2" title="一次请求中数据库调用时间统计">SQL Cost</th>
+		<th colspan="3" title="一次请求中缓存调用次数统计">Cache Ratio</th>
+		<th colspan="2" title="一次请求中缓存调用时间统计">Cache Cost</th>
 	</tr>
 	<tr class="odd">
 		<td><a href="?/date=${model.date}&domain=${model.domain}&sort=callMinCount">Min</a></td>
@@ -40,11 +43,11 @@
 		<td><a href="?/date=${model.date}&domain=${model.domain}&sort=cacheMinCount">Min</a></td>
 		<td><a href="?/date=${model.date}&domain=${model.domain}&sort=cacheMaxCount">Max</a></td>
 		<td><a href="?/date=${model.date}&domain=${model.domain}&sort=cacheAvgCount">Avg</a></td>
-		<td><a href="?/date=${model.date}&domain=${model.domain}&sort=cacheAvgTotalTime">AvgTotalTime(ms)</a></td>
+		<td><a href="?/date=${model.date}&domain=${model.domain}&sort=cacheAvgTotalTime">Time(ms)</a></td>
 		<td><a href="?/date=${model.date}&domain=${model.domain}&sort=cacheTimePercent">Time%</td>
 	</tr>
 	<c:forEach var="item" items="${model.matrix.matrixs}"
-				varStatus="status"> ${item.url}
+				varStatus="status">
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td  class="left">${item.type}</td>
 					<td  class="left">${item.name}</td>

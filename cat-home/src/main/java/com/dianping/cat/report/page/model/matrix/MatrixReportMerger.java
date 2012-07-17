@@ -18,6 +18,9 @@ public class MatrixReportMerger extends DefaultMerger {
 		if (old.getType() == null) {
 			old.setType(matrix.getType());
 		}
+		if (old.getUrl() == null) {
+			old.setUrl(matrix.getUrl());
+		}
 	}
 
 	@Override

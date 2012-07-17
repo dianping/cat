@@ -14,7 +14,7 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">${title}</td>
+			<td class="title">${title}&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
 			<td class="switch">Browse Mode:History Summarize Report 
 				[&nbsp;<a href="?domain=${model.domain}">Hourly Mode</a>&nbsp;]&nbsp;
 			</td>
@@ -22,7 +22,7 @@
 	</table>
 	<table class="navbar">
 		<tr>
-			<td class="domain">
+			<td class="domain" rowspan="2" style="vertical-align:top;">
 				<div class="domain">
 					<c:forEach var="domain" items="${model.domains}">
 						&nbsp;<c:choose>
@@ -43,7 +43,6 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="subtitle"><jsp:invoke fragment="subtitle"/></td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.historyNavs}">
 					<c:choose>

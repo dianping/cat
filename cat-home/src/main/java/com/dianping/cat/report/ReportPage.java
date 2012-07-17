@@ -21,7 +21,7 @@ public enum ReportPage implements Page {
 
    MODEL("model", "model", "Model", "Service Model", false),
 
-   SQL("sql", "sql", "SQL", "SQL Report", true),
+   SQL("sql", "sql", "SQL", "SQL Report", false),
 
    HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", false),
 
