@@ -16,6 +16,8 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.consumer.remote.RemoteIdChannel;
+import com.dianping.cat.consumer.remote.RemoteIdChannelManager;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.Task;
@@ -23,6 +25,7 @@ import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
@@ -40,6 +43,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Inject
 	private List<Handler> m_handlers;
+	
+	@Inject
+	private MessagePathBuilder m_builder;
+
+	@Inject
+	private RemoteIdChannelManager m_manager;
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
 
@@ -51,6 +60,8 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private long m_duration;
 
+	private String m_remoteIdPath;
+	
 	private void closeMessageBuckets() {
 		Date timestamp = new Date(m_startTime);
 
@@ -73,6 +84,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
 		closeMessageBuckets();
+		if (atEnd) {
+			m_manager.closeAllChannels(m_startTime);
+		}
 	}
 
 	@Override
@@ -158,9 +172,19 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		m_duration = duration;
 
 		loadReports();
+
+		String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		m_remoteIdPath = m_builder.getMessageRemoteIdPath(ipAddress, new Date(m_startTime));
 	}
 
 	private void storeMessage(MessageTree tree) {
+		try {
+			RemoteIdChannel m_channel = m_manager.openChannel(m_remoteIdPath, m_startTime);
+			m_channel.write(tree);
+      } catch (Exception e) {
+	      e.printStackTrace();
+      }
+		
 		String messageId = tree.getMessageId();
 		String domain = tree.getDomain();
 

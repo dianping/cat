@@ -14,12 +14,10 @@ public enum ContainerBootstrap {
 		m_container = ContainerLoader.getDefaultContainer();
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T lookup(Class<T> role) throws ComponentLookupException {
 		return (T) m_container.lookup(role);
 	}
 
-	@SuppressWarnings("unchecked")
 	public <T> T lookup(Class<T> role, String roleHint) throws ComponentLookupException {
 		return (T) m_container.lookup(role, roleHint);
 	}
