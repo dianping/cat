@@ -28,7 +28,6 @@ import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.HeartbeatHandler;
 import com.dianping.cat.consumer.problem.handler.LongSqlHandler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
-import com.dianping.cat.consumer.remote.RemoteIdAnalyzer;
 import com.dianping.cat.consumer.remote.RemoteIdChannelManager;
 import com.dianping.cat.consumer.remote.RemoteIdUploader;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -53,7 +52,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 				.req(AnalyzerFactory.class, LogviewUploader.class) //
 				.config(E("extraTime").value(property("extraTime", "180000"))//
-						, E("analyzers").value("problem,transaction,event,heartbeat,matrix,dump,remoteId")));
+						, E("analyzers").value("problem,transaction,event,heartbeat,matrix,dump")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
@@ -74,13 +73,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
 				.req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), LONG_URL.getName(), LONG_SQL.getName(), HEARTBEAT.getName() }, "m_handlers") //
-				.req(BucketManager.class, ReportDao.class, TaskDao.class));
+				.req(BucketManager.class, ReportDao.class, TaskDao.class)//
+				.req(MessagePathBuilder.class,RemoteIdChannelManager.class));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
-				.req(BucketManager.class, ReportDao.class, TaskDao.class));
+				.req(BucketManager.class, ReportDao.class, TaskDao.class)//
+				.req(MessagePathBuilder.class,RemoteIdChannelManager.class));
 
 		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
-				.req(BucketManager.class, ReportDao.class, TaskDao.class));
+				.req(BucketManager.class, ReportDao.class, TaskDao.class)//
+				.req(MessagePathBuilder.class,RemoteIdChannelManager.class));
 
 		all.add(C(MatrixAnalyzer.class).is(PER_LOOKUP) //
 				.req(BucketManager.class, ReportDao.class, TaskDao.class));
@@ -93,11 +95,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 				.req(ServerConfigManager.class, MessagePathBuilder.class) //
-				.req(DumpUploader.class, DumpChannelManager.class));
+				.req(DumpUploader.class, DumpChannelManager.class)//
+				.req(RemoteIdUploader.class));
 		
-		all.add(C(RemoteIdAnalyzer.class).is(PER_LOOKUP) //
-				.req(ServerConfigManager.class, MessagePathBuilder.class) //
-				.req(RemoteIdUploader.class, RemoteIdChannelManager.class));	
+//		all.add(C(RemoteIdAnalyzer.class).is(PER_LOOKUP) //
+//				.req(ServerConfigManager.class, MessagePathBuilder.class) //
+//				.req(RemoteIdUploader.class, RemoteIdChannelManager.class));	
 		
 		all.add(C(RemoteIdChannelManager.class));
 
@@ -108,7 +111,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 				.req(ServerConfigManager.class, FileSystemManager.class)); //
 		all.add(C(RemoteIdUploader.class) //
 				.req(ServerConfigManager.class, FileSystemManager.class) //
-				.req( MessagePathBuilder.class));
+				.req(MessagePathBuilder.class));
 		all.add(C(LogviewUploader.class) //
 				.req(ServerConfigManager.class, FileSystemManager.class) //
 				.req(BucketManager.class, LogviewDao.class));

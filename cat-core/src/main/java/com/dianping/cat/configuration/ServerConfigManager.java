@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
@@ -205,8 +207,11 @@ public class ServerConfigManager implements LogEnabled {
 
 	public boolean isLocalMode() {
 		if (m_config != null) {
+			System.out.println("Local Model in ServerConfigManager"+m_config.isLocalMode() );
+			System.out.println(m_config);
 			return m_config.isLocalMode();
 		} else {
+			System.out.println("Config is Null!!!");
 			return true;
 		}
 	}
@@ -292,4 +297,13 @@ public class ServerConfigManager implements LogEnabled {
 
 		public void configure(ServerConfigManager manager, boolean firstTime);
 	}
+
+//	@Override
+//   public void initialize() throws InitializationException {
+//		try {
+//	      initialize(new File("/data/appdatas/cat/server.xml"));
+//      } catch (Exception e) {
+//      	throw new RuntimeException("Error where loading cat server.xml!",e);
+//      }
+//   }
 }

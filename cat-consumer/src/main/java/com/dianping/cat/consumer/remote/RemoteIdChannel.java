@@ -6,12 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Files;
 
@@ -67,67 +62,14 @@ public class RemoteIdChannel {
 		}
 	}
 
-	private static class BooleanWrap {
-		private boolean boo;
-	}
-
 	public void write(MessageTree tree) throws IOException {
-		List<String> remoteIds = new ArrayList<String>();
-		Transaction t = (Transaction) tree.getMessage();
-
-		BooleanWrap booWrap = new BooleanWrap();
-		booWrap.boo = true; // default success
-		doTransactionChilds(remoteIds, t, booWrap);
-
-		StringBuilder sb = new StringBuilder((remoteIds.size() + 1) * 32);
-		if (booWrap.boo) {
-			sb.append('0');
-		} else {
-			sb.append('1');
-		}
-		sb.append('\t');
+		StringBuilder sb = new StringBuilder();
 		sb.append(tree.getMessageId());
 		sb.append('\t');
-		sb.append(tree.getParentMessageId());
-		sb.append('\t');
 		sb.append(tree.getRootMessageId());
-		for (String id : remoteIds) {
-			sb.append('\t');
-			sb.append(id);
-		}
 		sb.append('\n');
-
-		m_output.write(sb.toString().getBytes());
-	}
-
-	public static final String PIGEON_REQUEST_NAME = "PigeonRequest";
-
-	public static final String PIGEON_RESPONSE_NAME = "PigeonRespone";
-
-	public static final String PIGEON_REQUEST_TYPE = "RemoteCall";
-
-	private void doTransactionChilds(List<String> remoteIds, Transaction t, BooleanWrap booWrap) {
-		if (!t.hasChildren()) {
-			return;
-		}
-		for (Message m : t.getChildren()) {
-			if (m instanceof Event) {
-				Event e = (Event) m;
-				if (!e.isSuccess()) {
-					booWrap.boo = false;
-				}
-				if (PIGEON_REQUEST_TYPE.equals(m.getType()) && (PIGEON_REQUEST_NAME.equals(m.getName()) // is pigeon request
-						)) {
-					String requestMessageId = (String) e.getData();
-					remoteIds.add(requestMessageId);
-				}
-			} else if (m instanceof Transaction) {
-				Transaction tt = (Transaction) m;
-				if (!tt.isSuccess()) {
-					booWrap.boo = false;
-				}
-				doTransactionChilds(remoteIds, tt, booWrap);
-			}
+		synchronized (m_output) {
+			m_output.write(sb.toString().getBytes());
 		}
 	}
 }

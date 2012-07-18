@@ -10,7 +10,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,heartbeat,matrix,dump,remoteId</analyzers>
+				<analyzers>problem,transaction,event,heartbeat,matrix,dump</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -87,6 +87,12 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.remote.RemoteIdChannelManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -103,6 +109,12 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.remote.RemoteIdChannelManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -118,6 +130,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.remote.RemoteIdChannelManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -183,24 +201,8 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.dump.DumpChannelManager</role>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.remote.RemoteIdAnalyzer</role>
-			<implementation>com.dianping.cat.consumer.remote.RemoteIdAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.remote.RemoteIdUploader</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.remote.RemoteIdChannelManager</role>
 				</requirement>
 			</requirements>
 		</component>

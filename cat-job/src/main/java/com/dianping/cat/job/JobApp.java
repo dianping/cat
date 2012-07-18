@@ -28,7 +28,6 @@ public class JobApp extends Configured implements Tool {
 		return lookup(role, null);
 	}
 
-	@SuppressWarnings("unchecked2")
 	public static <T> T lookup(Class<T> role, String roleHint) {
 		try {
 			return (T) s_instance.m_container.lookup(role, roleHint == null ? "default" : roleHint.toString());
