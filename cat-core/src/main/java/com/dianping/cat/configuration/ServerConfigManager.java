@@ -202,14 +202,13 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
 		}
 
-		Threads.forGroup("Cat").start(new ServerConfigReloader(configFile));
+		//Threads.forGroup("Cat").start(new ServerConfigReloader(configFile));
 	}
 
 	public boolean isLocalMode() {
 		if (m_config != null) {
 			return m_config.isLocalMode();
 		} else {
-			System.out.println("Config is Null!!!->>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			return true;
 		}
 	}

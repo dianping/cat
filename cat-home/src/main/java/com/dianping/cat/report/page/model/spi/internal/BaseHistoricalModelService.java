@@ -31,7 +31,6 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
 		
 		m_localMode = manager.isLocalMode();
-		System.out.println(this.getClass().getName() + ">>>>>>>>>>>>>>>>Local Mode :" +m_localMode);
 	}
 
 	@Override

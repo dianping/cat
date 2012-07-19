@@ -65,7 +65,7 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 		m_localMode = m_configManager.isLocalMode();
 
 		if (!m_localMode) {
-			m_baseDir = m_configManager.getHdfsLocalBaseDir("dump");
+			m_baseDir = m_configManager.getHdfsLocalBaseDir("remote");
 
 		}
 	}
@@ -125,7 +125,7 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 
 		private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {
 			StringBuilder baseDir = new StringBuilder(32);
-			FileSystem fs = m_fileSystemManager.getFileSystem("dump", baseDir);
+			FileSystem fs = m_fileSystemManager.getFileSystem("remote", baseDir);
 			Path file = new Path(baseDir.toString(), path);
 			FSDataOutputStream out = fs.create(file);
 			return out;
@@ -147,7 +147,7 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 			root.addData("file", file);
 			root.setStatus(Message.SUCCESS);
 
-			Transaction t = cat.newTransaction("Task", "UploadDump");
+			Transaction t = cat.newTransaction("Task", "UploadRemoteIds");
 
 			t.addData("file", path);
 

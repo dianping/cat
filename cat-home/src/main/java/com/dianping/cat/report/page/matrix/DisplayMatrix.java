@@ -98,7 +98,7 @@ public class DisplayMatrix {
 				return (int) (o2.getSqlAvg() * 100 - o1.getSqlAvg() * 100);
 			}
 			if (m_sort.equalsIgnoreCase("SqlAvgTotalTime")) {
-				return o2.getSqlTime() - o1.getCacheMin();
+				return o2.getSqlTime() - o1.getSqlTime();
 			}
 			if (m_sort.equalsIgnoreCase("SqlTimePercent")) {
 				return (int) (o2.getSqlTimePercent() * 100 - o1.getSqlTimePercent() * 100);
@@ -113,7 +113,7 @@ public class DisplayMatrix {
 				return (int) (o2.getCacheAvg() * 100 - o1.getCacheAvg() * 100);
 			}
 			if (m_sort.equalsIgnoreCase("CacheAvgTotalTime")) {
-				return o2.getCacheTime() - o1.getCacheMin();
+				return o2.getCacheTime() - o1.getCacheTime();
 			}
 			if (m_sort.equalsIgnoreCase("CacheTimePercent")) {
 				return (int) (o2.getCacheTimePercent() * 100 - o1.getCacheTimePercent() * 100);
@@ -181,7 +181,9 @@ public class DisplayMatrix {
 			if (matrix.getCount() > 0) {
 				m_cacheAvg = (double) ratio.getTotalCount() / (double) matrix.getCount();
 			}
-			m_cacheTime = (int) (ratio.getTotalTime() / 1000);
+			if (m_cacheAvg > 0) {
+				m_cacheTime = (int) ((double)ratio.getTotalTime() / 1000 / m_cacheAvg / m_count);
+			}
 			if (matrix.getTotalTime() > 0) {
 				m_cacheTimePercent = (double) ratio.getTotalTime() / (double) (matrix.getTotalTime());
 			}
@@ -194,7 +196,9 @@ public class DisplayMatrix {
 			if (matrix.getCount() > 0) {
 				m_sqlAvg = (double) ratio.getTotalCount() / (double) matrix.getCount();
 			}
-			m_sqlTime = (int) (ratio.getTotalTime() / 1000);
+			if (m_sqlAvg > 0) {
+				m_sqlTime = (int) ((double)ratio.getTotalTime() / 1000 / m_sqlAvg / m_count);
+			}
 			if (matrix.getTotalTime() > 0) {
 				m_sqlTimePercent = (double) ratio.getTotalTime() / (double) (matrix.getTotalTime());
 			}
@@ -207,7 +211,9 @@ public class DisplayMatrix {
 			if (matrix.getCount() > 0) {
 				m_callAvg = (double) ratio.getTotalCount() / (double) matrix.getCount();
 			}
-			m_callTime = (int) (ratio.getTotalTime() / 1000);
+			if (m_callAvg > 0) {
+				m_callTime = (int) ((double)ratio.getTotalTime() / 1000 / m_callAvg / m_count);
+			}
 			if (matrix.getTotalTime() > 0) {
 				m_callTimePercent = (double) ratio.getTotalTime() / (double) (matrix.getTotalTime());
 			}
