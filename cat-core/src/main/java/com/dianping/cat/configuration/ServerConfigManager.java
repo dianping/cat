@@ -24,7 +24,7 @@ import com.site.helper.Files;
 import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
 
-public class ServerConfigManager implements LogEnabled {
+public class ServerConfigManager implements Initializable, LogEnabled {
 	private ServerConfig m_config;
 
 	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
@@ -56,7 +56,7 @@ public class ServerConfigManager implements LogEnabled {
 			}
 		}
 
-		return "127.0.0.1:2281";
+		return null;
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -207,11 +207,9 @@ public class ServerConfigManager implements LogEnabled {
 
 	public boolean isLocalMode() {
 		if (m_config != null) {
-			System.out.println("Local Model in ServerConfigManager"+m_config.isLocalMode() );
-			System.out.println(m_config);
 			return m_config.isLocalMode();
 		} else {
-			System.out.println("Config is Null!!!");
+			System.out.println("Config is Null!!!->>>>>>>>>>>>>>>>>>>>>>>>>>>>");
 			return true;
 		}
 	}
@@ -298,12 +296,12 @@ public class ServerConfigManager implements LogEnabled {
 		public void configure(ServerConfigManager manager, boolean firstTime);
 	}
 
-//	@Override
-//   public void initialize() throws InitializationException {
-//		try {
-//	      initialize(new File("/data/appdatas/cat/server.xml"));
-//      } catch (Exception e) {
-//      	throw new RuntimeException("Error where loading cat server.xml!",e);
-//      }
-//   }
+	@Override
+   public void initialize() throws InitializationException {
+		try {
+	      initialize(new File("/data/appdatas/cat/server.xml"));
+      } catch (Exception e) {
+      	throw new RuntimeException("Error where loading cat server.xml!",e);
+      }
+   }
 }

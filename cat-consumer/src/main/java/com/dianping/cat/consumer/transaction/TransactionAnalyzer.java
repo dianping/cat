@@ -67,7 +67,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private long m_duration;
 
 	private String m_remoteIdPath;
-	
+
 	private Logger m_logger;
 
 	private void clearAllDuration(TransactionReport report) {
@@ -328,10 +328,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		try {
 			RemoteIdChannel m_channel = m_manager.openChannel(m_remoteIdPath, m_startTime);
 			m_channel.write(tree);
-      } catch (Exception e) {
-	      e.printStackTrace();
-      }
-		
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		String messageId = tree.getMessageId();
 		String domain = tree.getDomain();
 
@@ -345,7 +345,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	private void storeReports(boolean atEnd) {
-		//DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
+		// DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 		Bucket<String> reportBucket = null;
 
@@ -359,7 +359,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 				set95Line(report);
 				clearAllDuration(report);
-				//String xml = builder.buildXml(report);
+				// String xml = builder.buildXml(report);
 				String xml = new TransactionReportFilter().buildXml(report);
 				String domain = report.getDomain();
 
@@ -372,32 +372,32 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 				for (TransactionReport report : m_reports.values()) {
 					try {
-	               Report r = m_reportDao.createLocal();
-	               //String xml = builder.buildXml(report);
-	   				String xml = new TransactionReportFilter().buildXml(report);
-	               String domain = report.getDomain();
+						Report r = m_reportDao.createLocal();
+						// String xml = builder.buildXml(report);
+						String xml = new TransactionReportFilter().buildXml(report);
+						String domain = report.getDomain();
 
-	               r.setName("transaction");
-	               r.setDomain(domain);
-	               r.setPeriod(period);
-	               r.setIp(ip);
-	               r.setType(1);
-	               r.setContent(xml);
+						r.setName("transaction");
+						r.setDomain(domain);
+						r.setPeriod(period);
+						r.setIp(ip);
+						r.setType(1);
+						r.setContent(xml);
 
-	               m_reportDao.insert(r);
+						m_reportDao.insert(r);
 
-	               Task task = m_taskDao.createLocal();
-	               task.setCreationDate(new Date());
-	               task.setProducer(ip);
-	               task.setReportDomain(domain);
-	               task.setReportName("transaction");
-	               task.setReportPeriod(period);
-	               task.setStatus(1); // status todo
-	               m_taskDao.insert(task);
-	               m_logger.info("insert transaction task:" + task.toString());
-               } catch (Throwable e) {
-         			Cat.getProducer().logError(e);
-               }
+						Task task = m_taskDao.createLocal();
+						task.setCreationDate(new Date());
+						task.setProducer(ip);
+						task.setReportDomain(domain);
+						task.setReportName("transaction");
+						task.setReportPeriod(period);
+						task.setStatus(1); // status todo
+						m_taskDao.insert(task);
+						m_logger.info("insert transaction task:" + task.toString());
+					} catch (Throwable e) {
+						Cat.getProducer().logError(e);
+					}
 				}
 			}
 
@@ -414,28 +414,34 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			}
 		}
 	}
-	
-	static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 
-		public TransactionReportFilter() {
-		}
+	static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+		private String m_domain;
 
 		@Override
 		public void visitType(TransactionType type) {
-			if ("URL".equals(type.getId())) {
-				List<String> names = new ArrayList<String>();
-				Map<String, TransactionName> transactionNames = type.getNames();
-				for (TransactionName transactionName : transactionNames.values()) {
-					if (transactionName.getTotalCount() <= 1) {
-						names.add(transactionName.getId());
+			if (!"Cat".equals(m_domain)) {
+				if ("URL".equals(type.getId())) {
+					List<String> names = new ArrayList<String>();
+					Map<String, TransactionName> transactionNames = type.getNames();
+					for (TransactionName transactionName : transactionNames.values()) {
+						if (transactionName.getTotalCount() <= 1) {
+							names.add(transactionName.getId());
+						}
 					}
-				}
 
-				for (String name : names) {
-					transactionNames.remove(name);
+					for (String name : names) {
+						transactionNames.remove(name);
+					}
 				}
 			}
 			super.visitType(type);
+		}
+
+		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			m_domain = transactionReport.getDomain();
+			super.visitTransactionReport(transactionReport);
 		}
 	}
 }

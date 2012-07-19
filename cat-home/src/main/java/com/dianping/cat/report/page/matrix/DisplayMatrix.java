@@ -74,10 +74,10 @@ public class DisplayMatrix {
 				return (int) (o2.getAvg() * 100 - o1.getAvg() * 100);
 			}
 			if (m_sort.equalsIgnoreCase("CallMinCount")) {
-				return o2.getCallMin() - o1.getCacheMin();
+				return o2.getCallMin() - o1.getCallMin();
 			}
 			if (m_sort.equalsIgnoreCase("CallMaxCount")) {
-				return o2.getCallMax() - o1.getCacheMax();
+				return o2.getCallMax() - o1.getCallMax();
 			}
 			if (m_sort.equalsIgnoreCase("CallAvgCount")) {
 				return (int) (o2.getCallAvg() * 100 - o1.getCallAvg() * 100);
@@ -89,10 +89,10 @@ public class DisplayMatrix {
 				return (int) (o2.getCallTimePercent() * 100 - o1.getCallTimePercent() * 100);
 			}
 			if (m_sort.equalsIgnoreCase("SqlMinCount")) {
-				return o2.getSqlMin() - o1.getCacheMin();
+				return o2.getSqlMin() - o1.getSqlMin();
 			}
 			if (m_sort.equalsIgnoreCase("SqlMaxCount")) {
-				return o2.getSqlMax() - o1.getCacheMax();
+				return o2.getSqlMax() - o1.getSqlMax();
 			}
 			if (m_sort.equalsIgnoreCase("SqlAvgCount")) {
 				return (int) (o2.getSqlAvg() * 100 - o1.getSqlAvg() * 100);

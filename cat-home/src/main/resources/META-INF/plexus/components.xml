@@ -821,7 +821,12 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction</role-hint>
-					<field-name>m_service</field-name>
+					<field-name>m_transactionService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>event</role-hint>
+					<field-name>m_eventService</field-name>
 				</requirement>
 			</requirements>
 		</component>
