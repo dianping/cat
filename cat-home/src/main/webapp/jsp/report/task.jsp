@@ -73,7 +73,10 @@
 				</select>
 				&nbsp;&nbsp;<input type='button' value=' search '  width=20 height=10 onclick="searchTask('${model.domain}','${model.name}','${payload.date}','${payload.step}')"></input>
 			</td>
-			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>total number of tasks:</b>&nbsp;&nbsp;${model.totalNumOfTasks}</td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>total tasks:</b>&nbsp;&nbsp;${model.totalNumOfTasks}</td>
+			<td clospan="2">
+				<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failure tasks:&nbsp;&nbsp;</b>${model.numOfFailureTasks}
+			</td>
 			</tr>
 		<tr>
 			<th >Producer</th>
@@ -81,6 +84,8 @@
 			<th >Domain</th>
 			<th >Name</th>
 			<th >Report Period</th>
+			
+			
 			<th >Start Date</th>
 			<th >End Date</th>
 			<th >Status</th>
@@ -107,7 +112,7 @@
 					<c:if test="${task.taskType==2}">day</c:if>
 				</td>
 				<td > 
-				<a href="" target="_blank">redo</a></td>
+				<a href="${model.baseUri}?&op=redo&period=${task.reportPeriod}&domain=${task.reportDomain}&name=${task.reportName}&taskType=${task.taskType}" target="_blank">redo</a></td>
 		</tr>
 		</c:forEach>
 		<tr>

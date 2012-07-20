@@ -36,7 +36,17 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	
 	private int totalNumOfTasks;
 	
+	private int numOfFailureTasks;
 	
+	
+	public int getNumOfFailureTasks() {
+   	return numOfFailureTasks;
+   }
+
+	public void setNumOfFailureTasks(int numOfFailureTasks) {
+   	this.numOfFailureTasks = numOfFailureTasks;
+   }
+
 	public int getTotalNumOfTasks() {
    	return totalNumOfTasks;
    }
@@ -58,12 +68,10 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return buildPageUri(getPage().getPath(), null);
 	}
 	
-	//TODO get the current Domain
 	public String getDomain(){
 		return domain;
 	}
 	
-	//TODO get the current name
 	public String getName(){
 		return name;
 	}
