@@ -63,7 +63,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 				int count = m_attempts.incrementAndGet();
 
 				if (count % 100 == 0) {
-					m_logger.error("Can't send message to cat-server due to Netty write buffer full! Count: " + count);
+					m_logger.error("Netty write buffer is full! Attempts: " + count);
 				}
 			}
 		}

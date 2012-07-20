@@ -859,8 +859,6 @@
 				</requirement>
 			</requirements>
 		</component>
-<<<<<<< HEAD
-=======
 		<component>
 			<role>com.dianping.cat.report.page.matrix.Handler</role>
 			<implementation>com.dianping.cat.report.page.matrix.Handler</implementation>
@@ -882,6 +880,5 @@
 			<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.matrix.JspViewer</implementation>
 		</component>
->>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
 	</components>
 </plexus>
