@@ -196,7 +196,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (message instanceof Transaction) {
 			int count = processTransaction(report, tree, (Transaction) message);
 
-			// the message is required by some transactions
 			if (count > 0) {
 				storeMessage(tree);
 			}
@@ -206,8 +205,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		String ip = tree.getIpAddress();
 		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
-		//hack pigeon default heartbeat is no use
-		if (t.getType().equals("Call") && t.getName().equals("")) {
+		//pigeon default heartbeat is no use
+		if (("Call").equals(t.getType()) &&("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
 			return 0;
 		}
 		TransactionName name = type.findOrCreateName(t.getName());

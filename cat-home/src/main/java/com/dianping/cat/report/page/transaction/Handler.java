@@ -139,7 +139,8 @@ public class Handler implements PageHandler<Context> {
 					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 					tps = totalCount / seconds;
 				} else {
-					tps = totalCount / (double) 3600;
+					long time = report.getEndTime().getTime() - report.getStartTime().getTime();
+					tps = totalCount / (double) time;
 				}
 				transType.setTps(tps);
 				for (TransactionName transName : transType.getNames().values()) {
@@ -149,7 +150,8 @@ public class Handler implements PageHandler<Context> {
 						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 						nameTps = totalNameCount / seconds;
 					} else {
-						nameTps = totalNameCount / (double) 3600;
+						long time = report.getEndTime().getTime() - report.getStartTime().getTime();
+						nameTps = totalNameCount / (double) time;
 					}
 					transName.setTps(nameTps);
 				}

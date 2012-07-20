@@ -69,7 +69,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 	public MatrixReport getReport(String domain) {
 		MatrixReport report = m_reports.get(domain);
-		
+
 		if (report == null) {
 			report = new MatrixReport(domain);
 		}
@@ -169,6 +169,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		List<Message> children = t.getChildren();
 		String type = t.getType();
 		Ratio ratio = null;
+		
 		if (type.equals("Call")) {
 			ratio = ratios.get("Call");
 		} else if (type.equals("SQL")) {
@@ -299,7 +300,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 				for (String url : removeUrls) {
 					matrixs.remove(url);
 				}
-				
+
 				if (totalCount > 0) {
 					Matrix other = new Matrix("OTHERS");
 					other.setType("OTHERS");
