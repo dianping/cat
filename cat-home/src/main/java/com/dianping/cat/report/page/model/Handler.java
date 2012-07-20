@@ -19,6 +19,7 @@ import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
@@ -26,6 +27,7 @@ import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
+import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -60,6 +62,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "heartbeat-local")
 	private LocalHeartbeatService m_heartbeatService;
+
+	@Inject(type = ModelService.class, value = "matrix-local")
+	private LocalMatrixService m_matrixService;
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -133,6 +138,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_ipService.invoke(request);
 			} else if ("heartbeat".equals(report)) {
 				response = m_heartbeatService.invoke(request);
+			} else if ("matrix".equals(report)) {
+				response = m_matrixService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}
@@ -265,6 +272,10 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		private String m_ipAddress;
 
+		private String m_currentType;
+
+		private String m_currentDomain;
+
 		public TransactionReportFilter(String type, String name, String ip) {
 			m_type = type;
 			m_name = name;
@@ -299,9 +310,19 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			if (m_type == null) {
 				// skip it
 			} else if (m_name != null && name.getId().equals(m_name)) {
-				super.visitName(name);
+				visitTransactionName(name);
 			} else if ("*".equals(m_name)) {
-				super.visitName(name);
+				visitTransactionName(name);
+			} else {
+				visitTransactionName(name);
+			}
+		}
+
+		private void visitTransactionName(TransactionName name) {
+			if ("URL".equals(m_currentType) && !"Cat".equals(m_currentDomain)) {
+				if (name.getTotalCount() > 1) {
+					super.visitName(name);
+				}
 			} else {
 				super.visitName(name);
 			}
@@ -317,15 +338,23 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		@Override
 		public void visitType(TransactionType type) {
 			if (m_type == null) {
+				m_currentType = type.getId();
 				super.visitType(type);
+
 			} else if (m_type != null && type.getId().equals(m_type)) {
 				type.setSuccessMessageUrl(null);
 				type.setFailMessageUrl(null);
-
+				m_currentType = type.getId();
 				super.visitType(type);
 			} else {
 				// skip it
 			}
+		}
+
+		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			m_currentDomain = transactionReport.getDomain();
+			super.visitTransactionReport(transactionReport);
 		}
 	}
 

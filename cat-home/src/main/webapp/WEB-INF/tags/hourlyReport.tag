@@ -14,7 +14,7 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">${title}</td>
+			<td class="title">${title}&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
 			<td class="switch">Browse Mode:Hourly Report 
 				[&nbsp;<a href="${model.baseUri}?op=history&domain=${model.domain}">History Mode</a>&nbsp;]&nbsp;
 			</td>
@@ -43,9 +43,6 @@
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
-		</tr>
-		<tr>
-			<td class="subtitle"><jsp:invoke fragment="subtitle"/></td>
 		</tr>
 	</table>
 

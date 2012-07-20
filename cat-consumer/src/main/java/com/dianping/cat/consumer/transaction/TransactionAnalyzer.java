@@ -19,6 +19,8 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.remote.RemoteIdChannel;
+import com.dianping.cat.consumer.remote.RemoteIdChannelManager;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -27,7 +29,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.Task;
@@ -35,6 +36,7 @@ import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
@@ -50,6 +52,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject
 	private TaskDao m_taskDao;
 
+	@Inject
+	private MessagePathBuilder m_builder;
+
+	@Inject
+	private RemoteIdChannelManager m_manager;
+
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
 	private long m_extraTime;
@@ -57,6 +65,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private long m_startTime;
 
 	private long m_duration;
+
+	private String m_remoteIdPath;
 
 	private Logger m_logger;
 
@@ -310,9 +320,18 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_duration = duration;
 
 		loadReports();
+		String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		m_remoteIdPath = m_builder.getMessageRemoteIdPath(ipAddress, new Date(m_startTime));
 	}
 
 	private void storeMessage(MessageTree tree) {
+		try {
+			RemoteIdChannel m_channel = m_manager.openChannel(m_remoteIdPath, m_startTime);
+			m_channel.write(tree);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		String messageId = tree.getMessageId();
 		String domain = tree.getDomain();
 
@@ -326,7 +345,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	private void storeReports(boolean atEnd) {
-		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
+		// DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 		Bucket<String> reportBucket = null;
 
@@ -340,7 +359,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 				set95Line(report);
 				clearAllDuration(report);
-				String xml = builder.buildXml(report);
+				// String xml = builder.buildXml(report);
+				String xml = new TransactionReportFilter().buildXml(report);
 				String domain = report.getDomain();
 
 				reportBucket.storeById(domain, xml);
@@ -352,31 +372,32 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 				for (TransactionReport report : m_reports.values()) {
 					try {
-	               Report r = m_reportDao.createLocal();
-	               String xml = builder.buildXml(report);
-	               String domain = report.getDomain();
+						Report r = m_reportDao.createLocal();
+						// String xml = builder.buildXml(report);
+						String xml = new TransactionReportFilter().buildXml(report);
+						String domain = report.getDomain();
 
-	               r.setName("transaction");
-	               r.setDomain(domain);
-	               r.setPeriod(period);
-	               r.setIp(ip);
-	               r.setType(1);
-	               r.setContent(xml);
+						r.setName("transaction");
+						r.setDomain(domain);
+						r.setPeriod(period);
+						r.setIp(ip);
+						r.setType(1);
+						r.setContent(xml);
 
-	               m_reportDao.insert(r);
+						m_reportDao.insert(r);
 
-	               Task task = m_taskDao.createLocal();
-	               task.setCreationDate(new Date());
-	               task.setProducer(ip);
-	               task.setReportDomain(domain);
-	               task.setReportName("transaction");
-	               task.setReportPeriod(period);
-	               task.setStatus(1); // status todo
-	               m_taskDao.insert(task);
-	               m_logger.info("insert transaction task:" + task.toString());
-               } catch (Throwable e) {
-         			Cat.getProducer().logError(e);
-               }
+						Task task = m_taskDao.createLocal();
+						task.setCreationDate(new Date());
+						task.setProducer(ip);
+						task.setReportDomain(domain);
+						task.setReportName("transaction");
+						task.setReportPeriod(period);
+						task.setStatus(1); // status todo
+						m_taskDao.insert(task);
+						m_logger.info("insert transaction task:" + task.toString());
+					} catch (Throwable e) {
+						Cat.getProducer().logError(e);
+					}
 				}
 			}
 
@@ -391,6 +412,36 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			if (reportBucket != null) {
 				m_bucketManager.closeBucket(reportBucket);
 			}
+		}
+	}
+
+	static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+		private String m_domain;
+
+		@Override
+		public void visitType(TransactionType type) {
+			if (!"Cat".equals(m_domain)) {
+				if ("URL".equals(type.getId())) {
+					List<String> names = new ArrayList<String>();
+					Map<String, TransactionName> transactionNames = type.getNames();
+					for (TransactionName transactionName : transactionNames.values()) {
+						if (transactionName.getTotalCount() <= 1) {
+							names.add(transactionName.getId());
+						}
+					}
+
+					for (String name : names) {
+						transactionNames.remove(name);
+					}
+				}
+			}
+			super.visitType(type);
+		}
+
+		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			m_domain = transactionReport.getDomain();
+			super.visitTransactionReport(transactionReport);
 		}
 	}
 }

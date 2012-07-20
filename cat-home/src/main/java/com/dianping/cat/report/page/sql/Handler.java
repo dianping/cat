@@ -53,10 +53,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.SQL);
 		model.setDisplayDomain(payload.getDomain());
 		model.setAction(payload.getAction());
-		// Last hour is default
-		if (payload.getPeriod().isCurrent()) {
-			payload.setStep(payload.getStep() - 1);
-		}
+
 		switch (payload.getAction()) {
 		case VIEW:
 			showReport(model, payload);
@@ -82,10 +79,15 @@ public class Handler implements PageHandler<Context> {
 			String durationOvertime = "";
 			String hitsovOvrtime = "";
 			String failureOvertime = "";
+			// Last hour is default
+			long date = payload.getDate();
+			if (payload.getPeriod().isCurrent()) {
+				date = date - 60 * 60 * 1000;
+			}
 			// when id is 0, will analyze all the data under this domain
 			if (id == 0) {
-				List<SqlReportRecord> allRecords = m_dao.findAllByDomainAndDate(payload.getDomain(),
-				      new Date(payload.getDate()), SqlReportRecordEntity.READSET_FULL);
+				List<SqlReportRecord> allRecords = m_dao.findAllByDomainAndDate(payload.getDomain(), new Date(date),
+				      SqlReportRecordEntity.READSET_FULL);
 				List<String> durationDistributions = new ArrayList<String>();
 				List<String> durationOvertimes = new ArrayList<String>();
 				List<String> hitsovOvrtimes = new ArrayList<String>();
@@ -135,6 +137,9 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		long startDate = payload.getDate();
 		model.setLongDate(startDate);
+		if (payload.getPeriod().isCurrent()) {
+			startDate = startDate - 60 * 60 * 1000;
+		}
 		Date transactiondate = new Date(startDate);
 		List<String> domains = new ArrayList<String>();
 		Readset<SqlReportRecord> domainSet = SqlReportRecordEntity.READSET_DOMAIN;
@@ -220,7 +225,7 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		for (int m = 0; m <= 12; m++) {
-			average[m] = totalHit[m] == 0 ? 0 : sum[m] /(double) totalHit[m];
+			average[m] = totalHit[m] == 0 ? 0 : sum[m] / (double) totalHit[m];
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i <= 12; i++) {

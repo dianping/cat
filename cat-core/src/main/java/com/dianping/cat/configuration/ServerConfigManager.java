@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
@@ -22,7 +24,7 @@ import com.site.helper.Files;
 import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
 
-public class ServerConfigManager implements LogEnabled {
+public class ServerConfigManager implements Initializable, LogEnabled {
 	private ServerConfig m_config;
 
 	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
@@ -54,7 +56,7 @@ public class ServerConfigManager implements LogEnabled {
 			}
 		}
 
-		return "127.0.0.1:2281";
+		return null;
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -200,7 +202,7 @@ public class ServerConfigManager implements LogEnabled {
 			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
 		}
 
-		Threads.forGroup("Cat").start(new ServerConfigReloader(configFile));
+		//Threads.forGroup("Cat").start(new ServerConfigReloader(configFile));
 	}
 
 	public boolean isLocalMode() {
@@ -292,4 +294,13 @@ public class ServerConfigManager implements LogEnabled {
 
 		public void configure(ServerConfigManager manager, boolean firstTime);
 	}
+
+	@Override
+   public void initialize() throws InitializationException {
+		try {
+	      initialize(new File("/data/appdatas/cat/server.xml"));
+      } catch (Exception e) {
+      	throw new RuntimeException("Error where loading cat server.xml!",e);
+      }
+   }
 }

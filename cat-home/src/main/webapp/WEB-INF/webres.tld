@@ -42,6 +42,8 @@
 <required>true</required>
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.String</type>
+<<<<<<< HEAD
+=======
 </attribute>
 <dynamic-attributes>false</dynamic-attributes>
 </tag>
@@ -50,6 +52,14 @@
 <name>useCss</name>
 <tag-class>org.unidal.webres.taglib.basic.UseCssTagHandler</tag-class>
 <body-content>JSP</body-content>
+<attribute>
+<description><![CDATA[Set the css value with EL or a css ref.]]></description>
+<name>value</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.Object</type>
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
+</attribute>
 <attribute>
 <description><![CDATA[Identify whether the link URL is secure or not.]]></description>
 <name>secure</name>
@@ -72,6 +82,7 @@
 <type>java.lang.String</type>
 </attribute>
 <attribute>
+<<<<<<< HEAD
 <description><![CDATA[Set the css value with EL or a css ref.]]></description>
 <name>value</name>
 <required>false</required>
@@ -79,6 +90,8 @@
 <type>java.lang.Object</type>
 </attribute>
 <attribute>
+=======
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
 <description><![CDATA[Target placement for this css resource to render]]></description>
 <name>target</name>
 <required>false</required>
@@ -114,19 +127,26 @@
 <tag-class>org.unidal.webres.taglib.basic.SetTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
-<description><![CDATA[The name.]]></description>
-<name>id</name>
-<required>true</required>
-<rtexprvalue>true</rtexprvalue>
-<type>java.lang.String</type>
-</attribute>
-<attribute>
+<<<<<<< HEAD
+=======
 <description><![CDATA[The value]]></description>
 <name>value</name>
 <required>true</required>
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.Object</type>
 </attribute>
+<attribute>
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
+<description><![CDATA[The name.]]></description>
+<name>id</name>
+<required>true</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.String</type>
+</attribute>
+<<<<<<< HEAD
+<attribute>
+<description><![CDATA[The value]]></description>
+=======
 <dynamic-attributes>false</dynamic-attributes>
 </tag>
 <tag>
@@ -134,6 +154,14 @@
 <name>useJs</name>
 <tag-class>org.unidal.webres.taglib.basic.UseJsTagHandler</tag-class>
 <body-content>JSP</body-content>
+<attribute>
+<description><![CDATA[Set the js value with EL or a js ref.]]></description>
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
+<name>value</name>
+<required>true</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.Object</type>
+</attribute>
 <attribute>
 <description><![CDATA[Identify whether the link URL is secure or not.]]></description>
 <name>secure</name>
@@ -156,13 +184,9 @@
 <type>java.lang.String</type>
 </attribute>
 <attribute>
+<<<<<<< HEAD
 <description><![CDATA[Set the js value with EL or a js ref.]]></description>
-<name>value</name>
-<required>false</required>
-<rtexprvalue>true</rtexprvalue>
-<type>java.lang.Object</type>
-</attribute>
-<attribute>
+=======
 <description><![CDATA[Target placement for this js resource to render]]></description>
 <name>target</name>
 <required>false</required>
@@ -177,6 +201,31 @@
 <tag-class>org.unidal.webres.taglib.basic.LinkTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
+<description><![CDATA[The value for link, could be a expression or a link ref.]]></description>
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
+<name>value</name>
+<required>true</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.Object</type>
+</attribute>
+<attribute>
+<<<<<<< HEAD
+<description><![CDATA[Target placement for this js resource to render]]></description>
+<name>target</name>
+<required>false</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.String</type>
+</attribute>
+<dynamic-attributes>true</dynamic-attributes>
+</tag>
+<tag>
+<description><![CDATA[Link Resource Tag]]></description>
+<name>link</name>
+<tag-class>org.unidal.webres.taglib.basic.LinkTagHandler</tag-class>
+<body-content>JSP</body-content>
+<attribute>
+=======
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
 <description><![CDATA[Identify whether the link URL is secure or not.]]></description>
 <name>secure</name>
 <required>false</required>
@@ -190,6 +239,7 @@
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.String</type>
 </attribute>
+<<<<<<< HEAD
 <attribute>
 <description><![CDATA[The value for link, could be a expression or a link ref.]]></description>
 <name>value</name>
@@ -197,6 +247,8 @@
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.Object</type>
 </attribute>
+=======
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
 <dynamic-attributes>true</dynamic-attributes>
 </tag>
 <tag>
@@ -205,6 +257,16 @@
 <tag-class>org.unidal.webres.taglib.basic.ImageTagHandler</tag-class>
 <body-content>JSP</body-content>
 <attribute>
+<<<<<<< HEAD
+=======
+<description><![CDATA[The value for image, could be a expression or a image path.]]></description>
+<name>value</name>
+<required>true</required>
+<rtexprvalue>true</rtexprvalue>
+<type>java.lang.Object</type>
+</attribute>
+<attribute>
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
 <description><![CDATA[Identify whether the image URL is secure or not.]]></description>
 <name>secure</name>
 <required>false</required>
@@ -225,6 +287,7 @@
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.String</type>
 </attribute>
+<<<<<<< HEAD
 <attribute>
 <description><![CDATA[The value for image, could be a expression or a image path.]]></description>
 <name>value</name>
@@ -232,6 +295,8 @@
 <rtexprvalue>true</rtexprvalue>
 <type>java.lang.Object</type>
 </attribute>
+=======
+>>>>>>> 48b336263d60a296d366bd7325c704e63da26f7b
 <dynamic-attributes>true</dynamic-attributes>
 </tag>
 <tag>

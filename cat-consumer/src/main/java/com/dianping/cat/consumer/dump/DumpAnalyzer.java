@@ -11,6 +11,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.remote.RemoteIdUploader;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -28,6 +29,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	@Inject
 	private DumpUploader m_uploader;
+
+	@Inject
+	private RemoteIdUploader m_remoteUploader;
 
 	public DumpUploader getDumpUploader() {
 		return m_uploader;
@@ -110,6 +114,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 		if (!m_localMode) {
 			m_uploader.start();
+			m_remoteUploader.start();
 		}
 	}
 }

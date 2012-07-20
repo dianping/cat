@@ -20,6 +20,9 @@ import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
 import com.dianping.cat.report.page.model.logview.HistoricalLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
+import com.dianping.cat.report.page.model.matrix.CompositeMatrixService;
+import com.dianping.cat.report.page.model.matrix.HistoricalMatrixService;
+import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
 import com.dianping.cat.report.page.model.problem.CompositeProblemService;
 import com.dianping.cat.report.page.model.problem.HistoricalProblemService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
@@ -68,6 +71,13 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "heartbeat", CompositeHeartbeatService.class) //
 		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
+		all.add(C(ModelService.class, "matrix-local", LocalMatrixService.class) //
+		      .req(BucketManager.class) //
+		      .req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
+		      .req(BucketManager.class, ReportDao.class));
+		all.add(C(ModelService.class, "matrix", CompositeMatrixService.class) //
+		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 		
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
 		      .req(BucketManager.class) //

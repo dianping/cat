@@ -14,7 +14,7 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">${title}</td>
+			<td class="title">${title}&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
 		</tr>
 	</table>
 
@@ -40,9 +40,6 @@
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
-		</tr>
-		<tr>
-			<td class="subtitle"><jsp:invoke fragment="subtitle"/></td>
 		</tr>
 	</table>
 

@@ -84,7 +84,7 @@ public class RemoteIdChannelManager extends ContainerHolder implements Initializ
 	public void initialize() throws InitializationException {
 		ServerConfigManager configManager = lookup(ServerConfigManager.class);
 
-		m_baseDir = configManager.getHdfsLocalBaseDir("dump");
+		m_baseDir = configManager.getHdfsLocalBaseDir("remote");
 	}
 
 	private RemoteIdChannel makeChannel(String key, String path, long startTime) throws IOException {

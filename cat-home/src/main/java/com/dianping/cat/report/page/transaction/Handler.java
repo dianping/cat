@@ -274,6 +274,7 @@ public class Handler implements PageHandler<Context> {
 		if (transactionReport == null) {
 			return;
 		}
+		setTps(payload, transactionReport);
 		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {
 			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, transactionReport, ""));

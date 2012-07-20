@@ -23,10 +23,12 @@ tr.even td {
 
 td.odd  {
 	background-color: #eee;
+	white-space: nowrap;
 }
 
 td.even  {
 	background-color: white;
+	white-space: nowrap;
 }
 
 a.error {
