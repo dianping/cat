@@ -28,6 +28,6 @@ public class TransactionModelServiceTest extends ComponentTestCase {
 		LocalTransactionService local = (LocalTransactionService) lookup(ModelService.class, "transaction-local");
 		ModelResponse<?> response = local.invoke(ModelRequest.from("Cat", "CURRENT"));
 
-		Assert.assertEquals("null", String.valueOf(response.getModel()));
+		Assert.assertEquals(true, response.getModel() != null);
 	}
 }
