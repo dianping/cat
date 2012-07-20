@@ -776,11 +776,23 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.task.JspViewer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.task.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.task.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.TaskDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>
