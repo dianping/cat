@@ -56,12 +56,10 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 		return messageId + "/logview.html";
 	}
 	
-	
-
 	@Override
 	public String getMessageRemoteIdPath(String ip, Date timestamp) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/remoteid-{1}");
-		String path = format.format(new Object[] { new Date(), ip });
+		String path = format.format(new Object[] { timestamp, ip });
 		return path;
 	}
 

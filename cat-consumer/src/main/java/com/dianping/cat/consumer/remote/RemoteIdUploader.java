@@ -104,7 +104,7 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 						upload();
 					}
 				} catch (Exception e) {
-					m_logger.warn("Error when dumping remoteIds to HDFS.", e);
+					m_logger.error("Error when dumping remoteIds to HDFS. " + e.getMessage());
 				}
 
 				try {
@@ -112,7 +112,6 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-
 			}
 		}
 
@@ -134,7 +133,8 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 		private void upload() {
 			File outbox = new File(m_baseDir, "outbox");
 			String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			String path = m_builder.getMessageRemoteIdPath(ipAddress, new Date());
+			Date lastHour = new Date(System.currentTimeMillis() - 60 * 60 * 1000);
+			String path = m_builder.getMessageRemoteIdPath(ipAddress, lastHour);
 			File file = new File(outbox, path);
 			if (!file.exists()) {
 				return;
@@ -168,7 +168,8 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 				t.addData("speed", speed);
 				t.setStatus(Message.SUCCESS);
 
-				m_logger.info(String.format("Finish remoteIds uploading(%s) to HDFS(%s) with size(%s) at %s.", file.getCanonicalPath(), path, size, speed));
+				m_logger.info(String.format("Finish remoteIds uploading(%s) to HDFS(%s) with size(%s) at %s.",
+				      file.getCanonicalPath(), path, size, speed));
 
 				if (!file.delete()) {
 					m_logger.warn("Can't delete file: " + file);

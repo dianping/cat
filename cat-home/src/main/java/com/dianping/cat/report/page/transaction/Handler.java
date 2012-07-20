@@ -266,7 +266,7 @@ public class Handler implements PageHandler<Context> {
 				TransactionReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			}
-			transactionReport = merger == null ? null : merger.getTransactionReport();
+			transactionReport = merger.getTransactionReport();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

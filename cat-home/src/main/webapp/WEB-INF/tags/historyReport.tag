@@ -14,9 +14,24 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">${title}&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
-			<td class="switch">Browse Mode:History Summarize Report 
-				[&nbsp;<a href="?domain=${model.domain}">Hourly Mode</a>&nbsp;]&nbsp;
+			<td class="title">&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
+			<td class="switch"><a href="?domain=${model.domain}">Switch To Hourly Mode</a>
+			</td>
+			<td class="nav">
+					&nbsp;&nbsp;<c:forEach var="nav" items="${model.historyNavs}">
+					<c:choose>
+						<c:when test="${nav.title eq model.reportType}">
+								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
+						</c:when>
+						<c:otherwise>
+								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]&nbsp;&nbsp;
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
+					
 			</td>
 		</tr>
 	</table>
@@ -35,26 +50,6 @@
 						</c:choose>&nbsp;
 					</c:forEach>
 				</div>
-			</td>
-			<td class="nav">
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
-			</td>
-		</tr>
-		<tr>
-			<td class="nav">
-				<c:forEach var="nav" items="${model.historyNavs}">
-					<c:choose>
-						<c:when test="${nav.title eq model.reportType}">
-								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${nav.title}" class="current">${nav.title}</a> ]
-						</c:when>
-						<c:otherwise>
-								&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${nav.title}">${nav.title}</a> ]&nbsp;&nbsp;
-						</c:otherwise>
-					</c:choose>
-				</c:forEach>
-				&nbsp;
 			</td>
 		</tr>
 	</table>

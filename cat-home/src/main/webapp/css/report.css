@@ -8,11 +8,12 @@
 
 .report .header .title {
 	font-weight: bold;
+	color: black;
 }
 
-.report .header .timestamp {
-	white-space: nowrap;
-	width: 200px;
+.report .header .title {
+	font-weight: bold;
+	color: black;
 }
 
 .report .navbar {
@@ -47,8 +48,15 @@
 	font-weight: bold;
 }
 
-.report .header .switch {
+.report .header .nav {
 	text-align: right;
+	font-size: small;
+	font-weight: bold;
+	color: black;
+}
+
+.report .header .switch {
+	text-align: left;
 	font-size: small;
 	font-weight: bold;
 }

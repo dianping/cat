@@ -107,7 +107,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 						upload();
 					}
 				} catch (Exception e) {
-					m_logger.warn("Error when dumping message to HDFS.", e);
+					m_logger.warn("Error when dumping message to HDFS. " +e.getMessage());
 				}
 
 				try {

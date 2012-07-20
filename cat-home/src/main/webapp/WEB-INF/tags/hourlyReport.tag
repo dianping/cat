@@ -14,9 +14,14 @@
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">${title}&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
-			<td class="switch">Browse Mode:Hourly Report 
-				[&nbsp;<a href="${model.baseUri}?op=history&domain=${model.domain}">History Mode</a>&nbsp;]&nbsp;
+			<td class="title">&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
+			<td class="switch"><a href="${model.baseUri}?op=history&domain=${model.domain}">Switch To History Mode</a>
+			</td>
+			<td class="nav">
+				<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+				</c:forEach>
+				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
 		</tr>
 	</table>
@@ -36,12 +41,6 @@
 						</c:choose>&nbsp;
 					</c:forEach>
 				</div>
-			</td>
-			<td class="nav">
-				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
-				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
 		</tr>
 	</table>

@@ -56,14 +56,15 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
 		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
 
-		if (heartbeatReport != null && historyReports != null) {
-			Set<String> domainNames = heartbeatReport.getDomainNames();
-			for (Report report : historyReports) {
-				domainNames.add(report.getDomain());
-			}
+		if (heartbeatReport == null) {
+			heartbeatReport = new HeartbeatReport(domain);
+		}
+		Set<String> domainNames = heartbeatReport.getDomainNames();
+		for (Report report : historyReports) {
+			domainNames.add(report.getDomain());
 		}
 
-		return merger == null ? null : heartbeatReport;
+		return heartbeatReport;
 	}
 
 	private HeartbeatReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

@@ -33,7 +33,7 @@ a:hover {
 }
 
 ul.tabs {
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid black;
 	list-style-type: none;
 	position: relative;
 	padding: 0em;
@@ -46,9 +46,9 @@ ul.tabs {
 	margin: 0em 0.4em 0em 0.4em;
 	padding: 0.4em 0.4em 0.4em 0.4em;
 	overflow: hidden;
-	border-top: 1px solid gray;
-	border-left: 1px solid gray;
-	border-right: 1px solid gray;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
 }
 
 .tabs li.selected {

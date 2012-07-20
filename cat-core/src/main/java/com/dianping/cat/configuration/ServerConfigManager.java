@@ -21,7 +21,6 @@ import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultDomParser;
 import com.site.helper.Files;
-import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
 
 public class ServerConfigManager implements Initializable, LogEnabled {
