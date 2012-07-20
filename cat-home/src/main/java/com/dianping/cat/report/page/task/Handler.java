@@ -114,9 +114,9 @@ public class Handler implements PageHandler<Context> {
 			      TaskEntity.READSET_COUNT);
 			totalNumOfTask = totalTasks.get(0).getCount();
 			totalPages = (int) Math.floor((double) totalNumOfTask / (double) PAGE_SIZE);
+			model.setTotalNumOfTasks(totalNumOfTask);
 			model.setTotalpages(totalPages);
 
-			// get the page dates
 			int currentPage = payload.getCurrentPage() == 0 ? 1 : payload.getCurrentPage();
 			int startLimit = (currentPage - 1) * PAGE_SIZE;
 

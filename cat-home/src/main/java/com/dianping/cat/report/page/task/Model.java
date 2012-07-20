@@ -34,7 +34,17 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	
 	private int status;
 	
+	private int totalNumOfTasks;
 	
+	
+	public int getTotalNumOfTasks() {
+   	return totalNumOfTasks;
+   }
+
+	public void setTotalNumOfTasks(int totalNumOfTasks) {
+   	this.totalNumOfTasks = totalNumOfTasks;
+   }
+
 	public Model(Context ctx) {
 		super(ctx);
 	}

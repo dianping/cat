@@ -73,6 +73,7 @@
 				</select>
 				&nbsp;&nbsp;<input type='button' value=' search '  width=20 height=10 onclick="searchTask('${model.domain}','${model.name}','${payload.date}','${payload.step}')"></input>
 			</td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>total number of tasks:</b>&nbsp;&nbsp;${model.totalNumOfTasks}</td>
 			</tr>
 		<tr>
 			<th >Producer</th>
@@ -101,7 +102,10 @@
 					<c:if test="${task.status==3}">done</c:if>
 					<c:if test="${task.status==4}">failure</c:if>
 				</td>
-				<td>${task.taskType}</td>
+				<td>
+					<c:if test="${task.taskType==0||task.taskType==1}">hour</c:if>
+					<c:if test="${task.taskType==2}">day</c:if>
+				</td>
 				<td > 
 				<a href="" target="_blank">redo</a></td>
 		</tr>
