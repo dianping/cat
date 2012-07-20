@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.task;
 
 public enum Action implements com.site.web.mvc.Action {
 	
-	VIEW("view");
+	VIEW("view"),REDO("redo");
 	
 	private String m_name;
 
