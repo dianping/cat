@@ -14,7 +14,6 @@ import com.site.lookup.ComponentTestCase;
 @RunWith(JUnit4.class)
 public class EventModelServiceTest extends ComponentTestCase {
 
-	@Test
 	public void testLookup() throws Exception {
 		ModelService<?> local = lookup(ModelService.class, "event-local");
 		ModelService<?> composite = lookup(ModelService.class, "event");
