@@ -53,7 +53,7 @@
 					<td  class="left">${item.name}</td>
 					<td>${item.count}</td>
 					<td>${w:format(item.avg,'0.0')}</td>
-					<td><a href="${model.logViewBaseUri}/${item.url}">Log View</a></td>
+					<td><a href="${model.logViewBaseUri}/${item.url}?domain=${model.domain}">Log View</a></td>
 					<td>${item.callMin}</td>
 					<td>${item.callMax}</td>
 					<td>${w:format(item.callAvg,'0.0')}</td>

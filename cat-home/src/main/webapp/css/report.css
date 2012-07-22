@@ -9,11 +9,7 @@
 .report .header .title {
 	font-weight: bold;
 	color: black;
-}
-
-.report .header .title {
-	font-weight: bold;
-	color: black;
+	width:33%;
 }
 
 .report .navbar {
@@ -53,12 +49,14 @@
 	font-size: small;
 	font-weight: bold;
 	color: black;
+	width:34%;
 }
 
 .report .header .switch {
-	text-align: left;
+	text-align: center;
 	font-size: small;
 	font-weight: bold;
+	width:33%;
 }
 
 .report .navbar .nav A {
