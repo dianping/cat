@@ -3,6 +3,8 @@ package com.dianping.cat.message.spi.codec;
 import org.jboss.netty.buffer.ChannelBuffer;
 
 public class HtmlEncodingBufferWriter implements BufferWriter {
+	public static final String ID = "html";
+
 	private static byte[] AMP = "&amp;".getBytes();
 
 	private static byte[] LT = "&lt;".getBytes();

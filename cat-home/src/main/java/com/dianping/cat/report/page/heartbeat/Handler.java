@@ -432,6 +432,7 @@ public class Handler implements PageHandler<Context> {
 		model.setStartedThreadGraph(displayHeartbeat.getStartedThreadGraph());
 		model.setCatThreadGraph(displayHeartbeat.getCatThreadGraph());
 		model.setPigeonThreadGraph(displayHeartbeat.getPigeonTheadGraph());
+		model.setHttpThreadGraph(displayHeartbeat.getHttpTheadGraph());
 		model.setCatMessageProducedGraph(displayHeartbeat.getCatMessageProducedGraph());
 		model.setCatMessageOverflowGraph(displayHeartbeat.getCatMessageOverflowGraph());
 		model.setCatMessageSizeGraph(displayHeartbeat.getCatMessageSizeGraph());

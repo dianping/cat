@@ -46,9 +46,9 @@
 	<td>
 		<svg version="1.1" width="1400" height="380" xmlns="http://www.w3.org/2000/svg">
 		  ${model.activeThreadGraph}
-		  ${model.daemonThreadGraph}
-		  ${model.totalThreadGraph}
 		  ${model.startedThreadGraph}
+		  ${model.totalThreadGraph}
+		  ${model.httpThreadGraph}
 		  ${model.catThreadGraph}
 		  ${model.pigeonThreadGraph}
 		</svg>

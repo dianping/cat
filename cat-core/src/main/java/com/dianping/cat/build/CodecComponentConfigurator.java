@@ -18,14 +18,14 @@ class CodecComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(BufferWriter.class, "escape", EscapingBufferWriter.class));
-		all.add(C(BufferWriter.class, "html-encode", HtmlEncodingBufferWriter.class));
+		all.add(C(BufferWriter.class, EscapingBufferWriter.ID, EscapingBufferWriter.class));
+		all.add(C(BufferWriter.class, HtmlEncodingBufferWriter.ID, HtmlEncodingBufferWriter.class));
 
-		all.add(C(MessageCodec.class, "plain-text", PlainTextMessageCodec.class) //
-		      .req(BufferWriter.class, "escape"));
-		all.add(C(MessageCodec.class, "html", HtmlMessageCodec.class) //
+		all.add(C(MessageCodec.class, PlainTextMessageCodec.ID, PlainTextMessageCodec.class) //
+		      .req(BufferWriter.class, EscapingBufferWriter.ID));
+		all.add(C(MessageCodec.class, HtmlMessageCodec.ID, HtmlMessageCodec.class) //
 		      .req(MessagePathBuilder.class) //
-		      .req(BufferWriter.class, "html-encode"));
+		      .req(BufferWriter.class, HtmlEncodingBufferWriter.ID));
 
 		return all;
 	}

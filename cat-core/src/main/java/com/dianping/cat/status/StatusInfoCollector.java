@@ -45,6 +45,20 @@ class StatusInfoCollector extends BaseVisitor {
 		return count;
 	}
 
+	private int countThreadsBySubstring(ThreadInfo[] threads, String... substrings) {
+		int count = 0;
+
+		for (ThreadInfo thread : threads) {
+			for (String str : substrings) {
+				if (thread.getThreadName().contains(str)) {
+					count++;
+				}
+			}
+		}
+
+		return count;
+	}
+
 	private String getThreadDump(ThreadInfo[] threads) {
 		StringBuilder sb = new StringBuilder(32768);
 		int index = 1;
@@ -200,6 +214,11 @@ class StatusInfoCollector extends BaseVisitor {
 		thread.setCatThreadCount(countThreadsByPrefix(threads, "Cat-"));
 		thread.setPigeonThreadCount(countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-",
 		      "Client-ResponseProcessor"));
+
+		int jbossThreadsCount = countThreadsByPrefix(threads, "http-");
+		int jettyThreadsCount = countThreadsBySubstring(threads, "@qtp");
+
+		thread.setHttpThreadCount(jbossThreadsCount + jettyThreadsCount);
 		thread.setDump(getThreadDump(threads));
 	}
 }

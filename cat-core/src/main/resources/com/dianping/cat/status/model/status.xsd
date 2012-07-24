@@ -73,6 +73,7 @@
 <xs:attribute name="total-started-count" type="xs:int"/>
 <xs:attribute name="cat-thread-count" type="xs:int"/>
 <xs:attribute name="pigeon-thread-count" type="xs:int"/>
+<xs:attribute name="http-thread-count" type="xs:int"/>
 </xs:complexType>
 <xs:complexType name="MessageType">
 <xs:simpleContent>

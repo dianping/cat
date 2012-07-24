@@ -27,7 +27,9 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.annotation.Inject;
 
 public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
-	private static final String ID = "PT1"; // plain text version 1
+	public static final String ID = "plain-text";
+
+	private static final String VERSION = "PT1"; // plain text version 1
 
 	private static final byte TAB = '\t'; // tab character
 
@@ -75,7 +77,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		String rootMessageId = helper.read(buf, TAB);
 		String sessionToken = helper.read(buf, LF);
 
-		if (ID.equals(id)) {
+		if (VERSION.equals(id)) {
 			tree.setDomain(domain);
 			tree.setHostName(hostName);
 			tree.setIpAddress(ipAddress);
@@ -222,7 +224,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
-		count += helper.write(buf, ID);
+		count += helper.write(buf, VERSION);
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, tree.getDomain());
 		count += helper.write(buf, TAB);

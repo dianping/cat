@@ -80,6 +80,9 @@
 			<implementation>com.dianping.cat.report.page.model.transaction.CompositeTransactionService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>transaction-historical</role-hint>
@@ -120,6 +123,9 @@
 			<role-hint>event</role-hint>
 			<implementation>com.dianping.cat.report.page.model.event.CompositeEventService</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -162,6 +168,9 @@
 			<implementation>com.dianping.cat.report.page.model.problem.CompositeProblemService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>problem-historical</role-hint>
@@ -202,6 +211,9 @@
 			<role-hint>heartbeat</role-hint>
 			<implementation>com.dianping.cat.report.page.model.heartbeat.CompositeHeartbeatService</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -244,6 +256,9 @@
 			<implementation>com.dianping.cat.report.page.model.matrix.CompositeMatrixService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>matrix-historical</role-hint>
@@ -284,6 +299,9 @@
 			<role-hint>ip</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
@@ -337,6 +355,9 @@
 			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>logview-historical</role-hint>
@@ -344,6 +365,18 @@
 					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.site.initialization.Module</role>
+			<role-hint>cat-home</role-hint>
+			<implementation>com.dianping.cat.CatHomeModule</implementation>
+		</component>
+		<component>
+			<role>com.site.initialization.ModuleManager</role>
+			<implementation>com.site.initialization.DefaultModuleManager</implementation>
+			<configuration>
+				<topLevelModules>cat-home</topLevelModules>
+			</configuration>
 		</component>
 		<component>
 			<role>com.site.web.mvc.model.ModuleRegistry</role>

@@ -25,6 +25,9 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 50);
 
 	@Inject
+	private ServerConfigManager m_configManager;
+
+	@Inject
 	private List<ModelService<T>> m_services;
 
 	private String m_name;
@@ -46,24 +49,18 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	public void initialize() throws InitializationException {
 		m_allServices.addAll(m_services);
 
-		ServerConfigManager manager = lookup(ServerConfigManager.class);
+		String remoteServers = m_configManager.getConsoleRemoteServers();
+		List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
 
-		try {
-			String remoteServers = manager.getConsoleRemoteServers();
-			List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
+		for (String endpoint : endpoints) {
+			int pos = endpoint.indexOf(':');
+			String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+			int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
+			BaseRemoteModelService<T> remote = createRemoteService();
 
-			for (String endpoint : endpoints) {
-				int pos = endpoint.indexOf(':');
-				String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
-				int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
-				BaseRemoteModelService<T> remote = createRemoteService();
-
-				remote.setHost(host);
-				remote.setPort(port);
-				m_allServices.add(remote);
-			}
-		} finally {
-			release(manager);
+			remote.setHost(host);
+			remote.setPort(port);
+			m_allServices.add(remote);
 		}
 	}
 
@@ -77,7 +74,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 		t.setStatus(Message.SUCCESS);
 		t.addData("request", request);
-		t.addData("thread",Thread.currentThread());
+		t.addData("thread", Thread.currentThread());
 
 		for (final ModelService<T> service : m_allServices) {
 			if (!service.isEligable(request)) {
@@ -93,7 +90,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 				@Override
 				public void run() {
 					Cat.setup("model-service");
-					
+
 					try {
 						ModelResponse<T> response = service.invoke(request);
 
@@ -116,7 +113,9 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		}
 
 		try {
-			semaphore.tryAcquire(count, 10000, TimeUnit.MILLISECONDS); // 10 seconds timeout
+			semaphore.tryAcquire(count, 10000, TimeUnit.MILLISECONDS); // 10
+																						  // seconds
+																						  // timeout
 		} catch (InterruptedException e) {
 			// ignore it
 			t.setStatus(e);

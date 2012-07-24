@@ -1,6 +1,10 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.configuration.ClientConfigManager</role>
+			<implementation>com.dianping.cat.configuration.ClientConfigManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.configuration.ServerConfigManager</role>
 			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
@@ -33,6 +37,12 @@
 			<implementation>com.dianping.cat.message.internal.DefaultMessageManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.configuration.ClientConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.io.TransportManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageStatistics</role>
 				</requirement>
 			</requirements>
@@ -58,7 +68,7 @@
 			<implementation>com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
+					<role>com.dianping.cat.configuration.ClientConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -175,7 +185,7 @@
 			<implementation>com.dianping.cat.message.io.DefaultTransportManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
+					<role>com.dianping.cat.configuration.ClientConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -184,10 +194,7 @@
 			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageHandler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -205,13 +212,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.site.initialization.ModuleManager</role>
+			<implementation>com.site.initialization.DefaultModuleManager</implementation>
+		</component>
+		<component>
+			<role>com.site.initialization.ModuleInitializer</role>
+			<implementation>com.site.initialization.DefaultModuleInitializer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.initialization.ModuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.site.initialization.Module</role>
+			<role-hint>cat-core</role-hint>
+			<implementation>com.dianping.cat.CatCoreModule</implementation>
+		</component>
+		<component>
+			<role>com.site.initialization.Module</role>
+			<role-hint>cat-client</role-hint>
+			<implementation>com.dianping.cat.CatClientModule</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
 			<role-hint>escape</role-hint>
 			<implementation>com.dianping.cat.message.spi.codec.EscapingBufferWriter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-			<role-hint>html-encode</role-hint>
+			<role-hint>html</role-hint>
 			<implementation>com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter</implementation>
 		</component>
 		<component>
@@ -235,7 +265,7 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
-					<role-hint>html-encode</role-hint>
+					<role-hint>html</role-hint>
 				</requirement>
 			</requirements>
 		</component>

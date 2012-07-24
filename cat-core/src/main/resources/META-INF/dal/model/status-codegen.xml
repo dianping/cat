@@ -49,6 +49,7 @@
     <attribute name="total-started-count" value-type="int" />
     <attribute name="cat-thread-count" value-type="int" />
     <attribute name="pigeon-thread-count" value-type="int" />
+    <attribute name="http-thread-count" value-type="int" />
     <element name="dump" value-type="String"/>
   </entity>
   <entity name="message">
