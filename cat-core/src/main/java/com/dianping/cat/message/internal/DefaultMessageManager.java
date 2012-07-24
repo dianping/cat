@@ -1,6 +1,5 @@
 package com.dianping.cat.message.internal;
 
-import java.lang.management.ManagementFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -228,9 +227,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return false;
 		}
 
-		int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
-
-		return threadCount > m_domain.getMaxThreads();
+		return false;
+		//int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
+		//return threadCount > m_domain.getMaxThreads();
 	}
 
 	@Override
