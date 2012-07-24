@@ -28,7 +28,8 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 <br>
 <table class='version'>
 	<tr class="odd"><td>版本</td><td>说明</td><td>发布时间</td></tr>
-	<tr class="even"><td>0.3.3</td><td>1、修改CAT线程为后台Dameon线程。2、减少CAT的日志输出。3、修复了极端情况客户端丢失部分消息。4、支持CAT的延迟加载。</td><td>2012-07-17</td></tr>
+	<tr class="even"><td>0.3.4</td><td>1、规范了CAT客户端的日志。2、规范CAT服务端的日志   </td><td>2012-07-17</td></tr>
+	<tr class="even"><td>0.3.3</td><td>1、修改CAT线程为后台Dameon线程。2、减少CAT的日志输出。3、修复了极端情况客户端丢失部分消息。4、支持CAT的延迟加载。5、修复了0.3.2一个getLog的bug</td><td>2012-07-17</td></tr>
 	<tr class="odd"><td>0.3.2</td><td>1、修复了配置单个服务器时候，服务器重启，客户端断开链接bug。2、修复了CAT不正常加载时候，内存溢出的问题。</td><td>2012-07-01</td></tr>
 	<tr class="even"><td>0.3.1</td><td>1、修复CAT在业务testcase的使用，支持业务运行Testcase在Console上看到运行情况。</td><td>2012-06-25</td></tr>
 	<tr class="odd"><td>0.3.0</td><td>1、修复CAT在Transaction Name的Nullpoint异常。</td><td>2012-06-15</td></tr>
