@@ -15,7 +15,7 @@
 	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseTools_js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['heartbeatHistory_js']}" target="head-js"/>
-</br>
+<br>
 <table class="machines">
 	<tr style="text-align: left">
 		<th>Machines:
@@ -42,12 +42,12 @@
 <tr>
 	
 	<td><div id="ActiveThread" class="graph"></div></td>
-	<td><div id="DaemonThread" class="graph"></div></td>
+	<td><div id="StartedThread" class="graph"></div></td>
 	<td><div id="TotalStartedThread" class="graph"></div></td>
 </tr>
 <tr>
 	
-	<td><div id="StartedThread" class="graph"></div></td>
+	<td><div id="HttpStartedThread" class="graph"></div></td>
 	<td><div id="CatStartedThread" class="graph"></div></td>
 	<td><div id="PigeonStartedThread" class="graph"></div></td>
 </tr>
@@ -84,14 +84,14 @@
 	var activeThreadGraphData = ${model.activeThreadGraph};
 	graph(document.getElementById('ActiveThread'), activeThreadGraphData);
 	//02
-	var daemonThreadGraphData = ${model.daemonThreadGraph};
-	graph(document.getElementById('DaemonThread'), daemonThreadGraphData);
+	var startedThreadGraphData = ${model.startedThreadGraph};
+	graph(document.getElementById('StartedThread'), startedThreadGraphData);
 	//03
 	var totalThreadGraphData = ${model.totalThreadGraph};
 	graph(document.getElementById('TotalStartedThread'), totalThreadGraphData);
 	//04
-	var startedThreadGraphData = ${model.startedThreadGraph};
-	graph(document.getElementById('StartedThread'), startedThreadGraphData);
+	var httpThreadGraphData = ${model.httpThreadGraph};
+	graph(document.getElementById('HttpThread'), httpThreadGraphData);
 	//05
 	var catThreadGraphData = ${model.catThreadGraph};
 	graph(document.getElementById('CatStartedThread'), catThreadGraphData);

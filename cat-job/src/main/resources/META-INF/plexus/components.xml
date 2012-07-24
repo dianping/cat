@@ -76,6 +76,11 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.site.initialization.Module</role>
+			<role-hint>cat-job</role-hint>
+			<implementation>com.dianping.cat.job.CatJobModule</implementation>
+		</component>
+		<component>
 			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>

@@ -10,15 +10,14 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.site.lookup.annotation.Inject;
 
 public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable, LogEnabled {
 	@Inject
-	private MessageManager m_manager;
+	private ClientConfigManager m_configManager;
 
 	private File m_baseLogDir;
 
@@ -55,8 +54,6 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	public String getLogViewPath(String messageId) {
 		return messageId + "/logview.html";
 	}
-	
-	
 
 	@Override
 	public String getMessageRemoteIdPath(String ip, Date timestamp) {
@@ -88,13 +85,7 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 
 	@Override
 	public void initialize() throws InitializationException {
-		ClientConfig config = m_manager.getClientConfig();
-
-		if (config == null) {
-			config = new ClientConfig();
-		}
-
-		String baseLogDir = config.getBaseLogDir();
+		String baseLogDir = m_configManager.getBaseLogDir();
 
 		try {
 			m_baseLogDir = new File(baseLogDir).getCanonicalFile();

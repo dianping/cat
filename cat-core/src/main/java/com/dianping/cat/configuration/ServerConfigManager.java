@@ -9,8 +9,6 @@ import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
@@ -21,21 +19,28 @@ import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultDomParser;
 import com.site.helper.Files;
-import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
 
-public class ServerConfigManager implements Initializable, LogEnabled {
+public class ServerConfigManager implements LogEnabled {
+	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
+
 	private ServerConfig m_config;
 
 	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
 
 	private Logger m_logger;
 
-	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	public String getBindHost() {
+		return null; // any IP address
+	}
+
+	public int getBindPort() {
+		return 2280;
 	}
 
 	public String getConsoleDefaultDomain() {
@@ -56,7 +61,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			}
 		}
 
-		return null;
+		return "";
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -126,6 +131,18 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
+	public Map<String, Domain> getLongConfigDomains() {
+		if (m_config != null) {
+			LongConfig longConfig = m_config.getConsumer().getLongConfig();
+
+			if (longConfig != null) {
+				return longConfig.getDomains();
+			}
+		}
+
+		return Collections.emptyMap();
+	}
+
 	public int getLongSqlDefaultThreshold() {
 		if (m_config != null) {
 			LongConfig longConfig = m_config.getConsumer().getLongConfig();
@@ -137,7 +154,7 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 		return 1000; // 1 second
 	}
-	
+
 	public int getLongUrlDefaultThreshold() {
 		if (m_config != null) {
 			LongConfig longConfig = m_config.getConsumer().getLongConfig();
@@ -148,18 +165,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 
 		return 1000; // 1 second
-	}
-
-	public Map<String, Domain> getLongConfigDomains() {
-		if (m_config != null) {
-			LongConfig longConfig = m_config.getConsumer().getLongConfig();
-
-			if (longConfig != null) {
-				return longConfig.getDomains();
-			}
-		}
-
-		return Collections.emptyMap();
 	}
 
 	public ServerConfig getServerConfig() {
@@ -202,7 +207,11 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			m_logger.warn("CAT server is running in LOCAL mode! No HDFS or MySQL will be accessed!");
 		}
 
-		//Threads.forGroup("Cat").start(new ServerConfigReloader(configFile));
+		// Threads.forGroup("Cat").start(new ServerConfigReloader(configFile));
+	}
+
+	public boolean isInitialized() {
+		return m_config != null;
 	}
 
 	public boolean isLocalMode() {
@@ -294,13 +303,4 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 		public void configure(ServerConfigManager manager, boolean firstTime);
 	}
-
-	@Override
-   public void initialize() throws InitializationException {
-		try {
-	      initialize(new File("/data/appdatas/cat/server.xml"));
-      } catch (Exception e) {
-      	throw new RuntimeException("Error where loading cat server.xml!",e);
-      }
-   }
 }

@@ -1,6 +1,5 @@
 package com.dianping.cat.message.spi;
 
-import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -25,25 +24,11 @@ public interface MessageManager {
 	public void end(Transaction transaction);
 
 	/**
-	 * Return configuration for CAT client.
-	 * 
-	 * @return CAT configuration
-	 */
-	public ClientConfig getClientConfig();
-
-	/**
 	 * Get peek transaction for current thread.
 	 * 
 	 * @return peek transaction for current thread, null if no transaction there.
 	 */
 	public Transaction getPeekTransaction();
-
-	/**
-	 * Return configuration for CAT client.
-	 * 
-	 * @return CAT configuration
-	 */
-	public ClientConfig getServerConfig();
 
 	/**
 	 * Get thread local message information.
@@ -58,22 +43,6 @@ public interface MessageManager {
 	 * @return true if the thread context is setup, false otherwise
 	 */
 	public boolean hasContext();
-
-	/**
-	 * Initialize CAT client with given CAT configuration.
-	 * 
-	 * @param config
-	 *           CAT configuration
-	 */
-	public void initializeClient(ClientConfig config);
-
-	/**
-	 * Initialize CAT server with given CAT configuration.
-	 * 
-	 * @param config
-	 *           CAT configuration
-	 */
-	public void initializeServer(ClientConfig config);
 
 	/**
 	 * Check if CAT logging is enabled or disabled.

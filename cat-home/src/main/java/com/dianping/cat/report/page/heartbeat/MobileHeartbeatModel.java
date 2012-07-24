@@ -22,7 +22,9 @@ public class MobileHeartbeatModel {
 
 	private MobileGraphItem m_catThreads = new MobileGraphItem();
 
-	private MobileGraphItem m_pigeonTheads = new MobileGraphItem();
+	private MobileGraphItem m_pigeonThreads = new MobileGraphItem();
+	
+	private MobileGraphItem m_httpThreads = new MobileGraphItem();
 
 	private MobileGraphItem m_addCatMessageProduced = new MobileGraphItem();
 
@@ -63,7 +65,8 @@ public class MobileHeartbeatModel {
 		creatGraph(m_totalThreads, heartbeat.getTotalThreads(), "Total Thread");
 		creatGraph(m_newThreads, heartbeat.getNewThreads(), "New Thread");
 		creatGraph(m_catThreads, heartbeat.getCatThreads(), "Cat Thread");
-		creatGraph(m_pigeonTheads, heartbeat.getPigeonTheads(), "Pigeon Thread");
+		creatGraph(m_pigeonThreads, heartbeat.getPigeonThreads(), "Pigeon Thread");
+		creatGraph(m_httpThreads, heartbeat.getHttpThreads(), "HTTP Thread");
 		creatGraph(m_addCatMessageProduced, heartbeat.getAddCatMessageProduced(), "Cat Message Produced / Minute");
 		creatGraph(m_addCatMessageOverflow, heartbeat.getAddCatMessageOverflow(), "Cat Message Overflow / Minute");
 		creatGraph(m_addCatMessageSize, heartbeat.getAddCatMessageSize(), "Cat Message Size / Minute");
@@ -145,7 +148,7 @@ public class MobileHeartbeatModel {
 	}
 
 	public MobileGraphItem getPigeonTheads() {
-		return m_pigeonTheads;
+		return m_pigeonThreads;
 	}
 
 	public MobileGraphItem getSystemLoadAverage() {
@@ -217,7 +220,11 @@ public class MobileHeartbeatModel {
 	}
 
 	public void setPigeonTheads(MobileGraphItem pigeonTheads) {
-		m_pigeonTheads = pigeonTheads;
+		m_pigeonThreads = pigeonTheads;
+	}
+	
+	public void setHttpTheads(MobileGraphItem httpTheads) {
+		m_httpThreads = httpTheads;
 	}
 
 	public void setSystemLoadAverage(MobileGraphItem systemLoadAverage) {

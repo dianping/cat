@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -69,8 +70,16 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private long m_lastTime = 0;
 
+	private CountDownLatch m_latch;
+
 	@Override
 	public void consume(MessageTree tree) {
+		try {
+			m_latch.await();
+		} catch (InterruptedException e) {
+			// ignore it
+		}
+
 		long timestamp = tree.getMessage().getTimestamp();
 		Period period = m_periodManager.findPeriod(timestamp);
 
@@ -147,13 +156,10 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_periodManager = new PeriodManager();
+		m_latch = new CountDownLatch(1);
+		m_periodManager = new PeriodManager(m_latch);
 
 		Threads.forGroup("Cat").start(m_periodManager);
-
-		if (m_uploader != null && !m_uploader.isLocalMode()) {
-			Threads.forGroup("Cat").start(m_uploader);
-		}
 	}
 
 	public void setAnalyzers(String analyzers) {
@@ -294,9 +300,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		private boolean m_active;
 
-		public PeriodManager() {
+		private CountDownLatch m_latch;
+
+		public PeriodManager(CountDownLatch latch) {
 			m_strategy = new PeriodStrategy(m_duration, m_extraTime, 3 * MINUTE);
 			m_active = true;
+			m_latch = latch;
 		}
 
 		private void endPeriod(long startTime) {
@@ -334,6 +343,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			// for current period
 			startPeriod(startTime);
+			m_latch.countDown();
 
 			try {
 				while (m_active) {

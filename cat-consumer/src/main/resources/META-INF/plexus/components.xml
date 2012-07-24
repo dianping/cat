@@ -265,5 +265,10 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.site.initialization.Module</role>
+			<role-hint>cat-consumer</role-hint>
+			<implementation>com.dianping.cat.consumer.CatConsumerModule</implementation>
+		</component>
 	</components>
 </plexus>

@@ -116,6 +116,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			period.setTotalStartedCount(thread.getTotalStartedCount());
 			period.setCatThreadCount(thread.getCatThreadCount());
 			period.setPigeonThreadCount(thread.getPigeonThreadCount());
+			period.setHttpThreadCount(thread.getHttpThreadCount());
 
 			MessageInfo catInfo = info.getMessage();
 			period.setCatMessageProduced(catInfo.getProduced());

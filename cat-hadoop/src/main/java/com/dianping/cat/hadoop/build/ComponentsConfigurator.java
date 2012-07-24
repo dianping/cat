@@ -14,6 +14,7 @@ import com.dianping.cat.hadoop.hdfs.InputChannelManager;
 import com.dianping.cat.hadoop.hdfs.OutputChannel;
 import com.dianping.cat.hadoop.hdfs.OutputChannelManager;
 import com.dianping.cat.message.spi.MessageCodec;
+import com.site.initialization.Module;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -33,6 +34,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, "plain-text"));
 		all.add(C(InputChannelManager.class, DefaultInputChannelManager.class) //
 		      .req(FileSystemManager.class));
+
+		all.add(C(Module.class, CatHadoopModule.ID, CatHadoopModule.class));
 
 		all.addAll(new DatabaseConfigurator().defineComponents());
 
