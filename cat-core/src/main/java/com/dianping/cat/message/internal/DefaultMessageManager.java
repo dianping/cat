@@ -35,6 +35,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private MessageIdFactory m_factory;
 
+	private long m_throttleTimes = 9999;
+
 	// we don't use static modifier since MessageManager is a singleton in
 	// production actually
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>() {
@@ -85,6 +87,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 			if (m_statistics != null) {
 				m_statistics.onSending(tree);
+			}
+		} else {
+			m_throttleTimes++;
+			
+			if (m_throttleTimes % 10000 == 0) {
+				m_logger.info("Cat Message is throttled! Times:" + m_throttleTimes);
 			}
 		}
 	}
@@ -175,18 +183,18 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_context.set(ctx);
 	}
 
-	boolean shouldThrottle(MessageTree tree) {
+	private boolean shouldThrottle(MessageTree tree) {
 		if (!isCatEnabled()) {
 			return true;
 		}
 
-		if (tree.getMessage() != null && "Heartbeat".equals(tree.getMessage().getName())) {
-			return false;
-		}
-
 		return false;
-		//int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
-		//return threadCount > m_domain.getMaxThreads();
+		
+		//if (tree.getMessage() != null && "Heartbeat".equals(tree.getMessage().getName())) {
+		//	return false;
+		//}
+		// int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
+		// return threadCount > m_domain.getMaxThreads();
 	}
 
 	@Override

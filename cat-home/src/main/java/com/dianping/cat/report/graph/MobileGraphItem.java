@@ -1,5 +1,7 @@
 package com.dianping.cat.report.graph;
 
+import java.util.Arrays;
+
 public class MobileGraphItem {
 
 	private String[] m_xlabel;
@@ -26,17 +28,29 @@ public class MobileGraphItem {
 	}
 
 	public MobileGraphItem setXlabel(String[] xlabel) {
-		m_xlabel = xlabel;
+		if (xlabel == null) {
+			m_xlabel = new String[0];
+		} else {
+			m_xlabel = Arrays.copyOf(xlabel, xlabel.length);
+		}
 		return this;
 	}
 
 	public MobileGraphItem setYlable(double[] ylable) {
-		m_ylable = ylable;
+		if (ylable == null) {
+			m_ylable = new double[0];
+		} else {
+			m_ylable = Arrays.copyOf(ylable, ylable.length);
+		}
 		return this;
 	}
 
 	public MobileGraphItem setValue(double[] value) {
-		m_value = value;
+		if (value == null) {
+			m_value = new double[0];
+		} else {
+			m_value = Arrays.copyOf(value, value.length);
+		}
 		return this;
 	}
 

@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model;
 
+import java.util.Arrays;
+
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.site.web.mvc.ActionContext;
@@ -28,16 +30,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("thread")
 	private String m_threadId;
-	
+
 	@FieldMeta("messageId")
 	private String m_messageId;
-	
+
 	@FieldMeta("tag")
 	private String m_tag;
-	
+
 	@FieldMeta("direction")
 	private String m_direction;
-	
+
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -52,8 +54,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	public String getIpAddress() {
-   	return m_ipAddress;
-   }
+		return m_ipAddress;
+	}
 
 	public String getName() {
 		return m_name;
@@ -81,8 +83,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	public String getThreadId() {
-   	return m_threadId;
-   }
+		return m_threadId;
+	}
 
 	public String getType() {
 		return m_type;
@@ -93,8 +95,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	public void setIpAddress(String ipAddress) {
-   	m_ipAddress = ipAddress;
-   }
+		m_ipAddress = ipAddress;
+	}
 
 	public void setName(String name) {
 		m_name = name;
@@ -106,40 +108,44 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	}
 
 	public void setPath(String[] path) {
-		m_path = path;
+		if (path == null) {
+			m_path = new String[0];
+		} else {
+			m_path = Arrays.copyOf(path, path.length);
+		}
 	}
 
 	public void setThreadId(String threadId) {
-   	m_threadId = threadId;
-   }
+		m_threadId = threadId;
+	}
 
 	public void setType(String type) {
 		m_type = type;
 	}
-	
+
 	public String getMessageId() {
-   	return m_messageId;
-   }
+		return m_messageId;
+	}
 
 	public void setMessageId(String messageId) {
-   	m_messageId = messageId;
-   }
+		m_messageId = messageId;
+	}
 
 	public String getTag() {
-   	return m_tag;
-   }
+		return m_tag;
+	}
 
 	public void setTag(String tag) {
-   	m_tag = tag;
-   }
+		m_tag = tag;
+	}
 
 	public String getDirection() {
-   	return m_direction;
-   }
+		return m_direction;
+	}
 
 	public void setDirection(String direction) {
-   	m_direction = direction;
-   }
+		m_direction = direction;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

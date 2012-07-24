@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.trend;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -65,7 +66,11 @@ public class GraphItem {
 	}
 
 	public void setYlable(double[] ylable) {
-		this.ylable = ylable;
+		if (ylable == null) {
+			this.ylable = new double[0];
+		} else {
+			this.ylable = Arrays.copyOf(ylable, ylable.length);
+		}
 	}
 
 	public String getTitles() {

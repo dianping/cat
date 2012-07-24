@@ -54,9 +54,11 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private transient boolean m_active;
 
-	private AtomicInteger m_errors = new AtomicInteger();
+	private AtomicInteger m_errors = new AtomicInteger(999);
 
-	private AtomicInteger m_attempts = new AtomicInteger();
+	private AtomicInteger m_attempts = new AtomicInteger(999);
+
+	private AtomicInteger m_reconnects = new AtomicInteger(999);
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -114,7 +116,11 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		future.awaitUninterruptibly();
 
 		if (!future.isSuccess()) {
-			//m_logger.error("Error when reconnecting to " + m_serverAddress, future.getCause());
+			int count = m_reconnects.incrementAndGet();
+			
+			if (count % 1000 == 0) {
+				m_logger.error("Error when reconnecting to " + m_serverAddress, future.getCause());
+			}
 		} else {
 			m_future = future;
 			m_logger.info("Reconnected to CAT server at " + m_serverAddress);
@@ -141,7 +147,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					} catch (Exception e) {
 						break;
 					}
-					
+
 					if (m_future == null || !m_future.getChannel().isOpen()) {
 						reconnect();
 					}
@@ -169,8 +175,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			} else {
 				int count = m_attempts.incrementAndGet();
 
-				if (count % 100 == 0) {
-					m_logger.error("Can't send message to cat-server due to Netty write buffer full! Count: " + count);
+				if (count % 1000 == 0) {
+					m_logger.error("Netty write buffer is full! Attempts: " + count);
 				}
 			}
 		}
@@ -189,7 +195,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 			int count = m_errors.incrementAndGet();
 
-			if (count % 100 == 0) {
+			if (count % 1000 == 0) {
 				m_logger.error("Message queue is full in tcp socket sender! Count: " + count);
 			}
 		}

@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.heartbeat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
@@ -26,7 +27,7 @@ public class DisplayHeartbeat {
 	private double[] m_catThreads = new double[60];
 
 	private double[] m_pigeonThreads = new double[60];
-	
+
 	private double[] m_httpThreads = new double[60];
 
 	private double[] m_catMessageProduced = new double[60];
@@ -159,7 +160,7 @@ public class DisplayHeartbeat {
 	public double[] getAddOldGcCount() {
 		return m_addOldGcCount;
 	}
-	
+
 	public GraphBuilder getBuilder() {
 		return m_builder;
 	}
@@ -350,7 +351,7 @@ public class DisplayHeartbeat {
 	public String getStartedThreadGraph() {
 		return m_builder.build(new HeartbeatPayload(1, "Started Thread", "Minute", "Count", m_newThreads));
 	}
-	
+
 	public double[] getSystemLoadAverage() {
 		return m_systemLoadAverage;
 	}
@@ -387,7 +388,11 @@ public class DisplayHeartbeat {
 				m_labels[i] = String.valueOf(i);
 			}
 
-			m_values = values;
+			if (values == null) {
+				m_values = new double[0];
+			} else {
+				m_values = Arrays.copyOf(values, values.length);
+			}
 		}
 
 		@Override

@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.logview;
 
+import java.util.Arrays;
+
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 import com.site.web.mvc.ActionContext;
@@ -67,7 +69,11 @@ public class Payload extends AbstractReportPayload<Action> {
 	}
 
 	public void setPath(String[] path) {
-		m_path = path;
+		if (path == null) {
+			m_path = new String[0];
+		} else {
+			m_path = Arrays.copyOf(path, path.length);
+		}
 	}
 
 	public void setShowHeader(String showHeader) {

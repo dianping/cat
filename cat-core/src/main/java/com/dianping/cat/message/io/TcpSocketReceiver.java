@@ -175,27 +175,14 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 				buffer.resetReaderIndex();
 				return null;
 			}
-
+			
 			return buffer.readBytes(length);
 		}
 	}
 
 	class MyHandler extends SimpleChannelHandler {
 		@Override
-		public void channelConnected(ChannelHandlerContext ctx, ChannelStateEvent event) throws Exception {
-			super.channelConnected(ctx, event);
-			m_logger.info("Socket client from " + event.getChannel().getRemoteAddress() + " CONNECTED!");
-		}
-
-		@Override
-		public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent event) throws Exception {
-			super.channelDisconnected(ctx, event);
-			m_logger.info("Socket client from " + event.getChannel().getRemoteAddress() + " DISCONNECTED!");
-		}
-
-		@Override
 		public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent event) throws Exception {
-			super.channelOpen(ctx, event);
 			m_channelGroup.add(event.getChannel());
 		}
 
