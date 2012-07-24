@@ -1,10 +1,15 @@
 package com.dianping.cat.report.page.task;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.hadoop.dal.TaskEntity;
 import com.dianping.cat.report.ReportPage;
@@ -16,11 +21,16 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
+
+	private static final int PAGE_SIZE = 1000000;
+
 	@Inject
 	private JspViewer m_jspViewer;
-	
+
 	@Inject
 	private TaskDao taskDao;
+
+	private static final String ALL = "All";
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -33,34 +43,104 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "task")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
-		Payload payload=ctx.getPayload();
-		//TODO initialize 
-//		initialize(payload,model);
-		
+		Payload payload = ctx.getPayload();
+
+		switch (payload.getAction()) {
+		case VIEW:
+			normalizeAndGetTaskData(payload, model);
+			break;
+		case REDO:	
+			redoTask(payload, model);
+			break;
+	}
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.TASK);
+
 		m_jspViewer.view(ctx, model);
 	}
 	
-	//TODO getTotal page
-	public int getTotalPage(Payload payload){
-		int pagesize=payload.getPagesize();
-		//TODO getAll conut;
-		int sum=0;//taskDao.getAllbyStartAndEnd();
+	//TODO redo the task
+	private void redoTask(Payload payload, Model model) {
 		
-		return (int) Math.floor((double)sum/(double)pagesize);
+   }
+
+	public void normalizeAndGetTaskData(Payload payload, Model model) {
+		String domain = payload.getDomain();
+		String name = payload.getName();
+		String queryDomain = domain;
+		String queryName = name;
+		model.setType(payload.getType());
+		model.setStatus(payload.getStatus());
+
+		if (isEmpty(domain) || ALL.equals(domain)) {
+			model.setDomain(ALL);
+			queryDomain = null;
+		} else {
+			model.setDomain(domain);
+		}
+
+		if (isEmpty(name) || ALL.equals(name)) {
+			model.setName(ALL);
+			queryName = null;
+		} else {
+			model.setName(name);
+		}
+
+		Date start = new Date(payload.getStartDate());
+		Date end = new Date(payload.getEndDate());
+		model.setDate(start.getTime());
+		model.setFrom(start);
+		model.setTo(end);
+		
+		getTaskData(payload,model,start,end,queryName,queryDomain);
+		
 	}
-	
-	public void initialize(Payload payload,Model model){
-		List<String> domains=null;
+
+	private void getTaskData(Payload payload, Model model,Date start,Date end,String queryName,String queryDomain) {
+		int totalPages = 0;
+		int totalNumOfTask = 0;
+		int type = payload.getType();
+		int status = payload.getStatus();
+
+		List<String> domains = new ArrayList<String>(Arrays.asList(ALL));
+		List<String> names = new ArrayList<String>(Arrays.asList(ALL));
+		List<Task> tasks = new ArrayList<Task>();
 		try {
-	      taskDao.findAllReportName(TaskEntity.READSET_REPORT_NAME);
-//	      model.setDomains(domains);
-			List<String> names=null;
-//			model.setNames(names);
-      } catch (DalException e) {
-	      e.printStackTrace();
-      }
-		
+			List<Task> domainSet = taskDao.findAllDistinct(start, end, TaskEntity.READSET_REPORT_DOMAIN);
+			List<Task> nameSet = taskDao.findAllDistinct(start, end, TaskEntity.READSET_REPORT_NAME);
+			for (Task task : domainSet) {
+				domains.add(task.getReportDomain());
+			}
+			for (Task task : nameSet) {
+				names.add(task.getReportName());
+			}
+			model.setDomains(domains);
+			model.setNames(names);
+
+			List<Task> totalTasks = taskDao.findAll(status, start, end, queryName, queryDomain, type, TaskEntity.READSET_COUNT);
+			totalNumOfTask = totalTasks.get(0).getCount();
+			totalPages = (int) Math.floor((double) totalNumOfTask / (double) PAGE_SIZE);
+			model.setTotalNumOfTasks(totalNumOfTask);
+			model.setTotalpages(totalPages);
+			
+			List<Task> totalFailureTasks = taskDao.findAll(4, start, end, queryName, queryDomain, type,
+			      TaskEntity.READSET_COUNT);
+			model.setNumOfFailureTasks(totalFailureTasks.get(0).getCount());
+
+			int currentPage = payload.getCurrentPage() == 0 ? 1 : payload.getCurrentPage();
+			int startLimit = (currentPage - 1) * PAGE_SIZE;
+			
+			tasks = this.taskDao.findByStatusTypeName(status, start, end, queryName, queryDomain, type, startLimit,
+			      PAGE_SIZE, TaskEntity.READSET_FULL);
+			model.setTasks(tasks);
+		} catch (DalException e) {
+			Cat.getProducer().logError(e);
+		}
+   }
+
+
+	
+	private boolean isEmpty(String str) {
+		return str == null || str.length() == 0;
 	}
 }

@@ -29,7 +29,7 @@
 	var responseTrendData = ${model.responseTrend};
 	var hitTrendData = ${model.hitTrend};
 	var errorTrendData = ${model.errorTrend};
-	graph(document.getElementById('responseTrend'), responseTrendData);
+	graph(document.getElementById('responseTrend'), responseTrendData);	
 	graph(document.getElementById('hitTrend'), hitTrendData);
 	graph(document.getElementById('errorTrend'), errorTrendData);
 </script>

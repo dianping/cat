@@ -1,6 +1,8 @@
 package com.dianping.cat.consumer.matrix;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +39,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	private ReportDao m_reportDao;
 
 	@SuppressWarnings("unused")
-   @Inject
+	@Inject
 	private TaskDao m_taskDao;
 
 	private Map<String, MatrixReport> m_reports = new HashMap<String, MatrixReport>();
@@ -72,6 +74,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			report = new MatrixReport(domain);
 		}
 
+		report.accept(new MatrixReportFilter());
 		report.getDomainNames().addAll(m_reports.keySet());
 		return report;
 	}
@@ -166,6 +169,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		List<Message> children = t.getChildren();
 		String type = t.getType();
 		Ratio ratio = null;
+		
 		if (type.equals("Call")) {
 			ratio = ratios.get("Call");
 		} else if (type.equals("SQL")) {
@@ -215,6 +219,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "matrix");
 
 			for (MatrixReport report : m_reports.values()) {
+				report.accept(new MatrixReportFilter());
 				Set<String> domainNames = report.getDomainNames();
 				domainNames.clear();
 				domainNames.addAll(getDomains());
@@ -231,6 +236,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 				for (MatrixReport report : m_reports.values()) {
 					try {
+						report.accept(new MatrixReportFilter());
 						Report r = m_reportDao.createLocal();
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
@@ -270,6 +276,39 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			if (reportBucket != null) {
 				m_bucketManager.closeBucket(reportBucket);
 			}
+		}
+	}
+
+	public static class MatrixReportFilter extends com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder {
+		private String m_domain;
+
+		@Override
+		public void visitMatrixReport(MatrixReport matrixReport) {
+			m_domain = matrixReport.getDomain();
+			if (!m_domain.equals("Cat")) {
+				Map<String, Matrix> matrixs = matrixReport.getMatrixs();
+				List<String> removeUrls = new ArrayList<String>();
+				int totalCount = 0;
+				Collection<Matrix> matrix = matrixs.values();
+
+				for (Matrix temp : matrix) {
+					if (temp.getType().equals("URL") && temp.getCount() < 5) {
+						removeUrls.add(temp.getName());
+						totalCount += temp.getCount();
+					}
+				}
+				for (String url : removeUrls) {
+					matrixs.remove(url);
+				}
+
+				if (totalCount > 0) {
+					Matrix other = new Matrix("OTHERS");
+					other.setType("OTHERS");
+					other.setCount(totalCount);
+					matrixs.put("OTHERS", other);
+				}
+			}
+			super.visitMatrixReport(matrixReport);
 		}
 	}
 }

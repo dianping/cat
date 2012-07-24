@@ -19,7 +19,6 @@ import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
@@ -272,10 +271,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		private String m_ipAddress;
 
-		private String m_currentType;
-
-		private String m_currentDomain;
-
 		public TransactionReportFilter(String type, String name, String ip) {
 			m_type = type;
 			m_name = name;
@@ -319,13 +314,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		private void visitTransactionName(TransactionName name) {
-			if ("URL".equals(m_currentType) && !"Cat".equals(m_currentDomain)) {
-				if (name.getTotalCount() > 1) {
-					super.visitName(name);
-				}
-			} else {
-				super.visitName(name);
-			}
+			super.visitName(name);
 		}
 
 		@Override
@@ -338,23 +327,15 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		@Override
 		public void visitType(TransactionType type) {
 			if (m_type == null) {
-				m_currentType = type.getId();
 				super.visitType(type);
 
 			} else if (m_type != null && type.getId().equals(m_type)) {
 				type.setSuccessMessageUrl(null);
 				type.setFailMessageUrl(null);
-				m_currentType = type.getId();
 				super.visitType(type);
 			} else {
 				// skip it
 			}
-		}
-
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			m_currentDomain = transactionReport.getDomain();
-			super.visitTransactionReport(transactionReport);
 		}
 	}
 

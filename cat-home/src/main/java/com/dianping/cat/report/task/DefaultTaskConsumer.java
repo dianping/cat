@@ -70,7 +70,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		try {
 			task = this.taskDao.findByStatusConsumer(STATUS_DOING, ip, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			m_logger.info("no doing task");
+			//TODO
+			//m_logger.info("no doing task");
 		}
 		return task;
 	}
@@ -81,7 +82,8 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		try {
 			task = this.taskDao.findByStatusConsumer(STATUS_TODO, null, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			m_logger.info("no todo task");
+			//TODO
+			//m_logger.info("no todo task");
 		}
 		return task;
 	}
@@ -134,13 +136,13 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 					continue; // ignore exist daily report
 				}
 
-				m_logger.info(String.format("Starting merge domain:%s daily report:%s from %s to %s: ", domain, name,
-				      startDate, endDate));
+				//m_logger.info(String.format("Starting merge domain:%s daily report:%s from %s to %s: ", domain, name,
+				//      startDate, endDate));
 
 				mergeDomainDailyReport(domain, name, startDate, endDate, domainSet);
 
-				m_logger.info(String.format("finish merge domain:%s daily report:%s from %s to %s: ", domain, name,
-				      startDate, endDate));
+				//m_logger.info(String.format("finish merge domain:%s daily report:%s from %s to %s: ", domain, name,
+				//      startDate, endDate));
 			}
 		}
 	}

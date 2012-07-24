@@ -52,17 +52,18 @@ public class HistoricalEventService extends BaseHistoricalModelService<EventRepo
 			model.accept(merger);
 		}
 		EventReport eventReport = merger.getEventReport();
-		
+
 		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
 		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
 
-		if (eventReport != null && historyReports != null) {
-			Set<String> domainNames = eventReport.getDomainNames();
-			for (Report report : historyReports) {
-				domainNames.add(report.getDomain());
-			}
+		if (eventReport == null) {
+			eventReport = new EventReport(domain);
 		}
-		return merger == null ? null : eventReport;
+		Set<String> domainNames = eventReport.getDomainNames();
+		for (Report report : historyReports) {
+			domainNames.add(report.getDomain());
+		}
+		return eventReport;
 	}
 
 	private EventReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

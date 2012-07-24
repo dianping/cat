@@ -144,14 +144,18 @@
 	</entity>
 
 	<entity name="task" table="task" alias="t">
-		<readsets>
-			<readset name="REPORT_NAME">
-				<member name="report_name" />
-			</readset>
-		</readsets>
+		<member  name="count" value-type="int" select-expr="COUNT(*)" all="false"/>
+		<var name="start-limit" value-type="int"/>
+		<var name="end-limit" value-type="int"/>
 		<readsets>
 			<readset name="REPORT_DOMAIN">
 				<member name="report_domain" />
+			</readset>
+			<readset name="REPORT_NAME">
+				<member name="report_name" />
+			</readset>
+			<readset name="COUNT">
+				<member name="count" />
 			</readset>
 		</readsets>
 		<query-defs>
@@ -208,15 +212,74 @@
 				]]></statement>
 			</query>
 			
-			<query name="find-all-report-name" type="SELECT" multiple="true">
+			<query name="find-all-distinct" type="SELECT" multiple="true">
+				<param name="start-date" />
+				<param name="end-date" />
 				<statement><![CDATA[
-					SELECT DISTINCT <FIELDS/> FROM <TABLE/> 
+					SELECT DISTINCT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE
+					<FIELD name='report-period'/> >= ${start-date}
+					AND <FIELD name='report-period'/> < ${end-date}
 				]]></statement>
 			</query>
 			
-			<query name="find-all-report-domain" type="SELECT" multiple="true">
+			<query name="find-all" type="SELECT" multiple="true">
+				<param name="status" />
+				<param name="start-date" />
+				<param name="end-date" />
+				<param name="report-name" />
+				<param name="report-domain" />
+				<param name="task-type" />
 				<statement><![CDATA[
-					SELECT DISTINCT <FIELDS/> FROM <TABLE/> 
+					SELECT <FIELDS/> 
+					FROM <TABLE/>
+					WHERE
+					<FIELD name='report-period'/> >= ${start-date}
+					AND <FIELD name='report-period'/> < ${end-date}
+					<IF type='NOT_ZERO' field='status'>
+						AND <FIELD name='status'/> = ${status}
+					</IF>
+					<IF type='NOT_NULL' field='report-name'>
+						AND  <FIELD name='report-name'/> = ${report-name}
+					</IF>
+					<IF type='NOT_ZERO' field='task-type'>
+						AND  <FIELD name='task-type'/> = ${task-type}
+					</IF>
+					<IF type='NOT_NULL' field='report-domain'>
+						AND  <FIELD name='report-domain'/> = ${report-domain}
+					</IF>
+				]]></statement>
+			</query>
+			
+			<query name="find-by-status-type-name" type="SELECT" multiple="true">
+				<param name="status" />
+				<param name="start-date" />
+				<param name="end-date" />
+				<param name="report-name" />
+				<param name="report-domain" />
+				<param name="task-type" />
+				<param name="start-limit" />
+				<param name="end-limit" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE
+					<FIELD name='report-period'/> >= ${start-date}
+					AND <FIELD name='report-period'/> < ${end-date}
+					<IF type='NOT_ZERO' field='status'>
+						AND <FIELD name='status'/> = ${status}
+					</IF>
+					<IF type='NOT_NULL' field='report-name'>
+						AND  <FIELD name='report-name'/> = ${report-name}
+					</IF>
+					<IF type='NOT_ZERO' field='task-type'>
+						AND  <FIELD name='task-type'/> = ${task-type}
+					</IF>
+					<IF type='NOT_NULL' field='report-domain'>
+						AND  <FIELD name='report-domain'/> = ${report-domain}
+					</IF>
+				limit ${start-limit},${end-limit}
 				]]></statement>
 			</query>
 			

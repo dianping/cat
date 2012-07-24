@@ -13,6 +13,7 @@
     margin:2px;
     float:left;
 }
+
 .jPag-control-back{
 	position:absolute;
 	left:0px;
@@ -24,6 +25,26 @@
 .jPaginate span{
     cursor:pointer;
 }
+
+
+ .tasktable{
+   table-layout:fixed
+ }
+  .tasktable td{text-overflow:ellipsis;overflow:hidden;white-space: nowrap;padding:2px}
+
+.class1{
+	background-image: url(../images/todo.png); 
+}
+.class2{
+	background-image: url(../images/doing.png);
+}
+.class3{
+	background-image: url(../images/done.jpg);
+}
+.class4{
+	background-image: url(../images/failure.png);
+}
+
 ul.jPag-pages{
     float:left;
     list-style-type:none;
@@ -40,6 +61,7 @@ ul.jPag-pages li a{
     float:left;
     padding:2px 5px;
 }
+
 span.jPag-current{
     cursor:default;
     font-weight:normal;

@@ -3,126 +3,139 @@
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-
+<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.task.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.task.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.task.Model" scope="request" />
 <jsp:useBean id="navBar" class="com.dianping.cat.report.view.NavigationBar" scope="page"/>
 
+<a:simpleReport title="Task Manage Platform">
 
-<html>
-	<head>
-		<title>CAT - ${model.page.description}</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-		<link rel="stylesheet" href="../css/body.css" type="text/css">
-		<link rel="stylesheet" href="../css/report.css" type="text/css">
-		<link rel="stylesheet" href="../css/transaction.css" type="text/css">
-		<link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
-				<script src="../js/jquery-1.3.2.js" type="text/javascript"></script>
-		<script src="../js/jquery.paginate.js" type="text/javascript"></script>
-		<script type="text/javascript">
-		$(function() {
+<link rel="stylesheet" href="../css/body.css" type="text/css">
+<link rel="stylesheet" href="../css/report.css" type="text/css">
+<link rel="stylesheet" href="../css/task.css" type="text/css">
+<link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+<script src="../js/jquery-1.7.1.js" type="text/javascript"></script>
+<script src="../js/task.js" type="text/javascript"></script>
+<body>
 		
-			$("#demo3").paginate({
-				count 		: 10,
-				start 		: 1,
-				display     : 10,
-				border					: true,
-				border_color			: '#BEF8B8',
-				text_color  			: '#68BA64',
-				background_color    	: '#E3F2E1',	
-				border_hover_color		: '#68BA64',
-				text_hover_color  		: 'black',
-				background_hover_color	: '#CAE6C6', 
-				rotate      : false,
-				images		: false,
-				mouse		: 'press',
-				onChange: function(currentPage) {
-				//点击页码时,执行的函数(作ajax异步请求数据)
-					alert(currentPage);
-				//取得分页数据
-				//getPaginateData(pageSize, currentPage);
-			}
-			});
-			show
-		});
-		</script>
-	</head>
-	<body>
 <div class="report">
-
-	<ul class="tabs">
-	<c:forEach var="page" items="${navBar.visiblePages}">
-		<c:if test="${page.standalone}">
-			<li ${model.page.name == page.name ? 'class="selected"' : ''}><a href="${model.webapp}/${page.moduleName}/${page.path}?domain=${model.domain}&date=${model.date}">${page.title}</a></li>
-		</c:if>
-		<c:if test="${not page.standalone and model.page.name == page.name}">
-			<li class="selected">${page.title}</li>
-		</c:if>
-	</c:forEach>
-	</ul>
-	<table class="header">
-		<tr>
-			<td class="title">Task Manage Platform</td>
-		</tr>
-	</table>
 	<table class="navbar">
 		<tr>
 			<td class="domain">
-			<div class="domain">
-			<b>domain:</b><c:forEach var="domain" items="${model.domains}">
-			  &nbsp;<c:choose>
-						<c:when test="${model.domain eq domain}">
-							<a href="domain=${domain}" class="current">[&nbsp;${domain}&nbsp;]</a>
-						</c:when>
-					<c:otherwise>
-						<a href="domain=${domain}">[&nbsp;${domain}&nbsp;]</a>
-					</c:otherwise>
-					</c:choose>&nbsp;
-			</c:forEach><br/>
-			<b>name:&nbsp;&nbsp;&nbsp;</b><c:forEach var="name" items="${model.names}">
-			  &nbsp;<c:choose>
-						<c:when test="${model.name eq name}">
-							<a href="name=${name}" class="current">[&nbsp;${name}&nbsp;]</a>
-						</c:when>
-					<c:otherwise>
-						<a href="name=${name}">[&nbsp;${name}&nbsp;]</a>
-					</c:otherwise>
-					</c:choose>&nbsp;
-			</c:forEach>
-			</div>
+				<div class="domain">
+					<c:forEach var="domain" items="${model.domains}">
+						&nbsp;<c:choose>
+							<c:when test="${model.domain eq domain}">
+								<a href="${model.baseUri}?domain=${domain}&date=${model.date}" class="current">[&nbsp;${domain}&nbsp;]</a>
+							</c:when>
+							<c:otherwise>
+								<a href="${model.baseUri}?domain=${domain}&date=${model.date}">[&nbsp;${domain}&nbsp;]</a>
+							</c:otherwise>
+						</c:choose>&nbsp;
+					</c:forEach>
+				</div>
+			</td>
+			<td class="nav">
+				<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?domain=${domain}&date=${model.date}&name=${name}&step=${nav.hours}">${nav.title}</a> ]&nbsp;
+				</c:forEach>
+				&nbsp;[ <a href="${model.baseUri}?domain=${domain}&name=${name}">now</a> ]&nbsp;
 			</td>
 		</tr>
 		<tr>
-			<td>From:&nbsp;&nbsp;<input type="text" name="from"/> To:&nbsp;&nbsp;<input type="text" name="to">
-				<b>status:&nbsp;&nbsp;</b><select>
-				  <option value ="todo">todo</option>
-				  <option value ="doing">doing</option>
-				  <option value="done">done</option>
-				  <option value="failed">failed</option>
-				</select>
-				<b>type:&nbsp;&nbsp;</b><select>
-				  <option value ="daily">daily</option>
-				  <option value ="hour">hour</option>
-				</select>
-				&nbsp;&nbsp;<input type='button' value=' search '  width=20 height=10></input>
-			</td>
+			<td><b>From ${w:format(model.from,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.to,'yyyy-MM-dd HH:mm:ss')}</b></td>
 		</tr>
-		
 	</table>
 
-	<div class="content">
-		<div class="demo">
-               <div id="demo3"> </div>                    
-         </div>
-    </div>
-	<table class="footer">
+	<table class="task">
+		<tr><td colspan='3'>
+				<b>Report Type:&nbsp;&nbsp;</b>
+				<select id="name">
+				  <option value="All">All</option>
+				  <option value ="Transaction">Transaction</option>
+				  <option value ="Event">Event</option>
+				  <option value ="Problem">Problem</option>
+				  <option value="Heartbeat">Heartbeat</option>
+				</select>
+				<b>Status:&nbsp;&nbsp;</b>
+				<select id="status">
+				  <option value ="0">All</option>
+				  <option value ="1">todo</option>
+				  <option value ="2">doing</option>
+				  <option value="3">done</option>
+				  <option value="4">failed</option>
+				</select>
+				<b>Type:&nbsp;&nbsp;</b><select id="type">
+				  <option value ="0">All</option>
+				  <option value ="1">hour</option>
+				  <option value ="2">daily</option>
+				</select>
+				&nbsp;&nbsp;<input type='button' value=' search '  width=20 height=10 onclick="searchTask('${model.domain}','${model.name}','${payload.date}','${payload.step}')"></input>
+			</td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b>total tasks:</b>&nbsp;&nbsp;${model.totalNumOfTasks}</td>
+			<td clospan="2">
+				<b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;failure tasks:&nbsp;&nbsp;</b>${model.numOfFailureTasks}
+			</td>
+			</tr>
 		<tr>
-			<td>[ end ]</td>
+			<th >Producer</th>
+			<th >Consumer</th>
+			<th >Domain</th>
+			<th >Name</th>
+			<th >Report Period</th>
+			
+			
+			<th >Start Date</th>
+			<th >End Date</th>
+			<th >Status</th>
+			<th >Type</th>
+			<th >Operation</th>
+		</tr>
+		<c:forEach var="task" items="${model.tasks}" varStatus="status">
+			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+				<td>${task.producer}</td>
+				<td>${task.consumer}</td>
+				<td>${task.reportDomain}</td>
+				<td>${task.reportName}</td>
+				<td>${w:format(task.reportPeriod,'yyyy-MM-dd HH:mm:ss')} </td>
+				<td>${w:format(task.startDate,'yyyy-MM-dd HH:mm:ss')}</td>
+				<td>${w:format(task.endDate,'yyyy-MM-dd HH:mm:ss')} </td>
+				<td class="class${task.status}">
+					<c:if test="${task.status==1}">todo</c:if>
+					<c:if test="${task.status==2}">doing</c:if>
+					<c:if test="${task.status==3}">done</c:if>
+					<c:if test="${task.status==4}">failure</c:if>
+				</td>
+				<td>
+					<c:if test="${task.taskType==0||task.taskType==1}">hour</c:if>
+					<c:if test="${task.taskType==2}">day</c:if>
+				</td>
+				<td > 
+				<a href="${model.baseUri}?&op=redo&period=${task.reportPeriod}&domain=${task.reportDomain}&name=${task.reportName}&taskType=${task.taskType}" target="_blank">redo</a></td>
+		</tr>
+		</c:forEach>
+		<tr>
+			<td colspan="9" id="pager"> </td>
 		</tr>
 	</table>
 </div>
-	</body>
-</html>
+
+<script type="text/javascript">
+ 	$(".class1").css("background-color","#33FF66");
+ 	$(".class2").css("background-color","#99CCFF");
+ 	$(".class4").css("background-color","#FF6633");
+	var type=${model.type};
+	var status=${model.status};
+	var name='${model.name}';
+	$("#type").val(type) ;
+	$("#status").val(status) ;
+	$("#name").val(name) ;
+	var totalPages=${model.totalpages};
+	var url="&domain="+"${model.domain}"+"&name="+"${model.name}"+"&date="+${payload.date}+"&step="+${payload.step};
+</script>
+</body>
+</a:simpleReport>
+
 
 

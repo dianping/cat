@@ -123,7 +123,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (report == null) {
 			report = new TransactionReport(domain);
 		}
-
+		report.accept(new TransactionReportFilter());
 		report.getDomainNames().addAll(m_reports.keySet());
 
 		report.accept(new StatisticsComputer());
@@ -196,7 +196,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (message instanceof Transaction) {
 			int count = processTransaction(report, tree, (Transaction) message);
 
-			// the message is required by some transactions
 			if (count > 0) {
 				storeMessage(tree);
 			}
@@ -206,6 +205,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		String ip = tree.getIpAddress();
 		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
+		//pigeon default heartbeat is no use
+		if (("Call").equals(t.getType()) &&("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
+			return 0;
+		}
 		TransactionName name = type.findOrCreateName(t.getName());
 		String messageId = tree.getMessageId();
 		int count = 0;
@@ -329,7 +332,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			RemoteIdChannel m_channel = m_manager.openChannel(m_remoteIdPath, m_startTime);
 			m_channel.write(tree);
 		} catch (Exception e) {
-			e.printStackTrace();
+			m_logger.error("Error when storing message info to remote file!", e);
 		}
 
 		String messageId = tree.getMessageId();
@@ -359,7 +362,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 				set95Line(report);
 				clearAllDuration(report);
-				// String xml = builder.buildXml(report);
 				String xml = new TransactionReportFilter().buildXml(report);
 				String domain = report.getDomain();
 
@@ -373,7 +375,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				for (TransactionReport report : m_reports.values()) {
 					try {
 						Report r = m_reportDao.createLocal();
-						// String xml = builder.buildXml(report);
 						String xml = new TransactionReportFilter().buildXml(report);
 						String domain = report.getDomain();
 
@@ -415,23 +416,32 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
-	static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+	public static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_domain;
 
 		@Override
 		public void visitType(TransactionType type) {
+			int count = 0;
 			if (!"Cat".equals(m_domain)) {
 				if ("URL".equals(type.getId())) {
 					List<String> names = new ArrayList<String>();
 					Map<String, TransactionName> transactionNames = type.getNames();
 					for (TransactionName transactionName : transactionNames.values()) {
-						if (transactionName.getTotalCount() <= 1) {
+						if (transactionName.getTotalCount() <= 5) {
 							names.add(transactionName.getId());
+							count += transactionName.getTotalCount();
 						}
 					}
 
 					for (String name : names) {
 						transactionNames.remove(name);
+					}
+					if (count > 0) {
+						TransactionName name = new TransactionName("OTHERS");
+						name.setTotalCount(count);
+						name.setMin(0);
+						name.setMax(0);
+						type.getNames().put("OTHERS", name);
 					}
 				}
 			}

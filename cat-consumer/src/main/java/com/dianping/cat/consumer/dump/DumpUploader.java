@@ -79,7 +79,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 		}
 	}
 
-	private long sleepPeriod = 1000;
+	private long sleepPeriod = 1000L * 60;
 
 	public void setSleepPeriod(long period) {
 		this.sleepPeriod = period;
@@ -107,7 +107,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 						upload();
 					}
 				} catch (Exception e) {
-					m_logger.warn("Error when dumping message to HDFS.", e);
+					m_logger.warn("Error when dumping message to HDFS. " + e.getMessage());
 				}
 
 				try {

@@ -176,6 +176,16 @@
 			</configuration>
 		</component>
 		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>temp</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>temp</logical-table-name>
+				<physical-table-name>temp</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.hadoop.dal.CommentDao</role>
 			<implementation>com.dianping.cat.hadoop.dal.CommentDao</implementation>
 			<requirements>
@@ -250,6 +260,15 @@
 		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 			<implementation>com.dianping.cat.hadoop.dal.TaskDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.TempDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.TempDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
