@@ -9,30 +9,6 @@
 			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.io.InMemoryQueue</role>
-			<implementation>com.dianping.cat.message.io.InMemoryQueue</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.io.MessageSender</role>
-			<role-hint>in-memory</role-hint>
-			<implementation>com.dianping.cat.message.io.InMemorySender</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.io.InMemoryQueue</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.io.MessageReceiver</role>
-			<role-hint>in-memory</role-hint>
-			<implementation>com.dianping.cat.message.io.InMemoryReceiver</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.io.InMemoryQueue</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.MessageManager</role>
 			<implementation>com.dianping.cat.message.internal.DefaultMessageManager</implementation>
 			<requirements>

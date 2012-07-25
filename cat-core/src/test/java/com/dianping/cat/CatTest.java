@@ -43,7 +43,7 @@ public class CatTest {
 	}
 
 	@Test
-	public void testWithoutGlobalConfigInitialize() throws InterruptedException {
+	public void testWithNoExistGlobalConfigInitialize() throws InterruptedException {
 		Cat.initialize(new File("/data/appdatas/cat/clientNoExist.xml"));
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("TestType", "TestName");

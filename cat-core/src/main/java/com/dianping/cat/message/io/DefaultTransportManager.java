@@ -24,10 +24,6 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 
 	@Override
 	public MessageSender getSender() {
-		if (m_sender == null) {
-			throw new RuntimeException("Server mode only, no sender is provided!");
-		}
-
 		return m_sender;
 	}
 
@@ -36,12 +32,12 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 		List<Server> servers = m_configManager.getServers();
 
 		if (!m_configManager.isCatEnabled()) {
-			m_sender = lookup(MessageSender.class, "in-memory");
+			m_sender = null;
 
 			if (m_configManager.isInitialized()) {
-				m_logger.warn("CAT was DISABLED explicitly, an in-memory sender used instead!");
+				m_logger.warn("CAT was DISABLED explicitly!");
 			} else {
-				m_logger.warn("CAT was DISABLED due to not initialized yet, an in-memory sender used instead!");
+				m_logger.warn("CAT was DISABLED due to not initialized yet!");
 			}
 		} else {
 			List<InetSocketAddress> addresses = new ArrayList<InetSocketAddress>();

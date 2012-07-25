@@ -7,7 +7,7 @@ import org.junit.runners.JUnit4;
 import com.dianping.cat.Cat;
 
 @RunWith(JUnit4.class)
-public class TransactionTest extends CatTestCase {
+public class TransactionTest{
 	@Test
 	public void testNormal() {
 		Transaction t = Cat.getProducer().newTransaction("URL", "MyPage");

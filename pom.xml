@@ -5,7 +5,7 @@
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
 	<version>0.3.4</version>
-	<name>arch-CAT</name>
+	<name>arch-cat</name>
 	<packaging>pom</packaging>
 	<modules>
 		<module>cat-core</module>

@@ -125,9 +125,7 @@ public class PayloadTest {
 		temp = cal.getTimeInMillis();
 
 		int weekOfDay = cal.get(Calendar.DAY_OF_WEEK);
-
-		temp = temp - 24 * (weekOfDay - 1) * ONE_HOUR;
-		temp = temp + 24 * ONE_HOUR;
+		temp = temp - 24 * (weekOfDay) * ONE_HOUR;
 		if (temp > System.currentTimeMillis()) {
 			temp = temp - 7 * ONE_DAY;
 		}
@@ -138,30 +136,33 @@ public class PayloadTest {
 		String lastOne = sdf.format(lastOneWeek);
 		String current = sdf.format(currentWeek);
 
+		System.out.println(current);
+		System.out.println(lastOne);
+		System.out.println(lastTwo);
 		payload.setDate(sdf.format(input));
 
 		payload.setStep(-1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 8 * ONE_DAY)), payload.getHistoryEndDate());
+		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 7 * ONE_DAY)), payload.getHistoryEndDate());
 
 		payload.computeStartDate();
 		checkDate(lastTwo, payload.getHistoryStartDate());
-		checkDate(sdf.format(new Date(lastTwoWeek.getTime() + 8 * ONE_DAY)), payload.getHistoryEndDate());
+		checkDate(sdf.format(new Date(lastTwoWeek.getTime() + 7 * ONE_DAY)), payload.getHistoryEndDate());
 
 		payload.setStep(1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 8 * ONE_DAY)), payload.getHistoryEndDate());
+		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 7 * ONE_DAY)), payload.getHistoryEndDate());
 
 		payload.computeStartDate();
 		payload.setStep(1);
 		checkDate(current, payload.getHistoryStartDate());
-		checkDate(sdf.format(currentWeek.getTime() + 8 * ONE_DAY), payload.getHistoryEndDate());
+		checkDate(sdf.format(currentWeek.getTime() + 7 * ONE_DAY), payload.getHistoryEndDate());
 
 		payload.computeStartDate();
 		checkDate(current, payload.getHistoryStartDate());
-		checkDate(sdf.format(currentWeek.getTime() + 8 * ONE_DAY), payload.getHistoryEndDate());
+		checkDate(sdf.format(currentWeek.getTime() + 7 * ONE_DAY), payload.getHistoryEndDate());
 	}
 
 	@Test
