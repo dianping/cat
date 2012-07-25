@@ -49,9 +49,9 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 
 	private transient boolean m_active;
 
-	private AtomicInteger m_errors = new AtomicInteger(999);
+	private AtomicInteger m_errors = new AtomicInteger();
 
-	private AtomicInteger m_attempts = new AtomicInteger(999);
+	private AtomicInteger m_attempts = new AtomicInteger();
 
 	boolean checkWritable(ChannelFuture future) {
 		boolean isWriteable = false;
@@ -62,7 +62,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 			} else {
 				int count = m_attempts.incrementAndGet();
 
-				if (count % 1000 == 0) {
+				if (count % 1000 == 0 || count == 1) {
 					m_logger.error("Netty write buffer is full! Attempts: " + count);
 				}
 			}
@@ -131,7 +131,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 
 			int count = m_errors.incrementAndGet();
 
-			if (count % 1000 == 0) {
+			if (count % 1000 == 0 || count == 1) {
 				m_logger.error("Message queue is full in tcp socket sender! Count: " + count);
 			}
 		}
@@ -228,7 +228,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 			if (!future.isSuccess()) {
 				future.getChannel().getCloseFuture().awaitUninterruptibly();
 				int count = m_reconnects.incrementAndGet();
-				
+
 				if (count % 1000 == 0) {
 					m_logger.error("Error when try to connecting to " + address + ", message: " + future.getCause());
 				}

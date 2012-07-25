@@ -13,6 +13,7 @@ import com.dianping.cat.message.Transaction;
 public class CatAppenderTest {
 	@Test
 	public void testWithTransaction() throws InterruptedException {
+		Cat.destroy();
 		CatAppender appender = new CatAppender();
 		Throwable throwable = new Exception();
 		Category logger = Logger.getLogger(CatAppenderTest.class);
@@ -29,6 +30,7 @@ public class CatAppenderTest {
 
 	@Test
 	public void testWithoutTransaction() throws InterruptedException {
+		Cat.destroy();
 		CatAppender appender = new CatAppender();
 		Throwable throwable = new Exception();
 		Category logger = Logger.getLogger(CatAppenderTest.class);

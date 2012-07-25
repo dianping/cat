@@ -20,6 +20,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 					process(tree);
 				} catch (Throwable e) {
 					m_errors++;
+					
 					if (m_errors % 10000 == 0) {
 						e.printStackTrace();
 					}
@@ -35,6 +36,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 					process(tree);
 				} catch (Throwable e) {
 					m_errors++;
+					
 					if (m_errors % 10000 == 0) {
 						e.printStackTrace();
 					}

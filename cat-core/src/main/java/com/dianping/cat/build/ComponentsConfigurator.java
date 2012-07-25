@@ -13,9 +13,6 @@ import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.io.DefaultTransportManager;
-import com.dianping.cat.message.io.InMemoryQueue;
-import com.dianping.cat.message.io.InMemoryReceiver;
-import com.dianping.cat.message.io.InMemorySender;
 import com.dianping.cat.message.io.MessageReceiver;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TcpSocketHierarchySender;
@@ -56,12 +53,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ClientConfigManager.class));
 		all.add(C(ServerConfigManager.class));
-
-		all.add(C(InMemoryQueue.class));
-		all.add(C(MessageSender.class, "in-memory", InMemorySender.class) //
-		      .req(InMemoryQueue.class));
-		all.add(C(MessageReceiver.class, "in-memory", InMemoryReceiver.class) //
-		      .req(InMemoryQueue.class));
 
 		all.add(C(MessageManager.class, DefaultMessageManager.class) //
 		      .req(ClientConfigManager.class, TransportManager.class, MessageStatistics.class));
