@@ -10,29 +10,29 @@ import com.google.gson.Gson;
 
 public class GraphItem {
 
-	private double[] m_ylable;
+	private double[] ylable;
 
-	private String m_titles;
+	private String titles;
 	
-	private String m_start;
+	private String start;
 	
-	private int m_size;
+	private int size;
 	
-	private List<String> m_subTitles = new ArrayList<String>();
+	private List<String> subTitles = new ArrayList<String>();
 
-	private List<double[]> m_values = new ArrayList<double[]>();
+	private List<double[]> values = new ArrayList<double[]>();
 
 	private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 	public GraphItem() {
 	}
 
 	public GraphItem addSubTitle(String title) {
-		m_subTitles.add(title);
+		this.subTitles.add(title);
 		return this;
 	}
 
 	public GraphItem addValue(double[] value) {
-		m_values.add(value);
+		this.values.add(value);
 		return this;
 	}
 
@@ -42,58 +42,58 @@ public class GraphItem {
 	}
 
 	public String getStart() {
-   	return m_start;
+   	return this.start;
    }
 
 	public void setStart(Date start) {
-   	m_start = sdf.format(start);
+   	this.start = sdf.format(start);
    }
 
 	public int getSize() {
-   	return m_size;
+   	return this.size;
    }
 
 	public void setSize(int size) {
-   	m_size = size;
+   	this.size = size;
    }
 
 	public void setStart(String start) {
-   	m_start = start;
+   	this.start = start;
    }
 
 	public double[] getYlable() {
-		return m_ylable;
+		return this.ylable;
 	}
 
 	public void setYlable(double[] ylable) {
 		if (ylable == null) {
-			m_ylable = new double[0];
+			this.ylable = new double[0];
 		} else {
-			m_ylable = Arrays.copyOf(ylable, ylable.length);
+			this.ylable = Arrays.copyOf(ylable, ylable.length);
 		}
 	}
 
 	public String getTitles() {
-		return m_titles;
+		return this.titles;
 	}
 
 	public void setTitles(String titles) {
-		m_titles = titles;
+		this.titles = titles;
 	}
 
 	public List<String> getSubTitles() {
-		return m_subTitles;
+		return this.subTitles;
 	}
 
 	public void setSubTitles(List<String> subTitles) {
-		m_subTitles = subTitles;
+		this.subTitles = subTitles;
 	}
 
 	public List<double[]> getValues() {
-		return m_values;
+		return this.values;
 	}
 
 	public void setValues(List<double[]> values) {
-		m_values = values;
+		this.values = values;
 	}
 }

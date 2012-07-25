@@ -104,6 +104,10 @@ public class HeartbeatGraphCreator implements GraphCreator<HeartbeatReport> {
 					key = "ActiveThread";
 					value = period.getThreadCount();
 					cacheHeartbeatColumn(detailCache, minute, value, key);
+					
+					key = "HttpThread";
+					value = period.getHttpThreadCount();
+					cacheHeartbeatColumn(detailCache, minute, value, key);
 				}
 
 				for (Entry<String, GraphLine> entry : detailCache.entrySet()) {
