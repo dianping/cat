@@ -203,12 +203,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		String ip = tree.getIpAddress();
-		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
 		//pigeon default heartbeat is no use
 		if (("Service").equals(t.getType()) &&("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
 			return 0;
 		}
+		String ip = tree.getIpAddress();
+		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
 		TransactionName name = type.findOrCreateName(t.getName());
 		String messageId = tree.getMessageId();
 		int count = 0;
