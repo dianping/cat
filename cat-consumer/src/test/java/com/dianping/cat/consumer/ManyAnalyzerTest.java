@@ -4,6 +4,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -23,6 +24,10 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 
 	private static int s_count3;
 
+	@Before
+	public void before(){
+	}
+	
 	@Test
 	public void test() throws Exception {
 		MessageConsumer consumer = lookup(MessageConsumer.class, "mockManyAnalyzers");

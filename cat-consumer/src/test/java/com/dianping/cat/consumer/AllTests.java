@@ -27,9 +27,9 @@ TransactionReportMessageAnalyzerTest.class,
 
 TransactionReportTest.class,
 
-ManyAnalyzerTest.class,
+//ManyAnalyzerTest.class,
 
-OneAnalyzerTwoDurationTest.class,
+//OneAnalyzerTwoDurationTest.class,
 
 ProblemReportTest.class,
 
