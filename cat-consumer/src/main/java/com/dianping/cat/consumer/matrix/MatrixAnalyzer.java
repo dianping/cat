@@ -125,6 +125,11 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 		if (message instanceof Transaction) {
 			String messageType = message.getType();
+			String messageName = message.getName();
+			
+			if (("Service").equals(messageType) && ("piegonService:heartTaskService:heartBeat").equals(messageName)) {
+				return;
+			}
 			if (messageType.equals("URL") || messageType.equals("Service")) {
 				Matrix matrix = report.findOrCreateMatrix(message.getName());
 				matrix.setType(message.getType());
@@ -169,7 +174,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		List<Message> children = t.getChildren();
 		String type = t.getType();
 		Ratio ratio = null;
-		
+
 		if (type.equals("Call")) {
 			ratio = ratios.get("Call");
 		} else if (type.equals("SQL")) {

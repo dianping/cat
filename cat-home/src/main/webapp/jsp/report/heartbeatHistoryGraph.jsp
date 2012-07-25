@@ -91,7 +91,7 @@
 	graph(document.getElementById('TotalStartedThread'), totalThreadGraphData);
 	//04
 	var httpThreadGraphData = ${model.httpThreadGraph};
-	graph(document.getElementById('HttpThread'), httpThreadGraphData);
+	graph(document.getElementById('HttpStartedThread'), httpThreadGraphData);
 	//05
 	var catThreadGraphData = ${model.catThreadGraph};
 	graph(document.getElementById('CatStartedThread'), catThreadGraphData);

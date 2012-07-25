@@ -206,7 +206,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		String ip = tree.getIpAddress();
 		TransactionType type = report.findOrCreateMachine(ip).findOrCreateType(t.getType());
 		//pigeon default heartbeat is no use
-		if (("Call").equals(t.getType()) &&("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
+		if (("Service").equals(t.getType()) &&("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
 			return 0;
 		}
 		TransactionName name = type.findOrCreateName(t.getName());
