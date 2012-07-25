@@ -35,6 +35,7 @@ public class TestServer extends SimpleServerSupport {
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
+		System.setProperty("devMode", "true");
 		JettyTestSupport.startServer(new TestServer());
 	}
 
