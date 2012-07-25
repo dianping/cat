@@ -176,6 +176,10 @@ public class DisplayMatrix {
 		public void setCacheInfo(Matrix matrix) {
 
 			Ratio ratio = matrix.getRatios().get("Cache");
+			if(ratio ==null){
+				return;
+			}
+			
 			m_cacheMin = ratio.getMin();
 			m_cacheMax = ratio.getMax();
 			if (matrix.getCount() > 0) {
@@ -191,6 +195,10 @@ public class DisplayMatrix {
 
 		public void setSQLInfo(Matrix matrix) {
 			Ratio ratio = matrix.getRatios().get("SQL");
+			if(ratio ==null){
+				return;
+			}
+			
 			m_sqlMin = ratio.getMin();
 			m_sqlMax = ratio.getMax();
 			if (matrix.getCount() > 0) {
@@ -206,6 +214,10 @@ public class DisplayMatrix {
 
 		public void setCallInfo(Matrix matrix) {
 			Ratio ratio = matrix.getRatios().get("Call");
+			if(ratio ==null){
+				return;
+			}
+			
 			m_callMin = ratio.getMin();
 			m_callMax = ratio.getMax();
 			if (matrix.getCount() > 0) {
