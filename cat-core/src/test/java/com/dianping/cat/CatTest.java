@@ -4,12 +4,22 @@ import java.io.File;
 
 import junit.framework.Assert;
 
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
 import org.junit.Test;
 
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
 public class CatTest {
+	@Test
+	public void test() throws ComponentLookupException {
+		Cat.initialize(null);
+
+		Object obj = Cat.lookup(Context.class);
+		System.out.println(obj);
+	}
+
 	@Test
 	public void testWithoutInitialize() throws InterruptedException {
 		MessageProducer cat = Cat.getProducer();

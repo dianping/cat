@@ -6,6 +6,7 @@
 	<artifactId>parent</artifactId>
 	<version>0.3.4</version>
 	<name>arch-cat</name>
+	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
 	<modules>
 		<module>cat-core</module>
@@ -49,7 +50,7 @@
 			<dependency>
 				<groupId>com.site.common</groupId>
 				<artifactId>test-framework</artifactId>
-				<version>1.0.2</version>
+				<version>1.0.3</version>
 			</dependency>
 			<dependency>
 				<groupId>com.site.common</groupId>
