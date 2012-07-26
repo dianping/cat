@@ -13,7 +13,7 @@ public class ClientConfigMerger extends DefaultMerger {
 	@Override
 	protected void visitConfigChildren(ClientConfig old, ClientConfig config) {
 		if (old != null) {
-			getStack().push(old);
+			getObjects().push(old);
 
 			// if servers is configured, then override it instead of merge
 			if (!config.getServers().isEmpty()) {
@@ -32,7 +32,7 @@ public class ClientConfigMerger extends DefaultMerger {
 				visitProperty(property);
 			}
 
-			getStack().pop();
+			getObjects().pop();
 		}
 	}
 
