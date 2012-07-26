@@ -4,28 +4,9 @@
 package com.dianping.cat.report.task;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.concurrent.locks.LockSupport;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.hadoop.dal.DailygraphDao;
-import com.dianping.cat.hadoop.dal.Dailyreport;
-import com.dianping.cat.hadoop.dal.DailyreportDao;
-import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.Graph;
-import com.dianping.cat.hadoop.dal.GraphDao;
-import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.hadoop.dal.TaskEntity;
@@ -36,32 +17,15 @@ import com.site.lookup.annotation.Inject;
  * @author sean.wang
  * @since May 28, 2012
  */
-public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
+public class DefaultTaskConsumer extends TaskConsumer {
 
 	@Inject
 	private TaskDao taskDao;
 
 	@Inject
-	private GraphDao graphDao;
-
-	@Inject
-	private ReportDao m_reportDao;
-
-	@SuppressWarnings("unused")
-	@Inject
-	private DailygraphDao m_dailyGraphDao;
-
-	@Inject
-	private DailyreportDao m_dailyReportDao;
-
-	private Logger m_logger;
+	private CatReportFacade reportFacade;
 
 	public DefaultTaskConsumer() {
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	@Override
@@ -70,8 +34,11 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		try {
 			task = this.taskDao.findByStatusConsumer(STATUS_DOING, ip, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
+<<<<<<< HEAD
+=======
 			//TODO
 			//m_logger.info("no doing task");
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 		}
 		return task;
 	}
@@ -82,13 +49,18 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		try {
 			task = this.taskDao.findByStatusConsumer(STATUS_TODO, null, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
+<<<<<<< HEAD
+=======
 			//TODO
 			//m_logger.info("no todo task");
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 		}
 		return task;
 	}
 
 	@Override
+<<<<<<< HEAD
+=======
 	protected void mergeReport(Task task) {
 		Date reportPeriod = task.getReportPeriod();
 		Date startDate = TaskHelper.yesterdayZero(reportPeriod);
@@ -195,57 +167,19 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 	private ProblemGraphCreator m_problemGraphCreator = new ProblemGraphCreator();
 
 	@Override
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 	protected boolean processTask(Task doing) {
-		String reportName = doing.getReportName();
-		String reportDomain = doing.getReportDomain();
-		Date reportPeriod = doing.getReportPeriod();
-
-		m_logger.info(String.format("start proecess %s task %s in %s: ", reportDomain, reportName, reportPeriod));
-
-		try {
-			List<Graph> graphs = null;
-			List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-			      ReportEntity.READSET_FULL);
-
-			if ("transaction".equals(reportName)) {
-				TransactionReport transactionReport = m_transactionMerger.mergeForGraph(reportDomain, reports);
-				graphs = m_transactionGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName,
-				      transactionReport);
-			} else if ("event".equals(reportName)) {
-				EventReport eventReport = m_eventMerger.mergeForGraph(reportDomain, reports);
-				graphs = m_eventGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
-			} else if ("heartbeat".equals(reportName)) {
-				HeartbeatReport heartbeatReport = m_heartbeatMerger.mergeForGraph(reportDomain, reports);
-				graphs = m_heartbeatGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName,
-				      heartbeatReport);
-			} else if ("problem".equals(reportName)) {
-				ProblemReport problemReport = m_problemMerger.mergeForGraph(reportDomain, reports);
-				graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
-			}
-
-			if (graphs != null) {
-				for (Graph graph : graphs) {
-					this.graphDao.insert(graph); // use mysql unique index and insert
-					                             // on duplicate
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		return reportFacade.builderReport(doing);
 	}
 
 	@Override
 	protected void taskNotFoundDuration() {
 		Date awakeTime = TaskHelper.nextTaskTime();
-		m_logger.info("waiting for next task until: " + awakeTime);
 		LockSupport.parkUntil(awakeTime.getTime());
 	}
 
 	@Override
 	protected void taskRetryDuration(Task task, int retryTimes) {
-		m_logger.warn("TaskConsumer retry " + retryTimes + ", " + task.toString());
 		LockSupport.parkNanos(10L * 1000 * 1000 * 1000);// sleep 10 sec
 	}
 
@@ -253,8 +187,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 	protected boolean updateDoingToDone(Task doing) {
 		doing.setStatus(STATUS_DONE);
 		doing.setEndDate(new Date());
-
-		m_logger.info("TaskConsumer doing to done, " + doing.toString());
 
 		try {
 			return this.taskDao.updateDoingToDone(doing, TaskEntity.UPDATESET_FULL) == 1;
@@ -269,8 +201,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		doing.setStatus(STATUS_FAIL);
 		doing.setEndDate(new Date());
 
-		m_logger.error("TaskConsumer failed, " + doing.toString());
-
 		try {
 			return this.taskDao.updateDoingToFail(doing, TaskEntity.UPDATESET_FULL) == 1;
 		} catch (DalException e) {
@@ -284,8 +214,6 @@ public class DefaultTaskConsumer extends TaskConsumer implements LogEnabled {
 		todo.setStatus(STATUS_DOING);
 		todo.setConsumer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		todo.setStartDate(new Date());
-
-		m_logger.info("TaskConsumer todo to doing, " + todo.toString());
 
 		try {
 			return this.taskDao.updateTodoToDoing(todo, TaskEntity.UPDATESET_FULL) == 1;

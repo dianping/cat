@@ -3,8 +3,11 @@ package com.dianping.cat.report.build;
 import java.util.ArrayList;
 import java.util.List;
 
+<<<<<<< HEAD
+=======
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.hadoop.dal.DailygraphDao;
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.GraphDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
@@ -16,11 +19,20 @@ import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
+import com.dianping.cat.report.task.CatReportFacade;
+import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.TaskConsumer;
+<<<<<<< HEAD
+import com.dianping.cat.report.task.event.EventReportBuilder;
+import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
+import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+=======
 import com.site.initialization.DefaultModuleManager;
 import com.site.initialization.Module;
 import com.site.initialization.ModuleManager;
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -36,8 +48,31 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
 		      .req(ValueTranslater.class));
 		all.add(C(TaskConsumer.class, DefaultTaskConsumer.class) //
+<<<<<<< HEAD
+		      .req(TaskDao.class,CatReportFacade.class));
+=======
 		      .req(TaskDao.class, GraphDao.class, ReportDao.class, DailygraphDao.class, DailyreportDao.class));
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 
+		all.add(C(TransactionReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class));
+
+		all.add(C(EventReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class));
+
+		all.add(C(ProblemReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class));
+
+		all.add(C(HeartbeatReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class));
+
+		all.add(C(DailyTaskProducer.class, DailyTaskProducer.class) //
+		      .req(TaskDao.class, ReportDao.class, DailyreportDao.class));
+
+		all.add(C(CatReportFacade.class)//
+				.req(TransactionReportBuilder.class,EventReportBuilder.class,
+						ProblemReportBuilder.class,HeartbeatReportBuilder.class));
+		
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));

@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.report.page.event.Handler.DetailOrder;
 import com.dianping.cat.report.page.event.Handler.SummaryOrder;
+import com.dianping.cat.report.task.event.EventGraphCreator;
 
 public class EventGraphCreatorTest {
 

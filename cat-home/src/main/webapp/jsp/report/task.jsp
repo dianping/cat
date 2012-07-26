@@ -67,9 +67,9 @@
 				  <option value="4">failed</option>
 				</select>
 				<b>Type:&nbsp;&nbsp;</b><select id="type">
-				  <option value ="0">All</option>
-				  <option value ="1">hour</option>
-				  <option value ="2">daily</option>
+				  <option value ="-1">All</option>
+				  <option value ="0">hour</option>
+				  <option value ="1">daily</option>
 				</select>
 				&nbsp;&nbsp;<input type='button' value=' search '  width=20 height=10 onclick="searchTask('${model.domain}','${model.name}','${payload.date}','${payload.step}')"></input>
 			</td>
@@ -108,11 +108,11 @@
 					<c:if test="${task.status==4}">failure</c:if>
 				</td>
 				<td>
-					<c:if test="${task.taskType==0||task.taskType==1}">hour</c:if>
-					<c:if test="${task.taskType==2}">day</c:if>
+					<c:if test="${task.taskType==0}">hour</c:if>
+					<c:if test="${task.taskType==1}">day</c:if>
 				</td>
 				<td > 
-				<a href="${model.baseUri}?&op=redo&period=${task.reportPeriod}&domain=${task.reportDomain}&name=${task.reportName}&taskType=${task.taskType}" target="_blank">redo</a></td>
+				<a href="${model.baseUri}?&op=redo&taskID=${task.id}" target="_blank">redo</a></td>
 		</tr>
 		</c:forEach>
 		<tr>

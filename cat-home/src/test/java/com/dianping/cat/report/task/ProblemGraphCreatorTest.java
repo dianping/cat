@@ -11,6 +11,7 @@ import org.unidal.webres.helper.Files;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 
 public class ProblemGraphCreatorTest {
 

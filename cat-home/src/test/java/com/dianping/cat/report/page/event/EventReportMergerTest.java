@@ -5,7 +5,7 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
-import com.dianping.cat.report.task.HistoryEventReportMerger;
+import com.dianping.cat.report.task.event.HistoryEventReportMerger;
 
 public class EventReportMergerTest {
 

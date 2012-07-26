@@ -38,12 +38,12 @@ public class TaskConsumerTest {
 			replayer.add(4);
 			this.stop();
 		}
-
+/*
 		@Override
 		protected void mergeReport(Task task) {
 			replayer.add(6);
 		}
-
+*/
 		@Override
 		protected boolean updateTodoToDoing(Task todo) {
 			replayer.add(7);
