@@ -76,7 +76,7 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 		}
 	}
 
-	private long sleepPeriod = 10000L;
+	private long sleepPeriod = 1000L * 60;
 
 	public void setSleepPeriod(long period) {
 		this.sleepPeriod = period;

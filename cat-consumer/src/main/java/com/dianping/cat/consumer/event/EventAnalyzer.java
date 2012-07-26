@@ -242,7 +242,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			RemoteIdChannel m_channel = m_manager.openChannel(m_remoteIdPath, m_startTime);
 			m_channel.write(tree);
       } catch (Exception e) {
-	      e.printStackTrace();
+			m_logger.error("Error when storing message info to remote file!", e);
       }
 		
 		String messageId = tree.getMessageId();

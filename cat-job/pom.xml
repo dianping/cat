@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.3.3</version>
+		<version>0.3.4</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-job</artifactId>
@@ -34,7 +34,7 @@
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
-				<version>1.1.1</version>
+				<version>1.1.5</version>
 				<executions>
 					<execution>
 						<id>generate dal jdbc model</id>

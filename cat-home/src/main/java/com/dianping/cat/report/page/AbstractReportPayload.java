@@ -59,8 +59,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			cal.set(Calendar.DATE, 1);
 			m_date = cal.getTimeInMillis();
 		} else if ("week".equals(m_reportType)) {
-			m_date = m_date - (ONE_HOUR) * (weekOfDay - 1) * 24;
-			m_date = m_date + ONE_HOUR * 24;
+			m_date = m_date - (ONE_HOUR) * (weekOfDay % 7) * 24;
 			if (m_date > System.currentTimeMillis()) {
 				m_date = m_date - 7 * 24 * ONE_HOUR;
 			}
@@ -130,7 +129,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 			int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
 			temp = m_date + maxDay * (ONE_HOUR * 24);
 		} else if ("week".equals(m_reportType)) {
-			temp = m_date + 8 * (ONE_HOUR * 24);
+			temp = m_date + 7 * (ONE_HOUR * 24);
 		} else {
 			temp = m_date + (ONE_HOUR * 24);
 		}

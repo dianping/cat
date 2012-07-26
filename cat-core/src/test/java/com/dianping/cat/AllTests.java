@@ -11,7 +11,6 @@ import com.dianping.cat.message.TransactionTest;
 import com.dianping.cat.message.configuration.ClientConfigTest;
 import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MillisSecondTimerTest;
-import com.dianping.cat.message.io.InMemoryTest;
 import com.dianping.cat.message.io.TcpSocketTest;
 import com.dianping.cat.message.spi.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
@@ -48,8 +47,6 @@ MillisSecondTimerTest.class,
 DefaultMessagePathBuilderTest.class,
 
 /* .io */
-InMemoryTest.class,
-
 TcpSocketTest.class,
 
 /* .spi.codec */

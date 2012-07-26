@@ -7,14 +7,12 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.configuration.client.entity.Bind;
-import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.io.MessageReceiver;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
-import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Threads.Task;
 import com.site.lookup.ContainerHolder;
@@ -22,9 +20,8 @@ import com.site.lookup.annotation.Inject;
 
 public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, Initializable, LogEnabled, Task {
 	@Inject
-	private MessageManager m_manager;
+	private ServerConfigManager m_configManager;
 
-	@Inject
 	private MessageConsumerRegistry m_registry;
 
 	private MessageReceiver m_receiver;
@@ -37,13 +34,19 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 	}
 
 	@Override
+	public String getName() {
+		return getClass().getSimpleName();
+	}
+
+	@Override
 	public void handle(MessageTree tree) {
+		if (m_registry == null) {
+			m_registry = lookup(MessageConsumerRegistry.class);
+		}
+
 		List<MessageConsumer> consumers = m_registry.getConsumers();
-		int size = consumers.size();
 
-		for (int i = 0; i < size; i++) {
-			MessageConsumer consumer = consumers.get(i);
-
+		for (MessageConsumer consumer : consumers) {
 			try {
 				consumer.consume(tree);
 			} catch (Throwable e) {
@@ -54,28 +57,17 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 
 	@Override
 	public void initialize() throws InitializationException {
-		ClientConfig config = m_manager.getServerConfig();
-
-		if (config == null) {
+		if (!m_configManager.isInitialized()) {
 			// by default, no configuration needed in develop mode, all in memory
 			m_receiver = lookup(MessageReceiver.class, "in-memory");
 		} else {
-			String mode = config.getMode();
+			TcpSocketReceiver receiver = (TcpSocketReceiver) lookup(MessageReceiver.class, "tcp-socket");
 
-			if ("server".equals(mode)) {
-				TcpSocketReceiver receiver = (TcpSocketReceiver) lookup(MessageReceiver.class, "tcp-socket");
-				Bind bind = config.getBind();
+			receiver.setHost(m_configManager.getBindHost());
+			receiver.setPort(m_configManager.getBindPort());
+			receiver.initialize();
 
-				receiver.setHost(bind.getIp());
-				receiver.setPort(bind.getPort());
-				receiver.initialize();
-
-				m_receiver = receiver;
-			} else if ("broker".equals(mode)) {
-				throw new UnsupportedOperationException("Not implemented yet");
-			} else {
-				throw new IllegalArgumentException(String.format("Unsupported mode(%s) in message handler!", mode));
-			}
+			m_receiver = receiver;
 		}
 	}
 
@@ -84,17 +76,8 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 		m_receiver.onMessage(this);
 	}
 
-	public void setRegistry(MessageConsumerRegistry registry) {
-		m_registry = registry;
-	}
-
 	@Override
 	public void shutdown() {
 		m_receiver.shutdown();
-	}
-
-	@Override
-	public String getName() {
-		return getClass().getSimpleName();
 	}
 }

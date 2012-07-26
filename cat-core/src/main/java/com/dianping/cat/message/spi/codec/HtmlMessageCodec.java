@@ -26,7 +26,9 @@ import com.site.lookup.annotation.Inject;
  * encoding
  */
 public class HtmlMessageCodec implements MessageCodec, Initializable {
-	private static final String ID = "HT1"; // HTML version 1
+	public static final String ID = "html";
+
+	private static final String VERSION = "HT1"; // HTML version 1
 
 	@Inject
 	private BufferWriter m_writer;
@@ -115,7 +117,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("<tr class=\"header\"><td colspan=5>");
-		sb.append(ID).append(" ").append(tree.getDomain()).append(" ");
+		sb.append(VERSION).append(" ").append(tree.getDomain()).append(" ");
 		sb.append(tree.getHostName()).append(" ").append(tree.getIpAddress()).append(" ");
 		sb.append(tree.getThreadGroupName()).append(" ").append(tree.getThreadId()).append(" ");
 		sb.append(tree.getThreadName()).append(" ").append(tree.getMessageId()).append(" ");
@@ -127,7 +129,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	protected int encodeLine(MessageTree tree, Message message, ChannelBuffer buf, char type, Policy policy, int level, LineCounter counter) {
+	protected int encodeLine(MessageTree tree, Message message, ChannelBuffer buf, char type, Policy policy, int level,
+	      LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 

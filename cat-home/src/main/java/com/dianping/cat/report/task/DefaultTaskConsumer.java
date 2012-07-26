@@ -34,6 +34,11 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			task = this.taskDao.findByStatusConsumer(STATUS_DOING, ip, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
+<<<<<<< HEAD
+=======
+			//TODO
+			//m_logger.info("no doing task");
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 		}
 		return task;
 	}
@@ -44,11 +49,125 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			task = this.taskDao.findByStatusConsumer(STATUS_TODO, null, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
+<<<<<<< HEAD
+=======
+			//TODO
+			//m_logger.info("no todo task");
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 		}
 		return task;
 	}
 
 	@Override
+<<<<<<< HEAD
+=======
+	protected void mergeReport(Task task) {
+		Date reportPeriod = task.getReportPeriod();
+		Date startDate = TaskHelper.yesterdayZero(reportPeriod);
+		Date endDate = TaskHelper.todayZero(reportPeriod);
+
+		List<Report> domainNames = null;
+		try {
+			domainNames = m_reportDao.findAllByDomainNameDuration(startDate, endDate, null, null,
+			      ReportEntity.READSET_DOMAIN_NAME);
+		} catch (DalException e) {
+			m_logger.error("domainNames", e);
+		}
+
+		if (domainNames == null || domainNames.size() == 0) {
+			return; // no hourly report
+		}
+
+		Set<String> domainSet = new HashSet<String>();
+		Set<String> nameSet = new HashSet<String>();
+		for (Report domainName : domainNames) {
+			domainSet.add(domainName.getDomain());
+			// ignore heartbeat and ip daily report merge
+			if (!"heartbeat".equals(domainName.getName()) && !"ip".equals(domainName.getName())) {
+				nameSet.add(domainName.getName());
+			}
+		}
+
+		List<Dailyreport> dailyDomainNames = null;
+		try {
+			dailyDomainNames = m_dailyReportDao.findAllByPeriod(startDate, endDate, DailyreportEntity.READSET_DOMAIN_NAME);
+		} catch (DalException e) {
+			m_logger.error("dailyDomainNames", e);
+		}
+
+		Set<String> dailySet = new HashSet<String>();
+		if (dailyDomainNames != null) {
+			for (Dailyreport domainName : dailyDomainNames) {
+				dailySet.add(domainName.getDomain() + "\t" + domainName.getName());
+			}
+		}
+		for (String domain : domainSet) { // iterate domains
+			for (String name : nameSet) { // iterate report names
+				String key = domain + "\t" + name;
+				if (dailySet.contains(key)) {
+					continue; // ignore exist daily report
+				}
+
+				//m_logger.info(String.format("Starting merge domain:%s daily report:%s from %s to %s: ", domain, name,
+				//      startDate, endDate));
+
+				mergeDomainDailyReport(domain, name, startDate, endDate, domainSet);
+
+				//m_logger.info(String.format("finish merge domain:%s daily report:%s from %s to %s: ", domain, name,
+				//      startDate, endDate));
+			}
+		}
+	}
+
+	private TransactionMerger m_transactionMerger = new TransactionMerger();
+
+	private EventMerger m_eventMerger = new EventMerger();
+
+	private ProblemMerger m_problemMerger = new ProblemMerger();
+
+	private HeartbeatMerger m_heartbeatMerger = new HeartbeatMerger();
+
+	private void mergeDomainDailyReport(String reportDomain, String reportName, Date startDate, Date endDate,
+	      Set<String> domainSet) {
+		String content = null;
+		try {
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(startDate, endDate, reportDomain, reportName,
+			      ReportEntity.READSET_FULL);
+			if ("transaction".equals(reportName)) {
+				content = m_transactionMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+			} else if ("event".equals(reportName)) {
+				content = m_eventMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+			} else if ("problem".equals(reportName)) {
+				content = m_problemMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+			} else {
+				return;
+			}
+			Dailyreport report = m_dailyReportDao.createLocal();
+			report.setContent(content);
+			report.setCreationDate(new Date());
+			report.setDomain(reportDomain);
+			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+			report.setName(reportName);
+			report.setPeriod(startDate);
+			report.setType(1);
+
+			m_dailyReportDao.insert(report);
+
+		} catch (Exception e) {
+			m_logger.error("mergeDomainDailyReport", e);
+		}
+	}
+
+	private TransactionGraphCreator m_transactionGraphCreator = new TransactionGraphCreator();
+
+	private EventGraphCreator m_eventGraphCreator = new EventGraphCreator();
+
+	private HeartbeatGraphCreator m_heartbeatGraphCreator = new HeartbeatGraphCreator();
+
+	private ProblemGraphCreator m_problemGraphCreator = new ProblemGraphCreator();
+
+	@Override
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 	protected boolean processTask(Task doing) {
 		return reportFacade.builderReport(doing);
 	}

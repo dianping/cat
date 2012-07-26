@@ -41,14 +41,12 @@ public class StatusUpdateTask implements Task, Initializable {
 		Transaction reboot = cat.newTransaction("System", "Reboot");
 
 		reboot.setStatus(Message.SUCCESS);
-		cat.logEvent("System", "Reboot", Message.SUCCESS, "");
+		cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
 		reboot.complete();
-
-		Cat.setup("StatusUpdateTask");
 
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
-			Transaction t = cat.newTransaction("Task", "Status");
+			Transaction t = cat.newTransaction("System", "Status");
 			Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
 			StatusInfo status = new StatusInfo();
 
@@ -77,8 +75,6 @@ public class StatusUpdateTask implements Task, Initializable {
 				}
 			}
 		}
-
-		Cat.reset();
 	}
 
 	public void setInterval(long interval) {

@@ -147,11 +147,14 @@ public class JobletRunner extends ContainerHolder implements LogEnabled {
 		public Progress(Logger logger, String token, float[] points) {
 			m_logger = logger;
 			m_token = token;
-			m_points = points;
 			m_start = System.currentTimeMillis();
 			m_last = m_start;
 			m_lastPoint = 0;
-
+			if(points==null){
+				m_points = new float[0];
+			}else{
+				m_points = Arrays.copyOf(points, points.length);
+			}
 			m_logger.info(String.format("%s%% %s ...", 0, m_token));
 		}
 

@@ -4,8 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>0.3.3</version>
-	<name>CAT</name>
+	<version>0.3.4</version>
+	<name>arch-cat</name>
+	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
 	<modules>
 		<module>cat-core</module>
@@ -39,7 +40,7 @@
 			<dependency>
 				<groupId>com.site.common</groupId>
 				<artifactId>lookup</artifactId>
-				<version>1.1.1</version>
+				<version>1.1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>junit</groupId>
@@ -49,7 +50,7 @@
 			<dependency>
 				<groupId>com.site.common</groupId>
 				<artifactId>test-framework</artifactId>
-				<version>1.0.2</version>
+				<version>1.0.3</version>
 			</dependency>
 			<dependency>
 				<groupId>com.site.common</groupId>

@@ -21,11 +21,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_daemonThreadGraph;
 
 	private int m_disks;
-	
+
 	private String m_diskHistoryGraph;
 
 	private String m_disksGraph;
-	
+
 	private String m_newGcCountGraph;
 
 	private String m_oldGcCountGraph;
@@ -42,6 +42,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_pigeonThreadGraph;
 
+	private String m_httpThreadGraph;
+
 	private HeartbeatReport m_report;
 
 	private DisplayHeartbeat m_result;
@@ -53,6 +55,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_totalThreadGraph;
 
 	private String m_mobileResponse;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -86,8 +89,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Action.VIEW;
 	}
 
+	public String getDiskHistoryGraph() {
+		return m_diskHistoryGraph;
+	}
+
 	public int getDiskRows() {
 		return (m_disks + 2) / 3;
+	}
+
+	public int getDisks() {
+		return m_disks;
 	}
 
 	public String getDisksGraph() {
@@ -119,6 +130,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_hour;
 	}
 
+	public String getHttpThreadGraph() {
+		return m_httpThreadGraph;
+	}
+
 	public String getIpAddress() {
 		return m_ipAddress;
 	}
@@ -133,6 +148,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String getMemoryFreeGraph() {
 		return m_memoryFreeGraph;
+	}
+
+	public String getMobileResponse() {
+		return m_mobileResponse;
 	}
 
 	public String getNewGcCountGraph() {
@@ -195,13 +214,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_daemonThreadGraph = daemonThreadGraph;
 	}
 
+	public void setDiskHistoryGraph(String diskHistoryGraph) {
+		m_diskHistoryGraph = diskHistoryGraph;
+	}
+
 	public void setDisks(int disks) {
 		m_disks = disks;
 	}
-	
-	public int getDisks() {
-   	return m_disks;
-   }
 
 	public void setDisksGraph(String disksGraph) {
 		m_disksGraph = disksGraph;
@@ -215,12 +234,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_hour = hour;
 	}
 
+	public void setHttpThreadGraph(String httpThreadGraph) {
+		m_httpThreadGraph = httpThreadGraph;
+	}
+
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
 	}
 
 	public void setMemoryFreeGraph(String memoryFreeGraph) {
 		m_memoryFreeGraph = memoryFreeGraph;
+	}
+
+	public void setMobileResponse(String mobileResponse) {
+		m_mobileResponse = mobileResponse;
 	}
 
 	public void setNewGcCountGraph(String gcCountGraph) {
@@ -258,21 +285,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTotalThreadGraph(String totalThreadGraph) {
 		m_totalThreadGraph = totalThreadGraph;
 	}
-
-	public String getMobileResponse() {
-   	return m_mobileResponse;
-   }
-
-	public void setMobileResponse(String mobileResponse) {
-   	m_mobileResponse = mobileResponse;
-   }
-
-	public String getDiskHistoryGraph() {
-   	return m_diskHistoryGraph;
-   }
-
-	public void setDiskHistoryGraph(String diskHistoryGraph) {
-   	m_diskHistoryGraph = diskHistoryGraph;
-   }
 
 }

@@ -194,6 +194,8 @@ public class Handler implements PageHandler<Context> {
 		
 		model.setActiveThreadGraph(getGraphItem("Thread (Count) ", "ActiveThread", start, size, graphData)
 		      .getJsonString());
+		model.setHttpThreadGraph(getGraphItem("Http Thread (Count) ", "HttpThread", start, size, graphData)
+		      .getJsonString());
 		model.setDaemonThreadGraph(getGraphItem("Daemon Thread (Count) ", "DaemonThread", start, size, graphData)
 		      .getJsonString());
 		model.setTotalThreadGraph(getGraphItem("Total Started Thread (Count) ", "TotalStartedThread", start, size,
@@ -270,7 +272,7 @@ public class Handler implements PageHandler<Context> {
 	
 	private Map<String, String[]> initial(int size){
 		Map<String, String[]> heartBeats = new HashMap<String, String[]>();
-		String[]names={"ActiveThread","CatMessageOverflow","CatMessageProduced","CatMessageSize","CatThreadCount","DaemonThread"
+		String[]names={"ActiveThread","HttpThread","CatMessageOverflow","CatMessageProduced","CatMessageSize","CatThreadCount","DaemonThread"
 				,"HeapUsage","MemoryFree","NewGcCount","NoneHeapUsage","OldGcCount","PigeonStartedThread","SystemLoadAverage","TotalStartedThread","StartedThread"};
 		for(String name:names){
 			String[] singlePeriod = initialData(size);
@@ -356,14 +358,13 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void divideByK(Map<String, double[]> result, String[] divideByKDates) {
-
 		for (String name : divideByKDates) {
 			double[] data = result.get(name);
+			
 			for (int i = 0; i < data.length; i++) {
 				data[i] = data[i] /(K*K);
 			}
 		}
-		
 	}
 
 	private void organiseAddedData(Map<String, double[]> result, String[] addedNames) {
@@ -375,6 +376,7 @@ public class Handler implements PageHandler<Context> {
 	private double[] getAddedCount(double[] source) {
 		int size = source.length;
 		double[] result = new double[size];
+		
 		for (int i = 1; i <= size - 1; i++) {
 			if (source[i - 1] > 0) {
 				double d = source[i] - source[i - 1];
@@ -429,6 +431,7 @@ public class Handler implements PageHandler<Context> {
 		model.setActiveThreadGraph(displayHeartbeat.getActiceThreadGraph());
 		model.setDaemonThreadGraph(displayHeartbeat.getDeamonThreadGraph());
 		model.setTotalThreadGraph(displayHeartbeat.getTotalThreadGraph());
+		model.setHttpThreadGraph(displayHeartbeat.getHttpTheadGraph());
 		model.setStartedThreadGraph(displayHeartbeat.getStartedThreadGraph());
 		model.setCatThreadGraph(displayHeartbeat.getCatThreadGraph());
 		model.setPigeonThreadGraph(displayHeartbeat.getPigeonTheadGraph());

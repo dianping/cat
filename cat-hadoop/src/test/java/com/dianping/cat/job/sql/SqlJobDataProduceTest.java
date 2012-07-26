@@ -10,9 +10,9 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultTransportManager;
-import com.dianping.cat.message.io.InMemoryQueue;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
+import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Stringizers;
@@ -26,7 +26,7 @@ public class SqlJobDataProduceTest extends CatTestCase {
 		DefaultTransportManager transport = (DefaultTransportManager) lookup(TransportManager.class);
 		MessageSender messageSender = lookup(MessageSender.class, "in-memory");
 		transport.setSender(messageSender);
-		InMemoryQueue queue = lookup(InMemoryQueue.class);
+		MessageQueue queue = lookup(MessageQueue.class);
 
 		long currentTimeMillis = System.currentTimeMillis();
 		long currentHour = currentTimeMillis - currentTimeMillis % (60 * 60 * 1000);
@@ -76,7 +76,7 @@ public class SqlJobDataProduceTest extends CatTestCase {
 				} finally {
 					t.complete();
 				}
-				MessageTree tree = queue.poll(0);
+				MessageTree tree = queue.poll();
 				tree.setDomain("domain" + i);
 				storage.store(tree);
 			}

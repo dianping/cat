@@ -98,6 +98,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 				channel.write(tree);
 			}
 		} catch (Exception e) {
+			//TODO
 			m_logger.error("Error when dumping to local file system!", e);
 		}
 	}

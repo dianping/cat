@@ -5,11 +5,13 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.ip.IpReportTest;
+import com.dianping.cat.consumer.matrix.MatrixReportFilterTest;
 import com.dianping.cat.consumer.problem.model.ProblemReportTest;
 import com.dianping.cat.consumer.transaction.FormatTest;
 import com.dianping.cat.consumer.transaction.GsonTest;
 import com.dianping.cat.consumer.transaction.NumberFormatTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
+import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
 import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
 
@@ -25,16 +27,19 @@ TransactionReportMessageAnalyzerTest.class,
 
 TransactionReportTest.class,
 
-ManyAnalyzerTest.class,
+//ManyAnalyzerTest.class,
 
-OneAnalyzerTwoDurationTest.class,
+//OneAnalyzerTwoDurationTest.class,
 
 ProblemReportTest.class,
 
 FormatTest.class, GsonTest.class,
 
-NumberFormatTest.class
+NumberFormatTest.class,
 
+MatrixReportFilterTest.class,
+
+TransactionReportFilterTest.class
 })
 public class AllTests {
 

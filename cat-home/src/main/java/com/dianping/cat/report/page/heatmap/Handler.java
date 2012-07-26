@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.heatmap;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -86,7 +87,7 @@ public class Handler implements PageHandler<Context> {
 		if (payload.getPeriod().isCurrent()) {
 			payload.setStep(payload.getStep() - 1);
 		}
-		
+
 		model.setDisplay(payload.getDisplay());
 		model.setAction(action);
 		model.setPage(ReportPage.HEATMAP);
@@ -191,11 +192,15 @@ public class Handler implements PageHandler<Context> {
 		private double m_lng1;
 
 		public Result(int[][] matrix, double lat1, double lng1, double latUnit, double lngUnit) {
-			m_matrix = matrix;
 			m_lat1 = lat1;
 			m_lng1 = lng1;
 			m_latUnit = latUnit;
 			m_lngUnit = lngUnit;
+			if (matrix == null) {
+				m_matrix = new int[0][0];
+			} else {
+				m_matrix = Arrays.copyOf(matrix, matrix.length);
+			}
 		}
 
 		public int getMax() {

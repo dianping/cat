@@ -99,7 +99,6 @@ public class Handler implements PageHandler<Context> {
 		case MOBILE_IP:
 			String ip = payload.getIp();
 			String location = IPSeekerManager.getLocation(ip);
-			System.out.println(ip + ":" + location);
 			model.setMobileResponse(location);
 			break;
 		}

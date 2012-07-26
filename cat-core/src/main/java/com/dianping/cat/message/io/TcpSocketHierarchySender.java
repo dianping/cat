@@ -62,8 +62,8 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 			} else {
 				int count = m_attempts.incrementAndGet();
 
-				if (count % 100 == 0) {
-					m_logger.error("Can't send message to cat-server due to Netty write buffer full! Count: " + count);
+				if (count % 1000 == 0 || count == 1) {
+					m_logger.error("Netty write buffer is full! Attempts: " + count);
 				}
 			}
 		}
@@ -131,7 +131,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 
 			int count = m_errors.incrementAndGet();
 
-			if (count % 100 == 0) {
+			if (count % 1000 == 0 || count == 1) {
 				m_logger.error("Message queue is full in tcp socket sender! Count: " + count);
 			}
 		}
@@ -183,6 +183,8 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 
 		private boolean m_active = true;
 
+		private AtomicInteger m_reconnects = new AtomicInteger(999);
+
 		public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses) {
 			int len = serverAddresses.size();
 
@@ -225,7 +227,11 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 
 			if (!future.isSuccess()) {
 				future.getChannel().getCloseFuture().awaitUninterruptibly();
-				m_logger.error("Error when try to connecting to " + address + ", message: " + future.getCause());
+				int count = m_reconnects.incrementAndGet();
+
+				if (count % 1000 == 0) {
+					m_logger.error("Error when try to connecting to " + address + ", message: " + future.getCause());
+				}
 				return null;
 			} else {
 				m_logger.info("Connected to CAT server at " + address);

@@ -2,15 +2,14 @@
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
-import java.util.concurrent.ExecutorService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+<<<<<<< HEAD
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -24,36 +23,26 @@ import com.dianping.cat.report.task.TaskConsumer;
 import com.site.helper.Files;
 import com.site.helper.Threads;
 import com.site.helper.Threads.DefaultThreadListener;
+=======
+import com.site.initialization.DefaultModuleContext;
+import com.site.initialization.ModuleContext;
+import com.site.initialization.ModuleInitializer;
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 import com.site.web.AbstractContainerServlet;
 
 public class CatServlet extends AbstractContainerServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static final String CAT_SERVER_XML = "/META-INF/cat/server.xml";
-
 	private Exception m_exception;
 
 	@Override
 	protected void initComponents(ServletConfig servletConfig) throws ServletException {
-		String catServerXml = servletConfig.getInitParameter("cat-server-xml");
-		ClientConfig config = loadConfig(null);
-
-		Threads.addListener(new CatThreadListener());
-
-		// to notify CAT client to not add another ThreadListener
-		getContainer().addContextValue("Cat.ThreadListener", "true");
-
 		try {
-			MessageManager manager = lookup(MessageManager.class);
+			ModuleContext ctx = new DefaultModuleContext(getContainer());
+			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
+			String catServerXml = servletConfig.getInitParameter("cat-server-xml");
 
-			manager.initializeServer(config);
-
-			ServerConfigManager serverConfigManager = lookup(ServerConfigManager.class);
-
-			serverConfigManager.initialize(catServerXml == null ? null : new File(catServerXml));
-
-			IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
-
+<<<<<<< HEAD
 			final DefaultMessageHandler handler = (DefaultMessageHandler) lookup(MessageHandler.class);
 
 			Threads.forGroup("Cat").start(handler);
@@ -76,29 +65,20 @@ public class CatServlet extends AbstractContainerServlet {
 		try {
 			if (configFile != null) {
 				String xml = Files.forIO().readFrom(new File(configFile).getCanonicalFile(), "utf-8");
+=======
+			ctx.setAttribute("cat-client-config-file", new File("/data/appdatas/cat/client.xml"));
+>>>>>>> 34aa1347a27cbd2b5539cbcf2043a0c7acc392b2
 
-				config = new DefaultDomParser().parse(xml);
+			if (catServerXml != null) {
+				ctx.setAttribute("cat-server-config-file", new File(catServerXml));
+			} else {
+				ctx.setAttribute("cat-server-config-file", new File("/data/appdatas/cat/server.xml"));
 			}
 
-			if (config == null) {
-				InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_SERVER_XML);
-
-				if (in == null) {
-					in = Cat.class.getResourceAsStream(CAT_SERVER_XML);
-				}
-
-				if (in != null) {
-					String xml = Files.forIO().readFrom(in, "utf-8");
-
-					config = new DefaultDomParser().parse(xml);
-				}
-			}
+			initializer.execute(ctx);
 		} catch (Exception e) {
 			m_exception = e;
-			throw new RuntimeException(String.format("Error when loading configuration file: %s!", configFile), e);
 		}
-
-		return config;
 	}
 
 	@Override
@@ -113,34 +93,6 @@ public class CatServlet extends AbstractContainerServlet {
 			m_exception.printStackTrace(writer);
 		} else {
 			writer.write("Not implemented yet!");
-		}
-	}
-
-	private final class CatThreadListener extends DefaultThreadListener {
-		@Override
-		public void onThreadGroupCreated(ThreadGroup group, String name) {
-			getLogger().info(String.format("Thread group(%s) created.", name));
-		}
-
-		@Override
-		public void onThreadPoolCreated(ExecutorService pool, String name) {
-			getLogger().info(String.format("Thread pool(%s) created.", name));
-		}
-
-		@Override
-		public void onThreadStarting(Thread thread, String name) {
-			getLogger().info(String.format("Starting thread(%s) ...", name));
-		}
-
-		@Override
-		public void onThreadStopping(Thread thread, String name) {
-			getLogger().info(String.format("Stopping thread(%s).", name));
-		}
-
-		@Override
-		public boolean onUncaughtException(Thread thread, Throwable e) {
-			getLogger().error(String.format("Uncaught exception thrown out of thread(%s)", thread.getName()), e);
-			return true;
 		}
 	}
 }

@@ -3,6 +3,9 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.CatClientModule;
+import com.dianping.cat.CatCoreModule;
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.internal.DefaultMessageManager;
@@ -10,9 +13,6 @@ import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.io.DefaultTransportManager;
-import com.dianping.cat.message.io.InMemoryQueue;
-import com.dianping.cat.message.io.InMemoryReceiver;
-import com.dianping.cat.message.io.InMemorySender;
 import com.dianping.cat.message.io.MessageReceiver;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TcpSocketHierarchySender;
@@ -28,6 +28,8 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageStorage;
+import com.dianping.cat.message.spi.codec.HtmlMessageCodec;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.consumer.DummyConsumer;
 import com.dianping.cat.message.spi.consumer.DumpToHtmlConsumer;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
@@ -36,6 +38,11 @@ import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageStatistics;
 import com.dianping.cat.message.spi.internal.DefaultMessageStorage;
 import com.dianping.cat.status.StatusUpdateTask;
+import com.site.initialization.DefaultModuleInitializer;
+import com.site.initialization.DefaultModuleManager;
+import com.site.initialization.Module;
+import com.site.initialization.ModuleInitializer;
+import com.site.initialization.ModuleManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -44,28 +51,23 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		all.add(C(ClientConfigManager.class));
 		all.add(C(ServerConfigManager.class));
 
-		all.add(C(InMemoryQueue.class));
-		all.add(C(MessageSender.class, "in-memory", InMemorySender.class) //
-		      .req(InMemoryQueue.class));
-		all.add(C(MessageReceiver.class, "in-memory", InMemoryReceiver.class) //
-		      .req(InMemoryQueue.class));
-
 		all.add(C(MessageManager.class, DefaultMessageManager.class) //
-		      .req(MessageStatistics.class));
+		      .req(ClientConfigManager.class, TransportManager.class, MessageStatistics.class));
 		all.add(C(MessageProducer.class, DefaultMessageProducer.class) //
 		      .req(MessageManager.class, MessageIdFactory.class));
 		all.add(C(MessageIdFactory.class));
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
-		      .req(MessageManager.class));
+		      .req(ClientConfigManager.class));
 
 		all.add(C(MessageStorage.class, "html", DefaultMessageStorage.class) //
 		      .req(MessagePathBuilder.class) //
-		      .req(MessageCodec.class, "html"));
+		      .req(MessageCodec.class, HtmlMessageCodec.ID));
 		all.add(C(MessageConsumer.class, DummyConsumer.ID, DummyConsumer.class));
 		all.add(C(MessageConsumer.class, DumpToHtmlConsumer.ID, DumpToHtmlConsumer.class) //
-		      .req(MessageStorage.class, "html") //
+		      .req(MessageStorage.class, HtmlMessageCodec.ID) //
 		      .req(MessagePathBuilder.class));
 		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
 		      .req(MessageConsumer.class, new String[] { DummyConsumer.ID }, "m_consumers"));
@@ -77,24 +79,32 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageSender.class, "tcp-socket", TcpSocketSender.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageStatistics.class, "default", "m_statistics") //
-		      .req(MessageCodec.class, "plain-text", "m_codec")//
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec")//
 		      .req(MessageQueue.class, "default", "m_queue"));
 		all.add(C(MessageSender.class, "tcp-socket-hierarchy", TcpSocketHierarchySender.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageStatistics.class, "default", "m_statistics") //
-		      .req(MessageCodec.class, "plain-text", "m_codec")//
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec")//
 		      .req(MessageQueue.class, "default", "m_queue"));
 		all.add(C(MessageReceiver.class, "tcp-socket", TcpSocketReceiver.class) //
 		      .is(PER_LOOKUP) //
-		      .req(MessageCodec.class, "plain-text"));
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
 		all.add(C(TransportManager.class, DefaultTransportManager.class) //
-		      .req(MessageManager.class));
+		      .req(ClientConfigManager.class));
 
 		all.add(C(MessageHandler.class, DefaultMessageHandler.class) //
-		      .req(MessageManager.class, MessageConsumerRegistry.class));
+		      .req(ServerConfigManager.class));
 		all.add(C(MessageStatistics.class, DefaultMessageStatistics.class));
 		all.add(C(StatusUpdateTask.class) //
 		      .req(MessageStatistics.class));
+
+		// TODO push it down
+		all.add(C(ModuleManager.class, DefaultModuleManager.class));
+		all.add(C(ModuleInitializer.class, DefaultModuleInitializer.class) //
+		      .req(ModuleManager.class));
+
+		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
+		all.add(C(Module.class, CatClientModule.ID, CatClientModule.class));
 
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());

@@ -4,6 +4,7 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -28,7 +29,11 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 	private static int s_count2;
 
 	private static int s_period = 0;
-
+	
+	@Before
+	public void before(){
+	}
+	
 	@Test
 	public void test() throws Exception {
 		MessageConsumer consumer = lookup(MessageConsumer.class, "mock");
@@ -102,9 +107,6 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 
 		@Override
 		public long getTimestamp() {
-//			if (m_type == -1) {
-//				return System.currentTimeMillis() - 60 * 60 * 1000;
-//			}
 			return System.currentTimeMillis();
 		}
 

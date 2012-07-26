@@ -3,6 +3,7 @@ package com.dianping.cat.report.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.hdfs.InputChannelManager;
@@ -45,6 +46,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "transaction", CompositeTransactionService.class) //
+		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "event-local", LocalEventService.class) //
@@ -53,6 +55,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "event", CompositeEventService.class) //
+		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "event-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
@@ -61,6 +64,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "problem", CompositeProblemService.class) //
+		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "heartbeat-local", LocalHeartbeatService.class) //
@@ -69,6 +73,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "heartbeat-historical", HistoricalHeartbeatService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "heartbeat", CompositeHeartbeatService.class) //
+		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "matrix-local", LocalMatrixService.class) //
@@ -77,14 +82,16 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "matrix", CompositeMatrixService.class) //
+		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
-		
+
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "ip-historical", HistoricalIpService.class) //
 		      .req(BucketManager.class, ReportDao.class));
 		all.add(C(ModelService.class, "ip", CompositeIpService.class) //
+		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "ip-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
@@ -95,6 +102,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, LogviewDao.class, InputChannelManager.class) //
 		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
+		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "logview-historical" }, "m_services"));
 
 		return all;

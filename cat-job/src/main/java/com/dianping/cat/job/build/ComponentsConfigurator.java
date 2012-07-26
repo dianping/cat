@@ -3,6 +3,7 @@ package com.dianping.cat.job.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.job.CatJobModule;
 import com.dianping.cat.job.joblet.BrowserJoblet;
 import com.dianping.cat.job.joblet.BrowserJoblet.BrowserOutputter;
 import com.dianping.cat.job.joblet.BrowserJoblet.OsTypeAndVersionReporter;
@@ -18,6 +19,7 @@ import com.dianping.cat.job.spi.joblet.Joblet;
 import com.dianping.cat.job.spi.joblet.JobletRunner;
 import com.dianping.cat.job.sql.dal.LocationRecordDao;
 import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
+import com.site.initialization.Module;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -48,6 +50,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(SqlOutputter.class));
 		all.add(C(SqlOutputter.class, SqlDatabaseOutputter.class) //
 		      .req(SqlReportRecordDao.class));
+
+		all.add(C(Module.class, CatJobModule.ID, CatJobModule.class));
 
 		all.addAll(new DatabaseConfigurator().defineComponents());
 

@@ -6,6 +6,7 @@
 			<configuration>
 				<dateFormat>MM-dd HH:mm:ss.SSS</dateFormat>
 				<showClass>true</showClass>
+				<logFilePattern>/data/applogs/cat/cat_{0,date,yyyyMMdd}.log</logFilePattern>
 			</configuration>
 		</component>
 	</components>

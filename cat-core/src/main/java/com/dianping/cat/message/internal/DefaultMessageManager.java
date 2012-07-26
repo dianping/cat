@@ -1,16 +1,16 @@
 package com.dianping.cat.message.internal;
 
-import java.lang.management.ManagementFactory;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -20,20 +20,22 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.status.StatusUpdateTask;
-import com.site.helper.Threads;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultMessageManager extends ContainerHolder implements MessageManager, LogEnabled {
+public class DefaultMessageManager extends ContainerHolder implements MessageManager, Initializable, LogEnabled {
+	@Inject
+	private ClientConfigManager m_configManager;
+
+	@Inject
+	private TransportManager m_transportManager;
+
 	@Inject
 	private MessageStatistics m_statistics;
 
-	private StatusUpdateTask m_statusUpdateTask;
-
 	private MessageIdFactory m_factory;
 
-	private TransportManager m_manager;
+	private long m_throttleTimes = 0;
 
 	// we don't use static modifier since MessageManager is a singleton in
 	// production actually
@@ -43,10 +45,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return null;
 		}
 	};
-
-	private ClientConfig m_clientConfig;
-
-	private ClientConfig m_serverConfig;
 
 	private Domain m_domain;
 
@@ -82,22 +80,21 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	void flush(MessageTree tree) {
-		if (m_manager != null) {
-			MessageSender sender = m_manager.getSender();
+		MessageSender sender = m_transportManager.getSender();
 
-			if (sender != null && !shouldThrottle(tree)) {
-				sender.send(tree);
+		if (sender != null && !shouldThrottle(tree)) {
+			sender.send(tree);
 
-				if (m_statistics != null) {
-					m_statistics.onSending(tree);
-				}
+			if (m_statistics != null) {
+				m_statistics.onSending(tree);
+			}
+		} else {
+			m_throttleTimes++;
+
+			if (m_throttleTimes % 10000 == 0 || m_throttleTimes == 1) {
+				m_logger.info("Cat Message is throttled! Times:" + m_throttleTimes);
 			}
 		}
-	}
-
-	@Override
-	public ClientConfig getClientConfig() {
-		return m_clientConfig;
 	}
 
 	Context getContext() {
@@ -124,11 +121,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public ClientConfig getServerConfig() {
-		return m_serverConfig;
-	}
-
-	@Override
 	public MessageTree getThreadLocalMessageTree() {
 		Context ctx = m_context.get();
 
@@ -144,45 +136,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_context.get() != null;
 	}
 
-	@Override
-	public void initializeClient(ClientConfig clientConfig) {
-		if (clientConfig != null) {
-			m_clientConfig = clientConfig;
-		} else {
-			m_clientConfig = new ClientConfig();
-			m_clientConfig.setMode("client");
-		}
-
-		Map<String, Domain> domains = m_clientConfig.getDomains();
-		Domain firstDomain = domains.isEmpty() ? null : domains.values().iterator().next();
-
-		m_domain = firstDomain == null ? new Domain("unknown").setEnabled(false) : firstDomain;
-
+	public void initialize() throws InitializationException {
+		m_domain = m_configManager.getFirstDomain();
 		m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
 
 		if (m_domain.getIp() == null) {
 			m_domain.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		}
 
-		// initialize milli-second resolution level timer
-		MilliSecondTimer.initialize();
-
-		m_manager = lookup(TransportManager.class);
+		// initialize domain and IP address
 		m_factory = lookup(MessageIdFactory.class);
-		m_statusUpdateTask = lookup(StatusUpdateTask.class);
-
-		// initialize domain and ip address
 		m_factory.initialize(m_domain.getId());
-
-		// start status update task
-		if (m_clientConfig.isEnabled()) {
-			Threads.forGroup("Cat").start(m_statusUpdateTask);
-		}
-	}
-
-	@Override
-	public void initializeServer(ClientConfig serverConfig) {
-		m_serverConfig = serverConfig;
 	}
 
 	@Override
@@ -219,18 +183,19 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		m_context.set(ctx);
 	}
 
-	boolean shouldThrottle(MessageTree tree) {
+	private boolean shouldThrottle(MessageTree tree) {
 		if (!isCatEnabled()) {
 			return true;
 		}
 
-		if (tree.getMessage() != null && "Heartbeat".equals(tree.getMessage().getName())) {
-			return false;
-		}
+		return false;
 
-		int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
-
-		return threadCount > m_domain.getMaxThreads();
+		// if (tree.getMessage() != null &&
+		// "Heartbeat".equals(tree.getMessage().getName())) {
+		// return false;
+		// }
+		// int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
+		// return threadCount > m_domain.getMaxThreads();
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.trend;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -26,12 +27,12 @@ public class GraphItem {
 	}
 
 	public GraphItem addSubTitle(String title) {
-		subTitles.add(title);
+		this.subTitles.add(title);
 		return this;
 	}
 
 	public GraphItem addValue(double[] value) {
-		values.add(value);
+		this.values.add(value);
 		return this;
 	}
 
@@ -41,7 +42,7 @@ public class GraphItem {
 	}
 
 	public String getStart() {
-   	return start;
+   	return this.start;
    }
 
 	public void setStart(Date start) {
@@ -49,7 +50,7 @@ public class GraphItem {
    }
 
 	public int getSize() {
-   	return size;
+   	return this.size;
    }
 
 	public void setSize(int size) {
@@ -61,15 +62,19 @@ public class GraphItem {
    }
 
 	public double[] getYlable() {
-		return ylable;
+		return this.ylable;
 	}
 
 	public void setYlable(double[] ylable) {
-		this.ylable = ylable;
+		if (ylable == null) {
+			this.ylable = new double[0];
+		} else {
+			this.ylable = Arrays.copyOf(ylable, ylable.length);
+		}
 	}
 
 	public String getTitles() {
-		return titles;
+		return this.titles;
 	}
 
 	public void setTitles(String titles) {
@@ -77,7 +82,7 @@ public class GraphItem {
 	}
 
 	public List<String> getSubTitles() {
-		return subTitles;
+		return this.subTitles;
 	}
 
 	public void setSubTitles(List<String> subTitles) {
@@ -85,7 +90,7 @@ public class GraphItem {
 	}
 
 	public List<double[]> getValues() {
-		return values;
+		return this.values;
 	}
 
 	public void setValues(List<double[]> values) {
