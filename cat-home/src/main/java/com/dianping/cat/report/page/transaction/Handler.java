@@ -377,9 +377,7 @@ public class Handler implements PageHandler<Context> {
 				}
 			}
 		} catch (Throwable e) {
-			e.printStackTrace();
-
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			model.setException(e);
 		}
 	}

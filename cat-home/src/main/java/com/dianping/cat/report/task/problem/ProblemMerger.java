@@ -3,22 +3,16 @@
  */
 package com.dianping.cat.report.task.problem;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import org.xml.sax.SAXException;
-
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.task.ReportMerger;
 
-/**
- * @author sean.wang
- * @since Jun 20, 2012
- */
 public class ProblemMerger implements ReportMerger<ProblemReport> {
 
 	public ProblemReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
@@ -47,10 +41,8 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 			try {
 				model = DefaultSaxParser.parse(xml);
 				model.accept(merger);
-			} catch (SAXException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 

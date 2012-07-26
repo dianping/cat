@@ -19,10 +19,6 @@ import com.dianping.cat.report.task.GraphCreator;
 import com.dianping.cat.report.task.GraphLine;
 import com.dianping.cat.report.task.TaskHelper;
 
-/**
- * @author sean.wang
- * @since Jun 20, 2012
- */
 public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 
 	@Override
@@ -158,12 +154,9 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 			detailBuilder.append("\n");
 		}
 		allGraph.setDetailContent(detailBuilder.toString());
-
 		allGraph.setCreationDate(new Date());
 
 		graphs.add(allGraph);
-
 		return graphs;
 	}
-
 }

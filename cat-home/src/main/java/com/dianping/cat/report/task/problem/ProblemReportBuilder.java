@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.hadoop.dal.Dailyreport;
@@ -20,7 +21,6 @@ import com.site.dal.jdbc.DalException;
 public class ProblemReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 
 	private ProblemMerger m_problemMerger = new ProblemMerger();
-	
 
 	private ProblemGraphCreator m_problemGraphCreator = new ProblemGraphCreator();
 
@@ -46,9 +46,8 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 			m_dailyReportDao.insert(report);
 			return true;
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 			return false;
-
 		}
 	}
 
@@ -67,7 +66,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 				}
 			}
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 			return false;
 		}
 		return true;

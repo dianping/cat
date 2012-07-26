@@ -20,10 +20,6 @@ import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.report.task.GraphCreator;
 import com.dianping.cat.report.task.GraphLine;
 
-/**
- * @author sean.wang
- * @since Jun 20, 2012
- */
 public class TransactionGraphCreator implements GraphCreator<TransactionReport> {
 
 	@Override

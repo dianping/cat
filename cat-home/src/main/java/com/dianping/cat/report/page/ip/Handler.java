@@ -128,7 +128,7 @@ public class Handler implements PageHandler<Context> {
 			model.setDisplayDomain(payload.getDomain());
 			model.setReport(report);
 		} catch (Throwable e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			model.setException(e);
 		}
 	}

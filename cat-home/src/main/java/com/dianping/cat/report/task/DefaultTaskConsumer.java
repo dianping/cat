@@ -14,10 +14,6 @@ import com.dianping.cat.hadoop.dal.TaskEntity;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
-/**
- * @author sean.wang
- * @since May 28, 2012
- */
 public class DefaultTaskConsumer extends TaskConsumer {
 
 	@Inject
@@ -35,7 +31,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			task = this.taskDao.findByStatusConsumer(STATUS_DOING, ip, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 		}
 		return task;
 	}
@@ -46,7 +42,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			task = this.taskDao.findByStatusConsumer(STATUS_TODO, null, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 		}
 		return task;
 	}
@@ -75,7 +71,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			return this.taskDao.updateDoingToDone(doing, TaskEntity.UPDATESET_FULL) == 1;
 		} catch (DalException e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 		}
 		return true;
 	}
@@ -88,7 +84,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			return this.taskDao.updateDoingToFail(doing, TaskEntity.UPDATESET_FULL) == 1;
 		} catch (DalException e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			return false;
 		}
 	}
@@ -102,7 +98,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		try {
 			return this.taskDao.updateTodoToDoing(todo, TaskEntity.UPDATESET_FULL) == 1;
 		} catch (DalException e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			return false;
 		}
 	}

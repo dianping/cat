@@ -56,7 +56,7 @@ public class Handler implements PageHandler<Context> {
 		case REDO:	
 			redoTask(payload, model);
 			break;
-	}
+		}
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.TASK);
 
@@ -64,12 +64,11 @@ public class Handler implements PageHandler<Context> {
 	}
 	
 	private boolean redoTask(Payload payload, Model model){
-		
 		int taskID=payload.getTaskID();
 		Task task = taskDao.createLocal();
+		
 		task.setId(taskID);
 		return reportFacade.builderReport(task);
-		
 	}
 
 	public void normalizeAndGetTaskData(Payload payload, Model model) {
@@ -101,7 +100,6 @@ public class Handler implements PageHandler<Context> {
 		model.setTo(end);
 		
 		getTaskData(payload,model,start,end,queryName,queryDomain);
-		
 	}
 
 	private void getTaskData(Payload payload, Model model,Date start,Date end,String queryName,String queryDomain) {
@@ -142,7 +140,7 @@ public class Handler implements PageHandler<Context> {
 			      PAGE_SIZE, TaskEntity.READSET_FULL);
 			model.setTasks(tasks);
 		} catch (DalException e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 		}
    }
 

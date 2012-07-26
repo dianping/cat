@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.hadoop.dal.Dailyreport;
@@ -45,7 +46,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 			m_dailyReportDao.insert(report);
 			return true;
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 			return false;
 		}
    }

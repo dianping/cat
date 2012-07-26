@@ -311,7 +311,7 @@ public class Handler implements PageHandler<Context> {
 				model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, ip, report));
 			}
 		} catch (Throwable e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			model.setException(e);
 		}
 	}

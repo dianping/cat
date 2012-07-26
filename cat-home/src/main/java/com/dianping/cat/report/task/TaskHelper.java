@@ -6,10 +6,6 @@ package com.dianping.cat.report.task;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * @author sean.wang
- * @since Jun 4, 2012
- */
 public class TaskHelper {
 
 	public static Date nextTaskTime() {
@@ -163,7 +159,5 @@ public class TaskHelper {
 		newCalendar.set(Calendar.SECOND, 0);
 
 		return newCalendar.getTime();
-
 	}
-
 }

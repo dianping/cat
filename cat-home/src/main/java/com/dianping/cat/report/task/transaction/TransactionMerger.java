@@ -3,22 +3,16 @@
  */
 package com.dianping.cat.report.task.transaction;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import org.xml.sax.SAXException;
-
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.ReportMerger;
 
-/**
- * @author sean.wang
- * @since Jun 20, 2012
- */
 public class TransactionMerger implements ReportMerger<TransactionReport> {
 
 	public TransactionReport mergeForGraph(String reportDomain, List<Report> reports) {
@@ -57,11 +51,9 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 			try {
 				model = DefaultSaxParser.parse(xml);
 				model.accept(merger);
-			} catch (SAXException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			} catch (Exception e) {
+				Cat.logError(e);
+			} 
 		}
 
 		TransactionReport transactionReport = merger.getTransactionReport();
