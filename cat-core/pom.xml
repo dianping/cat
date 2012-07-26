@@ -40,7 +40,7 @@
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
-				<version>1.1.1</version>
+				<version>1.1.5</version>
 				<executions>
 					<execution>
 						<id>generate configuration model</id>
