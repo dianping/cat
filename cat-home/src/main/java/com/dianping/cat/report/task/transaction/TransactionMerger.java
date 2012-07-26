@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.transaction;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
+import com.dianping.cat.report.task.ReportMerger;
 
 /**
  * @author sean.wang

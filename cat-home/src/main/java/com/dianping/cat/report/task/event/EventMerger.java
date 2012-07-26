@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.event;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,6 +13,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
+import com.dianping.cat.report.task.ReportMerger;
 
 public class EventMerger implements ReportMerger<EventReport> {
 
@@ -35,7 +36,6 @@ public class EventMerger implements ReportMerger<EventReport> {
 				e.printStackTrace();
 			}
 		}
-
 		EventReport eventReport = merger.getEventReport();
 		return eventReport;
 	}

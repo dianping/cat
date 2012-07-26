@@ -13,6 +13,7 @@ import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.hadoop.dal.TaskEntity;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.task.CatReportFacade;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
@@ -29,6 +30,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TaskDao taskDao;
+	
+	@Inject
+	private CatReportFacade reportFacade;
 
 	private static final String ALL = "All";
 
@@ -59,10 +63,14 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 	
-	//TODO redo the task
-	private void redoTask(Payload payload, Model model) {
+	private boolean redoTask(Payload payload, Model model){
 		
-   }
+		int taskID=payload.getTaskID();
+		Task task = taskDao.createLocal();
+		task.setId(taskID);
+		return reportFacade.builderReport(task);
+		
+	}
 
 	public void normalizeAndGetTaskData(Payload payload, Model model) {
 		String domain = payload.getDomain();
@@ -138,8 +146,6 @@ public class Handler implements PageHandler<Context> {
 		}
    }
 
-
-	
 	private boolean isEmpty(String str) {
 		return str == null || str.length() == 0;
 	}

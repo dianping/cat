@@ -13,6 +13,7 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.report.task.transaction.TransactionMerger;
 
 public class TransactionDailyGraphMergerTest {
 	private TransactionMerger m_meger = new TransactionMerger();

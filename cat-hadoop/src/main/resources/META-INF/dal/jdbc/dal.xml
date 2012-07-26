@@ -82,7 +82,7 @@
 					WHERE <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}
 					<IF type='NOT_NULL' field='domain'>
-						AND <FIELD name='domain'/> = ${domain}
+						AND BINARY <FIELD name='domain'/> = ${domain}
 					</IF>
 					<IF type='NOT_NULL' field='name'>
 						AND <FIELD name='name'/> = ${name}
@@ -98,7 +98,7 @@
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='domain'/> = ${domain}
+					AND BINARY <FIELD name='domain'/> = ${domain}
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
@@ -200,6 +200,14 @@
 					AND <FIELD name='id'/> = ${id};
 				]]></statement>
 			</query>
+			
+			<query name="update-status-to-todo" type="UPDATE">
+				<statement><![CDATA[
+					UPDATE <TABLE/>
+					SET <FIELD name='status'/>=1, 
+					WHERE <FIELD name='id'/> = ${id};
+				]]></statement>
+			</query>
 
 			<query name="update-doing-to-fail" type="UPDATE">
 				<statement><![CDATA[
@@ -287,12 +295,16 @@
 	</entity>
 
 	<entity name="dailyreport" table="dailyreport" alias="dr">
+		<member  name="count" value-type="int" select-expr="COUNT(*)" all="false"/>
 		<var name="start-date" value-type="Date" />
 		<var name="end-date" value-type="Date" />
 		<readsets>
 			<readset name="DOMAIN_NAME">
 				<member name="domain" />
 				<member name="name" />
+			</readset>
+			<readset name="COUNT">
+				<member name="count" />
 			</readset>
 		</readsets>
 		<query-defs>
@@ -344,7 +356,24 @@
 					WHERE <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}			
 				]]></statement>
+					</query>
+		
+			<query name="delete-by-domain-name-period" type="DELETE">
+				<param name="period" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+				DELETE FROM <TABLE/> 
+				WHERE <FIELD name='period'/> = ${period}
+				<IF type='NOT_NULL' field='domain'>
+					AND <FIELD name='domain'/> = ${domain}
+				</IF>
+				<IF type='NOT_NULL' field='name'>
+					AND <FIELD name='name'/> = ${name}
+				</IF>	
+				]]></statement>
 			</query>
+			
 		</query-defs>
 	</entity>
 
@@ -418,6 +447,26 @@
 					WHERE <FIELD name='name'/> = ${name}
 					AND <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}			
+				]]></statement>
+			</query>
+			
+			<query name="delete-by-domain-name-period-ip" type="DELETE">
+				<param name="period" />
+				<param name="domain" />
+				<param name="name" />
+				<param name="ip" />
+				<statement><![CDATA[
+					DELETE FROM <TABLE/> 
+					WHERE <FIELD name='period'/> = ${period}
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain}
+					</IF>
+					<IF type='NOT_NULL' field='name'>
+						AND <FIELD name='name'/> = ${name}
+					</IF>	
+					<IF type='NOT_NULL' field='ip'>
+						AND <FIELD name='ip'/> = ${ip}
+					</IF>	
 				]]></statement>
 			</query>
 		</query-defs>

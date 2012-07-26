@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
+import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 
 public class TransactionGraphCreatorTest {
 

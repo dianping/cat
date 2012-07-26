@@ -13,6 +13,7 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.report.task.problem.ProblemMerger;
 
 public class ProblemDailyGraphMergerTest {
 	private ProblemMerger m_meger = new ProblemMerger();

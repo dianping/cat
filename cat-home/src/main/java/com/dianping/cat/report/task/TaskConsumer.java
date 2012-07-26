@@ -31,7 +31,7 @@ public abstract class TaskConsumer implements Runnable {
 
 	public void run() {
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		findtask: while (running) {
+		while (running) {
 			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between
 			Transaction t = Cat.getProducer().newTransaction("Task", "MergeJob-" + localIp);
 			try {
@@ -43,8 +43,6 @@ public abstract class TaskConsumer implements Runnable {
 				if (task != null) {
 					task.setConsumer(localIp);
 					if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) { // confirm
-						                                                                             // doing
-						                                                                             // status
 						int retryTimes = 0;
 						while (!processTask(task)) {
 							retryTimes++;
@@ -52,12 +50,10 @@ public abstract class TaskConsumer implements Runnable {
 								taskRetryDuration(task, retryTimes);
 							} else {
 								updateDoingToFailure(task);
-								continue findtask;
+								continue;
 							}
 						}
-						if (updateDoingToDone(task)) {
-							mergeReport(task);
-						}
+						updateDoingToDone(task);
 					}
 				} else {
 					taskNotFoundDuration();
@@ -77,7 +73,6 @@ public abstract class TaskConsumer implements Runnable {
 
 	protected abstract void taskRetryDuration(Task task, int retryTimes);
 
-	protected abstract void mergeReport(Task task);
 
 	protected abstract void taskNotFoundDuration();
 
