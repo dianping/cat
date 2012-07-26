@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.model.heartbeat;
 
+import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
@@ -26,6 +27,15 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 			long hour = 60 * 60 * 1000;
 			long date = current - current % (hour) - hour;
 			report = getLocalReport(date, domain);
+			
+			if (report == null) {
+				report = new HeartbeatReport(domain);
+
+				HeartbeatReport catReport = getLocalReport(date, "Cat");
+				if (catReport != null) {
+					report.getDomainNames().addAll(catReport.getDomainNames());
+				}
+			}
 		}
 
 		return report;
