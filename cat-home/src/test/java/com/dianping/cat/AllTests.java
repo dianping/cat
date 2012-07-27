@@ -32,6 +32,8 @@ import com.dianping.cat.report.task.TransactionGraphCreatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+/* .http */
+TestHttp.class,
 
 /* .report.page.model.event */
 EventModelServiceTest.class, EventGraphDataTest.class,
@@ -76,8 +78,6 @@ ProblemCreateGraphDataTest.class, ProblemGraphCreatorTest.class,
 
 TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
 
-TransactionDailyGraphMergerTest.class,ProblemDailyGraphMergerTest.class,
-
-TestHttp.class})
+TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class })
 public class AllTests {
 }
