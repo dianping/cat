@@ -113,8 +113,10 @@ public class TaskConsumerTest {
 		while (!consumer.isStopped()) {
 			Thread.sleep(100);
 		}
+		
+		String expectValue=Arrays.toString(consumer.replayer.toArray());
 
-		Assert.assertEquals("[1, 10, 3, 6, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
+		Assert.assertEquals("[1, 10, 3, 1, 8, 4]", expectValue);
 
 		Assert.assertEquals(TaskConsumer.STATUS_DONE, t.getStatus());
 
@@ -198,7 +200,7 @@ public class TaskConsumerTest {
 			Thread.sleep(100);
 		}
 
-		Assert.assertEquals("[1, 8, 7, 10, 3, 6, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
+		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
 		Assert.assertEquals(TaskConsumer.STATUS_DONE, t.getStatus());
 	}
 

@@ -32,6 +32,7 @@ public abstract class TaskConsumer implements Runnable {
 	public void run() {
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		while (running) {
+			boolean again = false;
 			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between
 			Transaction t = Cat.getProducer().newTransaction("Task", "MergeJob-" + localIp);
 			try {
@@ -50,8 +51,12 @@ public abstract class TaskConsumer implements Runnable {
 								taskRetryDuration(task, retryTimes);
 							} else {
 								updateDoingToFailure(task);
-								continue;
+								again = true;
+								break;
 							}
+						}
+						if (again) {
+							continue;
 						}
 						updateDoingToDone(task);
 					}
@@ -60,7 +65,7 @@ public abstract class TaskConsumer implements Runnable {
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Cat.getProducer().logError(e);
 				t.setStatus(e);
 			} finally {
 				t.complete();
@@ -72,7 +77,6 @@ public abstract class TaskConsumer implements Runnable {
 	protected abstract boolean updateDoingToFailure(Task todo);
 
 	protected abstract void taskRetryDuration(Task task, int retryTimes);
-
 
 	protected abstract void taskNotFoundDuration();
 
