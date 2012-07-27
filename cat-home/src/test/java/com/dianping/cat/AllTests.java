@@ -25,12 +25,15 @@ import com.dianping.cat.report.task.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.ProblemCreateGraphDataTest;
 import com.dianping.cat.report.task.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.ProblemGraphCreatorTest;
+import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.TransactionGraphCreatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+/* .http */
+//TestHttp.class,
 
 /* .report.page.model.event */
 EventModelServiceTest.class, EventGraphDataTest.class,
@@ -67,8 +70,7 @@ ProblemGraphDataTest.class, TransactionGraphDataTest.class,
 ProblemReportMergerTest.class,
 
 /* .report.task */
-//TaskConsumerTest.class, 
-TaskHelperTest.class,
+TaskConsumerTest.class, TaskHelperTest.class,
 
 HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
 
@@ -76,6 +78,6 @@ ProblemCreateGraphDataTest.class, ProblemGraphCreatorTest.class,
 
 TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
 
-TransactionDailyGraphMergerTest.class,ProblemDailyGraphMergerTest.class})
+TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class })
 public class AllTests {
 }
