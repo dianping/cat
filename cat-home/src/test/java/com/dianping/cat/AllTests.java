@@ -25,6 +25,7 @@ import com.dianping.cat.report.task.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.ProblemCreateGraphDataTest;
 import com.dianping.cat.report.task.ProblemDailyGraphMergerTest;
 import com.dianping.cat.report.task.ProblemGraphCreatorTest;
+import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.TransactionGraphCreatorTest;
@@ -67,8 +68,7 @@ ProblemGraphDataTest.class, TransactionGraphDataTest.class,
 ProblemReportMergerTest.class,
 
 /* .report.task */
-//TaskConsumerTest.class, 
-TaskHelperTest.class,
+TaskConsumerTest.class, TaskHelperTest.class,
 
 HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
 
@@ -76,6 +76,8 @@ ProblemCreateGraphDataTest.class, ProblemGraphCreatorTest.class,
 
 TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
 
-TransactionDailyGraphMergerTest.class,ProblemDailyGraphMergerTest.class})
+TransactionDailyGraphMergerTest.class,ProblemDailyGraphMergerTest.class,
+
+TestHttp.class})
 public class AllTests {
 }

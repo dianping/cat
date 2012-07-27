@@ -28,7 +28,6 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 	}
 
 	private ProblemReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
-
 		ProblemReportMerger merger = null;
 		if (isDaily) {
 			merger = new HistoryProblemReportMerger(new ProblemReport(reportDomain));

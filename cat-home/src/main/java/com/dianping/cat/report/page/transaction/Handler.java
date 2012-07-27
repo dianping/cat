@@ -139,7 +139,7 @@ public class Handler implements PageHandler<Context> {
 					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 					tps = totalCount / seconds;
 				} else {
-					long time = report.getEndTime().getTime() - report.getStartTime().getTime();
+					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 					tps = totalCount / (double) time;
 				}
 				transType.setTps(tps);
@@ -150,7 +150,7 @@ public class Handler implements PageHandler<Context> {
 						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 						nameTps = totalNameCount / seconds;
 					} else {
-						long time = report.getEndTime().getTime() - report.getStartTime().getTime();
+						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 						nameTps = totalNameCount / (double) time;
 					}
 					transName.setTps(nameTps);
@@ -256,9 +256,9 @@ public class Handler implements PageHandler<Context> {
 		model.setIpAddress(ip);
 
 		TransactionReport transactionReport = null;
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
 		try {
-			Date start = payload.getHistoryStartDate();
-			Date end = payload.getHistoryEndDate();
 			String domain = model.getDomain();
 			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
 			      DailyreportEntity.READSET_FULL);
@@ -276,6 +276,8 @@ public class Handler implements PageHandler<Context> {
 		if (transactionReport == null) {
 			return;
 		}
+		transactionReport.setStartTime(start);
+		transactionReport.setEndTime(end);
 		setTps(payload, transactionReport);
 		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {
@@ -428,12 +430,6 @@ public class Handler implements PageHandler<Context> {
 						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
 						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
 						appendArray(sum, indexOfperiod, records[SummaryOrder.SUM.ordinal()], 12);
-						// total_count[indexOfperiod] =
-						// Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
-						// failure_count[indexOfperiod] =
-						// Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
-						// sum[indexOfperiod] =
-						// Double.valueOf(records[SummaryOrder.SUM.ordinal()]);
 					}
 				}
 			}
