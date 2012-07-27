@@ -63,7 +63,7 @@ public class TaskConsumerTest {
 		}
 
 		@Override
-		protected void taskRetryDuration(Task task, int retryTimes) {
+		protected void taskRetryDuration() {
 			replayer.add(11);
 		}
 

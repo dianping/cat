@@ -44,7 +44,7 @@ public abstract class TaskConsumer implements Runnable {
 						while (!processTask(task)) {
 							retryTimes++;
 							if (retryTimes < MAX_TODO_RETRY_TIMES) {
-								taskRetryDuration(task, retryTimes);
+								taskRetryDuration();
 							} else {
 								updateDoingToFailure(task);
 								again = true;
@@ -72,7 +72,7 @@ public abstract class TaskConsumer implements Runnable {
 
 	protected abstract boolean updateDoingToFailure(Task todo);
 
-	protected abstract void taskRetryDuration(Task task, int retryTimes);
+	protected abstract void taskRetryDuration();
 
 	protected abstract void taskNotFoundDuration();
 

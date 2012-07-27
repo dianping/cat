@@ -9,6 +9,7 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.report.page.ip.location.IPSeekerManager;
+import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.TaskConsumer;
 import com.site.helper.Threads;
 import com.site.initialization.AbstractModule;
@@ -32,10 +33,14 @@ public class CatHomeModule extends AbstractModule {
 		// warm up IP seeker
 		IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
 
-		if (!serverConfigManager.isLocalMode()) {
+		if (serverConfigManager.isLocalMode()) {
 			TaskConsumer taskConsumer = ctx.lookup(TaskConsumer.class);
+			DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);
 
 			Threads.forGroup("Cat").start(taskConsumer);
+			
+			Threads.forGroup("Cat").start(dailyTaskProducer);
+			
 		}
 	}
 
