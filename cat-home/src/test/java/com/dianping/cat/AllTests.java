@@ -33,7 +33,7 @@ import com.dianping.cat.report.task.TransactionGraphCreatorTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 /* .http */
-TestHttp.class,
+//TestHttp.class,
 
 /* .report.page.model.event */
 EventModelServiceTest.class, EventGraphDataTest.class,

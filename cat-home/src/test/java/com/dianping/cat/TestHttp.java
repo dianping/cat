@@ -17,6 +17,7 @@ import com.site.helper.Files;
 public class TestHttp {
 
 	private Server server;
+	
 	@Before
 	public void before() {
 		try {
@@ -42,6 +43,7 @@ public class TestHttp {
 	      e.printStackTrace();
       }
 	}
+	
 	private String getContentByUrl(String urlAddress) {
 		try {
 			URL url = new URL(urlAddress);
