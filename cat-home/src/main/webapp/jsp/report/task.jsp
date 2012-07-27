@@ -9,17 +9,31 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.task.Model" scope="request" />
 <jsp:useBean id="navBar" class="com.dianping.cat.report.view.NavigationBar" scope="page"/>
 
-<a:simpleReport title="Task Manage Platform">
-
 <link rel="stylesheet" href="../css/body.css" type="text/css">
 <link rel="stylesheet" href="../css/report.css" type="text/css">
 <link rel="stylesheet" href="../css/task.css" type="text/css">
 <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
 <script src="../js/jquery-1.7.1.js" type="text/javascript"></script>
 <script src="../js/task.js" type="text/javascript"></script>
+<a:body>
+
+<res:useCss value='${res.css.local.report_css}' target="head-css" />
+
 <body>
 		
 <div class="report">
+	<table class="header">
+			<tr>
+				<td class="title">&nbsp;&nbsp;<b>From ${w:format(model.from,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.to,'yyyy-MM-dd HH:mm:ss')}</b></td>
+			
+			<td class="nav">
+				<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?domain=${model.domain}&date=${model.date}&step=${nav.hours}">${nav.title}</a> ]&nbsp;
+				</c:forEach>
+				&nbsp;[ <a href="${model.baseUri}?domain=${model.domain}">now</a> ]&nbsp;
+			</td>
+		</table>
+		
 	<table class="navbar">
 		<tr>
 			<td class="domain">
@@ -36,15 +50,6 @@
 					</c:forEach>
 				</div>
 			</td>
-			<td class="nav">
-				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?domain=${domain}&date=${model.date}&name=${name}&step=${nav.hours}">${nav.title}</a> ]&nbsp;
-				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?domain=${domain}&name=${name}">now</a> ]&nbsp;
-			</td>
-		</tr>
-		<tr>
-			<td><b>From ${w:format(model.from,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.to,'yyyy-MM-dd HH:mm:ss')}</b></td>
 		</tr>
 	</table>
 
@@ -135,7 +140,8 @@
 	var url="&domain="+"${model.domain}"+"&name="+"${model.name}"+"&date="+${payload.date}+"&step="+${payload.step};
 </script>
 </body>
-</a:simpleReport>
+
+</a:body>
 
 
 

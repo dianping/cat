@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.hadoop.dal.Report;
@@ -15,7 +16,6 @@ import com.site.dal.jdbc.DalException;
 public class HeartbeatReportBuilder extends AbstractReportBuilder implements ReportBuilder{
 	
 	private HeartbeatMerger m_heartbeatMerger = new HeartbeatMerger();
-	
 
 	private HeartbeatGraphCreator m_heartbeatGraphCreator = new HeartbeatGraphCreator();
 
@@ -39,7 +39,7 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 				}
 			}
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 			return false;
 		}
 		return true;

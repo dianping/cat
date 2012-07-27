@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.event;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
@@ -22,6 +24,8 @@ public class EventReportMergerTest {
 		report1.accept(merger);
 		report2.accept(merger);
 		
-		System.out.println(merger.getEventReport());
+		String result = Files.forIO().readFrom(getClass().getResourceAsStream("MergerResult.xml"), "utf-8");
+		
+		Assert.assertEquals(result.replace("\r", ""), merger.getEventReport().toString().replace("\r", ""));
 	}
 }

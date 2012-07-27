@@ -46,7 +46,7 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 			m_dailyReportDao.insert(report);
 			return true;
 		} catch (DalException e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			return false;
 		}
 	}
@@ -67,7 +67,7 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 				}
 			}
 		} catch (DalException e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			return false;
 		}
 		return true;

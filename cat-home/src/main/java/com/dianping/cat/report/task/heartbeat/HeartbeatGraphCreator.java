@@ -19,10 +19,6 @@ import com.dianping.cat.report.task.GraphCreator;
 import com.dianping.cat.report.task.GraphLine;
 import com.dianping.cat.report.task.TaskHelper;
 
-/**
- * @author sean.wang
- * @since Jun 20, 2012
- */
 public class HeartbeatGraphCreator implements GraphCreator<HeartbeatReport> {
 
 	@Override

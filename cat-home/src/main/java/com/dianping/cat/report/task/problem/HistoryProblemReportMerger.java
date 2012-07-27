@@ -14,5 +14,4 @@ public class HistoryProblemReportMerger extends ProblemReportMerger {
 	public void visitThread(JavaThread thread) {
 		// do nothing
 	}
-
 }

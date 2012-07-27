@@ -149,7 +149,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			model.setModelInXml(dataModel == null ? "" : doFilter(payload, dataModel));
 		} catch (Throwable e) {
 			model.setException(e);
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 		}
 
 		m_jspViewer.view(ctx, model);

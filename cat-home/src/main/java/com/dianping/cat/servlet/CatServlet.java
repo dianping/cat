@@ -15,43 +15,43 @@ import com.site.initialization.ModuleInitializer;
 import com.site.web.AbstractContainerServlet;
 
 public class CatServlet extends AbstractContainerServlet {
-        private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-        private Exception m_exception;
+	private Exception m_exception;
 
-        @Override
-        protected void initComponents(ServletConfig servletConfig) throws ServletException {
-                try {
-                        ModuleContext ctx = new DefaultModuleContext(getContainer());
-                        ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
-                        String catServerXml = servletConfig.getInitParameter("cat-server-xml");
+	@Override
+	protected void initComponents(ServletConfig servletConfig) throws ServletException {
+		try {
+			ModuleContext ctx = new DefaultModuleContext(getContainer());
+			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
+			String catServerXml = servletConfig.getInitParameter("cat-server-xml");
 
-                        ctx.setAttribute("cat-client-config-file", new File("/data/appdatas/cat/client.xml"));
+			ctx.setAttribute("cat-client-config-file", new File("/data/appdatas/cat/client.xml"));
 
-                        if (catServerXml != null) {
-                                ctx.setAttribute("cat-server-config-file", new File(catServerXml));
-                        } else {
-                                ctx.setAttribute("cat-server-config-file", new File("/data/appdatas/cat/server.xml"));
-                        }
+			if (catServerXml != null) {
+				ctx.setAttribute("cat-server-config-file", new File(catServerXml));
+			} else {
+				ctx.setAttribute("cat-server-config-file", new File("/data/appdatas/cat/server.xml"));
+			}
 
-                        initializer.execute(ctx);
-                } catch (Exception e) {
-                        m_exception = e;
-                }
-        }
+			initializer.execute(ctx);
+		} catch (Exception e) {
+			m_exception = e;
+		}
+	}
 
-        @Override
-        protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-                res.setCharacterEncoding("utf-8");
-                res.setContentType("text/plain");
+	@Override
+	protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+		res.setCharacterEncoding("utf-8");
+		res.setContentType("text/plain");
 
-                PrintWriter writer = res.getWriter();
+		PrintWriter writer = res.getWriter();
 
-                if (m_exception != null) {
-                        writer.write("Server has NOT been initialized successfully! \r\n\r\n");
-                        m_exception.printStackTrace(writer);
-                } else {
-                        writer.write("Not implemented yet!");
-                }
-        }
+		if (m_exception != null) {
+			writer.write("Server has NOT been initialized successfully! \r\n\r\n");
+			m_exception.printStackTrace(writer);
+		} else {
+			writer.write("Not implemented yet!");
+		}
+	}
 }

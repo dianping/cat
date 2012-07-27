@@ -19,19 +19,13 @@ import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.report.task.GraphCreator;
 import com.dianping.cat.report.task.GraphLine;
 
-/**
- * @author sean.wang
- * @since Jun 20, 2012
- */
 public class EventGraphCreator implements GraphCreator<EventReport> {
 
 	@Override
 	public List<Graph> splitReportToGraphs(Date reportPeriod, String domainName, String reportName,
 	      EventReport eventReport) {
 		Set<String> ips = eventReport.getIps();
-		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); // all and
-		                                                           // every
-		                                                           // machine
+		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); 
 		Map<String, GraphLine> allDetailCache = new TreeMap<String, GraphLine>();
 		Map<String, GraphLine> allSummaryCache = new TreeMap<String, GraphLine>();
 		Date creationDate = new Date();
@@ -136,11 +130,8 @@ public class EventGraphCreator implements GraphCreator<EventReport> {
 			summarySb.append('\n');
 		}
 		allGraph.setSummaryContent(summarySb.toString());
-
 		graphs.add(allGraph);
-
 		return graphs;
-
 	}
 
 	private String arrayToString(long[] array) {

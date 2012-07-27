@@ -10,10 +10,6 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.message.Transaction;
 
-/**
- * @author sean.wang
- * @since May 21, 2012
- */
 public abstract class TaskConsumer implements Runnable {
 	private static final int MAX_TODO_RETRY_TIMES = 3;
 
@@ -34,7 +30,7 @@ public abstract class TaskConsumer implements Runnable {
 		while (running) {
 			boolean again = false;
 			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between
-			Transaction t = Cat.getProducer().newTransaction("Task", "MergeJob-" + localIp);
+			Transaction t = Cat.newTransaction("Task", "MergeJob-" + localIp);
 			try {
 				// tasks
 				Task task = findDoingTask(localIp); // find doing task
@@ -97,5 +93,4 @@ public abstract class TaskConsumer implements Runnable {
 	public boolean isStopped() {
 		return this.stopped;
 	}
-
 }

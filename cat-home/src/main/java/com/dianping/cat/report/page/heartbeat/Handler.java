@@ -417,7 +417,7 @@ public class Handler implements PageHandler<Context> {
 			DisplayHeartbeat displayHeartbeat = new DisplayHeartbeat(m_builder).display(report, ip);
 			return displayHeartbeat;
 		} catch (Throwable e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			model.setException(e);
 		}
 		return null;

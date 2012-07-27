@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.Graph;
@@ -29,12 +30,9 @@ public abstract class AbstractReportBuilder {
 	protected void getDomainSet(Set<String> domainSet, Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
 		try {
-			if(m_reportDao==null){
-				System.out.println("123>>>>>>>");
-			}
 			domainNames = m_reportDao .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 
 		if (domainNames == null || domainNames.size() == 0) {

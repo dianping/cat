@@ -33,7 +33,7 @@ public class DisplayMatrix {
 				item.setSQLInfo(matrix);
 				m_matrix.put(key, item);
 			} else {
-				Cat.getProducer().logError(new RuntimeException("Inter errer in matrix analyers!"));
+				Cat.logError(new RuntimeException("Inter errer in matrix analyers!"));
 			}
 		}
 	}
