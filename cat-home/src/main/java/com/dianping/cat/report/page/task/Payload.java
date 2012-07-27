@@ -120,6 +120,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@Override
 	public Action getAction() {
+		if(m_action==null){
+			m_action = Action.VIEW;
+		}
 		return m_action;
 	}
 

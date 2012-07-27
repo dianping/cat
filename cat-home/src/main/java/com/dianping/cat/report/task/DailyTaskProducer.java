@@ -69,7 +69,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 
 	private class DailyTask implements Runnable {
 
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		private String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 		private Date start;
 
@@ -137,6 +137,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		Date now=new Date();
 		Date todayZero=TaskHelper.todayZero(now);
 		Date yesterday=TaskHelper.yesterdayZero(now);
+		
 		if (!isYesterdayTaskGenerated(now,todayZero, yesterday)) {
 			DailyTask dailyTask = new DailyTask(yesterday, todayZero);
 			long startOfTask  = TaskHelper.startDateOfNextTask(now, 0).getTime();

@@ -48,6 +48,7 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+		model.setAction(payload.getAction());
 
 		switch (payload.getAction()) {
 		case VIEW:
@@ -57,7 +58,6 @@ public class Handler implements PageHandler<Context> {
 			redoTask(payload, model);
 			break;
 		}
-		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.TASK);
 
 		m_jspViewer.view(ctx, model);

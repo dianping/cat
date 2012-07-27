@@ -11,6 +11,7 @@ import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.message.Transaction;
 
 public abstract class TaskConsumer implements Runnable {
+
 	private static final int MAX_TODO_RETRY_TIMES = 3;
 
 	public static final int STATUS_TODO = 1;
