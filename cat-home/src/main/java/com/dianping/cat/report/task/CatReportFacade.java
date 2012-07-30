@@ -16,19 +16,25 @@ import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.site.lookup.annotation.Inject;
 
-public class CatReportFacade implements LogEnabled,Initializable{
+public class CatReportFacade implements LogEnabled, Initializable {
 
 	private static final int TYPE_DAILY = 1;
+
 	private static final int TYPE_HOUR = 0;
+
 	private Map<String, ReportBuilder> m_reportBuilders = new HashMap<String, ReportBuilder>();
+
 	private Logger m_logger;
-	
+
 	@Inject
 	private TransactionReportBuilder m_tansactionBuilder;
+
 	@Inject
 	private ProblemReportBuilder m_problemBuilder;
+
 	@Inject
 	private EventReportBuilder m_eventBuilder;
+
 	@Inject
 	private HeartbeatReportBuilder m_heartbeatBuilder;
 
@@ -47,7 +53,7 @@ public class CatReportFacade implements LogEnabled,Initializable{
 		Date reportPeriod = task.getReportPeriod();
 		ReportBuilder reportBuilder = this.getReportBuilder(reportName);
 		if (reportBuilder == null) {
-			m_logger.info("no report builder for type:"+" "+reportName);
+			m_logger.info("no report builder for type:" + " " + reportName);
 			return false;
 		} else {
 			if (task_type == TYPE_DAILY) {
@@ -59,16 +65,35 @@ public class CatReportFacade implements LogEnabled,Initializable{
 		return false;
 	}
 
-	@Override
-   public void enableLogging(Logger logger) {
-		this.m_logger=logger;
-   }
+	public boolean redoTask(Task task) {
+		int task_type = task.getTaskType();
+		String reportName = task.getReportName();
+		String reportDomain = task.getReportDomain();
+		Date reportPeriod = task.getReportPeriod();
+		ReportBuilder reportBuilder = this.getReportBuilder(reportName);
+		if (reportBuilder == null) {
+			m_logger.info("no report builder for type:" + " " + reportName);
+			return false;
+		} else {
+			if (task_type == TYPE_DAILY) {
+				return reportBuilder.redoDailyReport(reportName, reportDomain, reportPeriod);
+			} else if (task_type == TYPE_HOUR) {
+				return reportBuilder.redoHourReport(reportName, reportDomain, reportPeriod);
+			}
+		}
+		return false;
+	}
 
 	@Override
-   public void initialize() throws InitializationException {
+	public void enableLogging(Logger logger) {
+		this.m_logger = logger;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
 		m_reportBuilders.put("problem", m_problemBuilder);
 		m_reportBuilders.put("event", m_eventBuilder);
 		m_reportBuilders.put("heartbeat", m_heartbeatBuilder);
 		m_reportBuilders.put("transaction", m_tansactionBuilder);
-   }
+	}
 }

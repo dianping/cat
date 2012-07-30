@@ -21,56 +21,94 @@ import com.site.dal.jdbc.DalException;
 public class EventReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 
 	private EventGraphCreator m_eventGraphCreator = new EventGraphCreator();
-	
+
 	private EventMerger m_eventMerger = new EventMerger();
-	
-	@Override
-   public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
+
+	private Dailyreport getDailyReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = new HashSet<String>();
-		getDomainSet(domainSet, reportPeriod, endDate); 
+		getDomainSet(domainSet, reportPeriod, endDate);
 		String content = null;
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		content = m_eventMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+		Dailyreport report = m_dailyReportDao.createLocal();
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(reportDomain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(reportName);
+		report.setPeriod(reportPeriod);
+		report.setType(1);
+		return report;
+
+	}
+
+	@Override
+	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-			      ReportEntity.READSET_FULL);
-				content = m_eventMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
-			Dailyreport report = m_dailyReportDao.createLocal();
-			report.setContent(content);
-			report.setCreationDate(new Date());
-			report.setDomain(reportDomain);
-			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-			report.setName(reportName);
-			report.setPeriod(reportPeriod);
-			report.setType(1);
-			clearDailyGraph(report);
+			Dailyreport report=getDailyReportData(reportName, reportDomain, reportPeriod);
 			m_dailyReportDao.insert(report);
 			return true;
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}
-   }
+	}
+	
+	private List<Graph> getHourReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException{
+		List<Graph> graphs = new ArrayList<Graph>();
+			List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+			      ReportEntity.READSET_FULL);
+			EventReport transactionReport = m_eventMerger.mergeForGraph(reportDomain, reports);
+			graphs = m_eventGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+			return graphs;
+	}
 	
 	@Override
    public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
-		List<Graph> graphs = new ArrayList<Graph>();
+   	try {
+   		List<Graph> graphs = getHourReportData(reportName, reportDomain, reportPeriod);
+   		if (graphs != null) {
+   			for (Graph graph : graphs) {
+   				this.m_graphDao.insert(graph);
+   			}
+   		}
+   	} catch (Exception e) {
+   		Cat.logError(e);
+   		return false;
+   	}
+   	return true;
+   }
+
+	@Override
+	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-	      List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-	            ReportEntity.READSET_FULL);
-	      EventReport transactionReport = m_eventMerger.mergeForGraph(reportDomain, reports);
-			graphs = m_eventGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName,
-			      transactionReport);
-			
+			Dailyreport report=getDailyReportData(reportName, reportDomain, reportPeriod);
+			clearDailyReport(report);
+			m_dailyReportDao.insert(report);
+			return true;
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
+		try {
+			List<Graph> graphs = getHourReportData(reportName, reportDomain, reportPeriod);
 			if (graphs != null) {
-				clearGraphs(graphs);
+				clearHourlyGraphs(graphs);
 				for (Graph graph : graphs) {
-					this.m_graphDao.insert(graph); // use mysql unique index and insert
+//					this.m_graphDao.insert(graph);
+					writeReportToFile(reportName, reportDomain,reportPeriod,graph.toString());
 				}
 			}
-      } catch (DalException e) {
-      	e.printStackTrace();
-	      return false;
-      }
-	   return true;
-   }
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+		return true;
+	}
 }

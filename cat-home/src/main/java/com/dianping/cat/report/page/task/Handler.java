@@ -49,7 +49,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		model.setAction(payload.getAction());
-
+		model.setPage(ReportPage.TASK);
 		switch (payload.getAction()) {
 		case VIEW:
 			normalizeAndGetTaskData(payload, model);
@@ -58,17 +58,24 @@ public class Handler implements PageHandler<Context> {
 			redoTask(payload, model);
 			break;
 		}
-		model.setPage(ReportPage.TASK);
-
 		m_jspViewer.view(ctx, model);
 	}
 	
-	private boolean redoTask(Payload payload, Model model){
+	private void  redoTask(Payload payload, Model model){
 		int taskID=payload.getTaskID();
-		Task task = taskDao.createLocal();
+      try {
+      	Task task = taskDao.findByPK(taskID, TaskEntity.READSET_FULL);
+      	boolean success=reportFacade.redoTask(task);
+      	if(success){
+      		model.setUpdateResult("the task has been redo successfully!");
+      		taskDao.updateFailureToDone(task, TaskEntity.UPDATESET_FULL);
+      	}else{
+      		model.setUpdateResult("failed again!");
+      	}
+      } catch (DalException e) {
+	      e.printStackTrace();
+      }
 		
-		task.setId(taskID);
-		return reportFacade.builderReport(task);
 	}
 
 	public void normalizeAndGetTaskData(Payload payload, Model model) {
@@ -123,20 +130,20 @@ public class Handler implements PageHandler<Context> {
 			model.setDomains(domains);
 			model.setNames(names);
 
-			List<Task> totalTasks = taskDao.findAll(status, start, end, queryName, queryDomain, type, TaskEntity.READSET_COUNT);
+			List<Task> totalTasks = taskDao.findAll(status, start, end, queryName, queryDomain, type+1, TaskEntity.READSET_COUNT);
 			totalNumOfTask = totalTasks.get(0).getCount();
 			totalPages = (int) Math.floor((double) totalNumOfTask / (double) PAGE_SIZE);
 			model.setTotalNumOfTasks(totalNumOfTask);
 			model.setTotalpages(totalPages);
 			
-			List<Task> totalFailureTasks = taskDao.findAll(4, start, end, queryName, queryDomain, type,
-			      TaskEntity.READSET_COUNT);
+			List<Task> totalFailureTasks = taskDao.findAll(4, start, end, queryName, queryDomain, type+1, TaskEntity.READSET_COUNT);
+			
 			model.setNumOfFailureTasks(totalFailureTasks.get(0).getCount());
 
 			int currentPage = payload.getCurrentPage() == 0 ? 1 : payload.getCurrentPage();
 			int startLimit = (currentPage - 1) * PAGE_SIZE;
 			
-			tasks = this.taskDao.findByStatusTypeName(status, start, end, queryName, queryDomain, type, startLimit,
+			tasks = this.taskDao.findByStatusTypeName(status, start, end, queryName, queryDomain, type+1, startLimit,
 			      PAGE_SIZE, TaskEntity.READSET_FULL);
 			model.setTasks(tasks);
 		} catch (DalException e) {

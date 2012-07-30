@@ -60,7 +60,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		Date today = TaskHelper.todayZero(now);
 		Date tomorrow = TaskHelper.tomorrowZero(now);
 		DailyTask dailyTask = new DailyTask(today, tomorrow);
-		// schedule a task:next day's 00:04
+		// schedule a task at next day 00:09
 		Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now, 1);
 		long delay = startDateOfNextTask.getTime() - now.getTime();
 		service.scheduleAtFixedRate(dailyTask, delay, PERIOD, TimeUnit.MILLISECONDS);
@@ -119,7 +119,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		}
 
 		if (domainNames == null || domainNames.size() == 0) {
-			return; // no hourly report
+			return;
 		}
 		
 		for (Report domainName : domainNames) {

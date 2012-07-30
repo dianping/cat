@@ -25,9 +25,8 @@ public class ProblemGraphCreator implements GraphCreator<ProblemReport> {
 	public List<Graph> splitReportToGraphs(Date reportPeriod, String reportDomain, String reportName,
 	      ProblemReport report) {
 		Set<String> ips = report.getIps();
-		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); // all and
-		                                                           // every
-		                                                           // machine
+		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); 
+		
 		Map<String, GraphLine> allDetailCache = new TreeMap<String, GraphLine>();
 		Map<String, GraphLine> allSummaryCache = new TreeMap<String, GraphLine>();
 

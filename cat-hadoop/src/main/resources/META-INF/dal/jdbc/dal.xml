@@ -144,9 +144,10 @@
 	</entity>
 
 	<entity name="task" table="task" alias="t">
-		<member  name="count" value-type="int" select-expr="COUNT(*)" all="false"/>
-		<var name="start-limit" value-type="int"/>
-		<var name="end-limit" value-type="int"/>
+		<member name="count" value-type="int" select-expr="COUNT(*)"
+			all="false" />
+		<var name="start-limit" value-type="int" />
+		<var name="end-limit" value-type="int" />
 		<readsets>
 			<readset name="REPORT_DOMAIN">
 				<member name="report_domain" />
@@ -201,6 +202,18 @@
 				]]></statement>
 			</query>
 			
+			<query name="update-failure-to-done" type="UPDATE">
+				<statement><![CDATA[
+				
+				UPDATE <TABLE/>
+				SET <FIELD name='status'/>=3, 
+					<FIELD name='end-date'/>=${end-date}
+				WHERE <FIELD name='status'/> =4
+				AND <FIELD name='id'/> = ${id};
+				
+				]]></statement>
+			</query>
+
 			<query name="update-status-to-todo" type="UPDATE">
 				<statement><![CDATA[
 					UPDATE <TABLE/>
@@ -219,7 +232,7 @@
 					AND <FIELD name='id'/> = ${id};
 				]]></statement>
 			</query>
-			
+
 			<query name="find-all-distinct" type="SELECT" multiple="true">
 				<param name="start-date" />
 				<param name="end-date" />
@@ -231,7 +244,7 @@
 					AND <FIELD name='report-period'/> < ${end-date}
 				]]></statement>
 			</query>
-			
+
 			<query name="find-all" type="SELECT" multiple="true">
 				<param name="status" />
 				<param name="start-date" />
@@ -252,14 +265,14 @@
 						AND  <FIELD name='report-name'/> = ${report-name}
 					</IF>
 					<IF type='NOT_ZERO' field='task-type'>
-						AND  <FIELD name='task-type'/> = ${task-type}
+						AND  <FIELD name='task-type'/> = ${task-type}-1
 					</IF>
 					<IF type='NOT_NULL' field='report-domain'>
 						AND  <FIELD name='report-domain'/> = ${report-domain}
 					</IF>
 				]]></statement>
 			</query>
-			
+
 			<query name="find-by-status-type-name" type="SELECT" multiple="true">
 				<param name="status" />
 				<param name="start-date" />
@@ -282,20 +295,22 @@
 						AND  <FIELD name='report-name'/> = ${report-name}
 					</IF>
 					<IF type='NOT_ZERO' field='task-type'>
-						AND  <FIELD name='task-type'/> = ${task-type}
+						AND  <FIELD name='task-type'/> = ${task-type}-1
 					</IF>
 					<IF type='NOT_NULL' field='report-domain'>
 						AND  <FIELD name='report-domain'/> = ${report-domain}
 					</IF>
-				limit ${start-limit},${end-limit}
+					ORDER BY <FIELD name='status'/> DESC
+					limit ${start-limit},${end-limit}
 				]]></statement>
 			</query>
-			
+
 		</query-defs>
 	</entity>
 
 	<entity name="dailyreport" table="dailyreport" alias="dr">
-		<member  name="count" value-type="int" select-expr="COUNT(*)" all="false"/>
+		<member name="count" value-type="int" select-expr="COUNT(*)"
+			all="false" />
 		<var name="start-date" value-type="Date" />
 		<var name="end-date" value-type="Date" />
 		<readsets>
@@ -356,8 +371,8 @@
 					WHERE <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}			
 				]]></statement>
-					</query>
-		
+			</query>
+
 			<query name="delete-by-domain-name-period" type="DELETE">
 				<param name="period" />
 				<param name="domain" />
@@ -373,7 +388,7 @@
 				</IF>	
 				]]></statement>
 			</query>
-			
+
 		</query-defs>
 	</entity>
 
@@ -449,7 +464,7 @@
 					AND <FIELD name='period'/> < ${end-date}			
 				]]></statement>
 			</query>
-			
+
 			<query name="delete-by-domain-name-period-ip" type="DELETE">
 				<param name="period" />
 				<param name="domain" />

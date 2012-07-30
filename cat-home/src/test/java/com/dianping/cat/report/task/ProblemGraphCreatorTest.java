@@ -26,8 +26,8 @@ public class ProblemGraphCreatorTest {
 		
 		Assert.assertEquals(2, graphs.size());
 		for(Graph graph:graphs){
-			Assert.assertEquals(summary, graph.getSummaryContent());
-			Assert.assertEquals(detail, graph.getDetailContent());
+			Assert.assertEquals(summary.replaceAll("\\s*",""), graph.getSummaryContent().replaceAll("\\s*",""));
+			Assert.assertEquals(detail.replaceAll("\\s*",""), graph.getDetailContent().replaceAll("\\s*",""));
 		}
 	}
 }

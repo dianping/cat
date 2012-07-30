@@ -32,16 +32,16 @@ public class ProblemCreateGraphDataTest {
 		String exceptionSummary = Files.forIO().readFrom(getClass().getResourceAsStream("problemSummary"), "utf-8");
 		String exceptionDetail = Files.forIO().readFrom(getClass().getResourceAsStream("problemDetail"), "utf-8");
 
-		Assert.assertEquals(exceptionSummary, summary);
-		Assert.assertEquals(exceptionDetail, detail);
+		Assert.assertEquals(exceptionSummary.replaceAll("\\s*",""), summary.replaceAll("\\s*",""));
+		Assert.assertEquals(exceptionDetail.replaceAll("\\s*",""), detail.replaceAll("\\s*",""));
 
 		graph = graphs.get(1);
 
 		detail = graph.getDetailContent();
 		summary = graph.getSummaryContent();
 
-		Assert.assertEquals(exceptionSummary, summary);
-		Assert.assertEquals(exceptionDetail, detail);
+		Assert.assertEquals(exceptionSummary.replaceAll("\\s*",""), summary.replaceAll("\\s*",""));
+		Assert.assertEquals(exceptionDetail.replaceAll("\\s*",""), detail.replaceAll("\\s*",""));
 
 		exceptionSummary = Files.forIO().readFrom(getClass().getResourceAsStream("problemAllSummary"), "utf-8");
 		exceptionDetail = Files.forIO().readFrom(getClass().getResourceAsStream("problemAllDetail"), "utf-8");
@@ -50,7 +50,7 @@ public class ProblemCreateGraphDataTest {
 		detail = graph.getDetailContent();
 		summary = graph.getSummaryContent();
 
-		Assert.assertEquals(exceptionSummary, summary);
-		Assert.assertEquals(exceptionDetail, detail);
+		Assert.assertEquals(exceptionSummary.replaceAll("\\s*",""), summary.replaceAll("\\s*",""));
+		Assert.assertEquals(exceptionDetail.replaceAll("\\s*",""), detail.replaceAll("\\s*",""));
 	}
 }

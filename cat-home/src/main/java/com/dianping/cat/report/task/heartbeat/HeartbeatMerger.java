@@ -3,11 +3,8 @@
  */
 package com.dianping.cat.report.task.heartbeat;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
-
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -27,11 +24,9 @@ public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 			try {
 				model = DefaultSaxParser.parse(xml);
 				model.accept(merger);
-			} catch (SAXException e) {
+			} catch (Exception e) {
 				Cat.logError(e);
-			} catch (IOException e) {
-				Cat.logError(e);
-			}
+			} 
 		}
 
 		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();

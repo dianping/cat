@@ -3,6 +3,7 @@
  */
 package com.dianping.cat.report.task.transaction;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -12,6 +13,7 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.ReportMerger;
+import com.dianping.cat.report.task.TaskHelper;
 
 public class TransactionMerger implements ReportMerger<TransactionReport> {
 
@@ -35,6 +37,11 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 		transactionReport.addMachine(allMachines);
 		transactionReport.getIps().add("All");
 		transactionReport.getDomainNames().addAll(domainSet);
+		
+		Date date = transactionReport.getStartTime();
+		transactionReport.setStartTime(TaskHelper.todayZero(date));
+		Date end=new Date(TaskHelper.tomorrowZero(date).getTime()-1000);
+		transactionReport.setEndTime(end);
 		return transactionReport;
 	}
 

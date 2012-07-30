@@ -27,7 +27,7 @@ public abstract class TaskConsumer implements Runnable {
 	private volatile boolean stopped = false;
 
 	public void run() {
-		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String localIp =  getLoaclIp();
 		while (running) {
 			boolean again = false;
 			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between
@@ -71,6 +71,10 @@ public abstract class TaskConsumer implements Runnable {
 		this.stopped = true;
 	}
 
+	protected String getLoaclIp(){
+		return  NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+	}
+	
 	protected abstract boolean updateDoingToFailure(Task todo);
 
 	protected abstract void taskRetryDuration();

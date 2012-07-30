@@ -39,6 +39,17 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	private int totalNumOfTasks;
 
 	private int numOfFailureTasks;
+	
+	private String updateResult;
+
+	
+	public String getUpdateResult() {
+   	return updateResult;
+   }
+
+	public void setUpdateResult(String updateResult) {
+   	this.updateResult = updateResult;
+   }
 
 	public int getNumOfFailureTasks() {
 		return numOfFailureTasks;

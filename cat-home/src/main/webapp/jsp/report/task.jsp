@@ -114,7 +114,7 @@
 				</td>
 				<td>
 					<c:if test="${task.taskType==0}">hour</c:if>
-					<c:if test="${task.taskType==1}">day</c:if>
+					<c:if test="${task.taskType==1}">daily</c:if>
 				</td>
 				<td > 
 				<a href="${model.baseUri}?&op=redo&taskID=${task.id}" target="_blank">redo</a></td>

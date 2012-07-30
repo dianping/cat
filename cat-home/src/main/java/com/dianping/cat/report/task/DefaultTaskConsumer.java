@@ -22,9 +22,6 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	@Inject
 	private CatReportFacade reportFacade;
 
-	public DefaultTaskConsumer() {
-	}
-
 	@Override
 	protected Task findDoingTask(String ip) {
 		Task task = null;
