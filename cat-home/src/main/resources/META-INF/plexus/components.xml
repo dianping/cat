@@ -34,7 +34,7 @@
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.CatReportFacade</role>
+					<role>com.dianping.cat.report.task.ReportFacade</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -114,8 +114,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.CatReportFacade</role>
-			<implementation>com.dianping.cat.report.task.CatReportFacade</implementation>
+			<role>com.dianping.cat.report.task.ReportFacade</role>
+			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
@@ -962,7 +962,7 @@
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.CatReportFacade</role>
+					<role>com.dianping.cat.report.task.ReportFacade</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -980,8 +980,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.CatReportFacade</role>
-			<implementation>com.dianping.cat.report.task.CatReportFacade</implementation>
+			<role>com.dianping.cat.report.task.ReportFacade</role>
+			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>

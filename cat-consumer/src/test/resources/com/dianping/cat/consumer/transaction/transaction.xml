@@ -4,7 +4,7 @@
 	<domain>MobileApi</domain>
 	<ip>10.1.77.193</ip>
 	<machine ip="10.1.77.193">
-		<type id="SQL" totalCount="507" failCount="0" failPercent="0.00"
+		<type id="SQL" totalCount="111507" failCount="0" failPercent="0.00"
 			min="0.417" max="102.919" avg="0.0" sum="1937.0" sum2="34333.7" std="0.0"
 			tps="0.00" line95Value="14.00" line95Sum="14.00" line95Count="1">
 			<successMessageUrl>MobileApi-0a014dc1-1339999254922-0
@@ -28,7 +28,7 @@
 				<duration value="1" count="1" />
 			</name>
 		</type>
-		<type id="URL" totalCount="120" failCount="0" failPercent="0.00"
+		<type id="URL" totalCount="111120" failCount="0" failPercent="0.00"
 			min="2.354" max="2164.387" avg="0.0" sum="2689.6" sum2="4772307.3"
 			std="0.0" tps="0.00" line95Value="2164.00" line95Sum="2164.00"
 			line95Count="1">

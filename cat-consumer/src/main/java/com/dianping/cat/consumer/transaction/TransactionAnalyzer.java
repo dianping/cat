@@ -123,7 +123,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (report == null) {
 			report = new TransactionReport(domain);
 		}
-		report.accept(new TransactionReportFilter());
+		// report.accept(new TransactionReportFilter());
 		report.getDomainNames().addAll(m_reports.keySet());
 
 		report.accept(new StatisticsComputer());
@@ -425,10 +425,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			int value = (int) (totalCount / 10000);
 			int count = 0;
 			String successMessageUrl = null;
-			if (!"Cat".equals(m_domain) && type.getNames().size() > 20 && value > 0) {
-				if (value < 5) {
-					value = 5;
-				}
+	
+			value = Math.min(value, 5);
+
+			if (!"Cat".equals(m_domain) && (value > 0)) {
 				if ("URL".equals(type.getId())) {
 					List<String> names = new ArrayList<String>();
 					Map<String, TransactionName> transactionNames = type.getNames();
@@ -455,7 +455,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 					}
 				}
 			}
-			super.visitType(type);
+			//super.visitType(type);
 		}
 
 		@Override

@@ -74,7 +74,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			report = new MatrixReport(domain);
 		}
 
-		report.accept(new MatrixReportFilter());
+		// report.accept(new MatrixReportFilter());
 		report.getDomainNames().addAll(m_reports.keySet());
 		return report;
 	}
@@ -297,10 +297,9 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			}
 			int value = (int) (total / 10000);
 			String urlSample = null;
-			if (!m_domain.equals("Cat") && matrixs.size() > 20 && value > 0) {
-				if (value < 5) {
-					value = 5;
-				}
+			value = Math.min(value, 5);
+
+			if (!m_domain.equals("Cat") && (value > 0)) {
 				List<String> removeUrls = new ArrayList<String>();
 				int totalCount = 0;
 				Collection<Matrix> matrix = matrixs.values();
