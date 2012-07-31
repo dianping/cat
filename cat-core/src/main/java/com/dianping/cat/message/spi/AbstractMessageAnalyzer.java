@@ -1,5 +1,6 @@
 package com.dianping.cat.message.spi;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.site.lookup.ContainerHolder;
@@ -23,6 +24,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 					m_errors++;
 					
 					if (m_errors % 10000 == 0) {
+						Cat.logError(e);
 						e.printStackTrace();
 					}
 				}
@@ -39,6 +41,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 					m_errors++;
 					
 					if (m_errors % 10000 == 0) {
+						Cat.logError(e);
 						e.printStackTrace();
 					}
 				}

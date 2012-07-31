@@ -15,7 +15,7 @@ import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
-import com.dianping.cat.report.task.CatReportFacade;
+import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.TaskConsumer;
@@ -42,7 +42,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ValueTranslater.class));
 
 		all.add(C(TaskConsumer.class, DefaultTaskConsumer.class) //
-		      .req(TaskDao.class, CatReportFacade.class));
+		      .req(TaskDao.class, ReportFacade.class));
 		
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class));
@@ -59,7 +59,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DailyTaskProducer.class, DailyTaskProducer.class) //
 		      .req(TaskDao.class, ReportDao.class, DailyreportDao.class));
 
-		all.add(C(CatReportFacade.class)//
+		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
 		            HeartbeatReportBuilder.class));
 

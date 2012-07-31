@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.job.sql.dal.LocationRecord;
 import com.dianping.cat.job.sql.dal.LocationRecordDao;
 import com.dianping.cat.job.sql.dal.LocationRecordEntity;
@@ -107,7 +108,7 @@ public class Handler implements PageHandler<Context> {
 			try {
 				handleAjax(model, payload);
 			} catch (DalException e) {
-				e.printStackTrace();
+				Cat.logError(e);
 			}
 			break;
 		}

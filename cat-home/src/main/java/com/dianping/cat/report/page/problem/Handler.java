@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -261,7 +262,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			problemReport = merger == null ? null : merger.getProblemReport();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 		return problemReport;
 	}
@@ -280,7 +281,7 @@ public class Handler implements PageHandler<Context> {
 			graphs = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "problem",
 			      GraphEntity.READSET_FULL);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 		Map<String, double[]> result = buildGraphDates(start, end, type, status, graphs);
 		return result;

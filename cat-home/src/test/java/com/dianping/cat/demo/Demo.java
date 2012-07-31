@@ -102,7 +102,7 @@ public class Demo extends ComponentTestCase {
 								try {
 									Thread.sleep(1000);
 								} catch (InterruptedException e) {
-									e.printStackTrace();
+									//ignore it
 								}
 							} finally {
 								t.setStatus("child");
@@ -114,7 +114,7 @@ public class Demo extends ComponentTestCase {
 					try {
 						semaphore.acquire(1);
 					} catch (InterruptedException e) {
-						e.printStackTrace();
+						//ignore it
 					}
 					f.setStatus("father");
 					f.complete();

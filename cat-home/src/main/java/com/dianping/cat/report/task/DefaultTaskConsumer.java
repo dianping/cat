@@ -20,7 +20,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	private TaskDao taskDao;
 
 	@Inject
-	private CatReportFacade reportFacade;
+	private ReportFacade reportFacade;
 
 	@Override
 	protected Task findDoingTask(String ip) {

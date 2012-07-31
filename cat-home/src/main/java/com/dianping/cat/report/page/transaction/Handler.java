@@ -270,7 +270,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			transactionReport = merger.getTransactionReport();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 
 		if (transactionReport == null) {
@@ -398,7 +398,7 @@ public class Handler implements PageHandler<Context> {
 			graphs = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "transaction",
 			      GraphEntity.READSET_FULL);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 
 		Map<String, double[]> result = buildGraphDates(start, end, type, name, graphs);

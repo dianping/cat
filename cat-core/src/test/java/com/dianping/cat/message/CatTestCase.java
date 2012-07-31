@@ -36,7 +36,7 @@ public abstract class CatTestCase extends ComponentTestCase {
 				Files.forIO().writeTo(file, config.toString());
 				return file;
 			} catch (IOException e) {
-				e.printStackTrace();
+				return null;
 			}
 		}
 

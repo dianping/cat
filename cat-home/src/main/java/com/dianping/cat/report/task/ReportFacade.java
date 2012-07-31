@@ -16,7 +16,7 @@ import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.site.lookup.annotation.Inject;
 
-public class CatReportFacade implements LogEnabled, Initializable {
+public class ReportFacade implements LogEnabled, Initializable {
 
 	private static final int TYPE_DAILY = 1;
 

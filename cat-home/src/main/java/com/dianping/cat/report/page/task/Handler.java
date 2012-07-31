@@ -13,7 +13,7 @@ import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.hadoop.dal.TaskEntity;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.task.CatReportFacade;
+import com.dianping.cat.report.task.ReportFacade;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
@@ -32,7 +32,7 @@ public class Handler implements PageHandler<Context> {
 	private TaskDao taskDao;
 	
 	@Inject
-	private CatReportFacade reportFacade;
+	private ReportFacade reportFacade;
 
 	private static final String ALL = "All";
 
@@ -73,9 +73,8 @@ public class Handler implements PageHandler<Context> {
       		model.setUpdateResult("failed again!");
       	}
       } catch (DalException e) {
-	      e.printStackTrace();
+			Cat.logError(e);
       }
-		
 	}
 
 	public void normalizeAndGetTaskData(Payload payload, Model model) {

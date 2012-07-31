@@ -38,7 +38,7 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 
 	public static final long ONE_HOUR = 3600 * 1000L;
-	
+
 	public static final int K = 1024;
 
 	@Inject
@@ -170,7 +170,7 @@ public class Handler implements PageHandler<Context> {
 				}
 				model.setIpAddress(ip);
 			} catch (DalException e) {
-				e.printStackTrace();
+				Cat.logError(e);
 			}
 		}
 	}
@@ -191,7 +191,7 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 60);
 		Map<String, double[]> graphData = getHeartBeatData(model, payload);
-		
+
 		model.setActiveThreadGraph(getGraphItem("Thread (Count) ", "ActiveThread", start, size, graphData)
 		      .getJsonString());
 		model.setHttpThreadGraph(getGraphItem("Http Thread (Count) ", "HttpThread", start, size, graphData)
@@ -222,25 +222,25 @@ public class Handler implements PageHandler<Context> {
 		      start, size, graphData).getJsonString());
 		model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
 		      graphData).getJsonString());
-		List<GraphItem> diskInfo=getDiskInfo(graphData,start,size);
+		List<GraphItem> diskInfo = getDiskInfo(graphData, start, size);
 		model.setDisks(diskInfo.size());
 		model.setDiskHistoryGraph(new Gson().toJson(diskInfo));
 	}
-	
-	private ArrayList<GraphItem> getDiskInfo(Map<String, double[]> graphData,Date start, int size){
-		ArrayList<GraphItem> diskInfo=new ArrayList<GraphItem>();
-		
+
+	private ArrayList<GraphItem> getDiskInfo(Map<String, double[]> graphData, Date start, int size) {
+		ArrayList<GraphItem> diskInfo = new ArrayList<GraphItem>();
+
 		Iterator<Entry<String, double[]>> iterator = graphData.entrySet().iterator();
 		while (iterator.hasNext()) {
 			Entry<String, double[]> entry = iterator.next();
 			String name = (String) entry.getKey();
-			if(name.startsWith("Disk")){
-				double[]data=graphData.get(name);
+			if (name.startsWith("Disk")) {
+				double[] data = graphData.get(name);
 				for (int i = 0; i < data.length; i++) {
-	            data[i]=data[i]/(K*K*K);
-            }
-				String title=name+"[GB]";
-				GraphItem disk=getGraphItem(title,name,start,size,graphData);
+					data[i] = data[i] / (K * K * K);
+				}
+				String title = name + "[GB]";
+				GraphItem disk = getGraphItem(title, name, start, size, graphData);
 				diskInfo.add(disk);
 			}
 		}
@@ -258,7 +258,7 @@ public class Handler implements PageHandler<Context> {
 			graphs = this.graphDao.findByDomainNameIpDuration(start, end, ip, domain, "heartbeat",
 			      GraphEntity.READSET_FULL);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 		Map<String, double[]> result = buildHeartbeatDatas(start, end, graphs);
 		return result;
@@ -269,18 +269,19 @@ public class Handler implements PageHandler<Context> {
 		Map<String, String[]> hourlyDate = getHourlyDate(graphs, start, size);
 		return getHeartBeatDatesEveryMinute(hourlyDate, size);
 	}
-	
-	private Map<String, String[]> initial(int size){
+
+	private Map<String, String[]> initial(int size) {
 		Map<String, String[]> heartBeats = new HashMap<String, String[]>();
-		String[]names={"ActiveThread","HttpThread","CatMessageOverflow","CatMessageProduced","CatMessageSize","CatThreadCount","DaemonThread"
-				,"HeapUsage","MemoryFree","NewGcCount","NoneHeapUsage","OldGcCount","PigeonStartedThread","SystemLoadAverage","TotalStartedThread","StartedThread"};
-		for(String name:names){
+		String[] names = { "ActiveThread", "HttpThread", "CatMessageOverflow", "CatMessageProduced", "CatMessageSize",
+		      "CatThreadCount", "DaemonThread", "HeapUsage", "MemoryFree", "NewGcCount", "NoneHeapUsage", "OldGcCount",
+		      "PigeonStartedThread", "SystemLoadAverage", "TotalStartedThread", "StartedThread" };
+		for (String name : names) {
 			String[] singlePeriod = initialData(size);
 			heartBeats.put(name, singlePeriod);
 		}
 		return heartBeats;
 	}
-	
+
 	private Map<String, String[]> getHourlyDate(List<Graph> graphs, Date start, int size) {
 		Map<String, String[]> heartBeats = initial(size);
 		for (Graph graph : graphs) {
@@ -293,28 +294,28 @@ public class Handler implements PageHandler<Context> {
 				String name = records[DetailOrder.NAME.ordinal()];
 				String countPerHour = records[DetailOrder.COUNT_IN_MINUTES.ordinal()];
 				String[] singlePeriod = heartBeats.get(name);
-				if(singlePeriod==null){
-					singlePeriod=initialData(size);
-					heartBeats.put(name,singlePeriod);
+				if (singlePeriod == null) {
+					singlePeriod = initialData(size);
+					heartBeats.put(name, singlePeriod);
 				}
 				singlePeriod[indexOfperiod] = countPerHour;
 			}
 		}
 		return heartBeats;
 	}
-	private String[]initialData(int size){
+
+	private String[] initialData(int size) {
 		String[] singlePeriod = new String[size];
 		for (int index = 0; index < size; index++) {
-			StringBuilder sb=new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			for (int i = 0; i < 60; i++) {
-		      sb.append("0,");
-	      }
-			String hourData=sb.substring(0, sb.length()-1);
-			singlePeriod[index] =hourData;
+				sb.append("0,");
+			}
+			String hourData = sb.substring(0, sb.length() - 1);
+			singlePeriod[index] = hourData;
 		}
 		return singlePeriod;
 	}
-	
 
 	public Map<String, double[]> getHeartBeatDatesEveryMinute(Map<String, String[]> heartBeats, final int size) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
@@ -351,7 +352,7 @@ public class Handler implements PageHandler<Context> {
 			result.put("StartedThread", getAddedCount(totalStartedThread));
 		}
 		String[] addedDatas = { "NewGcCount", "OldGcCount", "CatMessageProduced", "CatMessageSize", "CatMessageOverflow" };
-		String[] divideByKDates = { "CatMessageSize", "HeapUsage", "NoneHeapUsage", "MemoryFree"};
+		String[] divideByKDates = { "CatMessageSize", "HeapUsage", "NoneHeapUsage", "MemoryFree" };
 
 		organiseAddedData(result, addedDatas);
 		divideByK(result, divideByKDates);
@@ -360,9 +361,9 @@ public class Handler implements PageHandler<Context> {
 	private void divideByK(Map<String, double[]> result, String[] divideByKDates) {
 		for (String name : divideByKDates) {
 			double[] data = result.get(name);
-			
+
 			for (int i = 0; i < data.length; i++) {
-				data[i] = data[i] /(K*K);
+				data[i] = data[i] / (K * K);
 			}
 		}
 	}
@@ -376,7 +377,7 @@ public class Handler implements PageHandler<Context> {
 	private double[] getAddedCount(double[] source) {
 		int size = source.length;
 		double[] result = new double[size];
-		
+
 		for (int i = 1; i <= size - 1; i++) {
 			if (source[i - 1] > 0) {
 				double d = source[i] - source[i - 1];

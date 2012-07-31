@@ -11,6 +11,7 @@ import java.util.Map.Entry;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.helper.DateDeserializer;
 import com.dianping.cat.job.sql.dal.SqlReportRecord;
 import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
@@ -127,7 +128,7 @@ public class Handler implements PageHandler<Context> {
 			model.setGraph4(graph4);
 			model.setStatement(statement);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 	}
 
@@ -176,7 +177,7 @@ public class Handler implements PageHandler<Context> {
 			report.setStartTime(new Date(startDate)).setEndTime(new Date(startDate + 60 * 60 * 1000 - 100));
 			model.setReport(report);
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 	}
 

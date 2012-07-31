@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Files;
 
@@ -45,7 +46,7 @@ public class RemoteIdChannel {
 		try {
 			m_output.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 	}
 

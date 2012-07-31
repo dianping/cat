@@ -368,7 +368,7 @@ public class Handler implements PageHandler<Context> {
 			events = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event",
 			      GraphEntity.READSET_FULL);
 		} catch (Exception e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 		Map<String, double[]> result = buildGraphDates(start, end, type, name, events);
 		return result;

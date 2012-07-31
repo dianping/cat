@@ -110,7 +110,7 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 				try {
 					Thread.sleep(sleepPeriod);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					//ignore it
 				}
 			}
 		}

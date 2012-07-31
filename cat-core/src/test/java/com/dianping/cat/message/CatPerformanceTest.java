@@ -195,7 +195,7 @@ public class CatPerformanceTest {
 		try {
 			end.await();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			//ignore
 		}
 
 		System.out.println("Done with errors: " + error);
@@ -219,7 +219,7 @@ public class CatPerformanceTest {
 			try {
 				m_latch.await();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				//ignore
 			}
 			long time = System.currentTimeMillis();
 			for (int i = 0; i < count; i++) {

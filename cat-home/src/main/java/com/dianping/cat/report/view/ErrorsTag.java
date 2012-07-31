@@ -12,6 +12,7 @@ import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.xml.sax.InputSource;
 
+import com.dianping.cat.Cat;
 import com.site.dal.xml.XmlAdapter;
 import com.site.dal.xml.XmlException;
 import com.site.dal.xml.annotation.XmlAttribute;
@@ -87,7 +88,7 @@ public class ErrorsTag extends AbstractBodyTag {
             try {
                write(sb.toString());
             } catch (IOException e) {
-               e.printStackTrace();
+      			Cat.logError(e);
             }
          }
       }
