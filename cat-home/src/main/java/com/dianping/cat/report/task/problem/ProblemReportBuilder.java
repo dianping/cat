@@ -62,7 +62,6 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 	}
 
 	private Dailyreport getDailyReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = new HashSet<String>();
 		getDomainSet(domainSet, reportPeriod, endDate);
@@ -111,5 +110,4 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		}
 		return true;
 	}
-
 }

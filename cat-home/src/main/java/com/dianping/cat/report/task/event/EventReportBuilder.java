@@ -101,8 +101,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 			if (graphs != null) {
 				clearHourlyGraphs(graphs);
 				for (Graph graph : graphs) {
-//					this.m_graphDao.insert(graph);
-					writeReportToFile(reportName, reportDomain,reportPeriod,graph.toString());
+					m_graphDao.insert(graph);
 				}
 			}
 		} catch (Exception e) {

@@ -62,7 +62,6 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 				clearHourlyGraphs(graphs);
 				for (Graph graph : graphs) {
 					this.m_graphDao.insert(graph); 
-//					writeReportToFile(reportName, reportDomain,reportPeriod,graph.toString());
 				}
 			}
 		} catch (Exception e) {

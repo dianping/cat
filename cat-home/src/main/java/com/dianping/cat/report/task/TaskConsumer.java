@@ -62,7 +62,7 @@ public abstract class TaskConsumer implements Runnable {
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Throwable e) {
-				Cat.getProducer().logError(e);
+				Cat.logError(e);
 				t.setStatus(e);
 			} finally {
 				t.complete();

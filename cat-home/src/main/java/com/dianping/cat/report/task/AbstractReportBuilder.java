@@ -1,8 +1,5 @@
 package com.dianping.cat.report.task;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,46 +29,28 @@ public abstract class AbstractReportBuilder {
 
 	protected void getDomainSet(Set<String> domainSet, Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
+
 		try {
 			domainNames = m_reportDao
 			      .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-
 		if (domainNames == null || domainNames.size() == 0) {
-			return; // no hourly report
+			return;
 		}
-
 		for (Report domainName : domainNames) {
 			domainSet.add(domainName.getDomain());
 		}
 	}
 
-	// clear graphs from databases
 	protected void clearHourlyGraphs(List<Graph> graphs) throws DalException {
 		for (Graph graph : graphs) {
 			this.m_graphDao.deleteByDomainNamePeriodIp(graph);
 		}
 	}
 
-	// clear daily graph from databases
 	protected void clearDailyReport(Dailyreport report) throws DalException {
 		this.m_dailyReportDao.deleteByDomainNamePeriod(report);
-	}
-
-	SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	
-	public void writeReportToFile(String domain, String name, Date period, String content) {
-		String fileName = (domain + "_" + name + "_" + df.format(period)).replace(' ', '_').replace(':', '_');
-		String inFile = "D:\\cat_report\\" + fileName;
-		try {
-			FileWriter fw = new FileWriter(inFile);
-			fw.write(content);
-			if (fw != null)
-				fw.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 }

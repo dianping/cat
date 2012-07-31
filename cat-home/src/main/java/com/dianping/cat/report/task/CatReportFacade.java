@@ -51,7 +51,8 @@ public class CatReportFacade implements LogEnabled, Initializable {
 		String reportName = task.getReportName();
 		String reportDomain = task.getReportDomain();
 		Date reportPeriod = task.getReportPeriod();
-		ReportBuilder reportBuilder = this.getReportBuilder(reportName);
+		ReportBuilder reportBuilder = getReportBuilder(reportName);
+		
 		if (reportBuilder == null) {
 			m_logger.info("no report builder for type:" + " " + reportName);
 			return false;
@@ -70,7 +71,8 @@ public class CatReportFacade implements LogEnabled, Initializable {
 		String reportName = task.getReportName();
 		String reportDomain = task.getReportDomain();
 		Date reportPeriod = task.getReportPeriod();
-		ReportBuilder reportBuilder = this.getReportBuilder(reportName);
+		ReportBuilder reportBuilder = getReportBuilder(reportName);
+		
 		if (reportBuilder == null) {
 			m_logger.info("no report builder for type:" + " " + reportName);
 			return false;

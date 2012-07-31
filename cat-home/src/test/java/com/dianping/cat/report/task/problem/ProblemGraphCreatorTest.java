@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.problem;
 
 import java.util.Date;
 import java.util.List;

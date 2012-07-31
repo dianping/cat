@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.event;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +15,8 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.report.task.GraphCreator;
+import com.dianping.cat.report.task.GraphLine;
 
 /**
  * @author sean.wang

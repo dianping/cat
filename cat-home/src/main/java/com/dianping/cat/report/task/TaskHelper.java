@@ -128,7 +128,6 @@ public class TaskHelper {
 	}
 
 	public static Date startDateOfNextTask(Date currentDate,int step) {
-
 		Calendar newCalendar = Calendar.getInstance();
 		newCalendar.setTime(currentDate);
 

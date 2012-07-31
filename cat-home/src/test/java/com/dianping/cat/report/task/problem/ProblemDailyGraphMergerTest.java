@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.problem;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,12 +11,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.report.task.transaction.TransactionMerger;
+import com.dianping.cat.report.task.problem.ProblemMerger;
 
-public class TransactionDailyGraphMergerTest {
-	private TransactionMerger m_meger = new TransactionMerger();
+public class ProblemDailyGraphMergerTest {
+	private ProblemMerger m_meger = new ProblemMerger();
 
 	private Set<String> m_domains = new HashSet<String>();
 
@@ -35,16 +35,16 @@ public class TransactionDailyGraphMergerTest {
 
 	@Test
 	public void testForMergerDaily() throws Exception {
-		TransactionReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
-		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionMergerDaily.xml"), "utf-8");
+		ProblemReport report = m_meger.mergeForDaily(m_reportDomain, reports, m_domains);
+		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemMergerDaily.xml"), "utf-8");
 	
 		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
 	}
 
 	@Test
 	public void testForMegerGraph() throws Exception {
-		TransactionReport report = m_meger.mergeForGraph(m_reportDomain, reports);
-		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("TransactionMergerGraph.xml"), "utf-8");
+		ProblemReport report = m_meger.mergeForGraph(m_reportDomain, reports);
+		String expeted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemMergerGraph.xml"), "utf-8");
 		
 		Assert.assertEquals(expeted.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
 	}
@@ -52,7 +52,7 @@ public class TransactionDailyGraphMergerTest {
 	private Report creatReport() {
 		Report result = new Report();
 		try {
-			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("transactionCreator.xml"), "utf-8");
+			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("problemCreator.xml"), "utf-8");
 			
 			result.setContent(xml);
 		} catch (Exception e) {

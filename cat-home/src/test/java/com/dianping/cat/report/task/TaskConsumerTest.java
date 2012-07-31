@@ -2,7 +2,7 @@ package com.dianping.cat.report.task;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -10,14 +10,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.hadoop.dal.Task;
-import com.dianping.cat.hadoop.dal.TaskDao;
-import com.site.lookup.annotation.Inject;
 
 public class TaskConsumerTest {
 	
-	@Inject
-	private TaskDao taskDao;
-
 	public static class TaskConsumerWrap extends TaskConsumer {
 
 		final List<Integer> replayer = new ArrayList<Integer>();
@@ -260,7 +255,7 @@ public class TaskConsumerTest {
 		final Task t = new Task();
 		t.setStatus(TaskConsumer.STATUS_TODO);
 
-		final List<Task> taskList = new ArrayList<Task>();
+		final List<Task> taskList = Collections.synchronizedList(new ArrayList<Task>());
 		taskList.add(t);
 		
 		TaskConsumerWrap consumerOne = new TaskConsumerWrap() {
@@ -327,19 +322,16 @@ public class TaskConsumerTest {
 		
 		String consumerTwoResult= Arrays.toString(consumerTwo.replayer.toArray());
 		
-		Assert.assertEquals(true,orEquals(consumerTwoResult));
+		Assert.assertEquals(true,possibleResult(consumerTwoResult));
 		Assert.assertEquals(TaskConsumer.STATUS_DONE, t.getStatus());
-		
 	}
 	
-	public boolean orEquals(String actual){
-		
+	public boolean possibleResult(String actual){
 		//当抢占到同一TODO task时
 		final String  expect1="[1, 8, 1, 8, 4]";
 		//当未抢占到同一TODO task时
 		final String  expect2="[1, 8, 4]";
 		
 		return actual.equals(expect1)||actual.equals(expect2);
-		
 	}
 }

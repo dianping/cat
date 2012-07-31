@@ -110,5 +110,4 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 		}
 		return true;
 	}
-
 }
