@@ -69,8 +69,13 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public Event newEvent(String type, String name) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
 		if (m_manager.isCatEnabled()) {
-			DefaultEvent event = new DefaultEvent(type, name);
+			DefaultEvent event = new DefaultEvent(type, name, m_manager);
 
 			m_manager.add(event);
 			return event;
@@ -80,6 +85,11 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	public Event newEvent(Transaction parent, String type, String name) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
 		if (m_manager.isCatEnabled() && parent != null) {
 			DefaultEvent event = new DefaultEvent(type, name);
 
@@ -92,6 +102,11 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public Heartbeat newHeartbeat(String type, String name) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
 		if (m_manager.isCatEnabled()) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
@@ -103,6 +118,11 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	public Heartbeat newHeartbeat(Transaction parent, String type, String name) {
+		// this enable CAT client logging cat message without explicit setup
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+
 		if (m_manager.isCatEnabled() && parent != null) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
