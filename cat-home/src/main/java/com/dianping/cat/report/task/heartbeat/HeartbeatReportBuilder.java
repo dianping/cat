@@ -13,32 +13,58 @@ import com.dianping.cat.report.task.AbstractReportBuilder;
 import com.dianping.cat.report.task.ReportBuilder;
 import com.site.dal.jdbc.DalException;
 
-public class HeartbeatReportBuilder extends AbstractReportBuilder implements ReportBuilder{
-	
+public class HeartbeatReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+
 	private HeartbeatMerger m_heartbeatMerger = new HeartbeatMerger();
 
 	private HeartbeatGraphCreator m_heartbeatGraphCreator = new HeartbeatGraphCreator();
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		throw new UnsupportedOperationException( "no daily report builder for heartbeat!" );
+		throw new UnsupportedOperationException("no daily report builder for heartbeat!");
 	}
 
 	@Override
 	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
-		List<Graph> graphs = new ArrayList<Graph>();
 		try {
-			List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-			      ReportEntity.READSET_FULL);
-			HeartbeatReport transactionReport = m_heartbeatMerger.mergeForGraph(reportDomain, reports);
-			graphs = m_heartbeatGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+			List<Graph> graphs=getHourReportData(reportName, reportDomain, reportPeriod);
 			if (graphs != null) {
-				clearGraphs(graphs);
 				for (Graph graph : graphs) {
-					this.m_graphDao.insert(graph); // use mysql unique index and insert
+					this.m_graphDao.insert(graph); // use mysql unique index and
 				}
 			}
-		} catch (DalException e) {
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+		return true;
+	}
+
+	private List<Graph> getHourReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		HeartbeatReport transactionReport = m_heartbeatMerger.mergeForGraph(reportDomain, reports);
+		graphs = m_heartbeatGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+		return graphs;
+	}
+
+	@Override
+	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
+		throw new UnsupportedOperationException("no daily report builder for heartbeat!");
+	}
+
+	@Override
+	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
+		try {
+			List<Graph> graphs=getHourReportData(reportName, reportDomain, reportPeriod);
+			if (graphs != null) {
+				clearHourlyGraphs(graphs);
+				for (Graph graph : graphs) {
+					this.m_graphDao.insert(graph); 
+				}
+			}
+		} catch (Exception e) {
 			Cat.logError(e);
 			return false;
 		}

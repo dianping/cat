@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.transaction;
 
 import java.util.Date;
 import java.util.HashMap;

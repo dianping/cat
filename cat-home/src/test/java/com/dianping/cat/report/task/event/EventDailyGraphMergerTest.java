@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.event;
 
 import java.util.ArrayList;
 import java.util.HashSet;

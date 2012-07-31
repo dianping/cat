@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.event;
 
 import org.junit.Assert;
 import org.junit.Test;

@@ -9,8 +9,8 @@ public class HistoryProblemReportMerger extends ProblemReportMerger {
 	public HistoryProblemReportMerger(ProblemReport problemReport) {
 	   super(problemReport);
    }
-
-	@Override
+   
+   @Override
 	public void visitThread(JavaThread thread) {
 		// do nothing
 	}

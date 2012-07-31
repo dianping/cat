@@ -17,42 +17,40 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public abstract class AbstractReportBuilder {
-	
+
 	@Inject
 	protected ReportDao m_reportDao;
-	
+
 	@Inject
 	protected GraphDao m_graphDao;
-	
+
 	@Inject
 	protected DailyreportDao m_dailyReportDao;
-	
+
 	protected void getDomainSet(Set<String> domainSet, Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
+
 		try {
-			domainNames = m_reportDao .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
+			domainNames = m_reportDao
+			      .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-
 		if (domainNames == null || domainNames.size() == 0) {
-			return; // no hourly report
+			return;
 		}
-
 		for (Report domainName : domainNames) {
 			domainSet.add(domainName.getDomain());
 		}
 	}
-	
-	//clear graphs from databases
-	protected void clearGraphs(List<Graph> graphs) throws DalException{
-		for(Graph graph:graphs){
+
+	protected void clearHourlyGraphs(List<Graph> graphs) throws DalException {
+		for (Graph graph : graphs) {
 			this.m_graphDao.deleteByDomainNamePeriodIp(graph);
 		}
 	}
-	
-	//clear daily graph from databases
-	protected void clearDailyGraph(Dailyreport report) throws DalException{
+
+	protected void clearDailyReport(Dailyreport report) throws DalException {
 		this.m_dailyReportDao.deleteByDomainNamePeriod(report);
 	}
 }

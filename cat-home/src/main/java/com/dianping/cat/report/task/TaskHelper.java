@@ -128,7 +128,6 @@ public class TaskHelper {
 	}
 
 	public static Date startDateOfNextTask(Date currentDate,int step) {
-
 		Calendar newCalendar = Calendar.getInstance();
 		newCalendar.setTime(currentDate);
 
@@ -155,7 +154,7 @@ public class TaskHelper {
 		}
 
 		newCalendar.set(Calendar.HOUR_OF_DAY, 0);
-		newCalendar.set(Calendar.MINUTE, 15);
+		newCalendar.set(Calendar.MINUTE, 9);
 		newCalendar.set(Calendar.SECOND, 0);
 
 		return newCalendar.getTime();
