@@ -18,20 +18,22 @@ import com.dianping.cat.report.page.sql.TestComputeStr;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
-import com.dianping.cat.report.task.EventDailyGraphMergerTest;
-import com.dianping.cat.report.task.EventGraphCreatorTest;
-import com.dianping.cat.report.task.HistoryEventMergerTest;
-import com.dianping.cat.report.task.HistoryTransactionMergerTest;
-import com.dianping.cat.report.task.ProblemCreateGraphDataTest;
-import com.dianping.cat.report.task.ProblemDailyGraphMergerTest;
-import com.dianping.cat.report.task.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
-import com.dianping.cat.report.task.TransactionDailyGraphMergerTest;
-import com.dianping.cat.report.task.TransactionGraphCreatorTest;
+import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
+import com.dianping.cat.report.task.event.EventGraphCreatorTest;
+import com.dianping.cat.report.task.event.HistoryEventMergerTest;
+import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
+import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
+import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
+import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
+import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
+import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+/* .http */
+//TestHttp.class,
 
 /* .report.page.model.event */
 EventModelServiceTest.class, EventGraphDataTest.class,
@@ -76,6 +78,6 @@ ProblemCreateGraphDataTest.class, ProblemGraphCreatorTest.class,
 
 TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
 
-TransactionDailyGraphMergerTest.class,ProblemDailyGraphMergerTest.class})
+TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class })
 public class AllTests {
 }

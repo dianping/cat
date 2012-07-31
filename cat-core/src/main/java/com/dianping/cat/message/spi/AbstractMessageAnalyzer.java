@@ -1,6 +1,7 @@
 package com.dianping.cat.message.spi;
 
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Transaction;
 import com.site.lookup.ContainerHolder;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
@@ -69,6 +70,14 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		// override it
 	}
 
+	protected boolean shouldDiscard(Transaction t) {
+		// pigeon default heartbeat is no use
+		if (("Service").equals(t.getType()) && ("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
+			return true;
+		}
+		return false;
+	}
+	
 	public abstract R getReport(String domain);
 
 	protected abstract boolean isTimeout();

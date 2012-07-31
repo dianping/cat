@@ -10,11 +10,8 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.message.Transaction;
 
-/**
- * @author sean.wang
- * @since May 21, 2012
- */
 public abstract class TaskConsumer implements Runnable {
+
 	private static final int MAX_TODO_RETRY_TIMES = 3;
 
 	public static final int STATUS_TODO = 1;
@@ -30,10 +27,11 @@ public abstract class TaskConsumer implements Runnable {
 	private volatile boolean stopped = false;
 
 	public void run() {
-		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		findtask: while (running) {
+		String localIp =  getLoaclIp();
+		while (running) {
+			boolean again = false;
 			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between
-			Transaction t = Cat.getProducer().newTransaction("Task", "MergeJob-" + localIp);
+			Transaction t = Cat.newTransaction("Task", "MergeJob-" + localIp);
 			try {
 				// tasks
 				Task task = findDoingTask(localIp); // find doing task
@@ -43,28 +41,28 @@ public abstract class TaskConsumer implements Runnable {
 				if (task != null) {
 					task.setConsumer(localIp);
 					if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) { // confirm
-						                                                                             // doing
-						                                                                             // status
 						int retryTimes = 0;
 						while (!processTask(task)) {
 							retryTimes++;
 							if (retryTimes < MAX_TODO_RETRY_TIMES) {
-								taskRetryDuration(task, retryTimes);
+								taskRetryDuration();
 							} else {
 								updateDoingToFailure(task);
-								continue findtask;
+								again = true;
+								break;
 							}
 						}
-						if (updateDoingToDone(task)) {
-							mergeReport(task);
+						if (again) {
+							continue;
 						}
+						updateDoingToDone(task);
 					}
 				} else {
 					taskNotFoundDuration();
 				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Throwable e) {
-				e.printStackTrace();
+				Cat.logError(e);
 				t.setStatus(e);
 			} finally {
 				t.complete();
@@ -73,11 +71,13 @@ public abstract class TaskConsumer implements Runnable {
 		this.stopped = true;
 	}
 
+	protected String getLoaclIp(){
+		return  NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+	}
+	
 	protected abstract boolean updateDoingToFailure(Task todo);
 
-	protected abstract void taskRetryDuration(Task task, int retryTimes);
-
-	protected abstract void mergeReport(Task task);
+	protected abstract void taskRetryDuration();
 
 	protected abstract void taskNotFoundDuration();
 
@@ -98,5 +98,4 @@ public abstract class TaskConsumer implements Runnable {
 	public boolean isStopped() {
 		return this.stopped;
 	}
-
 }

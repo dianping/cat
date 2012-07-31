@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.task;
 public enum JspFile {
 	VIEW("/jsp/report/task.jsp"),
 
+	REDO("/jsp/report/taskRedo.jsp")
 	;
 
 	private String m_path;

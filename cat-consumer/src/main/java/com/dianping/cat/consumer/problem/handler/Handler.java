@@ -12,8 +12,6 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.spi.MessageTree;
 
 public abstract class Handler {
-	public static Integer DEFAULT_DURATION = new Integer(0);
-
 	public static final int MAX_LOG_SIZE = 60;
 
 	public abstract int handle(Machine machine, MessageTree tree);
@@ -34,32 +32,31 @@ public abstract class Handler {
 		return entry;
 	}
 
-	public void updateEntry(MessageTree tree, Entry entry , int value) {
-	   Duration duration = entry.findOrCreateDuration(DEFAULT_DURATION);
-	   
-	   duration.incCount();
-	   duration.setValue(value);
-	   if (duration.getMessages().size() < MAX_LOG_SIZE) {
-	   	duration.getMessages().add(tree.getMessageId());
-	   }
+	public void updateEntry(MessageTree tree, Entry entry, int value) {
+		Duration duration = entry.findOrCreateDuration(value);
 
-	   JavaThread thread = entry.findOrCreateThread(tree.getThreadId());
-	   
-	   if (thread.getGroupName() == null) {
-	   	thread.setGroupName(tree.getThreadGroupName());
-	   }
-	   if (thread.getName() == null) {
-	   	thread.setName(tree.getThreadName());
-	   }
+		duration.incCount();
+		if (duration.getMessages().size() < MAX_LOG_SIZE) {
+			duration.getMessages().add(tree.getMessageId());
+		}
 
-	   Segment segment = thread.findOrCreateSegment(getSegmentByMessage(tree));
-	   
-	   segment.incCount();
-	   if (segment.getMessages().size() < MAX_LOG_SIZE) {
-	   	segment.getMessages().add(tree.getMessageId());
-	   }
-   }
-	
+		JavaThread thread = entry.findOrCreateThread(tree.getThreadId());
+
+		if (thread.getGroupName() == null) {
+			thread.setGroupName(tree.getThreadGroupName());
+		}
+		if (thread.getName() == null) {
+			thread.setName(tree.getThreadName());
+		}
+
+		Segment segment = thread.findOrCreateSegment(getSegmentByMessage(tree));
+
+		segment.incCount();
+		if (segment.getMessages().size() < MAX_LOG_SIZE) {
+			segment.getMessages().add(tree.getMessageId());
+		}
+	}
+
 	protected int getSegmentByMessage(MessageTree tree) {
 		Message message = tree.getMessage();
 		Calendar cal = Calendar.getInstance();

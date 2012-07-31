@@ -43,6 +43,17 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	private String reportType;
 	
 	
+	@FieldMeta("taskID")
+	private int taskID;
+	
+	public int getTaskID() {
+   	return taskID;
+   }
+
+	public void setTaskID(int taskID) {
+   	this.taskID = taskID;
+   }
+
 	public long getStartDate() {
    	return this.getDate();
    }
@@ -109,6 +120,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@Override
 	public Action getAction() {
+		if(m_action==null){
+			m_action = Action.VIEW;
+		}
 		return m_action;
 	}
 

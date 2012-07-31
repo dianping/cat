@@ -14,6 +14,7 @@
 	</entity>
 	<entity name="type" class-name="EventType">
 		<attribute name="id" key="true" />
+		<attribute name="tps" value-type="double" primitive="true" format="0.00" />
 		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
@@ -21,6 +22,7 @@
 	</entity>
 	<entity name="name" class-name="EventName">
 		<attribute name="id" key="true" />
+		<attribute name="tps" value-type="double" primitive="true" format="0.00" />
 		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />

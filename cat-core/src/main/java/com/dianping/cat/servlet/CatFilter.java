@@ -73,7 +73,7 @@ public class CatFilter implements Filter {
 		return ((HttpServletRequest) request).getRequestURI();
 	}
 
-	private String getSessionIdFromCookie(HttpServletRequest req) {
+	protected String getSessionIdFromCookie(HttpServletRequest req) {
 		Cookie[] cookies = req.getCookies();
 
 		if (cookies != null) {

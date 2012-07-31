@@ -203,8 +203,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
-		//pigeon default heartbeat is no use
-		if (("Service").equals(t.getType()) &&("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
+		if (shouldDiscard(t)) {
 			return 0;
 		}
 		String ip = tree.getIpAddress();
@@ -416,20 +415,30 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
-	public static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+	public static class TransactionReportFilter extends
+	      com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_domain;
 
 		@Override
 		public void visitType(TransactionType type) {
+			long totalCount = type.getTotalCount();
+			int value = (int) (totalCount / 10000);
 			int count = 0;
-			if (!"Cat".equals(m_domain)) {
+			String successMessageUrl = null;
+			if (!"Cat".equals(m_domain) && type.getNames().size() > 20 && value > 0) {
+				if (value < 5) {
+					value = 5;
+				}
 				if ("URL".equals(type.getId())) {
 					List<String> names = new ArrayList<String>();
 					Map<String, TransactionName> transactionNames = type.getNames();
 					for (TransactionName transactionName : transactionNames.values()) {
-						if (transactionName.getTotalCount() <= 5) {
+						if (transactionName.getTotalCount() <= value) {
 							names.add(transactionName.getId());
 							count += transactionName.getTotalCount();
+							if (successMessageUrl == null) {
+								successMessageUrl = transactionName.getSuccessMessageUrl();
+							}
 						}
 					}
 
@@ -438,6 +447,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 					}
 					if (count > 0) {
 						TransactionName name = new TransactionName("OTHERS");
+						name.setSuccessMessageUrl(successMessageUrl);
 						name.setTotalCount(count);
 						name.setMin(0);
 						name.setMax(0);

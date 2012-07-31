@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
-import com.dianping.cat.report.task.HistoryProblemReportMerger;
+import com.dianping.cat.report.task.problem.HistoryProblemReportMerger;
 
 public class ProblemReportMergerTest {
 	@Test

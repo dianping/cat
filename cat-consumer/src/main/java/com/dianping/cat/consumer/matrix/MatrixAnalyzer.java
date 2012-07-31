@@ -125,9 +125,8 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 		if (message instanceof Transaction) {
 			String messageType = message.getType();
-			String messageName = message.getName();
-			
-			if (("Service").equals(messageType) && ("piegonService:heartTaskService:heartBeat").equals(messageName)) {
+
+			if (shouldDiscard((Transaction) message)) {
 				return;
 			}
 			if (messageType.equals("URL") || messageType.equals("Service")) {
@@ -290,8 +289,18 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		@Override
 		public void visitMatrixReport(MatrixReport matrixReport) {
 			m_domain = matrixReport.getDomain();
-			if (!m_domain.equals("Cat")) {
-				Map<String, Matrix> matrixs = matrixReport.getMatrixs();
+			Map<String, Matrix> matrixs = matrixReport.getMatrixs();
+
+			long total = 0;
+			for (Matrix matrix : matrixs.values()) {
+				total = total + matrix.getCount();
+			}
+			int value = (int) (total / 10000);
+			String urlSample = null;
+			if (!m_domain.equals("Cat") && matrixs.size() > 20 && value > 0) {
+				if (value < 5) {
+					value = 5;
+				}
 				List<String> removeUrls = new ArrayList<String>();
 				int totalCount = 0;
 				Collection<Matrix> matrix = matrixs.values();
@@ -300,6 +309,9 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 					if (temp.getType().equals("URL") && temp.getCount() < 5) {
 						removeUrls.add(temp.getName());
 						totalCount += temp.getCount();
+						if (urlSample == null) {
+							urlSample = temp.getUrl();
+						}
 					}
 				}
 				for (String url : removeUrls) {
@@ -308,6 +320,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 				if (totalCount > 0) {
 					Matrix other = new Matrix("OTHERS");
+					other.setUrl(urlSample);
 					other.setType("OTHERS");
 					other.setCount(totalCount);
 					matrixs.put("OTHERS", other);

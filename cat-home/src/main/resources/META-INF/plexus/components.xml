@@ -34,16 +34,100 @@
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.CatReportFacade</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
+			<requirements>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailygraphDao</role>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.DailyTaskProducer</role>
+			<implementation>com.dianping.cat.report.task.DailyTaskProducer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.CatReportFacade</role>
+			<implementation>com.dianping.cat.report.task.CatReportFacade</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -877,6 +961,9 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.CatReportFacade</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -889,6 +976,93 @@
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.CatReportFacade</role>
+			<implementation>com.dianping.cat.report.task.CatReportFacade</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.ReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 			</requirements>
 		</component>

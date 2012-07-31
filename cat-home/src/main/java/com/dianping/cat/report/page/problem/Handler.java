@@ -112,7 +112,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (d != null) {
 			int longUrlTime = d.getUrlThreshold();
-			if (payload.getLongTime() == 0) {
+			if (payload.getRealLongTime() == 0) {
 				payload.setLongTime(longUrlTime);
 			}
 
@@ -177,7 +177,6 @@ public class Handler implements PageHandler<Context> {
 				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
 				problemStatistics.visitProblemReport(report);
 			} else {
-
 				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
 				problemStatistics.visitProblemReport(report);
 			}
@@ -292,13 +291,6 @@ public class Handler implements PageHandler<Context> {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 		setDefaultThreshold(model, payload);
-
-		Map<String, Domain> domains = m_manager.getLongConfigDomains();
-		Domain d = domains.get(payload.getDomain());
-
-		if (d != null && payload.getRealLongTime() == 0) {
-			payload.setLongTime(d.getUrlThreshold());
-		}
 
 		String ip = payload.getIpAddress();
 		if (StringUtils.isEmpty(ip)) {

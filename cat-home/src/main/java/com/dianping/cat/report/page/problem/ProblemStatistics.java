@@ -53,6 +53,7 @@ public class ProblemStatistics extends BaseVisitor {
 	}
 
 	public ProblemStatistics setUrlThreshold(int urlThreshold) {
+		System.out.println("UrlThreshold:"+urlThreshold);
 		m_urlThreshold = urlThreshold;
 		return this;
 	}

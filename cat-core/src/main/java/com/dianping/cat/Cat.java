@@ -7,7 +7,10 @@ import java.util.Date;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
 import com.site.initialization.DefaultModuleContext;
 import com.site.initialization.Module;
@@ -32,6 +35,38 @@ public class Cat {
 	private PlexusContainer m_container;
 
 	private Cat() {
+	}
+
+	public static Transaction newTransaction(String type, String name) {
+		return Cat.getProducer().newTransaction(type, name);
+	}
+
+	public static Event newEvent(String type, String name) {
+		return Cat.getProducer().newEvent(type, name);
+	}
+
+	public static void logError(Throwable cause) {
+		Cat.getProducer().logError(cause);
+	}
+
+	public static Heartbeat newHeartbeat(String type, String name) {
+		return Cat.getProducer().newHeartbeat(type, name);
+	}
+
+	public static String createMessageId() {
+		return Cat.getProducer().createMessageId();
+	}
+
+	public static boolean isEnabled() {
+		return Cat.getProducer().isEnabled();
+	}
+
+	public void logEvent(String type, String name, String status, String nameValuePairs) {
+		Cat.getProducer().logEvent(type, name, status, nameValuePairs);
+	}
+
+	public void logHeartbeat(String type, String name, String status, String nameValuePairs) {
+		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
 	}
 
 	public static void destroy() {
@@ -66,11 +101,6 @@ public class Cat {
 	}
 
 	public static void initialize(PlexusContainer container, File configFile) {
-		// synchronized (s_instance) {
-		// if (s_instance.m_container == null) {
-		// s_instance.setContainer(container);
-		// }
-		// }
 		ModuleContext ctx = new DefaultModuleContext(container);
 		Module module = ctx.lookup(Module.class, CatCoreModule.ID);
 

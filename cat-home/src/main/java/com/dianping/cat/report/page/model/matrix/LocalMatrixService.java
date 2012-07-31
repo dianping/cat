@@ -26,6 +26,15 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 			long hour = 60 * 60 * 1000;
 			long date = current - current % (hour) - hour;
 			report = getLocalReport(date, domain);
+
+			if (report == null) {
+				report = new MatrixReport(domain);
+
+				MatrixReport catReport = getLocalReport(date, "Cat");
+				if (catReport != null) {
+					report.getDomainNames().addAll(catReport.getDomainNames());
+				}
+			}
 		}
 
 		return report;

@@ -9,17 +9,31 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.task.Model" scope="request" />
 <jsp:useBean id="navBar" class="com.dianping.cat.report.view.NavigationBar" scope="page"/>
 
-<a:simpleReport title="Task Manage Platform">
-
 <link rel="stylesheet" href="../css/body.css" type="text/css">
 <link rel="stylesheet" href="../css/report.css" type="text/css">
 <link rel="stylesheet" href="../css/task.css" type="text/css">
 <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
 <script src="../js/jquery-1.7.1.js" type="text/javascript"></script>
 <script src="../js/task.js" type="text/javascript"></script>
+<a:body>
+
+<res:useCss value='${res.css.local.report_css}' target="head-css" />
+
 <body>
 		
 <div class="report">
+	<table class="header">
+			<tr>
+				<td class="title">&nbsp;&nbsp;<b>From ${w:format(model.from,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.to,'yyyy-MM-dd HH:mm:ss')}</b></td>
+			
+			<td class="nav">
+				<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?domain=${model.domain}&date=${model.date}&step=${nav.hours}">${nav.title}</a> ]&nbsp;
+				</c:forEach>
+				&nbsp;[ <a href="${model.baseUri}?domain=${model.domain}">now</a> ]&nbsp;
+			</td>
+		</table>
+		
 	<table class="navbar">
 		<tr>
 			<td class="domain">
@@ -36,15 +50,6 @@
 					</c:forEach>
 				</div>
 			</td>
-			<td class="nav">
-				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?domain=${domain}&date=${model.date}&name=${name}&step=${nav.hours}">${nav.title}</a> ]&nbsp;
-				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?domain=${domain}&name=${name}">now</a> ]&nbsp;
-			</td>
-		</tr>
-		<tr>
-			<td><b>From ${w:format(model.from,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.to,'yyyy-MM-dd HH:mm:ss')}</b></td>
 		</tr>
 	</table>
 
@@ -67,9 +72,9 @@
 				  <option value="4">failed</option>
 				</select>
 				<b>Type:&nbsp;&nbsp;</b><select id="type">
-				  <option value ="0">All</option>
-				  <option value ="1">hour</option>
-				  <option value ="2">daily</option>
+				  <option value ="-1">All</option>
+				  <option value ="0">hour</option>
+				  <option value ="1">daily</option>
 				</select>
 				&nbsp;&nbsp;<input type='button' value=' search '  width=20 height=10 onclick="searchTask('${model.domain}','${model.name}','${payload.date}','${payload.step}')"></input>
 			</td>
@@ -108,11 +113,11 @@
 					<c:if test="${task.status==4}">failure</c:if>
 				</td>
 				<td>
-					<c:if test="${task.taskType==0||task.taskType==1}">hour</c:if>
-					<c:if test="${task.taskType==2}">day</c:if>
+					<c:if test="${task.taskType==0}">hour</c:if>
+					<c:if test="${task.taskType==1}">daily</c:if>
 				</td>
 				<td > 
-				<a href="${model.baseUri}?&op=redo&period=${task.reportPeriod}&domain=${task.reportDomain}&name=${task.reportName}&taskType=${task.taskType}" target="_blank">redo</a></td>
+				<a href="${model.baseUri}?&op=redo&taskID=${task.id}" target="_blank">redo</a></td>
 		</tr>
 		</c:forEach>
 		<tr>
@@ -135,7 +140,8 @@
 	var url="&domain="+"${model.domain}"+"&name="+"${model.name}"+"&date="+${payload.date}+"&step="+${payload.step};
 </script>
 </body>
-</a:simpleReport>
+
+</a:body>
 
 
 

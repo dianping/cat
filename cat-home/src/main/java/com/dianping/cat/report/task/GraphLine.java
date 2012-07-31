@@ -1,25 +1,25 @@
 package com.dianping.cat.report.task;
 
-final class GraphLine {
-	long totalCount;
+public final class GraphLine {
+	public long totalCount;
 
-	long[] totalCounts;
-	
-	long failCount;
+	public long[] totalCounts;
 
-	long[] failCounts;
-	
-	double min;
+	public long failCount;
 
-	double max;
+	public long[] failCounts;
 
-	double sum;
+	public double min;
 
-	double[] sums;
-	
-	double sum2;
+	public double max;
 
-	int[] minuteCounts;
+	public double sum;
 
-	double[] minuteNumbers;
+	public double[] sums;
+
+	public double sum2;
+
+	public int[] minuteCounts;
+
+	public double[] minuteNumbers;
 }

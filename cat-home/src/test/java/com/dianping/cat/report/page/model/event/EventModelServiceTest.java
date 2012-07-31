@@ -27,6 +27,6 @@ public class EventModelServiceTest extends ComponentTestCase {
 		LocalEventService local = (LocalEventService) lookup(ModelService.class, "event-local");
 		ModelResponse<?> response = local.invoke(ModelRequest.from("Cat", "CURRENT"));
 
-		Assert.assertEquals(true, response.getModel() != null);
+		Assert.assertEquals(true, response != null);
 	}
 }

@@ -1,59 +1,71 @@
 package com.dianping.cat.report.page.task;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.report.view.TaskUrlNav;
 import com.site.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
-	
+
 	private long date;
-	
+
 	private List<String> domains;
-	
+
 	private List<String> names;
-	
+
 	private int totalpages;
-	
+
 	private int pageSize;
-	
+
 	private List<Task> tasks;
-	
+
 	private Date from;
-	
+
 	private Date to;
-	
+
 	private String domain;
-	
+
 	private String name;
-	
+
 	private int type;
-	
+
 	private int status;
-	
+
 	private int totalNumOfTasks;
-	
+
 	private int numOfFailureTasks;
 	
+	private String updateResult;
+
 	
-	public int getNumOfFailureTasks() {
-   	return numOfFailureTasks;
+	public String getUpdateResult() {
+   	return updateResult;
    }
+
+	public void setUpdateResult(String updateResult) {
+   	this.updateResult = updateResult;
+   }
+
+	public int getNumOfFailureTasks() {
+		return numOfFailureTasks;
+	}
 
 	public void setNumOfFailureTasks(int numOfFailureTasks) {
-   	this.numOfFailureTasks = numOfFailureTasks;
-   }
+		this.numOfFailureTasks = numOfFailureTasks;
+	}
 
 	public int getTotalNumOfTasks() {
-   	return totalNumOfTasks;
-   }
+		return totalNumOfTasks;
+	}
 
 	public void setTotalNumOfTasks(int totalNumOfTasks) {
-   	this.totalNumOfTasks = totalNumOfTasks;
-   }
+		this.totalNumOfTasks = totalNumOfTasks;
+	}
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -63,107 +75,113 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 	public Action getDefaultAction() {
 		return Action.VIEW;
 	}
-	
+
 	public String getBaseUri() {
 		return buildPageUri(getPage().getPath(), null);
 	}
-	
-	public String getDomain(){
+
+	public String getDomain() {
 		return domain;
 	}
-	
-	public String getName(){
+
+	public String getName() {
 		return name;
 	}
+
 	public long getDate() {
-   	return date;
-   }
+		return date;
+	}
 
 	public void setDate(long date) {
-   	this.date = date;
-   }
+		this.date = date;
+	}
 
 	public int getTotalpages() {
-   	return totalpages;
-   }
+		return totalpages;
+	}
 
 	public void setTotalpages(int totalpages) {
-   	this.totalpages = totalpages;
-   }
+		this.totalpages = totalpages;
+	}
 
 	public List<String> getDomains() {
-   	return domains;
-   }
+		if (domains == null) {
+			domains = new ArrayList<String>();
+		} else {
+			StringSortHelper.sortDomain(domains);
+		}
+		return domains;
+	}
 
 	public void setDomains(List<String> domains) {
-   	this.domains = domains;
-   }
+		this.domains = domains;
+	}
 
 	public List<String> getNames() {
-   	return names;
-   }
+		return names;
+	}
 
 	public void setNames(List<String> names) {
-   	this.names = names;
-   }
+		this.names = names;
+	}
 
 	public int getPageSize() {
-   	return pageSize;
-   }
+		return pageSize;
+	}
 
 	public void setPageSize(int pageSize) {
-   	this.pageSize = pageSize;
-   }
+		this.pageSize = pageSize;
+	}
 
 	public List<Task> getTasks() {
-   	return tasks;
-   }
+		return tasks;
+	}
 
 	public void setTasks(List<Task> tasks) {
-   	this.tasks = tasks;
-   }
-	
+		this.tasks = tasks;
+	}
+
 	public TaskUrlNav[] getNavs() {
 		return TaskUrlNav.values();
 	}
 
 	public Date getFrom() {
-   	return from;
-   }
+		return from;
+	}
 
 	public void setFrom(Date from) {
-   	this.from = from;
-   }
+		this.from = from;
+	}
 
 	public Date getTo() {
-   	return to;
-   }
+		return to;
+	}
 
 	public void setTo(Date to) {
-   	this.to = to;
-   }
+		this.to = to;
+	}
 
 	public void setDomain(String domain) {
-   	this.domain = domain;
-   }
+		this.domain = domain;
+	}
 
 	public void setName(String name) {
-   	this.name = name;
-   }
+		this.name = name;
+	}
 
 	public int getType() {
-   	return type;
-   }
+		return type;
+	}
 
 	public void setType(int type) {
-   	this.type = type;
-   }
+		this.type = type;
+	}
 
 	public int getStatus() {
-   	return status;
-   }
+		return status;
+	}
 
 	public void setStatus(int status) {
-   	this.status = status;
-   }
+		this.status = status;
+	}
 }

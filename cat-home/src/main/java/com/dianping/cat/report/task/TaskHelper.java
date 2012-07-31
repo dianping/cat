@@ -6,10 +6,6 @@ package com.dianping.cat.report.task;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * @author sean.wang
- * @since Jun 4, 2012
- */
 public class TaskHelper {
 
 	public static Date nextTaskTime() {
@@ -38,6 +34,17 @@ public class TaskHelper {
 	public static Date todayZero(Date reportPeriod) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(reportPeriod);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+	
+	public static Date tomorrowZero(Date reportPeriod) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(reportPeriod);
+		cal.add(Calendar.DAY_OF_YEAR, 1);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
 		cal.set(Calendar.SECOND, 0);
@@ -120,4 +127,36 @@ public class TaskHelper {
 		return buf.toString();
 	}
 
+	public static Date startDateOfNextTask(Date currentDate,int step) {
+		Calendar newCalendar = Calendar.getInstance();
+		newCalendar.setTime(currentDate);
+
+		boolean nextDay = false;
+
+		int currentHour = newCalendar.get(Calendar.HOUR_OF_DAY);
+		int currentMinute = newCalendar.get(Calendar.MINUTE);
+		int currentSecond = newCalendar.get(Calendar.SECOND);
+
+		if (currentHour > 0) {
+			nextDay = true;
+		} else if (currentHour == 0) {
+			if (currentMinute > 10) {
+				nextDay = true;
+			} else if (currentMinute == 10) {
+				if (currentSecond > 0) {
+					nextDay = true;
+				}
+			}
+		}
+
+		if (nextDay) {
+			newCalendar.add(Calendar.DATE, step);// 
+		}
+
+		newCalendar.set(Calendar.HOUR_OF_DAY, 0);
+		newCalendar.set(Calendar.MINUTE, 9);
+		newCalendar.set(Calendar.SECOND, 0);
+
+		return newCalendar.getTime();
+	}
 }
