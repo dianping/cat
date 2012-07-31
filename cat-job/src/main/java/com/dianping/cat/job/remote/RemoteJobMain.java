@@ -5,7 +5,9 @@ import java.util.Date;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.LocalFileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -26,15 +28,17 @@ import com.dianping.cat.job.sql.UrlStatementValue;
 
 public class RemoteJobMain extends Configured implements Tool {
 
-	private static String BASE_URL = "hdfs://10.1.1.169/user/cat/";
+	private String baseUrl = "hdfs://10.1.1.169/user/cat/";
 
-	private static String DEFAULT_IN_PATH = "hdfs://10.1.1.169/user/cat/dump/";
+	private String defaultDumpPath = "hdfs://10.1.1.169/user/cat/dump/";
 
-	private static String DEFAULT_OUT_PATH = "hdfs://10.1.1.169/user/cat/temp/remote";
+	private String defaultRemotePath = "hdfs://10.1.1.169/user/cat/remote/";
 
-	private static String DEFAULT_FINAL_PATH = "hdfs://10.1.1.169/user/cat/temp/sql";
+	private String defaultOutPath = "hdfs://10.1.1.169/user/cat/temp/remote";
 
-	private static final int DEFAULT_REDUCE_NUMBER = 3;
+	private String defaultSqlPath = "hdfs://10.1.1.169/user/cat/temp/sql";
+
+	private final int DEFAULT_REDUCE_NUMBER = 3;
 
 	/**
 	 * The job process last hour data when no args default. The args[0] can set
@@ -58,6 +62,12 @@ public class RemoteJobMain extends Configured implements Tool {
 	@Override
 	public int run(String[] args) throws Exception {
 		Configuration conf = getConf();
+
+		String value = "";
+		conf.set("tmpfiles", value);
+
+		FileSystem fs = FileSystem.getLocal(conf);
+
 		Job job = new Job(conf, "Cat_Remote_Job");
 
 		job.setJarByClass(RemoteJobMain.class);
@@ -88,25 +98,26 @@ public class RemoteJobMain extends Configured implements Tool {
 
 		// for local mode
 		if (args.length >= 3) {
-			BASE_URL = args[2];
-			if (BASE_URL.charAt(BASE_URL.length() - 1) == '/') {
-				BASE_URL = BASE_URL.substring(0, BASE_URL.length() - 1);
+			baseUrl = args[2];
+			if (baseUrl.charAt(baseUrl.length() - 1) == '/') {
+				baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
 			}
-			DEFAULT_IN_PATH = BASE_URL;
-			DEFAULT_OUT_PATH = BASE_URL + "/sql/";
-			DEFAULT_FINAL_PATH = BASE_URL + "/sqlResult/";
+			defaultDumpPath = baseUrl;
+			defaultOutPath = baseUrl + "/sql/";
+			defaultSqlPath = baseUrl + "/sqlResult/";
 		}
 
-		String inputPath = DEFAULT_IN_PATH + hourStr;
-		String outputPath = DEFAULT_OUT_PATH + hourStr;
+		String inputPath = defaultDumpPath + hourStr;
+		String outputPath = defaultOutPath + hourStr;
+		String cachePath = defaultRemotePath + hourStr;
 
 		System.out.println(String.format("InputPath: %s , OutPath %s", inputPath, outputPath));
+		System.out.println(String.format("CachePath: %s ", cachePath));
 
 		FileInputFormat.addInputPath(job, new Path(inputPath));
-		
+
 		Path outPath = new Path(outputPath);
 
-		FileSystem fs = FileSystem.get(conf);
 		fs.delete(outPath, true);
 		FileOutputFormat.setOutputPath(job, outPath);
 
@@ -131,10 +142,10 @@ public class RemoteJobMain extends Configured implements Tool {
 		job.setReducerClass(RemoteJobSqlReducer.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(Text.class);
-		FileInputFormat.addInputPath(job, new Path(DEFAULT_OUT_PATH + currentHour));
-		FileOutputFormat.setOutputPath(job, new Path(DEFAULT_FINAL_PATH));
+		FileInputFormat.addInputPath(job, new Path(defaultOutPath + currentHour));
+		FileOutputFormat.setOutputPath(job, new Path(defaultSqlPath));
 		FileSystem fs = FileSystem.get(conf);
-		fs.delete(new Path(DEFAULT_FINAL_PATH), true);
+		fs.delete(new Path(defaultSqlPath), true);
 		return job.waitForCompletion(true) ? 0 : 1;
 	}
 }

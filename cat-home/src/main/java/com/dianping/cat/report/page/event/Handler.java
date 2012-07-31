@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.event.StatisticsComputer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
@@ -105,7 +106,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
 			EventReport report = response.getModel();
-
+			setTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable event service registered for " + request + "!");
@@ -203,9 +204,9 @@ public class Handler implements PageHandler<Context> {
 		model.setIpAddress(ip);
 
 		EventReport eventReport = null;
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
 		try {
-			Date start = payload.getHistoryStartDate();
-			Date end = payload.getHistoryEndDate();
 			String domain = model.getDomain();
 			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "event",
 			      DailyreportEntity.READSET_FULL);
@@ -215,15 +216,18 @@ public class Handler implements PageHandler<Context> {
 				EventReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			}
-			eventReport = merger == null ? null : merger.getEventReport();
+			eventReport = merger.getEventReport();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 
 		if (eventReport == null) {
 			return;
 		}
+		eventReport.setStartTime(start);
+		eventReport.setEndTime(end);
 		eventReport.setDomain(model.getDisplayDomain());
+		setTps(payload, eventReport);
 		model.setReport(eventReport);
 		if (!StringUtils.isEmpty(type)) {
 			model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, ip, eventReport));
@@ -259,6 +263,41 @@ public class Handler implements PageHandler<Context> {
 			payload.computeStartDate();
 			payload.defaultIsYesterday();
 			model.setLongDate(payload.getDate());
+		}
+	}
+
+	private void setTps(Payload payload, EventReport report) {
+		if (payload != null && report != null) {
+			boolean isCurrent = payload.getPeriod().isCurrent();
+			String ip = payload.getIpAddress();
+			Machine machine = report.getMachines().get(ip);
+			if (machine == null) {
+				return;
+			}
+			for (EventType eventType : machine.getTypes().values()) {
+				long totalCount = eventType.getTotalCount();
+				double tps = 0;
+				if (isCurrent) {
+					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+					tps = totalCount / seconds;
+				} else {
+					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+					tps = totalCount / (double) time;
+				}
+				eventType.setTps(tps);
+				for (EventName transName : eventType.getNames().values()) {
+					long totalNameCount = transName.getTotalCount();
+					double nameTps = 0;
+					if (isCurrent) {
+						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+						nameTps = totalNameCount / seconds;
+					} else {
+						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+						nameTps = totalNameCount / (double) time;
+					}
+					transName.setTps(nameTps);
+				}
+			}
 		}
 	}
 
@@ -361,7 +400,7 @@ public class Handler implements PageHandler<Context> {
 			}
 		} else if (!isEmpty(type) && !isEmpty(name)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR* 12);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 12);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
 				for (int j = 0; j < allLines.length; j++) {

@@ -42,7 +42,7 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total">Total Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent">Failure%</a></th>
-			<th class="right">Sample Link</th>
+			<th class="right">Sample Link</th><th class="right">TPS</th>
 					</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
@@ -56,6 +56,7 @@
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 				<tr class="graphs"><td colspan="5"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
@@ -66,7 +67,7 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total">Total Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
-			<th class="right">Sample Link</th>
+			<th class="right">Sample Link</th><th class="right">TPS</th>
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"
 						varStatus="status">
@@ -80,6 +81,7 @@
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 				<tr class="graphs"><td colspan="5"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
@@ -87,6 +89,7 @@
 	</c:choose>
 </table>
 
+<font color="white">${lastIndex+1}</font>
 <res:useJs value="${res.js.local.event_js}" target="bottom-js" />
 </jsp:body>
 </a:historyReport>

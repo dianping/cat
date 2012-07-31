@@ -55,15 +55,11 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
-			<th><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type"> Type</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
-			<th class="right">Sample Link</th>
+			<th><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type"> Type</a></th>
+			<th class="right"><a  href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
+			<th class="right"><a  href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
+			<th class="right"><a  href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
+			<th class="right">Sample Link</th><th class="right">TPS</th>
 					</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
@@ -75,8 +71,8 @@
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
-					<td><a
-								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 			</c:forEach>
 		</c:when>
@@ -87,9 +83,8 @@
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
-			<th class="right">Sample Link</th>
+			<th class="right">Sample Link</th><th class="right">TPS</th>
 					</tr>
-			
 			<tr class="graphs">
 						<td colspan="6"><div id="-1" style="display: none"></div></td>
 					</tr>
@@ -104,8 +99,8 @@
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent,'0.00')}</td>
-					<td><a
-								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 				<tr class="graphs">
 							<td colspan="5"><div id="${status.index}"

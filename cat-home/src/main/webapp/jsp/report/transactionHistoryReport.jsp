@@ -113,6 +113,7 @@
 	</c:choose>
 </table>
 
+<font color="white">${lastIndex+1}</font>
 </br>
 
 <res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
