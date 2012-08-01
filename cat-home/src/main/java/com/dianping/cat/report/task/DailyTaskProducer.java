@@ -5,13 +5,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -28,15 +24,21 @@ import com.dianping.cat.message.Transaction;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
-public class DailyTaskProducer implements Runnable, Initializable {
+public class DailyTaskProducer implements Runnable {
+
+	private volatile boolean m_stop = false;
+
+	private boolean firstStart = true;
 
 	private static final int TYPE_DAILY = 1;
 
-	private static final int NUM_OF_THREADS = 2;
+	private static Set<String> m_dailyReportNameSet = new HashSet<String>();
 
-	private static final int PERIOD = 24 * 60 * 60 * 1000;
-
-	private final Set<String> m_dailyReportNameSet = new HashSet<String>();
+	static {
+		m_dailyReportNameSet.add("event");
+		m_dailyReportNameSet.add("transaction");
+		m_dailyReportNameSet.add("problem");
+	}
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -49,71 +51,62 @@ public class DailyTaskProducer implements Runnable, Initializable {
 
 	private Logger m_logger;
 
-	private ScheduledExecutorService m_service = Executors.newScheduledThreadPool(NUM_OF_THREADS);
-
 	@Override
 	public void run() {
-		// schedule a task at next day 00:09
-		Date now = new Date();
-		Date today = TaskHelper.todayZero(now);
-		Date tomorrow = TaskHelper.tomorrowZero(now);
-		DailyTask dailyTask = new DailyTask(today, tomorrow);
-		Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now, 1);
-		long delay = startDateOfNextTask.getTime() - now.getTime();
+		while (!m_stop) {
+			Date now = new Date();
+			Date yesterdayZero = TaskHelper.yesterdayZero(now);
+			Date todayZero = TaskHelper.todayZero(now);
+			Date tomorrowZero = TaskHelper.tomorrowZero(now);
 
-		m_service.scheduleAtFixedRate(dailyTask, delay, PERIOD, TimeUnit.MILLISECONDS);
+			if (firstStart) {
+				if (!isYesterdayTaskGenerated(now, yesterdayZero, todayZero)) {
+					generateDailyTasks(yesterdayZero, todayZero);
+				}
+				firstStart = false;
+			}
+			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now, 1);
+			LockSupport.parkUntil(startDateOfNextTask.getTime());
+			generateDailyTasks(todayZero, tomorrowZero);
+		}
 	}
 
-	private class DailyTask implements Runnable {
+	public void generateDailyTasks(Date start, Date end) {
+		Transaction t = Cat.newTransaction("System", "ProduceDailyReport");
+		try {
+			Set<String> domainSet = getDomainSet(start, end);
 
-		private Date m_start;
-
-		private Date m_end;
-
-		public DailyTask(Date start, Date end) {
-			m_start = start;
-			m_end = end;
-		}
-
-		public void run() {
-			Transaction t = Cat.newTransaction("System", "ProduceDailyReport");
-			try {
-				Set<String> domainSet = new HashSet<String>();
-				Set<String> nameSet = new HashSet<String>();
-
-				getDomainAndNameSet(domainSet, nameSet, m_start, m_end);
-				nameSet.retainAll(m_dailyReportNameSet);
-
-				for (String domain : domainSet) { // iterate domains
-					for (String name : nameSet) {
-						Task task = m_taskDao.createLocal();
-						task.setCreationDate(new Date());
-						task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-						task.setReportDomain(domain);
-						task.setReportName(name);
-						task.setReportPeriod(m_start);
-						task.setStatus(1); // status todo
-						task.setTaskType(TYPE_DAILY);
-						try {
-							m_taskDao.insert(task);
-						} catch (DalException e) {
-							Cat.logError(e);
-							t.setStatus(e);
-						}
+			for (String domain : domainSet) {
+				for (String name : m_dailyReportNameSet) {
+					Task task = m_taskDao.createLocal();
+					task.setCreationDate(new Date());
+					task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+					task.setReportDomain(domain);
+					task.setReportName(name);
+					task.setReportPeriod(start);
+					task.setStatus(1);
+					task.setTaskType(TYPE_DAILY);
+					try {
+						m_taskDao.insert(task);
+					} catch (DalException e) {
+						Cat.logError(e);
+						t.setStatus(e);
 					}
 				}
-				t.setStatus(Message.SUCCESS);
-			} catch (Exception e) {
-				Cat.logError(e);
-				t.setStatus(e);
-			} finally {
-				t.complete();
 			}
+			t.setStatus(Message.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
 		}
 	}
 
-	private void getDomainAndNameSet(Set<String> domainSet, Set<String> nameSet, Date start, Date end) {
+	private Set<String> getDomainSet(Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
+		Set<String> domainSet = new HashSet<String>();
+
 		try {
 			domainNames = m_reportDao
 			      .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
@@ -122,38 +115,16 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		}
 
 		if (domainNames == null || domainNames.size() == 0) {
-			return;
+			return domainSet;
 		}
 
 		for (Report domainName : domainNames) {
 			domainSet.add(domainName.getDomain());
-			// ignore heartbeat and ip daily report merge
-			if (!"heartbeat".equals(domainName.getName()) && !"ip".equals(domainName.getName())) {
-				nameSet.add(domainName.getName());
-			}
 		}
+		return domainSet;
 	}
 
-	@Override
-	public void initialize() throws InitializationException {
-		Date now = new Date();
-		Date todayZero = TaskHelper.todayZero(now);
-		Date yesterday = TaskHelper.yesterdayZero(now);
-		
-		m_dailyReportNameSet.add("event");
-		m_dailyReportNameSet.add("transaction");
-		m_dailyReportNameSet.add("problem");
-
-		if (!isYesterdayTaskGenerated(now, todayZero, yesterday)) {
-			DailyTask dailyTask = new DailyTask(yesterday, todayZero);
-			long startOfTask = TaskHelper.startDateOfNextTask(now, 0).getTime();
-			long delay = startOfTask - now.getTime();
-			
-			m_service.schedule(dailyTask, delay, TimeUnit.MILLISECONDS);
-		}
-	}
-
-	private boolean isYesterdayTaskGenerated(Date now, Date todayZero, Date yesterdayZero) {
+	private boolean isYesterdayTaskGenerated(Date now, Date yesterdayZero, Date todayZero) {
 		Date startDayOfTodayTask = TaskHelper.startDateOfNextTask(now, 0);
 		long nowLong = now.getTime();
 		long startOfTask = startDayOfTodayTask.getTime();
@@ -170,20 +141,20 @@ public class DailyTaskProducer implements Runnable, Initializable {
 				m_logger.error("DailyTask isYesterdayTaskGenerated", e);
 			}
 
-			Set<String> domainSet = new HashSet<String>();
-			Set<String> nameSet = new HashSet<String>();
-
-			getDomainAndNameSet(domainSet, nameSet, yesterdayZero, todayZero);
-			nameSet.retainAll(m_dailyReportNameSet);
+			Set<String> domainSet = getDomainSet(yesterdayZero, todayZero);
 
 			int total = allReports.get(0).getCount();
 			int domanSize = domainSet.size();
-			int nameSize = nameSet.size();
+			int nameSize = m_dailyReportNameSet.size();
 
 			if (total != domanSize * nameSize) {
 				return false;
 			}
 		}
 		return true;
+	}
+
+	public void stop() {
+		m_stop = true;
 	}
 }
