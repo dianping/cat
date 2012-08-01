@@ -40,15 +40,14 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	private int numOfFailureTasks;
 	
-	private String updateResult;
-
+	private boolean redoResult;
 	
-	public String getUpdateResult() {
-   	return updateResult;
+	public boolean isRedoResult() {
+   	return redoResult;
    }
 
-	public void setUpdateResult(String updateResult) {
-   	this.updateResult = updateResult;
+	public void setRedoResult(boolean redoResult) {
+   	this.redoResult = redoResult;
    }
 
 	public int getNumOfFailureTasks() {

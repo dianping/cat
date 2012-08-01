@@ -9,11 +9,15 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.hadoop.dal.Task;
+import com.dianping.cat.hadoop.dal.TaskDao;
+import com.dianping.cat.hadoop.dal.TaskEntity;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class ReportFacade implements LogEnabled, Initializable {
@@ -38,6 +42,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 	@Inject
 	private HeartbeatReportBuilder m_heartbeatBuilder;
 
+	@Inject
+	private TaskDao taskDao;
+
 	public void addNewReportBuild(ReportBuilder newReportBuilder, String name) {
 		this.m_reportBuilders.put(name, newReportBuilder);
 	}
@@ -52,7 +59,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		String reportDomain = task.getReportDomain();
 		Date reportPeriod = task.getReportPeriod();
 		ReportBuilder reportBuilder = getReportBuilder(reportName);
-		
+
 		if (reportBuilder == null) {
 			m_logger.info("no report builder for type:" + " " + reportName);
 			return false;
@@ -66,24 +73,33 @@ public class ReportFacade implements LogEnabled, Initializable {
 		return false;
 	}
 
-	public boolean redoTask(Task task) {
-		int task_type = task.getTaskType();
-		String reportName = task.getReportName();
-		String reportDomain = task.getReportDomain();
-		Date reportPeriod = task.getReportPeriod();
-		ReportBuilder reportBuilder = getReportBuilder(reportName);
-		
-		if (reportBuilder == null) {
-			m_logger.info("no report builder for type:" + " " + reportName);
-			return false;
-		} else {
-			if (task_type == TYPE_DAILY) {
-				return reportBuilder.redoDailyReport(reportName, reportDomain, reportPeriod);
-			} else if (task_type == TYPE_HOUR) {
-				return reportBuilder.redoHourReport(reportName, reportDomain, reportPeriod);
+	public boolean redoTask(int taskID) {
+		boolean update = false;
+		try {
+			Task task = taskDao.findByPK(taskID, TaskEntity.READSET_FULL);
+			int task_type = task.getTaskType();
+			String reportName = task.getReportName();
+			String reportDomain = task.getReportDomain();
+			Date reportPeriod = task.getReportPeriod();
+			ReportBuilder reportBuilder = getReportBuilder(reportName);
+			if (reportBuilder == null) {
+				m_logger.info("no report builder for type:" + " " + reportName);
+				return false;
+			} else {
+				if (task_type == TYPE_DAILY) {
+					update = reportBuilder.redoDailyReport(reportName, reportDomain, reportPeriod);
+				} else if (task_type == TYPE_HOUR) {
+					update = reportBuilder.redoHourReport(reportName, reportDomain, reportPeriod);
+				}
 			}
+			if (update) {
+				taskDao.updateFailureToDone(task, TaskEntity.UPDATESET_FULL);
+			}
+			return update;
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
 		}
-		return false;
 	}
 
 	@Override

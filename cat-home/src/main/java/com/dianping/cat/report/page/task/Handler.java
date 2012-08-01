@@ -63,18 +63,10 @@ public class Handler implements PageHandler<Context> {
 	
 	private void  redoTask(Payload payload, Model model){
 		int taskID=payload.getTaskID();
-      try {
-      	Task task = taskDao.findByPK(taskID, TaskEntity.READSET_FULL);
-      	boolean success=reportFacade.redoTask(task);
-      	if(success){
-      		model.setUpdateResult("the task has been redo successfully!");
-      		taskDao.updateFailureToDone(task, TaskEntity.UPDATESET_FULL);
-      	}else{
-      		model.setUpdateResult("failed again!");
-      	}
-      } catch (DalException e) {
-			Cat.logError(e);
-      }
+		
+		boolean redoResult=reportFacade.redoTask(taskID);
+		
+		model.setRedoResult(redoResult);
 	}
 
 	public void normalizeAndGetTaskData(Payload payload, Model model) {
