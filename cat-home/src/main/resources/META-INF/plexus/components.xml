@@ -1087,5 +1087,24 @@
 			<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.matrix.JspViewer</implementation>
 		</component>
+		<component>
+			<role>com.dianping.cat.report.page.monthreport.Handler</role>
+			<implementation>com.dianping.cat.report.page.monthreport.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.monthreport.JspViewer</implementation>
+		</component>
 	</components>
 </plexus>

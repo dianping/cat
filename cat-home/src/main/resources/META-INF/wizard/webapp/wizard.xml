@@ -41,6 +41,9 @@
       <page name="matrix" title="Matrix" path="matrix">
         <description>Matrix</description>
       </page>
+      <page name="monthreport" title="Monthreport" path="monthreport">
+        <description>Monthreport</description>
+      </page>
     </module>
   </webapp>
 </wizard>

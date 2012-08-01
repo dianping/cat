@@ -31,7 +31,7 @@ public abstract class TaskConsumer implements Runnable {
 		while (running) {
 			boolean again = false;
 			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between
-			Transaction t = Cat.newTransaction("Task", "MergeJob-" + localIp);
+			Transaction t = Cat.newTransaction("System", "MergeJob-" + localIp);
 			try {
 				// tasks
 				Task task = findDoingTask(localIp); // find doing task

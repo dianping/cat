@@ -33,15 +33,11 @@ public class CatHomeModule extends AbstractModule {
 		// warm up IP seeker
 		IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
 
-		if (serverConfigManager.isLocalMode()) {
-			TaskConsumer taskConsumer = ctx.lookup(TaskConsumer.class);
-			DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);
-
-			Threads.forGroup("Cat").start(taskConsumer);
-			
-			Threads.forGroup("Cat").start(dailyTaskProducer);
-			
-		}
+		TaskConsumer taskConsumer = ctx.lookup(TaskConsumer.class);
+		DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);
+		
+		Threads.forGroup("Cat").start(dailyTaskProducer);
+		Threads.forGroup("Cat").start(taskConsumer);
 	}
 
 	@Override

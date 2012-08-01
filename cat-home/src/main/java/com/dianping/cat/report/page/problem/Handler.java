@@ -251,7 +251,6 @@ public class Handler implements PageHandler<Context> {
 
 		ProblemReport problemReport = null;
 		try {
-
 			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem",
 			      DailyreportEntity.READSET_FULL);
 			ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));

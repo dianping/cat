@@ -153,7 +153,7 @@ public class EventReportMerger extends DefaultMerger {
 			Machine machine = eventReport.getMachines().get(m_ip);
 			if (machine != null) {
 				EventName mergesForAllName = mergesForAllName(eventReport);
-				EventType type = machine.getTypes().get(m_type);
+				EventType type = machine.findOrCreateType(m_type);
 				type.getNames().clear();
 				type.addName(mergesForAllName);
 			}

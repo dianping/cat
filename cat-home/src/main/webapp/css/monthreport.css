@@ -1,0 +1,7 @@
+.monthreport tr th{
+	text-align:left;
+}
+
+.monthreport tr td{
+	text-align:right;
+}

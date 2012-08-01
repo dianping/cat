@@ -23,6 +23,7 @@ import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.hadoop.dal.TaskDao;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
@@ -101,6 +102,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 						}
 					}
 				}
+				t.setStatus(Message.SUCCESS);
 			} catch (Exception e) {
 				Cat.logError(e);
 				t.setStatus(e);
@@ -137,6 +139,10 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		Date now = new Date();
 		Date todayZero = TaskHelper.todayZero(now);
 		Date yesterday = TaskHelper.yesterdayZero(now);
+		
+		m_dailyReportNameSet.add("event");
+		m_dailyReportNameSet.add("transaction");
+		m_dailyReportNameSet.add("problem");
 
 		if (!isYesterdayTaskGenerated(now, todayZero, yesterday)) {
 			DailyTask dailyTask = new DailyTask(yesterday, todayZero);
@@ -145,10 +151,6 @@ public class DailyTaskProducer implements Runnable, Initializable {
 			
 			m_service.schedule(dailyTask, delay, TimeUnit.MILLISECONDS);
 		}
-
-		m_dailyReportNameSet.add("event");
-		m_dailyReportNameSet.add("transaction");
-		m_dailyReportNameSet.add("problem");
 	}
 
 	private boolean isYesterdayTaskGenerated(Date now, Date todayZero, Date yesterdayZero) {

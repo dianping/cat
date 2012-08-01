@@ -12,39 +12,39 @@ import com.site.test.jetty.JettyServer;
 
 @RunWith(JUnit4.class)
 public class TestServer extends JettyServer {
-	public static void main(String[] args) throws Exception {
-		TestServer server = new TestServer();
+   public static void main(String[] args) throws Exception {
+      TestServer server = new TestServer();
 
-		server.startServer();
-		server.showReport();
-		server.stopServer();
-	}
+      server.startServer();
+      server.showReport();
+      server.stopServer();
+   }
 
-	@Before
-	public void before() throws Exception {
-		System.setProperty("devMode", "true");
-		super.startServer();
-	}
+   @Before
+   public void before() throws Exception {
+      System.setProperty("devMode", "true");
+      super.startServer();
+   }
 
-	@Override
-	protected String getContextPath() {
-		return "/cat";
-	}
+   @Override
+   protected String getContextPath() {
+      return "/cat";
+   }
 
-	@Override
-	protected int getServerPort() {
-		return 2281;
-	}
+   @Override
+   protected int getServerPort() {
+      return 2281;
+   }
 
-	@Override
-	protected void postConfigure(WebAppContext context) {
-		context.addFilter(GzipFilter.class, "/r/*", Handler.ALL);
-	}
+   @Override
+   protected void postConfigure(WebAppContext context) {
+      context.addFilter(GzipFilter.class, "/*", Handler.ALL);
+   }
 
-	@Test
-	public void showReport() throws Exception {
-		// open the page in the default browser
-		display("/cat/r");
-		waitForAnyKey();
-	}
+   @Test
+   public void showReport() throws Exception {
+      // open the page in the default browser
+      display("/cat/r");
+      waitForAnyKey();
+   }
 }

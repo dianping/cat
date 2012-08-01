@@ -27,7 +27,9 @@ public class NavigationBar {
 
 		ReportPage.TASK,
 		
-		ReportPage.LOGVIEW
+		ReportPage.LOGVIEW,
+		
+		ReportPage.MONTHREPORT
 
 		};
 	}
