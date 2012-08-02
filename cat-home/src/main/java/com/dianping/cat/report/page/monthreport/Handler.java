@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.monthreport;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -55,34 +56,51 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.MONTHREPORT);
 		normalize(payload, model);
 
-		String domain = payload.getDomain();
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		System.out.println(start);
-		System.out.println(end);
 		try {
+			Action action = payload.getAction();
+			Date start = payload.getHistoryStartDate();
+			Date end = payload.getHistoryEndDate();
 			Set<String> domains = getAllDomains(start, end);
-			TransactionReport transactionReport = getTransactionReport(start, end, domain);
-			ProblemReport problemReport = getProblemReport(start, end, domain);
-			ProjectReport report = new ProjectReport();
-			report.visit(transactionReport);
-
-			ProblemStatistics statistics = new ProblemStatistics();
-			statistics.setAllIp(true);
-			statistics.visitProblemReport(problemReport);
-
-			report.visit(statistics);
-
 			model.setDomains(domains);
-			model.setReport(report);
+
+			switch (action) {
+			case VIEW:
+				ProjectReport report = buildProblemReport(payload.getDomain(), start, end);
+				model.setReport(report);
+				break;
+			case ALL:
+				List<ProjectReport> reports = new ArrayList<ProjectReport>();
+
+				for (String domain : domains) {
+					ProjectReport buildProblemReport = buildProblemReport(domain, start, end);
+					reports.add(buildProblemReport);
+				}
+				model.setReports(reports);
+				break;
+			}
+
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	public ProjectReport buildProblemReport(String domain, Date start, Date end) throws DalException, SAXException,
+	      IOException {
+		TransactionReport transactionReport = getTransactionReport(start, end, domain);
+		ProblemReport problemReport = getProblemReport(start, end, domain);
+		ProjectReport report = new ProjectReport();
+		report.visit(transactionReport);
+
+		ProblemStatistics statistics = new ProblemStatistics();
+		statistics.setAllIp(true);
+		statistics.visitProblemReport(problemReport);
+
+		report.visit(statistics);
+		return report;
 	}
 
 	private void normalize(Payload payload, Model model) {
@@ -139,7 +157,7 @@ public class Handler implements PageHandler<Context> {
 		long startTime = start.getTime();
 		int days = (int) ((end.getTime() - startTime) / DAY);
 		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-		
+
 		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 
 		for (int i = 0; i < days; i++) {
@@ -151,6 +169,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			if (report != null) {
 				String xml = report.getContent();
+
 				ProblemReport reportModel = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
 				startLong = Math.min(startLong, reportModel.getStartTime().getTime());
 				endLong = Math.max(startLong, reportModel.getEndTime().getTime());
@@ -160,6 +179,7 @@ public class Handler implements PageHandler<Context> {
 				      domain + sdf.format(new Date(startTime + i * DAY)));
 			}
 		}
+
 		ProblemReport problemReport = merger.getProblemReport();
 		problemReport.setStartTime(new Date(startLong));
 		problemReport.setEndTime(new Date(endLong));

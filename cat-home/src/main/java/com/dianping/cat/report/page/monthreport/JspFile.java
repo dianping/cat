@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.monthreport;
 public enum JspFile {
 	VIEW("/jsp/report/monthreport.jsp"),
 
+	ALL("/jsp/report/monthreportAll.jsp"),
 	;
 
 	private String m_path;

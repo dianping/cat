@@ -17,7 +17,6 @@ import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
-import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class ReportFacade implements LogEnabled, Initializable {

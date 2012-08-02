@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -24,9 +26,7 @@ import com.dianping.cat.message.Transaction;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
-public class DailyTaskProducer implements Runnable {
-
-	private volatile boolean m_stop = false;
+public class DailyTaskProducer implements Runnable,Initializable {
 
 	private boolean firstStart = true;
 
@@ -53,16 +53,14 @@ public class DailyTaskProducer implements Runnable {
 
 	@Override
 	public void run() {
-		while (!m_stop) {
+		while (true) {
 			Date now = new Date();
 			Date yesterdayZero = TaskHelper.yesterdayZero(now);
 			Date todayZero = TaskHelper.todayZero(now);
 			Date tomorrowZero = TaskHelper.tomorrowZero(now);
 
 			if (firstStart) {
-				if (!isYesterdayTaskGenerated(now, yesterdayZero, todayZero)) {
-					generateDailyTasks(yesterdayZero, todayZero);
-				}
+				
 				firstStart = false;
 			}
 			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now, 1);
@@ -70,7 +68,19 @@ public class DailyTaskProducer implements Runnable {
 			generateDailyTasks(todayZero, tomorrowZero);
 		}
 	}
+	
+	@Override
+   public void initialize() throws InitializationException {
+		Date now = new Date();
+		Date yesterdayZero = TaskHelper.yesterdayZero(now);
+		Date todayZero = TaskHelper.todayZero(now);
 
+		if (!isYesterdayTaskGenerated(now, yesterdayZero, todayZero)) {
+			generateDailyTasks(yesterdayZero, todayZero);
+		}	   
+   }
+	
+	
 	public void generateDailyTasks(Date start, Date end) {
 		Transaction t = Cat.newTransaction("System", "ProduceDailyReport");
 		try {
@@ -79,6 +89,7 @@ public class DailyTaskProducer implements Runnable {
 			for (String domain : domainSet) {
 				for (String name : m_dailyReportNameSet) {
 					Task task = m_taskDao.createLocal();
+
 					task.setCreationDate(new Date());
 					task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 					task.setReportDomain(domain);
@@ -152,9 +163,5 @@ public class DailyTaskProducer implements Runnable {
 			}
 		}
 		return true;
-	}
-
-	public void stop() {
-		m_stop = true;
 	}
 }

@@ -65,10 +65,9 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = new HashSet<String>();
 		getDomainSet(domainSet, reportPeriod, endDate);
-		String content = null;
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
-		content = m_transactionMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+		String content = m_transactionMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 		
 		Dailyreport report = m_dailyReportDao.createLocal();
 		report.setContent(content);

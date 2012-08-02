@@ -20,7 +20,7 @@ public class ProjectReport {
 	private int m_days;
 
 	private BaseInfo m_url = new BaseInfo();
-	
+
 	private BaseInfo m_service = new BaseInfo();
 
 	private BaseInfo m_sql = new BaseInfo();
@@ -54,7 +54,7 @@ public class ProjectReport {
 	public BaseInfo getService() {
 		return m_service;
 	}
-	
+
 	public BaseInfo getSql() {
 		return m_sql;
 	}
@@ -83,6 +83,8 @@ public class ProjectReport {
 		m_start = new Date(startlong - startlong % day);
 		m_end = transactionReport.getEndTime();
 		m_days = (int) ((m_end.getTime() - m_start.getTime()) / day) + 1;
+		m_domain = transactionReport.getDomain();
+
 		Machine machine = transactionReport.getMachines().get("All");
 		Map<String, TransactionType> types = machine.getTypes();
 
@@ -90,7 +92,7 @@ public class ProjectReport {
 		if (url != null) {
 			m_url.visit(url, m_days);
 		}
-		
+
 		TransactionType service = types.get("Service");
 		if (service != null) {
 			m_service.visit(service, m_days);
@@ -133,7 +135,7 @@ public class ProjectReport {
 		}
 
 		public double getSuccessPercent() {
-			if(m_total ==0){
+			if (m_total == 0) {
 				return 0;
 			}
 			return 1 - m_errorPercent;
@@ -236,7 +238,7 @@ public class ProjectReport {
 
 		public void setLongSqlPercent(long longSqls) {
 			if (longSqls > 0) {
-				m_longSqlPercent = m_longSqls / longSqls;
+				m_longSqlPercent = (double) m_longSqls / (double) longSqls;
 			}
 		}
 
@@ -246,7 +248,7 @@ public class ProjectReport {
 
 		public void setLongUrlPercent(long longUrls) {
 			if (longUrls > 0) {
-				m_longUrlPercent = m_longUrls / longUrls;
+				m_longUrlPercent = (double) m_longUrls / (double) longUrls;
 			}
 		}
 

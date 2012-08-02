@@ -1,8 +1,10 @@
 package com.dianping.cat.report.page.monthreport;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view");
+	VIEW("view"),
 
+	ALL("all");
+	
 	private String m_name;
 
 	private Action(String name) {

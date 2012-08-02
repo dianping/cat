@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.monthreport;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 import com.dianping.cat.report.page.AbstractReportModel;
@@ -8,6 +9,8 @@ import com.dianping.cat.report.page.AbstractReportModel;
 public class Model extends AbstractReportModel<Action, Context> {
 	private ProjectReport m_report;
 
+	private List<ProjectReport> m_reports;
+	
 	private String m_domain;
 
 	private Set<String> m_domains;
@@ -45,5 +48,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setReport(ProjectReport report) {
    	m_report = report;
+   }
+
+	public List<ProjectReport> getReports() {
+   	return m_reports;
+   }
+
+	public void setReports(List<ProjectReport> reports) {
+   	m_reports = reports;
    }
 }

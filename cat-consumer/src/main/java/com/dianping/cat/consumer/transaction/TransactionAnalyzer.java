@@ -427,7 +427,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			String successMessageUrl = null;
 	
 			value = Math.min(value, 5);
-
 			if (!"Cat".equals(m_domain) && (value > 0)) {
 				if ("URL".equals(type.getId())) {
 					List<String> names = new ArrayList<String>();
@@ -455,7 +454,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 					}
 				}
 			}
-			//super.visitType(type);
+			super.visitType(type);
 		}
 
 		@Override

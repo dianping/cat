@@ -5,7 +5,7 @@
       <page name="home" title="Home" default="true">
         <description>Home Page</description>
       </page>
-      <page name="problem" title="Problem" path="p">
+      <page name="problem" title="Problem" path="p" view="/jsp/report/problemGroup.jsp">
         <description>Problem Discovered</description>
       </page>
       <page name="transaction" title="Transaction" path="t">
