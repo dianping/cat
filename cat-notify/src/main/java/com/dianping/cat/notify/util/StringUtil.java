@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@SuppressWarnings({"unchecked","rawtypes"})
 public class StringUtil {
    
     public static final String EMPTY_STRING = "";

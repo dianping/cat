@@ -23,8 +23,7 @@ import com.dianping.cat.notify.server.ContainerHolder;
 
 public abstract class AbstractReportCreater implements ReportCreater {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(AbstractReportCreater.class);
+	private final static Logger logger = LoggerFactory.getLogger(AbstractReportCreater.class);
 
 	protected Report m_config;
 
@@ -40,11 +39,10 @@ public abstract class AbstractReportCreater implements ReportCreater {
 	public boolean init(Report config, ContainerHolder holder) {
 		m_config = config;
 		m_configHolder = holder;
-		m_dailyReportDao = m_configHolder.lookup(DailyReportDao.class,
-				"dailyReportDao");
+		m_dailyReportDao = m_configHolder.lookup(DailyReportDao.class, "dailyReportDao");
 		m_render = m_configHolder.lookup(IRender.class, "render");
-		
-		if(m_config.getSchedule() == null || m_config.getSchedule().trim().length() == 0){
+
+		if (m_config.getSchedule() == null || m_config.getSchedule().trim().length() == 0) {
 			logger.error("fail to init cronExpression,Schedule isEmpty");
 			return false;
 		}
@@ -53,17 +51,11 @@ public abstract class AbstractReportCreater implements ReportCreater {
 	}
 
 	public abstract boolean isNeedToCreate(long timestamp);
-	
-	@Override
-	public final String getDomain() {
-		return m_config.getDomain();
-	}
 
-	public final String createReport(long timestamp) {
+	public final String createReport(long timestamp, String domain) {
 		TimeSpan timeRange = getReportTimeSpan(timestamp);
 		if (timeRange == null) {
-			logger.error(String.format("fail to get timeRange,timestamp[%s]",
-					timestamp));
+			logger.error(String.format("fail to get timeRange,timestamp[%s]", timestamp));
 			return null;
 		}
 
@@ -71,28 +63,24 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		long endMicros = timeRange.getEndMicros();
 		List<DailyReport> dailyReportList = null;
 		try {
-			dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(
-					new Date(startMicros), new Date(endMicros), getDomain(),
-					null, DailyReport.XML_TYPE);
+			dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(endMicros),
+			      domain, null, DailyReport.XML_TYPE);
 		} catch (Exception e) {
-			logger.error(String.format(
-					"fail to read report from database,time range[%s,%s]",
-					new Date(startMicros), new Date(endMicros)), e);
+			logger.error(String.format("fail to read report from database,time range[%s,%s]", new Date(startMicros),
+			      new Date(endMicros)), e);
 			return null;
 		}
 
 		if (dailyReportList == null || dailyReportList.size() == 0) {
-			logger.error(String.format(
-					"read empty data from database,time range[%s,%s]",
-					new Date(startMicros), new Date(endMicros)));
+			logger.error(String.format("read empty data from database,time range[%s,%s]", new Date(startMicros), new Date(
+			      endMicros)));
 			return null;
 		}
 
 		Map<String, List<DailyReport>> nameToDailyReportsMap = new HashMap<String, List<DailyReport>>();
 
 		for (DailyReport report : dailyReportList) {
-			List<DailyReport> reportList = nameToDailyReportsMap.get(report
-					.getName());
+			List<DailyReport> reportList = nameToDailyReportsMap.get(report.getName());
 			if (reportList == null) {
 				reportList = new ArrayList<DailyReport>();
 				nameToDailyReportsMap.put(report.getName(), reportList);
@@ -101,112 +89,85 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		}
 
 		StringBuilder report_content = new StringBuilder();
-		for (Map.Entry<String, List<DailyReport>> reportGroup : nameToDailyReportsMap
-				.entrySet()) {
+		for (Map.Entry<String, List<DailyReport>> reportGroup : nameToDailyReportsMap.entrySet()) {
 			String reportName = reportGroup.getKey();
 			if (reportName.equals(DailyReport.EVENT_REPORT)) {
-				EventReport eReport = parseEvent(reportGroup.getValue());
-				report_content.append(renderEventReport(timeRange, eReport));
+				EventReport eReport = parseEvent(reportGroup.getValue(), domain);
+				report_content.append(renderEventReport(timeRange, eReport, domain));
 			} else if (reportName.equals(DailyReport.PROBLEM_REPORT)) {
-				ProblemReport pReport = parseProblem(reportGroup.getValue());
-				report_content.append(renterProblemReport(timeRange, pReport));
+				ProblemReport pReport = parseProblem(reportGroup.getValue(), domain);
+				report_content.append(renterProblemReport(timeRange, pReport, domain));
 			} else if (reportName.equals(DailyReport.TRANSACGION_REPORT)) {
-				TransactionReport tReport = parseTransction(reportGroup
-						.getValue());
-				report_content.append(renderTransactionReport(timeRange,
-						tReport));
+				TransactionReport tReport = parseTransction(reportGroup.getValue(), domain);
+				report_content.append(renderTransactionReport(timeRange, tReport, domain));
 			}
 		}
 		return report_content.toString();
 	}
 
-	private EventReport parseEvent(List<DailyReport> reportList) {
+	private EventReport parseEvent(List<DailyReport> reportList, String domain) {
 		if (reportList == null || reportList.size() == 0) {
 			return null;
 		}
-		EventReportMerger merger = new EventReportMerger(new EventReport(
-				reportList.get(0).getDomain()));
+		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 		for (DailyReport dailyReport : reportList) {
 			String xml = dailyReport.getContent();
 			try {
-				EventReport model = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser
-						.parse(xml);
+				EventReport model = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
 				model.accept(merger);
 			} catch (SAXException e) {
-				logger.error(
-						String.format(
-								"fail to parse the report,domain:[%s]  name[%s], period[%s]",
-								dailyReport.getDomain(), dailyReport.getName(),
-								dailyReport.getPeriod()), e);
+				logger.error(String.format("fail to parse the report,domain:[%s]  name[%s], period[%s]",
+				      dailyReport.getDomain(), dailyReport.getName(), dailyReport.getPeriod()), e);
 				continue;
 			} catch (IOException e) {
-				logger.error(
-						String.format(
-								"fail to parse the report,domain:[%s]  name[%s], period[%s]",
-								dailyReport.getDomain(), dailyReport.getName(),
-								dailyReport.getPeriod()), e);
+				logger.error(String.format("fail to parse the report,domain:[%s]  name[%s], period[%s]",
+				      dailyReport.getDomain(), dailyReport.getName(), dailyReport.getPeriod()), e);
 				continue;
 			}
 		}
 		return merger.getEventReport();
 	}
 
-	private ProblemReport parseProblem(List<DailyReport> reportList) {
+	private ProblemReport parseProblem(List<DailyReport> reportList, String domain) {
 		if (reportList == null || reportList.size() == 0) {
 			return null;
 		}
-		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(
-				reportList.get(0).getDomain()));
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 		for (DailyReport dailyReport : reportList) {
 			String xml = dailyReport.getContent();
 			try {
-				ProblemReport model = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser
-						.parse(xml);
+				ProblemReport model = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
 				model.accept(merger);
 			} catch (SAXException e) {
-				logger.error(
-						String.format(
-								"fail to parse the report,domain:[%s]  name[%s], period[%s]",
-								dailyReport.getDomain(), dailyReport.getName(),
-								dailyReport.getPeriod()), e);
+				logger.error(String.format("fail to parse the report,domain:[%s]  name[%s], period[%s]",
+				      dailyReport.getDomain(), dailyReport.getName(), dailyReport.getPeriod()), e);
 				continue;
 			} catch (IOException e) {
-				logger.error(
-						String.format(
-								"fail to parse the report,domain:[%s]  name[%s], period[%s]",
-								dailyReport.getDomain(), dailyReport.getName(),
-								dailyReport.getPeriod()), e);
+				logger.error(String.format("fail to parse the report,domain:[%s]  name[%s], period[%s]",
+				      dailyReport.getDomain(), dailyReport.getName(), dailyReport.getPeriod()), e);
 				continue;
 			}
 		}
 		return merger.getProblemReport();
 	}
 
-	private TransactionReport parseTransction(List<DailyReport> reportList) {
+	private TransactionReport parseTransction(List<DailyReport> reportList, String domain) {
 		if (reportList == null || reportList.size() == 0) {
 			return null;
 		}
-		TransactionReportMerger merger = new TransactionReportMerger(
-				new TransactionReport(reportList.get(0).getDomain()));
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 		for (DailyReport dailyReport : reportList) {
 			String xml = dailyReport.getContent();
 			try {
-				TransactionReport model = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
-						.parse(xml);
+				TransactionReport model = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(xml);
 				model.accept(merger);
 			} catch (SAXException e) {
-				logger.error(
-						String.format(
-								"fail to parse the report,domain:[%s]  name[%s], period[%s]",
-								dailyReport.getDomain(), dailyReport.getName(),
-								dailyReport.getPeriod()), e);
+				logger.error(String.format("fail to parse the report,domain:[%s]  name[%s], period[%s]",
+				      dailyReport.getDomain(), dailyReport.getName(), dailyReport.getPeriod()), e);
 				continue;
 			} catch (IOException e) {
-				logger.error(
-						String.format(
-								"fail to parse the report,domain:[%s]  name[%s], period[%s]",
-								dailyReport.getDomain(), dailyReport.getName(),
-								dailyReport.getPeriod()), e);
+				logger.error(String.format("fail to parse the report,domain:[%s]  name[%s], period[%s]",
+				      dailyReport.getDomain(), dailyReport.getName(), dailyReport.getPeriod()), e);
 				continue;
 			}
 		}
@@ -215,14 +176,11 @@ public abstract class AbstractReportCreater implements ReportCreater {
 
 	protected abstract TimeSpan getReportTimeSpan(long timespan);
 
-	protected abstract String renderTransactionReport(TimeSpan timeSpan,
-			TransactionReport report);
+	protected abstract String renderTransactionReport(TimeSpan timeSpan, TransactionReport report, String domain);
 
-	protected abstract String renderEventReport(TimeSpan timeSpan,
-			EventReport report);
+	protected abstract String renderEventReport(TimeSpan timeSpan, EventReport report, String domain);
 
-	protected abstract String renterProblemReport(TimeSpan timeSpan,
-			ProblemReport report);
+	protected abstract String renterProblemReport(TimeSpan timeSpan, ProblemReport report, String domain);
 
 }
 

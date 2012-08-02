@@ -39,12 +39,7 @@ public class TaskConsumerTest {
 			replayer.add(4);
 			this.stop();
 		}
-/*
-		@Override
-		protected void mergeReport(Task task) {
-			replayer.add(6);
-		}
-*/
+
 		@Override
 		protected boolean updateTodoToDoing(Task todo) {
 			replayer.add(7);
@@ -73,6 +68,11 @@ public class TaskConsumerTest {
 			replayer.add(5);
 			return false;
 		}
+
+		@Override
+      protected long getSleepTime() {
+	      return 100;
+      }
 	};
 
 	/**
@@ -109,10 +109,10 @@ public class TaskConsumerTest {
 			}
 
 		};
-
+		
 		new Thread(consumer).start();
 		while (!consumer.isStopped()) {
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 		
 		String expectValue=Arrays.toString(consumer.replayer.toArray());
@@ -144,10 +144,10 @@ public class TaskConsumerTest {
 			}
 
 		};
-
+		
 		new Thread(consumer).start();
 		while (!consumer.isStopped()) {
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 
 		Assert.assertEquals("[1, 10, 11, 10, 11, 10, 5, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
@@ -195,10 +195,10 @@ public class TaskConsumerTest {
 			}
 
 		};
-
+		
 		new Thread(consumer).start();
 		while (!consumer.isStopped()) {
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 
 		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
@@ -240,10 +240,10 @@ public class TaskConsumerTest {
 			}
 
 		};
-
+		
 		new Thread(consumer).start();
 		while (!consumer.isStopped()) {
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 
 		Assert.assertEquals("[1, 8, 7, 10, 11, 10, 11, 10, 5, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
@@ -311,11 +311,11 @@ public class TaskConsumerTest {
 		new Thread(consumerOne).start();
 		new Thread(consumerTwo).start();
 		while (!consumerOne.isStopped()) {
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 		
 		while (!consumerTwo.isStopped()) {
-			Thread.sleep(100);
+			Thread.sleep(10);
 		}
 
 		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumerOne.replayer.toArray()));

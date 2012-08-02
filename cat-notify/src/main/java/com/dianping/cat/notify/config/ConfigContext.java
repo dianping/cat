@@ -96,5 +96,4 @@ public class ConfigContext {
 	public String getProperty(String key) {
 		return config.getProperty(key);
 	}
-
 }

@@ -20,12 +20,12 @@ public class DailyReportCreater extends AbstractReportCreater {
 	private static final String PATTERN = "<a href='http://cat.dianpingoa.com/cat/r/%s?op=history&domain=%s&date=%s&reportType=day'>(Last %s %s)</a>";
 
 	public boolean isNeedToCreate(long timestamp) {
-		
 		int hour = TimeUtil.getHourOfDay(timestamp);
-		/* create report at 00:00:00 */
-		if (hour != 0) {
+		/* create report at 01:00:00 */
+		if (hour != 1) {
 			return false;
 		}
+
 		long currentTime = System.currentTimeMillis();
 		if (lastSuccessTime.get() == -1) {
 			/* for first time */
@@ -46,6 +46,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 	protected TimeSpan getReportTimeSpan(long timespan) {
 		long startMicros = timespan - TimeUtil.TWO_DAY_MICROS;
 		long endMicros = timespan - TimeUtil.DAY_MICROS;
+
 		TimeSpan timeRange = new TimeSpan();
 		timeRange.setStartMicros(startMicros);
 		timeRange.setEndMicros(endMicros);
@@ -54,15 +55,13 @@ public class DailyReportCreater extends AbstractReportCreater {
 	}
 
 	@Override
-	protected String renderTransactionReport(TimeSpan timeSpan,
-			TransactionReport transactionReport) {
+	protected String renderTransactionReport(TimeSpan timeSpan, TransactionReport transactionReport, String domain) {
 		com.dianping.cat.consumer.transaction.model.entity.Machine machine = transactionReport
-				.findMachine(ReportConstants.ALL_IP);
+		      .findMachine(ReportConstants.ALL_IP);
 		if (machine == null) {
 			return null;
 		}
-		List<TransactionType> typeList = new ArrayList<TransactionType>(machine
-				.getTypes().values());
+		List<TransactionType> typeList = new ArrayList<TransactionType>(machine.getTypes().values());
 		Collections.sort(typeList, new Comparator<TransactionType>() {
 			@Override
 			public int compare(TransactionType o1, TransactionType o2) {
@@ -76,25 +75,21 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS * 7;
 		long preWeakDay = period - TimeUtil.DAY_MICROS * 6;
-		params.put("preWeakLastDay",
-				getViewUrl("t", getDomain(), preWeakLastDay));
-		params.put("preWeakDay", getViewUrl("t", getDomain(), preWeakDay));
+		params.put("preWeakLastDay", getViewUrl("t", domain, preWeakLastDay));
+		params.put("preWeakDay", getViewUrl("t", domain, preWeakDay));
 
 		params.put("typeList", typeList);
-		String templatePath = m_config.getTemplates().get("transaction")
-				.getPath();
+		String templatePath = m_config.getTemplates().get("transaction").getPath();
 		return m_render.fetchAll(templatePath, params);
 	}
 
 	@Override
-	protected String renderEventReport(TimeSpan timeSpan, EventReport report) {
-		com.dianping.cat.consumer.event.model.entity.Machine machine = report
-				.findMachine(ReportConstants.ALL_IP);
+	protected String renderEventReport(TimeSpan timeSpan, EventReport report, String domain) {
+		com.dianping.cat.consumer.event.model.entity.Machine machine = report.findMachine(ReportConstants.ALL_IP);
 		if (machine == null) {
 			return null;
 		}
-		List<EventType> eventTypeList = new ArrayList<EventType>(machine
-				.getTypes().values());
+		List<EventType> eventTypeList = new ArrayList<EventType>(machine.getTypes().values());
 		Collections.sort(eventTypeList, new Comparator<EventType>() {
 			@Override
 			public int compare(EventType o1, EventType o2) {
@@ -109,9 +104,8 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS * 7;
 		long preWeakDay = period - TimeUtil.DAY_MICROS * 6;
-		params.put("preWeakLastDay",
-				getViewUrl("e", getDomain(), preWeakLastDay));
-		params.put("preWeakDay", getViewUrl("e", getDomain(), preWeakDay));
+		params.put("preWeakLastDay", getViewUrl("e", domain, preWeakLastDay));
+		params.put("preWeakDay", getViewUrl("e", domain, preWeakDay));
 
 		params.put("typeList", eventTypeList);
 		String templatePath = m_config.getTemplates().get("event").getPath();
@@ -119,7 +113,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 	}
 
 	@Override
-	protected String renterProblemReport(TimeSpan timeSpan, ProblemReport report) {
+	protected String renterProblemReport(TimeSpan timeSpan, ProblemReport report, String domain) {
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		problemStatistics.setAllIp(true);
 		problemStatistics.visitProblemReport(report);
@@ -131,9 +125,8 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS * 7;
 		long preWeakDay = period - TimeUtil.DAY_MICROS * 6;
-		params.put("preWeakLastDay",
-				getViewUrl("p", getDomain(), preWeakLastDay));
-		params.put("preWeakDay", getViewUrl("p", getDomain(), preWeakDay));
+		params.put("preWeakLastDay", getViewUrl("p", domain, preWeakLastDay));
+		params.put("preWeakDay", getViewUrl("p", domain, preWeakDay));
 
 		params.put("problemStatistics", problemStatistics);
 		String templatePath = m_config.getTemplates().get("problem").getPath();
@@ -143,8 +136,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 	private String getViewUrl(String reportType, String domain, long timestamp) {
 		String weakname = TimeUtil.getDayNameOfWeak(timestamp);
 		String date = TimeUtil.formatTime("yyyy-MM-dd", timestamp);
-		return String.format(PATTERN, reportType, domain,
-				TimeUtil.formatTime("yyyyMMdd", timestamp), weakname, date);
+		return String.format(PATTERN, reportType, domain, TimeUtil.formatTime("yyyyMMdd", timestamp), weakname, date);
 	}
 
 }

@@ -12,7 +12,6 @@
 
 <res:useCss value='${res.css.local.report_css}' target="head-css" />
 <res:useCss value='${res.css.local.monthreport_css}' target="head-css" />
-<res:useCss value='${res.css.local.body_css}' target="head-css" />
 
 <body>
 		
@@ -50,57 +49,57 @@
 	<table class="monthreport">
 		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 		
-		<tr><th>URL请求平均响应时间（ms）</th><td>${w:formatNumber(model.report.url.responseTime,'0.0','ms')}</td></tr>
-		<tr><th>URL请求月总访问量 </th><td>${w:formatNumber(model.report.url.total,'0.0','')}</td></tr>
-		<tr><th>URL请求平均每天访问量</th><td>${w:formatNumber(model.report.url.avg,'0.0','')}</td></tr>
-		<tr><th>URL请求月出错次数</th><td>${w:formatNumber(model.report.url.errorTotal,'0.0','')}</td></tr>
-		<tr><th>URL请求每天平均出错次数</th><td>${w:formatNumber(model.report.url.errorAvg,'0.0','')}</td></tr>
-		<tr><th>URL请求成功百分比</th><td>${w:format(model.report.url.successPercent,'00.0000%')}</td></tr>
+		<tr class="odd"><th>URL请求平均响应时间（ms）</th><td>${w:formatNumber(model.report.url.responseTime,'0.0','ms')}</td></tr>
+		<tr class="even"><th>URL请求月总访问量 </th><td>${w:formatNumber(model.report.url.total,'0.0','')}</td></tr>
+		<tr class="odd"><th>URL请求平均每天访问量</th><td>${w:formatNumber(model.report.url.avg,'0.0','')}</td></tr>
+		<tr class="even"><th>URL请求月出错次数</th><td>${w:formatNumber(model.report.url.errorTotal,'0.0','')}</td></tr>
+		<tr class="odd"><th>URL请求每天平均出错次数</th><td>${w:formatNumber(model.report.url.errorAvg,'0.0','')}</td></tr>
+		<tr class="even"><th>URL请求成功百分比</th><td>${w:format(model.report.url.successPercent,'00.0000%')}</td></tr>
 			
-		<tr><th>&nbsp;</th><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 		
-		<tr><th>Service请求平均响应时间（ms）</th><td>${w:formatNumber(model.report.service.responseTime,'0.0','ms')}</td></tr>
-		<tr><th>Service请求月总访问量 </th><td>${w:formatNumber(model.report.service.total,'0.0','')}</td></tr>
-		<tr><th>Service请求平均每天访问量</th><td>${w:formatNumber(model.report.service.avg,'0.0','')}</td></tr>
-		<tr><th>Service请求月出错次数</th><td>${w:formatNumber(model.report.service.errorTotal,'0.0','')}</td></tr>
-		<tr><th>Service请求每天平均出错次数</th><td>${w:formatNumber(model.report.service.errorAvg,'0.0','')}</td></tr>
-		<tr><th>Service请求成功百分比</th><td>${w:format(model.report.service.successPercent,'00.0000%')}</td></tr>
+		<tr class="odd"><th>Service请求平均响应时间（ms）</th><td>${w:formatNumber(model.report.service.responseTime,'0.0','ms')}</td></tr>
+		<tr class="even"><th>Service请求月总访问量 </th><td>${w:formatNumber(model.report.service.total,'0.0','')}</td></tr>
+		<tr class="odd"><th>Service请求平均每天访问量</th><td>${w:formatNumber(model.report.service.avg,'0.0','')}</td></tr>
+		<tr class="even"><th>Service请求月出错次数</th><td>${w:formatNumber(model.report.service.errorTotal,'0.0','')}</td></tr>
+		<tr class="odd"><th>Service请求每天平均出错次数</th><td>${w:formatNumber(model.report.service.errorAvg,'0.0','')}</td></tr>
+		<tr class="even"><th>Service请求成功百分比</th><td>${w:format(model.report.service.successPercent,'00.0000%')}</td></tr>
 		
-		<tr><th>&nbsp;</th><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 		
-		<tr><th>远程调用平均响应时间（ms）</th><td>${w:formatNumber(model.report.call.responseTime,'0.0','ms')}</td></tr>
-		<tr><th>远程调用月总访问量 </th><td>${w:formatNumber(model.report.call.total,'0.0','')}</td></tr>
-		<tr><th>远程调用平均每天访问量</th><td>${w:formatNumber(model.report.call.avg,'0.0','')}</td></tr>
-		<tr><th>远程调用月出错次数</th><td>${w:formatNumber(model.report.call.errorTotal,'0.0','')}</td></tr>
-		<tr><th>远程调用每天平均出错次数</th><td>${w:formatNumber(model.report.call.errorAvg,'0.0','')}</td></tr>
-		<tr><th>远程调用成功百分比</th><td>${w:format(model.report.call.successPercent,'00.0000%')}</td></tr>
+		<tr class="odd"><th>远程调用平均响应时间（ms）</th><td>${w:formatNumber(model.report.call.responseTime,'0.0','ms')}</td></tr>
+		<tr class="even"><th>远程调用月总访问量 </th><td>${w:formatNumber(model.report.call.total,'0.0','')}</td></tr>
+		<tr class="odd"><th>远程调用平均每天访问量</th><td>${w:formatNumber(model.report.call.avg,'0.0','')}</td></tr>
+		<tr class="even"><th>远程调用月出错次数</th><td>${w:formatNumber(model.report.call.errorTotal,'0.0','')}</td></tr>
+		<tr class="odd"><th>远程调用每天平均出错次数</th><td>${w:formatNumber(model.report.call.errorAvg,'0.0','')}</td></tr>
+		<tr class="even"><th>远程调用成功百分比</th><td>${w:format(model.report.call.successPercent,'00.0000%')}</td></tr>
 		
-		<tr><th>&nbsp;</th><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 		
-		<tr><th>数据库平均响应时间（ms）</th><td>${w:formatNumber(model.report.sql.responseTime,'0.0','ms')}</td></tr>
-		<tr><th>数据库月总访问量 </th><td>${w:formatNumber(model.report.sql.total,'0.0','')}</td></tr>
-		<tr><th>数据库平均每天访问量</th><td>${w:formatNumber(model.report.sql.avg,'0.0','')}</td></tr>
-		<tr><th>数据库月出错次数</th><td>${w:formatNumber(model.report.sql.errorTotal,'0.0','')}</td></tr>
-		<tr><th>数据库每天平均出错次数</th><td>${w:formatNumber(model.report.sql.errorAvg,'0.0','')}</td></tr>
-		<tr><th>数据库成功百分比</th><td>${w:format(model.report.sql.successPercent,'00.0000%')}</td></tr>
+		<tr class="odd"><th>数据库平均响应时间（ms）</th><td>${w:formatNumber(model.report.sql.responseTime,'0.0','ms')}</td></tr>
+		<tr class="even"><th>数据库月总访问量 </th><td>${w:formatNumber(model.report.sql.total,'0.0','')}</td></tr>
+		<tr class="odd"><th>数据库平均每天访问量</th><td>${w:formatNumber(model.report.sql.avg,'0.0','')}</td></tr>
+		<tr class="even"><th>数据库月出错次数</th><td>${w:formatNumber(model.report.sql.errorTotal,'0.0','')}</td></tr>
+		<tr class="odd"><th>数据库每天平均出错次数</th><td>${w:formatNumber(model.report.sql.errorAvg,'0.0','')}</td></tr>
+		<tr class="even"><th>数据库成功百分比</th><td>${w:format(model.report.sql.successPercent,'00.0000%')}</td></tr>
 		
-		<tr><th>&nbsp;</th><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 		
-		<tr><th>缓存平均响应时间（ms）</th><td>${w:formatNumber(model.report.cache.responseTime,'0.0','ms')}</td></tr>
-		<tr><th>缓存月总访问量 </th><td>${w:formatNumber(model.report.cache.total,'0.0','')}</td></tr>
-		<tr><th>缓存平均每天访问量</th><td>${w:formatNumber(model.report.cache.avg,'0.0','')}</td></tr>
-		<tr><th>缓存命中率</th><td>${w:format(model.report.cache.hitPercent,'00.0000%')}</td></tr>
+		<tr class="odd"><th>缓存平均响应时间（ms）</th><td>${w:formatNumber(model.report.cache.responseTime,'0.0','ms')}</td></tr>
+		<tr class="even"><th>缓存月总访问量 </th><td>${w:formatNumber(model.report.cache.total,'0.0','')}</td></tr>
+		<tr class="odd"><th>缓存平均每天访问量</th><td>${w:formatNumber(model.report.cache.avg,'0.0','')}</td></tr>
+		<tr class="even"><th>缓存命中率</th><td>${w:format(model.report.cache.hitPercent,'00.0000%')}</td></tr>
 		
-		<tr><th>&nbsp;</th><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 		
-		<tr><th>Exception月异常数</th><td>${w:formatNumber(model.report.problem.exceptions,'0.0','')}</td></tr>
-		<tr><th>Exception平均每天异常数目</th><td>${w:formatNumber(model.report.problem.avgExceptions,'0.0','')}</td></tr>
-		<tr><th>Long-sql月总次数（大于100ms）</th><td>${w:formatNumber(model.report.problem.longSqls,'0.0','')}</td></tr>
-		<tr><th>Long-sql平均每天次数（大于100ms）</th><td>${w:formatNumber(model.report.problem.avgLongSqls,'0.0','')}</td></tr>
-		<tr><th>Long-sql百分比</th><td>${w:format(model.report.problem.longSqlPercent,'00.0000%')}</td></tr>
-		<tr><th>Long-url月总次数（大于1000ms）</th><td>${w:formatNumber(model.report.problem.longUrls,'0.0','')}</td></tr>
-		<tr><th>Long-url平均每天次数（大于100ms）</th><td>${w:formatNumber(model.report.problem.avgLongUrls,'0.0','')}</td></tr>
-		<tr><th>Long-url百分比</th><td>${w:format(model.report.problem.longUrlPercent,'00.0000%')}</td></tr>
+		<tr class="odd"><th>Exception月异常数</th><td>${w:formatNumber(model.report.problem.exceptions,'0.0','')}</td></tr>
+		<tr class="even"><th>Exception平均每天异常数目</th><td>${w:formatNumber(model.report.problem.avgExceptions,'0.0','')}</td></tr>
+		<tr class="odd"><th>Long-sql月总次数（大于100ms）</th><td>${w:formatNumber(model.report.problem.longSqls,'0.0','')}</td></tr>
+		<tr class="even"><th>Long-sql平均每天次数（大于100ms）</th><td>${w:formatNumber(model.report.problem.avgLongSqls,'0.0','')}</td></tr>
+		<tr class="odd"><th>Long-sql百分比</th><td>${w:format(model.report.problem.longSqlPercent,'00.0000%')}</td></tr>
+		<tr class="even"><th>Long-url月总次数（大于1000ms）</th><td>${w:formatNumber(model.report.problem.longUrls,'0.0','')}</td></tr>
+		<tr class="odd"><th>Long-url平均每天次数（大于100ms）</th><td>${w:formatNumber(model.report.problem.avgLongUrls,'0.0','')}</td></tr>
+		<tr class="even"><th>Long-url百分比</th><td>${w:format(model.report.problem.longUrlPercent,'00.0000%')}</td></tr>
 	</table>
 </div>
 </body>

@@ -7,10 +7,8 @@ public interface ReportCreater {
 
 	boolean init(Report config, ContainerHolder holder);
 
-	String getDomain();
-
 	boolean isNeedToCreate(long timestamp);
 
-	String createReport(long timestamp);
+	String createReport(long timestamp,String domain);
 
 }

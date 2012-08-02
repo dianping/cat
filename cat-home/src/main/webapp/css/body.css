@@ -94,6 +94,21 @@ tr.even td {
 	text-align: left;
 }
 
+tr.odd th {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+}
+
+tr.even th {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+}
 a.error {
 	background-color: red;
 }

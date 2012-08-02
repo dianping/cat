@@ -12,6 +12,8 @@ public class SendMailProccessor implements Processor {
 	
 	private HandworkJob m_sendMailJob;
 
+	//TODO
+	//http://localhost:8080?action=sendMail&domain=cat&day=2012-07-01
 	@Override
 	public void process(Request req, Response rep) {
 		String domain = req.getParameter("domain");

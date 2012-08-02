@@ -11,9 +11,6 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
-import org.apache.velocity.exception.MethodInvocationException;
-import org.apache.velocity.exception.ParseErrorException;
-import org.apache.velocity.exception.ResourceNotFoundException;
 
 import com.dianping.cat.notify.config.ConfigContext;
 
@@ -34,6 +31,7 @@ public class VelocityRender implements IRender {
 			File file = new File(templatePath).getCanonicalFile();
 			path = file.getAbsolutePath();
 		} catch (IOException e1) {
+			//TODO
 			e1.printStackTrace();
 		}
 		properties.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, path);
@@ -58,13 +56,8 @@ public class VelocityRender implements IRender {
 		try {
 			Template t = engine.getTemplate(template);
 			t.merge(context, writer);
-		} catch (ResourceNotFoundException e) {
-			return e.toString();
-		} catch (ParseErrorException e) {
-			return e.toString();
-		} catch (MethodInvocationException e) {
-			return e.toString();
 		} catch (Exception e) {
+			//TODO
 			return e.toString();
 		}
 		return writer.toString();

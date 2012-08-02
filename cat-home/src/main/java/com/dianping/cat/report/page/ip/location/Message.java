@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.ip.location;
 
 public interface Message {
-   String bad_ip_file="IP地址库文件错误";
-   String unknown_country="未知国家";
-   String unknown_area="未知地区";
+   String bad_ip_file="bad_ip_file";
+   String unknown_country="unknown_country";
+   String unknown_area="unknown_area";
 }

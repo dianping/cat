@@ -53,7 +53,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 
 	@Override
 	protected String renderTransactionReport(TimeSpan timeSpan,
-			TransactionReport report) {
+			TransactionReport report,String domain) {
 		com.dianping.cat.consumer.transaction.model.entity.Machine machine = report
 				.findMachine(ReportConstants.ALL_IP);
 		if (machine == null) {
@@ -84,7 +84,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 	}
 
 	@Override
-	protected String renderEventReport(TimeSpan timeSpan, EventReport report) {
+	protected String renderEventReport(TimeSpan timeSpan, EventReport report,String domain) {
 		com.dianping.cat.consumer.event.model.entity.Machine machine = report
 				.findMachine(ReportConstants.ALL_IP);
 		if (machine == null) {
@@ -114,7 +114,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 	}
 
 	@Override
-	protected String renterProblemReport(TimeSpan timeSpan, ProblemReport report) {
+	protected String renterProblemReport(TimeSpan timeSpan, ProblemReport report,String domain) {
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		problemStatistics.setAllIp(true);
 		problemStatistics.visitProblemReport(report);

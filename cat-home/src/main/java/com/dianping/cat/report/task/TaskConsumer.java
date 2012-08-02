@@ -26,17 +26,18 @@ public abstract class TaskConsumer implements Runnable {
 
 	private volatile boolean stopped = false;
 
+	private long m_nanos = 2L * 1000 * 1000 * 1000;
+	
 	public void run() {
-		String localIp =  getLoaclIp();
+		String localIp = getLoaclIp();
 		while (running) {
 			boolean again = false;
-			LockSupport.parkNanos(2L * 1000 * 1000 * 1000); // sleeping between
+			LockSupport.parkNanos(getSleepTime()); 
 			Transaction t = Cat.newTransaction("System", "MergeJob-" + localIp);
 			try {
-				// tasks
-				Task task = findDoingTask(localIp); // find doing task
+				Task task = findDoingTask(localIp); 
 				if (task == null) {
-					task = findTodoTask(); // find todo task
+					task = findTodoTask(); 
 				}
 				if (task != null) {
 					task.setConsumer(localIp);
@@ -52,10 +53,9 @@ public abstract class TaskConsumer implements Runnable {
 								break;
 							}
 						}
-						if (again) {
-							continue;
+						if (!again) {
+							updateDoingToDone(task);
 						}
-						updateDoingToDone(task);
 					}
 				} else {
 					taskNotFoundDuration();
@@ -71,10 +71,10 @@ public abstract class TaskConsumer implements Runnable {
 		this.stopped = true;
 	}
 
-	protected String getLoaclIp(){
-		return  NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+	protected String getLoaclIp() {
+		return NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
-	
+
 	protected abstract boolean updateDoingToFailure(Task todo);
 
 	protected abstract void taskRetryDuration();
@@ -97,5 +97,9 @@ public abstract class TaskConsumer implements Runnable {
 
 	public boolean isStopped() {
 		return this.stopped;
+	}
+	
+	protected long getSleepTime(){
+		return m_nanos;
 	}
 }

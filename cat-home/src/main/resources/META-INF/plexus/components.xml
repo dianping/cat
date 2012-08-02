@@ -995,6 +995,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

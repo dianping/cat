@@ -60,7 +60,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 				String className = report.getCreateClass();
 				Class<?> createClass = loader.loadClass(className);
 				ReportCreater reportCreater = (ReportCreater) createClass.newInstance();
-				if(!reportCreater.init(report, holder)){
+				if (!reportCreater.init(report, holder)) {
 					logger.error("fail to init the report create:", report.toString());
 					continue;
 				}
@@ -108,7 +108,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 	}
 
 	private boolean sendBySubscriber(long timestamp, boolean handwork, Subscriber subscriber) {
-		String emailTitle = String.format("Cat monitor reports of [%s]",subscriber.getDomain());
+		String emailTitle = String.format("Cat monitor reports of [%s]", subscriber.getDomain());
 		StringBuilder reportContent = new StringBuilder();
 		List<ReportCreater> reportList = m_reportCreaters.get(subscriber.getDomain());
 		for (ReportCreater reportCreater : reportList) {
@@ -117,7 +117,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 					continue;
 				}
 			}
-			reportContent.append(reportCreater.createReport(timestamp));
+			reportContent.append(reportCreater.createReport(timestamp, subscriber.getDomain()));
 		}
 		if (reportContent.toString().trim().length() == 0) {
 			return false;
@@ -129,7 +129,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		mailLog.setTitle(emailTitle);
 		try {
 			if (address == null) {
-				logger.error(String.format("subscriber [%s] email is empty",subscriber.getDomain()));
+				logger.error(String.format("subscriber [%s] email is empty", subscriber.getDomain()));
 				return false;
 			}
 			String[] addressArray = address.split(MAIL_SPLITER);
@@ -147,16 +147,18 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 				mailLog.setStatus(MailLog.SEND_FAIL);
 			}
 		} catch (Exception e1) {
-			//logger.error(String.format("Send Email fail,time[%s],domain[%s],type[%s],address[%d]", new Date(timestamp),subscriber.getDomain(), subscriber.getType(), subscriber.getAddress()));
+			// logger.error(String.format("Send Email fail,time[%s],domain[%s],type[%s],address[%d]",
+			// new Date(timestamp),subscriber.getDomain(), subscriber.getType(),
+			// subscriber.getAddress()));
 			mailLog.setStatus(MailLog.SEND_FAIL);
 		}
 		try {
 			m_mailLogDao.insertMailLog(mailLog);
 		} catch (Exception e) {
 			logger.error(String.format("Save email report to database fail,time[%s],title[%s],address[%s],content[%d]",
-			      new Date(timestamp), mailLog.getTitle(), mailLog.getAddress(), mailLog.getContent()),e);
+			      new Date(timestamp), mailLog.getTitle(), mailLog.getAddress(), mailLog.getContent()), e);
 		}
-		return MailLog.SEND_SUCCSS == mailLog.getStatus()?true:false;
+		return MailLog.SEND_SUCCSS == mailLog.getStatus() ? true : false;
 	}
 
 	@Override
@@ -164,16 +166,17 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		String domain = (String) jobContext.getData("domain");
 		long timestamp = (Long) jobContext.getData("day");
 		Subscriber subscriber = null;
-      try {
-	      subscriber = m_subscriberDao.getSubscriberByDomain(domain, Subscriber.MAIL);
-      } catch (Exception e) {
-      	logger.error(String.format("fail to get subscriber from databasee. domain[%s]",domain));
-      }
-      if(subscriber == null){
-      	logger.error(String.format("fail to get subscriber from databasee. domain[%s]",domain));
-      }
-      boolean result = sendBySubscriber(timestamp, true, subscriber);
-      logger.info(String.format("do send mail handwork. domain[%s] result %s",subscriber.getDomain(),result==true?"Success":"Fail"));
+		try {
+			subscriber = m_subscriberDao.getSubscriberByDomain(domain, Subscriber.MAIL);
+		} catch (Exception e) {
+			logger.error(String.format("fail to get subscriber from databasee. domain[%s]", domain));
+		}
+		if (subscriber == null) {
+			logger.error(String.format("fail to get subscriber from databasee. domain[%s]", domain));
+		}
+		boolean result = sendBySubscriber(timestamp, true, subscriber);
+		logger.info(String.format("do send mail handwork. domain[%s] result %s", subscriber.getDomain(),
+		      result == true ? "Success" : "Fail"));
 		return result;
 	}
 
@@ -203,5 +206,5 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		}
 		return false;
 	}
-	
+
 }

@@ -20,7 +20,6 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
@@ -56,9 +55,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setPage(ReportPage.MONTHREPORT);
 		normalize(payload, model);
-
 		try {
 			Action action = payload.getAction();
 			Date start = payload.getHistoryStartDate();
@@ -110,6 +107,7 @@ public class Handler implements PageHandler<Context> {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 		model.setDomain(payload.getDomain());
+		model.setAction(payload.getAction());
 		payload.setReportType("month");
 		payload.computeStartDate();
 		model.setLongDate(payload.getDate());
