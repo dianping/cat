@@ -63,7 +63,7 @@ public class DailyTaskProducer implements Runnable,Initializable {
 				
 				firstStart = false;
 			}
-			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now, 1);
+			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now);
 			LockSupport.parkUntil(startDateOfNextTask.getTime());
 			generateDailyTasks(todayZero, tomorrowZero);
 		}
@@ -136,31 +136,21 @@ public class DailyTaskProducer implements Runnable,Initializable {
 	}
 
 	private boolean isYesterdayTaskGenerated(Date now, Date yesterdayZero, Date todayZero) {
-		Date startDayOfTodayTask = TaskHelper.startDateOfNextTask(now, 0);
-		long nowLong = now.getTime();
-		long startOfTask = startDayOfTodayTask.getTime();
-
-		if (nowLong <= startOfTask) {
-			return false;
+		List<Dailyreport> allReports = new ArrayList<Dailyreport>();
+		try {
+			allReports = m_dailyReportDao.findAllByPeriod(yesterdayZero, todayZero, DailyreportEntity.READSET_COUNT);
+		} catch (DalException e) {
+			m_logger.error("DailyTaskProducer isYesterdayTaskGenerated", e);
 		}
 
-		if (nowLong > startOfTask) {
-			List<Dailyreport> allReports = new ArrayList<Dailyreport>();
-			try {
-				allReports = m_dailyReportDao.findAllByPeriod(yesterdayZero, todayZero, DailyreportEntity.READSET_COUNT);
-			} catch (DalException e) {
-				m_logger.error("DailyTask isYesterdayTaskGenerated", e);
-			}
+		Set<String> domainSet = getDomainSet(yesterdayZero, todayZero);
 
-			Set<String> domainSet = getDomainSet(yesterdayZero, todayZero);
+		int total = allReports.get(0).getCount();
+		int domanSize = domainSet.size();
+		int nameSize = m_dailyReportNameSet.size();
 
-			int total = allReports.get(0).getCount();
-			int domanSize = domainSet.size();
-			int nameSize = m_dailyReportNameSet.size();
-
-			if (total != domanSize * nameSize) {
-				return false;
-			}
+		if (total != domanSize * nameSize) {
+			return false;
 		}
 		return true;
 	}
