@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.ip.location;
 
 public interface Message {
-   String bad_ip_file="IPåœ°å€åº“æ–‡ä»¶é”™è¯¯";
-   String unknown_country="æœªçŸ¥å›½å®¶";
-   String unknown_area="æœªçŸ¥åœ°åŒº";
+   String bad_ip_file="IPµØÖ·¿âÎÄ¼ş´íÎó";
+   String unknown_country="Î´Öª¹ú¼Ò";
+   String unknown_area="Î´ÖªµØÇø";
 }
