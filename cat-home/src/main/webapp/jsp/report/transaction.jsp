@@ -77,24 +77,31 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-			<input type="text" name="queryname" id="queryname"  value="${model.queryName}">
-		    <input  style="WIDTH: 60px" value="Filter" onclick="selectByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+			<tr><th colspan='11'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+		    <input style="WIDTH: 60px" value="Filter" onclick="selectByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
+			</th></tr>
 			<tr>
 			<th><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}" class="graph_link" data-status="-1">[:: show ::]</a>
-			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type">Name</a></th>
-			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
-			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
-			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
+			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total Count</a></th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure&queryname=${model.queryName}">Failure Count</a></th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
 			<th  class="right">Sample Link</th><th class="right">Min(ms)</th><th class="right">Max(ms)</th>
-			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg">Avg</a>(ms)</th>
-			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line">95Line</a>(ms)</th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
+			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
 			<th class="right">Std(ms)</th><th class="right">TPS</th></tr>
 			<tr class="graphs"><td colspan="6"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td width="25%" style="text-align:left;word-wrap:break-word;word-break:break-all;"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+					<td width="25%" style="text-align:left;word-wrap:break-word;word-break:break-all;">
+					<c:choose>
+					<c:when test="${status.index > 0}">
+					<a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+					</c:when>
+					</c:choose>
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>

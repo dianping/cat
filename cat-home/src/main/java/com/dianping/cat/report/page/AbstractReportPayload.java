@@ -33,10 +33,10 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	@FieldMeta("step")
 	private int m_step;
 
-	@FieldMeta("customStart")
+	@FieldMeta("startDate")
 	private String m_customStart;
 
-	@FieldMeta("customEnd")
+	@FieldMeta("endDate")
 	private String m_customEnd;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
@@ -92,7 +92,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	}
 
 	// yestoday is default
-	public void defaultIsYesterday() {
+	public void setYesterdayDefault() {
 		if ("day".equals(m_reportType)) {
 			Calendar today = Calendar.getInstance();
 			long current = getCurrentDate();

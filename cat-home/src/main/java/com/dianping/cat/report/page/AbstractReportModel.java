@@ -19,15 +19,17 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	private long m_date;
 
 	private String m_displayDomain;
-	
+
 	private Date m_creatTime;
 
 	private String m_ipAddress;
-	
+
 	private String m_reportType;
-	
+
+	private String m_customDate;
+
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
-	
+
 	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
 
 	public AbstractReportModel(M ctx) {
@@ -45,7 +47,7 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	// required by report tag
 	public String getDate() {
-		if(m_reportType!=null&&m_reportType.length()>0){
+		if (m_reportType != null && m_reportType.length() > 0) {
 			return m_dayFormat.format(new Date(m_date));
 		}
 		return m_dateFormat.format(new Date(m_date));
@@ -79,15 +81,15 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	}
 
 	// required by report history tag
-	public HistoryNav[] getHistoryNavs(){
+	public HistoryNav[] getHistoryNavs() {
 		return HistoryNav.values();
 	}
-	
+
 	// required by current tag()
-	public HistoryNav getCurrentNav(){
-		return 	HistoryNav.getByName(m_reportType);
+	public HistoryNav getCurrentNav() {
+		return HistoryNav.getByName(m_reportType);
 	}
-	
+
 	public void setDisplayDomain(String displayDomain) {
 		m_displayDomain = displayDomain;
 	}
@@ -111,26 +113,38 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	}
 
 	public Date getCreatTime() {
-   	return m_creatTime;
-   }
+		return m_creatTime;
+	}
 
 	public void setCreatTime(Date creatTime) {
-   	m_creatTime = creatTime;
-   }
+		m_creatTime = creatTime;
+	}
 
 	public String getIpAddress() {
-   	return m_ipAddress;
-   }
+		return m_ipAddress;
+	}
 
 	public void setIpAddress(String ipAddress) {
-   	m_ipAddress = ipAddress;
-   }
+		m_ipAddress = ipAddress;
+	}
 
 	public String getReportType() {
-   	return m_reportType;
-   }
+		return m_reportType;
+	}
 
 	public void setReportType(String reportType) {
-   	m_reportType = reportType;
-   }
+		m_reportType = reportType;
+	}
+
+	public String getCustomDate() {
+		return m_customDate;
+	}
+
+	public void setCustomDate(Date start, Date end) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("&startDate=").append(sdf.format(start)).append("&endDate=").append(sdf.format(end));
+		m_customDate = sb.toString();
+	}
 }

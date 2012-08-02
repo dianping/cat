@@ -22,7 +22,7 @@ public class ScheduleReportTest extends BaseTest {
 		String xml = new DefaultXmlBuilder().buildXml(report);
 		String expected = source;
 
-		Assert.assertEquals("XML is not well parsed!", expected.replace("\r", ""), xml.replace("\r", ""));		
+		Assert.assertEquals("XML is not well parsed!", expected.replaceAll("\\s*", ""), xml.replaceAll("\\s*", ""));		
 	}
 
 }

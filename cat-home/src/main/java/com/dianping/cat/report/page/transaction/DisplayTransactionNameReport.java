@@ -16,25 +16,39 @@ public class DisplayTransactionNameReport {
 	private List<TransactionNameModel> m_results = new ArrayList<TransactionNameModel>();
 
 	public DisplayTransactionNameReport() {
-
 	}
 
 	public List<TransactionNameModel> getResults() {
 		return m_results;
 	}
 
-	public DisplayTransactionNameReport display(String sorted, String type, String ip,TransactionReport report, String queryName) {
+	private boolean isFit(String queryName, String transactionName) {
+		String[] args = queryName.split("\\|");
+
+		if (args != null) {
+			for (String str : args) {
+				if (str.length() > 0 && transactionName.toLowerCase().contains(str.trim().toLowerCase())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public DisplayTransactionNameReport display(String sorted, String type, String ip, TransactionReport report,
+	      String queryName) {
 		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
+		TransactionName all = new TransactionName("ALL");
 		if (types != null) {
 			TransactionType names = types.get(type);
 
 			if (names != null) {
 				for (Entry<String, TransactionName> entry : names.getNames().entrySet()) {
 					String transTypeName = entry.getValue().getId();
-					boolean isAdd = (queryName == null || queryName.length() == 0 || transTypeName.toLowerCase().contains(
-					      queryName.trim().toLowerCase()));
+					boolean isAdd = (queryName == null || queryName.length() == 0 || isFit(queryName, transTypeName));
 					if (isAdd) {
 						m_results.add(new TransactionNameModel(entry.getKey(), entry.getValue()));
+						mergeName(all,entry.getValue());
 					}
 				}
 			}
@@ -43,9 +57,58 @@ public class DisplayTransactionNameReport {
 			sorted = "avg";
 		}
 		Collections.sort(m_results, new TransactionNameComparator(sorted));
+		
+		m_results.add(0, new TransactionNameModel("ALL", all));
 		return this;
 	}
 
+	private void mergeName(TransactionName old, TransactionName other) {
+		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
+		old.setFailCount(old.getFailCount() + other.getFailCount());
+
+		if (other.getMin() < old.getMin()) {
+			old.setMin(other.getMin());
+		}
+
+		if (other.getMax() > old.getMax()) {
+			old.setMax(other.getMax());
+		}
+
+		old.setSum(old.getSum() + other.getSum());
+		old.setSum2(old.getSum2() + other.getSum2());
+
+		old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
+		old.setLine95Count(old.getLine95Count() + other.getLine95Count());
+		if (old.getLine95Count() > 0) {
+			old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
+		}
+		if (old.getTotalCount() > 0) {
+			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
+			old.setAvg(old.getSum() / old.getTotalCount());
+			old.setStd(std(old.getTotalCount(), old.getAvg(), old.getSum2(), old.getMax()));
+		}
+
+		if (old.getSuccessMessageUrl() == null) {
+			old.setSuccessMessageUrl(other.getSuccessMessageUrl());
+		}
+
+		if (old.getFailMessageUrl() == null) {
+			old.setFailMessageUrl(other.getFailMessageUrl());
+		}
+	}
+	
+	private double std(long count, double avg, double sum2, double max) {
+		double value = sum2 / count - avg * avg;
+
+		if (value <= 0 || count <= 1) {
+			return 0;
+		} else if (count == 2) {
+			return max - avg;
+		} else {
+			return Math.sqrt(value);
+		}
+	}
+	
 	public static class TransactionNameModel {
 		private String m_type;
 
