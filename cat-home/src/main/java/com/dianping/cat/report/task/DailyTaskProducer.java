@@ -26,11 +26,11 @@ import com.dianping.cat.message.Transaction;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
-public class DailyTaskProducer implements Runnable,Initializable {
-
-	private boolean firstStart = true;
+public class DailyTaskProducer implements Runnable, Initializable {
 
 	private static final int TYPE_DAILY = 1;
+
+	private static final long DAY = 24 * 60 * 60 * 1000L;
 
 	private static Set<String> m_dailyReportNameSet = new HashSet<String>();
 
@@ -55,33 +55,29 @@ public class DailyTaskProducer implements Runnable,Initializable {
 	public void run() {
 		while (true) {
 			Date now = new Date();
-			Date yesterdayZero = TaskHelper.yesterdayZero(now);
-			Date todayZero = TaskHelper.todayZero(now);
-			Date tomorrowZero = TaskHelper.tomorrowZero(now);
-
-			if (firstStart) {
-				
-				firstStart = false;
-			}
+			Date todayStart = TaskHelper.todayZero(now);
+			Date todayEnd = TaskHelper.tomorrowZero(now);
 			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now);
+
 			LockSupport.parkUntil(startDateOfNextTask.getTime());
-			generateDailyTasks(todayZero, tomorrowZero);
+			if (!checkTaskGenerated(todayStart)) {
+				generateDailyTasks(todayStart, todayEnd);
+			}
 		}
 	}
-	
-	@Override
-   public void initialize() throws InitializationException {
-		Date now = new Date();
-		Date yesterdayZero = TaskHelper.yesterdayZero(now);
-		Date todayZero = TaskHelper.todayZero(now);
 
-		if (!isYesterdayTaskGenerated(now, yesterdayZero, todayZero)) {
-			generateDailyTasks(yesterdayZero, todayZero);
-		}	   
-   }
-	
-	
-	public void generateDailyTasks(Date start, Date end) {
+	@Override
+	public void initialize() throws InitializationException {
+		Date now = new Date();
+		Date yesterdayStart = TaskHelper.yesterdayZero(now);
+		Date yesterdayEnd = TaskHelper.todayZero(now);
+
+		if (!checkTaskGenerated(yesterdayStart)) {
+			generateDailyTasks(yesterdayStart, yesterdayEnd);
+		}
+	}
+
+	private void generateDailyTasks(Date start, Date end) {
 		Transaction t = Cat.newTransaction("System", "ProduceDailyReport");
 		try {
 			Set<String> domainSet = getDomainSet(start, end);
@@ -135,19 +131,25 @@ public class DailyTaskProducer implements Runnable,Initializable {
 		return domainSet;
 	}
 
-	private boolean isYesterdayTaskGenerated(Date now, Date yesterdayZero, Date todayZero) {
+	private boolean checkTaskGenerated(Date start) {
 		List<Dailyreport> allReports = new ArrayList<Dailyreport>();
 		try {
-			allReports = m_dailyReportDao.findAllByPeriod(yesterdayZero, todayZero, DailyreportEntity.READSET_COUNT);
+			allReports = m_dailyReportDao.findAllByPeriod(start, new Date(start.getTime() + DAY),
+			      DailyreportEntity.READSET_COUNT);
 		} catch (DalException e) {
 			m_logger.error("DailyTaskProducer isYesterdayTaskGenerated", e);
 		}
 
-		Set<String> domainSet = getDomainSet(yesterdayZero, todayZero);
+		Set<String> domainSet = getDomainSet(start, new Date(start.getTime() + DAY));
 
-		int total = allReports.get(0).getCount();
+		int total = 0;
 		int domanSize = domainSet.size();
 		int nameSize = m_dailyReportNameSet.size();
+		
+		//SQL Framework
+		if (allReports != null && allReports.size() > 0) {
+			total = allReports.get(0).getCount();
+		}
 
 		if (total != domanSize * nameSize) {
 			return false;

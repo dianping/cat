@@ -40,7 +40,7 @@ public class TaskHelper {
 		cal.set(Calendar.MILLISECOND, 0);
 		return cal.getTime();
 	}
-	
+
 	public static Date tomorrowZero(Date reportPeriod) {
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(reportPeriod);
@@ -128,35 +128,14 @@ public class TaskHelper {
 	}
 
 	public static Date startDateOfNextTask(Date currentDate) {
-		Calendar newCalendar = Calendar.getInstance();
-		newCalendar.setTime(currentDate);
+		long day = 24 * 60 * 60 * 1000L;
+		long nineMissecond = 9 * 60 * 1000L;
+		Date dayStart = TaskHelper.todayZero(currentDate);
 
-		boolean nextDay = false;
-
-		int currentHour = newCalendar.get(Calendar.HOUR_OF_DAY);
-		int currentMinute = newCalendar.get(Calendar.MINUTE);
-		int currentSecond = newCalendar.get(Calendar.SECOND);
-
-		if (currentHour > 0) {
-			nextDay = true;
-		} else if (currentHour == 0) {
-			if (currentMinute > 10) {
-				nextDay = true;
-			} else if (currentMinute == 10) {
-				if (currentSecond > 0) {
-					nextDay = true;
-				}
-			}
+		if (currentDate.getTime() - dayStart.getTime() > nineMissecond) {
+			return new Date(dayStart.getTime() + day + nineMissecond);
+		} else {
+			return new Date(dayStart.getTime() + nineMissecond);
 		}
-
-		if (nextDay) {
-			newCalendar.add(Calendar.DATE, 1);// 
-		}
-
-		newCalendar.set(Calendar.HOUR_OF_DAY, 0);
-		newCalendar.set(Calendar.MINUTE, 9);
-		newCalendar.set(Calendar.SECOND, 0);
-
-		return newCalendar.getTime();
 	}
 }
