@@ -1,0 +1,87 @@
+﻿/* -------------
+   * commom *
+* ------------- */
+html{color:#000;background:#FFF;}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0;}table{border-collapse:collapse;border-spacing:0;}fieldset,img{border:0;}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:normal;}li{list-style:none;}caption,th{text-align:left;}q:before,q:after{content:'';}abbr,acronym{border:0;font-variant:normal;}sup{vertical-align:text-top;}sub{vertical-align:text-bottom;}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;}
+legend{color:#000;}del,ins{text-decoration:none;}
+
+body{font-family: "微软雅黑", "宋体", Arial, sans-serif; font-size: 12px; }
+.l-clear{ clear:both; width:1px; height:1px; overflow:hidden;}
+.l-hidden {display: none;}
+.l-loading
+{
+    position: absolute;z-index: 91000;  top:40%; left:50%; overflow:hidden;
+    background:url('../images/common/loading.gif') no-repeat 0px 0px;width:24px; height:24px; 
+     display:none;
+}
+/* -------------
+   * 滚动条颜色 *
+* ------------- */ 
+.l-scroll
+{
+        scrollbar-face-color:#C6D7FF; scrollbar-3dlight-color:#B5CBF7; scrollbar-darkshadow-color:#B5CBF7;
+        scrollbar-base-color:#B5CBF7;
+        scrollbar-shadow-color: #FFF; scrollbar-highlight-color: #FFF;  scrollbar-track-color:#FFF; scrollbar-arrow-color:#4A6184;
+}
+.l-noscroll
+{
+    overflow:hidden;
+}
+/* Draggable */
+.l-draggable{ overflow:hidden; border-style:solid; border-width:1px; opacity:0.5; filter:alpha(opacity=50); position:absolute; top:0; left:0; z-index:10001; background:#f2f1f1; border-color:#aaa;}
+/* Resizable */
+.l-resizable { display:none; overflow:hidden; border-style:dashed; border-width:1px; opacity:0.5; filter:alpha(opacity=50); position:absolute; top:0; left:0; z-index:10002; background:#f2f1f1;} 
+
+
+ /* --------------
+   *   icon  *
+* ------------ */
+.l-icon-checkbox {background:url('../images/icon/checkbox.gif') no-repeat center;}
+
+/* -------------
+   * 按钮 *
+* ------------- */
+.l-button
+{
+    display:block;border: solid 1px #A3C0E8;
+    width:50px ; height:20px; overflow:hidden; line-height:20px;
+    background: #E0EDFF url(../images/controls/button-bg.gif) repeat-x center;
+     text-align:center;color: #2C4D79;  text-decoration:none; cursor:pointer;
+}
+.l-button-over,.l-button:hover
+{background: #FFBE76 url(../images/controls/button-bg-over.gif) repeat-x center; border-color:#D6A886;
+}
+.l-btn
+{
+    display:block; 
+     height:21px; overflow:hidden; line-height:22px; position:relative; 
+     padding-left:15px; padding-right:15px; cursor:pointer;
+    background: #E0EDFF url(../images/controls/btn.gif) repeat-x;
+     text-align:center;color: #2C4D79;  text-decoration:none; cursor:pointer;
+}
+/* 按钮左边部位 */
+.l-btn-l
+{
+    position:absolute; width:3px; left:0px; top:0px;height:21px;
+    background: #E0EDFF url(../images/controls/btn-l.gif) no-repeat;
+}
+/* 按钮右边部位 */
+.l-btn-r
+{position:absolute; width:3px; right:0px; top:0px;height:21px;
+    background: #E0EDFF url(../images/controls/btn-r.gif) no-repeat;
+}
+
+
+
+/*
+    Draggable
+*/
+.l-drag-proxy { border: 1px solid #BDD1EE;position: absolute;z-index: 1001;height:25px; line-height:25px; padding-left:19px; padding-right:4px; background:white;  }
+.l-drag-proxy .l-drop-icon{position: absolute; top:5px; left:4px;width:16px; height:16px; }
+.l-drop-no{background: white url('../images/common/drop-icons.gif') no-repeat 0px -20px; width:16px; height:16px; overflow:hidden;}
+.l-drop-yes{background: white url('../images/common/drop-icons.gif') no-repeat 0px 0px;  width:16px; height:16px; overflow:hidden;}
+.l-drop-add{background: white url('../images/common/drop-icons.gif') no-repeat -20px 0px;  width:16px; height:16px; overflow:hidden;}
+.l-drag-coldroptip{width:9px; position:absolute; height:44px; z-index:1000;}
+.l-drop-move-up{background:transparent url('../images/common/drop-icons.gif') no-repeat -40px 0px; width:9px; height:9px; overflow:hidden;position:absolute; top:0px;}
+.l-drop-move-down{background: transparent url('../images/common/drop-icons.gif') no-repeat -60px 0px; width:9px; height:9px; overflow:hidden; position:absolute; bottom:0px;}
+ 
+ .l-drag-nodedroptip,.l-drag-rowdroptip{width:9px; position:absolute; height:1px; background-color:red; z-index:1000; line-height:1px; overflow:hidden;}

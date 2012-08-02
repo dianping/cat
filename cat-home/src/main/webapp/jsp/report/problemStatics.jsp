@@ -87,7 +87,6 @@
 		<th>Total</th>
 		<th>Status</th>
 		<th>Count</th>
-		<th>SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">

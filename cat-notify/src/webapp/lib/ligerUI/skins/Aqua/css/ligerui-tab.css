@@ -1,0 +1,52 @@
+﻿
+/* -----------------------
+   * tab *
+* ----------------------- */
+.l-tab-links{position:relative; height:26px; background:#F0F5F6; width:100%; overflow:hidden;
+background:url('../images/layout/tabs-bg.gif') repeat-x; border-bottom:1px solid #BED5F3;}
+.l-tab-links-left{position:absolute; top:1px; left:0; width:17px; height:23px; overflow:hidden; background:url(../images/layout/tabs-tools.gif) 0px 0px; z-index:13; cursor:pointer;}
+.l-tab-links-right{ position:absolute; top:1px; right:0;width:17px; height:23px; overflow:hidden;background:url(../images/layout/tabs-tools.gif) -51px 0px;z-index:13; cursor:pointer;}
+.l-tab-links-left-over{ background-position:-17px 0px;}
+.l-tab-links-right-over{ background-position:-68px 0px;}
+.l-tab-links-left-invalid{ background-position:-34px 0px;}
+.l-tab-links-right-invalid{ background-position:-85px 0px;}
+
+.l-tab-links ul{ list-style:none; margin:0; padding:0; width:9999px; height:26px; overflow:hidden; position:absolute; top:0; left:0;}
+.l-tab-links li{ float:left; margin:0; padding:0; margin-left:2px; height: 26px; line-height:26px; cursor:pointer;background:url(../images/layout/tabs-item-bg.gif); position:relative; overflow:hidden; border:none; }
+.l-tab-links li.l-selected{background:url(../images/layout/tabs-item-over-bg.gif);}
+.l-tab-links li a{ display:block; margin-left:6px; margin-right:37px;}
+.l-tab-links-item-left{ position:absolute;top:0; left:0;width:2px; height:26px; background:url(../images/layout/tabs-item-left-bg.gif)}
+.l-tab-links-item-right{position:absolute;top:0; right:0;width:2px; height:26px;background:url(../images/layout/tabs-item-right-bg.gif)}
+.l-tab-links-item-close{ width:11px; height:11px; overflow:hidden; position:absolute; top:4px; right:2px; z-index:12;background:url(../images/icon/icon-close.gif); cursor:pointer;}
+.l-tab-links-item-close-over{background:url(../images/icon/icon-close-over.gif);}
+
+.l-tab-content{ margin:0 auto; padding:0; border:none; width:100%;}
+.l-tab-content-item{ width:100%; overflow:hidden;}
+.l-tab-content-item iframe{width:100%; height:100%; border:none;}
+
+
+.l-tab-drag-proxy { border: 1px solid #BDD1EE;position: absolute;z-index: 1001;height:25px; line-height:25px; padding-left:19px; padding-right:4px; background:white;  }
+.l-tab-drag-proxy .l-drop-icon{position: absolute; top:5px; left:4px;width:16px; height:16px; }
+.l-drop-no{background: white url('../images/common/drop-icons.gif') no-repeat 0px -20px; width:16px; height:16px; overflow:hidden;}
+.l-drop-yes{background: white url('../images/common/drop-icons.gif') no-repeat 0px 0px;  width:16px; height:16px; overflow:hidden;}
+
+.l-tab-drag-droptip
+{
+    width:9px; position:absolute; top:30px; left:30px; height:44px; z-index:1000;
+}
+.l-tab-drag-droptip .l-drop-move-up{ position:absolute; top:0px;}
+.l-tab-drag-droptip .l-drop-move-down{ position:absolute; bottom:0px;}
+
+.l-drop-move-up{background:transparent url('../images/common/drop-icons.gif') no-repeat -40px 0px; width:9px; height:9px; overflow:hidden;}
+.l-drop-move-down{background: transparent url('../images/common/drop-icons.gif') no-repeat -60px 0px; width:9px; height:9px; overflow:hidden;}
+/* -----------------------
+   * easytab *
+* ----------------------- */
+.l-easytab{ padding:0px; position:relative;} 
+.l-easytab ul{margin:0; padding:0; list-style:none;position:absolute; top:0px; left:0px; z-index:101;}
+.l-easytab .l-easytab-header { padding-left:3px;}
+.l-easytab .l-easytab-header li{ float:left; margin-left:2px;}
+.l-easytab .l-easytab-header li span{ display:block; line-height:22px; height:22px; padding-left:8px; padding-right:8px; background:url('../images/controls/bg-tab-title.gif') repeat-x; color:#333; text-decoration:none;border:1px solid #AECAF0; color:#283B56;}
+.l-easytab .l-easytab-header li span.l-over{background:url('../images/controls/bg-tab-title-over.gif') repeat-x;border:1px solid #DAB364; cursor:pointer;}
+.l-easytab .l-easytab-header li span.l-selected{ background:none; background:white; border-top:3px solid #FFBD69;height:20px;color:#355686; border-left:1px solid  #DAB364;border-right:1px solid  #DAB364;border-bottom:1px solid  white; }
+.l-easytab .l-easytab-panelbox{ border:1px solid #AECAF0; clear:left; position:absolute;top:23px; padding:4px;z-index:100;}

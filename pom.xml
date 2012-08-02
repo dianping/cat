@@ -14,6 +14,7 @@
 		<module>cat-consumer</module>
 		<module>cat-job</module>
 		<module>cat-home</module>
+		<module>cat-notify</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -35,6 +36,11 @@
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-job</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>cat-notify</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

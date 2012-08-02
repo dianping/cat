@@ -1,0 +1,58 @@
+﻿
+/* --------------
+   *   tree  *
+* ------------ */
+.l-tree
+{
+    margin:0; padding:0; list-style:none; overflow:hidden; position:relative; display:block; background:white;
+} 
+.l-tree-loading
+{
+    position: absolute;z-index: 91000;  top:40%; left:50%; overflow:hidden;
+    background:url('../images/tree/loading.gif') no-repeat 0px 0px;width:24px; height:24px; 
+     display:none;
+}
+.l-tree a,.l-tree span{color: #333;display: inherit;height: 22px;line-height: 22px; text-decoration:none;} 
+.l-tree ul,.l-tree li{list-style:none; margin:0; padding:0;}
+.l-tree li {clear: both;display: block;cursor: pointer;}
+.l-tree li .l-body{ height:22px;line-height: 22px; overflow:hidden;}
+.l-tree .l-box
+{
+    width:22px; height:22px; overflow:hidden; float:left; background:url('../images/tree/tree.gif');background-position:-22px -220px;
+}
+.l-tree-noline .l-box
+{
+    background-image:url('../images/tree/tree-noline.gif');
+}
+.l-tree .l-expandable-close{background-position:0px -44px;}
+.l-tree .l-first .l-expandable-close{background-position:0px -22px;}
+.l-tree .l-last .l-expandable-close{ background-position:0px -66px;}
+.l-tree .l-onlychild  .l-expandable-close{background-position:0px 0px;}
+
+.l-tree .l-expandable-open{background-position:0px -132px;}
+.l-tree .l-first .l-expandable-open{background-position:0px -110px;}
+.l-tree .l-last .l-expandable-open{ background-position:0px -154px;}
+.l-tree .l-onlychild  .l-expandable-open{background-position:0px -88px;}
+
+.l-tree .l-over{background: whiteSmoke;}
+.l-tree .l-selected {background: #D9E8FB;}
+
+.l-tree .l-line{background-position:0px -176px;}
+.l-tree .l-note{ background-position:0px -198px;}
+
+.l-tree .l-note{ background-position:0px -198px;}
+.l-tree .l-note-last{ background-position:0px -220px;}
+.l-tree .l-checkbox-unchecked{ background-position:-22px 0px;} 
+.l-tree .l-checkbox-checked{ background-position:-22px -22px;} 
+.l-tree .l-checkbox-incomplete{ background-position:-22px -44px;} 
+
+.l-tree .l-over .l-checkbox-unchecked{ background-position:-44px 0px;} 
+.l-tree .l-over .l-checkbox-checked{ background-position:-44px -22px;} 
+.l-tree .l-over .l-checkbox-incomplete{ background-position:-44px -44px;} 
+
+
+.l-tree .l-tree-icon-folder{ background-position:-22px -88px;}
+.l-tree .l-tree-icon-none{ background:none;}
+.l-tree .l-tree-icon-none img{width:22px; height:22px; border:0;}
+.l-tree .l-tree-icon-folder-open{background-position:-44px -88px;}
+.l-tree .l-tree-icon-leaf{background-position:-22px -110px;}

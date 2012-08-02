@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap>
+	<typeAlias alias="subscriber" type="com.dianping.cat.notify.model.Subscriber"/>
+	<sql id="Subscriber.columns">
+		id,domain,address,type
+	</sql>
+	<resultMap id="SubscriberResult" class="subscriber">
+		<result property="id" column="id" nullValue="0" />
+		<result property="domain" column="domain" nullValue="" />
+		<result property="address" column="address" nullValue="" />
+		<result property="type" column="type" nullValue="" />
+	</resultMap>
+    <select id="Subscriber.selectSubscriber" resultMap="SubscriberResult" >
+    	select <include refid="Subscriber.columns"/> 
+    	from subscriber 
+    	where domain = #domain# and type=#type#
+    </select>
+    <select id="Subscriber.selectAllSubscriber" resultMap="SubscriberResult" >
+    	select <include refid="Subscriber.columns"/> 
+    	from subscriber 
+    	where type=#type#
+    </select>
+</sqlMap>

@@ -1,0 +1,29 @@
+<html>
+<head>
+<title>Reports</title>
+</head>
+<body>
+<br/>
+<br/>
+<table width="100%" rules="all">
+	<tr>
+		<td colspan="4">${title}
+		</td>
+	</tr>
+	<tr>
+		<td width="22%" >Type</td>
+		<td >Total Count</td>
+		<td >Failure Count</td>
+		<td >Failure%</td>
+	</tr>
+	#foreach( $type in $typeList)
+	<tr>
+	    <td>$!type.id</td>
+        <td>$!type.totalCount</td>
+        <td>$!type.failCount</td>
+        <td>$!type.failPercent</td>
+    </tr>
+    #end
+</table>
+</body>
+</html>

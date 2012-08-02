@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Reports</title>
+</head>
+<body>
+<br/>
+<br/>
+<table width="100%" rules="all">
+	<tr>
+		<td colspan="10">${title}&nbsp;&nbsp;${preWeakLastDay}&nbsp;&nbsp;${preWeakDay}
+		</td>
+	</tr>
+	<tr>
+		<td width="22%" >Type</td>
+		<td >Total Count</td>
+		<td >Failure Count</td>
+		<td >Failure%</td>
+		<td >Min(ms)</td>
+		<td >Max(ms)</td>
+		<td >Avg(ms)</td>
+		<td >95Line(ms)</td>
+		<td >Std(ms)</td>
+		<td >TPS(ms)</td>
+	</tr>
+	#foreach( $type in $typeList)
+	<tr>
+	    <td>$!type.id</td>
+        <td>$!type.totalCount</td>
+        <td>$!type.failCount</td>
+        <td>$!type.failPercent</td>
+        <td>$!type.min</td>
+        <td>$!type.max</td>
+        <td>$!type.avg</td>
+        <td>$!type.line95Value</td>
+        <td>$!type.std</td>
+        <td>$!type.tps</td>
+    </tr>
+    #end
+</table>
+</body>
+</html>

@@ -1,0 +1,26 @@
+﻿
+/* --------------
+   *   menu  *
+* ------------ */
+
+.l-menu { border:1px solid #979797; background:#F5F5F5;position:absolute; overflow:hidden; padding-bottom:2px; z-index:1001}
+.l-menu-shadow{z-index:1000;   
+	FILTER: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2,MakeShadow=false,ShadowOpacity=0.2);
+	BACKGROUND: #ddd;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+position: absolute;}
+.l-menu-inner{ position:relative;width:100%;z-index:103;}
+.l-menu-over{position:absolute;top:-24px;left:2px; z-index:102; height:22px; overflow:hidden;background:url('../images/menu/menu-item-over-m.gif') repeat-x;width:97%;}
+.l-menu-yline { background:url('../images/menu/menu-line-y.gif') repeat-y; width:2px; height:2000px; position:absolute; left:28px; top:1px; z-index:101;}
+.l-menu-over-l{background:url('../images/menu/menu-item-over-l.gif') no-repeat; width:28px; height:22px; position:absolute;top:0; left:0;} 
+.l-menu-over-r{background:url('../images/menu/menu-item-over-r.gif') no-repeat; width:3px;height:22px; position:absolute;top:0; right:0;}
+.l-menu-item { position:relative; height:23px; line-height:23px; width:100%;  cursor:pointer;}
+.l-menu-item-line{background:url('../images/menu/menu-line-x.gif') repeat-x; height:2px; width:100%; margin-top:1px; margin-bottom:1px; margin-left:30px; line-height:2px; overflow:hidden;}
+.l-menu-item-arrow{background:url('../images/menu/menu-item-arrow.gif') no-repeat; position:absolute; top:8px; right:9px; width:4px; height:7px;}
+.l-menu-item-text{color:#000000;left: 33px;position: absolute;top: 0;}
+.l-menu-item-icon{ left: 3px;top: 0;position: absolute; width:25px; height:22px; overflow:hidden;}
+.l-menu-item-disable{ cursor:default;}
+.l-menu-item-disable .l-menu-item-text{ color:#A1A1A1;}

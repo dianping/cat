@@ -1,0 +1,59 @@
+﻿/*
+   表格
+*/
+
+.l-grid-header
+{
+    border-bottom: 1px solid #E8F8A9;height: 26px;line-height: 26px;background:url('../images/grid/gridheaderbg.jpg'); overflow:hidden; width:100%;
+}
+.l-grid-hd-cell-mul
+{
+    border-bottom: 1px solid #ddd;
+}
+.l-grid-hd-cell
+{   
+     padding:0; margin:0;overflow:hidden; 
+    border-right:1px solid #ddd;
+    text-align:center; font-size:12px; height:26px; line-height:25px;
+}
+.l-selected .l-grid-row-cell,.l-grid-row-over .l-grid-row-cell 
+{
+    background:#EAF3FF;
+}
+.l-grid-row-alt .l-grid-row-cell
+{
+    background:#F9FBFC; border-right:1px solid #F9FBFC;
+}
+.l-grid-body td { border-bottom:none; height:24px; line-height:24px;} 
+.l-grid-body tr{border-bottom:1px solid #ddd;}
+.l-grid-body tr.l-selected td,.l-grid .l-grid-body tr.l-grid-row-over td{border-right:1px solid #EAF3FF; background:#EAF3FF; }
+.l-grid-body tr.l-checked td.l-grid-row-cell{border-right:1px solid #DCF8A8; background:#DCF8A8;}
+.l-grid-row-cell { background:white; border-right:1px solid white;}
+.l-grid td.l-grid-row-cell-last,.l-grid tr.l-checked td.l-grid-row-cell-last,.l-grid .l-grid-body tr.l-grid-row-over td.l-grid-row-cell-last{border-right:1px solid #ddd;} 
+.l-panel-bar
+{
+    height:32px;background:#EAEAEA;overflow:hidden; background-image:none;
+    border-top:1px solid #84A0C4;
+}
+.l-grid .l-grid-grouprow{ border-right:1px solid #ddd}
+.l-grid .l-grid-totalsummary-group td{ background-color:#EBDDF7;}
+
+.l-scroll
+{
+        scrollbar-face-color:#DBDBDB; scrollbar-3dlight-color:#C1C1C1; scrollbar-darkshadow-color:#C1C1C1;
+        scrollbar-base-color:#C1C1C1;
+        scrollbar-shadow-color: #FFF; scrollbar-highlight-color: #FFF;  scrollbar-track-color:#FFF; scrollbar-arrow-color:#4A6184;
+}
+
+/*
+    工具条
+*/
+.l-toolbar
+{     
+    border:1px solid #9CBAE7;  border-top:1px solid #EFF7F7;
+    margin:2px auto;width:99%; background:#F3F8F9;border: 1px solid #B6D3E0; height:30px; line-height:30px;
+}
+.l-toolbar-item
+{
+    float:left;margin-left:4px;margin-top:4px;
+}

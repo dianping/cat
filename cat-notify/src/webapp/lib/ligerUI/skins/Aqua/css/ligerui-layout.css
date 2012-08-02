@@ -1,0 +1,63 @@
+﻿
+/* --------------
+   *   layout  *
+* ------------ */
+.l-layout{ position:relative;}
+.l-layout-left,.l-layout-right,.l-layout-center,.l-layout-top,.l-layout-bottom{position:absolute;border:1px solid #BED5F3; background:white; z-index:10; overflow:hidden;} 
+.l-layout-top{width:100%;}
+.l-layout-bottom{width:100%}
+
+.l-layout-left .l-layout-header-toggle{position:absolute; top:3px; right:3px; height:20px; width:20px; overflow:hidden; background:url('../images/layout/togglebar.gif');background-position:-20px 0px; cursor:pointer;}
+.l-layout-left .l-layout-header-toggle-over{ background-position:-20px -20px;}
+
+.l-layout-right .l-layout-header-toggle{position:absolute; top:3px; left:3px; height:20px; width:20px; overflow:hidden; background:url('../images/layout/togglebar.gif');background-position:-20px -40px; cursor:pointer;}
+.l-layout-right .l-layout-header-toggle-over{ background-position:-20px -60px;}
+
+.l-layout-center .l-layout-header{ cursor:default;}
+
+.l-layout-header{ position:relative;padding-left:10px; color:#183152; font-weight:bold;height:25px; line-height:24px;  background:#E5EFFE url('../images/layout/layout-header.gif') repeat-x; overflow:hidden; cursor:pointer}
+.l-layout-header-inner{padding-right:22px;}
+.l-layout-right .l-layout-header-inner { padding-left:22px; padding-right:auto;}
+.l-layout-header-over{background:#EFF4FE url('../images/layout/layout-header-over.gif') repeat-x;} 
+
+.l-layout-collapse-left,.l-layout-collapse-right{ width:24px; background:#EAF2FE;border:1px solid #B8D0D6; position:absolute;top:0px;   display:none; height:100%;z-index:10;}
+.l-layout-collapse-left-over,.l-layout-collapse-right-over{background:#F5F9FA;}
+.l-layout-collapse-left-toggle,.l-layout-collapse-right-toggle{position:absolute; height:20px; width:20px; overflow:hidden; background:url('../images/layout/togglebar.gif');cursor:pointer;}
+.l-layout-collapse-left{left:2px;}
+.l-layout-collapse-left-toggle{top:0px; right:2px; background-position:-20px -40px;}
+.l-layout-collapse-left-toggle-over{background-position:-20px -60px;} 
+
+.l-layout-collapse-right{right:2px;}
+.l-layout-collapse-right-toggle{top:0px; left:2px; background-position:-20px 0px;}
+.l-layout-collapse-right-toggle-over{background-position:-20px -20px;} 
+
+
+
+.l-layout-drophandle-left{ position:absolute;width:5px;cursor:col-resize; z-index:10;display:none;}
+.l-layout-drophandle-right{ position:absolute;width:5px;cursor:col-resize; z-index:10;display:none;}
+.l-layout-drophandle-top{ position:absolute;height:5px;cursor:row-resize; z-index:10;display:none; line-height:1px;overflow:hidden;}
+.l-layout-drophandle-bottom{ position:absolute;height:5px;cursor:row-resize; z-index:10;display:none;line-height:1px;overflow:hidden;}
+.l-layout-dragging-xline{ background:#E0E4E2;height:4px;position:absolute;display:none; z-index:9999; padding:0; margin:0;line-height:1px; overflow:hidden;}
+.l-layout-dragging-yline{ background:#E0E4E2;width:4px;position:absolute;display:none; z-index:9999; padding:0; margin:0;}
+.l-layout-lock{ position:absolute; width:100%; height:100%; display:none; z-index:9990; margin:0; padding:0;}
+.l-layout-content{position:relative; background:white; overflow:hidden;}
+
+.l-layout-drophandle{ position:absolute; top:0px; left:-5px; width:5px;cursor:col-resize; z-index:10;height:100%; display:none;}
+.l-layout-collapse{ width:24px; background:#EAF2FE;border:1px solid #B8D0D6; position:absolute; top:0px; left:4px; display:none; height:100%;z-index:10;}
+.l-layout-collapse-over{background:#F5F9FA;}
+.l-layout-collapse-toggle{position:absolute; top:0px; right:2px; height:20px; width:20px; overflow:hidden; background:url('../images/layout/togglebar.gif');background-position:-20px -40px; cursor:pointer;}
+.l-layout-collapse-toggle-over{background-position:-20px -60px;} 
+.l-layout-dragging-line{ background:#E0E4E2;width:4px;position:absolute;top:0px; display:none; z-index:9999; padding:0; margin:0;height:100%;}
+ 
+/* --------------
+   *   accordion  *
+* ------------ */
+.l-accordion-panel{ border-left:1px solid #BED5F3; border-right:1px solid #BED5F3; border-bottom:1px solid #BED5F3; }
+.l-accordion-toggle{ position:absolute; top:2px; right:4px; height:20px; width:20px; overflow:hidden; background:url('../images/layout/togglebar.gif');cursor:pointer;}
+.l-accordion-toggle-close{ background-position:0px 0px;}
+.l-accordion-toggle-close-over{ background-position:0px -20px;}
+.l-accordion-toggle-open{ background-position:0px -40px;}
+.l-accordion-toggle-open-over{ background-position:0px -60px;} 
+.l-accordion-header{ position:relative;padding-left:10px; color:#183152; font-weight:bold;height:25px; line-height:24px;  background:#E5EFFE url('../images/layout/accordion-header.gif') repeat-x; overflow:hidden; cursor:pointer;}
+.l-accordion-header-over{background:#EFF4FE url('../images/layout/accordion-header-over.gif') repeat-x;} 
+.l-accordion-content{position:relative;overflow:auto; background:white url('../images/layout/accordion-content.gif') repeat-x;}

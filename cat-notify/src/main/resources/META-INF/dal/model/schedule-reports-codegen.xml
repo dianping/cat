@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="schedule-reports" root="true">
+    <entity-ref name="report" type="list" names="reports" />
+  </entity>
+  <entity name="report">
+    <attribute name="domain" value-type="String" />
+    <attribute name="createClass" value-type="String" />
+    <attribute name="schedule" value-type="String" />
+    <entity-ref name="template" type="map" names="templates" />
+  </entity>
+  <entity name="template">
+    <attribute name="id" key="true" value-type="String" />
+    <attribute name="path" value-type="String" />
+  </entity>
+</model>
+

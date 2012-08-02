@@ -1,0 +1,132 @@
+﻿/* -------------
+   * 多行文本框颜色 *
+* ------------- */ 
+.l-textarea{border:1px solid #A8AAAD; margin-left:-1px;outline:none;}
+ .l-textarea:hover{border-color:#01AAEE;}
+ l-textarea-invalid,.l-textarea:focus{ border-color:#FF8801;}
+/* 文本框、下来框、日期框、调整器都使用到这个 */
+.l-text
+{
+    position:relative;border:none; height:21px; line-height:21px; background:white;background:url('../images/form/text.gif') repeat-x;
+}
+.l-text .l-text-l
+{
+    position:absolute; left:0px; top:0px;
+    width:3px; height:21px; background:url('../images/form/text-l.gif') no-repeat; overflow:hidden;
+}
+.l-text .l-text-r
+{
+    position:absolute; right:0px; top:0px;
+    width:3px; height:21px; background:url('../images/form/text-r.gif') no-repeat; overflow:hidden;
+}
+.l-text-over{ background:url('../images/form/text-over.gif') repeat-x;}
+.l-text-over .l-text-l{ background:url('../images/form/text-l-over.gif') no-repeat;}
+.l-text-over .l-text-r{ background:url('../images/form/text-r-over.gif') no-repeat;}
+.l-text-focus{ background:url('../images/form/text-focus.gif') repeat-x;}
+.l-text-focus .l-text-l{ background:url('../images/form/text-l-focus.gif') no-repeat;}
+.l-text-focus .l-text-r{ background:url('../images/form/text-r-focus.gif') no-repeat;}
+.l-text-invalid{ background:url('../images/form/text-focus.gif') repeat-x;}
+.l-text-invalid .l-text-l{ background:url('../images/form/text-l-focus.gif') no-repeat;}
+.l-text-invalid .l-text-r{ background:url('../images/form/text-r-focus.gif') no-repeat;}
+
+.l-text-invalid{ border-color:#FF8801;}
+/*只读时边框*/
+.l-text-disabled{}
+/*只读时文本框*/
+.l-text-disabled .l-text-field{}
+/* 编辑状态 */
+.l-text-editing{}
+
+/* 表单文本框 input:text */
+.l-text-field
+{
+    position:absolute; top:1px; left:3px;
+    width:120px; 
+    border:0; margin:0; outline:none;
+}
+/* 表单文本框 内容为空时 */
+.l-text-field-null
+{ 
+    color:#C1C1C1;
+} 
+/* 下拉框/日期/调整器 右侧那个可点击的区域 分别是普通、经过、按住状态 */
+.l-trigger,.l-trigger-hover,.l-trigger-pressed
+{  
+    background:none; border:none;width:18px;height:21px; border-left:1px solid #A8AAAD; 
+} 
+/* 下拉框/日期 右侧那个可点击的区域里面的图标 */
+.l-trigger-icon
+{	 
+    background:url('../images/form/icon-down.gif') no-repeat 50% 50%;
+}
+.l-trigger-hover .l-trigger-icon
+{	 
+    background-image:url('../images/form/icon-down-over.gif');
+}
+.l-text-date .l-trigger,.l-text-date .l-trigger-hover,.l-text-date .l-trigger-pressed{ border-left:none;}
+.l-text-date .l-trigger-icon
+{
+    background:url('../images/form/text-date-icon.gif') no-repeat 50% 50%;
+}
+/* -------------
+  * 调整器 *
+* ------------- */
+.l-spinner-up .l-spinner-icon,.l-spinner-down .l-spinner-icon{overflow: hidden;position: absolute;left: -1px;top: 50%;margin-top: -3px;width: 100%;height: 6px;background: no-repeat center top;}
+.l-spinner-down-over{background:none;}
+.l-spinner-up-over{background:none;}
+.l-spinner-up .l-spinner-icon{background-image: url(../images/form/icon-up.gif);}
+.l-spinner-down .l-spinner-icon{background-image: url(../images/form/icon-down.gif);}
+.l-spinner-up,.l-spinner-down {width: 100%;height: 50%;overflow: hidden;display: block;position: absolute;left: 0px;top: 0px;}
+.l-spinner-down{top: 50%;}
+/*   调整器 中间 */
+.l-spinner-split{overflow: hidden;width: 18px;height: 1px;position: absolute;left: 0px;top: 50%;z-index: 10;background: #B5B8C8;   }
+.l-spinner-up-over .l-spinner-icon{background-image: url(../images/form/icon-up-over.gif);}
+.l-spinner-down-over .l-spinner-icon{background-image: url(../images/form/icon-down-over.gif);}
+
+/* -------------
+   * 验证 *
+* ------------- */
+.l-verify-star { color:Red;}
+ 
+/* -------------
+    * 复选框 *
+* ------------- */
+.l-checkbox-wrapper{
+	display: -moz-inline-stack;display:inline-block; zoom: 1;*display: inline;margin:0 auto;margin-right:2px; padding:0;}
+a.l-checkbox {
+	background:url('../images/form/checkboxradio.gif') no-repeat 0 -12px;
+	vertical-align: middle;
+	height: 12px;
+	width: 12px; margin:0 auto;
+	overflow:hidden; cursor:pointer;
+	display: -moz-inline-stack;display:inline-block; zoom: 1;*display: inline;
+}
+div.l-disabled a.l-checkbox
+{
+     
+}
+div.l-disabled a.l-checkbox-checked
+{
+     
+}
+a.l-checkbox-checked
+{
+    background-position:0 0px;
+}
+.l-over a.l-checkbox
+{
+    background-position:0px -12px;
+}
+.l-over a.l-checkbox-checked
+{
+    background-position:0px 0px;
+}
+/* -------------
+    * 单选框 *
+* ------------- */
+a.l-radio {background:url('../images/form/checkboxradio.gif') no-repeat -12px -12px;vertical-align: middle;height: 12px;width: 12px;}
+a.l-radio-checked{background-position:-12px 0px;}
+div.l-disabled a.l-radio{}
+div.l-disabled a.l-radio-checked{}
+.l-over a.l-radio{background-position:-12px -12px;}
+.l-over a.l-radio-checked{background-position:-12px 0px;}
