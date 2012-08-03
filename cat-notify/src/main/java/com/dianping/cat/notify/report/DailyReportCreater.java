@@ -1,11 +1,13 @@
 package com.dianping.cat.notify.report;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -13,16 +15,18 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.notify.job.ProblemStatistics;
+import com.dianping.cat.notify.job.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.notify.util.TimeUtil;
 
 public class DailyReportCreater extends AbstractReportCreater {
 
 	private static final String PATTERN = "<a href='http://cat.dianpingoa.com/cat/r/%s?op=history&domain=%s&date=%s&reportType=day'>(Last %s %s)</a>";
 
+	
 	public boolean isNeedToCreate(long timestamp) {
 		int hour = TimeUtil.getHourOfDay(timestamp);
 		/* create report at 01:00:00 */
-		if (hour != 1) {
+		if (hour != 19) {
 			return false;
 		}
 
@@ -68,10 +72,20 @@ public class DailyReportCreater extends AbstractReportCreater {
 				return (int) (o1.getAvg() - o2.getAvg());
 			}
 		});
+		
+		for(TransactionType transactionType : typeList){
+			String trendViewUrl = super.getTrendsViewUrl("e", domain, timeSpan.getEndMicros(), "day", transactionType.getId(), "查看趋势图");
+			transactionType.setSuccessMessageUrl(trendViewUrl);
+			DecimalFormat df = new DecimalFormat("#.##");
+			transactionType.setAvg(new Double(df.format(transactionType.getAvg())));
+			transactionType.setFailPercent(new Double(df.format(transactionType.getFailPercent())));
+		}
+		
 		long period = transactionReport.getStartTime().getTime();
 		Map<String, Object> params = new HashMap<String, Object>();
-		String reportDay = TimeUtil.formatTime("yyyy-MM-dd", period);
-		params.put("title", "Transaction Report " + reportDay);
+
+		String currentUrl = getCurrentViewUrl("t", domain, timeSpan.getEndMicros());
+		params.put("title", "Event Report " + currentUrl);
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS * 7;
 		long preWeakDay = period - TimeUtil.DAY_MICROS * 6;
@@ -96,11 +110,16 @@ public class DailyReportCreater extends AbstractReportCreater {
 				return (int) (o1.getTotalCount() - o2.getTotalCount());
 			}
 		});
+		for(EventType eventType : eventTypeList){
+			String trendViewUrl = super.getTrendsViewUrl("e", domain, timeSpan.getEndMicros(), "day", eventType.getId(), "查看趋势图");
+			eventType.setSuccessMessageUrl(trendViewUrl);
+		}
 
 		long period = report.getStartTime().getTime();
 		Map<String, Object> params = new HashMap<String, Object>(2);
-		String reportDay = TimeUtil.formatTime("yyyy-MM-dd", period);
-		params.put("title", "Event Report " + reportDay);
+		
+		String currentUrl = getCurrentViewUrl("e", domain, timeSpan.getEndMicros());
+		params.put("title", "Event Report " + currentUrl);
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS * 7;
 		long preWeakDay = period - TimeUtil.DAY_MICROS * 6;
@@ -120,8 +139,15 @@ public class DailyReportCreater extends AbstractReportCreater {
 		Map<String, Object> params = new HashMap<String, Object>(2);
 
 		long period = report.getStartTime().getTime();
-		String reportDay = TimeUtil.formatTime("yyyy-MM-dd", period);
-		params.put("title", "Problem Report " + reportDay);
+		
+		for(Entry<String, TypeStatistics> type: problemStatistics.getStatus().entrySet()){
+			TypeStatistics typeStatistics = type.getValue(); 
+			String trendViewUrl = getTrendsViewUrl("p", domain, timeSpan.getEndMicros(), "day", typeStatistics.getType(), "查看趋势图");
+			typeStatistics.setTrendUrl(trendViewUrl);
+		}
+		
+		String currentUrl = getCurrentViewUrl("p", domain, timeSpan.getEndMicros());
+		params.put("title", "Problem Report " + currentUrl);
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS * 7;
 		long preWeakDay = period - TimeUtil.DAY_MICROS * 6;

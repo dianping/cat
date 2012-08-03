@@ -5,35 +5,28 @@
 <body>
 <br/>
 <br/>
-<table width="100%" rules="all">
+<table rules="all">
     <tr>
-		<td colspan="4">${title}
+		<td colspan="5">${title}
 		</td>
 	</tr>
     <tr>
+        <th></th>
 		<th>Type</th>
 		<th>Total</th>
-		<th>Status</th>
-		<th>Count</th>
+		<th>Operation</th>
+	    <th></th>
 	</tr>
 	#foreach( $statistics in ${problemStatistics.status})
 	      <tr>
-		      <td rowspan="${statistics.status.size()}">${statistics.type}</td>
-		      <td rowspan="${statistics.status.size()}">${statistics.count}</td>
-		      #set ($i=0) 
-		      #foreach($one in ${statistics.status})
-			      #if($i!=0) 
-			         <tr>
-			      #end 
-		          <td >${one.status}</td>
-				  <td >${one.count}</td>
-				  #if($i!=0) 
-			         </tr>
-			      #end 
-		          #set($i=$i+1)
-		      #end 
+	          <td ></td>
+		      <td >${statistics.type}</td>
+		      <td >${statistics.count}</td>
+		      <td >${statistics.trendUrl}</td>
+		      <td ></td>
 		  </tr>
     #end
+    <tr></tr>
 </table>
 </body>
 </html>

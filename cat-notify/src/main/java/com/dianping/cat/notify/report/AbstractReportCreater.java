@@ -20,9 +20,14 @@ import com.dianping.cat.notify.model.DailyReport;
 import com.dianping.cat.notify.model.entity.Report;
 import com.dianping.cat.notify.render.IRender;
 import com.dianping.cat.notify.server.ContainerHolder;
+import com.dianping.cat.notify.util.TimeUtil;
 
 public abstract class AbstractReportCreater implements ReportCreater {
-
+	
+	private static final String TRENDS_URL= "<a href='http://cat.dianpingoa.com/cat/r/%s?op=historyGraph&domain=%s&date=%s&ip=All&reportType=%s&type=%s'>%s</a>";
+   
+	private static final String CURRENT_URL="<a href='http://cat.dianpingoa.com/cat/r/%s?domain=%s&date=%s&reportType=&op=view'>%s</a>";
+	
 	private final static Logger logger = LoggerFactory.getLogger(AbstractReportCreater.class);
 
 	protected Report m_config;
@@ -172,6 +177,17 @@ public abstract class AbstractReportCreater implements ReportCreater {
 			}
 		}
 		return merger.getTransactionReport();
+	}
+	//http://cat.dianpingoa.com/cat/r/%s?op=historyGraph&domain=%s&date=%s&ip=All&reportType=%s&type=%s'>%s
+	protected String getTrendsViewUrl(String reportType, String domain, long timestamp,String dayOrWeak,String name,String hyperText) {
+		return String.format(TRENDS_URL, reportType, domain, TimeUtil.formatTime("yyyyMMdd", timestamp),dayOrWeak,name,hyperText);
+	}
+	
+	//http://cat.dianpingoa.com/cat/r/%s?domain=%s&date=%s&reportType=&op=view
+	protected String getCurrentViewUrl(String reportType, String domain, long timestamp){
+		String reportDay = TimeUtil.formatTime("yyyy-MM-dd", timestamp);
+		return String.format(CURRENT_URL, reportType, domain, TimeUtil.formatTime("yyyyMMdd", timestamp),reportDay);
+
 	}
 
 	protected abstract TimeSpan getReportTimeSpan(long timespan);

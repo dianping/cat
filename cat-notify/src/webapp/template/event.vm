@@ -5,25 +5,32 @@
 <body>
 <br/>
 <br/>
-<table width="100%" rules="all">
+<table rules="all">
 	<tr>
-		<td colspan="4">${title}&nbsp;&nbsp;${preWeakLastDay}&nbsp;&nbsp;${preWeakDay}
+		<td colspan="6">${title}&nbsp;&nbsp;${preWeakLastDay}&nbsp;&nbsp;${preWeakDay}
 		</td>
 	</tr>
 	<tr>
-		<td width="22%" >Type</td>
+	    <td ></td>
+		<td >Type</td>
 		<td >Total Count</td>
 		<td >Failure Count</td>
 		<td >Failure%</td>
+		<td >Operation</td>
+	    <td ></td>
 	</tr>
 	#foreach( $type in $typeList)
 	<tr>
+	    <td ></td>
 	    <td>$!type.id</td>
         <td>$!type.totalCount</td>
         <td>$!type.failCount</td>
         <td>$!type.failPercent</td>
+        <td>$!type.successMessageUrl</td>
+        <td ></td>
     </tr>
     #end
+    <tr></tr>
 </table>
 </body>
 </html>

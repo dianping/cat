@@ -1,11 +1,13 @@
 package com.dianping.cat.notify.report;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -13,6 +15,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.notify.job.ProblemStatistics;
+import com.dianping.cat.notify.job.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.notify.util.TimeUtil;
 
 public class WeaklyReportCreater extends AbstractReportCreater {
@@ -21,7 +24,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 		int dayOfWeak = TimeUtil.getDayOfWeak(timestamp);
 		int hour = TimeUtil.getHourOfDay(timestamp);
 		/* create report at 00:00:00 of every saturday */
-		if (dayOfWeak != 7 || hour != 0) {
+		if (dayOfWeak != 5 || hour != 19) {
 			return false;
 		}
 		long currentTime = System.currentTimeMillis();
@@ -42,7 +45,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 
 	@Override
 	protected TimeSpan getReportTimeSpan(long timespan) {
-		long startMicros = timespan - TimeUtil.DAY_MICROS * 7;
+		long startMicros = timespan - TimeUtil.DAY_MICROS * 8;
 		long endMicros = timespan - TimeUtil.DAY_MICROS;
 		TimeSpan timeRange = new TimeSpan();
 		timeRange.setStartMicros(startMicros);
@@ -67,6 +70,14 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 				return (int) (o1.getAvg() - o2.getAvg());
 			}
 		});
+		
+		for(TransactionType transactionType : typeList){
+			String trendViewUrl = getTrendsViewUrl("e", domain, timeSpan.getEndMicros(), "week", transactionType.getId(), "查看趋势图");
+			transactionType.setSuccessMessageUrl(trendViewUrl);
+			DecimalFormat df = new DecimalFormat("#.##");
+			transactionType.setAvg(new Double(df.format(transactionType.getAvg())));
+			transactionType.setFailPercent(new Double(df.format(transactionType.getFailPercent())));
+		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
 
@@ -98,6 +109,11 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 				return (int) (o1.getTotalCount() - o2.getTotalCount());
 			}
 		});
+		
+		for(EventType eventType : eventTypeList){
+			String trendViewUrl = super.getTrendsViewUrl("e", domain, timeSpan.getEndMicros(), "week", eventType.getId(), "查看趋势图");
+			eventType.setSuccessMessageUrl(trendViewUrl);
+		}
 
 		Map<String, Object> params = new HashMap<String, Object>(2);
 
@@ -118,6 +134,12 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		problemStatistics.setAllIp(true);
 		problemStatistics.visitProblemReport(report);
+		
+		for(Entry<String, TypeStatistics> type: problemStatistics.getStatus().entrySet()){
+			TypeStatistics typeStatistics = type.getValue(); 
+			String trendViewUrl = getTrendsViewUrl("p", domain, timeSpan.getEndMicros(), "week", typeStatistics.getType(), "查看趋势图");
+			typeStatistics.setTrendUrl(trendViewUrl);
+		}
 
 		Map<String, Object> params = new HashMap<String, Object>(2);
 

@@ -24,7 +24,7 @@
 			<filtered>true</filtered>
 		</fileSet>
 		<fileSet>
-			<directory>webapp</directory>
+			<directory>src/webapp</directory>
 			<outputDirectory>/webapp</outputDirectory>
 			<includes>
 				<include>**/*</include>

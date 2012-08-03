@@ -139,6 +139,8 @@ public class ProblemStatistics extends BaseVisitor {
 		private int m_count;
 
 		private String m_type;
+		
+		private String m_trendUrl;
 
 		private Map<String, StatusStatistics> m_status = new LinkedHashMap<String, StatusStatistics>();
 
@@ -190,6 +192,15 @@ public class ProblemStatistics extends BaseVisitor {
 		public void setStatus(Map<String, StatusStatistics> status) {
 			m_status = status;
 		}
+
+		public String getTrendUrl() {
+			return m_trendUrl;
+		}
+
+		public void setTrendUrl(String trendUrl) {
+			this.m_trendUrl = trendUrl;
+		}
+		
 	}
 
 	public static class StatusStatistics {

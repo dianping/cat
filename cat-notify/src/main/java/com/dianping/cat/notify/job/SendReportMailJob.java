@@ -107,7 +107,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		}
 	}
 
-	private boolean sendBySubscriber(long timestamp, boolean handwork, Subscriber subscriber) {
+	private boolean sendBySubscriber_bak(long timestamp, boolean handwork, Subscriber subscriber) {
 		String emailTitle = String.format("Cat monitor reports of [%s]", subscriber.getDomain());
 		StringBuilder reportContent = new StringBuilder();
 		List<ReportCreater> reportList = m_reportCreaters.get(subscriber.getDomain());
@@ -160,6 +160,63 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		}
 		return MailLog.SEND_SUCCSS == mailLog.getStatus() ? true : false;
 	}
+	
+	private boolean sendBySubscriber(long timestamp, boolean handwork, Subscriber subscriber) {
+		String emailTitle = String.format("Cat monitor reports of [%s]", subscriber.getDomain());
+		List<ReportCreater> reportList = m_reportCreaters.get(subscriber.getDomain());
+		boolean sendResult = true;
+		for (ReportCreater reportCreater : reportList) {
+			if (!handwork) {
+				if (!reportCreater.isNeedToCreate(timestamp)) {
+					continue;
+				}
+			}
+			
+			String reportContent = reportCreater.createReport(timestamp, subscriber.getDomain());
+			if (reportContent.trim().length() == 0) {
+				continue;
+			}
+			
+			MailLog mailLog = new MailLog();
+			String address = subscriber.getAddress();
+			mailLog.setAddress(address);
+			mailLog.setContent(reportContent);
+			mailLog.setTitle(emailTitle);
+			try {
+				if (address == null) {
+					logger.error(String.format("subscriber [%s] email is empty", subscriber.getDomain()));
+					sendResult = false;
+					continue;
+				}
+				String[] addressArray = address.split(MAIL_SPLITER);
+				List<String> addressList = new ArrayList<String>();
+				for (int i = 0; i < addressArray.length; i++) {
+					addressList.add(addressArray[i]);
+				}
+				boolean result = m_commonService.sendEmail(reportContent.toString(), emailTitle, addressList);
+				if (result) {
+					logger.debug("Send Email Success!");
+					mailLog.setStatus(MailLog.SEND_SUCCSS);
+				} else {
+					logger.error(String.format("Send Email fail,time[%s],domain[%s],type[%s],address[%d]", new Date(timestamp),
+					      subscriber.getDomain(), subscriber.getType(), subscriber.getAddress()));
+					mailLog.setStatus(MailLog.SEND_FAIL);
+				}
+			} catch (Exception e1) {
+				mailLog.setStatus(MailLog.SEND_FAIL);
+			}
+			try {
+				m_mailLogDao.insertMailLog(mailLog);
+			} catch (Exception e) {
+				logger.error(String.format("Save email report to database fail,time[%s],title[%s],address[%s],content[%d]",
+				      new Date(timestamp), mailLog.getTitle(), mailLog.getAddress(), mailLog.getContent()), e);
+				continue;
+			}
+			sendResult = MailLog.SEND_SUCCSS == mailLog.getStatus() ? true : false;
+		}
+		return sendResult;
+	}
+
 
 	@Override
 	public boolean doHandwork(JobContext jobContext) {
