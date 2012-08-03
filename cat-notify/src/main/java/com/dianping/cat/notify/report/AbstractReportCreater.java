@@ -78,16 +78,8 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		StringBuilder report_content = new StringBuilder();
 		try {
 			for (String reportName : reportNames) {
-
 				List<DailyReport> dailyReportList = new ArrayList<DailyReport>();
-				for (; startMicros < endMicros; startMicros = startMicros + TimeUtil.DAY_MICROS) {
-					List<DailyReport> temp = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(
-							startMicros+TimeUtil.DAY_MICROS), domain, reportName, DailyReport.XML_TYPE);
-					if (temp != null) {
-						dailyReportList.addAll(temp);
-					}
-				}
-
+				dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(endMicros), domain, reportName, DailyReport.XML_TYPE);
 				if (reportName.equals(DailyReport.EVENT_REPORT)) {
 					EventReport eReport = parseEvent(dailyReportList, domain);
 					report_content.append(renderEventReport(timeRange, eReport, domain));

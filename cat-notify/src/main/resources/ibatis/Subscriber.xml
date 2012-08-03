@@ -3,13 +3,15 @@
 <sqlMap>
 	<typeAlias alias="subscriber" type="com.dianping.cat.notify.model.Subscriber"/>
 	<sql id="Subscriber.columns">
-		id,domain,group,owner,address,type
+		id,domain,address,type,group,owner
 	</sql>
 	<resultMap id="SubscriberResult" class="subscriber">
 		<result property="id" column="id" nullValue="0" />
 		<result property="domain" column="domain" nullValue="" />
 		<result property="address" column="address" nullValue="" />
 		<result property="type" column="type" nullValue="" />
+		<result property="group" column="group" nullValue=""/>
+		<result property="owner" column="owner" nullValue=""/>
 	</resultMap>
     <select id="Subscriber.selectSubscriber" resultMap="SubscriberResult" >
     	select <include refid="Subscriber.columns"/> 

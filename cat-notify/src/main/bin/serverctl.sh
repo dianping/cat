@@ -18,10 +18,10 @@ if [ $# -lt 1 ]; then
     usage
 fi
 
-if [ `whoami` == "root" ]; then
-  echo DO NOT use root user to launch me.
-  exit 1;
-fi
+#if [ `whoami` == "root" ]; then
+#  echo DO NOT use root user to launch me.
+#  exit 1;
+#fi
 
 #SET BAS DIR
 cd `dirname $0`/..
@@ -41,12 +41,12 @@ export LANG=zh_CN.GB18030
 JAVA_OPTS="$JAVA_OPTS -Djava.net.preferIPv4Stack=true"
 
 JAVA_OPTS="$JAVA_OPTS -server "
-JAVA_OPTS="$JAVA_OPTS -Xms512M "
-#JAVA_OPTS="$JAVA_OPTS -Xmx512M "
-JAVA_OPTS="$JAVA_OPTS -Xmx512M -Djava.nio.channels.spi.SelectorProvider=sun.nio.ch.PollSelectorProvider"
-JAVA_OPTS="$JAVA_OPTS -XX:PermSize=40m "
-JAVA_OPTS="$JAVA_OPTS -XX:MaxPermSize=40m "
-JAVA_OPTS="$JAVA_OPTS -Xss1m "
+JAVA_OPTS="$JAVA_OPTS -Xms1024M "
+#JAVA_OPTS="$JAVA_OPTS -Xmx1024M "
+JAVA_OPTS="$JAVA_OPTS -Xmx1024M -Djava.nio.channels.spi.SelectorProvider=sun.nio.ch.PollSelectorProvider"
+JAVA_OPTS="$JAVA_OPTS -XX:PermSize=80m "
+JAVA_OPTS="$JAVA_OPTS -XX:MaxPermSize=80m "
+JAVA_OPTS="$JAVA_OPTS -Xss2m "
 JAVA_OPTS="$JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError "
 JAVA_OPTS="$JAVA_OPTS -XX:+UseParallelOldGC "
 JAVA_OPTS="$JAVA_OPTS -XX:+DisableExplicitGC "
