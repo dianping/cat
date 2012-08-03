@@ -31,4 +31,20 @@ public class DailyReportDaoImp implements DailyReportDao {
 		map.put("type", type);
 		return (List) baseDao.executeQueryForList("DailyReport.selectReport", map);
 	}
+	
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@Override
+	public List<DailyReport> findSendMailReportDomainDuration(Date startDate,
+			Date endDate, String domain, int type)
+			throws Exception {
+		Map<String,Object> map=new HashMap<String,Object>();
+		if(type != DailyReport.JSON_TYPE && type != DailyReport.XML_TYPE){
+			return null;
+		}
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("domain", domain);
+		map.put("type", type);
+		return (List) baseDao.executeQueryForList("DailyReport.selectSendMailReport", map);
+	}
 }

@@ -33,7 +33,7 @@ public abstract class AbstractReportCreater implements ReportCreater {
 	
 	private final static Logger logger = LoggerFactory.getLogger(AbstractReportCreater.class);
 
-	protected Report m_config;
+	protected ReportConfig m_config;
 
 	protected ContainerHolder m_configHolder;
 
@@ -44,7 +44,7 @@ public abstract class AbstractReportCreater implements ReportCreater {
 	protected AtomicLong lastSuccessTime = new AtomicLong();
 
 	@Override
-	public boolean init(Report config, ContainerHolder holder) {
+	public boolean init(ReportConfig config, ContainerHolder holder) {
 		m_config = config;
 		m_configHolder = holder;
 		m_dailyReportDao = m_configHolder.lookup(DailyReportDao.class, "dailyReportDao");
@@ -71,8 +71,7 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		long endMicros = timeRange.getEndMicros();
 		List<DailyReport> dailyReportList = null;
 		try {
-			dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(endMicros),
-			      domain, null, DailyReport.XML_TYPE);
+			dailyReportList = m_dailyReportDao.findSendMailReportDomainDuration(new Date(startMicros), new Date(endMicros), domain, DailyReport.XML_TYPE);
 		} catch (Exception e) {
 			logger.error(String.format("fail to read report from database,time range[%s,%s]", new Date(startMicros),
 			      new Date(endMicros)), e);
@@ -121,6 +120,9 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 		for (DailyReport dailyReport : reportList) {
 			String xml = dailyReport.getContent();
+			if(xml == null){
+				continue;
+			}
 			try {
 				EventReport model = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
 				model.accept(merger);
@@ -144,6 +146,9 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 		for (DailyReport dailyReport : reportList) {
 			String xml = dailyReport.getContent();
+			if(xml == null){
+				continue;
+			}
 			try {
 				ProblemReport model = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
 				model.accept(merger);
@@ -167,6 +172,9 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 		for (DailyReport dailyReport : reportList) {
 			String xml = dailyReport.getContent();
+			if(xml == null){
+				continue;
+			}
 			try {
 				TransactionReport model = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(xml);
 				model.accept(merger);

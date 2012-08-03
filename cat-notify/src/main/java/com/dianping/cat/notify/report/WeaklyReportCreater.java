@@ -24,7 +24,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 		int dayOfWeak = TimeUtil.getDayOfWeak(timestamp);
 		int hour = TimeUtil.getHourOfDay(timestamp);
 		/* create report at 00:00:00 of every saturday */
-		if (dayOfWeak != 6 || hour != 10) {
+		if (dayOfWeak != 6 || hour != 14) {
 			return false;
 		}
 		long currentTime = System.currentTimeMillis();
