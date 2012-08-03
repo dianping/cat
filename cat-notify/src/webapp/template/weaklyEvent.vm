@@ -7,7 +7,7 @@
 <br/>
 <table rules="all">
 	<tr>
-		<td colspan="6">${title}
+		<td colspan="7">${title}
 		</td>
 	</tr>
 	<tr>

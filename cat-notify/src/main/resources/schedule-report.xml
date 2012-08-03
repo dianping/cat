@@ -1,10 +1,165 @@
 <schedule-reports >
+   <!-- Cat Report Config -->
    <report domain="Cat" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
       <template id="transaction" path="transaction.vm" />
       <template id="event" path="event.vm" />
 	  <template id="problem" path="problem.vm" />
    </report>
    <report domain="Cat" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- AdwordsWeb Report Config -->
+   <report domain="AdwordsWeb" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="AdwordsWeb" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- DPSearch Report Config -->
+   <report domain="DPSearch" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="DPSearch" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- GroupService Report Config -->
+   <report domain="GroupService" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="GroupService" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- GroupWeb Report Config -->
+   <report domain="GroupWeb" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="GroupWeb" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- MobileApi Report Config -->
+   <report domain="MobileApi" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="MobileApi" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- PayChannel Report Config -->
+   <report domain="PayChannel" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="PayChannel" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- PayEngine Report Config -->
+   <report domain="PayEngine" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="PayEngine" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- PayOrder Report Config -->
+   <report domain="PayOrder" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="PayOrder" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- PiccenterUpload Report Config -->
+   <report domain="PiccenterUpload" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="PiccenterUpload" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- TuanGouApi Report Config -->
+   <report domain="TuanGouApi" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="TuanGouApi" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- TuanGouApiMobile Report Config -->
+   <report domain="TuanGouApiMobile" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="TuanGouApiMobile" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- TuanGouRemote Report Config -->
+   <report domain="TuanGouRemote" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="TuanGouRemote" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- TuanGouWeb Report Config -->
+   <report domain="TuanGouWeb" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="TuanGouWeb" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
+      <template id="transaction" path="weaklyTransaction.vm" />
+      <template id="event" path="weaklyEvent.vm" />
+	  <template id="problem" path="weaklyProblem.vm" />
+   </report>
+   <!-- Unipay Report Config -->
+   <report domain="Unipay" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
+      <template id="transaction" path="transaction.vm" />
+      <template id="event" path="event.vm" />
+	  <template id="problem" path="problem.vm" />
+   </report>
+   <report domain="Unipay" createClass="com.dianping.cat.notify.report.WeaklyReportCreater"  schedule="10"  >
       <template id="transaction" path="weaklyTransaction.vm" />
       <template id="event" path="weaklyEvent.vm" />
 	  <template id="problem" path="weaklyProblem.vm" />

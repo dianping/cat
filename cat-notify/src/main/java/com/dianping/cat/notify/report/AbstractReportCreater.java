@@ -14,7 +14,10 @@ import org.xml.sax.SAXException;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.notify.dao.DailyReportDao;
 import com.dianping.cat.notify.model.DailyReport;
 import com.dianping.cat.notify.model.entity.Report;
@@ -24,9 +27,9 @@ import com.dianping.cat.notify.util.TimeUtil;
 
 public abstract class AbstractReportCreater implements ReportCreater {
 	
-	private static final String TRENDS_URL= "<a href='http://cat.dianpingoa.com/cat/r/%s?op=historyGraph&domain=%s&date=%s&ip=All&reportType=%s&type=%s'>%s</a>";
+	private static final String TRENDS_URL= "<a href='http://cat.dianpingoa.com/cat/r/%s?op=historyGraph&domain=%s&date=%s&ip=All&reportType=%s&type=%s' target='_blank'>%s</a>";
    
-	private static final String CURRENT_URL="<a href='http://cat.dianpingoa.com/cat/r/%s?domain=%s&date=%s&reportType=&op=view'>%s</a>";
+	private static final String CURRENT_URL="<a href='http://cat.dianpingoa.com/cat/r/%s?domain=%s&date=%s&reportType=&op=view' target='_blank'>%s</a>";
 	
 	private final static Logger logger = LoggerFactory.getLogger(AbstractReportCreater.class);
 
@@ -104,6 +107,7 @@ public abstract class AbstractReportCreater implements ReportCreater {
 				report_content.append(renterProblemReport(timeRange, pReport, domain));
 			} else if (reportName.equals(DailyReport.TRANSACGION_REPORT)) {
 				TransactionReport tReport = parseTransction(reportGroup.getValue(), domain);
+				caculateTps(tReport, ReportConstants.ALL_IP);
 				report_content.append(renderTransactionReport(timeRange, tReport, domain));
 			}
 		}
@@ -190,6 +194,27 @@ public abstract class AbstractReportCreater implements ReportCreater {
 
 	}
 
+	private void caculateTps(TransactionReport report, String ip) {
+		Machine machine = report.getMachines().get(ip);
+		if (machine == null) {
+			return;
+		}
+		for (TransactionType transType : machine.getTypes().values()) {
+			long totalCount = transType.getTotalCount();
+			double tps = 0;
+			double time = (report.getEndTime().getTime() - report
+					.getStartTime().getTime()) / (double) 1000;
+			tps = totalCount / (double) time;
+			transType.setTps(tps);
+			for (TransactionName transName : transType.getNames().values()) {
+				long totalNameCount = transName.getTotalCount();
+				double nameTps = 0;
+				nameTps = totalNameCount / (double) time;
+				transName.setTps(nameTps);
+			}
+		}
+	}
+	
 	protected abstract TimeSpan getReportTimeSpan(long timespan);
 
 	protected abstract String renderTransactionReport(TimeSpan timeSpan, TransactionReport report, String domain);

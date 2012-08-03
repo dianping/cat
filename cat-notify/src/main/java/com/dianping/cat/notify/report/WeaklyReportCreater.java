@@ -24,7 +24,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 		int dayOfWeak = TimeUtil.getDayOfWeak(timestamp);
 		int hour = TimeUtil.getHourOfDay(timestamp);
 		/* create report at 00:00:00 of every saturday */
-		if (dayOfWeak != 7 || hour != 1) {
+		if (dayOfWeak != 6 || hour != 10) {
 			return false;
 		}
 		long currentTime = System.currentTimeMillis();
@@ -77,6 +77,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 			DecimalFormat df = new DecimalFormat("#.##");
 			transactionType.setAvg(new Double(df.format(transactionType.getAvg())));
 			transactionType.setFailPercent(new Double(df.format(transactionType.getFailPercent())));
+			transactionType.setTps(new Double(df.format(transactionType.getTps())));
 		}
 
 		Map<String, Object> params = new HashMap<String, Object>();
