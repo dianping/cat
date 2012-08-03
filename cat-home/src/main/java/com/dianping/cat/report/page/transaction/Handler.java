@@ -216,7 +216,6 @@ public class Handler implements PageHandler<Context> {
 		String display = name != null ? name : type;
 
 		int size = (int) ((end.getTime() - start.getTime()) * 12 / ONE_HOUR);
-
 		GraphItem item = new GraphItem();
 		item.setStart(start);
 		item.setSize(size);
@@ -281,7 +280,7 @@ public class Handler implements PageHandler<Context> {
 		setTps(payload, transactionReport);
 		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {
-			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, transactionReport, ""));
+			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, transactionReport, payload.getQueryName()));
 		} else {
 			model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, transactionReport));
 		}
@@ -297,9 +296,13 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		String ip = payload.getIpAddress();
+		String queryName = payload.getQueryName();
 
 		if (ip == null || ip.length() == 0) {
 			payload.setIpAddress(CatString.ALL_IP);
+		}
+		if (queryName != null) {
+			model.setQueryName(queryName);
 		}
 		model.setIpAddress(payload.getIpAddress());
 		model.setDisplayDomain(payload.getDomain());
@@ -322,8 +325,9 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReportType(payload.getReportType());
 			payload.computeStartDate();
-			payload.defaultIsYesterday();
+			payload.setYesterdayDefault();
 			model.setLongDate(payload.getDate());
+			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
 	}
 
@@ -368,9 +372,6 @@ public class Handler implements PageHandler<Context> {
 				String sorted = payload.getSortBy();
 				String queryName = payload.getQueryName();
 				String ip = payload.getIpAddress();
-				if (queryName != null) {
-					model.setQueryName(queryName);
-				}
 				if (!StringUtils.isEmpty(type)) {
 					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report,
 					      queryName));
@@ -385,7 +386,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public Map<String, double[]> getGraphData(Model model, Payload payload) {
-		Date start = new Date(payload.getDate());
+		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		String domain = model.getDomain();
 		String type = payload.getType();
@@ -412,14 +413,13 @@ public class Handler implements PageHandler<Context> {
 		double[] failure_count = new double[size];
 		double[] sum = new double[size];
 
-		// set the default value
 		for (int i = 0; i < size; i++) {
 			total_count[i] = NOTEXIST;
 			failure_count[i] = NOTEXIST;
 			sum[i] = NOTEXIST;
 		}
 
-		if (!isEmpty(type) && isEmpty(name)) {
+		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
 			for (Graph graph : graphs) {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / ONE_HOUR);
 				String summaryContent = graph.getSummaryContent();
@@ -433,7 +433,7 @@ public class Handler implements PageHandler<Context> {
 					}
 				}
 			}
-		} else if (!isEmpty(type) && !isEmpty(name)) {
+		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
 			for (Graph graph : graphs) {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / ONE_HOUR);
 				String detailContent = graph.getDetailContent();
@@ -472,10 +472,6 @@ public class Handler implements PageHandler<Context> {
 				src[index + i] = Double.valueOf(values[i]);
 			}
 		}
-	}
-
-	private boolean isEmpty(String content) {
-		return content == null || content.equals("");
 	}
 
 	public enum SummaryOrder {

@@ -20,21 +20,21 @@
 	<tr style="text-align:left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All&reportType=${model.reportType}"
+					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All&reportType=${model.reportType}${model.customDate}"
 						class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All&reportType=${model.reportType}">All</a>
+					<a href="?op=history&domain=${model.domain}&date=${model.date}&threshold=${model.threshold}&ip=All&reportType=${model.reportType}${model.customDate}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&reportType=${model.reportType}"
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&reportType=${model.reportType}${model.customDate}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&reportType=${model.reportType}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&reportType=${model.reportType}${model.customDate}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -64,10 +64,11 @@
 			var sqlThreshold='${model.sqlThreshold}';
 			$("#p_longSql").val(sqlThreshold) ;
 			function longTimeChange(date,domain,ip){
+				var customDate ='${model.customDate}';
 				var reportType = '${model.reportType}';
 				var longtime=$("#p_longUrl").val();
 				var longSqlTime=$("#p_longSql").val();
-				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime+'&reportType='+reportType;
+				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime+'&reportType='+reportType+customDate;
 			}
 		</script><input style="WIDTH: 60px" value="Refresh"
 			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
@@ -90,7 +91,7 @@
 		<tr>
 			<td rowspan="${w:size(statistics.value.status)*2}"
 				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">
-				<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
+				<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
 				&nbsp;<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
 				&nbsp;&nbsp;${statistics.value.type}
 			</td>
@@ -102,7 +103,7 @@
 					<tr>
 				</c:if>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">
-					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
+					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
 					&nbsp;${status.value.status}
 				</td>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.count}</td>

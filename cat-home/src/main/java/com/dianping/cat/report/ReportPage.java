@@ -27,11 +27,11 @@ public enum ReportPage implements Page {
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
 
-   TASK("task", "task", "Task", "Task", true),
+   TASK("task", "task", "Task", "Task", false),
 
    MATRIX("matrix", "matrix", "Matrix", "Matrix", true),
 
-   MONTHREPORT("monthreport", "monthreport", "Monthreport", "Monthreport", true);
+   MONTHREPORT("monthreport", "monthreport", "Monthreport", "Monthreport", false);
 
    private String m_name;
 

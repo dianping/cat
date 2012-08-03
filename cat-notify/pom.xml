@@ -10,7 +10,6 @@
   <inceptionYear>2012</inceptionYear>
   <artifactId>cat-notify</artifactId>
   <name>CAT Notify</name>
-  <packaging>war</packaging>
 
 	<properties>
 		<jetty.version>7.3.1.v20110307</jetty.version>

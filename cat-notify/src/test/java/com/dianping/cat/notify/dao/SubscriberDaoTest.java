@@ -19,9 +19,7 @@ public class SubscriberDaoTest extends BaseTest {
 				subscriber.getAddress();
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 }
