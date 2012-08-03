@@ -12,8 +12,6 @@ import java.util.Map.Entry;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.notify.job.ProblemStatistics;
@@ -27,7 +25,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 	public boolean isNeedToCreate(long timestamp) {
 		int hour = TimeUtil.getHourOfDay(timestamp);
 		/* create report at 01:00:00 */
-		if (hour != 14) {
+		if (hour != 1) {
 			return false;
 		}
 
