@@ -26,7 +26,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 	public boolean isNeedToCreate(long timestamp) {
 		int hour = TimeUtil.getHourOfDay(timestamp);
 		/* create report at 01:00:00 */
-		if (hour != 19) {
+		if (hour != 1) {
 			return false;
 		}
 
