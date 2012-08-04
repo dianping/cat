@@ -53,12 +53,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		cal.setTimeInMillis(m_date);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		m_date = cal.getTimeInMillis();
-		int weekOfDay = cal.get(Calendar.DAY_OF_WEEK);
 
 		if ("month".equals(m_reportType)) {
 			cal.set(Calendar.DATE, 1);
 			m_date = cal.getTimeInMillis();
 		} else if ("week".equals(m_reportType)) {
+			int weekOfDay = cal.get(Calendar.DAY_OF_WEEK) % 7;
 			m_date = m_date - (ONE_HOUR) * (weekOfDay % 7) * 24;
 			if (m_date > System.currentTimeMillis()) {
 				m_date = m_date - 7 * 24 * ONE_HOUR;

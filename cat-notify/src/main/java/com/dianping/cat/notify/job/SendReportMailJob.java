@@ -67,7 +67,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		}
 	}
 
-	private boolean sendBySubscriber_bak(long timestamp, boolean handwork,
+	public boolean sendBySubscriber_bak(long timestamp, boolean handwork,
 			Subscriber subscriber) {
 		String emailTitle = String.format("Cat monitor reports of [%s]",
 				subscriber.getDomain());

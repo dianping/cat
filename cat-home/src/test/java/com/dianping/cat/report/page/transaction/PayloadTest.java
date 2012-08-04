@@ -124,7 +124,7 @@ public class PayloadTest {
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		temp = cal.getTimeInMillis();
 
-		int weekOfDay = cal.get(Calendar.DAY_OF_WEEK);
+		int weekOfDay = cal.get(Calendar.DAY_OF_WEEK) % 7;
 		temp = temp - 24 * (weekOfDay) * ONE_HOUR;
 		if (temp > System.currentTimeMillis()) {
 			temp = temp - 7 * ONE_DAY;

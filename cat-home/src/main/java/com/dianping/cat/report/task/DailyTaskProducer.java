@@ -32,14 +32,6 @@ public class DailyTaskProducer implements Runnable, Initializable {
 
 	private static final long DAY = 24 * 60 * 60 * 1000L;
 
-	private static Set<String> m_dailyReportNameSet = new HashSet<String>();
-
-	static {
-		m_dailyReportNameSet.add("event");
-		m_dailyReportNameSet.add("transaction");
-		m_dailyReportNameSet.add("problem");
-	}
-
 	@Inject
 	private TaskDao m_taskDao;
 
@@ -48,6 +40,8 @@ public class DailyTaskProducer implements Runnable, Initializable {
 
 	@Inject
 	private DailyreportDao m_dailyReportDao;
+
+	private Set<String> m_dailyReportNameSet = new HashSet<String>();
 
 	private Logger m_logger;
 
@@ -58,16 +52,24 @@ public class DailyTaskProducer implements Runnable, Initializable {
 			Date todayStart = TaskHelper.todayZero(now);
 			Date todayEnd = TaskHelper.tomorrowZero(now);
 			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now);
-
+			
 			LockSupport.parkUntil(startDateOfNextTask.getTime());
-			if (!checkTaskGenerated(todayStart)) {
-				generateDailyTasks(todayStart, todayEnd);
+			try {
+				if (!checkTaskGenerated(todayStart)) {
+					generateDailyTasks(todayStart, todayEnd);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
+		m_dailyReportNameSet.add("event");
+		m_dailyReportNameSet.add("transaction");
+		m_dailyReportNameSet.add("problem");
+
 		Date now = new Date();
 		Date yesterdayStart = TaskHelper.yesterdayZero(now);
 		Date yesterdayEnd = TaskHelper.todayZero(now);
@@ -133,6 +135,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 
 	private boolean checkTaskGenerated(Date start) {
 		List<Dailyreport> allReports = new ArrayList<Dailyreport>();
+		
 		try {
 			allReports = m_dailyReportDao.findAllByPeriod(start, new Date(start.getTime() + DAY),
 			      DailyreportEntity.READSET_COUNT);
@@ -141,12 +144,11 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		}
 
 		Set<String> domainSet = getDomainSet(start, new Date(start.getTime() + DAY));
-
 		int total = 0;
 		int domanSize = domainSet.size();
 		int nameSize = m_dailyReportNameSet.size();
-		
-		//SQL Framework
+
+		// SQL Framework
 		if (allReports != null && allReports.size() > 0) {
 			total = allReports.get(0).getCount();
 		}
