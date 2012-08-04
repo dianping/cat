@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
@@ -24,26 +25,31 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<String> m_service;
 
 	private String getLogView(String messageId, String direction, String tag) {
-		if (messageId != null) {
-			MessageId id = MessageId.parse(messageId);
-			ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
-			ModelRequest request = new ModelRequest(id.getDomain(), period) //
-			      .setProperty("messageId", messageId);
+		try {
+	      if (messageId != null) {
+	      	MessageId id = MessageId.parse(messageId);
+	      	ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
+	      	ModelRequest request = new ModelRequest(id.getDomain(), period) //
+	      	      .setProperty("messageId", messageId);
 
-			if (direction != null && tag != null) {
-				request.setProperty("direction", String.valueOf(direction));
-				request.setProperty("tag", tag);
-			}
+	      	if (direction != null && tag != null) {
+	      		request.setProperty("direction", String.valueOf(direction));
+	      		request.setProperty("tag", tag);
+	      	}
 
-			if (m_service.isEligable(request)) {
-				ModelResponse<String> response = m_service.invoke(request);
-				String logview = response.getModel();
+	      	if (m_service.isEligable(request)) {
+	      		ModelResponse<String> response = m_service.invoke(request);
+	      		String logview = response.getModel();
 
-				return logview;
-			} else {
-				throw new RuntimeException("Internal error: no eligible logview service registered for " + request + "!");
-			}
-		}
+	      		return logview;
+	      	} else {
+	      		throw new RuntimeException("Internal error: no eligible logview service registered for " + request + "!");
+	      	}
+	      }
+      } catch (Exception e) {
+      	Cat.logError(e);
+      	return null;
+      }
 
 		return null;
 	}

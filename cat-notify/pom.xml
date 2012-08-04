@@ -10,7 +10,6 @@
   <inceptionYear>2012</inceptionYear>
   <artifactId>cat-notify</artifactId>
   <name>CAT Notify</name>
-
 	<properties>
 		<jetty.version>7.3.1.v20110307</jetty.version>
 		<env>alpha</env>
@@ -219,16 +218,6 @@
 						<exclude>**/*.xml</exclude>
 						<exclude>**/*.properties</exclude>
 					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<includes>
-						<include>**/*Tests.java</include>
-					</includes>
-					<argLine>-Xmx256m</argLine>
 				</configuration>
 			</plugin>
 			<plugin>

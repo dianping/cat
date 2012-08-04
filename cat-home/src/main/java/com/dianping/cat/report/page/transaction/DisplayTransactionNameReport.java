@@ -38,7 +38,7 @@ public class DisplayTransactionNameReport {
 	public DisplayTransactionNameReport display(String sorted, String type, String ip, TransactionReport report,
 	      String queryName) {
 		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
-		TransactionName all = new TransactionName("ALL");
+		TransactionName all = new TransactionName("TOTAL");
 		if (types != null) {
 			TransactionType names = types.get(type);
 
@@ -58,7 +58,7 @@ public class DisplayTransactionNameReport {
 		}
 		Collections.sort(m_results, new TransactionNameComparator(sorted));
 		
-		m_results.add(0, new TransactionNameModel("ALL", all));
+		m_results.add(0, new TransactionNameModel("TOTAL", all));
 		return this;
 	}
 

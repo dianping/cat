@@ -19,11 +19,7 @@ public class DefaultMessageProducer implements MessageProducer {
 
 	@Override
 	public String createMessageId() {
-		if (m_manager.isCatEnabled()) {
-			return m_factory.getNextId();
-		} else {
-			return "cat-is-disabled";
-		}
+		return m_factory.getNextId();
 	}
 
 	@Override
@@ -72,7 +68,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
-		
+
 		if (m_manager.isCatEnabled()) {
 			DefaultEvent event = new DefaultEvent(type, name);
 
@@ -87,7 +83,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
-		
+
 		if (m_manager.isCatEnabled() && parent != null) {
 			DefaultEvent event = new DefaultEvent(type, name);
 
@@ -103,7 +99,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
-		
+
 		if (m_manager.isCatEnabled()) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 
@@ -118,7 +114,7 @@ public class DefaultMessageProducer implements MessageProducer {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
 		}
-		
+
 		if (m_manager.isCatEnabled() && parent != null) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
 

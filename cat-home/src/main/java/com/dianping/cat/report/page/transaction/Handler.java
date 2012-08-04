@@ -98,7 +98,6 @@ public class Handler implements PageHandler<Context> {
 			if (n != null) {
 				n.accept(m_computer);
 			}
-
 			return n;
 		} else {
 			return null;
@@ -117,14 +116,14 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
-			setTps(payload, report);
+			calculateTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
 		}
 	}
 
-	private void setTps(Payload payload, TransactionReport report) {
+	private void calculateTps(Payload payload, TransactionReport report) {
 		if (payload != null && report != null) {
 			boolean isCurrent = payload.getPeriod().isCurrent();
 			String ip = payload.getIpAddress();
@@ -277,7 +276,7 @@ public class Handler implements PageHandler<Context> {
 		}
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(end);
-		setTps(payload, transactionReport);
+		calculateTps(payload, transactionReport);
 		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {
 			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, transactionReport, payload.getQueryName()));

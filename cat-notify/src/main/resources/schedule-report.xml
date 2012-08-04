@@ -1,4 +1,4 @@
-<schedule-reports >
+<schedule-reports>
    <!-- Cat Report Config -->
    <report domain="Cat" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
       <template id="transaction" path="transaction.vm" />

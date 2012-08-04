@@ -1,4 +1,4 @@
-<schedule-reports >
+<schedule-reports>
    <report domain="mobileAPI" createClass="com.dianping.cat.notify.report.WeaklyReport" schedule="* * * * *">
         <template id="transaction" path="/webapp/template/daily.vm" />
         <template id="problem" path="/webapp/template/monthly.vm" />
