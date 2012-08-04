@@ -20,6 +20,7 @@
 		</property>
     </bean>
     <bean id="sendMailJob" class="com.dianping.cat.notify.job.SendReportMailJob"></bean>
+    <bean id="reportCreaterRegistry" class="com.dianping.cat.notify.report.StandardReportCreaterRegistry"></bean>
 	<!-- ===================== for Data persistence layer================ -->
 	<bean id="baseDao" class="com.dianping.cat.notify.dao.ibatisimpl.BaseDao">
 		<property name="dataSource">

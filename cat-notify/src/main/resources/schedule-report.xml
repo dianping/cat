@@ -1,4 +1,5 @@
 <schedule-reports>
+<<<<<<< HEAD
    <!-- Cat Report Config -->
    <report domain="Cat" createClass="com.dianping.cat.notify.report.DailyReportCreater"  schedule="10"  >
       <template id="transaction" path="transaction.vm" />
@@ -164,4 +165,35 @@
       <template id="event" path="weaklyEvent.vm" />
 	  <template id="problem" path="weaklyProblem.vm" />
    </report>
+=======
+	<default-reports exclude="Cat">
+		<template-report createClass="com.dianping.cat.notify.report.DailyReportCreater"
+			schedule="10">
+			<template id="transaction" path="transaction.vm" />
+			<template id="event" path="event.vm" />
+			<template id="problem" path="problem.vm" />
+		</template-report>
+		<template-report createClass="com.dianping.cat.notify.report.WeaklyReportCreater"
+			schedule="10">
+			<template id="transaction" path="weaklyTransaction.vm" />
+			<template id="event" path="weaklyEvent.vm" />
+			<template id="problem" path="weaklyProblem.vm" />
+		</template-report>
+	</default-reports>
+	<!-- Cat Report Config -->
+	<report domain="Cat"
+		createClass="com.dianping.cat.notify.report.DailyReportCreater"
+		schedule="10">
+		<template id="transaction" path="transaction.vm" />
+		<template id="event" path="event.vm" />
+		<template id="problem" path="problem.vm" />
+	</report>
+	<report domain="Cat"
+		createClass="com.dianping.cat.notify.report.WeaklyReportCreater"
+		schedule="10">
+		<template id="transaction" path="weaklyTransaction.vm" />
+		<template id="event" path="weaklyEvent.vm" />
+		<template id="problem" path="weaklyProblem.vm" />
+	</report>
+>>>>>>> 131f9197dfb50c6c9d29b33c88613f0dcea6b38e
 </schedule-reports>

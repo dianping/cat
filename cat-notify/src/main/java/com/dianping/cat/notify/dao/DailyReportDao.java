@@ -9,4 +9,7 @@ public interface DailyReportDao {
 
 	public List<DailyReport> findAllByDomainNameDuration(Date startDate, Date endDate, String domain, String name, int type) throws Exception;
 
+	public List<DailyReport> findSendMailReportDomainDuration(Date startDate, Date endDate, String domain, int type) throws Exception;
+
+	
 }
