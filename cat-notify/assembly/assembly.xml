@@ -25,7 +25,7 @@
 		</fileSet>
 		<fileSet>
 			<directory>src/webapp</directory>
-			<outputDirectory>/webapp</outputDirectory>
+			<outputDirectory>src/webapp</outputDirectory>
 			<includes>
 				<include>**/*</include>
 			</includes>
