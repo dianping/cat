@@ -109,13 +109,13 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 				mailLog.setStatus(MailLog.SEND_SUCCSS);
 			} else {
 				logger.error(String
-						.format("Send Email fail,time[%s],domain[%s],type[%s],address[%d]",
+						.format("Send Email fail,time[%s],domain[%s],type[%s],address[%s]",
 								new Date(timestamp), subscriber.getDomain(),
 								subscriber.getType(), subscriber.getAddress()));
 				mailLog.setStatus(MailLog.SEND_FAIL);
 			}
 		} catch (Exception e1) {
-			// logger.error(String.format("Send Email fail,time[%s],domain[%s],type[%s],address[%d]",
+			// logger.error(String.format("Send Email fail,time[%s],domain[%s],type[%s],address[%s]",
 			// new Date(timestamp),subscriber.getDomain(), subscriber.getType(),
 			// subscriber.getAddress()));
 			mailLog.setStatus(MailLog.SEND_FAIL);
@@ -125,7 +125,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		} catch (Exception e) {
 			logger.error(
 					String.format(
-							"Save email report to database fail,time[%s],title[%s],address[%s],content[%d]",
+							"Save email report to database fail,time[%s],title[%s],address[%s],content[%s]",
 							new Date(timestamp), mailLog.getTitle(),
 							mailLog.getAddress(), mailLog.getContent()), e);
 		}
@@ -178,7 +178,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 					mailLog.setStatus(MailLog.SEND_SUCCSS);
 				} else {
 					logger.error(String
-							.format("Send Email fail,time[%s],domain[%s],type[%s],address[%d]",
+							.format("Send Email fail,time[%s],domain[%s],type[%s],address[%s]",
 									new Date(timestamp),
 									subscriber.getDomain(),
 									subscriber.getType(),
@@ -193,7 +193,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 			} catch (Exception e) {
 				logger.error(
 						String.format(
-								"Save email report to database fail,time[%s],title[%s],address[%s],content[%d]",
+								"Save email report to database fail,time[%s],title[%s],address[%s],content[%s]",
 								new Date(timestamp), mailLog.getTitle(),
 								mailLog.getAddress(), mailLog.getContent()), e);
 				continue;
@@ -221,6 +221,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 			logger.error(String
 					.format("fail to get subscriber from databasee. domain[%s]",
 							domain));
+			return false;
 		}
 		boolean result = sendBySubscriber(timestamp, true, subscriber);
 		logger.info(String.format(

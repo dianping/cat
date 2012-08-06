@@ -1901,47 +1901,6 @@ public class StringUtil {
         return "..." + str.substring(str.length() - (maxWidth - 3));
     }
 
-   
-    public static String difference(String str1, String str2) {
-        if (str1 == null) {
-            return str2;
-        }
-
-        if (str2 == null) {
-            return str1;
-        }
-
-        int index = indexOfDifference(str1, str2);
-
-        if (index == -1) {
-            return EMPTY_STRING;
-        }
-
-        return str2.substring(index);
-    }
-
-   
-    public static int indexOfDifference(String str1, String str2) {
-        if ((str1 == str2) || (str1 == null) || (str2 == null)) {
-            return -1;
-        }
-
-        int i;
-
-        for (i = 0; (i < str1.length()) && (i < str2.length()); ++i) {
-            if (str1.charAt(i) != str2.charAt(i)) {
-                break;
-            }
-        }
-
-        if ((i < str2.length()) || (i < str1.length())) {
-            return i;
-        }
-
-        return -1;
-    }
-
-    
     public static int getLevenshteinDistance(String s, String t) {
         s     = defaultIfNull(s);
         t     = defaultIfNull(t);
