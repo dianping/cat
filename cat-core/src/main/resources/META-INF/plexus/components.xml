@@ -188,15 +188,27 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.initialization.ModuleManager</role>
-			<implementation>com.site.initialization.DefaultModuleManager</implementation>
-		</component>
-		<component>
-			<role>com.site.initialization.ModuleInitializer</role>
-			<implementation>com.site.initialization.DefaultModuleInitializer</implementation>
+			<role>com.dianping.cat.storage.dump.MessageBucket</role>
+			<role-hint>local</role-hint>
+			<implementation>com.dianping.cat.storage.dump.LocalMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.site.initialization.ModuleManager</role>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+			<role-hint>local</role-hint>
+			<implementation>com.dianping.cat.storage.dump.LocalMessageBucketManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

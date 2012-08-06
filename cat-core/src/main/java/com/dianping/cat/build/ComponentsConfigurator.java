@@ -38,11 +38,11 @@ import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageStatistics;
 import com.dianping.cat.message.spi.internal.DefaultMessageStorage;
 import com.dianping.cat.status.StatusUpdateTask;
-import com.site.initialization.DefaultModuleInitializer;
-import com.site.initialization.DefaultModuleManager;
+import com.dianping.cat.storage.dump.LocalMessageBucket;
+import com.dianping.cat.storage.dump.LocalMessageBucketManager;
+import com.dianping.cat.storage.dump.MessageBucket;
+import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.site.initialization.Module;
-import com.site.initialization.ModuleInitializer;
-import com.site.initialization.ModuleManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -98,10 +98,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StatusUpdateTask.class) //
 		      .req(MessageStatistics.class));
 
-		// TODO push it down
-		all.add(C(ModuleManager.class, DefaultModuleManager.class));
-		all.add(C(ModuleInitializer.class, DefaultModuleInitializer.class) //
-		      .req(ModuleManager.class));
+		all.add(C(MessageBucket.class, LocalMessageBucket.ID, LocalMessageBucket.class) //
+		      .is(PER_LOOKUP) //
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
+		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
+		      .req(ServerConfigManager.class, MessagePathBuilder.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
 		all.add(C(Module.class, CatClientModule.ID, CatClientModule.class));

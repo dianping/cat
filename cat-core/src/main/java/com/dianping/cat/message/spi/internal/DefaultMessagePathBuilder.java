@@ -56,10 +56,10 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
-	public String getMessageRemoteIdPath(String ip, Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/remoteid-{1}");
-		String path = format.format(new Object[] { timestamp, ip });
-		return path;
+	public String getLogViewPath(String domain, Date timestamp) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/logview-{1}");
+
+		return format.format(new Object[] { timestamp, domain });
 	}
 
 	@Override
@@ -70,10 +70,17 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
-	public String getLogViewPath(String domain, Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/logview-{1}");
+	public String getMessageRemoteIdPath(String ip, Date timestamp) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/remoteid-{1}");
+		String path = format.format(new Object[] { timestamp, ip });
+		return path;
+	}
 
-		return format.format(new Object[] { timestamp, domain });
+	@Override
+	public String getPath(Date timestamp, String name) {
+		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/{1}");
+
+		return format.format(new Object[] { timestamp, name });
 	}
 
 	@Override

@@ -5,6 +5,8 @@ import java.util.List;
 import com.site.helper.Splitters;
 
 public class MessageId {
+	private static final long VERSION1_THRESHOLD = 1325347200000L; // Jan. 1, 2012
+
 	private String m_domain;
 
 	private String m_ipAddressInHex;
@@ -65,7 +67,19 @@ public class MessageId {
 	}
 
 	public long getTimestamp() {
-		return m_timestamp;
+		if (m_timestamp > VERSION1_THRESHOLD) {
+			return m_timestamp;
+		} else {
+			return m_timestamp * 3600 * 1000L;
+		}
+	}
+
+	public int getVersion() {
+		if (m_timestamp > VERSION1_THRESHOLD) {
+			return 1;
+		} else {
+			return 2;
+		}
 	}
 
 	@Override

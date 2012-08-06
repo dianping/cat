@@ -1,4 +1,4 @@
-package com.dianping.cat.job.sql;
+package com.dianping.cat.hadoop.sql;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

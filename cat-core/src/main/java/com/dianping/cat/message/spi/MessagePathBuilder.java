@@ -10,6 +10,8 @@ public interface MessagePathBuilder {
 
 	public String getLogViewPath(String messageId);
 
+	public String getPath(Date timestamp, String name);
+	
 	public String getMessagePath(String domain, Date timestamp);
 	
 	public String getMessageRemoteIdPath(String ip, Date timestamp);

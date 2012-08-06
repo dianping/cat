@@ -1,5 +1,6 @@
 package com.dianping.cat;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -17,7 +18,16 @@ import com.site.helper.Files;
 public class TestHttp {
 
 	private Server server;
-	
+
+	@After
+	public void after() {
+		try {
+			server.stop();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Before
 	public void before() {
 		try {
@@ -35,77 +45,76 @@ public class TestHttp {
 		}
 	}
 
-	@After
-	public void after(){
-		try {
-	      server.stop();
-      } catch (Exception e) {
-	      e.printStackTrace();
-      }
-	}
-	
-	private String getContentByUrl(String urlAddress) {
-		try {
-			URL url = new URL(urlAddress);
-			HttpURLConnection http = (HttpURLConnection) url.openConnection();
-			int nRc = http.getResponseCode();
+	private String getContentByUrl(String urlAddress) throws IOException {
+		URL url = new URL(urlAddress);
+		HttpURLConnection http = (HttpURLConnection) url.openConnection();
+		int nRc = http.getResponseCode();
 
-			if (nRc == HttpURLConnection.HTTP_OK) {
-				InputStream in = http.getInputStream();
-				return Files.forIO().readFrom(in, "utf-8");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (nRc == HttpURLConnection.HTTP_OK) {
+			InputStream in = http.getInputStream();
+
+			return Files.forIO().readFrom(in, "utf-8");
+		} else {
+			return null;
 		}
-		return null;
 	}
 
 	@Test
-	public void testHome() {
+	public void testEvent() throws IOException {
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e") != null);
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e?domain=Cat&ip=All&type=URL") != null);
+		Assert.assertEquals(
+		      true,
+		      getContentByUrl("http://localhost:2281/cat/r/e?op=graphs&domain=Cat&date=2012072623&ip=All&type=URL") != null);
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e?op=history") != null);
+		Assert.assertEquals(true,
+		      getContentByUrl("http://localhost:2281/cat/r/e?op=history&domain=Cat&ip=All&type=URL") != null);
+		Assert.assertEquals(
+		      true,
+		      getContentByUrl("http://localhost:2281/cat/r/e?op=historyGraph&domain=Cat&date=2012072623&ip=All&type=URL") != null);
+	}
+
+	@Test
+	public void testHeartbeat() throws IOException {
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/h") != null);
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/h?op=history") != null);
+
+	}
+
+	@Test
+	public void testHome() throws IOException {
 		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/home") != null);
 		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/home?op=checkpoint") != null);
 	}
-	
+
 	@Test
-	public void testTransaction(){
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t?domain=Cat&ip=All&type=URL") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t?op=graphs&domain=Cat&date=2012072623&ip=All&type=URL") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t?op=history") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t?op=history&domain=Cat&ip=All&type=URL") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t?op=historyGraph&domain=Cat&date=2012072623&ip=All&type=URL") != null);
+	public void testMatrix() throws IOException {
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/matrix") != null);
 	}
-	
+
 	@Test
-	public void testEvent(){
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e?domain=Cat&ip=All&type=URL") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e?op=graphs&domain=Cat&date=2012072623&ip=All&type=URL") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e?op=history") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e?op=history&domain=Cat&ip=All&type=URL") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/e?op=historyGraph&domain=Cat&date=2012072623&ip=All&type=URL") != null);
-	}
-	
-	@Test
-	public void testProblem(){
+	public void testProblem() throws IOException {
 		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/p") != null);
 		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/p?op=history") != null);
 	}
-	
+
 	@Test
-	public void testHeartbeat(){
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/h") != null);
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/h?op=history") != null);
-	
-	}
-	
-	@Test
-	public void testMatrix(){
-		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/matrix") != null);
-	}
-	
-	@Test
-	public void testTask(){
+	public void testTask() throws IOException {
 		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/task") != null);
+	}
+
+	@Test
+	public void testTransaction() throws IOException {
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t") != null);
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t?domain=Cat&ip=All&type=URL") != null);
+		Assert.assertEquals(
+		      true,
+		      getContentByUrl("http://localhost:2281/cat/r/t?op=graphs&domain=Cat&date=2012072623&ip=All&type=URL") != null);
+		Assert.assertEquals(true, getContentByUrl("http://localhost:2281/cat/r/t?op=history") != null);
+		Assert.assertEquals(true,
+		      getContentByUrl("http://localhost:2281/cat/r/t?op=history&domain=Cat&ip=All&type=URL") != null);
+		Assert.assertEquals(
+		      true,
+		      getContentByUrl("http://localhost:2281/cat/r/t?op=historyGraph&domain=Cat&date=2012072623&ip=All&type=URL") != null);
 	}
 }

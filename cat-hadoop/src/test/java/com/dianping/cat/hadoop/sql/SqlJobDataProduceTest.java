@@ -1,10 +1,10 @@
-package com.dianping.cat.job.sql;
+package com.dianping.cat.hadoop.sql;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.job.hdfs.CatTestCase;
+import com.dianping.cat.hadoop.hdfs.CatTestCase;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;

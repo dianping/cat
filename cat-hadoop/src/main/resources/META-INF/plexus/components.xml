@@ -50,6 +50,34 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.storage.dump.MessageBucket</role>
+			<role-hint>hdfs</role-hint>
+			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageBucket</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>plain-text</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+			<role-hint>hdfs</role-hint>
+			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.site.initialization.Module</role>
 			<role-hint>cat-hadoop</role-hint>
 			<implementation>com.dianping.cat.hadoop.build.CatHadoopModule</implementation>

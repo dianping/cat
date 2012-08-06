@@ -16,6 +16,8 @@ import com.dianping.cat.message.spi.codec.HtmlMessageCodecTest;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
 import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilderTest;
 import com.dianping.cat.storage.BucketManagerTest;
+import com.dianping.cat.storage.dump.LocalMessageBucketManagerTest;
+import com.dianping.cat.storage.dump.LocalMessageBucketTest;
 import com.dianping.cat.storage.message.LocalLogviewBucketTest;
 import com.dianping.cat.storage.message.LogviewBucketTest;
 import com.dianping.cat.storage.report.LocalReportBucketTest;
@@ -60,6 +62,11 @@ BucketManagerTest.class,
 LocalReportBucketTest.class,
 
 LocalLogviewBucketTest.class,
+
+/* .storage.dump */
+LocalMessageBucketTest.class,
+
+LocalMessageBucketManagerTest.class,
 
 /* .storage.message */
 LogviewBucketTest.class

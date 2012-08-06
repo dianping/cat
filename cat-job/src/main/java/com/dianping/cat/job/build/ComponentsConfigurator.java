@@ -7,6 +7,7 @@ import com.dianping.cat.job.CatJobModule;
 import com.dianping.cat.job.joblet.BrowserJoblet;
 import com.dianping.cat.job.joblet.BrowserJoblet.BrowserOutputter;
 import com.dianping.cat.job.joblet.BrowserJoblet.OsTypeAndVersionReporter;
+import com.dianping.cat.job.joblet.ConversionJoblet;
 import com.dianping.cat.job.joblet.HelpJoblet;
 import com.dianping.cat.job.joblet.LocationJoblet;
 import com.dianping.cat.job.joblet.LocationJoblet.LocationDatabaseDumper;
@@ -44,6 +45,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(LocationOutputter.class, "database", LocationDatabaseDumper.class).is(PER_LOOKUP) //
 		      .req(LocationRecordDao.class));
 		all.add(C(LocationOutputter.class, "report", LocationReporter.class));
+		
+		// for Conversion Analyzer
+		all.add(C(Joblet.class, "conversion", ConversionJoblet.class).is(PER_LOOKUP));
 
 		// for SQL Analyzer
 		all.add(C(Joblet.class, "sql", SqlJoblet.class).is(PER_LOOKUP) //
