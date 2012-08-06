@@ -16,7 +16,7 @@ public class TransactionReportFilterTest {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
 		TransactionReport report = parser.parse(source);
 
-		TransactionReportFilter f1 = new TransactionReportFilter();
+		TransactionReportFilter f1 = new TransactionReportFilter(1);
 		String expected1 = Files.forIO().readFrom(getClass().getResourceAsStream("transactionFilter.xml"), "utf-8");
 		report.accept(f1);
 		

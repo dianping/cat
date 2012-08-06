@@ -10,39 +10,43 @@ import com.site.web.mvc.payload.annotation.FieldMeta;
 import com.site.web.mvc.payload.annotation.PathMeta;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
-	private ReportPage m_page;
-
 	@FieldMeta("op")
 	private Action m_action;
+
+	@FieldMeta("direction")
+	private String m_direction;
+
+	@FieldMeta("ip")
+	private String m_ipAddress;
+
+	@FieldMeta("messageId")
+	private String m_messageId;
+
+	@FieldMeta("name")
+	private String m_name;
+
+	private ReportPage m_page;
 
 	// /<report>/<domain>/<period>
 	@PathMeta("path")
 	private String[] m_path;
 
-	@FieldMeta("type")
-	private String m_type;
-
-	@FieldMeta("name")
-	private String m_name;
-
-	@FieldMeta("ip")
-	private String m_ipAddress;
+	@FieldMeta("tag")
+	private String m_tag;
 
 	@FieldMeta("thread")
 	private String m_threadId;
 
-	@FieldMeta("messageId")
-	private String m_messageId;
-
-	@FieldMeta("tag")
-	private String m_tag;
-
-	@FieldMeta("direction")
-	private String m_direction;
+	@FieldMeta("type")
+	private String m_type;
 
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public String getDirection() {
+		return m_direction;
 	}
 
 	public String getDomain() {
@@ -55,6 +59,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+
+	public String getMessageId() {
+		return m_messageId;
 	}
 
 	public String getName() {
@@ -82,6 +90,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public String getTag() {
+		return m_tag;
+	}
+
 	public String getThreadId() {
 		return m_threadId;
 	}
@@ -94,8 +106,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_action = Action.getByName(action, Action.XML);
 	}
 
+	public void setDirection(String direction) {
+		m_direction = direction;
+	}
+
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
+	}
+
+	public void setMessageId(String messageId) {
+		m_messageId = messageId;
 	}
 
 	public void setName(String name) {
@@ -115,36 +135,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setTag(String tag) {
+		m_tag = tag;
+	}
+
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
 	}
 
 	public void setType(String type) {
 		m_type = type;
-	}
-
-	public String getMessageId() {
-		return m_messageId;
-	}
-
-	public void setMessageId(String messageId) {
-		m_messageId = messageId;
-	}
-
-	public String getTag() {
-		return m_tag;
-	}
-
-	public void setTag(String tag) {
-		m_tag = tag;
-	}
-
-	public String getDirection() {
-		return m_direction;
-	}
-
-	public void setDirection(String direction) {
-		m_direction = direction;
 	}
 
 	@Override

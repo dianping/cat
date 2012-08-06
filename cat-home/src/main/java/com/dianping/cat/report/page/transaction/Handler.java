@@ -1,11 +1,8 @@
 package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -20,9 +17,7 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.hadoop.dal.GraphDao;
-import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -34,9 +29,7 @@ import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
-import com.dianping.cat.report.page.trend.GraphItem;
 import com.google.gson.Gson;
-import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -46,82 +39,30 @@ import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
-	public static final long ONE_HOUR = 3600 * 1000L;
+	@Inject
+	private GraphBuilder m_builder;
 
-	public static final double NOTEXIST = -1;
+	private StatisticsComputer m_computer = new StatisticsComputer();
+	
+	@Inject
+	private DailyreportDao m_dailyreportDao;
+	
+	@Inject
+	private GraphDao m_graphDao;
+	
+	@Inject
+	private HistoryGraphs m_historyGraph;
 
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject(type = ModelService.class, value = "transaction")
-	private ModelService<TransactionReport> m_service;
-
-	@Inject
-	private GraphBuilder m_builder;
-
 	@Inject
 	private ServerConfigManager m_manager;
 
-	@Inject
-	private DailyreportDao dailyreportDao;
+	@Inject(type = ModelService.class, value = "transaction")
+	private ModelService<TransactionReport> m_service;
 
-	@Inject
-	private GraphDao graphDao;
-
-	private StatisticsComputer m_computer = new StatisticsComputer();
-
-	private Gson gson = new Gson();
-
-	private TransactionName getTransactionName(Payload payload) {
-		String domain = payload.getDomain();
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = payload.getIpAddress();
-		String ipAddress = payload.getIpAddress();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
-		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", payload.getName())//
-		      .setProperty("ip", ipAddress);
-		if (name == null || name.length() == 0) {
-			request.setProperty("name", "*");
-			request.setProperty("all", "true");
-			name = "ALL";
-		}
-		ModelResponse<TransactionReport> response = m_service.invoke(request);
-		TransactionReport report = response.getModel();
-		TransactionType t = report.getMachines().get(ip).findType(type);
-
-		if (t != null) {
-			TransactionName n = t.findName(name);
-			if (n != null) {
-				n.accept(m_computer);
-			}
-			return n;
-		} else {
-			return null;
-		}
-	}
-
-	private TransactionReport getHourlyReport(Payload payload) {
-		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
-		String ipAddress = payload.getIpAddress();
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date) //
-		      .setProperty("type", payload.getType())//
-		      .setProperty("ip", ipAddress);
-
-		if (m_service.isEligable(request)) {
-			ModelResponse<TransactionReport> response = m_service.invoke(request);
-			TransactionReport report = response.getModel();
-			calculateTps(payload, report);
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
-		}
-	}
+	private Gson m_gson = new Gson();
 
 	private void calculateTps(Payload payload, TransactionReport report) {
 		if (payload != null && report != null) {
@@ -158,6 +99,57 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private TransactionReport getHourlyReport(Payload payload) {
+		String domain = payload.getDomain();
+		String date = String.valueOf(payload.getDate());
+		String ipAddress = payload.getIpAddress();
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("date", date) //
+		      .setProperty("type", payload.getType())//
+		      .setProperty("ip", ipAddress);
+
+		if (m_service.isEligable(request)) {
+			ModelResponse<TransactionReport> response = m_service.invoke(request);
+			TransactionReport report = response.getModel();
+			calculateTps(payload, report);
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
+		}
+	}
+
+	private TransactionName getTransactionName(Payload payload) {
+		String domain = payload.getDomain();
+		String type = payload.getType();
+		String name = payload.getName();
+		String ip = payload.getIpAddress();
+		String ipAddress = payload.getIpAddress();
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("date", date) //
+		      .setProperty("type", payload.getType()) //
+		      .setProperty("name", payload.getName())//
+		      .setProperty("ip", ipAddress);
+		if (name == null || name.length() == 0) {
+			request.setProperty("name", "*");
+			request.setProperty("all", "true");
+			name = "ALL";
+		}
+		ModelResponse<TransactionReport> response = m_service.invoke(request);
+		TransactionReport report = response.getModel();
+		TransactionType t = report.getMachines().get(ip).findType(type);
+
+		if (t != null) {
+			TransactionName n = t.findName(name);
+			if (n != null) {
+				n.accept(m_computer);
+			}
+			return n;
+		} else {
+			return null;
+		}
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "t")
@@ -180,109 +172,31 @@ public class Handler implements PageHandler<Context> {
 			showSummarizeReport(model, payload);
 			break;
 		case HISTORY_GRAPH:
-			buildTrendGraph(model, payload);
+			m_historyGraph.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
-			showComputerGraphs(model, payload);
+			showHourlyGraphs(model, payload);
 			break;
 		case MOBILE:
 			showHourlyReport(model, payload);
 			if (!StringUtils.isEmpty(payload.getType())) {
-				DisplayTransactionNameReport report = model.getDisplayNameReport();
-				String json = gson.toJson(report);
+				DisplayNames report = model.getDisplayNameReport();
+				String json = m_gson.toJson(report);
 				model.setMobileResponse(json);
 			} else {
-				DisplayTransactionTypeReport report = model.getDisplayTypeReport();
-				String json = gson.toJson(report);
+				DisplayTypes report = model.getDisplayTypeReport();
+				String json = m_gson.toJson(report);
 				model.setMobileResponse(json);
 			}
 			break;
 		case MOBILE_GRAPHS:
-			MobileTransactionGraphs graphs = showMobileGraphs(model, payload);
+			MobileGraphs graphs = showMobileGraphs(model, payload);
 			if (graphs != null) {
-				model.setMobileResponse(gson.toJson(graphs));
+				model.setMobileResponse(m_gson.toJson(graphs));
 			}
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private void buildTrendGraph(Model model, Payload payload) {
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		String type = payload.getType();
-		String name = payload.getName();
-		String display = name != null ? name : type;
-
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / ONE_HOUR);
-		GraphItem item = new GraphItem();
-		item.setStart(start);
-		item.setSize(size);
-
-		item.setTitles(display + " Response Time (ms)");
-		Map<String, double[]> graphData = getGraphData(model, payload);
-		double[] sum = graphData.get("sum");
-		double[] totalCount = graphData.get("total_count");
-		double[] avg = new double[sum.length];
-		for (int i = 0; i < sum.length; i++) {
-			if (totalCount[i] > 0) {
-				avg[i] = sum[i] / totalCount[i];
-			}
-		}
-		item.addValue(avg);
-		model.setResponseTrend(item.getJsonString());
-
-		item.getValues().clear();
-		item.setTitles(display + " Hits (count)");
-
-		item.addValue(totalCount);
-		model.setHitTrend(item.getJsonString());
-
-		item.getValues().clear();
-		item.setTitles(display + " Error (count)");
-		item.addValue(graphData.get("failure_count"));
-		model.setErrorTrend(item.getJsonString());
-	}
-
-	private void showSummarizeReport(Model model, Payload payload) {
-		String type = payload.getType();
-		String sorted = payload.getSortBy();
-		String ip = payload.getIpAddress();
-		if (ip == null) {
-			ip = CatString.ALL_IP;
-		}
-		model.setIpAddress(ip);
-
-		TransactionReport transactionReport = null;
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		try {
-			String domain = model.getDomain();
-			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
-			      DailyreportEntity.READSET_FULL);
-			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
-			for (Dailyreport report : reports) {
-				String xml = report.getContent();
-				TransactionReport reportModel = DefaultSaxParser.parse(xml);
-				reportModel.accept(merger);
-			}
-			transactionReport = merger.getTransactionReport();
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-
-		if (transactionReport == null) {
-			return;
-		}
-		transactionReport.setStartTime(start);
-		transactionReport.setEndTime(end);
-		calculateTps(payload, transactionReport);
-		model.setReport(transactionReport);
-		if (!StringUtils.isEmpty(type)) {
-			model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, transactionReport, payload.getQueryName()));
-		} else {
-			model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, transactionReport));
-		}
 	}
 
 	public void normalize(Model model, Payload payload) {
@@ -292,6 +206,12 @@ public class Handler implements PageHandler<Context> {
 
 		if (StringUtils.isEmpty(payload.getDomain())) {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
+		}
+		if (StringUtils.isEmpty(payload.getQueryName())) {
+			payload.setQueryName(null);
+		}
+		if (StringUtils.isEmpty(payload.getType())) {
+			payload.setType(null);
 		}
 
 		String ip = payload.getIpAddress();
@@ -330,17 +250,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private MobileTransactionGraphs showMobileGraphs(Model model, Payload payload) {
-		TransactionName name = getTransactionName(payload);
-
-		if (name == null) {
-			return null;
-		}
-		MobileTransactionGraphs graphs = new MobileTransactionGraphs().display(name);
-		return graphs;
-	}
-
-	private void showComputerGraphs(Model model, Payload payload) {
+	private void showHourlyGraphs(Model model, Payload payload) {
 		TransactionName name = getTransactionName(payload);
 
 		if (name == null) {
@@ -372,10 +282,9 @@ public class Handler implements PageHandler<Context> {
 				String queryName = payload.getQueryName();
 				String ip = payload.getIpAddress();
 				if (!StringUtils.isEmpty(type)) {
-					model.setDisplayNameReport(new DisplayTransactionNameReport().display(sorted, type, ip, report,
-					      queryName));
+					model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, report, queryName));
 				} else {
-					model.setDisplayTypeReport(new DisplayTransactionTypeReport().display(sorted, ip, report));
+					model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
 				}
 			}
 		} catch (Throwable e) {
@@ -384,100 +293,63 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public Map<String, double[]> getGraphData(Model model, Payload payload) {
+	private MobileGraphs showMobileGraphs(Model model, Payload payload) {
+		TransactionName name = getTransactionName(payload);
+
+		if (name == null) {
+			return null;
+		}
+		MobileGraphs graphs = new MobileGraphs().display(name);
+		return graphs;
+	}
+
+	private void showSummarizeReport(Model model, Payload payload) {
+		String type = payload.getType();
+		String sorted = payload.getSortBy();
+		String ip = payload.getIpAddress();
+		if (ip == null) {
+			ip = CatString.ALL_IP;
+		}
+		model.setIpAddress(ip);
+
+		TransactionReport transactionReport = null;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		String domain = model.getDomain();
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = model.getIpAddress();
-		String queryIP = "All".equals(ip) == true ? "all" : ip;
-		List<Graph> graphs = new ArrayList<Graph>();
-
 		try {
-			graphs = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "transaction",
-			      GraphEntity.READSET_FULL);
-		} catch (DalException e) {
+			String domain = model.getDomain();
+			List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
+			      DailyreportEntity.READSET_FULL);
+			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+			for (Dailyreport report : reports) {
+				String xml = report.getContent();
+				TransactionReport reportModel = DefaultSaxParser.parse(xml);
+				reportModel.accept(merger);
+			}
+			transactionReport = merger.getTransactionReport();
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
-		Map<String, double[]> result = buildGraphDates(start, end, type, name, graphs);
-		return result;
-	}
-
-	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
-		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / ONE_HOUR);
-		double[] total_count = new double[size];
-		double[] failure_count = new double[size];
-		double[] sum = new double[size];
-
-		for (int i = 0; i < size; i++) {
-			total_count[i] = NOTEXIST;
-			failure_count[i] = NOTEXIST;
-			sum[i] = NOTEXIST;
+		if (transactionReport == null) {
+			return;
 		}
-
-		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / ONE_HOUR);
-				String summaryContent = graph.getSummaryContent();
-				String[] allLines = summaryContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
-						appendArray(sum, indexOfperiod, records[SummaryOrder.SUM.ordinal()], 12);
-					}
-				}
-			}
-		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / ONE_HOUR);
-				String detailContent = graph.getDetailContent();
-				String[] allLines = detailContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
-						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
-						appendArray(sum, indexOfperiod, records[DetailOrder.SUM.ordinal()], 12);
-						// total_count[indexOfperiod] =
-						// Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
-						// failure_count[indexOfperiod] =
-						// Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
-						// sum[indexOfperiod] =
-						// Double.valueOf(records[DetailOrder.SUM.ordinal()]);
-					}
-				}
-			}
-		}
-
-		result.put("total_count", total_count);
-		result.put("failure_count", failure_count);
-		result.put("sum", sum);
-		return result;
-	}
-
-	private void appendArray(double[] src, int index, String str, int size) {
-		String[] values = str.split(",");
-		if (values.length < size) {
-			for (int i = 0; i < size; i++) {
-				src[index + i] = Double.valueOf(str);
-			}
+		transactionReport.setStartTime(start);
+		transactionReport.setEndTime(end);
+		calculateTps(payload, transactionReport);
+		model.setReport(transactionReport);
+		if (!StringUtils.isEmpty(type)) {
+			model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, transactionReport,
+			      payload.getQueryName()));
 		} else {
-			for (int i = 0; i < size; i++) {
-				src[index + i] = Double.valueOf(values[i]);
-			}
+			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, transactionReport));
 		}
-	}
-
-	public enum SummaryOrder {
-		TYPE, TOTAL_COUNT, FAILURE_COUNT, MIN, MAX, SUM, SUM2
 	}
 
 	public enum DetailOrder {
 		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT, MIN, MAX, SUM, SUM2
+	}
+
+	public enum SummaryOrder {
+		TYPE, TOTAL_COUNT, FAILURE_COUNT, MIN, MAX, SUM, SUM2
 	}
 }

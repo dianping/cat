@@ -13,7 +13,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.hadoop.dal.Graph;
-import com.dianping.cat.report.page.event.Handler;
 import com.site.helper.Files;
 
 @RunWith(JUnit4.class)
@@ -22,7 +21,7 @@ public class EventGraphDataTest {
 	@Test
 	public void testBuildGraphDatasByType() throws IOException{
 	
-		Handler handler = new Handler();
+		HistoryGraphs handler = new HistoryGraphs();
 		long time = System.currentTimeMillis();
 		time = time - time % (3600 * 1000 * 24);
 		Date start = new Date(time - 3600 * 1000 * 24);
@@ -34,7 +33,7 @@ public class EventGraphDataTest {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
-		Map<String, double[]> graphDatas=handler.buildGraphDates(start, end, "URL", "", graphs);
+		Map<String, double[]> graphDatas=handler.buildGraphDatas(start, end, "URL", "", graphs);
 		double[] total_count=graphDatas.get("total_count");
 		double[] failure_count=graphDatas.get("failure_count");
 		assertArray(30,total_count);
@@ -43,7 +42,7 @@ public class EventGraphDataTest {
 	
 	@Test
 	public void testBuildGraphDatasByTypeAndName() throws IOException{
-		Handler handler = new Handler();
+		HistoryGraphs handler = new HistoryGraphs();
 		long time = System.currentTimeMillis();
 		time = time - time % (3600 * 1000 * 24);
 		Date start = new Date(time - 3600 * 1000 * 24);
@@ -55,7 +54,7 @@ public class EventGraphDataTest {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
-		Map<String, double[]> graphDatas=handler.buildGraphDates(start, end, "URL", "ClientInfo", graphs);
+		Map<String, double[]> graphDatas=handler.buildGraphDatas(start, end, "URL", "ClientInfo", graphs);
 		double[] total_count=graphDatas.get("total_count");
 		double[] failure_count=graphDatas.get("failure_count");
 		assertArray(15,total_count);

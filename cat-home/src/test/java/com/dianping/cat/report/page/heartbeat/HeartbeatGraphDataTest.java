@@ -21,7 +21,7 @@ import com.site.lookup.ComponentTestCase;
 public class HeartbeatGraphDataTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
-		Handler handler = new Handler();
+		HistoryGraphs handler = new HistoryGraphs();
 		long time = System.currentTimeMillis();
 		time = time - time % (3600 * 1000 * 24);
 		Date start = new Date(time - 3600 * 1000 * 24);

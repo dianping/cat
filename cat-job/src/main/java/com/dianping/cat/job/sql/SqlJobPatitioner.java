@@ -7,7 +7,10 @@ public class SqlJobPatitioner extends Partitioner<UrlStatementKey, UrlStatementV
 	@Override
 	public int getPartition(UrlStatementKey key, UrlStatementValue value, int numPartitions) {
 		int hashCode = key.getDomain().hashCode();
-		hashCode = Math.abs(hashCode);
-		return hashCode % numPartitions;
+		if (hashCode > 0) {
+			return hashCode % numPartitions;
+		} else {
+			return (-hashCode) % numPartitions;
+		}
 	}
 }

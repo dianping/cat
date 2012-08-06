@@ -26,30 +26,30 @@ public class Handler implements PageHandler<Context> {
 
 	private String getLogView(String messageId, String direction, String tag) {
 		try {
-	      if (messageId != null) {
-	      	MessageId id = MessageId.parse(messageId);
-	      	ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
-	      	ModelRequest request = new ModelRequest(id.getDomain(), period) //
-	      	      .setProperty("messageId", messageId);
+			if (messageId != null) {
+				MessageId id = MessageId.parse(messageId);
+				ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
+				ModelRequest request = new ModelRequest(id.getDomain(), period) //
+				      .setProperty("messageId", messageId);
 
-	      	if (direction != null && tag != null) {
-	      		request.setProperty("direction", String.valueOf(direction));
-	      		request.setProperty("tag", tag);
-	      	}
+				if (direction != null && tag != null) {
+					request.setProperty("direction", String.valueOf(direction));
+					request.setProperty("tag", tag);
+				}
 
-	      	if (m_service.isEligable(request)) {
-	      		ModelResponse<String> response = m_service.invoke(request);
-	      		String logview = response.getModel();
+				if (m_service.isEligable(request)) {
+					ModelResponse<String> response = m_service.invoke(request);
+					String logview = response.getModel();
 
-	      		return logview;
-	      	} else {
-	      		throw new RuntimeException("Internal error: no eligible logview service registered for " + request + "!");
-	      	}
-	      }
-      } catch (Exception e) {
-      	Cat.logError(e);
-      	return null;
-      }
+					return logview;
+				} else {
+					throw new RuntimeException("Internal error: no eligible logview service registered for " + request + "!");
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+			return null;
+		}
 
 		return null;
 	}

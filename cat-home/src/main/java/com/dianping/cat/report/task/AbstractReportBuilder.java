@@ -19,13 +19,23 @@ import com.site.lookup.annotation.Inject;
 public abstract class AbstractReportBuilder {
 
 	@Inject
-	protected ReportDao m_reportDao;
+	protected DailyreportDao m_dailyReportDao;
 
 	@Inject
 	protected GraphDao m_graphDao;
 
 	@Inject
-	protected DailyreportDao m_dailyReportDao;
+	protected ReportDao m_reportDao;
+
+	protected void clearDailyReport(Dailyreport report) throws DalException {
+		this.m_dailyReportDao.deleteByDomainNamePeriod(report);
+	}
+
+	protected void clearHourlyGraphs(List<Graph> graphs) throws DalException {
+		for (Graph graph : graphs) {
+			this.m_graphDao.deleteByDomainNamePeriodIp(graph);
+		}
+	}
 
 	protected void getDomainSet(Set<String> domainSet, Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
@@ -42,15 +52,5 @@ public abstract class AbstractReportBuilder {
 		for (Report domainName : domainNames) {
 			domainSet.add(domainName.getDomain());
 		}
-	}
-
-	protected void clearHourlyGraphs(List<Graph> graphs) throws DalException {
-		for (Graph graph : graphs) {
-			this.m_graphDao.deleteByDomainNamePeriodIp(graph);
-		}
-	}
-
-	protected void clearDailyReport(Dailyreport report) throws DalException {
-		this.m_dailyReportDao.deleteByDomainNamePeriod(report);
 	}
 }

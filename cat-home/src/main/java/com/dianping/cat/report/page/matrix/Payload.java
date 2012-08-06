@@ -6,20 +6,16 @@ import com.site.web.mvc.ActionContext;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
-	@FieldMeta("sort")
-	private String sortBy;
-	
-	public Payload() {
-		super(ReportPage.MATRIX);
-	}
-
-	private ReportPage m_page;
-
 	@FieldMeta("op")
 	private Action m_action;
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	private ReportPage m_page;
+
+	@FieldMeta("sort")
+	private String sortBy;
+
+	public Payload() {
+		super(ReportPage.MATRIX);
 	}
 
 	@Override
@@ -32,19 +28,22 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_page;
 	}
 
+	public String getSortBy() {
+		return sortBy;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.MATRIX);
 	}
-	
-
-	public String getSortBy() {
-   	return sortBy;
-   }
 
 	public void setSortBy(String sortBy) {
-   	this.sortBy = sortBy;
-   }
+		this.sortBy = sortBy;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

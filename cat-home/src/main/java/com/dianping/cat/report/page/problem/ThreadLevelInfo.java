@@ -18,107 +18,22 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.report.view.ProblemReportHelper;
 
 public class ThreadLevelInfo {
-	private int m_minutes;
+	private List<String> m_datas = new ArrayList<String>();
 
 	private String m_groupName;
 
-	private Model m_model;
-
 	private Map<String, GroupStatistics> m_groupStatistics = new LinkedHashMap<String, GroupStatistics>();
 
-	private Map<String, TreeSet<String>> m_threadsInfo = new HashMap<String, TreeSet<String>>();
+	private int m_minutes;
 
-	private List<String> m_datas = new ArrayList<String>();
+	private Model m_model;
+
+	private Map<String, TreeSet<String>> m_threadsInfo = new HashMap<String, TreeSet<String>>();
 
 	public ThreadLevelInfo(Model model, String groupName) {
 		m_groupName = groupName;
 		m_model = model;
 		m_minutes = model.getLastMinute();
-	}
-
-	public List<GroupDisplayInfo> getGroups() {
-		List<GroupDisplayInfo> result = new ArrayList<GroupDisplayInfo>();
-
-		for (java.util.Map.Entry<String, TreeSet<String>> entry : m_threadsInfo.entrySet()) {
-			result.add(new GroupDisplayInfo().setName(entry.getKey()).setNumber(entry.getValue().size()));
-		}
-		Collections.sort(result, new Comparator<GroupDisplayInfo>() {
-			@Override
-			public int compare(GroupDisplayInfo o1, GroupDisplayInfo o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-		});
-		return result;
-	}
-
-	public List<String> getThreads() {
-		List<String> result = new ArrayList<String>();
-
-		for (TreeSet<String> set : m_threadsInfo.values()) {
-			for (String thread : set) {
-				result.add(thread);
-			}
-		}
-		return result;
-	}
-
-	private TreeSet<String> getThreadsByGroup(String groupName) {
-		return m_threadsInfo.get(groupName);
-	}
-
-	private String getShowDetailByMinte(int minute) {
-		Map<String, String> params = new LinkedHashMap<String, String>();
-		String baseUrl = "/cat/r/p?op=detail";
-		params.put("domain", m_model.getDomain());
-		params.put("ip", m_model.getIpAddress());
-		params.put("date", m_model.getDate());
-		params.put("minute", Integer.toString(minute));
-
-		StringBuilder sb = new StringBuilder().append("<td>");
-		String minuteStr = m_model.getDisplayHour() + ":";
-		if (minute < 10) {
-			minuteStr = minuteStr + "0" + Integer.toString(minute);
-		} else {
-			minuteStr = minuteStr + Integer.toString(minute);
-		}
-		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
-		sb.append("</td>");
-
-		for (GroupDisplayInfo group : getGroups()) {
-			String groupName = group.getName();
-			GroupStatistics value = m_groupStatistics.get(groupName);
-			Set<String> threads = getThreadsByGroup(groupName);
-			Map<String, TheadStatistics> temps = value.getStatistics();
-
-			for (String thread : threads) {
-				TheadStatistics theadStatistics = temps.get(thread);
-				TreeSet<String> errors = theadStatistics.getStatistics().get(minute);
-				sb.append("<td>");
-				for (String error : errors) {
-					params.put("group", groupName);
-					if (groupName.equals(m_groupName)) {
-						params.put("thread", thread);
-					}
-					String url = ProblemReportHelper.creatLinkString(baseUrl, error, params, "");
-					sb.append(url);
-				}
-				sb.append("</td>");
-			}
-		}
-		return sb.toString();
-	}
-
-	private void findOrCreatThreadInfo(String groupName, String threadName) {
-		TreeSet<String> sets = m_threadsInfo.get(groupName);
-
-		if (sets != null) {
-			sets.add(threadName);
-		} else {
-			sets = new TreeSet<String>();
-
-			sets.add(threadName);
-			m_threadsInfo.put(groupName, sets);
-		}
 	}
 
 	public ThreadLevelInfo display(ProblemReport report) {
@@ -173,8 +88,93 @@ public class ThreadLevelInfo {
 		}
 	}
 
+	private void findOrCreatThreadInfo(String groupName, String threadName) {
+		TreeSet<String> sets = m_threadsInfo.get(groupName);
+
+		if (sets != null) {
+			sets.add(threadName);
+		} else {
+			sets = new TreeSet<String>();
+
+			sets.add(threadName);
+			m_threadsInfo.put(groupName, sets);
+		}
+	}
+
 	public List<String> getDatas() {
 		return m_datas;
+	}
+
+	public List<GroupDisplayInfo> getGroups() {
+		List<GroupDisplayInfo> result = new ArrayList<GroupDisplayInfo>();
+
+		for (java.util.Map.Entry<String, TreeSet<String>> entry : m_threadsInfo.entrySet()) {
+			result.add(new GroupDisplayInfo().setName(entry.getKey()).setNumber(entry.getValue().size()));
+		}
+		Collections.sort(result, new Comparator<GroupDisplayInfo>() {
+			@Override
+			public int compare(GroupDisplayInfo o1, GroupDisplayInfo o2) {
+				return o1.getName().compareTo(o2.getName());
+			}
+		});
+		return result;
+	}
+
+	private String getShowDetailByMinte(int minute) {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		String baseUrl = "/cat/r/p?op=detail";
+		params.put("domain", m_model.getDomain());
+		params.put("ip", m_model.getIpAddress());
+		params.put("date", m_model.getDate());
+		params.put("minute", Integer.toString(minute));
+
+		StringBuilder sb = new StringBuilder().append("<td>");
+		String minuteStr = m_model.getDisplayHour() + ":";
+		if (minute < 10) {
+			minuteStr = minuteStr + "0" + Integer.toString(minute);
+		} else {
+			minuteStr = minuteStr + Integer.toString(minute);
+		}
+		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
+		sb.append("</td>");
+
+		for (GroupDisplayInfo group : getGroups()) {
+			String groupName = group.getName();
+			GroupStatistics value = m_groupStatistics.get(groupName);
+			Set<String> threads = getThreadsByGroup(groupName);
+			Map<String, TheadStatistics> temps = value.getStatistics();
+
+			for (String thread : threads) {
+				TheadStatistics theadStatistics = temps.get(thread);
+				TreeSet<String> errors = theadStatistics.getStatistics().get(minute);
+				sb.append("<td>");
+				for (String error : errors) {
+					params.put("group", groupName);
+					if (groupName.equals(m_groupName)) {
+						params.put("thread", thread);
+					}
+					String url = ProblemReportHelper.creatLinkString(baseUrl, error, params, "");
+					sb.append(url);
+				}
+				sb.append("</td>");
+			}
+		}
+		return sb.toString();
+	}
+
+	public List<String> getThreads() {
+		List<String> result = new ArrayList<String>();
+
+		for (TreeSet<String> set : m_threadsInfo.values()) {
+			for (String thread : set) {
+				result.add(thread);
+			}
+		}
+		return result;
+	}
+
+	private TreeSet<String> getThreadsByGroup(String groupName) {
+		return m_threadsInfo.get(groupName);
 	}
 
 	public static class GroupDisplayInfo {
@@ -186,13 +186,13 @@ public class ThreadLevelInfo {
 			return m_name;
 		}
 
+		public int getNumber() {
+			return m_number;
+		}
+
 		public GroupDisplayInfo setName(String name) {
 			m_name = name;
 			return this;
-		}
-
-		public int getNumber() {
-			return m_number;
 		}
 
 		public GroupDisplayInfo setNumber(int number) {
@@ -210,14 +210,6 @@ public class ThreadLevelInfo {
 			findOrCreatTheadStatistics(threadId, minute).add(segments, type);
 		}
 
-		public Map<String, TheadStatistics> getStatistics() {
-			return m_statistics;
-		}
-
-		public void setStatistics(Map<String, TheadStatistics> statistics) {
-			m_statistics = statistics;
-		}
-
 		public TheadStatistics findOrCreatTheadStatistics(String threadName, int minute) {
 			TheadStatistics statistics = m_statistics.get(threadName);
 			if (statistics == null) {
@@ -228,6 +220,14 @@ public class ThreadLevelInfo {
 			} else {
 				return statistics;
 			}
+		}
+
+		public Map<String, TheadStatistics> getStatistics() {
+			return m_statistics;
+		}
+
+		public void setStatistics(Map<String, TheadStatistics> statistics) {
+			m_statistics = statistics;
 		}
 	}
 
@@ -241,6 +241,12 @@ public class ThreadLevelInfo {
 			}
 		}
 
+		public void add(Map<Integer, Segment> segments, String type) {
+			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
+				findOrCreat(entry.getKey()).add(type);
+			}
+		}
+
 		public TreeSet<String> findOrCreat(Integer key) {
 			TreeSet<String> result = m_statistics.get(key);
 			if (result == null) {
@@ -248,12 +254,6 @@ public class ThreadLevelInfo {
 				m_statistics.put(key, result);
 			}
 			return result;
-		}
-
-		public void add(Map<Integer, Segment> segments, String type) {
-			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
-				findOrCreat(entry.getKey()).add(type);
-			}
 		}
 
 		public Map<Integer, TreeSet<String>> getStatistics() {

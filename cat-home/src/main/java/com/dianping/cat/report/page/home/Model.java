@@ -6,9 +6,9 @@ import java.util.Collections;
 import com.dianping.cat.report.page.AbstractReportModel;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private String m_domain;
-
 	private String m_content;
+
+	private String m_domain;
 
 	public Model(Context ctx) {
 		super(ctx);

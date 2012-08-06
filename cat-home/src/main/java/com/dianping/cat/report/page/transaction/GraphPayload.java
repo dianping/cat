@@ -81,7 +81,7 @@ public class GraphPayload {
 	final static class DurationPayload extends AbstractPayload {
 
 		private Map<Integer, Integer> m_map = new HashMap<Integer, Integer>();
-		
+
 		public DurationPayload(String title, String axisXLabel, String axisYLabel, TransactionName name) {
 			super(title, axisXLabel, axisYLabel, name);
 			int k = 1;

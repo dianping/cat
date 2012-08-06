@@ -1,13 +1,13 @@
 package com.dianping.cat.report.page.event;
 
 public enum JspFile {
-	HOURLY_REPORT("/jsp/report/event.jsp"),
+	GRAPHS("/jsp/report/event_graphs.jsp"),
 
-	HISTORY_REPORT("/jsp/report/eventHistoryReport.jsp"),
-	
 	HISTORY_GRAPH("/jsp/report/eventHistoryGraphs.jsp"),
 
-	GRAPHS("/jsp/report/event_graphs.jsp"),
+	HISTORY_REPORT("/jsp/report/eventHistoryReport.jsp"),
+
+	HOURLY_REPORT("/jsp/report/event.jsp"),
 
 	MOBILE("/jsp/report/event_mobile.jsp"),
 

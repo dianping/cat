@@ -20,29 +20,31 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_daemonThreadGraph;
 
-	private int m_disks;
-
 	private String m_diskHistoryGraph;
 
+	private int m_disks;
+
 	private String m_disksGraph;
-
-	private String m_newGcCountGraph;
-
-	private String m_oldGcCountGraph;
 
 	private String m_heapUsageGraph;
 
 	private int m_hour;
 
-	private String m_ipAddress;
+	private String m_httpThreadGraph;
 
-	private String m_noneHeapUsageGraph;
+	private String m_ipAddress;
 
 	private String m_memoryFreeGraph;
 
-	private String m_pigeonThreadGraph;
+	private String m_mobileResponse;
 
-	private String m_httpThreadGraph;
+	private String m_newGcCountGraph;
+
+	private String m_noneHeapUsageGraph;
+
+	private String m_oldGcCountGraph;
+
+	private String m_pigeonThreadGraph;
 
 	private HeartbeatReport m_report;
 
@@ -53,8 +55,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_systemLoadAverageGraph;
 
 	private String m_totalThreadGraph;
-
-	private String m_mobileResponse;
 
 	public Model(Context ctx) {
 		super(ctx);

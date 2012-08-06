@@ -7,11 +7,11 @@ import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
 
-	@FieldMeta("op")
-	private Action m_action;
-
 	@FieldMeta("id")
 	private int id;
+
+	@FieldMeta("op")
+	private Action m_action;
 
 	@FieldMeta("sort")
 	private String m_sortBy;
@@ -20,29 +20,29 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.SQL);
 	}
 
-	public String getSortBy() {
-		return m_sortBy;
-	}
-
-	public void setSortBy(String sortBy) {
-		m_sortBy = sortBy;
+	@Override
+	public Action getAction() {
+		return m_action == null ? Action.VIEW : m_action;
 	}
 
 	public int getId() {
 		return id;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public String getSortBy() {
+		return m_sortBy;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	@Override
-	public Action getAction() {
-		return m_action == null ? Action.VIEW : m_action;
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
 	}
 
 	@Override

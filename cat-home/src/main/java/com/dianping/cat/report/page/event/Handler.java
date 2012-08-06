@@ -1,11 +1,8 @@
 package com.dianping.cat.report.page.event;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -20,9 +17,7 @@ import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.hadoop.dal.GraphDao;
-import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -30,7 +25,6 @@ import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.trend.GraphItem;
 import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
@@ -40,27 +34,64 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
-	public static final long ONE_HOUR = 3600 * 1000L;
-
-	@Inject
-	private JspViewer m_jspViewer;
-
-	@Inject(type = ModelService.class, value = "event")
-	private ModelService<EventReport> m_service;
 
 	@Inject
 	private GraphBuilder m_builder;
 
+	private StatisticsComputer m_computer = new StatisticsComputer();
+
+	@Inject
+	private DailyreportDao m_dailyreportDao;
+
+	@Inject
+	private HistoryGraphs m_eventHistoryGraphs;
+
+	@Inject
+	private GraphDao m_graphDao;
+
+	@Inject
+	private JspViewer m_jspViewer;
+
 	@Inject
 	private ServerConfigManager m_manager;
 
-	@Inject
-	private DailyreportDao dailyreportDao;
+	@Inject(type = ModelService.class, value = "event")
+	private ModelService<EventReport> m_service;
 
-	@Inject
-	private GraphDao graphDao;
-
-	private StatisticsComputer m_computer = new StatisticsComputer();
+	private void calculateTps(Payload payload, EventReport report) {
+		if (payload != null && report != null) {
+			boolean isCurrent = payload.getPeriod().isCurrent();
+			String ip = payload.getIpAddress();
+			Machine machine = report.getMachines().get(ip);
+			if (machine == null) {
+				return;
+			}
+			for (EventType eventType : machine.getTypes().values()) {
+				long totalCount = eventType.getTotalCount();
+				double tps = 0;
+				if (isCurrent) {
+					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+					tps = totalCount / seconds;
+				} else {
+					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+					tps = totalCount / (double) time;
+				}
+				eventType.setTps(tps);
+				for (EventName transName : eventType.getNames().values()) {
+					long totalNameCount = transName.getTotalCount();
+					double nameTps = 0;
+					if (isCurrent) {
+						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+						nameTps = totalNameCount / seconds;
+					} else {
+						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+						nameTps = totalNameCount / (double) time;
+					}
+					transName.setTps(nameTps);
+				}
+			}
+		}
+	}
 
 	private EventName getEventName(Payload payload) {
 		String domain = payload.getDomain();
@@ -106,7 +137,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
 			EventReport report = response.getModel();
-			setTps(payload, report);
+			calculateTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable event service registered for " + request + "!");
@@ -136,7 +167,7 @@ public class Handler implements PageHandler<Context> {
 			showSummarizeReport(model, payload);
 			break;
 		case HISTORY_GRAPH:
-			buildTrendGraph(model, payload);
+			m_eventHistoryGraphs.buildTrendGraph(model, payload);
 			break;
 		case GRAPHS:
 			showGraphs(model, payload);
@@ -144,19 +175,19 @@ public class Handler implements PageHandler<Context> {
 		case MOBILE:
 			showHourlyReport(model, payload);
 			if (!StringUtils.isEmpty(payload.getType())) {
-				DisplayEventNameReport report = model.getDisplayNameReport();
+				DisplayNames report = model.getDisplayNameReport();
 				Gson gson = new Gson();
 				String json = gson.toJson(report);
 				model.setMobileResponse(json);
 			} else {
-				DisplayEventTypeReport report = model.getDisplayTypeReport();
+				DisplayTypes report = model.getDisplayTypeReport();
 				Gson gson = new Gson();
 				String json = gson.toJson(report);
 				model.setMobileResponse(json);
 			}
 			break;
 		case MOBILE_GRAPHS:
-			MobileEventGraphs graphs = showMobileGraphs(model, payload);
+			MobileGraphs graphs = showMobileGraphs(model, payload);
 			if (graphs != null) {
 				Gson gson = new Gson();
 				model.setMobileResponse(gson.toJson(graphs));
@@ -167,75 +198,6 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void buildTrendGraph(Model model, Payload payload) {
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		String type = payload.getType();
-		String name = payload.getName();
-		String display = name != null ? name : type;
-
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 12);
-
-		GraphItem item = new GraphItem();
-		item.setStart(start);
-		item.setSize(size);
-
-		Map<String, double[]> graphData = getGraphData(model, payload);
-		double[] failureCount = graphData.get("failure_count");
-		double[] totalCount = graphData.get("total_count");
-
-		item.setTitles(display + " Hit Trend");
-		item.addValue(totalCount);
-		model.setHitTrend(item.getJsonString());
-
-		item.getValues().clear();
-		item.setTitles(display + " Failure Trend");
-		item.addValue(failureCount);
-		model.setFailureTrend(item.getJsonString());
-	}
-
-	private void showSummarizeReport(Model model, Payload payload) {
-		String type = payload.getType();
-		String sorted = payload.getSortBy();
-		String ip = payload.getIpAddress();
-		if (ip == null) {
-			ip = CatString.ALL_IP;
-		}
-		model.setIpAddress(ip);
-
-		EventReport eventReport = null;
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		try {
-			String domain = model.getDomain();
-			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "event",
-			      DailyreportEntity.READSET_FULL);
-			EventReportMerger merger = new EventReportMerger(new EventReport(domain));
-			for (Dailyreport report : reports) {
-				String xml = report.getContent();
-				EventReport reportModel = DefaultSaxParser.parse(xml);
-				reportModel.accept(merger);
-			}
-			eventReport = merger.getEventReport();
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-
-		if (eventReport == null) {
-			return;
-		}
-		eventReport.setStartTime(start);
-		eventReport.setEndTime(end);
-		eventReport.setDomain(model.getDisplayDomain());
-		setTps(payload, eventReport);
-		model.setReport(eventReport);
-		if (!StringUtils.isEmpty(type)) {
-			model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, ip, eventReport));
-		} else {
-			model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, ip, eventReport));
-		}
-	}
-
 	public void normalize(Model model, Payload payload) {
 		if (StringUtils.isEmpty(payload.getDomain())) {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
@@ -244,6 +206,9 @@ public class Handler implements PageHandler<Context> {
 		String ip = payload.getIpAddress();
 		if (StringUtils.isEmpty(ip)) {
 			payload.setIpAddress(CatString.ALL_IP);
+		}
+		if(StringUtils.isEmpty(payload.getType())){
+			payload.setType(null);
 		}
 		model.setIpAddress(payload.getIpAddress());
 		model.setAction(payload.getAction());
@@ -265,51 +230,6 @@ public class Handler implements PageHandler<Context> {
 			model.setLongDate(payload.getDate());
 			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
-	}
-
-	private void setTps(Payload payload, EventReport report) {
-		if (payload != null && report != null) {
-			boolean isCurrent = payload.getPeriod().isCurrent();
-			String ip = payload.getIpAddress();
-			Machine machine = report.getMachines().get(ip);
-			if (machine == null) {
-				return;
-			}
-			for (EventType eventType : machine.getTypes().values()) {
-				long totalCount = eventType.getTotalCount();
-				double tps = 0;
-				if (isCurrent) {
-					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-					tps = totalCount / seconds;
-				} else {
-					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-					tps = totalCount / (double) time;
-				}
-				eventType.setTps(tps);
-				for (EventName transName : eventType.getNames().values()) {
-					long totalNameCount = transName.getTotalCount();
-					double nameTps = 0;
-					if (isCurrent) {
-						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						nameTps = totalNameCount / seconds;
-					} else {
-						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						nameTps = totalNameCount / (double) time;
-					}
-					transName.setTps(nameTps);
-				}
-			}
-		}
-	}
-
-	private MobileEventGraphs showMobileGraphs(Model model, Payload payload) {
-		EventName name = getEventName(payload);
-
-		if (name == null) {
-			return null;
-		}
-		MobileEventGraphs graphs = new MobileEventGraphs().display(name);
-		return graphs;
 	}
 
 	private void showGraphs(Model model, Payload payload) {
@@ -346,9 +266,9 @@ public class Handler implements PageHandler<Context> {
 			String ip = payload.getIpAddress();
 
 			if (!StringUtils.isEmpty(type)) {
-				model.setDisplayNameReport(new DisplayEventNameReport().display(sorted, type, ip, report));
+				model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, report));
 			} else {
-				model.setDisplayTypeReport(new DisplayEventTypeReport().display(sorted, ip, report));
+				model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, payload.isShowAll(), report));
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);
@@ -356,97 +276,63 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	public Map<String, double[]> getGraphData(Model model, Payload payload) {
+	private MobileGraphs showMobileGraphs(Model model, Payload payload) {
+		EventName name = getEventName(payload);
+
+		if (name == null) {
+			return null;
+		}
+		MobileGraphs graphs = new MobileGraphs().display(name);
+		return graphs;
+	}
+
+	private void showSummarizeReport(Model model, Payload payload) {
+		String type = payload.getType();
+		String sorted = payload.getSortBy();
+		String ip = payload.getIpAddress();
+		if (ip == null) {
+			ip = CatString.ALL_IP;
+		}
+		model.setIpAddress(ip);
+
+		EventReport eventReport = null;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		String domain = model.getDomain();
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = model.getIpAddress();
-		String queryIP = "All".equals(ip) == true ? "all" : ip;
-		List<Graph> events = new ArrayList<Graph>();
 		try {
-			events = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event",
-			      GraphEntity.READSET_FULL);
+			String domain = model.getDomain();
+			List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "event",
+			      DailyreportEntity.READSET_FULL);
+			EventReportMerger merger = new EventReportMerger(new EventReport(domain));
+			for (Dailyreport report : reports) {
+				String xml = report.getContent();
+				EventReport reportModel = DefaultSaxParser.parse(xml);
+				reportModel.accept(merger);
+			}
+			eventReport = merger.getEventReport();
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		Map<String, double[]> result = buildGraphDates(start, end, type, name, events);
-		return result;
-	}
 
-	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String name, List<Graph> graphs) {
-		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 12);
-		double[] total_count = new double[size];
-		double[] failure_count = new double[size];
-
-		if (!isEmpty(type) && isEmpty(name)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 12);
-				String summaryContent = graph.getSummaryContent();
-				String[] allLines = summaryContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
-
-						// total_count[indexOfperiod] =
-						// Double.valueOf(records[SummaryOrder.TOTAL_COUNT.ordinal()]);
-						// failure_count[indexOfperiod] =
-						// Double.valueOf(records[SummaryOrder.FAILURE_COUNT.ordinal()]);
-					}
-				}
-			}
-		} else if (!isEmpty(type) && !isEmpty(name)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 12);
-				String detailContent = graph.getDetailContent();
-				String[] allLines = detailContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
-
-						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
-
-						// total_count[indexOfperiod] =
-						// Double.valueOf(records[DetailOrder.TOTAL_COUNT.ordinal()]);
-						// failure_count[indexOfperiod] =
-						// Double.valueOf(records[DetailOrder.FAILURE_COUNT.ordinal()]);
-					}
-				}
-			}
+		if (eventReport == null) {
+			return;
 		}
-		result.put("total_count", total_count);
-		result.put("failure_count", failure_count);
-		return result;
-	}
-
-	private void appendArray(double[] src, int index, String str, int size) {
-		String[] values = str.split(",");
-		if (values.length < size) {
-			for (int i = 0; i < size; i++) {
-				src[index + i] = Double.valueOf(str);
-			}
+		eventReport.setStartTime(start);
+		eventReport.setEndTime(end);
+		eventReport.setDomain(model.getDisplayDomain());
+		calculateTps(payload, eventReport);
+		model.setReport(eventReport);
+		if (!StringUtils.isEmpty(type)) {
+			model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, eventReport));
 		} else {
-			for (int i = 0; i < size; i++) {
-				src[index + i] = Double.valueOf(values[i]);
-			}
+			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, payload.isShowAll(), eventReport));
 		}
-	}
-
-	private boolean isEmpty(String content) {
-		return content == null || content.equals("");
-	}
-
-	public enum SummaryOrder {
-		TYPE, TOTAL_COUNT, FAILURE_COUNT
 	}
 
 	public enum DetailOrder {
 		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT
 	}
 
+	public enum SummaryOrder {
+		TYPE, TOTAL_COUNT, FAILURE_COUNT
+	}
 }

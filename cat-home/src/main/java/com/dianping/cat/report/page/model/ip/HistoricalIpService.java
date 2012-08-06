@@ -16,10 +16,10 @@ import com.site.lookup.annotation.Inject;
 
 public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 	@Inject
-	private ReportDao m_reportDao;
+	private BucketManager m_bucketManager;
 
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportDao m_reportDao;
 
 	public HistoricalIpService() {
 		super("ip");

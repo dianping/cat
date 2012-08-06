@@ -38,7 +38,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	@Inject
 	private ReportDao m_reportDao;
 
-	@SuppressWarnings("unused")
 	@Inject
 	private TaskDao m_taskDao;
 
@@ -223,7 +222,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "matrix");
 
 			for (MatrixReport report : m_reports.values()) {
-				report.accept(new MatrixReportFilter());
+				report.accept(new MatrixReportFilter(50));
 				Set<String> domainNames = report.getDomainNames();
 				domainNames.clear();
 				domainNames.addAll(getDomains());
@@ -240,7 +239,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 				for (MatrixReport report : m_reports.values()) {
 					try {
-						report.accept(new MatrixReportFilter());
+						report.accept(new MatrixReportFilter(50));
 						Report r = m_reportDao.createLocal();
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
@@ -286,6 +285,12 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	public static class MatrixReportFilter extends com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder {
 		private String m_domain;
 
+		private int m_maxItems;
+
+		public MatrixReportFilter(int maxItems) {
+			m_maxItems = maxItems;
+		}
+
 		@Override
 		public void visitMatrixReport(MatrixReport matrixReport) {
 			m_domain = matrixReport.getDomain();
@@ -295,34 +300,38 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			for (Matrix matrix : matrixs.values()) {
 				total = total + matrix.getCount();
 			}
+			
 			int value = (int) (total / 10000);
 			String urlSample = null;
 			value = Math.min(value, 5);
 
 			if (!m_domain.equals("Cat") && (value > 0)) {
-				List<String> removeUrls = new ArrayList<String>();
 				int totalCount = 0;
 				Collection<Matrix> matrix = matrixs.values();
+				List<String> removeUrls = new ArrayList<String>();
 
-				for (Matrix temp : matrix) {
-					if (temp.getType().equals("URL") && temp.getCount() < 5) {
-						removeUrls.add(temp.getName());
-						totalCount += temp.getCount();
-						if (urlSample == null) {
-							urlSample = temp.getUrl();
+				if (matrix.size() > m_maxItems) {
+					for (Matrix temp : matrix) {
+						if (temp.getType().equals("URL") && temp.getCount() < 5) {
+							removeUrls.add(temp.getName());
+							totalCount += temp.getCount();
+							if (urlSample == null) {
+								urlSample = temp.getUrl();
+							}
 						}
 					}
-				}
-				for (String url : removeUrls) {
-					matrixs.remove(url);
-				}
+					for (String url : removeUrls) {
+						matrixs.remove(url);
+					}
 
-				if (totalCount > 0) {
-					Matrix other = new Matrix("OTHERS");
-					other.setUrl(urlSample);
-					other.setType("OTHERS");
-					other.setCount(totalCount);
-					matrixs.put("OTHERS", other);
+					if (totalCount > 0) {
+						Matrix other = new Matrix("OTHERS");
+						
+						other.setUrl(urlSample);
+						other.setType("OTHERS");
+						other.setCount(totalCount);
+						matrixs.put("OTHERS", other);
+					}
 				}
 			}
 			super.visitMatrixReport(matrixReport);

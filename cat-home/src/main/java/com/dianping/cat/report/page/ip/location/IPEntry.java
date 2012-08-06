@@ -6,13 +6,13 @@ package com.dianping.cat.report.page.ip.location;
  * </pre>
  */
 public class IPEntry {
-	public String beginIp;
+	public String area;
 
-	public String endIp;
+	public String beginIp;
 
 	public String country;
 
-	public String area;
+	public String endIp;
 
 	/**
 	 * 构造函数

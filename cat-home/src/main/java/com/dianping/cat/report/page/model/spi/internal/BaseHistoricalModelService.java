@@ -12,9 +12,9 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 
 public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {
-	private String m_name;
-
 	private boolean m_localMode = true;
+
+	private String m_name;
 
 	public BaseHistoricalModelService(String name) {
 		m_name = name;
@@ -29,7 +29,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	@Override
 	public void initialize() throws InitializationException {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		
+
 		m_localMode = manager.isLocalMode();
 	}
 
@@ -37,7 +37,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	public ModelResponse<T> invoke(ModelRequest request) {
 		ModelResponse<T> response = new ModelResponse<T>();
 		Transaction t = newTransaction("ModelService", getClass().getSimpleName());
-		t.addData("thread",Thread.currentThread());
+		t.addData("thread", Thread.currentThread());
 
 		try {
 			T model = buildModel(request);

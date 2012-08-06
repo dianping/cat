@@ -28,43 +28,6 @@ public class LocalLogViewService extends BaseLocalModelService<String> {
 		super("logview");
 	}
 
-	@Override
-	protected String getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
-		String messageId = request.getProperty("messageId");
-
-		if (messageId == null) {
-			return null;
-		}
-
-		String direction = request.getProperty("direction");
-		String tag = request.getProperty("tag");
-		MessageId id = MessageId.parse(messageId);
-		Bucket<MessageTree> bucket = m_bucketManager.getLogviewBucket(id.getTimestamp(), id.getDomain());
-		MessageTree tree = null;
-
-		tree = getLogviewFromBucket(bucket, messageId, direction, tag);
-
-		if (tree == null) {
-			List<Bucket<MessageTree>> buckets = m_bucketManager.getLogviewBuckets(id.getTimestamp(),id.getDomain());
-			for (Bucket<MessageTree> b : buckets) {
-				tree = getLogviewFromBucket(b, messageId, direction, tag);
-				if (tree != null) {
-					break;
-				}
-			}
-		}
-
-		if (tree != null) {
-			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-
-			m_codec.encode(tree, buf);
-			buf.readInt(); // get rid of length
-			return buf.toString(Charset.forName("utf-8"));
-		} else {
-			return null;
-		}
-	}
-
 	private MessageTree getLogviewFromBucket(Bucket<MessageTree> bucket, String messageId, String direction, String tag)
 	      throws IOException {
 		MessageTree tree = null;
@@ -83,5 +46,42 @@ public class LocalLogViewService extends BaseLocalModelService<String> {
 			tree = bucket.findById(messageId);
 		}
 		return tree;
+	}
+
+	@Override
+	protected String getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
+		String messageId = request.getProperty("messageId");
+
+		if (messageId == null) {
+			return null;
+		}
+
+		String direction = request.getProperty("direction");
+		String tag = request.getProperty("tag");
+		MessageId id = MessageId.parse(messageId);
+		Bucket<MessageTree> bucket = m_bucketManager.getLogviewBucket(id.getTimestamp(), id.getDomain());
+		MessageTree tree = null;
+
+		tree = getLogviewFromBucket(bucket, messageId, direction, tag);
+
+		if (tree == null) {
+			List<Bucket<MessageTree>> buckets = m_bucketManager.getLogviewBuckets(id.getTimestamp(), id.getDomain());
+			for (Bucket<MessageTree> b : buckets) {
+				tree = getLogviewFromBucket(b, messageId, direction, tag);
+				if (tree != null) {
+					break;
+				}
+			}
+		}
+
+		if (tree != null) {
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
+
+			m_codec.encode(tree, buf);
+			buf.readInt(); // get rid of length
+			return buf.toString(Charset.forName("utf-8"));
+		} else {
+			return null;
+		}
 	}
 }

@@ -5,14 +5,14 @@ import java.text.DecimalFormat;
 import com.site.lookup.annotation.Inject;
 
 public class DefaultGraphBuilder implements GraphBuilder {
+	private static final int BAR = 1;
+
+	private static final int LINE = 2;
+
 	@Inject
 	private ValueTranslater m_translater;
 
 	private int m_type = BAR;
-
-	private static final int BAR = 1;
-
-	private static final int LINE = 2;
 
 	@Override
 	public String build(GraphPayload payload) {
@@ -36,68 +36,6 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		buildFooter(payload, b);
 
 		return b.getResult().toString();
-	}
-
-	protected void buildLines(GraphPayload payload, XmlBuilder b, double maxValue, double[] values) {
-		DecimalFormat format = new DecimalFormat("0.#");
-		int width = payload.getWidth();
-		int height = payload.getHeight();
-		int top = payload.getMarginTop();
-		int left = payload.getMarginLeft();
-		int bottom = payload.getMarginBottom();
-		int right = payload.getMarginRight();
-		int h = height - top - bottom;
-		int w = width - left - right;
-		int cols = payload.getColumns();
-		int xstep = w / cols;
-		int[] pixels = m_translater.translate(h, maxValue, values);
-		String idPrefix = payload.getIdPrefix();
-
-		b.tag1("g", "id", "bar", "fill", "red");
-
-		for (int i = 0; i < cols && i < pixels.length; i++) {
-			int pixel = pixels[i];
-
-			if (pixel <= 0) {
-				continue;
-			}
-
-			int x = left + xstep * i;
-			int y = top + h - pixel;
-
-			b.tag("rect", "id", idPrefix + i, "x", x, "y", y, "width", xstep - 1, "height", pixel);
-		}
-
-		b.tag2("g");
-
-		b.tag1("g", "id", "label");
-
-		for (int i = 0; i < cols && i < pixels.length; i++) {
-			int pixel = pixels[i];
-
-			if (pixel <= 0) {
-				continue;
-			}
-
-			double value = values[i];
-			int x = left + xstep * i;
-			int y = top - 6 + h - pixel;
-			String tip = format.format(value);
-
-			// adjust
-			if (x + tip.length() * 7 > width - right) {
-				x = width - right - tip.length() * 7;
-			}
-
-			b.tag1("text", "x", x, "y", y, "display", "none");
-
-			b.indent().add(tip).newLine();
-			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", idPrefix + i + ".mouseover",
-			      "end", idPrefix + i + ".mouseout");
-			b.tag2("text");
-		}
-
-		b.tag2("g");
 	}
 
 	protected void buildBars(GraphPayload payload, XmlBuilder b, double maxValue, double[] values) {
@@ -274,8 +212,66 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		b.tag2("g");
 	}
 
-	private String toCompactString(double value) {
-		return new DecimalFormat("0.##").format(value);
+	protected void buildLines(GraphPayload payload, XmlBuilder b, double maxValue, double[] values) {
+		DecimalFormat format = new DecimalFormat("0.#");
+		int width = payload.getWidth();
+		int height = payload.getHeight();
+		int top = payload.getMarginTop();
+		int left = payload.getMarginLeft();
+		int bottom = payload.getMarginBottom();
+		int right = payload.getMarginRight();
+		int h = height - top - bottom;
+		int w = width - left - right;
+		int cols = payload.getColumns();
+		int xstep = w / cols;
+		int[] pixels = m_translater.translate(h, maxValue, values);
+		String idPrefix = payload.getIdPrefix();
+
+		b.tag1("g", "id", "bar", "fill", "red");
+
+		for (int i = 0; i < cols && i < pixels.length; i++) {
+			int pixel = pixels[i];
+
+			if (pixel <= 0) {
+				continue;
+			}
+
+			int x = left + xstep * i;
+			int y = top + h - pixel;
+
+			b.tag("rect", "id", idPrefix + i, "x", x, "y", y, "width", xstep - 1, "height", pixel);
+		}
+
+		b.tag2("g");
+
+		b.tag1("g", "id", "label");
+
+		for (int i = 0; i < cols && i < pixels.length; i++) {
+			int pixel = pixels[i];
+
+			if (pixel <= 0) {
+				continue;
+			}
+
+			double value = values[i];
+			int x = left + xstep * i;
+			int y = top - 6 + h - pixel;
+			String tip = format.format(value);
+
+			// adjust
+			if (x + tip.length() * 7 > width - right) {
+				x = width - right - tip.length() * 7;
+			}
+
+			b.tag1("text", "x", x, "y", y, "display", "none");
+
+			b.indent().add(tip).newLine();
+			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", idPrefix + i + ".mouseover",
+			      "end", idPrefix + i + ".mouseout");
+			b.tag2("text");
+		}
+
+		b.tag2("g");
 	}
 
 	protected void buildXLabels(GraphPayload payload, XmlBuilder b) {
@@ -354,10 +350,20 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		b.tag2("g");
 	}
 
-	protected static class PathBuilder {
-		private StringBuilder m_sb = new StringBuilder(64);
+	@Override
+	public void setGraphType(int GraphType) {
+		// TODO Auto-generated method stub
 
+	}
+
+	private String toCompactString(double value) {
+		return new DecimalFormat("0.##").format(value);
+	}
+
+	protected static class PathBuilder {
 		private int m_marker;
+
+		private StringBuilder m_sb = new StringBuilder(64);
 
 		public String build() {
 			String result = m_sb.toString();
@@ -403,11 +409,11 @@ public class DefaultGraphBuilder implements GraphBuilder {
 	}
 
 	protected static class XmlBuilder {
-		private StringBuilder m_sb = new StringBuilder(8192);
-
 		private boolean m_compact;
 
 		private int m_level;
+
+		private StringBuilder m_sb = new StringBuilder(8192);
 
 		public XmlBuilder add(String text) {
 			m_sb.append(text);
@@ -499,11 +505,5 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			newLine();
 			return this;
 		}
-	}
-
-	@Override
-	public void setGraphType(int GraphType) {
-		// TODO Auto-generated method stub
-
 	}
 }

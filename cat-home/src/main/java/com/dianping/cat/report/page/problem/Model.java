@@ -8,40 +8,40 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private ProblemReport m_report;
-
-	private int m_lastMinute; // last minute of current hour
-
-	private int m_hour;
-
-	private String m_threadId;
+	private ProblemStatistics m_allStatistics;
 
 	private int m_currentMinute; // for navigation
 
-	private int m_threshold;
-
-	private int m_sqlThreshold;
-	
-	private String m_groupName;
+	private String m_defaultSqlThreshold;
 
 	private String m_defaultThreshold;
-	
-	private String m_defaultSqlThreshold;
+
+	private DetailStatistics m_detailStatistics;
+
+	private String m_errorsTrend;
 
 	private GroupLevelInfo m_groupLevelInfo;
 
-	private ThreadLevelInfo m_threadLevelInfo;
+	private String m_groupName;
 
-	private ProblemStatistics m_problemStatistics;
+	private int m_hour;
 
-	private ProblemStatistics m_allStatistics;
-	
-	private DetailStatistics m_detailStatistics;
+	private int m_lastMinute; // last minute of current hour
 
 	private String m_mobileResponse;
 
-	private String m_errorsTrend;
-	
+	private ProblemStatistics m_problemStatistics;
+
+	private ProblemReport m_report;
+
+	private int m_sqlThreshold;
+
+	private String m_threadId;
+
+	private ThreadLevelInfo m_threadLevelInfo;
+
+	private int m_threshold;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -59,8 +59,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Action.GROUP;
 	}
 
+	public String getDefaultSqlThreshold() {
+		return m_defaultSqlThreshold;
+	}
+
 	public String getDefaultThreshold() {
 		return m_defaultThreshold;
+	}
+
+	public DetailStatistics getDetailStatistics() {
+		return m_detailStatistics;
 	}
 
 	@Override
@@ -79,6 +87,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
+	}
+
+	public String getErrorsTrend() {
+		return m_errorsTrend;
 	}
 
 	public GroupLevelInfo getGroupLevelInfo() {
@@ -120,8 +132,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getMobileResponse() {
-   	return m_mobileResponse;
-   }
+		return m_mobileResponse;
+	}
 
 	public ProblemStatistics getProblemStatistics() {
 		return m_problemStatistics;
@@ -129,6 +141,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public ProblemReport getReport() {
 		return m_report;
+	}
+
+	public int getSqlThreshold() {
+		return m_sqlThreshold;
 	}
 
 	public String getThreadId() {
@@ -151,8 +167,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_currentMinute = currentMinute;
 	}
 
+	public void setDefaultSqlThreshold(String defaultSqlThreshold) {
+		m_defaultSqlThreshold = defaultSqlThreshold;
+	}
+
 	public void setDefaultThreshold(String defaultThreshold) {
 		m_defaultThreshold = defaultThreshold;
+	}
+
+	public void setDetailStatistics(DetailStatistics detailStatistics) {
+		m_detailStatistics = detailStatistics;
+	}
+
+	public void setErrorsTrend(String errorsTrend) {
+		m_errorsTrend = errorsTrend;
 	}
 
 	public void setGroupLevelInfo(GroupLevelInfo groupLevelInfo) {
@@ -172,8 +200,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public void setMobileResponse(String mobileResponse) {
-   	m_mobileResponse = mobileResponse;
-   }
+		m_mobileResponse = mobileResponse;
+	}
 
 	public void setProblemStatistics(ProblemStatistics problemStatistics) {
 		m_problemStatistics = problemStatistics;
@@ -181,6 +209,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setReport(ProblemReport report) {
 		m_report = report;
+	}
+
+	public void setSqlThreshold(int sqlThreshold) {
+		m_sqlThreshold = sqlThreshold;
 	}
 
 	public void setThreadId(String threadId) {
@@ -195,36 +227,4 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_threshold = threshold;
 	}
 
-	public String getErrorsTrend() {
-   	return m_errorsTrend;
-   }
-
-	public void setErrorsTrend(String errorsTrend) {
-   	m_errorsTrend = errorsTrend;
-   }
-
-	public String getDefaultSqlThreshold() {
-   	return m_defaultSqlThreshold;
-   }
-
-	public void setDefaultSqlThreshold(String defaultSqlThreshold) {
-   	m_defaultSqlThreshold = defaultSqlThreshold;
-   }
-
-	public int getSqlThreshold() {
-   	return m_sqlThreshold;
-   }
-
-	public void setSqlThreshold(int sqlThreshold) {
-   	m_sqlThreshold = sqlThreshold;
-   }
-
-	public DetailStatistics getDetailStatistics() {
-   	return m_detailStatistics;
-   }
-
-	public void setDetailStatistics(DetailStatistics detailStatistics) {
-   	m_detailStatistics = detailStatistics;
-   }
-	
 }

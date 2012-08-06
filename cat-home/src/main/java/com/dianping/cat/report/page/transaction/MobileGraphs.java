@@ -10,26 +10,25 @@ import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.MobileGraphItem;
 import com.dianping.cat.report.graph.ValueTranslater;
 
-public class MobileTransactionGraphs {
-
-	private MobileGraphItem m_duration = new MobileGraphItem();
-
-	private MobileGraphItem m_hit = new MobileGraphItem();
+public class MobileGraphs {
 
 	private MobileGraphItem m_avargerTime = new MobileGraphItem();
 
+	private MobileGraphItem m_duration = new MobileGraphItem();
+
 	private MobileGraphItem m_failure = new MobileGraphItem();
 
-	private TransactionName m_name;
+	private MobileGraphItem m_hit = new MobileGraphItem();
 
 	private Map<Integer, Integer> m_map = new HashMap<Integer, Integer>();
 
+	private TransactionName m_name;
+
 	private transient ValueTranslater m_tansalater = new DefaultValueTranslater();
 
-	private transient String[] m_xlabel = { "0", "5", "10", "15", "20", "25",
-			"30", "35", "40", "45", "50", "55", "60" };
+	private transient String[] m_xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60" };
 
-	public MobileTransactionGraphs() {
+	public MobileGraphs() {
 		int k = 1;
 
 		m_map.put(0, 0);
@@ -37,15 +36,6 @@ public class MobileTransactionGraphs {
 			m_map.put(k, i);
 			k <<= 1;
 		}
-	}
-
-	public MobileTransactionGraphs display(TransactionName name) {
-		m_name = name;
-		creatAverageGraph();
-		creatDurationGraph();
-		creatFailureGraph();
-		creatHitGraph();
-		return this;
 	}
 
 	private void creatAverageGraph() {
@@ -70,8 +60,7 @@ public class MobileTransactionGraphs {
 		double[] averageValues = loadDurationValues();
 		m_duration.setTitle("Duration Distribution");
 		m_duration.setValue(averageValues);
-		String[] xlabel = { "0", "1", "2", "4", "8", "16", "32", "64", "128",
-				"256", "512", "1024", "2048", "4096" };
+		String[] xlabel = { "0", "1", "2", "4", "8", "16", "32", "64", "128", "256", "512", "1024", "2048", "4096" };
 		double[] ylable = new double[6];
 		m_duration.setXlabel(xlabel);
 		m_duration.setYlable(ylable);
@@ -117,6 +106,31 @@ public class MobileTransactionGraphs {
 				ylable[i] = maxValue / 5 * i;
 			}
 		}
+	}
+
+	public MobileGraphs display(TransactionName name) {
+		m_name = name;
+		creatAverageGraph();
+		creatDurationGraph();
+		creatFailureGraph();
+		creatHitGraph();
+		return this;
+	}
+
+	public MobileGraphItem getAvargerTime() {
+		return m_avargerTime;
+	}
+
+	public MobileGraphItem getDuration() {
+		return m_duration;
+	}
+
+	public MobileGraphItem getFailure() {
+		return m_failure;
+	}
+
+	public MobileGraphItem getHit() {
+		return m_hit;
 	}
 
 	private double[] loadAverageValues() {
@@ -173,21 +187,5 @@ public class MobileTransactionGraphs {
 		}
 
 		return values;
-	}
-
-	public MobileGraphItem getDuration() {
-		return m_duration;
-	}
-
-	public MobileGraphItem getHit() {
-		return m_hit;
-	}
-
-	public MobileGraphItem getAvargerTime() {
-		return m_avargerTime;
-	}
-
-	public MobileGraphItem getFailure() {
-		return m_failure;
 	}
 }

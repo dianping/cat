@@ -6,7 +6,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +20,7 @@ import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.hadoop.dal.GraphDao;
-import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
@@ -31,9 +28,7 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.trend.GraphItem;
 import com.google.gson.Gson;
-import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -43,47 +38,35 @@ import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
-	public static final long ONE_HOUR = 3600 * 1000L;
+	private static final String DETAIL = "detail";
 
-	private static final String ERROR = "errors";
+	private static final String VIEW = "view";
+
+	@Inject
+	private DailyreportDao m_dailyreportDao;
+
+	@Inject
+	private GraphDao m_graphDao;
+
+	@Inject
+	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject(type = ModelService.class, value = "problem")
-	private ModelService<ProblemReport> m_service;
-
 	@Inject
 	private ServerConfigManager m_manager;
 
-	@Inject
-	private DailyreportDao dailyreportDao;
+	@Inject(type = ModelService.class, value = "problem")
+	private ModelService<ProblemReport> m_service;
 
-	@Inject
-	private GraphDao graphDao;
-
-	private Gson gson = new Gson();
-
-	private static final String VIEW = "view";
-
-	private static final String DETAIL = "detail";
+	private Gson m_gson = new Gson();
 
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
 
 		cal.setTimeInMillis(date);
 		return cal.get(Calendar.HOUR_OF_DAY);
-	}
-
-	private String getIpAddress(ProblemReport report, Payload payload) {
-		Map<String, Machine> machines = report.getMachines();
-		String ip = payload.getIpAddress();
-
-		if ((ip == null || ip.length() == 0) && !machines.isEmpty()) {
-			ip = machines.keySet().iterator().next();
-		}
-
-		return ip;
 	}
 
 	private ProblemReport getHourlyReport(Payload payload, String type) {
@@ -107,38 +90,15 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void setDefaultThreshold(Model model, Payload payload) {
-		Map<String, Domain> domains = m_manager.getLongConfigDomains();
-		Domain d = domains.get(payload.getDomain());
+	private String getIpAddress(ProblemReport report, Payload payload) {
+		Map<String, Machine> machines = report.getMachines();
+		String ip = payload.getIpAddress();
 
-		if (d != null) {
-			int longUrlTime = d.getUrlThreshold();
-			if (payload.getRealLongTime() == 0) {
-				payload.setLongTime(longUrlTime);
-			}
-
-			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
-			      && longUrlTime != 4000 && longUrlTime != 5000) {
-				double sec = (double) (longUrlTime) / (double) 1000;
-				NumberFormat nf = new DecimalFormat("#.##");
-				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
-
-				model.setDefaultThreshold(option);
-			}
-
-			int longSqlTime = d.getSqlThreshold();
-			if (payload.getSqlLongTime() == 0) {
-				payload.setSqlLongTime(longSqlTime);
-			}
-
-			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
-				double sec = (double) (longSqlTime);
-				NumberFormat nf = new DecimalFormat("#");
-				String option = "<option value=\"" + longSqlTime + "\"" + ">" + nf.format(sec) + " ms</option>";
-
-				model.setDefaultSqlThreshold(option);
-			}
+		if ((ip == null || ip.length() == 0) && !machines.isEmpty()) {
+			ip = machines.keySet().iterator().next();
 		}
+
+		return ip;
 	}
 
 	@Override
@@ -185,7 +145,7 @@ public class Handler implements PageHandler<Context> {
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY_GRAPH:
-			buildTrendGraph(model, payload);
+			m_historyGraphs.buildTrendGraph(model, payload);
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -211,7 +171,7 @@ public class Handler implements PageHandler<Context> {
 				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000);
 				problemStatistics.visitProblemReport(report);
 				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
-				String response = gson.toJson(problemStatistics);
+				String response = m_gson.toJson(problemStatistics);
 				model.setMobileResponse(response);
 			} else {
 				report = showHourlyReport(model, payload);
@@ -220,70 +180,11 @@ public class Handler implements PageHandler<Context> {
 				problemStatistics.visitProblemReport(report);
 				ProblemStatistics statistics = model.getAllStatistics();
 				statistics.setIps(new ArrayList<String>(report.getIps()));
-				model.setMobileResponse(gson.toJson(statistics));
+				model.setMobileResponse(m_gson.toJson(statistics));
 			}
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private void buildTrendGraph(Model model, Payload payload) {
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		int size = (int) ((end.getTime() - start.getTime()) / (60 * 1000));
-
-		GraphItem item = new GraphItem();
-		item.setStart(start);
-
-		double[] data = getGraphData(model, payload).get(ERROR);
-		String type = payload.getType();
-		String status = payload.getStatus();
-		item.setTitles(StringUtils.isEmpty(status) ? type : status);
-		item.addValue(data);
-		item.setSize(size);
-		model.setErrorsTrend(item.getJsonString());
-	}
-
-	private ProblemReport showSummarizeReport(Model model, Payload payload) {
-		String domain = model.getDomain();
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-
-		ProblemReport problemReport = null;
-		try {
-			List<Dailyreport> reports = dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem",
-			      DailyreportEntity.READSET_FULL);
-			ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
-			for (Dailyreport report : reports) {
-				String xml = report.getContent();
-				ProblemReport reportModel = DefaultSaxParser.parse(xml);
-				reportModel.accept(merger);
-			}
-			problemReport = merger == null ? null : merger.getProblemReport();
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return problemReport;
-	}
-
-	public Map<String, double[]> getGraphData(Model model, Payload payload) {
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		String domain = model.getDomain();
-		String type = payload.getType();
-		String status = payload.getStatus();
-		String ip = model.getIpAddress();
-		String queryIP = "All".equals(ip) == true ? "all" : ip;
-		List<Graph> graphs = new ArrayList<Graph>();
-
-		try {
-			graphs = this.graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "problem",
-			      GraphEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		Map<String, double[]> result = buildGraphDates(start, end, type, status, graphs);
-		return result;
 	}
 
 	public void normalize(Model model, Payload payload) {
@@ -318,6 +219,40 @@ public class Handler implements PageHandler<Context> {
 			payload.setYesterdayDefault();
 			model.setLongDate(payload.getDate());
 			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
+		}
+	}
+
+	private void setDefaultThreshold(Model model, Payload payload) {
+		Map<String, Domain> domains = m_manager.getLongConfigDomains();
+		Domain d = domains.get(payload.getDomain());
+
+		if (d != null) {
+			int longUrlTime = d.getUrlThreshold();
+			if (payload.getRealLongTime() == 0) {
+				payload.setLongTime(longUrlTime);
+			}
+
+			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
+			      && longUrlTime != 4000 && longUrlTime != 5000) {
+				double sec = (double) (longUrlTime) / (double) 1000;
+				NumberFormat nf = new DecimalFormat("#.##");
+				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
+
+				model.setDefaultThreshold(option);
+			}
+
+			int longSqlTime = d.getSqlThreshold();
+			if (payload.getSqlLongTime() == 0) {
+				payload.setSqlLongTime(longSqlTime);
+			}
+
+			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
+				double sec = (double) (longSqlTime);
+				NumberFormat nf = new DecimalFormat("#");
+				String option = "<option value=\"" + longSqlTime + "\"" + ">" + nf.format(sec) + " ms</option>";
+
+				model.setDefaultSqlThreshold(option);
+			}
 		}
 	}
 
@@ -369,60 +304,33 @@ public class Handler implements PageHandler<Context> {
 		return report;
 	}
 
-	public Map<String, double[]> buildGraphDates(Date start, Date end, String type, String status, List<Graph> graphs) {
-		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR) * 60;
-		double[] errors = new double[size];
+	private ProblemReport showSummarizeReport(Model model, Payload payload) {
+		String domain = model.getDomain();
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
 
-		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(status)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 60);
-				String summaryContent = graph.getSummaryContent();
-				String[] allLines = summaryContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records.length < SummaryOrder.values().length) {
-						continue;
-					}
-					String dbType = records[SummaryOrder.TYPE.ordinal()];
-					if (dbType.equals(type)) {
-						String[] values = records[SummaryOrder.DETAIL.ordinal()].split(",");
-						for (int k = 0; k < values.length; k++) {
-							errors[indexOfperiod + k] = Double.parseDouble(values[k]);
-						}
-					}
-				}
+		ProblemReport problemReport = null;
+		try {
+			List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem",
+			      DailyreportEntity.READSET_FULL);
+			ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
+			for (Dailyreport report : reports) {
+				String xml = report.getContent();
+				ProblemReport reportModel = DefaultSaxParser.parse(xml);
+				reportModel.accept(merger);
 			}
-		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(status)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 60);
-				String detailContent = graph.getDetailContent();
-				String[] allLines = detailContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records.length < DetailOrder.values().length) {
-						continue;
-					}
-					String dbStatus = records[DetailOrder.STATUS.ordinal()];
-					String dbType = records[DetailOrder.TYPE.ordinal()];
-					if (status.equals(dbStatus) && type.equals(dbType)) {
-						String[] values = records[DetailOrder.DETAIL.ordinal()].split(",");
-						for (int k = 0; k < values.length; k++) {
-							errors[indexOfperiod + k] = Double.parseDouble(values[k]);
-						}
-					}
-				}
-			}
+			problemReport = merger == null ? null : merger.getProblemReport();
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		result.put(ERROR, errors);
-		return result;
-	}
-
-	public enum SummaryOrder {
-		TYPE, TOTAL_COUNT, DETAIL
+		return problemReport;
 	}
 
 	public enum DetailOrder {
 		TYPE, STATUS, TOTAL_COUNT, DETAIL
+	}
+
+	public enum SummaryOrder {
+		TYPE, TOTAL_COUNT, DETAIL
 	}
 }

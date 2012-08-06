@@ -1,13 +1,13 @@
 package com.dianping.cat.report.graph;
 
 public abstract class AbstractGraphPayload implements GraphPayload {
-	private double[] m_values;
-
-	private String m_title;
-
 	private String m_axisXLabel;
 
 	private String m_axisYLabel;
+
+	private String m_title;
+
+	private double[] m_values;
 
 	public AbstractGraphPayload(String title, String axisXLabel, String axisYLabel) {
 		m_title = title;

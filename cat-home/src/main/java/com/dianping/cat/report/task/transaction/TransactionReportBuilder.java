@@ -52,15 +52,6 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 		return true;
 	}
 
-	private List<Graph> getHourReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(reportDomain, reports);
-		graphs = m_transactionGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
-		return graphs;
-	}
-
 	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = new HashSet<String>();
@@ -68,7 +59,7 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
 		String content = m_transactionMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
-		
+
 		Dailyreport report = m_dailyReportDao.createLocal();
 		report.setContent(content);
 		report.setCreationDate(new Date());
@@ -78,6 +69,15 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 		report.setPeriod(reportPeriod);
 		report.setType(1);
 		return report;
+	}
+
+	private List<Graph> getHourReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(reportDomain, reports);
+		graphs = m_transactionGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+		return graphs;
 	}
 
 	@Override

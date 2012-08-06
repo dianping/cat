@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ModelRequest {
+	public static ModelRequest from(String domain, String period) {
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.getByName(period, ModelPeriod.CURRENT));
+
+		return request;
+	}
+
 	private String m_domain;
 
 	private ModelPeriod m_period;
@@ -14,12 +20,6 @@ public class ModelRequest {
 	public ModelRequest(String domain, ModelPeriod period) {
 		m_domain = domain;
 		m_period = period;
-	}
-
-	public static ModelRequest from(String domain, String period) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.getByName(period, ModelPeriod.CURRENT));
-
-		return request;
 	}
 
 	public String getDomain() {
@@ -38,6 +38,10 @@ public class ModelRequest {
 		}
 	}
 
+	public String getProperty(String name) {
+		return getProperty(name, null);
+	}
+
 	public String getProperty(String name, String defaultValue) {
 		if (m_properties == null) {
 			return defaultValue;
@@ -46,10 +50,6 @@ public class ModelRequest {
 		} else {
 			return defaultValue;
 		}
-	}
-
-	public String getProperty(String name) {
-		return getProperty(name, null);
 	}
 
 	public boolean hasProperty(String name) {

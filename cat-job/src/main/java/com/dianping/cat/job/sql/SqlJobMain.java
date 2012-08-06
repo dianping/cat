@@ -20,15 +20,15 @@ import com.dianping.cat.job.sql.database.SqlRecordJobReducer;
 
 public class SqlJobMain extends Configured implements Tool {
 
-	private static String BASE_URL;
+	private String BASE_URL;
 
-	private static String DEFAULT_IN_PATH = "hdfs://10.1.1.169/user/cat/dump/";
+	private String DEFAULT_IN_PATH = "hdfs://10.1.1.169/user/cat/dump/";
 
-	private static String DEFAULT_OUT_PATH = "hdfs://10.1.1.169/user/cat/sql/";
+	private String DEFAULT_OUT_PATH = "hdfs://10.1.1.169/user/cat/sql/";
 
-	private static String DEFAULT_FINAL_PATH = "hdfs://10.1.1.169/user/cat/sqlResult/";
+	private String DEFAULT_FINAL_PATH = "hdfs://10.1.1.169/user/cat/sqlResult/";
 
-	private static final int DEFAULT_REDUCE_NUMBER = 3;
+	private final int DEFAULT_REDUCE_NUMBER = 3;
 
 	/**
 	 * The job process last hour data when no args default. The args[0] can set
@@ -75,14 +75,13 @@ public class SqlJobMain extends Configured implements Tool {
 			}
 		}
 
-		
 		String hourStr = getLastHoursString(1);
 
 		if (args.length >= 2) {
 			hourStr = args[1];
 		}
 
-		//for local mode
+		// for local mode
 		if (args.length >= 3) {
 			BASE_URL = args[2];
 			if (BASE_URL.charAt(BASE_URL.length() - 1) == '/') {
@@ -95,16 +94,16 @@ public class SqlJobMain extends Configured implements Tool {
 
 		String inputPath = DEFAULT_IN_PATH + hourStr;
 		String outputPath = DEFAULT_OUT_PATH + hourStr;
-		
+
 		System.out.println(String.format("InputPath: %s , OutPath %s", inputPath, outputPath));
 
 		FileInputFormat.addInputPath(job, new Path(inputPath));
 		Path outPath = new Path(outputPath);
 
 		FileSystem fs = FileSystem.get(conf);
-		fs.delete(outPath, true);		
+		fs.delete(outPath, true);
 		FileOutputFormat.setOutputPath(job, outPath);
-		
+
 		if (job.waitForCompletion(true)) {
 			return runSqlRecordJob(hourStr);
 		} else {
@@ -129,7 +128,7 @@ public class SqlJobMain extends Configured implements Tool {
 		FileInputFormat.addInputPath(job, new Path(DEFAULT_OUT_PATH + currentHour));
 		FileOutputFormat.setOutputPath(job, new Path(DEFAULT_FINAL_PATH));
 		FileSystem fs = FileSystem.get(conf);
-		fs.delete(new Path(DEFAULT_FINAL_PATH), true);		
+		fs.delete(new Path(DEFAULT_FINAL_PATH), true);
 		return job.waitForCompletion(true) ? 0 : 1;
 	}
 }

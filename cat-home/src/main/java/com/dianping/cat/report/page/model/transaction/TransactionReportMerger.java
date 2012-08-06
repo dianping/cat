@@ -13,15 +13,15 @@ import com.dianping.cat.helper.CatString;
 public class TransactionReportMerger extends DefaultMerger {
 	private boolean m_allIp = false;
 
+	private Machine m_allMachines;
+
 	private boolean m_allName = false;
+
+	private TransactionName m_allNames;
 
 	private String m_ip;
 
 	private String m_type;
-
-	private Machine m_allMachines;
-
-	private TransactionName m_allNames;
 
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);

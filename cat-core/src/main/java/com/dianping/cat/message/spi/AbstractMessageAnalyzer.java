@@ -10,7 +10,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	protected static final long MINUTE = 60 * 1000;
 
-	private long m_errors = 9999;
+	private long m_errors = 0;
 
 	@Override
 	public void analyze(MessageQueue queue) {
@@ -22,10 +22,9 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 					process(tree);
 				} catch (Throwable e) {
 					m_errors++;
-					
-					if (m_errors % 10000 == 0) {
+
+					if (m_errors == 1 || m_errors % 10000 == 0) {
 						Cat.logError(e);
-						e.printStackTrace();
 					}
 				}
 			}
@@ -39,10 +38,9 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 					process(tree);
 				} catch (Throwable e) {
 					m_errors++;
-					
-					if (m_errors % 10000 == 0) {
+
+					if (m_errors == 1 || m_errors % 10000 == 0) {
 						Cat.logError(e);
-						e.printStackTrace();
 					}
 				}
 			} else {
@@ -80,7 +78,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		}
 		return false;
 	}
-	
+
 	public abstract R getReport(String domain);
 
 	protected abstract boolean isTimeout();

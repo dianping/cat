@@ -9,24 +9,24 @@ import com.site.web.mvc.payload.annotation.FieldMeta;
 import com.site.web.mvc.payload.annotation.PathMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
-	public Payload() {
-		super(ReportPage.LOGVIEW);
-	}
-
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("header")
-	private boolean m_showHeader = true;
-
 	@PathMeta("path")
 	private String[] m_path;
+
+	@FieldMeta("header")
+	private boolean m_showHeader = true;
 
 	@FieldMeta("tag1")
 	private String m_tag1;
 
 	@FieldMeta("tag2")
 	private String m_tag2;
+
+	public Payload() {
+		super(ReportPage.LOGVIEW);
+	}
 
 	@Override
 	public Action getAction() {

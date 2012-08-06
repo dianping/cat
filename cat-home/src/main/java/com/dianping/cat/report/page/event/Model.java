@@ -8,13 +8,11 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private EventReport m_report;
-	
-	private DisplayEventTypeReport m_displayTypeReport;
-	
-	private DisplayEventNameReport m_displayNameReport;
+	private DisplayNames m_displayNameReport;
 
-	private String m_type;
+	private DisplayTypes m_displayTypeReport;
+
+	private String m_failureTrend;
 
 	private String m_graph1;
 
@@ -24,19 +22,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_graph4;
 
-	private String m_mobileResponse;
-	
 	private String m_hitTrend;
-	
-	private String m_failureTrend;
 
-	public String getFailureTrend() {
-   	return m_failureTrend;
-   }
+	private String m_mobileResponse;
 
-	public void setFailureTrend(String failureTrend) {
-   	m_failureTrend = failureTrend;
-   }
+	private EventReport m_report;
+
+	private String m_type;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -45,6 +37,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.HOURLY_REPORT;
+	}
+
+	public DisplayNames getDisplayNameReport() {
+		return m_displayNameReport;
+	}
+
+	public DisplayTypes getDisplayTypeReport() {
+		return m_displayTypeReport;
 	}
 
 	@Override
@@ -65,13 +65,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
 	}
-	
-	public List<String> getIps() {
-		if (m_report == null) {
-			return new ArrayList<String>();
-		} else {
-			return StringSortHelper.sortDomain(m_report.getIps());
-		}
+
+	public String getFailureTrend() {
+		return m_failureTrend;
 	}
 
 	public String getGraph1() {
@@ -90,12 +86,40 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_graph4;
 	}
 
+	public String getHitTrend() {
+		return m_hitTrend;
+	}
+
+	public List<String> getIps() {
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getIps());
+		}
+	}
+
+	public String getMobileResponse() {
+		return m_mobileResponse;
+	}
+
 	public EventReport getReport() {
 		return m_report;
 	}
 
 	public String getType() {
 		return m_type;
+	}
+
+	public void setDisplayNameReport(DisplayNames displayNameReport) {
+		m_displayNameReport = displayNameReport;
+	}
+
+	public void setDisplayTypeReport(DisplayTypes displayTypeReport) {
+		m_displayTypeReport = displayTypeReport;
+	}
+
+	public void setFailureTrend(String failureTrend) {
+		m_failureTrend = failureTrend;
 	}
 
 	public void setGraph1(String graph1) {
@@ -114,6 +138,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_graph4 = graph4;
 	}
 
+	public void setHitTrend(String hitTrend) {
+		m_hitTrend = hitTrend;
+	}
+
+	public void setMobileResponse(String mobileResponse) {
+		m_mobileResponse = mobileResponse;
+	}
+
 	public void setReport(EventReport report) {
 		m_report = report;
 	}
@@ -122,37 +154,4 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_type = type;
 	}
 
-	public DisplayEventTypeReport getDisplayTypeReport() {
-   	return m_displayTypeReport;
-   }
-
-	public void setDisplayTypeReport(DisplayEventTypeReport displayTypeReport) {
-   	m_displayTypeReport = displayTypeReport;
-   }
-
-	public DisplayEventNameReport getDisplayNameReport() {
-   	return m_displayNameReport;
-   }
-
-	public void setDisplayNameReport(DisplayEventNameReport displayNameReport) {
-   	m_displayNameReport = displayNameReport;
-   }
-
-	public String getMobileResponse() {
-   	return m_mobileResponse;
-   }
-
-	public void setMobileResponse(String mobileResponse) {
-   	m_mobileResponse = mobileResponse;
-   }
-
-	public String getHitTrend() {
-   	return m_hitTrend;
-   }
-
-	public void setHitTrend(String hitTrend) {
-   	m_hitTrend = hitTrend;
-   }
-	
-	
 }

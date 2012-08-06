@@ -17,6 +17,13 @@ public class LocalIpService extends BaseLocalModelService<IpReport> {
 		super("ip");
 	}
 
+	private IpReport getLocalReport(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "ip");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : DefaultSaxParser.parse(xml);
+	}
+
 	@Override
 	protected IpReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		IpReport report = super.getReport(request, period, domain);
@@ -28,12 +35,5 @@ public class LocalIpService extends BaseLocalModelService<IpReport> {
 		}
 
 		return report;
-	}
-
-	private IpReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "ip");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

@@ -7,7 +7,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.event.Payload"	scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.event.Model" scope="request" />
 
-<a:historyReport title="History Report">
+<a:historyReport title="History Report" navUrlPrefix="type=${payload.type}&ip=${model.ipAddress}">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.event_css}" target="head-css" />

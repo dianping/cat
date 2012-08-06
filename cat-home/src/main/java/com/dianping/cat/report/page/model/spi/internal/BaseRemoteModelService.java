@@ -20,13 +20,13 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 	@Inject
 	private String m_host;
 
+	private String m_name;
+
 	@Inject
 	private int m_port = 2281; // default admin port
 
 	@Inject
 	private String m_serviceUri = "/cat/r/model";
-
-	private String m_name;
 
 	public BaseRemoteModelService(String name) {
 		m_name = name;

@@ -18,11 +18,11 @@ import com.dianping.cat.job.spi.mapreduce.MessageTreeInputFormat;
 
 public class UrlJobMain extends Configured implements Tool {
 
-	private static String BASE_URL;
+	private String BASE_URL;
 
-	private static String DEFAULT_IN_PATH = "hdfs://10.1.1.169/user/cat/dump/";
+	private String DEFAULT_IN_PATH = "hdfs://10.1.1.169/user/cat/dump/";
 
-	private static String DEFAULT_OUT_PATH = "hdfs://10.1.1.169/user/cat/url/";
+	private String DEFAULT_OUT_PATH = "hdfs://10.1.1.169/user/cat/url/";
 
 	private static final int DEFAULT_REDUCE_NUMBER = 3;
 
@@ -56,7 +56,7 @@ public class UrlJobMain extends Configured implements Tool {
 		job.setInputFormatClass(MessageTreeInputFormat.class);
 		job.setMapOutputKeyClass(Text.class);
 		job.setMapOutputValueClass(UrlValue.class);
-		
+
 		job.setPartitionerClass(UrlJobPatitioner.class);
 		job.setNumReduceTasks(DEFAULT_REDUCE_NUMBER);
 
@@ -75,7 +75,7 @@ public class UrlJobMain extends Configured implements Tool {
 			hourStr = args[1];
 		}
 
-		//for local mode
+		// for local mode
 		if (args.length >= 3) {
 			BASE_URL = args[2];
 			if (BASE_URL.charAt(BASE_URL.length() - 1) == '/') {

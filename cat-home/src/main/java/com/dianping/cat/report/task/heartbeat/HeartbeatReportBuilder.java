@@ -15,9 +15,9 @@ import com.site.dal.jdbc.DalException;
 
 public class HeartbeatReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 
-	private HeartbeatMerger m_heartbeatMerger = new HeartbeatMerger();
-
 	private HeartbeatGraphCreator m_heartbeatGraphCreator = new HeartbeatGraphCreator();
+
+	private HeartbeatMerger m_heartbeatMerger = new HeartbeatMerger();
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
@@ -27,7 +27,7 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 	@Override
 	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			List<Graph> graphs=getHourReportData(reportName, reportDomain, reportPeriod);
+			List<Graph> graphs = getHourReportData(reportName, reportDomain, reportPeriod);
 			if (graphs != null) {
 				for (Graph graph : graphs) {
 					this.m_graphDao.insert(graph); // use mysql unique index and
@@ -57,11 +57,11 @@ public class HeartbeatReportBuilder extends AbstractReportBuilder implements Rep
 	@Override
 	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			List<Graph> graphs=getHourReportData(reportName, reportDomain, reportPeriod);
+			List<Graph> graphs = getHourReportData(reportName, reportDomain, reportPeriod);
 			if (graphs != null) {
 				clearHourlyGraphs(graphs);
 				for (Graph graph : graphs) {
-					this.m_graphDao.insert(graph); 
+					this.m_graphDao.insert(graph);
 				}
 			}
 		} catch (Exception e) {

@@ -1,25 +1,19 @@
 package com.dianping.cat.report.page.problem;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view"),
+	DETAIL("detail"),
 
 	GROUP("group"),
 
+	HISTORY("history"),
+
+	HISTORY_GRAPH("historyGraph"),
+
+	MOBILE("mobile"),
+
 	THREAD("thread"),
 
-	DETAIL("detail"),
-
-	MOBILE("mobile"), 
-	
-	HISTORY("history"),
-	
-	HISTORY_GRAPH("historyGraph");
-
-	private String m_name;
-
-	private Action(String name) {
-		m_name = name;
-	}
+	VIEW("view");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
@@ -29,6 +23,12 @@ public enum Action implements com.site.web.mvc.Action {
 		}
 
 		return defaultAction;
+	}
+
+	private String m_name;
+
+	private Action(String name) {
+		m_name = name;
 	}
 
 	@Override

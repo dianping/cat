@@ -28,15 +28,9 @@ import com.site.lookup.annotation.Inject;
 
 public class DailyTaskProducer implements Runnable, Initializable {
 
-	private static final int TYPE_DAILY = 1;
-
 	private static final long DAY = 24 * 60 * 60 * 1000L;
 
-	@Inject
-	private TaskDao m_taskDao;
-
-	@Inject
-	private ReportDao m_reportDao;
+	private static final int TYPE_DAILY = 1;
 
 	@Inject
 	private DailyreportDao m_dailyReportDao;
@@ -45,38 +39,36 @@ public class DailyTaskProducer implements Runnable, Initializable {
 
 	private Logger m_logger;
 
-	@Override
-	public void run() {
-		while (true) {
-			Date now = new Date();
-			Date todayStart = TaskHelper.todayZero(now);
-			Date todayEnd = TaskHelper.tomorrowZero(now);
-			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now);
-			
-			LockSupport.parkUntil(startDateOfNextTask.getTime());
-			try {
-				if (!checkTaskGenerated(todayStart)) {
-					generateDailyTasks(todayStart, todayEnd);
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+	@Inject
+	private ReportDao m_reportDao;
+
+	@Inject
+	private TaskDao m_taskDao;
+
+	private boolean checkTaskGenerated(Date start) {
+		List<Dailyreport> allReports = new ArrayList<Dailyreport>();
+
+		try {
+			allReports = m_dailyReportDao.findAllByPeriod(start, new Date(start.getTime() + DAY),
+			      DailyreportEntity.READSET_COUNT);
+		} catch (DalException e) {
+			m_logger.error("DailyTaskProducer isYesterdayTaskGenerated", e);
 		}
-	}
 
-	@Override
-	public void initialize() throws InitializationException {
-		m_dailyReportNameSet.add("event");
-		m_dailyReportNameSet.add("transaction");
-		m_dailyReportNameSet.add("problem");
+		Set<String> domainSet = getDomainSet(start, new Date(start.getTime() + DAY));
+		int total = 0;
+		int domanSize = domainSet.size();
+		int nameSize = m_dailyReportNameSet.size();
 
-		Date now = new Date();
-		Date yesterdayStart = TaskHelper.yesterdayZero(now);
-		Date yesterdayEnd = TaskHelper.todayZero(now);
-
-		if (!checkTaskGenerated(yesterdayStart)) {
-			generateDailyTasks(yesterdayStart, yesterdayEnd);
+		// SQL Framework
+		if (allReports != null && allReports.size() > 0) {
+			total = allReports.get(0).getCount();
 		}
+
+		if (total != domanSize * nameSize) {
+			return false;
+		}
+		return true;
 	}
 
 	private void generateDailyTasks(Date start, Date end) {
@@ -133,29 +125,37 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		return domainSet;
 	}
 
-	private boolean checkTaskGenerated(Date start) {
-		List<Dailyreport> allReports = new ArrayList<Dailyreport>();
-		
-		try {
-			allReports = m_dailyReportDao.findAllByPeriod(start, new Date(start.getTime() + DAY),
-			      DailyreportEntity.READSET_COUNT);
-		} catch (DalException e) {
-			m_logger.error("DailyTaskProducer isYesterdayTaskGenerated", e);
-		}
+	@Override
+	public void initialize() throws InitializationException {
+		m_dailyReportNameSet.add("event");
+		m_dailyReportNameSet.add("transaction");
+		m_dailyReportNameSet.add("problem");
 
-		Set<String> domainSet = getDomainSet(start, new Date(start.getTime() + DAY));
-		int total = 0;
-		int domanSize = domainSet.size();
-		int nameSize = m_dailyReportNameSet.size();
+		Date now = new Date();
+		Date yesterdayStart = TaskHelper.yesterdayZero(now);
+		Date yesterdayEnd = TaskHelper.todayZero(now);
 
-		// SQL Framework
-		if (allReports != null && allReports.size() > 0) {
-			total = allReports.get(0).getCount();
+		if (!checkTaskGenerated(yesterdayStart)) {
+			generateDailyTasks(yesterdayStart, yesterdayEnd);
 		}
+	}
 
-		if (total != domanSize * nameSize) {
-			return false;
+	@Override
+	public void run() {
+		while (true) {
+			Date now = new Date();
+			Date todayStart = TaskHelper.todayZero(now);
+			Date todayEnd = TaskHelper.tomorrowZero(now);
+			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now);
+
+			LockSupport.parkUntil(startDateOfNextTask.getTime());
+			try {
+				if (!checkTaskGenerated(todayStart)) {
+					generateDailyTasks(todayStart, todayEnd);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
-		return true;
 	}
 }

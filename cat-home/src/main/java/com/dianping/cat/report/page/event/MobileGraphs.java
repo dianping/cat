@@ -6,27 +6,19 @@ import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.MobileGraphItem;
 import com.dianping.cat.report.graph.ValueTranslater;
 
-public class MobileEventGraphs {
-
-	private MobileGraphItem m_hit = new MobileGraphItem();
+public class MobileGraphs {
 
 	private MobileGraphItem m_failure = new MobileGraphItem();
+
+	private MobileGraphItem m_hit = new MobileGraphItem();
 
 	private EventName m_name;
 
 	private transient ValueTranslater m_tansalater = new DefaultValueTranslater();
-	
-	private transient String[] m_xlabel = { "0", "5", "10", "15", "20", "25",
-			"30", "35", "40", "45", "50", "55", "60" };
 
-	public MobileEventGraphs() {
-	}
+	private transient String[] m_xlabel = { "0", "5", "10", "15", "20", "25", "30", "35", "40", "45", "50", "55", "60" };
 
-	public MobileEventGraphs display(EventName name) {
-		m_name = name;
-		creatFailureGraph();
-		creatHitGraph();
-		return this;
+	public MobileGraphs() {
 	}
 
 	private void creatFailureGraph() {
@@ -63,6 +55,20 @@ public class MobileEventGraphs {
 		}
 	}
 
+	public MobileGraphs display(EventName name) {
+		m_name = name;
+		creatFailureGraph();
+		creatHitGraph();
+		return this;
+	}
+
+	public MobileGraphItem getFailure() {
+		return m_failure;
+	}
+
+	public MobileGraphItem getHit() {
+		return m_hit;
+	}
 
 	protected double[] loadFailureValues() {
 		double[] values = new double[12];
@@ -88,13 +94,5 @@ public class MobileEventGraphs {
 		}
 
 		return values;
-	}
-
-	public MobileGraphItem getHit() {
-		return m_hit;
-	}
-
-	public MobileGraphItem getFailure() {
-		return m_failure;
 	}
 }

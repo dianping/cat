@@ -13,13 +13,13 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.HOME);
 	}
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	@Override

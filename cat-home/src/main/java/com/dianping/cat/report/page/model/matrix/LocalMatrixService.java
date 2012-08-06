@@ -17,6 +17,13 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 		super("matrix");
 	}
 
+	private MatrixReport getLocalReport(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "matrix");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : DefaultSaxParser.parse(xml);
+	}
+
 	@Override
 	protected MatrixReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		MatrixReport report = super.getReport(request, period, domain);
@@ -38,12 +45,5 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 		}
 
 		return report;
-	}
-
-	private MatrixReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "matrix");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

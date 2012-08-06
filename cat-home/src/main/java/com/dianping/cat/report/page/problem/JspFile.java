@@ -4,18 +4,17 @@ public enum JspFile {
 
 	ALL("/jsp/report/problemStatics.jsp"),
 
+	DETAIL("/jsp/report/problemDetail.jsp"),
+
 	GROUP("/jsp/report/problemGroup.jsp"),
 
-	THREAD("/jsp/report/problemThread.jsp"),
-
-	DETAIL("/jsp/report/problemDetail.jsp"),
-	
-	MOBILE("/jsp/report/problem_mobile.jsp"),
-	
 	HISTORY("/jsp/report/problemHistoryReport.jsp"),
-	
-	HISTORY_GRAPH("/jsp/report/problemHistoryGraphs.jsp");
-	
+
+	HISTORY_GRAPH("/jsp/report/problemHistoryGraphs.jsp"),
+
+	MOBILE("/jsp/report/problem_mobile.jsp"),
+
+	THREAD("/jsp/report/problemThread.jsp");
 
 	private String m_path;
 

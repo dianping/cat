@@ -12,7 +12,7 @@ public class ProblemReportHelper {
 			sb.append("&").append(param.getKey()).append("=").append(param.getValue());
 		}
 		sb.append("\" class=\"").append(classStyle).append("\"");
-		sb.append(" onclick=\"return show(this);\"" ).append(" >");
+		sb.append(" onclick=\"return show(this);\"").append(" >");
 		if (text.trim().length() == 0) {
 			sb.append("&nbsp;&nbsp");
 		} else {

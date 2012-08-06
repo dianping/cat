@@ -17,24 +17,6 @@ import com.dianping.cat.report.task.TaskHelper;
 
 public class ProblemMerger implements ReportMerger<ProblemReport> {
 
-	public ProblemReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
-		ProblemReport report = merge(reportDomain, reports, true);
-		
-		Date date = report.getStartTime();
-		report.setStartTime(TaskHelper.todayZero(date));
-		Date end=new Date(TaskHelper.tomorrowZero(date).getTime()-1000);
-		report.setEndTime(end);	
-		report.getDomainNames().addAll(domains);
-		return report;
-	}
-
-	@Override
-	public ProblemReport mergeForGraph(String reportDomain, List<Report> reports) {
-		ProblemReport report = merge(reportDomain, reports, false);
-		
-		return report;
-	}
-
 	private ProblemReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
 		ProblemReportMerger merger = null;
 		if (isDaily) {
@@ -55,5 +37,23 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 
 		ProblemReport problemReport = merger.getProblemReport();
 		return problemReport;
+	}
+
+	public ProblemReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+		ProblemReport report = merge(reportDomain, reports, true);
+
+		Date date = report.getStartTime();
+		report.setStartTime(TaskHelper.todayZero(date));
+		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
+		report.setEndTime(end);
+		report.getDomainNames().addAll(domains);
+		return report;
+	}
+
+	@Override
+	public ProblemReport mergeForGraph(String reportDomain, List<Report> reports) {
+		ProblemReport report = merge(reportDomain, reports, false);
+
+		return report;
 	}
 }

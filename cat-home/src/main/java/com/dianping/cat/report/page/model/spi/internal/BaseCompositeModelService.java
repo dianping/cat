@@ -24,16 +24,16 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
       Initializable {
 	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 50);
 
+	// introduce another list is due to a bug inside Plexus ComponentList
+	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
+
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	@Inject
-	private List<ModelService<T>> m_services;
-
 	private String m_name;
 
-	// introduce another list is due to a bug inside Plexus ComponentList
-	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
+	@Inject
+	private List<ModelService<T>> m_services;
 
 	public BaseCompositeModelService(String name) {
 		m_name = name;
@@ -114,8 +114,8 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 		try {
 			semaphore.tryAcquire(count, 10000, TimeUnit.MILLISECONDS); // 10
-																						  // seconds
-																						  // timeout
+			                                                           // seconds
+			                                                           // timeout
 		} catch (InterruptedException e) {
 			// ignore it
 			t.setStatus(e);

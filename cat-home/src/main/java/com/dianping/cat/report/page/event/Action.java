@@ -1,23 +1,17 @@
 package com.dianping.cat.report.page.event;
 
 public enum Action implements com.site.web.mvc.Action {
-	HOURLY_REPORT("view"),
+	GRAPHS("graphs"),
+
+	HISTORY_GRAPH("historyGraph"),
 
 	HISTORY_REPORT("history"),
 
-	GRAPHS("graphs"),
+	HOURLY_REPORT("view"),
 
 	MOBILE("mobile"),
 
-	MOBILE_GRAPHS("mobile_graphs"), 
-	
-	HISTORY_GRAPH("historyGraph");
-
-	private String m_name;
-
-	private Action(String name) {
-		m_name = name;
-	}
+	MOBILE_GRAPHS("mobile_graphs");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
@@ -27,6 +21,12 @@ public enum Action implements com.site.web.mvc.Action {
 		}
 
 		return defaultAction;
+	}
+
+	private String m_name;
+
+	private Action(String name) {
+		m_name = name;
 	}
 
 	@Override

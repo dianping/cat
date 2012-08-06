@@ -3,12 +3,6 @@ package com.dianping.cat.report.page.matrix;
 public enum Action implements com.site.web.mvc.Action {
 	HOURLY_REPORT("view");
 
-	private String m_name;
-
-	private Action(String name) {
-		m_name = name;
-	}
-
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
 			if (action.getName().equals(name)) {
@@ -17,6 +11,12 @@ public enum Action implements com.site.web.mvc.Action {
 		}
 
 		return defaultAction;
+	}
+
+	private String m_name;
+
+	private Action(String name) {
+		m_name = name;
 	}
 
 	@Override

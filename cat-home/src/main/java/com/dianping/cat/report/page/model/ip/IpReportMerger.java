@@ -15,9 +15,9 @@ public class IpReportMerger extends DefaultMerger {
 	}
 
 	@Override
-   public void visitIpReport(IpReport ipReport) {
-	   super.visitIpReport(ipReport);
-	   getIpReport().getDomainNames().addAll(ipReport.getDomainNames());
-   }
-	
+	public void visitIpReport(IpReport ipReport) {
+		super.visitIpReport(ipReport);
+		getIpReport().getDomainNames().addAll(ipReport.getDomainNames());
+	}
+
 }

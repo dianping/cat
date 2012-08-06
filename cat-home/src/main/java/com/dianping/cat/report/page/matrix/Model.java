@@ -8,28 +8,12 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private MatrixReport m_report;
-
 	private DisplayMatrix m_matrix;
 
-	public MatrixReport getReport() {
-		return m_report;
-	}
-
-	public void setReport(MatrixReport report) {
-		m_report = report;
-	}
+	private MatrixReport m_report;
 
 	public Model(Context ctx) {
 		super(ctx);
-	}
-
-	public void setMatrix(DisplayMatrix matrix) {
-   	m_matrix = matrix;
-   }
-
-	public DisplayMatrix getMatrix() {
-		return m_matrix;
 	}
 
 	@Override
@@ -49,5 +33,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
+	}
+
+	public DisplayMatrix getMatrix() {
+		return m_matrix;
+	}
+
+	public MatrixReport getReport() {
+		return m_report;
+	}
+
+	public void setMatrix(DisplayMatrix matrix) {
+		m_matrix = matrix;
+	}
+
+	public void setReport(MatrixReport report) {
+		m_report = report;
 	}
 }

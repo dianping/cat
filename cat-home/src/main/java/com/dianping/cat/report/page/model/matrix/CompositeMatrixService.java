@@ -31,6 +31,6 @@ public class CompositeMatrixService extends BaseCompositeModelService<MatrixRepo
 			}
 		}
 
-		return  merger.getMatrixReport();
+		return merger.getMatrixReport();
 	}
 }

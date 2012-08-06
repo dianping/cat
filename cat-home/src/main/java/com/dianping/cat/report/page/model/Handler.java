@@ -41,29 +41,29 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
-	@Inject
-	private JspViewer m_jspViewer;
-
-	@Inject(type = ModelService.class, value = "transaction-local")
-	private LocalTransactionService m_transactionService;
-
 	@Inject(type = ModelService.class, value = "event-local")
 	private LocalEventService m_eventService;
-
-	@Inject(type = ModelService.class, value = "problem-local")
-	private LocalProblemService m_problemService;
-
-	@Inject(type = ModelService.class, value = "logview-local")
-	private LocalLogViewService m_logviewService;
-
-	@Inject(type = ModelService.class, value = "ip-local")
-	private LocalIpService m_ipService;
 
 	@Inject(type = ModelService.class, value = "heartbeat-local")
 	private LocalHeartbeatService m_heartbeatService;
 
+	@Inject(type = ModelService.class, value = "ip-local")
+	private LocalIpService m_ipService;
+
+	@Inject
+	private JspViewer m_jspViewer;
+
+	@Inject(type = ModelService.class, value = "logview-local")
+	private LocalLogViewService m_logviewService;
+
 	@Inject(type = ModelService.class, value = "matrix-local")
 	private LocalMatrixService m_matrixService;
+
+	@Inject(type = ModelService.class, value = "problem-local")
+	private LocalProblemService m_problemService;
+
+	@Inject(type = ModelService.class, value = "transaction-local")
+	private LocalTransactionService m_transactionService;
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -156,11 +156,11 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	}
 
 	static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
-		private String m_type;
+		private String m_ipAddress;
 
 		private String m_name;
 
-		private String m_ipAddress;
+		private String m_type;
 
 		public EventReportFilter(String type, String name, String ip) {
 			m_type = type;
@@ -214,6 +214,21 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 	}
 
+	static class HeartBeatReportFilter extends com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder {
+		private String m_ip;
+
+		public HeartBeatReportFilter(String ip) {
+			m_ip = ip;
+		}
+
+		@Override
+		public void visitMachine(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine) {
+			if (machine.getIp().equals(m_ip)) {
+				super.visitMachine(machine);
+			}
+		}
+	}
+
 	static class ProblemReportFilter extends com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
@@ -226,17 +241,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		@Override
-		public void visitMachine(Machine machine) {
-			if (m_ipAddress == null) {
-				super.visitMachine(machine);
-			} else if (machine.getIp().equals(m_ipAddress)) {
-				super.visitMachine(machine);
-			} else {
-				// skip it
-			}
-		}
-
-		@Override
 		public void visitDuration(com.dianping.cat.consumer.problem.model.entity.Duration duration) {
 			if ("view".equals(m_type)) {
 				super.visitDuration(duration);
@@ -244,6 +248,17 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				// skip it
 			} else {
 				super.visitDuration(duration);
+			}
+		}
+
+		@Override
+		public void visitMachine(Machine machine) {
+			if (m_ipAddress == null) {
+				super.visitMachine(machine);
+			} else if (machine.getIp().equals(m_ipAddress)) {
+				super.visitMachine(machine);
+			} else {
+				// skip it
 			}
 		}
 
@@ -265,16 +280,28 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	}
 
 	static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
-		private String m_type;
+		private String m_ipAddress;
 
 		private String m_name;
 
-		private String m_ipAddress;
+		private String m_type;
 
 		public TransactionReportFilter(String type, String name, String ip) {
 			m_type = type;
 			m_name = name;
 			m_ipAddress = ip;
+		}
+
+		@Override
+		public void visitAllDuration(AllDuration duration) {
+
+		}
+
+		@Override
+		public void visitDuration(Duration duration) {
+			if (m_type != null && m_name != null) {
+				super.visitDuration(duration);
+			}
 		}
 
 		@Override
@@ -286,18 +313,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			} else {
 				// skip it
 			}
-		}
-
-		@Override
-		public void visitDuration(Duration duration) {
-			if (m_type != null && m_name != null) {
-				super.visitDuration(duration);
-			}
-		}
-
-		@Override
-		public void visitAllDuration(AllDuration duration) {
-
 		}
 
 		@Override
@@ -313,15 +328,15 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			}
 		}
 
-		private void visitTransactionName(TransactionName name) {
-			super.visitName(name);
-		}
-
 		@Override
 		public void visitRange(Range range) {
 			if (m_type != null && m_name != null) {
 				super.visitRange(range);
 			}
+		}
+
+		private void visitTransactionName(TransactionName name) {
+			super.visitName(name);
 		}
 
 		@Override
@@ -335,21 +350,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitType(type);
 			} else {
 				// skip it
-			}
-		}
-	}
-
-	static class HeartBeatReportFilter extends com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder {
-		private String m_ip;
-
-		public HeartBeatReportFilter(String ip) {
-			m_ip = ip;
-		}
-
-		@Override
-		public void visitMachine(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine) {
-			if (machine.getIp().equals(m_ip)) {
-				super.visitMachine(machine);
 			}
 		}
 	}

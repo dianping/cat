@@ -12,10 +12,6 @@ import com.site.lookup.ContainerHolder;
 public abstract class ModelServiceWithCalSupport extends ContainerHolder {
 	private Transaction m_current;
 
-	protected void setParentTransaction(Transaction current) {
-		m_current = current;
-	}
-
 	protected void logError(Throwable cause) {
 		StringWriter writer = new StringWriter(2048);
 
@@ -47,5 +43,9 @@ public abstract class ModelServiceWithCalSupport extends ContainerHolder {
 		Transaction transaction = cat.newTransaction(m_current, type, name);
 
 		return transaction;
+	}
+
+	protected void setParentTransaction(Transaction current) {
+		m_current = current;
 	}
 }

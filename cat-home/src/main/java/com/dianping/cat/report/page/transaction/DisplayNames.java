@@ -11,11 +11,37 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 
-public class DisplayTransactionNameReport {
+public class DisplayNames {
 
 	private List<TransactionNameModel> m_results = new ArrayList<TransactionNameModel>();
 
-	public DisplayTransactionNameReport() {
+	public DisplayNames() {
+	}
+
+	public DisplayNames display(String sorted, String type, String ip, TransactionReport report, String queryName) {
+		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
+		TransactionName all = new TransactionName("TOTAL");
+		if (types != null) {
+			TransactionType names = types.get(type);
+
+			if (names != null) {
+				for (Entry<String, TransactionName> entry : names.getNames().entrySet()) {
+					String transTypeName = entry.getValue().getId();
+					boolean isAdd = (queryName == null || queryName.length() == 0 || isFit(queryName, transTypeName));
+					if (isAdd) {
+						m_results.add(new TransactionNameModel(entry.getKey(), entry.getValue()));
+						mergeName(all, entry.getValue());
+					}
+				}
+			}
+		}
+		if (sorted == null) {
+			sorted = "avg";
+		}
+		Collections.sort(m_results, new TransactionNameComparator(sorted));
+
+		m_results.add(0, new TransactionNameModel("TOTAL", all));
+		return this;
 	}
 
 	public List<TransactionNameModel> getResults() {
@@ -33,33 +59,6 @@ public class DisplayTransactionNameReport {
 			}
 		}
 		return false;
-	}
-
-	public DisplayTransactionNameReport display(String sorted, String type, String ip, TransactionReport report,
-	      String queryName) {
-		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
-		TransactionName all = new TransactionName("TOTAL");
-		if (types != null) {
-			TransactionType names = types.get(type);
-
-			if (names != null) {
-				for (Entry<String, TransactionName> entry : names.getNames().entrySet()) {
-					String transTypeName = entry.getValue().getId();
-					boolean isAdd = (queryName == null || queryName.length() == 0 || isFit(queryName, transTypeName));
-					if (isAdd) {
-						m_results.add(new TransactionNameModel(entry.getKey(), entry.getValue()));
-						mergeName(all,entry.getValue());
-					}
-				}
-			}
-		}
-		if (sorted == null) {
-			sorted = "avg";
-		}
-		Collections.sort(m_results, new TransactionNameComparator(sorted));
-		
-		m_results.add(0, new TransactionNameModel("TOTAL", all));
-		return this;
 	}
 
 	private void mergeName(TransactionName old, TransactionName other) {
@@ -96,7 +95,7 @@ public class DisplayTransactionNameReport {
 			old.setFailMessageUrl(other.getFailMessageUrl());
 		}
 	}
-	
+
 	private double std(long count, double avg, double sum2, double max) {
 		double value = sum2 / count - avg * avg;
 
@@ -106,28 +105,6 @@ public class DisplayTransactionNameReport {
 			return max - avg;
 		} else {
 			return Math.sqrt(value);
-		}
-	}
-	
-	public static class TransactionNameModel {
-		private String m_type;
-
-		private TransactionName m_detail;
-
-		public TransactionNameModel() {
-		}
-
-		public TransactionNameModel(String str, TransactionName detail) {
-			m_type = str;
-			m_detail = detail;
-		}
-
-		public String getType() {
-			return m_type;
-		}
-
-		public TransactionName getDetail() {
-			return m_detail;
 		}
 	}
 
@@ -160,6 +137,28 @@ public class DisplayTransactionNameReport {
 				return (int) (m2.getDetail().getLine95Value() * 100 - m1.getDetail().getLine95Value() * 100);
 			}
 			return 0;
+		}
+	}
+
+	public static class TransactionNameModel {
+		private TransactionName m_detail;
+
+		private String m_type;
+
+		public TransactionNameModel() {
+		}
+
+		public TransactionNameModel(String str, TransactionName detail) {
+			m_type = str;
+			m_detail = detail;
+		}
+
+		public TransactionName getDetail() {
+			return m_detail;
+		}
+
+		public String getType() {
+			return m_type;
 		}
 	}
 }

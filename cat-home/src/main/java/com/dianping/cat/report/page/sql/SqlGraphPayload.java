@@ -8,13 +8,13 @@ import com.dianping.cat.report.graph.AbstractGraphPayload;
 import com.site.helper.Splitters;
 
 public class SqlGraphPayload extends AbstractGraphPayload {
-	private String[] m_labels;
+	private int m_index;
 
-	private double[] m_values;
+	private String[] m_labels;
 
 	private int m_size;
 
-	private int m_index;
+	private double[] m_values;
 
 	public SqlGraphPayload(int index, String title, String axisXLabel, String axisYLabel, String metaData) {
 		super(title, axisXLabel, axisYLabel);
@@ -54,8 +54,18 @@ public class SqlGraphPayload extends AbstractGraphPayload {
 	}
 
 	@Override
+	public int getDisplayHeight() {
+		return (int) (super.getDisplayHeight() * 0.7);
+	}
+
+	@Override
+	public int getDisplayWidth() {
+		return (int) (super.getDisplayWidth() * 0.7);
+	}
+
+	@Override
 	public int getOffsetX() {
-		if (m_index % 2 == 1) {
+		if (m_index > 0 && m_index % 2 == 1) {
 			return getDisplayWidth();
 		} else {
 			return 0;
@@ -72,21 +82,6 @@ public class SqlGraphPayload extends AbstractGraphPayload {
 	}
 
 	@Override
-	protected double[] loadValues() {
-		return m_values;
-	}
-
-	@Override
-	public int getDisplayHeight() {
-		return (int) (super.getDisplayHeight() * 0.7);
-	}
-
-	@Override
-	public int getDisplayWidth() {
-		return (int) (super.getDisplayWidth() * 0.7);
-	}
-
-	@Override
 	public int getWidth() {
 		return super.getWidth() + 120;
 	}
@@ -94,6 +89,11 @@ public class SqlGraphPayload extends AbstractGraphPayload {
 	@Override
 	public boolean isStandalone() {
 		return false;
+	}
+
+	@Override
+	protected double[] loadValues() {
+		return m_values;
 	}
 
 	public double sum() {

@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.logview;
 
 public enum JspFile {
 	LOGVIEW("/jsp/report/logview.jsp"),
-	
+
 	LOGVIEW_NO_HEADER("/jsp/report/logview_no_header.jsp"),
 
 	MOBILE("/jsp/report/logview_mobile.jsp");

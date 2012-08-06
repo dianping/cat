@@ -15,53 +15,17 @@ import com.dianping.cat.report.view.ProblemReportHelper;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class GroupLevelInfo {
+	private List<String> m_datas = new ArrayList<String>();
+
+	private Map<String, GroupStatistics> m_groupStatistics = new LinkedHashMap<String, GroupStatistics>();
+
 	private int m_minutes;
 
 	private Model m_model;
 
-	private Map<String, GroupStatistics> m_groupStatistics = new LinkedHashMap<String, GroupStatistics>();
-
-	private List<String> m_datas = new ArrayList<String>();
-
 	public GroupLevelInfo(Model model) {
 		m_model = model;
 		m_minutes = model.getLastMinute();
-	}
-
-	public List<String> getGroups() {
-		return StringSortHelper.sortString(m_groupStatistics.keySet());
-	}
-
-	private String getShowDetailByMinte(int minute) {
-		Map<String, String> params = new LinkedHashMap<String, String>();
-		String baseUrl = "/cat/r/p?op=detail";
-		params.put("domain", m_model.getDomain());
-		params.put("ip", m_model.getIpAddress());
-		params.put("date", m_model.getDate());
-		params.put("minute", Integer.toString(minute));
-
-		StringBuilder sb = new StringBuilder().append("<td>");
-		String minuteStr = m_model.getDisplayHour() + ":";
-		if (minute < 10) {
-			minuteStr = minuteStr + "0" + Integer.toString(minute);
-		} else {
-			minuteStr = minuteStr + Integer.toString(minute);
-		}
-
-		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
-		sb.append("</td>");
-
-		for (String group : getGroups()) {
-			sb.append("<td>");
-			params.put("group", group);
-			GroupStatistics value = m_groupStatistics.get(group);
-			for (String temp : value.getStatistics().get(minute)) {
-				String url = ProblemReportHelper.creatLinkString(baseUrl, temp, params, "");
-				sb.append(url);
-			}
-			sb.append("</td>");
-		}
-		return sb.toString();
 	}
 
 	public GroupLevelInfo display(ProblemReport report) {
@@ -113,18 +77,56 @@ public class GroupLevelInfo {
 		return m_datas;
 	}
 
+	public List<String> getGroups() {
+		return StringSortHelper.sortString(m_groupStatistics.keySet());
+	}
+
+	private String getShowDetailByMinte(int minute) {
+		Map<String, String> params = new LinkedHashMap<String, String>();
+		String baseUrl = "/cat/r/p?op=detail";
+		params.put("domain", m_model.getDomain());
+		params.put("ip", m_model.getIpAddress());
+		params.put("date", m_model.getDate());
+		params.put("minute", Integer.toString(minute));
+
+		StringBuilder sb = new StringBuilder().append("<td>");
+		String minuteStr = m_model.getDisplayHour() + ":";
+		if (minute < 10) {
+			minuteStr = minuteStr + "0" + Integer.toString(minute);
+		} else {
+			minuteStr = minuteStr + Integer.toString(minute);
+		}
+
+		sb.append(ProblemReportHelper.creatLinkString(baseUrl, "minute", params, minuteStr));
+		sb.append("</td>");
+
+		for (String group : getGroups()) {
+			sb.append("<td>");
+			params.put("group", group);
+			GroupStatistics value = m_groupStatistics.get(group);
+			for (String temp : value.getStatistics().get(minute)) {
+				String url = ProblemReportHelper.creatLinkString(baseUrl, temp, params, "");
+				sb.append(url);
+			}
+			sb.append("</td>");
+		}
+		return sb.toString();
+	}
+
 	public static class GroupStatistics {
 
 		private Map<Integer, TreeSet<String>> m_statistics = new LinkedHashMap<Integer, TreeSet<String>>();
-
-		public TreeSet<String> getTag(int minutes) {
-			return m_statistics.get(minutes);
-		}
 
 		public GroupStatistics(int lastMinute) {
 			for (int i = 0; i <= lastMinute; i++) {
 
 				m_statistics.put(new Integer(i), new TreeSet<String>());
+			}
+		}
+
+		public void add(Map<Integer, Segment> segments, String type) {
+			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
+				findOrCreat(entry.getKey()).add(type);
 			}
 		}
 
@@ -137,14 +139,12 @@ public class GroupLevelInfo {
 			return result;
 		}
 
-		public void add(Map<Integer, Segment> segments, String type) {
-			for (java.util.Map.Entry<Integer, Segment> entry : segments.entrySet()) {
-				findOrCreat(entry.getKey()).add(type);
-			}
-		}
-
 		public Map<Integer, TreeSet<String>> getStatistics() {
 			return m_statistics;
+		}
+
+		public TreeSet<String> getTag(int minutes) {
+			return m_statistics.get(minutes);
 		}
 	}
 }

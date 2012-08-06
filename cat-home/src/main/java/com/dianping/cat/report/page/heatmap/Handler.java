@@ -22,10 +22,10 @@ import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
-	private JspViewer m_jspViewer;
+	private LocationRecordDao m_dao;
 
 	@Inject
-	private LocationRecordDao m_dao;
+	private JspViewer m_jspViewer;
 
 	private Result aggregate(List<LocationRecord> records, Payload payload) {
 		int unit = payload.getUnit();
@@ -111,17 +111,21 @@ public class Handler implements PageHandler<Context> {
 				Cat.logError(e);
 			}
 			break;
+		case VIEW:
+			break;
+		default:
+			break;
 		}
 
 		m_jspViewer.view(ctx, model);
 	}
 
 	static class Location {
+		private int m_count;
+
 		private double m_lat;
 
 		private double m_lng;
-
-		private int m_count;
 
 		public Location(double lat, double lng) {
 			m_lat = lat;
@@ -182,15 +186,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	static class Result {
-		private int[][] m_matrix;
+		private double m_lat1;
 
 		private double m_latUnit;
 
+		private double m_lng1;
+
 		private double m_lngUnit;
 
-		private double m_lat1;
-
-		private double m_lng1;
+		private int[][] m_matrix;
 
 		public Result(int[][] matrix, double lat1, double lng1, double latUnit, double lngUnit) {
 			m_lat1 = lat1;

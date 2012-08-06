@@ -30,6 +30,10 @@ import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
@@ -43,7 +47,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskConsumer.class, DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
-		
+
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class));
 
@@ -73,9 +77,5 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new WebComponentConfigurator().defineComponents());
 
 		return all;
-	}
-
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
 }
