@@ -169,7 +169,7 @@
 	</dependencies>
 	<build>
 		<filters>
-			<filter>assembly/filter/daily.properties</filter>
+			<filter>assembly/filter/qa.properties</filter>
 		</filters>
 		<resources>
 			<resource>
