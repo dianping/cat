@@ -22,7 +22,7 @@ public class CatNotifyServer {
 		ScheduleJobRunner runner = (ScheduleJobRunner) application.getBean("scheduleJobRunner");
 		
 		runner.start();
-		System.out.println("==========CatMailServer init Spring===========");
+		System.out.println("==========CatNotifyServer init Spring===========");
 	}
 
 	static void initLoggerConfig() {

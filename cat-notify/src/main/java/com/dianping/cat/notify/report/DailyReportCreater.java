@@ -88,7 +88,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 		String currentUrl = getCurrentViewUrl("t", domain,
 				timeSpan.getEndMicros());
-		params.put("title", "Event Report " + currentUrl);
+		params.put("title", "Transaction Report " + currentUrl);
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS * 7;
 		long preWeakDay = period - TimeUtil.DAY_MICROS * 6;
