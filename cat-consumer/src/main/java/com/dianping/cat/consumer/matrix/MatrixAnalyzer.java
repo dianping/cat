@@ -1,5 +1,5 @@
-package com.dianping.cat.consumer.matrix;
 
+package com.dianping.cat.consumer.matrix;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,7 +39,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	private ReportDao m_reportDao;
 
 	@Inject
-	private TaskDao m_taskDao;
+   private TaskDao m_taskDao;
 
 	private Map<String, MatrixReport> m_reports = new HashMap<String, MatrixReport>();
 

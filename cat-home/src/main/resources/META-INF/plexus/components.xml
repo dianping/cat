@@ -685,9 +685,6 @@
 					<role>com.dianping.cat.report.page.event.HistoryGraphs</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.event.JspViewer</role>
 				</requirement>
 				<requirement>
