@@ -16,7 +16,7 @@ import com.dianping.cat.report.task.ReportMerger;
 public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 
 	public HeartbeatReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
-		return null;
+		throw new RuntimeException("HeartbeatReport cat't be merged for daily report!");
 	}
 
 	public HeartbeatReport mergeForGraph(String reportDomain, List<Report> reports) {

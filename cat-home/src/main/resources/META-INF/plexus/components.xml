@@ -39,6 +39,38 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.transaction.TransactionGraphCreator</role>
+			<implementation>com.dianping.cat.report.task.transaction.TransactionGraphCreator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.event.EventGraphCreator</role>
+			<implementation>com.dianping.cat.report.task.event.EventGraphCreator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.problem.ProblemGraphCreator</role>
+			<implementation>com.dianping.cat.report.task.problem.ProblemGraphCreator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</role>
+			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
+			<implementation>com.dianping.cat.report.task.transaction.TransactionMerger</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.event.EventMerger</role>
+			<implementation>com.dianping.cat.report.task.event.EventMerger</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
+			<implementation>com.dianping.cat.report.task.problem.ProblemMerger</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</role>
+			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -50,6 +82,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -66,6 +104,12 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.event.EventGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.event.EventMerger</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -81,6 +125,12 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.problem.ProblemGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -95,6 +145,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -128,6 +184,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -589,6 +648,12 @@
 					<role>com.dianping.cat.report.page.problem.JspViewer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
@@ -630,6 +695,19 @@
 			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
+			<implementation>com.dianping.cat.report.task.problem.ProblemMerger</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.ReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
@@ -647,6 +725,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -672,6 +756,10 @@
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
+			<implementation>com.dianping.cat.report.task.transaction.TransactionMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>
 			<implementation>com.dianping.cat.report.page.event.Handler</implementation>
 			<requirements>
@@ -689,6 +777,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.event.EventMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -709,6 +803,10 @@
 		<component>
 			<role>com.dianping.cat.report.page.event.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.event.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.event.EventMerger</role>
+			<implementation>com.dianping.cat.report.task.event.EventMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.heartbeat.Handler</role>
@@ -1082,6 +1180,12 @@
 			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.task.event.EventGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.event.EventMerger</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
@@ -1093,19 +1197,20 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.ReportDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.ReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
+			<role>com.dianping.cat.report.task.event.EventGraphCreator</role>
+			<implementation>com.dianping.cat.report.task.event.EventGraphCreator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
@@ -1115,12 +1220,26 @@
 					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</role>
+			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</role>
+			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.task.problem.ProblemGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
@@ -1132,9 +1251,19 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.problem.ProblemGraphCreator</role>
+			<implementation>com.dianping.cat.report.task.problem.ProblemGraphCreator</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionGraphCreator</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
@@ -1145,6 +1274,10 @@
 					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.transaction.TransactionGraphCreator</role>
+			<implementation>com.dianping.cat.report.task.transaction.TransactionGraphCreator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
