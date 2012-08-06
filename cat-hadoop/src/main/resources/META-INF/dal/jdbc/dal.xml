@@ -82,7 +82,7 @@
 					WHERE <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}
 					<IF type='NOT_NULL' field='domain'>
-						AND BINARY <FIELD name='domain'/> = ${domain}
+						AND <FIELD name='domain'/> = ${domain}
 					</IF>
 					<IF type='NOT_NULL' field='name'>
 						AND <FIELD name='name'/> = ${name}
@@ -98,7 +98,7 @@
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='period'/> = ${period}
-					AND BINARY <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='domain'/> = ${domain}
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>

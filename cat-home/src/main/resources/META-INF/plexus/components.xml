@@ -616,13 +616,13 @@
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.graph.GraphBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
@@ -665,9 +665,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.HistoryGraphs</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.JspViewer</role>

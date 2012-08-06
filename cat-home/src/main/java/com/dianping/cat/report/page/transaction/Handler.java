@@ -42,8 +42,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private GraphBuilder m_builder;
 
-	private StatisticsComputer m_computer = new StatisticsComputer();
-	
 	@Inject
 	private DailyreportDao m_dailyreportDao;
 	
@@ -61,6 +59,8 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_service;
+
+	private StatisticsComputer m_computer = new StatisticsComputer();
 
 	private Gson m_gson = new Gson();
 
