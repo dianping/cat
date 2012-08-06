@@ -118,6 +118,8 @@ public class FileSystemManager implements Initializable {
 			} catch (IOException e) {
 				throw new InitializationException("init FileSystemManager fail", e);
 			}
+		} else {
+			m_config = new Configuration();
 		}
 	}
 }

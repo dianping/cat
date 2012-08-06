@@ -1,4 +1,4 @@
-package com.dianping.cat.job.hdfs;
+package com.dianping.cat.hadoop.hdfs;
 
 import java.io.File;
 

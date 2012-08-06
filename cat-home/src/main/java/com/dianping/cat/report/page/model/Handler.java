@@ -21,11 +21,13 @@ import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
+import com.dianping.cat.report.page.model.logview.LocalMessageService;
 import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -55,6 +57,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "logview-local")
 	private LocalLogViewService m_logviewService;
+
+	@Inject(type = ModelService.class, value = "message-local")
+	private LocalMessageService m_messageService;
 
 	@Inject(type = ModelService.class, value = "matrix-local")
 	private LocalMatrixService m_matrixService;
@@ -125,14 +130,23 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			} else if ("problem".equals(report)) {
 				response = m_problemService.invoke(request);
 			} else if ("logview".equals(report)) {
-				request.setProperty("messageId", payload.getMessageId());
+				String messageId = payload.getMessageId();
+				MessageId id = MessageId.parse(messageId);
+
+				request.setProperty("messageId", messageId);
+
 				if (!StringUtils.isEmpty(payload.getDirection())) {
 					request.setProperty("direction", payload.getDirection());
 				}
 				if (!StringUtils.isEmpty(payload.getTag())) {
 					request.setProperty("tag", payload.getTag());
 				}
-				response = m_logviewService.invoke(request);
+
+				if (id.getVersion() == 1) {
+					response = m_logviewService.invoke(request);
+				} else {
+					response = m_messageService.invoke(request);
+				}
 			} else if ("ip".equals(report)) {
 				response = m_ipService.invoke(request);
 			} else if ("heartbeat".equals(report)) {

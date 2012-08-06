@@ -95,7 +95,9 @@ public class ServerConfigManager implements LogEnabled {
 		if (m_config != null) {
 			StorageConfig storage = m_config.getStorage();
 
-			return storage.getLocalBaseDir() + "/" + id;
+			return new File(storage.getLocalBaseDir(), id).getPath();
+		} else if (id == null) {
+			return "target/bucket";
 		} else {
 			return "target/bucket/" + id;
 		}

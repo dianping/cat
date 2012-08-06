@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import junit.framework.Assert;
 
@@ -257,8 +258,22 @@ public class TaskConsumerTest {
 
 		final List<Task> taskList = Collections.synchronizedList(new ArrayList<Task>());
 		taskList.add(t);
+
+		final CountDownLatch latch =new CountDownLatch(2);
 		
 		TaskConsumerWrap consumerOne = new TaskConsumerWrap() {
+			
+			@Override
+			public void run(){
+				try {
+	            latch.await();
+	            System.out.println(System.currentTimeMillis());
+            } catch (InterruptedException e) {
+	            e.printStackTrace();
+            }
+				super.run();
+			}
+			
 			@Override
 			protected boolean updateTodoToDoing(Task todo) {
 				super.updateTodoToDoing(todo);
@@ -289,6 +304,17 @@ public class TaskConsumerTest {
 		TaskConsumerWrap consumerTwo = new TaskConsumerWrap() {
 
 			@Override
+			public void run(){
+				try {
+	            latch.await();
+	            System.out.println(System.currentTimeMillis());
+            } catch (InterruptedException e) {
+	            e.printStackTrace();
+            }
+				super.run();
+			}
+			
+			@Override
 			protected boolean processTask(Task doing) {
 				super.processTask(doing);
 				return true;
@@ -307,9 +333,10 @@ public class TaskConsumerTest {
 				return taskList.size() == 0 ? null : taskList.remove(0);
 			}
 		};
-		
 		new Thread(consumerOne).start();
+		latch.countDown();
 		new Thread(consumerTwo).start();
+		latch.countDown();
 		while (!consumerOne.isStopped()) {
 			Thread.sleep(10);
 		}

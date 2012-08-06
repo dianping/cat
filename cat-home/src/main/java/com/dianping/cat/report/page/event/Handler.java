@@ -17,7 +17,6 @@ import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.GraphDao;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
@@ -38,16 +37,11 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private GraphBuilder m_builder;
 
-	private StatisticsComputer m_computer = new StatisticsComputer();
-
 	@Inject
 	private DailyreportDao m_dailyreportDao;
 
 	@Inject
 	private HistoryGraphs m_eventHistoryGraphs;
-
-	@Inject
-	private GraphDao m_graphDao;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -57,6 +51,8 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "event")
 	private ModelService<EventReport> m_service;
+
+	private StatisticsComputer m_computer = new StatisticsComputer();
 
 	private void calculateTps(Payload payload, EventReport report) {
 		if (payload != null && report != null) {

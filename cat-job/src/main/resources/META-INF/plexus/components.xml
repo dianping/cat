@@ -57,6 +57,12 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.job.spi.joblet.Joblet</role>
+			<role-hint>conversion</role-hint>
+			<implementation>com.dianping.cat.job.joblet.ConversionJoblet</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.cat.job.spi.joblet.Joblet</role>
 			<role-hint>sql</role-hint>
 			<implementation>com.dianping.cat.job.joblet.SqlJoblet</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>

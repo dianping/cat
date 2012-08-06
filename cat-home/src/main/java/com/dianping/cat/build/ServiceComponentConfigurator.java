@@ -21,6 +21,7 @@ import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
 import com.dianping.cat.report.page.model.logview.HistoricalLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
+import com.dianping.cat.report.page.model.logview.LocalMessageService;
 import com.dianping.cat.report.page.model.matrix.CompositeMatrixService;
 import com.dianping.cat.report.page.model.matrix.HistoricalMatrixService;
 import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
@@ -32,6 +33,7 @@ import com.dianping.cat.report.page.model.transaction.CompositeTransactionServic
 import com.dianping.cat.report.page.model.transaction.HistoricalTransactionService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -93,6 +95,11 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "ip", CompositeIpService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "ip-historical" }, "m_services"));
+
+		all.add(C(ModelService.class, "message-local", LocalMessageService.class) //
+		      .req(MessageConsumer.class, "realtime") //
+		      .req(MessageBucketManager.class) //
+		      .req(MessageCodec.class, "html"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 		      .req(MessageConsumer.class, "realtime") //

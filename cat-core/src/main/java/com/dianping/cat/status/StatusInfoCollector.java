@@ -170,14 +170,14 @@ class StatusInfoCollector extends BaseVisitor {
 
 		// for Sun JDK
 		if (isInstanceOfInterface(bean.getClass(), "com.sun.management.OperatingSystemMXBean")) {
-//			com.sun.management.OperatingSystemMXBean b = (com.sun.management.OperatingSystemMXBean) bean;
-//
-//			os.setTotalPhysicalMemory(b.getTotalPhysicalMemorySize());
-//			os.setFreePhysicalMemory(b.getFreePhysicalMemorySize());
-//			os.setTotalSwapSpace(b.getTotalSwapSpaceSize());
-//			os.setFreeSwapSpace(b.getFreeSwapSpaceSize());
-//			os.setProcessTime(b.getProcessCpuTime());
-//			os.setCommittedVirtualMemory(b.getCommittedVirtualMemorySize());
+			com.sun.management.OperatingSystemMXBean b = (com.sun.management.OperatingSystemMXBean) bean;
+
+			os.setTotalPhysicalMemory(b.getTotalPhysicalMemorySize());
+			os.setFreePhysicalMemory(b.getFreePhysicalMemorySize());
+			os.setTotalSwapSpace(b.getTotalSwapSpaceSize());
+			os.setFreeSwapSpace(b.getFreeSwapSpaceSize());
+			os.setProcessTime(b.getProcessCpuTime());
+			os.setCommittedVirtualMemory(b.getCommittedVirtualMemorySize());
 		}
 	}
 

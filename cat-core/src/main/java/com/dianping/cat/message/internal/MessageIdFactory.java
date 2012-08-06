@@ -14,6 +14,8 @@ public class MessageIdFactory {
 
 	private String m_ipAddress;
 
+	private static final long HOUR = 3600 * 1000L;
+
 	public String getNextId() {
 		long timestamp = getTimestamp();
 		int index;
@@ -41,7 +43,9 @@ public class MessageIdFactory {
 	}
 
 	protected long getTimestamp() {
-		return MilliSecondTimer.currentTimeMillis();
+		long timestamp = MilliSecondTimer.currentTimeMillis();
+
+		return timestamp / HOUR; // version 2
 	}
 
 	public void initialize(String domain) {
@@ -51,16 +55,11 @@ public class MessageIdFactory {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 			List<String> items = Splitters.by(".").noEmptyItem().split(ip);
 			byte[] bytes = new byte[4];
-			
+
 			for (int i = 0; i < 4; i++) {
-				bytes[i] = (byte)Integer.parseInt(items.get(i));
+				bytes[i] = (byte) Integer.parseInt(items.get(i));
 			}
-			/*	try {
-	         byte[] bytess = InetAddress.getLocalHost().getAddress();
-         } catch (UnknownHostException e) {
-	         // TODO Auto-generated catch block
-	         e.printStackTrace();
-         }*/
+
 			StringBuilder sb = new StringBuilder(bytes.length / 2);
 
 			for (byte b : bytes) {

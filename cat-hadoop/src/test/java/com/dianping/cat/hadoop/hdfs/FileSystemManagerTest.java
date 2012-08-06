@@ -1,4 +1,4 @@
-package com.dianping.cat.job.hdfs;
+package com.dianping.cat.hadoop.hdfs;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
