@@ -272,10 +272,10 @@
 	</build>
 	<profiles>
 		<profile>
-			<id>daily</id>
+			<id>qa</id>
 			<build>
 				<filters>
-					<filter>assembly/filter/daily.properties</filter>
+					<filter>assembly/filter/qa.properties</filter>
 				</filters>
 				<plugins>
 					<plugin>
