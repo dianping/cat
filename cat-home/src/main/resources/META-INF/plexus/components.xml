@@ -559,27 +559,26 @@
 			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.problem.HistoryGraphs</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.problem.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>problem</role-hint>
 					<field-name>m_service</field-name>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
-				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.problem.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
@@ -600,26 +599,51 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.problem.HistoryGraphs</role>
+			<implementation>com.dianping.cat.report.page.problem.HistoryGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.problem.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.transaction.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_service</field-name>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.graph.GraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
-				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
+			<implementation>com.dianping.cat.report.page.transaction.HistoryGraphs</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
 				</requirement>
@@ -634,22 +658,34 @@
 			<implementation>com.dianping.cat.report.page.event.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.HistoryGraphs</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.event.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>event</role-hint>
 					<field-name>m_service</field-name>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.graph.GraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
-				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.event.HistoryGraphs</role>
+			<implementation>com.dianping.cat.report.page.event.HistoryGraphs</implementation>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
 				</requirement>
@@ -664,7 +700,13 @@
 			<implementation>com.dianping.cat.report.page.heartbeat.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.heartbeat.HistoryGraphs</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
@@ -673,12 +715,18 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.graph.GraphBuilder</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>heartbeat</role-hint>
 					<field-name>m_service</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.heartbeat.HistoryGraphs</role>
+			<implementation>com.dianping.cat.report.page.heartbeat.HistoryGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -730,32 +778,9 @@
 			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>transaction-local</role-hint>
-					<field-name>m_transactionService</field-name>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>event-local</role-hint>
 					<field-name>m_eventService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>problem-local</role-hint>
-					<field-name>m_problemService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>logview-local</role-hint>
-					<field-name>m_logviewService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>ip-local</role-hint>
-					<field-name>m_ipService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -764,78 +789,37 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>ip-local</role-hint>
+					<field-name>m_ipService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>logview-local</role-hint>
+					<field-name>m_logviewService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>matrix-local</role-hint>
 					<field-name>m_matrixService</field-name>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
-			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
-			<requirements>
 				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem-local</role-hint>
+					<field-name>m_problemService</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-					<field-name>m_consumer</field-name>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>transaction-local</role-hint>
+					<field-name>m_transactionService</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.event.LocalEventService</role>
 			<implementation>com.dianping.cat.report.page.model.event.LocalEventService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-					<field-name>m_consumer</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.problem.LocalProblemService</role>
-			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-					<field-name>m_consumer</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.logview.LocalLogViewService</role>
-			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-					<field-name>m_consumer</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.ip.LocalIpService</role>
-			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -862,8 +846,72 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.ip.LocalIpService</role>
+			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.logview.LocalLogViewService</role>
+			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>html</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.matrix.LocalMatrixService</role>
 			<implementation>com.dianping.cat.report.page.model.matrix.LocalMatrixService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.problem.LocalProblemService</role>
+			<implementation>com.dianping.cat.report.page.model.problem.LocalProblemService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
+			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -880,19 +928,15 @@
 			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.sql.JspViewer</role>
+					<role>com.dianping.cat.report.graph.GraphBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+					<role>com.dianping.cat.report.page.sql.JspViewer</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.sql.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.sql.JspViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
@@ -904,20 +948,20 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.sql.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.sql.JspViewer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.heatmap.Handler</role>
 			<implementation>com.dianping.cat.report.page.heatmap.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.job.sql.dal.LocationRecordDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
+				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.heatmap.JspViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.job.sql.dal.LocationRecordDao</role>
@@ -929,9 +973,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.heatmap.JspViewer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dashboard.Handler</role>
 			<implementation>com.dianping.cat.report.page.dashboard.Handler</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>event</role-hint>
+					<field-name>m_eventService</field-name>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
 				</requirement>
@@ -939,11 +992,6 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_transactionService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>event</role-hint>
-					<field-name>m_eventService</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -959,10 +1007,10 @@
 					<role>com.dianping.cat.report.page.task.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+					<role>com.dianping.cat.report.task.ReportFacade</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.ReportFacade</role>
+					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -971,24 +1019,9 @@
 			<implementation>com.dianping.cat.report.page.task.JspViewer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.TaskDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.ReportFacade</role>
 			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
 				</requirement>
@@ -996,22 +1029,28 @@
 					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
+			<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1025,47 +1064,56 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.problem.ProblemReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
+			<requirements>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.TaskDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1077,12 +1125,12 @@
 					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>matrix</role-hint>
 					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1095,10 +1143,10 @@
 			<implementation>com.dianping.cat.report.page.monthreport.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>

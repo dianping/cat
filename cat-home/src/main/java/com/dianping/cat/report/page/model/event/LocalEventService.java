@@ -17,6 +17,13 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 		super("event");
 	}
 
+	private EventReport getLocalReport(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "event");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : DefaultSaxParser.parse(xml);
+	}
+
 	@Override
 	protected EventReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		EventReport report = super.getReport(request, period, domain);
@@ -37,12 +44,5 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 			}
 		}
 		return report;
-	}
-
-	private EventReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "event");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

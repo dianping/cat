@@ -23,18 +23,62 @@ import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
+	private static final String ALL = "All";
+
 	private static final int PAGE_SIZE = 1000000;
 
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private TaskDao taskDao;
-	
-	@Inject
-	private ReportFacade reportFacade;
+	private ReportFacade m_reportFacade;
 
-	private static final String ALL = "All";
+	@Inject
+	private TaskDao m_taskDao;
+
+	private void getTaskData(Payload payload, Model model, Date start, Date end, String queryName, String queryDomain) {
+		int totalPages = 0;
+		int totalNumOfTask = 0;
+		int type = payload.getType();
+		int status = payload.getStatus();
+
+		List<String> domains = new ArrayList<String>(Arrays.asList(ALL));
+		List<String> names = new ArrayList<String>(Arrays.asList(ALL));
+		List<Task> tasks = new ArrayList<Task>();
+		try {
+			List<Task> domainSet = m_taskDao.findAllDistinct(start, end, TaskEntity.READSET_REPORT_DOMAIN);
+			List<Task> nameSet = m_taskDao.findAllDistinct(start, end, TaskEntity.READSET_REPORT_NAME);
+			for (Task task : domainSet) {
+				domains.add(task.getReportDomain());
+			}
+			for (Task task : nameSet) {
+				names.add(task.getReportName());
+			}
+			model.setDomains(domains);
+			model.setNames(names);
+
+			List<Task> totalTasks = m_taskDao.findAll(status, start, end, queryName, queryDomain, type + 1,
+			      TaskEntity.READSET_COUNT);
+			totalNumOfTask = totalTasks.get(0).getCount();
+			totalPages = (int) Math.floor((double) totalNumOfTask / (double) PAGE_SIZE);
+			model.setTotalNumOfTasks(totalNumOfTask);
+			model.setTotalpages(totalPages);
+
+			List<Task> totalFailureTasks = m_taskDao.findAll(4, start, end, queryName, queryDomain, type + 1,
+			      TaskEntity.READSET_COUNT);
+
+			model.setNumOfFailureTasks(totalFailureTasks.get(0).getCount());
+
+			int currentPage = payload.getCurrentPage() == 0 ? 1 : payload.getCurrentPage();
+			int startLimit = (currentPage - 1) * PAGE_SIZE;
+
+			tasks = this.m_taskDao.findByStatusTypeName(status, start, end, queryName, queryDomain, type + 1, startLimit,
+			      PAGE_SIZE, TaskEntity.READSET_FULL);
+			model.setTasks(tasks);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -54,19 +98,15 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			normalizeAndGetTaskData(payload, model);
 			break;
-		case REDO:	
+		case REDO:
 			redoTask(payload, model);
 			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
-	
-	private void  redoTask(Payload payload, Model model){
-		int taskID=payload.getTaskID();
-		
-		boolean redoResult=reportFacade.redoTask(taskID);
-		
-		model.setRedoResult(redoResult);
+
+	private boolean isEmpty(String str) {
+		return str == null || str.length() == 0;
 	}
 
 	public void normalizeAndGetTaskData(Payload payload, Model model) {
@@ -96,53 +136,14 @@ public class Handler implements PageHandler<Context> {
 		model.setDate(start.getTime());
 		model.setFrom(start);
 		model.setTo(end);
-		
-		getTaskData(payload,model,start,end,queryName,queryDomain);
+
+		getTaskData(payload, model, start, end, queryName, queryDomain);
 	}
 
-	private void getTaskData(Payload payload, Model model,Date start,Date end,String queryName,String queryDomain) {
-		int totalPages = 0;
-		int totalNumOfTask = 0;
-		int type = payload.getType();
-		int status = payload.getStatus();
+	private void redoTask(Payload payload, Model model) {
+		int taskID = payload.getTaskID();
+		boolean redoResult = m_reportFacade.redoTask(taskID);
 
-		List<String> domains = new ArrayList<String>(Arrays.asList(ALL));
-		List<String> names = new ArrayList<String>(Arrays.asList(ALL));
-		List<Task> tasks = new ArrayList<Task>();
-		try {
-			List<Task> domainSet = taskDao.findAllDistinct(start, end, TaskEntity.READSET_REPORT_DOMAIN);
-			List<Task> nameSet = taskDao.findAllDistinct(start, end, TaskEntity.READSET_REPORT_NAME);
-			for (Task task : domainSet) {
-				domains.add(task.getReportDomain());
-			}
-			for (Task task : nameSet) {
-				names.add(task.getReportName());
-			}
-			model.setDomains(domains);
-			model.setNames(names);
-
-			List<Task> totalTasks = taskDao.findAll(status, start, end, queryName, queryDomain, type+1, TaskEntity.READSET_COUNT);
-			totalNumOfTask = totalTasks.get(0).getCount();
-			totalPages = (int) Math.floor((double) totalNumOfTask / (double) PAGE_SIZE);
-			model.setTotalNumOfTasks(totalNumOfTask);
-			model.setTotalpages(totalPages);
-			
-			List<Task> totalFailureTasks = taskDao.findAll(4, start, end, queryName, queryDomain, type+1, TaskEntity.READSET_COUNT);
-			
-			model.setNumOfFailureTasks(totalFailureTasks.get(0).getCount());
-
-			int currentPage = payload.getCurrentPage() == 0 ? 1 : payload.getCurrentPage();
-			int startLimit = (currentPage - 1) * PAGE_SIZE;
-			
-			tasks = this.taskDao.findByStatusTypeName(status, start, end, queryName, queryDomain, type+1, startLimit,
-			      PAGE_SIZE, TaskEntity.READSET_FULL);
-			model.setTasks(tasks);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-   }
-
-	private boolean isEmpty(String str) {
-		return str == null || str.length() == 0;
+		model.setRedoResult(redoResult);
 	}
 }

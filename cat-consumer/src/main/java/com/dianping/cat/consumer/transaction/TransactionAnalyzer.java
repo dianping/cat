@@ -361,7 +361,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 				set95Line(report);
 				clearAllDuration(report);
-				String xml = new TransactionReportFilter().buildXml(report);
+				String xml = new TransactionReportFilter(50).buildXml(report);
 				String domain = report.getDomain();
 
 				reportBucket.storeById(domain, xml);
@@ -374,7 +374,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				for (TransactionReport report : m_reports.values()) {
 					try {
 						Report r = m_reportDao.createLocal();
-						String xml = new TransactionReportFilter().buildXml(report);
+						String xml = new TransactionReportFilter(50).buildXml(report);
 						String domain = report.getDomain();
 
 						r.setName("transaction");
@@ -419,38 +419,46 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	      com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_domain;
 
+		private int m_maxItems;
+		
+		public TransactionReportFilter(int maxItem){
+			m_maxItems = maxItem;
+		}
+		
 		@Override
 		public void visitType(TransactionType type) {
 			long totalCount = type.getTotalCount();
 			int value = (int) (totalCount / 10000);
 			int count = 0;
 			String successMessageUrl = null;
-	
+
 			value = Math.min(value, 5);
 			if (!"Cat".equals(m_domain) && (value > 0)) {
 				if ("URL".equals(type.getId())) {
 					List<String> names = new ArrayList<String>();
 					Map<String, TransactionName> transactionNames = type.getNames();
-					for (TransactionName transactionName : transactionNames.values()) {
-						if (transactionName.getTotalCount() <= value) {
-							names.add(transactionName.getId());
-							count += transactionName.getTotalCount();
-							if (successMessageUrl == null) {
-								successMessageUrl = transactionName.getSuccessMessageUrl();
+					if (transactionNames.size() > m_maxItems) {
+						for (TransactionName transactionName : transactionNames.values()) {
+							if (transactionName.getTotalCount() <= value) {
+								names.add(transactionName.getId());
+								count += transactionName.getTotalCount();
+								if (successMessageUrl == null) {
+									successMessageUrl = transactionName.getSuccessMessageUrl();
+								}
 							}
 						}
-					}
 
-					for (String name : names) {
-						transactionNames.remove(name);
-					}
-					if (count > 0) {
-						TransactionName name = new TransactionName("OTHERS");
-						name.setSuccessMessageUrl(successMessageUrl);
-						name.setTotalCount(count);
-						name.setMin(0);
-						name.setMax(0);
-						type.getNames().put("OTHERS", name);
+						for (String name : names) {
+							transactionNames.remove(name);
+						}
+						if (count > 0) {
+							TransactionName name = new TransactionName("OTHERS");
+							name.setSuccessMessageUrl(successMessageUrl);
+							name.setTotalCount(count);
+							name.setMin(0);
+							name.setMax(0);
+							type.getNames().put("OTHERS", name);
+						}
 					}
 				}
 			}

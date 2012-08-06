@@ -13,30 +13,22 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 
-public class DisplayTransactionTypeReport {
+public class DisplayTypes {
+
+	private Set<String> m_ips = new HashSet<String>();
 
 	private List<TransactionTypeModel> m_results = new ArrayList<TransactionTypeModel>();
 
-	private Set<String> m_ips = new HashSet<String>();
-	
-	public DisplayTransactionTypeReport() {
+	public DisplayTypes() {
 	}
 
-	public List<TransactionTypeModel> getResults() {
-		return m_results;
-	}
-
-	public Set<String> getIps() {
-   	return m_ips;
-   }
-
-	public DisplayTransactionTypeReport display(String sorted, String ip, TransactionReport report) {
+	public DisplayTypes display(String sorted, String ip, TransactionReport report) {
 		Machine machine = report.getMachines().get(ip);
 		if (machine == null) {
 			return this;
 		}
 		m_ips = report.getIps();
-		
+
 		Map<String, TransactionType> types = machine.getTypes();
 		if (types != null) {
 			for (Entry<String, TransactionType> entry : types.entrySet()) {
@@ -50,26 +42,12 @@ public class DisplayTransactionTypeReport {
 		return this;
 	}
 
-	public static class TransactionTypeModel {
-		private String m_type;
+	public Set<String> getIps() {
+		return m_ips;
+	}
 
-		private TransactionType m_detail;
-
-		public TransactionTypeModel() {
-		}
-
-		public TransactionTypeModel(String str, TransactionType detail) {
-			m_type = str;
-			m_detail = detail;
-		}
-
-		public String getType() {
-			return m_type;
-		}
-
-		public TransactionType getDetail() {
-			return m_detail;
-		}
+	public List<TransactionTypeModel> getResults() {
+		return m_results;
 	}
 
 	public static class TransactionTypeComparator implements Comparator<TransactionTypeModel> {
@@ -101,6 +79,28 @@ public class DisplayTransactionTypeReport {
 				return (int) (m2.getDetail().getLine95Value() * 100 - m1.getDetail().getLine95Value() * 100);
 			}
 			return 0;
+		}
+	}
+
+	public static class TransactionTypeModel {
+		private TransactionType m_detail;
+
+		private String m_type;
+
+		public TransactionTypeModel() {
+		}
+
+		public TransactionTypeModel(String str, TransactionType detail) {
+			m_type = str;
+			m_detail = detail;
+		}
+
+		public TransactionType getDetail() {
+			return m_detail;
+		}
+
+		public String getType() {
+			return m_type;
 		}
 	}
 }

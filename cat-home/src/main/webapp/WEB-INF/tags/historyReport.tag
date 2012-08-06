@@ -28,9 +28,9 @@
 						</c:otherwise>
 					</c:choose>
 				</c:forEach>
-				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=-1">${model.currentNav.last}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=1">${model.currentNav.next}</a> ]&nbsp;&nbsp;
-					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&nav=next">now</a> ]&nbsp;&nbsp;
+				&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=-1&${navUrlPrefix}">${model.currentNav.last}</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&date=${model.date}&reportType=${model.reportType}&step=1&${navUrlPrefix}">${model.currentNav.next}</a> ]&nbsp;&nbsp;
+					&nbsp;&nbsp;[ <a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&nav=next&${navUrlPrefix}">now</a> ]&nbsp;&nbsp;
 					
 			</td>
 		</tr>

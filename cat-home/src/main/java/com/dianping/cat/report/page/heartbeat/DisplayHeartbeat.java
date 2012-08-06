@@ -14,51 +14,51 @@ import com.dianping.cat.report.graph.GraphBuilder;
 public class DisplayHeartbeat {
 	private static final int K = 1024;
 
-	private List<Period> m_periods = new ArrayList<Period>();
-
 	private double[] m_activeThreads = new double[60];
-
-	private double[] m_daemonThreads = new double[60];
-
-	private double[] m_totalThreads = new double[60];
-
-	private double[] m_newThreads = new double[60];
-
-	private double[] m_catThreads = new double[60];
-
-	private double[] m_pigeonThreads = new double[60];
-
-	private double[] m_httpThreads = new double[60];
-
-	private double[] m_catMessageProduced = new double[60];
-
-	private double[] m_addCatMessageProduced = new double[60];
-
-	private double[] m_catMessageOverflow = new double[60];
 
 	private double[] m_addCatMessageOverflow = new double[60];
 
-	private double[] m_catMessageSize = new double[60];
+	private double[] m_addCatMessageProduced = new double[60];
 
 	private double[] m_addCatMessageSize = new double[60];
-
-	private double[] m_newGcCount = new double[60];
-
-	private double[] m_oldGcCount = new double[60];
 
 	private double[] m_addNewGcCount = new double[60];
 
 	private double[] m_addOldGcCount = new double[60];
 
+	private GraphBuilder m_builder;
+
+	private double[] m_catMessageOverflow = new double[60];
+
+	private double[] m_catMessageProduced = new double[60];
+
+	private double[] m_catMessageSize = new double[60];
+
+	private double[] m_catThreads = new double[60];
+
+	private double[] m_daemonThreads = new double[60];
+
 	private double[] m_heapUsage = new double[60];
 
-	private double[] m_noneHeapUsage = new double[60];
+	private double[] m_httpThreads = new double[60];
 
 	private double[] m_memoryFree = new double[60];
 
+	private double[] m_newGcCount = new double[60];
+
+	private double[] m_newThreads = new double[60];
+
+	private double[] m_noneHeapUsage = new double[60];
+
+	private double[] m_oldGcCount = new double[60];
+
+	private List<Period> m_periods = new ArrayList<Period>();
+
+	private double[] m_pigeonThreads = new double[60];
+
 	private double[] m_systemLoadAverage = new double[60];
 
-	private GraphBuilder m_builder;
+	private double[] m_totalThreads = new double[60];
 
 	public DisplayHeartbeat() {
 	}
@@ -369,13 +369,13 @@ public class DisplayHeartbeat {
 	}
 
 	public static class HeartbeatPayload extends AbstractGraphPayload {
-		private String[] m_labels;
-
-		private double[] m_values;
+		private String m_idPrefix;
 
 		private int m_index;
 
-		private String m_idPrefix;
+		private String[] m_labels;
+
+		private double[] m_values;
 
 		public HeartbeatPayload(int index, String title, String axisXLabel, String axisYLabel, double[] values) {
 			super(title, axisXLabel, axisYLabel);

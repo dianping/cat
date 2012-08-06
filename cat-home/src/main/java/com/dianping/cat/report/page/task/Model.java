@@ -14,60 +14,44 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	private long date;
 
+	private String domain;
+
 	private List<String> domains;
-
-	private List<String> names;
-
-	private int totalpages;
-
-	private int pageSize;
-
-	private List<Task> tasks;
 
 	private Date from;
 
-	private Date to;
-
-	private String domain;
-
 	private String name;
 
-	private int type;
+	private List<String> names;
+
+	private int numOfFailureTasks;
+
+	private int pageSize;
+
+	private boolean redoResult;
 
 	private int status;
 
+	private List<Task> tasks;
+
+	private Date to;
+
 	private int totalNumOfTasks;
 
-	private int numOfFailureTasks;
-	
-	private boolean redoResult;
-	
-	public boolean isRedoResult() {
-   	return redoResult;
-   }
+	private int totalpages;
 
-	public void setRedoResult(boolean redoResult) {
-   	this.redoResult = redoResult;
-   }
-
-	public int getNumOfFailureTasks() {
-		return numOfFailureTasks;
-	}
-
-	public void setNumOfFailureTasks(int numOfFailureTasks) {
-		this.numOfFailureTasks = numOfFailureTasks;
-	}
-
-	public int getTotalNumOfTasks() {
-		return totalNumOfTasks;
-	}
-
-	public void setTotalNumOfTasks(int totalNumOfTasks) {
-		this.totalNumOfTasks = totalNumOfTasks;
-	}
+	private int type;
 
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public String getBaseUri() {
+		return buildPageUri(getPage().getPath(), null);
+	}
+
+	public long getDate() {
+		return date;
 	}
 
 	@Override
@@ -75,32 +59,8 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return Action.VIEW;
 	}
 
-	public String getBaseUri() {
-		return buildPageUri(getPage().getPath(), null);
-	}
-
 	public String getDomain() {
 		return domain;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public long getDate() {
-		return date;
-	}
-
-	public void setDate(long date) {
-		this.date = date;
-	}
-
-	public int getTotalpages() {
-		return totalpages;
-	}
-
-	public void setTotalpages(int totalpages) {
-		this.totalpages = totalpages;
 	}
 
 	public List<String> getDomains() {
@@ -112,75 +72,115 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return domains;
 	}
 
-	public void setDomains(List<String> domains) {
-		this.domains = domains;
+	public Date getFrom() {
+		return from;
+	}
+
+	public String getName() {
+		return name;
 	}
 
 	public List<String> getNames() {
 		return names;
 	}
 
-	public void setNames(List<String> names) {
-		this.names = names;
+	public TaskUrlNav[] getNavs() {
+		return TaskUrlNav.values();
+	}
+
+	public int getNumOfFailureTasks() {
+		return numOfFailureTasks;
 	}
 
 	public int getPageSize() {
 		return pageSize;
 	}
 
-	public void setPageSize(int pageSize) {
-		this.pageSize = pageSize;
+	public int getStatus() {
+		return status;
 	}
 
 	public List<Task> getTasks() {
 		return tasks;
 	}
 
-	public void setTasks(List<Task> tasks) {
-		this.tasks = tasks;
-	}
-
-	public TaskUrlNav[] getNavs() {
-		return TaskUrlNav.values();
-	}
-
-	public Date getFrom() {
-		return from;
-	}
-
-	public void setFrom(Date from) {
-		this.from = from;
-	}
-
 	public Date getTo() {
 		return to;
 	}
 
-	public void setTo(Date to) {
-		this.to = to;
+	public int getTotalNumOfTasks() {
+		return totalNumOfTasks;
 	}
 
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public int getTotalpages() {
+		return totalpages;
 	}
 
 	public int getType() {
 		return type;
 	}
 
-	public void setType(int type) {
-		this.type = type;
+	public boolean isRedoResult() {
+		return redoResult;
 	}
 
-	public int getStatus() {
-		return status;
+	public void setDate(long date) {
+		this.date = date;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public void setDomains(List<String> domains) {
+		this.domains = domains;
+	}
+
+	public void setFrom(Date from) {
+		this.from = from;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setNames(List<String> names) {
+		this.names = names;
+	}
+
+	public void setNumOfFailureTasks(int numOfFailureTasks) {
+		this.numOfFailureTasks = numOfFailureTasks;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public void setRedoResult(boolean redoResult) {
+		this.redoResult = redoResult;
 	}
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
+	}
+
+	public void setTo(Date to) {
+		this.to = to;
+	}
+
+	public void setTotalNumOfTasks(int totalNumOfTasks) {
+		this.totalNumOfTasks = totalNumOfTasks;
+	}
+
+	public void setTotalpages(int totalpages) {
+		this.totalpages = totalpages;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 }

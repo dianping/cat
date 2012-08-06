@@ -1,11 +1,11 @@
 package com.dianping.cat.report.page.sql;
 
 public enum JspFile {
-	VIEW("/jsp/report/sql.jsp"),
-
 	GRAPHS("/jsp/report/sql_graphs.jsp"),
-	
-	MOBILE("/jsp/report/sql_mobile.jsp");
+
+	MOBILE("/jsp/report/sql_mobile.jsp"),
+
+	VIEW("/jsp/report/sql.jsp");
 
 	private String m_path;
 

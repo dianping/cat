@@ -4,15 +4,23 @@ import java.util.Arrays;
 
 public class MobileGraphItem {
 
+	private String m_title;
+
+	private double[] m_value;
+
 	private String[] m_xlabel;
 
 	private double[] m_ylable;
 
-	private double[] m_value;
-
-	private String m_title;
-
 	public MobileGraphItem() {
+	}
+
+	public String getTitle() {
+		return m_title;
+	}
+
+	public double[] getValue() {
+		return m_value;
 	}
 
 	public String[] getXlabel() {
@@ -23,8 +31,28 @@ public class MobileGraphItem {
 		return m_ylable;
 	}
 
-	public double[] getValue() {
-		return m_value;
+	public void setMaxValue(double maxValue) {
+		m_ylable = new double[6];
+		for (int i = 0; i < 6; i++) {
+			if (i == 0) {
+				m_ylable[0] = 0;
+			} else {
+				m_ylable[i] = maxValue / 5 * i;
+			}
+		}
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
+	}
+
+	public MobileGraphItem setValue(double[] value) {
+		if (value == null) {
+			m_value = new double[0];
+		} else {
+			m_value = Arrays.copyOf(value, value.length);
+		}
+		return this;
 	}
 
 	public MobileGraphItem setXlabel(String[] xlabel) {
@@ -43,33 +71,5 @@ public class MobileGraphItem {
 			m_ylable = Arrays.copyOf(ylable, ylable.length);
 		}
 		return this;
-	}
-
-	public MobileGraphItem setValue(double[] value) {
-		if (value == null) {
-			m_value = new double[0];
-		} else {
-			m_value = Arrays.copyOf(value, value.length);
-		}
-		return this;
-	}
-
-	public String getTitle() {
-		return m_title;
-	}
-
-	public void setTitle(String title) {
-		m_title = title;
-	}
-
-	public void setMaxValue(double maxValue) {
-		m_ylable = new double[6];
-		for (int i = 0; i < 6; i++) {
-			if (i == 0) {
-				m_ylable[0] = 0;
-			} else {
-				m_ylable[i] = maxValue / 5 * i;
-			}
-		}
 	}
 }

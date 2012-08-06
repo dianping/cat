@@ -12,23 +12,23 @@ public class NavigationBar {
 		ReportPage.TRANSACTION,
 
 		ReportPage.EVENT,
-		
+
 		ReportPage.PROBLEM,
 
 		ReportPage.HEARTBEAT,
 
 		ReportPage.MATRIX,
-		
+
 		ReportPage.IP,
 
 		ReportPage.HEATMAP,
-		
+
 		ReportPage.SQL,
 
 		ReportPage.TASK,
-		
+
 		ReportPage.LOGVIEW,
-		
+
 		ReportPage.MONTHREPORT
 
 		};

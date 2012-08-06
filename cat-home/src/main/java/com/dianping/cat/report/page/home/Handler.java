@@ -52,6 +52,10 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case VIEW:
 			break;
+		case CHECKPOINT:
+			break;
+		default:
+			break;
 		}
 
 		m_jspViewer.view(ctx, model);
@@ -64,11 +68,11 @@ public class Handler implements PageHandler<Context> {
 		int index = 1;
 
 		TreeMap<String, ThreadInfo> sortedThreads = new TreeMap<String, ThreadInfo>();
-		
+
 		for (ThreadInfo thread : threads) {
 			sortedThreads.put(thread.getThreadName(), thread);
 		}
-		
+
 		sb.append("Threads: ").append(threads.length);
 		sb.append("<pre>");
 
@@ -79,12 +83,12 @@ public class Handler implements PageHandler<Context> {
 
 		sb.append("\r\n");
 		sb.append("\r\n");
-		
+
 		index = 1;
-		
+
 		for (ThreadInfo thread : sortedThreads.values()) {
-			sb.append("<a name=\"").append(thread.getThreadId()).append("\">").append(index++).append(": ")
-			      .append(thread).append("\r\n");
+			sb.append("<a name=\"").append(thread.getThreadId()).append("\">").append(index++).append(": ").append(thread)
+			      .append("\r\n");
 		}
 
 		sb.append("</pre>");

@@ -15,6 +15,10 @@ import com.dianping.cat.report.task.ReportMerger;
 
 public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 
+	public HeartbeatReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+		return null;
+	}
+
 	public HeartbeatReport mergeForGraph(String reportDomain, List<Report> reports) {
 		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(reportDomain));
 
@@ -26,14 +30,10 @@ public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 				model.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
-			} 
+			}
 		}
 
 		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
 		return heartbeatReport;
-	}
-
-	public HeartbeatReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
-		return null;
 	}
 }

@@ -17,10 +17,10 @@ import com.site.lookup.annotation.Inject;
 
 public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixReport> {
 	@Inject
-	private ReportDao m_reportDao;
+	private BucketManager m_bucketManager;
 
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportDao m_reportDao;
 
 	public HistoricalMatrixService() {
 		super("matrix");
@@ -52,7 +52,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 			model.accept(merger);
 		}
 		MatrixReport matrixReport = merger.getMatrixReport();
-		
+
 		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
 		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
 

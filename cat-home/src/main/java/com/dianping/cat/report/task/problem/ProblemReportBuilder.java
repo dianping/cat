@@ -20,9 +20,9 @@ import com.site.dal.jdbc.DalException;
 
 public class ProblemReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 
-	private ProblemMerger m_problemMerger = new ProblemMerger();
-
 	private ProblemGraphCreator m_problemGraphCreator = new ProblemGraphCreator();
+
+	private ProblemMerger m_problemMerger = new ProblemMerger();
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
@@ -52,16 +52,8 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		return true;
 	}
 
-	private List<Graph> getHourReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		ProblemReport transactionReport = m_problemMerger.mergeForGraph(reportDomain, reports);
-		graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
-		return graphs;
-	}
-
-	private Dailyreport getDailyReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+	private Dailyreport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
+	      throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = new HashSet<String>();
 		getDomainSet(domainSet, reportPeriod, endDate);
@@ -79,6 +71,15 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		report.setPeriod(reportPeriod);
 		report.setType(1);
 		return report;
+	}
+
+	private List<Graph> getHourReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		ProblemReport transactionReport = m_problemMerger.mergeForGraph(reportDomain, reports);
+		graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+		return graphs;
 	}
 
 	@Override

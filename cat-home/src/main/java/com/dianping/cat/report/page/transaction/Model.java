@@ -8,13 +8,11 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private TransactionReport m_report;
-	
-	private DisplayTransactionTypeReport m_displayTypeReport;
-	
-	private DisplayTransactionNameReport m_displayNameReport;
+	private DisplayNames m_displayNameReport;
 
-	private String m_type;
+	private DisplayTypes m_displayTypeReport;
+
+	private String m_errorTrend;
 
 	private String m_graph1;
 
@@ -23,17 +21,19 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_graph3;
 
 	private String m_graph4;
-	
-	private String m_mobileResponse;
-	
-	private String m_queryName;
-	
-	private String m_responseTrend;
-	
+
 	private String m_hitTrend;
-	
-	private String m_errorTrend;
-	
+
+	private String m_mobileResponse;
+
+	private String m_queryName;
+
+	private TransactionReport m_report;
+
+	private String m_responseTrend;
+
+	private String m_type;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -43,14 +43,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Action.HOURLY_REPORT;
 	}
 
+	public DisplayNames getDisplayNameReport() {
+		return m_displayNameReport;
+	}
+
+	public DisplayTypes getDisplayTypeReport() {
+		return m_displayTypeReport;
+	}
+
 	@Override
-   public String getDomain() {
+	public String getDomain() {
 		if (m_report == null) {
 			return getDisplayDomain();
 		} else {
 			return m_report.getDomain();
 		}
-   }
+	}
 
 	// required by report tag
 	@Override
@@ -61,21 +69,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
 	}
-	
-	public List<String> getIps() {
-		if (m_report == null) {
-			return new ArrayList<String>();
-		} else {
-			return StringSortHelper.sortDomain(m_report.getIps());
-		}
-	}
-	
-	public String getQueryName() {
-		return m_queryName;
-	}
 
-	public void setQueryName(String queryName) {
-		m_queryName = queryName;
+	public String getErrorTrend() {
+		return m_errorTrend;
 	}
 
 	public String getGraph1() {
@@ -94,12 +90,48 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_graph4;
 	}
 
+	public String getHitTrend() {
+		return m_hitTrend;
+	}
+
+	public List<String> getIps() {
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getIps());
+		}
+	}
+
+	public String getMobileResponse() {
+		return m_mobileResponse;
+	}
+
+	public String getQueryName() {
+		return m_queryName;
+	}
+
 	public TransactionReport getReport() {
 		return m_report;
 	}
 
+	public String getResponseTrend() {
+		return m_responseTrend;
+	}
+
 	public String getType() {
 		return m_type;
+	}
+
+	public void setDisplayNameReport(DisplayNames displayNameReport) {
+		m_displayNameReport = displayNameReport;
+	}
+
+	public void setDisplayTypeReport(DisplayTypes dispalyReport) {
+		m_displayTypeReport = dispalyReport;
+	}
+
+	public void setErrorTrend(String errorTrend) {
+		m_errorTrend = errorTrend;
 	}
 
 	public void setGraph1(String graph1) {
@@ -118,59 +150,27 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_graph4 = graph4;
 	}
 
+	public void setHitTrend(String hitTrend) {
+		m_hitTrend = hitTrend;
+	}
+
+	public void setMobileResponse(String mobileResponse) {
+		m_mobileResponse = mobileResponse;
+	}
+
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
+	}
+
 	public void setReport(TransactionReport report) {
 		m_report = report;
+	}
+
+	public void setResponseTrend(String responseTrend) {
+		m_responseTrend = responseTrend;
 	}
 
 	public void setType(String type) {
 		m_type = type;
 	}
-
-	public DisplayTransactionTypeReport getDisplayTypeReport() {
-   	return m_displayTypeReport;
-   }
-
-	public void setDisplayTypeReport(DisplayTransactionTypeReport dispalyReport) {
-		m_displayTypeReport = dispalyReport;
-   }
-
-	public DisplayTransactionNameReport getDisplayNameReport() {
-   	return m_displayNameReport;
-   }
-
-	public void setDisplayNameReport(DisplayTransactionNameReport displayNameReport) {
-   	m_displayNameReport = displayNameReport;
-   }
-
-	public String getMobileResponse() {
-   	return m_mobileResponse;
-   }
-
-	public void setMobileResponse(String mobileResponse) {
-   	m_mobileResponse = mobileResponse;
-   }
-
-	public String getResponseTrend() {
-   	return m_responseTrend;
-   }
-
-	public void setResponseTrend(String responseTrend) {
-   	m_responseTrend = responseTrend;
-   }
-
-	public String getHitTrend() {
-   	return m_hitTrend;
-   }
-
-	public void setHitTrend(String hitTrend) {
-   	m_hitTrend = hitTrend;
-   }
-
-	public String getErrorTrend() {
-   	return m_errorTrend;
-   }
-
-	public void setErrorTrend(String errorTrend) {
-   	m_errorTrend = errorTrend;
-   }
 }

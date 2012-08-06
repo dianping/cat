@@ -8,13 +8,13 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private IpReport m_report;
-
 	private List<DisplayModel> m_displayModels;
 
 	private int m_hour;
 
 	private String m_mobileResponse;
+
+	private IpReport m_report;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -50,6 +50,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_hour;
 	}
 
+	public String getMobileResponse() {
+		return m_mobileResponse;
+	}
+
 	public IpReport getReport() {
 		return m_report;
 	}
@@ -62,26 +66,22 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_hour = hour;
 	}
 
+	public void setMobileResponse(String mobileResponse) {
+		m_mobileResponse = mobileResponse;
+	}
+
 	public void setReport(IpReport report) {
 		m_report = report;
 	}
-	
-	public String getMobileResponse() {
-   	return m_mobileResponse;
-   }
-
-	public void setMobileResponse(String mobileResponse) {
-   	m_mobileResponse = mobileResponse;
-   }
 
 	public static class DisplayModel {
 		private String m_address;
 
-		private int m_lastOne;
+		private int m_lastFifteen;
 
 		private int m_lastFive;
 
-		private int m_lastFifteen;
+		private int m_lastOne;
 
 		public DisplayModel(String address) {
 			m_address = address;

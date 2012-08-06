@@ -7,20 +7,16 @@ import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
 
-	private ReportPage m_page;
-
 	@FieldMeta("op")
 	private Action m_action;
 
 	@FieldMeta("domain")
 	private String m_domain;
-	
+
+	private ReportPage m_page;
+
 	public Payload() {
 		super(ReportPage.MONTHREPORT);
-	}
-	
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
 	}
 
 	@Override
@@ -28,9 +24,21 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getDomain() {
+		return m_domain;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setDomain(String domain) {
+		m_domain = domain;
 	}
 
 	@Override
@@ -43,13 +51,5 @@ public class Payload extends AbstractReportPayload<Action> {
 		if (m_action == null) {
 			m_action = Action.VIEW;
 		}
-	}
-
-	public String getDomain() {
-		return m_domain;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
 	}
 }

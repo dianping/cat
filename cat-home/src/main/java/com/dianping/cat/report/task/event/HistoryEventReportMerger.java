@@ -4,22 +4,22 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 
-public class HistoryEventReportMerger extends EventReportMerger{
+public class HistoryEventReportMerger extends EventReportMerger {
 
 	public HistoryEventReportMerger(EventReport eventReport) {
-	   super(eventReport);
-   }
+		super(eventReport);
+	}
 
 	@Override
-   protected void mergeName(EventName old, EventName other) {
+	protected void mergeName(EventName old, EventName other) {
 		old.getRanges().clear();
 		other.getRanges().clear();
-	   super.mergeName(old, other);
-   }
+		super.mergeName(old, other);
+	}
 
 	@Override
-   public void visitName(EventName name) {
+	public void visitName(EventName name) {
 		name.getRanges().clear();
-	   super.visitName(name);
-   }
+		super.visitName(name);
+	}
 }

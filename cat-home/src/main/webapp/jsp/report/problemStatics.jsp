@@ -10,7 +10,7 @@
 <c:set var="report" value="${model.report}" />
 
 <a:report title="Problem Report"
-	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}"
+	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}&threshold=${model.threshold}&sqlThreshold=${model.sqlThreshold}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -34,11 +34,11 @@
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}"
+						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&sqlThreshold=${model.sqlThreshold}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}">${ip}</a>
+						<a href="?op=view&domain=${model.domain}&ip=${ip}&date=${model.date}&threshold=${model.threshold}&sqlThreshold=${model.sqlThreshold}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;

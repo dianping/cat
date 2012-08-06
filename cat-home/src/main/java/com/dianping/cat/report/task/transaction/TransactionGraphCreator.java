@@ -22,6 +22,79 @@ import com.dianping.cat.report.task.GraphLine;
 
 public class TransactionGraphCreator implements GraphCreator<TransactionReport> {
 
+	private double[] arrayAdd(double[] src, double added[]) {
+		int size = added.length;
+		if (src == null) {
+			src = new double[size];
+		}
+		for (int i = 0; i < size; i++) {
+			src[i] = src[i] + added[i];
+		}
+		return src;
+	}
+
+	private long[] arrayAdd(long[] src, long added[]) {
+		int size = added.length;
+		if (src == null) {
+			src = new long[size];
+		}
+		for (int i = 0; i < size; i++) {
+			src[i] = src[i] + added[i];
+		}
+		return src;
+	}
+
+	private String arrayToString(double[] array) {
+		StringBuilder sb = new StringBuilder();
+		int size = 12;
+		for (int i = 0; i < size; i++) {
+			sb.append(array[i]);
+			if (i < 12) {
+				sb.append(',');
+			}
+		}
+		return sb.toString();
+	}
+
+	private String arrayToString(long[] array) {
+		StringBuilder sb = new StringBuilder();
+		int size = 12;
+		for (int i = 0; i < size; i++) {
+			sb.append(array[i]);
+			if (i < 11) {
+				sb.append(',');
+			}
+		}
+		return sb.toString();
+	}
+
+	private long[] getFailsCount(List<Range> ranges) {
+		long[] value = new long[12];
+		for (Range range : ranges) {
+			int minute = range.getValue();
+			value[minute / 5] = range.getFails();
+		}
+		return value;
+	}
+
+	private double[] getSumCount(List<Range> ranges) {
+		double[] value = new double[12];
+		for (Range range : ranges) {
+			int minute = range.getValue();
+			value[minute / 5] = range.getSum();
+		}
+		return value;
+	}
+
+	private long[] getTotalCount(List<Range> ranges) {
+		long[] value = new long[12];
+		for (Range range : ranges) {
+			int minute = range.getValue();
+			value[minute / 5] = range.getCount();
+		}
+		return value;
+	}
+
 	@Override
 	public List<Graph> splitReportToGraphs(Date reportPeriod, String reportDomain, String reportName,
 	      TransactionReport report) {
@@ -113,7 +186,7 @@ public class TransactionGraphCreator implements GraphCreator<TransactionReport> 
 				summaryBuilder.append('\t');
 				summaryBuilder.append(transactionType.getSum2());
 				summaryBuilder.append('\n');
-				
+
 				String summaryKey = transactionType.getId();
 				GraphLine summaryLine = allSummaryCache.get(summaryKey);
 				if (summaryLine == null) {
@@ -121,11 +194,11 @@ public class TransactionGraphCreator implements GraphCreator<TransactionReport> 
 					allSummaryCache.put(summaryKey, summaryLine);
 				}
 
-				summaryLine.totalCounts = arrayAdd(summaryLine.totalCounts,typeCounts);
+				summaryLine.totalCounts = arrayAdd(summaryLine.totalCounts, typeCounts);
 				summaryLine.failCounts = arrayAdd(summaryLine.failCounts, typeFails);
 				summaryLine.min += transactionType.getMin();
 				summaryLine.max += transactionType.getMax();
-				//summaryLine.sum += transactionType.getSum();
+				// summaryLine.sum += transactionType.getSum();
 				summaryLine.sums = arrayAdd(summaryLine.sums, typeSums);
 				summaryLine.sum2 += transactionType.getSum2();
 			}
@@ -186,78 +259,5 @@ public class TransactionGraphCreator implements GraphCreator<TransactionReport> 
 
 		return graphs;
 
-	}
-
-	private long[] arrayAdd(long[] src, long added[]) {
-		int size = added.length;
-		if (src == null) {
-			src = new long[size];
-		}
-		for (int i = 0; i < size; i++) {
-			src[i] = src[i] + added[i];
-		}
-		return src;
-	}
-
-	private double[] arrayAdd(double[] src, double added[]) {
-		int size = added.length;
-		if (src == null) {
-			src = new double[size];
-		}
-		for (int i = 0; i < size; i++) {
-			src[i] = src[i] + added[i];
-		}
-		return src;
-	}
-
-	private String arrayToString(long[] array) {
-		StringBuilder sb = new StringBuilder();
-		int size = 12;
-		for (int i = 0; i < size; i++) {
-			sb.append(array[i]);
-			if (i < 11) {
-				sb.append(',');
-			}
-		}
-		return sb.toString();
-	}
-
-	private String arrayToString(double[] array) {
-		StringBuilder sb = new StringBuilder();
-		int size = 12;
-		for (int i = 0; i < size; i++) {
-			sb.append(array[i]);
-			if (i < 12) {
-				sb.append(',');
-			}
-		}
-		return sb.toString();
-	}
-
-	private long[] getTotalCount(List<Range> ranges) {
-		long[] value = new long[12];
-		for (Range range : ranges) {
-			int minute = range.getValue();
-			value[minute / 5] = range.getCount();
-		}
-		return value;
-	}
-
-	private long[] getFailsCount(List<Range> ranges) {
-		long[] value = new long[12];
-		for (Range range : ranges) {
-			int minute = range.getValue();
-			value[minute / 5] = range.getFails();
-		}
-		return value;
-	}
-
-	private double[] getSumCount(List<Range> ranges) {
-		double[] value = new double[12];
-		for (Range range : ranges) {
-			int minute = range.getValue();
-			value[minute / 5] = range.getSum();
-		}
-		return value;
 	}
 }

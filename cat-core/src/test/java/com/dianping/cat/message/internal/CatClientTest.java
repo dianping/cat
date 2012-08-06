@@ -60,7 +60,7 @@ public class CatClientTest extends CatTestCase {
 	@Test
 	public void testEvent() throws Exception {
 		MessageProducer cat = Cat.getProducer();
-		Transaction root = cat.newTransaction("Task", "DumpRemoteIds-ipAddress - ts");
+		Transaction root = cat.newTransaction("System", "DumpRemoteIds-ipAddress - ts");
 		root.addData("file", "file");
 		root.setStatus(Message.SUCCESS);
 		root.complete();

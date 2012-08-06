@@ -24,18 +24,18 @@ import com.site.lookup.annotation.Inject;
 
 public class HistoricalLogViewService extends BaseHistoricalModelService<String> implements LogEnabled {
 	@Inject
-	private LogviewDao m_logviewDao;
+	private BucketManager m_bucketManager;
 
 	@Inject(value = "html")
 	private MessageCodec m_codec;
 
 	@Inject
-	private BucketManager m_bucketManager;
-
-	@Inject
 	private InputChannelManager m_inputChannelManager;
 
 	private Logger m_logger;
+
+	@Inject
+	private LogviewDao m_logviewDao;
 
 	public HistoricalLogViewService() {
 		super("logview");

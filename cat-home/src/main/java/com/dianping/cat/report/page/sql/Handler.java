@@ -30,13 +30,68 @@ import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
-	private JspViewer m_jspViewer;
+	private GraphBuilder m_builder;
 
 	@Inject
 	private SqlReportRecordDao m_dao;
 
 	@Inject
-	private GraphBuilder m_builder;
+	private JspViewer m_jspViewer;
+
+	// the computation of distribution is just a sum of all the date under the
+	// same domain and date
+	// String format key:value,key:value,... type of key and value int
+	public String compute(List<String> durationDistributions) {
+		Map<Integer, Integer> durations = new TreeMap<Integer, Integer>();
+		for (String s : durationDistributions) {
+			String distrubutions[] = s.split(",");
+			for (int i = 0; i < distrubutions.length; i++) {
+				String singleResult[] = distrubutions[i].split(":");
+				int duration = Integer.parseInt(singleResult[0]);
+				int count = Integer.parseInt(singleResult[1]);
+				Integer value = durations.get(duration);
+				durations.put(duration, value == null ? count : value + count);
+			}
+		}
+		StringBuilder sb = new StringBuilder();
+		Iterator<Entry<Integer, Integer>> it = durations.entrySet().iterator();
+		while (it.hasNext()) {
+			Map.Entry<Integer, Integer> entry = (Map.Entry<Integer, Integer>) it.next();
+			int key = entry.getKey();
+			int count = entry.getValue();
+			String result = key + ":" + count + ",";
+			sb.append(result);
+		}
+		return sb.substring(0, sb.length() - 1);
+	}
+
+	// the computation of duration is:duration=(hit*duration)/hit
+	public String computeDuration(List<String> durationOvertimes, List<String> hitsovOvrtimes) {
+		double[] sum = new double[13];
+		int[] totalHit = new int[13];
+		double[] average = new double[13];
+		for (int i = 0; i < durationOvertimes.size(); i++) {
+			String durations[] = durationOvertimes.get(i).split(",");
+			String hits[] = hitsovOvrtimes.get(i).split(",");
+			for (int j = 0; j <= 12; j++) {
+				String s_duration = durations[j].split(":")[1];
+				String s_hit = hits[j].split(":")[1];
+				double i_duration = Double.parseDouble(s_duration);
+				int i_hit = Integer.parseInt(s_hit);
+				totalHit[j] += i_hit;
+				sum[j] += i_duration * i_hit;
+			}
+		}
+		for (int m = 0; m <= 12; m++) {
+			average[m] = totalHit[m] == 0 ? 0 : sum[m] / (double) totalHit[m];
+		}
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i <= 12; i++) {
+			String s = i * 5 + ":" + average[i] + ",";
+			sb.append(s);
+		}
+		return sb.substring(0, sb.length() - 1);
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -179,60 +234,5 @@ public class Handler implements PageHandler<Context> {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-	}
-
-	// the computation of distribution is just a sum of all the date under the
-	// same domain and date
-	// String format key:value,key:value,... type of key and value int
-	public String compute(List<String> durationDistributions) {
-		Map<Integer, Integer> durations = new TreeMap<Integer, Integer>();
-		for (String s : durationDistributions) {
-			String distrubutions[] = s.split(",");
-			for (int i = 0; i < distrubutions.length; i++) {
-				String singleResult[] = distrubutions[i].split(":");
-				int duration = Integer.parseInt(singleResult[0]);
-				int count = Integer.parseInt(singleResult[1]);
-				Integer value = durations.get(duration);
-				durations.put(duration, value == null ? count : value + count);
-			}
-		}
-		StringBuilder sb = new StringBuilder();
-		Iterator<Entry<Integer, Integer>> it = durations.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<Integer, Integer> entry = (Map.Entry<Integer, Integer>) it.next();
-			int key = entry.getKey();
-			int count = entry.getValue();
-			String result = key + ":" + count + ",";
-			sb.append(result);
-		}
-		return sb.substring(0, sb.length() - 1);
-	}
-
-	// the computation of duration is:duration=(hit*duration)/hit
-	public String computeDuration(List<String> durationOvertimes, List<String> hitsovOvrtimes) {
-		double[] sum = new double[13];
-		int[] totalHit = new int[13];
-		double[] average = new double[13];
-		for (int i = 0; i < durationOvertimes.size(); i++) {
-			String durations[] = durationOvertimes.get(i).split(",");
-			String hits[] = hitsovOvrtimes.get(i).split(",");
-			for (int j = 0; j <= 12; j++) {
-				String s_duration = durations[j].split(":")[1];
-				String s_hit = hits[j].split(":")[1];
-				double i_duration = Double.parseDouble(s_duration);
-				int i_hit = Integer.parseInt(s_hit);
-				totalHit[j] += i_hit;
-				sum[j] += i_duration * i_hit;
-			}
-		}
-		for (int m = 0; m <= 12; m++) {
-			average[m] = totalHit[m] == 0 ? 0 : sum[m] / (double) totalHit[m];
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i <= 12; i++) {
-			String s = i * 5 + ":" + average[i] + ",";
-			sb.append(s);
-		}
-		return sb.substring(0, sb.length() - 1);
 	}
 }

@@ -27,13 +27,13 @@ public class TransactionGraphDataTest {
 
 	@Test
 	public void testBuildGraphDatesByType() {
-		Handler handler = new Handler();
+		HistoryGraphs handler = new HistoryGraphs();
 		try {
 			Date start = sf.parse("20120601");
 			Date end = sf.parse("20120607");
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "URL";
-			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, null, graphs);
+			Map<String, double[]> graphDates = handler.buildGraphDatas(start, end, type, null, graphs);
 			double[] expectTotalCount = graphDates.get("total_count");
 			double[] expectFailureCount = graphDates.get("failure_count");
 			double[] expectSum = graphDates.get("sum");
@@ -48,14 +48,14 @@ public class TransactionGraphDataTest {
 
 	@Test
 	public void testBuildGraphDatesByTypeAndName() {
-		Handler handler = new Handler();
+		HistoryGraphs handler = new HistoryGraphs();
 		try {
 			Date start = sf.parse("20120606");
 			Date end = sf.parse("20120606");
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "Result";
 			String name = "cacheService:cacheConfigService_1.0.0:getKeyConfigurations";
-			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, name, graphs);
+			Map<String, double[]> graphDates = handler.buildGraphDatas(start, end, type, name, graphs);
 			double[] expectTotalCount = graphDates.get("total_count");
 			double[] expectFailureCount = graphDates.get("failure_count");
 			double[] expectSum = graphDates.get("sum");
@@ -71,14 +71,14 @@ public class TransactionGraphDataTest {
 
 	@Test
 	public void testBuildGraphDatesEmpty() {
-		Handler handler = new Handler();
+		HistoryGraphs handler = new HistoryGraphs();
 		try {
 			Date start = sf.parse("20120606");
 			Date end = sf.parse("20120607");
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "Result";
 			String name = "Result";
-			Map<String, double[]> graphDates = handler.buildGraphDates(start, end, type, name, graphs);
+			Map<String, double[]> graphDates = handler.buildGraphDatas(start, end, type, name, graphs);
 			double[] sum = graphDates.get("sum");
 			assertArray(-1.0, sum);
 		} catch (ParseException e) {

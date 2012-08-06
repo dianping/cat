@@ -9,14 +9,17 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("type")
-	private String m_type;
-
 	@FieldMeta("name")
 	private String m_name;
 
+	@FieldMeta("show")
+	private boolean m_showAll = false;
+
 	@FieldMeta("sort")
 	private String m_sortBy;
+
+	@FieldMeta("type")
+	private String m_type;
 
 	public Payload() {
 		super(ReportPage.EVENT);
@@ -31,8 +34,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_name;
 	}
 
+	public String getSortBy() {
+		return m_sortBy;
+	}
+
 	public String getType() {
 		return m_type;
+	}
+
+	public boolean isShowAll() {
+		return m_showAll;
 	}
 
 	public void setAction(String action) {
@@ -43,17 +54,17 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_name = name;
 	}
 
+	public void setShowAll(boolean showAll) {
+		m_showAll = showAll;
+	}
+
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
+	}
+
 	public void setType(String type) {
 		m_type = type;
 	}
-	
-	public String getSortBy() {
-   	return m_sortBy;
-   }
-
-	public void setSortBy(String sortBy) {
-   	m_sortBy = sortBy;
-   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

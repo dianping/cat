@@ -21,7 +21,7 @@ public class CompositeProblemService extends BaseCompositeModelService<ProblemRe
 	@Override
 	protected ProblemReport merge(ModelRequest request, List<ModelResponse<ProblemReport>> responses) {
 		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(request.getDomain()));
-		
+
 		for (ModelResponse<ProblemReport> response : responses) {
 			if (response != null) {
 				ProblemReport model = response.getModel();

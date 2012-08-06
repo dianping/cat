@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.model.spi;
 
 public enum ModelPeriod {
-	HISTORICAL, LAST, CURRENT, FUTURE;
+	CURRENT, FUTURE, HISTORICAL, LAST;
 
 	private static final long ONE_HOUR = 3600 * 1000L;
 
@@ -13,22 +13,6 @@ public enum ModelPeriod {
 		}
 
 		return defaultValue;
-	}
-
-	public boolean isCurrent() {
-		return this == CURRENT;
-	}
-
-	public boolean isLast() {
-		return this == LAST;
-	}
-
-	public boolean isHistorical() {
-		return this == HISTORICAL;
-	}
-
-	public boolean isFuture() {
-		return this == FUTURE;
 	}
 
 	public static ModelPeriod getByTime(long timestamp) {
@@ -45,5 +29,21 @@ public enum ModelPeriod {
 		} else {
 			return ModelPeriod.HISTORICAL;
 		}
+	}
+
+	public boolean isCurrent() {
+		return this == CURRENT;
+	}
+
+	public boolean isFuture() {
+		return this == FUTURE;
+	}
+
+	public boolean isHistorical() {
+		return this == HISTORICAL;
+	}
+
+	public boolean isLast() {
+		return this == LAST;
 	}
 }

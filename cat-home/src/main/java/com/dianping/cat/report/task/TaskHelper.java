@@ -8,50 +8,6 @@ import java.util.Date;
 
 public class TaskHelper {
 
-	public static Date nextTaskTime() {
-		Calendar cal = Calendar.getInstance();
-		final int startFindMin = 10;
-		cal.set(Calendar.MINUTE, startFindMin);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		if (cal.get(Calendar.MINUTE) >= startFindMin) {
-			cal.add(Calendar.HOUR, 1);// timeout, waiting for next hour
-		}
-		return cal.getTime();
-	}
-
-	public static Date yesterdayZero(Date reportPeriod) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
-		cal.add(Calendar.DAY_OF_YEAR, -1);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTime();
-	}
-
-	public static Date todayZero(Date reportPeriod) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTime();
-	}
-
-	public static Date tomorrowZero(Date reportPeriod) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(reportPeriod);
-		cal.add(Calendar.DAY_OF_YEAR, 1);
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		return cal.getTime();
-	}
-
 	public static String join(double[] array, char separator) {
 		return join(array, separator, 0, array.length - 1);
 	}
@@ -127,6 +83,18 @@ public class TaskHelper {
 		return buf.toString();
 	}
 
+	public static Date nextTaskTime() {
+		Calendar cal = Calendar.getInstance();
+		final int startFindMin = 10;
+		cal.set(Calendar.MINUTE, startFindMin);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		if (cal.get(Calendar.MINUTE) >= startFindMin) {
+			cal.add(Calendar.HOUR, 1);// timeout, waiting for next hour
+		}
+		return cal.getTime();
+	}
+
 	public static Date startDateOfNextTask(Date currentDate) {
 		long day = 24 * 60 * 60 * 1000L;
 		long nineMissecond = 9 * 60 * 1000L;
@@ -137,5 +105,37 @@ public class TaskHelper {
 		} else {
 			return new Date(dayStart.getTime() + nineMissecond);
 		}
+	}
+
+	public static Date todayZero(Date reportPeriod) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(reportPeriod);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	public static Date tomorrowZero(Date reportPeriod) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(reportPeriod);
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	public static Date yesterdayZero(Date reportPeriod) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(reportPeriod);
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
 	}
 }

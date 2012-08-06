@@ -46,15 +46,15 @@ public class EventMerger implements ReportMerger<EventReport> {
 		HistoryEventReportMerger merger = new HistoryEventReportMerger(new EventReport(reportDomain));
 		EventReport eventReport2 = merge(reportDomain, reports, true);
 		Machine allMachines = merger.mergesForAllMachine(eventReport2);
-		
+
 		eventReport.addMachine(allMachines);
 		eventReport.getIps().add("All");
 		eventReport.getDomainNames().addAll(domains);
-		
+
 		Date date = eventReport.getStartTime();
 		eventReport.setStartTime(TaskHelper.todayZero(date));
-		Date end=new Date(TaskHelper.tomorrowZero(date).getTime()-1000);
-		eventReport.setEndTime(end);	
+		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
+		eventReport.setEndTime(end);
 		return eventReport;
 	}
 
@@ -63,7 +63,7 @@ public class EventMerger implements ReportMerger<EventReport> {
 		EventReport eventReport = merge(reportDomain, reports, false);
 		EventReportMerger merger = new EventReportMerger(new EventReport(reportDomain));
 		EventReport eventReport2 = merge(reportDomain, reports, false);
-		
+
 		Machine allMachines = merger.mergesForAllMachine(eventReport2);
 		eventReport.addMachine(allMachines);
 		eventReport.getIps().add("All");

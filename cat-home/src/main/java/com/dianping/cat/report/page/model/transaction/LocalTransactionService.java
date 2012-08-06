@@ -17,6 +17,13 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 		super("transaction");
 	}
 
+	private TransactionReport getLocalReport(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : DefaultSaxParser.parse(xml);
+	}
+
 	@Override
 	protected TransactionReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		TransactionReport report = super.getReport(request, period, domain);
@@ -26,7 +33,7 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 			long hour = 60 * 60 * 1000;
 			long date = current - current % (hour) - hour;
 			report = getLocalReport(date, domain);
-			
+
 			if (report == null) {
 				report = new TransactionReport(domain);
 
@@ -38,12 +45,5 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 		}
 
 		return report;
-	}
-
-	private TransactionReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "transaction");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

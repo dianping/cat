@@ -10,74 +10,66 @@ import com.site.web.mvc.ActionPayload;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
-	
+
 	protected static final long ONE_HOUR = 3600 * 1000L;
-	
-	private ReportPage m_page;
+
+	@FieldMeta("currentPage")
+	private int currentPage;
+
+	@FieldMeta("date")
+	private long date;
+
+	@FieldMeta("domain")
+	private String domain;
 
 	@FieldMeta("op")
 	private Action m_action;
-	
-	@FieldMeta("currentPage")
-	private int currentPage;
-	
-	@FieldMeta("status")
-	private int status;
-	
-	@FieldMeta("type")
-	private int type;
-	
-	@FieldMeta("name")
-	private String name;
-	
-	@FieldMeta("domain")
-	private String domain;
-	
-	@FieldMeta("step")
-	private int step;
-	
-	@FieldMeta("date")
-	private long  date;
-	
-	@FieldMeta("reportType")
-	private String reportType;
-	
-	
-	@FieldMeta("taskID")
-	private int taskID;
-	
-	public int getTaskID() {
-   	return taskID;
-   }
-
-	public void setTaskID(int taskID) {
-   	this.taskID = taskID;
-   }
-
-	public long getStartDate() {
-   	return this.getDate();
-   }
-
-	public long getEndDate() {
-		long start=this.getDate();
-   	return start+ONE_HOUR*24;
-   }
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
-	
+
+	private ReportPage m_page;
+
+	@FieldMeta("name")
+	private String name;
+
+	@FieldMeta("reportType")
+	private String reportType;
+
+	@FieldMeta("status")
+	private int status;
+
+	@FieldMeta("step")
+	private int step;
+
+	@FieldMeta("taskID")
+	private int taskID;
+
+	@FieldMeta("type")
+	private int type;
+
+	@Override
+	public Action getAction() {
+		if (m_action == null) {
+			m_action = Action.VIEW;
+		}
+		return m_action;
+	}
 
 	public long getCurrentDate() {
 		return TaskHelper.todayZero(new Date()).getTime();
+	}
+
+	public int getCurrentPage() {
+		return currentPage;
 	}
 
 	public long getDate() {
 		long current = getCurrentDate();
 
 		long extra = step * ONE_HOUR;
-		if (reportType != null
-		      && (reportType.equals("day") || reportType.equals("month") || reportType.equals("week"))) {
+		if (reportType != null && (reportType.equals("day") || reportType.equals("month") || reportType.equals("week"))) {
 			extra = 0;
 		}
 		if (date <= 0) {
@@ -91,9 +83,59 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 			return result;
 		}
 	}
-	
+
+	public String getDomain() {
+		return domain;
+	}
+
+	public long getEndDate() {
+		long start = this.getDate();
+		return start + ONE_HOUR * 24;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	public String getReportType() {
+		return reportType;
+	}
+
+	public long getStartDate() {
+		return this.getDate();
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public int getStep() {
+		return step;
+	}
+
+	public int getTaskID() {
+		return taskID;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+
 	public void setDate(String date) {
-		//default:today's task
+		// default:today's task
 		if (date == null || date.length() == 0) {
 			this.date = getCurrentDate();
 		} else {
@@ -101,10 +143,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 				Date temp = null;
 				if (date != null && date.length() == 10) {
 					temp = m_dateFormat.parse(date);
-				} else if(date != null && date.length() == 8){
+				} else if (date != null && date.length() == 8) {
 					temp = m_dayFormat.parse(date);
-				}else{
-					temp=new Date(Long.parseLong(date));
+				} else {
+					temp = new Date(Long.parseLong(date));
 				}
 				this.date = TaskHelper.todayZero(temp).getTime();
 			} catch (Exception e) {
@@ -114,21 +156,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+	public void setDomain(String domain) {
+		this.domain = domain;
 	}
 
-	@Override
-	public Action getAction() {
-		if(m_action==null){
-			m_action = Action.VIEW;
-		}
-		return m_action;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
+	public void setPage(ReportPage page) {
+		m_page = page;
 	}
 
 	@Override
@@ -136,70 +173,29 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_page = ReportPage.getByName(page, ReportPage.TASK);
 	}
 
-	public int getCurrentPage() {
-   	return currentPage;
-   }
-
-	public void setCurrentPage(int currentPage) {
-   	this.currentPage = currentPage;
-   }
-
-	public int getStatus() {
-   	return status;
-   }
+	public void setReportType(String reportType) {
+		this.reportType = reportType;
+	}
 
 	public void setStatus(int status) {
-   	this.status = status;
-   }
-
-
-	public String getName() {
-   	return name;
-   }
-
-	public void setName(String name) {
-   	this.name = name;
-   }
-
-	public String getDomain() {
-   	return domain;
-   }
-
-	public void setDomain(String domain) {
-   	this.domain = domain;
-   }
-
-	public int getType() {
-   	return type;
-   }
-
-	public void setType(int type) {
-   	this.type = type;
-   }
-
-	public void setPage(ReportPage page) {
-   	m_page = page;
-   }
-
-	public int getStep() {
-   	return step;
-   }
+		this.status = status;
+	}
 
 	public void setStep(int step) {
-   	this.step = step;
-   }
+		this.step = step;
+	}
 
-	public String getReportType() {
-   	return reportType;
-   }
+	public void setTaskID(int taskID) {
+		this.taskID = taskID;
+	}
 
-	public void setReportType(String reportType) {
-   	this.reportType = reportType;
-   }
+	public void setType(int type) {
+		this.type = type;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
-		if(m_action==null){
+		if (m_action == null) {
 			m_action = Action.VIEW;
 		}
 	}

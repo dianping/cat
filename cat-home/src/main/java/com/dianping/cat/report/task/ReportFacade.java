@@ -25,31 +25,27 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	private static final int TYPE_HOUR = 0;
 
-	private Map<String, ReportBuilder> m_reportBuilders = new HashMap<String, ReportBuilder>();
-
-	private Logger m_logger;
-
-	@Inject
-	private TransactionReportBuilder m_tansactionBuilder;
-
-	@Inject
-	private ProblemReportBuilder m_problemBuilder;
-
 	@Inject
 	private EventReportBuilder m_eventBuilder;
 
 	@Inject
 	private HeartbeatReportBuilder m_heartbeatBuilder;
 
+	private Logger m_logger;
+
+	@Inject
+	private ProblemReportBuilder m_problemBuilder;
+
+	private Map<String, ReportBuilder> m_reportBuilders = new HashMap<String, ReportBuilder>();
+
+	@Inject
+	private TransactionReportBuilder m_tansactionBuilder;
+
 	@Inject
 	private TaskDao taskDao;
 
 	public void addNewReportBuild(ReportBuilder newReportBuilder, String name) {
 		this.m_reportBuilders.put(name, newReportBuilder);
-	}
-
-	private ReportBuilder getReportBuilder(String reportName) {
-		return m_reportBuilders.get(reportName);
 	}
 
 	public boolean builderReport(Task task) {
@@ -70,6 +66,23 @@ public class ReportFacade implements LogEnabled, Initializable {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		this.m_logger = logger;
+	}
+
+	private ReportBuilder getReportBuilder(String reportName) {
+		return m_reportBuilders.get(reportName);
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_reportBuilders.put("problem", m_problemBuilder);
+		m_reportBuilders.put("event", m_eventBuilder);
+		m_reportBuilders.put("heartbeat", m_heartbeatBuilder);
+		m_reportBuilders.put("transaction", m_tansactionBuilder);
 	}
 
 	public boolean redoTask(int taskID) {
@@ -99,18 +112,5 @@ public class ReportFacade implements LogEnabled, Initializable {
 			Cat.logError(e);
 			return false;
 		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		this.m_logger = logger;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_reportBuilders.put("problem", m_problemBuilder);
-		m_reportBuilders.put("event", m_eventBuilder);
-		m_reportBuilders.put("heartbeat", m_heartbeatBuilder);
-		m_reportBuilders.put("transaction", m_tansactionBuilder);
 	}
 }

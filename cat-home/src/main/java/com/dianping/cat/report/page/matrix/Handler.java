@@ -19,18 +19,18 @@ import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
-	public static final long ONE_HOUR = 3600 * 1000L;
-
 	public static final double NOTEXIST = -1;
+
+	public static final long ONE_HOUR = 3600 * 1000L;
 
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject(type = ModelService.class, value = "matrix")
-	private ModelService<MatrixReport> m_service;
-
 	@Inject
 	private ServerConfigManager m_manager;
+
+	@Inject(type = ModelService.class, value = "matrix")
+	private ModelService<MatrixReport> m_service;
 
 	private MatrixReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();

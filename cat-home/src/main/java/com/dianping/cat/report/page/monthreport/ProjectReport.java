@@ -11,25 +11,25 @@ import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 
 public class ProjectReport {
 
-	private String m_domain;
+	private CacheInfo m_cache = new CacheInfo();
 
-	private Date m_start;
-
-	private Date m_end;
+	private BaseInfo m_call = new BaseInfo();
 
 	private int m_days;
 
-	private BaseInfo m_url = new BaseInfo();
+	private String m_domain;
+
+	private Date m_end;
+
+	private ProblemInfo m_problem = new ProblemInfo();
 
 	private BaseInfo m_service = new BaseInfo();
 
 	private BaseInfo m_sql = new BaseInfo();
 
-	private BaseInfo m_call = new BaseInfo();
+	private Date m_start;
 
-	private CacheInfo m_cache = new CacheInfo();
-
-	private ProblemInfo m_problem = new ProblemInfo();
+	private BaseInfo m_url = new BaseInfo();
 
 	public CacheInfo getCache() {
 		return m_cache;
@@ -39,16 +39,20 @@ public class ProjectReport {
 		return m_call;
 	}
 
+	public int getDays() {
+		return m_days;
+	}
+
 	public String getDomain() {
 		return m_domain;
 	}
 
-	public ProblemInfo getProblem() {
-		return m_problem;
+	public Date getEnd() {
+		return m_end;
 	}
 
-	public BaseInfo getUrl() {
-		return m_url;
+	public ProblemInfo getProblem() {
+		return m_problem;
 	}
 
 	public BaseInfo getService() {
@@ -63,12 +67,8 @@ public class ProjectReport {
 		return m_start;
 	}
 
-	public Date getEnd() {
-		return m_end;
-	}
-
-	public int getDays() {
-		return m_days;
+	public BaseInfo getUrl() {
+		return m_url;
 	}
 
 	public void visit(ProblemStatistics problemStatistics) {
@@ -110,17 +110,17 @@ public class ProjectReport {
 	}
 
 	public static class BaseInfo {
-		private double m_responseTime;
-
-		private long m_total;
-
 		private long m_avg;
-
-		private long m_errorTotal;
 
 		private long m_errorAvg;
 
 		private double m_errorPercent;
+
+		private long m_errorTotal;
+
+		private double m_responseTime;
+
+		private long m_total;
 
 		public long getAvg() {
 			return m_avg;
@@ -134,19 +134,19 @@ public class ProjectReport {
 			return m_errorPercent;
 		}
 
-		public double getSuccessPercent() {
-			if (m_total == 0) {
-				return 0;
-			}
-			return 1 - m_errorPercent;
-		}
-
 		public long getErrorTotal() {
 			return m_errorTotal;
 		}
 
 		public double getResponseTime() {
 			return m_responseTime;
+		}
+
+		public double getSuccessPercent() {
+			if (m_total == 0) {
+				return 0;
+			}
+			return 1 - m_errorPercent;
 		}
 
 		public long getTotal() {
@@ -166,13 +166,13 @@ public class ProjectReport {
 	}
 
 	public static class CacheInfo {
-		private double m_responseTime;
+		private long m_avg;
 
 		private double m_hitPercent;
 
-		private long m_total;
+		private double m_responseTime;
 
-		private long m_avg;
+		private long m_total;
 
 		public long getAvg() {
 			return m_avg;
@@ -192,21 +192,21 @@ public class ProjectReport {
 	}
 
 	public static class ProblemInfo {
-		private long m_exceptions;
-
 		private long m_avgExceptions;
-
-		private long m_longSqls;
 
 		private long m_avgLongSqls;
 
-		private double m_longSqlPercent;
-
-		private long m_longUrls;
-
 		private long m_avgLongUrls;
 
+		private long m_exceptions;
+
+		private double m_longSqlPercent;
+
+		private long m_longSqls;
+
 		private double m_longUrlPercent;
+
+		private long m_longUrls;
 
 		public long getAvgExceptions() {
 			return m_avgExceptions;
@@ -224,26 +224,26 @@ public class ProjectReport {
 			return m_exceptions;
 		}
 
+		public double getLongSqlPercent() {
+			return m_longSqlPercent;
+		}
+
 		public long getLongSqls() {
 			return m_longSqls;
+		}
+
+		public double getLongUrlPercent() {
+			return m_longUrlPercent;
 		}
 
 		public long getLongUrls() {
 			return m_longUrls;
 		}
 
-		public double getLongSqlPercent() {
-			return m_longSqlPercent;
-		}
-
 		public void setLongSqlPercent(long longSqls) {
 			if (longSqls > 0) {
 				m_longSqlPercent = (double) m_longSqls / (double) longSqls;
 			}
-		}
-
-		public double getLongUrlPercent() {
-			return m_longUrlPercent;
 		}
 
 		public void setLongUrlPercent(long longUrls) {

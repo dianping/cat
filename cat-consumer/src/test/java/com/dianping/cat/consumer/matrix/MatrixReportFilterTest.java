@@ -17,7 +17,7 @@ public class MatrixReportFilterTest {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("matrix.xml"), "utf-8");
 		MatrixReport report = parser.parse(source);
 
-		MatrixReportFilter f1 = new MatrixReportFilter();
+		MatrixReportFilter f1 = new MatrixReportFilter(1);
 		report.accept(f1);
 		String expected1 = Files.forIO().readFrom(getClass().getResourceAsStream("matrix-result.xml"), "utf-8");
 

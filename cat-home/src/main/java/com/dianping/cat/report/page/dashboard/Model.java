@@ -5,9 +5,13 @@ import com.site.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 	private String m_data;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public String getData() {
+		return m_data;
 	}
 
 	@Override
@@ -15,12 +19,8 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return Action.VIEW;
 	}
 
-	public String getData() {
-   	return m_data;
-   }
-
 	public void setData(String data) {
-   	m_data = data;
-   }
-	
+		m_data = data;
+	}
+
 }

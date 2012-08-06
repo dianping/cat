@@ -17,34 +17,6 @@ import com.dianping.cat.report.task.TaskHelper;
 
 public class TransactionMerger implements ReportMerger<TransactionReport> {
 
-	public TransactionReport mergeForGraph(String reportDomain, List<Report> reports) {
-		TransactionReport transactionReport = merge(reportDomain, reports, false);
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
-		TransactionReport transactionReport2 = merge(reportDomain, reports, false);
-		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
-		      .mergesForAllMachine(transactionReport2);
-		transactionReport.addMachine(allMachines);
-		transactionReport.getIps().add("All");
-		return transactionReport;
-	}
-
-	public TransactionReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domainSet) {
-		TransactionReport transactionReport = merge(reportDomain, reports, true);
-		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
-		TransactionReport transactionReport2 = merge(reportDomain, reports, true);
-		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
-		      .mergesForAllMachine(transactionReport2);
-		transactionReport.addMachine(allMachines);
-		transactionReport.getIps().add("All");
-		transactionReport.getDomainNames().addAll(domainSet);
-		
-		Date date = transactionReport.getStartTime();
-		transactionReport.setStartTime(TaskHelper.todayZero(date));
-		Date end=new Date(TaskHelper.tomorrowZero(date).getTime()-1000);
-		transactionReport.setEndTime(end);
-		return transactionReport;
-	}
-
 	private TransactionReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
 		TransactionReportMerger merger = null;
 		if (isDaily) {
@@ -60,10 +32,38 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 				model.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
-			} 
+			}
 		}
 
 		TransactionReport transactionReport = merger.getTransactionReport();
+		return transactionReport;
+	}
+
+	public TransactionReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domainSet) {
+		TransactionReport transactionReport = merge(reportDomain, reports, true);
+		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
+		TransactionReport transactionReport2 = merge(reportDomain, reports, true);
+		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
+		      .mergesForAllMachine(transactionReport2);
+		transactionReport.addMachine(allMachines);
+		transactionReport.getIps().add("All");
+		transactionReport.getDomainNames().addAll(domainSet);
+
+		Date date = transactionReport.getStartTime();
+		transactionReport.setStartTime(TaskHelper.todayZero(date));
+		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
+		transactionReport.setEndTime(end);
+		return transactionReport;
+	}
+
+	public TransactionReport mergeForGraph(String reportDomain, List<Report> reports) {
+		TransactionReport transactionReport = merge(reportDomain, reports, false);
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));
+		TransactionReport transactionReport2 = merge(reportDomain, reports, false);
+		com.dianping.cat.consumer.transaction.model.entity.Machine allMachines = merger
+		      .mergesForAllMachine(transactionReport2);
+		transactionReport.addMachine(allMachines);
+		transactionReport.getIps().add("All");
 		return transactionReport;
 	}
 }

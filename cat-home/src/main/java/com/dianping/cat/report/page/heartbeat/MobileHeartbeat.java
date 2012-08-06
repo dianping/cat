@@ -7,28 +7,12 @@ import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.MobileGraphItem;
 import com.dianping.cat.report.graph.ValueTranslater;
 
-public class MobileHeartbeatModel {
-	private List<String> m_ips = new ArrayList<String>();
-
-	private String m_currentIp;
-
+public class MobileHeartbeat {
 	private MobileGraphItem m_activeThreads = new MobileGraphItem();
 
-	private MobileGraphItem m_daemonThreads = new MobileGraphItem();
-
-	private MobileGraphItem m_totalThreads = new MobileGraphItem();
-
-	private MobileGraphItem m_newThreads = new MobileGraphItem();
-
-	private MobileGraphItem m_catThreads = new MobileGraphItem();
-
-	private MobileGraphItem m_pigeonThreads = new MobileGraphItem();
-	
-	private MobileGraphItem m_httpThreads = new MobileGraphItem();
+	private MobileGraphItem m_addCatMessageOverflow = new MobileGraphItem();
 
 	private MobileGraphItem m_addCatMessageProduced = new MobileGraphItem();
-
-	private MobileGraphItem m_addCatMessageOverflow = new MobileGraphItem();
 
 	private MobileGraphItem m_addCatMessageSize = new MobileGraphItem();
 
@@ -36,17 +20,33 @@ public class MobileHeartbeatModel {
 
 	private MobileGraphItem m_addOldGcCount = new MobileGraphItem();
 
-	private MobileGraphItem m_heapUsage = new MobileGraphItem();
+	private MobileGraphItem m_catThreads = new MobileGraphItem();
 
-	private MobileGraphItem m_noneHeapUsage = new MobileGraphItem();
+	private String m_currentIp;
 
-	private MobileGraphItem m_memoryFree = new MobileGraphItem();
-
-	private MobileGraphItem m_systemLoadAverage = new MobileGraphItem();
+	private MobileGraphItem m_daemonThreads = new MobileGraphItem();
 
 	private List<MobileGraphItem> m_disks = new ArrayList<MobileGraphItem>();
 
+	private MobileGraphItem m_heapUsage = new MobileGraphItem();
+
+	private MobileGraphItem m_httpThreads = new MobileGraphItem();
+
+	private List<String> m_ips = new ArrayList<String>();
+
+	private MobileGraphItem m_memoryFree = new MobileGraphItem();
+
+	private MobileGraphItem m_newThreads = new MobileGraphItem();
+
+	private MobileGraphItem m_noneHeapUsage = new MobileGraphItem();
+
+	private MobileGraphItem m_pigeonThreads = new MobileGraphItem();
+
+	private MobileGraphItem m_systemLoadAverage = new MobileGraphItem();
+
 	private transient ValueTranslater m_tansalater = new DefaultValueTranslater();
+
+	private MobileGraphItem m_totalThreads = new MobileGraphItem();
 
 	private void creatGraph(MobileGraphItem graph, double[] values, String title) {
 		graph.setTitle(title);
@@ -54,7 +54,7 @@ public class MobileHeartbeatModel {
 		graph.setMaxValue(m_tansalater.getMaxValue(values));
 	}
 
-	public MobileHeartbeatModel display(Model model, DisplayHeartbeat heartbeat) {
+	public MobileHeartbeat display(Model model, DisplayHeartbeat heartbeat) {
 		if (heartbeat == null) {
 			return this;
 		}
@@ -124,8 +124,8 @@ public class MobileHeartbeatModel {
 	}
 
 	public List<MobileGraphItem> getDisks() {
-   	return m_disks;
-   }
+		return m_disks;
+	}
 
 	public MobileGraphItem getHeapUsage() {
 		return m_heapUsage;
@@ -196,11 +196,15 @@ public class MobileHeartbeatModel {
 	}
 
 	public void setDisks(List<MobileGraphItem> disks) {
-   	m_disks = disks;
-   }
+		m_disks = disks;
+	}
 
 	public void setHeapUsage(MobileGraphItem heapUsage) {
 		m_heapUsage = heapUsage;
+	}
+
+	public void setHttpTheads(MobileGraphItem httpTheads) {
+		m_httpThreads = httpTheads;
 	}
 
 	public void setIps(List<String> ips) {
@@ -221,10 +225,6 @@ public class MobileHeartbeatModel {
 
 	public void setPigeonTheads(MobileGraphItem pigeonTheads) {
 		m_pigeonThreads = pigeonTheads;
-	}
-	
-	public void setHttpTheads(MobileGraphItem httpTheads) {
-		m_httpThreads = httpTheads;
 	}
 
 	public void setSystemLoadAverage(MobileGraphItem systemLoadAverage) {

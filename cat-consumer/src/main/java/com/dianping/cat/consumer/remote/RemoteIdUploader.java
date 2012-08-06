@@ -142,14 +142,10 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 
 			MessageProducer cat = Cat.getProducer();
 			String ts = new SimpleDateFormat("mmss").format(new Date());
-			Transaction root = cat.newTransaction("Task", "DumpRemoteIds-" + ipAddress + "-" + ts);
+			Transaction root = cat.newTransaction("System", "DumpRemoteIds-" + ipAddress + "-" + ts);
 
 			root.addData("file", file);
 			root.setStatus(Message.SUCCESS);
-
-			Transaction t = cat.newTransaction("Task", "UploadRemoteIds");
-
-			t.addData("file", path);
 
 			try {
 				FileInputStream fis = new FileInputStream(file);
@@ -164,9 +160,8 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 				String size = Formats.forNumber().format(file.length(), "0.#", "B");
 				String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
 
-				t.addData("size", size);
-				t.addData("speed", speed);
-				t.setStatus(Message.SUCCESS);
+				root.addData("size", size);
+				root.addData("speed", speed);
 
 				m_logger.info(String.format("Finish remoteIds uploading(%s) to HDFS(%s) with size(%s) at %s.",
 				      file.getCanonicalPath(), path, size, speed));
@@ -174,20 +169,18 @@ public class RemoteIdUploader implements Initializable, LogEnabled {
 				if (!file.delete()) {
 					m_logger.warn("Can't delete file: " + file);
 				}
+				root.setStatus(Message.SUCCESS);
 			} catch (AccessControlException e) {
 				cat.logError(e);
-				t.setStatus(e);
+				root.setStatus(e);
 				m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
 			} catch (Exception e) {
 				cat.logError(e);
-				t.setStatus(e);
+				root.setStatus(e);
 				m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
 			} finally {
-				t.complete();
+				root.complete();
 			}
-
-			root.complete();
-			Cat.reset();
 		}
 	}
 }

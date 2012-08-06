@@ -17,18 +17,18 @@ import com.site.lookup.annotation.Inject;
 public class DefaultTaskConsumer extends TaskConsumer {
 
 	@Inject
-	private TaskDao taskDao;
+	private ReportFacade m_reportFacade;
 
 	@Inject
-	private ReportFacade reportFacade;
+	private TaskDao m_taskDao;
 
 	@Override
 	protected Task findDoingTask(String ip) {
 		Task task = null;
 		try {
-			task = this.taskDao.findByStatusConsumer(STATUS_DOING, ip, TaskEntity.READSET_FULL);
+			task = m_taskDao.findByStatusConsumer(STATUS_DOING, ip, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			//Cat.logError(e);
+			// Cat.logError(e);
 		}
 		return task;
 	}
@@ -37,16 +37,16 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	protected Task findTodoTask() {
 		Task task = null;
 		try {
-			task = this.taskDao.findByStatusConsumer(STATUS_TODO, null, TaskEntity.READSET_FULL);
+			task = m_taskDao.findByStatusConsumer(STATUS_TODO, null, TaskEntity.READSET_FULL);
 		} catch (DalException e) {
-			//Cat.logError(e);
+			// Cat.logError(e);
 		}
 		return task;
 	}
 
 	@Override
 	protected boolean processTask(Task doing) {
-		return reportFacade.builderReport(doing);
+		return m_reportFacade.builderReport(doing);
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		doing.setEndDate(new Date());
 
 		try {
-			return this.taskDao.updateDoingToDone(doing, TaskEntity.UPDATESET_FULL) == 1;
+			return m_taskDao.updateDoingToDone(doing, TaskEntity.UPDATESET_FULL) == 1;
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
@@ -79,7 +79,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		doing.setEndDate(new Date());
 
 		try {
-			return this.taskDao.updateDoingToFail(doing, TaskEntity.UPDATESET_FULL) == 1;
+			return m_taskDao.updateDoingToFail(doing, TaskEntity.UPDATESET_FULL) == 1;
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;
@@ -93,7 +93,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 		todo.setStartDate(new Date());
 
 		try {
-			return this.taskDao.updateTodoToDoing(todo, TaskEntity.UPDATESET_FULL) == 1;
+			return m_taskDao.updateTodoToDoing(todo, TaskEntity.UPDATESET_FULL) == 1;
 		} catch (DalException e) {
 			Cat.logError(e);
 			return false;

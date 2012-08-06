@@ -9,14 +9,14 @@ import com.dianping.cat.report.page.AbstractReportModel;
 public class Model extends AbstractReportModel<Action, Context> {
 	private String m_cb;
 
+	private String m_display;
+
 	private String m_locationData;
 
 	private int m_max;
-	
+
 	private HeatMapReport m_report;
-	
-	private String m_display;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -32,6 +32,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
+	}
+
+	public String getDisplay() {
+		return m_display;
 	}
 
 	@Override
@@ -51,34 +55,30 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public int getMax() {
-   	return m_max;
-   }
+		return m_max;
+	}
 
 	public HeatMapReport getReport() {
-   	return m_report;
-   }
-
-	public void setReport(HeatMapReport report) {
-   	m_report = report;
-   }
+		return m_report;
+	}
 
 	public void setCb(String cb) {
 		m_cb = cb;
+	}
+
+	public void setDisplay(String display) {
+		m_display = display;
 	}
 
 	public void setLocationData(String locationData) {
 		m_locationData = locationData;
 	}
 
-	public String getDisplay() {
-   	return m_display;
-   }
-
-	public void setDisplay(String display) {
-   	m_display = display;
-   }
-
 	public void setMax(int max) {
-   	m_max = max;
-   }
+		m_max = max;
+	}
+
+	public void setReport(HeatMapReport report) {
+		m_report = report;
+	}
 }

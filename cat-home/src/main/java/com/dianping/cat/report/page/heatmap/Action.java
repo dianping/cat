@@ -1,15 +1,9 @@
 package com.dianping.cat.report.page.heatmap;
 
 public enum Action implements com.site.web.mvc.Action {
-	VIEW("view"),
-	
-	JSONP("jsonp");
+	JSONP("jsonp"),
 
-	private String m_name;
-
-	private Action(String name) {
-		m_name = name;
-	}
+	VIEW("view");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
@@ -19,6 +13,12 @@ public enum Action implements com.site.web.mvc.Action {
 		}
 
 		return defaultAction;
+	}
+
+	private String m_name;
+
+	private Action(String name) {
+		m_name = name;
 	}
 
 	@Override

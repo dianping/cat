@@ -42,6 +42,6 @@ public class CompositeEventService extends BaseCompositeModelService<EventReport
 			}
 		}
 
-		return  merger.getEventReport();
+		return merger.getEventReport();
 	}
 }

@@ -31,16 +31,113 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
-	@Inject
-	private JspViewer m_jspViewer;
+	private static final long DAY = 24 * 60 * 60 * 1000L;
 
 	@Inject
 	private DailyreportDao m_dailyreportDao;
 
 	@Inject
+	private JspViewer m_jspViewer;
+
+	@Inject
 	private ServerConfigManager m_manager;
 
-	private static final long DAY = 24 * 60 * 60 * 1000L;
+	public ProjectReport buildProblemReport(String domain, Date start, Date end) throws DalException, SAXException,
+	      IOException {
+		TransactionReport transactionReport = getTransactionReport(start, end, domain);
+		ProblemReport problemReport = getProblemReport(start, end, domain);
+		ProjectReport report = new ProjectReport();
+		report.visit(transactionReport);
+
+		ProblemStatistics statistics = new ProblemStatistics();
+		statistics.setAllIp(true);
+		statistics.visitProblemReport(problemReport);
+
+		report.visit(statistics);
+		return report;
+	}
+
+	private Set<String> getAllDomains(final Date start, final Date end) throws DalException {
+		Set<String> domains = new HashSet<String>();
+		List<Dailyreport> historyReports = m_dailyreportDao.findAllByPeriod(start, end,
+		      DailyreportEntity.READSET_DOMAIN_NAME);
+
+		for (Dailyreport report : historyReports) {
+			domains.add(report.getDomain());
+		}
+		return domains;
+	}
+
+	private ProblemReport getProblemReport(final Date start, final Date end, String domain) throws DalException,
+	      SAXException, IOException {
+		long startLong = Long.MAX_VALUE;
+		long endLong = 0;
+		long startTime = start.getTime();
+		int days = (int) ((end.getTime() - startTime) / DAY);
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
+
+		for (int i = 0; i < days; i++) {
+			Dailyreport report = null;
+			try {
+				report = m_dailyreportDao.findByNameDomainPeriod(new Date(startTime + i * DAY), domain, "problem",
+				      DailyreportEntity.READSET_FULL);
+			} catch (DalException e) {
+			}
+			if (report != null) {
+				String xml = report.getContent();
+
+				ProblemReport reportModel = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
+				startLong = Math.min(startLong, reportModel.getStartTime().getTime());
+				endLong = Math.max(startLong, reportModel.getEndTime().getTime());
+				reportModel.accept(merger);
+			} else {
+				Cat.getProducer().logEvent("MonthReport", "transaction", "NotFound",
+				      domain + sdf.format(new Date(startTime + i * DAY)));
+			}
+		}
+
+		ProblemReport problemReport = merger.getProblemReport();
+		problemReport.setStartTime(new Date(startLong));
+		problemReport.setEndTime(new Date(endLong));
+		return problemReport;
+	}
+
+	private TransactionReport getTransactionReport(final Date start, final Date end, String domain) throws DalException,
+	      SAXException, IOException {
+		long startLong = Long.MAX_VALUE;
+		long endLong = 0;
+		long startTime = start.getTime();
+		int days = (int) ((end.getTime() - startTime) / DAY);
+		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+
+		for (int i = 0; i < days; i++) {
+			Dailyreport report = null;
+			try {
+				report = m_dailyreportDao.findByNameDomainPeriod(new Date(startTime + i * DAY), domain, "transaction",
+				      DailyreportEntity.READSET_FULL);
+			} catch (DalException e) {
+			}
+			if (report != null) {
+				String xml = report.getContent();
+				TransactionReport reportModel = DefaultSaxParser.parse(xml);
+				startLong = Math.min(startLong, reportModel.getStartTime().getTime());
+				endLong = Math.max(startLong, reportModel.getEndTime().getTime());
+				reportModel.accept(merger);
+			} else {
+				Cat.getProducer().logEvent("MonthReport", "transaction", "NotFound",
+				      domain + sdf.format(new Date(startTime + i * DAY)));
+			}
+		}
+		TransactionReport transactionReport = merger.getTransactionReport();
+
+		transactionReport.setStartTime(new Date(startLong));
+		transactionReport.setEndTime(new Date(endLong));
+		return transactionReport;
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -85,21 +182,6 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	public ProjectReport buildProblemReport(String domain, Date start, Date end) throws DalException, SAXException,
-	      IOException {
-		TransactionReport transactionReport = getTransactionReport(start, end, domain);
-		ProblemReport problemReport = getProblemReport(start, end, domain);
-		ProjectReport report = new ProjectReport();
-		report.visit(transactionReport);
-
-		ProblemStatistics statistics = new ProblemStatistics();
-		statistics.setAllIp(true);
-		statistics.visitProblemReport(problemReport);
-
-		report.visit(statistics);
-		return report;
-	}
-
 	private void normalize(Payload payload, Model model) {
 		String domain = payload.getDomain();
 
@@ -111,87 +193,5 @@ public class Handler implements PageHandler<Context> {
 		payload.setReportType("month");
 		payload.computeStartDate();
 		model.setLongDate(payload.getDate());
-	}
-
-	private TransactionReport getTransactionReport(final Date start, final Date end, String domain) throws DalException,
-	      SAXException, IOException {
-		long startLong = Long.MAX_VALUE;
-		long endLong = 0;
-		long startTime = start.getTime();
-		int days = (int) ((end.getTime() - startTime) / DAY);
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
-
-		for (int i = 0; i < days; i++) {
-			Dailyreport report = null;
-			try {
-				report = m_dailyreportDao.findByNameDomainPeriod(new Date(startTime + i * DAY), domain, "transaction",
-				      DailyreportEntity.READSET_FULL);
-			} catch (DalException e) {
-			}
-			if (report != null) {
-				String xml = report.getContent();
-				TransactionReport reportModel = DefaultSaxParser.parse(xml);
-				startLong = Math.min(startLong, reportModel.getStartTime().getTime());
-				endLong = Math.max(startLong, reportModel.getEndTime().getTime());
-				reportModel.accept(merger);
-			} else {
-				Cat.getProducer().logEvent("MonthReport", "transaction", "NotFound",
-				      domain + sdf.format(new Date(startTime + i * DAY)));
-			}
-		}
-		TransactionReport transactionReport = merger.getTransactionReport();
-
-		transactionReport.setStartTime(new Date(startLong));
-		transactionReport.setEndTime(new Date(endLong));
-		return transactionReport;
-	}
-
-	private ProblemReport getProblemReport(final Date start, final Date end, String domain) throws DalException,
-	      SAXException, IOException {
-		long startLong = Long.MAX_VALUE;
-		long endLong = 0;
-		long startTime = start.getTime();
-		int days = (int) ((end.getTime() - startTime) / DAY);
-		final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
-		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
-
-		for (int i = 0; i < days; i++) {
-			Dailyreport report = null;
-			try {
-				report = m_dailyreportDao.findByNameDomainPeriod(new Date(startTime + i * DAY), domain, "problem",
-				      DailyreportEntity.READSET_FULL);
-			} catch (DalException e) {
-			}
-			if (report != null) {
-				String xml = report.getContent();
-
-				ProblemReport reportModel = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
-				startLong = Math.min(startLong, reportModel.getStartTime().getTime());
-				endLong = Math.max(startLong, reportModel.getEndTime().getTime());
-				reportModel.accept(merger);
-			} else {
-				Cat.getProducer().logEvent("MonthReport", "transaction", "NotFound",
-				      domain + sdf.format(new Date(startTime + i * DAY)));
-			}
-		}
-
-		ProblemReport problemReport = merger.getProblemReport();
-		problemReport.setStartTime(new Date(startLong));
-		problemReport.setEndTime(new Date(endLong));
-		return problemReport;
-	}
-
-	private Set<String> getAllDomains(final Date start, final Date end) throws DalException {
-		Set<String> domains = new HashSet<String>();
-		List<Dailyreport> historyReports = m_dailyreportDao.findAllByPeriod(start, end,
-		      DailyreportEntity.READSET_DOMAIN_NAME);
-
-		for (Dailyreport report : historyReports) {
-			domains.add(report.getDomain());
-		}
-		return domains;
 	}
 }

@@ -21,11 +21,52 @@ import com.dianping.cat.report.task.GraphLine;
 
 public class EventGraphCreator implements GraphCreator<EventReport> {
 
+	private long[] arrayAdd(long[] src, long added[]) {
+		int size = added.length;
+		if (src == null) {
+			src = new long[size];
+		}
+		for (int i = 0; i < size; i++) {
+			src[i] = src[i] + added[i];
+		}
+		return src;
+	}
+
+	private String arrayToString(long[] array) {
+		StringBuilder sb = new StringBuilder();
+		int size = 12;
+		for (int i = 0; i < size; i++) {
+			sb.append(array[i]);
+			if (i < 11) {
+				sb.append(',');
+			}
+		}
+		return sb.toString();
+	}
+
+	private long[] getFailsCount(List<Range> ranges) {
+		long[] value = new long[12];
+		for (Range range : ranges) {
+			int minute = range.getValue();
+			value[minute / 5] = range.getFails();
+		}
+		return value;
+	}
+
+	private long[] getTotalCount(List<Range> ranges) {
+		long[] value = new long[12];
+		for (Range range : ranges) {
+			int minute = range.getValue();
+			value[minute / 5] = range.getCount();
+		}
+		return value;
+	}
+
 	@Override
 	public List<Graph> splitReportToGraphs(Date reportPeriod, String domainName, String reportName,
 	      EventReport eventReport) {
 		Set<String> ips = eventReport.getIps();
-		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1); 
+		List<Graph> graphs = new ArrayList<Graph>(ips.size() + 1);
 		Map<String, GraphLine> allDetailCache = new TreeMap<String, GraphLine>();
 		Map<String, GraphLine> allSummaryCache = new TreeMap<String, GraphLine>();
 		Date creationDate = new Date();
@@ -132,46 +173,5 @@ public class EventGraphCreator implements GraphCreator<EventReport> {
 		allGraph.setSummaryContent(summarySb.toString());
 		graphs.add(allGraph);
 		return graphs;
-	}
-
-	private String arrayToString(long[] array) {
-		StringBuilder sb = new StringBuilder();
-		int size = 12;
-		for (int i = 0; i < size; i++) {
-			sb.append(array[i]);
-			if (i < 11) {
-				sb.append(',');
-			}
-		}
-		return sb.toString();
-	}
-
-	private long[] getTotalCount(List<Range> ranges) {
-		long[] value = new long[12];
-		for (Range range : ranges) {
-			int minute = range.getValue();
-			value[minute / 5] = range.getCount();
-		}
-		return value;
-	}
-
-	private long[] getFailsCount(List<Range> ranges) {
-		long[] value = new long[12];
-		for (Range range : ranges) {
-			int minute = range.getValue();
-			value[minute / 5] = range.getFails();
-		}
-		return value;
-	}
-
-	private long[] arrayAdd(long[] src, long added[]) {
-		int size = added.length;
-		if (src == null) {
-			src = new long[size];
-		}
-		for (int i = 0; i < size; i++) {
-			src[i] = src[i] + added[i];
-		}
-		return src;
 	}
 }

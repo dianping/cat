@@ -1,14 +1,8 @@
 package com.dianping.cat.report.page.task;
 
 public enum Action implements com.site.web.mvc.Action {
-	
-	VIEW("view"),REDO("redo");
-	
-	private String m_name;
 
-	private Action(String name) {
-		m_name = name;
-	}
+	REDO("redo"), VIEW("view");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
@@ -18,6 +12,12 @@ public enum Action implements com.site.web.mvc.Action {
 		}
 
 		return defaultAction;
+	}
+
+	private String m_name;
+
+	private Action(String name) {
+		m_name = name;
 	}
 
 	@Override

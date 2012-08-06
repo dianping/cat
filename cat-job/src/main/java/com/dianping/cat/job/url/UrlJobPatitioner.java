@@ -8,7 +8,10 @@ public class UrlJobPatitioner extends Partitioner<Text, UrlValue> {
 	@Override
 	public int getPartition(Text key, UrlValue value, int numPartitions) {
 		int hashCode = key.hashCode();
-		hashCode = Math.abs(hashCode);
-		return hashCode % numPartitions;
+		if (hashCode > 0) {
+			return hashCode % numPartitions;
+		} else {
+			return (-hashCode) % numPartitions;
+		}
 	}
 }

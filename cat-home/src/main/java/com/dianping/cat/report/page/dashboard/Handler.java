@@ -26,16 +26,42 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
+	@Inject(type = ModelService.class, value = "event")
+	private ModelService<EventReport> m_eventService;
+
+	private Gson m_gson = new Gson();
+
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_transactionService;
 
-	@Inject(type = ModelService.class, value = "event")
-	private ModelService<EventReport> m_eventService;
+	private EventReport getEventHourlyReport(String domain) {
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
+		      .setProperty("ip", "All");
 
-	private Gson m_gson = new Gson();
+		if (m_transactionService.isEligable(request)) {
+			ModelResponse<EventReport> response = m_eventService.invoke(request);
+			EventReport report = response.getModel();
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
+		}
+	}
+
+	private TransactionReport getTransactionHourlyReport(String domain) {
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
+		      .setProperty("ip", "All");
+
+		if (m_transactionService.isEligable(request)) {
+			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
+			TransactionReport report = response.getModel();
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
+		}
+	}
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -93,31 +119,5 @@ public class Handler implements PageHandler<Context> {
 
 		model.setData(m_gson.toJson(data));
 		m_jspViewer.view(ctx, model);
-	}
-
-	private TransactionReport getTransactionHourlyReport(String domain) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
-		      .setProperty("ip", "All");
-
-		if (m_transactionService.isEligable(request)) {
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			TransactionReport report = response.getModel();
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
-		}
-	}
-
-	private EventReport getEventHourlyReport(String domain) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
-		      .setProperty("ip", "All");
-
-		if (m_transactionService.isEligable(request)) {
-			ModelResponse<EventReport> response = m_eventService.invoke(request);
-			EventReport report = response.getModel();
-			return report;
-		} else {
-			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
-		}
 	}
 }

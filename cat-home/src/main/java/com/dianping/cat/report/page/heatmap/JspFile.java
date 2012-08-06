@@ -1,9 +1,9 @@
 package com.dianping.cat.report.page.heatmap;
 
 public enum JspFile {
-	VIEW("/jsp/report/heatmap.jsp"),
-
 	JSONP("/jsp/report/heatmap_jsonp.jsp"),
+
+	VIEW("/jsp/report/heatmap.jsp"),
 
 	;
 

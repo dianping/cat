@@ -7,13 +7,13 @@ import java.util.Set;
 import com.dianping.cat.report.page.AbstractReportModel;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private ProjectReport m_report;
-
-	private List<ProjectReport> m_reports;
-	
 	private String m_domain;
 
 	private Set<String> m_domains;
+
+	private ProjectReport m_report;
+
+	private List<ProjectReport> m_reports;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -34,6 +34,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_domains;
 	}
 
+	public ProjectReport getReport() {
+		return m_report;
+	}
+
+	public List<ProjectReport> getReports() {
+		return m_reports;
+	}
+
 	public void setDomain(String domain) {
 		m_domain = domain;
 	}
@@ -42,19 +50,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_domains = domains;
 	}
 
-	public ProjectReport getReport() {
-   	return m_report;
-   }
-
 	public void setReport(ProjectReport report) {
-   	m_report = report;
-   }
-
-	public List<ProjectReport> getReports() {
-   	return m_reports;
-   }
+		m_report = report;
+	}
 
 	public void setReports(List<ProjectReport> reports) {
-   	m_reports = reports;
-   }
+		m_reports = reports;
+	}
 }

@@ -14,34 +14,34 @@ import com.site.web.mvc.payload.annotation.FieldMeta;
 public abstract class AbstractReportPayload<A extends Action> implements ActionPayload<ReportPage, A> {
 	protected static final long ONE_HOUR = 3600 * 1000L;
 
+	@FieldMeta("endDate")
+	private String m_customEnd;
+
+	@FieldMeta("startDate")
+	private String m_customStart;
+
+	@FieldMeta("date")
+	private long m_date;
+
+	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+
+	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
+
 	private ReportPage m_defaultPage;
-
-	private ReportPage m_page;
-
-	@FieldMeta("ip")
-	private String m_ipAddress;
 
 	@FieldMeta("domain")
 	private String m_domain;
 
-	@FieldMeta("date")
-	private long m_date;
+	@FieldMeta("ip")
+	private String m_ipAddress;
+
+	private ReportPage m_page;
 
 	@FieldMeta("reportType")
 	private String m_reportType;
 
 	@FieldMeta("step")
 	private int m_step;
-
-	@FieldMeta("startDate")
-	private String m_customStart;
-
-	@FieldMeta("endDate")
-	private String m_customEnd;
-
-	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
-
-	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
 
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;
@@ -91,27 +91,42 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		}
 	}
 
-	// yestoday is default
-	public void setYesterdayDefault() {
-		if ("day".equals(m_reportType)) {
-			Calendar today = Calendar.getInstance();
-			long current = getCurrentDate();
-			today.setTimeInMillis(current);
-			today.set(Calendar.HOUR_OF_DAY, 0);
-			if (m_date == today.getTimeInMillis()) {
-				m_date = m_date - 24 * ONE_HOUR;
+	public long getCurrentDate() {
+		long timestamp = System.currentTimeMillis();
+
+		return timestamp - timestamp % ONE_HOUR;
+	}
+
+	public long getCurrentStartDay() {
+		long timestamp = System.currentTimeMillis();
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(new Date(timestamp));
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		return cal.getTimeInMillis();
+	}
+
+	public long getDate() {
+		long current = getCurrentDate();
+
+		long extra = m_step * ONE_HOUR;
+		if (m_reportType != null
+		      && (m_reportType.equals("day") || m_reportType.equals("month") || m_reportType.equals("week"))) {
+			extra = 0;
+		}
+		if (m_date <= 0) {
+			return current + extra;
+		} else {
+			long result = m_date + extra;
+
+			if (result > current) {
+				return current;
 			}
+			return result;
 		}
 	}
 
-	public Date getHistoryStartDate() {
-		if (m_customStart != null) {
-			try {
-				return m_dayFormat.parse(m_customStart);
-			} catch (ParseException e) {
-			}
-		}
-		return new Date(m_date);
+	public String getDomain() {
+		return m_domain;
 	}
 
 	public Date getHistoryEndDate() {
@@ -137,46 +152,18 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		return cal.getTime();
 	}
 
-	public long getCurrentStartDay() {
-		long timestamp = System.currentTimeMillis();
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(new Date(timestamp));
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		return cal.getTimeInMillis();
-	}
-
-	public long getCurrentDate() {
-		long timestamp = System.currentTimeMillis();
-
-		return timestamp - timestamp % ONE_HOUR;
-	}
-
-	public long getDate() {
-		long current = getCurrentDate();
-
-		long extra = m_step * ONE_HOUR;
-		if (m_reportType != null
-		      && (m_reportType.equals("day") || m_reportType.equals("month") || m_reportType.equals("week"))) {
-			extra = 0;
-		}
-		if (m_date <= 0) {
-			return current + extra;
-		} else {
-			long result = m_date + extra;
-
-			if (result > current) {
-				return current;
+	public Date getHistoryStartDate() {
+		if (m_customStart != null) {
+			try {
+				return m_dayFormat.parse(m_customStart);
+			} catch (ParseException e) {
 			}
-			return result;
 		}
+		return new Date(m_date);
 	}
 
-	public long getRealDate() {
-		return m_date;
-	}
-
-	public String getDomain() {
-		return m_domain;
+	public String getIpAddress() {
+		return m_ipAddress;
 	}
 
 	@Override
@@ -186,6 +173,26 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	public ModelPeriod getPeriod() {
 		return ModelPeriod.getByTime(getDate());
+	}
+
+	public long getRealDate() {
+		return m_date;
+	}
+
+	public String getReportType() {
+		return m_reportType;
+	}
+
+	public int getStep() {
+		return m_step;
+	}
+
+	public void setCustomEnd(String customEnd) {
+		m_customEnd = customEnd;
+	}
+
+	public void setCustomStart(String customStart) {
+		m_customStart = customStart;
 	}
 
 	public void setDate(String date) {
@@ -211,6 +218,10 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		m_domain = domain;
 	}
 
+	public void setIpAddress(String ipAddress) {
+		m_ipAddress = ipAddress;
+	}
+
 	public void setPage(ReportPage page) {
 		m_page = page;
 	}
@@ -220,36 +231,25 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		m_page = ReportPage.getByName(page, m_defaultPage);
 	}
 
-	public String getIpAddress() {
-		return m_ipAddress;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
-	}
-
-	public String getReportType() {
-		return m_reportType;
-	}
-
 	public void setReportType(String reportType) {
 		this.m_reportType = reportType;
-	}
-
-	public int getStep() {
-		return m_step;
 	}
 
 	public void setStep(int nav) {
 		m_step = nav;
 	}
 
-	public void setCustomStart(String customStart) {
-		m_customStart = customStart;
-	}
-
-	public void setCustomEnd(String customEnd) {
-		m_customEnd = customEnd;
+	// yestoday is default
+	public void setYesterdayDefault() {
+		if ("day".equals(m_reportType)) {
+			Calendar today = Calendar.getInstance();
+			long current = getCurrentDate();
+			today.setTimeInMillis(current);
+			today.set(Calendar.HOUR_OF_DAY, 0);
+			if (m_date == today.getTimeInMillis()) {
+				m_date = m_date - 24 * ONE_HOUR;
+			}
+		}
 	}
 
 }

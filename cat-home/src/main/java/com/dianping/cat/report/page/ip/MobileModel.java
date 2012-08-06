@@ -7,16 +7,16 @@ import com.dianping.cat.report.page.ip.Model.DisplayModel;
 public class MobileModel {
 	private List<DisplayModel> m_displayModels;
 
-	public MobileModel(){
-		
+	public MobileModel() {
+
 	}
-	
+
 	public List<DisplayModel> getDisplayModels() {
-   	return m_displayModels;
-   }
+		return m_displayModels;
+	}
 
 	public MobileModel setDisplayModels(List<DisplayModel> displayModels) {
-   	m_displayModels = displayModels;
-   	return this;
-   }
+		m_displayModels = displayModels;
+		return this;
+	}
 }

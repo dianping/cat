@@ -57,6 +57,7 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 
 	@Override
 	public void initialize() throws InitializationException {
+		//TODO
 		if (!m_configManager.isInitialized()) {
 			// by default, no configuration needed in develop mode, all in memory
 			m_receiver = lookup(MessageReceiver.class, "in-memory");

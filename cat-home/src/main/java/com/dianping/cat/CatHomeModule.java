@@ -20,11 +20,6 @@ public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
 
 	@Override
-	public Module[] getDependencies(ModuleContext ctx) {
-		return ctx.getModules(CatConsumerModule.ID, CatJobModule.ID);
-	}
-
-	@Override
 	protected void execute(ModuleContext ctx) throws Exception {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
@@ -35,9 +30,14 @@ public class CatHomeModule extends AbstractModule {
 
 		TaskConsumer taskConsumer = ctx.lookup(TaskConsumer.class);
 		DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);
-		
+
 		Threads.forGroup("Cat").start(dailyTaskProducer);
 		Threads.forGroup("Cat").start(taskConsumer);
+	}
+
+	@Override
+	public Module[] getDependencies(ModuleContext ctx) {
+		return ctx.getModules(CatConsumerModule.ID, CatJobModule.ID);
 	}
 
 	@Override

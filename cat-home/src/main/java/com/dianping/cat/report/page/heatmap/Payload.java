@@ -9,6 +9,18 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
+	@FieldMeta("cb")
+	private String m_cb;
+
+	@FieldMeta("display")
+	private String m_display;
+
+	@FieldMeta("flag")
+	private int m_flag;
+
+	@FieldMeta("height")
+	private int m_height;
+
 	@FieldMeta("lat1")
 	private double m_lat1;
 
@@ -21,23 +33,11 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("lng2")
 	private double m_lng2;
 
-	@FieldMeta("width")
-	private int m_width;
-
-	@FieldMeta("height")
-	private int m_height;
-
 	@FieldMeta("unit")
 	private int m_unit = 20;
 
-	@FieldMeta("cb")
-	private String m_cb;
-
-	@FieldMeta("flag")
-	private int m_flag;
-
-	@FieldMeta("display")
-	private String m_display;
+	@FieldMeta("width")
+	private int m_width;
 
 	public Payload() {
 		super(ReportPage.HEATMAP);
@@ -50,6 +50,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public String getCb() {
 		return m_cb;
+	}
+
+	public String getDisplay() {
+		return m_display;
+	}
+
+	public int getFlag() {
+		return m_flag;
 	}
 
 	public int getHeight() {
@@ -88,6 +96,14 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_cb = cb;
 	}
 
+	public void setDisplay(String display) {
+		m_display = display;
+	}
+
+	public void setFlag(int flag) {
+		m_flag = flag;
+	}
+
 	public void setHeight(int height) {
 		m_height = height;
 	}
@@ -115,22 +131,6 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setWidth(int width) {
 		m_width = width;
 	}
-	
-	public int getFlag() {
-   	return m_flag;
-   }
-
-	public void setFlag(int flag) {
-   	m_flag = flag;
-   }
-
-	public String getDisplay() {
-   	return m_display;
-   }
-
-	public void setDisplay(String display) {
-   	m_display = display;
-   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

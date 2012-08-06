@@ -11,6 +11,23 @@ public class LocationData {
 
 	private int m_min = Integer.MAX_VALUE;
 
+	public LocationData addLocationInfo(Location location) {
+		m_locations.add(location);
+		return this;
+	}
+
+	private String getJsonByLocation(Location location) {
+		StringBuilder sb = new StringBuilder();
+		int count = location.getCount();
+		sb.append("[").append(location.getLat()).append(",");
+		sb.append(location.getLng()).append(",");
+		sb.append(count).append("]");
+		m_max = m_max < count ? count : m_max;
+		m_min = m_min > count ? count : m_min;
+
+		return sb.toString();
+	}
+
 	public String getJsonString() {
 		String data = getLocationsString();
 		int min = m_min;
@@ -22,6 +39,10 @@ public class LocationData {
 		sb.append("data:").append(data);
 		sb.append("}");
 		return sb.toString();
+	}
+
+	public List<Location> getLocations() {
+		return m_locations;
 	}
 
 	public String getLocationsString() {
@@ -38,37 +59,16 @@ public class LocationData {
 		return sb.toString();
 	}
 
-	private String getJsonByLocation(Location location) {
-		StringBuilder sb = new StringBuilder();
-		int count = location.getCount();
-		sb.append("[").append(location.getLat()).append(",");
-		sb.append(location.getLng()).append(",");
-		sb.append(count).append("]");
-		m_max = m_max < count ? count : m_max;
-		m_min = m_min > count ? count : m_min;
-
-		return sb.toString();
-	}
-
-	public LocationData addLocationInfo(Location location) {
-		m_locations.add(location);
-		return this;
-	}
-
-	public List<Location> getLocations() {
-		return m_locations;
-	}
-
 	public void setLocations(List<Location> locations) {
 		m_locations = locations;
 	}
 
 	public static class Location {
+		private int m_count;
+
 		private double m_lat;
 
 		private double m_lng;
-
-		private int m_count;
 
 		public Location(double lat, double lng, int count) {
 			m_lat = lat;
@@ -76,28 +76,28 @@ public class LocationData {
 			m_count = count;
 		}
 
-		public double getLat() {
-			return m_lat;
+		public int getCount() {
+			return m_count;
 		}
 
-		public void setLat(double lat) {
-			m_lat = lat;
+		public double getLat() {
+			return m_lat;
 		}
 
 		public double getLng() {
 			return m_lng;
 		}
 
-		public void setLng(double lng) {
-			m_lng = lng;
-		}
-
-		public int getCount() {
-			return m_count;
-		}
-
 		public void setCount(int count) {
 			m_count = count;
+		}
+
+		public void setLat(double lat) {
+			m_lat = lat;
+		}
+
+		public void setLng(double lng) {
+			m_lng = lng;
 		}
 	}
 }

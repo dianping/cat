@@ -17,6 +17,13 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 		super("problem");
 	}
 
+	private ProblemReport getLocalReport(long timestamp, String domain) throws Exception {
+		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "problem");
+		String xml = bucket.findById(domain);
+
+		return xml == null ? null : DefaultSaxParser.parse(xml);
+	}
+
 	@Override
 	protected ProblemReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
 		ProblemReport report = super.getReport(request, period, domain);
@@ -26,7 +33,7 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 			long hour = 60 * 60 * 1000;
 			long date = current - current % (hour) - hour;
 			report = getLocalReport(date, domain);
-			
+
 			if (report == null) {
 				report = new ProblemReport(domain);
 
@@ -38,12 +45,5 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 		}
 
 		return report;
-	}
-
-	private ProblemReport getLocalReport(long timestamp, String domain) throws Exception {
-		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "problem");
-		String xml = bucket.findById(domain);
-
-		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 }

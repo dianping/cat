@@ -43,6 +43,32 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "ip")
 	private ModelService<IpReport> m_service;
 
+	private List<DisplayModel> getDisplayModels(IpReport report) {
+		Calendar cal = Calendar.getInstance();
+		int minute = cal.get(Calendar.MINUTE);
+		Map<String, DisplayModel> models = new HashMap<String, DisplayModel>();
+		DisplayModelBuilder builder = new DisplayModelBuilder(models, minute);
+
+		if (report != null) {
+			report.accept(builder); // prepare display model
+		}
+
+		List<DisplayModel> displayModels = new ArrayList<DisplayModel>(models.values());
+
+		Collections.sort(displayModels, new Comparator<DisplayModel>() {
+			@Override
+			public int compare(DisplayModel m1, DisplayModel m2) {
+				return m2.getLastFifteen() - m1.getLastFifteen(); // desc order
+			}
+		});
+
+		if (displayModels.size() > 100) {
+			return displayModels.subList(0, 100);
+		} else {
+			return displayModels;
+		}
+	}
+
 	private int getHour(long date) {
 		Calendar cal = Calendar.getInstance();
 
@@ -130,32 +156,6 @@ public class Handler implements PageHandler<Context> {
 		} catch (Throwable e) {
 			Cat.logError(e);
 			model.setException(e);
-		}
-	}
-
-	private List<DisplayModel> getDisplayModels(IpReport report) {
-		Calendar cal = Calendar.getInstance();
-		int minute = cal.get(Calendar.MINUTE);
-		Map<String, DisplayModel> models = new HashMap<String, DisplayModel>();
-		DisplayModelBuilder builder = new DisplayModelBuilder(models, minute);
-
-		if (report != null) {
-			report.accept(builder); // prepare display model
-		}
-
-		List<DisplayModel> displayModels = new ArrayList<DisplayModel>(models.values());
-
-		Collections.sort(displayModels, new Comparator<DisplayModel>() {
-			@Override
-			public int compare(DisplayModel m1, DisplayModel m2) {
-				return m2.getLastFifteen() - m1.getLastFifteen(); // desc order
-			}
-		});
-
-		if (displayModels.size() > 100) {
-			return displayModels.subList(0, 100);
-		} else {
-			return displayModels;
 		}
 	}
 

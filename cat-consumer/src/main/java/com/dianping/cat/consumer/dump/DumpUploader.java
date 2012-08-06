@@ -146,7 +146,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 				MessageProducer cat = Cat.getProducer();
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 				String ts = new SimpleDateFormat("mmss").format(new Date());
-				Transaction root = cat.newTransaction("Task", "Dump-" + ip + "-" + ts);
+				Transaction root = cat.newTransaction("System", "Dump-" + ip + "-" + ts);
 
 				Collections.sort(paths);
 
@@ -154,7 +154,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 				root.setStatus(Message.SUCCESS);
 
 				for (String path : paths) {
-					Transaction t = cat.newTransaction("Task", "UploadDump");
+					Transaction t = cat.newTransaction("System", "UploadDump");
 					File file = new File(baseDir, path);
 
 					t.addData("file", path);

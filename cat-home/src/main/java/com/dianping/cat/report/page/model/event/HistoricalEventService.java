@@ -17,10 +17,10 @@ import com.site.lookup.annotation.Inject;
 
 public class HistoricalEventService extends BaseHistoricalModelService<EventReport> {
 	@Inject
-	private ReportDao m_reportDao;
+	private BucketManager m_bucketManager;
 
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportDao m_reportDao;
 
 	public HistoricalEventService() {
 		super("event");
