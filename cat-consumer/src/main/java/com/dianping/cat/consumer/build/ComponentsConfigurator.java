@@ -40,6 +40,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.site.initialization.Module;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
@@ -101,6 +102,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class) //
 		      .req(DumpUploader.class, DumpChannelManager.class)//
+		      .req(MessageBucketManager.class) //
 		      .req(RemoteIdUploader.class));
 
 		// all.add(C(RemoteIdAnalyzer.class).is(PER_LOOKUP) //
