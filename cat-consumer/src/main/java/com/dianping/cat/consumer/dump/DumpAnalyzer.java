@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.dump;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
@@ -12,9 +13,11 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.remote.RemoteIdUploader;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.site.lookup.annotation.Inject;
 
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
@@ -32,6 +35,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	@Inject
 	private RemoteIdUploader m_remoteUploader;
+
+	@Inject
+	private MessageBucketManager m_bucketManager;
 
 	public DumpUploader getDumpUploader() {
 		return m_uploader;
@@ -79,27 +85,39 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	@Override
 	protected void process(MessageTree tree) {
-		if (m_localMode || tree.getMessage() == null) {
+		if (tree.getMessage() == null) {
 			return;
 		}
 
-		try {
-			String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			long timestamp = tree.getMessage().getTimestamp();
-			String domain = tree.getDomain();
-			String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
-			DumpChannel channel = m_manager.openChannel(path, false, m_startTime);
-			int length = channel.write(tree);
+		String messageId = tree.getMessageId();
+		MessageId id = MessageId.parse(messageId);
 
-			if (length <= 0) {
-				m_manager.closeChannel(channel);
+		if (id.getVersion() == 1) {
+			if (!m_localMode) {
+				try {
+					String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+					long timestamp = tree.getMessage().getTimestamp();
+					String domain = tree.getDomain();
+					String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
+					DumpChannel channel = m_manager.openChannel(path, false, m_startTime);
+					int length = channel.write(tree);
 
-				channel = m_manager.openChannel(path, true, m_startTime);
-				channel.write(tree);
+					if (length <= 0) {
+						m_manager.closeChannel(channel);
+
+						channel = m_manager.openChannel(path, true, m_startTime);
+						channel.write(tree);
+					}
+				} catch (Exception e) {
+					m_logger.error("Error when dumping to local file system!", e);
+				}
 			}
-		} catch (Exception e) {
-			//TODO
-			m_logger.error("Error when dumping to local file system!", e);
+		} else {
+			try {
+				m_bucketManager.storeMessage(tree);
+			} catch (IOException e) {
+				m_logger.error("Error when dumping to local file system!", e);
+			}
 		}
 	}
 

@@ -6,8 +6,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -21,6 +23,9 @@ import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
 import com.dianping.cat.hadoop.dal.GraphDao;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
@@ -28,7 +33,10 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.google.gson.Gson;
+import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -53,7 +61,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JspViewer m_jspViewer;
+	
+	@Inject
+	private ProblemMerger m_problemMerger;
 
+	@Inject
+	protected ReportDao m_reportDao;
+	
 	@Inject
 	private ServerConfigManager m_manager;
 
@@ -114,11 +128,13 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
+
 		ProblemReport report = null;
 		ProblemStatistics problemStatistics = new ProblemStatistics();
 		String ip = model.getIpAddress();
 		int urlThreshold = payload.getLongTime();
 		int sqlThreshold = payload.getSqlLongTime();
+
 		switch (payload.getAction()) {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
@@ -216,7 +232,6 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReportType(payload.getReportType());
 			payload.computeStartDate();
-			payload.setYesterdayDefault();
 			model.setLongDate(payload.getDate());
 			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
@@ -308,8 +323,25 @@ public class Handler implements PageHandler<Context> {
 		String domain = model.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-
 		ProblemReport problemReport = null;
+		Date currentDayStart = TaskHelper.todayZero(new Date());
+
+		if(currentDayStart.getTime()==start.getTime()){
+			try {
+	         List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "problem",
+	               ReportEntity.READSET_FULL);
+	         List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
+
+	         Set<String> domains = new HashSet<String>();
+	         for(Report report:allReports){
+	         	domains.add(report.getDomain());
+	         }
+	         return m_problemMerger.mergeForDaily(domain, reports, domains );
+         } catch (DalException e) {
+         	Cat.logError(e);
+         	return new ProblemReport(domain);
+         }
+		}
 		try {
 			List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem",
 			      DailyreportEntity.READSET_FULL);

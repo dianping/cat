@@ -17,12 +17,15 @@ import com.dianping.cat.report.task.AbstractReportBuilder;
 import com.dianping.cat.report.task.ReportBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 import com.site.dal.jdbc.DalException;
+import com.site.lookup.annotation.Inject;
 
 public class EventReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 
-	private EventGraphCreator m_eventGraphCreator = new EventGraphCreator();
+	@Inject
+	private EventGraphCreator m_eventGraphCreator;
 
-	private EventMerger m_eventMerger = new EventMerger();
+	@Inject
+	private EventMerger m_eventMerger;
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {

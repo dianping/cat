@@ -17,12 +17,15 @@ import com.dianping.cat.report.task.AbstractReportBuilder;
 import com.dianping.cat.report.task.ReportBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 import com.site.dal.jdbc.DalException;
+import com.site.lookup.annotation.Inject;
 
 public class TransactionReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 
-	private TransactionGraphCreator m_transactionGraphCreator = new TransactionGraphCreator();
+	@Inject
+	private TransactionGraphCreator m_transactionGraphCreator;
 
-	private TransactionMerger m_transactionMerger = new TransactionMerger();
+	@Inject
+	private TransactionMerger m_transactionMerger;
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {

@@ -12,12 +12,15 @@ import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.report.task.AbstractReportBuilder;
 import com.dianping.cat.report.task.ReportBuilder;
 import com.site.dal.jdbc.DalException;
+import com.site.lookup.annotation.Inject;
 
 public class HeartbeatReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 
-	private HeartbeatGraphCreator m_heartbeatGraphCreator = new HeartbeatGraphCreator();
+	@Inject
+	private HeartbeatGraphCreator m_heartbeatGraphCreator;
 
-	private HeartbeatMerger m_heartbeatMerger = new HeartbeatMerger();
+	@Inject
+	private HeartbeatMerger m_heartbeatMerger;
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {

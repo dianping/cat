@@ -31,18 +31,18 @@ public class ReportFacade implements LogEnabled, Initializable {
 	@Inject
 	private HeartbeatReportBuilder m_heartbeatBuilder;
 
-	private Logger m_logger;
-
 	@Inject
 	private ProblemReportBuilder m_problemBuilder;
-
-	private Map<String, ReportBuilder> m_reportBuilders = new HashMap<String, ReportBuilder>();
 
 	@Inject
 	private TransactionReportBuilder m_tansactionBuilder;
 
 	@Inject
-	private TaskDao taskDao;
+	private TaskDao m_taskDao;
+
+	private Logger m_logger;
+
+	private Map<String, ReportBuilder> m_reportBuilders = new HashMap<String, ReportBuilder>();
 
 	public void addNewReportBuild(ReportBuilder newReportBuilder, String name) {
 		this.m_reportBuilders.put(name, newReportBuilder);
@@ -88,7 +88,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 	public boolean redoTask(int taskID) {
 		boolean update = false;
 		try {
-			Task task = taskDao.findByPK(taskID, TaskEntity.READSET_FULL);
+			Task task = m_taskDao.findByPK(taskID, TaskEntity.READSET_FULL);
 			int task_type = task.getTaskType();
 			String reportName = task.getReportName();
 			String reportDomain = task.getReportDomain();
@@ -105,7 +105,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 				}
 			}
 			if (update) {
-				taskDao.updateFailureToDone(task, TaskEntity.UPDATESET_FULL);
+				m_taskDao.updateFailureToDone(task, TaskEntity.UPDATESET_FULL);
 			}
 			return update;
 		} catch (Exception e) {

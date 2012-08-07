@@ -17,12 +17,15 @@ import com.dianping.cat.report.task.AbstractReportBuilder;
 import com.dianping.cat.report.task.ReportBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 import com.site.dal.jdbc.DalException;
+import com.site.lookup.annotation.Inject;
 
 public class ProblemReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 
-	private ProblemGraphCreator m_problemGraphCreator = new ProblemGraphCreator();
+	@Inject
+	private ProblemGraphCreator m_problemGraphCreator;
 
-	private ProblemMerger m_problemMerger = new ProblemMerger();
+	@Inject
+	private ProblemMerger m_problemMerger;
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
@@ -39,7 +42,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 	@Override
 	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			List<Graph> graphs = getHourReport(reportName, reportDomain, reportPeriod);
+			List<Graph> graphs = getHourlyReport(reportName, reportDomain, reportPeriod);
 			if (graphs != null) {
 				for (Graph graph : graphs) {
 					this.m_graphDao.insert(graph); // use mysql unique index and
@@ -73,7 +76,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		return report;
 	}
 
-	private List<Graph> getHourReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+	private List<Graph> getHourlyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		List<Graph> graphs = new ArrayList<Graph>();
 		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
@@ -98,7 +101,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 	@Override
 	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			List<Graph> graphs = getHourReport(reportName, reportDomain, reportPeriod);
+			List<Graph> graphs = getHourlyReport(reportName, reportDomain, reportPeriod);
 			if (graphs != null) {
 				clearHourlyGraphs(graphs);
 				for (Graph graph : graphs) {
