@@ -40,16 +40,26 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		for (LocalMessageBucket bucket : m_buckets.values()) {
 			bucket.close();
 		}
+
+		m_buckets.clear();
 	}
 
 	void closeIdleBuckets() throws IOException {
 		long now = System.currentTimeMillis();
 		long hour = 3600 * 1000L;
+		List<String> closedKeys = new ArrayList<String>();
 
-		for (LocalMessageBucket bucket : m_buckets.values()) {
+		for (Map.Entry<String, LocalMessageBucket> e : m_buckets.entrySet()) {
+			LocalMessageBucket bucket = e.getValue();
+
 			if (now - bucket.getLastAccessTime() >= hour) {
 				bucket.close();
+				closedKeys.add(e.getKey());
 			}
+		}
+
+		for (String key : closedKeys) {
+			m_buckets.remove(key);
 		}
 	}
 
