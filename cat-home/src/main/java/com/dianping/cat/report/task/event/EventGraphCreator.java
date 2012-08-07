@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
+import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.report.task.GraphCreator;
 import com.dianping.cat.report.task.GraphLine;
@@ -78,7 +79,7 @@ public class EventGraphCreator implements GraphCreator<EventReport> {
 			graph.setPeriod(reportPeriod);
 			graph.setType(3);
 			graph.setCreationDate(creationDate);
-			com.dianping.cat.consumer.event.model.entity.Machine machine = eventReport.getMachines().get(ip);
+			Machine machine = eventReport.getMachines().get(ip);
 			Map<String, EventType> types = machine.getTypes();
 			StringBuilder detailBuilder = new StringBuilder();
 			StringBuilder summaryBuilder = new StringBuilder();
@@ -125,12 +126,12 @@ public class EventGraphCreator implements GraphCreator<EventReport> {
 				}
 				summaryLine.totalCounts = arrayAdd(summaryLine.totalCounts, typeCounts);
 				summaryLine.failCounts = arrayAdd(summaryLine.failCounts, typeFails);
-
+				
 				summaryBuilder.append(eventType.getId());
 				summaryBuilder.append('\t');
-				summaryBuilder.append(arrayToString(summaryLine.totalCounts));
+				summaryBuilder.append(arrayToString(typeCounts));
 				summaryBuilder.append('\t');
-				summaryBuilder.append(arrayToString(summaryLine.failCounts));
+				summaryBuilder.append(arrayToString(typeFails));
 				summaryBuilder.append('\n');
 
 			}

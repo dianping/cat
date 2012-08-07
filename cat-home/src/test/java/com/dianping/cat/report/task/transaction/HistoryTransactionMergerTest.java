@@ -14,10 +14,10 @@ public class HistoryTransactionMergerTest {
 
 	@Test
 	public void testMerge() throws Exception{
-		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("HistoryTransaction.xml"), "utf-8");
 		TransactionReport report1 = new DefaultDomParser().parse(oldXml);
 		TransactionReport report2 = new DefaultDomParser().parse(oldXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transactionResult.xml"),
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("HistoryTransactionMergeResult.xml"),
 		      "utf-8");
 		TransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(report1.getDomain()));
 
