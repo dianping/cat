@@ -72,7 +72,7 @@ public class WeaklyReportCreater extends AbstractReportCreater {
 		});
 		
 		for(TransactionType transactionType : typeList){
-			String trendViewUrl = getTrendsViewUrl("e", domain, timeSpan.getEndMicros(), "week", transactionType.getId(), "查看趋势图");
+			String trendViewUrl = getTrendsViewUrl("t", domain, timeSpan.getEndMicros(), "week", transactionType.getId(), "查看趋势图");
 			transactionType.setSuccessMessageUrl(trendViewUrl);
 			DecimalFormat df = new DecimalFormat("#.##");
 			transactionType.setAvg(new Double(df.format(transactionType.getAvg())));

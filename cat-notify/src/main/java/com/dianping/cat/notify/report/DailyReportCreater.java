@@ -75,7 +75,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 		});
 
 		for (TransactionType transactionType : typeList) {
-			String trendViewUrl = super.getTrendsViewUrl("e", domain,timeSpan.getEndMicros(), "day", transactionType.getId(),"查看趋势图");
+			String trendViewUrl = super.getTrendsViewUrl("t", domain,timeSpan.getEndMicros(), "day", transactionType.getId(),"查看趋势图");
 			transactionType.setSuccessMessageUrl(trendViewUrl);
 			DecimalFormat df = new DecimalFormat("#.##");
 			transactionType.setAvg(new Double(df.format(transactionType.getAvg())));
