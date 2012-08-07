@@ -1,20 +1,22 @@
 package com.dianping.cat.report.page.model.event;
 
-import java.util.Map;
-
 import com.dianping.cat.consumer.event.StatisticsComputer;
+import com.dianping.cat.consumer.event.model.entity.Machine;
+import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.transform.DefaultMerger;
 import com.dianping.cat.helper.CatString;
 
 public class EventReportMerger extends DefaultMerger {
 	private boolean m_allIp = false;
 
+	private Machine m_allMachines;
+
 	private boolean m_allName = false;
+
+	private EventName m_allNames;
 
 	private String m_ip;
 
@@ -24,12 +26,6 @@ public class EventReportMerger extends DefaultMerger {
 		super(eventReport);
 
 		eventReport.accept(new StatisticsComputer());
-	}
-
-	@Override
-	protected void mergeEventReport(EventReport old, EventReport eventReport) {
-		super.mergeEventReport(old, eventReport);
-
 	}
 
 	@Override
@@ -60,50 +56,16 @@ public class EventReportMerger extends DefaultMerger {
 		old.setFails(old.getFails() + range.getFails());
 	}
 
-	public EventName mergesFor(String typeName, String ip) {
-		EventName name = new EventName("ALL");
-		EventReport report = getEventReport();
-		EventType type = report.getMachines().get(ip).findType(typeName);
-
-		if (type != null) {
-			for (EventName n : type.getNames().values()) {
-				mergeName(name, n);
-				visitNameChildren(name, n);
-			}
-		}
-
-		return name;
-	}
-
 	public Machine mergesForAllMachine(EventReport report) {
 		Machine machine = new Machine(CatString.ALL_IP);
-		for (Machine temp : report.getMachines().values()) {
-			if (!machine.getIp().equals(CatString.ALL_IP)) {
-				mergeMachine(machine, temp);
+
+		for (Machine m : report.getMachines().values()) {
+			if (!m.getIp().equals(CatString.ALL_IP)) {
+				visitMachineChildren(machine, m);
 			}
-			visitMachineChildren(machine, temp);
 		}
+
 		return machine;
-	}
-
-	public EventName mergesForAllName(EventReport report) {
-		EventName name = new EventName("ALL");
-		EventType type = report.getMachines().get(m_ip).findType(m_type);
-
-		if (type != null) {
-			for (EventName n : type.getNames().values()) {
-				mergeName(name, n);
-				visitNameChildren(name, n);
-			}
-		}
-
-		return name;
-	}
-
-	public EventReport mergesFrom(EventReport report) {
-		report.accept(this);
-
-		return getEventReport();
 	}
 
 	@Override
@@ -129,37 +91,60 @@ public class EventReportMerger extends DefaultMerger {
 		return this;
 	}
 
-	public void setAllName(boolean allName) {
+	public EventReportMerger setAllName(boolean allName) {
 		m_allName = allName;
+		return this;
 	}
 
-	public void setIp(String ip) {
+	public EventReportMerger setIp(String ip) {
 		m_ip = ip;
+		return this;
 	}
 
-	public void setType(String type) {
+	public EventReportMerger setType(String type) {
 		m_type = type;
+		return this;
+	}
+
+	@Override
+	public void visitMachine(Machine machine) {
+		if (m_allIp) {
+			visitMachineChildren(m_allMachines, machine);
+		} else {
+			super.visitMachine(machine);
+		}
+	}
+
+	@Override
+	public void visitName(EventName name) {
+		if (m_allName) {
+			visitNameChildren(m_allNames, name);
+		} else {
+			super.visitName(name);
+		}
 	}
 
 	@Override
 	public void visitEventReport(EventReport eventReport) {
+		EventReport report = getEventReport();
+
 		if (m_allIp) {
-			Map<String, Machine> machines = eventReport.getMachines();
-			Machine allMachines = mergesForAllMachine(eventReport);
-			machines.clear();
-			eventReport.addMachine(allMachines);
+			m_allMachines = report.findOrCreateMachine(CatString.ALL_IP);
 		}
+
 		if (m_allName) {
-			Machine machine = eventReport.getMachines().get(m_ip);
-			if (machine != null) {
-				EventName mergesForAllName = mergesForAllName(eventReport);
-				EventType type = machine.findOrCreateType(m_type);
-				type.getNames().clear();
-				type.addName(mergesForAllName);
-			}
+			m_allNames = report.findOrCreateMachine(m_ip).findOrCreateType(m_type).findOrCreateName("ALL");
 		}
+
 		super.visitEventReport(eventReport);
-		getEventReport().getDomainNames().addAll(eventReport.getDomainNames());
-		getEventReport().getIps().addAll(eventReport.getIps());
+		report.getDomainNames().addAll(eventReport.getDomainNames());
+		report.getIps().addAll(eventReport.getIps());
+	}
+
+	@Override
+	public void visitType(EventType type) {
+		if (!m_allName || m_allName && m_type.equals(type.getId())) {
+			super.visitType(type);
+		}
 	}
 }
