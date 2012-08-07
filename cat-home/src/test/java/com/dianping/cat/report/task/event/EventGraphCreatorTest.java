@@ -15,14 +15,13 @@ import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.report.page.event.Handler.DetailOrder;
 import com.dianping.cat.report.page.event.Handler.SummaryOrder;
-import com.dianping.cat.report.task.event.EventGraphCreator;
 
 public class EventGraphCreatorTest {
 
 	@Test
-	public void test() throws Exception {
+	public void testSplitReportToGraphs() throws Exception {
 		EventGraphCreator creator = new EventGraphCreator();
-		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("eventCreator.xml"), "utf-8");
+		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventReport.xml"), "utf-8");
 		EventReport report = DefaultSaxParser.parse(xml);
 		Date date = new Date();
 		List<Graph> graphs = creator.splitReportToGraphs(date, "MobileApi", "event", report);

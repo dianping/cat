@@ -2,6 +2,7 @@
    <domain>Cat</domain>
    <domain>MobileApi</domain>
    <ip>10.1.77.193</ip>
+   <ip>10.1.77.194</ip>
    <ip>All</ip>
    <machine ip="10.1.77.193">
       <type id="URL" totalCount="3450" failCount="0" failPercent="0.00">
@@ -69,363 +70,8 @@
             <range value="55" count="5" fails="0"/>
          </name>
       </type>
-      <type id="Mobile" totalCount="1710" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-			</successMessageUrl>
-         <name id="Device" totalCount="1705" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-				</successMessageUrl>
-            <range value="0" count="75" fails="0"/>
-            <range value="5" count="85" fails="0"/>
-            <range value="10" count="125" fails="0"/>
-            <range value="15" count="240" fails="0"/>
-            <range value="20" count="110" fails="0"/>
-            <range value="25" count="215" fails="0"/>
-            <range value="30" count="135" fails="0"/>
-            <range value="35" count="360" fails="0"/>
-            <range value="40" count="130" fails="0"/>
-            <range value="45" count="75" fails="0"/>
-            <range value="50" count="75" fails="0"/>
-            <range value="55" count="80" fails="0"/>
-         </name>
-         <name id="Location" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232006181-0
-				</successMessageUrl>
-            <range value="20" count="5" fails="0"/>
-         </name>
-      </type>
-      <type id="SQL.PARAM" totalCount="7735" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-			</successMessageUrl>
-         <name id="APIUserInfo.getUserInfo" totalCount="1265" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-				</successMessageUrl>
-            <range value="0" count="75" fails="0"/>
-            <range value="5" count="80" fails="0"/>
-            <range value="10" count="85" fails="0"/>
-            <range value="15" count="255" fails="0"/>
-            <range value="20" count="85" fails="0"/>
-            <range value="25" count="75" fails="0"/>
-            <range value="30" count="80" fails="0"/>
-            <range value="35" count="105" fails="0"/>
-            <range value="40" count="80" fails="0"/>
-            <range value="45" count="195" fails="0"/>
-            <range value="50" count="75" fails="0"/>
-            <range value="55" count="75" fails="0"/>
-         </name>
-         <name id="APIBadge.getBadgeTaskList" totalCount="300" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230839418-0
-				</successMessageUrl>
-            <range value="0" count="25" fails="0"/>
-            <range value="5" count="25" fails="0"/>
-            <range value="10" count="25" fails="0"/>
-            <range value="15" count="25" fails="0"/>
-            <range value="20" count="25" fails="0"/>
-            <range value="25" count="25" fails="0"/>
-            <range value="30" count="25" fails="0"/>
-            <range value="35" count="25" fails="0"/>
-            <range value="40" count="25" fails="0"/>
-            <range value="45" count="25" fails="0"/>
-            <range value="50" count="25" fails="0"/>
-            <range value="55" count="25" fails="0"/>
-         </name>
-         <name id="APIAnnounce.getValid" totalCount="600" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230840524-0
-				</successMessageUrl>
-            <range value="0" count="50" fails="0"/>
-            <range value="5" count="50" fails="0"/>
-            <range value="10" count="50" fails="0"/>
-            <range value="15" count="50" fails="0"/>
-            <range value="20" count="50" fails="0"/>
-            <range value="25" count="50" fails="0"/>
-            <range value="30" count="50" fails="0"/>
-            <range value="35" count="50" fails="0"/>
-            <range value="40" count="50" fails="0"/>
-            <range value="45" count="50" fails="0"/>
-            <range value="50" count="50" fails="0"/>
-            <range value="55" count="50" fails="0"/>
-         </name>
-         <name id="APIPush.getAndroidPushItems" totalCount="35" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231019548-0
-				</successMessageUrl>
-            <range value="0" count="5" fails="0"/>
-            <range value="10" count="5" fails="0"/>
-            <range value="20" count="5" fails="0"/>
-            <range value="30" count="5" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-         <name id="APICommonToken.queryByType" totalCount="15" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231020463-0
-				</successMessageUrl>
-            <range value="0" count="5" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-         <name id="APICampaign.getCampaignCacheList" totalCount="25" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231419001-0
-				</successMessageUrl>
-            <range value="10" count="5" fails="0"/>
-            <range value="25" count="5" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-         <name id="APIUser.getUserProfile" totalCount="410" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231472951-0
-				</successMessageUrl>
-            <range value="10" count="10" fails="0"/>
-            <range value="15" count="180" fails="0"/>
-            <range value="30" count="30" fails="0"/>
-            <range value="35" count="60" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIFeed.getUserFeed" totalCount="345" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231472951-0
-				</successMessageUrl>
-            <range value="10" count="10" fails="0"/>
-            <range value="15" count="180" fails="0"/>
-            <range value="35" count="25" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIUserExtend.getSnsImportedFlags" totalCount="345" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231472951-0
-				</successMessageUrl>
-            <range value="10" count="10" fails="0"/>
-            <range value="15" count="180" fails="0"/>
-            <range value="35" count="25" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIFriend.getFollowsID" totalCount="300" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851230-0
-				</successMessageUrl>
-            <range value="15" count="175" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIFriend.getFansID" totalCount="300" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851230-0
-				</successMessageUrl>
-            <range value="15" count="175" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIRegion.getRegionById" totalCount="20" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851230-0
-				</successMessageUrl>
-            <range value="15" count="5" fails="0"/>
-            <range value="45" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getLastCheckinUserID" totalCount="215" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="15" fails="0"/>
-            <range value="35" count="75" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getShopCheckInListWithCount" totalCount="215" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="15" fails="0"/>
-            <range value="35" count="75" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getShopCheckInList" totalCount="215" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="15" fails="0"/>
-            <range value="35" count="75" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getShopCheckInCount" totalCount="215" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="15" fails="0"/>
-            <range value="35" count="75" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getMeAndHoneyFollowShopCheckInListWithCount" totalCount="160" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="25" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="10" fails="0"/>
-            <range value="35" count="55" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APIMayor.getMayorID" totalCount="265" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="30" fails="0"/>
-            <range value="35" count="110" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APILocation.getOffset" totalCount="10" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232006181-0
-				</successMessageUrl>
-            <range value="20" count="10" fails="0"/>
-         </name>
-         <name id="APILocateCategory.getLocateList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232081505-0
-				</successMessageUrl>
-            <range value="20" count="5" fails="0"/>
-         </name>
-         <name id="APIShop.getShop" totalCount="105" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232089216-0
-				</successMessageUrl>
-            <range value="20" count="25" fails="0"/>
-            <range value="35" count="80" fails="0"/>
-         </name>
-         <name id="APIPromo.getPromo" totalCount="235" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232089216-0
-				</successMessageUrl>
-            <range value="20" count="235" fails="0"/>
-         </name>
-         <name id="APIShop.getGoogleLatLngByShopId" totalCount="25" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337233179106-0
-				</successMessageUrl>
-            <range value="35" count="25" fails="0"/>
-         </name>
-         <name id="APIPromo.getPromoByShop" totalCount="160" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337233179106-0
-				</successMessageUrl>
-            <range value="35" count="160" fails="0"/>
-         </name>
-         <name id="APIShop.getChildrenShopIdsByGroupId" totalCount="80" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337233179106-0
-				</successMessageUrl>
-            <range value="35" count="80" fails="0"/>
-         </name>
-         <name id="APIUser.getBlackUserList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337233288139-0
-				</successMessageUrl>
-            <range value="40" count="5" fails="0"/>
-         </name>
-         <name id="APICategory.getAllCategoryList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234089383-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APICategory.getAllCategoryTreeList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234089651-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APICategory.getAllRootCategoryList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234089892-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APICategory.getAllParentCategoryId" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234089964-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APISearch.getFilterOptionList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234090090-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APICity.getCityList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234246981-0
-				</successMessageUrl>
-            <range value="55" count="5" fails="0"/>
-         </name>
-         <name id="APIRank.getCityRankCount" totalCount="1835" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234246981-0
-				</successMessageUrl>
-            <range value="55" count="1835" fails="0"/>
-         </name>
-      </type>
-      <type id="Response" totalCount="1705" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-			</successMessageUrl>
-         <name id="Status" totalCount="1705" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-				</successMessageUrl>
-            <range value="0" count="75" fails="0"/>
-            <range value="5" count="85" fails="0"/>
-            <range value="10" count="125" fails="0"/>
-            <range value="15" count="240" fails="0"/>
-            <range value="20" count="110" fails="0"/>
-            <range value="25" count="215" fails="0"/>
-            <range value="30" count="135" fails="0"/>
-            <range value="35" count="360" fails="0"/>
-            <range value="40" count="130" fails="0"/>
-            <range value="45" count="75" fails="0"/>
-            <range value="50" count="75" fails="0"/>
-            <range value="55" count="80" fails="0"/>
-         </name>
-      </type>
-      <type id="PigeonRespone" totalCount="10125" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337231441640-0
-			</successMessageUrl>
-         <name id="Payload" totalCount="10125" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231441640-0
-				</successMessageUrl>
-            <range value="10" count="775" fails="0"/>
-            <range value="15" count="2775" fails="0"/>
-            <range value="25" count="1120" fails="0"/>
-            <range value="30" count="410" fails="0"/>
-            <range value="35" count="3315" fails="0"/>
-            <range value="40" count="750" fails="0"/>
-            <range value="45" count="970" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-      </type>
-      <type id="Exception" totalCount="5" failCount="5" failPercent="100.00">
-         <failMessageUrl>MobileApi-0a014dc1-1337231446010-0</failMessageUrl>
-         <name id="java.lang.reflect.InvocationTargetException" totalCount="5" failCount="5" failPercent="100.00">
-            <failMessageUrl>MobileApi-0a014dc1-1337231446010-0</failMessageUrl>
-            <range value="10" count="5" fails="5"/>
-         </name>
-      </type>
-      <type id="RemoteCall" totalCount="20240" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337231448660-0
-			</successMessageUrl>
-         <name id="PigeonRequest" totalCount="10120" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231448660-0
-				</successMessageUrl>
-            <range value="10" count="770" fails="0"/>
-            <range value="15" count="2775" fails="0"/>
-            <range value="25" count="1120" fails="0"/>
-            <range value="30" count="410" fails="0"/>
-            <range value="35" count="3315" fails="0"/>
-            <range value="40" count="750" fails="0"/>
-            <range value="45" count="970" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-         <name id="PigeonRespone" totalCount="10120" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231448660-0
-				</successMessageUrl>
-            <range value="10" count="770" fails="0"/>
-            <range value="15" count="2775" fails="0"/>
-            <range value="25" count="1120" fails="0"/>
-            <range value="30" count="410" fails="0"/>
-            <range value="35" count="3315" fails="0"/>
-            <range value="40" count="750" fails="0"/>
-            <range value="45" count="970" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-      </type>
-      <type id="RuntimeException" totalCount="5" failCount="5" failPercent="100.00">
-         <failMessageUrl>MobileApi-0a014dc1-1337232089216-0</failMessageUrl>
-         <name id="java.lang.NullPointerException" totalCount="5" failCount="5" failPercent="100.00">
-            <failMessageUrl>MobileApi-0a014dc1-1337232089216-0</failMessageUrl>
-            <range value="20" count="5" fails="5"/>
-         </name>
-      </type>
    </machine>
-   <machine ip="All">
+   <machine ip="10.1.77.194">
       <type id="URL" totalCount="3450" failCount="0" failPercent="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 			</successMessageUrl>
@@ -462,6 +108,73 @@
             <range value="55" count="80" fails="0"/>
          </name>
       </type>
+      <type id="User1" totalCount="1705" failCount="0" failPercent="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+			</successMessageUrl>
+         <name id="LogIn" totalCount="1535" failCount="0" failPercent="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+            <range value="0" count="75" fails="0"/>
+            <range value="5" count="85" fails="0"/>
+            <range value="10" count="125" fails="0"/>
+            <range value="15" count="175" fails="0"/>
+            <range value="20" count="105" fails="0"/>
+            <range value="25" count="215" fails="0"/>
+            <range value="30" count="110" fails="0"/>
+            <range value="35" count="290" fails="0"/>
+            <range value="40" count="130" fails="0"/>
+            <range value="45" count="75" fails="0"/>
+            <range value="50" count="75" fails="0"/>
+            <range value="55" count="75" fails="0"/>
+         </name>
+         <name id="NotLogIn" totalCount="170" failCount="0" failPercent="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337231972930-0
+				</successMessageUrl>
+            <range value="15" count="65" fails="0"/>
+            <range value="20" count="5" fails="0"/>
+            <range value="30" count="25" fails="0"/>
+            <range value="35" count="70" fails="0"/>
+            <range value="55" count="5" fails="0"/>
+         </name>
+      </type>
+   </machine>
+   <machine ip="All">
+<type id="URL" totalCount="6900" failCount="0" failPercent="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+			</successMessageUrl>
+         <name id="ClientInfo" totalCount="3450" failCount="0" failPercent="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+            <range value="0" count="150" fails="0"/>
+            <range value="5" count="170" fails="0"/>
+            <range value="10" count="250" fails="0"/>
+            <range value="15" count="480" fails="0"/>
+            <range value="20" count="220" fails="0"/>
+            <range value="25" count="440" fails="0"/>
+            <range value="30" count="270" fails="0"/>
+            <range value="35" count="730" fails="0"/>
+            <range value="40" count="260" fails="0"/>
+            <range value="45" count="170" fails="0"/>
+            <range value="50" count="150" fails="0"/>
+            <range value="55" count="160" fails="0"/>
+         </name>
+         <name id="Payload" totalCount="3450" failCount="0" failPercent="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
+				</successMessageUrl>
+            <range value="0" count="150" fails="0"/>
+            <range value="5" count="170" fails="0"/>
+            <range value="10" count="250" fails="0"/>
+            <range value="15" count="480" fails="0"/>
+            <range value="20" count="220" fails="0"/>
+            <range value="25" count="440" fails="0"/>
+            <range value="30" count="270" fails="0"/>
+            <range value="35" count="730" fails="0"/>
+            <range value="40" count="260" fails="0"/>
+            <range value="45" count="170" fails="0"/>
+            <range value="50" count="150" fails="0"/>
+            <range value="55" count="160" fails="0"/>
+         </name>
+      </type>
       <type id="User" totalCount="1705" failCount="0" failPercent="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 			</successMessageUrl>
@@ -491,359 +204,33 @@
             <range value="55" count="5" fails="0"/>
          </name>
       </type>
-      <type id="Mobile" totalCount="1710" failCount="0" failPercent="0.00">
+      <type id="User1" totalCount="1705" failCount="0" failPercent="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 			</successMessageUrl>
-         <name id="Device" totalCount="1705" failCount="0" failPercent="0.00">
+         <name id="LogIn" totalCount="1535" failCount="0" failPercent="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
 				</successMessageUrl>
             <range value="0" count="75" fails="0"/>
             <range value="5" count="85" fails="0"/>
             <range value="10" count="125" fails="0"/>
-            <range value="15" count="240" fails="0"/>
-            <range value="20" count="110" fails="0"/>
+            <range value="15" count="175" fails="0"/>
+            <range value="20" count="105" fails="0"/>
             <range value="25" count="215" fails="0"/>
-            <range value="30" count="135" fails="0"/>
-            <range value="35" count="360" fails="0"/>
+            <range value="30" count="110" fails="0"/>
+            <range value="35" count="290" fails="0"/>
             <range value="40" count="130" fails="0"/>
             <range value="45" count="75" fails="0"/>
-            <range value="50" count="75" fails="0"/>
-            <range value="55" count="80" fails="0"/>
-         </name>
-         <name id="Location" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232006181-0
-				</successMessageUrl>
-            <range value="20" count="5" fails="0"/>
-         </name>
-      </type>
-      <type id="SQL.PARAM" totalCount="7735" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-			</successMessageUrl>
-         <name id="APIUserInfo.getUserInfo" totalCount="1265" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-				</successMessageUrl>
-            <range value="0" count="75" fails="0"/>
-            <range value="5" count="80" fails="0"/>
-            <range value="10" count="85" fails="0"/>
-            <range value="15" count="255" fails="0"/>
-            <range value="20" count="85" fails="0"/>
-            <range value="25" count="75" fails="0"/>
-            <range value="30" count="80" fails="0"/>
-            <range value="35" count="105" fails="0"/>
-            <range value="40" count="80" fails="0"/>
-            <range value="45" count="195" fails="0"/>
             <range value="50" count="75" fails="0"/>
             <range value="55" count="75" fails="0"/>
          </name>
-         <name id="APIBadge.getBadgeTaskList" totalCount="300" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230839418-0
+         <name id="NotLogIn" totalCount="170" failCount="0" failPercent="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337231972930-0
 				</successMessageUrl>
-            <range value="0" count="25" fails="0"/>
-            <range value="5" count="25" fails="0"/>
-            <range value="10" count="25" fails="0"/>
-            <range value="15" count="25" fails="0"/>
-            <range value="20" count="25" fails="0"/>
-            <range value="25" count="25" fails="0"/>
+            <range value="15" count="65" fails="0"/>
+            <range value="20" count="5" fails="0"/>
             <range value="30" count="25" fails="0"/>
-            <range value="35" count="25" fails="0"/>
-            <range value="40" count="25" fails="0"/>
-            <range value="45" count="25" fails="0"/>
-            <range value="50" count="25" fails="0"/>
-            <range value="55" count="25" fails="0"/>
-         </name>
-         <name id="APIAnnounce.getValid" totalCount="600" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230840524-0
-				</successMessageUrl>
-            <range value="0" count="50" fails="0"/>
-            <range value="5" count="50" fails="0"/>
-            <range value="10" count="50" fails="0"/>
-            <range value="15" count="50" fails="0"/>
-            <range value="20" count="50" fails="0"/>
-            <range value="25" count="50" fails="0"/>
-            <range value="30" count="50" fails="0"/>
-            <range value="35" count="50" fails="0"/>
-            <range value="40" count="50" fails="0"/>
-            <range value="45" count="50" fails="0"/>
-            <range value="50" count="50" fails="0"/>
-            <range value="55" count="50" fails="0"/>
-         </name>
-         <name id="APIPush.getAndroidPushItems" totalCount="35" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231019548-0
-				</successMessageUrl>
-            <range value="0" count="5" fails="0"/>
-            <range value="10" count="5" fails="0"/>
-            <range value="20" count="5" fails="0"/>
-            <range value="30" count="5" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-         <name id="APICommonToken.queryByType" totalCount="15" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231020463-0
-				</successMessageUrl>
-            <range value="0" count="5" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-         <name id="APICampaign.getCampaignCacheList" totalCount="25" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231419001-0
-				</successMessageUrl>
-            <range value="10" count="5" fails="0"/>
-            <range value="25" count="5" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-         <name id="APIUser.getUserProfile" totalCount="410" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231472951-0
-				</successMessageUrl>
-            <range value="10" count="10" fails="0"/>
-            <range value="15" count="180" fails="0"/>
-            <range value="30" count="30" fails="0"/>
-            <range value="35" count="60" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIFeed.getUserFeed" totalCount="345" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231472951-0
-				</successMessageUrl>
-            <range value="10" count="10" fails="0"/>
-            <range value="15" count="180" fails="0"/>
-            <range value="35" count="25" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIUserExtend.getSnsImportedFlags" totalCount="345" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231472951-0
-				</successMessageUrl>
-            <range value="10" count="10" fails="0"/>
-            <range value="15" count="180" fails="0"/>
-            <range value="35" count="25" fails="0"/>
-            <range value="40" count="5" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIFriend.getFollowsID" totalCount="300" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851230-0
-				</successMessageUrl>
-            <range value="15" count="175" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIFriend.getFansID" totalCount="300" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851230-0
-				</successMessageUrl>
-            <range value="15" count="175" fails="0"/>
-            <range value="45" count="125" fails="0"/>
-         </name>
-         <name id="APIRegion.getRegionById" totalCount="20" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851230-0
-				</successMessageUrl>
-            <range value="15" count="5" fails="0"/>
-            <range value="45" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getLastCheckinUserID" totalCount="215" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="15" fails="0"/>
-            <range value="35" count="75" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getShopCheckInListWithCount" totalCount="215" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="15" fails="0"/>
-            <range value="35" count="75" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getShopCheckInList" totalCount="215" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="15" fails="0"/>
-            <range value="35" count="75" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getShopCheckInCount" totalCount="215" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="15" fails="0"/>
-            <range value="35" count="75" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APICheckList.getMeAndHoneyFollowShopCheckInListWithCount" totalCount="160" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="25" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="10" fails="0"/>
-            <range value="35" count="55" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APIMayor.getMayorID" totalCount="265" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231851227-0
-				</successMessageUrl>
-            <range value="15" count="55" fails="0"/>
-            <range value="25" count="55" fails="0"/>
-            <range value="30" count="30" fails="0"/>
-            <range value="35" count="110" fails="0"/>
-            <range value="40" count="15" fails="0"/>
-         </name>
-         <name id="APILocation.getOffset" totalCount="10" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232006181-0
-				</successMessageUrl>
-            <range value="20" count="10" fails="0"/>
-         </name>
-         <name id="APILocateCategory.getLocateList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232081505-0
-				</successMessageUrl>
-            <range value="20" count="5" fails="0"/>
-         </name>
-         <name id="APIShop.getShop" totalCount="105" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232089216-0
-				</successMessageUrl>
-            <range value="20" count="25" fails="0"/>
-            <range value="35" count="80" fails="0"/>
-         </name>
-         <name id="APIPromo.getPromo" totalCount="235" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337232089216-0
-				</successMessageUrl>
-            <range value="20" count="235" fails="0"/>
-         </name>
-         <name id="APIShop.getGoogleLatLngByShopId" totalCount="25" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337233179106-0
-				</successMessageUrl>
-            <range value="35" count="25" fails="0"/>
-         </name>
-         <name id="APIPromo.getPromoByShop" totalCount="160" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337233179106-0
-				</successMessageUrl>
-            <range value="35" count="160" fails="0"/>
-         </name>
-         <name id="APIShop.getChildrenShopIdsByGroupId" totalCount="80" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337233179106-0
-				</successMessageUrl>
-            <range value="35" count="80" fails="0"/>
-         </name>
-         <name id="APIUser.getBlackUserList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337233288139-0
-				</successMessageUrl>
-            <range value="40" count="5" fails="0"/>
-         </name>
-         <name id="APICategory.getAllCategoryList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234089383-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APICategory.getAllCategoryTreeList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234089651-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APICategory.getAllRootCategoryList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234089892-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APICategory.getAllParentCategoryId" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234089964-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APISearch.getFilterOptionList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234090090-0
-				</successMessageUrl>
-            <range value="50" count="5" fails="0"/>
-         </name>
-         <name id="APICity.getCityList" totalCount="5" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234246981-0
-				</successMessageUrl>
+            <range value="35" count="70" fails="0"/>
             <range value="55" count="5" fails="0"/>
-         </name>
-         <name id="APIRank.getCityRankCount" totalCount="1835" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337234246981-0
-				</successMessageUrl>
-            <range value="55" count="1835" fails="0"/>
-         </name>
-      </type>
-      <type id="Response" totalCount="1705" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-			</successMessageUrl>
-         <name id="Status" totalCount="1705" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337230813532-0
-				</successMessageUrl>
-            <range value="0" count="75" fails="0"/>
-            <range value="5" count="85" fails="0"/>
-            <range value="10" count="125" fails="0"/>
-            <range value="15" count="240" fails="0"/>
-            <range value="20" count="110" fails="0"/>
-            <range value="25" count="215" fails="0"/>
-            <range value="30" count="135" fails="0"/>
-            <range value="35" count="360" fails="0"/>
-            <range value="40" count="130" fails="0"/>
-            <range value="45" count="75" fails="0"/>
-            <range value="50" count="75" fails="0"/>
-            <range value="55" count="80" fails="0"/>
-         </name>
-      </type>
-      <type id="PigeonRespone" totalCount="10125" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337231441640-0
-			</successMessageUrl>
-         <name id="Payload" totalCount="10125" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231441640-0
-				</successMessageUrl>
-            <range value="10" count="775" fails="0"/>
-            <range value="15" count="2775" fails="0"/>
-            <range value="25" count="1120" fails="0"/>
-            <range value="30" count="410" fails="0"/>
-            <range value="35" count="3315" fails="0"/>
-            <range value="40" count="750" fails="0"/>
-            <range value="45" count="970" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-      </type>
-      <type id="Exception" totalCount="5" failCount="5" failPercent="100.00">
-         <failMessageUrl>MobileApi-0a014dc1-1337231446010-0</failMessageUrl>
-         <name id="java.lang.reflect.InvocationTargetException" totalCount="5" failCount="5" failPercent="100.00">
-            <failMessageUrl>MobileApi-0a014dc1-1337231446010-0</failMessageUrl>
-            <range value="10" count="5" fails="5"/>
-         </name>
-      </type>
-      <type id="RemoteCall" totalCount="20240" failCount="0" failPercent="0.00">
-         <successMessageUrl>MobileApi-0a014dc1-1337231448660-0
-			</successMessageUrl>
-         <name id="PigeonRequest" totalCount="10120" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231448660-0
-				</successMessageUrl>
-            <range value="10" count="770" fails="0"/>
-            <range value="15" count="2775" fails="0"/>
-            <range value="25" count="1120" fails="0"/>
-            <range value="30" count="410" fails="0"/>
-            <range value="35" count="3315" fails="0"/>
-            <range value="40" count="750" fails="0"/>
-            <range value="45" count="970" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-         <name id="PigeonRespone" totalCount="10120" failCount="0" failPercent="0.00">
-            <successMessageUrl>MobileApi-0a014dc1-1337231448660-0
-				</successMessageUrl>
-            <range value="10" count="770" fails="0"/>
-            <range value="15" count="2775" fails="0"/>
-            <range value="25" count="1120" fails="0"/>
-            <range value="30" count="410" fails="0"/>
-            <range value="35" count="3315" fails="0"/>
-            <range value="40" count="750" fails="0"/>
-            <range value="45" count="970" fails="0"/>
-            <range value="50" count="10" fails="0"/>
-         </name>
-      </type>
-      <type id="RuntimeException" totalCount="5" failCount="5" failPercent="100.00">
-         <failMessageUrl>MobileApi-0a014dc1-1337232089216-0</failMessageUrl>
-         <name id="java.lang.NullPointerException" totalCount="5" failCount="5" failPercent="100.00">
-            <failMessageUrl>MobileApi-0a014dc1-1337232089216-0</failMessageUrl>
-            <range value="20" count="5" fails="5"/>
          </name>
       </type>
    </machine>
