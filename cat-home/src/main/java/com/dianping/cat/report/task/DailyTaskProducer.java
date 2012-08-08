@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -45,17 +44,17 @@ public class DailyTaskProducer implements Runnable, Initializable {
 	@Inject
 	private TaskDao m_taskDao;
 
-	private boolean checkTaskGenerated(Date start) {
+	private boolean checkTaskGenerated(Date day) {
 		List<Dailyreport> allReports = new ArrayList<Dailyreport>();
 
 		try {
-			allReports = m_dailyReportDao.findAllByPeriod(start, new Date(start.getTime() + DAY),
+			allReports = m_dailyReportDao.findAllByPeriod(day, new Date(day.getTime() + DAY),
 			      DailyreportEntity.READSET_COUNT);
 		} catch (DalException e) {
-			m_logger.error("DailyTaskProducer isYesterdayTaskGenerated", e);
+			m_logger.warn("DailyTaskProducer isYesterdayTaskGenerated", e);
 		}
 
-		Set<String> domainSet = getDomainSet(start, new Date(start.getTime() + DAY));
+		Set<String> domainSet = getDomainSet(day, new Date(day.getTime() + DAY));
 		int total = 0;
 		int domanSize = domainSet.size();
 		int nameSize = m_dailyReportNameSet.size();
@@ -71,10 +70,10 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		return true;
 	}
 
-	private void generateDailyTasks(Date start, Date end) {
+	private void generateDailyTasks(Date day) {
 		Transaction t = Cat.newTransaction("System", "ProduceDailyReport");
 		try {
-			Set<String> domainSet = getDomainSet(start, end);
+			Set<String> domainSet = getDomainSet(day, new Date(day.getTime() + DAY));
 
 			for (String domain : domainSet) {
 				for (String name : m_dailyReportNameSet) {
@@ -84,7 +83,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 					task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 					task.setReportDomain(domain);
 					task.setReportName(name);
-					task.setReportPeriod(start);
+					task.setReportPeriod(day);
 					task.setStatus(1);
 					task.setTaskType(TYPE_DAILY);
 					try {
@@ -130,31 +129,18 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		m_dailyReportNameSet.add("event");
 		m_dailyReportNameSet.add("transaction");
 		m_dailyReportNameSet.add("problem");
-
-		Date now = new Date();
-		Date yesterdayStart = TaskHelper.yesterdayZero(now);
-		Date yesterdayEnd = TaskHelper.todayZero(now);
-
-		if (!checkTaskGenerated(yesterdayStart)) {
-			generateDailyTasks(yesterdayStart, yesterdayEnd);
-		}
 	}
 
 	@Override
 	public void run() {
 		while (true) {
-			Date now = new Date();
-			Date todayStart = TaskHelper.todayZero(now);
-			Date todayEnd = TaskHelper.tomorrowZero(now);
-			Date startDateOfNextTask = TaskHelper.startDateOfNextTask(now);
-
-			LockSupport.parkUntil(startDateOfNextTask.getTime());
 			try {
-				if (!checkTaskGenerated(todayStart)) {
-					generateDailyTasks(todayStart, todayEnd);
+				Date yestoday = TaskHelper.yesterdayZero(new Date());
+				if (!checkTaskGenerated(yestoday)) {
+					generateDailyTasks(yestoday);
 				}
+				Thread.sleep(10 * 60 * 1000);
 			} catch (Exception e) {
-				Cat.logError(e);
 			}
 		}
 	}

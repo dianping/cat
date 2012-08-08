@@ -14,7 +14,6 @@ import com.dianping.cat.report.page.model.event.EventModelServiceTest;
 import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
-import com.dianping.cat.report.page.sql.TestComputeStr;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
@@ -55,9 +54,6 @@ HeartbeatGraphDataTest.class,
 
 /* .report.page.model */
 EventReportFilterTest.class, TransactionReportFilterTest.class,
-
-/* .report.page.sql */
-TestComputeStr.class,
 
 /* . report.page.transcation */
 PayloadTest.class, TransactionReportMergerTest.class,
