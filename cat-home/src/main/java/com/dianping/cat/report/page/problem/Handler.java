@@ -22,7 +22,6 @@ import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.GraphDao;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -54,20 +53,17 @@ public class Handler implements PageHandler<Context> {
 	private DailyreportDao m_dailyreportDao;
 
 	@Inject
-	private GraphDao m_graphDao;
-
-	@Inject
 	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
-	
+
 	@Inject
 	private ProblemMerger m_problemMerger;
 
 	@Inject
 	protected ReportDao m_reportDao;
-	
+
 	@Inject
 	private ServerConfigManager m_manager;
 
@@ -326,21 +322,22 @@ public class Handler implements PageHandler<Context> {
 		ProblemReport problemReport = null;
 		Date currentDayStart = TaskHelper.todayZero(new Date());
 
-		if(currentDayStart.getTime()==start.getTime()){
+		if (currentDayStart.getTime() == start.getTime()) {
 			try {
-	         List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "problem",
-	               ReportEntity.READSET_FULL);
-	         List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
+				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "problem",
+				      ReportEntity.READSET_FULL);
+				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, null,
+				      ReportEntity.READSET_DOMAIN_NAME);
 
-	         Set<String> domains = new HashSet<String>();
-	         for(Report report:allReports){
-	         	domains.add(report.getDomain());
-	         }
-	         return m_problemMerger.mergeForDaily(domain, reports, domains );
-         } catch (DalException e) {
-         	Cat.logError(e);
-         	return new ProblemReport(domain);
-         }
+				Set<String> domains = new HashSet<String>();
+				for (Report report : allReports) {
+					domains.add(report.getDomain());
+				}
+				return m_problemMerger.mergeForDaily(domain, reports, domains);
+			} catch (DalException e) {
+				Cat.logError(e);
+				return new ProblemReport(domain);
+			}
 		}
 		try {
 			List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem",

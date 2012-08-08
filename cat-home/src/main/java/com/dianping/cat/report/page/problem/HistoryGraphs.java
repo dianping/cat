@@ -36,15 +36,15 @@ public class HistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 60);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
-				
+
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
-					
+
 					if (records.length < SummaryOrder.values().length) {
 						continue;
 					}
 					String dbType = records[SummaryOrder.TYPE.ordinal()];
-					
+
 					if (dbType.equals(type)) {
 						String[] values = records[SummaryOrder.DETAIL.ordinal()].split(",");
 						for (int k = 0; k < values.length; k++) {
@@ -58,7 +58,7 @@ public class HistoryGraphs {
 				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 60);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
-				
+
 				for (int j = 0; j < allLines.length; j++) {
 					String[] records = allLines[j].split("\t");
 					if (records.length < DetailOrder.values().length) {
@@ -66,7 +66,7 @@ public class HistoryGraphs {
 					}
 					String dbStatus = records[DetailOrder.STATUS.ordinal()];
 					String dbType = records[DetailOrder.TYPE.ordinal()];
-				
+
 					if (status.equals(dbStatus) && type.equals(dbType)) {
 						String[] values = records[DetailOrder.DETAIL.ordinal()].split(",");
 						for (int k = 0; k < values.length; k++) {
@@ -91,7 +91,7 @@ public class HistoryGraphs {
 		double[] data = getGraphData(model, payload).get(ERROR);
 		String type = payload.getType();
 		String status = payload.getStatus();
-		
+
 		item.setTitles(StringUtils.isEmpty(status) ? type : status);
 		item.addValue(data);
 		item.setSize(size);
@@ -109,7 +109,7 @@ public class HistoryGraphs {
 		List<Graph> graphs = new ArrayList<Graph>();
 
 		try {
-			graphs = this.m_graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "problem",
+			graphs = m_graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "problem",
 			      GraphEntity.READSET_FULL);
 		} catch (DalException e) {
 			Cat.logError(e);

@@ -19,8 +19,6 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.remote.RemoteIdChannel;
-import com.dianping.cat.consumer.remote.RemoteIdChannelManager;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -36,7 +34,6 @@ import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
@@ -52,12 +49,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject
 	private TaskDao m_taskDao;
 
-	@Inject
-	private MessagePathBuilder m_builder;
-
-	@Inject
-	private RemoteIdChannelManager m_manager;
-
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
 	private long m_extraTime;
@@ -65,8 +56,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private long m_startTime;
 
 	private long m_duration;
-
-	private String m_remoteIdPath;
 
 	private Logger m_logger;
 
@@ -322,18 +311,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_duration = duration;
 
 		loadReports();
-		String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		m_remoteIdPath = m_builder.getMessageRemoteIdPath(ipAddress, new Date(m_startTime));
 	}
 
 	private void storeMessage(MessageTree tree) {
-		try {
-			RemoteIdChannel m_channel = m_manager.openChannel(m_remoteIdPath, m_startTime);
-			m_channel.write(tree);
-		} catch (Exception e) {
-			m_logger.error("Error when storing message info to remote file!", e);
-		}
-
 		String messageId = tree.getMessageId();
 		String domain = tree.getDomain();
 
@@ -420,11 +400,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		private String m_domain;
 
 		private int m_maxItems;
-		
-		public TransactionReportFilter(int maxItem){
+
+		public TransactionReportFilter(int maxItem) {
 			m_maxItems = maxItem;
 		}
-		
+
 		@Override
 		public void visitType(TransactionType type) {
 			long totalCount = type.getTotalCount();
