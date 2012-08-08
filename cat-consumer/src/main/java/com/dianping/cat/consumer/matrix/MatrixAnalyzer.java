@@ -38,7 +38,8 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	@Inject
 	private ReportDao m_reportDao;
 
-	@Inject
+	@SuppressWarnings("unused")
+   @Inject
    private TaskDao m_taskDao;
 
 	private Map<String, MatrixReport> m_reports = new HashMap<String, MatrixReport>();

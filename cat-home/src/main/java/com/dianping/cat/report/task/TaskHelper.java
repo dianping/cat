@@ -108,6 +108,9 @@ public class TaskHelper {
 	}
 
 	public static Date todayZero(Date reportPeriod) {
+		if(reportPeriod==null){
+			reportPeriod = new Date();
+		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(reportPeriod);
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -118,6 +121,9 @@ public class TaskHelper {
 	}
 
 	public static Date tomorrowZero(Date reportPeriod) {
+		if(reportPeriod==null){
+			reportPeriod = new Date();
+		}
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(reportPeriod);
 		cal.add(Calendar.DAY_OF_YEAR, 1);

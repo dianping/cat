@@ -69,6 +69,14 @@ public class HistoryGraphs {
 				}
 			}
 		}
+		int test = 0;
+		for(int i=0;i<total_count.length;i++){
+			if(total_count[i]>-1){
+				test+=total_count[i];
+			}
+		}
+		System.out.println("Event total:"+test);
+		
 		result.put("total_count", total_count);
 		result.put("failure_count", failure_count);
 		return result;

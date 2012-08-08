@@ -52,7 +52,7 @@ public class TransactionDailyGraphMergerTest {
 	private Report creatReport() {
 		Report result = new Report();
 		try {
-			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("transactionCreator.xml"), "utf-8");
+			String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseTransactionReport.xml"), "utf-8");
 			
 			result.setContent(xml);
 		} catch (Exception e) {

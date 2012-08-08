@@ -49,7 +49,6 @@ public abstract class TaskConsumer implements Runnable {
 	public void run() {
 		String localIp = getLoaclIp();
 		while (running) {
-			boolean again = false;
 			LockSupport.parkNanos(getSleepTime());
 			Transaction t = Cat.newTransaction("System", "MergeJob-" + localIp);
 			try {
@@ -57,6 +56,8 @@ public abstract class TaskConsumer implements Runnable {
 				if (task == null) {
 					task = findTodoTask();
 				}
+				
+				boolean again = false;
 				if (task != null) {
 					task.setConsumer(localIp);
 					if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) { // confirm

@@ -209,12 +209,16 @@ public class LocalMessageBucket implements MessageBucket {
 		}
 
 		public synchronized void close() throws IOException {
-			try {
-				flushBlock();
-			} finally {
-				m_out.close();
-				m_indexFile.close();
-				m_dataFile.close();
+			if (m_out != null) {
+				try {
+					flushBlock();
+				} finally {
+					m_out.close();
+					m_indexFile.close();
+					m_dataFile.close();
+
+					m_out = null;
+				}
 			}
 		}
 
@@ -223,10 +227,12 @@ public class LocalMessageBucket implements MessageBucket {
 
 			byte[] data = m_buf.toByteArray();
 
-			m_dataFile.writeInt(data.length);
-			m_dataFile.write(data);
-			m_blockAddress += data.length + 4;
-			m_blockSize = 0;
+			if (data.length > 0) {
+				m_dataFile.writeInt(data.length);
+				m_dataFile.write(data);
+				m_blockAddress += data.length + 4;
+				m_blockSize = 0;
+			}
 
 			m_buf.reset();
 			m_out = new DataOutputStream(new GZIPOutputStream(m_buf));

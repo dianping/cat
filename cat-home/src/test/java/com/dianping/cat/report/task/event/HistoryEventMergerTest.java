@@ -13,10 +13,10 @@ import com.dianping.cat.report.task.event.HistoryEventReportMerger;
 public class HistoryEventMergerTest {
 	@Test
 	public void testMerge() throws Exception{
-		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("event.xml"), "utf-8");
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("HistoryBaseEvent.xml"), "utf-8");
 		EventReport report1 = DefaultSaxParser.parse(oldXml);
 		EventReport report2 = DefaultSaxParser.parse(oldXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("eventResult.xml"),
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("HistoryEventMergerDaily.xml"),
 		      "utf-8");
 		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(report1.getDomain()));
 
@@ -26,7 +26,6 @@ public class HistoryEventMergerTest {
 		String actual = new DefaultXmlBuilder().buildXml(merger.getEventReport());
 
 		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
-
 	}
 	
 }
