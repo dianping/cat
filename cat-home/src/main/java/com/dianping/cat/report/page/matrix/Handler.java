@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.matrix;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
