@@ -5,7 +5,7 @@ import java.util.List;
 import com.site.helper.Splitters;
 
 public class MessageId {
-	private static final long VERSION1_THRESHOLD = 1325347200000L; // Jan. 1, 2012
+	private static final long VERSION1_THRESHOLD = 1325347200000L; // Jan. 1 2012
 
 	private String m_domain;
 
@@ -60,6 +60,36 @@ public class MessageId {
 
 	public int getIndex() {
 		return m_index;
+	}
+
+	public String getIpAddress() {
+		StringBuilder sb = new StringBuilder();
+		String local=m_ipAddressInHex;
+		int length = local.length();
+		
+		for (int i = 0; i < length; i += 2) {
+			char first = local.charAt(i);
+			char next = local.charAt(i + 1);
+			int temp = 0;
+
+			if (first >= '0' && first <= '9') {
+				temp += (first - '0') << 4;
+			} else {
+				temp += ((first - 'a') + 10) << 4;
+			}
+			if (next >= '0' && next <= '9') {
+				temp += next - '0';
+			} else {
+				temp += (next - 'a') + 10;
+			}
+
+			if (sb.length() > 0) {
+				sb.append('.');
+			}
+			sb.append(temp);
+		}
+
+		return sb.toString();
 	}
 
 	public String getIpAddressInHex() {

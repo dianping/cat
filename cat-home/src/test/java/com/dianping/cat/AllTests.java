@@ -58,6 +58,8 @@ EventReportFilterTest.class, TransactionReportFilterTest.class,
 /* . report.page.transcation */
 PayloadTest.class, TransactionReportMergerTest.class,
 
+/* . report.page.cross */
+
 /* graph test */
 EventGraphDataTest.class, HeartbeatGraphDataTest.class,
 

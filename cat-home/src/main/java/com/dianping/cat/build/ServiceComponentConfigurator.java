@@ -9,6 +9,9 @@ import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.hdfs.InputChannelManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.report.page.model.cross.CompositeCrossService;
+import com.dianping.cat.report.page.model.cross.HistoricalCrossService;
+import com.dianping.cat.report.page.model.cross.LocalCrossService;
 import com.dianping.cat.report.page.model.event.CompositeEventService;
 import com.dianping.cat.report.page.model.event.HistoricalEventService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
@@ -87,6 +90,15 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 
+		all.add(C(ModelService.class, "cross-local", LocalCrossService.class) //
+		      .req(BucketManager.class) //
+		      .req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "cross-historical", HistoricalCrossService.class) //
+		      .req(BucketManager.class, ReportDao.class));
+		all.add(C(ModelService.class, "cross", CompositeCrossService.class) //
+		      .req(ServerConfigManager.class) //
+		      .req(ModelService.class, new String[] { "cross-historical" }, "m_services"));
+		
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class, "realtime"));

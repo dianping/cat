@@ -23,6 +23,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.model.cross.LocalCrossService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
@@ -69,6 +70,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "transaction-local")
 	private LocalTransactionService m_transactionService;
+
+	@Inject(type = ModelService.class, value = "cross-local")
+	private LocalCrossService m_crossService;
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -153,6 +157,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_heartbeatService.invoke(request);
 			} else if ("matrix".equals(report)) {
 				response = m_matrixService.invoke(request);
+			} else if ("cross".equals(report)) {
+				response = m_crossService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}

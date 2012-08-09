@@ -412,6 +412,50 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>cross-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.cross.LocalCrossService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>cross-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.cross.HistoricalCrossService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>cross</role-hint>
+			<implementation>com.dianping.cat.report.page.model.cross.CompositeCrossService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>cross-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>ip-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
 			<requirements>
@@ -927,6 +971,11 @@
 					<role-hint>transaction-local</role-hint>
 					<field-name>m_transactionService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>cross-local</role-hint>
+					<field-name>m_crossService</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1042,6 +1091,20 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.transaction.LocalTransactionService</role>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.cross.LocalCrossService</role>
+			<implementation>com.dianping.cat.report.page.model.cross.LocalCrossService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -1321,6 +1384,27 @@
 		<component>
 			<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.monthreport.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cross.Handler</role>
+			<implementation>com.dianping.cat.report.page.cross.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.cross.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>cross</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cross.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.cross.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>

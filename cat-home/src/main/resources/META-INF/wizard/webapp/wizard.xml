@@ -44,6 +44,9 @@
       <page name="monthreport" title="Monthreport" path="monthreport">
         <description>Monthreport</description>
       </page>
+      <page name="cross" title="Cross" path="cross">
+        <description>Cross</description>
+      </page>
     </module>
   </webapp>
 </wizard>
