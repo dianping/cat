@@ -6,6 +6,7 @@ import java.util.List;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.hadoop.hdfs.InputChannelManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -20,6 +21,7 @@ import com.dianping.cat.report.page.model.ip.HistoricalIpService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
 import com.dianping.cat.report.page.model.logview.HistoricalLogViewService;
+import com.dianping.cat.report.page.model.logview.HistoricalMessageService;
 import com.dianping.cat.report.page.model.logview.LocalLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalMessageService;
 import com.dianping.cat.report.page.model.matrix.CompositeMatrixService;
@@ -33,6 +35,7 @@ import com.dianping.cat.report.page.model.transaction.CompositeTransactionServic
 import com.dianping.cat.report.page.model.transaction.HistoricalTransactionService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.storage.BucketManager;
+import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
@@ -98,8 +101,12 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ModelService.class, "message-local", LocalMessageService.class) //
 		      .req(MessageConsumer.class, "realtime") //
-		      .req(MessageBucketManager.class) //
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
 		      .req(MessageCodec.class, "html"));
+		all.add(C(ModelService.class, "message-historical", HistoricalMessageService.class) //
+				.req(MessageBucketManager.class, LocalMessageBucketManager.ID, "m_localBucketManager") //
+				.req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
+				.req(MessageCodec.class, "html"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 		      .req(MessageConsumer.class, "realtime") //
@@ -110,7 +117,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "logview-historical" }, "m_services"));
+		      .req(ModelService.class, new String[] { "message-historical", "logview-historical" }, "m_services"));
 
 		return all;
 	}

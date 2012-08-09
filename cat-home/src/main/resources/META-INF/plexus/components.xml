@@ -465,6 +465,28 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>message-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.logview.HistoricalMessageService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
+					<field-name>m_localBucketManager</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>hdfs</role-hint>
+					<field-name>m_hdfsBucketManager</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
@@ -521,6 +543,7 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
+						<role-hint>message-historical</role-hint>
 						<role-hint>logview-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
@@ -999,6 +1022,7 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>

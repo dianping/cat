@@ -112,6 +112,20 @@ public class HistoricalLogViewService extends BaseHistoricalModelService<String>
 		}
 	}
 
+	@Override
+	public boolean isEligable(ModelRequest request) {
+		boolean eligibale = super.isEligable(request);
+
+		if (eligibale) {
+			String messageId = request.getProperty("messageId");
+			MessageId id = MessageId.parse(messageId);
+
+			return id.getVersion() == 1;
+		}
+
+		return eligibale;
+	}
+
 	private MessageTree readMessageTree(Logview logview) throws IOException {
 		InputChannel inputChannel = null;
 
