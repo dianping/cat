@@ -22,8 +22,6 @@ import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.Task;
-import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
@@ -38,10 +36,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 	@Inject
 	private ReportDao m_reportDao;
-
-	@SuppressWarnings("unused")
-   @Inject
-   private TaskDao m_taskDao;
 
 	private Map<String, MatrixReport> m_reports = new HashMap<String, MatrixReport>();
 
@@ -254,16 +248,16 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 						r.setContent(xml);
 
 						m_reportDao.insert(r);
-
-						 Task task = m_taskDao.createLocal();
-						 task.setCreationDate(new Date());
-						 task.setProducer(ip);
-						 task.setReportDomain(domain);
-						 task.setReportName("matrix");
-						 task.setReportPeriod(period);
-						 task.setStatus(1); // status todo
-						 m_taskDao.insert(task);
-						 m_logger.info("insert matrix task:" + task.toString());
+//
+//						 Task task = m_taskDao.createLocal();
+//						 task.setCreationDate(new Date());
+//						 task.setProducer(ip);
+//						 task.setReportDomain(domain);
+//						 task.setReportName("matrix");
+//						 task.setReportPeriod(period);
+//						 task.setStatus(1); // status todo
+//						 m_taskDao.insert(task);
+//						 m_logger.info("insert matrix task:" + task.toString());
 					} catch (Throwable e) {
 						Cat.getProducer().logError(e);
 					}

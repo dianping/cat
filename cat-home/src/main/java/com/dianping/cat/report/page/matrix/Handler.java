@@ -64,6 +64,9 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(model, payload);
 		switch (payload.getAction()) {
+		case HISTORY_REPORT:
+			showSummarizeReport(model, payload);
+			break;
 		case HOURLY_REPORT:
 			MatrixReport report = getHourlyReport(payload);
 			model.setReport(report);
@@ -73,6 +76,10 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	public void showSummarizeReport(Model model, Payload payload){
+		
+	}
+	
 	public void normalize(Model model, Payload payload) {
 		Action action = payload.getAction();
 		model.setAction(action);
@@ -88,6 +95,16 @@ public class Handler implements PageHandler<Context> {
 			model.setLongDate(payload.getCurrentDate());
 		} else {
 			model.setLongDate(payload.getDate());
+		}
+		if (action == Action.HISTORY_REPORT) {
+			String type = payload.getReportType();
+			if (type == null || type.length() == 0) {
+				payload.setReportType("day");
+			}
+			model.setReportType(payload.getReportType());
+			payload.computeStartDate();
+			model.setLongDate(payload.getDate());
+			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
 	}
 }
