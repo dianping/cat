@@ -299,7 +299,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		private String m_name;
 
 		private String m_type;
-
+		
 		public TransactionReportFilter(String type, String name, String ip) {
 			m_type = type;
 			m_name = name;
@@ -308,7 +308,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitAllDuration(AllDuration duration) {
-
 		}
 
 		@Override

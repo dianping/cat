@@ -2,15 +2,20 @@ package com.dianping.cat.notify.job;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dianping.cat.notify.config.ConfigContext;
+import com.dianping.cat.notify.dao.DailyReportDao;
 import com.dianping.cat.notify.dao.MailLogDao;
 import com.dianping.cat.notify.dao.SubscriberDao;
+import com.dianping.cat.notify.model.DailyReport;
 import com.dianping.cat.notify.model.MailLog;
 import com.dianping.cat.notify.model.Subscriber;
 import com.dianping.cat.notify.report.ReportCreater;
@@ -30,10 +35,14 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 	private ReportCreaterRegistry reportCreaterRegistry;
 
 	private MailLogDao m_mailLogDao;
+	
+	protected DailyReportDao m_dailyReportDao;
 
 	public static String MAIL_SPLITER = ",";
 
 	private AtomicLong lastDoneTime = new AtomicLong();
+	
+	private String m_defaultReceivers;
 
 	@Override
 	public boolean init(JobContext jobContext) {
@@ -46,6 +55,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		m_subscriberDao = holder.lookup(SubscriberDao.class, "subscriberDao");
 		m_commonService = holder.lookup(CommonAlarmService.class,"commonService");
 		m_mailLogDao = holder.lookup(MailLogDao.class, "mailLogDao");
+		m_dailyReportDao = holder.lookup(DailyReportDao.class, "dailyReportDao");
 
 		lastDoneTime.set(-1);
 
@@ -55,14 +65,49 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 	@Override
 	public void doJob(long timestamp) {
 		List<Object> subscriberList = null;
+		List<String> domainList =null;
 		try {
 			subscriberList = m_subscriberDao.getAllMailSubscriber();
 		} catch (Exception e) {
 			logger.error("fail to get subscribers from database", e);
 			return;
 		}
+		
+		//get all domain
+		try {
+			domainList = m_dailyReportDao.findDistinctReportDomain(new Date(timestamp-TimeUtil.TWO_DAY_MICROS), new Date(timestamp-TimeUtil.DAY_MICROS), DailyReport.XML_TYPE);
+		} catch (Exception e) {
+			logger.error("fail to get domain from database", e);
+			return;
+		}
+		if(domainList == null || domainList.size() == 0){
+			return;
+		}
+		Set<String> domainSet = new HashSet<String>();
+		for(String domain : domainList){
+			domainSet.add(domain);
+		}
+		
+		
+		//send emails to subscribers
 		for (Object element : subscriberList) {
 			Subscriber subscriber = (Subscriber) element;
+			sendBySubscriber(timestamp, false, subscriber);
+			//remove the domain
+			domainSet.remove(subscriber.getDomain());
+		}
+		
+		
+		if(domainSet.size() == 0){
+			return;
+		}
+		Iterator<String> iterator = domainSet.iterator();
+		while(iterator.hasNext()){
+			String domain = iterator.next();
+			Subscriber subscriber = new Subscriber();
+			subscriber.setAddress(m_defaultReceivers);
+			subscriber.setDomain(domain);
+			//notify administrators to configure the new domain subscriber
 			sendBySubscriber(timestamp, false, subscriber);
 		}
 	}
@@ -260,4 +305,10 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 	public void setReportCreaterRegistry(ReportCreaterRegistry reportCreaterRegistry) {
 		this.reportCreaterRegistry = reportCreaterRegistry;
 	}
+
+	public void setDefaultReceivers(String defaultReceivers) {
+   	this.m_defaultReceivers = defaultReceivers;
+   }
+	
+	
 }

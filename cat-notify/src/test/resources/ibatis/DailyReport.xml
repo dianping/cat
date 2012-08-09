@@ -43,4 +43,17 @@
         	  </isNotEmpty>
         	  and (name='event' or name='problem' or name='transaction')
     </select>
+    <select id="DailyReport.selectDistinctDomain" resultClass="java.lang.String">
+    	select distinct domain
+    	from dailyreport 
+    	where <![CDATA[ period>=#startDate# and period<#endDate#
+   		      ]]>      
+              <isNotEmpty prepend="AND" property="domain">
+            	  domain=#domain# 
+        	  </isNotEmpty>
+        	  <isNotEmpty prepend="AND" property="type">
+            	  type=#type# 
+        	  </isNotEmpty>
+        	  and (name='event' or name='problem' or name='transaction')
+    </select>
 </sqlMap>
