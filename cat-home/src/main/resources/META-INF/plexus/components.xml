@@ -155,6 +155,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.DailyTaskProducer</role>
 			<implementation>com.dianping.cat.report.task.DailyTaskProducer</implementation>
 			<requirements>
@@ -1284,6 +1302,9 @@
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
@@ -1293,6 +1314,10 @@
 					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+			<implementation>com.dianping.cat.report.task.matrix.MatrixMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>

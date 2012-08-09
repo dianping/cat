@@ -25,6 +25,7 @@ import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatMerger;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
+import com.dianping.cat.report.task.matrix.MatrixMerger;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
@@ -79,6 +80,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(HeartbeatReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,HeartbeatGraphCreator.class,HeartbeatMerger.class));
 
+		all.add(C(MatrixReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,MatrixMerger.class));
+		
 		all.add(C(DailyTaskProducer.class, DailyTaskProducer.class) //
 		      .req(TaskDao.class, ReportDao.class, DailyreportDao.class));
 
