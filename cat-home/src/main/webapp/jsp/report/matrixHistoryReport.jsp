@@ -16,9 +16,9 @@
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>
-		<th class="left" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
-		<th rowspan="2" title="所有请求中总次数"><a href="?date=${model.date}&domain=${model.domain}&sort=Count">Total<br/>Hits</a></th>
-		<th rowspan="2" title="所有请求中平均响应时间"><a href="?date=${model.date}&domain=${model.domain}&sort=Time">Avg<br/>Duration(ms)</a></th>
+		<th class="left" rowspan="2"><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
+		<th rowspan="2" title="所有请求中总次数"><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=Count">Total<br/>Hits</a></th>
+		<th rowspan="2" title="所有请求中平均响应时间"><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=Time">Avg<br/>Duration(ms)</a></th>
 		<th rowspan="2">Sample Link</th>
 		<th colspan="3" title="一次请求中远程调用次数统计">Call Ratio</th>
 		<th colspan="2" title="一次请求中远程调用时间统计">Call Cost</th>
@@ -28,23 +28,23 @@
 		<th colspan="2" title="一次请求中缓存调用时间统计">Cache Cost</th>
 	</tr>
 	<tr class="odd">
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callMinCount">Min</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callMaxCount">Max</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callAvgCount">Avg</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callAvgTotalTime">Time(ms)</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callTimePercent">Time%</td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=callMinCount">Min</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=callMaxCount">Max</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=callAvgCount">Avg</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=callAvgTotalTime">Time(ms)</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=callTimePercent">Time%</td>
 		
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlMinCount">Min</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlMaxCount">Max</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlAvgCount">Avg</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlAvgTotalTime">Time(ms)</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlTimePercent">Time%</td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=sqlMinCount">Min</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=sqlMaxCount">Max</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=sqlAvgCount">Avg</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=sqlAvgTotalTime">Time(ms)</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=sqlTimePercent">Time%</td>
 		
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheMinCount">Min</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheMaxCount">Max</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheAvgCount">Avg</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheAvgTotalTime">Time(ms)</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheTimePercent">Time%</td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=cacheMinCount">Min</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=cacheMaxCount">Max</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=cacheAvgCount">Avg</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=cacheAvgTotalTime">Time(ms)</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&sort=cacheTimePercent">Time%</td>
 	</tr>
 	<c:forEach var="item" items="${model.matrix.matrixs}"
 				varStatus="status">
