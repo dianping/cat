@@ -186,6 +186,9 @@
 					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
@@ -1165,6 +1168,9 @@
 					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
@@ -1272,6 +1278,21 @@
 		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionGraphCreator</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionGraphCreator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
