@@ -11,7 +11,11 @@ import java.util.Map;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -35,13 +39,35 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Map<String, LocalMessageBucket> m_buckets = new HashMap<String, LocalMessageBucket>();
 
+	public void archive(long startTime) throws IOException {
+		String path = m_pathBuilder.getPath(new Date(startTime), "");
+		List<String> keys = new ArrayList<String>();
+
+		synchronized (m_buckets) {
+			for (String key : m_buckets.keySet()) {
+				if (key.startsWith(path)) {
+					keys.add(key);
+				}
+			}
+
+			for (String key : keys) {
+				LocalMessageBucket bucket = m_buckets.remove(key);
+
+				bucket.close();
+				bucket.archive();
+			}
+		}
+	}
+
 	@Override
 	public void close() throws IOException {
-		for (LocalMessageBucket bucket : m_buckets.values()) {
-			bucket.close();
-		}
+		synchronized (m_buckets) {
+			for (LocalMessageBucket bucket : m_buckets.values()) {
+				bucket.close();
+			}
 
-		m_buckets.clear();
+			m_buckets.clear();
+		}
 	}
 
 	void closeIdleBuckets() throws IOException {
@@ -49,17 +75,19 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		long hour = 3600 * 1000L;
 		List<String> closedKeys = new ArrayList<String>();
 
-		for (Map.Entry<String, LocalMessageBucket> e : m_buckets.entrySet()) {
-			LocalMessageBucket bucket = e.getValue();
+		synchronized (m_buckets) {
+			for (Map.Entry<String, LocalMessageBucket> e : m_buckets.entrySet()) {
+				LocalMessageBucket bucket = e.getValue();
 
-			if (now - bucket.getLastAccessTime() >= hour) {
-				bucket.close();
-				closedKeys.add(e.getKey());
+				if (now - bucket.getLastAccessTime() >= hour) {
+					bucket.close();
+					closedKeys.add(e.getKey());
+				}
 			}
-		}
 
-		for (String key : closedKeys) {
-			m_buckets.remove(key);
+			for (String key : closedKeys) {
+				m_buckets.remove(key);
+			}
 		}
 	}
 
@@ -74,43 +102,60 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public MessageTree loadMessage(String messageId) throws IOException {
-		MessageId id = MessageId.parse(messageId);
-		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
-		final File dir = new File(m_baseDir, path);
-		final String key = "-" + id.getDomain() + "-";
-		final List<String> paths = new ArrayList<String>();
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction("BucketService", getClass().getSimpleName());
 
-		Scanners.forDir().scan(dir, new FileMatcher() {
-			@Override
-			public Direction matches(File base, String name) {
-				if (name.contains(key) && !name.endsWith(".idx")) {
-					paths.add(path + name);
+		t.setStatus(Message.SUCCESS);
+
+		try {
+			MessageId id = MessageId.parse(messageId);
+			final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
+			final File dir = new File(m_baseDir, path);
+			final String key = "-" + id.getDomain() + "-";
+			final List<String> paths = new ArrayList<String>();
+
+			Scanners.forDir().scan(dir, new FileMatcher() {
+				@Override
+				public Direction matches(File base, String name) {
+					if (name.contains(key) && !name.endsWith(".idx")) {
+						paths.add(path + name);
+					}
+
+					return Direction.NEXT;
+				}
+			});
+
+			for (String dataFile : paths) {
+				LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+				if (bucket == null) {
+					File file = new File(m_baseDir, dataFile);
+
+					if (file.exists()) {
+						bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+						bucket.setBaseDir(m_baseDir);
+						bucket.initialize(dataFile);
+						m_buckets.put(dataFile, bucket);
+					}
 				}
 
-				return Direction.NEXT;
-			}
-		});
-
-		for (String dataFile : paths) {
-			LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-			if (bucket == null) {
-				File file = new File(m_baseDir, dataFile);
-
-				if (file.exists()) {
-					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-					bucket.setBaseDir(m_baseDir);
-					bucket.initialize(dataFile);
-					m_buckets.put(dataFile, bucket);
+				if (bucket != null) {
+					return bucket.findById(messageId);
 				}
 			}
 
-			if (bucket != null) {
-				return bucket.findById(messageId);
-			}
+			return null;
+		} catch (IOException e) {
+			t.setStatus(e);
+			cat.logError(e);
+			throw e;
+		} catch (RuntimeException e) {
+			t.setStatus(e);
+			cat.logError(e);
+			throw e;
+		} finally {
+			t.complete();
 		}
-
-		return null;
 	}
 
 	public void setBaseDir(File baseDir) {
@@ -150,7 +195,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					try {
 						closeIdleBuckets();
 					} catch (IOException e) {
-						e.printStackTrace();
+						Cat.getProducer().logError(e);
 					}
 				}
 			} catch (InterruptedException e) {

@@ -51,6 +51,7 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		}
 
 		bucket.close();
+		bucket.archive();
 	}
 
 	@Test
@@ -91,7 +92,8 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		LocalMessageBucket bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 
 		bucket.setMessageCodec(MockCodec.INSTANCE);
-		bucket.initialize("target/bucket/hdfs/dump/dump" + id);
+		bucket.setBaseDir(new File("target/bucket/hdfs/dump"));
+		bucket.initialize("dump" + id);
 		factory.setIpAddress("7f000001");
 		factory.initialize("Test");
 		return bucket;

@@ -16,6 +16,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.site.lookup.annotation.Inject;
 
@@ -27,13 +28,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	private MessagePathBuilder m_builder;
 
 	@Inject
-	private DumpChannelManager m_manager;
+	private DumpChannelManager m_channelManager;
 
 	@Inject
 	private DumpUploader m_uploader;
 
-	@Inject
-	private MessageBucketManager m_bucketManager;
+	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
+	private LocalMessageBucketManager m_bucketManager;
 
 	public DumpUploader getDumpUploader() {
 		return m_uploader;
@@ -52,7 +53,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd) {
-			m_manager.closeAllChannels(m_startTime);
+			m_channelManager.closeAllChannels(m_startTime);
+
+			try {
+	         m_bucketManager.archive(m_startTime);
+         } catch (IOException e) {
+	         e.printStackTrace();
+         }
 		}
 	}
 
@@ -95,13 +102,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 					long timestamp = tree.getMessage().getTimestamp();
 					String domain = tree.getDomain();
 					String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
-					DumpChannel channel = m_manager.openChannel(path, false, m_startTime);
+					DumpChannel channel = m_channelManager.openChannel(path, false, m_startTime);
 					int length = channel.write(tree);
 
 					if (length <= 0) {
-						m_manager.closeChannel(channel);
+						m_channelManager.closeChannel(channel);
 
-						channel = m_manager.openChannel(path, true, m_startTime);
+						channel = m_channelManager.openChannel(path, true, m_startTime);
 						channel.write(tree);
 					}
 				} catch (Exception e) {

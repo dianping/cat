@@ -19,6 +19,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.site.helper.Files;
 import com.site.lookup.annotation.Inject;
 
 public class LocalMessageBucket implements MessageBucket {
@@ -38,7 +39,7 @@ public class LocalMessageBucket implements MessageBucket {
 
 	private int m_rawSize;
 
-	private File m_dataFile;
+	private String m_dataFile;
 
 	private long m_lastAccessTime;
 
@@ -92,9 +93,12 @@ public class LocalMessageBucket implements MessageBucket {
 
 	@Override
 	public void initialize(String dataFile) throws IOException {
-		m_dataFile = new File(m_baseDir, dataFile);
-		m_writer = new MessageBlockWriter(m_dataFile);
-		m_reader = new MessageBlockReader(m_dataFile);
+		m_dataFile = dataFile;
+
+		File file = new File(m_baseDir, dataFile);
+
+		m_writer = new MessageBlockWriter(file);
+		m_reader = new MessageBlockReader(file);
 	}
 
 	public void setBaseDir(File baseDir) {
@@ -251,5 +255,19 @@ public class LocalMessageBucket implements MessageBucket {
 
 			m_blockSize += data.length + 4;
 		}
+	}
+
+	public void archive() throws IOException {
+		File outbox = new File(m_baseDir, "outbox");
+		File from = new File(m_baseDir, m_dataFile);
+		File to = new File(outbox, m_dataFile);
+		File fromIndex = new File(m_baseDir, m_dataFile + ".idx");
+		File toIndex = new File(outbox, m_dataFile + ".idx");
+
+		to.getParentFile().mkdirs();
+		Files.forDir().copyFile(from, to);
+		Files.forDir().copyFile(fromIndex, toIndex);
+		Files.forDir().delete(from);
+		Files.forDir().delete(fromIndex);
 	}
 }

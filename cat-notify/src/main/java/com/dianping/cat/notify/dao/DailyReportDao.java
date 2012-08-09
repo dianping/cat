@@ -11,5 +11,6 @@ public interface DailyReportDao {
 
 	public List<DailyReport> findSendMailReportDomainDuration(Date startDate, Date endDate, String domain, int type) throws Exception;
 
+	public List<String> findDistinctReportDomain(Date startDate, Date endDate, int type) throws Exception;
 	
 }

@@ -13,6 +13,10 @@ import org.apache.hadoop.fs.PathFilter;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
@@ -59,46 +63,64 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	@Override
 	public MessageTree loadMessage(String messageId) throws IOException {
-		MessageId id = MessageId.parse(messageId);
-		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
-		final StringBuilder sb = new StringBuilder();
-		FileSystem fs = m_manager.getFileSystem("dump", sb);
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction("BucketService", getClass().getSimpleName());
 
-		sb.append('/').append(path);
+		t.setStatus(Message.SUCCESS);
 
-		final String key = "-" + id.getDomain() + "-";
-		final String str = sb.toString();
-		final Path basePath = new Path(str);
-		final List<String> paths = new ArrayList<String>();
+		try {
+			MessageId id = MessageId.parse(messageId);
+			final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
+			final StringBuilder sb = new StringBuilder();
+			FileSystem fs = m_manager.getFileSystem("dump", sb);
 
-		fs.listStatus(basePath, new PathFilter() {
-			@Override
-			public boolean accept(Path p) {
-				String name = p.getName();
+			sb.append('/').append(path);
 
-				if (name.contains(key) && !name.endsWith(".idx")) {
-					paths.add(path + name);
+			final String key = "-" + id.getDomain() + "-";
+			final String str = sb.toString();
+			final Path basePath = new Path(str);
+			final List<String> paths = new ArrayList<String>();
+
+			fs.listStatus(basePath, new PathFilter() {
+				@Override
+				public boolean accept(Path p) {
+					String name = p.getName();
+
+					if (name.contains(key) && !name.endsWith(".idx")) {
+						paths.add(path + name);
+					}
+
+					return false;
+				}
+			});
+
+			for (String dataFile : paths) {
+				HdfsMessageBucket bucket = m_buckets.get(dataFile);
+
+				if (bucket == null) {
+					bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
+					bucket.initialize(dataFile);
+					m_buckets.put(dataFile, bucket);
 				}
 
-				return false;
-			}
-		});
-		
-		for (String dataFile : paths) {
-			HdfsMessageBucket bucket = m_buckets.get(dataFile);
-
-			if (bucket == null) {
-				bucket = (HdfsMessageBucket) lookup(MessageBucket.class, HdfsMessageBucket.ID);
-				bucket.initialize(dataFile);
-				m_buckets.put(dataFile, bucket);
+				if (bucket != null) {
+					return bucket.findById(messageId);
+				}
 			}
 
-			if (bucket != null) {
-				return bucket.findById(messageId);
-			}
+			return null;
+		} catch (IOException e) {
+			t.setStatus(e);
+			cat.logError(e);
+			throw e;
+		} catch (RuntimeException e) {
+			t.setStatus(e);
+			cat.logError(e);
+			throw e;
+		} finally {
+			t.complete();
 		}
 
-		return null;
 	}
 
 	@Override

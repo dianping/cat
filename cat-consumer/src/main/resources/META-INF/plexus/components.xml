@@ -195,6 +195,7 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
 				</requirement>
 			</requirements>
 		</component>

@@ -84,4 +84,18 @@ public class LocalLogViewService extends BaseLocalModelService<String> {
 			return null;
 		}
 	}
+
+	@Override
+	public boolean isEligable(ModelRequest request) {
+		boolean eligibale = super.isEligable(request);
+
+		if (eligibale) {
+			String messageId = request.getProperty("messageId");
+			MessageId id = MessageId.parse(messageId);
+
+			return id.getVersion() == 1;
+		}
+
+		return eligibale;
+	}
 }

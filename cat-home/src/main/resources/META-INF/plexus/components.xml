@@ -155,6 +155,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.DailyTaskProducer</role>
 			<implementation>com.dianping.cat.report.task.DailyTaskProducer</implementation>
 			<requirements>
@@ -184,6 +202,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
@@ -509,6 +530,28 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>message-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.logview.HistoricalMessageService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
+					<field-name>m_localBucketManager</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>hdfs</role-hint>
+					<field-name>m_hdfsBucketManager</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
@@ -565,6 +608,7 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
+						<role-hint>message-historical</role-hint>
 						<role-hint>logview-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
@@ -1048,6 +1092,7 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
@@ -1228,6 +1273,9 @@
 					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
@@ -1337,6 +1385,28 @@
 			<implementation>com.dianping.cat.report.task.transaction.TransactionGraphCreator</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+			<implementation>com.dianping.cat.report.task.matrix.MatrixMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 			<implementation>com.dianping.cat.hadoop.dal.TaskDao</implementation>
 			<requirements>
@@ -1349,6 +1419,15 @@
 			<role>com.dianping.cat.report.page.matrix.Handler</role>
 			<implementation>com.dianping.cat.report.page.matrix.Handler</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 				</requirement>
