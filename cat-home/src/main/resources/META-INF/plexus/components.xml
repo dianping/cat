@@ -1333,6 +1333,15 @@
 			<implementation>com.dianping.cat.report.page.matrix.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 				</requirement>
 				<requirement>
