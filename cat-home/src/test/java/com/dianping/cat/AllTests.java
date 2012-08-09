@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.graph.ValueTranslaterTest;
+import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.ip.DisplayModelTest;
@@ -59,6 +60,7 @@ EventReportFilterTest.class, TransactionReportFilterTest.class,
 PayloadTest.class, TransactionReportMergerTest.class,
 
 /* . report.page.cross */
+CrossReportMergerTest.class,
 
 /* graph test */
 EventGraphDataTest.class, HeartbeatGraphDataTest.class,
