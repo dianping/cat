@@ -5,24 +5,24 @@
 <body>
 <br/>
 <br/>
-<table rules="all">
+<table rules="all" >
     <tr>
-		<td colspan="5">${title}
+		<td colspan="5" >${title}
 		</td>
 	</tr>
     <tr>
-        <th></th>
-		<th>Type</th>
-		<th>Total</th>
-		<th>Operation</th>
-	    <th></th>
+        <td></td>
+		<td>Type</td>
+		<td>Total</td>
+		<td>Link</td>
+	    <td></td>
 	</tr>
-	#foreach( $statistics in ${problemStatistics.status})
+	#foreach( $problem in ${typeList})
 	      <tr>
 	          <td ></td>
-		      <td >${statistics.type}</td>
-		      <td >${statistics.count}</td>
-		      <td >${statistics.trendUrl}</td>
+		      <td >$!problem.type</td>
+		      <td style="text-align:right">$!problem.count</td>
+		      <td >$!problem.trendUrl</td>
 		      <td ></td>
 		  </tr>
     #end

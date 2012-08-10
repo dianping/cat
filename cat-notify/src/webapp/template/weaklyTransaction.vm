@@ -5,9 +5,9 @@
 <body>
 <br/>
 <br/>
-<table rules="all">
+<table rules="all" >
 	<tr>
-		<td colspan="9">${title}
+		<td colspan="9" >${title}
 		</td>
 	</tr>
 	<tr>
@@ -18,19 +18,19 @@
 		<td >Failure%</td>
 		<td >Avg(ms)</td>
 		<td >TPS</td>
-		<td >Operation</td>
+		<td >Link</td>
 		<td></td>
 	</tr>
 	#foreach( $type in $typeList)
 	<tr>
 	    <td></td>
 	    <td>$!type.id</td>
-        <td>$!type.totalCount</td>
-        <td>$!type.failCount</td>
-        <td>$!type.failPercent</td>
-        <td>$!type.avg</td>
-        <td>$!type.tps</td>
-        <td>$!type.successMessageUrl</td>
+        <td style="text-align:right">$!type.totalCount</td>
+        <td style="text-align:right">$!type.failCount</td>
+        <td style="text-align:right">$!type.failPercent</td>
+        <td style="text-align:right">$!type.avg</td>
+        <td style="text-align:right">$!type.tps</td>
+        <td>$!type.link</td>
         <td></td>
     </tr>
     #end

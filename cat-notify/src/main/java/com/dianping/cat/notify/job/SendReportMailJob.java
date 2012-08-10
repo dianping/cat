@@ -1,6 +1,7 @@
 package com.dianping.cat.notify.job;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -25,8 +26,7 @@ import com.dianping.cat.notify.util.TimeUtil;
 import com.dianping.hawk.common.alarm.service.CommonAlarmService;
 
 public class SendReportMailJob implements ScheduleJob, HandworkJob {
-	private final static Logger logger = LoggerFactory
-			.getLogger(SendReportMailJob.class);
+	private final static Logger logger = LoggerFactory.getLogger(SendReportMailJob.class);
 
 	private SubscriberDao m_subscriberDao;
 
@@ -35,25 +35,25 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 	private ReportCreaterRegistry reportCreaterRegistry;
 
 	private MailLogDao m_mailLogDao;
-	
+
 	protected DailyReportDao m_dailyReportDao;
 
 	public static String MAIL_SPLITER = ",";
 
 	private AtomicLong lastDoneTime = new AtomicLong();
-	
+
 	private String m_defaultReceivers;
 
 	@Override
 	public boolean init(JobContext jobContext) {
 		ContainerHolder holder = (ContainerHolder) jobContext.getData("container");
 		ConfigContext configContext = (ConfigContext) jobContext.getData("config");
-		if(!reportCreaterRegistry.initReportCreaters(configContext, holder)){
+		if (!reportCreaterRegistry.initReportCreaters(configContext, holder)) {
 			return false;
 		}
 		/* inject dao */
 		m_subscriberDao = holder.lookup(SubscriberDao.class, "subscriberDao");
-		m_commonService = holder.lookup(CommonAlarmService.class,"commonService");
+		m_commonService = holder.lookup(CommonAlarmService.class, "commonService");
 		m_mailLogDao = holder.lookup(MailLogDao.class, "mailLogDao");
 		m_dailyReportDao = holder.lookup(DailyReportDao.class, "dailyReportDao");
 
@@ -65,121 +65,57 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 	@Override
 	public void doJob(long timestamp) {
 		List<Object> subscriberList = null;
-		List<String> domainList =null;
+		List<String> domainList = null;
 		try {
 			subscriberList = m_subscriberDao.getAllMailSubscriber();
 		} catch (Exception e) {
 			logger.error("fail to get subscribers from database", e);
 			return;
 		}
-		
-		//get all domain
+
+		// get all domain
 		try {
-			domainList = m_dailyReportDao.findDistinctReportDomain(new Date(timestamp-TimeUtil.TWO_DAY_MICROS), new Date(timestamp-TimeUtil.DAY_MICROS), DailyReport.XML_TYPE);
+			domainList = m_dailyReportDao.findDistinctReportDomain(new Date(timestamp - TimeUtil.TWO_DAY_MICROS),
+			      new Date(timestamp - TimeUtil.DAY_MICROS), DailyReport.XML_TYPE);
 		} catch (Exception e) {
 			logger.error("fail to get domain from database", e);
 			return;
 		}
-		if(domainList == null || domainList.size() == 0){
+		if (domainList == null || domainList.size() == 0) {
 			return;
 		}
 		Set<String> domainSet = new HashSet<String>();
-		for(String domain : domainList){
+		for (String domain : domainList) {
 			domainSet.add(domain);
 		}
-		
-		
-		//send emails to subscribers
+
+		// send emails to subscribers
 		for (Object element : subscriberList) {
 			Subscriber subscriber = (Subscriber) element;
 			sendBySubscriber(timestamp, false, subscriber);
-			//remove the domain
+			// remove the domain
 			domainSet.remove(subscriber.getDomain());
 		}
-		
-		
-		if(domainSet.size() == 0){
+
+		if (domainSet.size() == 0) {
 			return;
 		}
 		Iterator<String> iterator = domainSet.iterator();
-		while(iterator.hasNext()){
+		while (iterator.hasNext()) {
 			String domain = iterator.next();
 			Subscriber subscriber = new Subscriber();
 			subscriber.setAddress(m_defaultReceivers);
 			subscriber.setDomain(domain);
-			//notify administrators to configure the new domain subscriber
+			// notify administrators to configure the new domain subscriber
 			sendBySubscriber(timestamp, false, subscriber);
 		}
 	}
 
-	public boolean sendBySubscriber_bak(long timestamp, boolean handwork,
-			Subscriber subscriber) {
-		String emailTitle = String.format("Cat monitor reports of [%s]",
-				subscriber.getDomain());
-		StringBuilder reportContent = new StringBuilder();
-		List<ReportCreater> reportList = reportCreaterRegistry.getReportCreaters(subscriber
-				.getDomain());
-		for (ReportCreater reportCreater : reportList) {
-			if (!handwork) {
-				if (!reportCreater.isNeedToCreate(timestamp)) {
-					continue;
-				}
-			}
-			reportContent.append(reportCreater.createReport(timestamp,
-					subscriber.getDomain()));
-		}
-		if (reportContent.toString().trim().length() == 0) {
-			return false;
-		}
-		MailLog mailLog = new MailLog();
-		String address = subscriber.getAddress();
-		mailLog.setAddress(address);
-		mailLog.setContent(reportContent.toString());
-		mailLog.setTitle(emailTitle);
-		try {
-			if (address == null) {
-				logger.error(String.format("subscriber [%s] email is empty",
-						subscriber.getDomain()));
-				return false;
-			}
-			String[] addressArray = address.split(MAIL_SPLITER);
-			List<String> addressList = new ArrayList<String>();
-			for (int i = 0; i < addressArray.length; i++) {
-				addressList.add(addressArray[i]);
-			}
-			boolean result = m_commonService.sendEmail(
-					reportContent.toString(), emailTitle, addressList);
-			if (result) {
-				logger.debug("Send Email Success!");
-				mailLog.setStatus(MailLog.SEND_SUCCSS);
-			} else {
-				logger.error(String
-						.format("Send Email fail,time[%s],domain[%s],type[%s],address[%s]",
-								new Date(timestamp), subscriber.getDomain(),
-								subscriber.getType(), subscriber.getAddress()));
-				mailLog.setStatus(MailLog.SEND_FAIL);
-			}
-		} catch (Exception e1) {
-			// logger.error(String.format("Send Email fail,time[%s],domain[%s],type[%s],address[%s]",
-			// new Date(timestamp),subscriber.getDomain(), subscriber.getType(),
-			// subscriber.getAddress()));
-			mailLog.setStatus(MailLog.SEND_FAIL);
-		}
-		try {
-			m_mailLogDao.insertMailLog(mailLog);
-		} catch (Exception e) {
-			logger.error(
-					String.format(
-							"Save email report to database fail,time[%s],title[%s],address[%s],content[%s]",
-							new Date(timestamp), mailLog.getTitle(),
-							mailLog.getAddress(), mailLog.getContent()), e);
-		}
-		return MailLog.SEND_SUCCSS == mailLog.getStatus() ? true : false;
-	}
+	private boolean sendBySubscriber(long timestamp, boolean handwork, Subscriber subscriber) {
+		Date yestoday = yesterdayZero(new Date(timestamp));
+		String dateStr =  TimeUtil.formatTime("yyyy-MM-dd", yestoday);
+		String emailTitle = String.format("[CAT] monitor reports of [%s] " + dateStr, subscriber.getDomain());
 
-	private boolean sendBySubscriber(long timestamp, boolean handwork,
-			Subscriber subscriber) {
-		String emailTitle = String.format("Cat monitor reports of [%s]",subscriber.getDomain());
 		List<ReportCreater> reportList = reportCreaterRegistry.getReportCreaters(subscriber.getDomain());
 		if (reportList == null) {
 			return false;
@@ -192,8 +128,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 				}
 			}
 
-			String reportContent = reportCreater.createReport(timestamp,
-					subscriber.getDomain());
+			String reportContent = reportCreater.createReport(timestamp, subscriber.getDomain());
 			if (reportContent.trim().length() == 0) {
 				continue;
 			}
@@ -205,9 +140,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 			mailLog.setTitle(emailTitle);
 			try {
 				if (address == null) {
-					logger.error(String.format(
-							"subscriber [%s] email is empty",
-							subscriber.getDomain()));
+					logger.error(String.format("subscriber [%s] email is empty", subscriber.getDomain()));
 					sendResult = false;
 					continue;
 				}
@@ -216,18 +149,13 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 				for (int i = 0; i < addressArray.length; i++) {
 					addressList.add(addressArray[i]);
 				}
-				boolean result = m_commonService.sendEmail(
-						reportContent.toString(), emailTitle, addressList);
+				boolean result = m_commonService.sendEmail(reportContent.toString(), emailTitle, addressList);
 				if (result) {
 					logger.debug("Send Email Success!");
 					mailLog.setStatus(MailLog.SEND_SUCCSS);
 				} else {
-					logger.error(String
-							.format("Send Email fail,time[%s],domain[%s],type[%s],address[%s]",
-									new Date(timestamp),
-									subscriber.getDomain(),
-									subscriber.getType(),
-									subscriber.getAddress()));
+					logger.error(String.format("Send Email fail,time[%s],domain[%s],type[%s],address[%s]", new Date(
+					      timestamp), subscriber.getDomain(), subscriber.getType(), subscriber.getAddress()));
 					mailLog.setStatus(MailLog.SEND_FAIL);
 				}
 			} catch (Exception e1) {
@@ -236,15 +164,11 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 			try {
 				m_mailLogDao.insertMailLog(mailLog);
 			} catch (Exception e) {
-				logger.error(
-						String.format(
-								"Save email report to database fail,time[%s],title[%s],address[%s],content[%s]",
-								new Date(timestamp), mailLog.getTitle(),
-								mailLog.getAddress(), mailLog.getContent()), e);
+				logger.error(String.format("Save email report to database fail,time[%s],title[%s],address[%s],content[%s]",
+				      new Date(timestamp), mailLog.getTitle(), mailLog.getAddress(), mailLog.getContent()), e);
 				continue;
 			}
-			sendResult = MailLog.SEND_SUCCSS == mailLog.getStatus() ? true
-					: false;
+			sendResult = MailLog.SEND_SUCCSS == mailLog.getStatus() ? true : false;
 		}
 		return sendResult;
 	}
@@ -255,23 +179,17 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		long timestamp = (Long) jobContext.getData("day");
 		Subscriber subscriber = null;
 		try {
-			subscriber = m_subscriberDao.getSubscriberByDomain(domain,
-					Subscriber.MAIL);
+			subscriber = m_subscriberDao.getSubscriberByDomain(domain, Subscriber.MAIL);
 		} catch (Exception e) {
-			logger.error(String
-					.format("fail to get subscriber from databasee. domain[%s]",
-							domain));
+			logger.error(String.format("fail to get subscriber from databasee. domain[%s]", domain));
 		}
 		if (subscriber == null) {
-			logger.error(String
-					.format("fail to get subscriber from databasee. domain[%s]",
-							domain));
+			logger.error(String.format("fail to get subscriber from databasee. domain[%s]", domain));
 			return false;
 		}
 		boolean result = sendBySubscriber(timestamp, true, subscriber);
-		logger.info(String.format(
-				"do send mail handwork. domain[%s] result %s",
-				subscriber.getDomain(), result == true ? "Success" : "Fail"));
+		logger.info(String.format("do send mail handwork. domain[%s] result %s", subscriber.getDomain(),
+		      result == true ? "Success" : "Fail"));
 		return result;
 	}
 
@@ -307,8 +225,17 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 	}
 
 	public void setDefaultReceivers(String defaultReceivers) {
-   	this.m_defaultReceivers = defaultReceivers;
-   }
-	
-	
+		this.m_defaultReceivers = defaultReceivers;
+	}
+
+	private  Date yesterdayZero(Date reportPeriod) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(reportPeriod);
+		cal.add(Calendar.DAY_OF_YEAR, -1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
 }
