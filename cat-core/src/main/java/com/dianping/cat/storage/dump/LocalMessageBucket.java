@@ -269,5 +269,10 @@ public class LocalMessageBucket implements MessageBucket {
 		Files.forDir().copyFile(fromIndex, toIndex);
 		Files.forDir().delete(from);
 		Files.forDir().delete(fromIndex);
+
+		File parentFile = from.getParentFile();
+
+		parentFile.delete(); // delete it if empty
+		parentFile.getParentFile().delete(); // delete it if empty
 	}
 }

@@ -113,7 +113,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 				try {
 					Thread.sleep(sleepPeriod);
 				} catch (InterruptedException e) {
-					//ignore it
+					// ignore it
 				}
 			}
 		}
@@ -140,7 +140,9 @@ public class DumpUploader implements Initializable, LogEnabled {
 				}
 			});
 
-			if (paths.size() > 0) {
+			int len = paths.size();
+
+			if (len > 0) {
 				Cat.setup("DumpUploader");
 
 				MessageProducer cat = Cat.getProducer();
@@ -153,7 +155,8 @@ public class DumpUploader implements Initializable, LogEnabled {
 				root.addData("files", paths);
 				root.setStatus(Message.SUCCESS);
 
-				for (String path : paths) {
+				for (int i = 0; i < len; i++) {
+					String path = paths.get(i);
 					Transaction t = cat.newTransaction("System", "UploadDump");
 					File file = new File(baseDir, path);
 
@@ -176,11 +179,16 @@ public class DumpUploader implements Initializable, LogEnabled {
 						t.addData("speed", speed);
 						t.setStatus(Message.SUCCESS);
 
-						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.",
-						      file.getCanonicalPath(), path, size, speed));
+						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.", file.getCanonicalPath(),
+						      path, size, speed));
 
 						if (!file.delete()) {
 							m_logger.warn("Can't delete file: " + file);
+						}
+
+						if (i == len - 1) {
+							file.getParentFile().delete(); // try to delete parent dir
+							file.getParentFile().getParentFile().delete(); // try to delete parent dir
 						}
 					} catch (AccessControlException e) {
 						cat.logError(e);
