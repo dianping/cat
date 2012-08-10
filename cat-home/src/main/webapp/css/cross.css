@@ -1,0 +1,29 @@
+.cross {
+	font-size: small;
+	min-width:50%;	
+}
+.cross tr th{
+	text-align:left;
+}
+.cross .odd td {
+	background-color: #eee;
+	font-size: small;
+	text-align:left;
+}
+
+.cross .even td {
+	background-color: white;
+	font-size: small;
+	text-align:left;
+}
+.cross th .left{
+	text-align:left;
+}
+
+.cross tr .left{
+	text-align:left;
+}
+
+.cross tr .left{
+	text-align:left;
+}

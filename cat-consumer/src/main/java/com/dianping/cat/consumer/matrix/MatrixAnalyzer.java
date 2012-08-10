@@ -22,7 +22,6 @@ import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
@@ -37,10 +36,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 	@Inject
 	private ReportDao m_reportDao;
-	
-	@SuppressWarnings("unused")
-   @Inject
-	private TaskDao m_taskDao;
 
 	private Map<String, MatrixReport> m_reports = new HashMap<String, MatrixReport>();
 
@@ -74,7 +69,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			report = new MatrixReport(domain);
 		}
 
-		// report.accept(new MatrixReportFilter());
 		report.getDomainNames().addAll(m_reports.keySet());
 		return report;
 	}

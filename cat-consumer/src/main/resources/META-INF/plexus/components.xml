@@ -10,7 +10,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,heartbeat,matrix,dump</analyzers>
+				<analyzers>problem,transaction,event,heartbeat,matrix,cross,dump</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -98,6 +98,9 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
@@ -119,6 +122,19 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.cross.CrossAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.cross.CrossAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.matrix.MatrixAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.matrix.MatrixAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -127,7 +143,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -15,6 +15,7 @@ public class MessageIdFactoryTest {
 			return m_timestamp;
 		}
 	};
+	
 
 	private void check(String domain, String expected) {
 		m_factory.setDomain(domain);
@@ -59,6 +60,19 @@ public class MessageIdFactoryTest {
 		checkHexString(m_timestamp++, "135bdb7825e");
 		checkHexString(m_timestamp++, "135bdb7825f");
 		checkHexString(m_timestamp++, "135bdb78260");
+	}
+	
+	@Test
+	public void testGetIpAddress() {
+		for(int i=0;i<1000000;i++){
+		MessageId id = new MessageId(null, "ffffffff", m_timestamp, 0);
+		
+		Assert.assertEquals("255.255.255.255", id.getIpAddress());
+
+		id = new MessageId(null, "11f111f1", m_timestamp, 0);
+		
+		Assert.assertEquals("17.241.17.241", id.getIpAddress());
+		}
 	}
 
 	private void checkHexString(long value, String expected) {

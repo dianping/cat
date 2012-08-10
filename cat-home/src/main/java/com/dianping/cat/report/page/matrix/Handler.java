@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.matrix;
 
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -34,8 +33,6 @@ import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
-
-
 public class Handler implements PageHandler<Context> {
 
 	public static final double NOTEXIST = -1;
@@ -44,7 +41,6 @@ public class Handler implements PageHandler<Context> {
 	
 	@Inject
 	protected ReportDao m_reportDao;
-	
 	
 	@Inject
 	private MatrixMerger m_matrixMerger;
