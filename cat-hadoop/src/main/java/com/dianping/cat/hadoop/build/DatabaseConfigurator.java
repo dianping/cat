@@ -12,6 +12,8 @@ final class DatabaseConfigurator extends AbstractJdbcResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+		
+		//Hack for hadoop jobs
 		all.add(defineJdbcDataSourceComponent("cat", "com.mysql.jdbc.Driver", "jdbc:mysql://10.1.1.220:3306/cat", "dpcom_cat", "dp!@jWLcFDfEX",
 		      "<![CDATA[useUnicode=true&autoReconnect=true]]>"));
 

@@ -39,14 +39,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	private Map<String, CrossReport> m_reports = new HashMap<String, CrossReport>();
 
-	private long m_extraTime;
-
-	private long m_startTime;
-
-	private long m_duration;
-
-	private Logger m_logger;
-
 	private static final String UNKNOWN = "UnknownIp";
 
 	@Override

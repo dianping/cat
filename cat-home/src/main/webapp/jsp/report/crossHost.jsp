@@ -19,21 +19,21 @@
 	<tr style="text-align: left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=host&domain=${model.domain}&date=${model.date}&project=${payload.projectName}"
+					<a href="?domain=${model.domain}&date=${model.date}&project=${payload.projectName}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=host&domain=${model.domain}&date=${model.date}&project=${payload.projectName}">All</a>
+					<a href="?domain=${model.domain}&date=${model.date}&project=${payload.projectName}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=host&domain=${model.domain}&ip=${ip}&date=${model.date}&project=${payload.projectName}"
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&project=${payload.projectName}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=host&domain=${model.domain}&ip=${ip}&date=${model.date}&project=${payload.projectName}">${ip}</a>
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&project=${payload.projectName}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;

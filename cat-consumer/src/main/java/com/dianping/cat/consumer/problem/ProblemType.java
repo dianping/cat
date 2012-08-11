@@ -9,8 +9,10 @@ public enum ProblemType {
 
 	LONG_SQL("long-sql"),
 	
-	LONG_URL("long-url");
+	LONG_URL("long-url"),
 
+	LONG_SERVICE("long-service");
+	
 	private String m_name;
 
 	private ProblemType(String name) {

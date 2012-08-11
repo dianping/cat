@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="common-report-codegen.xml" />
+  <file path="common-report-model.xml" />
+</manifest>
+

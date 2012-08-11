@@ -19,21 +19,21 @@
 	<tr style="text-align: left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?op=method&domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}"
+					<a href="?domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?op=method&domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}">All</a>
+					<a href="?domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=method&domain=${model.domain}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}"
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=method&domain=${model.domain}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}">${ip}</a>
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
