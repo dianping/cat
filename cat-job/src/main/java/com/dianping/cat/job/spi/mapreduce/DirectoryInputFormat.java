@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -21,15 +22,18 @@ public abstract class DirectoryInputFormat<K, V> extends FileInputFormat<K, V> {
 		}
 	};
 
-	public void addFileStat(List<FileStatus> result, PathFilter inputFilter, FileSystem fs, FileStatus globStat)
-	      throws IOException {
+	private void addFileStat(List<FileStatus> result, PathFilter inputFilter, FileSystem fs, FileStatus globStat) throws IOException {
 		if (globStat.isDir()) {
 			for (FileStatus stat : fs.listStatus(globStat.getPath(), inputFilter)) {
 				addFileStat(result, inputFilter, fs, stat);
 			}
 		} else {
-			System.out.println(globStat.getPath().getName());
-			result.add(globStat);
+			String name = globStat.getPath().getName();
+
+			if (!name.endsWith(".idx")) { // exclude index file
+				System.out.println(name);
+				result.add(globStat);
+			}
 		}
 	}
 
@@ -41,7 +45,8 @@ public abstract class DirectoryInputFormat<K, V> extends FileInputFormat<K, V> {
 			throw new IOException("No input paths specified in job");
 		}
 
-		TokenCache.obtainTokensForNamenodes(job.getCredentials(), dirs, job.getConfiguration());
+		Configuration configuration = job.getConfiguration();
+		TokenCache.obtainTokensForNamenodes(job.getCredentials(), dirs, configuration);
 
 		List<IOException> errors = new ArrayList<IOException>();
 		List<PathFilter> filters = new ArrayList<PathFilter>();
@@ -52,13 +57,13 @@ public abstract class DirectoryInputFormat<K, V> extends FileInputFormat<K, V> {
 		}
 
 		// Add Default Hidden file
-		PathFilter inputFilter = new MultiPathFilter(filters);
-
 		filters.add(hiddenFileFilter);
+
+		PathFilter inputFilter = new MultiPathFilter(filters);
 
 		for (int i = 0; i < dirs.length; ++i) {
 			Path p = dirs[i];
-			FileSystem fs = p.getFileSystem(job.getConfiguration());
+			FileSystem fs = p.getFileSystem(configuration);
 			FileStatus[] matches = fs.globStatus(p, inputFilter);
 
 			if (matches == null) {

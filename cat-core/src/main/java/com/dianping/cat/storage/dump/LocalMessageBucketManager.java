@@ -140,7 +140,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 
 				if (bucket != null) {
-					return bucket.findById(messageId);
+					MessageTree tree = bucket.findById(messageId);
+					
+					t.addData("path", dataFile);
+					return tree;
 				}
 			}
 

@@ -7,12 +7,20 @@ import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.mapreduce.InputSplit;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.TaskAttemptContext;
+import org.apache.hadoop.mapreduce.lib.input.FileSplit;
 
 public class MessageTreeInputFormat extends DirectoryInputFormat<LongWritable, MessageTreeWritable> {
 	@Override
 	public MessageTreeReader createRecordReader(InputSplit split, TaskAttemptContext context) throws IOException,
 	      InterruptedException {
-		return new MessageTreeReader();
+		FileSplit fs = (FileSplit) split;
+		String name = fs.getPath().getName();
+
+		if (name.endsWith(".gz")) { // version 1
+			return new MessageTreeReader();
+		} else { // version 2
+			return new MessageTreeReaderV2();
+		}
 	}
 
 	@Override

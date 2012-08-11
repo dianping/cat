@@ -1,10 +1,14 @@
 package com.dianping.cat.notify.report;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -12,13 +16,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.notify.dao.DailyReportDao;
+import com.dianping.cat.notify.job.ProblemStatistics;
+import com.dianping.cat.notify.job.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.notify.model.DailyReport;
 import com.dianping.cat.notify.render.IRender;
 import com.dianping.cat.notify.server.ContainerHolder;
@@ -79,7 +87,8 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		try {
 			for (String reportName : reportNames) {
 				List<DailyReport> dailyReportList = new ArrayList<DailyReport>();
-				dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(endMicros), domain, reportName, DailyReport.XML_TYPE);
+				dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(endMicros),
+				      domain, reportName, DailyReport.XML_TYPE);
 				if (reportName.equals(DailyReport.EVENT_REPORT)) {
 					EventReport eReport = parseEvent(dailyReportList, domain);
 					report_content.append(renderEventReport(timeRange, eReport, domain));
@@ -220,6 +229,128 @@ public abstract class AbstractReportCreater implements ReportCreater {
 	protected abstract String renderEventReport(TimeSpan timeSpan, EventReport report, String domain);
 
 	protected abstract String renterProblemReport(TimeSpan timeSpan, ProblemReport report, String domain);
+
+	protected List<TransactionRenderDO> getTransactionRenderDoList(TimeSpan timeSpan,
+	      TransactionReport transactionReport, String domain, boolean isWeek) {
+		String urlType = "day";
+		if (isWeek) {
+			urlType = "weak";
+		}
+		com.dianping.cat.consumer.transaction.model.entity.Machine machine = transactionReport
+		      .findMachine(ReportConstants.ALL_IP);
+		if (machine == null) {
+			return null;
+		}
+		Map<String, TransactionType> types = machine.getTypes();
+		types.remove("Task");
+		types.remove("System");
+		types.remove("Result");
+
+		List<TransactionType> typeList = new ArrayList<TransactionType>(types.values());
+		if (typeList.size() == 0) {
+			return null;
+		}
+		Collections.sort(typeList, new Comparator<TransactionType>() {
+			@Override
+			public int compare(TransactionType o1, TransactionType o2) {
+				return (int) (o2.getAvg() - o1.getAvg());
+			}
+		});
+
+		List<TransactionRenderDO> tRenderDoList = new ArrayList<TransactionRenderDO>();
+		DecimalFormat floatFormat = new DecimalFormat(",###.##");
+		DecimalFormat integerFormat = new DecimalFormat(",###");
+		for (TransactionType transactionType : typeList) {
+			String trendViewUrl = getTrendsViewUrl("t", domain, timeSpan.getEndMicros(), urlType, transactionType.getId(),
+			      "Graph");
+			TransactionRenderDO renderDO = new TransactionRenderDO();
+			renderDO.setId(transactionType.getId());
+			renderDO.setAvg(floatFormat.format(transactionType.getAvg()));
+			renderDO.setFailCount(integerFormat.format(transactionType.getFailCount()));
+			renderDO.setFailPercent(floatFormat.format(transactionType.getFailPercent()));
+			renderDO.setTotalCount(integerFormat.format(transactionType.getTotalCount()));
+			renderDO.setTps(floatFormat.format(transactionType.getTps()));
+			renderDO.setLink(trendViewUrl);
+			tRenderDoList.add(renderDO);
+		}
+		return tRenderDoList;
+	}
+
+	public List<EventRenderDO> getEventRenderDoList(TimeSpan timeSpan, EventReport report, String domain, boolean isWeek) {
+		String urlType = "day";
+		if (isWeek) {
+			urlType = "weak";
+		}
+		com.dianping.cat.consumer.event.model.entity.Machine machine = report.findMachine(ReportConstants.ALL_IP);
+		if (machine == null) {
+			return null;
+		}
+		Map<String, EventType> types = machine.getTypes();
+		types.remove(CatConstants.TYPE_URL);
+		types.remove(CatConstants.TYPE_SQL_PARAM);
+		types.remove(CatConstants.TYPE_PIGEON_REQUEST);
+		types.remove(CatConstants.TYPE_PIGEON_RESPONSE);
+		types.remove(CatConstants.TYPE_REMOTE_CALL);
+
+		List<EventType> eventTypeList = new ArrayList<EventType>(types.values());
+
+		if (eventTypeList.size() == 0) {
+			return null;
+		}
+		Collections.sort(eventTypeList, new Comparator<EventType>() {
+			@Override
+			public int compare(EventType o1, EventType o2) {
+				return (int) (o2.getTotalCount() - o1.getTotalCount());
+			}
+		});
+		List<EventRenderDO> eRenderDoList = new ArrayList<EventRenderDO>();
+		DecimalFormat floatFormat = new DecimalFormat(",###.##");
+		DecimalFormat integerFormat = new DecimalFormat(",###");
+		for (EventType eventType : eventTypeList) {
+			String trendViewUrl = getTrendsViewUrl("e", domain, timeSpan.getEndMicros(), urlType, eventType.getId(),"Graph");
+			eventType.setSuccessMessageUrl(trendViewUrl);
+			EventRenderDO eventRenderDO = new EventRenderDO();
+			eventRenderDO.setFailCount(integerFormat.format(eventType.getFailCount()));
+			eventRenderDO.setFailPercent(floatFormat.format(eventType.getFailPercent()));
+			eventRenderDO.setId(eventType.getId());
+			eventRenderDO.setLink(trendViewUrl);
+			eventRenderDO.setTotalCount(integerFormat.format(eventType.getTotalCount()));
+			eRenderDoList.add(eventRenderDO);
+		}
+		return eRenderDoList;
+	}
+
+	protected List<ProblemRenderDO> getProblemRenderDoList(TimeSpan timeSpan, ProblemReport report, String domain,
+	      boolean isWeek) {
+		String urlType = "day";
+		if (isWeek) {
+			urlType = "weak";
+		}
+		List<ProblemRenderDO> pRenderDoList = new ArrayList<ProblemRenderDO>();
+		ProblemStatistics problemStatistics = new ProblemStatistics();
+		problemStatistics.setAllIp(true);
+		problemStatistics.visitProblemReport(report);
+		List<TypeStatistics> typeStatisticsList = new ArrayList<TypeStatistics>(problemStatistics.getStatus().values());
+		Collections.sort(typeStatisticsList, new Comparator<TypeStatistics>() {
+			@Override
+			public int compare(TypeStatistics o1, TypeStatistics o2) {
+				return (int) (o2.getCount() - o1.getCount());
+			}
+		});
+		
+		DecimalFormat integerFormat = new DecimalFormat(",###");
+		for (TypeStatistics typeStatistics : typeStatisticsList) {
+			String trendViewUrl = getTrendsViewUrl("p", domain, timeSpan.getEndMicros(), urlType, typeStatistics.getType(), "Graph");
+			typeStatistics.setTrendUrl(trendViewUrl);
+			ProblemRenderDO problemRenderDO = new ProblemRenderDO();
+			problemRenderDO.setCount(integerFormat.format(typeStatistics.getCount()));
+			problemRenderDO.setTrendUrl(trendViewUrl);
+			problemRenderDO.setType(typeStatistics.getType());
+			pRenderDoList.add(problemRenderDO);
+		}
+		
+		return pRenderDoList;
+	}
 
 }
 
