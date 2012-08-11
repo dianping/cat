@@ -1,5 +1,7 @@
 package com.dianping.cat.status;
 
+import java.util.Calendar;
+
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -43,6 +45,22 @@ public class StatusUpdateTask implements Task, Initializable {
 		reboot.setStatus(Message.SUCCESS);
 		cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
 		reboot.complete();
+
+		// try to avoid send heartbeat at 59-01 second
+		while (true) {
+			Calendar cal = Calendar.getInstance();
+			int second = cal.get(Calendar.SECOND);
+
+			if (second < 2 || second > 58) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// ignore it
+				}
+			} else {
+				break;
+			}
+		}
 
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
