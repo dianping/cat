@@ -43,7 +43,7 @@ public class TestSendMessage {
 		}
 		for (int i = 0; i < 200; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
-			Cat.getProducer().newEvent("PigeonCall.server", "110.1.6.48");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.7.24:8080");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -52,7 +52,7 @@ public class TestSendMessage {
 
 		for (int i = 0; i < 300; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
-			Cat.getProducer().newEvent("PigeonCall.server", "100.1.6.65");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.7.39:8080");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -65,7 +65,7 @@ public class TestSendMessage {
 	public void sendPigeonServerTransaction() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method6");
-			Cat.getProducer().newEvent("PigeonCall.client", "192.168.64.11");
+			Cat.getProducer().newEvent("PigeonCall.client", "192.168.7.77");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -73,7 +73,7 @@ public class TestSendMessage {
 		}
 		for (int i = 0; i < 200; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method8");
-			Cat.getProducer().newEvent("PigeonCall.client", "192.168.0.2");
+			Cat.getProducer().newEvent("PigeonCall.client", "192.168.7.20");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -82,7 +82,7 @@ public class TestSendMessage {
 
 		for (int i = 0; i < 300; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method5");
-			Cat.getProducer().newEvent("PigeonCall.client", "192.168.0.3");
+			Cat.getProducer().newEvent("PigeonCall.client", "192.168.7.231");
 			t.addData("key and value");
 
 			Thread.sleep(1);

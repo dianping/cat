@@ -260,7 +260,17 @@ public class Handler implements PageHandler<Context> {
 		}
 		action = payload.getAction();
 		model.setAction(action);
-		
+
+		if (action == Action.HISTORY_PROJECT || action == Action.HISTORY_METHOD||action==Action.HISTORY_HOST) {
+			String type = payload.getReportType();
+			if (type == null || type.length() == 0) {
+				payload.setReportType("day");
+			}
+			model.setReportType(payload.getReportType());
+			payload.computeStartDate();
+			model.setLongDate(payload.getDate());
+			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
+		}
 	}
 
 }
