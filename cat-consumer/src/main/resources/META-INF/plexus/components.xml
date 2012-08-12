@@ -162,6 +162,11 @@
 			<role>com.dianping.cat.consumer.common.CommonAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.common.CommonAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.ip.TopIpAnalyzer</role>

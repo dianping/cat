@@ -220,6 +220,10 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
+		if (shouldDiscard(t)) {
+			return null;
+		}
+		
 		String type = t.getType();
 
 		if ("PigeonCall".equals(type) || "Call".equals(type)) {

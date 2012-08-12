@@ -34,6 +34,7 @@ import com.dianping.cat.consumer.problem.handler.LongServiceHandler;
 import com.dianping.cat.consumer.problem.handler.LongSqlHandler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.hadoop.dal.HostinfoDao;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.TaskDao;
@@ -97,7 +98,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MatrixAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
 
-		all.add(C(CommonAnalyzer.class).is(PER_LOOKUP));
+		all.add(C(CommonAnalyzer.class).is(PER_LOOKUP)//
+				.req(HostinfoDao.class));
 
 		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));

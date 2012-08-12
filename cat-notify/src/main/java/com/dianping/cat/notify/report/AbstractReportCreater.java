@@ -279,7 +279,7 @@ public abstract class AbstractReportCreater implements ReportCreater {
 	public List<EventRenderDO> getEventRenderDoList(TimeSpan timeSpan, EventReport report, String domain, boolean isWeek) {
 		String urlType = "day";
 		if (isWeek) {
-			urlType = "weak";
+			urlType = "week";
 		}
 		com.dianping.cat.consumer.event.model.entity.Machine machine = report.findMachine(ReportConstants.ALL_IP);
 		if (machine == null) {
@@ -324,7 +324,7 @@ public abstract class AbstractReportCreater implements ReportCreater {
 	      boolean isWeek) {
 		String urlType = "day";
 		if (isWeek) {
-			urlType = "weak";
+			urlType = "week";
 		}
 		List<ProblemRenderDO> pRenderDoList = new ArrayList<ProblemRenderDO>();
 		ProblemStatistics problemStatistics = new ProblemStatistics();

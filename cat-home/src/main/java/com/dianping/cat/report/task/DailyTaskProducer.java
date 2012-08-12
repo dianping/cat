@@ -130,6 +130,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		m_dailyReportNameSet.add("transaction");
 		m_dailyReportNameSet.add("problem");
 		m_dailyReportNameSet.add("matrix");
+		m_dailyReportNameSet.add("cross");
 	}
 
 	@Override

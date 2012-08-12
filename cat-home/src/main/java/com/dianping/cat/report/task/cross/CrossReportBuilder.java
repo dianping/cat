@@ -1,0 +1,78 @@
+package com.dianping.cat.report.task.cross;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.hadoop.dal.Dailyreport;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportEntity;
+import com.dianping.cat.report.task.AbstractReportBuilder;
+import com.dianping.cat.report.task.ReportBuilder;
+import com.dianping.cat.report.task.TaskHelper;
+import com.site.dal.jdbc.DalException;
+import com.site.lookup.annotation.Inject;
+
+public class CrossReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+	
+	@Inject
+	private CrossMerger m_crossMerger;
+
+	@Override
+	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
+		try {
+			Dailyreport report = getdailyReport(reportName, reportDomain, reportPeriod);
+			m_dailyReportDao.insert(report);
+			return true;
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
+		Set<String> domainSet = new HashSet<String>();
+		getDomainSet(domainSet, reportPeriod, endDate);
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		String content = m_crossMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+
+		Dailyreport report = m_dailyReportDao.createLocal();
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(reportDomain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(reportName);
+		report.setPeriod(reportPeriod);
+		report.setType(1);
+		return report;
+	}
+	
+	@Override
+	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod){
+		throw new RuntimeException("Cross report don't support HourReport!");
+	}
+
+	@Override
+	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
+		try {
+			Dailyreport report = getdailyReport(reportName, reportDomain, reportPeriod);
+			clearDailyReport(report);
+			m_dailyReportDao.insert(report);
+			return true;
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
+	@Override
+	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
+		throw new RuntimeException("Cross report don't support redo HourReport!");
+	}
+
+}
