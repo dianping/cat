@@ -168,7 +168,7 @@ public class Handler implements PageHandler<Context> {
 
 			methodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
-			methodInfo.setRemoteIp(payload.getRemoteIp());
+			methodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
 			methodInfo.visitCrossReport(methodReport);
 			model.setReport(methodReport);
 			model.setMethodInfo(methodInfo);
@@ -202,7 +202,7 @@ public class Handler implements PageHandler<Context> {
 
 			historyMethodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
-			historyMethodInfo.setRemoteIp(payload.getRemoteIp());
+			historyMethodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
 			historyMethodInfo.visitCrossReport(historyMethodReport);
 			model.setReport(historyMethodReport);
 			model.setMethodInfo(historyMethodInfo);
@@ -234,6 +234,7 @@ public class Handler implements PageHandler<Context> {
 		model.setServiceSort(payload.getServiceSort());
 		model.setIpAddress(payload.getIpAddress());
 		model.setDisplayDomain(payload.getDomain());
+		model.setQueryName(payload.getQueryName());
 
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());

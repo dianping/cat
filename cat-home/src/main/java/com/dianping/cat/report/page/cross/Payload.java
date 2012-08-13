@@ -25,6 +25,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("serviceSort")
 	private String m_serviceSort;
+	
+	@FieldMeta("queryName")
+	private String m_queryName;
 
 	public Payload() {
 		super(ReportPage.CROSS);
@@ -87,6 +90,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
+	}
+
+	public String getQueryName() {
+		return m_queryName;
+	}
+
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
 	}
 
 	@Override
