@@ -46,8 +46,8 @@
 <table class='cross'>
 		<c:if test="${!empty model.projectInfo.callProjectsInfo}">
 		<tr>
-			<th>Type</th>
-			<th>RemoteProject</th>
+			<th class="left">Type</th>
+			<th class="left">RemoteProject</th>
 			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=total">Total</a></th>
 			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failure">Failure</a></th>
 			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failurePercent">Failure%</a></th>
@@ -56,8 +56,8 @@
 		</tr>
 		<c:forEach var="callInfo" items="${model.projectInfo.callProjectsInfo}" varStatus="status">
 			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-		         	<td>${callInfo.type}</td>
-		         	<td><a href="?op=historyHost&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${callInfo.projectName }">${callInfo.projectName}</a></td>
+		         	<td class="left">${callInfo.type}</td>
+		         	<td class="left"><a href="?op=historyHost&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${callInfo.projectName }">${callInfo.projectName}</a></td>
 		            <td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
 		         	<td>${w:format(callInfo.failureCount,'#,###,###,###,##0')}</td>
 		        		<td>${w:format(callInfo.failurePercent,'0.00')}</td>
@@ -71,8 +71,8 @@
 
 		<c:if test="${!empty model.projectInfo.serviceProjectsInfo}">
 		      <tr>
-		         <th>Type</th>
-		         <th>RemoteProject</th>
+		         <th class="left">Type</th>
+		         <th class="left">RemoteProject</th>
 		         <th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
 		         <th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
 		         <th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
@@ -81,8 +81,8 @@
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.projectInfo.serviceProjectsInfo}" varStatus="status">
 		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-		            <td>${serviceInfo.type}</td>
-		            <td><a href="?op=historyHost&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${serviceInfo.projectName }">${serviceInfo.projectName}</a></td>
+		            <td class="left">${serviceInfo.type}</td>
+		            <td class="left"><a href="?op=historyHost&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${serviceInfo.projectName }">${serviceInfo.projectName}</a></td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failurePercent,'0.00')}</td>
