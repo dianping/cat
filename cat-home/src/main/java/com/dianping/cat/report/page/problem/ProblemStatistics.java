@@ -233,14 +233,16 @@ public class ProblemStatistics extends BaseVisitor {
 		}
 
 		public void statics(String status, Duration duration) {
-			m_count += duration.getCount();
-			StatusStatistics value = m_status.get(status);
-			if (value == null) {
-				value = new StatusStatistics(status);
-				m_status.put(status, value);
-			}
-			value.statics(duration);
+			if (duration != null) {
+				m_count += duration.getCount();
 
+				StatusStatistics value = m_status.get(status);
+				if (value == null) {
+					value = new StatusStatistics(status);
+					m_status.put(status, value);
+				}
+				value.statics(duration);
+			}
 		}
 	}
 }
