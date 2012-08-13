@@ -48,7 +48,8 @@ public class DailyReportDaoImp implements DailyReportDao {
 		return (List) baseDao.executeQueryForList("DailyReport.selectSendMailReport", map);
 	}
 
-	@Override
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+   @Override
    public List<String> findDistinctReportDomain(Date startDate, Date endDate, int type)
          throws Exception {
 		Map<String,Object> map=new HashMap<String,Object>();

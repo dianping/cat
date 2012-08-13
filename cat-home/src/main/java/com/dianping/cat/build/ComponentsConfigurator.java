@@ -19,6 +19,8 @@ import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.TaskConsumer;
+import com.dianping.cat.report.task.cross.CrossMerger;
+import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
 import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
@@ -62,33 +64,39 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventGraphCreator.class));
 		all.add(C(ProblemGraphCreator.class));
 		all.add(C(HeartbeatGraphCreator.class));
-		
+
 		all.add(C(TransactionMerger.class));
 		all.add(C(EventMerger.class));
 		all.add(C(ProblemMerger.class));
 		all.add(C(HeartbeatMerger.class));
-		
+		all.add(C(CrossMerger.class));
+
 		all.add(C(TransactionReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,TransactionGraphCreator.class,TransactionMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class,
+		            TransactionMerger.class));
 
 		all.add(C(EventReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,EventGraphCreator.class,EventMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, EventGraphCreator.class, EventMerger.class));
 
 		all.add(C(ProblemReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,ProblemGraphCreator.class,ProblemMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, ProblemGraphCreator.class, ProblemMerger.class));
 
 		all.add(C(HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,HeartbeatGraphCreator.class,HeartbeatMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class,
+		            HeartbeatMerger.class));
 
 		all.add(C(MatrixReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,MatrixMerger.class));
-		
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class));
+
+		all.add(C(CrossReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class));
+
 		all.add(C(DailyTaskProducer.class, DailyTaskProducer.class) //
 		      .req(TaskDao.class, ReportDao.class, DailyreportDao.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
-		            HeartbeatReportBuilder.class,MatrixReportBuilder.class,TaskDao.class));
+		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class, TaskDao.class));
 
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

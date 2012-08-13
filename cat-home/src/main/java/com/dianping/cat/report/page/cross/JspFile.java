@@ -5,7 +5,13 @@ public enum JspFile {
 	
 	HOURLY_METHOD("/jsp/report/crossMethod.jsp"),
 	
-	HOURLY_PROJECT("/jsp/report/cross.jsp");
+	HOURLY_PROJECT("/jsp/report/cross.jsp"),
+
+	HISTORY_HOST("/jsp/report/crossHistoryHost.jsp"),
+	
+	HISTORY_METHOD("/jsp/report/crossHistoryMethod.jsp"),
+	
+	HISTORY_PROJECT("/jsp/report/crossHistoryProject.jsp");
 	
 	private String m_path;
 

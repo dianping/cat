@@ -35,10 +35,10 @@ public class TypeCompartor implements Comparator<TypeDetailInfo> {
 			return (int) (m2.getFailureCount() - m1.getFailureCount());
 		}
 		if (m_sorted.equals("failurePercent")) {
-			return (int) (m2.getFailurePercent() * 100 - m1.getFailurePercent() * 100);
+			return (int) (m2.getFailurePercent() * 1000 - m1.getFailurePercent() * 1000);
 		}
 		if (m_sorted.equals("avg")) {
-			return (int) (m2.getAvg() * 100 - m1.getAvg() * 100);
+			return (int) (m2.getAvg() * 1000 - m1.getAvg() * 1000);
 		}
 		return 0;
 	}

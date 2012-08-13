@@ -33,61 +33,61 @@ public class TestSendMessage {
 
 	@Test
 	public void sendPigeonClientTransaction() throws Exception {
-		for (int i = 0; i < 180; i++) {
+		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
-			Cat.getProducer().newEvent("PigeonCall.server", ":30.12.6.1");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.64.11:2280");
 			t.addData("key and value");
 
 			Thread.sleep(1);
 			t.complete();
 		}
-		for (int i = 0; i < 80; i++) {
+		for (int i = 0; i < 200; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
-			Cat.getProducer().newEvent("PigeonCall.server", ":10.12.6.1");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.7.24:8080");
 			t.addData("key and value");
 
 			Thread.sleep(1);
 			t.complete();
 		}
 
-		for (int i = 0; i < 280; i++) {
+		for (int i = 0; i < 300; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
-			Cat.getProducer().newEvent("PigeonCall.server", ":20.12.6.1");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.7.39:8080");
 			t.addData("key and value");
 
 			Thread.sleep(1);
 			t.complete();
 		}
-		Thread.sleep(1000);
+		Thread.sleep(100);
 	}
 	
 	@Test
 	public void sendPigeonServerTransaction() throws Exception {
-		for (int i = 0; i < 180; i++) {
-			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method1");
-			Cat.getProducer().newEvent("PigeonCall.client", "30.12.6.1");
+		for (int i = 0; i < 100; i++) {
+			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method6");
+			Cat.getProducer().newEvent("PigeonCall.client", "192.168.7.77");
 			t.addData("key and value");
 
 			Thread.sleep(1);
 			t.complete();
 		}
-		for (int i = 0; i < 80; i++) {
-			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method2");
-			Cat.getProducer().newEvent("PigeonCall.client", "10.12.6.1");
+		for (int i = 0; i < 200; i++) {
+			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method8");
+			Cat.getProducer().newEvent("PigeonCall.client", "192.168.7.20");
 			t.addData("key and value");
 
 			Thread.sleep(1);
 			t.complete();
 		}
 
-		for (int i = 0; i < 280; i++) {
-			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method4");
-			Cat.getProducer().newEvent("PigeonCall.client", "20.12.6.1");
+		for (int i = 0; i < 300; i++) {
+			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method5");
+			Cat.getProducer().newEvent("PigeonCall.client", "192.168.7.231");
 			t.addData("key and value");
 
 			Thread.sleep(1);
 			t.complete();
 		}
-		Thread.sleep(1000);
+		Thread.sleep(100);
 	}
 }

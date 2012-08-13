@@ -1,16 +1,27 @@
 package com.dianping.cat.message.spi;
 
+import org.codehaus.plexus.logging.Logger;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.site.lookup.ContainerHolder;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
-	private volatile boolean m_active = true;
 
 	protected static final long MINUTE = 60 * 1000;
 
+	protected long m_extraTime;
+
+	protected long m_startTime;
+
+	protected long m_duration;
+
+	protected Logger m_logger;
+
 	private long m_errors = 0;
+
+	private volatile boolean m_active = true;
 
 	@Override
 	public void analyze(MessageQueue queue) {

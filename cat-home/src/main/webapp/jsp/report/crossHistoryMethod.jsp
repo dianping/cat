@@ -7,10 +7,10 @@
 <jsp:useBean id="payload"  	type="com.dianping.cat.report.page.cross.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.cross.Model" scope="request" />
 
-<a:report title="Cross Report"
+<a:historyReport title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
 
-	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 
 <res:useCss value="${res.css.local.cross_css}" target="head-css" />
@@ -20,21 +20,21 @@
 	<tr style="text-align: left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}"
+					<a href="?op=history&domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}">All</a>
+					<a href="?op=history&domain=${model.domain}&date=${model.date}&remote=${payload.remoteIp}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}"
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&remote=${payload.remoteIp}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -49,10 +49,10 @@
 			<th class="left">Type</th>
 			<th class="left">RemoteIp</th>
 			<th class="left">Method</th>
-			<th><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=total">Total</a></th>
-			<th><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure">Failure</a></th>
-			<th><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent">Failure%</a></th>
-			<th><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=avg">Avg(ms)</a></th>
+			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=total">Total</a></th>
+			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure">Failure</a></th>
+			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent">Failure%</a></th>
+			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=avg">Avg(ms)</a></th>
 			<th>TPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.methodInfo.callProjectsInfo}" varStatus="status">
@@ -76,10 +76,10 @@
 		         <th class="left">Type</th>
 				 <th class="left">RemoteIp</th>
 				 <th class="left">Method</th>
-		         <th><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
-		         <th><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
-		         <th><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
-		         <th><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
 		         <th>TPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.methodInfo.serviceProjectsInfo}" varStatus="status">
@@ -97,4 +97,4 @@
 		      </c:if>
 </table>
 </jsp:body>
-</a:report>
+</a:historyReport>

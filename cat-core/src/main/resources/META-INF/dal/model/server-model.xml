@@ -17,8 +17,9 @@
 	</entity>
 	<entity name="consumer" class-name="ConsumerConfig" />
 	<entity name="long-config">
-		<attribute name="default-url-threshold" value-type="int" default-value="2000" />
-		<attribute name="default-sql-threshold" value-type="int" default-value="1000" />
+		<attribute name="default-url-threshold" value-type="int" default-value="1000" />
+		<attribute name="default-sql-threshold" value-type="int" default-value="100" />
+		<attribute name="default-service-threshold" value-type="int" default-value="50" />
 		<entity-ref name="domain" type="map" names="domains" />
 	</entity>
 	<entity name="domain">

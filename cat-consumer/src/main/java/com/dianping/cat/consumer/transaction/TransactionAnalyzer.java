@@ -51,14 +51,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
 
-	private long m_extraTime;
-
-	private long m_startTime;
-
-	private long m_duration;
-
-	private Logger m_logger;
-
 	private void clearAllDuration(TransactionReport report) {
 		Collection<Machine> machines = report.getMachines().values();
 		for (Machine machine : machines) {
