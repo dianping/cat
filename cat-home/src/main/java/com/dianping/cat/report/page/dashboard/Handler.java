@@ -63,6 +63,7 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
 				if (eventMachine != null) {
 					Collection<EventType> types = eventMachine.getTypes().values();
+					
 					for (EventType eventType : types) {
 						String id = eventType.getId();
 						data.put(id + COUNT, String.valueOf(eventType.getTotalCount()));
@@ -70,12 +71,14 @@ public class Handler implements PageHandler<Context> {
 				}
 			} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				EventType eventType = eventMachine.findType(type);
-				if (type != null) {
+				
+				if (eventType != null) {
 					data.put(COUNT, String.valueOf(eventType.getTotalCount()));
 				}
 			} else if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				EventType eventType = eventMachine.findType(type);
-				if (type != null) {
+				
+				if (eventType != null) {
 					EventName eventName = eventType.findName(name);
 
 					if (eventName != null) {
@@ -89,7 +92,8 @@ public class Handler implements PageHandler<Context> {
 	private void buildProblemReportResult(ProblemReport problemReport, String ip, String type, String name,
 	      Map<String, String> data) {
 		ProblemStatistics problemStatistics = new ProblemStatistics();
-		if (ip.equals(Payload.ALL)) {
+		
+		if (ip.equalsIgnoreCase(Payload.ALL)) {
 			problemStatistics.setAllIp(true);
 		} else {
 			problemStatistics.setIp(ip);
@@ -98,6 +102,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
 			Map<String, TypeStatistics> status = problemStatistics.getStatus();
+			
 			for (Entry<String, TypeStatistics> temp : status.entrySet()) {
 				String key = temp.getKey();
 				TypeStatistics value = temp.getValue();
@@ -106,12 +111,14 @@ public class Handler implements PageHandler<Context> {
 		} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 			Map<String, TypeStatistics> status = problemStatistics.getStatus();
 			TypeStatistics value = status.get(type);
+			
 			if (value != null) {
 				data.put(COUNT, String.valueOf(value.getCount()));
 			}
 		} else if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 			Map<String, TypeStatistics> status = problemStatistics.getStatus();
 			TypeStatistics value = status.get(type);
+			
 			if (value != null) {
 				StatusStatistics nameValue = value.getStatus().get(name);
 				if (nameValue != null) {
@@ -128,20 +135,24 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
 				if (transactionMachine != null) {
 					Collection<TransactionType> types = transactionMachine.getTypes().values();
+					
 					for (TransactionType transactionType : types) {
 						String id = transactionType.getId();
+						
 						data.put(id + TIME, m_format.format(transactionType.getAvg()));
 						data.put(id + COUNT, String.valueOf(transactionType.getTotalCount()));
 					}
 				}
 			} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				TransactionType transactionType = transactionMachine.findType(type);
+				
 				if (transactionType != null) {
 					data.put(TIME, m_format.format(transactionType.getAvg()));
 					data.put(COUNT, String.valueOf(transactionType.getTotalCount()));
 				}
 			} else if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				TransactionType transactionType = transactionMachine.findType(type);
+				
 				if (transactionType != null) {
 					TransactionName transactionName = transactionType.findName(name);
 
@@ -154,20 +165,18 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private Map<String, String> getBaseInfoByDomian(String domain, String ip) {
+	private Map<String, String> getBaseInfoByDomianAndIp(String domain, String ip) {
 		Map<String, String> data = new HashMap<String, String>();
 
-		TransactionReport transactionReport = getTransactionHourlyReport(domain, ip, null, null);
+		TransactionReport transactionReport = getTransactionHourlyReport(domain, ip, null);
 
 		Machine transactionMachine = transactionReport.getMachines().get(ip);
 		if (transactionMachine != null) {
-			if (transactionMachine != null) {
-				Collection<TransactionType> types = transactionMachine.getTypes().values();
-				for (TransactionType type : types) {
-					String name = type.getId();
-					data.put(name + TIME, m_format.format(type.getAvg()));
-					data.put(name + COUNT, m_format.format(type.getTotalCount()));
-				}
+			Collection<TransactionType> types = transactionMachine.getTypes().values();
+			for (TransactionType type : types) {
+				String name = type.getId();
+				data.put(name + TIME, m_format.format(type.getAvg()));
+				data.put(name + COUNT, m_format.format(type.getTotalCount()));
 			}
 		}
 		EventReport eventReport = getEventHourlyReport(domain, ip, null);
@@ -177,6 +186,7 @@ public class Handler implements PageHandler<Context> {
 			long exceptionCount = 0;
 			EventType exception = eventMachine.findType("Exception");
 			EventType runtimeException = eventMachine.findType("RuntimeException");
+
 			if (exception != null) {
 				exceptionCount += exception.getTotalCount();
 			}
@@ -208,7 +218,7 @@ public class Handler implements PageHandler<Context> {
 	private ProblemReport getProblemHourlyReport(String domain, String ip) {
 		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
 		      .setProperty("type", "view");
-		if (!ip.equals(Payload.ALL)) {
+		if (!ip.equalsIgnoreCase(Payload.ALL)) {
 			request.setProperty("ip", ip);
 		}
 
@@ -221,10 +231,10 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private TransactionReport getTransactionHourlyReport(String domain, String ip, String type, String name) {
+	private TransactionReport getTransactionHourlyReport(String domain, String ip, String type) {
 		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT) //
 		      .setProperty("ip", ip);
-		if (!StringUtils.isEmpty(name)) {
+		if (!StringUtils.isEmpty(type)) {
 			request.setProperty("type", type);
 		}
 
@@ -248,15 +258,14 @@ public class Handler implements PageHandler<Context> {
 	@OutboundActionMeta(name = "dashboard")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
+		Payload payload = ctx.getPayload();
+		Map<String, String> data = new HashMap<String, String>();
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.DASHBOARD);
-
-		Payload payload = ctx.getPayload();
-		Map<String, String> data = new HashMap<String, String>();
 		data.put("timestamp", String.valueOf(new Date().getTime()));
-
 		String domain = payload.getDomain();
+		
 		if (!StringUtils.isEmpty(domain)) {
 			String report = payload.getReport();
 			String type = payload.getType();
@@ -265,18 +274,20 @@ public class Handler implements PageHandler<Context> {
 
 			if (!StringUtils.isEmpty(report)) {
 				if ("transaction".equalsIgnoreCase(report)) {
-					TransactionReport transactionReport = getTransactionHourlyReport(domain, ip, type, name);
+					TransactionReport transactionReport = getTransactionHourlyReport(domain, ip, type);
+
 					buildTransactionReportResult(transactionReport, ip, type, name, data);
 				} else if ("event".equalsIgnoreCase(report)) {
 					EventReport eventReport = getEventHourlyReport(domain, ip, type);
-					buildEventReportResult(eventReport, ip, type, name, data);
 
+					buildEventReportResult(eventReport, ip, type, name, data);
 				} else if ("problem".equalsIgnoreCase(report)) {
 					ProblemReport problemReport = getProblemHourlyReport(domain, ip);
+
 					buildProblemReportResult(problemReport, ip, type, name, data);
 				}
 			} else {
-				Map<String, String> temp = getBaseInfoByDomian(domain, ip);
+				Map<String, String> temp = getBaseInfoByDomianAndIp(domain, ip);
 				data.putAll(temp);
 			}
 		}
