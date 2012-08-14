@@ -77,14 +77,18 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_projectInfo;
 	}
 
+	public String getQueryName() {
+		return m_queryName;
+	}
+
 	public CrossReport getReport() {
 		return m_report;
 	}
+	
 
 	public String getServiceSort() {
 		return m_serviceSort;
 	}
-	
 
 	public void setCallSort(String callSort) {
 		m_callSort = callSort;
@@ -102,20 +106,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_projectInfo = projectInfo;
 	}
 
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
+	}
+
 	public void setReport(CrossReport report) {
 		m_report = report;
 	}
 
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
-	}
-
-	public String getQueryName() {
-		return m_queryName;
-	}
-
-	public void setQueryName(String queryName) {
-		m_queryName = queryName;
 	}
 	
 }

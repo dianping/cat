@@ -99,54 +99,6 @@ public class HostInfo extends BaseVisitor {
 		return values;
 	}
 
-	public HostInfo setCallSortBy(String callSoryBy) {
-		m_callSortBy = callSoryBy;
-		return this;
-	}
-
-	public HostInfo setClientIp(String clientIp) {
-		m_clientIp = clientIp;
-		return this;
-	}
-
-	public HostInfo setProjectName(String projectName) {
-		this.m_projectName = projectName;
-		return this;
-	}
-
-	public HostInfo setServiceSortBy(String serviceSortBy) {
-		m_serviceSortBy = serviceSortBy;
-		return this;
-	}
-
-	@Override
-	public void visitCrossReport(CrossReport crossReport) {
-		super.visitCrossReport(crossReport);
-	}
-
-	@Override
-	public void visitLocal(Local local) {
-		if (m_clientIp.equalsIgnoreCase("All") || m_clientIp.equalsIgnoreCase(local.getId())) {
-			super.visitLocal(local);
-		}
-	}
-
-	@Override
-	public void visitRemote(Remote remote) {
-		String remoteIp = remote.getId();
-		boolean flag = projectContains(remoteIp, m_projectName);
-
-		if (flag) {
-			String role = remote.getRole();
-
-			if (role != null && role.endsWith("Client")) {
-				addServiceProject(remoteIp, remote.getType());
-			} else if (role != null && role.endsWith("Server")) {
-				addCallProject(remoteIp, remote.getType());
-			}
-		}
-	}
-	
 	public boolean projectContains(String ip, String projectName) {
 		if(ALL.equalsIgnoreCase(projectName)){
 			return true;
@@ -172,8 +124,56 @@ public class HostInfo extends BaseVisitor {
 		return false;
 	}
 
+	public HostInfo setCallSortBy(String callSoryBy) {
+		m_callSortBy = callSoryBy;
+		return this;
+	}
+
+	public HostInfo setClientIp(String clientIp) {
+		m_clientIp = clientIp;
+		return this;
+	}
+
 	public void setHostInfoDao(HostinfoDao hostInfoDao) {
 		m_hostInfoDao = hostInfoDao;
+	}
+
+	public HostInfo setProjectName(String projectName) {
+		this.m_projectName = projectName;
+		return this;
+	}
+
+	public HostInfo setServiceSortBy(String serviceSortBy) {
+		m_serviceSortBy = serviceSortBy;
+		return this;
+	}
+
+	@Override
+	public void visitCrossReport(CrossReport crossReport) {
+		super.visitCrossReport(crossReport);
+	}
+	
+	@Override
+	public void visitLocal(Local local) {
+		if (m_clientIp.equalsIgnoreCase("All") || m_clientIp.equalsIgnoreCase(local.getId())) {
+			super.visitLocal(local);
+		}
+	}
+
+	@Override
+	public void visitRemote(Remote remote) {
+		String remoteIp = remote.getId();
+		boolean flag = projectContains(remoteIp, m_projectName);
+
+		if (flag) {
+			String role = remote.getRole();
+
+			if (role != null && role.endsWith("Client")) {
+				addServiceProject(remoteIp, remote.getType());
+			} else if (role != null && role.endsWith("Server")) {
+				addCallProject(remoteIp, remote.getType());
+			}
+		}
 	}
 	
 	

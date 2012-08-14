@@ -59,6 +59,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_projectName;
 	}
 
+	public String getQueryName() {
+		return m_queryName;
+	}
+
 	public String getRemoteIp() {
 		return m_remoteIp;
 	}
@@ -84,20 +88,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_projectName = projectName;
 	}
 
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
+	}
+
 	public void setRemoteIp(String remoteIp) {
 		m_remoteIp = remoteIp;
 	}
 
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
-	}
-
-	public String getQueryName() {
-		return m_queryName;
-	}
-
-	public void setQueryName(String queryName) {
-		m_queryName = queryName;
 	}
 
 	@Override

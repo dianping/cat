@@ -45,6 +45,10 @@ public class TypeDetailInfo {
 		return m_failurePercent;
 	}
 
+	public String getIp() {
+		return m_ip;
+	}
+
 	public String getProjectName() {
 		return m_projectName;
 	}
@@ -92,6 +96,10 @@ public class TypeDetailInfo {
 		m_failurePercent = failrePercent;
 	}
 
+	public void setIp(String ip) {
+		m_ip = ip;
+	}
+
 	public void setSum(double sum) {
 		m_sum = sum;
 	}
@@ -102,14 +110,6 @@ public class TypeDetailInfo {
 
 	public void setType(String type) {
 		m_type = type;
-	}
-
-	public String getIp() {
-		return m_ip;
-	}
-
-	public void setIp(String ip) {
-		m_ip = ip;
 	}
 	
 }

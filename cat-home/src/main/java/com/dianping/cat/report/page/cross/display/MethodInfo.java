@@ -87,6 +87,10 @@ public class MethodInfo extends BaseVisitor {
 		return values;
 	}
 
+	public String getQuery() {
+		return m_query;
+	}
+
 	public long getReportDuration() {
 		return m_reportDuration;
 	}
@@ -98,6 +102,19 @@ public class MethodInfo extends BaseVisitor {
 		return values;
 	}
 
+	private boolean isFit(String queryName, String methodName) {
+		String[] args = queryName.split("\\|");
+
+		if (args != null) {
+			for (String str : args) {
+				if (str.length() > 0 && methodName.toLowerCase().contains(str.trim().toLowerCase())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
 	public MethodInfo setCallSortBy(String callSoryBy) {
 		m_callSortBy = callSoryBy;
 		return this;
@@ -105,6 +122,11 @@ public class MethodInfo extends BaseVisitor {
 
 	public MethodInfo setClientIp(String clientIp) {
 		m_clientIp = clientIp;
+		return this;
+	}
+
+	public MethodInfo setQuery(String query) {
+		m_query = query;
 		return this;
 	}
 
@@ -119,12 +141,6 @@ public class MethodInfo extends BaseVisitor {
 	}
 
 	@Override
-	public void visitType(Type type) {
-		m_currentType = type.getId();
-		super.visitType(type);
-	}
-
-	@Override
 	public void visitCrossReport(CrossReport crossReport) {
 		super.visitCrossReport(crossReport);
 	}
@@ -134,15 +150,6 @@ public class MethodInfo extends BaseVisitor {
 		if (m_clientIp.equalsIgnoreCase("All") || m_clientIp.equalsIgnoreCase(local.getId())) {
 			super.visitLocal(local);
 		}
-	}
-
-	public String getQuery() {
-		return m_query;
-	}
-
-	public MethodInfo setQuery(String query) {
-		m_query = query;
-		return this;
 	}
 
 	@Override
@@ -166,16 +173,9 @@ public class MethodInfo extends BaseVisitor {
 		}
 	}
 
-	private boolean isFit(String queryName, String methodName) {
-		String[] args = queryName.split("\\|");
-
-		if (args != null) {
-			for (String str : args) {
-				if (str.length() > 0 && methodName.toLowerCase().contains(str.trim().toLowerCase())) {
-					return true;
-				}
-			}
-		}
-		return false;
+	@Override
+	public void visitType(Type type) {
+		m_currentType = type.getId();
+		super.visitType(type);
 	}
 }

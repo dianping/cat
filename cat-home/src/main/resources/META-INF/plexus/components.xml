@@ -1244,17 +1244,22 @@
 			<implementation>com.dianping.cat.report.page.dashboard.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>event</role-hint>
 					<field-name>m_eventService</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_transactionService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemService</field-name>
 				</requirement>
 			</requirements>
 		</component>
