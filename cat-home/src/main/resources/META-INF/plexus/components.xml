@@ -71,6 +71,10 @@
 			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.cross.CrossMerger</role>
+			<implementation>com.dianping.cat.report.task.cross.CrossMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -173,6 +177,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.DailyTaskProducer</role>
 			<implementation>com.dianping.cat.report.task.DailyTaskProducer</implementation>
 			<requirements>
@@ -205,6 +227,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
@@ -1276,6 +1301,9 @@
 					<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
@@ -1407,6 +1435,28 @@
 			<implementation>com.dianping.cat.report.task.matrix.MatrixMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.cross.CrossMerger</role>
+			<implementation>com.dianping.cat.report.task.cross.CrossMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 			<implementation>com.dianping.cat.hadoop.dal.TaskDao</implementation>
 			<requirements>
@@ -1475,6 +1525,18 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>cross</role-hint>
 					<field-name>m_service</field-name>
@@ -1484,6 +1546,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.cross.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.cross.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.HostinfoDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 	</components>
 </plexus>

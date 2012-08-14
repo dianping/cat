@@ -12,11 +12,16 @@ import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
-import com.dianping.cat.report.project.ProjectInfoCache;
+import com.dianping.cat.hadoop.dal.Hostinfo;
+import com.dianping.cat.hadoop.dal.HostinfoDao;
+import com.dianping.cat.hadoop.dal.HostinfoEntity;
+import com.site.dal.jdbc.DalException;
 
 public class HostInfo extends BaseVisitor {
 
 	private static final String ALL = "ALL";
+	
+	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	private Map<String, TypeDetailInfo> m_callProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
@@ -31,6 +36,8 @@ public class HostInfo extends BaseVisitor {
 	private long m_reportDuration;
 
 	private String m_serviceSortBy = "Avg";
+
+	private HostinfoDao m_hostInfoDao;
 
 	public HostInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
@@ -127,7 +134,7 @@ public class HostInfo extends BaseVisitor {
 	@Override
 	public void visitRemote(Remote remote) {
 		String remoteIp = remote.getId();
-		boolean flag = ProjectInfoCache.getIntance().isInTheProject(remoteIp, m_projectName);
+		boolean flag = projectContains(remoteIp, m_projectName);
 
 		if (flag) {
 			String role = remote.getRole();
@@ -139,4 +146,35 @@ public class HostInfo extends BaseVisitor {
 			}
 		}
 	}
+	
+	public boolean projectContains(String ip, String projectName) {
+		if(ALL.equalsIgnoreCase(projectName)){
+			return true;
+		}
+		if (ip.indexOf(':') > 0) {
+			ip = ip.substring(0, ip.indexOf(':'));
+		}
+		try {
+			Hostinfo hostInfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+			if (hostInfo != null) {
+				if(projectName.equalsIgnoreCase(hostInfo.getDomain())){
+					return true;
+				}else{
+					return false;
+				}
+			}
+		} catch (DalException e) {
+			if(projectName.equals(UNKNOWN_PROJECT)){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public void setHostInfoDao(HostinfoDao hostInfoDao) {
+		m_hostInfoDao = hostInfoDao;
+	}
+	
+	
 }

@@ -44,14 +44,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	private Map<String, EventReport> m_reports = new HashMap<String, EventReport>();
 
-	private long m_extraTime;
-
-	private long m_startTime;
-
-	private long m_duration;
-	
-	private Logger m_logger;
-
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);

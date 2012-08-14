@@ -12,6 +12,13 @@ public class NameCompartor implements Comparator<NameDetailInfo> {
 
 	@Override
 	public int compare(NameDetailInfo m1, NameDetailInfo m2) {
+		if (m1.getId()!=null&&m1.getId().equals("ALL")) {
+			return -1;
+		}
+		if (m2.getId()!=null&&m2.getId().equals("ALL")) {
+			return 1;
+		}
+		
 		if (m_sorted.equals("name")) {
 			return m1.getId().compareTo(m2.getId());
 		}
@@ -22,10 +29,10 @@ public class NameCompartor implements Comparator<NameDetailInfo> {
 			return (int) (m2.getFailureCount() - m1.getFailureCount());
 		}
 		if (m_sorted.equals("failurePercent")) {
-			return (int) (m2.getFailurePercent() * 100 - m1.getFailurePercent() * 100);
+			return (int) (m2.getFailurePercent() * 1000 - m1.getFailurePercent() * 1000);
 		}
 		if (m_sorted.equals("avg")) {
-			return (int) (m2.getAvg() * 100 - m1.getAvg() * 100);
+			return (int) (m2.getAvg() * 1000 - m1.getAvg() * 1000);
 		}
 		return 0;
 	}

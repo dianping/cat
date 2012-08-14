@@ -34,6 +34,7 @@
     <attribute name="name" value-type="String" />
     <attribute name="url-threshold" value-type="int" />
     <attribute name="sql-threshold" value-type="int" />
+    <attribute name="service-threshold" value-type="int" />
   </entity>
   <entity name="console">
     <attribute name="default-domain" value-type="String" />

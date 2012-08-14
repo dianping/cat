@@ -43,14 +43,6 @@ public class TopIpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements 
 
 	private int m_lastPhase;
 
-	private long m_extraTime;
-
-	private long m_startTime;
-
-	private long m_duration;
-
-	private Logger m_logger;
-
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.cat.consumer.model">
+	<entity name="common-report" root="true">
+		<attribute name="domain" key="true" />
+		<element name="domain" value-type="String" type="set" names="domain-names" />
+		<element name="ip" value-type="String" type="set" names="ips" />
+	</entity>
+</model>
+

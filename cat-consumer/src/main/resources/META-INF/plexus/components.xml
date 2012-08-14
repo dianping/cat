@@ -10,7 +10,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,heartbeat,matrix,cross,dump</analyzers>
+				<analyzers>problem,transaction,event,heartbeat,matrix,cross,common,dump</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -63,6 +63,16 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+			<role-hint>long-service</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.handler.LongServiceHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.problem.ProblemAnalyzer</role>
 			<implementation>com.dianping.cat.consumer.problem.ProblemAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -83,6 +93,7 @@
 						<role-hint>error</role-hint>
 						<role-hint>long-url</role-hint>
 						<role-hint>long-sql</role-hint>
+						<role-hint>long-service</role-hint>
 						<role-hint>heartbeat</role-hint>
 					</role-hints>
 					<field-name>m_handlers</field-name>
@@ -144,6 +155,16 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.common.CommonAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.common.CommonAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
 				</requirement>
 			</requirements>
 		</component>

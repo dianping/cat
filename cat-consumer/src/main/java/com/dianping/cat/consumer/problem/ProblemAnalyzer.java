@@ -43,14 +43,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
 
-	private long m_extraTime;
-
-	private Logger m_logger;
-
-	private long m_startTime;
-
-	private long m_duration;
-	
 	private void closeMessageBuckets() {
 		Date timestamp = new Date(m_startTime);
 

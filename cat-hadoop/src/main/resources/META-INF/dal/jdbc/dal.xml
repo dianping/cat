@@ -486,6 +486,29 @@
 			</query>
 		</query-defs>
 	</entity>
+	<entity name="hostinfo" table="hostinfo" alias="h">
+	<member name="creation-date" insert-expr="NOW()" />
+	<member name="last-modified-date" insert-expr="NOW()"
+		update-expr="NOW()" />
+	<query-defs>
+		<query name="find-by-ip" type="SELECT">
+			<param name="ip" />
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='ip'/> = ${ip}
+				]]></statement>
+		</query>
+		<query name="insert" type="INSERT">
+			<statement><![CDATA[
+			INSERT INTO <TABLE/>
+			(<FIELDS/>) VALUES(<VALUES/>) 
+			ON DUPLICATE KEY 
+			UPDATE <FIELD name='domain'/> = ${domain},
+            <FIELD name='last-modified-date'/> = NOW()]]></statement>
+		</query>
+	</query-defs>
+</entity>
 </entities>
 
 

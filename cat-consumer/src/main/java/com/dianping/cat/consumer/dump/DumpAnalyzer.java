@@ -36,19 +36,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
 	private LocalMessageBucketManager m_bucketManager;
 
-	public DumpUploader getDumpUploader() {
-		return m_uploader;
-	}
-
-	private long m_extraTime;
-
-	private long m_startTime;
-
-	private long m_duration;
-
 	private boolean m_localMode = true;
 
 	private Logger m_logger;
+
+	public DumpUploader getDumpUploader() {
+		return m_uploader;
+	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {

@@ -14,6 +14,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_callSort;
 	
+	private String m_queryName;
+	
 	private HostInfo m_hostInfo;
 	
 	private MethodInfo m_methodInfo;
@@ -107,4 +109,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
 	}
+
+	public String getQueryName() {
+		return m_queryName;
+	}
+
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
+	}
+	
 }
