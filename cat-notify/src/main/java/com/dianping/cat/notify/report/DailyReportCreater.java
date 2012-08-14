@@ -50,7 +50,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 	@Override
 	protected String renderTransactionReport(TimeSpan timeSpan, TransactionReport transactionReport, String domain) {
-		List<TransactionRenderDO> tRenderDoList = getTransactionRenderDoList(timeSpan, transactionReport, domain, true);
+		List<TransactionRenderDO> tRenderDoList = getTransactionRenderDoList(timeSpan, transactionReport, domain, false);
 		if (tRenderDoList == null || tRenderDoList.size() == 0) {
 			return "";
 		}
@@ -58,7 +58,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 		long period = timeSpan.getTimeStamp();
 		Map<String, Object> params = new HashMap<String, Object>();
 
-		String currentUrl = getViewUrl("t", domain, period);
+		String currentUrl = getCurrentViewUrl("t", domain, period);
 		params.put("title", "Transaction Report " + currentUrl);
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS;
@@ -73,7 +73,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 	@Override
 	protected String renderEventReport(TimeSpan timeSpan, EventReport report, String domain) {
-		List<EventRenderDO> eRenderDoList = getEventRenderDoList(timeSpan, report, domain, true);
+		List<EventRenderDO> eRenderDoList = getEventRenderDoList(timeSpan, report, domain, false);
 		if (eRenderDoList == null || eRenderDoList.size() == 0) {
 			return "";
 		}
@@ -81,7 +81,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 		long period = timeSpan.getTimeStamp();
 		Map<String, Object> params = new HashMap<String, Object>(2);
 
-		String currentUrl = getViewUrl("e", domain, period);
+		String currentUrl = getCurrentViewUrl("e", domain, period);
 		params.put("title", "Event Report " + currentUrl);
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS;
@@ -96,7 +96,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 	@Override
 	protected String renterProblemReport(TimeSpan timeSpan, ProblemReport report, String domain) {
-		List<ProblemRenderDO> pRenderDoList = getProblemRenderDoList(timeSpan, report, domain, true);
+		List<ProblemRenderDO> pRenderDoList = getProblemRenderDoList(timeSpan, report, domain, false);
 		if (pRenderDoList == null || pRenderDoList.size() == 0) {
 			return "";
 		}
@@ -104,7 +104,7 @@ public class DailyReportCreater extends AbstractReportCreater {
 		Map<String, Object> params = new HashMap<String, Object>(2);
 
 		long period = timeSpan.getTimeStamp();
-		String currentUrl = getViewUrl("p", domain, period);
+		String currentUrl = getCurrentViewUrl("p", domain, period);
 		params.put("title", "Problem Report " + currentUrl);
 
 		long preWeakLastDay = period - TimeUtil.DAY_MICROS;

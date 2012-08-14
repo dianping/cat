@@ -234,7 +234,7 @@ public abstract class AbstractReportCreater implements ReportCreater {
 	      TransactionReport transactionReport, String domain, boolean isWeek) {
 		String urlType = "day";
 		if (isWeek) {
-			urlType = "weak";
+			urlType = "week";
 		}
 		com.dianping.cat.consumer.transaction.model.entity.Machine machine = transactionReport
 		      .findMachine(ReportConstants.ALL_IP);
