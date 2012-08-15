@@ -33,7 +33,7 @@ public class ClientConfigValidator extends DefaultValidator {
 	@Override
 	public void visitDomain(Domain domain) {
 		super.visitDomain(domain);
-
+ 
 		// set default values
 		if (domain.getEnabled() == null) {
 			domain.setEnabled(true);
