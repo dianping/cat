@@ -14,6 +14,7 @@
 	<jsp:body>
 
 <res:useCss value="${res.css.local.cross_css}" target="head-css" />
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 
 </br>
 <table class="machines">
@@ -44,15 +45,28 @@
 </table>
 <br>
 <table class='cross'>
+		<tr><th colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
+			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
+			</th></tr>
+		<script>
+			function filterByName(date,domain,ip){
+				var queryName=$("#queryname").val();
+				var serviceSort='${model.serviceSort}';
+				var callSort='${model.callSort}';
+				var remote='${payload.remoteIp}'
+				window.location.href="?op=historyMethod&domain="+domain+"&ip="+ip+"&date="+date+"&queryName="+queryName+"&remote="+remote+"&serviceSort="+serviceSort+"&callSort"+callSort;
+			}
+		</script>
 		<c:if test="${!empty model.methodInfo.callProjectsInfo}">
 		<tr>
 			<th class="left">Type</th>
 			<th class="left">RemoteIp</th>
 			<th class="left">Method</th>
-			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=total">Total</a></th>
-			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure">Failure</a></th>
-			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent">Failure%</a></th>
-			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=avg">Avg(ms)</a></th>
+			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=total&queryName=${model.queryName}">Total</a></th>
+			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure&queryName=${model.queryName}">Failure</a></th>
+			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent&queryName=${model.queryName}">Failure%</a></th>
+			<th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=avg&queryName=${model.queryName}">Avg(ms)</a></th>
 			<th>TPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.methodInfo.callProjectsInfo}" varStatus="status">
@@ -76,10 +90,10 @@
 		         <th class="left">Type</th>
 				 <th class="left">RemoteIp</th>
 				 <th class="left">Method</th>
-		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
-		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
-		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
-		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}">Total</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}">Failure</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}">Failure%</a></th>
+		         <th><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}">Avg(ms)</a></th>
 		         <th>TPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.methodInfo.serviceProjectsInfo}" varStatus="status">

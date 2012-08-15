@@ -7,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
@@ -31,6 +33,8 @@ public class MethodInfo extends BaseVisitor {
 	private String m_remoteIp;
 
 	private long m_reportDuration;
+
+	private String m_query;
 
 	private String m_callSortBy = "Avg";
 
@@ -83,6 +87,10 @@ public class MethodInfo extends BaseVisitor {
 		return values;
 	}
 
+	public String getQuery() {
+		return m_query;
+	}
+
 	public long getReportDuration() {
 		return m_reportDuration;
 	}
@@ -92,6 +100,19 @@ public class MethodInfo extends BaseVisitor {
 
 		Collections.sort(values, new NameCompartor(m_serviceSortBy));
 		return values;
+	}
+
+	private boolean isFit(String queryName, String methodName) {
+		String[] args = queryName.split("\\|");
+
+		if (args != null) {
+			for (String str : args) {
+				if (str.length() > 0 && methodName.toLowerCase().contains(str.trim().toLowerCase())) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 	public MethodInfo setCallSortBy(String callSoryBy) {
@@ -104,19 +125,19 @@ public class MethodInfo extends BaseVisitor {
 		return this;
 	}
 
-	public void setRemoteIp(String remoteIp) {
+	public MethodInfo setQuery(String query) {
+		m_query = query;
+		return this;
+	}
+
+	public MethodInfo setRemoteIp(String remoteIp) {
 		m_remoteIp = remoteIp;
+		return this;
 	}
 
 	public MethodInfo setServiceSortBy(String serviceSortBy) {
 		m_serviceSortBy = serviceSortBy;
 		return this;
-	}
-
-	@Override
-	public void visitType(Type type) {
-		m_currentType = type.getId();
-		super.visitType(type);
 	}
 
 	@Override
@@ -135,10 +156,12 @@ public class MethodInfo extends BaseVisitor {
 	public void visitName(Name name) {
 		String role = m_currentRole;
 
-		if (role != null && role.endsWith("Client")) {
-			addServiceProject(m_currentType, name);
-		} else if (role != null && role.endsWith("Server")) {
-			addCallProject(m_currentType, name);
+		if (StringUtils.isEmpty(m_query) || isFit(m_query, name.getId())) {
+			if (role != null && role.endsWith("Client")) {
+				addServiceProject(m_currentType, name);
+			} else if (role != null && role.endsWith("Server")) {
+				addCallProject(m_currentType, name);
+			}
 		}
 	}
 
@@ -150,4 +173,9 @@ public class MethodInfo extends BaseVisitor {
 		}
 	}
 
+	@Override
+	public void visitType(Type type) {
+		m_currentType = type.getId();
+		super.visitType(type);
+	}
 }

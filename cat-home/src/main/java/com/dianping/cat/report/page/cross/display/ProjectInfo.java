@@ -121,6 +121,10 @@ public class ProjectInfo extends BaseVisitor {
 		return this;
 	}
 
+	public void setHostInfoDao(HostinfoDao hostInfoDao) {
+		m_hostInfoDao = hostInfoDao;
+	}
+
 	public ProjectInfo setServiceSortBy(String serviceSortBy) {
 		m_serviceSortBy = serviceSortBy;
 		return this;
@@ -148,10 +152,6 @@ public class ProjectInfo extends BaseVisitor {
 		} else if (role != null && role.endsWith("Server")) {
 			addCallProject(remoteIp, remote.getType());
 		}
-	}
-
-	public void setHostInfoDao(HostinfoDao hostInfoDao) {
-		m_hostInfoDao = hostInfoDao;
 	}
 
 }

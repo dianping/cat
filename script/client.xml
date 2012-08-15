@@ -1,0 +1,13 @@
+<config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+	<servers>
+<!--
+		<server ip="192.168.63.141" port="2280" />
+		<server ip="192.168.33.38" port="2280" />
+		<server ip="192.168.33.38" port="2280" />
+-->	
+	<server ip="127.0.0.1" port="2280" />
+	<server ip="192.168.7.71" port="2280" />
+	<server ip="192.168.33.38" port="2280" />
+	</servers>
+	<domain id="Cat" enabled="true" max-threads="10000"/>
+</config>

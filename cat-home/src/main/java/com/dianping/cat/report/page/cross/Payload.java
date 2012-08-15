@@ -25,6 +25,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("serviceSort")
 	private String m_serviceSort;
+	
+	@FieldMeta("queryName")
+	private String m_queryName;
 
 	public Payload() {
 		super(ReportPage.CROSS);
@@ -56,6 +59,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_projectName;
 	}
 
+	public String getQueryName() {
+		return m_queryName;
+	}
+
 	public String getRemoteIp() {
 		return m_remoteIp;
 	}
@@ -79,6 +86,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setProjectName(String projectName) {
 		m_projectName = projectName;
+	}
+
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
 	}
 
 	public void setRemoteIp(String remoteIp) {

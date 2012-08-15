@@ -87,26 +87,26 @@ public class PayloadTest {
 		payload.setStep(-1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(current, payload.getHistoryEndDate());
+		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.computeStartDate();
 		checkDate(lastTwo, payload.getHistoryStartDate());
-		checkDate(lastOne, payload.getHistoryEndDate());
+		checkDate(lastOne, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(current, payload.getHistoryEndDate());
+		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
 		payload.computeStartDate();
 		checkDate(current, payload.getHistoryStartDate());
-		checkDate(next, payload.getHistoryEndDate());
+		checkDate(next, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
 		payload.computeStartDate();
 		checkDate(current, payload.getHistoryStartDate());
-		checkDate(next, payload.getHistoryEndDate());
+		checkDate(next, adjustEndDate(payload.getHistoryEndDate()));
 	}
 
 	@Test
@@ -141,25 +141,25 @@ public class PayloadTest {
 		payload.setStep(-1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 7 * ONE_DAY)), payload.getHistoryEndDate());
+		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 7 * ONE_DAY)), adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.computeStartDate();
 		checkDate(lastTwo, payload.getHistoryStartDate());
-		checkDate(sdf.format(new Date(lastTwoWeek.getTime() + 7 * ONE_DAY)), payload.getHistoryEndDate());
+		checkDate(sdf.format(new Date(lastTwoWeek.getTime() + 7 * ONE_DAY)), adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 7 * ONE_DAY)), payload.getHistoryEndDate());
+		checkDate(sdf.format(new Date(lastOneWeek.getTime() + 7 * ONE_DAY)), adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.computeStartDate();
 		payload.setStep(1);
 		checkDate(current, payload.getHistoryStartDate());
-		checkDate(sdf.format(currentWeek.getTime() + 7 * ONE_DAY), payload.getHistoryEndDate());
+		checkDate(sdf.format(currentWeek.getTime() + 7 * ONE_DAY), adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.computeStartDate();
 		checkDate(current, payload.getHistoryStartDate());
-		checkDate(sdf.format(currentWeek.getTime() + 7 * ONE_DAY), payload.getHistoryEndDate());
+		checkDate(sdf.format(currentWeek.getTime() + 7 * ONE_DAY), adjustEndDate(payload.getHistoryEndDate()));
 	}
 
 	@Test
@@ -187,15 +187,19 @@ public class PayloadTest {
 		payload.setStep(-1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(current, payload.getHistoryEndDate());
+		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.computeStartDate();
 		checkDate(lastTwo, payload.getHistoryStartDate());
-		checkDate(lastOne, payload.getHistoryEndDate());
+		checkDate(lastOne, adjustEndDate(payload.getHistoryEndDate()));
 
 		payload.setStep(1);
 		payload.computeStartDate();
 		checkDate(lastOne, payload.getHistoryStartDate());
-		checkDate(current, payload.getHistoryEndDate());
+		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
+	}
+	
+	private Date adjustEndDate(Date date){
+		return new Date(date.getTime()+1000);
 	}
 }

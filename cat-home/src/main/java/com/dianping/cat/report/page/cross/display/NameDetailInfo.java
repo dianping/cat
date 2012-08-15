@@ -63,6 +63,10 @@ public class NameDetailInfo {
 		return m_tps;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
 	public void mergeName(Name name) {
 		m_totalCount += name.getTotalCount();
 		m_failureCount += name.getFailCount();
@@ -101,15 +105,11 @@ public class NameDetailInfo {
 		m_sum = sum;
 	}
 
-	public String getType() {
-		return m_type;
+	public void setTotalCount(long totalCount) {
+		m_totalCount = totalCount;
 	}
 
 	public void setType(String type) {
 		m_type = type;
-	}
-
-	public void setTotalCount(long totalCount) {
-		m_totalCount = totalCount;
 	}
 }
