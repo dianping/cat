@@ -221,11 +221,6 @@
 			<implementation>com.dianping.cat.CatCoreModule</implementation>
 		</component>
 		<component>
-			<role>com.site.initialization.Module</role>
-			<role-hint>cat-client</role-hint>
-			<implementation>com.dianping.cat.CatClientModule</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
 			<role-hint>escape</role-hint>
 			<implementation>com.dianping.cat.message.spi.codec.EscapingBufferWriter</implementation>

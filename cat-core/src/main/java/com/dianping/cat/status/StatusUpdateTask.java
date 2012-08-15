@@ -85,8 +85,6 @@ public class StatusUpdateTask implements Task, Initializable {
 	         }
 	         t.setStatus(Message.SUCCESS);
 	         t.complete();
-         }else{
-         	System.out.println("Cat is disable!");
          }
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;
 

@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -46,54 +47,7 @@ public class ClientConfigReloader implements Task {
 		}
 	}
 
-	@Override
-	public void run() {
-		while (isActive()) {
-			try {
-				try {
-					long now = m_file.lastModified();
-
-					if (now > m_lastModifyTime) {
-						ClientConfig newConfig = mergerClientConfig();
-
-						Map<String, Domain> domains = newConfig.getDomains();
-						Domain firstDomain = domains.isEmpty() ? null : domains.values().iterator().next();
-
-						boolean catEnable = firstDomain.getEnabled();
-						boolean oldEnabled = m_config.isEnabled();
-
-						if (oldEnabled != catEnable) {
-							if(oldEnabled){
-								Cat.getProducer().logEvent("System", "Reload", Message.SUCCESS, String.format("Change from %s to %s", oldEnabled, catEnable));
-							}
-							synchronized (m_config) {
-								m_config.setEnabled(catEnable);
-							}
-							if(catEnable){
-								Cat.getProducer().logEvent("System", "Reload", Message.SUCCESS, String.format("Change from %s to %s", oldEnabled, catEnable));
-							}
-						}
-					}
-				} catch (IOException e) {
-					Cat.getProducer().logEvent("System", "ReloadIOException", "IOException", null);
-				} catch (SAXException e) {
-					Cat.getProducer().logEvent("System", "ReloadSAXException", "SAXException", null);
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				Thread.sleep(2000L);
-			} catch (InterruptedException e) {
-				m_active = false;
-			}
-		}
-	}
-
-	@Override
-	public void shutdown() {
-		m_active = false;
-	}
-
-	public ClientConfig mergerClientConfig() throws IOException, SAXException {
+	public ClientConfig getClientConfig() throws IOException, SAXException {
 		ClientConfig clientConfig = null;
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CAT_CLIENT_XML);
 
@@ -115,5 +69,56 @@ public class ClientConfigReloader implements Task {
 		}
 
 		return clientConfig;
+	}
+
+	@Override
+	public void run() {
+		while (isActive()) {
+			try {
+				try {
+					long now = m_file.lastModified();
+
+					if (now > m_lastModifyTime) {
+						ClientConfig newConfig = getClientConfig();
+
+						Map<String, Domain> domains = newConfig.getDomains();
+						Domain firstDomain = domains.isEmpty() ? null : domains.values().iterator().next();
+
+						boolean catEnable = firstDomain.getEnabled();
+						boolean oldEnabled = m_config.isEnabled();
+
+						if (oldEnabled != catEnable) {
+							if (oldEnabled) {
+								Cat.getProducer().logEvent("System", "Reload:" + catEnable, Message.SUCCESS,
+								      String.format("Change from %s to %s", oldEnabled, catEnable));
+							}
+							synchronized (m_config) {
+								m_config.setEnabled(catEnable);
+							}
+							if (catEnable) {
+								Cat.getProducer().logEvent("System", "Reload:" + catEnable, Message.SUCCESS,
+								      String.format("Change from %s to %s", oldEnabled, catEnable));
+							}
+						}
+					}
+				} catch (IOException e) {
+					Cat.getProducer().logEvent("System", "ReloadIOException", "IOException", null);
+				} catch (SAXParseException e) {
+					Cat.getProducer().logEvent("System", "ReloadSAXException", "SAXException", null);
+				} catch (RuntimeException e) {
+					Cat.getProducer().logEvent("System", "ReloadException", "RuntimeException", null);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+				Thread.sleep(2000L);
+			} catch (InterruptedException e) {
+				m_active = false;
+			}
+		}
+	}
+
+	@Override
+	public void shutdown() {
+		m_active = false;
 	}
 }
