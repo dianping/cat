@@ -1,5 +1,6 @@
 package com.dianping.cat.message.internal;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Stack;
 
@@ -145,8 +146,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		// initialize domain and IP address
-		m_factory = lookup(MessageIdFactory.class);
-		m_factory.initialize(m_domain.getId());
+		try {
+			m_factory = lookup(MessageIdFactory.class);
+			m_factory.initialize(m_domain.getId());
+		} catch (IOException e) {
+			throw new InitializationException("Error while initializing MessageIdFactory!", e);
+		}
 	}
 
 	@Override
