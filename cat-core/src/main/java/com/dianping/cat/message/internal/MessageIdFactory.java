@@ -1,5 +1,10 @@
 package com.dianping.cat.message.internal;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -14,7 +19,19 @@ public class MessageIdFactory {
 
 	private String m_ipAddress;
 
+	private MappedByteBuffer m_byteBuffer;
+
+	private RandomAccessFile m_markFile;
+
 	private static final long HOUR = 3600 * 1000L;
+
+	public void close() {
+		try {
+			m_markFile.close();
+		} catch (Exception e) {
+			// ignore it
+		}
+	}
 
 	public String getNextId() {
 		long timestamp = getTimestamp();
@@ -28,6 +45,8 @@ public class MessageIdFactory {
 
 			index = m_index++;
 		}
+
+		saveMark();
 
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
@@ -48,7 +67,7 @@ public class MessageIdFactory {
 		return timestamp / HOUR; // version 2
 	}
 
-	public void initialize(String domain) {
+	public void initialize(String domain) throws IOException {
 		m_domain = domain;
 
 		if (m_ipAddress == null) {
@@ -68,6 +87,35 @@ public class MessageIdFactory {
 			}
 
 			m_ipAddress = sb.toString();
+		}
+
+		String tmpDir = System.getProperty("java.io.tmpdir");
+		File mark = new File(tmpDir, "cat-" + domain + ".mark");
+
+		m_markFile = new RandomAccessFile(mark, "rw");
+		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 20);
+		
+		if (m_byteBuffer.limit() > 0) {
+			int index = m_byteBuffer.getInt();
+			long timestamp = m_byteBuffer.getLong();
+
+			if (timestamp == m_lastTimestamp) { // for same hour
+				m_index = index;
+			} else {
+				m_index = 0;
+			}
+		}
+
+		saveMark();
+	}
+
+	private void saveMark() {
+		try {
+			m_byteBuffer.rewind();
+			m_byteBuffer.putInt(m_index);
+			m_byteBuffer.putLong(m_lastTimestamp);
+		} catch (Exception e) {
+			// ignore it
 		}
 	}
 

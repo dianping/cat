@@ -3,7 +3,6 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.CatClientModule;
 import com.dianping.cat.CatCoreModule;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -105,7 +104,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class, MessagePathBuilder.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
-		all.add(C(Module.class, CatClientModule.ID, CatClientModule.class));
 
 		all.addAll(new CodecComponentConfigurator().defineComponents());
 		all.addAll(new StorageComponentConfigurator().defineComponents());
