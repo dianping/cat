@@ -148,10 +148,15 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		} else {
 			temp = m_date + (ONE_HOUR * 24);
 		}
-		cal.setTimeInMillis(temp -1000);
+		cal.setTimeInMillis(temp);
 		return cal.getTime();
 	}
-	
+
+	public Date getHistoryDisplayEndDate() {
+		Date date = getHistoryEndDate();
+		return new Date(date.getTime() - 1000);
+	}
+
 	public Date getHistoryStartDate() {
 		if (m_customStart != null) {
 			try {
@@ -161,7 +166,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		}
 		return new Date(m_date);
 	}
-	
+
 	public String getIpAddress() {
 		return m_ipAddress;
 	}

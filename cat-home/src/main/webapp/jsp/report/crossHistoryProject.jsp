@@ -10,7 +10,7 @@
 <a:historyReport title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
 
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 
 <res:useCss value="${res.css.local.cross_css}" target="head-css" />

@@ -8,7 +8,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
 
 <a:historyReport title="HeartBeat History Report">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.transaction_css}" target="head-css" />
 	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
