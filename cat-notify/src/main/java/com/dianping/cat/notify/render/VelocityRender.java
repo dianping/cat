@@ -11,11 +11,16 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 import org.apache.velocity.app.VelocityEngine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.dianping.cat.notify.config.ConfigContext;
+import com.dianping.cat.notify.report.AbstractReportCreater;
 
 public class VelocityRender implements IRender {
-
+	
+	private final static Logger logger = LoggerFactory.getLogger(VelocityRender.class);
+	
 	private VelocityEngine engine = null;
 
 	private ConfigContext configContext;
@@ -57,8 +62,8 @@ public class VelocityRender implements IRender {
 			Template t = engine.getTemplate(template);
 			t.merge(context, writer);
 		} catch (Exception e) {
-			//TODO
-			return e.toString();
+			logger.error(e.toString());
+			return "";
 		}
 		return writer.toString();
 	}

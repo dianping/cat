@@ -50,6 +50,9 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 	@Override
 	protected String renderTransactionReport(TimeSpan timeSpan, TransactionReport transactionReport, String domain) {
+		if(null == transactionReport){
+			return "";
+		}
 		List<TransactionRenderDO> tRenderDoList = getTransactionRenderDoList(timeSpan, transactionReport, domain, false);
 		if (tRenderDoList == null || tRenderDoList.size() == 0) {
 			return "";
@@ -73,6 +76,9 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 	@Override
 	protected String renderEventReport(TimeSpan timeSpan, EventReport report, String domain) {
+		if(null == report){
+			return "";
+		}
 		List<EventRenderDO> eRenderDoList = getEventRenderDoList(timeSpan, report, domain, false);
 		if (eRenderDoList == null || eRenderDoList.size() == 0) {
 			return "";
@@ -96,6 +102,9 @@ public class DailyReportCreater extends AbstractReportCreater {
 
 	@Override
 	protected String renterProblemReport(TimeSpan timeSpan, ProblemReport report, String domain) {
+		if(null == report){
+			return "";
+		}
 		List<ProblemRenderDO> pRenderDoList = getProblemRenderDoList(timeSpan, report, domain, false);
 		if (pRenderDoList == null || pRenderDoList.size() == 0) {
 			return "";
