@@ -192,7 +192,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		List<Message> messages = t.getChildren();
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("PigeonCall.client")) {
+				if (message.getType().equals("PigeonService.client")) {
 					String name = message.getName();
 					int index = name.indexOf(":");
 					if(index>0){
