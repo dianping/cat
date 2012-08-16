@@ -82,31 +82,31 @@ public abstract class AbstractReportCreater implements ReportCreater {
 
 		long startMicros = timeRange.getStartMicros();
 		long endMicros = timeRange.getEndMicros();
-
+		
 		StringBuilder report_content = new StringBuilder();
-		try {
-			for (String reportName : reportNames) {
-				List<DailyReport> dailyReportList = new ArrayList<DailyReport>();
-				dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(endMicros),
-				      domain, reportName, DailyReport.XML_TYPE);
-				if (reportName.equals(DailyReport.EVENT_REPORT)) {
-					EventReport eReport = parseEvent(dailyReportList, domain);
-					report_content.append(renderEventReport(timeRange, eReport, domain));
-				} else if (reportName.equals(DailyReport.PROBLEM_REPORT)) {
-					ProblemReport pReport = parseProblem(dailyReportList, domain);
-					report_content.append(renterProblemReport(timeRange, pReport, domain));
-				} else if (reportName.equals(DailyReport.TRANSACGION_REPORT)) {
-					TransactionReport tReport = parseTransction(dailyReportList, domain);
-					caculateTps(tReport, ReportConstants.ALL_IP);
-					report_content.append(renderTransactionReport(timeRange, tReport, domain));
-				}
+		logger.info(String.format("begin to create report for[%s]",domain));
+		for (String reportName : reportNames) {
+			List<DailyReport> dailyReportList = new ArrayList<DailyReport>();
+			try {
+				dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(endMicros),domain, reportName, DailyReport.XML_TYPE);
+			} catch (Exception e) {
+				logger.error(String.format("fail to read report from database,time range[%s,%s]", new Date(startMicros), new Date(endMicros)), e);
+				continue;
 			}
-		} catch (Exception e) {
-			logger.error(String.format("fail to read report from database,time range[%s,%s]", new Date(startMicros),
-			      new Date(endMicros)), e);
-			return null;
+			if (reportName.equals(DailyReport.EVENT_REPORT)) {
+				EventReport eReport = parseEvent(dailyReportList, domain);
+				report_content.append(renderEventReport(timeRange, eReport, domain));
+			} else if (reportName.equals(DailyReport.PROBLEM_REPORT)) {
+				ProblemReport pReport = parseProblem(dailyReportList, domain);
+				report_content.append(renterProblemReport(timeRange, pReport, domain));
+			} else if (reportName.equals(DailyReport.TRANSACGION_REPORT)) {
+				TransactionReport tReport = parseTransction(dailyReportList, domain);
+				caculateTps(tReport, ReportConstants.ALL_IP);
+				report_content.append(renderTransactionReport(timeRange, tReport, domain));
+			}
 		}
-
+		logger.info(String.format("finish to create report for[%s]",domain));
+		
 		return report_content.toString();
 	}
 
@@ -307,7 +307,8 @@ public abstract class AbstractReportCreater implements ReportCreater {
 		DecimalFormat floatFormat = new DecimalFormat(",###.##");
 		DecimalFormat integerFormat = new DecimalFormat(",###");
 		for (EventType eventType : eventTypeList) {
-			String trendViewUrl = getTrendsViewUrl("e", domain, timeSpan.getEndMicros(), urlType, eventType.getId(),"Graph");
+			String trendViewUrl = getTrendsViewUrl("e", domain, timeSpan.getEndMicros(), urlType, eventType.getId(),
+			      "Graph");
 			eventType.setSuccessMessageUrl(trendViewUrl);
 			EventRenderDO eventRenderDO = new EventRenderDO();
 			eventRenderDO.setFailCount(integerFormat.format(eventType.getFailCount()));
@@ -337,10 +338,11 @@ public abstract class AbstractReportCreater implements ReportCreater {
 				return (int) (o2.getCount() - o1.getCount());
 			}
 		});
-		
+
 		DecimalFormat integerFormat = new DecimalFormat(",###");
 		for (TypeStatistics typeStatistics : typeStatisticsList) {
-			String trendViewUrl = getTrendsViewUrl("p", domain, timeSpan.getEndMicros(), urlType, typeStatistics.getType(), "Graph");
+			String trendViewUrl = getTrendsViewUrl("p", domain, timeSpan.getEndMicros(), urlType,
+			      typeStatistics.getType(), "Graph");
 			typeStatistics.setTrendUrl(trendViewUrl);
 			ProblemRenderDO problemRenderDO = new ProblemRenderDO();
 			problemRenderDO.setCount(integerFormat.format(typeStatistics.getCount()));
@@ -348,7 +350,7 @@ public abstract class AbstractReportCreater implements ReportCreater {
 			problemRenderDO.setType(typeStatistics.getType());
 			pRenderDoList.add(problemRenderDO);
 		}
-		
+
 		return pRenderDoList;
 	}
 
