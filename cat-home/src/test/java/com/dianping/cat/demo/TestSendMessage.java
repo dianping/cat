@@ -68,7 +68,7 @@ public class TestSendMessage {
 			Cat.getProducer().newEvent("PigeonService.client", "192.168.7.77");
 			t.addData("key and value");
 
-			Thread.sleep(1);
+			Thread.sleep(51);
 			t.complete();
 		}
 		for (int i = 0; i < 200; i++) {
