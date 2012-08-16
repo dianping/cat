@@ -18,7 +18,7 @@ import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
 
 public class MethodInfo extends BaseVisitor {
 
-	private static final String ALL = "ALL";
+	private static final String ALL_METHOD = "AllMethods";
 
 	private Map<String, NameDetailInfo> m_callProjectsInfo = new LinkedHashMap<String, NameDetailInfo>();
 
@@ -46,11 +46,11 @@ public class MethodInfo extends BaseVisitor {
 
 	private void addCallProject(String type, Name name) {
 		String id = name.getId();
-		NameDetailInfo all = m_callProjectsInfo.get(ALL);
+		NameDetailInfo all = m_callProjectsInfo.get(ALL_METHOD);
 
 		if (all == null) {
-			all = new NameDetailInfo(m_reportDuration, ALL, m_remoteIp, type);
-			m_callProjectsInfo.put(ALL, all);
+			all = new NameDetailInfo(m_reportDuration, ALL_METHOD, m_remoteIp, type);
+			m_callProjectsInfo.put(ALL_METHOD, all);
 		}
 		NameDetailInfo info = m_callProjectsInfo.get(id);
 
@@ -64,11 +64,11 @@ public class MethodInfo extends BaseVisitor {
 
 	private void addServiceProject(String type, Name name) {
 		String id = name.getId();
-		NameDetailInfo all = m_serviceProjectsInfo.get(ALL);
+		NameDetailInfo all = m_serviceProjectsInfo.get(ALL_METHOD);
 
 		if (all == null) {
-			all = new NameDetailInfo(m_reportDuration, ALL, m_remoteIp, type);
-			m_serviceProjectsInfo.put(ALL, all);
+			all = new NameDetailInfo(m_reportDuration, ALL_METHOD, m_remoteIp, type);
+			m_serviceProjectsInfo.put(ALL_METHOD, all);
 		}
 		NameDetailInfo info = m_serviceProjectsInfo.get(id);
 
@@ -167,7 +167,19 @@ public class MethodInfo extends BaseVisitor {
 
 	@Override
 	public void visitRemote(Remote remote) {
-		if (m_remoteIp.equalsIgnoreCase("All") || m_remoteIp.equalsIgnoreCase(remote.getId())) {
+		String role = remote.getRole();
+		if (role.endsWith("Server")) {
+			if (m_remoteIp.equals(HostInfo.ALL_SERVER_IP)) {
+				m_currentRole = remote.getRole();
+				super.visitRemote(remote);
+			}
+		} else if (role.endsWith("Client")) {
+			if (m_remoteIp.equals(HostInfo.ALL_CLIENT_IP)) {
+				m_currentRole = remote.getRole();
+				super.visitRemote(remote);
+			}
+		}
+		if(m_remoteIp.equals(remote.getId())){
 			m_currentRole = remote.getRole();
 			super.visitRemote(remote);
 		}
