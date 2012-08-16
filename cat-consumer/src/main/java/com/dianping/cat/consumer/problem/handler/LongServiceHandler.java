@@ -54,7 +54,7 @@ public class LongServiceHandler extends Handler implements Initializable {
 		Map<String, Domain> domains = m_configManager.getLongConfigDomains();
 
 		for (Domain domain : domains.values()) {
-			if (domain.getUrlThreshold() != null) {
+			if (domain.getServiceThreshold() != null) {
 				m_thresholds.put(domain.getName(), domain.getUrlThreshold());
 			}
 		}

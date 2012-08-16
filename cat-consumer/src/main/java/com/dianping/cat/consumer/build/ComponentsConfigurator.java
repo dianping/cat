@@ -6,6 +6,7 @@ import static com.dianping.cat.consumer.problem.ProblemType.HEARTBEAT;
 import static com.dianping.cat.consumer.problem.ProblemType.LONG_SERVICE;
 import static com.dianping.cat.consumer.problem.ProblemType.LONG_SQL;
 import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
+import static com.dianping.cat.consumer.problem.ProblemType.LONG_CACHE;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import com.dianping.cat.consumer.problem.handler.ErrorHandler;
 import com.dianping.cat.consumer.problem.handler.FailureHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.HeartbeatHandler;
+import com.dianping.cat.consumer.problem.handler.LongCacheHandler;
 import com.dianping.cat.consumer.problem.handler.LongServiceHandler;
 import com.dianping.cat.consumer.problem.handler.LongSqlHandler;
 import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
@@ -77,14 +79,17 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Handler.class, LONG_SQL.getName(), LongSqlHandler.class) //
 		      .req(ServerConfigManager.class));
-		
+
 		all.add(C(Handler.class, LONG_SERVICE.getName(), LongServiceHandler.class) //
 		      .req(ServerConfigManager.class));
+
+		all.add(C(Handler.class, LONG_CACHE.getName(), LongCacheHandler.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class) //
 		      .req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), //
-		            LONG_URL.getName(), LONG_SQL.getName(), LONG_SERVICE.getName(),HEARTBEAT.getName() }, "m_handlers"));
+		            LONG_URL.getName(), LONG_SQL.getName(), LONG_SERVICE.getName(),//
+		            LONG_CACHE.getName(), HEARTBEAT.getName() }, "m_handlers"));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
@@ -99,7 +104,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(CommonAnalyzer.class).is(PER_LOOKUP)//
-				.req(HostinfoDao.class));
+		      .req(HostinfoDao.class));
 
 		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));

@@ -60,7 +60,7 @@ public class TestSendMessage {
 		}
 		Thread.sleep(100);
 	}
-	
+
 	@Test
 	public void sendPigeonServerTransaction() throws Exception {
 		for (int i = 0; i < 100; i++) {
@@ -89,5 +89,23 @@ public class TestSendMessage {
 			t.complete();
 		}
 		Thread.sleep(100);
+	}
+
+	@Test
+	public void sendCacheTransaction() throws Exception {
+		for (int i = 0; i < 100; i++) {
+			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method6");
+			Cat.getProducer().newEvent("PigeonService.client", "192.168.7.77");
+			t.addData("key and value");
+
+			Thread.sleep(11);
+			Transaction t2 = Cat.getProducer().newTransaction("Cache.local", "Method");
+			Cat.getProducer().newEvent("PigeonService.client", "192.168.7.77");
+			t2.addData("key and value");
+
+			Thread.sleep(11);
+			t2.complete();
+			t.complete();
+		}
 	}
 }

@@ -11,7 +11,9 @@ public enum ProblemType {
 	
 	LONG_URL("long-url"),
 
-	LONG_SERVICE("long-service");
+	LONG_SERVICE("long-service"),
+
+	LONG_CACHE("long-cache");
 	
 	private String m_name;
 
