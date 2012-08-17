@@ -60,7 +60,7 @@
 		         	<td class="left"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${callInfo.ip }">${callInfo.ip}</a></td>
 		            <td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
 		         	<td>${w:format(callInfo.failureCount,'#,###,###,###,##0')}</td>
-		        	<td>${w:format(callInfo.failurePercent,'0.00')}</td>
+		        	<td>${w:format(callInfo.failurePercent,'0.00%')}</td>
 		             <td>${w:format(callInfo.avg,'0.00')}</td>
 		             <td>${w:format(callInfo.tps,'0.00')}</td>
 		         </tr>
@@ -85,7 +85,7 @@
 		            <td class="left"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${serviceInfo.ip}">${serviceInfo.ip}</a></td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
-		            <td>${w:format(serviceInfo.failurePercent,'0.00')}</td>
+		            <td>${w:format(serviceInfo.failurePercent,'0.00%')}</td>
 		             <td>${w:format(serviceInfo.avg,'0.00')}</td>
 		             <td>${w:format(serviceInfo.tps,'0.00')}</td>
 		         </tr>

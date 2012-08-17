@@ -71,7 +71,7 @@
 								href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent,'0.00')}</td>
+					<td>${w:format(e.failPercent/100,'0.00%')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -99,7 +99,7 @@
 								class="graph_link" data-status="${status.index}">[:: show ::]</a> ${e.id}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent,'0.00')}</td>
+					<td>${w:format(e.failPercent/100,'0.00%')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>

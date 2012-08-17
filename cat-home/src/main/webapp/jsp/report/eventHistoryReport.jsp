@@ -54,7 +54,7 @@
 					<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}${model.customDate}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent,'0.00')}</td>
+					<td>${w:format(e.failPercent/100,'0.00%')}</td>
 					<td><a href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
@@ -79,7 +79,7 @@
 					${e.id}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent,'0.00')}</td>
+					<td>${w:format(e.failPercent/100,'0.00%')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
