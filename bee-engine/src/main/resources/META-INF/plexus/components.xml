@@ -1,0 +1,8 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.bee.engine.spi.TableProviderManager</role>
+			<implementation>com.dianping.bee.engine.spi.internal.DefaultTableProviderManager</implementation>
+		</component>
+	</components>
+</plexus>
