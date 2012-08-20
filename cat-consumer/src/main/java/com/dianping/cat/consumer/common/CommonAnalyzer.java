@@ -9,7 +9,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.cat.consumer.model.entity.CommonReport;
+import com.dianping.cat.consumer.common.model.entity.CommonReport;
 import com.dianping.cat.hadoop.dal.Hostinfo;
 import com.dianping.cat.hadoop.dal.HostinfoDao;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;

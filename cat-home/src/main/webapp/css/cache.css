@@ -1,0 +1,29 @@
+.cache {
+	font-size: small;
+	min-width:50%;	
+}
+.cache tr th{
+	text-align:right;
+}
+.cache .odd td {
+	background-color: #eee;
+	font-size: small;
+	text-align:right;
+}
+
+.cache .even td {
+	background-color: white;
+	font-size: small;
+	text-align:right;
+}
+.cache th .left{
+	text-align:left;
+}
+
+.cache tr .left{
+	text-align:left;
+}
+
+.cache tr .left{
+	text-align:left;
+}

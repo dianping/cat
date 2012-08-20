@@ -18,24 +18,39 @@ public class TransactionReportVistor extends BaseVisitor {
 
 	private CacheReport m_cacheReport = new CacheReport();
 
-	private EventReport m_eventReport;
+	private Set<String> m_cacheTypes = new HashSet<String>();
 
 	private String m_currentIp;
 
 	private String m_currentType;
 
-	private String m_type;
+	private EventReport m_eventReport;
 
-	private Set<String> m_cacheTypes = new HashSet<String>();
+	private String m_queryName;
 
 	private String m_sortBy = "missed";
+
+	private String m_type;
 
 	public CacheReport getCacheReport() {
 		return m_cacheReport;
 	}
 
-	public TransactionReportVistor setType(String type) {
-		m_type = type;
+	private boolean isFit(String queryName, String methodName) {
+		String[] args = queryName.split("\\|");
+
+		if (args != null) {
+			for (String str : args) {
+				if (str.length() > 0 && methodName.toLowerCase().contains(str.trim().toLowerCase())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public TransactionReportVistor setCurrentIp(String currentIp) {
+		m_currentIp = currentIp;
 		return this;
 	}
 
@@ -44,24 +59,68 @@ public class TransactionReportVistor extends BaseVisitor {
 		return this;
 	}
 
-	public void setSortBy(String sortBy) {
-		if(sortBy!=null){
-			m_sortBy  = sortBy;
-		}
-   }
+	public TransactionReportVistor setQueryName(String queryName) {
+		m_queryName = queryName;
+		return this;
+	}
 
-	@Override
-	public void visitName(TransactionName transactionName) {
-		com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport.findOrCreateMachine(m_currentIp);
-		EventType eventType = machine.findOrCreateType(m_currentType);
-		EventName eventName = eventType.findOrCreateName(transactionName.getId() + ":missed");
-		m_cacheReport.addNewNameItem(transactionName, eventName);
+	public TransactionReportVistor setSortBy(String sortBy) {
+		if (sortBy != null) {
+			m_sortBy = sortBy;
+		}
+		return this;
+	}
+
+	public TransactionReportVistor setType(String type) {
+		m_type = type;
+		return this;
 	}
 
 	@Override
 	public void visitMachine(Machine machine) {
-		m_currentIp = machine.getIp();
-		super.visitMachine(machine);
+		if (machine.getIp().equalsIgnoreCase(m_currentIp)) {
+			super.visitMachine(machine);
+		}
+	}
+
+	@Override
+	public void visitName(TransactionName transactionName) {
+		String id = transactionName.getId();
+		if (!StringUtils.isEmpty(m_type)) {
+			if (StringUtils.isEmpty(m_queryName) || isFit(m_queryName, id)) {
+				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport
+				      .findOrCreateMachine(m_currentIp);
+				EventType eventType = machine.findOrCreateType(m_currentType);
+
+				String arrays[] = id.split(":");
+				String categroy = arrays[0];
+				String method = "";
+
+				if (arrays.length > 1) {
+					method = arrays[1];
+				}
+				EventName eventName = new EventName();
+				if (method.equals("get")) {
+					eventName = eventType.findOrCreateName(categroy + ":missed");
+				}
+				m_cacheReport.addNewNameItem(transactionName, eventName);
+			}
+		}
+	}
+
+	@Override
+	public void visitTransactionReport(TransactionReport transactionReport) {
+		m_cacheTypes.add("Cache.memcached");
+		m_cacheTypes.add("Cache.web");
+		m_cacheTypes.add("Cache.kvdb");
+		m_cacheReport.setSortBy(m_sortBy);
+
+		super.visitTransactionReport(transactionReport);
+		m_cacheReport.setDomain(transactionReport.getDomain());
+		m_cacheReport.setDomainNames(transactionReport.getDomainNames());
+		m_cacheReport.setStartTime(transactionReport.getStartTime());
+		m_cacheReport.setEndTime(transactionReport.getEndTime());
+		m_cacheReport.setIps(transactionReport.getIps());
 	}
 
 	@Override
@@ -83,19 +142,4 @@ public class TransactionReportVistor extends BaseVisitor {
 		}
 	}
 
-	@Override
-	public void visitTransactionReport(TransactionReport transactionReport) {
-		m_cacheTypes.add("Cache.memcached");
-		m_cacheTypes.add("Cache.web");
-		m_cacheTypes.add("Cache.kvdb");
-		m_cacheReport.setSortBy(m_sortBy);
-		
-		super.visitTransactionReport(transactionReport);
-		m_cacheReport.setDomain(transactionReport.getDomain());
-		m_cacheReport.setDomainNames(transactionReport.getDomainNames());
-		m_cacheReport.setStartTime(transactionReport.getStartTime());
-		m_cacheReport.setEndTime(transactionReport.getEndTime());
-		m_cacheReport.setIps(transactionReport.getIps());
-	}
-	
 }

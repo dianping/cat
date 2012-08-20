@@ -7,10 +7,10 @@ import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private CacheReport m_report;
-	
 	private String m_queryName;
-	
+
+	private CacheReport m_report;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -21,20 +21,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	@Override
-   public String getDomain() {
+	public String getDomain() {
 		return m_report.getDomain();
-   }
+	}
 
 	@Override
-   public Collection<String> getDomains() {
+	public Collection<String> getDomains() {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
 			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
 	}
-	
-	public Collection<String> getIps(){
+
+	public Collection<String> getIps() {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
@@ -42,12 +42,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
-	public CacheReport getReport() {
-		return m_report;
-	}
-	
 	public String getQueryName() {
 		return m_queryName;
+	}
+
+	public CacheReport getReport() {
+		return m_report;
 	}
 
 	public void setQueryName(String queryName) {
@@ -57,5 +57,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setReport(CacheReport report) {
 		m_report = report;
 	}
-	
+
 }

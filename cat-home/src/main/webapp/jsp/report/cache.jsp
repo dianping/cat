@@ -17,6 +17,7 @@
 
 <jsp:body>
 
+<res:useCss value="${res.css.local.cache_css}" target="head-css" />
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 </br>
 <table class="machines">
@@ -49,7 +50,7 @@
 <table class="cache">
     <c:choose>
 		<c:when test="${empty payload.type}">
-		<tr><th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
+		<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">Hit Rate(%)</a></th>
@@ -69,12 +70,18 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-			<tr><th colspan='11'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
-		    <input style="WIDTH: 60px" value="Filter" onclick="selectByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+			<tr><th colspan='6'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 			</th></tr>
+			<script>
+			function filterByName(date,domain,ip){
+				var queryname=$("#queryname").val();
+				window.location.href="?domain="+domain+"&type="+type+"&date="+date+"&queryname="+queryname+"&ip="+ip;
+			}
+		</script>
 			<tr>
-			<th>
+			<th  class="left">
 			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>

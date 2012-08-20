@@ -1,13 +1,7 @@
 package com.dianping.cat.report.page.cache;
 
 public enum Action implements com.site.web.mvc.Action {
-	HOURLY_REPORT("view"), HISTORY_REPORT("history");
-
-	private String m_name;
-
-	private Action(String name) {
-		m_name = name;
-	}
+	HISTORY_REPORT("history"), HOURLY_REPORT("view");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
@@ -17,6 +11,12 @@ public enum Action implements com.site.web.mvc.Action {
 		}
 
 		return defaultAction;
+	}
+
+	private String m_name;
+
+	private Action(String name) {
+		m_name = name;
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.cache;
 
 public enum JspFile {
-	HOURLY_REPORT("/jsp/report/cache.jsp"), HISTORY_REPORT("/jsp/report/cacheHistory.jsp"),
+	HISTORY_REPORT("/jsp/report/cacheHistory.jsp"), HOURLY_REPORT("/jsp/report/cache.jsp"),
 
 	;
 
