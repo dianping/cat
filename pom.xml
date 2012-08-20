@@ -15,6 +15,7 @@
 		<module>cat-job</module>
 		<module>cat-home</module>
 		<module>cat-notify</module>
+		<module>bee-engine</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

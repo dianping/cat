@@ -141,9 +141,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 				if (bucket != null) {
 					MessageTree tree = bucket.findById(messageId);
-					
-					t.addData("path", dataFile);
-					return tree;
+
+					if (tree != null && tree.getMessageId().equals(messageId)) {
+						t.addData("path", dataFile);
+						return tree;
+					}
 				}
 			}
 
@@ -168,7 +170,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void storeMessage(MessageTree tree) throws IOException {
 		MessageId id = MessageId.parse(tree.getMessageId());
-		// <caller domain> - <callee domain> - <callee ip>
+		// <callee domain> - <caller domain> - <callee ip>
 		String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
 		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
 		LocalMessageBucket bucket = m_buckets.get(dataFile);
