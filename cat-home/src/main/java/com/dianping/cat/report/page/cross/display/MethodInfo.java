@@ -15,6 +15,10 @@ import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
+import com.dianping.cat.hadoop.dal.Hostinfo;
+import com.dianping.cat.hadoop.dal.HostinfoDao;
+import com.dianping.cat.hadoop.dal.HostinfoEntity;
+import com.site.dal.jdbc.DalException;
 
 public class MethodInfo extends BaseVisitor {
 
@@ -23,6 +27,8 @@ public class MethodInfo extends BaseVisitor {
 	private Map<String, NameDetailInfo> m_callProjectsInfo = new LinkedHashMap<String, NameDetailInfo>();
 
 	private Map<String, NameDetailInfo> m_serviceProjectsInfo = new LinkedHashMap<String, NameDetailInfo>();
+
+	private String m_remoteProject;
 
 	private String m_clientIp;
 
@@ -39,6 +45,10 @@ public class MethodInfo extends BaseVisitor {
 	private String m_callSortBy = "Avg";
 
 	private String m_serviceSortBy = "Avg";
+
+	private HostinfoDao m_hostInfoDao;
+
+	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	public MethodInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
@@ -168,18 +178,8 @@ public class MethodInfo extends BaseVisitor {
 	@Override
 	public void visitRemote(Remote remote) {
 		String role = remote.getRole();
-		if (role.endsWith("Server")) {
-			if (m_remoteIp.equals(HostInfo.ALL_SERVER_IP)) {
-				m_currentRole = remote.getRole();
-				super.visitRemote(remote);
-			}
-		} else if (role.endsWith("Client")) {
-			if (m_remoteIp.equals(HostInfo.ALL_CLIENT_IP)) {
-				m_currentRole = remote.getRole();
-				super.visitRemote(remote);
-			}
-		}
-		if(m_remoteIp.equals(remote.getId())){
+		String ip = remote.getId();
+		if (projectContains(m_remoteProject, ip, role) || m_remoteIp.equals(remote.getId())) {
 			m_currentRole = remote.getRole();
 			super.visitRemote(remote);
 		}
@@ -189,5 +189,41 @@ public class MethodInfo extends BaseVisitor {
 	public void visitType(Type type) {
 		m_currentType = type.getId();
 		super.visitType(type);
+	}
+
+	public void setRemoteProject(String remoteProject) {
+		m_remoteProject = remoteProject;
+	}
+
+	public void setHostInfoDao(HostinfoDao hostInfoDao) {
+		m_hostInfoDao = hostInfoDao;
+	}
+
+	private boolean projectContains(String projectName, String ip, String role) {
+		if (m_remoteIp.startsWith("All")) {
+			if (m_remoteProject.startsWith("AllClient") && role.endsWith("Client")) {
+				return true;
+			} else if (m_remoteProject.startsWith("AllServer") && role.endsWith("Server")) {
+				return true;
+			}
+			if (ip.indexOf(':') > 0) {
+				ip = ip.substring(0, ip.indexOf(':'));
+			}
+			try {
+				Hostinfo hostInfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+				if (hostInfo != null) {
+					if (projectName.equalsIgnoreCase(hostInfo.getDomain())) {
+						return true;
+					} else {
+						return false;
+					}
+				}
+			} catch (DalException e) {
+				if (projectName.equals(UNKNOWN_PROJECT)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

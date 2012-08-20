@@ -1,0 +1,61 @@
+package com.dianping.cat.report.page.cache;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.view.StringSortHelper;
+
+public class Model extends AbstractReportModel<Action, Context> {
+	private CacheReport m_report;
+	
+	private String m_queryName;
+	
+	public Model(Context ctx) {
+		super(ctx);
+	}
+
+	@Override
+	public Action getDefaultAction() {
+		return Action.HISTORY_REPORT;
+	}
+
+	@Override
+   public String getDomain() {
+		return m_report.getDomain();
+   }
+
+	@Override
+   public Collection<String> getDomains() {
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getDomainNames());
+		}
+	}
+	
+	public Collection<String> getIps(){
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getIps());
+		}
+	}
+
+	public CacheReport getReport() {
+		return m_report;
+	}
+	
+	public String getQueryName() {
+		return m_queryName;
+	}
+
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
+	}
+
+	public void setReport(CacheReport report) {
+		m_report = report;
+	}
+	
+}

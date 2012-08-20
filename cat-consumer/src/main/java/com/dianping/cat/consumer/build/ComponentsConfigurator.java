@@ -1,13 +1,5 @@
 package com.dianping.cat.consumer.build;
 
-import static com.dianping.cat.consumer.problem.ProblemType.ERROR;
-import static com.dianping.cat.consumer.problem.ProblemType.FAILURE;
-import static com.dianping.cat.consumer.problem.ProblemType.HEARTBEAT;
-import static com.dianping.cat.consumer.problem.ProblemType.LONG_SERVICE;
-import static com.dianping.cat.consumer.problem.ProblemType.LONG_SQL;
-import static com.dianping.cat.consumer.problem.ProblemType.LONG_URL;
-import static com.dianping.cat.consumer.problem.ProblemType.LONG_CACHE;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,14 +19,9 @@ import com.dianping.cat.consumer.ip.TopIpAnalyzer;
 import com.dianping.cat.consumer.logview.LogviewUploader;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.handler.ErrorHandler;
-import com.dianping.cat.consumer.problem.handler.FailureHandler;
+import com.dianping.cat.consumer.problem.handler.DefaultProblemHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
-import com.dianping.cat.consumer.problem.handler.HeartbeatHandler;
-import com.dianping.cat.consumer.problem.handler.LongCacheHandler;
-import com.dianping.cat.consumer.problem.handler.LongServiceHandler;
-import com.dianping.cat.consumer.problem.handler.LongSqlHandler;
-import com.dianping.cat.consumer.problem.handler.LongUrlHandler;
+import com.dianping.cat.consumer.problem.handler.LongExecutionHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.dal.HostinfoDao;
 import com.dianping.cat.hadoop.dal.LogviewDao;
@@ -66,30 +53,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
 
-		all.add(C(Handler.class, HEARTBEAT.getName(), HeartbeatHandler.class));
-
-		all.add(C(Handler.class, ERROR.getName(), ErrorHandler.class)//
+		all.add(C(Handler.class, "DefaultHandler", DefaultProblemHandler.class)//
+		      .config(E("failureType").value(failureTypes))//
 		      .config(E("errorType").value(errorTypes)));
-
-		all.add(C(Handler.class, FAILURE.getName(), FailureHandler.class)//
-		      .config(E("failureType").value(failureTypes)));
-
-		all.add(C(Handler.class, LONG_URL.getName(), LongUrlHandler.class) //
+		
+		all.add(C(Handler.class, "LongHandler", LongExecutionHandler.class) //
 		      .req(ServerConfigManager.class));
-
-		all.add(C(Handler.class, LONG_SQL.getName(), LongSqlHandler.class) //
-		      .req(ServerConfigManager.class));
-
-		all.add(C(Handler.class, LONG_SERVICE.getName(), LongServiceHandler.class) //
-		      .req(ServerConfigManager.class));
-
-		all.add(C(Handler.class, LONG_CACHE.getName(), LongCacheHandler.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class) //
-		      .req(Handler.class, new String[] { FAILURE.getName(), ERROR.getName(), //
-		            LONG_URL.getName(), LONG_SQL.getName(), LONG_SERVICE.getName(),//
-		            LONG_CACHE.getName(), HEARTBEAT.getName() }, "m_handlers"));
+		      .req(Handler.class, new String[] { "DefaultHandler","LongHandler" }, "m_handlers"));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));

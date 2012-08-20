@@ -1,0 +1,76 @@
+package com.dianping.cat.report.page.cache;
+
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportPayload;
+import com.site.web.mvc.ActionContext;
+import com.site.web.mvc.payload.annotation.FieldMeta;
+
+public class Payload extends AbstractReportPayload<Action> {
+	@FieldMeta("op")
+	private Action m_action;
+
+	private ReportPage m_page;
+	
+	@FieldMeta("query")
+	private String m_queryName;
+
+	@FieldMeta("type")
+	private String m_type;
+	
+	@FieldMeta("sort")
+	private String m_sortBy;
+
+	public Payload() {
+	   super(ReportPage.CACHE);
+   }
+
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
+
+	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	public String getQueryName() {
+		return m_queryName;
+	}
+	
+	public String getType() {
+		return m_type;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.CACHE);
+	}
+	
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
+	}
+
+	public void setType(String type) {
+		m_type = type;
+	}
+
+	public String getSortBy() {
+		return m_sortBy;
+	}
+
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
+	}
+
+	@Override
+	public void validate(ActionContext<?> ctx) {
+		if(m_action ==null){
+			m_action = Action.HOURLY_REPORT;
+		}
+	}
+}

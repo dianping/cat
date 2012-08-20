@@ -20,6 +20,8 @@ public class NavigationBar {
 		ReportPage.MATRIX,
 		
 		ReportPage.CROSS,
+		
+		ReportPage.CACHE,
 
 		ReportPage.IP,
 

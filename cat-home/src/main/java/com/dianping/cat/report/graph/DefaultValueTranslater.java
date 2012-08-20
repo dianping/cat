@@ -38,8 +38,12 @@ public class DefaultValueTranslater implements ValueTranslater {
 
 		for (int i = 0; i < len; i++) {
 			double value = values[i];
+			double temp = value * height / maxValue;
 
-			result[i] = (int) (value * height / maxValue);
+			if (temp > 0 && temp < 1) {
+				temp = 1;
+			}
+			result[i] = (int) temp;
 		}
 
 		return result;

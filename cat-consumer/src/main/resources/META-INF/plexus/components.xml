@@ -23,59 +23,22 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
-			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.HeartbeatHandler</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
-			<role-hint>error</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.ErrorHandler</implementation>
+			<role-hint>DefaultHandler</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.handler.DefaultProblemHandler</implementation>
 			<configuration>
+				<failureType>URL,SQL,Call,Cache</failureType>
 				<errorType>Error,RuntimeException,Exception</errorType>
 			</configuration>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
-			<role-hint>failure</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.FailureHandler</implementation>
-			<configuration>
-				<failureType>URL,SQL,Call,Cache</failureType>
-			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
-			<role-hint>long-url</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.LongUrlHandler</implementation>
+			<role-hint>LongHandler</role-hint>
+			<implementation>com.dianping.cat.consumer.problem.handler.LongExecutionHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
-			<role-hint>long-sql</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.LongSqlHandler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
-			<role-hint>long-service</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.LongServiceHandler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
-			<role-hint>long-cache</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.LongCacheHandler</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.problem.ProblemAnalyzer</role>
@@ -94,13 +57,8 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.problem.handler.Handler</role>
 					<role-hints>
-						<role-hint>failure</role-hint>
-						<role-hint>error</role-hint>
-						<role-hint>long-url</role-hint>
-						<role-hint>long-sql</role-hint>
-						<role-hint>long-service</role-hint>
-						<role-hint>long-cache</role-hint>
-						<role-hint>heartbeat</role-hint>
+						<role-hint>DefaultHandler</role-hint>
+						<role-hint>LongHandler</role-hint>
 					</role-hints>
 					<field-name>m_handlers</field-name>
 				</requirement>

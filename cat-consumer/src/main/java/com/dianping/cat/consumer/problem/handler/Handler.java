@@ -34,10 +34,11 @@ public abstract class Handler {
 
 	public void updateEntry(MessageTree tree, Entry entry, int value) {
 		Duration duration = entry.findOrCreateDuration(value);
+		List<String> messages = duration.getMessages();
 
 		duration.incCount();
-		if (duration.getMessages().size() < MAX_LOG_SIZE) {
-			duration.getMessages().add(tree.getMessageId());
+		if (messages.size() < MAX_LOG_SIZE) {
+			messages.add(tree.getMessageId());
 		}
 
 		JavaThread thread = entry.findOrCreateThread(tree.getThreadId());
@@ -50,10 +51,11 @@ public abstract class Handler {
 		}
 
 		Segment segment = thread.findOrCreateSegment(getSegmentByMessage(tree));
+		List<String> segmentMessages = segment.getMessages();
 
 		segment.incCount();
-		if (segment.getMessages().size() < MAX_LOG_SIZE) {
-			segment.getMessages().add(tree.getMessageId());
+		if (segmentMessages.size() < MAX_LOG_SIZE) {
+			segmentMessages.add(tree.getMessageId());
 		}
 	}
 

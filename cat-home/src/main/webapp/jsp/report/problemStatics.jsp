@@ -59,6 +59,7 @@
 				<option value="100">100 ms</option>
 				<option value="500">500 ms</option>
 				<option value="1000">1000 ms</option>
+				<option value="2000">2000 ms</option>
 		</select>
 		<script>
 			var threshold='${model.threshold}';

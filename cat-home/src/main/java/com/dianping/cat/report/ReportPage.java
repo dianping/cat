@@ -33,7 +33,9 @@ public enum ReportPage implements Page {
 
    MONTHREPORT("monthreport", "monthreport", "Monthreport", "Monthreport", false),
 
-   CROSS("cross", "cross", "Cross", "Cross", true);
+   CROSS("cross", "cross", "Cross", "Cross", true),
+
+   CACHE("cache", "cache", "Cache", "Cache", true);
 
    private String m_name;
 
