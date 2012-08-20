@@ -95,7 +95,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class));
 		all.add(C(MessageStatistics.class, DefaultMessageStatistics.class));
 		all.add(C(StatusUpdateTask.class) //
-		      .req(MessageStatistics.class));
+		      .req(MessageStatistics.class,ClientConfigManager.class));
 
 		all.add(C(MessageBucket.class, LocalMessageBucket.ID, LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //

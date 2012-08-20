@@ -125,6 +125,10 @@ a.long-sql {
 	background-color: #6699CC;
 }
 
+a.long-service {
+	background-color: #7799FF;
+}
+
 a.url {
 	background-color: #cc0000;
 }
@@ -137,7 +141,7 @@ a.call {
 	background-color: #9966ff;
 }
 
-a.cache {
+a.long-cache {
 	background-color: #aa3faa;
 }
 

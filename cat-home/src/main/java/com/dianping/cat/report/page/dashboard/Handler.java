@@ -53,6 +53,8 @@ public class Handler implements PageHandler<Context> {
 
 	private static final String COUNT = "Count";
 
+	private static final String FAILURE_COUNT = "FailureCount";
+
 	private static final String TIME = "ResponseTime";
 
 	private void buildEventReportResult(EventReport eventReport, String ip, String type, String name,
@@ -63,26 +65,32 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
 				if (eventMachine != null) {
 					Collection<EventType> types = eventMachine.getTypes().values();
-					
+
 					for (EventType eventType : types) {
 						String id = eventType.getId();
 						data.put(id + COUNT, String.valueOf(eventType.getTotalCount()));
+						data.put(id + FAILURE_COUNT, String.valueOf(eventType.getFailCount()));
 					}
 				}
 			} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				EventType eventType = eventMachine.findType(type);
-				
+
 				if (eventType != null) {
 					data.put(COUNT, String.valueOf(eventType.getTotalCount()));
+					for (EventName eventName : eventType.getNames().values()) {
+						data.put(eventName.getId() + COUNT, String.valueOf(eventName.getTotalCount()));
+						data.put(eventName.getId() + FAILURE_COUNT, String.valueOf(eventName.getFailCount()));
+					}
 				}
 			} else if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				EventType eventType = eventMachine.findType(type);
-				
+
 				if (eventType != null) {
 					EventName eventName = eventType.findName(name);
 
 					if (eventName != null) {
 						data.put(COUNT, String.valueOf(eventName.getTotalCount()));
+						data.put(FAILURE_COUNT, String.valueOf(eventName.getFailCount()));
 					}
 				}
 			}
@@ -92,7 +100,7 @@ public class Handler implements PageHandler<Context> {
 	private void buildProblemReportResult(ProblemReport problemReport, String ip, String type, String name,
 	      Map<String, String> data) {
 		ProblemStatistics problemStatistics = new ProblemStatistics();
-		
+
 		if (ip.equalsIgnoreCase(Payload.ALL)) {
 			problemStatistics.setAllIp(true);
 		} else {
@@ -102,7 +110,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
 			Map<String, TypeStatistics> status = problemStatistics.getStatus();
-			
+
 			for (Entry<String, TypeStatistics> temp : status.entrySet()) {
 				String key = temp.getKey();
 				TypeStatistics value = temp.getValue();
@@ -111,14 +119,17 @@ public class Handler implements PageHandler<Context> {
 		} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 			Map<String, TypeStatistics> status = problemStatistics.getStatus();
 			TypeStatistics value = status.get(type);
-			
+
 			if (value != null) {
 				data.put(COUNT, String.valueOf(value.getCount()));
+				for (Entry<String, StatusStatistics> temp : value.getStatus().entrySet()) {
+					data.put(temp.getKey() + COUNT, String.valueOf(temp.getValue().getCount()));
+				}
 			}
 		} else if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 			Map<String, TypeStatistics> status = problemStatistics.getStatus();
 			TypeStatistics value = status.get(type);
-			
+
 			if (value != null) {
 				StatusStatistics nameValue = value.getStatus().get(name);
 				if (nameValue != null) {
@@ -135,30 +146,40 @@ public class Handler implements PageHandler<Context> {
 			if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
 				if (transactionMachine != null) {
 					Collection<TransactionType> types = transactionMachine.getTypes().values();
-					
+
 					for (TransactionType transactionType : types) {
 						String id = transactionType.getId();
-						
+
 						data.put(id + TIME, m_format.format(transactionType.getAvg()));
 						data.put(id + COUNT, String.valueOf(transactionType.getTotalCount()));
+						data.put(id + FAILURE_COUNT, String.valueOf(transactionType.getFailCount()));
 					}
 				}
 			} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				TransactionType transactionType = transactionMachine.findType(type);
-				
+
 				if (transactionType != null) {
 					data.put(TIME, m_format.format(transactionType.getAvg()));
 					data.put(COUNT, String.valueOf(transactionType.getTotalCount()));
+					data.put(FAILURE_COUNT, String.valueOf(transactionType.getFailCount()));
+
+					for (TransactionName transactionName : transactionType.getNames().values()) {
+						String id = transactionName.getId();
+						data.put(id + TIME, m_format.format(transactionName.getAvg()));
+						data.put(id + COUNT, String.valueOf(transactionName.getTotalCount()));
+						data.put(id + FAILURE_COUNT, String.valueOf(transactionName.getFailCount()));
+					}
 				}
 			} else if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
 				TransactionType transactionType = transactionMachine.findType(type);
-				
+
 				if (transactionType != null) {
 					TransactionName transactionName = transactionType.findName(name);
 
 					if (transactionName != null) {
 						data.put(TIME, m_format.format(transactionName.getAvg()));
 						data.put(COUNT, String.valueOf(transactionName.getTotalCount()));
+						data.put(FAILURE_COUNT, String.valueOf(transactionName.getFailCount()));
 					}
 				}
 			}
@@ -265,7 +286,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.DASHBOARD);
 		data.put("timestamp", String.valueOf(new Date().getTime()));
 		String domain = payload.getDomain();
-		
+
 		if (!StringUtils.isEmpty(domain)) {
 			String report = payload.getReport();
 			String type = payload.getType();

@@ -54,6 +54,10 @@ public class ClientConfigManager implements LogEnabled {
 			return m_config.getServers();
 		}
 	}
+	
+	public ClientConfig getClientConfig(){
+		return m_config;
+	}
 
 	public void initialize(File configFile) throws Exception {
 		ClientConfig globalConfig = null;
@@ -102,6 +106,7 @@ public class ClientConfigManager implements LogEnabled {
 		}
 
 		m_config = clientConfig;
+
 	}
 
 	public boolean isCatEnabled() {
@@ -116,3 +121,4 @@ public class ClientConfigManager implements LogEnabled {
 		return m_config != null;
 	}
 }
+

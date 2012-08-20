@@ -46,7 +46,7 @@ public class ParseCrossInfoTest {
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.70");
 
-		Message message = new DefaultEvent("PigeonCall.client", "192.168.7.71", null);
+		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71", null);
 		t.addChild(message);
 
 		info = analyzer.parseCorssTransaction(t, tree);
@@ -65,7 +65,7 @@ public class ParseCrossInfoTest {
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
 
-		Message message = new DefaultEvent("PigeonCall.client", "192.168.7.71:29987", null);
+		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71:29987", null);
 		t.addChild(message);
 
 		info = analyzer.parseCorssTransaction(t, tree);

@@ -19,8 +19,10 @@ import com.site.dal.jdbc.DalException;
 
 public class HostInfo extends BaseVisitor {
 
-	private static final String ALL = "ALL";
-	
+	public static final String ALL_CLIENT_IP = "AllClientIP";
+
+	public static final String ALL_SERVER_IP = "AllServerIP";
+
 	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	private Map<String, TypeDetailInfo> m_callProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
@@ -44,15 +46,15 @@ public class HostInfo extends BaseVisitor {
 	}
 
 	private void addCallProject(String ip, Type type) {
-		TypeDetailInfo all = m_callProjectsInfo.get(ALL);
-		
+		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER_IP);
+
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration);
-			all.setIp(ALL);
-			m_callProjectsInfo.put(ALL, all);
+			all.setIp(ALL_SERVER_IP);
+			m_callProjectsInfo.put(ALL_SERVER_IP, all);
 		}
 		TypeDetailInfo info = m_callProjectsInfo.get(ip);
-		
+
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration);
 			info.setIp(ip);
@@ -63,15 +65,15 @@ public class HostInfo extends BaseVisitor {
 	}
 
 	private void addServiceProject(String ip, Type type) {
-		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL);
-		
+		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT_IP);
+
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration);
-			all.setIp(ALL);
-			m_serviceProjectsInfo.put(ALL, all);
+			all.setIp(ALL_CLIENT_IP);
+			m_serviceProjectsInfo.put(ALL_CLIENT_IP, all);
 		}
 		TypeDetailInfo info = m_serviceProjectsInfo.get(ip);
-		
+
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration);
 			info.setIp(ip);
@@ -83,7 +85,7 @@ public class HostInfo extends BaseVisitor {
 
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
-		
+
 		Collections.sort(values, new TypeCompartor(m_callSortBy));
 		return values;
 	}
@@ -94,33 +96,40 @@ public class HostInfo extends BaseVisitor {
 
 	public List<TypeDetailInfo> getServiceProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_serviceProjectsInfo.values());
-		
+
 		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
 		return values;
 	}
 
-	public boolean projectContains(String ip, String projectName) {
-		if(ALL.equalsIgnoreCase(projectName)){
-			return true;
+	public boolean projectContains(String ip, String projectName,String role) {
+		if(role.endsWith("Server")){
+			if(ProjectInfo.ALL_SERVER.equals(projectName)){
+				return true;
+			}
+		}else if(role.endsWith("Client")){
+			if(ProjectInfo.ALL_CLIENT.equals(projectName)){
+				return true;
+			}
 		}
+		
 		if (ip.indexOf(':') > 0) {
 			ip = ip.substring(0, ip.indexOf(':'));
 		}
 		try {
 			Hostinfo hostInfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
 			if (hostInfo != null) {
-				if(projectName.equalsIgnoreCase(hostInfo.getDomain())){
+				if (projectName.equalsIgnoreCase(hostInfo.getDomain())) {
 					return true;
-				}else{
+				} else {
 					return false;
 				}
 			}
 		} catch (DalException e) {
-			if(projectName.equals(UNKNOWN_PROJECT)){
+			if (projectName.equals(UNKNOWN_PROJECT)) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -152,7 +161,7 @@ public class HostInfo extends BaseVisitor {
 	public void visitCrossReport(CrossReport crossReport) {
 		super.visitCrossReport(crossReport);
 	}
-	
+
 	@Override
 	public void visitLocal(Local local) {
 		if (m_clientIp.equalsIgnoreCase("All") || m_clientIp.equalsIgnoreCase(local.getId())) {
@@ -163,10 +172,10 @@ public class HostInfo extends BaseVisitor {
 	@Override
 	public void visitRemote(Remote remote) {
 		String remoteIp = remote.getId();
-		boolean flag = projectContains(remoteIp, m_projectName);
+		String role = remote.getRole();
+		boolean flag = projectContains(remoteIp, m_projectName, role);
 
 		if (flag) {
-			String role = remote.getRole();
 
 			if (role != null && role.endsWith("Client")) {
 				addServiceProject(remoteIp, remote.getType());
@@ -175,6 +184,5 @@ public class HostInfo extends BaseVisitor {
 			}
 		}
 	}
-	
-	
+
 }

@@ -88,7 +88,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 		for (String domain : domainList) {
 			domainSet.add(domain);
 		}
-
+		
 		// send emails to subscribers
 		for (Object element : subscriberList) {
 			Subscriber subscriber = (Subscriber) element;
@@ -110,7 +110,7 @@ public class SendReportMailJob implements ScheduleJob, HandworkJob {
 			sendBySubscriber(timestamp, false, subscriber);
 		}
 	}
-
+	
 	private boolean sendBySubscriber(long timestamp, boolean handwork, Subscriber subscriber) {
 		Date yestoday = yesterdayZero(new Date(timestamp));
 		String dateStr =  TimeUtil.formatTime("yyyy-MM-dd", yestoday);

@@ -21,7 +21,9 @@ import com.site.dal.jdbc.DalException;
 
 public class ProjectInfo extends BaseVisitor {
 
-	private static final String ALL = "ALL";
+	public static final String ALL_SERVER = "AllServers";
+	
+	public static final String ALL_CLIENT = "AllClients";
 
 	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
@@ -46,10 +48,10 @@ public class ProjectInfo extends BaseVisitor {
 	private void addCallProject(String ip, Type type) {
 		String projectName = getProjectName(ip);
 
-		TypeDetailInfo all = m_callProjectsInfo.get(ALL);
+		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
 		if (all == null) {
-			all = new TypeDetailInfo(m_reportDuration, ALL);
-			m_callProjectsInfo.put(ALL, all);
+			all = new TypeDetailInfo(m_reportDuration, ALL_SERVER);
+			m_callProjectsInfo.put(ALL_SERVER, all);
 		}
 		TypeDetailInfo info = m_callProjectsInfo.get(projectName);
 		if (info == null) {
@@ -63,10 +65,10 @@ public class ProjectInfo extends BaseVisitor {
 	private void addServiceProject(String ip, Type type) {
 		String projectName = getProjectName(ip);
 
-		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL);
+		TypeDetailInfo all = m_serviceProjectsInfo.get(ALL_CLIENT);
 		if (all == null) {
-			all = new TypeDetailInfo(m_reportDuration, ALL);
-			m_serviceProjectsInfo.put(ALL, all);
+			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
+			m_serviceProjectsInfo.put(ALL_CLIENT, all);
 		}
 		TypeDetailInfo info = m_serviceProjectsInfo.get(projectName);
 		if (info == null) {

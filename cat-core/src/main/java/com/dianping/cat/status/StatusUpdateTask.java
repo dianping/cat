@@ -6,6 +6,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -20,6 +21,9 @@ import com.site.lookup.annotation.Inject;
 public class StatusUpdateTask implements Task, Initializable {
 	@Inject
 	private MessageStatistics m_statistics;
+	
+	@Inject
+	private ClientConfigManager m_manager;
 
 	private boolean m_active = true;
 
@@ -64,25 +68,24 @@ public class StatusUpdateTask implements Task, Initializable {
 
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
-			Transaction t = cat.newTransaction("System", "Status");
-			Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
-			StatusInfo status = new StatusInfo();
+			if (m_manager.isCatEnabled()) {
+	         Transaction t = cat.newTransaction("System", "Status");
+	         Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
+	         StatusInfo status = new StatusInfo();
+	         try {
+		         status.accept(new StatusInfoCollector(m_statistics));
 
-			try {
-				status.accept(new StatusInfoCollector(m_statistics));
-
-				h.addData(status.toString());
-				h.setStatus(Message.SUCCESS);
-			} catch (Throwable e) {
-				h.setStatus(e);
-				cat.logError(e);
-			} finally {
-				h.complete();
-			}
-
-			t.setStatus(Message.SUCCESS);
-			t.complete();
-
+		         h.addData(status.toString());
+		         h.setStatus(Message.SUCCESS);
+	         } catch (Throwable e) {
+		         h.setStatus(e);
+		         cat.logError(e);
+	         } finally {
+		         h.complete();
+	         }
+	         t.setStatus(Message.SUCCESS);
+	         t.complete();
+         }
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;
 
 			if (elapsed < m_interval) {

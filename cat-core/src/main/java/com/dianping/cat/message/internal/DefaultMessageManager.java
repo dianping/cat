@@ -156,7 +156,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public boolean isCatEnabled() {
-		return m_domain != null && m_domain.isEnabled() && m_context.get() != null;
+		return m_domain != null && m_domain.isEnabled() && m_context.get() != null && m_configManager.isCatEnabled();
 	}
 
 	String nextMessageId() {

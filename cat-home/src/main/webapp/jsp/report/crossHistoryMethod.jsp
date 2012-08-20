@@ -10,7 +10,7 @@
 <a:historyReport title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
 
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 
 <res:useCss value="${res.css.local.cross_css}" target="head-css" />
@@ -45,7 +45,7 @@
 </table>
 <br>
 <table class='cross'>
-		<tr><th colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+		<tr><th style="text-align: left" colspan='8'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 			</th></tr>
@@ -76,7 +76,7 @@
 					<td class="left">${callInfo.id}</td>
 		         	<td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
 		         	<td>${w:format(callInfo.failureCount,'#,###,###,###,##0')}</td>
-		        	<td>${w:format(callInfo.failurePercent,'0.00')}</td>
+		        	<td>${w:format(callInfo.failurePercent,'0.00%')}</td>
 		            <td>${w:format(callInfo.avg,'0.00')}</td>
 		            <td>${w:format(callInfo.tps,'0.00')}</td>
 		         </tr>
@@ -103,7 +103,7 @@
 					<td class="left">${serviceInfo.id}</td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
-		            <td>${w:format(serviceInfo.failurePercent,'0.00')}</td>
+		            <td>${w:format(serviceInfo.failurePercent,'0.00%')}</td>
 		            <td>${w:format(serviceInfo.avg,'0.00')}</td>
 		            <td>${w:format(serviceInfo.tps,'0.00')}</td>
 		         </tr>

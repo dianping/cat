@@ -200,6 +200,6 @@ public class PayloadTest {
 	}
 	
 	private Date adjustEndDate(Date date){
-		return new Date(date.getTime()+1000);
+		return new Date(date.getTime());
 	}
 }
