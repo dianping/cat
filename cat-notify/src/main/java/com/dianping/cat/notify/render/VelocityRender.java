@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dianping.cat.notify.config.ConfigContext;
-import com.dianping.cat.notify.report.AbstractReportCreater;
 
 public class VelocityRender implements IRender {
 	

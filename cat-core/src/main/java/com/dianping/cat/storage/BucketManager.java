@@ -6,11 +6,13 @@ import java.util.List;
 import com.dianping.cat.message.spi.MessageTree;
 
 public interface BucketManager {
+	public void closeAllLogviewBuckets();
+
 	public void closeBucket(Bucket<?> bucket);
-	
-	public List<Bucket<MessageTree>> getLogviewBuckets(long timestamp,String excludeDomain) throws IOException;
 
 	public Bucket<MessageTree> getLogviewBucket(long timestamp, String domain) throws IOException;
+
+	public List<Bucket<MessageTree>> getLogviewBuckets(long timestamp, String excludeDomain) throws IOException;
 
 	public Bucket<MessageTree> getMessageBucket(long timestamp, String domain) throws IOException;
 

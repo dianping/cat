@@ -130,6 +130,9 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
