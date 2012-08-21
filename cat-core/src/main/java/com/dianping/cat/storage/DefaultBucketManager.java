@@ -84,11 +84,11 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	public List<Bucket<MessageTree>> getLogviewBuckets(long timestamp, String excludeDomain) throws IOException {
 		long t = timestamp - timestamp % (60 * 60 * 1000L);
 		List<Bucket<MessageTree>> buckets = new ArrayList<Bucket<MessageTree>>();
-		
+
 		for (Bucket<?> bucket : m_map.values()) {
 			if (bucket instanceof LocalLogviewBucket) {
 				LocalLogviewBucket logview = (LocalLogviewBucket) bucket;
-				
+
 				if (logview.getTimestamp() == t && !logview.getDomain().equals(excludeDomain)) {
 					buckets.add(logview);
 				}
@@ -147,6 +147,24 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		@Override
 		public String toString() {
 			return String.format("Entry[type=%s,path=%s]", m_type, m_path);
+		}
+	}
+
+	@Override
+	public void closeAllLogviewBuckets() {
+		int hour = 60 * 60 * 1000;
+		long currentTimeMillis = System.currentTimeMillis();
+		long lastHour = currentTimeMillis - currentTimeMillis % hour - 2 * hour;
+
+		for (Bucket<?> bucket : m_map.values()) {
+			if (bucket instanceof LocalLogviewBucket) {
+				long timestamp = ((LocalLogviewBucket) bucket).getTimestamp();
+
+				if (timestamp < lastHour) {
+					LocalLogviewBucket logview = (LocalLogviewBucket) bucket;
+					closeBucket(logview);
+				}
+			}
 		}
 	}
 }

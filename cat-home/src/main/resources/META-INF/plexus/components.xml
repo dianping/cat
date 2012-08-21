@@ -1566,32 +1566,32 @@
 			<implementation>com.dianping.cat.report.page.cache.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.cache.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.event.EventMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>event</role-hint>
+					<field-name>m_eventService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.cache.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_transactionService</field-name>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>event</role-hint>
-					<field-name>m_eventService</field-name>
+					<role-hint>transaction</role-hint>
+					<field-name>m_transactionService</field-name>
 				</requirement>
 			</requirements>
 		</component>

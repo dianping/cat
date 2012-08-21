@@ -14,6 +14,7 @@ import com.dianping.cat.hadoop.dal.Hostinfo;
 import com.dianping.cat.hadoop.dal.HostinfoDao;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.storage.BucketManager;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
@@ -24,11 +25,19 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 	@Inject
 	private HostinfoDao m_hostInfoDao;
 
+	@Inject
+	private BucketManager m_bucketManager;
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
-		//if (atEnd) {
+		if (atEnd) {
 			storeReport();
-		//}
+		}
+		try {
+			m_bucketManager.closeAllLogviewBuckets();
+		} catch (Exception e) {
+			m_logger.error("Close logviewbucket error", e);
+		}
 	}
 
 	private void storeReport() {
@@ -38,7 +47,7 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 
 			for (String ip : ips) {
 				Hostinfo info = m_hostInfoDao.createLocal();
-				
+
 				info.setDomain(domain);
 				info.setIp(ip);
 				try {
