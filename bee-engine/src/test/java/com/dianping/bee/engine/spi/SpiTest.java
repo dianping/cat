@@ -1,7 +1,5 @@
 package com.dianping.bee.engine.spi;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -11,19 +9,13 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class SpiTest extends ComponentTestCase {
-	// select a, sum(a) from t1 where c=? and d=?
 	@Test
 	public void sample() throws Exception {
-		TableProviderManager manager = lookup(TableProviderManager.class);
-		TableProvider table = manager.getTableProvider("t1");
-		Statement stmt = null;
-
-		// stmt.accept(visitor);
-
-		List<ColumnMeta> cols = stmt.getSelectedColumns();
-		Index index = stmt.getIndex();
-		RowFilter filter = stmt.getRowFilter();
-		RowSet rowset = table.query(cols, index, filter);
+		TableProviderManager tableProviderManager = lookup(TableProviderManager.class);
+		StatementManager statementManager = lookup(StatementManager.class);
+		Statement stmt = statementManager.parse("select a, sum(a) from t1 where c=? and d=?");
+		TableProvider table = tableProviderManager.getTableProvider(stmt.getTableName());
+		RowSet rowset = table.query(stmt);
 
 		display(rowset);
 	}
@@ -55,7 +47,7 @@ public class SpiTest extends ComponentTestCase {
 		}
 
 		sb.append(rows).append(" rows selected.");
-		
+
 		System.out.println(sb);
 	}
 }

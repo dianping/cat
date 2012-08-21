@@ -4,5 +4,14 @@
 			<role>com.dianping.bee.engine.spi.TableProviderManager</role>
 			<implementation>com.dianping.bee.engine.spi.internal.DefaultTableProviderManager</implementation>
 		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.StatementManager</role>
+			<implementation>com.dianping.bee.engine.spi.internal.DefaultStatementManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.Statement</role>
+			<implementation>com.dianping.bee.engine.spi.internal.DefaultStatement</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
 	</components>
 </plexus>

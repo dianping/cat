@@ -24,11 +24,11 @@
 					        AND <FIELD name='tag-request'/> = ${tag-request}
 			        	</IF>
 			        	<IF type='EQ' field='direction' value='true'>
-					        AND <FIELD name='message-id'/> \\> ${message-id}
+					        AND <FIELD name='message-id'/> \> ${message-id}
 				        	ORDER BY <FIELD name='message-id'/> ASC 
 			        	</IF>
 			        	<IF type='EQ' field='direction' value='false'>
-					        AND <FIELD name='message-id'/> \\< ${message-id}
+					        AND <FIELD name='message-id'/> \< ${message-id}
 				        	ORDER BY <FIELD name='message-id'/> DESC 
 			        	</IF>
 			        	LIMIT 1 

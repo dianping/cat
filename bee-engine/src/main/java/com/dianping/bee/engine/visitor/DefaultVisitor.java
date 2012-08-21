@@ -337,6 +337,7 @@ public class DefaultVisitor implements SQLASTVisitor {
 
 		selectStep = SELECT_STEP.WHERE;
 		Expression where = node.getWhere();
+		
 		visitChild(2, where);
 		this.whereExpression = where;
 

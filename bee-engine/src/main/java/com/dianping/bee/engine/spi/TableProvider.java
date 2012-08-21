@@ -1,16 +1,13 @@
 package com.dianping.bee.engine.spi;
 
-import java.util.List;
-
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.TableMeta;
 
 public interface TableProvider {
-	public TableMeta getMeta();
+	public String getName();
 
-	public List<ColumnMeta> getColumns();
+	public ColumnMeta[] getColumns();
 
-	public List<Index> getIndexes();
+	public Index[] getIndexes();
 
-	public RowSet query(List<ColumnMeta> selectedColumns, Index index, RowFilter filter);
+	public RowSet query(Statement stmt);
 }
