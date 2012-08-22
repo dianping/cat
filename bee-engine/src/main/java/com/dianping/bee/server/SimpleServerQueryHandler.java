@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with dianping.com.
  */
-package com.dianping.bee.server.mysql;
+package com.dianping.bee.server;
 
 import org.apache.log4j.Logger;
 
@@ -28,16 +28,17 @@ import com.alibaba.cobar.server.handler.ShowHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
 import com.alibaba.cobar.server.handler.UseHandler;
 import com.alibaba.cobar.server.parser.ServerParse;
+import com.dianping.bee.server.mysql.SelectHandler;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-public class WhaleServerQueryHandler implements FrontendQueryHandler {
-	private static final Logger LOGGER = Logger.getLogger(WhaleServerQueryHandler.class);
+public class SimpleServerQueryHandler implements FrontendQueryHandler {
+	private static final Logger LOGGER = Logger.getLogger(SimpleServerQueryHandler.class);
 
 	private final ServerConnection source;
 
-	public WhaleServerQueryHandler(ServerConnection source) {
+	public SimpleServerQueryHandler(ServerConnection source) {
 		this.source = source;
 	}
 

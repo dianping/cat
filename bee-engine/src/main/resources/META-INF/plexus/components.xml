@@ -1,8 +1,21 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.bee.server.SimpleServer</role>
+			<implementation>com.dianping.bee.server.SimpleServer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<implementation>com.dianping.bee.db.CatDatabase</implementation>
+		</component>
+		<component>
 			<role>com.dianping.bee.engine.spi.TableProviderManager</role>
 			<implementation>com.dianping.bee.engine.spi.internal.DefaultTableProviderManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.StatementManager</role>

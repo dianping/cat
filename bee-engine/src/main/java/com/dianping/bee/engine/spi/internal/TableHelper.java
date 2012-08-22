@@ -17,7 +17,7 @@ public class TableHelper {
 		ColumnMeta[] columns = table.getColumns();
 
 		for (ColumnMeta column : columns) {
-			if (column.getName().equals(columnName)) {
+			if (column.getName().equalsIgnoreCase(columnName)) {
 				return column;
 			}
 		}
@@ -36,7 +36,7 @@ public class TableHelper {
 				String columnName = first.getName();
 
 				for (ColumnMeta column : columns) {
-					if (column.getName().equals(columnName)) {
+					if (column.getName().equalsIgnoreCase(columnName)) {
 						return index;
 					}
 				}

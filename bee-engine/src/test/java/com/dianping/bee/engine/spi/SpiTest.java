@@ -13,7 +13,7 @@ public class SpiTest extends ComponentTestCase {
 	public void sample() throws Exception {
 		TableProviderManager tableProviderManager = lookup(TableProviderManager.class);
 		StatementManager statementManager = lookup(StatementManager.class);
-		Statement stmt = statementManager.parse("select a, sum(a) from t1 where c=? and d=?");
+		Statement stmt = statementManager.parse("select type, sum(failures) from transaction where domain=? and starttime=?");
 		TableProvider table = tableProviderManager.getTableProvider(stmt.getTableName());
 		RowSet rowset = table.query(stmt);
 

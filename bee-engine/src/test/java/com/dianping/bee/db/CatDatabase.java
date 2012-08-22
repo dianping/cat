@@ -45,13 +45,11 @@ public class CatDatabase implements DatabaseProvider {
 
 		@Override
 		public ColumnMeta[] getColumns() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public Index[] getIndexes() {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
@@ -62,7 +60,6 @@ public class CatDatabase implements DatabaseProvider {
 
 		@Override
 		public RowSet query(Statement stmt) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 	}
@@ -115,7 +112,7 @@ public class CatDatabase implements DatabaseProvider {
 	}
 
 	public static enum TransactionIndex implements Index {
-		IDX_TYPE_NAME(TransactionColumn.StartTime, false, TransactionColumn.Domain, true);
+		IDX_STARTTIME_DOMAIN(TransactionColumn.StartTime, false, TransactionColumn.Domain, true);
 
 		private ColumnMeta[] m_columns;
 

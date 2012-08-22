@@ -23,7 +23,6 @@ import com.alibaba.cobar.server.response.SelectLastInsertId;
 import com.alibaba.cobar.server.response.SelectUser;
 import com.alibaba.cobar.server.response.SelectVersion;
 import com.alibaba.cobar.server.response.SelectVersionComment;
-import com.dianping.whale.cobar.response.SelectResponse;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>

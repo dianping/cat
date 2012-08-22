@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.sql.RowSet;
+
 import org.apache.log4j.Logger;
 
 import com.alibaba.cobar.ErrorCode;
@@ -33,9 +35,6 @@ import com.alibaba.cobar.protocol.mysql.RowDataPacket;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.util.IntegerUtil;
 import com.alibaba.cobar.util.StringUtil;
-import com.dianping.whale.engine.IQueryInterface;
-import com.dianping.whale.server.WhaleServer;
-import com.dianping.whale.storage.RowSet;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
