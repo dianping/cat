@@ -35,15 +35,29 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 
 	private List<ColumnMeta> m_whereColumns = new ArrayList<ColumnMeta>();
 
+	private ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
+		for (ColumnMeta column : columns) {
+			if (column.getName().equals(columnName)) {
+				return column;
+			}
+		}
+
+		ColumnMeta column = m_helper.findColumn(m_tableName, columnName);
+
+		columns.add(column);
+		return column;
+	}
+
 	public Statement getStatement() {
 		return m_stmt;
 	}
 
 	@Override
 	public void visit(DMLSelectStatement node) {
-		TableReference tr = node.getTables();
-
+		// for from clause
 		m_clause = Clause.TABLE;
+
+		TableReference tr = node.getTables();
 
 		if (tr.isSingleTable()) {
 			tr.accept(this);
@@ -51,9 +65,12 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			throw new RuntimeException("Not a single table query!");
 		}
 
-		List<Pair<Expression, String>> exprList = node.getSelectExprList();
+		m_stmt.setTableName(m_tableName);
 
+		// for select clause
 		m_clause = Clause.SELECT;
+
+		List<Pair<Expression, String>> exprList = node.getSelectExprList();
 
 		for (Pair<Expression, String> pair : exprList) {
 			String alias = pair.getValue();
@@ -67,6 +84,7 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 
 		m_stmt.setSelectColumns(m_selectColumns);
 
+		// for where clause
 		m_clause = Clause.WHERE;
 
 		Expression where = node.getWhere();
@@ -78,6 +96,7 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			// to evaluate where clause
 			m_rowFilter.setExpression(where);
 			m_stmt.setRowFilter(m_rowFilter);
+			m_stmt.setIndex(m_helper.findIndex(m_tableName, m_whereColumns));
 		}
 	}
 
@@ -95,19 +114,6 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			findOrCreateColumnFrom(m_whereColumns, whereColumnName);
 			break;
 		}
-	}
-
-	private ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
-		for (ColumnMeta column : columns) {
-			if (column.getName().equals(columnName)) {
-				return column;
-			}
-		}
-
-		ColumnMeta column = m_helper.findColumn(m_tableName, columnName);
-
-		columns.add(column);
-		return column;
 	}
 
 	@Override

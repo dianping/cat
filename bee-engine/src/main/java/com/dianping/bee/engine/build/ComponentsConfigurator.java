@@ -3,9 +3,11 @@ package com.dianping.bee.engine.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.bee.engine.spi.RowFilter;
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
+import com.dianping.bee.engine.spi.internal.DefaultRowFilter;
 import com.dianping.bee.engine.spi.internal.DefaultStatement;
 import com.dianping.bee.engine.spi.internal.DefaultStatementManager;
 import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
@@ -22,12 +24,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class));
 		all.add(C(StatementManager.class, DefaultStatementManager.class));
 		all.add(C(Statement.class, DefaultStatement.class).is(PER_LOOKUP));
+		all.add(C(RowFilter.class, DefaultRowFilter.class).is(PER_LOOKUP));
 
 		all.add(C(TableHelper.class) //
 		      .req(TableProviderManager.class));
 
 		all.add(C(SingleTableStatementVisitor.class).is(PER_LOOKUP) //
-		      .req(TableHelper.class, Statement.class));
+		      .req(TableHelper.class, Statement.class, RowFilter.class));
 
 		return all;
 	}

@@ -8,35 +8,51 @@ import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 
 public class DefaultStatement implements Statement {
+	private String m_tableName;
 
-	@Override
-	public List<ColumnMeta> getSelectColumns() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	private RowFilter m_rowFilter;
+
+	private Index m_index;
+
+	private List<ColumnMeta> m_selectColumns;
 
 	@Override
 	public Index getIndex() {
-		// TODO Auto-generated method stub
-		return null;
+		return m_index;
 	}
 
 	@Override
 	public RowFilter getRowFilter() {
-		// TODO Auto-generated method stub
-		return null;
+		return m_rowFilter;
+	}
+
+	@Override
+	public List<ColumnMeta> getSelectColumns() {
+		return m_selectColumns;
 	}
 
 	@Override
 	public String getTableName() {
-		// TODO Auto-generated method stub
-		return null;
+		return m_tableName;
+	}
+
+	@Override
+	public void setIndex(Index index) {
+		m_index = index;
 	}
 
 	@Override
 	public void setRowFilter(RowFilter rowFilter) {
-		// TODO Auto-generated method stub
-
+		m_rowFilter = rowFilter;
 	}
 
+	@Override
+	public void setSelectColumns(List<ColumnMeta> selectColumns) {
+		m_selectColumns = selectColumns;
+	}
+
+	@Override
+	public void setTableName(String tableName) {
+		m_tableName = tableName;
+	}
 }

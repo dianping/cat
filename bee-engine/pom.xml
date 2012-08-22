@@ -10,7 +10,7 @@
 	<groupId>com.dianping.bee</groupId>
 	<artifactId>bee-engine</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>bee-engine</name>
+	<name>Bee Engine</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.site.common</groupId>

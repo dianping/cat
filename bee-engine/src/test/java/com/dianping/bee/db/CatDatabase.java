@@ -68,25 +68,31 @@ public class CatDatabase implements DatabaseProvider {
 	}
 
 	public static enum TransactionColumn implements ColumnMeta {
-		Type(String.class),
+		Id(String.class), // hash, auto generated
 
-		Name(String.class),
+		StartTime(String.class), // 20120822(for daily), 2012082213(for hour)
 
-		TotalCount(Integer.class),
+		Domain(String.class), // MobileApi
 
-		Failures(Integer.class),
+		Type(String.class), // URL
 
-		SampleLink(String.class),
+		Name(String.class), // /deallist.bin
 
-		MinDuration(Integer.class),
+		TotalCount(Integer.class), // 2033
 
-		MaxDuration(Integer.class),
+		Failures(Integer.class), // 5
 
-		SumDuration(Long.class),
+		SampleMessage(String.class), // MobileApi-0a0101a6-1345600834200-1
 
-		Sum2Duration(Long.class),
+		MinDuration(Integer.class), // 1
 
-		Line95(Integer.class);
+		MaxDuration(Integer.class), // 1234
+
+		SumDuration(Long.class), // 123456
+
+		Sum2Duration(Long.class), // 2364233
+
+		Line95(Integer.class); // 123
 
 		private String m_name;
 
@@ -98,34 +104,60 @@ public class CatDatabase implements DatabaseProvider {
 		}
 
 		@Override
-		public Object getName() {
+		public String getName() {
 			return m_name;
+		}
+
+		@Override
+		public Class<?> getType() {
+			return m_type;
 		}
 	}
 
 	public static enum TransactionIndex implements Index {
-		IDX_TYPE_NAME {
-			@Override
-			public ColumnMeta getColumn(int index) {
-				switch (index) {
-				case 0:
-					return TransactionColumn.Type;
-				case 1:
-					return TransactionColumn.Name;
-				}
+		IDX_TYPE_NAME(TransactionColumn.StartTime, false, TransactionColumn.Domain, true);
 
-				throw new RuntimeException("Internal error happened!");
+		private ColumnMeta[] m_columns;
+
+		private boolean[] m_orders;
+
+		private TransactionIndex(Object... args) {
+			int length = args.length;
+
+			if (length % 2 != 0) {
+				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(), name()));
 			}
 
-			@Override
-			public int getLength() {
-				return 2;
-			}
+			m_columns = new ColumnMeta[length / 2];
+			m_orders = new boolean[length / 2];
 
-			@Override
-			public boolean isAscend(int index) {
-				return true;
+			for (int i = 0; i < length / 2; i++) {
+				m_columns[i] = (ColumnMeta) args[2 * i];
+				m_orders[i] = (Boolean) args[2 * i + 1];
 			}
-		};
+		}
+
+		@Override
+		public ColumnMeta getColumn(int index) {
+			if (index >= 0 && index < m_columns.length) {
+				return m_columns[index];
+			} else {
+				throw new IndexOutOfBoundsException("size: " + m_columns.length + ", index: " + index);
+			}
+		}
+
+		@Override
+		public int getLength() {
+			return m_columns.length;
+		}
+
+		@Override
+		public boolean isAscend(int index) {
+			if (index >= 0 && index < m_orders.length) {
+				return m_orders[index];
+			} else {
+				throw new IndexOutOfBoundsException("size: " + m_orders.length + ", index: " + index);
+			}
+		}
 	}
 }
