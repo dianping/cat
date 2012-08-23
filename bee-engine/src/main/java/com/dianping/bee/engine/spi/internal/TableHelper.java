@@ -2,10 +2,10 @@ package com.dianping.bee.engine.spi.internal;
 
 import java.util.List;
 
-import com.dianping.bee.engine.spi.Index;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.meta.Index;
 import com.site.lookup.annotation.Inject;
 
 public class TableHelper {

@@ -20,7 +20,7 @@ import java.util.List;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public interface MultiTableStatement extends Statement {
-	public List<String> getTableNames();
+	public List<TableProvider> getTables();
 
-	public void setTableNames(List<String> tableName);
+	public void setTables(List<TableProvider> tables);
 }

@@ -4,7 +4,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.meta.Row;
+import com.dianping.bee.engine.spi.meta.RowSet;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)

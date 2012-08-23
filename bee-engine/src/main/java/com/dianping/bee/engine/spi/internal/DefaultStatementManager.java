@@ -34,7 +34,7 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 	private Statement parseSQL(String sql) throws SQLSyntaxErrorException {
 		SQLStatement statement = SQLParserDelegate.parse(sql);
 		
-		DefaultStatementVisitor defaultVisitor = lookup(DefaultStatementVisitor.class);
+		DefaultStatementVisitor defaultVisitor =  new DefaultStatementVisitor();
 		statement.accept(defaultVisitor);
 		
 		if (defaultVisitor.getTableAlias().size() > 1) {

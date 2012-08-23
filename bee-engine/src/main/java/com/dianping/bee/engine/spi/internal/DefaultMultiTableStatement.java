@@ -2,14 +2,15 @@ package com.dianping.bee.engine.spi.internal;
 
 import java.util.List;
 
-import com.dianping.bee.engine.spi.Index;
 import com.dianping.bee.engine.spi.MultiTableStatement;
 import com.dianping.bee.engine.spi.RowFilter;
-import com.dianping.bee.engine.spi.RowSet;
+import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.RowSet;
 
 public class DefaultMultiTableStatement implements MultiTableStatement {
-	private List<String> m_tableNames;
+	private List<TableProvider> m_tables;
 
 	private RowFilter m_rowFilter;
 
@@ -33,8 +34,8 @@ public class DefaultMultiTableStatement implements MultiTableStatement {
 	}
 
 	@Override
-	public List<String> getTableNames() {
-		return m_tableNames;
+	public List<TableProvider> getTables() {
+		return m_tables;
 	}
 
 	@Override
@@ -53,8 +54,8 @@ public class DefaultMultiTableStatement implements MultiTableStatement {
 	}
 
 	@Override
-	public void setTableNames(List<String> tableNames) {
-		m_tableNames = tableNames;
+	public void setTables(List<TableProvider> tables) {
+		m_tables = tables;
 	}
 
 	@Override

@@ -60,6 +60,7 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.SingleTableStatement</role>
+<<<<<<< HEAD
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.RowFilter</role>
@@ -76,6 +77,8 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.MultiTableStatement</role>
+=======
+>>>>>>> bc221d6253f4aeecb3754cd7150255210a46e24e
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.RowFilter</role>
@@ -83,6 +86,25 @@
 			</requirements>
 		</component>
 		<component>
+<<<<<<< HEAD
+=======
+			<role>com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor</role>
+			<implementation>com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.internal.TableHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.MultiTableStatement</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.RowFilter</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+>>>>>>> bc221d6253f4aeecb3754cd7150255210a46e24e
 			<role>com.dianping.bee.server.SelectHandler</role>
 			<implementation>com.dianping.bee.server.SelectHandler</implementation>
 			<requirements>
