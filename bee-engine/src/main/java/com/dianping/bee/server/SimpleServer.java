@@ -39,7 +39,7 @@ public class SimpleServer implements LogEnabled {
 
 		// startup connector
 		NIOConnector connector = new NIOConnector("BeeConnector");
-		
+
 		connector.setProcessors(processors);
 		connector.start();
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2012 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+  <appender name="STDOUT" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="${cobar.home}/logs/stdout.log" />
+    <param name="append" value="true" />
+    <param name="encoding" value="UTF-8" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
+    </layout>
+  </appender>
+  <appender name="ALARM" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="${cobar.home}/logs/alarm.log" />
+    <param name="append" value="true" />
+    <param name="encoding" value="UTF-8" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
+    </layout>
+  </appender>
+  <appender name="HEARTBEAT" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="${cobar.home}/logs/heartbeat.log" />
+    <param name="append" value="true" />
+    <param name="encoding" value="UTF-8" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{HH:mm:ss,SSS} %-5p %m%n" />
+    </layout>
+  </appender>
+
+  <logger name="com.alibaba.cobar.CobarServer">
+    <level value="info" />
+  </logger>
+  <logger name="com.alibaba.cobar.net.handler.FrontendAuthenticator">
+    <level value="info" />
+  </logger>
+  <logger name="com.alibaba.cobar.mysql.MySQLDataNode">
+    <level value="info" />
+  </logger>
+  <logger name="alarm">
+    <level value="error" />
+    <appender-ref ref="ALARM" />
+  </logger>
+  <logger name="heartbeat" additivity="false">
+    <level value="warn" />
+    <appender-ref ref="HEARTBEAT" />
+  </logger>
+
+  <root>
+    <level value="warn" />
+    <appender-ref ref="STDOUT" />
+  </root>
+
+</log4j:configuration>

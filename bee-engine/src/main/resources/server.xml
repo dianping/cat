@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ - Copyright 1999-2012 Alibaba Group.
+ -  
+ - Licensed under the Apache License, Version 2.0 (the "License");
+ - you may not use this file except in compliance with the License.
+ - You may obtain a copy of the License at
+ -  
+ -      http://www.apache.org/licenses/LICENSE-2.0
+ -  
+ - Unless required by applicable law or agreed to in writing, software
+ - distributed under the License is distributed on an "AS IS" BASIS,
+ - WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ - See the License for the specific language governing permissions and
+ - limitations under the License.
+-->
+<!DOCTYPE cobar:server SYSTEM "server.dtd">
+<cobar:server xmlns:cobar="http://cobar.alibaba.com/">
+  
+  <!-- 系统参数定义，服务端口、管理端口，处理器个数、线程池等。 -->
+  <!--
+  <system>
+    <property name="serverPort">8066</property>
+    <property name="managerPort">9066</property>
+    <property name="initExecutor">16</property>
+    <property name="timerExecutor">4</property>
+    <property name="managerExecutor">4</property>
+    <property name="processors">4</property>
+    <property name="processorHandler">8</property>
+    <property name="processorExecutor">8</property>
+    <property name="clusterHeartbeatUser">_HEARTBEAT_USER_</property>
+    <property name="clusterHeartbeatPass">_HEARTBEAT_PASS_</property>
+  </system>
+  -->
+
+  <!-- 用户访问定义，用户名、密码、schema等信息。 -->
+  <user name="test">
+    <property name="password">test</property>
+    <property name="schemas">dbtest</property>
+  </user>
+  <!--
+  <user name="root">
+    <property name="password"></property>
+  </user>
+  -->
+
+  <!-- 集群列表定义，指定集群节点的主机和权重，用于集群间的心跳和客户端负载均衡。 -->
+  <!-- 
+  <cluster>
+    <node name="cobar1">
+      <property name="host">127.0.0.1</property>
+      <property name="weight">1</property>
+    </node>
+  </cluster>
+   -->
+   
+  <!-- 隔离区定义，可以限定某个主机上只允许某个用户登录。 -->
+  <!--
+  <quarantine>
+    <host name="1.2.3.4">
+      <property name="user">test</property>
+    </host>
+  </quarantine>
+  -->
+
+</cobar:server>
