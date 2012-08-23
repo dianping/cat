@@ -82,31 +82,35 @@ public abstract class AbstractReportCreater implements ReportCreater {
 
 		long startMicros = timeRange.getStartMicros();
 		long endMicros = timeRange.getEndMicros();
-		
+
 		StringBuilder report_content = new StringBuilder();
-		logger.info(String.format("begin to create report for[%s]",domain));
+		logger.info(String.format("begin to create report for[%s]", domain));
 		for (String reportName : reportNames) {
 			List<DailyReport> dailyReportList = new ArrayList<DailyReport>();
 			try {
 				dailyReportList = m_dailyReportDao.findAllByDomainNameDuration(new Date(startMicros), new Date(endMicros),domain, reportName, DailyReport.XML_TYPE);
 			} catch (Exception e) {
-				logger.error(String.format("fail to read report from database,time range[%s,%s]", new Date(startMicros), new Date(endMicros)), e);
+				logger.error(String.format("fail to read report from database,time range[%s,%s]", new Date(startMicros),new Date(endMicros)), e);
 				continue;
 			}
-			if (reportName.equals(DailyReport.EVENT_REPORT)) {
-				EventReport eReport = parseEvent(dailyReportList, domain);
-				report_content.append(renderEventReport(timeRange, eReport, domain));
-			} else if (reportName.equals(DailyReport.PROBLEM_REPORT)) {
-				ProblemReport pReport = parseProblem(dailyReportList, domain);
-				report_content.append(renterProblemReport(timeRange, pReport, domain));
-			} else if (reportName.equals(DailyReport.TRANSACGION_REPORT)) {
-				TransactionReport tReport = parseTransction(dailyReportList, domain);
-				caculateTps(tReport, ReportConstants.ALL_IP);
-				report_content.append(renderTransactionReport(timeRange, tReport, domain));
+			try {
+				if (reportName.equals(DailyReport.EVENT_REPORT)) {
+					EventReport eReport = parseEvent(dailyReportList, domain);
+					report_content.append(renderEventReport(timeRange, eReport, domain));
+				} else if (reportName.equals(DailyReport.PROBLEM_REPORT)) {
+					ProblemReport pReport = parseProblem(dailyReportList, domain);
+					report_content.append(renterProblemReport(timeRange, pReport, domain));
+				} else if (reportName.equals(DailyReport.TRANSACGION_REPORT)) {
+					TransactionReport tReport = parseTransction(dailyReportList, domain);
+					caculateTps(tReport, ReportConstants.ALL_IP);
+					report_content.append(renderTransactionReport(timeRange, tReport, domain));
+				}
+			} catch (Exception e) {
+				logger.error("fail to parse report",e);
+				continue;
 			}
 		}
-		logger.info(String.format("finish to create report for[%s]",domain));
-		
+		logger.info(String.format("finish to create report for[%s]", domain));
 		return report_content.toString();
 	}
 

@@ -59,7 +59,7 @@ JAVA_OPTS="$JAVA_OPTS -Dlog4j.configuration=file:$BASE_DIR/conf/log4j.xml"
 JAVA_OPTS="$JAVA_OPTS -Dconfiguration=$BASE_DIR/conf/config.properties"
 
 #for debug
-JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
+#JAVA_OPTS="$JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=n"
 export JAVA_OPTS
 
 if [ ! -f "$JAVA_HOME/bin/java" ]; then
@@ -89,7 +89,7 @@ start()
 {
 	echo "========================================================================="
 	echo ""
-	echo "  DataCenter-Server Startup Environment"
+	echo "  CatNotify-Server Startup Environment"
 	echo ""
 	echo "  BASE_DIR: $BASE_DIR"
 	echo ""
