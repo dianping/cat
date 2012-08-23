@@ -19,9 +19,11 @@ import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
 import com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.TableHelper;
-import com.dianping.bee.server.SelectHandler;
+import com.dianping.bee.server.SimpleDescHandler;
+import com.dianping.bee.server.SimpleSelectHandler;
 import com.dianping.bee.server.SimpleServer;
 import com.dianping.bee.server.SimpleServerQueryHandler;
+import com.dianping.bee.server.SimpleShowHandler;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -50,10 +52,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MultiTableStatementVisitor.class).is(PER_LOOKUP) //
 		      .req(TableHelper.class, MultiTableStatement.class, RowFilter.class));
 
-		all.add(C(SelectHandler.class) //
+		all.add(C(SimpleShowHandler.class));
+		all.add(C(SimpleDescHandler.class));
+		all.add(C(SimpleSelectHandler.class) //
 		      .req(StatementManager.class));
 		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		      .req(SelectHandler.class));
+		      .req(SimpleSelectHandler.class, SimpleShowHandler.class));
 
 		return all;
 	}

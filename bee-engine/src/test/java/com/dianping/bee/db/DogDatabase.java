@@ -14,16 +14,6 @@ import com.dianping.bee.engine.spi.meta.internal.DefaultRow;
 import com.dianping.bee.engine.spi.meta.internal.DefaultRowSet;
 
 public class DogDatabase implements DatabaseProvider {
-	@Override
-	public String getName() {
-		return "dog";
-	}
-
-	@Override
-	public DogTable[] getTables() {
-		return DogTable.values();
-	}
-
 	public static enum DogTable implements TableProvider {
 		Transaction("transaction") {
 			@Override
@@ -118,15 +108,6 @@ public class DogDatabase implements DatabaseProvider {
 
 		Line95(Integer.class); // 123
 
-		private String m_name;
-
-		private Class<?> m_type;
-
-		private TransactionColumn(Class<?> type) {
-			m_type = type;
-			m_name = name().toLowerCase();
-		}
-
 		public static TransactionColumn findByName(String name) {
 			for (TransactionColumn column : values()) {
 				if (column.getName().equalsIgnoreCase(name)) {
@@ -136,6 +117,15 @@ public class DogDatabase implements DatabaseProvider {
 
 			throw new RuntimeException(String.format("Column(%s) is not found in %s", name,
 			      TransactionColumn.class.getName()));
+		}
+
+		private String m_name;
+
+		private Class<?> m_type;
+
+		private TransactionColumn(Class<?> type) {
+			m_type = type;
+			m_name = name().toLowerCase();
 		}
 
 		@Override
@@ -195,5 +185,27 @@ public class DogDatabase implements DatabaseProvider {
 				throw new IndexOutOfBoundsException("size: " + m_orders.length + ", index: " + index);
 			}
 		}
+	}
+
+	@Override
+	public String getName() {
+		return "dog";
+	}
+
+	@Override
+	public TableProvider getTable(String tableName) {
+		for (TableProvider table : DogTable.values()) {
+			if (table.getName().equalsIgnoreCase(tableName)) {
+				return table;
+			}
+		}
+
+		throw new RuntimeException(
+		      String.format("Table(%s) is not found in %s", tableName, TableProvider.class.getName()));
+	}
+
+	@Override
+	public DogTable[] getTables() {
+		return DogTable.values();
 	}
 }

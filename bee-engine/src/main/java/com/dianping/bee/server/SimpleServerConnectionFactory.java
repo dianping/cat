@@ -21,7 +21,7 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 
 	@Override
 	protected FrontendConnection getConnection(SocketChannel channel) {
-		ServerConnection c = new ServerConnection(channel);
+		ServerConnection c = new SimpleServerConnection(channel);
 		SimpleServerQueryHandler queryHandler = getQueryHandler(c);
 
 		c.setQueryHandler(queryHandler);
@@ -41,7 +41,8 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 			return queryHandler;
 		} catch (ComponentLookupException e) {
 			throw new RuntimeException(
-			      "Unable to get SimpleServerQueryHandler instance, please check if the environment is setup correctly!", e);
+			      "Unable to get SimpleServerQueryHandler instance, please check if the environment is setup correctly!",
+			      e);
 		}
 	}
 

@@ -6,7 +6,13 @@
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>cat</role-hint>
 			<implementation>com.dianping.bee.db.CatDatabase</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>dog</role-hint>
+			<implementation>com.dianping.bee.db.DogDatabase</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.TableProviderManager</role>
@@ -78,8 +84,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.server.SelectHandler</role>
-			<implementation>com.dianping.bee.server.SelectHandler</implementation>
+			<role>com.dianping.bee.server.SimpleShowHandler</role>
+			<implementation>com.dianping.bee.server.SimpleShowHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.server.SimpleSelectHandler</role>
+			<implementation>com.dianping.bee.server.SimpleSelectHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.StatementManager</role>
@@ -92,7 +102,10 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.bee.server.SelectHandler</role>
+					<role>com.dianping.bee.server.SimpleSelectHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.server.SimpleShowHandler</role>
 				</requirement>
 			</requirements>
 		</component>
