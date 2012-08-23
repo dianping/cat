@@ -13,18 +13,18 @@ import com.dianping.bee.engine.spi.meta.internal.DefaultCell;
 import com.dianping.bee.engine.spi.meta.internal.DefaultRow;
 import com.dianping.bee.engine.spi.meta.internal.DefaultRowSet;
 
-public class CatDatabase implements DatabaseProvider {
+public class DogDatabase implements DatabaseProvider {
 	@Override
 	public String getName() {
-		return "cat";
+		return "dog";
 	}
 
 	@Override
-	public CatTable[] getTables() {
-		return CatTable.values();
+	public DogTable[] getTables() {
+		return DogTable.values();
 	}
 
-	public static enum CatTable implements TableProvider {
+	public static enum DogTable implements TableProvider {
 		Transaction("transaction") {
 			@Override
 			public TransactionColumn[] getColumns() {
@@ -45,7 +45,7 @@ public class CatDatabase implements DatabaseProvider {
 
 		private String m_name;
 
-		private CatTable(String name) {
+		private DogTable(String name) {
 			m_name = name;
 		}
 

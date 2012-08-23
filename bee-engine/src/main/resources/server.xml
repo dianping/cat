@@ -36,7 +36,7 @@
   <!-- 用户访问定义，用户名、密码、schema等信息。 -->
   <user name="test">
     <property name="password">test</property>
-    <property name="schemas">dbtest</property>
+    <property name="schemas">cat,dog</property>
   </user>
   <!--
   <user name="root">

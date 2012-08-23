@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.bee.db.CatDatabase;
+import com.dianping.bee.db.DogDatabase;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.MultiTableStatement;
 import com.dianping.bee.engine.spi.RowFilter;
@@ -31,7 +32,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(SimpleServer.class));
 
-		all.add(C(DatabaseProvider.class, CatDatabase.class));
+		all.add(C(DatabaseProvider.class, "cat", CatDatabase.class));
+		all.add(C(DatabaseProvider.class, "dog", DogDatabase.class));
 
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class) //
 		      .req(DatabaseProvider.class));

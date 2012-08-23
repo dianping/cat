@@ -82,7 +82,8 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			pair.getKey().accept(this);
 		}
 
-		m_stmt.setSelectColumns(m_selectColumns);
+		ColumnMeta[] columnMetas = new ColumnMeta[m_selectColumns.size()];
+		m_stmt.setSelectColumns(m_selectColumns.toArray(columnMetas));
 
 		// for where clause
 		m_clause = Clause.WHERE;
