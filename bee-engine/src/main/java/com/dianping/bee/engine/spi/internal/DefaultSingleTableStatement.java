@@ -1,7 +1,5 @@
 package com.dianping.bee.engine.spi.internal;
 
-import java.util.List;
-
 import com.dianping.bee.engine.spi.RowFilter;
 import com.dianping.bee.engine.spi.SingleTableStatement;
 import com.dianping.bee.engine.spi.TableProvider;
@@ -16,7 +14,7 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 
 	private Index m_index;
 
-	private List<ColumnMeta> m_selectColumns;
+	private ColumnMeta[] m_selectColumns;
 
 	@Override
 	public Index getIndex() {
@@ -29,7 +27,7 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	}
 
 	@Override
-	public List<ColumnMeta> getSelectColumns() {
+	public ColumnMeta[] getSelectColumns() {
 		return m_selectColumns;
 	}
 
@@ -49,8 +47,12 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	}
 
 	@Override
-	public void setSelectColumns(List<ColumnMeta> selectColumns) {
-		m_selectColumns = selectColumns;
+	public void setSelectColumns(ColumnMeta[] selectColumns) {
+		if (selectColumns != null && selectColumns.length > 0) {
+			m_selectColumns = selectColumns;
+		} else {
+			m_selectColumns = m_table.getColumns();
+		}
 	}
 
 	@Override
