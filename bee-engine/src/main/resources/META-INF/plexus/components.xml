@@ -88,6 +88,15 @@
 			<implementation>com.dianping.bee.server.SimpleShowHandler</implementation>
 		</component>
 		<component>
+			<role>com.dianping.bee.server.SimpleDescHandler</role>
+			<implementation>com.dianping.bee.server.SimpleDescHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.TableProviderManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.bee.server.SimpleSelectHandler</role>
 			<implementation>com.dianping.bee.server.SimpleSelectHandler</implementation>
 			<requirements>
@@ -106,6 +115,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.server.SimpleShowHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.server.SimpleDescHandler</role>
 				</requirement>
 			</requirements>
 		</component>

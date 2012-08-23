@@ -16,8 +16,6 @@ package com.dianping.bee.server;
 
 import java.nio.ByteBuffer;
 
-import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-
 import com.alibaba.cobar.CobarServer;
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.Fields;
@@ -29,15 +27,17 @@ import com.alibaba.cobar.protocol.mysql.ResultSetHeaderPacket;
 import com.alibaba.cobar.protocol.mysql.RowDataPacket;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.util.StringUtil;
-import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
+import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.site.lookup.ContainerLoader;
+import com.site.lookup.annotation.Inject;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SimpleDescHandler {
+	@Inject
+	private TableProviderManager m_manager;
 
 	/**
 	 * @param stmt
@@ -53,28 +53,17 @@ public class SimpleDescHandler {
 			c.writeErrMessage(ErrorCode.ER_NO_DB_ERROR, "No database selected");
 			return;
 		}
+
 		SchemaConfig schema = CobarServer.getInstance().getConfig().getSchemas().get(db);
 		if (schema == null) {
 			c.writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Unknown database '" + db + "'");
 			return;
 		}
 
-		DatabaseProvider provider = null;
-		try {
-			provider = ContainerLoader.getDefaultContainer().lookup(DatabaseProvider.class, db);
-		} catch (ComponentLookupException e) {
-			c.writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Can not load database '" + db + "'");
-			return;
-		}
-		if (provider == null) {
-			c.writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Can not load database '" + db + "'");
-			return;
-		}
+		TableProvider table = m_manager.getTableProvider(tableName);
 
-		//FIXME: why abstractmethod exception
-		TableProvider table = provider.getTable(tableName);
 		if (table == null) {
-			c.writeErrMessage(ErrorCode.ER_BAD_TABLE_ERROR, "Can not load table '" + tableName + "'");
+			c.writeErrMessage(ErrorCode.ER_BAD_TABLE_ERROR, "Unknown table '" + tableName + "'");
 			return;
 		}
 

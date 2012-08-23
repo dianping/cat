@@ -53,11 +53,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(TableHelper.class, MultiTableStatement.class, RowFilter.class));
 
 		all.add(C(SimpleShowHandler.class));
-		all.add(C(SimpleDescHandler.class));
+		all.add(C(SimpleDescHandler.class)//
+		      .req(TableProviderManager.class));
 		all.add(C(SimpleSelectHandler.class) //
 		      .req(StatementManager.class));
 		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		      .req(SimpleSelectHandler.class, SimpleShowHandler.class));
+		      .req(SimpleSelectHandler.class, SimpleShowHandler.class, SimpleDescHandler.class));
 
 		return all;
 	}
