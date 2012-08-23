@@ -2,14 +2,15 @@ package com.dianping.bee.engine.spi.internal;
 
 import java.util.List;
 
-import com.dianping.bee.engine.spi.Index;
 import com.dianping.bee.engine.spi.RowFilter;
-import com.dianping.bee.engine.spi.RowSet;
 import com.dianping.bee.engine.spi.SingleTableStatement;
+import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.RowSet;
 
 public class DefaultSingleTableStatement implements SingleTableStatement {
-	private String m_tableName;
+	private TableProvider m_table;
 
 	private RowFilter m_rowFilter;
 
@@ -33,8 +34,8 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	}
 
 	@Override
-	public String getTableName() {
-		return m_tableName;
+	public TableProvider getTable() {
+		return m_table;
 	}
 
 	@Override
@@ -53,12 +54,27 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	}
 
 	@Override
-	public void setTableName(String tableName) {
-		m_tableName = tableName;
+	public void setTable(TableProvider table) {
+		m_table = table;
 	}
 
 	@Override
 	public RowSet query() {
+		// Query By Index
+		RowSet providerRowSet = m_table.queryByIndex(m_index, m_selectColumns);
+		// Filter
+		providerRowSet.filter(m_rowFilter);
+		// Build select columns
+		RowSet returnRowSet = buildReturnRowSet(providerRowSet);
+		return returnRowSet;
+	}
+
+	/**
+	 * @param providerRowSet
+	 * @return
+	 */
+	private RowSet buildReturnRowSet(RowSet providerRowSet) {
 		return null;
 	}
+
 }

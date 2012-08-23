@@ -1,6 +1,5 @@
-package com.dianping.bee.engine.spi;
+package com.dianping.bee.engine.spi.meta;
 
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
 
 public interface Index {
 	public int getLength();

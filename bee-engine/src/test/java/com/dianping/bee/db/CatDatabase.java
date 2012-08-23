@@ -1,9 +1,20 @@
 package com.dianping.bee.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang3.RandomStringUtils;
+
 import com.dianping.bee.engine.spi.DatabaseProvider;
-import com.dianping.bee.engine.spi.Index;
 import com.dianping.bee.engine.spi.TableProvider;
+import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.Row;
+import com.dianping.bee.engine.spi.meta.RowSet;
+import com.dianping.bee.engine.spi.meta.internal.DefaultCell;
+import com.dianping.bee.engine.spi.meta.internal.DefaultRow;
+import com.dianping.bee.engine.spi.meta.internal.DefaultRowSet;
 
 public class CatDatabase implements DatabaseProvider {
 	@Override
@@ -55,6 +66,22 @@ public class CatDatabase implements DatabaseProvider {
 		public String getName() {
 			return m_name;
 		}
+
+		@Override
+		public RowSet queryByIndex(Index index, List<ColumnMeta> selectColumns) {
+			List<ColumnMeta> columns = new ArrayList<ColumnMeta>();
+			columns.addAll(selectColumns);
+			DefaultRowSet rowSet = new DefaultRowSet(columns);
+			for (int i = 0; i < 10; i++) {
+				Cell[] cells = new Cell[columns.size()];
+				for(int j=0;j<cells.length;j++){
+					cells[j] = new DefaultCell(CatDatabase.TransactionColumn.valueOf(columns.get(j).getName()),RandomStringUtils.randomAlphanumeric(5));
+				}
+				Row row = new DefaultRow(cells);
+				rowSet.addRow(row);
+			}
+			return rowSet;
+		}
 	}
 
 	public static enum TransactionColumn implements ColumnMeta {
@@ -103,11 +130,6 @@ public class CatDatabase implements DatabaseProvider {
 			return m_type;
 		}
 
-		@Override
-      public int getCobarType() {
-	      // TODO 
-	      return 0;
-      }
 	}
 
 	public static enum TransactionIndex implements Index {
@@ -121,7 +143,8 @@ public class CatDatabase implements DatabaseProvider {
 			int length = args.length;
 
 			if (length % 2 != 0) {
-				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(), name()));
+				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(),
+				      name()));
 			}
 
 			m_columns = new ColumnMeta[length / 2];

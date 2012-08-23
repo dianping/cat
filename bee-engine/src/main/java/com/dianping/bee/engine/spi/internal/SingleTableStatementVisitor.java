@@ -65,7 +65,7 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			throw new RuntimeException("Not a single table query!");
 		}
 
-		m_stmt.setTableName(m_tableName);
+		m_stmt.setTable(m_helper.findTable(m_tableName));
 
 		// for select clause
 		m_clause = Clause.SELECT;

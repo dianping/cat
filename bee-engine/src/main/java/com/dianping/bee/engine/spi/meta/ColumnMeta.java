@@ -4,6 +4,4 @@ public interface ColumnMeta {
 	public String getName();
 
 	public Class<?> getType();
-
-	public int getCobarType();
 }

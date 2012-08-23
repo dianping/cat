@@ -12,13 +12,24 @@
  * accordance with the terms of the license agreement you entered into
  * with dianping.com.
  */
-package com.dianping.bee.engine.spi;
+package com.dianping.bee.engine.spi.meta.internal;
+
+import com.dianping.bee.engine.spi.meta.Cell;
+import com.dianping.bee.engine.spi.meta.Row;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-public interface SingleTableStatement extends Statement {
-	public TableProvider getTable();
+public class DefaultRow implements Row {
 
-	public void setTable(TableProvider tableName);
+	private Cell[] m_cells;
+	
+	public DefaultRow(Cell[] cells){
+		this.m_cells = cells;
+	}
+	
+	@Override
+   public Cell getCell(int colIndex) {
+	   return m_cells[colIndex];
+   }
 }

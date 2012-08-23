@@ -14,7 +14,6 @@ import com.dianping.bee.engine.spi.internal.DefaultMultiTableStatement;
 import com.dianping.bee.engine.spi.internal.DefaultRowFilter;
 import com.dianping.bee.engine.spi.internal.DefaultSingleTableStatement;
 import com.dianping.bee.engine.spi.internal.DefaultStatementManager;
-import com.dianping.bee.engine.spi.internal.DefaultStatementVisitor;
 import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
 import com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor;
@@ -44,7 +43,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableHelper.class) //
 		      .req(TableProviderManager.class));
 
-		all.add(C(DefaultStatementVisitor.class).is(PER_LOOKUP));
 		all.add(C(SingleTableStatementVisitor.class).is(PER_LOOKUP) //
 		      .req(TableHelper.class, SingleTableStatement.class, RowFilter.class));
 		all.add(C(MultiTableStatementVisitor.class).is(PER_LOOKUP) //

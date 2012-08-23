@@ -22,8 +22,13 @@
 			<implementation>com.dianping.bee.engine.spi.internal.DefaultStatementManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.Statement</role>
-			<implementation>com.dianping.bee.engine.spi.internal.DefaultStatement</implementation>
+			<role>com.dianping.bee.engine.spi.SingleTableStatement</role>
+			<implementation>com.dianping.bee.engine.spi.internal.DefaultSingleTableStatement</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.MultiTableStatement</role>
+			<implementation>com.dianping.bee.engine.spi.internal.DefaultMultiTableStatement</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
@@ -49,10 +54,45 @@
 					<role>com.dianping.bee.engine.spi.internal.TableHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.Statement</role>
+					<role>com.dianping.bee.engine.spi.SingleTableStatement</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.RowFilter</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor</role>
+			<implementation>com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.internal.TableHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.MultiTableStatement</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.RowFilter</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.server.SelectHandler</role>
+			<implementation>com.dianping.bee.server.SelectHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.StatementManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.server.SimpleServerQueryHandler</role>
+			<implementation>com.dianping.bee.server.SimpleServerQueryHandler</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.server.SelectHandler</role>
 				</requirement>
 			</requirements>
 		</component>
