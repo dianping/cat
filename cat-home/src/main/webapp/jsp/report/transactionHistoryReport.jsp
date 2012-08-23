@@ -8,7 +8,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 
 <a:historyReport title="History Report" navUrlPrefix="type=${payload.type}&queryname=${model.queryName}">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.transaction_css}" target="head-css" />
 	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
@@ -61,7 +61,7 @@
 							<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${item.type}${model.customDate}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent,'0.00')}</td>
+					<td>${w:format(e.failPercent/100,'0.00%')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>
@@ -116,7 +116,7 @@
 					${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
-					<td>${w:format(e.failPercent,'0.00')}</td>
+					<td>${w:format(e.failPercent/100,'0.00%')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.min,'0.#')}</td>
 					<td>${w:format(e.max,'0.#')}</td>

@@ -47,6 +47,9 @@
       <page name="cross" title="Cross" path="cross">
         <description>Cross</description>
       </page>
+      <page name="cache" title="Cache" path="cache">
+        <description>Cache</description>
+      </page>
     </module>
   </webapp>
 </wizard>

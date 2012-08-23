@@ -76,8 +76,8 @@ public class TypeDetailInfo {
 		m_sum += type.getSum();
 
 		if (m_totalCount > 0) {
-			m_avg = m_sum / m_totalCount;
-			m_failurePercent = m_failureCount / m_totalCount;
+			m_avg = m_sum /  (double)m_totalCount;
+			m_failurePercent = (double)m_failureCount /  (double)m_totalCount;
 		}
 		if (m_seconds > 0) {
 			m_tps = m_totalCount / (double)m_seconds;

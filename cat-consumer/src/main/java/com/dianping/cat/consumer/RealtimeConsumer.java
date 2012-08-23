@@ -455,9 +455,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			boolean result = m_queue.offer(tree);
 			if (!result) { // trace queue overflow
 				m_queueOverflow++;
-				if (m_queueOverflow >= 100) {
-					m_logger.warn(m_analyzer + " queue overflow");
-					m_queueOverflow = 0;
+				if (m_queueOverflow % 1000 == 0) {
+					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
 				}
 			}
 			return result;

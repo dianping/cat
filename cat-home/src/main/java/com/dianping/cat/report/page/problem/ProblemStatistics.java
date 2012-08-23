@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import com.dianping.cat.consumer.problem.ProblemType;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -18,6 +19,8 @@ import com.dianping.cat.helper.MapUtils;
 
 public class ProblemStatistics extends BaseVisitor {
 
+	private Map<String, TypeStatistics> m_status = new TreeMap<String, TypeStatistics>();
+
 	private boolean m_allIp = false;
 
 	private String m_ip = "";
@@ -26,21 +29,27 @@ public class ProblemStatistics extends BaseVisitor {
 
 	private int m_sqlThreshold = 100;
 
-	private Map<String, TypeStatistics> m_status = new TreeMap<String, TypeStatistics>();
-
 	private int m_urlThreshold = 1000;
+
+	private int m_serviceThreshold = 50;
 
 	private List<Duration> getDurationsByType(String type, Entry entry) {
 		List<Duration> durations = new ArrayList<Duration>();
-		if ("long-url".equals(type)) {
+		if (ProblemType.LONG_URL.getName().equals(type)) {
 			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
 				if (temp.getKey() >= m_urlThreshold) {
 					durations.add(temp.getValue());
 				}
 			}
-		} else if ("long-sql".equals(type)) {
+		} else if (ProblemType.LONG_SQL.getName().equals(type)) {
 			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
 				if (temp.getKey() >= m_sqlThreshold) {
+					durations.add(temp.getValue());
+				}
+			}
+		} else if (ProblemType.LONG_SERVICE.getName().equals(type)) {
+			for (java.util.Map.Entry<Integer, Duration> temp : entry.getDurations().entrySet()) {
+				if (temp.getKey() >= m_serviceThreshold) {
 					durations.add(temp.getValue());
 				}
 			}

@@ -273,7 +273,7 @@ public class DisplayMatrix {
 				return (int) (o2.getCallAvg() * 100 - o1.getCallAvg() * 100);
 			}
 			if (m_sort.equalsIgnoreCase("CallAvgTotalTime")) {
-				return o2.getCallTime() - o1.getCacheMin();
+				return o2.getCallTime() - o1.getCallTime();
 			}
 			if (m_sort.equalsIgnoreCase("callTimePercent")) {
 				return (int) (o2.getCallTimePercent() * 100 - o1.getCallTimePercent() * 100);

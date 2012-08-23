@@ -8,7 +8,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.matrix.Model" scope="request" />
 
 <a:historyReport title="History Report" navUrlPrefix="domain=${model.domain}">
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.matrix_css}" target="head-css" />
 </br>

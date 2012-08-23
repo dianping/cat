@@ -166,8 +166,9 @@ public class Handler implements PageHandler<Context> {
 			CrossReport methodReport = getHourlyReport(payload);
 			MethodInfo methodInfo = new MethodInfo(payload.getHourDuration());
 
+			methodInfo.setHostInfoDao(m_hostinfoDao);
 			methodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort());
+			      .setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
 			methodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
 			methodInfo.visitCrossReport(methodReport);
 			model.setReport(methodReport);
@@ -200,8 +201,9 @@ public class Handler implements PageHandler<Context> {
 			CrossReport historyMethodReport = getSummarizeReport(payload);
 			MethodInfo historyMethodInfo = new MethodInfo(payload.getHourDuration());
 
+			historyMethodInfo.setHostInfoDao(m_hostinfoDao);
 			historyMethodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort());
+			      .setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
 			historyMethodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
 			historyMethodInfo.visitCrossReport(historyMethodReport);
 			model.setReport(historyMethodReport);

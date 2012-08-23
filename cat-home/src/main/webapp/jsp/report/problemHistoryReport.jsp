@@ -9,7 +9,7 @@
 
 <a:historyReport title="History Report" navUrlPrefix="threshold=${model.threshold}&sqlThreshold=${model.sqlThreshold}&ip=${model.ipAddress}">
 
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.problem_css}" target="head-css"/>
 	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
@@ -56,6 +56,7 @@
 				<option value="100">100 ms</option>
 				<option value="500">500 ms</option>
 				<option value="1000">1000 ms</option>
+				<option value="2000">2000 ms</option>
 		</select>
 		<script>
 			var threshold='${model.threshold}';

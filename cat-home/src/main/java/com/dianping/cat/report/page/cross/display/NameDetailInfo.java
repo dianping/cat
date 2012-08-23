@@ -5,7 +5,7 @@ import com.dianping.cat.consumer.cross.model.entity.Name;
 public class NameDetailInfo {
 
 	private String m_type;
-	
+
 	private double m_avg;
 
 	private long m_failureCount;
@@ -21,10 +21,10 @@ public class NameDetailInfo {
 	private double m_sum;
 
 	private long m_totalCount;
-	
+
 	private double m_tps;
 
-	public NameDetailInfo(long seconds,String id,String ip,String type) {
+	public NameDetailInfo(long seconds, String id, String ip, String type) {
 		m_seconds = seconds;
 		m_id = id;
 		m_ip = ip;
@@ -73,11 +73,11 @@ public class NameDetailInfo {
 		m_sum += name.getSum();
 
 		if (m_totalCount > 0) {
-			m_avg = m_sum / m_totalCount;
-			m_failurePercent = m_failureCount / m_totalCount;
+			m_avg = m_sum / (double) m_totalCount;
+			m_failurePercent = (double) m_failureCount / (double) m_totalCount;
 		}
 		if (m_seconds > 0) {
-			m_tps = m_totalCount / (double)m_seconds;
+			m_tps = m_totalCount / (double) m_seconds;
 		}
 	}
 

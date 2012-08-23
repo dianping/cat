@@ -131,7 +131,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		}
 
 		report.addIp(tree.getIpAddress());
-		//Machine machine = findOrCreateMachine(report, tree);
 		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
 		int count = 0;
 

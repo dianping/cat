@@ -105,9 +105,11 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 				if (bucket != null) {
 					MessageTree tree = bucket.findById(messageId);
-					
-					t.addData("path", dataFile);
-					return tree;
+
+					if (tree != null && tree.getMessageId().equals(messageId)) {
+						t.addData("path", dataFile);
+						return tree;
+					}
 				}
 			}
 

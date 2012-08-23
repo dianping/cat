@@ -1,0 +1,30 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.site.web.mvc.model.ModuleRegistry</role>
+			<implementation>com.site.web.mvc.model.ModuleRegistry</implementation>
+			<configuration>
+				<modules>
+					<module default="true">com.dianping.dog.alarm.AlarmModule</module>
+				</modules>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.AlarmModule</role>
+			<implementation>com.dianping.dog.alarm.AlarmModule</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.page.home.Handler</role>
+			<implementation>com.dianping.dog.alarm.page.home.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.alarm.page.home.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.page.home.JspViewer</role>
+			<implementation>com.dianping.dog.alarm.page.home.JspViewer</implementation>
+		</component>
+	</components>
+</plexus>

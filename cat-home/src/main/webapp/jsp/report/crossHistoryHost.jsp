@@ -10,7 +10,7 @@
 <a:historyReport title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
 
-	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 
 <res:useCss value="${res.css.local.cross_css}" target="head-css" />
@@ -57,10 +57,10 @@
 		<c:forEach var="callInfo" items="${model.hostInfo.callProjectsInfo}" varStatus="status">
 			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 		         	<td class="left">${callInfo.type}</td>
-		         	<td class="left"><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${callInfo.ip }">${callInfo.ip}</a></td>
+		         	<td class="left"><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${callInfo.ip }&project=${payload.projectName}">${callInfo.ip}</a></td>
 		            <td>${w:format(callInfo.totalCount,'#,###,###,###,##0')}</td>
 		         	<td>${w:format(callInfo.failureCount,'#,###,###,###,##0')}</td>
-		        	<td>${w:format(callInfo.failurePercent,'0.00')}</td>
+		        	<td>${w:format(callInfo.failurePercent,'0.00%')}</td>
 		             <td>${w:format(callInfo.avg,'0.00')}</td>
 		             <td>${w:format(callInfo.tps,'0.00')}</td>
 		         </tr>
@@ -82,10 +82,10 @@
 		      <c:forEach var="serviceInfo" items="${model.hostInfo.serviceProjectsInfo}" varStatus="status">
 		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 		            <td class="left">${serviceInfo.type}</td>
-		            <td class="left"><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${serviceInfo.ip}">${serviceInfo.ip}</a></td>
+		            <td class="left"><a href="?op=historyMethod&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${serviceInfo.ip}&project=${payload.projectName}">${serviceInfo.ip}</a></td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
-		            <td>${w:format(serviceInfo.failurePercent,'0.00')}</td>
+		            <td>${w:format(serviceInfo.failurePercent,'0.00%')}</td>
 		             <td>${w:format(serviceInfo.avg,'0.00')}</td>
 		             <td>${w:format(serviceInfo.tps,'0.00')}</td>
 		         </tr>

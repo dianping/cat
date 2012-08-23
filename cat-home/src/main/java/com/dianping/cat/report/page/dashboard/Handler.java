@@ -53,6 +53,8 @@ public class Handler implements PageHandler<Context> {
 
 	private static final String COUNT = "Count";
 
+	private static final String FAILURE_COUNT = "FailureCount";
+
 	private static final String TIME = "ResponseTime";
 
 	private void buildEventReportResult(EventReport eventReport, String ip, String type, String name,
@@ -67,6 +69,7 @@ public class Handler implements PageHandler<Context> {
 					for (EventType eventType : types) {
 						String id = eventType.getId();
 						data.put(id + COUNT, String.valueOf(eventType.getTotalCount()));
+						data.put(id + FAILURE_COUNT, String.valueOf(eventType.getFailCount()));
 					}
 				}
 			} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
@@ -76,6 +79,7 @@ public class Handler implements PageHandler<Context> {
 					data.put(COUNT, String.valueOf(eventType.getTotalCount()));
 					for (EventName eventName : eventType.getNames().values()) {
 						data.put(eventName.getId() + COUNT, String.valueOf(eventName.getTotalCount()));
+						data.put(eventName.getId() + FAILURE_COUNT, String.valueOf(eventName.getFailCount()));
 					}
 				}
 			} else if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
@@ -86,6 +90,7 @@ public class Handler implements PageHandler<Context> {
 
 					if (eventName != null) {
 						data.put(COUNT, String.valueOf(eventName.getTotalCount()));
+						data.put(FAILURE_COUNT, String.valueOf(eventName.getFailCount()));
 					}
 				}
 			}
@@ -147,6 +152,7 @@ public class Handler implements PageHandler<Context> {
 
 						data.put(id + TIME, m_format.format(transactionType.getAvg()));
 						data.put(id + COUNT, String.valueOf(transactionType.getTotalCount()));
+						data.put(id + FAILURE_COUNT, String.valueOf(transactionType.getFailCount()));
 					}
 				}
 			} else if (StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
@@ -155,11 +161,13 @@ public class Handler implements PageHandler<Context> {
 				if (transactionType != null) {
 					data.put(TIME, m_format.format(transactionType.getAvg()));
 					data.put(COUNT, String.valueOf(transactionType.getTotalCount()));
+					data.put(FAILURE_COUNT, String.valueOf(transactionType.getFailCount()));
 
 					for (TransactionName transactionName : transactionType.getNames().values()) {
 						String id = transactionName.getId();
 						data.put(id + TIME, m_format.format(transactionName.getAvg()));
 						data.put(id + COUNT, String.valueOf(transactionName.getTotalCount()));
+						data.put(id + FAILURE_COUNT, String.valueOf(transactionName.getFailCount()));
 					}
 				}
 			} else if (!StringUtils.isEmpty(name) && !StringUtils.isEmpty(type)) {
@@ -171,6 +179,7 @@ public class Handler implements PageHandler<Context> {
 					if (transactionName != null) {
 						data.put(TIME, m_format.format(transactionName.getAvg()));
 						data.put(COUNT, String.valueOf(transactionName.getTotalCount()));
+						data.put(FAILURE_COUNT, String.valueOf(transactionName.getFailCount()));
 					}
 				}
 			}
