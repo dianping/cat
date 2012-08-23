@@ -8,6 +8,7 @@ import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
+import com.dianping.bee.server.SimpleServer;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -19,6 +20,16 @@ public class SpiTest extends ComponentTestCase {
 		RowSet rowset = stmt.query();
 
 		display(rowset);
+	}
+
+	@Test
+	public void runServer() throws Exception {
+		SimpleServer server = lookup(SimpleServer.class);
+
+		server.startup();
+
+		System.out.println("Press any key to continue ...");
+		System.in.read();
 	}
 
 	private void display(RowSet rowset) {
