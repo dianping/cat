@@ -10,6 +10,7 @@ import com.alibaba.cobar.net.NIOConnector;
 import com.alibaba.cobar.net.NIOProcessor;
 import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
+import com.site.lookup.ContainerLoader;
 import com.site.lookup.annotation.Inject;
 
 public class SimpleServer implements LogEnabled {
@@ -46,6 +47,7 @@ public class SimpleServer implements LogEnabled {
 		SimpleServerConnectionFactory sf = new SimpleServerConnectionFactory();
 
 		sf.setIdleTimeout(3600 * 1000L); // one hour
+		sf.setContainer(ContainerLoader.getDefaultContainer());
 
 		NIOAcceptor server = new NIOAcceptor("BeeServer", m_port, sf);
 

@@ -12,17 +12,12 @@ import com.alibaba.cobar.net.factory.FrontendConnectionFactory;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.server.session.BlockingSession;
 import com.alibaba.cobar.server.session.NonBlockingSession;
-import com.site.lookup.ContainerLoader;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 	private PlexusContainer m_container;
-
-	public void initialize() {
-		m_container = ContainerLoader.getDefaultContainer();
-	}
 
 	@Override
 	protected FrontendConnection getConnection(SocketChannel channel) {
@@ -38,7 +33,7 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 		return c;
 	}
 
-	private SimpleServerQueryHandler getQueryHandler(ServerConnection c) {
+	protected SimpleServerQueryHandler getQueryHandler(ServerConnection c) {
 		try {
 			SimpleServerQueryHandler queryHandler = m_container.lookup(SimpleServerQueryHandler.class);
 
@@ -49,4 +44,9 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 			      "Unable to get SimpleServerQueryHandler instance, please check if the environment is setup correctly!", e);
 		}
 	}
+
+	public void setContainer(PlexusContainer container) {
+		m_container = container;
+	}
+
 }
