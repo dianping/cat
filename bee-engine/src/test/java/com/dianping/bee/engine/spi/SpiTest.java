@@ -12,8 +12,7 @@ public class SpiTest extends ComponentTestCase {
 	@Test
 	public void sample() throws Exception {
 		StatementManager statementManager = lookup(StatementManager.class);
-		Statement stmt = statementManager
-		      .parse("select type, sum(failures) from transaction where domain=? and starttime=?");
+		Statement stmt = statementManager.build("select type, sum(failures) from transaction where domain=? and starttime=?");
 		RowSet rowset = stmt.query();
 
 		display(rowset);

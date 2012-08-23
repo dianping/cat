@@ -28,26 +28,27 @@ import com.alibaba.cobar.server.handler.ShowHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
 import com.alibaba.cobar.server.handler.UseHandler;
 import com.alibaba.cobar.server.parser.ServerParse;
-import com.dianping.bee.server.mysql.SelectHandler;
+import com.site.lookup.annotation.Inject;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SimpleServerQueryHandler implements FrontendQueryHandler {
+	@Inject
+	private SelectHandler m_selectHandler;
+
 	private static final Logger LOGGER = Logger.getLogger(SimpleServerQueryHandler.class);
 
-	private final ServerConnection source;
-
-	public SimpleServerQueryHandler(ServerConnection source) {
-		this.source = source;
-	}
+	private ServerConnection m_conn;
 
 	@Override
 	public void query(String sql) {
-		ServerConnection c = this.source;
+		ServerConnection c = this.m_conn;
+
 		if (LOGGER.isDebugEnabled()) {
 			LOGGER.debug(new StringBuilder().append(c).append(sql).toString());
 		}
+
 		int rs = ServerParse.parse(sql);
 		switch (rs & 0xff) {
 		case ServerParse.EXPLAIN:
@@ -60,7 +61,7 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 			ShowHandler.handle(sql, c, rs >>> 8);
 			break;
 		case ServerParse.SELECT:
-			SelectHandler.handle(sql, c, rs >>> 8);
+			m_selectHandler.handle(sql, c, rs >>> 8);
 			break;
 		case ServerParse.START:
 			StartHandler.handle(sql, c, rs >>> 8);
@@ -91,4 +92,7 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 		}
 	}
 
+	public void setServerConnection(ServerConnection c) {
+		m_conn = c;
+	}
 }

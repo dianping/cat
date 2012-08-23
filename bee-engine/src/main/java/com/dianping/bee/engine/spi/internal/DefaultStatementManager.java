@@ -14,7 +14,7 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 	private Map<String, Statement> m_statements = new HashMap<String, Statement>();
 
 	@Override
-	public Statement parse(String sql) throws SQLSyntaxErrorException {
+	public Statement build(String sql) throws SQLSyntaxErrorException {
 		Statement statement = m_statements.get(sql);
 
 		if (statement == null) {

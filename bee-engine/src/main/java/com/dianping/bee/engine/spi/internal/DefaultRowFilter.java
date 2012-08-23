@@ -21,6 +21,7 @@ public class DefaultRowFilter implements RowFilter {
 
 	public String toString() {
 		MySQLOutputASTVisitor visitor = new MySQLOutputASTVisitor(new StringBuilder());
+		
 		m_expr.accept(visitor);
 		return visitor.getSql();
 	}

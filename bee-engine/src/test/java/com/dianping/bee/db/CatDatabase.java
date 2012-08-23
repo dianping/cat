@@ -2,8 +2,6 @@ package com.dianping.bee.db;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.Index;
-import com.dianping.bee.engine.spi.RowSet;
-import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 
@@ -57,11 +55,6 @@ public class CatDatabase implements DatabaseProvider {
 		public String getName() {
 			return m_name;
 		}
-
-		@Override
-		public RowSet query(Statement stmt) {
-			return null;
-		}
 	}
 
 	public static enum TransactionColumn implements ColumnMeta {
@@ -109,6 +102,12 @@ public class CatDatabase implements DatabaseProvider {
 		public Class<?> getType() {
 			return m_type;
 		}
+
+		@Override
+      public int getCobarType() {
+	      // TODO 
+	      return 0;
+      }
 	}
 
 	public static enum TransactionIndex implements Index {
