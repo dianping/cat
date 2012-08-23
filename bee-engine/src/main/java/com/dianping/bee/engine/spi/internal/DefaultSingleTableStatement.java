@@ -73,8 +73,7 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	 * @param providerRowSet
 	 * @return
 	 */
-	private RowSet buildReturnRowSet(RowSet providerRowSet) {
-		return null;
+	private RowSet buildReturnRowSet(RowSet c) {
+		return c;
 	}
-
 }

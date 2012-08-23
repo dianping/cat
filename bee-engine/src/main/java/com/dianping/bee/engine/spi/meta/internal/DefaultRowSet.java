@@ -66,7 +66,7 @@ public class DefaultRowSet implements RowSet {
 		Iterator<Row> it = m_rows.iterator();
 		while (it.hasNext()) {
 			Row row = it.next();
-			if (rowFilter.filter(row)) {
+			if (!rowFilter.filter(row)) {
 				it.remove();
 			}
 		}

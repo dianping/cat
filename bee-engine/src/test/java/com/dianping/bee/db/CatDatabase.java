@@ -74,9 +74,11 @@ public class CatDatabase implements DatabaseProvider {
 			DefaultRowSet rowSet = new DefaultRowSet(columns);
 			for (int i = 0; i < 10; i++) {
 				Cell[] cells = new Cell[columns.size()];
-				for(int j=0;j<cells.length;j++){
-					cells[j] = new DefaultCell(CatDatabase.TransactionColumn.valueOf(columns.get(j).getName()),RandomStringUtils.randomAlphanumeric(5));
+				for (int j = 0; j < cells.length; j++) {
+					cells[j] = new DefaultCell(TransactionColumn.findByName(columns.get(j).getName()),
+					      RandomStringUtils.randomAlphanumeric(5));
 				}
+
 				Row row = new DefaultRow(cells);
 				rowSet.addRow(row);
 			}
@@ -120,6 +122,16 @@ public class CatDatabase implements DatabaseProvider {
 			m_name = name().toLowerCase();
 		}
 
+		public static TransactionColumn findByName(String name) {
+			for (TransactionColumn column : values()) {
+				if (column.getName().equalsIgnoreCase(name)) {
+					return column;
+				}
+			}
+
+			throw new RuntimeException(String.format("Column(%s) is not found in %s", name, TransactionColumn.class.getName()));
+		}
+
 		@Override
 		public String getName() {
 			return m_name;
@@ -129,7 +141,6 @@ public class CatDatabase implements DatabaseProvider {
 		public Class<?> getType() {
 			return m_type;
 		}
-
 	}
 
 	public static enum TransactionIndex implements Index {
@@ -143,8 +154,7 @@ public class CatDatabase implements DatabaseProvider {
 			int length = args.length;
 
 			if (length % 2 != 0) {
-				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(),
-				      name()));
+				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(), name()));
 			}
 
 			m_columns = new ColumnMeta[length / 2];
