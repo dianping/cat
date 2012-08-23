@@ -5,14 +5,18 @@ import java.util.List;
 
 import com.dianping.bee.db.CatDatabase;
 import com.dianping.bee.engine.spi.DatabaseProvider;
+import com.dianping.bee.engine.spi.MultiTableStatement;
 import com.dianping.bee.engine.spi.RowFilter;
-import com.dianping.bee.engine.spi.Statement;
+import com.dianping.bee.engine.spi.SingleTableStatement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
+import com.dianping.bee.engine.spi.internal.DefaultMultiTableStatement;
 import com.dianping.bee.engine.spi.internal.DefaultRowFilter;
-import com.dianping.bee.engine.spi.internal.DefaultStatement;
+import com.dianping.bee.engine.spi.internal.DefaultSingleTableStatement;
 import com.dianping.bee.engine.spi.internal.DefaultStatementManager;
+import com.dianping.bee.engine.spi.internal.DefaultStatementVisitor;
 import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
+import com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.TableHelper;
 import com.dianping.bee.server.SimpleServer;
@@ -31,14 +35,18 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class) //
 		      .req(DatabaseProvider.class));
 		all.add(C(StatementManager.class, DefaultStatementManager.class));
-		all.add(C(Statement.class, DefaultStatement.class).is(PER_LOOKUP));
+		all.add(C(SingleTableStatement.class, DefaultSingleTableStatement.class).is(PER_LOOKUP));
+		all.add(C(MultiTableStatement.class, DefaultMultiTableStatement.class).is(PER_LOOKUP));
 		all.add(C(RowFilter.class, DefaultRowFilter.class).is(PER_LOOKUP));
 
 		all.add(C(TableHelper.class) //
 		      .req(TableProviderManager.class));
 
+		all.add(C(DefaultStatementVisitor.class).is(PER_LOOKUP));
 		all.add(C(SingleTableStatementVisitor.class).is(PER_LOOKUP) //
-		      .req(TableHelper.class, Statement.class, RowFilter.class));
+		      .req(TableHelper.class, SingleTableStatement.class, RowFilter.class));
+		all.add(C(MultiTableStatementVisitor.class).is(PER_LOOKUP) //
+		      .req(TableHelper.class, MultiTableStatement.class, RowFilter.class));
 
 		return all;
 	}

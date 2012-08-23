@@ -3,12 +3,13 @@ package com.dianping.bee.engine.spi.internal;
 import java.util.List;
 
 import com.dianping.bee.engine.spi.Index;
+import com.dianping.bee.engine.spi.MultiTableStatement;
 import com.dianping.bee.engine.spi.RowFilter;
-import com.dianping.bee.engine.spi.Statement;
+import com.dianping.bee.engine.spi.RowSet;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 
-public class DefaultStatement implements Statement {
-	private String m_tableName;
+public class DefaultMultiTableStatement implements MultiTableStatement {
+	private List<String> m_tableNames;
 
 	private RowFilter m_rowFilter;
 
@@ -32,8 +33,8 @@ public class DefaultStatement implements Statement {
 	}
 
 	@Override
-	public String getTableName() {
-		return m_tableName;
+	public List<String> getTableNames() {
+		return m_tableNames;
 	}
 
 	@Override
@@ -52,7 +53,12 @@ public class DefaultStatement implements Statement {
 	}
 
 	@Override
-	public void setTableName(String tableName) {
-		m_tableName = tableName;
+	public void setTableNames(List<String> tableNames) {
+		m_tableNames = tableNames;
 	}
+
+	@Override
+   public RowSet query() {
+	   return null;
+   }
 }

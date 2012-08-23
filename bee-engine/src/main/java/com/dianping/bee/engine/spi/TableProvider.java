@@ -8,6 +8,4 @@ public interface TableProvider {
 	public ColumnMeta[] getColumns();
 
 	public Index[] getIndexes();
-
-	public RowSet query(Statement stmt);
 }

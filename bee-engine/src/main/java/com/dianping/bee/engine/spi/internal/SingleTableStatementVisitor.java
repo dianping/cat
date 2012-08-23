@@ -11,7 +11,7 @@ import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
 import com.alibaba.cobar.parser.util.Pair;
 import com.alibaba.cobar.parser.visitor.EmptySQLASTVisitor;
 import com.dianping.bee.engine.spi.RowFilter;
-import com.dianping.bee.engine.spi.Statement;
+import com.dianping.bee.engine.spi.SingleTableStatement;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.site.lookup.annotation.Inject;
 
@@ -20,7 +20,7 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 	private TableHelper m_helper;
 
 	@Inject
-	private Statement m_stmt;
+	private SingleTableStatement m_stmt;
 
 	@Inject
 	private RowFilter m_rowFilter;
@@ -48,7 +48,7 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 		return column;
 	}
 
-	public Statement getStatement() {
+	public SingleTableStatement getStatement() {
 		return m_stmt;
 	}
 
@@ -113,6 +113,16 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 
 			findOrCreateColumnFrom(m_whereColumns, whereColumnName);
 			break;
+		case TABLE:
+			break;
+		case GROUP:
+			break;
+		case HAVING:
+			break;
+		case ORDER:
+			break;
+		default:
+			;
 		}
 	}
 
