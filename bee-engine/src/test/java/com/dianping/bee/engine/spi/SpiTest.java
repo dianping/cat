@@ -11,11 +11,10 @@ import com.site.lookup.ComponentTestCase;
 public class SpiTest extends ComponentTestCase {
 	@Test
 	public void sample() throws Exception {
-		TableProviderManager tableProviderManager = lookup(TableProviderManager.class);
 		StatementManager statementManager = lookup(StatementManager.class);
-		Statement stmt = statementManager.parse("select type, sum(failures) from transaction where domain=? and starttime=?");
-		TableProvider table = tableProviderManager.getTableProvider(stmt.getTableName());
-		RowSet rowset = table.query(stmt);
+		Statement stmt = statementManager
+		      .parse("select type, sum(failures) from transaction where domain=? and starttime=?");
+		RowSet rowset = stmt.query();
 
 		display(rowset);
 	}

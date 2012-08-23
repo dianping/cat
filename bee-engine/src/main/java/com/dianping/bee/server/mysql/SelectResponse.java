@@ -19,8 +19,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.sql.RowSet;
-
 import org.apache.log4j.Logger;
 
 import com.alibaba.cobar.ErrorCode;
@@ -35,6 +33,9 @@ import com.alibaba.cobar.protocol.mysql.RowDataPacket;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.util.IntegerUtil;
 import com.alibaba.cobar.util.StringUtil;
+import com.dianping.bee.engine.spi.RowSet;
+import com.dianping.bee.engine.spi.Statement;
+import com.dianping.bee.engine.spi.StatementManager;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
@@ -42,42 +43,6 @@ import com.alibaba.cobar.util.StringUtil;
 public class SelectResponse {
 
 	private static final Logger LOGGER = Logger.getLogger(SelectResponse.class);
-
-	private static final Map<String, IQueryInterface> queryInterfaces = new HashMap<String, IQueryInterface>();
-
-	/**
-	 * find Query Engine by schema
-	 * 
-	 * @param c
-	 * @return
-	 */
-	private static IQueryInterface getQueryInterface(ServerConnection c) {
-		String schema = c.getSchema();
-		SchemaConfig schemaConfig = WhaleServer.getInstance().getConfig().getSchemas().get(schema);
-		if (schemaConfig != null) {
-			String dataNode = schemaConfig.getDataNode();
-			String dataSourceName = WhaleServer.getInstance().getConfig().getDataNodes().get(dataNode).getSource()
-			      .getName();
-			DataSourceConfig dataSourceConfig = WhaleServer.getInstance().getConfig().getDataSources().get(dataSourceName);
-			String type = dataSourceConfig.getType();
-			if ("whale".equals(type)) {
-				String classPath = dataSourceConfig.getSqlMode();
-				IQueryInterface queryInstance = queryInterfaces.get(classPath);
-				if (queryInstance == null) {
-					try {
-						queryInstance = (IQueryInterface) Class.forName(classPath).newInstance();
-						queryInterfaces.put(classPath, queryInstance);
-					} catch (Exception e) {
-						LOGGER.warn("Instance Query Interface Failed", e);
-						return null;
-					}
-				}
-				return queryInstance;
-			} else if ("mysql".equals(type)) {
-			}
-		}
-		return null;
-	}
 
 	/**
 	 * 
@@ -133,28 +98,17 @@ public class SelectResponse {
 	 * @param c
 	 * @param stmt
 	 */
-	public static void response(ServerConnection c, String stmt) {
-		IQueryInterface queryInterface = getQueryInterface(c);
-		if (queryInterface == null) {
-			LOGGER.warn("No Query Interface Found");
-			c.writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, stmt);
-			return;
-		}
+	public static void response(ServerConnection c, String sql) {
+		StatementManager statementManager = lookup(StatementManager.class);
+		Statement stmt = statementManager.parse(sql);
 
-		RowSet result = null;
-		try {
-			result = queryInterface.query(stmt);
-		} catch (SQLException e) {
-			LOGGER.warn(stmt, e);
-			c.writeErrMessage(ErrorCode.ER_PARSE_ERROR, stmt);
-			return;
-		}
+		RowSet result = stmt.query();
 
 		byte packetId = 0;
 		EOFPacket eof = new EOFPacket();
 		ByteBuffer buffer = c.allocate();
 		// write header
-		int fieldCount = result.getMetaData().getColumnCount();
+		int fieldCount = result.getColumns();
 		ResultSetHeaderPacket header = PacketUtil.getHeader(fieldCount);
 		header.packetId = ++packetId;
 		buffer = header.write(buffer, c);
@@ -163,8 +117,7 @@ public class SelectResponse {
 		int columnIndex = 0;
 		FieldPacket[] fields = new FieldPacket[fieldCount];
 		for (int i = 0; i < fieldCount; i++) {
-			fields[columnIndex] = PacketUtil.getField(result.getMetaData().getColumnNames()[i], result.getMetaData()
-			      .getColumnTypes()[i]);
+			fields[columnIndex] = PacketUtil.getField(result.getColumn(i).getName(), result.getColumn(i).getType());
 			fields[columnIndex++].packetId = ++packetId;
 		}
 		eof.packetId = ++packetId;
@@ -175,8 +128,8 @@ public class SelectResponse {
 		buffer = eof.write(buffer, c);
 
 		// write rows
-		for (int rowIndex = 0; rowIndex < result.getData().length; rowIndex++) {
-			RowDataPacket row = getRow(result.getData()[rowIndex], result.getMetaData().getColumnTypes(), c.getCharset());
+		for (int rowIndex = 0; rowIndex < result.getRows(); rowIndex++) {
+			RowDataPacket row = getRow(result.getRow(rowIndex), result.getMetaData().getColumnTypes(), c.getCharset());
 			row.packetId = ++packetId;
 			buffer = row.write(buffer, c);
 		}
