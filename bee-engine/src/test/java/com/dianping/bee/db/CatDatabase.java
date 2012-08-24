@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
+import com.dianping.bee.engine.spi.internal.StaticTableHelper;
 import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Index;
@@ -14,6 +15,7 @@ import com.dianping.bee.engine.spi.meta.internal.DefaultRow;
 import com.dianping.bee.engine.spi.meta.internal.DefaultRowSet;
 
 public class CatDatabase implements DatabaseProvider {
+
 	public static enum CatTable implements TableProvider {
 		Transaction("transaction") {
 			@Override
@@ -29,13 +31,13 @@ public class CatDatabase implements DatabaseProvider {
 
 		Event("event") {
 			@Override
-			public TransactionColumn[] getColumns() {
-				return TransactionColumn.values();
+			public EventColumn[] getColumns() {
+				return EventColumn.values();
 			}
 
 			@Override
-			public TransactionIndex[] getIndexes() {
-				return TransactionIndex.values();
+			public EventIndex[] getIndexes() {
+				return EventIndex.values();
 			}
 		},
 
@@ -68,10 +70,11 @@ public class CatDatabase implements DatabaseProvider {
 		public RowSet queryByIndex(Index index, ColumnMeta[] selectColumns) {
 			ColumnMeta[] columns = selectColumns;
 			DefaultRowSet rowSet = new DefaultRowSet(columns);
-			for (int i = 0; i < 10; i++) {
+
+			for (int rowIndex = 0; rowIndex < 10; rowIndex++) {
 				Cell[] cells = new Cell[columns.length];
-				for (int j = 0; j < cells.length; j++) {
-					ColumnMeta columnMeta = TransactionColumn.findByName(columns[j].getName());
+				for (int colIndex = 0; colIndex < cells.length; colIndex++) {
+					ColumnMeta columnMeta = StaticTableHelper.findColumn(this, columns[colIndex].getName());
 					String randomValue = null;
 					if (columnMeta.getType().getSimpleName().equals("String")) {
 						randomValue = RandomStringUtils.randomAlphabetic(5);
@@ -81,7 +84,7 @@ public class CatDatabase implements DatabaseProvider {
 					} else {
 						randomValue = RandomStringUtils.randomAlphanumeric(5);
 					}
-					cells[j] = new DefaultCell(columnMeta, randomValue);
+					cells[colIndex] = new DefaultCell(columnMeta, randomValue);
 				}
 
 				Row row = new DefaultRow(cells);
@@ -219,17 +222,6 @@ public class CatDatabase implements DatabaseProvider {
 
 		Line95(Integer.class); // 123
 
-		public static TransactionColumn findByName(String name) {
-			for (TransactionColumn column : values()) {
-				if (column.getName().equalsIgnoreCase(name)) {
-					return column;
-				}
-			}
-
-			throw new RuntimeException(String.format("Column(%s) is not found in %s", name,
-			      TransactionColumn.class.getName()));
-		}
-
 		private String m_name;
 
 		private Class<?> m_type;
@@ -301,18 +293,6 @@ public class CatDatabase implements DatabaseProvider {
 	@Override
 	public String getName() {
 		return "cat";
-	}
-
-	@Override
-	public TableProvider getTable(String tableName) {
-		for (TableProvider table : CatTable.values()) {
-			if (table.getName().equalsIgnoreCase(tableName)) {
-				return table;
-			}
-		}
-
-		throw new RuntimeException(
-		      String.format("Table(%s) is not found in %s", tableName, TableProvider.class.getName()));
 	}
 
 	@Override

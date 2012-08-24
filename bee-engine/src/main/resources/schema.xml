@@ -24,4 +24,7 @@
   <schema name="dog">
   </schema>
 
+  <schema name="information_schema">
+  </schema>
+
 </cobar:schema>

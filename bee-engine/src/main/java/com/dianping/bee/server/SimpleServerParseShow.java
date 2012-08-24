@@ -26,6 +26,12 @@ public class SimpleServerParseShow {
 
 	public static final int TABLES = 2;
 
+	public static final int STATUS = 3;
+
+	public static final int VARIABLES = 4;
+
+	public static final int TABLESTATUS = 5;
+
 	public static int parse(String stmt, int offset) {
 		int i = offset;
 		for (; i < stmt.length(); i++) {
@@ -38,12 +44,56 @@ public class SimpleServerParseShow {
 				continue;
 			case 'T':
 			case 't':
-				return showTablesCheck(stmt, i);
+				return showTableCheck(stmt, i);
 			case 'D':
 			case 'd':
 				return showDatabasesCheck(stmt, i);
+			case 'S':
+			case 's':
+				return showStatusCheck(stmt, i);
+			case 'V':
+			case 'v':
+				return showVariablesCheck(stmt, i);
 			default:
 				return OTHER;
+			}
+		}
+		return OTHER;
+	}
+
+	// SHOW VARIABLES
+	private static int showVariablesCheck(String stmt, int offset) {
+		if (stmt.length() > offset + "ariables".length()) {
+			char c1 = stmt.charAt(++offset);
+			char c2 = stmt.charAt(++offset);
+			char c3 = stmt.charAt(++offset);
+			char c4 = stmt.charAt(++offset);
+			char c5 = stmt.charAt(++offset);
+			char c6 = stmt.charAt(++offset);
+			char c7 = stmt.charAt(++offset);
+			char c8 = stmt.charAt(++offset);
+			if ((c1 == 'A' || c1 == 'a') && (c2 == 'R' || c2 == 'r') && (c3 == 'I' || c3 == 'i')
+			      && (c4 == 'A' || c4 == 'a') && (c5 == 'B' || c5 == 'b') && (c6 == 'L' || c6 == 'l')
+			      && (c7 == 'E' || c7 == 'e') && (c8 == 'S' || c8 == 's')
+			      && (stmt.length() == ++offset || ParseUtil.isEOF(stmt.charAt(offset)))) {
+				return VARIABLES;
+			}
+		}
+		return OTHER;
+	}
+
+	// SHOW STATUS
+	static int showStatusCheck(String stmt, int offset) {
+		if (stmt.length() > offset + "tatus".length()) {
+			char c1 = stmt.charAt(++offset);
+			char c2 = stmt.charAt(++offset);
+			char c3 = stmt.charAt(++offset);
+			char c4 = stmt.charAt(++offset);
+			char c5 = stmt.charAt(++offset);
+			if ((c1 == 'T' || c1 == 't') && (c2 == 'A' || c2 == 'a') && (c3 == 'T' || c3 == 't')
+			      && (c4 == 'U' || c4 == 'u') && (c5 == 'S' || c5 == 's')
+			      && (stmt.length() == ++offset || ParseUtil.isEOF(stmt.charAt(offset)))) {
+				return STATUS;
 			}
 		}
 		return OTHER;
@@ -70,8 +120,8 @@ public class SimpleServerParseShow {
 		return OTHER;
 	}
 
-	// SHOW TABLES
-	static int showTablesCheck(String stmt, int offset) {
+	// SHOW TABLES OR SHOW TABLE STATUS FROM [TABLE]
+	static int showTableCheck(String stmt, int offset) {
 		if (stmt.length() > offset + "ables".length()) {
 			char c1 = stmt.charAt(++offset);
 			char c2 = stmt.charAt(++offset);
@@ -82,6 +132,37 @@ public class SimpleServerParseShow {
 			      && (c4 == 'E' || c4 == 'e') && (c5 == 'S' || c5 == 's')
 			      && (stmt.length() == ++offset || ParseUtil.isEOF(stmt.charAt(offset)))) {
 				return TABLES;
+			} else if (c5 == ' ') {
+				return showTableStatusCheck(stmt, offset);
+			}
+		}
+		return OTHER;
+	}
+
+	/**
+	 * @param stmt
+	 * @param offset
+	 * @return
+	 */
+	static int showTableStatusCheck(String stmt, int offset) {
+		if (stmt.length() > offset + "status from ".length()) {
+			char c1 = stmt.charAt(++offset);
+			char c2 = stmt.charAt(++offset);
+			char c3 = stmt.charAt(++offset);
+			char c4 = stmt.charAt(++offset);
+			char c5 = stmt.charAt(++offset);
+			char c6 = stmt.charAt(++offset);
+			char c7 = stmt.charAt(++offset);
+			char c8 = stmt.charAt(++offset);
+			char c9 = stmt.charAt(++offset);
+			char c10 = stmt.charAt(++offset);
+			char c11 = stmt.charAt(++offset);
+			char c12 = stmt.charAt(++offset);
+			if ((c1 == 'S' || c1 == 's') && (c2 == 'T' || c2 == 't') && (c3 == 'A' || c3 == 'a')
+			      && (c4 == 'T' || c4 == 't') && (c5 == 'U' || c5 == 'u') && (c6 == 'S' || c6 == 's') && (c7 == ' ')
+			      && (c8 == 'F' || c8 == 'f') && (c9 == 'R' || c9 == 'r') && (c10 == 'o' || c10 == 'o')
+			      && (c11 == 'M' || c11 == 'm') && (c12 == ' ')) {
+				return TABLESTATUS;
 			}
 		}
 		return OTHER;

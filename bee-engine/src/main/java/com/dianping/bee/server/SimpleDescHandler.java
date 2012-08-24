@@ -61,7 +61,6 @@ public class SimpleDescHandler {
 		}
 
 		TableProvider table = m_manager.getTableProvider(tableName);
-
 		if (table == null) {
 			c.writeErrMessage(ErrorCode.ER_BAD_TABLE_ERROR, "Unknown table '" + tableName + "'");
 			return;
@@ -106,14 +105,26 @@ public class SimpleDescHandler {
 		// write rows
 		packetId = eof.packetId;
 
-		for (ColumnMeta column : columns) {
+		if (columns != null) {
+			for (ColumnMeta column : columns) {
+				RowDataPacket row = new RowDataPacket(FIELD_COUNT);
+				row.add(StringUtil.encode(column.getName(), c.getCharset()));
+				row.add(StringUtil.encode(column.getType().getSimpleName(), c.getCharset()));
+				row.add(null);
+				row.add(null);
+				row.add(null);
+				row.add(null);
+				row.packetId = ++packetId;
+				buffer = row.write(buffer, c);
+			}
+		} else {
 			RowDataPacket row = new RowDataPacket(FIELD_COUNT);
-			row.add(StringUtil.encode(column.getName(), c.getCharset()));
-			row.add(StringUtil.encode(column.getType().getSimpleName(), c.getCharset()));
-			row.add(StringUtil.encode(null, c.getCharset()));
-			row.add(StringUtil.encode(null, c.getCharset()));
-			row.add(StringUtil.encode(null, c.getCharset()));
-			row.add(StringUtil.encode(null, c.getCharset()));
+			row.add(null);
+			row.add(null);
+			row.add(null);
+			row.add(null);
+			row.add(null);
+			row.add(null);
 			row.packetId = ++packetId;
 			buffer = row.write(buffer, c);
 		}

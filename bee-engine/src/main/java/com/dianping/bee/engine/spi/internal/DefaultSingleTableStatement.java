@@ -65,7 +65,9 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 		// Query By Index
 		RowSet providerRowSet = m_table.queryByIndex(m_index, m_selectColumns);
 		// Filter
-		providerRowSet.filter(m_rowFilter);
+		if (providerRowSet != null) {
+			providerRowSet.filter(m_rowFilter);
+		}
 		// Build select columns
 		RowSet returnRowSet = buildReturnRowSet(providerRowSet);
 		return returnRowSet;

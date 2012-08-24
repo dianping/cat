@@ -25,7 +25,6 @@ import com.alibaba.cobar.server.handler.KillHandler;
 import com.alibaba.cobar.server.handler.SavepointHandler;
 import com.alibaba.cobar.server.handler.SetHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
-import com.alibaba.cobar.server.handler.UseHandler;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -40,6 +39,9 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 
 	@Inject
 	private SimpleDescHandler m_descHandler;
+
+	@Inject
+	private SimpleUseHandler m_useHandler;
 
 	private static final Logger LOGGER = Logger.getLogger(SimpleServerQueryHandler.class);
 
@@ -62,16 +64,9 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 			SetHandler.handle(sql, c, rs >>> 8);
 			break;
 		case SimpleServerParse.DESC:
-			//FIXME: why not inject
-			if(m_descHandler==null){
-				m_descHandler = new SimpleDescHandler();
-			}
 			m_descHandler.handle(sql, c, rs >>> 8);
+			break;
 		case SimpleServerParse.SHOW:
-			// FIXME: why not inject
-			if (m_showHandler == null) {
-				m_showHandler = new SimpleShowHandler();
-			}
 			m_showHandler.handle(sql, c, rs >>> 8);
 			break;
 		case SimpleServerParse.SELECT:
@@ -93,7 +88,7 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 			c.writeErrMessage(ErrorCode.ER_UNKNOWN_COM_ERROR, "Unsupported command");
 			break;
 		case SimpleServerParse.USE:
-			UseHandler.handle(sql, c, rs >>> 8);
+			m_useHandler.handle(sql, c, rs >>> 8);
 			break;
 		case SimpleServerParse.COMMIT:
 			c.commit();

@@ -29,7 +29,6 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 		c.setTxIsolation(Isolations.REPEATED_READ);
 		c.setSession(new BlockingSession(c));
 		c.setSession2(new NonBlockingSession(c));
-
 		return c;
 	}
 

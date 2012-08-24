@@ -6,6 +6,11 @@
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>information_schema</role-hint>
+			<implementation>com.dianping.bee.server.InformationSchemaDatabase</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
 			<role-hint>cat</role-hint>
 			<implementation>com.dianping.bee.db.CatDatabase</implementation>
 		</component>
@@ -86,6 +91,15 @@
 		<component>
 			<role>com.dianping.bee.server.SimpleShowHandler</role>
 			<implementation>com.dianping.bee.server.SimpleShowHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.TableProviderManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.server.SimpleUseHandler</role>
+			<implementation>com.dianping.bee.server.SimpleUseHandler</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.server.SimpleDescHandler</role>
@@ -118,6 +132,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.server.SimpleDescHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.server.SimpleUseHandler</role>
 				</requirement>
 			</requirements>
 		</component>

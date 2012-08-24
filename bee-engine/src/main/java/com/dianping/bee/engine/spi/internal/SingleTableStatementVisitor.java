@@ -12,10 +12,25 @@ import com.alibaba.cobar.parser.util.Pair;
 import com.alibaba.cobar.parser.visitor.EmptySQLASTVisitor;
 import com.dianping.bee.engine.spi.RowFilter;
 import com.dianping.bee.engine.spi.SingleTableStatement;
+import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.site.lookup.annotation.Inject;
 
 public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
+	static enum Clause {
+		SELECT,
+
+		TABLE,
+
+		WHERE,
+
+		GROUP,
+
+		HAVING,
+
+		ORDER;
+	}
+
 	@Inject
 	private TableHelper m_helper;
 
@@ -34,6 +49,22 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 	private List<ColumnMeta> m_selectColumns = new ArrayList<ColumnMeta>();
 
 	private List<ColumnMeta> m_whereColumns = new ArrayList<ColumnMeta>();
+
+	private boolean checkSelectAll(List<ColumnMeta> columns, String columnName) {
+		if ("*".equals(columnName)) {
+			TableProvider table = m_helper.findTable(m_tableName);
+			if (table != null) {
+				ColumnMeta[] columnMetas = table.getColumns();
+				if (columnMetas != null) {
+					for (ColumnMeta meta : columnMetas) {
+						columns.add(meta);
+					}
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 
 	private ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
 		for (ColumnMeta column : columns) {
@@ -107,7 +138,9 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 		case SELECT:
 			String selectColumnName = node.getIdTextUpUnescape();
 
-			findOrCreateColumnFrom(m_selectColumns, selectColumnName);
+			if (!checkSelectAll(m_selectColumns, selectColumnName)) {
+				findOrCreateColumnFrom(m_selectColumns, selectColumnName);
+			}
 			break;
 		case WHERE:
 			String whereColumnName = node.getIdTextUpUnescape();
@@ -131,19 +164,5 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 	public void visit(TableRefFactor node) {
 		m_alias = node.getAlias();
 		m_tableName = node.getTable().getIdTextUpUnescape();
-	}
-
-	static enum Clause {
-		SELECT,
-
-		TABLE,
-
-		WHERE,
-
-		GROUP,
-
-		HAVING,
-
-		ORDER;
 	}
 }
