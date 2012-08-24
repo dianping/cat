@@ -78,6 +78,12 @@ public class SimpleShowHandler {
 	 */
 	private void showTableStatus(ServerConnection c, String stmt) {
 		String dbName = stmt.substring("show table status from ".length()).trim();
+		int length = dbName.length();
+		if (length > 0) {
+			if (dbName.charAt(0) == '`' && dbName.charAt(length - 1) == '`') {
+				dbName = dbName.substring(1, length - 1);
+			}
+		}
 
 		DatabaseProvider provider = null;
 		try {

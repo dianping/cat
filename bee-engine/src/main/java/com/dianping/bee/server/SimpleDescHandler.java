@@ -30,6 +30,7 @@ import com.alibaba.cobar.util.StringUtil;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.meta.internal.TypeUtils;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -46,7 +47,13 @@ public class SimpleDescHandler {
 	 */
 	public void handle(String stmt, ServerConnection c, int offset) {
 		String tableName = stmt.substring(offset).trim();
-
+		int length = tableName.length();
+		if (length > 0) {
+			if (tableName.charAt(0) == '`' && tableName.charAt(length - 1) == '`') {
+				tableName = tableName.substring(1, length - 1);
+			}
+		}
+		
 		// 检查当前使用的DB
 		String db = c.getSchema();
 		if (db == null) {
@@ -109,7 +116,9 @@ public class SimpleDescHandler {
 			for (ColumnMeta column : columns) {
 				RowDataPacket row = new RowDataPacket(FIELD_COUNT);
 				row.add(StringUtil.encode(column.getName(), c.getCharset()));
-				row.add(StringUtil.encode(column.getType().getSimpleName(), c.getCharset()));
+				row.add(StringUtil.encode(
+				      TypeUtils.convertFieldTypeToString(TypeUtils.convertJavaTypeToFieldType(column.getType())),
+				      c.getCharset()));
 				row.add(null);
 				row.add(null);
 				row.add(null);
@@ -137,5 +146,4 @@ public class SimpleDescHandler {
 		// post write
 		c.write(buffer);
 	}
-
 }

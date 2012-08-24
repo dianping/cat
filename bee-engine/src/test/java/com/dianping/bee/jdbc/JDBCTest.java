@@ -17,12 +17,10 @@ package com.dianping.bee.jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.bee.server.SimpleServer;
 import com.site.lookup.ComponentTestCase;
 
 /**
@@ -30,14 +28,6 @@ import com.site.lookup.ComponentTestCase;
  */
 @RunWith(JUnit4.class)
 public class JDBCTest extends ComponentTestCase {
-
-	private SimpleServer server;
-
-	@Before
-	public void runServer() throws Exception {
-		server = lookup(SimpleServer.class);
-		server.startup();
-	}
 
 	@Test
 	public void testConnection() {
@@ -49,6 +39,8 @@ public class JDBCTest extends ComponentTestCase {
 		String password = "test";
 		try {
 			Class.forName(driver).newInstance();
+			System.out.println("Driver loaded");
+			DriverManager.setLoginTimeout(600);
 			conn = DriverManager.getConnection(url + dbName, userName, password);
 			System.out.println("Connected to the database");
 			conn.close();
