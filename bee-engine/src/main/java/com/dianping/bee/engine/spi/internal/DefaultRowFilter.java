@@ -8,6 +8,9 @@ import com.dianping.bee.engine.spi.meta.Row;
 public class DefaultRowFilter implements RowFilter {
 	private Expression m_expr;
 
+	/**
+	 * Return true if the row passed the filter
+	 */
 	@Override
 	public boolean filter(Row row) {
 		return true;

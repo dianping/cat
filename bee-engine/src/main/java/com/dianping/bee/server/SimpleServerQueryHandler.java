@@ -24,10 +24,7 @@ import com.alibaba.cobar.server.handler.ExplainHandler;
 import com.alibaba.cobar.server.handler.KillHandler;
 import com.alibaba.cobar.server.handler.SavepointHandler;
 import com.alibaba.cobar.server.handler.SetHandler;
-import com.alibaba.cobar.server.handler.ShowHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
-import com.alibaba.cobar.server.handler.UseHandler;
-import com.alibaba.cobar.server.parser.ServerParse;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -35,7 +32,16 @@ import com.site.lookup.annotation.Inject;
  */
 public class SimpleServerQueryHandler implements FrontendQueryHandler {
 	@Inject
-	private SelectHandler m_selectHandler;
+	private SimpleSelectHandler m_selectHandler;
+
+	@Inject
+	private SimpleShowHandler m_showHandler;
+
+	@Inject
+	private SimpleDescHandler m_descHandler;
+
+	@Inject
+	private SimpleUseHandler m_useHandler;
 
 	private static final Logger LOGGER = Logger.getLogger(SimpleServerQueryHandler.class);
 
@@ -49,42 +55,45 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 			LOGGER.debug(new StringBuilder().append(c).append(sql).toString());
 		}
 
-		int rs = ServerParse.parse(sql);
+		int rs = SimpleServerParse.parse(sql);
 		switch (rs & 0xff) {
-		case ServerParse.EXPLAIN:
+		case SimpleServerParse.EXPLAIN:
 			ExplainHandler.handle(sql, c, rs >>> 8);
 			break;
-		case ServerParse.SET:
+		case SimpleServerParse.SET:
 			SetHandler.handle(sql, c, rs >>> 8);
 			break;
-		case ServerParse.SHOW:
-			ShowHandler.handle(sql, c, rs >>> 8);
+		case SimpleServerParse.DESC:
+			m_descHandler.handle(sql, c, rs >>> 8);
 			break;
-		case ServerParse.SELECT:
+		case SimpleServerParse.SHOW:
+			m_showHandler.handle(sql, c, rs >>> 8);
+			break;
+		case SimpleServerParse.SELECT:
 			m_selectHandler.handle(sql, c, rs >>> 8);
 			break;
-		case ServerParse.START:
+		case SimpleServerParse.START:
 			StartHandler.handle(sql, c, rs >>> 8);
 			break;
-		case ServerParse.BEGIN:
+		case SimpleServerParse.BEGIN:
 			BeginHandler.handle(sql, c);
 			break;
-		case ServerParse.SAVEPOINT:
+		case SimpleServerParse.SAVEPOINT:
 			SavepointHandler.handle(sql, c);
 			break;
-		case ServerParse.KILL:
+		case SimpleServerParse.KILL:
 			KillHandler.handle(sql, rs >>> 8, c);
 			break;
-		case ServerParse.KILL_QUERY:
+		case SimpleServerParse.KILL_QUERY:
 			c.writeErrMessage(ErrorCode.ER_UNKNOWN_COM_ERROR, "Unsupported command");
 			break;
-		case ServerParse.USE:
-			UseHandler.handle(sql, c, rs >>> 8);
+		case SimpleServerParse.USE:
+			m_useHandler.handle(sql, c, rs >>> 8);
 			break;
-		case ServerParse.COMMIT:
+		case SimpleServerParse.COMMIT:
 			c.commit();
 			break;
-		case ServerParse.ROLLBACK:
+		case SimpleServerParse.ROLLBACK:
 			c.rollback();
 			break;
 		default:

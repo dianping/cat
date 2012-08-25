@@ -41,32 +41,13 @@ import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
+import com.dianping.bee.engine.spi.meta.internal.TypeUtils;
 import com.site.lookup.annotation.Inject;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-public class SelectHandler {
-	private static int convertJavaTypeToFieldType(Class<?> clazz) {
-		String simpleClassName = clazz.getSimpleName();
-		if ("String".equals(simpleClassName)) {
-			return Fields.FIELD_TYPE_STRING;
-		} else if ("int".equals(simpleClassName) || "Integer".equals(simpleClassName)) {
-			return Fields.FIELD_TYPE_INT24;
-		} else if ("long".equals(simpleClassName) || "Long".equals(simpleClassName)) {
-			return Fields.FIELD_TYPE_LONG;
-		} else if ("float".equals(simpleClassName) || "Float".equals(simpleClassName)) {
-			return Fields.FIELD_TYPE_FLOAT;
-		} else if ("double".equals(simpleClassName) || "Double".equals(simpleClassName)) {
-			return Fields.FIELD_TYPE_DOUBLE;
-		} else if ("Date".equals(simpleClassName)) {
-			return Fields.FIELD_TYPE_DATE;
-		} else if ("Timestamp".equals(simpleClassName)) {
-			return Fields.FIELD_TYPE_TIMESTAMP;
-		} else {
-			return Fields.FIELD_TYPE_STRING;
-		}
-	}
+public class SimpleSelectHandler {
 
 	@Inject
 	private StatementManager m_manager;
@@ -80,7 +61,7 @@ public class SelectHandler {
 			ColumnMeta column = rowset.getColumn(i);
 			Cell cell = row.getCell(i);
 			String value = cell.getValue().toString();
-			switch (convertJavaTypeToFieldType(column.getType())) {
+			switch (TypeUtils.convertJavaTypeToFieldType(column.getType())) {
 			case Fields.FIELD_TYPE_STRING:
 				packet.add(StringUtil.encode(value, charset));
 				break;
@@ -208,8 +189,8 @@ public class SelectHandler {
 		int columnIndex = 0;
 		FieldPacket[] fields = new FieldPacket[fieldCount];
 		for (int i = 0; i < fieldCount; i++) {
-			fields[columnIndex] = PacketUtil.getField(rowset.getColumn(i).getName(), convertJavaTypeToFieldType(rowset
-			      .getColumn(i).getType()));
+			fields[columnIndex] = PacketUtil.getField(rowset.getColumn(i).getName(),
+			      TypeUtils.convertJavaTypeToFieldType(rowset.getColumn(i).getType()));
 			fields[columnIndex++].packetId = ++packetId;
 		}
 		eof.packetId = ++packetId;

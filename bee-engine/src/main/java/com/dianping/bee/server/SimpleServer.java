@@ -5,6 +5,9 @@ import java.io.IOException;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.alibaba.cobar.CobarServer;
+import com.alibaba.cobar.config.model.SystemConfig;
+import com.alibaba.cobar.net.FrontendConnection;
 import com.alibaba.cobar.net.NIOAcceptor;
 import com.alibaba.cobar.net.NIOConnector;
 import com.alibaba.cobar.net.NIOProcessor;
@@ -19,6 +22,8 @@ public class SimpleServer implements LogEnabled {
 
 	private Logger m_logger;
 
+	public static final String VERSION = "bee-0.0.1-cobar-1.3.0";
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -29,24 +34,26 @@ public class SimpleServer implements LogEnabled {
 	}
 
 	public void startup() throws IOException {
+		SystemConfig system = CobarServer.getInstance().getConfig().getSystem();
+		FrontendConnection.setServerVersion(VERSION);
 		// start processors
-		NIOProcessor[] processors = new NIOProcessor[4];
+		NIOProcessor[] processors = new NIOProcessor[system.getProcessors()];
 
 		for (int i = 0; i < processors.length; i++) {
-			processors[i] = new NIOProcessor("Processor" + i, 4, 4);
+			processors[i] = new NIOProcessor("Processor" + i, system.getProcessorHandler(), system.getProcessorExecutor());
 			processors[i].startup();
 		}
 
 		// startup connector
 		NIOConnector connector = new NIOConnector("BeeConnector");
-		
+
 		connector.setProcessors(processors);
 		connector.start();
 
 		// startup server
 		SimpleServerConnectionFactory sf = new SimpleServerConnectionFactory();
 
-		sf.setIdleTimeout(3600 * 1000L); // one hour
+		sf.setIdleTimeout(system.getIdleTimeout()); // one hour
 		sf.setContainer(ContainerLoader.getDefaultContainer());
 
 		NIOAcceptor server = new NIOAcceptor("BeeServer", m_port, sf);

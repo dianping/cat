@@ -1,19 +1,31 @@
+/**
+ * Project: bee-engine
+ * 
+ * File Created at 2012-8-24
+ * 
+ * Copyright 2012 dianping.com.
+ * All rights reserved.
+ *
+ * This software is the confidential and proprietary information of
+ * Dianping Company. ("Confidential Information").  You shall not
+ * disclose such Confidential Information and shall use it only in
+ * accordance with the terms of the license agreement you entered into
+ * with dianping.com.
+ */
 package com.dianping.bee.engine.spi.internal;
 
 import java.util.List;
 
 import com.dianping.bee.engine.spi.TableProvider;
-import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Index;
-import com.site.lookup.annotation.Inject;
 
-public class TableHelper {
-	@Inject
-	private TableProviderManager m_manager;
+/**
+ * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
+ */
+public class StaticTableHelper {
 
-	public ColumnMeta findColumn(String tableName, String columnName) {
-		TableProvider table = findTable(tableName);
+	public static ColumnMeta findColumn(TableProvider table, String columnName) {
 		ColumnMeta[] columns = table.getColumns();
 
 		if (columns != null) {
@@ -23,11 +35,10 @@ public class TableHelper {
 				}
 			}
 		}
-		throw new BadSQLSyntaxException("Column(%s) of table(%s) is not found!", columnName, tableName);
+		throw new BadSQLSyntaxException("Column(%s) of table(%s) is not found!", columnName, table.getName());
 	}
 
-	public Index findIndex(String tableName, List<ColumnMeta> columns) {
-		TableProvider table = findTable(tableName);
+	public Index findIndex(TableProvider table, List<ColumnMeta> columns) {
 		Index[] indexes = table.getIndexes();
 
 		if (indexes != null && indexes.length > 0) {
@@ -45,15 +56,5 @@ public class TableHelper {
 		}
 
 		return null;
-	}
-
-	public TableProvider findTable(String tableName) {
-		TableProvider table = m_manager.getTableProvider(tableName);
-
-		if (table == null) {
-			throw new BadSQLSyntaxException("Table(%s) is not found!", tableName);
-		} else {
-			return table;
-		}
 	}
 }

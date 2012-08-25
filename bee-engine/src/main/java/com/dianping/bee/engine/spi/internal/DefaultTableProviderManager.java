@@ -24,7 +24,7 @@ public class DefaultTableProviderManager implements TableProviderManager, Initia
 
 	@Override
 	public TableProvider getTableProvider(String table) {
-		return m_tables.get(table);
+		return m_tables.get(table.toUpperCase());
 	}
 
 	@Override

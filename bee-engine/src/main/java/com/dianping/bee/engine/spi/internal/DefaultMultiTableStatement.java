@@ -16,7 +16,7 @@ public class DefaultMultiTableStatement implements MultiTableStatement {
 
 	private Index m_index;
 
-	private List<ColumnMeta> m_selectColumns;
+	private ColumnMeta[] m_selectColumns;
 
 	@Override
 	public Index getIndex() {
@@ -29,7 +29,7 @@ public class DefaultMultiTableStatement implements MultiTableStatement {
 	}
 
 	@Override
-	public List<ColumnMeta> getSelectColumns() {
+	public ColumnMeta[] getSelectColumns() {
 		return m_selectColumns;
 	}
 
@@ -49,7 +49,7 @@ public class DefaultMultiTableStatement implements MultiTableStatement {
 	}
 
 	@Override
-	public void setSelectColumns(List<ColumnMeta> selectColumns) {
+	public void setSelectColumns(ColumnMeta[] selectColumns) {
 		m_selectColumns = selectColumns;
 	}
 

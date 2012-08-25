@@ -28,41 +28,23 @@ import com.dianping.bee.engine.spi.meta.RowSet;
  */
 public class DefaultRowSet implements RowSet {
 
-	public DefaultRowSet(List<ColumnMeta> columnMetas) {
+	private ColumnMeta[] m_columnMetas;
+
+	private List<Row> m_rows;
+
+	public DefaultRowSet(ColumnMeta[] columnMetas) {
 		this.m_columnMetas = columnMetas;
 		this.m_rows = new ArrayList<Row>();
 	}
-
-	private List<ColumnMeta> m_columnMetas;
-
-	private List<Row> m_rows;
 
 	public void addRow(Row row) {
 		this.m_rows.add(row);
 	}
 
 	@Override
-	public ColumnMeta getColumn(int colIndex) {
-		return m_columnMetas.get(colIndex);
-	}
-
-	@Override
-	public int getColumns() {
-		return m_columnMetas.size();
-	}
-
-	@Override
-	public Row getRow(int rowIndex) {
-		return m_rows.get(rowIndex);
-	}
-
-	@Override
-	public int getRows() {
-		return m_rows.size();
-	}
-
-	@Override
 	public void filter(RowFilter rowFilter) {
+		if (rowFilter == null)
+			return;
 		Iterator<Row> it = m_rows.iterator();
 		while (it.hasNext()) {
 			Row row = it.next();
@@ -72,4 +54,31 @@ public class DefaultRowSet implements RowSet {
 		}
 	}
 
+	@Override
+	public ColumnMeta getColumn(int colIndex) {
+		if (colIndex >= 0 && colIndex < m_columnMetas.length) {
+			return m_columnMetas[colIndex];
+		} else {
+			throw new IndexOutOfBoundsException("size: " + m_columnMetas.length + ", index: " + colIndex);
+		}
+	}
+
+	@Override
+	public int getColumns() {
+		return m_columnMetas.length;
+	}
+
+	@Override
+	public Row getRow(int rowIndex) {
+		if (rowIndex >= 0 && rowIndex < m_rows.size()) {
+			return m_rows.get(rowIndex);
+		} else {
+			throw new IndexOutOfBoundsException("size: " + m_rows.size() + ", index: " + rowIndex);
+		}
+	}
+
+	@Override
+	public int getRows() {
+		return m_rows.size();
+	}
 }

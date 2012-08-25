@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.bee.db.CatDatabase;
+import com.dianping.bee.db.DogDatabase;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.MultiTableStatement;
 import com.dianping.bee.engine.spi.RowFilter;
@@ -18,9 +19,13 @@ import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
 import com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.TableHelper;
-import com.dianping.bee.server.SelectHandler;
+import com.dianping.bee.server.InformationSchemaDatabase;
+import com.dianping.bee.server.SimpleDescHandler;
+import com.dianping.bee.server.SimpleSelectHandler;
 import com.dianping.bee.server.SimpleServer;
 import com.dianping.bee.server.SimpleServerQueryHandler;
+import com.dianping.bee.server.SimpleShowHandler;
+import com.dianping.bee.server.SimpleUseHandler;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -31,7 +36,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(SimpleServer.class));
 
-		all.add(C(DatabaseProvider.class, CatDatabase.class));
+		all.add(C(DatabaseProvider.class, "information_schema", InformationSchemaDatabase.class));
+		all.add(C(DatabaseProvider.class, "cat", CatDatabase.class));
+		all.add(C(DatabaseProvider.class, "dog", DogDatabase.class));
 
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class) //
 		      .req(DatabaseProvider.class));
@@ -48,10 +55,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MultiTableStatementVisitor.class).is(PER_LOOKUP) //
 		      .req(TableHelper.class, MultiTableStatement.class, RowFilter.class));
 
-		all.add(C(SelectHandler.class) //
+		all.add(C(SimpleShowHandler.class)//
+		      .req(TableProviderManager.class));
+		all.add(C(SimpleUseHandler.class));
+		all.add(C(SimpleDescHandler.class)//
+		      .req(TableProviderManager.class));
+		all.add(C(SimpleSelectHandler.class) //
 		      .req(StatementManager.class));
 		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		      .req(SelectHandler.class));
+		      .req(SimpleSelectHandler.class, SimpleShowHandler.class, SimpleDescHandler.class, SimpleUseHandler.class));
 
 		return all;
 	}
