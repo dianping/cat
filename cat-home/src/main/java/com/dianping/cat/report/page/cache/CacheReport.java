@@ -197,9 +197,9 @@ public class CacheReport {
 			} else if (m_sort.equals("missed")) {
 				return (int) (o2.getMissed() - o1.getMissed());
 			} else if (m_sort.equals("hitPercent")) {
-				return (int) (o2.getHited() * 100 - o1.getHited() * 100);
+				return (int) (o1.getHited() * 1000 - o2.getHited() * 1000);
 			} else if (m_sort.equals("avg")) {
-				return (int) (o2.getName().getAvg() * 100 - o1.getName().getAvg() * 100);
+				return (int) (o2.getName().getAvg() * 1000 - o1.getName().getAvg() * 1000);
 			} else if (m_sort.equals("name")) {
 				return o1.getName().getId().compareTo(o2.getName().getId());
 			}
@@ -254,9 +254,9 @@ public class CacheReport {
 			} else if (m_sort.equals("missed")) {
 				return (int) (o2.getMissed() - o1.getMissed());
 			} else if (m_sort.equals("hitPercent")) {
-				return (int) (o2.getHited() * 100 - o1.getHited() * 100);
+				return (int) (o1.getHited() * 1000 - o2.getHited() * 1000);
 			} else if (m_sort.equals("avg")) {
-				return (int) (o2.getType().getAvg() * 100 - o1.getType().getAvg() * 100);
+				return (int) (o2.getType().getAvg() * 1000 - o1.getType().getAvg() * 1000);
 			} else if (m_sort.equals("type")) {
 				return o1.getType().getId().compareTo(o2.getType().getId());
 			}

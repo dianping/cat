@@ -236,6 +236,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setReportType(payload.getReportType());
 			payload.computeStartDate();
+			//payload.setYesterdayDefault();
 			model.setLongDate(payload.getDate());
 			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}

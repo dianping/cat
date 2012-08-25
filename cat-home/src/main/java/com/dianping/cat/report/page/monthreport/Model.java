@@ -1,19 +1,23 @@
 package com.dianping.cat.report.page.monthreport;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
+import com.dianping.cat.consumer.monthreport.model.entity.MonthReport;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
 	private String m_domain;
 
-	private Set<String> m_domains;
+	private MonthReport m_report;
+	
+	private MonthReport m_reportLast;
+	
+	private MonthReport m_reportLastTwo;
 
-	private ProjectReport m_report;
-
-	private List<ProjectReport> m_reports;
+	private List<MonthReport> m_reports;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -31,14 +35,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Collection<String> getDomains() {
-		return m_domains;
+		if (m_report != null) {
+			List<String> domains = m_report.getDomains();
+
+			StringSortHelper.sortDomain(domains);
+			return domains;
+		}
+		return Collections.emptySet();
 	}
 
-	public ProjectReport getReport() {
+	public MonthReport getReport() {
 		return m_report;
 	}
 
-	public List<ProjectReport> getReports() {
+	public List<MonthReport> getReports() {
 		return m_reports;
 	}
 
@@ -46,15 +56,28 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_domain = domain;
 	}
 
-	public void setDomains(Set<String> domains) {
-		m_domains = domains;
-	}
-
-	public void setReport(ProjectReport report) {
+	public void setReport(MonthReport report) {
 		m_report = report;
 	}
 
-	public void setReports(List<ProjectReport> reports) {
+	public void setReports(List<MonthReport> reports) {
 		m_reports = reports;
 	}
+
+	public MonthReport getReportLast() {
+		return m_reportLast;
+	}
+
+	public void setReportLast(MonthReport reportLast) {
+		m_reportLast = reportLast;
+	}
+
+	public MonthReport getReportLastTwo() {
+		return m_reportLastTwo;
+	}
+
+	public void setReportLastTwo(MonthReport reportLastTwo) {
+		m_reportLastTwo = reportLastTwo;
+	}
+	
 }
