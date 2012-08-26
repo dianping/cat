@@ -11,9 +11,10 @@
 <c:set var="report" value="${model.report}"/>
 
 
-<a:historyReport title="Cache Report${empty payload.type ? '' : ' :: '}<a href='?op=history&domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>" navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:historyReport title="Cache Report${empty payload.type ? '' : ' :: '}<a href='?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&type=${payload.type}${model.customDate}'>${payload.type}</a>" 
+navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
-<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
+<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 <jsp:body>
 
@@ -26,11 +27,11 @@
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
+						<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&ip=${ip}&date=${model.date}&type=${payload.type}&queryname=${model.queryName}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -42,17 +43,17 @@
 <table class="cache">
 	<c:choose>
 		<c:when test="${empty payload.type}">
-		<tr><th  class="left"><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">Hit Rate(%)</a></th>
-			<th><a href="?op=history&domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
+		<tr><th  class="left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
+			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
+			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
+			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">Hit Rate(%)</a></th>
+			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
 			<th>TPS</th></tr>
 			<c:forEach var="item" items="${model.report.typeItems}" varStatus="status">
 				<c:set var="e" value="${item.type}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align:left"><a href="?op=history&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${e.id}">${e.id}</a></td>
+					<td style="text-align:left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${e.id}">${e.id}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
 					<td>${w:format(item.hited,'0.00%')}</td>
@@ -69,16 +70,18 @@
 			<script>
 			function filterByName(date,domain,ip,type){
 				var queryname=$("#queryname").val();
-				window.location.href="?op=history&domain="+domain+"&type="+type+"&date="+date+"&queryname="+queryname+"&ip="+ip;
+				var customDate = '${model.customDate}';
+				var reportType ='${model.reportType}';
+				window.location.href="?op=history&domain="+domain+"&reportType="+reportType+"&type="+type+"&date="+date+"&queryname="+queryname+"&ip="+ip+customDate;
 			}
 		</script>
 			<tr>
 			<th class="left">
-			<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
-			<th ><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
-			<th ><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
-			<th ><a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
-			<th ><a href="?op=history&domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
+			<a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a></th>
+			<th ><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
+			<th ><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
+			<th ><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
+			<th ><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th>TPS</th></tr>
 			<c:forEach var="item" items="${model.report.nameItems}" varStatus="status">
 				<c:set var="e" value="${item.name}"/>

@@ -81,9 +81,6 @@ public class Handler implements PageHandler<Context> {
 				model.setReport(report);
 				model.setReportLast(reportLast);
 				model.setReportLastTwo(reportLastTwo);
-
-				model.setReportLast(report);
-				model.setReportLastTwo(report);
 				break;
 			case ALL:
 				List<MonthReport> reports = new ArrayList<MonthReport>();
