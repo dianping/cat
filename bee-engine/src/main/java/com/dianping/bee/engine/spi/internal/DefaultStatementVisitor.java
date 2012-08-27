@@ -36,7 +36,9 @@ public class DefaultStatementVisitor extends EmptySQLASTVisitor {
 	@Override
 	public void visit(DMLSelectStatement node) {
 		TableReference tr = node.getTables();
-		tr.accept(this);
+		if (tr != null) {
+			tr.accept(this);
+		}
 	}
 
 	@Override

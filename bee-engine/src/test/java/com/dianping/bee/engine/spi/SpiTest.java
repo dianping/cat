@@ -20,7 +20,7 @@ public class SpiTest extends ComponentTestCase {
 
 		display(rowset);
 	}
-
+	
 	private void display(RowSet rowset) {
 		StringBuilder sb = new StringBuilder(1024);
 		int cols = rowset.getColumns();

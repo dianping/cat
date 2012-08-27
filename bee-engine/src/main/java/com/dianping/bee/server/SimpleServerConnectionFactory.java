@@ -12,6 +12,7 @@ import com.alibaba.cobar.net.factory.FrontendConnectionFactory;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.server.session.BlockingSession;
 import com.alibaba.cobar.server.session.NonBlockingSession;
+import com.dianping.bee.server.handler.SimpleServerQueryHandler;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>

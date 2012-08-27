@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with dianping.com.
  */
-package com.dianping.bee.server;
+package com.dianping.bee.server.handler;
 
 import java.nio.ByteBuffer;
 import java.util.Set;
