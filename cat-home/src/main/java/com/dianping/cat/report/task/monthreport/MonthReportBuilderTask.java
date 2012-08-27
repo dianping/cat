@@ -12,6 +12,7 @@ import java.util.Set;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.monthreport.model.entity.MonthReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -23,6 +24,7 @@ import com.dianping.cat.hadoop.dal.DailyreportEntity;
 import com.dianping.cat.hadoop.dal.Monthreport;
 import com.dianping.cat.hadoop.dal.MonthreportDao;
 import com.dianping.cat.hadoop.dal.MonthreportEntity;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
@@ -200,6 +202,13 @@ public class MonthReportBuilderTask implements Runnable {
 	}
 
 	public void run() {
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		if (ip.equals("192.168.7.70") || ip.equals("10.1.6.128")) {
+			Cat.getProducer().logEvent("System", "JobMonthStart:" + ip, Message.SUCCESS, "");
+		} else {
+			Cat.getProducer().logEvent("System", "JobMonthEnd:" + ip, Message.SUCCESS, "");
+			return;
+		}
 		while (true) {
 			try {
 				Date lastMonth = getMonthFirstDay(-1);
