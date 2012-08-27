@@ -16,6 +16,8 @@ package com.dianping.bee.jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +31,7 @@ import com.site.lookup.ComponentTestCase;
 @RunWith(JUnit4.class)
 public class JDBCTest extends ComponentTestCase {
 
-	@Test
+	// @Test
 	public void testConnection() {
 		Connection conn = null;
 		String url = "jdbc:mysql://localhost:2330/";
@@ -43,6 +45,32 @@ public class JDBCTest extends ComponentTestCase {
 			DriverManager.setLoginTimeout(600);
 			conn = DriverManager.getConnection(url + dbName, userName, password);
 			System.out.println("Connected to the database");
+			conn.close();
+			System.out.println("Disconnected from database");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testQuery() {
+		Connection conn = null;
+		String url = "jdbc:mysql://localhost:2330/";
+		String dbName = "cat";
+		String driver = "com.mysql.jdbc.Driver";
+		String userName = "test";
+		String password = "test";
+		try {
+			Class.forName(driver).newInstance();
+			System.out.println("Driver loaded");
+			DriverManager.setLoginTimeout(600);
+			conn = DriverManager.getConnection(url + dbName, userName, password);
+			System.out.println("Connected to the database");
+			Statement stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery("select type, sum(failures) from transaction where domain=? and starttime=?");
+			while (rs.next()) {
+				System.out.println(rs.getString(1));
+			}
 			conn.close();
 			System.out.println("Disconnected from database");
 		} catch (Exception e) {

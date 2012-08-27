@@ -35,10 +35,36 @@ public class ShowHandler extends AbstractCommandHandler {
 			showStatus(c);
 		} else if ("variables".equalsIgnoreCase(first)) {
 			showVariables(c);
-		} else {
+		} else if ("collation".equalsIgnoreCase(first)){
+			showCollation(c);
+		}
+		else {
 			error(c, ErrorCode.ER_UNKNOWN_COM_ERROR, "Unsupported show command");
 		}
 	}
+
+	/**
+	 * @param c
+	 */
+   private void showCollation(ServerConnection c) {
+   	Map<String,String> map = new HashMap<String,String>();
+   	
+		CommandContext ctx = new CommandContext(c);
+		String[] names = { "Collation", "Charset", "Id", "Default", "Compiled", "Sortlen" };
+
+		ctx.writeHeader(names.length);
+
+		for (String name : names) {
+			ctx.writeField(name, Fields.FIELD_TYPE_VAR_STRING);
+		}
+
+		ctx.writeEOF();
+		
+		// TODO real data here
+		
+		ctx.writeEOF();
+		ctx.complete();
+   }
 
 	private void showStatus(ServerConnection c) {
 		Map<String, String> map = new HashMap<String, String>();
