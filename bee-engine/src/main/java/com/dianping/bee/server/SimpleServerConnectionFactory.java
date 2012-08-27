@@ -9,9 +9,12 @@ import com.alibaba.cobar.CobarPrivileges;
 import com.alibaba.cobar.Isolations;
 import com.alibaba.cobar.net.FrontendConnection;
 import com.alibaba.cobar.net.factory.FrontendConnectionFactory;
+import com.alibaba.cobar.net.handler.FrontendQueryHandler;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.server.session.BlockingSession;
 import com.alibaba.cobar.server.session.NonBlockingSession;
+import com.dianping.bee.engine.spi.handler.internal.DefaultServerQueryHandler;
+import com.dianping.bee.engine.spi.session.SessionManager;
 import com.dianping.bee.server.handler.SimpleServerQueryHandler;
 
 /**
@@ -22,9 +25,10 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 
 	@Override
 	protected FrontendConnection getConnection(SocketChannel channel) {
-		ServerConnection c = new SimpleServerConnection(channel);
-		SimpleServerQueryHandler queryHandler = getQueryHandler(c);
+		SimpleServerConnection c = new SimpleServerConnection(channel);
+		FrontendQueryHandler queryHandler = getDefaultQueryHandler(c); // TODO use another one for test
 
+		c.setSessionManager(getSessionManager());
 		c.setQueryHandler(queryHandler);
 		c.setPrivileges(new CobarPrivileges());
 		c.setTxIsolation(Isolations.REPEATED_READ);
@@ -33,7 +37,19 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 		return c;
 	}
 
-	protected SimpleServerQueryHandler getQueryHandler(ServerConnection c) {
+	protected DefaultServerQueryHandler getDefaultQueryHandler(ServerConnection c) {
+		try {
+			DefaultServerQueryHandler queryHandler = m_container.lookup(DefaultServerQueryHandler.class);
+
+			queryHandler.setServerConnection(c);
+			return queryHandler;
+		} catch (ComponentLookupException e) {
+			throw new RuntimeException(
+			      "Unable to get DefaultServerQueryHandler instance, please check if the environment is setup correctly!", e);
+		}
+	}
+
+	protected SimpleServerQueryHandler getSimpleQueryHandler(ServerConnection c) {
 		try {
 			SimpleServerQueryHandler queryHandler = m_container.lookup(SimpleServerQueryHandler.class);
 
@@ -41,8 +57,17 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 			return queryHandler;
 		} catch (ComponentLookupException e) {
 			throw new RuntimeException(
-			      "Unable to get SimpleServerQueryHandler instance, please check if the environment is setup correctly!",
-			      e);
+			      "Unable to get SimpleServerQueryHandler instance, please check if the environment is setup correctly!", e);
+		}
+	}
+
+	protected SessionManager getSessionManager() {
+		try {
+			SessionManager sessionManager = m_container.lookup(SessionManager.class);
+
+			return sessionManager;
+		} catch (ComponentLookupException e) {
+			throw new RuntimeException("Unable to get SessionManager instance, please check if the environment is setup correctly!", e);
 		}
 	}
 
