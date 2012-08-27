@@ -18,6 +18,7 @@
 		<module>dog-gateway</module>
 		<module>dog-home</module>
 		<module>bee-engine</module>
+		<module>cat-data</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

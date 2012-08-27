@@ -20,11 +20,15 @@
 			<implementation>com.dianping.bee.db.DogDatabase</implementation>
 		</component>
 		<component>
+			<role>com.dianping.bee.engine.spi.session.SessionManager</role>
+			<implementation>com.dianping.bee.engine.spi.session.DefaultSessionManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.bee.engine.spi.TableProviderManager</role>
 			<implementation>com.dianping.bee.engine.spi.internal.DefaultTableProviderManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+					<role>com.dianping.bee.engine.spi.session.SessionManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -135,6 +139,42 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.server.handler.SimpleUseHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.handler.internal.DefaultServerQueryHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.internal.DefaultServerQueryHandler</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.server.handler.SimpleSelectHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.handler.internal.ShowHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.handler.internal.DescHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.handler.internal.UseHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.handler.internal.UseHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.internal.UseHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.handler.internal.ShowHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.internal.ShowHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.handler.internal.DescHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.internal.DescHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.TableProviderManager</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -21,11 +21,14 @@ import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.util.MySQLMessage;
 import com.alibaba.cobar.protocol.mysql.OkPacket;
 import com.alibaba.cobar.server.ServerConnection;
+import com.dianping.bee.engine.spi.session.SessionManager;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SimpleServerConnection extends ServerConnection {
+
+	private SessionManager m_sessionManager;
 
 	/**
 	 * @param channel
@@ -44,20 +47,20 @@ public class SimpleServerConnection extends ServerConnection {
 		String db = mm.readString();
 
 		// 检查schema是否已经设置
-//		if (schema != null) {
-//			if (schema.equals(db)) {
-//				write(writeToBuffer(OkPacket.OK, allocate()));
-//			} else {
-//				writeErrMessage(ErrorCode.ER_DBACCESS_DENIED_ERROR, "Not allowed to change the database!");
-//			}
-//			return;
-//		}
+		// if (schema != null) {
+		// if (schema.equals(db)) {
+		// write(writeToBuffer(OkPacket.OK, allocate()));
+		// } else {
+		// writeErrMessage(ErrorCode.ER_DBACCESS_DENIED_ERROR, "Not allowed to change the database!");
+		// }
+		// return;
+		// }
 
 		// 检查schema的有效性
-//		if (db == null || !privileges.schemaExists(db)) {
-//			writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Unknown database '" + db + "'");
-//			return;
-//		}
+		// if (db == null || !privileges.schemaExists(db)) {
+		// writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Unknown database '" + db + "'");
+		// return;
+		// }
 		if (!privileges.userExists(user, host)) {
 			writeErrMessage(ErrorCode.ER_ACCESS_DENIED_ERROR, "Access denied for user '" + user + "'");
 			return;
@@ -70,5 +73,15 @@ public class SimpleServerConnection extends ServerConnection {
 			String s = "Access denied for user '" + user + "' to database '" + db + "'";
 			writeErrMessage(ErrorCode.ER_DBACCESS_DENIED_ERROR, s);
 		}
+	}
+
+	@Override
+	public void setSchema(String schema) {
+		super.setSchema(schema);
+		m_sessionManager.getSession().setDatabase(schema);
+	}
+
+	public void setSessionManager(SessionManager sessionManager) {
+		m_sessionManager = sessionManager;
 	}
 }

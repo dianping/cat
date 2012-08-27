@@ -1,0 +1,9 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>cat</role-hint>
+			<implementation>com.dianping.cat.data.CatDatabaseProvider</implementation>
+		</component>
+	</components>
+</plexus>
