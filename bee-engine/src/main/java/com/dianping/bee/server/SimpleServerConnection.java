@@ -76,9 +76,14 @@ public class SimpleServerConnection extends ServerConnection {
 	}
 
 	@Override
-	public void setSchema(String schema) {
-		super.setSchema(schema);
-		m_sessionManager.getSession().setDatabase(schema);
+	public void query(byte[] data) {
+		m_sessionManager.getSession().setDatabase(getSchema());
+
+		try {
+			super.query(data);
+		} finally {
+			m_sessionManager.removeSession();
+		}
 	}
 
 	public void setSessionManager(SessionManager sessionManager) {

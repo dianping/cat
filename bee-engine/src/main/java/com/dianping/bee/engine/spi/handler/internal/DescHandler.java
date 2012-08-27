@@ -12,8 +12,10 @@ import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.handler.AbstractCommandHandler;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.internal.TypeUtils;
+import com.site.lookup.annotation.Inject;
 
 public class DescHandler extends AbstractCommandHandler {
+	@Inject
 	private TableProviderManager m_manager;
 
 	@Override
