@@ -15,7 +15,7 @@ import com.site.lookup.annotation.Inject;
 
 public class DefaultServerQueryHandler implements FrontendQueryHandler {
 	@Inject
-	private SimpleSelectHandler m_selectHandler;
+	private SelectHandler m_selectHandler;
 
 	@Inject
 	private ShowHandler m_showHandler;

@@ -47,8 +47,6 @@ public class ShowHandler extends AbstractCommandHandler {
 	 * @param c
 	 */
    private void showCollation(ServerConnection c) {
-   	Map<String,String> map = new HashMap<String,String>();
-   	
 		CommandContext ctx = new CommandContext(c);
 		String[] names = { "Collation", "Charset", "Id", "Default", "Compiled", "Sortlen" };
 
