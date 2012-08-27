@@ -34,7 +34,7 @@ public class JDBCTest extends ComponentTestCase {
 	// @Test
 	public void testConnection() {
 		Connection conn = null;
-		String url = "jdbc:mysql://localhost:2330/";
+		String url = "jdbc:mysql://127.0.0.1:2330/";
 		String dbName = "cat";
 		String driver = "com.mysql.jdbc.Driver";
 		String userName = "test";
@@ -53,28 +53,27 @@ public class JDBCTest extends ComponentTestCase {
 	}
 
 	@Test
-	public void testQuery() {
+	public void testQuery() throws Exception {
 		Connection conn = null;
 		String url = "jdbc:mysql://localhost:2330/";
 		String dbName = "cat";
 		String driver = "com.mysql.jdbc.Driver";
 		String userName = "test";
 		String password = "test";
-		try {
-			Class.forName(driver).newInstance();
-			System.out.println("Driver loaded");
-			DriverManager.setLoginTimeout(600);
-			conn = DriverManager.getConnection(url + dbName, userName, password);
-			System.out.println("Connected to the database");
-			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("select type, sum(failures) from transaction where domain=? and starttime=?");
-			while (rs.next()) {
-				System.out.println(rs.getString(1));
-			}
-			conn.close();
-			System.out.println("Disconnected from database");
-		} catch (Exception e) {
-			e.printStackTrace();
+
+		Class.forName(driver).newInstance();
+		System.out.println("Driver loaded");
+		DriverManager.setLoginTimeout(600);
+		conn = DriverManager.getConnection(url + dbName, userName, password);
+		System.out.println("Connected to the database");
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery("select type, sum(failures) from transaction where domain=? and starttime=?");
+		
+		while (rs.next()) {
+			System.out.println(rs.getString(1));
 		}
+		
+		conn.close();
+		System.out.println("Disconnected from database");
 	}
 }

@@ -1,4 +1,4 @@
-package com.dianping.bee.engine.spi.handler.internal;
+package com.dianping.bee.server;
 
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.handler.FrontendQueryHandler;
@@ -9,11 +9,14 @@ import com.alibaba.cobar.server.handler.KillHandler;
 import com.alibaba.cobar.server.handler.SavepointHandler;
 import com.alibaba.cobar.server.handler.SetHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
-import com.dianping.bee.server.handler.SimpleSelectHandler;
+import com.dianping.bee.engine.spi.handler.internal.DescHandler;
+import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
+import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
+import com.dianping.bee.engine.spi.handler.internal.UseHandler;
 import com.dianping.bee.server.parse.SimpleServerParse;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultServerQueryHandler implements FrontendQueryHandler {
+public class SimpleServerQueryHandler implements FrontendQueryHandler {
 	@Inject
 	private SelectHandler m_selectHandler;
 

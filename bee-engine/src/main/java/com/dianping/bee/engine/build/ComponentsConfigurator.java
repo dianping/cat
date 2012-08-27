@@ -11,7 +11,6 @@ import com.dianping.bee.engine.spi.RowFilter;
 import com.dianping.bee.engine.spi.SingleTableStatement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.dianping.bee.engine.spi.handler.internal.DefaultServerQueryHandler;
 import com.dianping.bee.engine.spi.handler.internal.DescHandler;
 import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
 import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
@@ -28,6 +27,7 @@ import com.dianping.bee.engine.spi.session.DefaultSessionManager;
 import com.dianping.bee.engine.spi.session.SessionManager;
 import com.dianping.bee.server.InformationSchemaDatabase;
 import com.dianping.bee.server.SimpleServer;
+import com.dianping.bee.server.SimpleServerQueryHandler;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -58,30 +58,21 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MultiTableStatementVisitor.class).is(PER_LOOKUP) //
 		      .req(TableHelper.class, MultiTableStatement.class, RowFilter.class));
 
-		// all.add(C(SimpleShowHandler.class)//
-		// .req(TableProviderManager.class));
-		// all.add(C(SimpleUseHandler.class));
-		// all.add(C(SimpleDescHandler.class)//
-		// .req(TableProviderManager.class));
-		// all.add(C(SimpleSelectHandler.class) //
-		// .req(StatementManager.class));
-		// all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		// .req(SimpleSelectHandler.class, SimpleShowHandler.class,
-		// SimpleDescHandler.class, SimpleUseHandler.class));
-
 		defineHandlers(all);
 
 		return all;
 	}
 
 	private void defineHandlers(List<Component> all) {
-		all.add(C(DefaultServerQueryHandler.class).is(PER_LOOKUP) //
+		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
 		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class));
 
 		all.add(C(UseHandler.class));
 		all.add(C(ShowHandler.class));
 		all.add(C(DescHandler.class) //
 		      .req(TableProviderManager.class));
+		all.add(C(SelectHandler.class) //
+		      .req(StatementManager.class));
 	}
 
 	public static void main(String[] args) {

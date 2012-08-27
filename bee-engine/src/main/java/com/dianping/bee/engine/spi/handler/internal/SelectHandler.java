@@ -41,7 +41,6 @@ import com.site.lookup.annotation.Inject;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SelectHandler extends AbstractCommandHandler {
-
 	@Inject
 	private StatementManager m_manager;
 
