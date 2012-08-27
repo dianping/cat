@@ -20,12 +20,12 @@ import com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor;
 import com.dianping.bee.engine.spi.internal.TableHelper;
 import com.dianping.bee.server.InformationSchemaDatabase;
-import com.dianping.bee.server.SimpleDescHandler;
-import com.dianping.bee.server.SimpleSelectHandler;
 import com.dianping.bee.server.SimpleServer;
-import com.dianping.bee.server.SimpleServerQueryHandler;
-import com.dianping.bee.server.SimpleShowHandler;
-import com.dianping.bee.server.SimpleUseHandler;
+import com.dianping.bee.server.handler.SimpleDescHandler;
+import com.dianping.bee.server.handler.SimpleSelectHandler;
+import com.dianping.bee.server.handler.SimpleServerQueryHandler;
+import com.dianping.bee.server.handler.SimpleShowHandler;
+import com.dianping.bee.server.handler.SimpleUseHandler;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 

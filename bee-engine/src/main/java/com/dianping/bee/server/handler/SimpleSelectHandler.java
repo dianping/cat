@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with dianping.com.
  */
-package com.dianping.bee.server;
+package com.dianping.bee.server.handler;
 
 import java.nio.ByteBuffer;
 import java.sql.SQLSyntaxErrorException;
@@ -26,7 +26,6 @@ import com.alibaba.cobar.protocol.mysql.FieldPacket;
 import com.alibaba.cobar.protocol.mysql.ResultSetHeaderPacket;
 import com.alibaba.cobar.protocol.mysql.RowDataPacket;
 import com.alibaba.cobar.server.ServerConnection;
-import com.alibaba.cobar.server.parser.ServerParseSelect;
 import com.alibaba.cobar.server.response.SelectDatabase;
 import com.alibaba.cobar.server.response.SelectIdentity;
 import com.alibaba.cobar.server.response.SelectLastInsertId;
@@ -42,6 +41,7 @@ import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.meta.internal.TypeUtils;
+import com.dianping.bee.server.parse.SimpleServerParseSelect;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -103,20 +103,23 @@ public class SimpleSelectHandler {
 
 	public void handle(String stmt, ServerConnection c, int offs) {
 		int offset = offs;
-		switch (ServerParseSelect.parse(stmt, offs)) {
-		case ServerParseSelect.VERSION_COMMENT:
+		switch (SimpleServerParseSelect.parse(stmt, offs)) {
+		case SimpleServerParseSelect.VERSION_COMMENT:
 			SelectVersionComment.response(c);
 			break;
-		case ServerParseSelect.DATABASE:
+		case SimpleServerParseSelect.DATABASE:
 			SelectDatabase.response(c);
 			break;
-		case ServerParseSelect.USER:
+		case SimpleServerParseSelect.USER:
 			SelectUser.response(c);
 			break;
-		case ServerParseSelect.VERSION:
+		case SimpleServerParseSelect.VERSION:
 			SelectVersion.response(c);
 			break;
-		case ServerParseSelect.LAST_INSERT_ID:
+		case SimpleServerParseSelect.SESSION:
+			selectSession(c, stmt);
+			break;
+		case SimpleServerParseSelect.LAST_INSERT_ID:
 			// offset = ParseUtil.move(stmt, 0, "select".length());
 			loop: for (; offset < stmt.length(); ++offset) {
 				switch (stmt.charAt(offset)) {
@@ -131,11 +134,11 @@ public class SimpleSelectHandler {
 					break loop;
 				}
 			}
-			offset = ServerParseSelect.indexAfterLastInsertIdFunc(stmt, offset);
-			offset = ServerParseSelect.skipAs(stmt, offset);
+			offset = SimpleServerParseSelect.indexAfterLastInsertIdFunc(stmt, offset);
+			offset = SimpleServerParseSelect.skipAs(stmt, offset);
 			SelectLastInsertId.response(c, stmt, offset);
 			break;
-		case ServerParseSelect.IDENTITY:
+		case SimpleServerParseSelect.IDENTITY:
 			// offset = ParseUtil.move(stmt, 0, "select".length());
 			loop: for (; offset < stmt.length(); ++offset) {
 				switch (stmt.charAt(offset)) {
@@ -151,9 +154,9 @@ public class SimpleSelectHandler {
 			}
 			int indexOfAtAt = offset;
 			offset += 2;
-			offset = ServerParseSelect.indexAfterIdentity(stmt, offset);
+			offset = SimpleServerParseSelect.indexAfterIdentity(stmt, offset);
 			String orgName = stmt.substring(indexOfAtAt, offset);
-			offset = ServerParseSelect.skipAs(stmt, offset);
+			offset = SimpleServerParseSelect.skipAs(stmt, offset);
 			SelectIdentity.response(c, stmt, offset, orgName);
 			break;
 		default:
@@ -163,6 +166,55 @@ public class SimpleSelectHandler {
 				c.writeErrMessage(ErrorCode.ER_SYNTAX_ERROR, e.getMessage());
 			}
 		}
+	}
+
+	/**
+	 * @param c
+	 * @param stmt
+	 */
+	private void selectSession(ServerConnection c, String stmt) {
+		String sessionVariable = stmt.substring(stmt.indexOf("@@session"));
+
+		int FIELD_COUNT = 1;
+		ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
+		FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
+		EOFPacket eof = new EOFPacket();
+		int i = 0;
+		byte packetId = 0;
+		header.packetId = ++packetId;
+		fields[i] = PacketUtil.getField(sessionVariable, Fields.FIELD_TYPE_VAR_STRING);
+		fields[i++].packetId = ++packetId;
+		eof.packetId = ++packetId;
+
+		ByteBuffer buffer = c.allocate();
+
+		// write header
+		buffer = header.write(buffer, c);
+
+		// write fields
+		for (FieldPacket field : fields) {
+			buffer = field.write(buffer, c);
+		}
+
+		// write eof
+		buffer = eof.write(buffer, c);
+
+		// write rows
+		packetId = eof.packetId;
+
+		// TODO: sample result currently
+		RowDataPacket row = new RowDataPacket(FIELD_COUNT);
+		row.add(StringUtil.encode("1", c.getCharset()));
+		row.packetId = ++packetId;
+		buffer = row.write(buffer, c);
+
+		// write last eof
+		EOFPacket lastEof = new EOFPacket();
+		lastEof.packetId = ++packetId;
+		buffer = lastEof.write(buffer, c);
+
+		// post write
+		c.write(buffer);
 	}
 
 	/**

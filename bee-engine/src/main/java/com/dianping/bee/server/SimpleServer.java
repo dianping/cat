@@ -22,7 +22,11 @@ public class SimpleServer implements LogEnabled {
 
 	private Logger m_logger;
 
-	public static final String VERSION = "bee-0.0.1-cobar-1.3.0";
+	/**
+	 * The mysql version can not be changed, JDBC Driver will parse mysql major
+	 * and minor version information
+	 */
+	public static final String VERSION = "5.1.48-bee-0.0.1";
 
 	@Override
 	public void enableLogging(Logger logger) {

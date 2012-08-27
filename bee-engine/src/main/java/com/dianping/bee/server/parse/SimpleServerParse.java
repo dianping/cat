@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with dianping.com.
  */
-package com.dianping.bee.server;
+package com.dianping.bee.server.parse;
 
 import com.alibaba.cobar.parser.util.ParseUtil;
 

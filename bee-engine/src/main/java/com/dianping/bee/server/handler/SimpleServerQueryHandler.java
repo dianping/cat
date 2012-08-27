@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with dianping.com.
  */
-package com.dianping.bee.server;
+package com.dianping.bee.server.handler;
 
 import org.apache.log4j.Logger;
 
@@ -25,6 +25,7 @@ import com.alibaba.cobar.server.handler.KillHandler;
 import com.alibaba.cobar.server.handler.SavepointHandler;
 import com.alibaba.cobar.server.handler.SetHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
+import com.dianping.bee.server.parse.SimpleServerParse;
 import com.site.lookup.annotation.Inject;
 
 /**

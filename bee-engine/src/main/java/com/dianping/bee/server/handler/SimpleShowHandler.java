@@ -12,7 +12,7 @@
  * accordance with the terms of the license agreement you entered into
  * with dianping.com.
  */
-package com.dianping.bee.server;
+package com.dianping.bee.server.handler;
 
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -35,6 +35,7 @@ import com.alibaba.cobar.util.StringUtil;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
+import com.dianping.bee.server.parse.SimpleServerParseShow;
 import com.site.lookup.ContainerLoader;
 import com.site.lookup.annotation.Inject;
 
@@ -67,9 +68,84 @@ public class SimpleShowHandler {
 		case SimpleServerParseShow.VARIABLES:
 			showVariables(c, stmt);
 			break;
+		case SimpleServerParseShow.COLLATION:
+			showCollation(c, stmt);
+			break;
 		default:
 			c.writeErrMessage(ErrorCode.ER_UNKNOWN_COM_ERROR, "Unsupported show command");
 		}
+	}
+
+	/**
+	 * @param c
+	 * @param stmt
+	 */
+	private void showCollation(ServerConnection c, String stmt) {
+		int FIELD_COUNT = 6;
+		ResultSetHeaderPacket header = PacketUtil.getHeader(FIELD_COUNT);
+		FieldPacket[] fields = new FieldPacket[FIELD_COUNT];
+		EOFPacket eof = new EOFPacket();
+		int i = 0;
+		byte packetId = 0;
+		header.packetId = ++packetId;
+		fields[i] = PacketUtil.getField("Collation", Fields.FIELD_TYPE_VAR_STRING);
+		fields[i++].packetId = ++packetId;
+		fields[i] = PacketUtil.getField("Charset", Fields.FIELD_TYPE_VAR_STRING);
+		fields[i++].packetId = ++packetId;
+		fields[i] = PacketUtil.getField("Id", Fields.FIELD_TYPE_LONG);
+		fields[i++].packetId = ++packetId;
+		fields[i] = PacketUtil.getField("Default", Fields.FIELD_TYPE_VAR_STRING);
+		fields[i++].packetId = ++packetId;
+		fields[i] = PacketUtil.getField("Compiled", Fields.FIELD_TYPE_VAR_STRING);
+		fields[i++].packetId = ++packetId;
+		fields[i] = PacketUtil.getField("Sortlen", Fields.FIELD_TYPE_LONG);
+		fields[i++].packetId = ++packetId;
+		eof.packetId = ++packetId;
+
+		ByteBuffer buffer = c.allocate();
+
+		// write header
+		buffer = header.write(buffer, c);
+
+		// write fields
+		for (FieldPacket field : fields) {
+			buffer = field.write(buffer, c);
+		}
+
+		// write eof
+		buffer = eof.write(buffer, c);
+
+		// write rows
+		packetId = eof.packetId;
+
+		// TODO: sample result currently
+		// RowDataPacket row = new RowDataPacket(FIELD_COUNT);
+		// row.add(StringUtil.encode("utf8_general_ci", c.getCharset()));
+		// row.add(StringUtil.encode("utf8", c.getCharset()));
+		// row.add(LongUtil.toBytes(33L));
+		// row.add(StringUtil.encode("Yes", c.getCharset()));
+		// row.add(StringUtil.encode("Yes", c.getCharset()));
+		// row.add(LongUtil.toBytes(1));
+		// row.packetId = ++packetId;
+		// buffer = row.write(buffer, c);
+		//
+		// row = new RowDataPacket(FIELD_COUNT);
+		// row.add(StringUtil.encode("utf8_bin", c.getCharset()));
+		// row.add(StringUtil.encode("utf8", c.getCharset()));
+		// row.add(LongUtil.toBytes(83L));
+		// row.add(StringUtil.encode("", c.getCharset()));
+		// row.add(StringUtil.encode("Yes", c.getCharset()));
+		// row.add(LongUtil.toBytes(1));
+		// row.packetId = ++packetId;
+		// buffer = row.write(buffer, c);
+
+		// write last eof
+		EOFPacket lastEof = new EOFPacket();
+		lastEof.packetId = ++packetId;
+		buffer = lastEof.write(buffer, c);
+
+		// post write
+		c.write(buffer);
 	}
 
 	/**
@@ -100,6 +176,7 @@ public class SimpleShowHandler {
 		int i = 0;
 		byte packetId = 0;
 		header.packetId = ++packetId;
+		// FIXME field type need to be updated
 		fields[i] = PacketUtil.getField("Name", Fields.FIELD_TYPE_VAR_STRING);
 		fields[i++].packetId = ++packetId;
 		fields[i] = PacketUtil.getField("Engine", Fields.FIELD_TYPE_VAR_STRING);

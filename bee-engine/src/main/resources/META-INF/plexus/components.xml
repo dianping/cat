@@ -89,8 +89,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.server.SimpleShowHandler</role>
-			<implementation>com.dianping.bee.server.SimpleShowHandler</implementation>
+			<role>com.dianping.bee.server.handler.SimpleShowHandler</role>
+			<implementation>com.dianping.bee.server.handler.SimpleShowHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.TableProviderManager</role>
@@ -98,12 +98,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.server.SimpleUseHandler</role>
-			<implementation>com.dianping.bee.server.SimpleUseHandler</implementation>
+			<role>com.dianping.bee.server.handler.SimpleUseHandler</role>
+			<implementation>com.dianping.bee.server.handler.SimpleUseHandler</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.server.SimpleDescHandler</role>
-			<implementation>com.dianping.bee.server.SimpleDescHandler</implementation>
+			<role>com.dianping.bee.server.handler.SimpleDescHandler</role>
+			<implementation>com.dianping.bee.server.handler.SimpleDescHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.TableProviderManager</role>
@@ -111,8 +111,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.server.SimpleSelectHandler</role>
-			<implementation>com.dianping.bee.server.SimpleSelectHandler</implementation>
+			<role>com.dianping.bee.server.handler.SimpleSelectHandler</role>
+			<implementation>com.dianping.bee.server.handler.SimpleSelectHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.StatementManager</role>
@@ -120,21 +120,21 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.server.SimpleServerQueryHandler</role>
-			<implementation>com.dianping.bee.server.SimpleServerQueryHandler</implementation>
+			<role>com.dianping.bee.server.handler.SimpleServerQueryHandler</role>
+			<implementation>com.dianping.bee.server.handler.SimpleServerQueryHandler</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.bee.server.SimpleSelectHandler</role>
+					<role>com.dianping.bee.server.handler.SimpleSelectHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.server.SimpleShowHandler</role>
+					<role>com.dianping.bee.server.handler.SimpleShowHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.server.SimpleDescHandler</role>
+					<role>com.dianping.bee.server.handler.SimpleDescHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.server.SimpleUseHandler</role>
+					<role>com.dianping.bee.server.handler.SimpleUseHandler</role>
 				</requirement>
 			</requirements>
 		</component>
