@@ -35,6 +35,7 @@ import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.meta.internal.TypeUtils;
+import com.site.helper.Joiners;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -61,7 +62,8 @@ public class SelectHandler extends AbstractCommandHandler {
 			selectSession(c, first.substring("@@SESSION.".length()));
 		} else {
 			try {
-				selectStatement(c, first);
+				String stmt = "select " + Joiners.by(' ').join(parts);
+				selectStatement(c, stmt);
 			} catch (SQLSyntaxErrorException e) {
 				error(c, ErrorCode.ER_SYNTAX_ERROR, e.getMessage());
 			}

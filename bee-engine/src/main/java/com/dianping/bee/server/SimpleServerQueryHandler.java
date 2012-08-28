@@ -43,7 +43,7 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 		case SimpleServerParse.SET:
 			SetHandler.handle(sql, c, rs >>> 8);
 			break;
-		case SimpleServerParse.DESC:
+		case SimpleServerParse.DESC: // New added
 			m_descHandler.handle(sql, c, rs >>> 8);
 			break;
 		case SimpleServerParse.SHOW:

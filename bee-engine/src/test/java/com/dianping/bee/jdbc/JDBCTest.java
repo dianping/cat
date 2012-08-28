@@ -17,6 +17,7 @@ package com.dianping.bee.jdbc;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 
 import org.junit.Test;
@@ -62,18 +63,26 @@ public class JDBCTest extends ComponentTestCase {
 		String password = "test";
 
 		Class.forName(driver).newInstance();
-		System.out.println("Driver loaded");
 		DriverManager.setLoginTimeout(600);
 		conn = DriverManager.getConnection(url + dbName, userName, password);
-		System.out.println("Connected to the database");
+		System.out.println("Query began");
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery("select type, sum(failures) from transaction where domain=? and starttime=?");
-		
-		while (rs.next()) {
-			System.out.println(rs.getString(1));
+		ResultSetMetaData meta = rs.getMetaData();
+		int columns = meta.getColumnCount();
+		for (int column = 1; column <= columns; column++) {
+			String columnName = meta.getColumnName(column);
+			System.out.print(columnName + "\t");
 		}
-		
+		System.out.println();
+		while (rs.next()) {
+			for (int column = 1; column <= columns; column++) {
+				System.out.print(rs.getString(column) + "\t");
+			}
+			System.out.println();
+		}
+
 		conn.close();
-		System.out.println("Disconnected from database");
+		System.out.println("Query Finished");
 	}
 }
