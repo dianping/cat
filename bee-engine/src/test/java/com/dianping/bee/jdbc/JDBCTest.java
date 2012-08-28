@@ -105,6 +105,15 @@ public class JDBCTest extends ComponentTestCase {
 		rs2.last();
 		Assert.assertTrue(rs2.getRow() > 0);
 		displayResultSet(rs2);
+
+		Statement stmt3 = conn.createStatement();
+		Assert.assertNotNull(stmt3);
+		ResultSet rs3 = stmt3.executeQuery("select * from transaction");
+		Assert.assertTrue(rs3.getMetaData().getColumnCount() > 0);
+		Assert.assertNotNull(rs3);
+		rs3.last();
+		Assert.assertTrue(rs3.getRow() > 0);
+		displayResultSet(rs3);
 		conn.close();
 	}
 

@@ -19,19 +19,14 @@ import java.util.List;
 
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.Fields;
-import com.alibaba.cobar.protocol.mysql.RowDataPacket;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.server.response.SelectDatabase;
 import com.alibaba.cobar.server.response.SelectUser;
 import com.alibaba.cobar.server.response.SelectVersion;
 import com.alibaba.cobar.server.response.SelectVersionComment;
-import com.alibaba.cobar.util.IntegerUtil;
-import com.alibaba.cobar.util.StringUtil;
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.handler.AbstractCommandHandler;
-import com.dianping.bee.engine.spi.meta.Cell;
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.meta.internal.TypeUtils;
@@ -54,6 +49,8 @@ public class SelectHandler extends AbstractCommandHandler {
 			SelectVersionComment.response(c);
 		} else if ("DATABASE".equalsIgnoreCase(first)) {
 			SelectDatabase.response(c);
+		} else if ("DATABASE()".equalsIgnoreCase(first)) {
+			selectCurrentDatabase(c);
 		} else if ("USER".equalsIgnoreCase(first)) {
 			SelectUser.response(c);
 		} else if ("VERSION".equalsIgnoreCase(first)) {
@@ -70,83 +67,23 @@ public class SelectHandler extends AbstractCommandHandler {
 		}
 	}
 
-	private RowDataPacket getRow(RowSet rowset, int rowIndex, String charset) {
-		int cols = rowset.getColumns();
-		RowDataPacket packet = new RowDataPacket(cols);
-		Row row = rowset.getRow(rowIndex);
-
-		for (int i = 0; i < cols; i++) {
-			ColumnMeta column = rowset.getColumn(i);
-			Cell cell = row.getCell(i);
-			String value = cell.getValue().toString();
-			switch (TypeUtils.convertJavaTypeToFieldType(column.getType())) {
-			case Fields.FIELD_TYPE_STRING:
-				packet.add(StringUtil.encode(value, charset));
-				break;
-			case Fields.FIELD_TYPE_INT24:
-				packet.add(value == null ? null : IntegerUtil.toBytes(Integer.parseInt(value)));
-				break;
-			case Fields.FIELD_TYPE_DECIMAL:
-			case Fields.FIELD_TYPE_TINY:
-			case Fields.FIELD_TYPE_SHORT:
-			case Fields.FIELD_TYPE_LONG:
-			case Fields.FIELD_TYPE_FLOAT:
-			case Fields.FIELD_TYPE_DOUBLE:
-			case Fields.FIELD_TYPE_NULL:
-			case Fields.FIELD_TYPE_TIMESTAMP:
-			case Fields.FIELD_TYPE_LONGLONG:
-			case Fields.FIELD_TYPE_DATE:
-			case Fields.FIELD_TYPE_TIME:
-			case Fields.FIELD_TYPE_DATETIME:
-			case Fields.FIELD_TYPE_YEAR:
-			case Fields.FIELD_TYPE_NEWDATE:
-			case Fields.FIELD_TYPE_VARCHAR:
-			case Fields.FIELD_TYPE_BIT:
-			case Fields.FIELD_TYPE_NEW_DECIMAL:
-			case Fields.FIELD_TYPE_ENUM:
-			case Fields.FIELD_TYPE_SET:
-			case Fields.FIELD_TYPE_TINY_BLOB:
-			case Fields.FIELD_TYPE_MEDIUM_BLOB:
-			case Fields.FIELD_TYPE_LONG_BLOB:
-			case Fields.FIELD_TYPE_BLOB:
-			case Fields.FIELD_TYPE_VAR_STRING:
-			case Fields.FIELD_TYPE_GEOMETRY:
-			default:
-				packet.add(StringUtil.encode(value, charset));
-			}
-
-		}
-		return packet;
-	}
-
 	/**
 	 * @param c
-	 * @param sql
-	 * @throws SQLSyntaxErrorException
 	 */
-	private void selectStatement(ServerConnection c, String sql) throws SQLSyntaxErrorException {
-		Statement stmt = m_manager.build(sql);
-
-		RowSet rowset = stmt.query();
-
+	private void selectCurrentDatabase(ServerConnection c) {
 		CommandContext ctx = new CommandContext(c);
-		String[] names = new String[rowset.getColumns()];
-		for (int colIndex = 0; colIndex < names.length; colIndex++) {
-			names[colIndex] = rowset.getColumn(colIndex).getName();
-		}
+		String[] names = { "database()" };
 
 		ctx.writeHeader(names.length);
 
-		for (int colIndex = 0; colIndex < names.length; colIndex++) {
-			ctx.writeField(names[colIndex], TypeUtils.convertJavaTypeToFieldType(rowset.getColumn(colIndex).getType()));
+		for (String name : names) {
+			ctx.writeField(name, Fields.FIELD_TYPE_VAR_STRING);
 		}
 
 		ctx.writeEOF();
 
-		for (int rowIndex = 0; rowIndex < rowset.getRows(); rowIndex++) {
-			RowDataPacket row = getRow(rowset, rowIndex, c.getCharset());
-			ctx.write(row);
-		}
+		String schema = c.getSchema();
+		ctx.writeRow(schema);
 
 		ctx.writeEOF();
 		ctx.complete();
@@ -170,6 +107,44 @@ public class SelectHandler extends AbstractCommandHandler {
 
 		// TODO real data here
 		ctx.writeRow("1");
+
+		ctx.writeEOF();
+		ctx.complete();
+	}
+
+	/**
+	 * @param c
+	 * @param sql
+	 * @throws SQLSyntaxErrorException
+	 */
+	private void selectStatement(ServerConnection c, String sql) throws SQLSyntaxErrorException {
+		if (c.getSchema() == null) {
+			error(c, ErrorCode.ER_BAD_DB_ERROR, "No database selected");
+			return;
+		}
+
+		Statement stmt = m_manager.build(sql);
+
+		RowSet rowset = stmt.query();
+
+		CommandContext ctx = new CommandContext(c);
+		String[] names = new String[rowset.getColumns()];
+		for (int colIndex = 0; colIndex < names.length; colIndex++) {
+			names[colIndex] = rowset.getColumn(colIndex).getName();
+		}
+
+		ctx.writeHeader(names.length);
+
+		for (int colIndex = 0; colIndex < names.length; colIndex++) {
+			ctx.writeField(names[colIndex], TypeUtils.convertJavaTypeToFieldType(rowset.getColumn(colIndex).getType()));
+		}
+
+		ctx.writeEOF();
+
+		for (int rowIndex = 0; rowIndex < rowset.getRows(); rowIndex++) {
+			Row row = rowset.getRow(rowIndex);
+			ctx.writeRow(row);
+		}
 
 		ctx.writeEOF();
 		ctx.complete();
