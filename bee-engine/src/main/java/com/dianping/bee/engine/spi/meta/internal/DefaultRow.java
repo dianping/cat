@@ -34,7 +34,7 @@ public class DefaultRow implements Row {
 	}
 
 	@Override
-	public int getCells() {
+	public int getColumnSize() {
 		return m_cells.length;
 	}
 }

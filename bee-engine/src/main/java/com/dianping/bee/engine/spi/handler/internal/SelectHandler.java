@@ -95,7 +95,7 @@ public class SelectHandler extends AbstractCommandHandler {
 	 */
 	private void selectSession(ServerConnection c, String sessionVariable) {
 		CommandContext ctx = new CommandContext(c);
-		String[] names = { "sessionVariable" };
+		String[] names = { sessionVariable };
 
 		ctx.writeHeader(names.length);
 
@@ -128,7 +128,7 @@ public class SelectHandler extends AbstractCommandHandler {
 		RowSet rowset = stmt.query();
 
 		CommandContext ctx = new CommandContext(c);
-		String[] names = new String[rowset.getColumns()];
+		String[] names = new String[rowset.getColumnSize()];
 		for (int colIndex = 0; colIndex < names.length; colIndex++) {
 			names[colIndex] = rowset.getColumn(colIndex).getName();
 		}
@@ -141,7 +141,7 @@ public class SelectHandler extends AbstractCommandHandler {
 
 		ctx.writeEOF();
 
-		for (int rowIndex = 0; rowIndex < rowset.getRows(); rowIndex++) {
+		for (int rowIndex = 0; rowIndex < rowset.getRowSize(); rowIndex++) {
 			Row row = rowset.getRow(rowIndex);
 			ctx.writeRow(row);
 		}
