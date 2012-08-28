@@ -10,7 +10,7 @@ import com.dianping.bee.engine.spi.handler.AbstractCommandHandler;
 
 public class UseHandler extends AbstractCommandHandler {
 	@Override
-	public void handle(ServerConnection c, List<String> parts) {
+	protected void handle(ServerConnection c, List<String> parts) {
 		String schema = unescape(parts.get(0));
 
 		// 检查schema的有效性

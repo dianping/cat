@@ -5,7 +5,7 @@ import java.util.List;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.site.lookup.annotation.Inject;
 
 public class TableHelper {
@@ -26,12 +26,12 @@ public class TableHelper {
 		throw new BadSQLSyntaxException("Column(%s) of table(%s) is not found!", columnName, tableName);
 	}
 
-	public Index findIndex(String tableName, List<ColumnMeta> columns) {
+	public IndexMeta findIndex(String tableName, List<ColumnMeta> columns) {
 		TableProvider table = findTable(tableName);
-		Index[] indexes = table.getIndexes();
+		IndexMeta[] indexes = table.getIndexes();
 
 		if (indexes != null && indexes.length > 0) {
-			for (Index index : indexes) {
+			for (IndexMeta index : indexes) {
 				// if first column of index is in columns, then pick it up
 				ColumnMeta first = index.getColumn(0);
 				String columnName = first.getName();

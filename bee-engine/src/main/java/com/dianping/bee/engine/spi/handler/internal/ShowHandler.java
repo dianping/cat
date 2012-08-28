@@ -16,7 +16,7 @@ import com.dianping.bee.engine.spi.handler.AbstractCommandHandler;
 
 public class ShowHandler extends AbstractCommandHandler {
 	@Override
-	public void handle(ServerConnection c, List<String> parts) {
+	protected void handle(ServerConnection c, List<String> parts) {
 		int len = parts.size();
 		String first = len > 0 ? parts.get(0) : null;
 		String second = len > 1 ? parts.get(1) : null;

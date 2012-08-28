@@ -4,5 +4,4 @@ public interface DatabaseProvider {
 	public String getName();
 
 	public TableProvider[] getTables();
-	
 }

@@ -18,7 +18,7 @@ import java.util.List;
 
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
@@ -38,11 +38,11 @@ public class StaticTableHelper {
 		throw new BadSQLSyntaxException("Column(%s) of table(%s) is not found!", columnName, table.getName());
 	}
 
-	public Index findIndex(TableProvider table, List<ColumnMeta> columns) {
-		Index[] indexes = table.getIndexes();
+	public IndexMeta findIndex(TableProvider table, List<ColumnMeta> columns) {
+		IndexMeta[] indexes = table.getIndexes();
 
 		if (indexes != null && indexes.length > 0) {
-			for (Index index : indexes) {
+			for (IndexMeta index : indexes) {
 				// if first column of index is in columns, then pick it up
 				ColumnMeta first = index.getColumn(0);
 				String columnName = first.getName();

@@ -1,8 +1,8 @@
 package com.dianping.cat.data.event;
 
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 
-public enum EventIndex implements Index {
+public enum EventIndex implements IndexMeta {
 	IDX_STARTTIME_DOMAIN(EventColumn.StartTime, false, EventColumn.Domain, true);
 
 	private EventColumn[] m_columns;

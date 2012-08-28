@@ -4,7 +4,7 @@ import com.dianping.bee.engine.spi.RowFilter;
 import com.dianping.bee.engine.spi.SingleTableStatement;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.bee.engine.spi.meta.RowSet;
 
 public class DefaultSingleTableStatement implements SingleTableStatement {
@@ -12,12 +12,12 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 
 	private RowFilter m_rowFilter;
 
-	private Index m_index;
+	private IndexMeta m_index;
 
 	private ColumnMeta[] m_selectColumns;
 
 	@Override
-	public Index getIndex() {
+	public IndexMeta getIndex() {
 		return m_index;
 	}
 
@@ -37,7 +37,7 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	}
 
 	@Override
-	public void setIndex(Index index) {
+	public void setIndex(IndexMeta index) {
 		m_index = index;
 	}
 

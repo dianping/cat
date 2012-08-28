@@ -19,7 +19,7 @@ import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.internal.StaticTableHelper;
 import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.meta.internal.DefaultCell;
@@ -62,7 +62,7 @@ public class InformationSchemaDatabase implements DatabaseProvider {
 		}
 
 		@Override
-		public Index[] getIndexes() {
+		public IndexMeta[] getIndexes() {
 			return null;
 		}
 
@@ -72,7 +72,7 @@ public class InformationSchemaDatabase implements DatabaseProvider {
 		}
 
 		@Override
-		public RowSet queryByIndex(Index index, ColumnMeta[] selectColumns) {
+		public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
 			ColumnMeta[] columns = selectColumns;
 			DefaultRowSet rowSet = new DefaultRowSet(columns);
 

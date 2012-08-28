@@ -1,8 +1,8 @@
 package com.dianping.cat.data.transaction;
 
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 
-public enum TransactionIndex implements Index {
+public enum TransactionIndex implements IndexMeta {
 	IDX_STARTTIME_DOMAIN(TransactionColumn.StartTime, false, TransactionColumn.Domain, true);
 
 	private TransactionColumn[] m_columns;

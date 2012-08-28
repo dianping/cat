@@ -19,7 +19,7 @@ public class DescHandler extends AbstractCommandHandler {
 	private TableProviderManager m_manager;
 
 	@Override
-	public void handle(ServerConnection c, List<String> parts) {
+	protected void handle(ServerConnection c, List<String> parts) {
 		String tableName = unescape(parts.get(0));
 
 		String db = c.getSchema();

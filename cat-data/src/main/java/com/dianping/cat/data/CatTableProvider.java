@@ -2,7 +2,7 @@ package com.dianping.cat.data;
 
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.cat.data.event.EventColumn;
 import com.dianping.cat.data.event.EventIndex;
@@ -22,13 +22,13 @@ public enum CatTableProvider implements TableProvider {
 
 	private ColumnMeta[] m_columns;
 
-	private Index[] m_indexes;
+	private IndexMeta[] m_indexes;
 
 	private CatTableProvider(String name) {
 		m_name = name;
 	}
 
-	private CatTableProvider(String name, ColumnMeta[] columns, Index[] indexes) {
+	private CatTableProvider(String name, ColumnMeta[] columns, IndexMeta[] indexes) {
 		m_name = name;
 		m_columns = columns;
 		m_indexes = indexes;
@@ -40,7 +40,7 @@ public enum CatTableProvider implements TableProvider {
 	}
 
 	@Override
-	public Index[] getIndexes() {
+	public IndexMeta[] getIndexes() {
 		return m_indexes;
 	}
 
@@ -50,7 +50,7 @@ public enum CatTableProvider implements TableProvider {
 	}
 
 	@Override
-	public RowSet queryByIndex(Index index, ColumnMeta[] selectColumns) {
+	public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
 		return null;
 	}
 }
