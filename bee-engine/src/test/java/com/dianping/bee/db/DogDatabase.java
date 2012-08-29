@@ -4,10 +4,9 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.dianping.bee.engine.spi.internal.StaticTableHelper;
 import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.meta.internal.DefaultCell;
@@ -47,7 +46,7 @@ public class DogDatabase implements DatabaseProvider {
 		}
 
 		@Override
-		public Index[] getIndexes() {
+		public IndexMeta[] getIndexes() {
 			return null;
 		}
 
@@ -57,7 +56,7 @@ public class DogDatabase implements DatabaseProvider {
 		}
 
 		@Override
-		public RowSet queryByIndex(Index index, ColumnMeta[] selectColumns) {
+		public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
 			ColumnMeta[] columns = selectColumns;
 			DefaultRowSet rowSet = new DefaultRowSet(columns);
 
@@ -65,7 +64,7 @@ public class DogDatabase implements DatabaseProvider {
 				Cell[] cells = new Cell[columns.length];
 
 				for (int colIndex = 0; colIndex < cells.length; colIndex++) {
-					ColumnMeta columnMeta = StaticTableHelper.findColumn(this, columns[colIndex].getName());
+					ColumnMeta columnMeta = columns[colIndex];
 					String randomValue = null;
 					if (columnMeta.getType().getSimpleName().equals("String")) {
 						randomValue = RandomStringUtils.randomAlphabetic(5);
@@ -132,7 +131,7 @@ public class DogDatabase implements DatabaseProvider {
 		}
 	}
 
-	public static enum TransactionIndex implements Index {
+	public static enum TransactionIndex implements IndexMeta {
 		IDX_STARTTIME_DOMAIN(TransactionColumn.StartTime, false, TransactionColumn.Domain, true);
 
 		private ColumnMeta[] m_columns;

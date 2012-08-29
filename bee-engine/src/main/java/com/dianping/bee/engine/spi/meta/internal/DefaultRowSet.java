@@ -64,7 +64,7 @@ public class DefaultRowSet implements RowSet {
 	}
 
 	@Override
-	public int getColumns() {
+	public int getColumnSize() {
 		return m_columnMetas.length;
 	}
 
@@ -78,7 +78,7 @@ public class DefaultRowSet implements RowSet {
 	}
 
 	@Override
-	public int getRows() {
+	public int getRowSize() {
 		return m_rows.size();
 	}
 }

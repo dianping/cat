@@ -16,7 +16,7 @@ import com.dianping.bee.engine.spi.handler.AbstractCommandHandler;
 
 public class ShowHandler extends AbstractCommandHandler {
 	@Override
-	public void handle(ServerConnection c, List<String> parts) {
+	protected void handle(ServerConnection c, List<String> parts) {
 		int len = parts.size();
 		String first = len > 0 ? parts.get(0) : null;
 		String second = len > 1 ? parts.get(1) : null;
@@ -35,9 +35,32 @@ public class ShowHandler extends AbstractCommandHandler {
 			showStatus(c);
 		} else if ("variables".equalsIgnoreCase(first)) {
 			showVariables(c);
+		} else if ("collation".equalsIgnoreCase(first)) {
+			showCollation(c);
 		} else {
 			error(c, ErrorCode.ER_UNKNOWN_COM_ERROR, "Unsupported show command");
 		}
+	}
+
+	/**
+	 * @param c
+	 */
+	private void showCollation(ServerConnection c) {
+		CommandContext ctx = new CommandContext(c);
+		String[] names = { "Collation", "Charset", "Id", "Default", "Compiled", "Sortlen" };
+
+		ctx.writeHeader(names.length);
+
+		for (String name : names) {
+			ctx.writeField(name, Fields.FIELD_TYPE_VAR_STRING);
+		}
+
+		ctx.writeEOF();
+
+		// TODO real data here
+
+		ctx.writeEOF();
+		ctx.complete();
 	}
 
 	private void showStatus(ServerConnection c) {
@@ -128,9 +151,9 @@ public class ShowHandler extends AbstractCommandHandler {
 
 		TableProvider[] tables = provider.getTables();
 		CommandContext ctx = new CommandContext(c);
-		String[] names = { "Name", "Engine", "Version", "Row_format", "Rows", "Avg_row_length", "Data_length", "Max_data_length",
-		      "Index_length", "Data_free", "Auto_increment", "Create_time", "Update_time", "Check_time", "Collation", "Checksum",
-		      "Create_options", "Comment" };
+		String[] names = { "Name", "Engine", "Version", "Row_format", "Rows", "Avg_row_length", "Data_length",
+		      "Max_data_length", "Index_length", "Data_free", "Auto_increment", "Create_time", "Update_time",
+		      "Check_time", "Collation", "Checksum", "Create_options", "Comment" };
 
 		ctx.writeHeader(names.length);
 
@@ -157,7 +180,27 @@ public class ShowHandler extends AbstractCommandHandler {
 	private void showVariables(ServerConnection c) {
 		Map<String, String> map = new HashMap<String, String>();
 
-		map.put("BeeStatus", "Good");
+		// map.put("language","");
+		map.put("net_write_timeout", "60");
+		map.put("interactive_timeout", "28800");
+		map.put("wait_timeout", "28800");
+		map.put("character_set_client", System.getProperty("sun.jnu.encoding"));
+		map.put("character_set_connection", System.getProperty("sun.jnu.encoding"));
+		// map.put("character_set","");
+		map.put("character_set_server", System.getProperty("sun.jnu.encoding"));
+		map.put("tx_isolation", "REPEATABLE-READ");
+		map.put("transaction_isolation", "");
+		map.put("character_set_results", System.getProperty("sun.jnu.encoding"));
+		// map.put("timezone","");
+		map.put("time_zone", "SYSTEM");
+		map.put("system_time_zone", "");
+		map.put("lower_case_table_names", "1");
+		map.put("max_allowed_packet", "1048576");
+		map.put("net_buffer_length", "8192");
+		map.put("sql_mode", "");
+		map.put("query_cache_type", "ON");
+		map.put("query_cache_size", "0");
+		map.put("init_connect", "");
 		// TODO real data here
 
 		CommandContext ctx = new CommandContext(c);

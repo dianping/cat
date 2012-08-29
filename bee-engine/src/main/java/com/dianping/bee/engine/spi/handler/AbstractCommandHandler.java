@@ -3,6 +3,7 @@ package com.dianping.bee.engine.spi.handler;
 import java.nio.ByteBuffer;
 import java.util.List;
 
+import com.alibaba.cobar.Fields;
 import com.alibaba.cobar.net.util.PacketUtil;
 import com.alibaba.cobar.protocol.MySQLPacket;
 import com.alibaba.cobar.protocol.mysql.EOFPacket;
@@ -11,7 +12,12 @@ import com.alibaba.cobar.protocol.mysql.OkPacket;
 import com.alibaba.cobar.protocol.mysql.ResultSetHeaderPacket;
 import com.alibaba.cobar.protocol.mysql.RowDataPacket;
 import com.alibaba.cobar.server.ServerConnection;
+import com.alibaba.cobar.util.IntegerUtil;
 import com.alibaba.cobar.util.StringUtil;
+import com.dianping.bee.engine.spi.meta.Cell;
+import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.meta.Row;
+import com.dianping.bee.engine.spi.meta.internal.TypeUtils;
 import com.site.helper.Splitters;
 import com.site.lookup.ContainerHolder;
 
@@ -110,6 +116,53 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 
 			row.packetId = m_packetId++;
 			write(row);
+		}
+
+		public void writeRow(Row row) {
+			RowDataPacket packet = new RowDataPacket(row.getColumnSize());
+			for (int cellIndex = 0; cellIndex < row.getColumnSize(); cellIndex++) {
+				Cell cell = row.getCell(cellIndex);
+				ColumnMeta column = cell.getMeta();
+				String value = String.valueOf(cell.getValue());
+				switch (TypeUtils.convertJavaTypeToFieldType(column.getType())) {
+				case Fields.FIELD_TYPE_STRING:
+					packet.add(StringUtil.encode(value, m_charset));
+					break;
+				case Fields.FIELD_TYPE_INT24:
+					packet.add(value == null ? null : IntegerUtil.toBytes(Integer.parseInt(value)));
+					break;
+				case Fields.FIELD_TYPE_DECIMAL:
+				case Fields.FIELD_TYPE_TINY:
+				case Fields.FIELD_TYPE_SHORT:
+				case Fields.FIELD_TYPE_LONG:
+				case Fields.FIELD_TYPE_FLOAT:
+				case Fields.FIELD_TYPE_DOUBLE:
+				case Fields.FIELD_TYPE_NULL:
+				case Fields.FIELD_TYPE_TIMESTAMP:
+				case Fields.FIELD_TYPE_LONGLONG:
+				case Fields.FIELD_TYPE_DATE:
+				case Fields.FIELD_TYPE_TIME:
+				case Fields.FIELD_TYPE_DATETIME:
+				case Fields.FIELD_TYPE_YEAR:
+				case Fields.FIELD_TYPE_NEWDATE:
+				case Fields.FIELD_TYPE_VARCHAR:
+				case Fields.FIELD_TYPE_BIT:
+				case Fields.FIELD_TYPE_NEW_DECIMAL:
+				case Fields.FIELD_TYPE_ENUM:
+				case Fields.FIELD_TYPE_SET:
+				case Fields.FIELD_TYPE_TINY_BLOB:
+				case Fields.FIELD_TYPE_MEDIUM_BLOB:
+				case Fields.FIELD_TYPE_LONG_BLOB:
+				case Fields.FIELD_TYPE_BLOB:
+				case Fields.FIELD_TYPE_VAR_STRING:
+				case Fields.FIELD_TYPE_GEOMETRY:
+				default:
+					packet.add(StringUtil.encode(value, m_charset));
+				}
+			}
+
+			packet.packetId = m_packetId++;
+			write(packet);
 		}
 	}
 }

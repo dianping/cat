@@ -23,7 +23,7 @@ public class SpiTest extends ComponentTestCase {
 	
 	private void display(RowSet rowset) {
 		StringBuilder sb = new StringBuilder(1024);
-		int cols = rowset.getColumns();
+		int cols = rowset.getColumnSize();
 
 		for (int i = 0; i < cols; i++) {
 			ColumnMeta column = rowset.getColumn(i);
@@ -33,7 +33,7 @@ public class SpiTest extends ComponentTestCase {
 
 		sb.append('\n');
 
-		int rows = rowset.getRows();
+		int rows = rowset.getRowSize();
 
 		for (int i = 0; i < rows; i++) {
 			Row row = rowset.getRow(i);

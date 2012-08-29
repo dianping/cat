@@ -11,9 +11,9 @@ public interface RowSet {
 
 	public ColumnMeta getColumn(int colIndex);
 
-	public int getColumns();
+	public int getColumnSize();
 
 	public Row getRow(int rowIndex);
 
-	public int getRows();
+	public int getRowSize();
 }

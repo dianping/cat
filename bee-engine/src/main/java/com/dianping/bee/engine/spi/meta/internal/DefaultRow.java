@@ -23,13 +23,18 @@ import com.dianping.bee.engine.spi.meta.Row;
 public class DefaultRow implements Row {
 
 	private Cell[] m_cells;
-	
-	public DefaultRow(Cell[] cells){
+
+	public DefaultRow(Cell[] cells) {
 		this.m_cells = cells;
 	}
-	
+
 	@Override
-   public Cell getCell(int colIndex) {
-	   return m_cells[colIndex];
-   }
+	public Cell getCell(int colIndex) {
+		return m_cells[colIndex];
+	}
+
+	@Override
+	public int getColumnSize() {
+		return m_cells.length;
+	}
 }

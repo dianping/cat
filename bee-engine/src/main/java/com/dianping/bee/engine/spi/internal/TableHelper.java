@@ -5,7 +5,7 @@ import java.util.List;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.Index;
+import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.site.lookup.annotation.Inject;
 
 public class TableHelper {
@@ -13,7 +13,11 @@ public class TableHelper {
 	private TableProviderManager m_manager;
 
 	public ColumnMeta findColumn(String tableName, String columnName) {
-		TableProvider table = findTable(tableName);
+		return findColumn(null, tableName, columnName);
+	}
+
+	public ColumnMeta findColumn(String databaseName, String tableName, String columnName) {
+		TableProvider table = findTable(databaseName, tableName);
 		ColumnMeta[] columns = table.getColumns();
 
 		if (columns != null) {
@@ -24,14 +28,19 @@ public class TableHelper {
 			}
 		}
 		throw new BadSQLSyntaxException("Column(%s) of table(%s) is not found!", columnName, tableName);
+
 	}
 
-	public Index findIndex(String tableName, List<ColumnMeta> columns) {
-		TableProvider table = findTable(tableName);
-		Index[] indexes = table.getIndexes();
+	public IndexMeta findIndex(String tableName, List<ColumnMeta> columns) {
+		return findIndex(null, tableName, columns);
+	}
+
+	public IndexMeta findIndex(String databaseName, String tableName, List<ColumnMeta> columns) {
+		TableProvider table = findTable(databaseName, tableName);
+		IndexMeta[] indexes = table.getIndexes();
 
 		if (indexes != null && indexes.length > 0) {
-			for (Index index : indexes) {
+			for (IndexMeta index : indexes) {
 				// if first column of index is in columns, then pick it up
 				ColumnMeta first = index.getColumn(0);
 				String columnName = first.getName();
@@ -48,7 +57,16 @@ public class TableHelper {
 	}
 
 	public TableProvider findTable(String tableName) {
-		TableProvider table = m_manager.getTableProvider(tableName);
+		return findTable(null, tableName);
+	}
+
+	public TableProvider findTable(String databaseName, String tableName) {
+		TableProvider table = null;
+		if (databaseName != null) {
+			table = m_manager.getTableProvider(databaseName, tableName);
+		} else {
+			table = m_manager.getTableProvider(tableName);
+		}
 
 		if (table == null) {
 			throw new BadSQLSyntaxException("Table(%s) is not found!", tableName);

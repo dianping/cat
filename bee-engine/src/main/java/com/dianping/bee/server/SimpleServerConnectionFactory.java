@@ -13,9 +13,7 @@ import com.alibaba.cobar.net.handler.FrontendQueryHandler;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.server.session.BlockingSession;
 import com.alibaba.cobar.server.session.NonBlockingSession;
-import com.dianping.bee.engine.spi.handler.internal.DefaultServerQueryHandler;
 import com.dianping.bee.engine.spi.session.SessionManager;
-import com.dianping.bee.server.handler.SimpleServerQueryHandler;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
@@ -26,7 +24,7 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 	@Override
 	protected FrontendConnection getConnection(SocketChannel channel) {
 		SimpleServerConnection c = new SimpleServerConnection(channel);
-		FrontendQueryHandler queryHandler = getDefaultQueryHandler(c); // TODO use another one for test
+		FrontendQueryHandler queryHandler = getQueryHandler(c); // TODO use another one for test
 
 		c.setSessionManager(getSessionManager());
 		c.setQueryHandler(queryHandler);
@@ -37,19 +35,7 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 		return c;
 	}
 
-	protected DefaultServerQueryHandler getDefaultQueryHandler(ServerConnection c) {
-		try {
-			DefaultServerQueryHandler queryHandler = m_container.lookup(DefaultServerQueryHandler.class);
-
-			queryHandler.setServerConnection(c);
-			return queryHandler;
-		} catch (ComponentLookupException e) {
-			throw new RuntimeException(
-			      "Unable to get DefaultServerQueryHandler instance, please check if the environment is setup correctly!", e);
-		}
-	}
-
-	protected SimpleServerQueryHandler getSimpleQueryHandler(ServerConnection c) {
+	protected SimpleServerQueryHandler getQueryHandler(ServerConnection c) {
 		try {
 			SimpleServerQueryHandler queryHandler = m_container.lookup(SimpleServerQueryHandler.class);
 
@@ -74,5 +60,4 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 	public void setContainer(PlexusContainer container) {
 		m_container = container;
 	}
-
 }

@@ -1,20 +1,4 @@
-/**
- * Project: bee-engine
- * 
- * File Created at 2012-8-15
- * 
- * Copyright 2012 dianping.com.
- * All rights reserved.
- *
- * This software is the confidential and proprietary information of
- * Dianping Company. ("Confidential Information").  You shall not
- * disclose such Confidential Information and shall use it only in
- * accordance with the terms of the license agreement you entered into
- * with dianping.com.
- */
-package com.dianping.bee.server.handler;
-
-import org.apache.log4j.Logger;
+package com.dianping.bee.server;
 
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.handler.FrontendQueryHandler;
@@ -25,36 +9,31 @@ import com.alibaba.cobar.server.handler.KillHandler;
 import com.alibaba.cobar.server.handler.SavepointHandler;
 import com.alibaba.cobar.server.handler.SetHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
+import com.dianping.bee.engine.spi.handler.internal.DescHandler;
+import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
+import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
+import com.dianping.bee.engine.spi.handler.internal.UseHandler;
 import com.dianping.bee.server.parse.SimpleServerParse;
 import com.site.lookup.annotation.Inject;
 
-/**
- * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
- */
 public class SimpleServerQueryHandler implements FrontendQueryHandler {
 	@Inject
-	private SimpleSelectHandler m_selectHandler;
+	private SelectHandler m_selectHandler;
 
 	@Inject
-	private SimpleShowHandler m_showHandler;
+	private ShowHandler m_showHandler;
 
 	@Inject
-	private SimpleDescHandler m_descHandler;
+	private DescHandler m_descHandler;
 
 	@Inject
-	private SimpleUseHandler m_useHandler;
-
-	private static final Logger LOGGER = Logger.getLogger(SimpleServerQueryHandler.class);
+	private UseHandler m_useHandler;
 
 	private ServerConnection m_conn;
 
 	@Override
 	public void query(String sql) {
-		ServerConnection c = this.m_conn;
-
-		if (LOGGER.isDebugEnabled()) {
-			LOGGER.debug(new StringBuilder().append(c).append(sql).toString());
-		}
+		ServerConnection c = m_conn;
 
 		int rs = SimpleServerParse.parse(sql);
 		switch (rs & 0xff) {
@@ -64,7 +43,7 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 		case SimpleServerParse.SET:
 			SetHandler.handle(sql, c, rs >>> 8);
 			break;
-		case SimpleServerParse.DESC:
+		case SimpleServerParse.DESC: // New added
 			m_descHandler.handle(sql, c, rs >>> 8);
 			break;
 		case SimpleServerParse.SHOW:
