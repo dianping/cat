@@ -171,11 +171,21 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	public DumpTreeItem getStoreMeta(MessageTree tree) throws IOException {
 		DumpTreeItem item = new DumpTreeItem();
 
-		MessageId id = MessageId.parse(tree.getMessageId());
-		int index = id.getIndex();
-		String fileName = getBucketName(id, tree);
+		MessageId messageId = MessageId.parse(tree.getMessageId());
+		int index = messageId.getIndex();
+		
+		String fileName = getBucketName(messageId, tree);
 		ChannelBuffer buf = getChannelBuf(index,fileName, tree);
-		item.setBuf(buf).setFileName(fileName).setIndex(index);
+		
+		// get rid of length
+		buf.readInt();
+
+		int size = buf.readableBytes();
+		byte[] data = new byte[size];
+
+		buf.readBytes(data);
+		
+		item.setFileName(fileName).setIndex(index).setSize(size).setBytes(data);
 		return item;
 	}
 
@@ -201,7 +211,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	public void storeMessage(DumpTreeItem item) throws IOException{
 		LocalMessageBucket bucket = m_buckets.get(item.getFileName());
-		bucket.storeChannelBuf(item.getIndex(), item.getBuf());
+		bucket.storeChannelBuf(item.getIndex(), item.getSize(),item.getBytes());
 	}
 
 	@Override

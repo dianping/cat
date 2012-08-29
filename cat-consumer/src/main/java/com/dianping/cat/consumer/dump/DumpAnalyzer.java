@@ -16,6 +16,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
@@ -48,6 +49,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	private Logger m_logger;
 
 	private final BlockingQueue<DumpTreeItem> m_queue = new LinkedBlockingQueue<DumpTreeItem>(10000);
+
+	private int m_errors;
 
 	public DumpUploader getDumpUploader() {
 		return m_uploader;
@@ -123,10 +126,18 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 				// return the fileName and 2-bit tree
 
 				DumpTreeItem item = m_bucketManager.getStoreMeta(tree);
-				m_queue.offer(item);
-				//m_bucketManager.storeMessage(tree);
+				boolean result = m_queue.offer(item);
+
+				if (!result) {
+					m_errors++;
+
+					if (m_errors == 1 || m_errors % 10000 == 0) {
+						m_logger.error("Error when put dump item into queue, errors:" + m_errors);
+					}
+				}
+				// m_bucketManager.storeMessage(tree);
 			} catch (IOException e) {
-				m_logger.error("Error when dumping to local file system!", e);
+				//m_logger.error("Error when dumping to local file system!", e);
 			}
 		}
 	}
@@ -153,14 +164,24 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 		@Override
 		public void run() {
+			int i = 0;
+			long current = System.currentTimeMillis();
 			while (true) {
 				try {
+					i++;
 					DumpTreeItem item = m_queue.poll(5, TimeUnit.MILLISECONDS);
+
 					if (item != null) {
 						m_bucketManager.storeMessage(item);
 					}
+
+					if (i % 10000 == 0) {
+						long l = System.currentTimeMillis() - current;
+						System.out.println("Total :" + i + " time " + l);
+						System.out.println((double) i / l);
+					}
 				} catch (Exception e) {
-					if (m_error == 1 || m_error % 1000 == 0) {
+					if (m_error == 1 || m_error % 10000 == 0) {
 						Cat.logError(e);
 					}
 				}
@@ -168,12 +189,12 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		}
 
 		@Override
-      public String getName() {
-	      return "WriteMessageTree";
-      }
+		public String getName() {
+			return "WriteMessageTree";
+		}
 
 		@Override
-      public void shutdown() {
-      }
+		public void shutdown() {
+		}
 	}
 }

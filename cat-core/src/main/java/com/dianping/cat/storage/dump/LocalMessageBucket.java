@@ -117,13 +117,7 @@ public class LocalMessageBucket implements MessageBucket {
 		return buf;
 	}
 
-	public void storeChannelBuf(int treeIndex, ChannelBuffer buf) throws IOException {
-		buf.readInt();// get rid of length
-
-		int size = buf.readableBytes();
-		byte[] data = new byte[size];
-
-		buf.readBytes(data);
+	public void storeChannelBuf(int treeIndex, int size, byte[] data) throws IOException {
 		m_lastAccessTime = System.currentTimeMillis();
 		m_writer.writeMessage(treeIndex, data);
 		m_dirty.set(true);

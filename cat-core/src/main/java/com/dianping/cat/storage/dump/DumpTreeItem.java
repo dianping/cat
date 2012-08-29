@@ -1,6 +1,5 @@
 package com.dianping.cat.storage.dump;
 
-import org.jboss.netty.buffer.ChannelBuffer;
 
 public class DumpTreeItem {
 
@@ -8,14 +7,17 @@ public class DumpTreeItem {
 	
 	private String m_fileName;
 	
-	private ChannelBuffer m_buf;
+	private int m_size;
+	
+	private byte[] m_bytes;
 
 	public int getIndex() {
 		return m_index;
 	}
 
-	public void setIndex(int index) {
+	public DumpTreeItem setIndex(int index) {
 		m_index = index;
+		return this;
 	}
 
 	public String getFileName() {
@@ -27,12 +29,21 @@ public class DumpTreeItem {
 		return this;
 	}
 
-	public ChannelBuffer getBuf() {
-		return m_buf;
+	public int getSize() {
+		return m_size;
 	}
 
-	public DumpTreeItem setBuf(ChannelBuffer buf) {
-		m_buf = buf;
+	public DumpTreeItem setSize(int size) {
+		m_size = size;
 		return this;
 	}
+
+	public byte[] getBytes() {
+		return m_bytes;
+	}
+
+	public void setBytes(byte[] bytes) {
+		m_bytes = bytes;
+	}
+	
 }
