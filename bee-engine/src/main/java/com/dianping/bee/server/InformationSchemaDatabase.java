@@ -16,14 +16,11 @@ package com.dianping.bee.server;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.dianping.bee.engine.spi.internal.StaticTableHelper;
 import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
-import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.meta.internal.DefaultCell;
-import com.dianping.bee.engine.spi.meta.internal.DefaultRow;
 import com.dianping.bee.engine.spi.meta.internal.DefaultRowSet;
 
 /**
@@ -78,12 +75,10 @@ public class InformationSchemaDatabase implements DatabaseProvider {
 
 			Cell[] cells = new Cell[columns.length];
 			for (int colIndex = 0; colIndex < cells.length; colIndex++) {
-				ColumnMeta columnMeta = StaticTableHelper.findColumn(this, columns[colIndex].getName());
+				ColumnMeta columnMeta = columns[colIndex];
 				cells[colIndex] = new DefaultCell(columnMeta, null);
 			}
 
-			Row row = new DefaultRow(cells);
-			rowSet.addRow(row);
 			return rowSet;
 		}
 	}

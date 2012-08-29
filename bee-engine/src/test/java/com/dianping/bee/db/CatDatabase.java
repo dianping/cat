@@ -4,7 +4,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.dianping.bee.engine.spi.internal.StaticTableHelper;
 import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
@@ -74,7 +73,7 @@ public class CatDatabase implements DatabaseProvider {
 			for (int rowIndex = 0; rowIndex < 10; rowIndex++) {
 				Cell[] cells = new Cell[columns.length];
 				for (int colIndex = 0; colIndex < cells.length; colIndex++) {
-					ColumnMeta columnMeta = StaticTableHelper.findColumn(this, columns[colIndex].getName());
+					ColumnMeta columnMeta = columns[colIndex];
 					String randomValue = null;
 					if (columnMeta.getType().getSimpleName().equals("String")) {
 						randomValue = RandomStringUtils.randomAlphabetic(5);

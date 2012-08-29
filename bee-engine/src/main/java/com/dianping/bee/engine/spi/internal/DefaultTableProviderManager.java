@@ -21,6 +21,17 @@ public class DefaultTableProviderManager extends ContainerHolder implements Tabl
 	private Map<String, Map<String, TableProvider>> m_map = new HashMap<String, Map<String, TableProvider>>();
 
 	@Override
+	public TableProvider getTableProvider(String database, String table) {
+		Map<String, TableProvider> map = m_map.get(database.toLowerCase());
+
+		if (map != null) {
+			return map.get(table.toUpperCase());
+		} else {
+			return null;
+		}
+	}
+
+	@Override
 	public TableProvider getTableProvider(String table) {
 		String database = m_sessionManager.getSession().getDatabase();
 		Map<String, TableProvider> map = m_map.get(database);

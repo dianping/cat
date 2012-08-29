@@ -53,6 +53,31 @@ public class JDBCTest extends ComponentTestCase {
 	}
 
 	@Test
+	public void testQueryInformationSchema() throws InstantiationException, IllegalAccessException,
+	      ClassNotFoundException, SQLException {
+		String url = "jdbc:mysql://localhost:2330/";
+		String dbName = "cat";
+		String driver = "com.mysql.jdbc.Driver";
+		String userName = "test";
+		String password = "test";
+		String sql = "SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='cat'";
+
+		Class.forName(driver).newInstance();
+		DriverManager.setLoginTimeout(600);
+		Connection conn = DriverManager.getConnection(url + dbName, userName, password);
+		Statement stmt = conn.createStatement();
+		Assert.assertNotNull(stmt);
+		ResultSet rs = stmt.executeQuery(sql);
+		Assert.assertEquals(1, rs.getMetaData().getColumnCount());
+		Assert.assertNotNull(rs);
+		rs.last();
+		Assert.assertEquals(0, rs.getRow());
+		displayResultSet(rs);
+		conn.close();
+
+	}
+
+	@Test
 	public void testSingleQuery() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
 	      SQLException {
 		String url = "jdbc:mysql://localhost:2330/";

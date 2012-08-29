@@ -44,6 +44,8 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 
 	private String m_tableName;
 
+	private String m_databaseName;
+
 	private Clause m_clause;
 
 	private List<ColumnMeta> m_selectColumns = new ArrayList<ColumnMeta>();
@@ -73,7 +75,7 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			}
 		}
 
-		ColumnMeta column = m_helper.findColumn(m_tableName, columnName);
+		ColumnMeta column = m_helper.findColumn(m_databaseName, m_tableName, columnName);
 
 		columns.add(column);
 		return column;
@@ -96,7 +98,11 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			throw new RuntimeException("Not a single table query!");
 		}
 
-		m_stmt.setTable(m_helper.findTable(m_tableName));
+		if (m_databaseName == null) {
+			m_stmt.setTable(m_helper.findTable(m_tableName));
+		} else {
+			m_stmt.setTable(m_helper.findTable(m_databaseName, m_tableName));
+		}
 
 		// for select clause
 		m_clause = Clause.SELECT;
@@ -128,7 +134,11 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			// to evaluate where clause
 			m_rowFilter.setExpression(where);
 			m_stmt.setRowFilter(m_rowFilter);
-			m_stmt.setIndex(m_helper.findIndex(m_tableName, m_whereColumns));
+			if (m_databaseName == null) {
+				m_stmt.setIndex(m_helper.findIndex(m_tableName, m_whereColumns));
+			} else {
+				m_stmt.setIndex(m_helper.findIndex(m_databaseName, m_tableName, m_whereColumns));
+			}
 		}
 	}
 
@@ -164,5 +174,8 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 	public void visit(TableRefFactor node) {
 		m_alias = node.getAlias();
 		m_tableName = node.getTable().getIdTextUpUnescape();
+		if (node.getTable().getParent() != null) {
+			m_databaseName = node.getTable().getParent().getIdTextUpUnescape();
+		}
 	}
 }
