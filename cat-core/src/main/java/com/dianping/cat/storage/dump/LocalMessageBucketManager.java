@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -167,6 +168,42 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_baseDir = baseDir;
 	}
 
+	public DumpTreeItem getStoreMeta(MessageTree tree) throws IOException {
+		DumpTreeItem item = new DumpTreeItem();
+
+		MessageId id = MessageId.parse(tree.getMessageId());
+		int index = id.getIndex();
+		String fileName = getBucketName(id, tree);
+		ChannelBuffer buf = getChannelBuf(index,fileName, tree);
+		item.setBuf(buf).setFileName(fileName).setIndex(index);
+		return item;
+	}
+
+	private String getBucketName(MessageId id, MessageTree tree) throws IOException {
+		// <callee domain> - <caller domain> - <callee ip>
+		String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
+		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+		LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+		if (bucket == null) {
+			bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+			bucket.setBaseDir(m_baseDir);
+			bucket.initialize(dataFile);
+			m_buckets.put(dataFile, bucket);
+		}
+		return dataFile;
+	}
+
+	private ChannelBuffer getChannelBuf(int index,String fileName, MessageTree tree) throws IOException {
+		LocalMessageBucket bucket = m_buckets.get(fileName);
+		return bucket.getChannelBuf(tree);
+	}
+
+	public void storeMessage(DumpTreeItem item) throws IOException{
+		LocalMessageBucket bucket = m_buckets.get(item.getFileName());
+		bucket.storeChannelBuf(item.getIndex(), item.getBuf());
+	}
+
 	@Override
 	public void storeMessage(MessageTree tree) throws IOException {
 		MessageId id = MessageId.parse(tree.getMessageId());
@@ -212,4 +249,5 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		public void shutdown() {
 		}
 	}
+
 }

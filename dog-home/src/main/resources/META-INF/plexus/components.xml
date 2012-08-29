@@ -14,6 +14,11 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.dog.alarm.rule.RuleContext</role>
+			<implementation>com.dianping.dog.alarm.rule.DefaultRuleContext</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
 			<role>com.site.web.mvc.model.ModuleRegistry</role>
 			<implementation>com.site.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>

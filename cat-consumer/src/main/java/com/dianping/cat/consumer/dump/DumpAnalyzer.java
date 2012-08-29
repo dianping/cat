@@ -4,20 +4,27 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.storage.dump.DumpTreeItem;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.site.helper.Threads;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
@@ -40,6 +47,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	private Logger m_logger;
 
+	private final BlockingQueue<DumpTreeItem> m_queue = new LinkedBlockingQueue<DumpTreeItem>(10000);
+
 	public DumpUploader getDumpUploader() {
 		return m_uploader;
 	}
@@ -50,10 +59,10 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			m_channelManager.closeAllChannels(m_startTime);
 
 			try {
-	         m_bucketManager.archive(m_startTime);
-         } catch (IOException e) {
-	         e.printStackTrace();
-         }
+				m_bucketManager.archive(m_startTime);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -111,7 +120,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			}
 		} else {
 			try {
-				m_bucketManager.storeMessage(tree);
+				// return the fileName and 2-bit tree
+
+				DumpTreeItem item = m_bucketManager.getStoreMeta(tree);
+				m_queue.offer(item);
+				//m_bucketManager.storeMessage(tree);
 			} catch (IOException e) {
 				m_logger.error("Error when dumping to local file system!", e);
 			}
@@ -130,6 +143,37 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 		if (!m_localMode) {
 			m_uploader.start();
+
+			Threads.forGroup("Cat").start(new WriteMessageTree());
 		}
+	}
+
+	public class WriteMessageTree implements Task {
+		private int m_error = 0;
+
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					DumpTreeItem item = m_queue.poll(5, TimeUnit.MILLISECONDS);
+					if (item != null) {
+						m_bucketManager.storeMessage(item);
+					}
+				} catch (Exception e) {
+					if (m_error == 1 || m_error % 1000 == 0) {
+						Cat.logError(e);
+					}
+				}
+			}
+		}
+
+		@Override
+      public String getName() {
+	      return "WriteMessageTree";
+      }
+
+		@Override
+      public void shutdown() {
+      }
 	}
 }

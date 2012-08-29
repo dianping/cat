@@ -75,9 +75,27 @@ public class DumpChannel {
 		m_lastChunkAdjust = lastChunkAdjust;
 	}
 
+	public int write(ChannelBuffer buf) throws IOException{
+		int length = buf.readInt();
+		long count = m_file.length();
+
+		if (m_maxSize > 0 && count + m_lastChunkAdjust + length > m_maxSize) {
+			// exceed the max size
+			return 0;
+		}
+
+		buf.getBytes(buf.readerIndex(), m_out, length);
+
+		// a blank line used to separate two message trees
+		m_out.write('\n');
+		//m_out.flush();
+		
+		return length + 1;
+	}
+	
 	public int write(MessageTree tree) throws IOException {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-
+		
 		m_codec.encode(tree, buf);
 
 		int length = buf.readInt();
@@ -93,7 +111,7 @@ public class DumpChannel {
 		// a blank line used to separate two message trees
 		m_out.write('\n');
 		//m_out.flush();
-
+		
 		return length + 1;
 	}
 }

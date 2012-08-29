@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
 public class TestSendMessage {
@@ -198,11 +199,11 @@ public class TestSendMessage {
 	public void sendCacheTransactionWithMissed() throws Exception {
 		for (int i = 0; i < 130; i++) {
 			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method" + i % 10);
-				Cat.getProducer().newEvent("Cache.kvdb", "Method"+ i % 10+":missed");
+			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
 			t.addData("key and value");
 
 			Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method" + i % 10);
-				Cat.getProducer().newEvent("Cache.web", "Method"+ i % 10+":missed");
+			Cat.getProducer().newEvent("Cache.web", "Method" + i % 10 + ":missed");
 			t2.addData("key and value");
 			Thread.sleep(2);
 			t2.complete();
@@ -213,11 +214,38 @@ public class TestSendMessage {
 			Thread.sleep(3);
 			t3.complete();
 		}
-		
-		Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method" );
+
+		Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method");
 		t2.addData("key and value");
 		Thread.sleep(2);
 		t2.complete();
 		Thread.sleep(1000);
+	}
+
+	@Test
+	public void sendMaxMessage() throws Exception {
+		long time = System.currentTimeMillis();
+		int i = 10;
+		while (i > 0) {
+			i = 10 * 1000 - (int) (System.currentTimeMillis() - time);
+
+			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method" + i % 10);
+			t.setStatus(Message.SUCCESS);
+			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
+			t.addData("key and value");
+
+			Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method" + i % 10);
+			Cat.getProducer().newEvent("Cache.web", "Method" + i % 10 + ":missed");
+			t2.addData("key and value");
+			t2.setStatus(Message.SUCCESS);
+			t2.complete();
+
+			Transaction t3 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			t3.addData("key and value");
+			t3.setStatus(Message.SUCCESS);
+			t3.complete();
+			t.complete();
+		}
+		Thread.sleep(10 * 1000);
 	}
 }

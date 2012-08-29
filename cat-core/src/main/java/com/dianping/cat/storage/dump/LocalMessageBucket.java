@@ -109,6 +109,27 @@ public class LocalMessageBucket implements MessageBucket {
 		m_codec = codec;
 	}
 
+	public ChannelBuffer getChannelBuf(MessageTree tree) {
+		// int index = MessageId.parse(tree.getMessageId()).getIndex();
+		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
+
+		m_codec.encode(tree, buf);
+		return buf;
+	}
+
+	public void storeChannelBuf(int treeIndex, ChannelBuffer buf) throws IOException {
+		buf.readInt();// get rid of length
+
+		int size = buf.readableBytes();
+		byte[] data = new byte[size];
+
+		buf.readBytes(data);
+		m_lastAccessTime = System.currentTimeMillis();
+		m_writer.writeMessage(treeIndex, data);
+		m_dirty.set(true);
+		m_rawSize += data.length;
+	}
+
 	@Override
 	public void store(MessageTree tree) throws IOException {
 		int index = MessageId.parse(tree.getMessageId()).getIndex();

@@ -162,7 +162,7 @@ public class MonthReportBuilderTask implements Runnable {
 
 	private long getSleepTime() {
 		long currentTime = System.currentTimeMillis();
-		long nextDay = TaskHelper.tomorrowZero(new Date()).getTime();
+		long nextDay = TaskHelper.tomorrowZero(new Date()).getTime() + 1000 * 60 * 10;
 		return nextDay - currentTime;
 	}
 

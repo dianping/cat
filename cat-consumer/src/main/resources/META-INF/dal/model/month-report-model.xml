@@ -66,8 +66,8 @@
     <attribute name="response-time-flag" value-type="int" primitive="true" />
     <attribute name="error-total-flag" value-type="int"  primitive="true"/>
     <attribute name="error-avg-flag" value-type="int" primitive="true" />
-    <attribute name="error-percent-flag" value-type="int" primitive="true" format="0.000000"/>
-    <attribute name="success-percent-flag" value-type="double" primitive="true" format="0.000000"/>
+    <attribute name="error-percent-flag" value-type="int" primitive="true" />
+    <attribute name="success-percent-flag" value-type="int" primitive="true"/>
   </entity>
   <entity name="service">
     <entity-ref name="base-info" />
@@ -85,7 +85,7 @@
     <attribute name="total" value-type="long"  primitive="true"/>
     <attribute name="avg" value-type="double" primitive="true" format="0.00"/>
     <attribute name="response-time" value-type="double" primitive="true" format="0.00"/>
-    <attribute name="hit-percent" value-type="double" primitive="true" format="0.0000"/>
+    <attribute name="hit-percent" value-type="double" primitive="true" format="0.000000"/>
     
     <attribute name="total-flag" value-type="int"  primitive="true"/>
     <attribute name="avg-flag" value-type="int" primitive="true" />
