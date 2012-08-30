@@ -10,10 +10,10 @@ import com.alibaba.cobar.server.handler.SavepointHandler;
 import com.alibaba.cobar.server.handler.SetHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
 import com.dianping.bee.engine.spi.handler.internal.DescHandler;
+import com.dianping.bee.engine.spi.handler.internal.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
 import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
 import com.dianping.bee.engine.spi.handler.internal.UseHandler;
-import com.dianping.bee.server.parse.SimpleServerParse;
 import com.site.lookup.annotation.Inject;
 
 public class SimpleServerQueryHandler implements FrontendQueryHandler {
@@ -28,6 +28,9 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 
 	@Inject
 	private UseHandler m_useHandler;
+
+	@Inject
+	private PrepareHandler m_prepareHandler;
 
 	private ServerConnection m_conn;
 
@@ -79,6 +82,11 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 		default:
 			c.execute(sql, rs);
 		}
+	}
+
+	public void prepare(String sql) {
+		ServerConnection c = m_conn;
+		m_prepareHandler.handle(sql, c, -1);
 	}
 
 	public void setServerConnection(ServerConnection c) {

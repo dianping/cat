@@ -13,6 +13,8 @@ import com.site.lookup.ContainerHolder;
 public class DefaultStatementManager extends ContainerHolder implements StatementManager {
 	private Map<String, Statement> m_statements = new HashMap<String, Statement>();
 
+	private Map<String, Statement> m_prepares = new HashMap<String, Statement>();
+
 	@Override
 	public Statement build(String sql) throws SQLSyntaxErrorException {
 		Statement statement = m_statements.get(sql);
@@ -48,5 +50,23 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		} else {
 			throw new SQLSyntaxErrorException(sql);
 		}
+	}
+
+	@Override
+	public Statement prepare(String sql) throws SQLSyntaxErrorException {
+		Statement statement = m_prepares.get(sql);
+
+		if (statement == null) {
+			synchronized (m_prepares) {
+				statement = m_prepares.get(sql);
+
+				if (statement == null) {
+					statement = parseSQL(sql);
+					m_prepares.put(sql, statement);
+				}
+			}
+		}
+
+		return statement;
 	}
 }

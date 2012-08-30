@@ -12,6 +12,7 @@ import com.dianping.bee.engine.spi.SingleTableStatement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.handler.internal.DescHandler;
+import com.dianping.bee.engine.spi.handler.internal.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
 import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
 import com.dianping.bee.engine.spi.handler.internal.UseHandler;
@@ -65,13 +66,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 	private void defineHandlers(List<Component> all) {
 		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class));
+		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class, PrepareHandler.class));
 
 		all.add(C(UseHandler.class));
 		all.add(C(ShowHandler.class));
 		all.add(C(DescHandler.class) //
 		      .req(TableProviderManager.class));
 		all.add(C(SelectHandler.class) //
+		      .req(StatementManager.class));
+		all.add(C(PrepareHandler.class)//
 		      .req(StatementManager.class));
 	}
 
