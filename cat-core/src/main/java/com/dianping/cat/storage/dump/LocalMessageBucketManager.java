@@ -168,8 +168,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_baseDir = baseDir;
 	}
 
-	public DumpTreeItem getStoreMeta(MessageTree tree) throws IOException {
-		DumpTreeItem item = new DumpTreeItem();
+	public DumpItem buildStoreMetaInfo(MessageTree tree) throws IOException {
+		DumpItem item = new DumpItem();
 
 		MessageId messageId = MessageId.parse(tree.getMessageId());
 		int index = messageId.getIndex();
@@ -206,12 +206,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private ChannelBuffer getChannelBuf(int index,String fileName, MessageTree tree) throws IOException {
 		LocalMessageBucket bucket = m_buckets.get(fileName);
+		
 		return bucket.getChannelBuf(tree);
 	}
 
-	public void storeMessage(DumpTreeItem item) throws IOException{
+	public void storeMessage(DumpItem item) throws IOException{
 		LocalMessageBucket bucket = m_buckets.get(item.getFileName());
-		bucket.storeChannelBuf(item.getIndex(), item.getSize(),item.getBytes());
+		
+		bucket.storeChannelBuf(item.getIndex(), item.getSize(), item.getBytes());
 	}
 
 	@Override

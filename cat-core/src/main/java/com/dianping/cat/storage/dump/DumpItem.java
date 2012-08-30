@@ -1,7 +1,7 @@
 package com.dianping.cat.storage.dump;
 
 
-public class DumpTreeItem {
+public class DumpItem {
 
 	private int m_index;
 	
@@ -15,7 +15,7 @@ public class DumpTreeItem {
 		return m_index;
 	}
 
-	public DumpTreeItem setIndex(int index) {
+	public DumpItem setIndex(int index) {
 		m_index = index;
 		return this;
 	}
@@ -24,7 +24,7 @@ public class DumpTreeItem {
 		return m_fileName;
 	}
 
-	public DumpTreeItem setFileName(String fileName) {
+	public DumpItem setFileName(String fileName) {
 		m_fileName = fileName;
 		return this;
 	}
@@ -33,7 +33,7 @@ public class DumpTreeItem {
 		return m_size;
 	}
 
-	public DumpTreeItem setSize(int size) {
+	public DumpItem setSize(int size) {
 		m_size = size;
 		return this;
 	}

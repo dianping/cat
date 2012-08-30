@@ -20,7 +20,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.storage.dump.DumpTreeItem;
+import com.dianping.cat.storage.dump.DumpItem;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 import com.site.helper.Threads;
@@ -47,7 +47,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	private Logger m_logger;
 
-	private final BlockingQueue<DumpTreeItem> m_queue = new LinkedBlockingQueue<DumpTreeItem>(10000);
+	private final BlockingQueue<DumpItem> m_storeQueue = new LinkedBlockingQueue<DumpItem>(10000);
 
 	private int m_errors;
 
@@ -122,8 +122,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			}
 		} else {
 			try {
-				DumpTreeItem item = m_bucketManager.getStoreMeta(tree);
-				boolean result = m_queue.offer(item);
+				DumpItem item = m_bucketManager.buildStoreMetaInfo(tree);
+				boolean result = m_storeQueue.offer(item);
+				
 				if (!result) {
 					m_errors++;
 
@@ -131,7 +132,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 						m_logger.error("Error when put dump item into queue, errors:" + m_errors);
 					}
 				}
-				// m_bucketManager.storeMessage(tree);
+				//m_bucketManager.storeMessage(tree);
 			} catch (IOException e) {
 				m_logger.error("Error when dumping to local file system!", e);
 			}
@@ -164,7 +165,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			// long current = System.currentTimeMillis();
 			while (true) {
 				try {
-					DumpTreeItem item = m_queue.poll(5, TimeUnit.MILLISECONDS);
+					DumpItem item = m_storeQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
 						m_bucketManager.storeMessage(item);

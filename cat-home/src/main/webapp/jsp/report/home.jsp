@@ -37,9 +37,11 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 <br>
 <br>
 <table>
-	<tr class="even"><td>序号</td><td>常见问题</td></tr>
-	<tr class="odd"><td>1</td><td>Transaction、Event历史报表，图表X轴以5分钟为刻度，Y轴表示每5分钟的值</td></tr>
-	<tr class="odd"><td>2</td><td>Problem、Heartbeat历史报表，图表X轴以1分钟为刻度，Y轴表示每1分钟的值</td></tr>
+	<tr class="even"><td>序号</td><td>常见问题</td><td>解答</td></tr>
+	<tr class="odd"><td>1</td><td>TestCase跑不起来</td><td>升级至CAT的0.4.0的版本，Pigeon版本至1.6.1</td></tr>
+	<tr class="even"><td>2</td><td>集成了CAT，但是在测试环境看不到信息</td><td>请check相关步骤<a href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E9%9B%86%E6%88%90%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3" target="_blank">CAT集成帮助文档</a></td></tr>
+	<tr class="odd"><td>3</td><td>Transaction、Event报表区间</<td><td>Transaction、Event历史报表，图表X轴以5分钟为刻度，Y轴表示每5分钟的值</td></tr>
+	<tr class="even"><td>4</td><td>Problem、Hearbeat报表区间</<td><td>Problem、Heartbeat历史报表，图表X轴以1分钟为刻度，Y轴表示每1分钟的值</td></tr>
 </table>
 <br>
 <br>
