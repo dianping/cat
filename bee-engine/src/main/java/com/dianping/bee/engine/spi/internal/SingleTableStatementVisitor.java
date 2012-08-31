@@ -10,8 +10,6 @@ import com.alibaba.cobar.parser.ast.fragment.tableref.TableReference;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
 import com.alibaba.cobar.parser.util.Pair;
 import com.alibaba.cobar.parser.visitor.EmptySQLASTVisitor;
-import com.dianping.bee.engine.spi.RowFilter;
-import com.dianping.bee.engine.spi.SingleTableStatement;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.site.lookup.annotation.Inject;
@@ -36,9 +34,6 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 
 	@Inject
 	private SingleTableStatement m_stmt;
-
-	@Inject
-	private RowFilter m_rowFilter;
 
 	private String m_alias;
 
@@ -132,8 +127,9 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			where.accept(this);
 
 			// to evaluate where clause
-			m_rowFilter.setExpression(where);
-			m_stmt.setRowFilter(m_rowFilter);
+			// m_rowFilter.setExpression(where);
+			// m_stmt.setRowFilter(m_rowFilter);
+
 			if (m_databaseName == null) {
 				m_stmt.setIndex(m_helper.findIndex(m_tableName, m_whereColumns));
 			} else {

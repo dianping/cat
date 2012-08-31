@@ -16,6 +16,10 @@
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
+			<groupId>com.dianping.cat</groupId>
+			<artifactId>cat-consumer</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.site.common</groupId>
 			<artifactId>test-framework</artifactId>
 			<scope>test</scope>

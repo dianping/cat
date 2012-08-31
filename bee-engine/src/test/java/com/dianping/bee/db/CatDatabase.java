@@ -4,6 +4,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
+import com.dianping.bee.engine.spi.index.Index;
 import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
@@ -194,6 +195,11 @@ public class CatDatabase implements DatabaseProvider {
 				throw new IndexOutOfBoundsException("size: " + m_orders.length + ", index: " + index);
 			}
 		}
+
+		@Override
+      public Class<? extends Index<?>> getIndexClass() {
+			throw new UnsupportedOperationException("Not implemented yet!");
+      }
 	}
 
 	public static enum TransactionColumn implements ColumnMeta {
@@ -287,6 +293,11 @@ public class CatDatabase implements DatabaseProvider {
 				throw new IndexOutOfBoundsException("size: " + m_orders.length + ", index: " + index);
 			}
 		}
+
+		@Override
+      public Class<? extends Index<?>> getIndexClass() {
+			throw new UnsupportedOperationException("Not implemented yet!");
+      }
 	}
 
 	@Override

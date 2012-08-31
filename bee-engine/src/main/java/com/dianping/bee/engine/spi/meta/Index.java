@@ -1,6 +1,6 @@
 package com.dianping.bee.engine.spi.meta;
 
-import com.dianping.bee.engine.spi.RowFilter;
+import com.dianping.bee.engine.spi.row.RowContext;
 
 public interface Index {
 	public IndexMeta getMeta();
@@ -9,7 +9,9 @@ public interface Index {
 
 	public void addValue(int index, Object value, PredicateType type);
 
-	public void scan(RowSet rowset, RowFilter filter);
+	public void findByKey(RowContext ctx);
+	
+	public void findByRange(RowContext ctx);
 
 	public static enum PredicateType {
 		LT("<"),

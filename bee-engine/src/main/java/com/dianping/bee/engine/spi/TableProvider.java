@@ -11,9 +11,5 @@ public interface TableProvider {
 
 	public String getName();
 
-	/**
-	 * @param m_index
-	 * @param m_selectColumns
-	 */
-	public RowSet queryByIndex(IndexMeta m_index, ColumnMeta[] m_selectColumns);
+	public RowSet queryByIndex(IndexMeta m_index, ColumnMeta[] m_selectColumns) throws Exception;
 }

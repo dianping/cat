@@ -39,11 +39,7 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		DefaultStatementVisitor defaultVisitor = new DefaultStatementVisitor();
 		statement.accept(defaultVisitor);
 
-		if (defaultVisitor.getTableAlias().size() > 1) {
-			MultiTableStatementVisitor visitor = lookup(MultiTableStatementVisitor.class);
-			statement.accept(visitor);
-			return visitor.getStatement();
-		} else if (defaultVisitor.getTableAlias().size() == 1) {
+		if (defaultVisitor.getTableAlias().size() == 1) {
 			SingleTableStatementVisitor visitor = lookup(SingleTableStatementVisitor.class);
 			statement.accept(visitor);
 			return visitor.getStatement();

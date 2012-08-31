@@ -846,6 +846,9 @@
 					<role>com.dianping.cat.report.page.transaction.JspViewer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.transaction.XmlViewer</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
 				</requirement>
 				<requirement>
@@ -873,6 +876,10 @@
 		<component>
 			<role>com.dianping.cat.report.page.transaction.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.transaction.XmlViewer</role>
+			<implementation>com.dianping.cat.report.page.transaction.XmlViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>

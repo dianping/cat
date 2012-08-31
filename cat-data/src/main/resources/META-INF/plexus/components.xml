@@ -5,5 +5,9 @@
 			<role-hint>cat</role-hint>
 			<implementation>com.dianping.cat.data.CatDatabaseProvider</implementation>
 		</component>
+		<component>
+			<role>com.dianping.cat.data.transaction.TransactionIndexer</role>
+			<implementation>com.dianping.cat.data.transaction.TransactionIndexer</implementation>
+		</component>
 	</components>
 </plexus>

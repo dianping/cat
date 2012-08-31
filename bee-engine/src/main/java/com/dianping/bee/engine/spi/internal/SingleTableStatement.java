@@ -1,13 +1,18 @@
 package com.dianping.bee.engine.spi.internal;
 
-import com.dianping.bee.engine.spi.RowFilter;
-import com.dianping.bee.engine.spi.SingleTableStatement;
+import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.TableProvider;
+import com.dianping.bee.engine.spi.index.Index;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.bee.engine.spi.meta.RowSet;
+import com.dianping.bee.engine.spi.row.DefaultRowContext;
+import com.dianping.bee.engine.spi.row.DefaultRowListener;
+import com.dianping.bee.engine.spi.row.RowContext;
+import com.dianping.bee.engine.spi.row.RowFilter;
+import com.site.lookup.ContainerHolder;
 
-public class DefaultSingleTableStatement implements SingleTableStatement {
+public class SingleTableStatement extends ContainerHolder implements Statement {
 	private TableProvider m_table;
 
 	private RowFilter m_rowFilter;
@@ -22,18 +27,8 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	}
 
 	@Override
-	public RowFilter getRowFilter() {
-		return m_rowFilter;
-	}
-
-	@Override
 	public ColumnMeta[] getSelectColumns() {
 		return m_selectColumns;
-	}
-
-	@Override
-	public TableProvider getTable() {
-		return m_table;
 	}
 
 	@Override
@@ -41,7 +36,6 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 		m_index = index;
 	}
 
-	@Override
 	public void setRowFilter(RowFilter rowFilter) {
 		m_rowFilter = rowFilter;
 	}
@@ -55,29 +49,25 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 		}
 	}
 
-	@Override
 	public void setTable(TableProvider table) {
 		m_table = table;
 	}
 
 	@Override
 	public RowSet query() {
-		// Query By Index
-		RowSet providerRowSet = m_table.queryByIndex(m_index, m_selectColumns);
-		// Filter
-		if (providerRowSet != null) {
-			providerRowSet.filter(m_rowFilter);
-		}
-		// Build select columns
-		RowSet returnRowSet = buildReturnRowSet(providerRowSet);
-		return returnRowSet;
-	}
+		Index<?> index = lookup(m_index.getIndexClass());
+		RowContext ctx = new DefaultRowContext(m_selectColumns);
+		DefaultRowListener listener = new DefaultRowListener(m_selectColumns);
 
-	/**
-	 * @param providerRowSet
-	 * @return
-	 */
-	private RowSet buildReturnRowSet(RowSet c) {
-		return c;
+		listener.setRowFilter(m_rowFilter);
+		ctx.setRowListener(listener);
+
+		try {
+			index.queryById(ctx, null);
+
+			return listener.getRowSet();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
