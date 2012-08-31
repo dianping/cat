@@ -23,22 +23,21 @@ import com.alibaba.cobar.protocol.MySQLPacket;
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-public class PreparePacket extends MySQLPacket {
+public class PrepareParameterPacket extends MySQLPacket {
 
-	public static final byte FIELD_COUNT = 0x00;
+	private int m_fieldType;
 
-	private byte m_fieldCount = FIELD_COUNT;
+	private int m_columnFlag;
 
-	private long m_statementId;
+	private byte m_decimal;
 
-	private int m_columnSize;
+	private int m_length;
 
-	private int m_parameterSize;
-
-	public PreparePacket(long statementId, int columnSize, int parameterSize) {
-		this.m_statementId = statementId;
-		this.m_columnSize = columnSize;
-		this.m_parameterSize = parameterSize;
+	public PrepareParameterPacket(int fieldType, int columnFlag, byte decimal, int length) {
+		this.m_fieldType = fieldType;
+		this.m_columnFlag = columnFlag;
+		this.m_decimal = decimal;
+		this.m_length = length;
 	}
 
 	@Override
@@ -47,20 +46,21 @@ public class PreparePacket extends MySQLPacket {
 		buffer = c.checkWriteBuffer(buffer, c.getPacketHeaderSize() + size);
 		BufferUtil.writeUB3(buffer, size);
 		buffer.put(packetId);
-		buffer.put(m_fieldCount);
-		BufferUtil.writeUB4(buffer, m_statementId);
-		BufferUtil.writeUB2(buffer, m_columnSize);
-		BufferUtil.writeUB2(buffer, m_parameterSize);
+		BufferUtil.writeUB2(buffer, m_fieldType);
+		BufferUtil.writeUB2(buffer, m_columnFlag);
+		buffer.put(m_decimal);
+		BufferUtil.writeUB4(buffer, m_length);
 		return buffer;
 	}
 
 	@Override
 	public int calcPacketSize() {
-		return 9;// 1+4+2+2
+		return 9; // 2+2+1+4
 	}
 
 	@Override
 	protected String getPacketInfo() {
-		return "MySQL Prepare Packet";
+		return "MySQL Prepare Parameter Packet";
 	}
+
 }

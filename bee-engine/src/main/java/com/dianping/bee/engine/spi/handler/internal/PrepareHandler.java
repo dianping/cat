@@ -18,6 +18,7 @@ import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 
 import com.alibaba.cobar.ErrorCode;
+import com.alibaba.cobar.Fields;
 import com.alibaba.cobar.server.ServerConnection;
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
@@ -76,8 +77,17 @@ public class PrepareHandler extends AbstractCommandHandler {
 		CommandContext ctx = new CommandContext(c);
 		int columnSize = stmt.getSelectColumns().length;
 		int parameterSize = stmt.getParameterSize();
+
 		PreparePacket packet = new PreparePacket(stmtId, columnSize, parameterSize);
 		ctx.write(packet);
+
+		// FIXME: just some sample code here
+		for (int i = 0; i < parameterSize; i++) {
+			PrepareParameterPacket parameterPacket = new PrepareParameterPacket(Fields.FIELD_TYPE_STRING,
+			      Fields.NOT_NULL_FLAG, (byte) 0, 50);
+			ctx.write(parameterPacket);
+		}
+
 		ctx.complete();
 	}
 }
