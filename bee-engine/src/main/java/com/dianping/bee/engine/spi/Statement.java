@@ -7,15 +7,19 @@ import com.dianping.bee.engine.spi.meta.RowSet;
 public interface Statement {
 	public IndexMeta getIndex();
 
+	public int getParameterSize();
+
 	public RowFilter getRowFilter();
 
 	public ColumnMeta[] getSelectColumns();
 
+	public RowSet query();
+
 	public void setIndex(IndexMeta index);
+
+	public void setParameterSize(int m_parameterSize);
 
 	public void setRowFilter(RowFilter rowFilter);
 
 	public void setSelectColumns(ColumnMeta[] selectColumns);
-
-	public RowSet query();
 }

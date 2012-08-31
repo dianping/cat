@@ -93,7 +93,67 @@ public class SimpleServerConnection extends ServerConnection {
 
 			// 执行查询
 			if (queryHandler != null) {
-				((SimpleServerQueryHandler) queryHandler).prepare(sql);
+				((SimpleServerQueryHandler) queryHandler).stmtPrepare(sql);
+			} else {
+				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
+			}
+		} finally {
+			m_sessionManager.removeSession();
+		}
+	}
+
+	@Override
+	public void stmtExecute(byte[] data) {
+		m_sessionManager.getSession().setDatabase(getSchema());
+		try {
+			// 取得查询语句
+			MySQLMessage mm = new MySQLMessage(data);
+			mm.position(5);
+			String sql = null;
+			try {
+				sql = mm.readString(charset);
+			} catch (UnsupportedEncodingException e) {
+				writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET, "Unknown charset '" + charset + "'");
+				return;
+			}
+			if (sql == null || sql.length() == 0) {
+				writeErrMessage(ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty Prepared SQL");
+				return;
+			}
+
+			// 执行查询
+			if (queryHandler != null) {
+				((SimpleServerQueryHandler) queryHandler).stmtExecute(sql);
+			} else {
+				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
+			}
+		} finally {
+			m_sessionManager.removeSession();
+		}
+	}
+
+	@Override
+	public void stmtClose(byte[] data) {
+		m_sessionManager.getSession().setDatabase(getSchema());
+		try {
+			// 取得查询语句
+			MySQLMessage mm = new MySQLMessage(data);
+			mm.position(5);
+			String sql = null;
+			try {
+				sql = mm.readString(charset);
+			} catch (UnsupportedEncodingException e) {
+				writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET, "Unknown charset '" + charset + "'");
+				return;
+			}
+			if (sql == null || sql.length() == 0) {
+				writeErrMessage(ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty Prepared SQL");
+				return;
+			}
+
+			// 执行查询
+			if (queryHandler != null) {
+				((SimpleServerQueryHandler) queryHandler).stmtClose(sql);
 			} else {
 				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
 			}

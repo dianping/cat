@@ -24,6 +24,11 @@ public class DefaultMultiTableStatement implements MultiTableStatement {
 	}
 
 	@Override
+	public int getParameterSize() {
+		return 0;
+	}
+
+	@Override
 	public RowFilter getRowFilter() {
 		return m_rowFilter;
 	}
@@ -39,8 +44,17 @@ public class DefaultMultiTableStatement implements MultiTableStatement {
 	}
 
 	@Override
+	public RowSet query() {
+		return null;
+	}
+
+	@Override
 	public void setIndex(IndexMeta index) {
 		m_index = index;
+	}
+
+	@Override
+	public void setParameterSize(int m_parameterSize) {
 	}
 
 	@Override
@@ -57,9 +71,4 @@ public class DefaultMultiTableStatement implements MultiTableStatement {
 	public void setTables(List<TableProvider> tables) {
 		m_tables = tables;
 	}
-
-	@Override
-   public RowSet query() {
-	   return null;
-   }
 }

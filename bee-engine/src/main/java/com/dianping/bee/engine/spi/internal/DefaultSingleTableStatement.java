@@ -16,9 +16,24 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 
 	private ColumnMeta[] m_selectColumns;
 
+	private int m_parameterSize;
+
+	/**
+	 * @param providerRowSet
+	 * @return
+	 */
+	private RowSet buildReturnRowSet(RowSet c) {
+		return c;
+	}
+
 	@Override
 	public IndexMeta getIndex() {
 		return m_index;
+	}
+
+	@Override
+	public int getParameterSize() {
+		return m_parameterSize;
 	}
 
 	@Override
@@ -37,8 +52,26 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	}
 
 	@Override
+	public RowSet query() {
+		// Query By Index
+		RowSet providerRowSet = m_table.queryByIndex(m_index, m_selectColumns);
+		// Filter
+		if (providerRowSet != null) {
+			providerRowSet.filter(m_rowFilter);
+		}
+		// Build select columns
+		RowSet returnRowSet = buildReturnRowSet(providerRowSet);
+		return returnRowSet;
+	}
+
+	@Override
 	public void setIndex(IndexMeta index) {
 		m_index = index;
+	}
+
+	@Override
+	public void setParameterSize(int m_parameterSize) {
+		this.m_parameterSize = m_parameterSize;
 	}
 
 	@Override
@@ -58,26 +91,5 @@ public class DefaultSingleTableStatement implements SingleTableStatement {
 	@Override
 	public void setTable(TableProvider table) {
 		m_table = table;
-	}
-
-	@Override
-	public RowSet query() {
-		// Query By Index
-		RowSet providerRowSet = m_table.queryByIndex(m_index, m_selectColumns);
-		// Filter
-		if (providerRowSet != null) {
-			providerRowSet.filter(m_rowFilter);
-		}
-		// Build select columns
-		RowSet returnRowSet = buildReturnRowSet(providerRowSet);
-		return returnRowSet;
-	}
-
-	/**
-	 * @param providerRowSet
-	 * @return
-	 */
-	private RowSet buildReturnRowSet(RowSet c) {
-		return c;
 	}
 }

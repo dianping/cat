@@ -19,9 +19,9 @@ import java.util.List;
 
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.server.ServerConnection;
+import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.handler.AbstractCommandHandler;
-import com.site.helper.Joiners;
 import com.site.lookup.annotation.Inject;
 
 /**
@@ -33,11 +33,51 @@ public class PrepareHandler extends AbstractCommandHandler {
 
 	@Override
 	protected void handle(ServerConnection c, List<String> parts) {
-		String stmt = Joiners.by(' ').join(parts);
+		// String stmt = Joiners.by(' ').join(parts);
+		// try {
+		// m_manager.stmtPrepare(stmt);
+		// } catch (SQLSyntaxErrorException e) {
+		// error(c, ErrorCode.ER_SYNTAX_ERROR, e.getMessage());
+		// }
+	}
+
+	/**
+	 * @param sql
+	 * @param c
+	 * @param offset
+	 */
+	public void close(String sql, ServerConnection c, int offset) {
+
+	}
+
+	/**
+	 * @param sql
+	 * @param c
+	 * @param offset
+	 */
+	public void execute(String sql, ServerConnection c, int offset) {
+
+	}
+
+	/**
+	 * @param sql
+	 * @param c
+	 * @param offset
+	 */
+	public void prepare(String sql, ServerConnection c, int offset) {
+		Statement stmt = null;
 		try {
-			m_manager.prepare(stmt);
+			stmt = m_manager.parseSQL(sql);
 		} catch (SQLSyntaxErrorException e) {
 			error(c, ErrorCode.ER_SYNTAX_ERROR, e.getMessage());
 		}
+
+		long stmtId = m_manager.stmtPrepare(stmt);
+		CommandContext ctx = new CommandContext(c);
+		int columnSize = stmt.getSelectColumns().length;
+		int parameterSize = stmt.getParameterSize();
+		PreparePacket packet = new PreparePacket(stmtId, columnSize, parameterSize);
+		ctx.write(packet);
+		ctx.complete();
 	}
 }
