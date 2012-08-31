@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.monthreport;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.consumer.monthreport.model.entity.MonthReport;
@@ -41,7 +41,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 			StringSortHelper.sortDomain(domains);
 			return domains;
 		}
-		return Collections.emptySet();
+
+		ArrayList<String> arrayList = new ArrayList<String>();
+		
+		arrayList.add(getDomain());
+		return arrayList;
 	}
 
 	public MonthReport getReport() {

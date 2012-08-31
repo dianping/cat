@@ -257,6 +257,9 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 				</requirement>
@@ -299,6 +302,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -345,6 +351,9 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 				</requirement>
@@ -387,6 +396,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -433,6 +445,9 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 				</requirement>
@@ -475,6 +490,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1067,6 +1085,9 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
@@ -1079,6 +1100,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1150,6 +1174,9 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
@@ -1162,6 +1189,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1178,6 +1208,9 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
@@ -1190,6 +1223,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>

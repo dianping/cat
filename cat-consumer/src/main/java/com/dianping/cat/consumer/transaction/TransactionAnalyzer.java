@@ -366,13 +366,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 						task.setReportPeriod(period);
 						task.setStatus(1); // status todo
 						m_taskDao.insert(task);
-						m_logger.info("insert transaction task:" + task.toString());
 					} catch (Throwable e) {
 						Cat.getProducer().logError(e);
 					}
 				}
 			}
-
 			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);
