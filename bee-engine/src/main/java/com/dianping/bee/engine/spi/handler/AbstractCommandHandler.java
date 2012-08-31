@@ -78,27 +78,25 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 		}
 
 		public void write(MySQLPacket packet) {
+			packet.packetId = m_packetId++;
 			m_buffer = packet.write(m_buffer, m_conn);
 		}
 
 		public void writeEOF() {
 			EOFPacket eof = new EOFPacket();
 
-			eof.packetId = m_packetId++;
 			write(eof);
 		}
 
 		public void writeField(String name, int fieldType) {
 			FieldPacket field = PacketUtil.getField(name, fieldType);
 
-			field.packetId = m_packetId++;
 			write(field);
 		}
 
 		public void writeHeader(int fieldCount) {
 			ResultSetHeaderPacket header = PacketUtil.getHeader(fieldCount);
 
-			header.packetId = m_packetId++;
 			write(header);
 		}
 
@@ -114,7 +112,6 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 				row.add(StringUtil.encode(values[i], m_charset));
 			}
 
-			row.packetId = m_packetId++;
 			write(row);
 		}
 
@@ -161,7 +158,6 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 				}
 			}
 
-			packet.packetId = m_packetId++;
 			write(packet);
 		}
 	}
