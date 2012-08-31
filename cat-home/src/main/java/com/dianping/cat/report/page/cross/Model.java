@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.cross;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.report.page.AbstractReportModel;
@@ -11,21 +12,21 @@ import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	
+
 	private String m_callSort;
-	
+
 	private String m_queryName;
-	
+
 	private HostInfo m_hostInfo;
-	
+
 	private MethodInfo m_methodInfo;
-	
+
 	private ProjectInfo m_projectInfo;
 
 	private CrossReport m_report;
-	
+
 	private String m_serviceSort;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -38,9 +39,9 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public Action getDefaultAction() {
 		return Action.HOURLY_PROJECT;
 	}
-	
+
 	@Override
-   public String getDomain() {
+	public String getDomain() {
 		if (m_report == null) {
 			return getDisplayDomain();
 		} else {
@@ -49,19 +50,26 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	@Override
-   public Collection<String> getDomains() {
+	public Collection<String> getDomains() {
 		if (m_report == null) {
-			return new ArrayList<String>();
+			ArrayList<String> arrayList = new ArrayList<String>();
+
+			arrayList.add(getDomain());
+			return arrayList;
 		} else {
-			return StringSortHelper.sortDomain(m_report.getDomainNames());
+			Set<String> domainNames = m_report.getDomainNames();
+
+			domainNames.add(getDomain());
+			return StringSortHelper.sortDomain(domainNames);
+
 		}
 	}
-	
+
 	public HostInfo getHostInfo() {
 		return m_hostInfo;
 	}
 
-	public Collection<String> getIps(){
+	public Collection<String> getIps() {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
@@ -84,7 +92,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public CrossReport getReport() {
 		return m_report;
 	}
-	
 
 	public String getServiceSort() {
 		return m_serviceSort;
@@ -117,5 +124,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
 	}
-	
+
 }

@@ -21,36 +21,27 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	private ColumnMeta[] m_selectColumns;
 
+	private int m_parameterSize;
+
 	@Override
 	public IndexMeta getIndex() {
 		return m_index;
 	}
 
 	@Override
+	public int getParameterSize() {
+		return m_parameterSize;
+	}
+
+	@Override
+	public RowFilter getRowFilter() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
 	public ColumnMeta[] getSelectColumns() {
 		return m_selectColumns;
-	}
-
-	@Override
-	public void setIndex(IndexMeta index) {
-		m_index = index;
-	}
-
-	public void setRowFilter(RowFilter rowFilter) {
-		m_rowFilter = rowFilter;
-	}
-
-	@Override
-	public void setSelectColumns(ColumnMeta[] selectColumns) {
-		if (selectColumns != null && selectColumns.length > 0) {
-			m_selectColumns = selectColumns;
-		} else {
-			m_selectColumns = m_table.getColumns();
-		}
-	}
-
-	public void setTable(TableProvider table) {
-		m_table = table;
 	}
 
 	@Override
@@ -70,4 +61,36 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public void setIndex(IndexMeta index) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setParameterSize(int m_parameterSize) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setRowFilter(RowFilter rowFilter) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void setSelectColumns(ColumnMeta[] selectColumns) {
+		if (selectColumns != null && selectColumns.length > 0) {
+			m_selectColumns = selectColumns;
+		} else {
+			m_selectColumns = m_table.getColumns();
+		}
+	}
+
+	public void setTable(TableProvider table) {
+		m_table = table;
+	}
+
 }

@@ -1,7 +1,14 @@
 package com.dianping.cat.report.page.model.cross;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -12,6 +19,9 @@ import com.site.lookup.annotation.Inject;
 public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 	@Inject
 	private BucketManager m_bucketManager;
+
+	@Inject
+	private ReportDao m_reportDao;
 
 	public LocalCrossService() {
 		super("cross");
@@ -36,10 +46,13 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 
 			if (report == null) {
 				report = new CrossReport(domain);
+			
+				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(hour), new Date(
+						hour + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
 
-				CrossReport catReport = getLocalReport(date, "Cat");
-				if (catReport != null) {
-					report.getDomainNames().addAll(catReport.getDomainNames());
+				Set<String> domainNames = report.getDomainNames();
+				for (Report temp : historyReports) {
+					domainNames.add(temp.getDomain());
 				}
 			}
 		}

@@ -1,7 +1,14 @@
 package com.dianping.cat.report.page.model.matrix;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -12,6 +19,9 @@ import com.site.lookup.annotation.Inject;
 public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 	@Inject
 	private BucketManager m_bucketManager;
+
+	@Inject
+	private ReportDao m_reportDao;
 
 	public LocalMatrixService() {
 		super("matrix");
@@ -37,9 +47,12 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 			if (report == null) {
 				report = new MatrixReport(domain);
 
-				MatrixReport catReport = getLocalReport(date, "Cat");
-				if (catReport != null) {
-					report.getDomainNames().addAll(catReport.getDomainNames());
+				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(hour), new Date(
+						hour + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+
+				Set<String> domainNames = report.getDomainNames();
+				for (Report temp : historyReports) {
+					domainNames.add(temp.getDomain());
 				}
 			}
 		}

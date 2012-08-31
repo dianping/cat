@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
+import com.alibaba.cobar.parser.ast.expression.primary.ParamMarker;
 import com.alibaba.cobar.parser.ast.fragment.tableref.TableRefFactor;
 import com.alibaba.cobar.parser.ast.fragment.tableref.TableReference;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
@@ -40,6 +41,8 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 	private String m_tableName;
 
 	private String m_databaseName;
+
+	private int m_parameterSize;
 
 	private Clause m_clause;
 
@@ -135,6 +138,8 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 			} else {
 				m_stmt.setIndex(m_helper.findIndex(m_databaseName, m_tableName, m_whereColumns));
 			}
+
+			m_stmt.setParameterSize(m_parameterSize);
 		}
 	}
 
@@ -173,5 +178,10 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 		if (node.getTable().getParent() != null) {
 			m_databaseName = node.getTable().getParent().getIdTextUpUnescape();
 		}
+	}
+
+	@Override
+	public void visit(ParamMarker node) {
+		m_parameterSize++;
 	}
 }

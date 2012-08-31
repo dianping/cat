@@ -84,12 +84,28 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 		}
 	}
 
-	public void prepare(String sql) {
-		ServerConnection c = m_conn;
-		m_prepareHandler.handle(sql, c, -1);
-	}
-
 	public void setServerConnection(ServerConnection c) {
 		m_conn = c;
+	}
+
+	/**
+	 * @param sql
+	 */
+	public void stmtClose(String sql) {
+		ServerConnection c = m_conn;
+		m_prepareHandler.close(sql, c, -1);
+	}
+
+	/**
+	 * @param sql
+	 */
+	public void stmtExecute(String sql) {
+		ServerConnection c = m_conn;
+		m_prepareHandler.execute(sql, c, -1);
+	}
+
+	public void stmtPrepare(String sql) {
+		ServerConnection c = m_conn;
+		m_prepareHandler.prepare(sql, c, -1);
 	}
 }

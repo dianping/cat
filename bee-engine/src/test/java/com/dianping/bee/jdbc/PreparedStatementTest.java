@@ -20,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -39,14 +40,15 @@ public class PreparedStatementTest extends ComponentTestCase {
 		String url = "jdbc:mysql://localhost:2330/";
 		String dbName = "cat";
 		String driver = "com.mysql.jdbc.Driver";
-		String userName = "test";
-		String password = "test";
-		String arg = "?useServerPrepStmts=true";
+		Properties props = new Properties();
+		props.setProperty("user", "test");
+		props.setProperty("password", "test");
+		props.setProperty("useServerPrepStmts", "true");
 		String sql = "select type, sum(failures) from transaction where domain=? and starttime=?";
 
 		Class.forName(driver).newInstance();
 		DriverManager.setLoginTimeout(600);
-		Connection conn = DriverManager.getConnection(url + dbName + (arg == null ? "" : arg), userName, password);
+		Connection conn = DriverManager.getConnection(url + dbName, props);
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		Assert.assertNotNull(stmt);
 		stmt.setString(1, "MobiApi");

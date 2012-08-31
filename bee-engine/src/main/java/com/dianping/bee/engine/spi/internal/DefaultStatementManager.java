@@ -13,7 +13,9 @@ import com.site.lookup.ContainerHolder;
 public class DefaultStatementManager extends ContainerHolder implements StatementManager {
 	private Map<String, Statement> m_statements = new HashMap<String, Statement>();
 
-	private Map<String, Statement> m_prepares = new HashMap<String, Statement>();
+	private Map<Long, Statement> m_prepares = new HashMap<Long, Statement>();
+
+	private static long stmtId = 0;
 
 	@Override
 	public Statement build(String sql) throws SQLSyntaxErrorException {
@@ -33,7 +35,7 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		return statement;
 	}
 
-	private Statement parseSQL(String sql) throws SQLSyntaxErrorException {
+	public Statement parseSQL(String sql) throws SQLSyntaxErrorException {
 		SQLStatement statement = SQLParserDelegate.parse(sql);
 
 		DefaultStatementVisitor defaultVisitor = new DefaultStatementVisitor();
@@ -49,20 +51,23 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 	}
 
 	@Override
-	public Statement prepare(String sql) throws SQLSyntaxErrorException {
-		Statement statement = m_prepares.get(sql);
-
-		if (statement == null) {
-			synchronized (m_prepares) {
-				statement = m_prepares.get(sql);
-
-				if (statement == null) {
-					statement = parseSQL(sql);
-					m_prepares.put(sql, statement);
-				}
-			}
+	public long stmtPrepare(Statement stmt) {
+		synchronized (m_prepares) {
+			m_prepares.put(stmtId++ % Long.MAX_VALUE, stmt);
 		}
 
-		return statement;
+		return stmtId;
+	}
+
+	@Override
+	public Statement stmtExecute(long stmtId) {
+		return m_prepares.get(stmtId);
+	}
+
+	@Override
+	public void stmtClose(long stmtId) {
+		synchronized (m_prepares) {
+			m_prepares.remove(stmtId);
+		}
 	}
 }

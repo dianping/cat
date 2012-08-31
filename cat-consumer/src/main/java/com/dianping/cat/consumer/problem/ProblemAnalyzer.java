@@ -209,10 +209,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	               task.setReportDomain(domain);
 	               task.setReportName("problem");
 	               task.setReportPeriod(period);
-	               task.setStatus(1); // status todo
+	               task.setStatus(1);
 	               m_taskDao.insert(task);
-	               m_logger.info("insert event task:" + task.toString());
-               } catch (Throwable e) {
+                } catch (Throwable e) {
          			Cat.getProducer().logError(e);
                }
 				}

@@ -1,7 +1,14 @@
 package com.dianping.cat.report.page.model.event;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
@@ -13,6 +20,9 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
+	@Inject
+	private ReportDao m_reportDao;
+	
 	public LocalEventService() {
 		super("event");
 	}
@@ -36,10 +46,13 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 
 			if (report == null) {
 				report = new EventReport(domain);
+				
+				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(hour), new Date(
+						hour + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
 
-				EventReport catReport = getLocalReport(date, "Cat");
-				if (catReport != null) {
-					report.getDomainNames().addAll(catReport.getDomainNames());
+				Set<String> domainNames = report.getDomainNames();
+				for (Report temp : historyReports) {
+					domainNames.add(temp.getDomain());
 				}
 			}
 		}

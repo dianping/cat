@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.page.AbstractReportModel;
@@ -83,9 +84,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public List<String> getDomains() {
 		if (m_report == null) {
-			return new ArrayList<String>();
+			ArrayList<String> arrayList = new ArrayList<String>();
+
+			arrayList.add(getDomain());
+			return arrayList;
 		} else {
-			return StringSortHelper.sortDomain(m_report.getDomainNames());
+			Set<String> domainNames = m_report.getDomainNames();
+
+			domainNames.add(getDomain());
+			return StringSortHelper.sortDomain(domainNames);
+
 		}
 	}
 
