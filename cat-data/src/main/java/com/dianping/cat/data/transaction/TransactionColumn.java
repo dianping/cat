@@ -17,15 +17,15 @@ public enum TransactionColumn implements ColumnMeta {
 
 	SampleMessage(String.class), // MobileApi-0a0101a6-1345600834200-1
 
-	MinDuration(Integer.class), // 1
+	MinDuration(Double.class), // 1
 
-	MaxDuration(Integer.class), // 1234
+	MaxDuration(Double.class), // 1234
 
-	SumDuration(Long.class), // 123456
+	SumDuration(Double.class), // 123456
 
-	Sum2Duration(Long.class), // 2364233
+	Sum2Duration(Double.class), // 2364233
 
-	Line95(Integer.class); // 123
+	Line95(Double.class); // 123
 
 	private String m_name;
 

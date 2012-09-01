@@ -8,6 +8,14 @@ import com.dianping.bee.db.DogDatabase;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
+import com.dianping.bee.engine.spi.expr.Evaluator;
+import com.dianping.bee.engine.spi.expr.internal.ComparisionEqualsEvaluator;
+import com.dianping.bee.engine.spi.expr.internal.ComparisionIsEvaluator;
+import com.dianping.bee.engine.spi.expr.internal.IdentifierEvaluator;
+import com.dianping.bee.engine.spi.expr.internal.LiteralNumberEvaluator;
+import com.dianping.bee.engine.spi.expr.internal.LiteralStringEvaluator;
+import com.dianping.bee.engine.spi.expr.internal.LogicalAndEvaluator;
+import com.dianping.bee.engine.spi.expr.internal.LogicalOrEvaluator;
 import com.dianping.bee.engine.spi.handler.internal.DescHandler;
 import com.dianping.bee.engine.spi.handler.internal.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
@@ -15,6 +23,7 @@ import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
 import com.dianping.bee.engine.spi.handler.internal.UseHandler;
 import com.dianping.bee.engine.spi.internal.DefaultStatementManager;
 import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
+import com.dianping.bee.engine.spi.internal.SingleTableRowFilter;
 import com.dianping.bee.engine.spi.internal.SingleTableStatement;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder;
 import com.dianping.bee.engine.spi.internal.TableHelper;
@@ -41,17 +50,29 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class) //
 		      .req(SessionManager.class));
 		all.add(C(StatementManager.class, DefaultStatementManager.class));
-		all.add(C(SingleTableStatement.class).is(PER_LOOKUP));
 
 		all.add(C(TableHelper.class) //
 		      .req(TableProviderManager.class));
 
+		all.add(C(SingleTableStatement.class).is(PER_LOOKUP));
+		all.add(C(SingleTableRowFilter.class).is(PER_LOOKUP));
 		all.add(C(SingleTableStatementBuilder.class).is(PER_LOOKUP) //
-		      .req(TableHelper.class, SingleTableStatement.class));
+		      .req(TableHelper.class, SingleTableStatement.class, SingleTableRowFilter.class));
 
 		defineHandlers(all);
+		defineEvaluators(all);
 
 		return all;
+	}
+
+	private void defineEvaluators(List<Component> all) {
+		all.add(C(Evaluator.class, LogicalAndEvaluator.ID, LogicalAndEvaluator.class));
+		all.add(C(Evaluator.class, LogicalOrEvaluator.ID, LogicalOrEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
+		all.add(C(Evaluator.class, IdentifierEvaluator.ID, IdentifierEvaluator.class));
+		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
+		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
 	}
 
 	private void defineHandlers(List<Component> all) {

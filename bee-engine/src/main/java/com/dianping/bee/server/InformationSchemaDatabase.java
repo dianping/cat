@@ -16,12 +16,8 @@ package com.dianping.bee.server;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
-import com.dianping.bee.engine.spi.meta.RowSet;
-import com.dianping.bee.engine.spi.meta.internal.DefaultCell;
-import com.dianping.bee.engine.spi.meta.internal.DefaultRowSet;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
@@ -68,19 +64,19 @@ public class InformationSchemaDatabase implements DatabaseProvider {
 			return m_name;
 		}
 
-		@Override
-		public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
-			ColumnMeta[] columns = selectColumns;
-			DefaultRowSet rowSet = new DefaultRowSet(columns);
-
-			Cell[] cells = new Cell[columns.length];
-			for (int colIndex = 0; colIndex < cells.length; colIndex++) {
-				ColumnMeta columnMeta = columns[colIndex];
-				cells[colIndex] = new DefaultCell(columnMeta, null);
-			}
-
-			return rowSet;
-		}
+//		@Override
+//		public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
+//			ColumnMeta[] columns = selectColumns;
+//			DefaultRowSet rowSet = new DefaultRowSet(columns);
+//
+//			Cell[] cells = new Cell[columns.length];
+//			for (int colIndex = 0; colIndex < cells.length; colIndex++) {
+//				ColumnMeta columnMeta = columns[colIndex];
+//				cells[colIndex] = new DefaultCell(columnMeta, null);
+//			}
+//
+//			return rowSet;
+//		}
 
 		@Override
       public IndexMeta getDefaultIndex() {

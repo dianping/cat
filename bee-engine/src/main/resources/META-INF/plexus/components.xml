@@ -37,11 +37,6 @@
 			<implementation>com.dianping.bee.engine.spi.internal.DefaultStatementManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.internal.SingleTableStatement</role>
-			<implementation>com.dianping.bee.engine.spi.internal.SingleTableStatement</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-		</component>
-		<component>
 			<role>com.dianping.bee.engine.spi.internal.TableHelper</role>
 			<implementation>com.dianping.bee.engine.spi.internal.TableHelper</implementation>
 			<requirements>
@@ -49,6 +44,16 @@
 					<role>com.dianping.bee.engine.spi.TableProviderManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.internal.SingleTableStatement</role>
+			<implementation>com.dianping.bee.engine.spi.internal.SingleTableStatement</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.internal.SingleTableRowFilter</role>
+			<implementation>com.dianping.bee.engine.spi.internal.SingleTableRowFilter</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder</role>
@@ -60,6 +65,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.internal.SingleTableStatement</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.internal.SingleTableRowFilter</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -119,6 +127,41 @@
 					<role>com.dianping.bee.engine.spi.StatementManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.expr.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.logical.LogicalAndExpression</role-hint>
+			<implementation>com.dianping.bee.engine.spi.expr.internal.LogicalAndEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.expr.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.logical.LogicalOrExpression</role-hint>
+			<implementation>com.dianping.bee.engine.spi.expr.internal.LogicalOrEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.expr.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression</role-hint>
+			<implementation>com.dianping.bee.engine.spi.expr.internal.ComparisionEqualsEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.expr.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.ComparisionIsExpression</role-hint>
+			<implementation>com.dianping.bee.engine.spi.expr.internal.ComparisionIsEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.expr.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.Identifier</role-hint>
+			<implementation>com.dianping.bee.engine.spi.expr.internal.IdentifierEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.expr.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString</role-hint>
+			<implementation>com.dianping.bee.engine.spi.expr.internal.LiteralStringEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.expr.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber</role-hint>
+			<implementation>com.dianping.bee.engine.spi.expr.internal.LiteralNumberEvaluator</implementation>
 		</component>
 	</components>
 </plexus>

@@ -19,25 +19,23 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 public class TransactionIndexer implements Index<Pair<String, String>> {
 	@Override
 	public void queryById(RowContext ctx, Pair<String, String> pair) throws Exception {
-		if (pair == null) {
-			pair = new Pair<String, String>("", "Cat");
-		}
+		pair = new Pair<String, String>("", "Cat");
 
 		TransactionReport report = getHourlyReport(pair.getValue(), pair.getKey());
 		Machine machine = report.getMachines().get("All");
 
 		for (TransactionType type : machine.getTypes().values()) {
 			if (type.getNames().isEmpty()) {
-				applyRow(ctx, type, null);
+				applyRow(ctx, report, type, null);
 			} else {
 				for (TransactionName name : type.getNames().values()) {
-					applyRow(ctx, type, name);
+					applyRow(ctx, report, type, name);
 				}
 			}
 		}
 	}
 
-	private void applyRow(RowContext ctx, TransactionType type, TransactionName name) {
+	private void applyRow(RowContext ctx, TransactionReport report, TransactionType type, TransactionName name) {
 		int cols = ctx.getColumnSize();
 
 		for (int i = 0; i < cols; i++) {
@@ -49,6 +47,49 @@ public class TransactionIndexer implements Index<Pair<String, String>> {
 				break;
 			case Name:
 				ctx.setColumnValue(i, name == null ? null : name.getId());
+				break;
+			case Domain:
+				ctx.setColumnValue(i, report.getDomain());
+				break;
+			case StartTime:
+				ctx.setColumnValue(i, report.getStartTime());
+				break;
+			case MinDuration:
+				ctx.setColumnValue(i, name != null ? name.getMin() : type.getMin());
+				break;
+			case MaxDuration:
+				ctx.setColumnValue(i, name != null ? name.getMax() : type.getMax());
+				break;
+			case SampleMessage:
+				String url;
+
+				if (name != null) {
+					if (name.getFailMessageUrl() != null) {
+						url = name.getFailMessageUrl();
+					} else {
+						url = name.getSuccessMessageUrl();
+					}
+				} else {
+					if (type.getFailMessageUrl() != null) {
+						url = type.getFailMessageUrl();
+					} else {
+						url = type.getSuccessMessageUrl();
+					}
+				}
+				ctx.setColumnValue(i, url);
+				break;
+			case TotalCount:
+				ctx.setColumnValue(i, name != null ? name.getTotalCount() : type.getTotalCount());
+				break;
+			case Failures:
+				ctx.setColumnValue(i, name != null ? name.getFailCount() : type.getFailCount());
+				break;
+			case SumDuration:
+				ctx.setColumnValue(i, name != null ? name.getSum() : type.getSum());
+				break;
+			case Line95:
+				ctx.setColumnValue(i, name != null ? name.getLine95Value() : type.getLine95Value());
+				break;
 			default:
 				// TODO more here
 			}

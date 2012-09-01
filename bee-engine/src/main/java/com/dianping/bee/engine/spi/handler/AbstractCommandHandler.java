@@ -116,45 +116,54 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 		}
 
 		public void writeRow(Row row) {
-			RowDataPacket packet = new RowDataPacket(row.getColumnSize());
-			for (int cellIndex = 0; cellIndex < row.getColumnSize(); cellIndex++) {
+			int len = row.getColumnSize();
+			RowDataPacket packet = new RowDataPacket(len);
+
+			for (int cellIndex = 0; cellIndex < len; cellIndex++) {
 				Cell cell = row.getCell(cellIndex);
 				ColumnMeta column = cell.getMeta();
 				String value = cell.getValue() == null ? null : String.valueOf(cell.getValue());
-				switch (TypeUtils.convertJavaTypeToFieldType(column.getType())) {
-				case Fields.FIELD_TYPE_STRING:
-					packet.add(StringUtil.encode(value, m_charset));
-					break;
-				case Fields.FIELD_TYPE_INT24:
-					packet.add(value == null ? null : IntegerUtil.toBytes(Integer.parseInt(value)));
-					break;
-				case Fields.FIELD_TYPE_DECIMAL:
-				case Fields.FIELD_TYPE_TINY:
-				case Fields.FIELD_TYPE_SHORT:
-				case Fields.FIELD_TYPE_LONG:
-				case Fields.FIELD_TYPE_FLOAT:
-				case Fields.FIELD_TYPE_DOUBLE:
-				case Fields.FIELD_TYPE_NULL:
-				case Fields.FIELD_TYPE_TIMESTAMP:
-				case Fields.FIELD_TYPE_LONGLONG:
-				case Fields.FIELD_TYPE_DATE:
-				case Fields.FIELD_TYPE_TIME:
-				case Fields.FIELD_TYPE_DATETIME:
-				case Fields.FIELD_TYPE_YEAR:
-				case Fields.FIELD_TYPE_NEWDATE:
-				case Fields.FIELD_TYPE_VARCHAR:
-				case Fields.FIELD_TYPE_BIT:
-				case Fields.FIELD_TYPE_NEW_DECIMAL:
-				case Fields.FIELD_TYPE_ENUM:
-				case Fields.FIELD_TYPE_SET:
-				case Fields.FIELD_TYPE_TINY_BLOB:
-				case Fields.FIELD_TYPE_MEDIUM_BLOB:
-				case Fields.FIELD_TYPE_LONG_BLOB:
-				case Fields.FIELD_TYPE_BLOB:
-				case Fields.FIELD_TYPE_VAR_STRING:
-				case Fields.FIELD_TYPE_GEOMETRY:
-				default:
-					packet.add(StringUtil.encode(value, m_charset));
+
+				try {
+					switch (TypeUtils.convertJavaTypeToFieldType(column.getType())) {
+					case Fields.FIELD_TYPE_STRING:
+						packet.add(StringUtil.encode(value, m_charset));
+						break;
+					case Fields.FIELD_TYPE_INT24:
+						packet.add(value == null ? null : IntegerUtil.toBytes(Integer.parseInt(value)));
+						break;
+					case Fields.FIELD_TYPE_DECIMAL:
+					case Fields.FIELD_TYPE_TINY:
+					case Fields.FIELD_TYPE_SHORT:
+					case Fields.FIELD_TYPE_LONG:
+					case Fields.FIELD_TYPE_FLOAT:
+					case Fields.FIELD_TYPE_DOUBLE:
+					case Fields.FIELD_TYPE_NULL:
+					case Fields.FIELD_TYPE_TIMESTAMP:
+					case Fields.FIELD_TYPE_LONGLONG:
+					case Fields.FIELD_TYPE_DATE:
+					case Fields.FIELD_TYPE_TIME:
+					case Fields.FIELD_TYPE_DATETIME:
+					case Fields.FIELD_TYPE_YEAR:
+					case Fields.FIELD_TYPE_NEWDATE:
+					case Fields.FIELD_TYPE_VARCHAR:
+					case Fields.FIELD_TYPE_BIT:
+					case Fields.FIELD_TYPE_NEW_DECIMAL:
+					case Fields.FIELD_TYPE_ENUM:
+					case Fields.FIELD_TYPE_SET:
+					case Fields.FIELD_TYPE_TINY_BLOB:
+					case Fields.FIELD_TYPE_MEDIUM_BLOB:
+					case Fields.FIELD_TYPE_LONG_BLOB:
+					case Fields.FIELD_TYPE_BLOB:
+					case Fields.FIELD_TYPE_VAR_STRING:
+					case Fields.FIELD_TYPE_GEOMETRY:
+					default:
+						packet.add(StringUtil.encode(value, m_charset));
+						break;
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!", column.getName(),
+					      value), e);
 				}
 			}
 

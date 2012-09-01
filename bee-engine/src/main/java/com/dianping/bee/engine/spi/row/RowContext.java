@@ -16,4 +16,6 @@ public interface RowContext {
 
 	public void setRowListener(RowListener listener);
 
+	public Object getValue(String columnName);
+
 }

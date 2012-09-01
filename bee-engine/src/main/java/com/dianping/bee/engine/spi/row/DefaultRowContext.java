@@ -48,4 +48,19 @@ public class DefaultRowContext implements RowContext {
 	public void setRowListener(RowListener listener) {
 		m_listener = listener;
 	}
+
+	@Override
+	public Object getValue(String columnName) {
+		int len = m_columns.length;
+
+		for (int i = 0; i < len; i++) {
+			ColumnMeta column = m_columns[i];
+
+			if (column.getName().equalsIgnoreCase(columnName)) {
+				return m_values[i];
+			}
+		}
+
+		return null;
+	}
 }

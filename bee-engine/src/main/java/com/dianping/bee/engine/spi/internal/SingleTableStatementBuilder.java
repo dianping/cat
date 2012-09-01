@@ -17,10 +17,13 @@ import com.site.lookup.annotation.Inject;
 
 public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	@Inject
-	private TableHelper m_helper;
+	private SingleTableStatement m_stmt;
 
 	@Inject
-	private SingleTableStatement m_stmt;
+	private SingleTableRowFilter m_rowFilter;
+
+	@Inject
+	private TableHelper m_helper;
 
 	private String m_alias;
 
@@ -35,21 +38,6 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	private List<ColumnMeta> m_selectColumns = new ArrayList<ColumnMeta>();
 
 	private List<ColumnMeta> m_whereColumns = new ArrayList<ColumnMeta>();
-
-	private boolean checkSelectAll(List<ColumnMeta> columns, String columnName) {
-		if ("*".equals(columnName)) {
-			TableProvider table = m_helper.findTable(m_tableName);
-			ColumnMeta[] columnMetas = table.getColumns();
-
-			for (ColumnMeta meta : columnMetas) {
-				columns.add(meta);
-			}
-
-			return true;
-		} else {
-			return false;
-		}
-	}
 
 	private ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
 		for (ColumnMeta column : columns) {
@@ -81,12 +69,6 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 			throw new RuntimeException("Not a single table query!");
 		}
 
-		if (m_databaseName == null) {
-			m_stmt.setTable(m_helper.findTable(m_tableName));
-		} else {
-			m_stmt.setTable(m_helper.findTable(m_databaseName, m_tableName));
-		}
-
 		// for select clause
 		m_clause = Clause.SELECT;
 
@@ -102,8 +84,7 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 			expr.getKey().accept(this);
 		}
 
-		ColumnMeta[] columnMetas = new ColumnMeta[m_selectColumns.size()];
-		m_stmt.setSelectColumns(m_selectColumns.toArray(columnMetas));
+		m_stmt.setSelectColumns(m_selectColumns);
 
 		// for where clause
 		m_clause = Clause.WHERE;
@@ -115,8 +96,8 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 			where.accept(this);
 
 			// to evaluate where clause
-			// m_rowFilter.setExpression(where);
-			// m_stmt.setRowFilter(m_rowFilter);
+			m_stmt.setWhereColumns(m_whereColumns);
+			m_stmt.setRowFilter(m_rowFilter.setExpression(where));
 
 			if (m_databaseName == null) {
 				m_stmt.setIndex(m_helper.findIndex(m_tableName, m_whereColumns));
@@ -134,9 +115,17 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 		case SELECT:
 			String selectColumnName = node.getIdTextUpUnescape();
 
-			if (!checkSelectAll(m_selectColumns, selectColumnName)) {
+			if ("*".equals(selectColumnName)) { // expand it
+				TableProvider table = m_helper.findTable(m_databaseName, m_tableName);
+				ColumnMeta[] columnMetas = table.getColumns();
+
+				for (ColumnMeta meta : columnMetas) {
+					m_selectColumns.add(meta);
+				}
+			} else {
 				findOrCreateColumnFrom(m_selectColumns, selectColumnName);
 			}
+
 			break;
 		case WHERE:
 			String whereColumnName = node.getIdTextUpUnescape();

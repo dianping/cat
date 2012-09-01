@@ -1,18 +1,10 @@
 package com.dianping.bee.db;
 
-import org.apache.commons.lang3.RandomStringUtils;
-
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.index.Index;
-import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
-import com.dianping.bee.engine.spi.meta.Row;
-import com.dianping.bee.engine.spi.meta.RowSet;
-import com.dianping.bee.engine.spi.meta.internal.DefaultCell;
-import com.dianping.bee.engine.spi.meta.internal.DefaultRow;
-import com.dianping.bee.engine.spi.meta.internal.DefaultRowSet;
 
 public class DogDatabase implements DatabaseProvider {
 
@@ -56,33 +48,33 @@ public class DogDatabase implements DatabaseProvider {
 			return m_name;
 		}
 
-		@Override
-		public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
-			ColumnMeta[] columns = selectColumns;
-			DefaultRowSet rowSet = new DefaultRowSet(columns);
-
-			for (int rowIndex = 0; rowIndex < 10; rowIndex++) {
-				Cell[] cells = new Cell[columns.length];
-
-				for (int colIndex = 0; colIndex < cells.length; colIndex++) {
-					ColumnMeta columnMeta = columns[colIndex];
-					String randomValue = null;
-					if (columnMeta.getType().getSimpleName().equals("String")) {
-						randomValue = RandomStringUtils.randomAlphabetic(5);
-					} else if (columnMeta.getType().getSimpleName().equals("Integer")
-					      || columnMeta.getType().getSimpleName().equals("Long")) {
-						randomValue = RandomStringUtils.randomNumeric(3);
-					} else {
-						randomValue = RandomStringUtils.randomAlphanumeric(5);
-					}
-					cells[colIndex] = new DefaultCell(columnMeta, randomValue);
-				}
-
-				Row row = new DefaultRow(cells);
-				rowSet.addRow(row);
-			}
-			return rowSet;
-		}
+//		@Override
+//		public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
+//			ColumnMeta[] columns = selectColumns;
+//			DefaultRowSet rowSet = new DefaultRowSet(columns);
+//
+//			for (int rowIndex = 0; rowIndex < 10; rowIndex++) {
+//				Cell[] cells = new Cell[columns.length];
+//
+//				for (int colIndex = 0; colIndex < cells.length; colIndex++) {
+//					ColumnMeta columnMeta = columns[colIndex];
+//					String randomValue = null;
+//					if (columnMeta.getType().getSimpleName().equals("String")) {
+//						randomValue = RandomStringUtils.randomAlphabetic(5);
+//					} else if (columnMeta.getType().getSimpleName().equals("Integer")
+//					      || columnMeta.getType().getSimpleName().equals("Long")) {
+//						randomValue = RandomStringUtils.randomNumeric(3);
+//					} else {
+//						randomValue = RandomStringUtils.randomAlphanumeric(5);
+//					}
+//					cells[colIndex] = new DefaultCell(columnMeta, randomValue);
+//				}
+//
+//				Row row = new DefaultRow(cells);
+//				rowSet.addRow(row);
+//			}
+//			return rowSet;
+//		}
 
 		@Override
       public IndexMeta getDefaultIndex() {

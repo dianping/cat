@@ -75,7 +75,7 @@ public class PrepareHandler extends AbstractCommandHandler {
 
 		long stmtId = m_manager.stmtPrepare(stmt);
 		CommandContext ctx = new CommandContext(c);
-		int columnSize = stmt.getSelectColumns().length;
+		int columnSize = stmt.getColumnSize();
 		int parameterSize = stmt.getParameterSize();
 
 		PreparePacket packet = new PreparePacket(stmtId, columnSize, parameterSize);
