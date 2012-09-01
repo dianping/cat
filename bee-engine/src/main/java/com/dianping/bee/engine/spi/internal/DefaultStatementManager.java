@@ -37,14 +37,19 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 
 	public Statement parseSQL(String sql) throws SQLSyntaxErrorException {
 		SQLStatement statement = SQLParserDelegate.parse(sql);
+		QueryDetector detector = new QueryDetector();
 
-		DefaultStatementVisitor defaultVisitor = new DefaultStatementVisitor();
-		statement.accept(defaultVisitor);
+		statement.accept(detector);
 
-		if (defaultVisitor.getTableAlias().size() == 1) {
-			SingleTableStatementVisitor visitor = lookup(SingleTableStatementVisitor.class);
-			statement.accept(visitor);
-			return visitor.getStatement();
+		if (detector.isSingleTable()) {
+			SingleTableStatementBuilder builder = lookup(SingleTableStatementBuilder.class);
+
+			try {
+				statement.accept(builder);
+				return builder.getStatement();
+			} finally {
+				release(builder);
+			}
 		} else {
 			throw new SQLSyntaxErrorException(sql);
 		}

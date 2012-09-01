@@ -70,7 +70,7 @@ public class PreparedStatementTest extends ComponentTestCase {
 			System.out.print(columnName + "\t");
 		}
 		System.out.println();
-		rs.first();
+		rs.beforeFirst();
 		while (rs.next()) {
 			for (int column = 1; column <= columns; column++) {
 				System.out.print(rs.getString(column) + "\t");

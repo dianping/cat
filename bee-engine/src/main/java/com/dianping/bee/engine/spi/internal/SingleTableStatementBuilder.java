@@ -15,21 +15,7 @@ import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.site.lookup.annotation.Inject;
 
-public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
-	static enum Clause {
-		SELECT,
-
-		TABLE,
-
-		WHERE,
-
-		GROUP,
-
-		HAVING,
-
-		ORDER;
-	}
-
+public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	@Inject
 	private TableHelper m_helper;
 
@@ -53,17 +39,16 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 	private boolean checkSelectAll(List<ColumnMeta> columns, String columnName) {
 		if ("*".equals(columnName)) {
 			TableProvider table = m_helper.findTable(m_tableName);
-			if (table != null) {
-				ColumnMeta[] columnMetas = table.getColumns();
-				if (columnMetas != null) {
-					for (ColumnMeta meta : columnMetas) {
-						columns.add(meta);
-					}
-				}
+			ColumnMeta[] columnMetas = table.getColumns();
+
+			for (ColumnMeta meta : columnMetas) {
+				columns.add(meta);
 			}
+
 			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	private ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
@@ -107,14 +92,14 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 
 		List<Pair<Expression, String>> exprList = node.getSelectExprList();
 
-		for (Pair<Expression, String> pair : exprList) {
-			String alias = pair.getValue();
+		for (Pair<Expression, String> expr : exprList) {
+			String alias = expr.getValue();
 
 			if (alias != null && !alias.equals(m_alias)) {
-				throw new BadSQLSyntaxException("Invalid select alias(%s)!", alias);
+				throw new BadSQLSyntaxException("Invalid select alias(%s), expected: null or %s!", alias, m_alias);
 			}
 
-			pair.getKey().accept(this);
+			expr.getKey().accept(this);
 		}
 
 		ColumnMeta[] columnMetas = new ColumnMeta[m_selectColumns.size()];
@@ -167,21 +152,36 @@ public class SingleTableStatementVisitor extends EmptySQLASTVisitor {
 		case ORDER:
 			break;
 		default:
-			;
-		}
-	}
-
-	@Override
-	public void visit(TableRefFactor node) {
-		m_alias = node.getAlias();
-		m_tableName = node.getTable().getIdTextUpUnescape();
-		if (node.getTable().getParent() != null) {
-			m_databaseName = node.getTable().getParent().getIdTextUpUnescape();
+			break;
 		}
 	}
 
 	@Override
 	public void visit(ParamMarker node) {
 		m_parameterSize++;
+	}
+
+	@Override
+	public void visit(TableRefFactor node) {
+		m_alias = node.getAlias();
+		m_tableName = node.getTable().getIdTextUpUnescape();
+
+		if (node.getTable().getParent() != null) {
+			m_databaseName = node.getTable().getParent().getIdTextUpUnescape();
+		}
+	}
+
+	static enum Clause {
+		SELECT,
+
+		TABLE,
+
+		WHERE,
+
+		GROUP,
+
+		HAVING,
+
+		ORDER;
 	}
 }

@@ -120,7 +120,7 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 			for (int cellIndex = 0; cellIndex < row.getColumnSize(); cellIndex++) {
 				Cell cell = row.getCell(cellIndex);
 				ColumnMeta column = cell.getMeta();
-				String value = String.valueOf(cell.getValue());
+				String value = cell.getValue() == null ? null : String.valueOf(cell.getValue());
 				switch (TypeUtils.convertJavaTypeToFieldType(column.getType())) {
 				case Fields.FIELD_TYPE_STRING:
 					packet.add(StringUtil.encode(value, m_charset));

@@ -24,19 +24,8 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 	private int m_parameterSize;
 
 	@Override
-	public IndexMeta getIndex() {
-		return m_index;
-	}
-
-	@Override
 	public int getParameterSize() {
 		return m_parameterSize;
-	}
-
-	@Override
-	public RowFilter getRowFilter() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -64,20 +53,17 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	@Override
 	public void setIndex(IndexMeta index) {
-		// TODO Auto-generated method stub
-
+		m_index = index;
 	}
 
 	@Override
-	public void setParameterSize(int m_parameterSize) {
-		// TODO Auto-generated method stub
-
+	public void setParameterSize(int parameterSize) {
+		m_parameterSize = parameterSize;
 	}
 
 	@Override
 	public void setRowFilter(RowFilter rowFilter) {
-		// TODO Auto-generated method stub
-
+		m_rowFilter = rowFilter;
 	}
 
 	@Override

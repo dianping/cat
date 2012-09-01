@@ -6,11 +6,7 @@ import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.row.RowFilter;
 
 public interface Statement {
-	public IndexMeta getIndex();
-
 	public int getParameterSize();
-
-	public RowFilter getRowFilter();
 
 	public ColumnMeta[] getSelectColumns();
 
@@ -18,7 +14,7 @@ public interface Statement {
 
 	public void setIndex(IndexMeta index);
 
-	public void setParameterSize(int m_parameterSize);
+	public void setParameterSize(int parameterSize);
 
 	public void setRowFilter(RowFilter rowFilter);
 

@@ -28,6 +28,8 @@ public enum CatTableProvider implements TableProvider {
 
 	private ColumnMeta[] m_columns;
 
+	private IndexMeta m_defaultIndex;
+
 	private IndexMeta[] m_indexes;
 
 	private CatTableProvider(String name) {
@@ -37,12 +39,22 @@ public enum CatTableProvider implements TableProvider {
 	private CatTableProvider(String name, ColumnMeta[] columns, IndexMeta[] indexes) {
 		m_name = name;
 		m_columns = columns;
+		m_defaultIndex = indexes.length > 0 ? indexes[0] : null;
 		m_indexes = indexes;
 	}
 
 	@Override
 	public ColumnMeta[] getColumns() {
 		return m_columns;
+	}
+
+	@Override
+	public IndexMeta getDefaultIndex() {
+		if (m_defaultIndex == null) {
+			throw new RuntimeException("No default index defined yet!");
+		} else {
+			return m_defaultIndex;
+		}
 	}
 
 	@Override

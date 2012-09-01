@@ -37,8 +37,8 @@
 			<implementation>com.dianping.bee.engine.spi.internal.DefaultStatementManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.SingleTableStatement</role>
-			<implementation>com.dianping.bee.engine.spi.internal.DefaultSingleTableStatement</implementation>
+			<role>com.dianping.bee.engine.spi.internal.SingleTableStatement</role>
+			<implementation>com.dianping.bee.engine.spi.internal.SingleTableStatement</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
@@ -51,15 +51,15 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor</role>
-			<implementation>com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor</implementation>
+			<role>com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder</role>
+			<implementation>com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.internal.TableHelper</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.SingleTableStatement</role>
+					<role>com.dianping.bee.engine.spi.internal.SingleTableStatement</role>
 				</requirement>
 			</requirements>
 		</component>

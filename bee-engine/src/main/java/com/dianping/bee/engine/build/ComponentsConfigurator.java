@@ -16,7 +16,7 @@ import com.dianping.bee.engine.spi.handler.internal.UseHandler;
 import com.dianping.bee.engine.spi.internal.DefaultStatementManager;
 import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
 import com.dianping.bee.engine.spi.internal.SingleTableStatement;
-import com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor;
+import com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder;
 import com.dianping.bee.engine.spi.internal.TableHelper;
 import com.dianping.bee.engine.spi.session.DefaultSessionManager;
 import com.dianping.bee.engine.spi.session.SessionManager;
@@ -46,7 +46,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableHelper.class) //
 		      .req(TableProviderManager.class));
 
-		all.add(C(SingleTableStatementVisitor.class).is(PER_LOOKUP) //
+		all.add(C(SingleTableStatementBuilder.class).is(PER_LOOKUP) //
 		      .req(TableHelper.class, SingleTableStatement.class));
 
 		defineHandlers(all);

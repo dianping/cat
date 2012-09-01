@@ -83,6 +83,11 @@ public class DogDatabase implements DatabaseProvider {
 			}
 			return rowSet;
 		}
+
+		@Override
+      public IndexMeta getDefaultIndex() {
+	      return TransactionIndex.IDX_STARTTIME_DOMAIN;
+      }
 	}
 
 	public static enum TransactionColumn implements ColumnMeta {

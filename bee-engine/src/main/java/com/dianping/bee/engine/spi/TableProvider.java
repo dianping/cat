@@ -7,6 +7,8 @@ import com.dianping.bee.engine.spi.meta.RowSet;
 public interface TableProvider {
 	public ColumnMeta[] getColumns();
 
+	public IndexMeta getDefaultIndex();
+
 	public IndexMeta[] getIndexes();
 
 	public String getName();

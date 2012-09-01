@@ -5,8 +5,8 @@ import com.dianping.bee.engine.spi.meta.AbstractIndexMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
 
 public class TransactionIndex extends AbstractIndexMeta<TransactionColumn> implements IndexMeta {
-	public static final TransactionIndex IDX_STARTTIME_DOMAIN = new TransactionIndex(TransactionColumn.StartTime, false,
-	      TransactionColumn.Domain, true);
+	public static final TransactionIndex IDX_STARTTIME_DOMAIN = new TransactionIndex(TransactionColumn.Domain, true,
+	      TransactionColumn.StartTime, false);
 
 	private TransactionIndex(Object... args) {
 		super(args);

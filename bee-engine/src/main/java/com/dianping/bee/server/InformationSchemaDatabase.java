@@ -81,6 +81,12 @@ public class InformationSchemaDatabase implements DatabaseProvider {
 
 			return rowSet;
 		}
+
+		@Override
+      public IndexMeta getDefaultIndex() {
+	      // TODO Auto-generated method stub
+	      return null;
+      }
 	}
 
 	public static enum SchemataColumn implements ColumnMeta {

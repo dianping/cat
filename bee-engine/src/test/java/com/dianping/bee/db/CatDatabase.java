@@ -24,6 +24,11 @@ public class CatDatabase implements DatabaseProvider {
 			}
 
 			@Override
+			public IndexMeta getDefaultIndex() {
+				return TransactionIndex.IDX_STARTTIME_DOMAIN;
+			}
+
+			@Override
 			public TransactionIndex[] getIndexes() {
 				return TransactionIndex.values();
 			}
@@ -33,6 +38,11 @@ public class CatDatabase implements DatabaseProvider {
 			@Override
 			public EventColumn[] getColumns() {
 				return EventColumn.values();
+			}
+
+			@Override
+			public IndexMeta getDefaultIndex() {
+				return EventIndex.IDX_STARTTIME_DOMAIN;
 			}
 
 			@Override
@@ -91,6 +101,11 @@ public class CatDatabase implements DatabaseProvider {
 				rowSet.addRow(row);
 			}
 			return rowSet;
+		}
+
+		@Override
+		public IndexMeta getDefaultIndex() {
+			return null;
 		}
 	}
 
@@ -160,8 +175,7 @@ public class CatDatabase implements DatabaseProvider {
 			int length = args.length;
 
 			if (length % 2 != 0) {
-				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(),
-				      name()));
+				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(), name()));
 			}
 
 			m_columns = new ColumnMeta[length / 2];
@@ -197,9 +211,9 @@ public class CatDatabase implements DatabaseProvider {
 		}
 
 		@Override
-      public Class<? extends Index<?>> getIndexClass() {
+		public Class<? extends Index<?>> getIndexClass() {
 			throw new UnsupportedOperationException("Not implemented yet!");
-      }
+		}
 	}
 
 	public static enum TransactionColumn implements ColumnMeta {
@@ -258,8 +272,7 @@ public class CatDatabase implements DatabaseProvider {
 			int length = args.length;
 
 			if (length % 2 != 0) {
-				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(),
-				      name()));
+				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(), name()));
 			}
 
 			m_columns = new ColumnMeta[length / 2];
@@ -295,9 +308,9 @@ public class CatDatabase implements DatabaseProvider {
 		}
 
 		@Override
-      public Class<? extends Index<?>> getIndexClass() {
+		public Class<? extends Index<?>> getIndexClass() {
 			throw new UnsupportedOperationException("Not implemented yet!");
-      }
+		}
 	}
 
 	@Override

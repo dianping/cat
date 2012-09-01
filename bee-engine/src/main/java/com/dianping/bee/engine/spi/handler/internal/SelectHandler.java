@@ -124,7 +124,6 @@ public class SelectHandler extends AbstractCommandHandler {
 		}
 
 		Statement stmt = m_manager.build(sql);
-
 		RowSet rowset = stmt.query();
 
 		CommandContext ctx = new CommandContext(c);
