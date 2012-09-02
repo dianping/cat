@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.alibaba.cobar.parser.ast.expression.Expression;
+import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
 import com.alibaba.cobar.parser.ast.expression.primary.ParamMarker;
+import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber;
+import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString;
 import com.alibaba.cobar.parser.ast.fragment.tableref.TableRefFactor;
 import com.alibaba.cobar.parser.ast.fragment.tableref.TableReference;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
@@ -144,6 +147,29 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	@Override
 	public void visit(ParamMarker node) {
 		m_parameterSize++;
+	}
+
+	@Override
+	public void visit(ComparisionEqualsExpression node) {
+		Expression left = node.getLeftOprand();
+
+		if (left instanceof Identifier) {
+			Expression right = node.getRightOprand();
+
+			if (right instanceof LiteralString) {
+				String name = ((Identifier) left).getIdText();
+				String value = ((LiteralString) right).getString();
+
+				m_stmt.addAttribute(name, value);
+			} else if (right instanceof LiteralNumber) {
+				String name = ((Identifier) left).getIdText();
+				Number value = ((LiteralNumber) right).getNumber();
+
+				m_stmt.addAttribute(name, value);
+			}
+		}
+
+		super.visit(node);
 	}
 
 	@Override

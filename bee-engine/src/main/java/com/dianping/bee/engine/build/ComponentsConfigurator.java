@@ -19,6 +19,7 @@ import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanEvaluato
 import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanOrEqualsEvaluator;
 import com.dianping.bee.engine.spi.evaluator.logical.IdentifierEvaluator;
 import com.dianping.bee.engine.spi.evaluator.logical.InEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LiteralBooleanEvaluator;
 import com.dianping.bee.engine.spi.evaluator.logical.LiteralNumberEvaluator;
 import com.dianping.bee.engine.spi.evaluator.logical.LiteralStringEvaluator;
 import com.dianping.bee.engine.spi.evaluator.logical.LogicalAndEvaluator;
@@ -43,6 +44,10 @@ import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
@@ -77,6 +82,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Evaluator.class, ConcatEvaluator.ID, ConcatEvaluator.class));
 	}
 
+	private void defineHandlers(List<Component> all) {
+		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
+		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class, PrepareHandler.class));
+
+		all.add(C(UseHandler.class));
+		all.add(C(ShowHandler.class));
+		all.add(C(DescHandler.class) //
+		      .req(TableProviderManager.class));
+		all.add(C(SelectHandler.class) //
+		      .req(StatementManager.class));
+		all.add(C(PrepareHandler.class)//
+		      .req(StatementManager.class));
+	}
+
 	private void defineLogicalEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, LogicalAndEvaluator.ID, LogicalAndEvaluator.class));
 		all.add(C(Evaluator.class, LogicalOrEvaluator.ID, LogicalOrEvaluator.class));
@@ -95,23 +114,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
 		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
-	}
-
-	private void defineHandlers(List<Component> all) {
-		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class, PrepareHandler.class));
-
-		all.add(C(UseHandler.class));
-		all.add(C(ShowHandler.class));
-		all.add(C(DescHandler.class) //
-		      .req(TableProviderManager.class));
-		all.add(C(SelectHandler.class) //
-		      .req(StatementManager.class));
-		all.add(C(PrepareHandler.class)//
-		      .req(StatementManager.class));
-	}
-
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+		all.add(C(Evaluator.class, LiteralBooleanEvaluator.ID, LiteralBooleanEvaluator.class));
 	}
 }

@@ -51,7 +51,7 @@ public abstract class AbstractIndexMeta<T extends ColumnMeta> implements IndexMe
 	}
 
 	@Override
-	public Class<? extends Index<?>> getIndexClass() {
+	public Class<? extends Index> getIndexClass() {
 		throw new UnsupportedOperationException("Not implemented yet!");
 	}
 }

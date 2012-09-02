@@ -13,7 +13,7 @@ public class TransactionIndex extends AbstractIndexMeta<TransactionColumn> imple
 	}
 
 	@Override
-	public Class<? extends Index<?>> getIndexClass() {
+	public Class<? extends Index> getIndexClass() {
 		if (this == IDX_DOMAIN) {
 			return TransactionIndexer.class;
 		} else {

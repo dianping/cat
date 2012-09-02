@@ -1,6 +1,8 @@
 package com.dianping.bee.engine.spi.row;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 
@@ -11,6 +13,8 @@ public class DefaultRowContext implements RowContext {
 
 	private RowListener m_listener;
 
+	private Map<String, List<Object>> m_attributes;
+
 	public DefaultRowContext(ColumnMeta[] columns) {
 		m_columns = columns;
 		m_values = new Object[columns.length];
@@ -20,6 +24,12 @@ public class DefaultRowContext implements RowContext {
 	public void apply() {
 		m_listener.onRow(this);
 		Arrays.fill(m_values, null);
+	}
+
+	@SuppressWarnings("unchecked")
+   @Override
+	public <T> List<T> getAttributeValues(String name) {
+		return (List<T>) m_attributes.get(name);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -35,18 +45,20 @@ public class DefaultRowContext implements RowContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
+   public <T> T getFirstAttribute(String name, T defaultValue) {
+		List<T> list = (List<T>) m_attributes.get(name);
+
+		if (list == null || list.isEmpty()) {
+			return defaultValue;
+		} else {
+			return list.get(0);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
 	public <T> T getValue(int colIndex) {
 		return (T) m_values[colIndex];
-	}
-
-	@Override
-	public void setColumnValue(int colIndex, Object value) {
-		m_values[colIndex] = value;
-	}
-
-	@Override
-	public void setRowListener(RowListener listener) {
-		m_listener = listener;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,5 +75,17 @@ public class DefaultRowContext implements RowContext {
 		}
 
 		return null;
+	}
+
+	public void setAttributes(Map<String, List<Object>> attributes) {
+		m_attributes = attributes;
+	}
+
+	@Override
+	public void setColumnValue(int colIndex, Object value) {
+		m_values[colIndex] = value;
+	}
+	public void setRowListener(RowListener listener) {
+		m_listener = listener;
 	}
 }

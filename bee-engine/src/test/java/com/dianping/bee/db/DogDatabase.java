@@ -177,7 +177,7 @@ public class DogDatabase implements DatabaseProvider {
 		}
 
 		@Override
-      public Class<? extends Index<?>> getIndexClass() {
+      public Class<? extends Index> getIndexClass() {
 			throw new UnsupportedOperationException("Not implemented yet!");
       }
 	}

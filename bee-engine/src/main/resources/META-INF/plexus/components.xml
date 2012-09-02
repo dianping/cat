@@ -195,6 +195,11 @@
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralBoolean</role-hint>
+			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LiteralBooleanEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.string.Concat</role-hint>
 			<implementation>com.dianping.bee.engine.spi.evaluator.function.ConcatEvaluator</implementation>
 		</component>
