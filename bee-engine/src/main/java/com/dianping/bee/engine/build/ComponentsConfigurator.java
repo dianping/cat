@@ -8,14 +8,21 @@ import com.dianping.bee.db.DogDatabase;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.dianping.bee.engine.spi.expr.Evaluator;
-import com.dianping.bee.engine.spi.expr.internal.ComparisionEqualsEvaluator;
-import com.dianping.bee.engine.spi.expr.internal.ComparisionIsEvaluator;
-import com.dianping.bee.engine.spi.expr.internal.IdentifierEvaluator;
-import com.dianping.bee.engine.spi.expr.internal.LiteralNumberEvaluator;
-import com.dianping.bee.engine.spi.expr.internal.LiteralStringEvaluator;
-import com.dianping.bee.engine.spi.expr.internal.LogicalAndEvaluator;
-import com.dianping.bee.engine.spi.expr.internal.LogicalOrEvaluator;
+import com.dianping.bee.engine.spi.evaluator.Evaluator;
+import com.dianping.bee.engine.spi.evaluator.function.ConcatEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.BetweenAndEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionEqualsEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanOrEqualsEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionIsEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanOrEqualsEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.IdentifierEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.InEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LiteralNumberEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LiteralStringEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LogicalAndEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LogicalOrEvaluator;
 import com.dianping.bee.engine.spi.handler.internal.DescHandler;
 import com.dianping.bee.engine.spi.handler.internal.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
@@ -60,17 +67,32 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(TableHelper.class, SingleTableStatement.class, SingleTableRowFilter.class));
 
 		defineHandlers(all);
-		defineEvaluators(all);
+		defineLogicalEvaluators(all);
+		defineFunctionEvaluators(all);
 
 		return all;
 	}
 
-	private void defineEvaluators(List<Component> all) {
+	private void defineFunctionEvaluators(List<Component> all) {
+		all.add(C(Evaluator.class, ConcatEvaluator.ID, ConcatEvaluator.class));
+	}
+
+	private void defineLogicalEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, LogicalAndEvaluator.ID, LogicalAndEvaluator.class));
 		all.add(C(Evaluator.class, LogicalOrEvaluator.ID, LogicalOrEvaluator.class));
+
 		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanEvaluator.ID, ComparisionGreaterThanEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID, ComparisionGreaterThanOrEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionLessThanEvaluator.ID, ComparisionLessThanEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionLessThanOrEqualsEvaluator.ID, ComparisionLessThanOrEqualsEvaluator.class));
+
+		all.add(C(Evaluator.class, BetweenAndEvaluator.ID, BetweenAndEvaluator.class));
+		all.add(C(Evaluator.class, InEvaluator.ID, InEvaluator.class));
+
 		all.add(C(Evaluator.class, IdentifierEvaluator.ID, IdentifierEvaluator.class));
+
 		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
 		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
 	}

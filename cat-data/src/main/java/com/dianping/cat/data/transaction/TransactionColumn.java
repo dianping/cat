@@ -6,6 +6,8 @@ public enum TransactionColumn implements ColumnMeta {
 	StartTime(String.class), // 20120822(for daily), 2012082213(for hour)
 
 	Domain(String.class), // MobileApi
+	
+	Ip(String.class), // 127.0.0.1
 
 	Type(String.class), // URL
 
@@ -13,7 +15,7 @@ public enum TransactionColumn implements ColumnMeta {
 
 	TotalCount(Integer.class), // 2033
 
-	Failures(Integer.class), // 5
+	FailCount(Integer.class), // 5
 
 	SampleMessage(String.class), // MobileApi-0a0101a6-1345600834200-1
 
@@ -21,11 +23,13 @@ public enum TransactionColumn implements ColumnMeta {
 
 	MaxDuration(Double.class), // 1234
 
-	SumDuration(Double.class), // 123456
+	AvgDuration(Double.class), // 123.56
 
-	Sum2Duration(Double.class), // 2364233
+	StdDuration(Double.class), // 236.23
 
-	Line95(Double.class); // 123
+	Line95(Double.class), // 123.4
+
+	TPS(Double.class); // 12.4
 
 	private String m_name;
 

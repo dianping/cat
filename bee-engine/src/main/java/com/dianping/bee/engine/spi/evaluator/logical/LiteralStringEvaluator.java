@@ -1,7 +1,7 @@
-package com.dianping.bee.engine.spi.expr.internal;
+package com.dianping.bee.engine.spi.evaluator.logical;
 
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString;
-import com.dianping.bee.engine.spi.expr.AbstractEvaluator;
+import com.dianping.bee.engine.spi.evaluator.AbstractEvaluator;
 import com.dianping.bee.engine.spi.row.RowContext;
 
 public class LiteralStringEvaluator extends AbstractEvaluator<LiteralString, String> {

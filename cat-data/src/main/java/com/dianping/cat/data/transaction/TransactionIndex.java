@@ -5,7 +5,7 @@ import com.dianping.bee.engine.spi.meta.AbstractIndexMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
 
 public class TransactionIndex extends AbstractIndexMeta<TransactionColumn> implements IndexMeta {
-	public static final TransactionIndex IDX_STARTTIME_DOMAIN = new TransactionIndex(TransactionColumn.Domain, true,
+	public static final TransactionIndex IDX_DOMAIN = new TransactionIndex(TransactionColumn.Domain, true,
 	      TransactionColumn.StartTime, false);
 
 	private TransactionIndex(Object... args) {
@@ -14,10 +14,14 @@ public class TransactionIndex extends AbstractIndexMeta<TransactionColumn> imple
 
 	@Override
 	public Class<? extends Index<?>> getIndexClass() {
-		return TransactionIndexer.class;
+		if (this == IDX_DOMAIN) {
+			return TransactionIndexer.class;
+		} else {
+			throw new UnsupportedOperationException("No index defined for index: " + this);
+		}
 	}
 
 	public static TransactionIndex[] values() {
-		return new TransactionIndex[] { IDX_STARTTIME_DOMAIN };
+		return new TransactionIndex[] { IDX_DOMAIN };
 	}
 }

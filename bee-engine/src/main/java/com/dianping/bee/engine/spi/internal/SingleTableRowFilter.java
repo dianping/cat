@@ -1,7 +1,7 @@
 package com.dianping.bee.engine.spi.internal;
 
 import com.alibaba.cobar.parser.ast.expression.Expression;
-import com.dianping.bee.engine.spi.expr.Evaluator;
+import com.dianping.bee.engine.spi.evaluator.Evaluator;
 import com.dianping.bee.engine.spi.row.RowContext;
 import com.dianping.bee.engine.spi.row.RowFilter;
 import com.site.lookup.ContainerHolder;
@@ -18,7 +18,7 @@ public class SingleTableRowFilter extends ContainerHolder implements RowFilter {
 		if (value == null) {
 			return false;
 		} else {
-			return (Boolean) value;
+			return ((Boolean) value).booleanValue();
 		}
 	}
 

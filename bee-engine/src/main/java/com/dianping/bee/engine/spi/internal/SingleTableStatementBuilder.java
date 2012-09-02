@@ -98,14 +98,10 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 			// to evaluate where clause
 			m_stmt.setWhereColumns(m_whereColumns);
 			m_stmt.setRowFilter(m_rowFilter.setExpression(where));
-
-			if (m_databaseName == null) {
-				m_stmt.setIndex(m_helper.findIndex(m_tableName, m_whereColumns));
-			} else {
-				m_stmt.setIndex(m_helper.findIndex(m_databaseName, m_tableName, m_whereColumns));
-			}
-
+			m_stmt.setIndex(m_helper.findIndex(m_databaseName, m_tableName, m_whereColumns));
 			m_stmt.setParameterSize(m_parameterSize);
+		} else {
+			m_stmt.setIndex(m_helper.findDefaultIndex(m_databaseName, m_tableName));
 		}
 	}
 

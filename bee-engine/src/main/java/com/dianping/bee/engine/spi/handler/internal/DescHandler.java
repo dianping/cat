@@ -34,7 +34,7 @@ public class DescHandler extends AbstractCommandHandler {
 			return;
 		}
 
-		TableProvider table = m_manager.getTableProvider(tableName);
+		TableProvider table = m_manager.getTableProvider(db, tableName);
 		if (table == null) {
 			error(c, ErrorCode.ER_BAD_TABLE_ERROR, "Unknown table '%s'", tableName);
 			return;

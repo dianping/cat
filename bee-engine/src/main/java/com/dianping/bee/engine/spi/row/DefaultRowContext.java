@@ -49,15 +49,16 @@ public class DefaultRowContext implements RowContext {
 		m_listener = listener;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object getValue(String columnName) {
+	public <T> T getValue(String columnName) {
 		int len = m_columns.length;
 
 		for (int i = 0; i < len; i++) {
 			ColumnMeta column = m_columns[i];
 
 			if (column.getName().equalsIgnoreCase(columnName)) {
-				return m_values[i];
+				return (T) m_values[i];
 			}
 		}
 

@@ -26,22 +26,25 @@ public class TransactionIndexer implements Index<Pair<String, String>> {
 
 		for (TransactionType type : machine.getTypes().values()) {
 			if (type.getNames().isEmpty()) {
-				applyRow(ctx, report, type, null);
+				applyRow(ctx, report, machine, type, null);
 			} else {
 				for (TransactionName name : type.getNames().values()) {
-					applyRow(ctx, report, type, name);
+					applyRow(ctx, report, machine, type, name);
 				}
 			}
 		}
 	}
 
-	private void applyRow(RowContext ctx, TransactionReport report, TransactionType type, TransactionName name) {
+	private void applyRow(RowContext ctx, TransactionReport report, Machine machine, TransactionType type, TransactionName name) {
 		int cols = ctx.getColumnSize();
 
 		for (int i = 0; i < cols; i++) {
 			TransactionColumn column = ctx.getColumn(i);
 
 			switch (column) {
+			case Ip:
+				ctx.setColumnValue(i, machine.getIp());
+				break;
 			case Type:
 				ctx.setColumnValue(i, type.getId());
 				break;
@@ -81,14 +84,20 @@ public class TransactionIndexer implements Index<Pair<String, String>> {
 			case TotalCount:
 				ctx.setColumnValue(i, name != null ? name.getTotalCount() : type.getTotalCount());
 				break;
-			case Failures:
+			case FailCount:
 				ctx.setColumnValue(i, name != null ? name.getFailCount() : type.getFailCount());
 				break;
-			case SumDuration:
-				ctx.setColumnValue(i, name != null ? name.getSum() : type.getSum());
+			case AvgDuration:
+				ctx.setColumnValue(i, name != null ? name.getAvg() : type.getAvg());
+				break;
+			case StdDuration:
+				ctx.setColumnValue(i, name != null ? name.getStd() : type.getStd());
 				break;
 			case Line95:
 				ctx.setColumnValue(i, name != null ? name.getLine95Value() : type.getLine95Value());
+				break;
+			case TPS:
+				ctx.setColumnValue(i, name != null ? name.getTps() : type.getTps());
 				break;
 			default:
 				// TODO more here
