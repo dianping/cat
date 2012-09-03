@@ -2,9 +2,9 @@ package com.dianping.bee.engine.spi.internal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.index.Index;
@@ -25,7 +25,7 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	private int m_parameterSize;
 
-	private Map<ColumnMeta, Integer> m_allColumns = new TreeMap<ColumnMeta, Integer>();
+	private Map<ColumnMeta, Integer> m_allColumns = new LinkedHashMap<ColumnMeta, Integer>();
 
 	private Map<String, List<Object>> m_attributes = new HashMap<String, List<Object>>();
 

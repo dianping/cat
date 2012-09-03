@@ -16,6 +16,8 @@ public interface RowContext {
 
 	public <T> T getFirstAttribute(String name, T defaultValue);
 
+	public <T> T getFirstAttribute(int attrIndex, T defaultValue);
+	
 	public <T> T getValue(int colIndex);
 
 	public <T> T getValue(String columnName);

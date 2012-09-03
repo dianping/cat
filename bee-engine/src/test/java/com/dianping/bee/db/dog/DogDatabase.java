@@ -1,4 +1,4 @@
-package com.dianping.bee.db;
+package com.dianping.bee.db.dog;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
@@ -47,34 +47,6 @@ public class DogDatabase implements DatabaseProvider {
 		public String getName() {
 			return m_name;
 		}
-
-//		@Override
-//		public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
-//			ColumnMeta[] columns = selectColumns;
-//			DefaultRowSet rowSet = new DefaultRowSet(columns);
-//
-//			for (int rowIndex = 0; rowIndex < 10; rowIndex++) {
-//				Cell[] cells = new Cell[columns.length];
-//
-//				for (int colIndex = 0; colIndex < cells.length; colIndex++) {
-//					ColumnMeta columnMeta = columns[colIndex];
-//					String randomValue = null;
-//					if (columnMeta.getType().getSimpleName().equals("String")) {
-//						randomValue = RandomStringUtils.randomAlphabetic(5);
-//					} else if (columnMeta.getType().getSimpleName().equals("Integer")
-//					      || columnMeta.getType().getSimpleName().equals("Long")) {
-//						randomValue = RandomStringUtils.randomNumeric(3);
-//					} else {
-//						randomValue = RandomStringUtils.randomAlphanumeric(5);
-//					}
-//					cells[colIndex] = new DefaultCell(columnMeta, randomValue);
-//				}
-//
-//				Row row = new DefaultRow(cells);
-//				rowSet.addRow(row);
-//			}
-//			return rowSet;
-//		}
 
 		@Override
       public IndexMeta getDefaultIndex() {

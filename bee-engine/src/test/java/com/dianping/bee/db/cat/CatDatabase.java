@@ -1,13 +1,10 @@
-package com.dianping.bee.db;
-
-import org.apache.commons.lang3.RandomStringUtils;
+package com.dianping.bee.db.cat;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.index.Index;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
-import com.dianping.bee.engine.spi.row.RowContext;
 
 public class CatDatabase implements DatabaseProvider {
 
@@ -62,6 +59,11 @@ public class CatDatabase implements DatabaseProvider {
 		}
 
 		@Override
+		public IndexMeta getDefaultIndex() {
+			return null;
+		}
+
+		@Override
 		public IndexMeta[] getIndexes() {
 			return null;
 		}
@@ -69,11 +71,6 @@ public class CatDatabase implements DatabaseProvider {
 		@Override
 		public String getName() {
 			return m_name;
-		}
-
-		@Override
-		public IndexMeta getDefaultIndex() {
-			return null;
 		}
 	}
 
@@ -166,6 +163,11 @@ public class CatDatabase implements DatabaseProvider {
 		}
 
 		@Override
+		public Class<? extends Index> getIndexClass() {
+			return EventIndexer.class;
+		}
+
+		@Override
 		public int getLength() {
 			return m_columns.length;
 		}
@@ -177,11 +179,6 @@ public class CatDatabase implements DatabaseProvider {
 			} else {
 				throw new IndexOutOfBoundsException("size: " + m_orders.length + ", index: " + index);
 			}
-		}
-
-		@Override
-		public Class<? extends Index> getIndexClass() {
-			return TransactionIndexer.class;
 		}
 	}
 
@@ -264,6 +261,11 @@ public class CatDatabase implements DatabaseProvider {
 		}
 
 		@Override
+		public Class<? extends Index> getIndexClass() {
+			return TransactionIndexer.class;
+		}
+
+		@Override
 		public int getLength() {
 			return m_columns.length;
 		}
@@ -276,49 +278,6 @@ public class CatDatabase implements DatabaseProvider {
 				throw new IndexOutOfBoundsException("size: " + m_orders.length + ", index: " + index);
 			}
 		}
-
-		@Override
-		public Class<? extends Index> getIndexClass() {
-			throw new UnsupportedOperationException("Not implemented yet!");
-		}
-	}
-
-	private static class TransactionSampleData {
-		private static Object[][] sampleData;
-
-		static {
-			sampleData = new Object[10][];
-			int columnSize = TransactionColumn.values().length;
-			for (int i = 0; i < sampleData.length; i++) {
-				sampleData[i] = new Object[columnSize];
-				for (int j = 0; i < columnSize; j++) {
-					if (TransactionColumn.values()[j].getType().getSimpleName().equals("String")) {
-						sampleData[i][j] = RandomStringUtils.randomAlphabetic(5);
-					} else if (TransactionColumn.values()[j].getType().getSimpleName().equals("Integer")
-					      || TransactionColumn.values()[j].getType().getSimpleName().equals("Long")) {
-						sampleData[i][j] = RandomStringUtils.randomNumeric(3);
-					} else {
-						sampleData[i][j] = RandomStringUtils.randomAlphanumeric(5);
-					}
-				}
-			}
-		}
-
-		public static Object[][] getSampleData() {
-			return sampleData;
-		}
-	}
-
-	private class TransactionIndexer implements Index {
-
-		@Override
-		public void query(RowContext ctx) throws Exception {
-			Object[][] sampleData = TransactionSampleData.getSampleData();
-			for (int i = 0; i < sampleData.length; i++) {
-				ctx.apply();
-			}
-		}
-
 	}
 
 	@Override
