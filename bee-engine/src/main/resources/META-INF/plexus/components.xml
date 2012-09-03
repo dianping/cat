@@ -7,17 +7,11 @@
 		<component>
 			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
 			<role-hint>information_schema</role-hint>
-			<implementation>com.dianping.bee.server.InformationSchemaDatabase</implementation>
+			<implementation>com.dianping.bee.server.is.InformationSchemaDatabaseProvider</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
-			<role-hint>cat</role-hint>
-			<implementation>com.dianping.bee.db.CatDatabase</implementation>
-		</component>
-		<component>
-			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
-			<role-hint>dog</role-hint>
-			<implementation>com.dianping.bee.db.DogDatabase</implementation>
+			<role>com.dianping.bee.server.is.schema.SchemataIndexer</role>
+			<implementation>com.dianping.bee.server.is.schema.SchemataIndexer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.session.SessionManager</role>
@@ -192,6 +186,11 @@
 			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber</role-hint>
 			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LiteralNumberEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralBoolean</role-hint>
+			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LiteralBooleanEvaluator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>

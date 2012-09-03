@@ -5,10 +5,14 @@ import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.cat.data.event.EventColumn;
 import com.dianping.cat.data.event.EventIndex;
+import com.dianping.cat.data.node.NodeColumn;
+import com.dianping.cat.data.node.NodeIndex;
 import com.dianping.cat.data.transaction.TransactionColumn;
 import com.dianping.cat.data.transaction.TransactionIndex;
 
 public enum CatTableProvider implements TableProvider {
+	Node("node", NodeColumn.values(), NodeIndex.values()),
+	
 	Transaction("transaction", TransactionColumn.values(), TransactionIndex.values()),
 
 	Event("event", EventColumn.values(), EventIndex.values()),

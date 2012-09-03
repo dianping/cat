@@ -1,6 +1,7 @@
 package com.dianping.bee.engine.spi.internal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,7 +13,6 @@ import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.row.DefaultRowContext;
 import com.dianping.bee.engine.spi.row.DefaultRowListener;
-import com.dianping.bee.engine.spi.row.RowContext;
 import com.dianping.bee.engine.spi.row.RowFilter;
 import com.site.lookup.ContainerHolder;
 
@@ -23,9 +23,11 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	private ColumnMeta[] m_selectColumns;
 
+	private int m_parameterSize;
+
 	private Map<ColumnMeta, Integer> m_allColumns = new TreeMap<ColumnMeta, Integer>();
 
-	private int m_parameterSize;
+	private Map<String, List<Object>> m_attributes = new HashMap<String, List<Object>>();
 
 	@Override
 	public int getColumnSize() {
@@ -39,20 +41,23 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	@Override
 	public RowSet query() {
-		Index<?> index = lookup(m_index.getIndexClass());
+		Index index = lookup(m_index.getIndexClass());
 		List<ColumnMeta> columns = new ArrayList<ColumnMeta>(m_allColumns.keySet());
-		RowContext ctx = new DefaultRowContext(columns.toArray(new ColumnMeta[0]));
+		DefaultRowContext ctx = new DefaultRowContext(columns.toArray(new ColumnMeta[0]));
 		DefaultRowListener listener = new DefaultRowListener(m_selectColumns);
 
 		listener.setRowFilter(m_rowFilter);
 		ctx.setRowListener(listener);
+		ctx.setAttributes(m_attributes);
 
 		try {
-			index.queryById(ctx, null);
+			index.query(ctx);
 
 			return listener.getRowSet();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		} finally {
+			release(index);
 		}
 	}
 
@@ -88,5 +93,16 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 				m_allColumns.put(column, -1);
 			}
 		}
+	}
+
+	public void addAttribute(String name, Object value) {
+		List<Object> list = m_attributes.get(name);
+
+		if (list == null) {
+			list = new ArrayList<Object>(3);
+			m_attributes.put(name, list);
+		}
+
+		list.add(value);
 	}
 }

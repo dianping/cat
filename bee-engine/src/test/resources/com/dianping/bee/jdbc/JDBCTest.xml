@@ -1,0 +1,14 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>cat</role-hint>
+			<implementation>com.dianping.bee.db.CatDatabase</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>dog</role-hint>
+			<implementation>com.dianping.bee.db.DogDatabase</implementation>
+		</component>
+	</components>
+</plexus>

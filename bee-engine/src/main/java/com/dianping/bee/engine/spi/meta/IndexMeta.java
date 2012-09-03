@@ -9,5 +9,5 @@ public interface IndexMeta {
 
 	public boolean isAscend(int index);
 
-	public Class<? extends Index<?>> getIndexClass();
+	public Class<? extends Index> getIndexClass();
 }

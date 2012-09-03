@@ -35,7 +35,8 @@ import com.site.lookup.ComponentTestCase;
 public class JDBCTest extends ComponentTestCase {
 
 	@Test
-	public void testConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
+	      SQLException {
 		Connection conn = null;
 		String url = "jdbc:mysql://127.0.0.1:2330/";
 		String dbName = "cat";
@@ -52,8 +53,8 @@ public class JDBCTest extends ComponentTestCase {
 	}
 
 	@Test
-	public void testQueryInformationSchema() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
-	      SQLException {
+	public void testQueryInformationSchema() throws InstantiationException, IllegalAccessException,
+	      ClassNotFoundException, SQLException {
 		String url = "jdbc:mysql://localhost:2330/";
 		String dbName = "cat";
 		String driver = "com.mysql.jdbc.Driver";
@@ -77,7 +78,8 @@ public class JDBCTest extends ComponentTestCase {
 	}
 
 	@Test
-	public void testSingleQuery() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+	public void testSingleQuery() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
+	      SQLException {
 		String url = "jdbc:mysql://localhost:2330/";
 		String dbName = "cat";
 		String driver = "com.mysql.jdbc.Driver";
@@ -99,8 +101,8 @@ public class JDBCTest extends ComponentTestCase {
 	}
 
 	@Test
-	public void testMultiQueryInSameDatabase() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
-	      SQLException {
+	public void testMultiQueryInSameDatabase() throws InstantiationException, IllegalAccessException,
+	      ClassNotFoundException, SQLException {
 		String url = "jdbc:mysql://localhost:2330/";
 		String dbName = "cat";
 		String driver = "com.mysql.jdbc.Driver";
@@ -140,9 +142,9 @@ public class JDBCTest extends ComponentTestCase {
 		conn.close();
 	}
 
-	@Test
-	public void testMultiQueryInMultiDatabaese() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
-	      SQLException {
+//	@Test
+	public void testMultiQueryInMultiDatabaese() throws InstantiationException, IllegalAccessException,
+	      ClassNotFoundException, SQLException {
 		String url = "jdbc:mysql://localhost:2330/";
 		String dbName = "cat";
 		String driver = "com.mysql.jdbc.Driver";
