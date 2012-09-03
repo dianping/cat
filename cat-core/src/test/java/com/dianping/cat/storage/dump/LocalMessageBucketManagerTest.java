@@ -1,5 +1,7 @@
 package com.dianping.cat.storage.dump;
 
+import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,6 +72,12 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		@Override
 		protected long getTimestamp() {
 			return 1343532130488L / 3600 / 1000;
+		}
+
+		@Override
+		public void initialize(String domain) throws IOException {
+			super.initialize(domain);
+			super.resetIndex();
 		}
 	}
 }

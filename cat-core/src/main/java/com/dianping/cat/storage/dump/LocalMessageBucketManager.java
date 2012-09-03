@@ -7,10 +7,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -39,6 +42,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private File m_baseDir;
 
 	private Map<String, LocalMessageBucket> m_buckets = new HashMap<String, LocalMessageBucket>();
+
+	private BlockingQueue<MessageBlock> m_blockQueue = new LinkedBlockingQueue<MessageBlock>(1000);
 
 	public void archive(long startTime) throws IOException {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -98,6 +103,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir("dump"));
 		}
 
+		Threads.forGroup("Cat").start(new BlockDumper());
 		Threads.forGroup("Cat").start(new IdleChecker());
 	}
 
@@ -141,7 +147,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 
 				if (bucket != null) {
-					MessageTree tree = bucket.findById(messageId);
+					// flush the buffer if have data
+					MessageBlock block = bucket.flushBlock();
+
+					if (block != null) {
+						m_blockQueue.offer(block);
+
+						LockSupport.parkNanos(50 * 1000 * 1000L); // wait 50 ms
+					}
+
+					MessageTree tree = bucket.findByIndex(id.getIndex());
 
 					if (tree != null && tree.getMessageId().equals(messageId)) {
 						t.addData("path", dataFile);
@@ -159,6 +174,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			t.setStatus(e);
 			cat.logError(e);
 			throw e;
+		} catch (Error e) {
+			t.setStatus(e);
+			cat.logError(e);
+			throw e;
 		} finally {
 			t.complete();
 		}
@@ -166,54 +185,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	public void setBaseDir(File baseDir) {
 		m_baseDir = baseDir;
-	}
-
-	public DumpItem buildStoreMetaInfo(MessageTree tree) throws IOException {
-		DumpItem item = new DumpItem();
-
-		MessageId messageId = MessageId.parse(tree.getMessageId());
-		int index = messageId.getIndex();
-		
-		String fileName = getBucketName(messageId, tree);
-		ChannelBuffer buf = getChannelBuf(index,fileName, tree);
-		
-		// get rid of length
-		buf.readInt();
-
-		int size = buf.readableBytes();
-		byte[] data = new byte[size];
-
-		buf.readBytes(data);
-		
-		item.setFileName(fileName).setIndex(index).setSize(size).setBytes(data);
-		return item;
-	}
-
-	private String getBucketName(MessageId id, MessageTree tree) throws IOException {
-		// <callee domain> - <caller domain> - <callee ip>
-		String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
-		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
-		LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-		if (bucket == null) {
-			bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-			bucket.setBaseDir(m_baseDir);
-			bucket.initialize(dataFile);
-			m_buckets.put(dataFile, bucket);
-		}
-		return dataFile;
-	}
-
-	private ChannelBuffer getChannelBuf(int index,String fileName, MessageTree tree) throws IOException {
-		LocalMessageBucket bucket = m_buckets.get(fileName);
-		
-		return bucket.getChannelBuf(tree);
-	}
-
-	public void storeMessage(DumpItem item) throws IOException{
-		LocalMessageBucket bucket = m_buckets.get(item.getFileName());
-		
-		bucket.storeChannelBuf(item.getIndex(), item.getSize(), item.getBytes());
 	}
 
 	@Override
@@ -231,7 +202,50 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_buckets.put(dataFile, bucket);
 		}
 
-		bucket.store(tree);
+		MessageBlock block = bucket.store(tree);
+
+		if (block != null) {
+			m_blockQueue.offer(block);
+		}
+	}
+
+	class BlockDumper implements Task {
+		private int m_errors;
+
+		@Override
+		public String getName() {
+			return "LocalMessageBucketManager-BlockDumper";
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					MessageBlock block = m_blockQueue.poll(5, TimeUnit.MILLISECONDS);
+
+					if (block != null) {
+						String dataFile = block.getDataFile();
+						LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+						try {
+							bucket.getWriter().writeBlock(block);
+						} catch (Throwable e) {
+							m_errors++;
+
+							if (m_errors == 1 || m_errors % 1000 == 0) {
+								Cat.getProducer().logError(new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
+							}
+						}
+					}
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
 	}
 
 	class IdleChecker implements Task {
@@ -261,5 +275,4 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		public void shutdown() {
 		}
 	}
-
 }

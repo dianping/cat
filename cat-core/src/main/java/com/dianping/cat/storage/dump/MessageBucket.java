@@ -15,5 +15,5 @@ public interface MessageBucket {
 
 	public void initialize(String dataFile) throws IOException;
 
-	public void store(MessageTree tree) throws IOException;
+	public MessageBlock store(MessageTree tree) throws IOException;
 }
