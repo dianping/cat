@@ -72,7 +72,7 @@ public class JDBCTest extends ComponentTestCase {
 		Assert.assertNotNull(rs);
 		rs.last();
 		Assert.assertEquals(0, rs.getRow());
-		displayResultSet(rs);
+		displayResultSet(sql, rs);
 		conn.close();
 
 	}
@@ -85,18 +85,20 @@ public class JDBCTest extends ComponentTestCase {
 		String driver = "com.mysql.jdbc.Driver";
 		String userName = "test";
 		String password = "test";
+		String sql = null;
 
 		Class.forName(driver).newInstance();
 		DriverManager.setLoginTimeout(600);
 		Connection conn = DriverManager.getConnection(url + dbName, userName, password);
 		Statement stmt = conn.createStatement();
 		Assert.assertNotNull(stmt);
-		ResultSet rs = stmt.executeQuery("select type, sum(failures) from transaction where domain=? and starttime=?");
-		Assert.assertEquals(2, rs.getMetaData().getColumnCount());
+		sql = "select type, sum(failures), domain from transaction where domain='MobileApi' and starttime='20120822'";
+		ResultSet rs = stmt.executeQuery(sql);
+		Assert.assertEquals(3, rs.getMetaData().getColumnCount());
 		Assert.assertNotNull(rs);
 		rs.last();
 		Assert.assertTrue(rs.getRow() > 0);
-		displayResultSet(rs);
+		displayResultSet(sql, rs);
 		conn.close();
 	}
 
@@ -108,6 +110,7 @@ public class JDBCTest extends ComponentTestCase {
 		String driver = "com.mysql.jdbc.Driver";
 		String userName = "test";
 		String password = "test";
+		String sql = null;
 
 		Class.forName(driver).newInstance();
 		DriverManager.setLoginTimeout(600);
@@ -115,34 +118,37 @@ public class JDBCTest extends ComponentTestCase {
 
 		Statement stmt1 = conn.createStatement();
 		Assert.assertNotNull(stmt1);
-		ResultSet rs1 = stmt1.executeQuery("select type, sum(failures) from transaction where domain=? and starttime=?");
+		sql = "select type, sum(failures) from transaction where domain='MobileApi' and starttime='20120822'";
+		ResultSet rs1 = stmt1.executeQuery(sql);
 		Assert.assertEquals(2, rs1.getMetaData().getColumnCount());
 		Assert.assertNotNull(rs1);
 		rs1.last();
 		Assert.assertTrue(rs1.getRow() > 0);
-		displayResultSet(rs1);
+		displayResultSet(sql, rs1);
 
 		Statement stmt2 = conn.createStatement();
 		Assert.assertNotNull(stmt2);
-		ResultSet rs2 = stmt2.executeQuery("select type,sum(failures) from event");
+		sql = "select type,sum(failures) from event";
+		ResultSet rs2 = stmt2.executeQuery(sql);
 		Assert.assertEquals(2, rs2.getMetaData().getColumnCount());
 		Assert.assertNotNull(rs2);
 		rs2.last();
 		Assert.assertTrue(rs2.getRow() > 0);
-		displayResultSet(rs2);
+		displayResultSet(sql, rs2);
 
 		Statement stmt3 = conn.createStatement();
 		Assert.assertNotNull(stmt3);
-		ResultSet rs3 = stmt3.executeQuery("select * from transaction");
+		sql = "select * from transaction";
+		ResultSet rs3 = stmt3.executeQuery(sql);
 		Assert.assertTrue(rs3.getMetaData().getColumnCount() > 0);
 		Assert.assertNotNull(rs3);
 		rs3.last();
 		Assert.assertTrue(rs3.getRow() > 0);
-		displayResultSet(rs3);
+		displayResultSet(sql, rs3);
 		conn.close();
 	}
 
-//	@Test
+	@Test
 	public void testMultiQueryInMultiDatabaese() throws InstantiationException, IllegalAccessException,
 	      ClassNotFoundException, SQLException {
 		String url = "jdbc:mysql://localhost:2330/";
@@ -150,6 +156,7 @@ public class JDBCTest extends ComponentTestCase {
 		String driver = "com.mysql.jdbc.Driver";
 		String userName = "test";
 		String password = "test";
+		String sql = null;
 
 		Class.forName(driver).newInstance();
 		DriverManager.setLoginTimeout(600);
@@ -157,28 +164,31 @@ public class JDBCTest extends ComponentTestCase {
 
 		Statement stmt1 = conn1.createStatement();
 		Assert.assertNotNull(stmt1);
-		ResultSet rs1 = stmt1.executeQuery("select type, sum(failures) from transaction where domain=? and starttime=?");
+		sql = "select type, sum(failures) from transaction where domain='MobileApi' and starttime='20120822'";
+		ResultSet rs1 = stmt1.executeQuery(sql);
 		Assert.assertEquals(2, rs1.getMetaData().getColumnCount());
 		Assert.assertNotNull(rs1);
 		rs1.last();
 		Assert.assertTrue(rs1.getRow() > 0);
-		displayResultSet(rs1);
+		displayResultSet(sql, rs1);
 		conn1.close();
 
 		dbName = "dog";
 		Connection conn2 = DriverManager.getConnection(url + dbName, userName, password);
 		Statement stmt2 = conn2.createStatement();
 		Assert.assertNotNull(stmt2);
-		ResultSet rs2 = stmt2.executeQuery("select type, sum(failures) from transaction where domain=? and starttime=?");
+		sql = "select type, sum(failures) from transaction where domain='MobileApi' and starttime='20120822'";
+		ResultSet rs2 = stmt2.executeQuery(sql);
 		Assert.assertEquals(2, rs2.getMetaData().getColumnCount());
 		Assert.assertNotNull(rs2);
 		rs2.last();
 		Assert.assertTrue(rs2.getRow() > 0);
-		displayResultSet(rs2);
+		displayResultSet(sql, rs2);
 		conn2.close();
 	}
 
-	private void displayResultSet(ResultSet rs) throws SQLException {
+	private void displayResultSet(String sql, ResultSet rs) throws SQLException {
+		System.out.println("Query: " + sql);
 		ResultSetMetaData meta = rs.getMetaData();
 		int columns = meta.getColumnCount();
 		for (int column = 1; column <= columns; column++) {

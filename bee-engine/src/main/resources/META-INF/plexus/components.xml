@@ -179,6 +179,11 @@
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.ParamMarker</role-hint>
+			<implementation>com.dianping.bee.engine.spi.evaluator.logical.ParamMarkerEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString</role-hint>
 			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LiteralStringEvaluator</implementation>
 		</component>
@@ -196,6 +201,24 @@
 			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.string.Concat</role-hint>
 			<implementation>com.dianping.bee.engine.spi.evaluator.function.ConcatEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>cat</role-hint>
+			<implementation>com.dianping.bee.db.cat.CatDatabase</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.db.cat.TransactionIndexer</role>
+			<implementation>com.dianping.bee.db.cat.TransactionIndexer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.db.cat.EventIndexer</role>
+			<implementation>com.dianping.bee.db.cat.EventIndexer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>dog</role-hint>
+			<implementation>com.dianping.bee.db.dog.DogDatabase</implementation>
 		</component>
 	</components>
 </plexus>

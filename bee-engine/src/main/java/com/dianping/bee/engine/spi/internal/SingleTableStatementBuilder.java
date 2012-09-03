@@ -166,7 +166,13 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 				Number value = ((LiteralNumber) right).getNumber();
 
 				m_stmt.addAttribute(name, value);
-			}
+			} else if (right instanceof ParamMarker) {
+				// FIXME
+				String name = ((Identifier) left).getIdText();
+				String value = "?";
+
+				m_stmt.addAttribute(name, value);
+			} 
 		}
 
 		super.visit(node);

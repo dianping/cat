@@ -1,6 +1,8 @@
 package com.dianping.bee.engine.spi.row;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +29,7 @@ public class DefaultRowContext implements RowContext {
 	}
 
 	@SuppressWarnings("unchecked")
-   @Override
+	@Override
 	public <T> List<T> getAttributeValues(String name) {
 		return (List<T>) m_attributes.get(name);
 	}
@@ -45,7 +47,7 @@ public class DefaultRowContext implements RowContext {
 
 	@SuppressWarnings("unchecked")
 	@Override
-   public <T> T getFirstAttribute(String name, T defaultValue) {
+	public <T> T getFirstAttribute(String name, T defaultValue) {
 		List<T> list = (List<T>) m_attributes.get(name);
 
 		if (list == null || list.isEmpty()) {
@@ -53,6 +55,27 @@ public class DefaultRowContext implements RowContext {
 		} else {
 			return list.get(0);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getFirstAttribute(int attrIndex, T defaultValue) {
+		int index = 0;
+		Collection<List<Object>> values = m_attributes.values();
+		Iterator<List<Object>> iterator = values.iterator();
+		while (iterator.hasNext() && index++ < attrIndex) {
+			iterator.next();
+		}
+		if (iterator.hasNext()) {
+			List<T> list = (List<T>) iterator.next();
+
+			if (list == null || list.isEmpty()) {
+				return defaultValue;
+			} else {
+				return list.get(0);
+			}
+		}
+		return defaultValue;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -85,6 +108,7 @@ public class DefaultRowContext implements RowContext {
 	public void setColumnValue(int colIndex, Object value) {
 		m_values[colIndex] = value;
 	}
+
 	public void setRowListener(RowListener listener) {
 		m_listener = listener;
 	}
