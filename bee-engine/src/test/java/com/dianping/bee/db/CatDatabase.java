@@ -1,10 +1,13 @@
 package com.dianping.bee.db;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.index.Index;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
+import com.dianping.bee.engine.spi.row.RowContext;
 
 public class CatDatabase implements DatabaseProvider {
 
@@ -67,33 +70,6 @@ public class CatDatabase implements DatabaseProvider {
 		public String getName() {
 			return m_name;
 		}
-
-//		@Override
-//		public RowSet queryByIndex(IndexMeta index, ColumnMeta[] selectColumns) {
-//			ColumnMeta[] columns = selectColumns;
-//			DefaultRowSet rowSet = new DefaultRowSet(columns);
-//
-//			for (int rowIndex = 0; rowIndex < 10; rowIndex++) {
-//				Cell[] cells = new Cell[columns.length];
-//				for (int colIndex = 0; colIndex < cells.length; colIndex++) {
-//					ColumnMeta columnMeta = columns[colIndex];
-//					String randomValue = null;
-//					if (columnMeta.getType().getSimpleName().equals("String")) {
-//						randomValue = RandomStringUtils.randomAlphabetic(5);
-//					} else if (columnMeta.getType().getSimpleName().equals("Integer")
-//					      || columnMeta.getType().getSimpleName().equals("Long")) {
-//						randomValue = RandomStringUtils.randomNumeric(3);
-//					} else {
-//						randomValue = RandomStringUtils.randomAlphanumeric(5);
-//					}
-//					cells[colIndex] = new DefaultCell(columnMeta, randomValue);
-//				}
-//
-//				Row row = new DefaultRow(cells);
-//				rowSet.addRow(row);
-//			}
-//			return rowSet;
-//		}
 
 		@Override
 		public IndexMeta getDefaultIndex() {
@@ -167,7 +143,8 @@ public class CatDatabase implements DatabaseProvider {
 			int length = args.length;
 
 			if (length % 2 != 0) {
-				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(), name()));
+				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(),
+				      name()));
 			}
 
 			m_columns = new ColumnMeta[length / 2];
@@ -204,7 +181,7 @@ public class CatDatabase implements DatabaseProvider {
 
 		@Override
 		public Class<? extends Index> getIndexClass() {
-			throw new UnsupportedOperationException("Not implemented yet!");
+			return TransactionIndexer.class;
 		}
 	}
 
@@ -264,7 +241,8 @@ public class CatDatabase implements DatabaseProvider {
 			int length = args.length;
 
 			if (length % 2 != 0) {
-				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(), name()));
+				throw new IllegalArgumentException(String.format("Parameters should be paired for %s(%s)!", getClass(),
+				      name()));
 			}
 
 			m_columns = new ColumnMeta[length / 2];
@@ -303,6 +281,44 @@ public class CatDatabase implements DatabaseProvider {
 		public Class<? extends Index> getIndexClass() {
 			throw new UnsupportedOperationException("Not implemented yet!");
 		}
+	}
+
+	private static class TransactionSampleData {
+		private static Object[][] sampleData;
+
+		static {
+			sampleData = new Object[10][];
+			int columnSize = TransactionColumn.values().length;
+			for (int i = 0; i < sampleData.length; i++) {
+				sampleData[i] = new Object[columnSize];
+				for (int j = 0; i < columnSize; j++) {
+					if (TransactionColumn.values()[j].getType().getSimpleName().equals("String")) {
+						sampleData[i][j] = RandomStringUtils.randomAlphabetic(5);
+					} else if (TransactionColumn.values()[j].getType().getSimpleName().equals("Integer")
+					      || TransactionColumn.values()[j].getType().getSimpleName().equals("Long")) {
+						sampleData[i][j] = RandomStringUtils.randomNumeric(3);
+					} else {
+						sampleData[i][j] = RandomStringUtils.randomAlphanumeric(5);
+					}
+				}
+			}
+		}
+
+		public static Object[][] getSampleData() {
+			return sampleData;
+		}
+	}
+
+	private class TransactionIndexer implements Index {
+
+		@Override
+		public void query(RowContext ctx) throws Exception {
+			Object[][] sampleData = TransactionSampleData.getSampleData();
+			for (int i = 0; i < sampleData.length; i++) {
+				ctx.apply();
+			}
+		}
+
 	}
 
 	@Override

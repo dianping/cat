@@ -7,17 +7,11 @@
 		<component>
 			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
 			<role-hint>information_schema</role-hint>
-			<implementation>com.dianping.bee.server.InformationSchemaDatabase</implementation>
+			<implementation>com.dianping.bee.server.is.InformationSchemaDatabaseProvider</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
-			<role-hint>cat</role-hint>
-			<implementation>com.dianping.bee.db.CatDatabase</implementation>
-		</component>
-		<component>
-			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
-			<role-hint>dog</role-hint>
-			<implementation>com.dianping.bee.db.DogDatabase</implementation>
+			<role>com.dianping.bee.server.is.schema.SchemataIndexer</role>
+			<implementation>com.dianping.bee.server.is.schema.SchemataIndexer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.session.SessionManager</role>

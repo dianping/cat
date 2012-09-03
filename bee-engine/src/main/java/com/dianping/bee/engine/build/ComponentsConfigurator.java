@@ -3,8 +3,6 @@ package com.dianping.bee.engine.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.bee.db.CatDatabase;
-import com.dianping.bee.db.DogDatabase;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
@@ -37,9 +35,10 @@ import com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder;
 import com.dianping.bee.engine.spi.internal.TableHelper;
 import com.dianping.bee.engine.spi.session.DefaultSessionManager;
 import com.dianping.bee.engine.spi.session.SessionManager;
-import com.dianping.bee.server.InformationSchemaDatabase;
 import com.dianping.bee.server.SimpleServer;
 import com.dianping.bee.server.SimpleServerQueryHandler;
+import com.dianping.bee.server.is.InformationSchemaDatabaseProvider;
+import com.dianping.bee.server.is.schema.SchemataIndexer;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -54,9 +53,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(SimpleServer.class));
 
-		all.add(C(DatabaseProvider.class, "information_schema", InformationSchemaDatabase.class));
-		all.add(C(DatabaseProvider.class, "cat", CatDatabase.class));
-		all.add(C(DatabaseProvider.class, "dog", DogDatabase.class));
+		all.add(C(DatabaseProvider.class, InformationSchemaDatabaseProvider.ID, InformationSchemaDatabaseProvider.class));
+		all.add(C(SchemataIndexer.class));
 
 		all.add(C(SessionManager.class, DefaultSessionManager.class));
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class) //
@@ -103,7 +101,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionGreaterThanEvaluator.ID, ComparisionGreaterThanEvaluator.class));
-		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID, ComparisionGreaterThanOrEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID,
+		      ComparisionGreaterThanOrEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanEvaluator.ID, ComparisionLessThanEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanOrEqualsEvaluator.ID, ComparisionLessThanOrEqualsEvaluator.class));
 
