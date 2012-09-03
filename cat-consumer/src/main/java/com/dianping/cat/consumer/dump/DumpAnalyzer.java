@@ -151,9 +151,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 		if (!m_localMode) {
 			m_uploader.start();
-
-			Threads.forGroup("Cat").start(new WriteMessageTree());
 		}
+
+		Threads.forGroup("Cat").start(new WriteMessageTree());
 	}
 
 	public class WriteMessageTree implements Task {

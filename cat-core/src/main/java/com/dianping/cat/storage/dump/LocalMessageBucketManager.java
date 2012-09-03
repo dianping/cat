@@ -248,7 +248,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 					try {
 						closeIdleBuckets();
-					} catch (IOException e) {
+					} catch (Throwable e) {
 						Cat.getProducer().logError(e);
 					}
 				}
