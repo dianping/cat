@@ -1,17 +1,18 @@
 package com.dianping.bee.engine.spi.evaluator;
 
 import com.alibaba.cobar.parser.ast.expression.Expression;
-import com.alibaba.cobar.parser.ast.expression.arithmeic.ArithmeticSubtractExpression;
 import com.alibaba.cobar.parser.util.ExprEvalUtils;
+import com.alibaba.cobar.parser.util.Pair;
 import com.dianping.bee.engine.spi.row.RowContext;
 import com.site.lookup.ContainerHolder;
 
 public abstract class AbstractEvaluator<S extends Expression, T> extends ContainerHolder implements Evaluator<S, T> {
-	@SuppressWarnings("unchecked")
-	protected <V> V eval(RowContext ctx, Expression child) {
-		Evaluator<Expression, V> evaluator = lookup(Evaluator.class, child.getClass().getName());
+	protected double compareNumber(Number n1, Number n2) {
+		Pair<Number, Number> pair = ExprEvalUtils.convertNum2SameLevel(n1, n2);
+		Number v1 = pair.getKey();
+		Number v2 = pair.getValue();
 
-		return (V) evaluator.evaluate(ctx, child);
+		return v1.doubleValue() - v2.doubleValue();
 	}
 
 	protected Integer compareTo(RowContext ctx, Expression left, Expression right) {
@@ -29,19 +30,11 @@ public abstract class AbstractEvaluator<S extends Expression, T> extends Contain
 		if (v1 instanceof Number) {
 			Number n1 = (Number) v1;
 			Number n2 = ExprEvalUtils.string2Number(String.valueOf(v2));
-			Number result = ExprEvalUtils.calculate(new ArithmeticSubtractExpression(left, right), n1, n2);
+			double result = compareNumber(n1, n2);
 
-			if (result == null) {
-				return null;
-			} else if (result instanceof Integer) {
-				return (Integer) result;
-			}
-
-			double val = result.doubleValue();
-
-			if (val > -1e-6 && val < 1e-6) {
+			if (result > -1e-6 && result < 1e-6) {
 				return 0;
-			} else if (val > 0) {
+			} else if (result > 0) {
 				return 1;
 			} else {
 				return -1;
@@ -49,5 +42,12 @@ public abstract class AbstractEvaluator<S extends Expression, T> extends Contain
 		}
 
 		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected <V> V eval(RowContext ctx, Expression child) {
+		Evaluator<Expression, V> evaluator = lookup(Evaluator.class, child.getClass().getName());
+
+		return (V) evaluator.evaluate(ctx, child);
 	}
 }

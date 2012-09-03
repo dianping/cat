@@ -88,7 +88,7 @@ public class TransactionIndexer implements Index {
 	}
 
 	private TransactionReport getHourlyReport(RowContext ctx) throws IOException, SAXException {
-		String domain = ctx.getFirstAttribute("domain", null);
+		String domain = ctx.getFirstAttribute("domain", "Cat");
 		String date = ctx.getFirstAttribute("starttime", "");
 		String ip = ctx.getFirstAttribute("ip", "All");
 		URL url = new URL(String.format("http://localhost:2281/cat/r/t?domain=%s&date=%s&ip=%s&xml=true", domain, date, ip));
