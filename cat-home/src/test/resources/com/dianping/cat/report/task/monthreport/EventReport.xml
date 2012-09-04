@@ -1,0 +1,14 @@
+<event-report domain="MobileApi" startTime="2012-06-18 15:00:00"
+	endTime="2012-06-18 15:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<ip>All</ip>
+	<machine ip="All">
+		<type id="Cache.memcached" totalCount="1550" failCount="0" failPercent="0.00">
+		</type>
+		<type id="Cache.kvdb" totalCount="1550" failCount="0" failPercent="0.00">
+		</type>
+		<type id="Cache.web" totalCount="1550" failCount="0" failPercent="0.00">
+		</type>
+	</machine>
+</event-report>

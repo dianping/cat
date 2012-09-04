@@ -43,6 +43,9 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	@FieldMeta("step")
 	private int m_step;
 
+	@FieldMeta("today")
+	private boolean m_today;
+	
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;
 	}
@@ -257,4 +260,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		}
 	}
 
+	public boolean isToday() {
+		return m_today;
+	}
+
+	public void setToday(boolean today) {
+		m_today = today;
+	}
+	
 }

@@ -13,6 +13,10 @@ import com.site.lookup.ContainerHolder;
 public class DefaultStatementManager extends ContainerHolder implements StatementManager {
 	private Map<String, Statement> m_statements = new HashMap<String, Statement>();
 
+	private Map<Long, Statement> m_prepares = new HashMap<Long, Statement>();
+
+	private static long stmtId = 0;
+
 	@Override
 	public Statement build(String sql) throws SQLSyntaxErrorException {
 		Statement statement = m_statements.get(sql);
@@ -31,20 +35,44 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		return statement;
 	}
 
-	private Statement parseSQL(String sql) throws SQLSyntaxErrorException {
+	public Statement parseSQL(String sql) throws SQLSyntaxErrorException {
 		SQLStatement statement = SQLParserDelegate.parse(sql);
-		
-		DefaultStatementVisitor defaultVisitor =  new DefaultStatementVisitor();
-		statement.accept(defaultVisitor);
-		
-		if (defaultVisitor.getTableAlias().size() > 1) {
-			MultiTableStatementVisitor visitor = lookup(MultiTableStatementVisitor.class);
-			statement.accept(visitor);
-			return visitor.getStatement();
+		QueryDetector detector = new QueryDetector();
+
+		statement.accept(detector);
+
+		if (detector.isSingleTable()) {
+			SingleTableStatementBuilder builder = lookup(SingleTableStatementBuilder.class);
+
+			try {
+				statement.accept(builder);
+				return builder.getStatement();
+			} finally {
+				release(builder);
+			}
 		} else {
-			SingleTableStatementVisitor visitor = lookup(SingleTableStatementVisitor.class);
-			statement.accept(visitor);
-			return visitor.getStatement();
+			throw new SQLSyntaxErrorException(sql);
+		}
+	}
+
+	@Override
+	public long stmtPrepare(Statement stmt) {
+		synchronized (m_prepares) {
+			m_prepares.put(stmtId++ % Long.MAX_VALUE, stmt);
+		}
+
+		return stmtId;
+	}
+
+	@Override
+	public Statement stmtExecute(long stmtId) {
+		return m_prepares.get(stmtId);
+	}
+
+	@Override
+	public void stmtClose(long stmtId) {
+		synchronized (m_prepares) {
+			m_prepares.remove(stmtId);
 		}
 	}
 }

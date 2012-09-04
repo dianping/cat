@@ -20,6 +20,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("type")
 	private String m_type;
+	
+	@FieldMeta("xml")
+	private boolean m_xml;
 
 	public Payload() {
 		super(ReportPage.TRANSACTION);
@@ -46,6 +49,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_type;
 	}
 
+	public boolean isXml() {
+   	return m_xml;
+   }
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.HOURLY_REPORT);
 	}
@@ -65,6 +72,10 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setType(String type) {
 		m_type = type;
 	}
+
+	public void setXml(boolean xml) {
+   	m_xml = xml;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

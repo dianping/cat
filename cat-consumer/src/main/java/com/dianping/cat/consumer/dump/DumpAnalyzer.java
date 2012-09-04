@@ -40,20 +40,16 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	private Logger m_logger;
 
-	public DumpUploader getDumpUploader() {
-		return m_uploader;
-	}
-
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd) {
 			m_channelManager.closeAllChannels(m_startTime);
 
 			try {
-	         m_bucketManager.archive(m_startTime);
-         } catch (IOException e) {
-	         e.printStackTrace();
-         }
+				m_bucketManager.archive(m_startTime);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -67,9 +63,22 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		return Collections.emptySet();
 	}
 
+	public DumpUploader getDumpUploader() {
+		return m_uploader;
+	}
+
 	@Override
 	public Object getReport(String domain) {
 		throw new UnsupportedOperationException("This should not be called!");
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		m_localMode = m_configManager.isLocalMode();
+
+		if (!m_localMode) {
+			m_uploader.start();
+		}
 	}
 
 	@Override
@@ -122,14 +131,5 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		m_extraTime = extraTime;
 		m_startTime = startTime;
 		m_duration = duration;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_localMode = m_configManager.isLocalMode();
-
-		if (!m_localMode) {
-			m_uploader.start();
-		}
 	}
 }

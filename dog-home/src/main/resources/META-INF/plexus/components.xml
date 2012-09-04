@@ -1,6 +1,24 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.dog.event.EventListenerRegistry</role>
+			<implementation>com.dianping.dog.event.DefaultEventListenerRegistry</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.event.EventDispatcher</role>
+			<implementation>com.dianping.dog.event.DefaultEventDispatcher</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.event.EventListenerRegistry</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.rule.RuleContext</role>
+			<implementation>com.dianping.dog.alarm.rule.DefaultRuleContext</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
 			<role>com.site.web.mvc.model.ModuleRegistry</role>
 			<implementation>com.site.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>

@@ -14,10 +14,44 @@ import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
 public class DefaultBucketManager extends ContainerHolder implements BucketManager {
+	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();
+
 	@Inject
 	private MessagePathBuilder m_pathBuilder;
 
-	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();
+	@Override
+	public void closeAllLogviewBuckets() {
+		int hour = 60 * 60 * 1000;
+		long currentTimeMillis = System.currentTimeMillis();
+		long lastHour = currentTimeMillis - currentTimeMillis % hour - 2 * hour;
+
+		List<Entry> removeEntries = new ArrayList<Entry>();
+		for (java.util.Map.Entry<Entry, Bucket<?>> temp : m_map.entrySet()) {
+			Entry entry = temp.getKey();
+			Bucket<?> bucket = temp.getValue();
+
+			if (bucket instanceof LocalLogviewBucket) {
+				long timestamp = ((LocalLogviewBucket) bucket).getTimestamp();
+
+				if (timestamp < lastHour) {
+					removeEntries.add(entry);
+				}
+			}
+		}
+
+		synchronized (m_map) {
+			for (Entry entry : removeEntries) {
+				Bucket<?> bucket = m_map.get(entry);
+				try {
+					bucket.close();
+				} catch (Exception e) {
+					// ignore it
+				}
+				m_map.remove(entry);
+				release(bucket);
+			}
+		}
+	}
 
 	@Override
 	public void closeBucket(Bucket<?> bucket) {
@@ -27,15 +61,19 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 			// ignore it
 		}
 
+		Entry key = null;
+		
 		synchronized (m_map) {
 			for (Map.Entry<Entry, Bucket<?>> e : m_map.entrySet()) {
 				if (e.getValue() == bucket) {
-					m_map.remove(e.getKey());
+					key = e.getKey();
 					break;
 				}
 			}
 		}
-
+		if (key != null) {
+			m_map.remove(key);
+		}
 		release(bucket);
 	}
 
@@ -81,6 +119,11 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@Override
+	public Bucket<MessageTree> getLogviewBucket(long timestamp, String domain) throws IOException {
+		return getBucket(MessageTree.class, timestamp, domain, "logview");
+	}
+
+	@Override
 	public List<Bucket<MessageTree>> getLogviewBuckets(long timestamp, String excludeDomain) throws IOException {
 		long t = timestamp - timestamp % (60 * 60 * 1000L);
 		List<Bucket<MessageTree>> buckets = new ArrayList<Bucket<MessageTree>>();
@@ -98,11 +141,6 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	@Override
-	public Bucket<MessageTree> getLogviewBucket(long timestamp, String domain) throws IOException {
-		return getBucket(MessageTree.class, timestamp, domain, "logview");
-	}
-
-	@Override
 	public Bucket<MessageTree> getMessageBucket(long timestamp, String domain) throws IOException {
 		return getBucket(MessageTree.class, timestamp, domain, "message");
 	}
@@ -113,11 +151,11 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 	}
 
 	static class Entry {
-		private Class<?> m_type;
+		private String m_namespace;
 
 		private String m_path;
 
-		private String m_namespace;
+		private Class<?> m_type;
 
 		public Entry(Class<?> type, String path, String namespace) {
 			m_type = type;
@@ -147,24 +185,6 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		@Override
 		public String toString() {
 			return String.format("Entry[type=%s,path=%s]", m_type, m_path);
-		}
-	}
-
-	@Override
-	public void closeAllLogviewBuckets() {
-		int hour = 60 * 60 * 1000;
-		long currentTimeMillis = System.currentTimeMillis();
-		long lastHour = currentTimeMillis - currentTimeMillis % hour - 2 * hour;
-
-		for (Bucket<?> bucket : m_map.values()) {
-			if (bucket instanceof LocalLogviewBucket) {
-				long timestamp = ((LocalLogviewBucket) bucket).getTimestamp();
-
-				if (timestamp < lastHour) {
-					LocalLogviewBucket logview = (LocalLogviewBucket) bucket;
-					closeBucket(logview);
-				}
-			}
 		}
 	}
 }

@@ -90,6 +90,11 @@ public class ProblemStatistics extends BaseVisitor {
 		m_urlThreshold = urlThreshold;
 		return this;
 	}
+	
+	public ProblemStatistics setServiceThreshold(int serviceThreshold) {
+		m_serviceThreshold = serviceThreshold;
+		return this;
+	}
 
 	private void statisticsDuration(Entry entry) {
 		String type = entry.getType();

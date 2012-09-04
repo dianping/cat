@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.monthreport.model" enable-merger="true" enable-json-builder="true"
+	enable-xml-parser="true"  enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true"
+	enable-native-builder="true" enable-native-parser="true">
+ <entity name="month-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="day" value-type="int"  primitive="true"/>
+    <element name="domain" value-type="String" type="list" names="domains" />
+    <entity-ref name="problem-info" />
+    <entity-ref name="url" />
+    <entity-ref name="service" />
+    <entity-ref name="call" />
+    <entity-ref name="sql" />
+    <entity-ref name="web-cache" />
+    <entity-ref name="kvdb-cache" />
+    <entity-ref name="mem-cache" />
+  </entity>
+  <entity name="problem-info">
+    <attribute name="exceptions" value-type="long"  primitive="true"/>
+    <attribute name="avg-exceptions" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="longSqls" value-type="long"  primitive="true"/>
+    <attribute name="avg-longSqls" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="long-sqlPercent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="longUrls" value-type="long"  primitive="true"/>
+    <attribute name="avg-longUrls" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="long-urlPercent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="longServices" value-type="long"  primitive="true"/>
+    <attribute name="avg-longServices" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="long-servicePercent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="longCaches" value-type="long" primitive="true" />
+    <attribute name="avg-longCaches" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="long-cachePercent" value-type="double" primitive="true"  format="0.000000"/>
+    
+    <attribute name="exceptions-flag" value-type="int"  primitive="true"/>
+    <attribute name="avg-exceptions-flag" value-type="int" primitive="true" />
+    <attribute name="longSqls-flag" value-type="int"  primitive="true"/>
+    <attribute name="avg-longSqls-flag" value-type="int" primitive="true" />
+    <attribute name="long-sqlPercent-flag" value-type="int" primitive="true" />
+    <attribute name="longUrls-flag" value-type="int"  primitive="true"/>
+    <attribute name="avg-longUrls-flag" value-type="int" primitive="true" />
+    <attribute name="long-urlPercent-flag" value-type="int" primitive="true" />
+    <attribute name="longServices-flag" value-type="int"  primitive="true"/>
+    <attribute name="avg-longServices-flag" value-type="int" primitive="true" />
+    <attribute name="long-servicePercent-flag" value-type="int" primitive="true" />
+    <attribute name="longCaches-flag" value-type="int" primitive="true" />
+    <attribute name="avg-longCaches-flag" value-type="int" primitive="true" />
+    <attribute name="long-cachePercent-flag" value-type="int" primitive="true" />
+    
+  </entity>
+  <entity name="url">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="base-info">
+    <attribute name="total" value-type="long"  primitive="true"/>
+    <attribute name="avg" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="response-time" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="error-total" value-type="long"  primitive="true"/>
+    <attribute name="error-avg" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="error-percent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="success-percent" value-type="double" primitive="true"  format="0.000000"/>
+    
+    <attribute name="total-flag" value-type="int"  primitive="true"/>
+    <attribute name="avg-flag" value-type="int" primitive="true" />
+    <attribute name="response-time-flag" value-type="int" primitive="true" />
+    <attribute name="error-total-flag" value-type="int"  primitive="true"/>
+    <attribute name="error-avg-flag" value-type="int" primitive="true" />
+    <attribute name="error-percent-flag" value-type="int" primitive="true" />
+    <attribute name="success-percent-flag" value-type="int" primitive="true"/>
+  </entity>
+  <entity name="service">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="call">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="sql">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="web-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+  <entity name="base-cache-info">
+    <attribute name="total" value-type="long"  primitive="true"/>
+    <attribute name="avg" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="response-time" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="hit-percent" value-type="double" primitive="true" format="0.000000"/>
+    
+    <attribute name="total-flag" value-type="int"  primitive="true"/>
+    <attribute name="avg-flag" value-type="int" primitive="true" />
+    <attribute name="response-time-flag" value-type="int" primitive="true" />
+    <attribute name="hit-percent-flag" value-type="int" primitive="true" />
+  </entity>
+  <entity name="kvdb-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+  <entity name="mem-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+</model>
+

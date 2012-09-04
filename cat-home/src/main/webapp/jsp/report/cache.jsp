@@ -70,7 +70,7 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-			<tr class="left"><th colspan='6'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
+			<tr><th class="left" colspan='6'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
 		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 			</th></tr>
@@ -92,7 +92,7 @@
 				<c:set var="e" value="${item.name}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td width="25%" style="text-align:left;word-wrap:break-word;word-break:break-all;">${w:shorten(e.id, 80)}</td>
+					<td style="text-align:left;word-wrap:break-word;word-break:break-all;">${w:shorten(e.id, 80)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${item.missed}</td>
 					<td>${w:format(item.hited,'0.00%')}</td>

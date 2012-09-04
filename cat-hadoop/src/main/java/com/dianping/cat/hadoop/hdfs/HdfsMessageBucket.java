@@ -16,6 +16,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.storage.dump.MessageBlock;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.site.lookup.annotation.Inject;
 
@@ -75,7 +76,7 @@ public class HdfsMessageBucket implements MessageBucket {
 	}
 
 	@Override
-	public void store(MessageTree tree) throws IOException {
+	public MessageBlock store(MessageTree tree) throws IOException {
 		throw new UnsupportedOperationException("Not supported by HDFS!");
 	}
 

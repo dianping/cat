@@ -15,10 +15,8 @@
 package com.dianping.bee.engine.spi.meta.internal;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import com.dianping.bee.engine.spi.RowFilter;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
@@ -42,19 +40,6 @@ public class DefaultRowSet implements RowSet {
 	}
 
 	@Override
-	public void filter(RowFilter rowFilter) {
-		if (rowFilter == null)
-			return;
-		Iterator<Row> it = m_rows.iterator();
-		while (it.hasNext()) {
-			Row row = it.next();
-			if (!rowFilter.filter(row)) {
-				it.remove();
-			}
-		}
-	}
-
-	@Override
 	public ColumnMeta getColumn(int colIndex) {
 		if (colIndex >= 0 && colIndex < m_columnMetas.length) {
 			return m_columnMetas[colIndex];
@@ -64,7 +49,7 @@ public class DefaultRowSet implements RowSet {
 	}
 
 	@Override
-	public int getColumns() {
+	public int getColumnSize() {
 		return m_columnMetas.length;
 	}
 
@@ -78,7 +63,7 @@ public class DefaultRowSet implements RowSet {
 	}
 
 	@Override
-	public int getRows() {
+	public int getRowSize() {
 		return m_rows.size();
 	}
 }

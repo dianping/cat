@@ -4,9 +4,12 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.monthreport.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.report.page.monthreport.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.monthreport.Model" scope="request" />
+<jsp:useBean id="ctx"
+	type="com.dianping.cat.report.page.monthreport.Context" scope="request" />
+<jsp:useBean id="payload"
+	type="com.dianping.cat.report.page.monthreport.Payload" scope="request" />
+<jsp:useBean id="model"
+	type="com.dianping.cat.report.page.monthreport.Model" scope="request" />
 
 <a:body>
 	<res:useCss value='${res.css.local.report_css}' target="head-css" />
@@ -30,25 +33,11 @@
 					</td>
 			</table>
 
-			<table class="navbar">
-				<tr>
-					<td class="domain">
-						<div class="domain">
-							<c:forEach var="domain" items="${model.domains}">
-						&nbsp;<c:choose>
-									<c:when test="${model.domain eq domain}">
-										<a href="?domain=${domain}&date=${model.date}" class="current">[&nbsp;${domain}&nbsp;]</a>
-									</c:when>
-									<c:otherwise>
-										<a href="?domain=${domain}&date=${model.date}">[&nbsp;${domain}&nbsp;]</a>
-									</c:otherwise>
-								</c:choose>&nbsp;
-					</c:forEach>
-						</div>
-					</td>
-				</tr>
-			</table>
 			<table class="monthreport">
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
 				<tr class="odd">
 					<th>项目名称</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
@@ -58,256 +47,365 @@
 				<tr class="even">
 					<th>统计天数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${item.days}</td>
+						<td>${item.day}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>URL请求平均响应时间（ms）</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.url.responseTime,'0.0','ms')}</td>
+						<td>${w:formatNumber(item.url.baseInfo.responseTime,'0.0','ms')}</td>
 					</c:forEach>
+					<%-- <td background="/cat/images/${item.url.baseInfo.responseTimeFlag}.jpeg">
+                  <img width="15px" height="15px" src="/cat/images/${item.url.baseInfo.responseTimeFlag}.jpeg"></img>
+               </td> --%>
 				</tr>
 				<tr class="even">
 					<th>URL请求月总访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.url.total,'0.0','')}</td>
+						<td>${w:formatNumber(item.url.baseInfo.total,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>URL请求平均每天访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.url.avg,'0.0','')}</td>
+						<td>${w:formatNumber(item.url.baseInfo.avg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>URL请求月出错次数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.url.errorTotal,'0.0','')}</td>
+						<td>${w:formatNumber(item.url.baseInfo.errorTotal,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>URL请求每天平均出错次数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.url.errorAvg,'0.0','')}</td>
+						<td>${w:formatNumber(item.url.baseInfo.errorAvg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>URL请求成功百分比</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:format(item.url.successPercent,'00.0000%')}</td>
+						<td>${w:format(item.url.baseInfo.successPercent,'00.0000%')}</td>
 					</c:forEach>
 				</tr>
 
 				<tr>
-					<th>&nbsp;</th>
+					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
 
 				<tr class="odd">
 					<th>Service请求平均响应时间（ms）</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.service.responseTime,'0.0','ms')}</td>
+						<td>${w:formatNumber(item.service.baseInfo.responseTime,'0.0','ms')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>Service请求月总访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.service.total,'0.0','')}</td>
+						<td>${w:formatNumber(item.service.baseInfo.total,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>Service请求平均每天访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.service.avg,'0.0','')}</td>
+						<td>${w:formatNumber(item.service.baseInfo.avg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>Service请求月出错次数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.service.errorTotal,'0.0','')}</td>
+						<td>${w:formatNumber(item.service.baseInfo.errorTotal,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>Service请求每天平均出错次数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.service.errorAvg,'0.0','')}</td>
+						<td>${w:formatNumber(item.service.baseInfo.errorAvg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>Service请求成功百分比</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:format(item.service.successPercent,'00.0000%')}</td>
+						<td>${w:format(item.service.baseInfo.successPercent,'00.0000%')}</td>
 					</c:forEach>
 				</tr>
 
 				<tr>
-					<th>&nbsp;</th>
+					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
 
 				<tr class="odd">
 					<th>远程调用平均响应时间（ms）</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.call.responseTime,'0.0','ms')}</td>
+						<td>${w:formatNumber(item.call.baseInfo.responseTime,'0.0','ms')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>远程调用月总访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.call.total,'0.0','')}</td>
+						<td>${w:formatNumber(item.call.baseInfo.total,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>远程调用平均每天访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.call.avg,'0.0','')}</td>
+						<td>${w:formatNumber(item.call.baseInfo.avg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>远程调用月出错次数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.call.errorTotal,'0.0','')}</td>
+						<td>${w:formatNumber(item.call.baseInfo.errorTotal,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>远程调用每天平均出错次数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.call.errorAvg,'0.0','')}</td>
+						<td>${w:formatNumber(item.call.baseInfo.errorAvg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>远程调用成功百分比</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:format(item.call.successPercent,'00.0000%')}</td>
+						<td>${w:format(item.call.baseInfo.successPercent,'00.0000%')}</td>
 					</c:forEach>
 				</tr>
 
 				<tr>
-					<th>&nbsp;</th>
+					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
 
 				<tr class="odd">
 					<th>数据库平均响应时间（ms）</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.sql.responseTime,'0.0','ms')}</td>
+						<td>${w:formatNumber(item.sql.baseInfo.responseTime,'0.0','ms')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>数据库月总访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.sql.total,'0.0','')}</td>
+						<td>${w:formatNumber(item.sql.baseInfo.total,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>数据库平均每天访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.sql.avg,'0.0','')}</td>
+						<td>${w:formatNumber(item.sql.baseInfo.avg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>数据库月出错次数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.sql.errorTotal,'0.0','')}</td>
+						<td>${w:formatNumber(item.sql.baseInfo.errorTotal,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>数据库每天平均出错次数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.sql.errorAvg,'0.0','')}</td>
+						<td>${w:formatNumber(item.sql.baseInfo.errorAvg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>数据库成功百分比</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:format(item.sql.successPercent,'00.0000%')}</td>
+						<td>${w:format(item.sql.baseInfo.successPercent,'00.0000%')}</td>
 					</c:forEach>
 				</tr>
 
 				<tr>
-					<th>&nbsp;</th>
+					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
 
 				<tr class="odd">
-					<th>缓存平均响应时间（ms）</th>
+					<th>memcached缓存平均响应时间（ms）</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.cache.responseTime,'0.0','ms')}</td>
+						<td>${w:formatNumber(item.memCache.baseCacheInfo.responseTime,'0.0','ms')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
-					<th>缓存月总访问量</th>
+					<th>memcached缓存月总访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.cache.total,'0.0','')}</td>
+						<td>${w:formatNumber(item.memCache.baseCacheInfo.total,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
-					<th>缓存平均每天访问量</th>
+					<th>memcached缓存平均每天访问量</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.cache.avg,'0.0','')}</td>
+						<td>${w:formatNumber(item.memCache.baseCacheInfo.avg,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
-					<th>缓存命中率</th>
+					<th>memcached缓存命中率</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:format(item.cache.hitPercent,'00.0000%')}</td>
+						<td>${w:format(item.memCache.baseCacheInfo.hitPercent,'00.0000%')}</td>
+					</c:forEach>
+				</tr>
+
+				<tr class="odd">
+					<th>kvdbCache缓存平均响应时间（ms）</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.kvdbCache.baseCacheInfo.responseTime,'0.0','ms')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="even">
+					<th>kvdbCache缓存月总访问量</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.kvdbCache.baseCacheInfo.total,'0.0','')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="odd">
+					<th>kvdbCache缓存平均每天访问量</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.kvdbCache.baseCacheInfo.avg,'0.0','')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="even">
+					<th>kvdbCache缓存命中率</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:format(item.kvdbCache.baseCacheInfo.hitPercent,'00.0000%')}</td>
+					</c:forEach>
+				</tr>
+
+				<tr class="odd">
+					<th>webCache缓存平均响应时间（ms）</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.webCache.baseCacheInfo.responseTime,'0.0','ms')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="even">
+					<th>webCache缓存月总访问量</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.webCache.baseCacheInfo.total,'0.0','')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="odd">
+					<th>webCache缓存平均每天访问量</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.webCache.baseCacheInfo.avg,'0.0','')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="even">
+					<th>webCache缓存命中率</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:format(item.webCache.baseCacheInfo.hitPercent,'00.0000%')}</td>
 					</c:forEach>
 				</tr>
 
 				<tr>
-					<th>&nbsp;</th>
+					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
 
 				<tr class="odd">
 					<th>Exception月异常数</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.problem.exceptions,'0.0','')}</td>
+						<td>${w:formatNumber(item.problemInfo.exceptions,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>Exception平均每天异常数目</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.problem.avgExceptions,'0.0','')}</td>
+						<td>${w:formatNumber(item.problemInfo.avgExceptions,'0.0','')}</td>
+					</c:forEach>
+				</tr>
+
+				<tr class="odd">
+					<th>Long-url月总次数（大于1000ms）</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.problemInfo.longUrls,'0.0','')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="even">
+					<th>Long-url平均每天次数（大于100ms）</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.problemInfo.avgLongUrls,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
+					<th>Long-url百分比</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:format(item.problemInfo.longUrlPercent,'00.0000%')}</td>
+					</c:forEach>
+				</tr>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+
+				<tr class="odd">
+					<th>Long-service月总次数（大于1000ms）</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.problemInfo.longServices,'0.0','')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="even">
+					<th>Long-service平均每天次数（大于100ms）</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.problemInfo.avgLongServices,'0.0','')}</td>
+					</c:forEach>
+				</tr>
+				<tr class="odd">
+					<th>Long-service百分比</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:format(item.problemInfo.longServicePercent,'00.0000%')}</td>
+					</c:forEach>
+				</tr>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+
+				<tr class="odd">
 					<th>Long-sql月总次数（大于100ms）</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.problem.longSqls,'0.0','')}</td>
+						<td>${w:formatNumber(item.problemInfo.longSqls,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
 					<th>Long-sql平均每天次数（大于100ms）</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.problem.avgLongSqls,'0.0','')}</td>
+						<td>${w:formatNumber(item.problemInfo.avgLongSqls,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
 					<th>Long-sql百分比</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:format(item.problem.longSqlPercent,'00.0000%')}</td>
+						<td>${w:format(item.problemInfo.longSqlPercent,'00.0000%')}</td>
+					</c:forEach>
+				</tr>
+
+				<tr>
+					<td>&nbsp;</td>
+					<td>&nbsp;</td>
+				</tr>
+
+				<tr class="odd">
+					<th>Long-cache月总次数（大于10ms）</th>
+					<c:forEach var="item" items="${model.reports}" varStatus="status">
+						<td>${w:formatNumber(item.problemInfo.longCaches,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="even">
-					<th>Long-url月总次数（大于1000ms）</th>
+					<th>Long-cache平均每天次数（大于10ms）</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.problem.longUrls,'0.0','')}</td>
+						<td>${w:formatNumber(item.problemInfo.avgLongCaches,'0.0','')}</td>
 					</c:forEach>
 				</tr>
 				<tr class="odd">
-					<th>Long-url平均每天次数（大于100ms）</th>
+					<th>Long-cache百分比</th>
 					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:formatNumber(item.problem.avgLongUrls,'0.0','')}</td>
-					</c:forEach>
-				</tr>
-				<tr class="even">
-					<th>Long-url百分比</th>
-					<c:forEach var="item" items="${model.reports}" varStatus="status">
-						<td>${w:format(item.problem.longUrlPercent,'00.0000%')}</td>
+						<td>${w:format(item.problemInfo.longCachePercent,'00.0000%')}</td>
 					</c:forEach>
 				</tr>
 			</table>
+
 		</div>
 	</body>
 </a:body>

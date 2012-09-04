@@ -72,6 +72,7 @@ CREATE TABLE `task` (
   `report_domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',  
   `report_period` datetime NOT NULL  COMMENT '报表时间',
   `status`        tinyint(4) NOT NULL COMMENT '执行状态: 1/todo, 2/doing, 3/done 4/failed',  
+  `task_type`     tinyint(4) NOT NULL COMMENT '执行状态: /daily',
   `creation_date` datetime NOT NULL  COMMENT '任务创建时间',
   `start_date`    datetime NULL  COMMENT '开始时间, 这次执行开始时间',
   `end_date`      datetime NULL  COMMENT '结束时间, 这次执行结束时间',

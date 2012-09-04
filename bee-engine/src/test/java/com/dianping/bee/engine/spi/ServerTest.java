@@ -35,8 +35,9 @@ public class ServerTest extends ComponentTestCase {
 		server.startup();
 
 		System.out.println(CobarServer.getInstance().getConfig().getUsers());
-		
+
 		System.out.println("Press any key to continue ...");
 		System.in.read();
 	}
+
 }

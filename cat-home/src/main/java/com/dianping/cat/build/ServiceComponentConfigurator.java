@@ -49,7 +49,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(ModelService.class, "transaction-local", LocalTransactionService.class) //
-		      .req(BucketManager.class) //
+		      .req(BucketManager.class, ReportDao.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
 		      .req(BucketManager.class, ReportDao.class));
@@ -58,7 +58,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "event-local", LocalEventService.class) //
-		      .req(BucketManager.class) //
+		      .req(BucketManager.class, ReportDao.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
 		      .req(BucketManager.class, ReportDao.class));
@@ -67,7 +67,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, new String[] { "event-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "problem-local", LocalProblemService.class) //
-		      .req(BucketManager.class) //
+		      .req(BucketManager.class, ReportDao.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
 		      .req(BucketManager.class, ReportDao.class));
@@ -76,7 +76,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "heartbeat-local", LocalHeartbeatService.class) //
-		      .req(BucketManager.class) //
+		      .req(BucketManager.class, ReportDao.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "heartbeat-historical", HistoricalHeartbeatService.class) //
 		      .req(BucketManager.class, ReportDao.class));
@@ -85,7 +85,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "matrix-local", LocalMatrixService.class) //
-		      .req(BucketManager.class) //
+		      .req(BucketManager.class, ReportDao.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
 		      .req(BucketManager.class, ReportDao.class));
@@ -94,7 +94,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "cross-local", LocalCrossService.class) //
-		      .req(BucketManager.class) //
+		      .req(BucketManager.class, ReportDao.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "cross-historical", HistoricalCrossService.class) //
 		      .req(BucketManager.class, ReportDao.class));

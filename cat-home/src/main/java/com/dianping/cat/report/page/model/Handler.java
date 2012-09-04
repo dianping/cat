@@ -305,7 +305,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		private String m_name;
 
 		private String m_type;
-		
+
 		public TransactionReportFilter(String type, String name, String ip) {
 			m_type = type;
 			m_name = name;
@@ -325,12 +325,14 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.transaction.model.entity.Machine machine) {
-			if (m_ipAddress == null || m_ipAddress.equals(CatString.ALL_IP)) {
-				super.visitMachine(machine);
-			} else if (machine.getIp().equals(m_ipAddress)) {
-				super.visitMachine(machine);
-			} else {
-				// skip it
+			synchronized (machine) {
+				if (m_ipAddress == null || m_ipAddress.equals(CatString.ALL_IP)) {
+					super.visitMachine(machine);
+				} else if (machine.getIp().equals(m_ipAddress)) {
+					super.visitMachine(machine);
+				} else {
+					// skip it
+				}
 			}
 		}
 
@@ -362,10 +364,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		public void visitType(TransactionType type) {
 			if (m_type == null) {
 				super.visitType(type);
-
 			} else if (m_type != null && type.getId().equals(m_type)) {
-				type.setSuccessMessageUrl(null);
-				type.setFailMessageUrl(null);
 				super.visitType(type);
 			} else {
 				// skip it

@@ -17,12 +17,15 @@ import com.site.lookup.ContainerLoader;
 import com.site.lookup.annotation.Inject;
 
 public class SimpleServer implements LogEnabled {
+	/**
+	 * The mysql version can not be changed, JDBC Driver will parse mysql major and minor version information
+	 */
+	public static final String VERSION = "5.1.48-bee-0.0.1";
+
 	@Inject
 	private int m_port = 2330;
 
 	private Logger m_logger;
-
-	public static final String VERSION = "bee-0.0.1-cobar-1.3.0";
 
 	@Override
 	public void enableLogging(Logger logger) {

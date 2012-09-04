@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.matrix;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Set;
 
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.report.page.AbstractReportModel;
@@ -29,9 +30,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Collection<String> getDomains() {
 		if (m_report == null) {
-			return new ArrayList<String>();
+			ArrayList<String> arrayList = new ArrayList<String>();
+
+			arrayList.add(getDomain());
+			return arrayList;
 		} else {
-			return StringSortHelper.sortDomain(m_report.getDomainNames());
+			Set<String> domainNames = m_report.getDomainNames();
+
+			domainNames.add(getDomain());
+			return StringSortHelper.sortDomain(domainNames);
+
 		}
 	}
 

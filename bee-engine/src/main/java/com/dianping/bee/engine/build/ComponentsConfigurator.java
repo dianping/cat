@@ -3,72 +3,131 @@ package com.dianping.bee.engine.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.bee.db.CatDatabase;
-import com.dianping.bee.db.DogDatabase;
+import com.dianping.bee.db.cat.CatDatabase;
+import com.dianping.bee.db.cat.EventIndexer;
+import com.dianping.bee.db.cat.TransactionIndexer;
+import com.dianping.bee.db.dog.DogDatabase;
 import com.dianping.bee.engine.spi.DatabaseProvider;
-import com.dianping.bee.engine.spi.MultiTableStatement;
-import com.dianping.bee.engine.spi.RowFilter;
-import com.dianping.bee.engine.spi.SingleTableStatement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.dianping.bee.engine.spi.internal.DefaultMultiTableStatement;
-import com.dianping.bee.engine.spi.internal.DefaultRowFilter;
-import com.dianping.bee.engine.spi.internal.DefaultSingleTableStatement;
+import com.dianping.bee.engine.spi.evaluator.Evaluator;
+import com.dianping.bee.engine.spi.evaluator.function.ConcatEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.BetweenAndEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionEqualsEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanOrEqualsEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionIsEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanOrEqualsEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.IdentifierEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.InEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LiteralBooleanEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LiteralNumberEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LiteralStringEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LogicalAndEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.LogicalOrEvaluator;
+import com.dianping.bee.engine.spi.evaluator.logical.ParamMarkerEvaluator;
+import com.dianping.bee.engine.spi.handler.internal.DescHandler;
+import com.dianping.bee.engine.spi.handler.internal.PrepareHandler;
+import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
+import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
+import com.dianping.bee.engine.spi.handler.internal.UseHandler;
 import com.dianping.bee.engine.spi.internal.DefaultStatementManager;
 import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
-import com.dianping.bee.engine.spi.internal.MultiTableStatementVisitor;
-import com.dianping.bee.engine.spi.internal.SingleTableStatementVisitor;
+import com.dianping.bee.engine.spi.internal.SingleTableRowFilter;
+import com.dianping.bee.engine.spi.internal.SingleTableStatement;
+import com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder;
 import com.dianping.bee.engine.spi.internal.TableHelper;
-import com.dianping.bee.server.InformationSchemaDatabase;
-import com.dianping.bee.server.SimpleDescHandler;
-import com.dianping.bee.server.SimpleSelectHandler;
+import com.dianping.bee.engine.spi.session.DefaultSessionManager;
+import com.dianping.bee.engine.spi.session.SessionManager;
 import com.dianping.bee.server.SimpleServer;
 import com.dianping.bee.server.SimpleServerQueryHandler;
-import com.dianping.bee.server.SimpleShowHandler;
-import com.dianping.bee.server.SimpleUseHandler;
+import com.dianping.bee.server.is.InformationSchemaDatabaseProvider;
+import com.dianping.bee.server.is.schema.SchemataIndexer;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(SimpleServer.class));
 
-		all.add(C(DatabaseProvider.class, "information_schema", InformationSchemaDatabase.class));
-		all.add(C(DatabaseProvider.class, "cat", CatDatabase.class));
-		all.add(C(DatabaseProvider.class, "dog", DogDatabase.class));
+		all.add(C(DatabaseProvider.class, InformationSchemaDatabaseProvider.ID, InformationSchemaDatabaseProvider.class));
+		all.add(C(SchemataIndexer.class));
 
+		all.add(C(SessionManager.class, DefaultSessionManager.class));
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class) //
-		      .req(DatabaseProvider.class));
+		      .req(SessionManager.class));
 		all.add(C(StatementManager.class, DefaultStatementManager.class));
-		all.add(C(SingleTableStatement.class, DefaultSingleTableStatement.class).is(PER_LOOKUP));
-		all.add(C(MultiTableStatement.class, DefaultMultiTableStatement.class).is(PER_LOOKUP));
-		all.add(C(RowFilter.class, DefaultRowFilter.class).is(PER_LOOKUP));
 
 		all.add(C(TableHelper.class) //
 		      .req(TableProviderManager.class));
 
-		all.add(C(SingleTableStatementVisitor.class).is(PER_LOOKUP) //
-		      .req(TableHelper.class, SingleTableStatement.class, RowFilter.class));
-		all.add(C(MultiTableStatementVisitor.class).is(PER_LOOKUP) //
-		      .req(TableHelper.class, MultiTableStatement.class, RowFilter.class));
+		all.add(C(SingleTableStatement.class).is(PER_LOOKUP));
+		all.add(C(SingleTableRowFilter.class).is(PER_LOOKUP));
+		all.add(C(SingleTableStatementBuilder.class).is(PER_LOOKUP) //
+		      .req(TableHelper.class, SingleTableStatement.class, SingleTableRowFilter.class));
 
-		all.add(C(SimpleShowHandler.class)//
-		      .req(TableProviderManager.class));
-		all.add(C(SimpleUseHandler.class));
-		all.add(C(SimpleDescHandler.class)//
-		      .req(TableProviderManager.class));
-		all.add(C(SimpleSelectHandler.class) //
-		      .req(StatementManager.class));
-		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		      .req(SimpleSelectHandler.class, SimpleShowHandler.class, SimpleDescHandler.class, SimpleUseHandler.class));
+		defineHandlers(all);
+		defineLogicalEvaluators(all);
+		defineFunctionEvaluators(all);
+		defineDatabaseProvider(all);
 
 		return all;
 	}
 
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	// FIXME: need dependency reverse
+	private void defineDatabaseProvider(List<Component> all) {
+		all.add(C(DatabaseProvider.class, "cat", CatDatabase.class));
+		all.add(C(TransactionIndexer.class));
+		all.add(C(EventIndexer.class));
+		all.add(C(DatabaseProvider.class, "dog", DogDatabase.class));
+	}
+
+	private void defineFunctionEvaluators(List<Component> all) {
+		all.add(C(Evaluator.class, ConcatEvaluator.ID, ConcatEvaluator.class));
+	}
+
+	private void defineHandlers(List<Component> all) {
+		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
+		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class, PrepareHandler.class));
+
+		all.add(C(UseHandler.class));
+		all.add(C(ShowHandler.class));
+		all.add(C(DescHandler.class) //
+		      .req(TableProviderManager.class));
+		all.add(C(SelectHandler.class) //
+		      .req(StatementManager.class));
+		all.add(C(PrepareHandler.class)//
+		      .req(StatementManager.class));
+	}
+
+	private void defineLogicalEvaluators(List<Component> all) {
+		all.add(C(Evaluator.class, LogicalAndEvaluator.ID, LogicalAndEvaluator.class));
+		all.add(C(Evaluator.class, LogicalOrEvaluator.ID, LogicalOrEvaluator.class));
+
+		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanEvaluator.ID, ComparisionGreaterThanEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID,
+		      ComparisionGreaterThanOrEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionLessThanEvaluator.ID, ComparisionLessThanEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionLessThanOrEqualsEvaluator.ID, ComparisionLessThanOrEqualsEvaluator.class));
+
+		all.add(C(Evaluator.class, BetweenAndEvaluator.ID, BetweenAndEvaluator.class));
+		all.add(C(Evaluator.class, InEvaluator.ID, InEvaluator.class));
+
+		all.add(C(Evaluator.class, IdentifierEvaluator.ID, IdentifierEvaluator.class));
+		all.add(C(Evaluator.class, ParamMarkerEvaluator.ID, ParamMarkerEvaluator.class));
+		
+		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
+		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
+		all.add(C(Evaluator.class, LiteralBooleanEvaluator.ID, LiteralBooleanEvaluator.class));
 	}
 }

@@ -94,7 +94,7 @@ public class MessageIdFactory {
 
 		m_markFile = new RandomAccessFile(mark, "rw");
 		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 20);
-		
+
 		if (m_byteBuffer.limit() > 0) {
 			int index = m_byteBuffer.getInt();
 			long timestamp = m_byteBuffer.getLong();
@@ -125,5 +125,9 @@ public class MessageIdFactory {
 
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
+	}
+
+	protected void resetIndex() {
+		m_index = 0;
 	}
 }

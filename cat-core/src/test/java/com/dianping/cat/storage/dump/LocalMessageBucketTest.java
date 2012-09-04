@@ -7,6 +7,7 @@ import java.util.Random;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -19,6 +20,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
+@Ignore
 public class LocalMessageBucketTest extends ComponentTestCase {
 	@BeforeClass
 	public static void beforeClass() {

@@ -14,6 +14,7 @@
  */
 package com.dianping.bee.server;
 
+import java.io.UnsupportedEncodingException;
 import java.nio.channels.SocketChannel;
 import java.util.Set;
 
@@ -21,11 +22,14 @@ import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.util.MySQLMessage;
 import com.alibaba.cobar.protocol.mysql.OkPacket;
 import com.alibaba.cobar.server.ServerConnection;
+import com.dianping.bee.engine.spi.session.SessionManager;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SimpleServerConnection extends ServerConnection {
+
+	private SessionManager m_sessionManager;
 
 	/**
 	 * @param channel
@@ -43,21 +47,6 @@ public class SimpleServerConnection extends ServerConnection {
 		mm.position(5);
 		String db = mm.readString();
 
-		// 检查schema是否已经设置
-//		if (schema != null) {
-//			if (schema.equals(db)) {
-//				write(writeToBuffer(OkPacket.OK, allocate()));
-//			} else {
-//				writeErrMessage(ErrorCode.ER_DBACCESS_DENIED_ERROR, "Not allowed to change the database!");
-//			}
-//			return;
-//		}
-
-		// 检查schema的有效性
-//		if (db == null || !privileges.schemaExists(db)) {
-//			writeErrMessage(ErrorCode.ER_BAD_DB_ERROR, "Unknown database '" + db + "'");
-//			return;
-//		}
 		if (!privileges.userExists(user, host)) {
 			writeErrMessage(ErrorCode.ER_ACCESS_DENIED_ERROR, "Access denied for user '" + user + "'");
 			return;
@@ -70,5 +59,110 @@ public class SimpleServerConnection extends ServerConnection {
 			String s = "Access denied for user '" + user + "' to database '" + db + "'";
 			writeErrMessage(ErrorCode.ER_DBACCESS_DENIED_ERROR, s);
 		}
+	}
+
+	@Override
+	public void query(byte[] data) {
+		m_sessionManager.getSession().setDatabase(getSchema());
+
+		try {
+			super.query(data);
+		} finally {
+			m_sessionManager.removeSession();
+		}
+	}
+
+	@Override
+	public void stmtPrepare(byte[] data) {
+		m_sessionManager.getSession().setDatabase(getSchema());
+		try {
+			// 取得查询语句
+			MySQLMessage mm = new MySQLMessage(data);
+			mm.position(5);
+			String sql = null;
+			try {
+				sql = mm.readString(charset);
+			} catch (UnsupportedEncodingException e) {
+				writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET, "Unknown charset '" + charset + "'");
+				return;
+			}
+			if (sql == null || sql.length() == 0) {
+				writeErrMessage(ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty Prepared SQL");
+				return;
+			}
+
+			// 执行查询
+			if (queryHandler != null) {
+				((SimpleServerQueryHandler) queryHandler).stmtPrepare(sql);
+			} else {
+				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
+			}
+		} finally {
+			m_sessionManager.removeSession();
+		}
+	}
+
+	@Override
+	public void stmtExecute(byte[] data) {
+		m_sessionManager.getSession().setDatabase(getSchema());
+		try {
+			// 取得查询语句
+			MySQLMessage mm = new MySQLMessage(data);
+			mm.position(5);
+			String sql = null;
+			try {
+				sql = mm.readString(charset);
+			} catch (UnsupportedEncodingException e) {
+				writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET, "Unknown charset '" + charset + "'");
+				return;
+			}
+			if (sql == null || sql.length() == 0) {
+				writeErrMessage(ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty Prepared SQL");
+				return;
+			}
+
+			// 执行查询
+			if (queryHandler != null) {
+				((SimpleServerQueryHandler) queryHandler).stmtExecute(sql);
+			} else {
+				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
+			}
+		} finally {
+			m_sessionManager.removeSession();
+		}
+	}
+
+	@Override
+	public void stmtClose(byte[] data) {
+		m_sessionManager.getSession().setDatabase(getSchema());
+		try {
+			// 取得查询语句
+			MySQLMessage mm = new MySQLMessage(data);
+			mm.position(5);
+			String sql = null;
+			try {
+				sql = mm.readString(charset);
+			} catch (UnsupportedEncodingException e) {
+				writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET, "Unknown charset '" + charset + "'");
+				return;
+			}
+			if (sql == null || sql.length() == 0) {
+				writeErrMessage(ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty Prepared SQL");
+				return;
+			}
+
+			// 执行查询
+			if (queryHandler != null) {
+				((SimpleServerQueryHandler) queryHandler).stmtClose(sql);
+			} else {
+				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
+			}
+		} finally {
+			m_sessionManager.removeSession();
+		}
+	}
+
+	public void setSessionManager(SessionManager sessionManager) {
+		m_sessionManager = sessionManager;
 	}
 }

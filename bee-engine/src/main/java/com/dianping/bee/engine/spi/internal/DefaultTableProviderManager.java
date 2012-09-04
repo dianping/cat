@@ -1,6 +1,7 @@
 package com.dianping.bee.engine.spi.internal;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -9,30 +10,45 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
+import com.dianping.bee.engine.spi.session.SessionManager;
+import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultTableProviderManager implements TableProviderManager, Initializable {
+public class DefaultTableProviderManager extends ContainerHolder implements TableProviderManager, Initializable {
 	@Inject
-	private DatabaseProvider m_databaseProvider;
+	private SessionManager m_sessionManager;
 
-	private Map<String, TableProvider> m_tables = new HashMap<String, TableProvider>();
-
-	@Override
-	public String getDatabaseName() {
-		return m_databaseProvider.getName();
-	}
+	private Map<String, Map<String, TableProvider>> m_map = new HashMap<String, Map<String, TableProvider>>();
 
 	@Override
-	public TableProvider getTableProvider(String table) {
-		return m_tables.get(table.toUpperCase());
+	public TableProvider getTableProvider(String database, String table) {
+		if (database == null) {
+			database = m_sessionManager.getSession().getDatabase();
+		} else {
+			database = database.toLowerCase();
+		}
+
+		Map<String, TableProvider> map = m_map.get(database);
+
+		if (map != null) {
+			return map.get(table.toUpperCase());
+		} else {
+			return null;
+		}
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
-		TableProvider[] tables = m_databaseProvider.getTables();
+		List<DatabaseProvider> providers = lookupList(DatabaseProvider.class);
 
-		for (TableProvider table : tables) {
-			m_tables.put(table.getName().toUpperCase(), table);
+		for (DatabaseProvider provider : providers) {
+			Map<String, TableProvider> map = new HashMap<String, TableProvider>();
+
+			for (TableProvider table : provider.getTables()) {
+				map.put(table.getName().toUpperCase(), table);
+			}
+
+			m_map.put(provider.getName(), map);
 		}
 	}
 }

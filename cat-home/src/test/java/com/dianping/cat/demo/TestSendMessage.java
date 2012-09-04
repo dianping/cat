@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
 public class TestSendMessage {
@@ -198,11 +199,11 @@ public class TestSendMessage {
 	public void sendCacheTransactionWithMissed() throws Exception {
 		for (int i = 0; i < 130; i++) {
 			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method" + i % 10);
-				Cat.getProducer().newEvent("Cache.kvdb", "Method"+ i % 10+":missed");
+			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
 			t.addData("key and value");
 
 			Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method" + i % 10);
-				Cat.getProducer().newEvent("Cache.web", "Method"+ i % 10+":missed");
+			Cat.getProducer().newEvent("Cache.web", "Method" + i % 10 + ":missed");
 			t2.addData("key and value");
 			Thread.sleep(2);
 			t2.complete();
@@ -213,11 +214,68 @@ public class TestSendMessage {
 			Thread.sleep(3);
 			t3.complete();
 		}
-		
-		Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method" );
+
+		Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method");
 		t2.addData("key and value");
 		Thread.sleep(2);
 		t2.complete();
 		Thread.sleep(1000);
+	}
+
+	@Test
+	public void sendMaxMessage() throws Exception {
+		long time = System.currentTimeMillis();
+		int i = 10;
+		while (i > 0) {
+			i = 10 * 1000000 - (int) (System.currentTimeMillis() - time);
+
+			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method" + i % 10);
+			t.setStatus(Message.SUCCESS);
+			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
+			t.addData("key and value");
+
+			Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method" + i % 10);
+			Cat.getProducer().newEvent("Cache.web", "Method" + i % 10 + ":missed");
+			t2.addData("key and value");
+			t2.setStatus(Message.SUCCESS);
+			t2.complete();
+
+			Transaction t3 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			t3.addData("key and value");
+			t3.setStatus(Message.SUCCESS);
+			t3.complete();
+			
+			Transaction t4 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			t4.addData("key and value");
+			t4.setStatus(Message.SUCCESS);
+			t4.complete();
+			
+			Transaction t5 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			t5.addData("key and value");
+			t5.setStatus(Message.SUCCESS);
+			t5.complete();
+			
+			Transaction t6 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			t6.addData("key and value");
+			t6.setStatus(Message.SUCCESS);
+			t6.complete();
+			
+			Transaction t7 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			t7.addData("key and value");
+			t7.setStatus(Message.SUCCESS);
+			t7.complete();
+			
+			Transaction t8 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			t8.addData("key and value");
+			t8.setStatus(Message.SUCCESS);
+			t8.complete();
+			
+			Transaction t9 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			t9.addData("key and value");
+			t9.setStatus(Message.SUCCESS);
+			t9.complete();
+			t.complete();
+		}
+		Thread.sleep(10 * 1000);
 	}
 }
