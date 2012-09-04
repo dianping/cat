@@ -11,36 +11,11 @@ public class RuleEntity {
 
 	private String ruleType;
 
-	private String domain;
-
-	private String report;
-
-	private String type;
-
-	private String name;
-
 	private List<Duration> durations;
 
-	static class Connect{
-		private String connectType;//http
-		private String connectSource;//cat
-		private String domain;
-		private String report;
-		private String type;
-		private String name;
-	}
-	
-	static class Duration {
-		private int min;
-
-		private int max;
-
-		private List<AlarmStrategyEntity> strategys;
-	}
+	private ConnectEntity connect;
 
 	private long interval;
-
-	private List<AlarmStrategyEntity> strategys;
 
 	public long getId() {
 		return id;
@@ -48,22 +23,6 @@ public class RuleEntity {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getDomain() {
-		return domain;
-	}
-
-	public void setDomain(String domain) {
-		this.domain = domain;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
 	}
 
 	public long getInterval() {
@@ -74,12 +33,28 @@ public class RuleEntity {
 		this.interval = interval;
 	}
 
-	public List<AlarmStrategyEntity> getStrategys() {
-		return strategys;
+	public String getRuleType() {
+		return ruleType;
 	}
 
-	public void setStrategys(List<AlarmStrategyEntity> strategys) {
-		this.strategys = strategys;
+	public void setRuleType(String ruleType) {
+		this.ruleType = ruleType;
+	}
+
+	public List<Duration> getDurations() {
+		return durations;
+	}
+
+	public void setDurations(List<Duration> durations) {
+		this.durations = durations;
+	}
+
+	public ConnectEntity getConnect() {
+		return connect;
+	}
+
+	public void setConnect(ConnectEntity connect) {
+		this.connect = connect;
 	}
 
 }

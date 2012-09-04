@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.dog.event.EventDispatcher;
-import com.dianping.dog.event.EventListener;
-import com.dianping.dog.event.RuleEvent;
 
-public class DefaultConnectorRegistry implements ConnectorRegistry,EventListener<RuleEvent> {
+public class DefaultConnectorRegistry implements ConnectorRegistry{
 	
 	private EventDispatcher m_dispatcher;
 
@@ -49,16 +47,6 @@ public class DefaultConnectorRegistry implements ConnectorRegistry,EventListener
 			m_connectors.remove(connectorId);
 		}
 	}
-
-	@Override
-   public boolean isEligible(RuleEvent event) {
-	   return true;
-   }
-
-	@Override
-   public void onEvent(RuleEvent event) {
-	   
-   }
 	
    public void setDispatcher(EventDispatcher dispatcher) {
    	m_dispatcher = dispatcher;

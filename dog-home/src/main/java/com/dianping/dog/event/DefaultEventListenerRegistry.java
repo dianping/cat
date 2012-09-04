@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultEventListenerRegistry implements EventListenerRegistry {
+public class DefaultEventListenerRegistry implements EventListenerRegistry,EventListener<RuleEvent> {
 	
 	private Map<EventType, List<EventListener<Event>>> m_map = new HashMap<EventType, List<EventListener<Event>>>();
 
@@ -34,22 +34,14 @@ public class DefaultEventListenerRegistry implements EventListenerRegistry {
 			listeners.add((EventListener<Event>) listener);
 		}
 	}
-	
-	public void modify(EventType type,EventListener<?> listener){
-	}
-	
-	public void remove(EventType type,EventListener<?> listener){
-	}
-	
-	//
-//	@Override
-//   public boolean isEligible(RuleEvent event) {
-//	   return true;
-//   }
-//
-//	@Override
-//   public void onEvent(RuleEvent event) {
-//		
-//		
-//   }
+
+	@Override
+   public boolean isEligible(RuleEvent event) {
+	   return true;
+   }
+
+	@Override
+   public void onEvent(RuleEvent event) {
+	   
+   }
 }
