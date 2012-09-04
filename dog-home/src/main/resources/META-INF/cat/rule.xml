@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rule>
+	<problem-template id="max-min-template">
+		<connector url="http://cat.dianpingoa.com" duration="200">
+			<data-param report="Promblem" domain="tester" type="error"
+				status="RuntimeException" />
+		</connector>
+		<match class="com.dianping.dog.ProblemRuleListener">
+			<match-param min="20" max="10" avg="200" failcount="1000"></match-param>
+		</match>
+	</problem-template>
+	<event-template id="event-max-min-template">
+		<connector url="http://cat.dianpingoa.com" duration="200">
+			<data-param report="Promblem" domain="tester" type="error"
+				name="RuntimeException" />
+		</connector>
+		<match class="com.dianping.dog.EventRuleListener">
+			<match-param min="20" max="10" avg="200" failcount="1000"></match-param>
+		</match>
+	</event-template>
+	<transaction-template id="transaction-max-min-template">
+		<connector url="http://cat.dianpingoa.com" duration="200">
+			<data-param report="Promblem" domain="tester" type="error"
+				name="RuntimeException" />
+		</connector>
+		<match class="com.dianping.dog.TransactionRuleListener">
+			<match-param min="20" max="10" avg="200" failcount="1000"></match-param>
+		</match>
+	</transaction-template>
+</rule>

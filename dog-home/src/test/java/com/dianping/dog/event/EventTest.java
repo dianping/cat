@@ -40,6 +40,12 @@ public class EventTest extends ComponentTestCase {
 		public void onEvent(MockEvent event) {
 			s_result.append(event.getIndex()).append(':');
 		}
+
+		@Override
+      public boolean isEligible(MockEvent event) {
+	      // TODO Auto-generated method stub
+	      return true;
+      }
 	}
 
 	static class MockEvent implements Event {
@@ -57,5 +63,6 @@ public class EventTest extends ComponentTestCase {
 		public EventType getType() {
 			return MockEventType.TYPE1;
 		}
+
 	}
 }

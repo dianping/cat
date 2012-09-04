@@ -9,6 +9,7 @@ import com.dianping.dog.event.EventListener;
 import com.site.lookup.annotation.Inject;
 
 public abstract class AbstractRuleReactor<T extends Event> implements EventListener<T> {
+
 	@Inject
 	private EventDispatcher m_dispatcher;
 
