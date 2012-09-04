@@ -1,6 +1,6 @@
 package com.dianping.dog.connector;
 
-import com.dianping.dog.alarm.rule.ConnectEntity;
+import com.dianping.dog.entity.ConnectEntity;
 
 public class ConnectorContext implements Comparable<ConnectorContext> {
 	

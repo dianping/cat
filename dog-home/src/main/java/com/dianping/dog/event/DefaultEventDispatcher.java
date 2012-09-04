@@ -16,9 +16,7 @@ public class DefaultEventDispatcher implements EventDispatcher {
 		if (listeners != null && !listeners.isEmpty()) {
 			for (EventListener<Event> listener : listeners) {
 				try {
-					if (listener.isEligible(event)) {
 						listener.onEvent(event);
-					}
 				} catch (Exception e) {
 					// ignore it
 					Cat.getProducer().logError(e);

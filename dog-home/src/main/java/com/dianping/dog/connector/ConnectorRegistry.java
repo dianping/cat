@@ -2,13 +2,12 @@ package com.dianping.dog.connector;
 
 import java.util.List;
 
-
 public interface ConnectorRegistry {
-	
-	List<Connector> getConnectors();
-	
-	void removeConnector(long connectorId);
-	
-	void registerConnector(ConnectorContext ruleEntity);
+
+	public List<Connector> getConnectors() ;
+
+	public void registerConnector(ConnectorContext ctx);
+
+	public void removeConnector(long connectorId);
 	
 }

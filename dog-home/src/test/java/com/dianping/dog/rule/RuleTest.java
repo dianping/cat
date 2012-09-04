@@ -64,10 +64,6 @@ public class RuleTest extends ComponentTestCase {
 			s_result.append(event.getConnections()).append(":");
 		}
 
-		@Override
-      public boolean isEligible(AlarmEvent event) {
-	      return true;
-      }
 	}
 
 	static class ConnectionEvent implements Event {
@@ -103,10 +99,6 @@ public class RuleTest extends ComponentTestCase {
 		protected void prepare(RuleContext ctx, ConnectionEvent event) {
 		}
 
-		@Override
-      public boolean isEligible(ConnectionEvent event) {
-	      return true;
-      }
 	}
 
 	static enum ConnectionRule implements Rule {

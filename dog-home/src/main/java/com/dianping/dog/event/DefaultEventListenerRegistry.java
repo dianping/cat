@@ -36,11 +36,6 @@ public class DefaultEventListenerRegistry implements EventListenerRegistry,Event
 	}
 
 	@Override
-   public boolean isEligible(RuleEvent event) {
-	   return true;
-   }
-
-	@Override
    public void onEvent(RuleEvent event) {
 	   
    }

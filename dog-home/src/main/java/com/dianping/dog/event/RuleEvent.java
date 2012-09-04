@@ -1,6 +1,6 @@
 package com.dianping.dog.event;
 
-import com.dianping.dog.alarm.rule.RuleEntity;
+import com.dianping.dog.entity.RuleEntity;
 
 public class RuleEvent implements Event {
 

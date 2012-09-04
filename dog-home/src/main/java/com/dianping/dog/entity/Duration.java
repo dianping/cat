@@ -1,4 +1,4 @@
-package com.dianping.dog.alarm.rule;
+package com.dianping.dog.entity;
 
 import java.util.List;
 
