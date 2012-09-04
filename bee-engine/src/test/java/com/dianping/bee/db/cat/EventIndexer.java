@@ -66,6 +66,12 @@ public class EventIndexer implements Index {
 			case TotalCount:
 				ctx.setColumnValue(i, row[4]);
 				break;
+			case SumDuration:
+				ctx.setColumnValue(i, row[9]);
+				break;
+			case Sum2Duration:
+				ctx.setColumnValue(i, row[10]);
+				break;
 			case Line95:
 				ctx.setColumnValue(i, row[11]);
 				break;
@@ -100,9 +106,10 @@ public class EventIndexer implements Index {
 
 					if (EventColumn.values()[j].getType().getSimpleName().equals("String")) {
 						sampleData[i][j] = RandomStringUtils.randomAlphabetic(5);
-					} else if (EventColumn.values()[j].getType().getSimpleName().equals("Integer")
-					      || EventColumn.values()[j].getType().getSimpleName().equals("Long")) {
+					} else if (EventColumn.values()[j].getType().getSimpleName().equals("Integer")) {
 						sampleData[i][j] = RandomStringUtils.randomNumeric(3);
+					} else if (EventColumn.values()[j].getType().getSimpleName().equals("Long")) {
+						sampleData[i][j] = RandomStringUtils.randomNumeric(6);
 					} else {
 						sampleData[i][j] = RandomStringUtils.randomAlphanumeric(5);
 					}

@@ -16,12 +16,15 @@ package com.dianping.bee.server;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.SocketChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.util.MySQLMessage;
 import com.alibaba.cobar.protocol.mysql.OkPacket;
 import com.alibaba.cobar.server.ServerConnection;
+import com.dianping.bee.engine.spi.PreparedStatement;
 import com.dianping.bee.engine.spi.session.SessionManager;
 
 /**
@@ -108,22 +111,40 @@ public class SimpleServerConnection extends ServerConnection {
 		try {
 			// 取得查询语句
 			MySQLMessage mm = new MySQLMessage(data);
+			Long stmtId;
 			mm.position(5);
-			String sql = null;
-			try {
-				sql = mm.readString(charset);
-			} catch (UnsupportedEncodingException e) {
-				writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET, "Unknown charset '" + charset + "'");
-				return;
-			}
-			if (sql == null || sql.length() == 0) {
-				writeErrMessage(ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty Prepared SQL");
-				return;
-			}
+			stmtId = (long) mm.readInt();
+			byte flag = mm.read();
+			int iterationCount = mm.readInt();
 
 			// 执行查询
 			if (queryHandler != null) {
-				((SimpleServerQueryHandler) queryHandler).stmtExecute(sql);
+				PreparedStatement stmt = ((SimpleServerQueryHandler) queryHandler).getStatement(stmtId);
+				if (stmt == null) {
+					writeErrMessage(ErrorCode.ER_YES, "Invalid Statement Identifier");
+				}
+				int parameterSize = stmt.getParameterSize();
+				List<Object> parameters = new ArrayList<Object>(parameterSize);
+				int nullBitMapSize = (parameterSize + 7) / 8;
+				for (int i = 0; i < nullBitMapSize; i++) {
+					// TODO
+					byte null_bits_map = mm.read();
+				}
+
+				byte new_bound = mm.read();
+
+				for (int i = 0; i < parameterSize; i++) {
+					byte[] typeArray = mm.readBytes(2);
+					// TODO determine type
+				}
+
+				for (int i = 0; i < parameterSize; i++) {
+					byte length = mm.read();
+					byte[] value = mm.readBytes(length);
+					parameters.add(new String(value));
+				}
+
+				((SimpleServerQueryHandler) queryHandler).stmtExecute(stmtId, parameters);
 			} else {
 				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
 			}
@@ -138,22 +159,13 @@ public class SimpleServerConnection extends ServerConnection {
 		try {
 			// 取得查询语句
 			MySQLMessage mm = new MySQLMessage(data);
-			mm.position(5);
-			String sql = null;
-			try {
-				sql = mm.readString(charset);
-			} catch (UnsupportedEncodingException e) {
-				writeErrMessage(ErrorCode.ER_UNKNOWN_CHARACTER_SET, "Unknown charset '" + charset + "'");
-				return;
-			}
-			if (sql == null || sql.length() == 0) {
-				writeErrMessage(ErrorCode.ER_NOT_ALLOWED_COMMAND, "Empty Prepared SQL");
-				return;
-			}
+			Long stmtId;
+			mm.position(1);
+			stmtId = mm.readLong();
 
 			// 执行查询
 			if (queryHandler != null) {
-				((SimpleServerQueryHandler) queryHandler).stmtClose(sql);
+				((SimpleServerQueryHandler) queryHandler).stmtClose(stmtId);
 			} else {
 				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
 			}

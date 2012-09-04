@@ -1,0 +1,22 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>cat</role-hint>
+			<implementation>com.dianping.bee.db.cat.CatDatabase</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.db.cat.EventIndexer</role>
+			<implementation>com.dianping.bee.db.cat.EventIndexer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.db.cat.TransactionIndexer</role>
+			<implementation>com.dianping.bee.db.cat.TransactionIndexer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>dog</role-hint>
+			<implementation>com.dianping.bee.db.dog.DogDatabase</implementation>
+		</component>
+	</components>
+</plexus>
