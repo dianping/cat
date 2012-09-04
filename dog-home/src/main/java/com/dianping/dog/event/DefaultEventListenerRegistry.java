@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 public class DefaultEventListenerRegistry implements EventListenerRegistry,EventListener<RuleEvent> {
-	
 	private Map<EventType, List<EventListener<Event>>> m_map = new HashMap<EventType, List<EventListener<Event>>>();
 
 	@Override
