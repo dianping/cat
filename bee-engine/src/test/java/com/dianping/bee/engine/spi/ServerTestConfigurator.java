@@ -1,4 +1,4 @@
-package com.dianping.bee.jdbc;
+package com.dianping.bee.engine.spi;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -8,13 +8,12 @@ import com.dianping.bee.db.cat.CatDatabase;
 import com.dianping.bee.db.cat.EventIndexer;
 import com.dianping.bee.db.cat.TransactionIndexer;
 import com.dianping.bee.db.dog.DogDatabase;
-import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
-public class JDBCTestConfigurator extends AbstractResourceConfigurator {
+public class ServerTestConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new JDBCTestConfigurator());
+		generatePlexusComponentsXmlFile(new ServerTestConfigurator());
 	}
 
 	@Override
@@ -31,6 +30,6 @@ public class JDBCTestConfigurator extends AbstractResourceConfigurator {
 
 	@Override
 	protected File getConfigurationFile() {
-		return new File("src/test/resources/" + JDBCTest.class.getName().replace('.', '/') + ".xml");
+		return new File("src/test/resources/" + ServerTest.class.getName().replace('.', '/') + ".xml");
 	}
 }
