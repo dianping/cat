@@ -6,7 +6,6 @@ import java.util.List;
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
-import com.alibaba.cobar.parser.ast.expression.primary.ParamMarker;
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber;
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString;
 import com.alibaba.cobar.parser.ast.fragment.tableref.TableRefFactor;
@@ -33,8 +32,6 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	private String m_tableName;
 
 	private String m_databaseName;
-
-	private int m_parameterSize;
 
 	private Clause m_clause;
 
@@ -102,7 +99,6 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 			m_stmt.setWhereColumns(m_whereColumns);
 			m_stmt.setRowFilter(m_rowFilter.setExpression(where));
 			m_stmt.setIndex(m_helper.findIndex(m_databaseName, m_tableName, m_whereColumns));
-			m_stmt.setParameterSize(m_parameterSize);
 		} else {
 			m_stmt.setIndex(m_helper.findDefaultIndex(m_databaseName, m_tableName));
 		}
@@ -145,11 +141,6 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	}
 
 	@Override
-	public void visit(ParamMarker node) {
-		m_parameterSize++;
-	}
-
-	@Override
 	public void visit(ComparisionEqualsExpression node) {
 		Expression left = node.getLeftOprand();
 
@@ -166,13 +157,7 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 				Number value = ((LiteralNumber) right).getNumber();
 
 				m_stmt.addAttribute(name, value);
-			} else if (right instanceof ParamMarker) {
-				// FIXME
-				String name = ((Identifier) left).getIdText();
-				String value = "?";
-
-				m_stmt.addAttribute(name, value);
-			} 
+			}
 		}
 
 		super.visit(node);

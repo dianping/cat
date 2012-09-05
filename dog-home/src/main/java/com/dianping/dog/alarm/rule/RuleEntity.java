@@ -2,7 +2,7 @@ package com.dianping.dog.alarm.rule;
 
 import java.util.List;
 
-/**
+/* *
  * @author yanchun.yang 从数据库中读取的规则配置实体类
  * */
 public class RuleEntity {
@@ -14,6 +14,28 @@ public class RuleEntity {
 	private List<Duration> durations;
 
 	private ConnectEntity connect;
+
+	static class Connect {
+		private String connectType;// http
+
+		private String connectSource;// cat
+
+		private String domain;
+
+		private String report;
+
+		private String type;
+
+		private String name;
+	}
+
+	static class Duration {
+		private int min;
+
+		private int max;
+
+		private List<AlarmStrategyEntity> strategys;
+	}
 
 	private long interval;
 

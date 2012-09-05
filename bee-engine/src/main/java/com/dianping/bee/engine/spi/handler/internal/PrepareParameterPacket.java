@@ -25,6 +25,10 @@ import com.alibaba.cobar.protocol.MySQLPacket;
  */
 public class PrepareParameterPacket extends MySQLPacket {
 
+	public static final byte FIELD_COUNT = 0x04;
+
+	private byte m_fieldCount = FIELD_COUNT;
+	
 	private int m_fieldType;
 
 	private int m_columnFlag;
@@ -46,6 +50,7 @@ public class PrepareParameterPacket extends MySQLPacket {
 		buffer = c.checkWriteBuffer(buffer, c.getPacketHeaderSize() + size);
 		BufferUtil.writeUB3(buffer, size);
 		buffer.put(packetId);
+		buffer.put(m_fieldCount);
 		BufferUtil.writeUB2(buffer, m_fieldType);
 		BufferUtil.writeUB2(buffer, m_columnFlag);
 		buffer.put(m_decimal);

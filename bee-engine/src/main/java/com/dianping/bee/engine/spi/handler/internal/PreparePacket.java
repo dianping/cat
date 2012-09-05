@@ -40,7 +40,22 @@ public class PreparePacket extends MySQLPacket {
 		this.m_columnSize = columnSize;
 		this.m_parameterSize = parameterSize;
 	}
+	/**
+	 * Bytes               Name
+		-----               ----
+		1                   field_count
+		4                   statement_handler_id
+		2                   columns
+		2                   parameters
 
+		field_count:         Always = 0, as with OK Packet.
+
+		statement_handler_id: ID of statement handler.
+
+		columns:             Number of columns in result set.
+
+		parameters:          Number of parameters in query.
+	 */
 	@Override
 	public ByteBuffer write(ByteBuffer buffer, FrontendConnection c) {
 		int size = calcPacketSize();
@@ -49,7 +64,9 @@ public class PreparePacket extends MySQLPacket {
 		buffer.put(packetId);
 		buffer.put(m_fieldCount);
 		BufferUtil.writeUB4(buffer, m_statementId);
-		BufferUtil.writeUB2(buffer, m_columnSize);
+		//FIXME: not compatible with document
+		// BufferUtil.writeUB2(buffer, m_columnSize);
+		BufferUtil.writeUB2(buffer, m_fieldCount);
 		BufferUtil.writeUB2(buffer, m_parameterSize);
 		return buffer;
 	}

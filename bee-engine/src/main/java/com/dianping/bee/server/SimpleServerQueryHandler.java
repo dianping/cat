@@ -1,5 +1,7 @@
 package com.dianping.bee.server;
 
+import java.util.List;
+
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.handler.FrontendQueryHandler;
 import com.alibaba.cobar.server.ServerConnection;
@@ -9,6 +11,7 @@ import com.alibaba.cobar.server.handler.KillHandler;
 import com.alibaba.cobar.server.handler.SavepointHandler;
 import com.alibaba.cobar.server.handler.SetHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
+import com.dianping.bee.engine.spi.PreparedStatement;
 import com.dianping.bee.engine.spi.handler.internal.DescHandler;
 import com.dianping.bee.engine.spi.handler.internal.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
@@ -91,21 +94,26 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 	/**
 	 * @param sql
 	 */
-	public void stmtClose(String sql) {
+	public void stmtClose(Long stmtId) {
 		ServerConnection c = m_conn;
-		m_prepareHandler.close(sql, c, -1);
+		m_prepareHandler.close(stmtId, c);
 	}
 
 	/**
 	 * @param sql
+	 * @param parameters
 	 */
-	public void stmtExecute(String sql) {
+	public void stmtExecute(Long stmtId, List<Object> parameters) {
 		ServerConnection c = m_conn;
-		m_prepareHandler.execute(sql, c, -1);
+		m_prepareHandler.execute(stmtId, parameters, c);
 	}
 
 	public void stmtPrepare(String sql) {
 		ServerConnection c = m_conn;
-		m_prepareHandler.prepare(sql, c, -1);
+		m_prepareHandler.prepare(sql, c);
+	}
+
+	public PreparedStatement getStatement(Long stmtId) {
+		return m_prepareHandler.getStatement(stmtId);
 	}
 }
