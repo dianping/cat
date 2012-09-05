@@ -35,7 +35,9 @@ public enum ReportPage implements Page {
 
    CROSS("cross", "cross", "Cross", "Cross", true),
 
-   CACHE("cache", "cache", "Cache", "Cache", true);
+   CACHE("cache", "cache", "Cache", "Cache", true),
+
+   DATABASE("database", "database", "Database", "Database", true);
 
    private String m_name;
 

@@ -244,32 +244,32 @@ public class TestSendMessage {
 			t3.addData("key and value");
 			t3.setStatus(Message.SUCCESS);
 			t3.complete();
-			
+
 			Transaction t4 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
 			t4.addData("key and value");
 			t4.setStatus(Message.SUCCESS);
 			t4.complete();
-			
+
 			Transaction t5 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
 			t5.addData("key and value");
 			t5.setStatus(Message.SUCCESS);
 			t5.complete();
-			
+
 			Transaction t6 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
 			t6.addData("key and value");
 			t6.setStatus(Message.SUCCESS);
 			t6.complete();
-			
+
 			Transaction t7 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
 			t7.addData("key and value");
 			t7.setStatus(Message.SUCCESS);
 			t7.complete();
-			
+
 			Transaction t8 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
 			t8.addData("key and value");
 			t8.setStatus(Message.SUCCESS);
 			t8.complete();
-			
+
 			Transaction t9 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
 			t9.addData("key and value");
 			t9.setStatus(Message.SUCCESS);
@@ -277,5 +277,70 @@ public class TestSendMessage {
 			t.complete();
 		}
 		Thread.sleep(10 * 1000);
+	}
+
+	@Test
+	public void sendSqlTransaction() throws Exception {
+		for (int k = 0; k < 5; k++) {
+			for (int i = 0; i < 100; i++) {
+				Transaction t = Cat.getProducer().newTransaction("SQL", "User.select" + i % 10);
+				Cat.getProducer().newEvent("SQL", "Select").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
+				t.addData("select * from hostinfo");
+				t.setStatus(Message.SUCCESS);
+				t.complete();
+
+				Transaction t2 = Cat.getProducer().newTransaction("SQL", "User.insert" + i % 10);
+				Cat.getProducer().newEvent("SQL", "Update").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
+				t2.addData("update * from hostinfo");
+				t2.complete();
+
+				Transaction t3 = Cat.getProducer().newTransaction("SQL", "User.delete" + i % 10);
+				Cat.getProducer().newEvent("SQL", "Delete").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
+				t3.addData("delete * from hostinfo");
+				t3.setStatus(Message.SUCCESS);
+				t3.complete();
+			}
+		}
+		Thread.sleep(1000);
+	}
+
+	@Test
+	public void sendOtherDomainSqlTransaction() throws Exception {
+		for (int k = 0; k < 5; k++) {
+			for (int i = 0; i < 100; i++) {
+				Transaction t = Cat.getProducer().newTransaction("SQL", "User.select" + i % 10);
+				Cat.getProducer().newEvent("SQL", "Select").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
+				t.addData("select * from hostinfo");
+				t.setStatus(Message.SUCCESS);
+				Cat.getManager().getThreadLocalMessageTree().setDomain("Cat" + k);
+				t.complete();
+
+				Transaction t2 = Cat.getProducer().newTransaction("SQL", "User.insert" + i % 10);
+				Cat.getProducer().newEvent("SQL", "Update").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
+				t2.addData("update * from hostinfo");
+				Cat.getManager().getThreadLocalMessageTree().setDomain("Cat" + k);
+				t2.complete();
+
+				Transaction t3 = Cat.getProducer().newTransaction("SQL", "User.delete" + i % 10);
+				Cat.getProducer().newEvent("SQL", "Delete").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
+				t3.addData("delete * from hostinfo");
+				t3.setStatus(Message.SUCCESS);
+				Cat.getManager().getThreadLocalMessageTree().setDomain("Cat" + k);
+				t3.complete();
+			}
+		}
+		Thread.sleep(1000);
 	}
 }

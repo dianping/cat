@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.common.CommonAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.dump.DumpChannelManager;
 import com.dianping.cat.consumer.dump.DumpUploader;
@@ -48,7 +49,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class, LogviewUploader.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
-		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,common,dump")));
+		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,common,database,dump")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
@@ -71,6 +72,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 
 		all.add(C(CrossAnalyzer.class).is(PER_LOOKUP) //
+		      .req(BucketManager.class, ReportDao.class));
+		
+		all.add(C(DatabaseAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(MatrixAnalyzer.class).is(PER_LOOKUP) //

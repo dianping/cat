@@ -87,6 +87,10 @@
 			<implementation>com.dianping.cat.report.task.cross.CrossMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
+			<implementation>com.dianping.cat.report.task.database.DatabaseMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -185,6 +189,24 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.database.DatabaseReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.database.DatabaseReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -525,6 +547,53 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>cross-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>database-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.database.LocalDatabaseService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>database-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.database.HistoricalDatabaseService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>database</role-hint>
+			<implementation>com.dianping.cat.report.page.model.database.CompositeDatabaseService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>database-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -1082,6 +1151,11 @@
 					<role-hint>cross-local</role-hint>
 					<field-name>m_crossService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>database-local</role-hint>
+					<field-name>m_databaseService</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1227,6 +1301,23 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.cross.LocalCrossService</role>
 			<implementation>com.dianping.cat.report.page.model.cross.LocalCrossService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.database.LocalDatabaseService</role>
+			<implementation>com.dianping.cat.report.page.model.database.LocalDatabaseService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -1662,6 +1753,40 @@
 		<component>
 			<role>com.dianping.cat.report.page.cache.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.cache.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.database.Handler</role>
+			<implementation>com.dianping.cat.report.page.database.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.database.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>database</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
+			<implementation>com.dianping.cat.report.task.database.DatabaseMerger</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.database.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.database.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>

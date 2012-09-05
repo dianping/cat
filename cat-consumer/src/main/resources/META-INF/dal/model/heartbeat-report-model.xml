@@ -30,7 +30,7 @@
     <attribute name="system-load-average" value-type="double" primitive="true" />
     <attribute name="cat-message-produced" value-type="long" primitive="true" />
     <attribute name="cat-message-overflow" value-type="long" primitive="true" />
-    <attribute name="cat-message-size" value-type="long" primitive="true" />
+    <attribute name="cat-message-size" value-type="double" primitive="true" format="0.00"/>
     <entity-ref name="disk" type="list" names="disks"/>
   </entity>
   <entity name="disk">

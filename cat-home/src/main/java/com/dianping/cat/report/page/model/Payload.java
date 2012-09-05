@@ -40,6 +40,9 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("type")
 	private String m_type;
 
+	@FieldMeta("database")
+	private String m_database;
+	
 	@Override
 	public Action getAction() {
 		return m_action;
@@ -145,6 +148,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public String getDatabase() {
+		return m_database;
+	}
+
+	public void setDatabase(String database) {
+		m_database = database;
 	}
 
 	@Override

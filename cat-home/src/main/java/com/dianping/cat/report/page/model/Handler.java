@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.database.model.entity.Domain;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -24,6 +25,7 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.cross.LocalCrossService;
+import com.dianping.cat.report.page.model.database.LocalDatabaseService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
@@ -74,6 +76,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "cross-local")
 	private LocalCrossService m_crossService;
 
+	@Inject(type = ModelService.class, value = "database-local")
+	private LocalDatabaseService m_databaseService;
+
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
 		String ipAddress = payload.getIpAddress();
@@ -100,7 +105,13 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
 
 			return filter.buildXml((com.dianping.cat.consumer.heartbeat.model.IEntity<?>) dataModel);
-		} else {
+		} else if("database".equals(report)){
+			String domain = payload.getDomain();
+			DatabaseReportFilter filter = new DatabaseReportFilter(domain);
+
+			return filter.buildXml((com.dianping.cat.consumer.database.model.IEntity<?>) dataModel);
+		}
+		else {
 			return String.valueOf(dataModel);
 		}
 	}
@@ -159,6 +170,10 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_matrixService.invoke(request);
 			} else if ("cross".equals(report)) {
 				response = m_crossService.invoke(request);
+			} else if ("database".equals(report)) {
+				String databaseName = payload.getDatabase();
+				ModelRequest database = new ModelRequest(databaseName, payload.getPeriod());
+				response = m_databaseService.invoke(database);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}
@@ -368,6 +383,23 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitType(type);
 			} else {
 				// skip it
+			}
+		}
+	}
+
+	static class DatabaseReportFilter extends com.dianping.cat.consumer.database.model.transform.DefaultXmlBuilder {
+
+		private String m_domain;
+
+		public DatabaseReportFilter(String domain) {
+			m_domain = domain;
+		}
+
+		@Override
+		public void visitDomain(Domain domain) {
+			String id = domain.getId();
+			if (m_domain.equals("All") || m_domain.equals(id)) {
+				super.visitDomain(domain);
 			}
 		}
 	}

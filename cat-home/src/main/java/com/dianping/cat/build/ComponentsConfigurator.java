@@ -22,6 +22,8 @@ import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.TaskConsumer;
 import com.dianping.cat.report.task.cross.CrossMerger;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
+import com.dianping.cat.report.task.database.DatabaseMerger;
+import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
 import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
@@ -75,6 +77,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ProblemMerger.class));
 		all.add(C(HeartbeatMerger.class));
 		all.add(C(CrossMerger.class));
+		all.add(C(DatabaseMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class,
@@ -92,6 +95,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MatrixReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class));
+
+		all.add(C(DatabaseReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, DatabaseMerger.class));
 
 		all.add(C(CrossReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class));

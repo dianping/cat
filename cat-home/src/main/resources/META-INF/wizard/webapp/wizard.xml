@@ -50,6 +50,9 @@
       <page name="cache" title="Cache" path="cache">
         <description>Cache</description>
       </page>
+      <page name="database" title="Database" path="database">
+        <description>Database</description>
+      </page>
     </module>
   </webapp>
 </wizard>

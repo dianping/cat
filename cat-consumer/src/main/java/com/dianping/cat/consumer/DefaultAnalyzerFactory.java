@@ -2,6 +2,7 @@ package com.dianping.cat.consumer;
 
 import com.dianping.cat.consumer.common.CommonAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -52,6 +53,11 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			return analyzer;
 		} else if (name.equals("cross")) {
 			CrossAnalyzer analyzer = lookup(CrossAnalyzer.class);
+
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
+			return analyzer;
+		} else if (name.equals("database")) {
+			DatabaseAnalyzer analyzer = lookup(DatabaseAnalyzer.class);
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;
