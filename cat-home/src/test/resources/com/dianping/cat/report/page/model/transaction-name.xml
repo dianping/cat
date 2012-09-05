@@ -4,7 +4,9 @@
    <ip>10.1.77.193</ip>
    <machine ip="10.1.77.193">
       <type id="URL" totalCount="12" failCount="0" failPercent="0.00" min="2.354" max="2164.387" avg="0.0" sum="2689.6" sum2="4772307.3" std="0.0" tps="0.00" line95Value="2164.00" line95Sum="2164.00" line95Count="1">
-         <name id="/config.bin" totalCount="2" failCount="0" failPercent="0.00" min="2.354" max="2.725" avg="0.0" sum="5.1" sum2="13.0" std="0.0" tps="0.00" line95Value="2.00" line95Sum="2.00" line95Count="1">
+         <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
+			</successMessageUrl>
+		 <name id="/config.bin" totalCount="2" failCount="0" failPercent="0.00" min="2.354" max="2.725" avg="0.0" sum="5.1" sum2="13.0" std="0.0" tps="0.00" line95Value="2.00" line95Sum="2.00" line95Count="1">
             <successMessageUrl>MobileApi-0a014dc1-1339999960694-0
 				</successMessageUrl>
          </name>

@@ -1,8 +1,10 @@
 <sql-report>
 	<sql-domain-report domain="Cat" startTime="2012-06-18 14:00:00"
 		endTime="2012-06-18 14:59:59">
-		<domainName>Cat</domainName>
-		<domainName>MobileApi</domainName>
+		<domain>Cat</domain>
+		<domain>MobileApi</domain>
+		<ip>10.1.77.193</ip>
+		<ip>10.1.77.194</ip>
 		<database id="CatDabase" connect-url="jdbc://10.1.1.220:3306/cat">
 			<table id="HostInfo" totalCount="111507" failCount="0"
 				failPercent="0.00" avg="0.0" sum="1937.0" tps="0.00">
@@ -17,8 +19,8 @@
 	<sql-database-report database="CAT"
 		connect-url="jdbc://10.1.1.220:3306/cat" startTime="2012-06-18 14:00:00"
 		endTime="2012-06-18 14:59:59">
-		<databaseName>CAT1</databaseName>
-		<databaseName>CAT2</databaseName>
+		<database>CAT1</database>
+		<database>CAT2</database>
 		<domain id="Cat">
 			<table id="HostInfo" totalCount="111507" failCount="0"
 				failPercent="0.00" avg="0.0" sum="1937.0" tps="0.00">

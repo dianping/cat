@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="sql-report" root="true">
+    <entity-ref name="sql-domain-report" />
+    <entity-ref name="sql-database-report" />
+  </entity>
+  <entity name="sql-domain-report">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <element name="domainName" value-type="String" type="list" names="domainNames" />
+    <entity-ref name="database" />
+  </entity>
+  <entity name="database">
+    <attribute name="id" value-type="String" />
+    <attribute name="connect-url" value-type="String" />
+    <entity-ref name="table" type="list" names="tables" />
+  </entity>
+  <entity name="table">
+    <attribute name="id" value-type="String" />
+    <attribute name="totalCount" value-type="int" />
+    <attribute name="failCount" value-type="int" />
+    <attribute name="failPercent" value-type="double" />
+    <attribute name="avg" value-type="double" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="tps" value-type="double" />
+    <entity-ref name="method" type="list" names="methods" />
+  </entity>
+  <entity name="method">
+    <attribute name="id" value-type="String" />
+    <attribute name="totalCount" value-type="int" />
+    <attribute name="failCount" value-type="int" />
+    <attribute name="failPercent" value-type="double" />
+    <attribute name="avg" value-type="double" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="tps" value-type="double" />
+  </entity>
+  <entity name="sql-database-report">
+    <attribute name="database" value-type="String" />
+    <attribute name="connect-url" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <element name="databaseName" value-type="String" type="list" names="databaseNames" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="table" type="list" names="tables" />
+  </entity>
+</model>
+
