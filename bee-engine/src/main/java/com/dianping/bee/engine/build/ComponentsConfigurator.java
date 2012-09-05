@@ -3,10 +3,6 @@ package com.dianping.bee.engine.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.bee.db.cat.CatDatabase;
-import com.dianping.bee.db.cat.EventIndexer;
-import com.dianping.bee.db.cat.TransactionIndexer;
-import com.dianping.bee.db.dog.DogDatabase;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
@@ -34,6 +30,8 @@ import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
 import com.dianping.bee.engine.spi.handler.internal.UseHandler;
 import com.dianping.bee.engine.spi.internal.DefaultStatementManager;
 import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
+import com.dianping.bee.engine.spi.internal.SingleTablePreparedStatement;
+import com.dianping.bee.engine.spi.internal.SingleTablePreparedStatementBuilder;
 import com.dianping.bee.engine.spi.internal.SingleTableRowFilter;
 import com.dianping.bee.engine.spi.internal.SingleTableStatement;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder;
@@ -74,20 +72,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SingleTableStatementBuilder.class).is(PER_LOOKUP) //
 		      .req(TableHelper.class, SingleTableStatement.class, SingleTableRowFilter.class));
 
+		all.add(C(SingleTablePreparedStatement.class).is(PER_LOOKUP));
+		all.add(C(SingleTablePreparedStatementBuilder.class).is(PER_LOOKUP)//
+		      .req(TableHelper.class, SingleTablePreparedStatement.class, SingleTableRowFilter.class));
+
 		defineHandlers(all);
 		defineLogicalEvaluators(all);
 		defineFunctionEvaluators(all);
-		defineDatabaseProvider(all);
 
 		return all;
-	}
-
-	// FIXME: need dependency reverse
-	private void defineDatabaseProvider(List<Component> all) {
-		all.add(C(DatabaseProvider.class, "cat", CatDatabase.class));
-		all.add(C(TransactionIndexer.class));
-		all.add(C(EventIndexer.class));
-		all.add(C(DatabaseProvider.class, "dog", DogDatabase.class));
 	}
 
 	private void defineFunctionEvaluators(List<Component> all) {
@@ -125,7 +118,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Evaluator.class, IdentifierEvaluator.ID, IdentifierEvaluator.class));
 		all.add(C(Evaluator.class, ParamMarkerEvaluator.ID, ParamMarkerEvaluator.class));
-		
+
 		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
 		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
 		all.add(C(Evaluator.class, LiteralBooleanEvaluator.ID, LiteralBooleanEvaluator.class));

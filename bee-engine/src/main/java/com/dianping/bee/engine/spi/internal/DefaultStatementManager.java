@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.alibaba.cobar.parser.ast.stmt.SQLStatement;
 import com.alibaba.cobar.parser.recognizer.SQLParserDelegate;
+import com.dianping.bee.engine.spi.PreparedStatement;
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.site.lookup.ContainerHolder;
@@ -13,7 +14,7 @@ import com.site.lookup.ContainerHolder;
 public class DefaultStatementManager extends ContainerHolder implements StatementManager {
 	private Map<String, Statement> m_statements = new HashMap<String, Statement>();
 
-	private Map<Long, Statement> m_prepares = new HashMap<Long, Statement>();
+	private Map<Long, PreparedStatement> m_prepares = new HashMap<Long, PreparedStatement>();
 
 	private static long stmtId = 0;
 
@@ -42,7 +43,12 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		statement.accept(detector);
 
 		if (detector.isSingleTable()) {
-			SingleTableStatementBuilder builder = lookup(SingleTableStatementBuilder.class);
+			SingleTableStatementBuilder builder = null;
+			if (detector.isPrepared()) {
+				builder = lookup(SingleTablePreparedStatementBuilder.class);
+			} else {
+				builder = lookup(SingleTableStatementBuilder.class);
+			}
 
 			try {
 				statement.accept(builder);
@@ -56,17 +62,12 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 	}
 
 	@Override
-	public long stmtPrepare(Statement stmt) {
+	public long stmtPrepare(PreparedStatement stmt) {
 		synchronized (m_prepares) {
 			m_prepares.put(stmtId++ % Long.MAX_VALUE, stmt);
 		}
 
-		return stmtId;
-	}
-
-	@Override
-	public Statement stmtExecute(long stmtId) {
-		return m_prepares.get(stmtId);
+		return stmtId - 1;
 	}
 
 	@Override
@@ -74,5 +75,10 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		synchronized (m_prepares) {
 			m_prepares.remove(stmtId);
 		}
+	}
+
+	@Override
+	public PreparedStatement getStatement(Long stmtId) {
+		return m_prepares.get(stmtId);
 	}
 }

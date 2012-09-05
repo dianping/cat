@@ -4,34 +4,28 @@ import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
 import com.alibaba.cobar.parser.ast.expression.primary.ParamMarker;
-import com.alibaba.cobar.parser.ast.fragment.tableref.TableReferences;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
-import com.alibaba.cobar.parser.visitor.EmptySQLASTVisitor;
 
-public class QueryDetector extends EmptySQLASTVisitor {
-	private boolean m_singleTable;
+public class SingleTablePreparedStatementBuilder extends SingleTableStatementBuilder {
 
-	private boolean m_isPrepared;
+	private int m_parameterSize;
 
-	public boolean isPrepared() {
-		return m_isPrepared;
-	}
-
-	public boolean isSingleTable() {
-		return m_singleTable;
+	public SingleTablePreparedStatement getStatement() {
+		return (SingleTablePreparedStatement) super.getStatement();
 	}
 
 	@Override
 	public void visit(DMLSelectStatement node) {
-		TableReferences tables = node.getTables();
-
-		m_singleTable = tables.isSingleTable();
-		
+		super.visit(node);
 		Expression where = node.getWhere();
-
 		if (where != null) {
-			where.accept(this);
+			getStatement().setParameterSize(m_parameterSize);
 		}
+	}
+
+	@Override
+	public void visit(ParamMarker node) {
+		m_parameterSize++;
 	}
 
 	@Override
@@ -42,10 +36,15 @@ public class QueryDetector extends EmptySQLASTVisitor {
 			Expression right = node.getRightOprand();
 
 			if (right instanceof ParamMarker) {
-				m_isPrepared = true;
+				// FIXME
+				String name = ((Identifier) left).getIdText();
+				String value = "?";
+
+				getStatement().addAttribute(name, value);
 			}
 		}
 
 		super.visit(node);
 	}
+
 }

@@ -23,8 +23,6 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	private ColumnMeta[] m_selectColumns;
 
-	private int m_parameterSize;
-
 	private Map<ColumnMeta, Integer> m_allColumns = new LinkedHashMap<ColumnMeta, Integer>();
 
 	private Map<String, List<Object>> m_attributes = new HashMap<String, List<Object>>();
@@ -32,11 +30,6 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 	@Override
 	public int getColumnSize() {
 		return m_selectColumns.length;
-	}
-
-	@Override
-	public int getParameterSize() {
-		return m_parameterSize;
 	}
 
 	@Override
@@ -63,10 +56,6 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	public void setIndex(IndexMeta index) {
 		m_index = index;
-	}
-
-	public void setParameterSize(int parameterSize) {
-		m_parameterSize = parameterSize;
 	}
 
 	public void setRowFilter(RowFilter rowFilter) {
