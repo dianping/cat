@@ -21,7 +21,7 @@ import com.site.lookup.annotation.Inject;
 public class StatusUpdateTask implements Task, Initializable {
 	@Inject
 	private MessageStatistics m_statistics;
-	
+
 	@Inject
 	private ClientConfigManager m_manager;
 
@@ -69,23 +69,26 @@ public class StatusUpdateTask implements Task, Initializable {
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
 			if (m_manager.isCatEnabled()) {
-	         Transaction t = cat.newTransaction("System", "Status");
-	         Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
-	         StatusInfo status = new StatusInfo();
-	         try {
-		         status.accept(new StatusInfoCollector(m_statistics));
+				Transaction t = cat.newTransaction("System", "Status");
+				Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
+				StatusInfo status = new StatusInfo();
 
-		         h.addData(status.toString());
-		         h.setStatus(Message.SUCCESS);
-	         } catch (Throwable e) {
-		         h.setStatus(e);
-		         cat.logError(e);
-	         } finally {
-		         h.complete();
-	         }
-	         t.setStatus(Message.SUCCESS);
-	         t.complete();
-         }
+				t.addData("dumpLocked", m_manager.isDumpLocked());
+
+				try {
+					status.accept(new StatusInfoCollector(m_statistics).setDumpLocked(m_manager.isDumpLocked()));
+
+					h.addData(status.toString());
+					h.setStatus(Message.SUCCESS);
+				} catch (Throwable e) {
+					h.setStatus(e);
+					cat.logError(e);
+				} finally {
+					h.complete();
+				}
+				t.setStatus(Message.SUCCESS);
+				t.complete();
+			}
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;
 
 			if (elapsed < m_interval) {

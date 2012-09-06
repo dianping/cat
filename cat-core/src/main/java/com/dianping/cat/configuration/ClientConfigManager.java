@@ -36,6 +36,10 @@ public class ClientConfigManager implements LogEnabled {
 		}
 	}
 
+	public ClientConfig getClientConfig() {
+		return m_config;
+	}
+
 	public Domain getFirstDomain() {
 		if (m_config == null) {
 			return new Domain("UNKNOWN").setEnabled(false);
@@ -53,10 +57,6 @@ public class ClientConfigManager implements LogEnabled {
 		} else {
 			return m_config.getServers();
 		}
-	}
-	
-	public ClientConfig getClientConfig(){
-		return m_config;
 	}
 
 	public void initialize(File configFile) throws Exception {
@@ -117,8 +117,15 @@ public class ClientConfigManager implements LogEnabled {
 		}
 	}
 
+	public boolean isDumpLocked() {
+		if (m_config == null) {
+			return false;
+		} else {
+			return m_config.isDumpLocked();
+		}
+	}
+
 	public boolean isInitialized() {
 		return m_config != null;
 	}
 }
-
