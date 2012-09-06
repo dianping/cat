@@ -131,19 +131,19 @@ public class SimpleServerConnection extends ServerConnection {
 					byte null_bits_map = mm.read();
 				}
 
-				byte new_bound = mm.read();
+				byte new_params_bound_flag = mm.read();
+				if (new_params_bound_flag == (byte) 1) {
+					for (int i = 0; i < parameterSize; i++) {
+						byte[] typeArray = mm.readBytes(2);
+						// TODO determine type
+					}
 
-				for (int i = 0; i < parameterSize; i++) {
-					byte[] typeArray = mm.readBytes(2);
-					// TODO determine type
+					for (int i = 0; i < parameterSize; i++) {
+						byte length = mm.read();
+						byte[] value = mm.readBytes(length);
+						parameters.add(new String(value));
+					}
 				}
-
-				for (int i = 0; i < parameterSize; i++) {
-					byte length = mm.read();
-					byte[] value = mm.readBytes(length);
-					parameters.add(new String(value));
-				}
-
 				((SimpleServerQueryHandler) queryHandler).stmtExecute(stmtId, parameters);
 			} else {
 				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");

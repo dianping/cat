@@ -32,6 +32,26 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	private Map<String, List<Object>> m_attributes = new HashMap<String, List<Object>>();
 
+	public void addAttribute(String name, Object value) {
+		List<Object> list = m_attributes.get(name);
+
+		if (list == null) {
+			list = new ArrayList<Object>(3);
+			m_attributes.put(name, list);
+		}
+
+		list.add(value);
+	}
+
+	@Override
+	public ColumnMeta getColumnMeta(int colIndex) {
+		if (colIndex >= 0 && colIndex < m_selectColumns.length) {
+			return m_selectColumns[colIndex];
+		} else {
+			throw new IndexOutOfBoundsException("size: " + m_selectColumns.length + ", index: " + colIndex);
+		}
+	}
+
 	@Override
 	public int getColumnSize() {
 		return m_selectColumns.length;
@@ -87,16 +107,5 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 				m_allColumns.put(column, -1);
 			}
 		}
-	}
-
-	public void addAttribute(String name, Object value) {
-		List<Object> list = m_attributes.get(name);
-
-		if (list == null) {
-			list = new ArrayList<Object>(3);
-			m_attributes.put(name, list);
-		}
-
-		list.add(value);
 	}
 }

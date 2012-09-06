@@ -14,6 +14,7 @@ import com.alibaba.cobar.protocol.mysql.RowDataPacket;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.util.IntegerUtil;
 import com.alibaba.cobar.util.StringUtil;
+import com.dianping.bee.engine.spi.handler.internal.BinaryRowDataPacket;
 import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
@@ -162,12 +163,81 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 						break;
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!", column.getName(),
-					      value), e);
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!",
+					      column.getName(), value), e);
 				}
 			}
 
 			write(packet);
 		}
+
+		/**
+		 * @param row
+		 */
+		public void writeBinaryRow(Row row) {
+			int len = row.getColumnSize();
+			BinaryRowDataPacket packet = new BinaryRowDataPacket(len);
+
+			for (int cellIndex = 0; cellIndex < len; cellIndex++) {
+				Cell cell = row.getCell(cellIndex);
+				ColumnMeta column = cell.getMeta();
+				String value = cell.getValue() == null ? null : String.valueOf(cell.getValue());
+
+				try {
+					switch (TypeUtils.convertJavaTypeToFieldType(column.getType())) {
+					case Fields.FIELD_TYPE_STRING:
+						byte[] encodeStr = StringUtil.encode(value, m_charset);
+						packet.add(encodeStr, (byte) -1);
+						break;
+					case Fields.FIELD_TYPE_INT24:
+						packet.add(value == null ? null : convertIntToBytes(Integer.parseInt(value)), (byte) 4);
+						break;
+					case Fields.FIELD_TYPE_DECIMAL:
+					case Fields.FIELD_TYPE_TINY:
+					case Fields.FIELD_TYPE_SHORT:
+					case Fields.FIELD_TYPE_LONG:
+					case Fields.FIELD_TYPE_FLOAT:
+					case Fields.FIELD_TYPE_DOUBLE:
+					case Fields.FIELD_TYPE_NULL:
+					case Fields.FIELD_TYPE_TIMESTAMP:
+					case Fields.FIELD_TYPE_LONGLONG:
+					case Fields.FIELD_TYPE_DATE:
+					case Fields.FIELD_TYPE_TIME:
+					case Fields.FIELD_TYPE_DATETIME:
+					case Fields.FIELD_TYPE_YEAR:
+					case Fields.FIELD_TYPE_NEWDATE:
+					case Fields.FIELD_TYPE_VARCHAR:
+					case Fields.FIELD_TYPE_BIT:
+					case Fields.FIELD_TYPE_NEW_DECIMAL:
+					case Fields.FIELD_TYPE_ENUM:
+					case Fields.FIELD_TYPE_SET:
+					case Fields.FIELD_TYPE_TINY_BLOB:
+					case Fields.FIELD_TYPE_MEDIUM_BLOB:
+					case Fields.FIELD_TYPE_LONG_BLOB:
+					case Fields.FIELD_TYPE_BLOB:
+					case Fields.FIELD_TYPE_VAR_STRING:
+					case Fields.FIELD_TYPE_GEOMETRY:
+					default:
+						encodeStr = StringUtil.encode(value, m_charset);
+						packet.add(encodeStr, (byte) -1);
+						break;
+					}
+				} catch (Exception e) {
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!",
+					      column.getName(), value), e);
+				}
+			}
+
+			write(packet);
+		}
+	}
+
+	private static byte[] convertIntToBytes(int i) {
+		byte[] result = new byte[4];
+		result[0] = (byte) (i & 0xff);
+		result[1] = (byte) (i >>> 8);
+		result[2] = (byte) (i >>> 16);
+		result[3] = (byte) (i >>> 24);
+		return result;
 	}
 }

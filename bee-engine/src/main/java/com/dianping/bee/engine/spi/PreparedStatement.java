@@ -14,14 +14,15 @@
  */
 package com.dianping.bee.engine.spi;
 
+import com.dianping.bee.engine.spi.meta.ColumnMeta;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public interface PreparedStatement extends Statement {
-	public int getParameterSize();
+	public ColumnMeta getParameterMeta(int paramIndex);
 
-	public void setParameterSize(int size);
+	public int getParameterSize();
 
 	public void setParameter(int index, Object param);
 }
