@@ -10,7 +10,7 @@ import com.dianping.bee.engine.spi.meta.internal.DefaultRowSet;
 public class DefaultRowListener implements RowListener {
 	private RowFilter m_filter;
 
-	private DefaultRowSet m_rowset;
+	private RowSet m_rowset;
 
 	public DefaultRowListener(ColumnMeta[] selectColumns) {
 		m_rowset = new DefaultRowSet(selectColumns);

@@ -11,12 +11,17 @@ import com.dianping.bee.engine.spi.index.Index;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.bee.engine.spi.meta.RowSet;
-import com.dianping.bee.engine.spi.row.DefaultRowContext;
 import com.dianping.bee.engine.spi.row.DefaultRowListener;
+import com.dianping.bee.engine.spi.row.RowContext;
 import com.dianping.bee.engine.spi.row.RowFilter;
+import com.dianping.bee.engine.spi.row.RowListener;
 import com.site.lookup.ContainerHolder;
+import com.site.lookup.annotation.Inject;
 
 public class SingleTableStatement extends ContainerHolder implements Statement {
+	@Inject
+	protected RowContext ctx;
+
 	private IndexMeta m_index;
 
 	private RowFilter m_rowFilter;
@@ -36,10 +41,10 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 	public RowSet query() {
 		Index index = lookup(m_index.getIndexClass());
 		List<ColumnMeta> columns = new ArrayList<ColumnMeta>(m_allColumns.keySet());
-		DefaultRowContext ctx = new DefaultRowContext(columns.toArray(new ColumnMeta[0]));
-		DefaultRowListener listener = new DefaultRowListener(m_selectColumns);
-
+		RowListener listener = new DefaultRowListener(m_selectColumns);
 		listener.setRowFilter(m_rowFilter);
+
+		ctx.setColumnMeta(columns.toArray(new ColumnMeta[0]));
 		ctx.setRowListener(listener);
 		ctx.setAttributes(m_attributes);
 

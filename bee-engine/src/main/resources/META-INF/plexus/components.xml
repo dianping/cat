@@ -40,9 +40,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.bee.engine.spi.row.RowContext</role>
+			<implementation>com.dianping.bee.engine.spi.row.DefaultRowContext</implementation>
+		</component>
+		<component>
 			<role>com.dianping.bee.engine.spi.internal.SingleTableStatement</role>
 			<implementation>com.dianping.bee.engine.spi.internal.SingleTableStatement</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.row.RowContext</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.internal.SingleTableRowFilter</role>
@@ -69,6 +78,11 @@
 			<role>com.dianping.bee.engine.spi.internal.SingleTablePreparedStatement</role>
 			<implementation>com.dianping.bee.engine.spi.internal.SingleTablePreparedStatement</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.row.RowContext</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.internal.SingleTablePreparedStatementBuilder</role>

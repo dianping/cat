@@ -14,7 +14,6 @@
  */
 package com.dianping.bee.engine.spi;
 
-import java.util.List;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
@@ -24,5 +23,5 @@ public interface PreparedStatement extends Statement {
 
 	public void setParameterSize(int size);
 
-	public void setParameters(List<Object> params);
+	public void setParameter(int index, Object param);
 }

@@ -113,7 +113,7 @@ public class SimpleServerConnection extends ServerConnection {
 			MySQLMessage mm = new MySQLMessage(data);
 			Long stmtId;
 			mm.position(5);
-			stmtId = (long) mm.readInt();
+			stmtId = mm.readUB4();
 			byte flag = mm.read();
 			int iterationCount = mm.readInt();
 
@@ -161,7 +161,7 @@ public class SimpleServerConnection extends ServerConnection {
 			MySQLMessage mm = new MySQLMessage(data);
 			Long stmtId;
 			mm.position(1);
-			stmtId = mm.readLong();
+			stmtId = mm.readUB4();
 
 			// 执行查询
 			if (queryHandler != null) {

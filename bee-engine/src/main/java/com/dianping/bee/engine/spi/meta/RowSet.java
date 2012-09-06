@@ -1,5 +1,6 @@
 package com.dianping.bee.engine.spi.meta;
 
+
 public interface RowSet {
 	public ColumnMeta getColumn(int colIndex);
 
@@ -8,4 +9,6 @@ public interface RowSet {
 	public Row getRow(int rowIndex);
 
 	public int getRowSize();
+
+	public void addRow(Row row);
 }

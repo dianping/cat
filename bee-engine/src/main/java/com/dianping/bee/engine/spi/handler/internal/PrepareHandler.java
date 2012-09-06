@@ -56,7 +56,9 @@ public class PrepareHandler extends AbstractCommandHandler {
 	 */
 	public void execute(Long stmtId, List<Object> parameters, ServerConnection c) {
 		PreparedStatement stmt = m_manager.getStatement(stmtId);
-		stmt.setParameters(parameters);
+		for (int i = 0; i < parameters.size(); i++) {
+			stmt.setParameter(i, parameters.get(i));
+		}
 
 		RowSet rowset = stmt.query();
 
@@ -104,24 +106,30 @@ public class PrepareHandler extends AbstractCommandHandler {
 		int columnSize = stmt.getColumnSize();
 		int parameterSize = ((PreparedStatement) stmt).getParameterSize();
 
-		PreparePacket packet = new PreparePacket(stmtId, columnSize, parameterSize);
+		PrepareOKPacket packet = new PrepareOKPacket(stmtId, columnSize, parameterSize);
 		ctx.write(packet);
 
 		// FIXME: just some sample code here
 		for (int i = 0; i < parameterSize; i++) {
-			// PrepareParameterPacket parameterPacket = new
-			// PrepareParameterPacket(Fields.FIELD_TYPE_STRING,
-			// Fields.NOT_NULL_FLAG, (byte) 0, 50);
 			FieldPacket field = new FieldPacket();
 			field.type = Fields.FIELD_TYPE_STRING;
 			field.flags = Fields.NOT_NULL_FLAG;
 			field.decimals = (byte) 0;
 			field.length = 50;
-			// ctx.write(parameterPacket);
 			ctx.write(field);
 		}
-
 		ctx.writeEOF();
+
+		for (int i = 0; i < columnSize; i++) {
+			FieldPacket field = new FieldPacket();
+			field.type = Fields.FIELD_TYPE_STRING;
+			field.flags = Fields.NOT_NULL_FLAG;
+			field.decimals = (byte) 0;
+			field.length = 50;
+			ctx.write(field);
+		}
+		ctx.writeEOF();
+
 		ctx.complete();
 	}
 }

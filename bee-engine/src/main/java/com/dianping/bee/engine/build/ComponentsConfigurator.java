@@ -36,6 +36,8 @@ import com.dianping.bee.engine.spi.internal.SingleTableRowFilter;
 import com.dianping.bee.engine.spi.internal.SingleTableStatement;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder;
 import com.dianping.bee.engine.spi.internal.TableHelper;
+import com.dianping.bee.engine.spi.row.DefaultRowContext;
+import com.dianping.bee.engine.spi.row.RowContext;
 import com.dianping.bee.engine.spi.session.DefaultSessionManager;
 import com.dianping.bee.engine.spi.session.SessionManager;
 import com.dianping.bee.server.SimpleServer;
@@ -67,12 +69,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableHelper.class) //
 		      .req(TableProviderManager.class));
 
-		all.add(C(SingleTableStatement.class).is(PER_LOOKUP));
+		all.add(C(RowContext.class, DefaultRowContext.class));
+		all.add(C(SingleTableStatement.class).is(PER_LOOKUP)//
+		      .req(RowContext.class));
 		all.add(C(SingleTableRowFilter.class).is(PER_LOOKUP));
 		all.add(C(SingleTableStatementBuilder.class).is(PER_LOOKUP) //
 		      .req(TableHelper.class, SingleTableStatement.class, SingleTableRowFilter.class));
 
-		all.add(C(SingleTablePreparedStatement.class).is(PER_LOOKUP));
+		all.add(C(SingleTablePreparedStatement.class).is(PER_LOOKUP)//
+		      .req(RowContext.class));
 		all.add(C(SingleTablePreparedStatementBuilder.class).is(PER_LOOKUP)//
 		      .req(TableHelper.class, SingleTablePreparedStatement.class, SingleTableRowFilter.class));
 

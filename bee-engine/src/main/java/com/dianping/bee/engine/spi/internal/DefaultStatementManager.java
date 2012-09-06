@@ -18,6 +18,7 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 
 	private static long stmtId = 0;
 
+	// FIXME: when to clear cache
 	@Override
 	public Statement build(String sql) throws SQLSyntaxErrorException {
 		Statement statement = m_statements.get(sql);
@@ -70,6 +71,7 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		return stmtId - 1;
 	}
 
+	// FIXME: when to remove prepared statement
 	@Override
 	public void stmtClose(long stmtId) {
 		synchronized (m_prepares) {

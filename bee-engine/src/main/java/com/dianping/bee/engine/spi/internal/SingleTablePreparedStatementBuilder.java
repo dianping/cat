@@ -1,8 +1,6 @@
 package com.dianping.bee.engine.spi.internal;
 
 import com.alibaba.cobar.parser.ast.expression.Expression;
-import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression;
-import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
 import com.alibaba.cobar.parser.ast.expression.primary.ParamMarker;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
 
@@ -27,24 +25,4 @@ public class SingleTablePreparedStatementBuilder extends SingleTableStatementBui
 	public void visit(ParamMarker node) {
 		m_parameterSize++;
 	}
-
-	@Override
-	public void visit(ComparisionEqualsExpression node) {
-		Expression left = node.getLeftOprand();
-
-		if (left instanceof Identifier) {
-			Expression right = node.getRightOprand();
-
-			if (right instanceof ParamMarker) {
-				// FIXME
-				String name = ((Identifier) left).getIdText();
-				String value = "?";
-
-				getStatement().addAttribute(name, value);
-			}
-		}
-
-		super.visit(node);
-	}
-
 }

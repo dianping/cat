@@ -14,6 +14,8 @@
  */
 package com.dianping.bee.engine.spi.meta.internal;
 
+import java.util.Arrays;
+
 import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.Row;
 
@@ -36,5 +38,9 @@ public class DefaultRow implements Row {
 	@Override
 	public int getColumnSize() {
 		return m_cells.length;
+	}
+
+	public String toString() {
+		return Arrays.toString(m_cells);
 	}
 }

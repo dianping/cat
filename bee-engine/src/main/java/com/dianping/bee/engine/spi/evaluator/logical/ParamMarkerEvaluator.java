@@ -9,6 +9,6 @@ public class ParamMarkerEvaluator extends AbstractEvaluator<ParamMarker, Object>
 
 	@Override
 	public Object evaluate(RowContext ctx, ParamMarker expr) {
-		return ctx.getFirstAttribute(expr.getParamIndex(), "");
+		return ctx.getParameter(expr.getParamIndex() - 1);
 	}
 }

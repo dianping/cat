@@ -51,7 +51,7 @@ public class PreparedStatementTest extends ComponentTestCase {
 		Connection conn = DriverManager.getConnection(url + dbName, props);
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		Assert.assertNotNull(stmt);
-		stmt.setString(1, "MobiApi");
+		stmt.setString(1, "MobileApi");
 		stmt.setString(2, "20120822");
 		ResultSet rs = stmt.executeQuery();
 		Assert.assertEquals(2, rs.getMetaData().getColumnCount());
