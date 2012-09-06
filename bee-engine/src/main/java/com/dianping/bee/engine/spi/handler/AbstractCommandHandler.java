@@ -186,10 +186,11 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 				try {
 					switch (TypeUtils.convertJavaTypeToFieldType(column.getType())) {
 					case Fields.FIELD_TYPE_STRING:
-						packet.add(StringUtil.encode(value, m_charset));
+						byte[] encodeStr = StringUtil.encode(value, m_charset);
+						packet.add(encodeStr, (byte) -1);
 						break;
 					case Fields.FIELD_TYPE_INT24:
-						packet.add(value == null ? null : convertIntToBytes(Integer.parseInt(value)));
+						packet.add(value == null ? null : convertIntToBytes(Integer.parseInt(value)), (byte) 4);
 						break;
 					case Fields.FIELD_TYPE_DECIMAL:
 					case Fields.FIELD_TYPE_TINY:
@@ -217,7 +218,8 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 					case Fields.FIELD_TYPE_VAR_STRING:
 					case Fields.FIELD_TYPE_GEOMETRY:
 					default:
-						packet.add(StringUtil.encode(value, m_charset));
+						encodeStr = StringUtil.encode(value, m_charset);
+						packet.add(encodeStr, (byte) -1);
 						break;
 					}
 				} catch (Exception e) {

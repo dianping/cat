@@ -33,16 +33,20 @@ public class BinaryRowDataPacket extends MySQLPacket {
 
 	private final List<byte[]> fieldValues;
 
+	private final byte[] fieldsLength;
+
 	private byte[] bitMap;
 
 	public BinaryRowDataPacket(int fieldCount) {
 		this.fieldCount = fieldCount;
 		this.fieldValues = new ArrayList<byte[]>(fieldCount);
+		this.fieldsLength = new byte[fieldCount];
 		this.bitMap = new byte[(fieldCount + 7 + 2) / 8];
 	}
 
-	public void add(byte[] value) {
+	public void add(byte[] value, byte fieldLength) {
 		fieldValues.add(value);
+		this.fieldsLength[fieldValues.size() - 1] = fieldLength;
 	}
 
 	@Override
@@ -55,7 +59,9 @@ public class BinaryRowDataPacket extends MySQLPacket {
 		for (int i = 0; i < fieldCount; i++) {
 			byte[] fv = fieldValues.get(i);
 			bb = c.checkWriteBuffer(bb, BufferUtil.getLength(fv.length));
-			BufferUtil.writeLength(bb, fv.length);
+			if (fieldsLength[i] < 0) {
+				BufferUtil.writeLength(bb, fieldValues.get(i).length);
+			}
 			bb = c.writeToBuffer(fv, bb);
 		}
 		return bb;
@@ -65,8 +71,11 @@ public class BinaryRowDataPacket extends MySQLPacket {
 	public int calcPacketSize() {
 		int size = 1 + bitMap.length;
 		for (int i = 0; i < fieldCount; i++) {
-			byte[] v = fieldValues.get(i);
-			size += (v == null || v.length == 0) ? 1 : BufferUtil.getLength(v);
+			if (fieldsLength[i] > 0) {
+				size += fieldsLength[i];
+			} else {
+				size += fieldValues.get(i).length + 1;
+			}
 		}
 		return size;
 	}
