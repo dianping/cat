@@ -23,6 +23,7 @@
       </xs:sequence>
       <xs:attribute name="mode" type="xs:string" use="required"/>
       <xs:attribute name="enabled" type="xs:boolean" default="true"/>
+      <xs:attribute name="dump-locked" type="xs:boolean"/>
       <xs:anyAttribute processContents="lax"/>
    </xs:complexType>
    <xs:complexType name="ServerType">
