@@ -48,7 +48,7 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 				report = new HeartbeatReport(domain);
 
 				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(hour), new Date(
-						hour + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+						hour + 60 * 60 * 1000), null, "heartbeat", ReportEntity.READSET_DOMAIN_NAME);
 
 				Set<String> domainNames = report.getDomainNames();
 				for (Report temp : historyReports) {

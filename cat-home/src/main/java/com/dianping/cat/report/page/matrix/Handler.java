@@ -111,7 +111,7 @@ public class Handler implements PageHandler<Context> {
 			try {
 				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "matrix",
 				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, null,
+				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "matrix",
 				      ReportEntity.READSET_DOMAIN_NAME);
 
 				Set<String> domains = new HashSet<String>();

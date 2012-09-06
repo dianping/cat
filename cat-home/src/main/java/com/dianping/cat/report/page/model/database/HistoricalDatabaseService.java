@@ -55,7 +55,7 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 		DatabaseReport databaseReport = merger.getDatabaseReport();
 
 		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+		      timestamp + 60 * 60 * 1000), null, "database", ReportEntity.READSET_DOMAIN_NAME);
 
 		if (databaseReport == null) {
 			databaseReport = new DatabaseReport(database);

@@ -48,7 +48,7 @@ public class LocalDatabaseService extends BaseLocalModelService<DatabaseReport> 
 				report = new DatabaseReport(database);
 				
 				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(hour), new Date(
-						hour + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+						hour + 60 * 60 * 1000), null, "database", ReportEntity.READSET_DOMAIN_NAME);
 
 				Set<String> databaseNames = report.getDatabaseNames();
 				for (Report temp : historyReports) {

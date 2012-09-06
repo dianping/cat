@@ -12,9 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageStatistics;
+ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.GcInfo;
@@ -105,7 +103,6 @@ class StatusInfoCollector extends BaseVisitor {
 
 	@Override
 	public void visitDisk(DiskInfo disk) {
-		Transaction t =Cat.newTransaction("Disk", "Disk");
 		File[] roots = File.listRoots();
 
 		if (roots != null) {
@@ -121,24 +118,19 @@ class StatusInfoCollector extends BaseVisitor {
 		}
 
 		super.visitDisk(disk);
-		t.complete();
 	}
 
 	@Override
 	public void visitDiskVolume(DiskVolumeInfo diskVolume) {
-		Transaction t =Cat.newTransaction("visitDiskVolume", "visitDiskVolume");
 		File volume = new File(diskVolume.getId());
 
 		diskVolume.setTotal(volume.getTotalSpace());
 		diskVolume.setFree(volume.getFreeSpace());
 		diskVolume.setUsable(volume.getUsableSpace());
-		t.complete();
 	}
 
 	@Override
 	public void visitMemory(MemoryInfo memory) {
-
-		Transaction t =Cat.newTransaction("visitMemory", "visitMemory");
 		MemoryMXBean bean = ManagementFactory.getMemoryMXBean();
 		Runtime runtime = Runtime.getRuntime();
 
@@ -162,7 +154,6 @@ class StatusInfoCollector extends BaseVisitor {
 		}
 
 		super.visitMemory(memory);
-		t.complete();
 	}
 
 	@Override
@@ -176,7 +167,6 @@ class StatusInfoCollector extends BaseVisitor {
 
 	@Override
 	public void visitOs(OsInfo os) {
-		Transaction t =Cat.newTransaction("visitOs", "visitOs");
 		OperatingSystemMXBean bean = ManagementFactory.getOperatingSystemMXBean();
 
 		os.setArch(bean.getArch());
@@ -196,23 +186,18 @@ class StatusInfoCollector extends BaseVisitor {
 			os.setProcessTime(b.getProcessCpuTime());
 			os.setCommittedVirtualMemory(b.getCommittedVirtualMemorySize());
 		}
-		t.complete();
 	}
 
 	@Override
 	public void visitRuntime(RuntimeInfo runtime) {
-
-		Transaction t =Cat.newTransaction("visitRuntime", "visitRuntime");
 		RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
 
 		runtime.setStartTime(bean.getStartTime());
 		runtime.setUpTime(bean.getUptime());
-		t.complete();
 	}
 
 	@Override
 	public void visitStatus(StatusInfo status) {
-		Transaction t =Cat.newTransaction("visitStatus", "visitStatus");
 		status.setTimestamp(new Date());
 		status.setOs(new OsInfo());
 		status.setDisk(new DiskInfo());
@@ -222,7 +207,6 @@ class StatusInfoCollector extends BaseVisitor {
 		status.setMessage(new MessageInfo());
 
 		super.visitStatus(status);
-		t.complete();
 	}
 
 	@Override

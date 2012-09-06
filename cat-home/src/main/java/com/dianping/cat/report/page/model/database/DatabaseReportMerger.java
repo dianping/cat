@@ -16,7 +16,7 @@ public class DatabaseReportMerger extends DefaultMerger {
 	public DatabaseReportMerger(DatabaseReport databaseReport) {
 		super(databaseReport);
 	}
-	
+
 	public Domain mergesForAllMachine(DatabaseReport report) {
 		Domain machine = new Domain(CatString.ALL_IP);
 
@@ -40,15 +40,6 @@ public class DatabaseReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeTable(Table old, Table table) {
-		double sum = 0;
-		if (old.getTotalPercent() > 0) {
-			sum += old.getTotalCount() / old.getTotalPercent();
-		}
-		if (table.getTotalPercent() > 0) {
-			sum += table.getTotalCount() / table.getTotalPercent();
-		}
-		old.setTotalPercent((old.getTotalCount() + table.getTotalCount()) / sum);
-
 		old.setTotalCount(old.getTotalCount() + table.getTotalCount());
 		old.setFailCount(old.getFailCount() + table.getFailCount());
 		old.setFailPercent(old.getFailCount() / (double) old.getTotalCount());
@@ -58,20 +49,13 @@ public class DatabaseReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeMethod(Method old, Method method) {
-		double sum = 0;
-		if (old.getTotalPercent() > 0) {
-			sum += old.getTotalCount() / old.getTotalPercent();
-		}
-		if (method.getTotalPercent() > 0) {
-			sum += method.getTotalCount() / method.getTotalPercent();
-		}
-		old.setTotalPercent((old.getTotalCount() + method.getTotalCount()) / sum);
-
 		old.setTotalCount(old.getTotalCount() + method.getTotalCount());
 		old.setFailCount(old.getFailCount() + method.getFailCount());
 		old.setFailPercent(old.getFailCount() / (double) old.getTotalCount());
 		old.setSum(old.getSum() + method.getSum());
 		old.setAvg(old.getSum() / (double) old.getTotalCount());
+		
+		old.getSqlNames().addAll(method.getSqlNames());
 	}
 
 	@Override
@@ -89,10 +73,13 @@ public class DatabaseReportMerger extends DefaultMerger {
 			m_all = old.findOrCreateDomain(CatString.ALL_Domain);
 		}
 		super.visitDatabaseReport(databaseReport);
+		old.setConnectUrl(databaseReport.getConnectUrl());
+		old.setStartTime(databaseReport.getStartTime());
+		old.setEndTime(databaseReport.getEndTime());
 		old.getDomainNames().addAll(databaseReport.getDomainNames());
 		old.getDatabaseNames().addAll(databaseReport.getDatabaseNames());
-		
-		if(m_allDomain){
+
+		if (m_allDomain) {
 			old.getDomainNames().remove(CatString.ALL_Domain);
 		}
 

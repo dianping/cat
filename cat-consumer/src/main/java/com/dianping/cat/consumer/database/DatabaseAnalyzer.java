@@ -209,7 +209,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 						r.setDomain(domain);
 						r.setPeriod(period);
 						r.setIp(ip);
-						r.setType(1);
+						r.setType(2);
 						r.setContent(xml);
 
 						m_reportDao.insert(r);

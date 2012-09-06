@@ -4,9 +4,12 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.database.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.report.page.database.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.database.Model" scope="request" />
+<jsp:useBean id="ctx"
+	type="com.dianping.cat.report.page.database.Context" scope="request" />
+<jsp:useBean id="payload"
+	type="com.dianping.cat.report.page.database.Payload" scope="request" />
+<jsp:useBean id="model"
+	type="com.dianping.cat.report.page.database.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
 
@@ -20,12 +23,15 @@
 	<div class="report">
 		<table class="header">
 			<tr>
-				<td class="title">&nbsp;&nbsp; From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
+				<td class="title">&nbsp;&nbsp; From
+					${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to
+					${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 				<td class="switch"><a
 					href="${model.baseUri}?op=history&database=${model.database}">Switch
 						To History Mode</a></td>
 				<td class="nav"><c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?database=${model.database}&date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a
+							href="${model.baseUri}?database=${model.database}&date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach> &nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 				</td>
 			</tr>
@@ -38,11 +44,13 @@
 						<c:forEach var="database" items="${model.databases}">
 						&nbsp;<c:choose>
 								<c:when test="${model.database eq database}">
-									<a href="${model.baseUri}?database=${database}&date=${model.date}"
+									<a
+										href="${model.baseUri}?database=${database}&date=${model.date}"
 										class="current">[&nbsp;${database}&nbsp;]</a>
 								</c:when>
 								<c:otherwise>
-									<a href="${model.baseUri}?database=${database}&date=${model.date}">[&nbsp;${database}&nbsp;]</a>
+									<a
+										href="${model.baseUri}?database=${database}&date=${model.date}">[&nbsp;${database}&nbsp;]</a>
 								</c:otherwise>
 							</c:choose>&nbsp;
 					</c:forEach>
@@ -52,7 +60,7 @@
 		</table>
 
 		</br>
-		
+
 		<table class="machines">
 			<tr style="text-align: left">
 				<th>Domains: &nbsp;[&nbsp; <c:choose>
@@ -67,11 +75,13 @@
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 							<c:when test="${model.domain eq domain}">
-								<a href="?database=${model.database}&domain=${domain}&date=${model.date}"
+								<a
+									href="?database=${model.database}&domain=${domain}&date=${model.date}"
 									class="current">${domain}</a>
 							</c:when>
 							<c:otherwise>
-								<a href="?database=${model.database}&domain=${domain}&date=${model.date}">${domain}</a>
+								<a
+									href="?database=${model.database}&domain=${domain}&date=${model.date}">${domain}</a>
 							</c:otherwise>
 						</c:choose>
    	 		&nbsp;]&nbsp;
@@ -79,51 +89,58 @@
 				</th>
 			</tr>
 		</table>
-		
+
 		</br>
 
 		<table class="database">
 			<tr>
-				<th class="left"><a href="${model.baseUri}?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=name">Table</a></th>
-				<th>Name</th>
-				<th><a href="${model.baseUri}?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=total">Total</a></th>
-				<th><a href="${model.baseUri}?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=failure">Failure</a></th>
-				<th><a href="${model.baseUri}?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=failurePercent">Failure%</a></th>
-				<th><a href="${model.baseUri}?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=avg">Avg(ms)</a></th>
-				<th>TablePercent%</th>
-				<th>MethodPercent%</th>
+			    <th></th>
+				<th class="left"><a
+					href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=name">Table</a></th>
+				<th><a href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=total">Total</a></th>
+				<th><a href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=failure">Failure</a></th>
+				<th><a href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=failurePercent">Failure%</a></th>
+				<th><a href="?database=${model.database}&date=${model.date}&domain=${model.domain}&sort=avg">Avg(ms)</a></th>
+				<th>Percent%</th>
 				<th>TPS</th>
 			</tr>
 			<c:forEach var="item" items="${model.displayDatabase.results}"
 				varStatus="status">
 				<tr class="odd">
-					<td  class="left">${item.id}</td>
-					<td>&nbsp;</td>
+					<td class="left"><a href="" class="graph_link" data-status="${status.index}">[:: show ::]</a></td>
+					<td class="left">${item.id}</td>
 					<td>${w:format(item.totalCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(item.failCount,'#,###,###,###,##0')}</td>
 					<td>${w:format(item.failPercent,'0.00%')}</td>
 					<td>${w:format(item.avg,'0.00')}</td>
 					<td>${w:format(item.totalPercent,'0.00%')}</td>
-					<td>-</td>
 					<td>${w:format(item.tps,'0.00')}</td>
 				</tr>
-				<c:forEach var="methodEntry" items="${item.methods}"
-					varStatus="status1">
-					<tr class="${status1.index  mod 2==0 ? 'even' : 'odd'}">
-						<c:set var="method" value="${methodEntry.value}" />
-						<td style="background:white">&nbsp;</td>
-						<td>${method.id}</td>
-						<td>${w:format(method.totalCount,'#,###,###,###,##0')}</td>
-						<td>${w:format(method.failCount,'#,###,###,###,##0')}</td>
-						<td>${w:format(method.failPercent,'0.00%')}</td>
-						<td>${w:format(method.avg,'0.00')}</td>
-						<td>&nbsp;</td>
-						<td>${w:format(method.totalPercent,'0.00%')}</td>
-						<td>${w:format(method.tps,'0.00')}</td>
-					</tr>
-				</c:forEach>
-				<tr>
-					<td>&nbsp;</td>
+				<tr id="${status.index}" style="display:none">
+					<td colspan="8">
+					<table>
+						<th>Method</th>
+						<th>Total</th>
+						<th>Failure</th>
+						<th>Failure%</th>
+						<th>Avg(ms)</th>
+						<th>Percent%</th>
+						<th>TPS</th>
+
+						<c:forEach var="methodEntry" items="${item.methods}"
+							varStatus="status1">
+							<tr class="${status1.index  mod 2==0 ? 'even' : 'odd'}">
+								<c:set var="method" value="${methodEntry.value}" />
+								<td>${method.id}</td>
+								<td>${w:format(method.totalCount,'#,###,###,###,##0')}</td>
+								<td>${w:format(method.failCount,'#,###,###,###,##0')}</td>
+								<td>${w:format(method.failPercent,'0.00%')}</td>
+								<td>${w:format(method.avg,'0.00')}</td>
+								<td>${w:format(method.totalPercent,'0.00%')}</td>
+								<td>${w:format(method.tps,'0.00')}</td>
+							</tr>
+						</c:forEach>
+					</table></td>
 				</tr>
 			</c:forEach>
 
@@ -135,5 +152,6 @@
 		</table>
 	</div>
 	</br>
+<res:useJs value="${res.js.local.database_js}" target="bottom-js" />
 
 </a:body>

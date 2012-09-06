@@ -54,7 +54,7 @@ public class HistoricalHeartbeatService extends BaseHistoricalModelService<Heart
 		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
 
 		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+		      timestamp + 60 * 60 * 1000), null, "heartbeat", ReportEntity.READSET_DOMAIN_NAME);
 
 		if (heartbeatReport == null) {
 			heartbeatReport = new HeartbeatReport(domain);

@@ -10,5 +10,5 @@ import com.dianping.cat.hadoop.dal.Graph;
 
 public interface GraphCreator<E> {
 
-	List<Graph> splitReportToGraphs(Date reportPeriod, String reportDomain, String reportName, E report);
+	public List<Graph> splitReportToGraphs(Date reportPeriod, String reportDomain, String reportName, E report);
 }

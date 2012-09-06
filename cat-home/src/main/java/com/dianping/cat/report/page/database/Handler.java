@@ -20,6 +20,7 @@ import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
+import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -88,18 +89,27 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
+		String domain = payload.getDomain();
+
 		switch (payload.getAction()) {
 		case HISTORY_REPORT:
 			DatabaseReport historyReport = showSummarizeReport(model, payload);
-			DisplayDatabase displayHistoryDatabase = new DisplayDatabase();
+
+			long historyDuration = historyReport.getEndTime().getTime() - historyReport.getStartTime().getTime();
+			DisplayDatabase displayHistoryDatabase = new DisplayDatabase().setDomain(domain).setDuration(
+			      historyDuration);
 
 			displayHistoryDatabase.setSortBy(payload.getSortBy()).visitDatabaseReport(historyReport);
 			model.setReport(historyReport);
 			model.setDisplayDatabase(displayHistoryDatabase);
 			break;
 		case HOURLY_REPORT:
+			long hourlyDuration = ONE_HOUR;
+			if (ModelPeriod.CURRENT == payload.getPeriod()) {
+				hourlyDuration = System.currentTimeMillis() % ONE_HOUR;
+			}
 			DatabaseReport hourlyReport = getHourlyReport(payload);
-			DisplayDatabase displayDatabase = new DisplayDatabase();
+			DisplayDatabase displayDatabase = new DisplayDatabase().setDomain(domain).setDuration(hourlyDuration);
 
 			displayDatabase.setSortBy(payload.getSortBy()).visitDatabaseReport(hourlyReport);
 			model.setReport(hourlyReport);
@@ -123,7 +133,7 @@ public class Handler implements PageHandler<Context> {
 		model.setDatabase(payload.getDatabase());
 		model.setDisplayDomain(payload.getDomain());
 		model.setDomain(payload.getDomain());
-		
+
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());
 		} else {
@@ -145,7 +155,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private DatabaseReport showSummarizeReport(Model model, Payload payload) {
-		String domain = payload.getDomain();
+		String database = payload.getDatabase();
 
 		DatabaseReport databaseReport = null;
 		Date start = payload.getHistoryStartDate();
@@ -154,24 +164,24 @@ public class Handler implements PageHandler<Context> {
 
 		if (currentDayStart.getTime() == start.getTime()) {
 			try {
-				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "database",
+				List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
 				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, null,
+				List<Report> allReports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, "database",
 				      ReportEntity.READSET_DOMAIN_NAME);
 
-				Set<String> domains = new HashSet<String>();
+				Set<String> databases = new HashSet<String>();
 				for (Report report : allReports) {
-					domains.add(report.getDomain());
+					databases.add(report.getDomain());
 				}
-				databaseReport = m_databaseMerger.mergeForDaily(domain, reports, domains);
+				databaseReport = m_databaseMerger.mergeForDaily(database, reports, databases);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
 		} else {
 			try {
-				List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "database",
+				List<Dailyreport> reports = m_dailyreportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
 				      DailyreportEntity.READSET_FULL);
-				DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(domain));
+				DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
 				for (Dailyreport report : reports) {
 					String xml = report.getContent();
 					DatabaseReport reportModel = DefaultSaxParser.parse(xml);

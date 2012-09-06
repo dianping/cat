@@ -24,7 +24,7 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			Dailyreport report = getdailyReport(reportName, reportDomain, reportPeriod);
+			Dailyreport report = getDailyReport(reportName, reportDomain, reportPeriod);
 			m_dailyReportDao.insert(report);
 			return true;
 		} catch (Exception e) {
@@ -33,13 +33,13 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 		}
 	}
 
-	private Dailyreport getdailyReport(String reportName, String reportDatabase, Date reportPeriod) throws DalException {
+	private Dailyreport getDailyReport(String reportName, String reportDatabase, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = new HashSet<String>();
-		getDomainSet(domainSet, reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDatabase, reportName,
+		Set<String> databaseSet = new HashSet<String>();
+		getDatabaseSet(databaseSet, reportPeriod, endDate);
+		List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(reportPeriod, endDate, reportDatabase, reportName,
 		      ReportEntity.READSET_FULL);
-		String content = m_databaseMerger.mergeForDaily(reportDatabase, reports, domainSet).toString();
+		String content = m_databaseMerger.mergeForDaily(reportDatabase, reports, databaseSet).toString();
 
 		Dailyreport report = m_dailyReportDao.createLocal();
 		report.setContent(content);
@@ -48,7 +48,7 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(reportName);
 		report.setPeriod(reportPeriod);
-		report.setType(1);
+		report.setType(2);
 		return report;
 	}
 	
@@ -60,7 +60,7 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 	@Override
 	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			Dailyreport report = getdailyReport(reportName, reportDomain, reportPeriod);
+			Dailyreport report = getDailyReport(reportName, reportDomain, reportPeriod);
 			clearDailyReport(report);
 			m_dailyReportDao.insert(report);
 			return true;
@@ -69,7 +69,12 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 			return false;
 		}
 	}
-
+	
+	@Override
+	protected void clearDailyReport(Dailyreport report) throws DalException {
+		this.m_dailyReportDao.deleteDatabaseByDomainNamePeriod(report);
+	}
+	
 	@Override
 	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Database report don't support redo HourReport!");

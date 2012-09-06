@@ -37,9 +37,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		} else {
 			Set<String> domainNames = m_report.getDomainNames();
 
-			domainNames.add(getDomain());
 			return StringSortHelper.sortDomain(domainNames);
-
 		}
 	}
 

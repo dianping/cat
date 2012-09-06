@@ -20,7 +20,7 @@ public class DatabaseMerger implements ReportMerger<DatabaseReport> {
 		DatabaseReport databaseReport = getDailyReport(reportDatabase, reports, false);
 		DatabaseReport databaseReport2 = getDailyReport(reportDatabase, reports, true);
 
-		databaseReport.addDomain(databaseReport2.findOrCreateDomain(CatString.ALL_Domain));
+		databaseReport.addDomain(databaseReport2.findDomain(CatString.ALL_Domain));
 		databaseReport.getDomainNames().add(CatString.ALL_Domain);
 		
 		Date date = databaseReport.getStartTime();

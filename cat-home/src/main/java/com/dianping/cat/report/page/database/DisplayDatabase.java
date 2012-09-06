@@ -7,13 +7,24 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
+import com.dianping.cat.consumer.database.model.entity.Domain;
+import com.dianping.cat.consumer.database.model.entity.Method;
 import com.dianping.cat.consumer.database.model.entity.Table;
 import com.dianping.cat.consumer.database.model.transform.BaseVisitor;
 
 public class DisplayDatabase extends BaseVisitor {
 	private String m_sortBy = "name";
 
+	private String m_domain = "cat";
+
+	private String m_currentDomain;
+
 	private List<Table> m_results = new ArrayList<Table>();
+
+	private int m_totalCount;
+
+	private long m_duration;
 
 	public List<Table> getResults() {
 		Collections.sort(m_results, new TableCompartor(m_sortBy));
@@ -28,8 +39,41 @@ public class DisplayDatabase extends BaseVisitor {
 	}
 
 	@Override
+	public void visitDatabaseReport(DatabaseReport databaseReport) {
+		super.visitDatabaseReport(databaseReport);
+
+		for (Table table : m_results) {
+			int totalCount = table.getTotalCount();
+			table.setTotalPercent(totalCount / (double) m_totalCount);
+
+			for (Method method : table.getMethods().values()) {
+				method.setTotalPercent(method.getTotalCount() / (double) totalCount);
+			}
+		}
+	}
+
+	@Override
+	public void visitDomain(Domain domain) {
+		m_currentDomain = domain.getId();
+		super.visitDomain(domain);
+	}
+
+	@Override
 	public void visitTable(Table table) {
-		m_results.add(table);
+		if (m_domain.equals(m_currentDomain)) {
+			m_results.add(table);
+			if (table.getId().equals("All")) {
+				m_totalCount = table.getTotalCount();
+				table.setTotalPercent(1);
+			}
+			if (m_duration > 0) {
+				table.setTps(table.getTotalCount() * 1000.0 / (double) m_duration);
+
+				for (Method method : table.getMethods().values()) {
+					method.setTps(method.getTotalCount() * 1000.0 / (double) m_duration);
+				}
+			}
+		}
 	}
 
 	public static class TableCompartor implements Comparator<Table> {
@@ -67,5 +111,15 @@ public class DisplayDatabase extends BaseVisitor {
 			return 0;
 		}
 
+	}
+
+	public DisplayDatabase setDomain(String database) {
+		m_domain = database;
+		return this;
+	}
+
+	public DisplayDatabase setDuration(long duration) {
+		m_duration = duration;
+		return this;
 	}
 }
