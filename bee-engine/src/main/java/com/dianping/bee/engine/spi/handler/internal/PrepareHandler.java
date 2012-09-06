@@ -18,13 +18,14 @@ import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 
 import com.alibaba.cobar.ErrorCode;
-import com.alibaba.cobar.Fields;
+import com.alibaba.cobar.net.util.PacketUtil;
 import com.alibaba.cobar.protocol.mysql.FieldPacket;
 import com.alibaba.cobar.server.ServerConnection;
 import com.dianping.bee.engine.spi.PreparedStatement;
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.handler.AbstractCommandHandler;
+import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
 import com.dianping.bee.engine.spi.meta.internal.TypeUtils;
@@ -78,7 +79,7 @@ public class PrepareHandler extends AbstractCommandHandler {
 
 		for (int rowIndex = 0; rowIndex < rowset.getRowSize(); rowIndex++) {
 			Row row = rowset.getRow(rowIndex);
-			ctx.writeRow(row);
+			ctx.writeBinaryRow(row);
 		}
 
 		ctx.writeEOF();
@@ -94,14 +95,15 @@ public class PrepareHandler extends AbstractCommandHandler {
 	 * @param c
 	 */
 	public void prepare(String sql, ServerConnection c) {
-		Statement stmt = null;
+		Statement ori_stmt = null;
 		try {
-			stmt = m_manager.parseSQL(sql);
+			ori_stmt = m_manager.parseSQL(sql);
 		} catch (SQLSyntaxErrorException e) {
 			error(c, ErrorCode.ER_SYNTAX_ERROR, e.getMessage());
 		}
 
-		long stmtId = m_manager.stmtPrepare((PreparedStatement) stmt);
+		PreparedStatement stmt = (PreparedStatement) ori_stmt;
+		long stmtId = m_manager.stmtPrepare(stmt);
 		CommandContext ctx = new CommandContext(c);
 		int columnSize = stmt.getColumnSize();
 		int parameterSize = ((PreparedStatement) stmt).getParameterSize();
@@ -109,23 +111,18 @@ public class PrepareHandler extends AbstractCommandHandler {
 		PrepareOKPacket packet = new PrepareOKPacket(stmtId, columnSize, parameterSize);
 		ctx.write(packet);
 
-		// FIXME: just some sample code here
 		for (int i = 0; i < parameterSize; i++) {
-			FieldPacket field = new FieldPacket();
-			field.type = Fields.FIELD_TYPE_STRING;
-			field.flags = Fields.NOT_NULL_FLAG;
-			field.decimals = (byte) 0;
-			field.length = 50;
+			ColumnMeta paramMeta = stmt.getParameterMeta(i);
+			FieldPacket field = PacketUtil.getField(paramMeta.getName(),
+			      TypeUtils.convertJavaTypeToFieldType(paramMeta.getType()));
 			ctx.write(field);
 		}
 		ctx.writeEOF();
 
 		for (int i = 0; i < columnSize; i++) {
-			FieldPacket field = new FieldPacket();
-			field.type = Fields.FIELD_TYPE_STRING;
-			field.flags = Fields.NOT_NULL_FLAG;
-			field.decimals = (byte) 0;
-			field.length = 50;
+			ColumnMeta colMeta = stmt.getColumnMeta(i);
+			FieldPacket field = PacketUtil.getField(colMeta.getName(),
+			      TypeUtils.convertJavaTypeToFieldType(colMeta.getType()));
 			ctx.write(field);
 		}
 		ctx.writeEOF();

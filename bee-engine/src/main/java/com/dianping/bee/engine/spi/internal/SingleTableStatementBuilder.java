@@ -25,13 +25,13 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	private SingleTableRowFilter m_rowFilter;
 
 	@Inject
-	private TableHelper m_helper;
+	protected TableHelper m_helper;
 
 	private String m_alias;
 
-	private String m_tableName;
+	protected String m_tableName;
 
-	private String m_databaseName;
+	protected String m_databaseName;
 
 	private Clause m_clause;
 
