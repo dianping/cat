@@ -61,10 +61,8 @@ public class Handler implements PageHandler<Context> {
 	private DatabaseReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
-		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date) //
-		      .setProperty("ip", ipAddress)//
 		      .setProperty("database", payload.getDatabase());
 
 		if (m_service.isEligable(request)) {

@@ -266,6 +266,9 @@
 					<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.database.DatabaseReportBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
@@ -1455,6 +1458,9 @@
 					<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.database.DatabaseReportBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
@@ -1606,6 +1612,28 @@
 		<component>
 			<role>com.dianping.cat.report.task.cross.CrossMerger</role>
 			<implementation>com.dianping.cat.report.task.cross.CrossMerger</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.database.DatabaseReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.database.DatabaseReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
+			<implementation>com.dianping.cat.report.task.database.DatabaseMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
@@ -1779,10 +1807,6 @@
 					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
-			<implementation>com.dianping.cat.report.task.database.DatabaseMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.database.JspViewer</role>

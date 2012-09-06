@@ -8,6 +8,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.database.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
 import com.dianping.cat.report.task.ReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
@@ -15,26 +16,38 @@ import com.dianping.cat.report.task.TaskHelper;
 public class DatabaseMerger implements ReportMerger<DatabaseReport> {
 
 	@Override
-	public DatabaseReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
-		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(reportDomain));
+	public DatabaseReport mergeForDaily(String reportDatabase, List<Report> reports, Set<String> databaseNames) {
+		DatabaseReport databaseReport = getDailyReport(reportDatabase, reports, false);
+		DatabaseReport databaseReport2 = getDailyReport(reportDatabase, reports, true);
+
+		databaseReport.addDomain(databaseReport2.findOrCreateDomain(CatString.ALL_Domain));
+		databaseReport.getDomainNames().add(CatString.ALL_Domain);
 		
+		Date date = databaseReport.getStartTime();
+		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
+
+		databaseReport.getDatabaseNames().addAll(databaseNames);
+		databaseReport.setStartTime(TaskHelper.todayZero(date));
+		databaseReport.setEndTime(end);
+		return databaseReport;
+	}
+
+	private DatabaseReport getDailyReport(String reportDatabase, List<Report> reports, boolean allDomain) {
+		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(reportDatabase));
+		if (allDomain) {
+			merger.setAllDomain(true);
+		}
 		for (Report report : reports) {
 			String xml = report.getContent();
 			try {
 				DatabaseReport model = DefaultSaxParser.parse(xml);
-		
+
 				model.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
 		DatabaseReport databaseReport = merger.getDatabaseReport();
-		Date date = databaseReport.getStartTime();
-		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
-		
-		databaseReport.getDatabaseNames().addAll(domains);
-		databaseReport.setStartTime(TaskHelper.todayZero(date));
-		databaseReport.setEndTime(end);
 		return databaseReport;
 	}
 

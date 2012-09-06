@@ -33,18 +33,18 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 		}
 	}
 
-	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+	private Dailyreport getdailyReport(String reportName, String reportDatabase, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = new HashSet<String>();
 		getDomainSet(domainSet, reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDatabase, reportName,
 		      ReportEntity.READSET_FULL);
-		String content = m_databaseMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+		String content = m_databaseMerger.mergeForDaily(reportDatabase, reports, domainSet).toString();
 
 		Dailyreport report = m_dailyReportDao.createLocal();
 		report.setContent(content);
 		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
+		report.setDomain(reportDatabase);
 		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		report.setName(reportName);
 		report.setPeriod(reportPeriod);

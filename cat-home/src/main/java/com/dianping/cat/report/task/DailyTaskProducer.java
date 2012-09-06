@@ -70,6 +70,10 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		return true;
 	}
 
+	private boolean checkDatabaseTaskGenerated(Date day){
+		return false;
+	}
+	
 	private void generateDailyTasks(Date day) {
 		Transaction t = Cat.newTransaction("System", "ProduceDailyReport");
 		try {

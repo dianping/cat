@@ -28,23 +28,24 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 
 	@Override
 	protected DatabaseReport buildModel(ModelRequest request) throws Exception {
-		String domain = request.getDomain();
+		String database = request.getProperty("database");
+		
 		long date = Long.parseLong(request.getProperty("date"));
 		DatabaseReport report;
 
 		if (isLocalMode()) {
-			report = getReportFromLocalDisk(date, domain);
+			report = getReportFromLocalDisk(date, database);
 		} else {
-			report = getReportFromDatabase(date, domain);
+			report = getReportFromDatabase(date, database);
 		}
 
 		return report;
 	}
 
-	private DatabaseReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
+	private DatabaseReport getReportFromDatabase(long timestamp, String database) throws Exception {
+		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), database, 1, getName(),
 		      ReportEntity.READSET_FULL);
-		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(domain));
+		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
 
 		for (Report report : reports) {
 			String xml = report.getContent();
@@ -57,7 +58,7 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
 
 		if (databaseReport == null) {
-			databaseReport = new DatabaseReport(domain);
+			databaseReport = new DatabaseReport(database);
 		}
 		Set<String> dataBaseNames = databaseReport.getDatabaseNames();
 		for (Report report : historyReports) {
@@ -66,9 +67,9 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 		return databaseReport;
 	}
 
-	private DatabaseReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
+	private DatabaseReport getReportFromLocalDisk(long timestamp, String database) throws Exception {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "database");
-		String xml = bucket.findById(domain);
+		String xml = bucket.findById(database);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}

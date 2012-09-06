@@ -27,25 +27,25 @@ public class LocalDatabaseService extends BaseLocalModelService<DatabaseReport> 
 		super("database");
 	}
 
-	private DatabaseReport getLocalReport(long timestamp, String domain) throws Exception {
+	private DatabaseReport getLocalReport(long timestamp, String database) throws Exception {
 		Bucket<String> bucket = m_bucketManager.getReportBucket(timestamp, "database");
-		String xml = bucket.findById(domain);
+		String xml = bucket.findById(database);
 
 		return xml == null ? null : DefaultSaxParser.parse(xml);
 	}
 
 	@Override
-	protected DatabaseReport getReport(ModelRequest request, ModelPeriod period, String domain) throws Exception {
-		DatabaseReport report = super.getReport(request, period, domain);
+	protected DatabaseReport getReport(ModelRequest request, ModelPeriod period, String database) throws Exception {
+		DatabaseReport report = super.getReport(request, period, database);
 
 		if (report == null && period.isLast()) {
 			long current = System.currentTimeMillis();
 			long hour = 60 * 60 * 1000;
 			long date = current - current % (hour) - hour;
-			report = getLocalReport(date, domain);
+			report = getLocalReport(date, database);
 
 			if (report == null) {
-				report = new DatabaseReport(domain);
+				report = new DatabaseReport(database);
 				
 				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(hour), new Date(
 						hour + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);

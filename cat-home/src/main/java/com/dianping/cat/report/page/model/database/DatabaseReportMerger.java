@@ -16,6 +16,18 @@ public class DatabaseReportMerger extends DefaultMerger {
 	public DatabaseReportMerger(DatabaseReport databaseReport) {
 		super(databaseReport);
 	}
+	
+	public Domain mergesForAllMachine(DatabaseReport report) {
+		Domain machine = new Domain(CatString.ALL_IP);
+
+		for (Domain m : report.getDomains().values()) {
+			if (!m.getId().equals(CatString.ALL_IP)) {
+				visitDomainChildren(machine, m);
+			}
+		}
+
+		return machine;
+	}
 
 	@Override
 	public void visitDomain(Domain domain) {

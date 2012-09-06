@@ -14,6 +14,7 @@ import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.hadoop.dal.TaskEntity;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
+import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
@@ -44,6 +45,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 	
 	@Inject
 	private CrossReportBuilder m_crossReportBuilder;
+	
+	@Inject
+	private DatabaseReportBuilder m_databaseReportBuilder;
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -93,6 +97,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("transaction", m_tansactionBuilder);
 		m_reportBuilders.put("matrix", m_matrixReportBuilder);
 		m_reportBuilders.put("cross", m_crossReportBuilder);
+		m_reportBuilders.put("database", m_databaseReportBuilder);
 	}
 
 	public boolean redoTask(int taskID) {

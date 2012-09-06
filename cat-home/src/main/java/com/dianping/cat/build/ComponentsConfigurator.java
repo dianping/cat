@@ -62,8 +62,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ValueTranslater.class));
 
 		all.add(C(MonthReportBuilderTask.class)//
-				.req(MonthreportDao.class, DailyreportDao.class));
-		
+		      .req(MonthreportDao.class, DailyreportDao.class));
+
 		all.add(C(TaskConsumer.class, DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
 
@@ -107,7 +107,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
-		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class, TaskDao.class));
+		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
+		            DatabaseReportBuilder.class, TaskDao.class));
 
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
