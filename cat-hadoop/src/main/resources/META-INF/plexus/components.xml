@@ -225,6 +225,16 @@
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>sqltable</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>sqltable</logical-table-name>
+				<physical-table-name>sqltable</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>subscriber</role-hint>
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -336,6 +346,15 @@
 		<component>
 			<role>com.dianping.cat.hadoop.dal.SqlreportDao</role>
 			<implementation>com.dianping.cat.hadoop.dal.SqlreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.SqltableDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.SqltableDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>

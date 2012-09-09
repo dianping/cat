@@ -15,6 +15,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.consumer.sql.model.entity.Database;
 import com.dianping.cat.consumer.transaction.model.IEntity;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
@@ -36,6 +37,7 @@ import com.dianping.cat.report.page.model.problem.LocalProblemService;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.model.sql.LocalSqlService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.site.lookup.ContainerHolder;
@@ -46,6 +48,9 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
+	@Inject
+	private JspViewer m_jspViewer;
+
 	@Inject(type = ModelService.class, value = "event-local")
 	private LocalEventService m_eventService;
 
@@ -54,9 +59,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "ip-local")
 	private LocalIpService m_ipService;
-
-	@Inject
-	private JspViewer m_jspViewer;
 
 	@Inject(type = ModelService.class, value = "logview-local")
 	private LocalLogViewService m_logviewService;
@@ -78,6 +80,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "database-local")
 	private LocalDatabaseService m_databaseService;
+
+	@Inject(type = ModelService.class, value = "sql-local")
+	private LocalSqlService m_sqlService;
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -105,13 +110,17 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			HeartBeatReportFilter filter = new HeartBeatReportFilter(ipAddress);
 
 			return filter.buildXml((com.dianping.cat.consumer.heartbeat.model.IEntity<?>) dataModel);
-		} else if("database".equals(report)){
+		} else if ("database".equals(report)) {
 			String domain = payload.getDomain();
 			DatabaseReportFilter filter = new DatabaseReportFilter(domain);
 
 			return filter.buildXml((com.dianping.cat.consumer.database.model.IEntity<?>) dataModel);
-		}
-		else {
+		} else if ("sql".equals(report)) {
+			String database = payload.getDatabase();
+			SqlReportFilter filter = new SqlReportFilter(database);
+
+			return filter.buildXml((com.dianping.cat.consumer.sql.model.IEntity<?>) dataModel);
+		} else {
 			return String.valueOf(dataModel);
 		}
 	}
@@ -174,6 +183,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				String databaseName = payload.getDatabase();
 				ModelRequest database = new ModelRequest(databaseName, payload.getPeriod());
 				response = m_databaseService.invoke(database);
+			} else if ("sql".equals(report)) {
+				response = m_sqlService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}
@@ -402,5 +413,22 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitDomain(domain);
 			}
 		}
+	}
+
+	static class SqlReportFilter extends com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder {
+
+		private String m_database;
+
+		public SqlReportFilter(String database) {
+			m_database = database;
+		}
+
+		@Override
+		public void visitDatabase(Database database) {
+			if ("All".equals(m_database) || database.getId().equals(m_database)) {
+				super.visitDatabase(database);
+			}
+		}
+
 	}
 }

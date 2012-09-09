@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.sql.model.entity.Method;
 import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.consumer.sqlparse.SqlParseManager;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Event;
@@ -34,6 +35,9 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 	@Inject
 	private ReportDao m_reportDao;
+
+	@Inject
+	private SqlParseManager m_sqlParseManager;
 
 	private Map<String, SqlReport> m_reports = new HashMap<String, SqlReport>();
 
@@ -109,23 +113,22 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 		report.addDomain(domain);
 
 		if (message instanceof Transaction) {
-			processTransaction(tree, (Transaction) message);
+			processTransaction(report, tree, (Transaction) message);
 		}
 	}
 
-	private void processTransaction(MessageTree tree, Transaction t) {
+	private void processTransaction(SqlReport report, MessageTree tree, Transaction t) {
 		String type = t.getType();
 
 		if ("SQL".equals(type)) {
-			DatabaseItem item = buildDataBaseItem(t);
+			DatabaseItem item = buildDataBaseItem(tree.getDomain(), t);
 			if (item != null) {
-				String domain = tree.getDomain();
 				String sqlName = t.getName();
 				String databaseName = item.getDatabase();
 				String tables = item.getTables();
 				String method = item.getMethod();
 
-				SqlReport report = m_reports.get(domain);
+				report.addDatabaseName(databaseName);
 
 				Database database = report.findOrCreateDatabase(databaseName);
 				database.setConnectUrl(item.getConnectionUrl());
@@ -141,7 +144,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 			for (Message message : messages) {
 				if (message instanceof Transaction) {
-					processTransaction(tree, (Transaction) message);
+					processTransaction(report, tree, (Transaction) message);
 				}
 			}
 		}
@@ -246,44 +249,33 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 	}
 
-	private DatabaseItem buildDataBaseItem(Transaction t) {
+	private DatabaseItem buildDataBaseItem(String domain, Transaction t) {
 		List<Message> messages = t.getChildren();
 		String connection = null;
 		String method = null;
-		String sql = (String) t.getData();
+		String sqlName = t.getName();
+		String sqlStatement = (String) t.getData();
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("SQL")) {
+				if (type.equals("SQL.Method")) {
 					method = message.getName();
-				} else if (type.equals("SQL.sql")) {
+				} else if (type.equals("SQL.Database")) {
 					connection = message.getName();
 				}
 			}
 		}
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
-			String tables = getTableNamesBySql(sql);
+			String tables = m_sqlParseManager.getTableNames(sqlName, sqlStatement, domain);
 			String database = getDataBaseName(connection);
 
 			item.setDatabase(database).setTables(tables).setMethod(method).setConnectionUrl(connection);
 			return item;
 		}
 		return null;
-	}
-
-	private String getTableNamesBySql(String sql) {
-		try {
-			if (sql == null || sql.length() == 0)
-				sql = "TTT";
-			return "Table" + sql.substring(0, 6);
-
-		} catch (Exception e) {
-
-		}
-		return "Test";
 	}
 
 	private String getDataBaseName(String url) {

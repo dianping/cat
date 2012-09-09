@@ -21,8 +21,6 @@ public enum ReportPage implements Page {
 
    MODEL("model", "model", "Model", "Service Model", false),
 
-   SQL("sql", "sql", "SQL", "SQL Report", false),
-
    HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", false),
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
@@ -37,6 +35,8 @@ public enum ReportPage implements Page {
 
    CACHE("cache", "cache", "Cache", "Cache", true),
 
+   SQL("sql", "sql", "SQL", "SQL Report", true),
+ 
    DATABASE("database", "database", "Database", "Database", true);
 
    private String m_name;

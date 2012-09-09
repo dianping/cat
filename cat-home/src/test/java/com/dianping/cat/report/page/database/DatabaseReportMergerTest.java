@@ -23,13 +23,15 @@ public class DatabaseReportMergerTest {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
+		//Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), merger.getDatabaseReport().toString().replaceAll("\r", ""));
+		
 		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), merger.getDatabaseReport().toString().replaceAll("\\s*", ""));
 		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""), reportNew.toString().replaceAll("\\s*", ""));
 		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""), reportOld.toString().replaceAll("\\s*", ""));
 	}
 
 	@Test
-	public void testMergeAllIp() throws Exception {
+	public void testMergeAllDomain() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("DatabaseReportOld.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("DatabaseReportNew.xml"), "utf-8");
 		DatabaseReport reportOld = new DefaultDomParser().parse(oldXml);
@@ -46,6 +48,8 @@ public class DatabaseReportMergerTest {
 
 		String actual = new DefaultXmlBuilder().buildXml(merger.getDatabaseReport());
 
+	//	Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), actual.replaceAll("\r", ""));
+		
 		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), actual.replaceAll("\\s*", ""));
 		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""), reportOld.toString().replaceAll("\\s*", ""));
 		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""), reportNew.toString().replaceAll("\\s*", ""));

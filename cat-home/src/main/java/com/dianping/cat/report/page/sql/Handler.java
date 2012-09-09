@@ -1,96 +1,79 @@
 package com.dianping.cat.report.page.sql;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.helper.DateDeserializer;
-import com.dianping.cat.job.sql.dal.SqlReportRecord;
-import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
-import com.dianping.cat.job.sql.dal.SqlReportRecordEntity;
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
+import com.dianping.cat.hadoop.dal.Dailyreport;
+import com.dianping.cat.hadoop.dal.DailyreportDao;
+import com.dianping.cat.hadoop.dal.DailyreportEntity;
+import com.dianping.cat.hadoop.dal.Report;
+import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.ReportEntity;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.graph.GraphBuilder;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.dianping.cat.report.page.model.sql.SqlReportMerger;
+import com.dianping.cat.report.page.model.spi.ModelPeriod;
+import com.dianping.cat.report.page.model.spi.ModelRequest;
+import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.sql.SqlMerger;
 import com.site.dal.jdbc.DalException;
-import com.site.dal.jdbc.Readset;
 import com.site.lookup.annotation.Inject;
+import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
+/**
+ * @author youyong
+ */
 public class Handler implements PageHandler<Context> {
-	@Inject
-	private GraphBuilder m_builder;
+
+	public static final long ONE_HOUR = 3600 * 1000L;
 
 	@Inject
-	private SqlReportRecordDao m_dao;
+	protected ReportDao m_reportDao;
+
+	@Inject
+	private SqlMerger m_sqlMerger;
+
+	@Inject
+	private DailyreportDao m_dailyreportDao;
 
 	@Inject
 	private JspViewer m_jspViewer;
 
-	// the computation of distribution is just a sum of all the date under the
-	// same domain and date
-	// String format key:value,key:value,... type of key and value int
-	public String compute(List<String> durationDistributions) {
-		Map<Integer, Integer> durations = new TreeMap<Integer, Integer>();
-		for (String s : durationDistributions) {
-			String distrubutions[] = s.split(",");
-			for (int i = 0; i < distrubutions.length; i++) {
-				String singleResult[] = distrubutions[i].split(":");
-				int duration = Integer.parseInt(singleResult[0]);
-				int count = Integer.parseInt(singleResult[1]);
-				Integer value = durations.get(duration);
-				durations.put(duration, value == null ? count : value + count);
-			}
-		}
-		StringBuilder sb = new StringBuilder();
-		Iterator<Entry<Integer, Integer>> it = durations.entrySet().iterator();
-		while (it.hasNext()) {
-			Map.Entry<Integer, Integer> entry = (Map.Entry<Integer, Integer>) it.next();
-			int key = entry.getKey();
-			int count = entry.getValue();
-			String result = key + ":" + count + ",";
-			sb.append(result);
-		}
-		return sb.substring(0, sb.length() - 1);
-	}
+	@Inject
+	private ServerConfigManager m_manager;
 
-	// the computation of duration is:duration=(hit*duration)/hit
-	public String computeDuration(List<String> durationOvertimes, List<String> hitsovOvrtimes) {
-		double[] sum = new double[13];
-		int[] totalHit = new int[13];
-		double[] average = new double[13];
-		for (int i = 0; i < durationOvertimes.size(); i++) {
-			String durations[] = durationOvertimes.get(i).split(",");
-			String hits[] = hitsovOvrtimes.get(i).split(",");
-			for (int j = 0; j <= 12; j++) {
-				String s_duration = durations[j].split(":")[1];
-				String s_hit = hits[j].split(":")[1];
-				double i_duration = Double.parseDouble(s_duration);
-				int i_hit = Integer.parseInt(s_hit);
-				totalHit[j] += i_hit;
-				sum[j] += i_duration * i_hit;
-			}
+	@Inject(type = ModelService.class, value = "sql")
+	private ModelService<SqlReport> m_service;
+
+	private SqlReport getHourlyReport(Payload payload) {
+		String domain = payload.getDomain();
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("date", date) //
+		      .setProperty("database", payload.getDatabase());
+
+		if (m_service.isEligable(request)) {
+			ModelResponse<SqlReport> response = m_service.invoke(request);
+			SqlReport report = response.getModel();
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable sql service registered for " + request + "!");
 		}
-		for (int m = 0; m <= 12; m++) {
-			average[m] = totalHit[m] == 0 ? 0 : sum[m] / (double) totalHit[m];
-		}
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i <= 12; i++) {
-			String s = i * 5 + ":" + average[i] + ",";
-			sb.append(s);
-		}
-		return sb.substring(0, sb.length() - 1);
 	}
 
 	@Override
@@ -106,133 +89,112 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setPage(ReportPage.SQL);
-		model.setDisplayDomain(payload.getDomain());
-		model.setAction(payload.getAction());
+		normalize(model, payload);
+		String database = payload.getDatabase();
 
 		switch (payload.getAction()) {
-		case VIEW:
-			showReport(model, payload);
+		case HISTORY_REPORT:
+			SqlReport historyReport = showSummarizeReport(model, payload);
+
+			long historyDuration = historyReport.getEndTime().getTime() - historyReport.getStartTime().getTime();
+			DisplaySqlReport displayHistorySql = new DisplaySqlReport().setDatabase(database).setDuration(
+			      historyDuration);
+
+			displayHistorySql.setSortBy(payload.getSortBy()).visitSqlReport(historyReport);
+			model.setReport(historyReport);
+			model.setDisplaySqlReport(displayHistorySql);
 			break;
-		case GRAPHS:
-			showGraphs(model, payload);
-			break;
-		case MOBLIE:
-			showReport(model, payload);
-			SqlReport report = model.getReport();
-			Gson gson = new GsonBuilder().registerTypeAdapter(Date.class, new DateDeserializer()).create();
-			model.setMobileResponse(gson.toJson(report));
+		case HOURLY_REPORT:
+			long hourlyDuration = ONE_HOUR;
+			if (ModelPeriod.CURRENT == payload.getPeriod()) {
+				hourlyDuration = System.currentTimeMillis() % ONE_HOUR;
+			}
+			SqlReport hourlyReport = getHourlyReport(payload);
+			DisplaySqlReport displaySql = new DisplaySqlReport().setDatabase(database).setDuration(hourlyDuration);
+
+			displaySql.setSortBy(payload.getSortBy()).visitSqlReport(hourlyReport);
+			model.setReport(hourlyReport);
+			model.setDisplaySqlReport(displaySql);
 			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
 
-	protected void showGraphs(Model model, Payload payload) {
-		int id = payload.getId();
-		try {
-			String statement = "";
-			String durationDistribution = "";
-			String durationOvertime = "";
-			String hitsovOvrtime = "";
-			String failureOvertime = "";
-			// Last hour is default
-			long date = payload.getDate();
-			if (payload.getPeriod().isCurrent()) {
-				date = date - 60 * 60 * 1000;
-			}
-			// when id is 0, will analyze all the data under this domain
-			if (id == 0) {
-				List<SqlReportRecord> allRecords = m_dao.findAllByDomainAndDate(payload.getDomain(), new Date(date),
-				      SqlReportRecordEntity.READSET_FULL);
-				List<String> durationDistributions = new ArrayList<String>();
-				List<String> durationOvertimes = new ArrayList<String>();
-				List<String> hitsovOvrtimes = new ArrayList<String>();
-				List<String> failureOvertimes = new ArrayList<String>();
-				for (SqlReportRecord record : allRecords) {
-					durationDistributions.add(record.getDurationDistribution());
-					durationOvertimes.add(record.getDurationOverTime());
-					hitsovOvrtimes.add(record.getHitsOverTime());
-					failureOvertimes.add(record.getFailureOverTime());
-				}
-				// summary all the result
-				durationDistribution = compute(durationDistributions);
-				hitsovOvrtime = compute(hitsovOvrtimes);
-				failureOvertime = compute(failureOvertimes);
-				durationOvertime = computeDuration(durationOvertimes, hitsovOvrtimes);
-			} else {
-				SqlReportRecord record = m_dao.findByPK(id, SqlReportRecordEntity.READSET_FULL);
-				statement = record.getStatement();
-				durationDistribution = record.getDurationDistribution();
-				durationOvertime = record.getDurationOverTime();
-				hitsovOvrtime = record.getHitsOverTime();
-				failureOvertime = record.getFailureOverTime();
-			}
+	public void normalize(Model model, Payload payload) {
+		Action action = payload.getAction();
+		model.setAction(action);
+		model.setPage(ReportPage.SQL);
 
-			String graph1 = m_builder.build(new SqlGraphPayload(0, "SQL Exeture Time Distribution", "Duration (ms)",
-			      "Count", durationDistribution));
-			String graph2 = m_builder.build(new SqlGraphPayload(1, "SQL Hits Over One Hour", "Time (min)", "Count",
-			      hitsovOvrtime));
-			String graph3 = m_builder.build(new SqlGraphPayload(2, "SQL Exeture Average Time Over One Hour", "Time (min)",
-			      "Average Duration (ms)", durationOvertime));
-			String graph4 = m_builder.build(new SqlGraphPayload(3, "SQL Failures Over One Hour", "Time (min)", "Count",
-			      failureOvertime));
-
-			model.setGraph1(graph1);
-			model.setGraph2(graph2);
-			model.setGraph3(graph3);
-			model.setGraph4(graph4);
-			model.setStatement(statement);
-		} catch (DalException e) {
-			Cat.logError(e);
+		if (StringUtils.isEmpty(payload.getDomain())) {
+			payload.setDomain(m_manager.getConsoleDefaultDomain());
+		}
+		if (StringUtils.isEmpty(payload.getDatabase())) {
+			payload.setDatabase(CatString.ALL_Database);
+		}
+		model.setDisplayDomain(payload.getDomain());
+		model.setDatabase(payload.getDatabase());
+		
+		if (payload.getPeriod().isFuture()) {
+			model.setLongDate(payload.getCurrentDate());
+		} else {
+			model.setLongDate(payload.getDate());
+		}
+		if (action == Action.HISTORY_REPORT) {
+			String type = payload.getReportType();
+			if (type == null || type.length() == 0) {
+				payload.setReportType("day");
+			}
+			model.setReportType(payload.getReportType());
+			payload.computeStartDate();
+			if (!payload.isToday()) {
+				payload.setYesterdayDefault();
+			}
+			model.setLongDate(payload.getDate());
+			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
 	}
 
-	protected void showReport(Model model, Payload payload) {
-		SqlReport report = new SqlReport();
-		report.setSortBy(payload.getSortBy());
+	private SqlReport showSummarizeReport(Model model, Payload payload) {
+		SqlReport sqlReport = null;
 		String domain = payload.getDomain();
-		long startDate = payload.getDate();
-		model.setLongDate(startDate);
-		if (payload.getPeriod().isCurrent()) {
-			startDate = startDate - 60 * 60 * 1000;
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		Date currentDayStart = TaskHelper.todayZero(new Date());
+
+		if (currentDayStart.getTime() == start.getTime()) {
+			try {
+				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "sql",
+				      ReportEntity.READSET_FULL);
+				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "sql",
+				      ReportEntity.READSET_DOMAIN_NAME);
+
+				Set<String> sqls = new HashSet<String>();
+				for (Report report : allReports) {
+					sqls.add(report.getDomain());
+				}
+				sqlReport = m_sqlMerger.mergeForDaily(domain, reports, sqls);
+			} catch (DalException e) {
+				Cat.logError(e);
+			}
+		} else {
+			try {
+				List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "sql",
+				      DailyreportEntity.READSET_FULL);
+				SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
+				for (Dailyreport report : reports) {
+					String xml = report.getContent();
+					SqlReport reportModel = DefaultSaxParser.parse(xml);
+					reportModel.accept(merger);
+				}
+				sqlReport = merger.getSqlReport();
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
-		Date transactiondate = new Date(startDate);
-		List<String> domains = new ArrayList<String>();
-		Readset<SqlReportRecord> domainSet = SqlReportRecordEntity.READSET_DOMAIN;
 
-		List<SqlReportModel> sqlRecordModels = new ArrayList<SqlReportModel>();
-		try {
-			List<SqlReportRecord> recordsForDomain = m_dao.findAllDistinctByDate(transactiondate, domainSet);
+		sqlReport.setStartTime(start);
+		sqlReport.setEndTime(end);
 
-			if (recordsForDomain != null) {
-				for (SqlReportRecord record : recordsForDomain) {
-					domains.add(record.getDomain());
-				}
-			} else {
-				if (domain != null) {
-					domains.add(domain);
-				}
-			}
-			if ((domain == null || domain.length() == 0) && domains.size() > 0) {
-				domain = domains.get(0);
-			}
-
-			List<SqlReportRecord> reportRecords = m_dao.findAllByDomainAndDate(domain, transactiondate,
-			      SqlReportRecordEntity.READSET_FULL);
-			if (reportRecords != null) {
-				for (SqlReportRecord record : reportRecords) {
-					sqlRecordModels.add(new SqlReportModel(record));
-				}
-			}
-
-			if (domain != null) {
-				reportRecords = m_dao.findAllByDomainAndDate(domain, transactiondate, SqlReportRecordEntity.READSET_FULL);
-			}
-			report.setDomain(domain).setDomains(domains).setReportRecords(sqlRecordModels);
-			report.setStartTime(new Date(startDate)).setEndTime(new Date(startDate + 60 * 60 * 1000 - 100));
-			model.setReport(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
+		return sqlReport;
 	}
 }

@@ -91,6 +91,10 @@
 			<implementation>com.dianping.cat.report.task.database.DatabaseMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.sql.SqlMerger</role>
+			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -211,6 +215,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.sql.SqlReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.sql.SqlReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.cross.CrossReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
 			<requirements>
@@ -267,6 +289,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.database.DatabaseReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.sql.SqlReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
@@ -597,6 +622,53 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>database-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>sql-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.sql.LocalSqlService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>sql-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.sql.HistoricalSqlService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>sql</role-hint>
+			<implementation>com.dianping.cat.report.page.model.sql.CompositeSqlService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>sql-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -1107,6 +1179,9 @@
 			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.page.model.JspViewer</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>event-local</role-hint>
 					<field-name>m_eventService</field-name>
@@ -1120,9 +1195,6 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>ip-local</role-hint>
 					<field-name>m_ipService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1159,7 +1231,16 @@
 					<role-hint>database-local</role-hint>
 					<field-name>m_databaseService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>sql-local</role-hint>
+					<field-name>m_sqlService</field-name>
+				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.event.LocalEventService</role>
@@ -1208,10 +1289,6 @@
 					<field-name>m_consumer</field-name>
 				</requirement>
 			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.logview.LocalLogViewService</role>
@@ -1336,28 +1413,51 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.sql.Handler</role>
-			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
+			<role>com.dianping.cat.report.page.model.sql.LocalSqlService</role>
+			<implementation>com.dianping.cat.report.page.model.sql.LocalSqlService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.graph.GraphBuilder</role>
+					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.sql.JspViewer</role>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.job.sql.dal.SqlReportRecordDao</role>
-			<implementation>com.dianping.cat.job.sql.dal.SqlReportRecordDao</implementation>
+			<role>com.dianping.cat.report.page.sql.Handler</role>
+			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.sql.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>sql</role-hint>
+					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.sql.SqlMerger</role>
+			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.sql.JspViewer</role>
@@ -1459,6 +1559,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.database.DatabaseReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.sql.SqlReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
@@ -1634,6 +1737,24 @@
 		<component>
 			<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
 			<implementation>com.dianping.cat.report.task.database.DatabaseMerger</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.sql.SqlReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.sql.SqlReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>

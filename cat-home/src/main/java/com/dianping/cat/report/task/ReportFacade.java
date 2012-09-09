@@ -19,6 +19,7 @@ import com.dianping.cat.report.task.event.EventReportBuilder;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.site.lookup.annotation.Inject;
 
@@ -48,6 +49,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 	
 	@Inject
 	private DatabaseReportBuilder m_databaseReportBuilder;
+	
+	@Inject
+	private SqlReportBuilder m_sqlReportBuilder;
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -98,6 +102,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("matrix", m_matrixReportBuilder);
 		m_reportBuilders.put("cross", m_crossReportBuilder);
 		m_reportBuilders.put("database", m_databaseReportBuilder);
+		m_reportBuilders.put("sql", m_sqlReportBuilder);
 	}
 
 	public boolean redoTask(int taskID) {

@@ -26,7 +26,7 @@
       <page name="model" title="Model" path="model" standalone="false">
         <description>Service Model</description>
       </page>
-      <page name="sql" title="SQL" path="sql" standalone="false">
+      <page name="sql" title="SQL" path="sql">
         <description>SQL Report</description>
       </page>
       <page name="heatmap" title="Heatmap" path="heatmap" standalone="false">

@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.database.model.entity.Method;
 import com.dianping.cat.consumer.database.model.entity.Table;
 import com.dianping.cat.consumer.database.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.database.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.consumer.sqlparse.SqlParseManager;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Event;
@@ -34,6 +35,9 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 
 	@Inject
 	private ReportDao m_reportDao;
+
+	@Inject
+	private SqlParseManager m_sqlParseManeger;
 
 	private Map<String, DatabaseReport> m_reports = new HashMap<String, DatabaseReport>();
 
@@ -105,7 +109,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		String type = t.getType();
 
 		if ("SQL".equals(type)) {
-			DatabaseItem item = buildDataBaseItem(t);
+			DatabaseItem item = buildDataBaseItem(tree.getDomain(), t);
 			if (item != null) {
 				String sqlName = t.getName();
 				String domainName = tree.getDomain();
@@ -240,70 +244,33 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 
 	}
 
-	private DatabaseItem buildDataBaseItem(Transaction t) {
+	private DatabaseItem buildDataBaseItem(String domain, Transaction t) {
 		List<Message> messages = t.getChildren();
 		String connection = null;
 		String method = null;
-		String sql = (String) t.getData();
+		String sqlName = t.getName();
+		String sqlStatement = (String) t.getData();
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("SQL")) {
+				if (type.equals("SQL.Method")) {
 					method = message.getName();
-				} else if (type.equals("SQL.database")) {
+				} else if (type.equals("SQL.Database")) {
 					connection = message.getName();
 				}
 			}
 		}
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
-			String tables = getTableNamesBySql(sql);
+			String tables = m_sqlParseManeger.getTableNames(sqlName, sqlStatement, domain);
 			String database = getDataBaseName(connection);
 
 			item.setDatabase(database).setTables(tables).setMethod(method).setConnectionUrl(connection);
 			return item;
 		}
 		return null;
-	}
-
-	public String getTableNamesBySql(String sql) {
-		sql = sql.toLowerCase().trim();
-		String[] tabs = sql.split("\\s{1,}");
-		char c = sql.charAt(0);
-
-		if (c == 's') {
-			int index = findByContent(tabs, "from");
-			if (index > 0) {
-				return tabs[index + 1];
-			}
-		} else if (c == 'u') {
-			return tabs[1];
-		} else if (c == 'i') {
-			int index = findByContent(tabs, "into");
-			if (index > 0) {
-				return tabs[index + 1];
-			}
-		} else if (c == 'd') {
-			int index = findByContent(tabs, "from");
-			if (index > 0) {
-				return tabs[index + 1];
-			}
-		} else if (c == 'c') {
-			return "Call";
-		}
-
-		return "UnknownTable";
-	}
-
-	private int findByContent(String tabs[], String content) {
-		for (int i = 0; i < tabs.length; i++) {
-			if (tabs[i].equals(content)) {
-				return i;
-			}
-		}
-		return 0;
 	}
 
 	private String getDataBaseName(String url) {
