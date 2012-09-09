@@ -69,13 +69,6 @@ public class HistoryGraphs {
 				}
 			}
 		}
-		int test = 0;
-		for(int i=0;i<total_count.length;i++){
-			if(total_count[i]>-1){
-				test+=total_count[i];
-			}
-		}
-		System.out.println("Event total:"+test);
 		
 		result.put("total_count", total_count);
 		result.put("failure_count", failure_count);
@@ -118,12 +111,21 @@ public class HistoryGraphs {
 		String ip = model.getIpAddress();
 		String queryIP = "All".equals(ip) == true ? "all" : ip;
 		List<Graph> events = new ArrayList<Graph>();
-		try {
-			events = this.m_graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event",
-			      GraphEntity.READSET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
+		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + ONE_HOUR) {
+			try {
+				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain,
+				      "event", GraphEntity.READSET_FULL);
+				events.add(graph);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
+//		try {
+//			events = this.m_graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event",
+//			      GraphEntity.READSET_FULL);
+//		} catch (Exception e) {
+//			Cat.logError(e);
+//		}
 		Map<String, double[]> result = buildGraphDatas(start, end, type, name, events);
 		return result;
 	}

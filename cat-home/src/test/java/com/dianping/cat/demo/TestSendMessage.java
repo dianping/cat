@@ -78,6 +78,21 @@ public class TestSendMessage {
 		}
 		Thread.sleep(1000);
 	}
+	
+	@Test
+	public void sentHackPigenTransaction()throws Exception {
+		for (int i = 0; i < 200; i++) {
+			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.7.24:8080");
+			Cat.getProducer().logEvent("RemoteCall", "Pigeon",Message.SUCCESS,"MessageID");
+			t.addData("key and value");
+
+			Thread.sleep(1);
+			Cat.getManager().getThreadLocalMessageTree().setDomain("Pigeon");
+			Cat.getManager().getThreadLocalMessageTree().setMessageId("Cat-c0a81a38-374214-1203");
+			t.complete();
+		}
+	}
 
 	@Test
 	public void sendPigeonClientTransaction() throws Exception {
@@ -92,6 +107,7 @@ public class TestSendMessage {
 		for (int i = 0; i < 200; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
 			Cat.getProducer().newEvent("PigeonCall.server", "192.168.7.24:8080");
+			Cat.getProducer().logEvent("RemoteCall", "Test",Message.SUCCESS,"MessageID");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -284,7 +300,7 @@ public class TestSendMessage {
 		for (int k = 0; k < 5; k++) {
 			for (int i = 0; i < 100; i++) {
 				Transaction t = Cat.getProducer().newTransaction("SQL", "User.select" + i % 10);
-				Cat.getProducer().newEvent("SQL", "Select").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Method", "Select").setStatus(Message.SUCCESS);
 				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
 				      .setStatus(Message.SUCCESS);
 				t.addData("select * from hostinfo");
@@ -292,14 +308,14 @@ public class TestSendMessage {
 				t.complete();
 
 				Transaction t2 = Cat.getProducer().newTransaction("SQL", "User.insert" + i % 10);
-				Cat.getProducer().newEvent("SQL", "Update").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Method", "Update").setStatus(Message.SUCCESS);
 				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
 				      .setStatus(Message.SUCCESS);
 				t2.addData("update * from hostinfo");
 				t2.complete();
 
 				Transaction t3 = Cat.getProducer().newTransaction("SQL", "User.delete" + i % 10);
-				Cat.getProducer().newEvent("SQL", "Delete").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Method", "Delete").setStatus(Message.SUCCESS);
 				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
 				      .setStatus(Message.SUCCESS);
 				t3.addData("delete * from hostinfo");
@@ -315,7 +331,7 @@ public class TestSendMessage {
 		for (int k = 0; k < 5; k++) {
 			for (int i = 0; i < 100; i++) {
 				Transaction t = Cat.getProducer().newTransaction("SQL", "User.select" + i % 10);
-				Cat.getProducer().newEvent("SQL", "Select").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Method", "Select").setStatus(Message.SUCCESS);
 				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
 				      .setStatus(Message.SUCCESS);
 				t.addData("select * from hostinfo");
@@ -324,7 +340,7 @@ public class TestSendMessage {
 				t.complete();
 
 				Transaction t2 = Cat.getProducer().newTransaction("SQL", "User.insert" + i % 10);
-				Cat.getProducer().newEvent("SQL", "Update").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Method", "Update").setStatus(Message.SUCCESS);
 				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
 				      .setStatus(Message.SUCCESS);
 				t2.addData("update * from hostinfo");
@@ -332,7 +348,7 @@ public class TestSendMessage {
 				t2.complete();
 
 				Transaction t3 = Cat.getProducer().newTransaction("SQL", "User.delete" + i % 10);
-				Cat.getProducer().newEvent("SQL", "Delete").setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Method", "Delete").setStatus(Message.SUCCESS);
 				Cat.getProducer().newEvent("SQL.database", "jdbc:mysql://192.168.7.43:3306/database" + k)
 				      .setStatus(Message.SUCCESS);
 				t3.addData("delete * from hostinfo");

@@ -1,7 +1,6 @@
 function show(anchor, id) {
 	var cell = document.getElementById(id);
 	var text = anchor.innerHTML;
-	
 	if (text == '[:: show ::]') {
 		anchor.innerHTML = '[:: hide ::]';
 		

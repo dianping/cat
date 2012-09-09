@@ -568,6 +568,22 @@
 					ORDER BY <FIELD name='period'/> ASC 
 				]]></statement>
 			</query>
+			<query name="find-singal-by-domain-name-ip-duration" type="SELECT">
+				<param name="start-date" />
+				<param name="ip" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name}
+					AND <FIELD name='domain'/> = ${domain}
+					<IF type='NOT_NULL' field='ip'>
+						AND  <FIELD name='ip'/> = ${ip}
+					</IF>
+					AND <FIELD name='period'/> = ${start-date}
+				]]></statement>
+			</query>
 			<query name="find-ip-by-domain-name-duration" type="SELECT"
 				multiple="true">
 				<param name="start-date" />
@@ -672,6 +688,14 @@
 				WHERE <FIELD name='period'/> = ${period} 
 				]]></statement>
 	</query>
+    </query-defs>
+  </entity>
+  <entity name="sqltable">
+    <query-defs>
+      <query name="find-all-by-domain" type="SELECT">
+        <param name="domain" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='domain'/> = ${domain}]]></statement>
+      </query>
     </query-defs>
   </entity>
 </entities>
