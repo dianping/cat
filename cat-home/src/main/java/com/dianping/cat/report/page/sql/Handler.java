@@ -20,11 +20,11 @@ import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.sql.SqlMerger;
 import com.site.dal.jdbc.DalException;
@@ -128,6 +128,7 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isEmpty(payload.getDomain())) {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
+		
 		if (StringUtils.isEmpty(payload.getDatabase())) {
 			payload.setDatabase(CatString.ALL_Database);
 		}
