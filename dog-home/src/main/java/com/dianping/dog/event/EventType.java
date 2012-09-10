@@ -1,5 +1,8 @@
 package com.dianping.dog.event;
 
-public interface EventType {
+public enum EventType {
+	
+	ProblemEvent,
+	ProblemViolationEvent
 	
 }

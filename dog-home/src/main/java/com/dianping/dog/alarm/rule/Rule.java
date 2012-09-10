@@ -1,7 +1,16 @@
 package com.dianping.dog.alarm.rule;
 
-public interface Rule {
-	public String getName();
+import com.dianping.dog.alarm.entity.RuleEntity;
+import com.dianping.dog.event.Event;
 
-	public boolean apply(RuleContext ctx);
+public interface Rule {
+	
+	public boolean init(RuleEntity entity);
+	
+	public String getName();
+	
+	public boolean isEligible(Event event);
+
+	public boolean apply(Event event);
+			
 }

@@ -2,7 +2,9 @@ package com.dianping.dog.alarm.data;
 
 import java.util.Date;
 
-public interface DataEvent {
+import com.dianping.dog.event.Event;
+
+public interface DataEvent extends Event{
 	public Date getTimestamp();
 
 	public String getDomain();
