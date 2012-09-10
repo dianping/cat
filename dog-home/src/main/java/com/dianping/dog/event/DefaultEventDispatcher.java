@@ -11,7 +11,7 @@ public class DefaultEventDispatcher implements EventDispatcher {
 
 	@Override
 	public void dispatch(Event event) {
-		List<EventListener<Event>> listeners = m_registry.getListeners(event.getType());
+		List<EventListener<Event>> listeners = m_registry.getListeners(event.getEventType());
 
 		if (listeners != null && !listeners.isEmpty()) {
 			for (EventListener<Event> listener : listeners) {
@@ -23,7 +23,7 @@ public class DefaultEventDispatcher implements EventDispatcher {
 				}
 			}
 		} else {
-			Cat.getProducer().logEvent("UnhandledEvent", event.getType().getClass().getName(), "0", null);
+			Cat.getProducer().logEvent("UnhandledEvent", event.getEventType().getClass().getName(), "0", null);
 		}
 	}
 }

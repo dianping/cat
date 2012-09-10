@@ -5,8 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultEventListenerRegistry implements EventListenerRegistry,EventListener<RuleEvent> {
-	
+public class DefaultEventListenerRegistry implements EventListenerRegistry {
 	private Map<EventType, List<EventListener<Event>>> m_map = new HashMap<EventType, List<EventListener<Event>>>();
 
 	@Override
@@ -35,8 +34,4 @@ public class DefaultEventListenerRegistry implements EventListenerRegistry,Event
 		}
 	}
 
-	@Override
-   public void onEvent(RuleEvent event) {
-	   
-   }
 }
