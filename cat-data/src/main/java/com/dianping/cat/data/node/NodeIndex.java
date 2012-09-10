@@ -1,8 +1,8 @@
 package com.dianping.cat.data.node;
 
-import com.dianping.bee.engine.spi.index.Index;
-import com.dianping.bee.engine.spi.meta.AbstractIndexMeta;
-import com.dianping.bee.engine.spi.meta.IndexMeta;
+import com.dianping.bee.engine.spi.AbstractIndexMeta;
+import com.dianping.bee.engine.spi.Index;
+import com.dianping.bee.engine.spi.IndexMeta;
 
 public class NodeIndex extends AbstractIndexMeta<NodeColumn> implements IndexMeta {
 	public static final NodeIndex IDX_StartTime = new NodeIndex(NodeColumn.StartTime, false);

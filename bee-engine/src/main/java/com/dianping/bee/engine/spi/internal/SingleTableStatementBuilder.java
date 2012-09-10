@@ -13,8 +13,8 @@ import com.alibaba.cobar.parser.ast.fragment.tableref.TableReference;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
 import com.alibaba.cobar.parser.util.Pair;
 import com.alibaba.cobar.parser.visitor.EmptySQLASTVisitor;
+import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.site.lookup.annotation.Inject;
 
 public class SingleTableStatementBuilder extends EmptySQLASTVisitor {

@@ -2,9 +2,9 @@ package com.dianping.bee.engine.spi.internal;
 
 import java.util.List;
 
+import com.dianping.bee.engine.RowSet;
+import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.PreparedStatement;
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.RowSet;
 
 public class SingleTablePreparedStatement extends SingleTableStatement implements PreparedStatement {
 	private Object[] m_params;

@@ -1,6 +1,6 @@
 package com.dianping.cat.data.node;
 
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.ColumnMeta;
 
 public enum NodeColumn implements ColumnMeta {
 	StartTime(String.class), // 2012082213(for hour)

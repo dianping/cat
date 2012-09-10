@@ -14,7 +14,6 @@
  */
 package com.dianping.bee.engine.spi;
 
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>

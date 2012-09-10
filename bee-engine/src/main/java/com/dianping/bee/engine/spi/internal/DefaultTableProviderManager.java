@@ -8,9 +8,9 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
+import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.dianping.bee.engine.spi.session.SessionManager;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 

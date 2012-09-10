@@ -13,7 +13,7 @@ import com.alibaba.cobar.net.handler.FrontendQueryHandler;
 import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.server.session.BlockingSession;
 import com.alibaba.cobar.server.session.NonBlockingSession;
-import com.dianping.bee.engine.spi.session.SessionManager;
+import com.dianping.bee.engine.spi.SessionManager;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>

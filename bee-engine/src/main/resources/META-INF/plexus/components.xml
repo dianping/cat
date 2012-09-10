@@ -1,28 +1,41 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.bee.engine.QueryService</role>
+			<implementation>com.dianping.bee.engine.internal.DefaultQueryService</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.SessionManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.StatementManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.bee.server.SimpleServer</role>
 			<implementation>com.dianping.bee.server.SimpleServer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
 			<role-hint>information_schema</role-hint>
-			<implementation>com.dianping.bee.server.is.InformationSchemaDatabaseProvider</implementation>
+			<implementation>com.dianping.bee.server.mysql.InformationSchemaDatabaseProvider</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.server.is.schema.SchemataIndexer</role>
-			<implementation>com.dianping.bee.server.is.schema.SchemataIndexer</implementation>
+			<role>com.dianping.bee.server.mysql.SchemataIndexer</role>
+			<implementation>com.dianping.bee.server.mysql.SchemataIndexer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.session.SessionManager</role>
-			<implementation>com.dianping.bee.engine.spi.session.DefaultSessionManager</implementation>
+			<role>com.dianping.bee.engine.spi.SessionManager</role>
+			<implementation>com.dianping.bee.engine.spi.internal.DefaultSessionManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.TableProviderManager</role>
 			<implementation>com.dianping.bee.engine.spi.internal.DefaultTableProviderManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.session.SessionManager</role>
+					<role>com.dianping.bee.engine.spi.SessionManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -40,8 +53,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.row.RowContext</role>
-			<implementation>com.dianping.bee.engine.spi.row.DefaultRowContext</implementation>
+			<role>com.dianping.bee.engine.spi.RowContext</role>
+			<implementation>com.dianping.bee.engine.spi.internal.DefaultRowContext</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.internal.SingleTableStatement</role>
@@ -49,7 +62,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.row.RowContext</role>
+					<role>com.dianping.bee.engine.spi.RowContext</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -80,7 +93,7 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.row.RowContext</role>
+					<role>com.dianping.bee.engine.spi.RowContext</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -106,33 +119,33 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.handler.internal.SelectHandler</role>
+					<role>com.dianping.bee.engine.spi.handler.SelectHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.handler.internal.ShowHandler</role>
+					<role>com.dianping.bee.engine.spi.handler.ShowHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.handler.internal.DescHandler</role>
+					<role>com.dianping.bee.engine.spi.handler.DescHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.handler.internal.UseHandler</role>
+					<role>com.dianping.bee.engine.spi.handler.UseHandler</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.bee.engine.spi.handler.internal.PrepareHandler</role>
+					<role>com.dianping.bee.engine.spi.handler.PrepareHandler</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.handler.internal.UseHandler</role>
-			<implementation>com.dianping.bee.engine.spi.handler.internal.UseHandler</implementation>
+			<role>com.dianping.bee.engine.spi.handler.UseHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.UseHandler</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.handler.internal.ShowHandler</role>
-			<implementation>com.dianping.bee.engine.spi.handler.internal.ShowHandler</implementation>
+			<role>com.dianping.bee.engine.spi.handler.ShowHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.ShowHandler</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.handler.internal.DescHandler</role>
-			<implementation>com.dianping.bee.engine.spi.handler.internal.DescHandler</implementation>
+			<role>com.dianping.bee.engine.spi.handler.DescHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.DescHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.TableProviderManager</role>
@@ -140,8 +153,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.handler.internal.SelectHandler</role>
-			<implementation>com.dianping.bee.engine.spi.handler.internal.SelectHandler</implementation>
+			<role>com.dianping.bee.engine.spi.handler.SelectHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.SelectHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.StatementManager</role>
@@ -149,8 +162,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.handler.internal.PrepareHandler</role>
-			<implementation>com.dianping.bee.engine.spi.handler.internal.PrepareHandler</implementation>
+			<role>com.dianping.bee.engine.spi.handler.PrepareHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.PrepareHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.StatementManager</role>
