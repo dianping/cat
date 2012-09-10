@@ -54,7 +54,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 		MatrixReport matrixReport = merger.getMatrixReport();
 
 		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+		      timestamp + 60 * 60 * 1000), null, "matrix", ReportEntity.READSET_DOMAIN_NAME);
 
 		if (matrixReport != null && historyReports != null) {
 			Set<String> domainNames = matrixReport.getDomainNames();

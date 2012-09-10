@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
-import com.dianping.cat.message.spi.MessageStatistics;
+ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.GcInfo;
@@ -26,6 +26,8 @@ import com.dianping.cat.status.model.transform.BaseVisitor;
 
 class StatusInfoCollector extends BaseVisitor {
 	private MessageStatistics m_statistics;
+
+	private boolean m_dumpLocked;
 
 	public StatusInfoCollector(MessageStatistics statistics) {
 		m_statistics = statistics;
@@ -92,6 +94,11 @@ class StatusInfoCollector extends BaseVisitor {
 		}
 
 		return isInstanceOfInterface(clazz.getSuperclass(), interfaceName);
+	}
+
+	public StatusInfoCollector setDumpLocked(boolean dumpLocked) {
+		m_dumpLocked = dumpLocked;
+		return this;
 	}
 
 	@Override
@@ -205,15 +212,23 @@ class StatusInfoCollector extends BaseVisitor {
 	@Override
 	public void visitThread(ThreadsInfo thread) {
 		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
-		ThreadInfo[] threads = bean.dumpAllThreads(true, true);
+
+		bean.setThreadContentionMonitoringEnabled(true);
+
+		ThreadInfo[] threads;
+
+		if (m_dumpLocked) {
+			threads = bean.dumpAllThreads(true, true);
+		} else {
+			threads = bean.dumpAllThreads(false, false);
+		}
 
 		thread.setCount(bean.getThreadCount());
 		thread.setDaemonCount(bean.getDaemonThreadCount());
 		thread.setPeekCount(bean.getPeakThreadCount());
 		thread.setTotalStartedCount((int) bean.getTotalStartedThreadCount());
 		thread.setCatThreadCount(countThreadsByPrefix(threads, "Cat-"));
-		thread.setPigeonThreadCount(countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-",
-		      "Client-ResponseProcessor"));
+		thread.setPigeonThreadCount(countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-", "Client-ResponseProcessor"));
 
 		int jbossThreadsCount = countThreadsByPrefix(threads, "http-");
 		int jettyThreadsCount = countThreadsBySubstring(threads, "@qtp");

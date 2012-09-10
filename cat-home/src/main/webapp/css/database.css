@@ -1,0 +1,28 @@
+.database {
+	font-size: small;
+}
+.database tr th{
+	text-align:right;
+}
+.database .odd td {
+	background-color: #eee;
+	font-size: small;
+	text-align:right;
+}
+
+.database .even td {
+	background-color: white;
+	font-size: small;
+	text-align:right;
+}
+.database th .left{
+	text-align:left;
+}
+
+.database tr .left{
+	text-align:left;
+}
+
+.database tr .left{
+	text-align:left;
+}

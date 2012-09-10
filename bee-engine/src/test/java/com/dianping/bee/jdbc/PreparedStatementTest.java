@@ -44,17 +44,43 @@ public class PreparedStatementTest extends ComponentTestCase {
 		props.setProperty("user", "test");
 		props.setProperty("password", "test");
 		props.setProperty("useServerPrepStmts", "true");
-		String sql = "select type, sum(failures) from transaction where domain=? and starttime=?";
+		String sql = "select type, sum(failures),domain,starttime from transaction where domain=? and starttime=?";
 
 		Class.forName(driver).newInstance();
 		DriverManager.setLoginTimeout(600);
 		Connection conn = DriverManager.getConnection(url + dbName, props);
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		Assert.assertNotNull(stmt);
-		stmt.setString(1, "MobiApi");
+		stmt.setString(1, "MobileApi");
 		stmt.setString(2, "20120822");
 		ResultSet rs = stmt.executeQuery();
-		Assert.assertEquals(2, rs.getMetaData().getColumnCount());
+		Assert.assertEquals(4, rs.getMetaData().getColumnCount());
+		Assert.assertNotNull(rs);
+		rs.last();
+		Assert.assertTrue(rs.getRow() > 0);
+		displayResultSet(rs);
+		conn.close();
+	}
+
+	@Test
+	public void testSingleQueryWithoutParameter() throws InstantiationException, IllegalAccessException,
+	      ClassNotFoundException, SQLException {
+		String url = "jdbc:mysql://localhost:2330/";
+		String dbName = "cat";
+		String driver = "com.mysql.jdbc.Driver";
+		Properties props = new Properties();
+		props.setProperty("user", "test");
+		props.setProperty("password", "test");
+		props.setProperty("useServerPrepStmts", "true");
+		String sql = "select type, sum(failures) ,domain,starttime from transaction";
+
+		Class.forName(driver).newInstance();
+		DriverManager.setLoginTimeout(600);
+		Connection conn = DriverManager.getConnection(url + dbName, props);
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		Assert.assertNotNull(stmt);
+		ResultSet rs = stmt.executeQuery();
+		Assert.assertEquals(4, rs.getMetaData().getColumnCount());
 		Assert.assertNotNull(rs);
 		rs.last();
 		Assert.assertTrue(rs.getRow() > 0);

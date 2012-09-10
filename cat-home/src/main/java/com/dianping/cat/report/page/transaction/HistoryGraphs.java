@@ -13,7 +13,6 @@ import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
-import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 
@@ -132,16 +131,18 @@ public class HistoryGraphs {
 		String type = payload.getType();
 		String name = payload.getName();
 		String ip = model.getIpAddress();
-		String queryIP = "All".equals(ip) == true ? "all" : ip;
+		String queryIp = "All".equals(ip) == true ? "all" : ip;
 		List<Graph> graphs = new ArrayList<Graph>();
 
-		try {
-			graphs = this.m_graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "transaction",
-			      GraphEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
+		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + ONE_HOUR) {
+			try {
+				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
+				      "transaction", GraphEntity.READSET_FULL);
+				graphs.add(graph);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
-
 		Map<String, double[]> result = buildGraphDatas(start, end, type, name, graphs);
 		return result;
 	}

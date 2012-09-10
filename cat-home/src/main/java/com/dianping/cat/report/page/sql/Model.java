@@ -3,23 +3,17 @@ package com.dianping.cat.report.page.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
 public class Model extends AbstractReportModel<Action, Context> {
-	private String m_graph1;
-
-	private String m_graph2;
-
-	private String m_graph3;
-
-	private String m_graph4;
-
-	private String m_mobileResponse;
 
 	private SqlReport m_report;
+	
+	private DisplaySqlReport m_displaySqlReport;
 
-	private String m_statement;
+	private String m_database;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -27,9 +21,17 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.HOURLY_REPORT;
 	}
 
+	public List<String> getDatabases(){
+		if (m_report == null) {
+			return new ArrayList<String>();
+		} else {
+			return StringSortHelper.sortDomain(m_report.getDatabaseNames());
+		}
+	}
+	
 	@Override
 	public String getDomain() {
 		if (m_report == null) {
@@ -38,69 +40,39 @@ public class Model extends AbstractReportModel<Action, Context> {
 			return m_report.getDomain();
 		}
 	}
+	
+	public SqlReport getReport() {
+		return m_report;
+	}
+
+	public void setReport(SqlReport sqlReport) {
+		m_report = sqlReport;
+	}
+
+	public DisplaySqlReport getDisplaySqlReport() {
+		return m_displaySqlReport;
+	}
+
+	public void setDisplaySqlReport(DisplaySqlReport displaySqlReport) {
+		m_displaySqlReport = displaySqlReport;
+	}
 
 	@Override
 	public List<String> getDomains() {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
-			return StringSortHelper.sortDomain(m_report.getDomains());
+			return StringSortHelper.sortDomain(m_report.getDomainNames());
 		}
 	}
 
-	public String getGraph1() {
-		return m_graph1;
-	}
+	public void setDatabase(String database) {
+		m_database = database;
+   }
 
-	public String getGraph2() {
-		return m_graph2;
+	public String getDatabase() {
+		return m_database;
 	}
-
-	public String getGraph3() {
-		return m_graph3;
-	}
-
-	public String getGraph4() {
-		return m_graph4;
-	}
-
-	public String getMobileResponse() {
-		return m_mobileResponse;
-	}
-
-	public SqlReport getReport() {
-		return m_report;
-	}
-
-	public String getStatement() {
-		return m_statement;
-	}
-
-	public void setGraph1(String graph1) {
-		m_graph1 = graph1;
-	}
-
-	public void setGraph2(String graph2) {
-		m_graph2 = graph2;
-	}
-
-	public void setGraph3(String graph3) {
-		m_graph3 = graph3;
-	}
-
-	public void setGraph4(String graph4) {
-		m_graph4 = graph4;
-	}
-
-	public void setMobileResponse(String mobileResponse) {
-		m_mobileResponse = mobileResponse;
-	}
-
-	public void setReport(SqlReport report) {
-		this.m_report = report;
-	}
-
-	public void setStatement(String statement) {
-		m_statement = statement;
-	}
+	
+	
 }

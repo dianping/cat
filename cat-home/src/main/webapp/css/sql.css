@@ -1,25 +1,28 @@
-.sql-table tr th {
-	text-align: left;
-}
-
-.sql-table {
-	width: auto;
+.sql {
 	font-size: small;
 }
-
-.sql-table .odd td {
+.sql tr th{
+	text-align:right;
+}
+.sql .odd td {
 	background-color: #eee;
 	font-size: small;
 	text-align:right;
 }
 
-.sql-table .even td {
+.sql .even td {
 	background-color: white;
 	font-size: small;
 	text-align:right;
 }
+.sql th .left{
+	text-align:left;
+}
 
-.sql-title {
-	background-color: #F2F2F2;
-	font-size: medium;
+.sql tr .left{
+	text-align:left;
+}
+
+.sql tr .left{
+	text-align:left;
 }

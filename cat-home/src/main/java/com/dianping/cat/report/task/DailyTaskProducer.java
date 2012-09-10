@@ -44,25 +44,39 @@ public class DailyTaskProducer implements Runnable, Initializable {
 	@Inject
 	private TaskDao m_taskDao;
 
-	private boolean checkTaskGenerated(Date day) {
+	private boolean checkDatabaseTaskGenerated(Date day) {
+		List<Dailyreport> allReports = new ArrayList<Dailyreport>();
+
+		try {
+			allReports = m_dailyReportDao.findDatabaseAllByPeriod(day, new Date(day.getTime() + DAY),
+			      DailyreportEntity.READSET_DOMAIN_NAME);
+		} catch (DalException e) {
+			m_logger.warn("DailyTaskProducer isYesterdayTaskGenerated", e);
+		}
+
+		Set<String> databaseSet = getDatabaseSet(day, new Date(day.getTime() + DAY));
+		int total =  allReports.size();
+
+		if (total != databaseSet.size()) {
+			return false;
+		}
+		return true;
+	}
+
+	private boolean checkDomainTaskGenerated(Date day) {
 		List<Dailyreport> allReports = new ArrayList<Dailyreport>();
 
 		try {
 			allReports = m_dailyReportDao.findAllByPeriod(day, new Date(day.getTime() + DAY),
-			      DailyreportEntity.READSET_COUNT);
+			      DailyreportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			m_logger.warn("DailyTaskProducer isYesterdayTaskGenerated", e);
 		}
 
 		Set<String> domainSet = getDomainSet(day, new Date(day.getTime() + DAY));
-		int total = 0;
 		int domanSize = domainSet.size();
 		int nameSize = m_dailyReportNameSet.size();
-
-		// SQL Framework
-		if (allReports != null && allReports.size() > 0) {
-			total = allReports.get(0).getCount();
-		}
+		int total = allReports.size();
 
 		if (total != domanSize * nameSize) {
 			return false;
@@ -70,7 +84,38 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		return true;
 	}
 
-	private void generateDailyTasks(Date day) {
+	private void generateDatabaseTasks(Date day) {
+		Transaction t = Cat.newTransaction("System", "ProduceDatabaseReport");
+		try {
+			Set<String> databaseSet = getDatabaseSet(day, new Date(day.getTime() + DAY));
+
+			for (String domain : databaseSet) {
+				Task task = m_taskDao.createLocal();
+
+				task.setCreationDate(new Date());
+				task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+				task.setReportDomain(domain);
+				task.setReportName("database");
+				task.setReportPeriod(day);
+				task.setStatus(1);
+				task.setTaskType(TYPE_DAILY);
+				try {
+					m_taskDao.insert(task);
+				} catch (DalException e) {
+					Cat.logError(e);
+					t.setStatus(e);
+				}
+			}
+			t.setStatus(Message.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
+	}
+
+	private void generateDomainDailyTasks(Date day) {
 		Transaction t = Cat.newTransaction("System", "ProduceDailyReport");
 		try {
 			Set<String> domainSet = getDomainSet(day, new Date(day.getTime() + DAY));
@@ -103,6 +148,27 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		}
 	}
 
+	private Set<String> getDatabaseSet(Date start, Date end) {
+		List<Report> databaseNames = new ArrayList<Report>();
+		Set<String> databaseSet = new HashSet<String>();
+
+		try {
+			databaseNames = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, "database",
+			      ReportEntity.READSET_DOMAIN_NAME);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+
+		if (databaseNames == null || databaseNames.size() == 0) {
+			return databaseSet;
+		}
+
+		for (Report domainName : databaseNames) {
+			databaseSet.add(domainName.getDomain());
+		}
+		return databaseSet;
+	}
+
 	private Set<String> getDomainSet(Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
 		Set<String> domainSet = new HashSet<String>();
@@ -131,6 +197,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		m_dailyReportNameSet.add("problem");
 		m_dailyReportNameSet.add("matrix");
 		m_dailyReportNameSet.add("cross");
+		m_dailyReportNameSet.add("sql");
 	}
 
 	@Override
@@ -138,8 +205,11 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		while (true) {
 			try {
 				Date yestoday = TaskHelper.yesterdayZero(new Date());
-				if (!checkTaskGenerated(yestoday)) {
-					generateDailyTasks(yestoday);
+				if (!checkDomainTaskGenerated(yestoday)) {
+					generateDomainDailyTasks(yestoday);
+				}
+				if (!checkDatabaseTaskGenerated(yestoday)) {
+					generateDatabaseTasks(yestoday);
 				}
 				Thread.sleep(10 * 60 * 1000);
 			} catch (Exception e) {

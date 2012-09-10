@@ -10,6 +10,7 @@ import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.common.CommonAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.dump.DumpChannelManager;
 import com.dianping.cat.consumer.dump.DumpUploader;
@@ -22,10 +23,13 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.handler.DefaultProblemHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongExecutionHandler;
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
+import com.dianping.cat.consumer.sqlparse.SqlParseManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.dal.HostinfoDao;
 import com.dianping.cat.hadoop.dal.LogviewDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
+import com.dianping.cat.hadoop.dal.SqltableDao;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.spi.MessageCodec;
@@ -45,10 +49,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
 
+		all.add(C(SqlParseManager.class, SqlParseManager.class)//
+				.req(SqltableDao.class));
+
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class, LogviewUploader.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
-		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,common,dump")));
+		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,common,database,sql,dump")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,Cache";
@@ -56,13 +63,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Handler.class, "DefaultHandler", DefaultProblemHandler.class)//
 		      .config(E("failureType").value(failureTypes))//
 		      .config(E("errorType").value(errorTypes)));
-		
+
 		all.add(C(Handler.class, "LongHandler", LongExecutionHandler.class) //
 		      .req(ServerConfigManager.class));
 
 		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class) //
-		      .req(Handler.class, new String[] { "DefaultHandler","LongHandler" }, "m_handlers"));
+		      .req(Handler.class, new String[] { "DefaultHandler", "LongHandler" }, "m_handlers"));
 
 		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
@@ -72,6 +79,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(CrossAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
+
+		all.add(C(DatabaseAnalyzer.class).is(PER_LOOKUP) //
+		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class));
+
+		all.add(C(SqlAnalyzer.class).is(PER_LOOKUP) //
+		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class));
 
 		all.add(C(MatrixAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));

@@ -53,4 +53,21 @@ public abstract class AbstractReportBuilder {
 			domainSet.add(domainName.getDomain());
 		}
 	}
+	
+	protected void getDatabaseSet(Set<String> domainSet, Date start, Date end) {
+		List<Report> databaseNames = new ArrayList<Report>();
+
+		try {
+			databaseNames = m_reportDao
+			      .findAllByDomainNameDuration(start, end, null, "database", ReportEntity.READSET_DOMAIN_NAME);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		if (databaseNames == null || databaseNames.size() == 0) {
+			return;
+		}
+		for (Report domainName : databaseNames) {
+			domainSet.add(domainName.getDomain());
+		}
+	}
 }

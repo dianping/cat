@@ -37,7 +37,9 @@ com.dianping.cat.report.page.monthreport.Handler.class,
 
 com.dianping.cat.report.page.cross.Handler.class,
 
-com.dianping.cat.report.page.cache.Handler.class
+com.dianping.cat.report.page.cache.Handler.class,
+
+com.dianping.cat.report.page.database.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

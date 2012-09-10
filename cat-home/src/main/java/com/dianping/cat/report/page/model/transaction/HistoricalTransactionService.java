@@ -54,7 +54,7 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 		TransactionReport transactionReport = merger.getTransactionReport();
 
 		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+		      timestamp + 60 * 60 * 1000), null, "transaction", ReportEntity.READSET_DOMAIN_NAME);
 
 		if (transactionReport == null) {
 			transactionReport = new TransactionReport(domain);

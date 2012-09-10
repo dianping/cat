@@ -54,7 +54,7 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 		ProblemReport problemReport = merger.getProblemReport();
 
 		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, null, ReportEntity.READSET_DOMAIN_NAME);
+		      timestamp + 60 * 60 * 1000), null, "problem", ReportEntity.READSET_DOMAIN_NAME);
 
 		if (problemReport == null) {
 			problemReport = new ProblemReport(domain);

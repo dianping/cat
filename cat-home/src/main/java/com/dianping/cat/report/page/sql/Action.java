@@ -1,11 +1,9 @@
 package com.dianping.cat.report.page.sql;
 
 public enum Action implements com.site.web.mvc.Action {
-	GRAPHS("graphs"),
-
-	MOBLIE("mobile"),
-
-	VIEW("view");
+	HOURLY_REPORT("hourly"),
+	
+	HISTORY_REPORT("history");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {

@@ -1,0 +1,5 @@
+select * from table"
+ update table set col =1"
+ insert	into table (column) values(1)"
+	delete	from table"
+select r.id,r.name,r.des from resource r where r.id in (select resource_id from resource_role where role_id=#roleId#)

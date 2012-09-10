@@ -87,29 +87,30 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	protected int encodeFooter(MessageTree tree, ChannelBuffer buf) {
-		BufferHelper helper = m_bufferHelper;
-		int count = 0;
-		String uri = "/cat/r/m/" + m_builder.getLogViewPath(tree.getMessageId());
+		
+//		BufferHelper helper = m_bufferHelper;
+//		int count = 0;
+//		String uri = "/cat/r/m/" + m_builder.getLogViewPath(tree.getMessageId());
+//
+//		count += helper.tr1(buf, "nav");
+//		count += helper.td1(buf, "colspan=\"4\" align=\"left\"");
+//		count += helper.nbsp(buf, 3);
+//		count += helper.write(buf, "<a href=\"");
+//		count += helper.write(buf, uri);
+//		count += helper.write(buf, "?tag1=t:");
+//		count += helper.write(buf, tree.getThreadId());
+//		count += helper.write(buf, "\">&lt;&lt;&lt; Thread &nbsp;&nbsp;</a>");
+//		count += helper.write(buf, "<a href=\"");
+//		count += helper.write(buf, uri);
+//		count += helper.write(buf, "?tag2=t:");
+//		count += helper.write(buf, tree.getThreadId());
+//		count += helper.write(buf, "\"> &nbsp;&nbsp;Thread &gt;&gt;&gt;</a>");
+//		count += helper.nbsp(buf, 3);
+//		count += helper.td2(buf);
+//		count += helper.tr2(buf);
+//		count += helper.crlf(buf);
 
-		count += helper.tr1(buf, "nav");
-		count += helper.td1(buf, "colspan=\"4\" align=\"left\"");
-		count += helper.nbsp(buf, 3);
-		count += helper.write(buf, "<a href=\"");
-		count += helper.write(buf, uri);
-		count += helper.write(buf, "?tag1=t:");
-		count += helper.write(buf, tree.getThreadId());
-		count += helper.write(buf, "\">&lt;&lt;&lt; Thread &nbsp;&nbsp;</a>");
-		count += helper.write(buf, "<a href=\"");
-		count += helper.write(buf, uri);
-		count += helper.write(buf, "?tag2=t:");
-		count += helper.write(buf, tree.getThreadId());
-		count += helper.write(buf, "\"> &nbsp;&nbsp;Thread &gt;&gt;&gt;</a>");
-		count += helper.nbsp(buf, 3);
-		count += helper.td2(buf);
-		count += helper.tr2(buf);
-		count += helper.crlf(buf);
-
-		return count;
+		return 0;
 	}
 
 	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
@@ -218,7 +219,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,%s);\">[:: show ::]</a>",
+		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: show ::]</a>",
 		      m_logViewPrefix, link, id));
 		count += helper.td2(buf);
 

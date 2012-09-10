@@ -26,7 +26,7 @@
       <page name="model" title="Model" path="model" standalone="false">
         <description>Service Model</description>
       </page>
-      <page name="sql" title="SQL" path="sql" standalone="false">
+      <page name="sql" title="SQL" path="sql">
         <description>SQL Report</description>
       </page>
       <page name="heatmap" title="Heatmap" path="heatmap" standalone="false">
@@ -49,6 +49,9 @@
       </page>
       <page name="cache" title="Cache" path="cache">
         <description>Cache</description>
+      </page>
+      <page name="database" title="Database" path="database">
+        <description>Database</description>
       </page>
     </module>
   </webapp>

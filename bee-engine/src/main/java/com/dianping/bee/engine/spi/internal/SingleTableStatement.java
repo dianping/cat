@@ -11,12 +11,17 @@ import com.dianping.bee.engine.spi.index.Index;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.bee.engine.spi.meta.RowSet;
-import com.dianping.bee.engine.spi.row.DefaultRowContext;
 import com.dianping.bee.engine.spi.row.DefaultRowListener;
+import com.dianping.bee.engine.spi.row.RowContext;
 import com.dianping.bee.engine.spi.row.RowFilter;
+import com.dianping.bee.engine.spi.row.RowListener;
 import com.site.lookup.ContainerHolder;
+import com.site.lookup.annotation.Inject;
 
 public class SingleTableStatement extends ContainerHolder implements Statement {
+	@Inject
+	protected RowContext ctx;
+
 	private IndexMeta m_index;
 
 	private RowFilter m_rowFilter;
@@ -27,6 +32,26 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	private Map<String, List<Object>> m_attributes = new HashMap<String, List<Object>>();
 
+	public void addAttribute(String name, Object value) {
+		List<Object> list = m_attributes.get(name);
+
+		if (list == null) {
+			list = new ArrayList<Object>(3);
+			m_attributes.put(name, list);
+		}
+
+		list.add(value);
+	}
+
+	@Override
+	public ColumnMeta getColumnMeta(int colIndex) {
+		if (colIndex >= 0 && colIndex < m_selectColumns.length) {
+			return m_selectColumns[colIndex];
+		} else {
+			throw new IndexOutOfBoundsException("size: " + m_selectColumns.length + ", index: " + colIndex);
+		}
+	}
+
 	@Override
 	public int getColumnSize() {
 		return m_selectColumns.length;
@@ -36,10 +61,10 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 	public RowSet query() {
 		Index index = lookup(m_index.getIndexClass());
 		List<ColumnMeta> columns = new ArrayList<ColumnMeta>(m_allColumns.keySet());
-		DefaultRowContext ctx = new DefaultRowContext(columns.toArray(new ColumnMeta[0]));
-		DefaultRowListener listener = new DefaultRowListener(m_selectColumns);
-
+		RowListener listener = new DefaultRowListener(m_selectColumns);
 		listener.setRowFilter(m_rowFilter);
+
+		ctx.setColumnMeta(columns.toArray(new ColumnMeta[0]));
 		ctx.setRowListener(listener);
 		ctx.setAttributes(m_attributes);
 
@@ -82,16 +107,5 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 				m_allColumns.put(column, -1);
 			}
 		}
-	}
-
-	public void addAttribute(String name, Object value) {
-		List<Object> list = m_attributes.get(name);
-
-		if (list == null) {
-			list = new ArrayList<Object>(3);
-			m_attributes.put(name, list);
-		}
-
-		list.add(value);
 	}
 }

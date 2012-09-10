@@ -206,7 +206,7 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		            + "<tr><td>&nbsp;&nbsp;&nbsp;&nbsp;E15:33:42.009</td><td>CacheHost</td><td>host-1</td><td>&nbsp;</td><td>ip=192.168.8.123</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;T15:33:42.010</td><td>Cache</td><td>findReviewByPK</td><td class=\"error\">Missing</td><td>1.0ms 2468</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.010</td><td>Service</td><td>ReviewService</td><td>&nbsp;</td><td>request data</td></tr>\r\n"
-		            + "<tr><td>&nbsp;&nbsp;<a href=\"/cat/r/m/domain1-c0a83f99-135bdb7825c-1/logview.html\" onclick=\"return show(this,1637924287);\">[:: show ::]</a></td><td colspan=\"4\"><div id=\"1637924287\"></div></td></tr>\r\n"
+		            + "<tr><td>&nbsp;&nbsp;<a href=\"/cat/r/m/domain1-c0a83f99-135bdb7825c-1/logview.html\" onclick=\"return show(this,'1637924287');\">[:: show ::]</a></td><td colspan=\"4\"><div id=\"1637924287\"></div></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;A15:33:42.012</td><td>DAL</td><td>findReviewByPK</td><td>&nbsp;</td><td>5.0ms select title,content from Review where id = ?</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:42.027</td><td>URL</td><td>View</td><td>&nbsp;</td><td>view=HTML</td></tr>\r\n"
 		            + "<tr><td>T15:33:42.087</td><td>URL</td><td>Review</td><td>&nbsp;</td><td>100ms /review/2468</td></tr>\r\n");

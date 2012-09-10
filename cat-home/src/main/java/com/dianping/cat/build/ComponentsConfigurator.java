@@ -22,6 +22,8 @@ import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.TaskConsumer;
 import com.dianping.cat.report.task.cross.CrossMerger;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
+import com.dianping.cat.report.task.database.DatabaseMerger;
+import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
 import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
@@ -34,6 +36,8 @@ import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.sql.SqlMerger;
+import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
@@ -60,8 +64,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ValueTranslater.class));
 
 		all.add(C(MonthReportBuilderTask.class)//
-				.req(MonthreportDao.class, DailyreportDao.class));
-		
+		      .req(MonthreportDao.class, DailyreportDao.class));
+
 		all.add(C(TaskConsumer.class, DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
 
@@ -75,6 +79,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ProblemMerger.class));
 		all.add(C(HeartbeatMerger.class));
 		all.add(C(CrossMerger.class));
+		all.add(C(DatabaseMerger.class));
+		all.add(C(SqlMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class,
@@ -93,6 +99,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MatrixReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class));
 
+		all.add(C(DatabaseReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, DatabaseMerger.class));
+
+		all.add(C(SqlReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, SqlMerger.class));
+
 		all.add(C(CrossReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class));
 
@@ -101,7 +113,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
-		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class, TaskDao.class));
+		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
+		            DatabaseReportBuilder.class, SqlReportBuilder.class,TaskDao.class));
 
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

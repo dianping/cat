@@ -2,12 +2,14 @@ package com.dianping.cat.consumer;
 
 import com.dianping.cat.consumer.common.CommonAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.ip.TopIpAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.site.lookup.ContainerHolder;
@@ -52,6 +54,16 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			return analyzer;
 		} else if (name.equals("cross")) {
 			CrossAnalyzer analyzer = lookup(CrossAnalyzer.class);
+
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
+			return analyzer;
+		} else if (name.equals("database")) {
+			DatabaseAnalyzer analyzer = lookup(DatabaseAnalyzer.class);
+
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
+			return analyzer;
+		} else if (name.equals("sql")) {
+			SqlAnalyzer analyzer = lookup(SqlAnalyzer.class);
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;

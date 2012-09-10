@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
+import com.dianping.cat.report.page.database.DatabaseReportMergerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.ip.DisplayModelTest;
@@ -15,6 +16,7 @@ import com.dianping.cat.report.page.model.event.EventModelServiceTest;
 import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
+import com.dianping.cat.report.page.sql.SqlReportMergerTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
 import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportMergerTest;
@@ -68,6 +70,11 @@ EventGraphDataTest.class, HeartbeatGraphDataTest.class,
 ProblemGraphDataTest.class, TransactionGraphDataTest.class,
 
 ProblemReportMergerTest.class,
+/* database test*/
+DatabaseReportMergerTest.class,
+
+/* sql test*/
+SqlReportMergerTest.class,
 
 /* .report.task */
 TaskConsumerTest.class, TaskHelperTest.class,

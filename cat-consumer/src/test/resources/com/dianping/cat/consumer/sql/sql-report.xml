@@ -1,38 +1,17 @@
-<sql-report>
-	<sql-domain-report domain="Cat" startTime="2012-06-18 14:00:00"
-		endTime="2012-06-18 14:59:59">
-		<domain>Cat</domain>
-		<domain>MobileApi</domain>
-		<ip>10.1.77.193</ip>
-		<ip>10.1.77.194</ip>
-		<database id="CatDabase" connect-url="jdbc://10.1.1.220:3306/cat">
-			<table id="HostInfo" totalCount="111507" failCount="0"
-				failPercent="0.00" avg="0.0" sum="1937.0" tps="0.00">
-				<method id="select" totalCount="1" failCount="0" failPercent="0.00"
-					avg="0.0" sum="0.9" tps="0.00"></method>
-				<method id="insert" totalCount="1" failCount="0" failPercent="0.00"
-					avg="0.0" sum="0.9" tps="0.00"></method>
-			</table>
-			<table></table>
-		</database>
-	</sql-domain-report>
-	<sql-database-report database="CAT"
-		connect-url="jdbc://10.1.1.220:3306/cat" startTime="2012-06-18 14:00:00"
-		endTime="2012-06-18 14:59:59">
-		<database>CAT1</database>
-		<database>CAT2</database>
-		<domain id="Cat">
-			<table id="HostInfo" totalCount="111507" failCount="0"
-				failPercent="0.00" avg="0.0" sum="1937.0" tps="0.00">
-				<method id="select" totalCount="1" failCount="0" failPercent="0.00"
-					avg="0.0" sum="0.9" tps="0.00"></method>
-				<method id="insert" totalCount="1" failCount="0" failPercent="0.00"
-					avg="0.0" sum="0.9" tps="0.00"></method>
-			</table>
-			<table></table>
-		</domain>
-		<domain></domain>
-	</sql-database-report>
+<sql-report domain="Cat" startTime="2012-06-18 14:00:00"
+	endTime="2012-06-18 14:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<database id="CatDabase" connect-url="jdbc://10.1.1.220:3306/cat">
+		<table id="HostInfo" totalCount="111507" failCount="0"
+			failPercent="0.00" avg="0.0" sum="1937.0" tps="0.00">
+			<method id="select" totalCount="1" failCount="0" failPercent="0.00"
+				avg="0.0" sum="0.9" tps="0.00"></method>
+			<method id="insert" totalCount="1" failCount="0" failPercent="0.00"
+				avg="0.0" sum="0.9" tps="0.00"></method>
+		</table>
+		<table></table>
+	</database>
 </sql-report>
 
 

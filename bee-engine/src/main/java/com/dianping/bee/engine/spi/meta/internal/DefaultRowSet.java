@@ -66,4 +66,5 @@ public class DefaultRowSet implements RowSet {
 	public int getRowSize() {
 		return m_rows.size();
 	}
+
 }

@@ -35,7 +35,7 @@ public class TaskConsumerTest {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				
 			}
 			replayer.add(4);
 			this.stop();
@@ -267,9 +267,8 @@ public class TaskConsumerTest {
 			public void run(){
 				try {
 	            latch.await();
-	            System.out.println(System.currentTimeMillis());
             } catch (InterruptedException e) {
-	            e.printStackTrace();
+	            
             }
 				super.run();
 			}
@@ -307,9 +306,8 @@ public class TaskConsumerTest {
 			public void run(){
 				try {
 	            latch.await();
-	            System.out.println(System.currentTimeMillis());
             } catch (InterruptedException e) {
-	            e.printStackTrace();
+	            
             }
 				super.run();
 			}
@@ -342,7 +340,7 @@ public class TaskConsumerTest {
 		}
 		
 		while (!consumerTwo.isStopped()) {
-			Thread.sleep(10);
+			Thread.sleep(500);
 		}
 
 		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumerOne.replayer.toArray()));

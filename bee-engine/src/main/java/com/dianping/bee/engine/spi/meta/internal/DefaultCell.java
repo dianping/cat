@@ -23,14 +23,14 @@ import com.dianping.bee.engine.spi.meta.ColumnMeta;
 public class DefaultCell implements Cell {
 
 	private ColumnMeta m_columnMeta;
-	
+
 	private Object m_value;
-	
-	public DefaultCell(ColumnMeta columnMeta, Object value){
+
+	public DefaultCell(ColumnMeta columnMeta, Object value) {
 		this.m_columnMeta = columnMeta;
 		this.m_value = value;
 	}
-	
+
 	@Override
 	public ColumnMeta getMeta() {
 		return m_columnMeta;
@@ -41,4 +41,7 @@ public class DefaultCell implements Cell {
 		return m_value;
 	}
 
+	public String toString() {
+		return m_value.toString();
+	}
 }
