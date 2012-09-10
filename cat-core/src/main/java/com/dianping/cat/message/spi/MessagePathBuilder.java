@@ -8,8 +8,6 @@ public interface MessagePathBuilder {
 
 	public File getLogViewBaseDir();
 
-	public String getLogViewPath(String messageId);
-
 	public String getPath(Date timestamp, String name);
 	
 	public String getMessagePath(String domain, Date timestamp);

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dianping.bee.engine.helper.SqlParsers;
 import com.dianping.cat.Cat;
 import com.dianping.cat.hadoop.dal.Sqltable;
 import com.dianping.cat.hadoop.dal.SqltableDao;
@@ -53,7 +54,22 @@ public class SqlParseManager {
 	}
 
 	private String parseSql(String sqlStatement) {
-		return "Table+" + System.currentTimeMillis();
+		List<String> tables = SqlParsers.forTable().parse(sqlStatement);
+		String result = "";
+		boolean first = true;
+		
+		if (tables != null && tables.size() > 0) {
+			for (String table : tables) {
+				if (first) {
+					result = table;
+				} else {
+					result = result + ":" + table;
+				}
+			}
+		} else {
+			result = "UnKnownTable";
+		}
+		return result;
 	}
 
 	private synchronized void loadAllFromDatabase(String domain) {

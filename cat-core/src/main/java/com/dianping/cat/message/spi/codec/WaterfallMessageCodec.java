@@ -70,7 +70,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	protected int encodeFooter(MessageTree tree, ChannelBuffer buf) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
-		String uri = "/cat/r/m/" + m_builder.getLogViewPath(tree.getMessageId());
+		String uri = "/cat/r/m/" + tree.getMessageId();
 
 		count += helper.tr1(buf, "nav");
 		count += helper.td1(buf, "colspan=\"4\" align=\"left\"");

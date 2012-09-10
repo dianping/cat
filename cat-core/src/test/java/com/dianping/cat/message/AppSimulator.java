@@ -7,7 +7,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 
 @RunWith(JUnit4.class)
 public class AppSimulator extends CatTestCase {
@@ -43,9 +42,7 @@ public class AppSimulator extends CatTestCase {
 		}
 
 		if (isCatServerAlive()) {
-			MessagePathBuilder builder = lookup(MessagePathBuilder.class);
-
-			System.out.println("Please open page http://localhost:2281/cat/r/m/" + builder.getLogViewPath(id));
+			System.out.println("Please open page http://localhost:2281/cat/r/m/" + id);
 		} else {
 			System.out.println("CAT server is not started at localhost:2280, so no log view dumped!");
 		}

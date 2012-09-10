@@ -47,10 +47,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	private DateHelper m_dateHelper = new DateHelper();
 
 	protected String buildLink(Message message) {
-		String messageId = message.getData().toString();
-		String path = m_builder.getLogViewPath(messageId);
-
-		return path;
+		return message.getData().toString();
 	}
 
 	@Override
@@ -191,16 +188,15 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		}
 
 		String link = buildLink(message);
-		String id = tree.getMessageId();
 
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
 		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: show ::]</a>",
-		      m_logViewPrefix, link, id));
+		      m_logViewPrefix, link, link));
 		count += helper.td2(buf);
 
-		count += helper.td(buf, "<div id=\"" + id + "\"></div>", "colspan=\"4\"");
+		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
 
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);

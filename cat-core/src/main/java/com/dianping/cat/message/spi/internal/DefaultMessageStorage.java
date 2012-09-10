@@ -45,9 +45,7 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Log
 
 	@Override
 	public String getPath(MessageTree tree) {
-		String path = m_builder.getLogViewPath(tree.getMessageId());
-
-		return path;
+		return tree.getMessageId();
 	}
 
 	@Override
@@ -67,7 +65,7 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Log
 
 	@Override
 	public String store(MessageTree tree, String... tags) {
-		String path = m_builder.getLogViewPath(tree.getMessageId());
+		String path = tree.getMessageId();
 
 		m_job.append(tree);
 		return path;
@@ -92,7 +90,7 @@ public class DefaultMessageStorage implements MessageStorage, Initializable, Log
 		}
 
 		private void handle(MessageTree tree) {
-			String path = m_builder.getLogViewPath(tree.getMessageId());
+			String path = tree.getMessageId();
 			File file = new File(m_builder.getLogViewBaseDir(), path);
 
 			if (!file.exists()) {
