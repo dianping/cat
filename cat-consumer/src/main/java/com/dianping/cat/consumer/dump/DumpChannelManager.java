@@ -33,16 +33,6 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 
 	private Logger m_logger;
 
-	public void closeAllChannels() {
-		synchronized (m_channels) {
-			for (DumpChannel channel : m_channels.values()) {
-				closeChannel(channel);
-			}
-
-			m_channels.clear();
-		}
-	}
-
 	public void closeAllChannels(long startTime) {
 		Set<String> closedKeySet = new HashSet<String>();
 

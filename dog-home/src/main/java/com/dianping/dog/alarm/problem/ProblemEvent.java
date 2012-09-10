@@ -46,12 +46,12 @@ public class ProblemEvent implements DataEvent {
 
 	@Override
 	public long getTotalCount() {
-		return rowData.getData("totalCount");
+		return (Long)rowData.getData("totalCount");
 	}
 
 	@Override
 	public long getFailCount() {
-		return rowData.getData("failCount");
+		return (Long)rowData.getData("failCount");
 	}
 
 	@Override

@@ -25,6 +25,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action == null ? Action.HOURLY_REPORT : m_action;
 	}
 
+	public String getDatabase() {
+		return m_database;
+	}
+
 	public String getSortBy() {
 		return m_sortBy;
 	}
@@ -33,16 +37,12 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_action = Action.getByName(action, Action.HOURLY_REPORT);
 	}
 
-	public void setSortBy(String sortBy) {
-		m_sortBy = sortBy;
-	}
-
-	public String getDatabase() {
-		return m_database;
-	}
-
 	public void setDatabase(String database) {
 		m_database = database;
+	}
+
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
 	}
 
 	@Override
