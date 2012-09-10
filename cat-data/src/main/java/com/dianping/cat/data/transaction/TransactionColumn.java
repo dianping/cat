@@ -1,6 +1,6 @@
 package com.dianping.cat.data.transaction;
 
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.ColumnMeta;
 
 public enum TransactionColumn implements ColumnMeta {
 	StartTime(String.class), // 20120822(for daily), 2012082213(for hour)

@@ -1,8 +1,8 @@
 package com.dianping.cat.data.transaction;
 
-import com.dianping.bee.engine.spi.index.Index;
-import com.dianping.bee.engine.spi.meta.AbstractIndexMeta;
-import com.dianping.bee.engine.spi.meta.IndexMeta;
+import com.dianping.bee.engine.spi.AbstractIndexMeta;
+import com.dianping.bee.engine.spi.Index;
+import com.dianping.bee.engine.spi.IndexMeta;
 
 public class TransactionIndex extends AbstractIndexMeta<TransactionColumn> implements IndexMeta {
 	public static final TransactionIndex IDX_DOMAIN = new TransactionIndex(TransactionColumn.Domain, true,

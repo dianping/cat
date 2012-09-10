@@ -12,11 +12,11 @@ import com.alibaba.cobar.server.handler.SavepointHandler;
 import com.alibaba.cobar.server.handler.SetHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
 import com.dianping.bee.engine.spi.PreparedStatement;
-import com.dianping.bee.engine.spi.handler.internal.DescHandler;
-import com.dianping.bee.engine.spi.handler.internal.PrepareHandler;
-import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
-import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
-import com.dianping.bee.engine.spi.handler.internal.UseHandler;
+import com.dianping.bee.engine.spi.handler.DescHandler;
+import com.dianping.bee.engine.spi.handler.PrepareHandler;
+import com.dianping.bee.engine.spi.handler.SelectHandler;
+import com.dianping.bee.engine.spi.handler.ShowHandler;
+import com.dianping.bee.engine.spi.handler.UseHandler;
 import com.site.lookup.annotation.Inject;
 
 public class SimpleServerQueryHandler implements FrontendQueryHandler {

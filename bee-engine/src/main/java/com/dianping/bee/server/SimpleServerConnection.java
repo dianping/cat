@@ -25,7 +25,7 @@ import com.alibaba.cobar.net.util.MySQLMessage;
 import com.alibaba.cobar.protocol.mysql.OkPacket;
 import com.alibaba.cobar.server.ServerConnection;
 import com.dianping.bee.engine.spi.PreparedStatement;
-import com.dianping.bee.engine.spi.session.SessionManager;
+import com.dianping.bee.engine.spi.SessionManager;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>

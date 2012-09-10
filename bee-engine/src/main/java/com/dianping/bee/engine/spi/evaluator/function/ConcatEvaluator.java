@@ -4,8 +4,8 @@ import java.util.List;
 
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.primary.function.string.Concat;
+import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.evaluator.AbstractEvaluator;
-import com.dianping.bee.engine.spi.row.RowContext;
 
 public class ConcatEvaluator extends AbstractEvaluator<Concat, String> {
 	public static final String ID = Concat.class.getName();

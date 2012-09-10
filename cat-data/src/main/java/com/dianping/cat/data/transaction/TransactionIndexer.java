@@ -6,8 +6,8 @@ import java.net.URL;
 
 import org.xml.sax.SAXException;
 
-import com.dianping.bee.engine.spi.index.Index;
-import com.dianping.bee.engine.spi.row.RowContext;
+import com.dianping.bee.engine.spi.Index;
+import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;

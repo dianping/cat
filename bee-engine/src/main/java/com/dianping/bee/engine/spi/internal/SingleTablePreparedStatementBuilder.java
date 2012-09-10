@@ -9,7 +9,7 @@ import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpre
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
 import com.alibaba.cobar.parser.ast.expression.primary.ParamMarker;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
+import com.dianping.bee.engine.spi.ColumnMeta;
 
 public class SingleTablePreparedStatementBuilder extends SingleTableStatementBuilder {
 	private List<ColumnMeta> m_paramColumns = new ArrayList<ColumnMeta>();
