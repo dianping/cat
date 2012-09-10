@@ -122,7 +122,9 @@ public class SimpleServerConnection extends ServerConnection {
 				PreparedStatement stmt = ((SimpleServerQueryHandler) queryHandler).getStatement(stmtId);
 				if (stmt == null) {
 					writeErrMessage(ErrorCode.ER_YES, "Invalid Statement Identifier");
+					return;
 				}
+
 				int parameterSize = stmt.getParameterSize();
 				List<Object> parameters = new ArrayList<Object>(parameterSize);
 				int nullBitMapSize = (parameterSize + 7) / 8;

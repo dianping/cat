@@ -20,6 +20,10 @@ import com.dianping.bee.engine.spi.meta.ColumnMeta;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public interface PreparedStatement extends Statement {
+	public long getStatementId();
+
+	public void setStatementId(long statementId);
+
 	public ColumnMeta getParameterMeta(int paramIndex);
 
 	public int getParameterSize();

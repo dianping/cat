@@ -3,6 +3,8 @@ package com.dianping.bee.engine.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.bee.engine.QueryService;
+import com.dianping.bee.engine.internal.DefaultQueryService;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
@@ -55,6 +57,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
+
+		all.add(C(QueryService.class, DefaultQueryService.class).is(PER_LOOKUP) //
+				.req(SessionManager.class, StatementManager.class));
 
 		all.add(C(SimpleServer.class));
 
@@ -113,8 +118,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionGreaterThanEvaluator.ID, ComparisionGreaterThanEvaluator.class));
-		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID,
-		      ComparisionGreaterThanOrEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID, ComparisionGreaterThanOrEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanEvaluator.ID, ComparisionLessThanEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanOrEqualsEvaluator.ID, ComparisionLessThanOrEqualsEvaluator.class));
 

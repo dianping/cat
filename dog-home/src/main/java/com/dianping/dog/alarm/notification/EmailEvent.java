@@ -2,7 +2,9 @@ package com.dianping.dog.alarm.notification;
 
 import java.util.List;
 
-public interface EmailEvent {
+import com.dianping.dog.event.Event;
+
+public interface EmailEvent  extends Event{
 	public String getTitle();
 
 	public String getContent();

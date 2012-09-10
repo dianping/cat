@@ -31,11 +31,27 @@ public class DisplaySqlReport extends BaseVisitor {
 		return m_results;
 	}
 
+	public DisplaySqlReport setDatabase(String database) {
+		m_database = database;
+		return this;
+	}
+
+	public DisplaySqlReport setDuration(long duration) {
+		m_duration = duration;
+		return this;
+	}
+
 	public DisplaySqlReport setSortBy(String sortBy) {
 		if (!StringUtils.isEmpty(sortBy)) {
 			m_sortBy = sortBy;
 		}
 		return this;
+	}
+
+	@Override
+	public void visitDatabase(Database database) {
+		m_currentDatabase = database.getId();
+		super.visitDatabase(database);
 	}
 
 	@Override
@@ -50,12 +66,6 @@ public class DisplaySqlReport extends BaseVisitor {
 				method.setTotalPercent(method.getTotalCount() / (double) totalCount);
 			}
 		}
-	}
-
-	@Override
-	public void visitDatabase(Database database) {
-		m_currentDatabase = database.getId();
-		super.visitDatabase(database);
 	}
 
 	@Override
@@ -111,15 +121,5 @@ public class DisplaySqlReport extends BaseVisitor {
 			return 0;
 		}
 
-	}
-
-	public DisplaySqlReport setDatabase(String database) {
-		m_database = database;
-		return this;
-	}
-
-	public DisplaySqlReport setDuration(long duration) {
-		m_duration = duration;
-		return this;
 	}
 }

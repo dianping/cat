@@ -25,13 +25,13 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	private SingleTableRowFilter m_rowFilter;
 
 	@Inject
-	protected TableHelper m_helper;
+	private TableHelper m_helper;
 
 	private String m_alias;
 
-	protected String m_tableName;
+	private String m_tableName;
 
-	protected String m_databaseName;
+	private String m_databaseName;
 
 	private Clause m_clause;
 
@@ -46,13 +46,17 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 			}
 		}
 
-		ColumnMeta column = m_helper.findColumn(m_databaseName, m_tableName, columnName);
+		ColumnMeta column = findColumnBy(columnName);
 
 		columns.add(column);
 		return column;
 	}
 
-	public SingleTableStatement getStatement() {
+	protected ColumnMeta findColumnBy(String columnName) {
+		return m_helper.findColumn(m_databaseName, m_tableName, columnName);
+	}
+
+	protected SingleTableStatement getStatement() {
 		return m_stmt;
 	}
 

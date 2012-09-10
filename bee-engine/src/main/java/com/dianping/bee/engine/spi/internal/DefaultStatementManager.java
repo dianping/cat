@@ -1,8 +1,9 @@
 package com.dianping.bee.engine.spi.internal;
 
 import java.sql.SQLSyntaxErrorException;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.alibaba.cobar.parser.ast.stmt.SQLStatement;
 import com.alibaba.cobar.parser.recognizer.SQLParserDelegate;
@@ -12,13 +13,12 @@ import com.dianping.bee.engine.spi.StatementManager;
 import com.site.lookup.ContainerHolder;
 
 public class DefaultStatementManager extends ContainerHolder implements StatementManager {
-	private Map<String, Statement> m_statements = new HashMap<String, Statement>();
+	private Map<String, Statement> m_statements = new LRUCache<String, Statement>(1000);
 
-	private Map<Long, PreparedStatement> m_prepares = new HashMap<Long, PreparedStatement>();
+	private Map<Long, PreparedStatement> m_prepares = new LRUCache<Long, PreparedStatement>(100);
 
-	private static long stmtId = 0;
+	private long m_nextStatementId;
 
-	// FIXME: when to clear cache
 	@Override
 	public Statement build(String sql) throws SQLSyntaxErrorException {
 		Statement statement = m_statements.get(sql);
@@ -30,6 +30,13 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 				if (statement == null) {
 					statement = parseSQL(sql);
 					m_statements.put(sql, statement);
+
+					if (statement instanceof PreparedStatement) {
+						PreparedStatement preparedStatement = (PreparedStatement) statement;
+
+						preparedStatement.setStatementId(m_nextStatementId);
+						m_prepares.put(m_nextStatementId++, preparedStatement);
+					}
 				}
 			}
 		}
@@ -37,14 +44,20 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		return statement;
 	}
 
-	public Statement parseSQL(String sql) throws SQLSyntaxErrorException {
+	@Override
+	public PreparedStatement getPreparedStatement(Long stmtId) {
+		return m_prepares.get(stmtId);
+	}
+
+	private Statement parseSQL(String sql) throws SQLSyntaxErrorException {
 		SQLStatement statement = SQLParserDelegate.parse(sql);
 		QueryDetector detector = new QueryDetector();
 
 		statement.accept(detector);
 
 		if (detector.isSingleTable()) {
-			SingleTableStatementBuilder builder = null;
+			SingleTableStatementBuilder builder;
+
 			if (detector.isPrepared()) {
 				builder = lookup(SingleTablePreparedStatementBuilder.class);
 			} else {
@@ -62,25 +75,20 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 		}
 	}
 
-	@Override
-	public long stmtPrepare(PreparedStatement stmt) {
-		synchronized (m_prepares) {
-			m_prepares.put(stmtId++ % Long.MAX_VALUE, stmt);
+	private final class LRUCache<K, V> extends LinkedHashMap<K, V> {
+		private static final long serialVersionUID = 1L;
+
+		private int m_capacity;
+
+		private LRUCache(int capacity) {
+			super(capacity * 4 / 3 + 1, 0.75f, true);
+
+			m_capacity = capacity * 4 / 3 + 1;
 		}
 
-		return stmtId - 1;
-	}
-
-	// FIXME: when to remove prepared statement
-	@Override
-	public void stmtClose(long stmtId) {
-		synchronized (m_prepares) {
-			m_prepares.remove(stmtId);
+		@Override
+		protected boolean removeEldestEntry(Entry<K, V> eldest) {
+			return size() > m_capacity;
 		}
-	}
-
-	@Override
-	public PreparedStatement getStatement(Long stmtId) {
-		return m_prepares.get(stmtId);
 	}
 }

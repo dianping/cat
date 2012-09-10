@@ -54,10 +54,6 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 		}
 	}
 
-	protected ByteBuffer writeHeader(ServerConnection c, ByteBuffer buffer, MySQLPacket packet) {
-		return packet.write(buffer, c);
-	}
-
 	protected static class CommandContext {
 		private ServerConnection m_conn;
 
@@ -163,8 +159,8 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 						break;
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!",
-					      column.getName(), value), e);
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!", column.getName(),
+					      value), e);
 				}
 			}
 
@@ -223,8 +219,8 @@ public abstract class AbstractCommandHandler extends ContainerHolder implements 
 						break;
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!",
-					      column.getName(), value), e);
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!", column.getName(),
+					      value), e);
 				}
 			}
 

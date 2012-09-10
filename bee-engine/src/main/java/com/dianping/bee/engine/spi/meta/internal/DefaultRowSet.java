@@ -17,6 +17,7 @@ package com.dianping.bee.engine.spi.meta.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
@@ -67,4 +68,35 @@ public class DefaultRowSet implements RowSet {
 		return m_rows.size();
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(1024);
+		int cols = m_columnMetas.length;
+
+		for (int i = 0; i < cols; i++) {
+			ColumnMeta column = m_columnMetas[i];
+
+			sb.append(column.getName()).append('|');
+		}
+
+		sb.append('\n');
+
+		int rows = m_rows.size();
+
+		for (int i = 0; i < rows; i++) {
+			Row row = m_rows.get(i);
+
+			for (int j = 0; j < cols; j++) {
+				Cell cell = row.getCell(j);
+
+				sb.append(cell.getValue()).append('|');
+			}
+
+			sb.append('\n');
+		}
+
+		sb.append(rows).append(" rows selected.");
+
+		return sb.toString();
+	}
 }

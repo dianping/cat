@@ -56,8 +56,10 @@ public class PrepareHandler extends AbstractCommandHandler {
 	 * @param c
 	 */
 	public void execute(Long stmtId, List<Object> parameters, ServerConnection c) {
-		PreparedStatement stmt = m_manager.getStatement(stmtId);
-		for (int i = 0; i < parameters.size(); i++) {
+		PreparedStatement stmt = m_manager.getPreparedStatement(stmtId);
+		int len = parameters.size();
+
+		for (int i = 0; i < len; i++) {
 			stmt.setParameter(i, parameters.get(i));
 		}
 
@@ -87,7 +89,7 @@ public class PrepareHandler extends AbstractCommandHandler {
 	}
 
 	public PreparedStatement getStatement(Long stmtId) {
-		return m_manager.getStatement(stmtId);
+		return m_manager.getPreparedStatement(stmtId);
 	}
 
 	/**
@@ -95,15 +97,17 @@ public class PrepareHandler extends AbstractCommandHandler {
 	 * @param c
 	 */
 	public void prepare(String sql, ServerConnection c) {
-		Statement ori_stmt = null;
+		Statement ori_stmt;
+
 		try {
-			ori_stmt = m_manager.parseSQL(sql);
+			ori_stmt = m_manager.build(sql);
 		} catch (SQLSyntaxErrorException e) {
 			error(c, ErrorCode.ER_SYNTAX_ERROR, e.getMessage());
+			return;
 		}
 
 		PreparedStatement stmt = (PreparedStatement) ori_stmt;
-		long stmtId = m_manager.stmtPrepare(stmt);
+		long stmtId = stmt.getStatementId();
 		CommandContext ctx = new CommandContext(c);
 		int columnSize = stmt.getColumnSize();
 		int parameterSize = ((PreparedStatement) stmt).getParameterSize();
@@ -113,16 +117,14 @@ public class PrepareHandler extends AbstractCommandHandler {
 
 		for (int i = 0; i < parameterSize; i++) {
 			ColumnMeta paramMeta = stmt.getParameterMeta(i);
-			FieldPacket field = PacketUtil.getField(paramMeta.getName(),
-			      TypeUtils.convertJavaTypeToFieldType(paramMeta.getType()));
+			FieldPacket field = PacketUtil.getField(paramMeta.getName(), TypeUtils.convertJavaTypeToFieldType(paramMeta.getType()));
 			ctx.write(field);
 		}
 		ctx.writeEOF();
 
 		for (int i = 0; i < columnSize; i++) {
 			ColumnMeta colMeta = stmt.getColumnMeta(i);
-			FieldPacket field = PacketUtil.getField(colMeta.getName(),
-			      TypeUtils.convertJavaTypeToFieldType(colMeta.getType()));
+			FieldPacket field = PacketUtil.getField(colMeta.getName(), TypeUtils.convertJavaTypeToFieldType(colMeta.getType()));
 			ctx.write(field);
 		}
 		ctx.writeEOF();

@@ -19,9 +19,9 @@ public class SqlMerger implements ReportMerger<SqlReport> {
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(reportDomain));
 		for (Report report : reports) {
 			String xml = report.getContent();
-			SqlReport model;
+			System.out.println(xml);
 			try {
-				model = DefaultSaxParser.parse(xml);
+				SqlReport model = DefaultSaxParser.parse(xml);
 				model.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);

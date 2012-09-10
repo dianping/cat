@@ -10,6 +10,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.internal.MessageId;
@@ -48,7 +49,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			try {
 				m_bucketManager.archive(m_startTime);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Cat.logError(e);
+				m_logger.error("Error when archvie the dump bucket!", e);
 			}
 		}
 	}

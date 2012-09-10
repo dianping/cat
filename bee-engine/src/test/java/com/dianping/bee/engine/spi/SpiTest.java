@@ -8,6 +8,7 @@ import com.dianping.bee.engine.spi.meta.Cell;
 import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.dianping.bee.engine.spi.meta.Row;
 import com.dianping.bee.engine.spi.meta.RowSet;
+import com.dianping.bee.engine.spi.session.SessionManager;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
@@ -15,12 +16,16 @@ public class SpiTest extends ComponentTestCase {
 	@Test
 	public void sample() throws Exception {
 		StatementManager statementManager = lookup(StatementManager.class);
+		SessionManager sessionManager = lookup(SessionManager.class);
+
+		sessionManager.getSession().setDatabase("cat");
+
 		Statement stmt = statementManager.build("select type, sum(failures) from transaction where domain=? and starttime=?");
 		RowSet rowset = stmt.query();
 
 		display(rowset);
 	}
-	
+
 	private void display(RowSet rowset) {
 		StringBuilder sb = new StringBuilder(1024);
 		int cols = rowset.getColumnSize();

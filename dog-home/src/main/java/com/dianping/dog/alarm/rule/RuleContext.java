@@ -1,9 +1,13 @@
 package com.dianping.dog.alarm.rule;
 
-public interface RuleContext {
-	public <T> T getAttribute(String name);
+import com.dianping.dog.alarm.problem.ProblemEvent;
 
-	public <T> T getAttribute(String name, T defaultValue);
-
-	public void setAttribute(String name, Object value);
+public class RuleContext {
+	
+	ProblemEvent m_event;
+	
+	public RuleContext(ProblemEvent event){
+		this.m_event = event;
+	}
+   
 }
