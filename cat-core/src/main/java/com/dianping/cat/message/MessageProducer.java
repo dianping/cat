@@ -140,6 +140,16 @@ public interface MessageProducer {
 	public void logError(Throwable cause);
 
 	/**
+	 * Log an event in one shot with SUCCESS status.
+	 * 
+	 * @param type
+	 *           event type
+	 * @param name
+	 *           event name
+	 */
+	public void logEvent(String type, String name);
+	
+	/**
 	 * Log an event in one shot.
 	 * 
 	 * @param type

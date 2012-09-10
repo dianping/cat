@@ -60,6 +60,10 @@ public class Cat {
 	public static boolean isEnabled() {
 		return Cat.getProducer().isEnabled();
 	}
+	
+	public void logEvent(String type, String name) {
+		Cat.getProducer().logEvent(type, name);
+	}
 
 	public void logEvent(String type, String name, String status, String nameValuePairs) {
 		Cat.getProducer().logEvent(type, name, status, nameValuePairs);

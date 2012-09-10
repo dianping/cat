@@ -5,6 +5,7 @@ import java.io.StringWriter;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
@@ -40,6 +41,11 @@ public class DefaultMessageProducer implements MessageProducer {
 		} else {
 			logEvent("Exception", cause.getClass().getName(), "ERROR", writer.toString());
 		}
+	}
+
+	@Override
+	public void logEvent(String type, String name) {
+		logEvent(type, name, Message.SUCCESS, null);
 	}
 
 	@Override
