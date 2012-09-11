@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.testdb.CatDatabase;
-import com.dianping.bee.testdb.DogDatabase;
 import com.dianping.bee.testdb.EventIndexer;
 import com.dianping.bee.testdb.TransactionIndexer;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
@@ -24,7 +23,6 @@ public class TestServerConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DatabaseProvider.class, "cat", CatDatabase.class));
 		all.add(C(EventIndexer.class));
 		all.add(C(TransactionIndexer.class));
-		all.add(C(DatabaseProvider.class, "dog", DogDatabase.class));
 
 		return all;
 	}

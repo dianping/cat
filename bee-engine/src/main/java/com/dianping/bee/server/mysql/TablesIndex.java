@@ -22,7 +22,7 @@ import com.dianping.bee.engine.spi.IndexMeta;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class TablesIndex extends AbstractIndexMeta<TablesColumn> implements IndexMeta {
-	public static final TablesIndex IDX_NAME = new TablesIndex(TablesColumn.TABLE_NAME, true);
+	public static final TablesIndex IDX_NAME = new TablesIndex(TablesColumn.TABLE_SCHEMA, true);
 
 	private TablesIndex(Object... args) {
 		super(args);

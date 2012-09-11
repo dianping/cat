@@ -15,6 +15,7 @@
 package com.dianping.bee.mysql;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -30,6 +31,33 @@ import com.dianping.bee.jdbc.JDBCTestHelper;
 public class InformationSchemaTest {
 
 	@Test
+	public void testDatabaseMeta() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
+	      SQLException {
+		// Connection conn = JDBCTestHelper.getCatConnection(null);
+		Connection conn = JDBCTestHelper.getMySQLConnection(null);
+		DatabaseMetaData metadata = conn.getMetaData();
+		ResultSet databaseRs = metadata.getCatalogs();
+		JDBCTestHelper.displayResultSet("metadata.getCatalogs()", databaseRs);
+
+		String[] tableTypes = new String[] { "TABLES" };
+		databaseRs.beforeFirst();
+		while (databaseRs.next()) {
+			String database = databaseRs.getString(1);
+			ResultSet tablesRs = metadata.getTables(null, database, "%", tableTypes);
+			JDBCTestHelper.displayResultSet("metadata.getTables() for " + database, tablesRs);
+
+			tablesRs.beforeFirst();
+			while (tablesRs.next()) {
+				String table = tablesRs.getString(3);
+				ResultSet columnsRs = metadata.getColumns(null, database, table, "%");
+				JDBCTestHelper.displayResultSet("meta.getColumns() for " + table, columnsRs);
+			}
+		}
+
+		conn.close();
+	}
+
+	@Test
 	public void testColumns() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
 	      SQLException {
 		String sql = "SELECT  `TABLE_CATALOG`,  `TABLE_SCHEMA`,  `TABLE_NAME`,  `COLUMN_NAME`,  `ORDINAL_POSITION`,  `COLUMN_DEFAULT`,  `IS_NULLABLE`,  `DATA_TYPE`,  `CHARACTER_MAXIMUM_LENGTH`,  `CHARACTER_OCTET_LENGTH`,  `NUMERIC_PRECISION`,  `NUMERIC_SCALE`,  `CHARACTER_SET_NAME`,  `COLLATION_NAME`,  `COLUMN_TYPE`,  `COLUMN_KEY`,  `EXTRA`,  `PRIVILEGES`,  `COLUMN_COMMENT` FROM `information_schema`.`COLUMNS` LIMIT 1000";
@@ -43,6 +71,11 @@ public class InformationSchemaTest {
 		rs.last();
 		Assert.assertTrue(rs.getRow() > 0);
 		JDBCTestHelper.displayResultSet(sql, rs);
+
+		String sql2 = "SELECT * FROM `information_schema`.`COLUMNS` WHERE TABLE_NAME='transaction'";
+		Statement stmt2 = conn.createStatement();
+		ResultSet rs2 = stmt2.executeQuery(sql2);
+		JDBCTestHelper.displayResultSet(sql2, rs2);
 		conn.close();
 	}
 

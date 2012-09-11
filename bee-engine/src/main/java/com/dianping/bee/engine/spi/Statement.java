@@ -9,4 +9,6 @@ public interface Statement {
 	public int getColumnSize();
 
 	public RowSet query();
+	
+	public IndexMeta getIndexMeta();
 }

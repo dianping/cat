@@ -70,4 +70,30 @@ public class JDBCTestHelper {
 		Connection conn = DriverManager.getConnection(url + db, props);
 		return conn;
 	}
+
+	public static Connection getMySQLConnection(Properties props) throws InstantiationException, IllegalAccessException,
+	      ClassNotFoundException, SQLException {
+		String url = "jdbc:mysql://localhost:3306/";
+		String db = "test";
+		String driver = "com.mysql.jdbc.Driver";
+
+		if (props == null) {
+			props = new Properties();
+		}
+		props = new Properties();
+		if (props.getProperty("user") == null) {
+			props.setProperty("user", "root");
+		}
+		if (props.getProperty("password") == null) {
+			props.setProperty("password", "");
+		}
+		if (props.getProperty("useServerPrepStmts") == null) {
+			props.setProperty("useServerPrepStmts", "true");
+		}
+
+		Class.forName(driver).newInstance();
+		DriverManager.setLoginTimeout(600);
+		Connection conn = DriverManager.getConnection(url + db, props);
+		return conn;
+	}
 }

@@ -22,7 +22,7 @@ import com.dianping.bee.engine.spi.IndexMeta;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class ColumnsIndex extends AbstractIndexMeta<TablesColumn> implements IndexMeta {
-	public static final ColumnsIndex IDX_NAME = new ColumnsIndex(ColumnsColumn.COLUMN_NAME, true);
+	public static final ColumnsIndex IDX_NAME = new ColumnsIndex(ColumnsColumn.TABLE_NAME, true);
 
 	private ColumnsIndex(Object... args) {
 		super(args);

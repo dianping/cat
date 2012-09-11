@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import org.junit.Assert;
 import org.junit.Test;
 
-
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
