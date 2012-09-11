@@ -18,15 +18,6 @@
 			<implementation>com.dianping.bee.server.SimpleServer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
-			<role-hint>information_schema</role-hint>
-			<implementation>com.dianping.bee.server.mysql.InformationSchemaDatabaseProvider</implementation>
-		</component>
-		<component>
-			<role>com.dianping.bee.server.mysql.SchemataIndexer</role>
-			<implementation>com.dianping.bee.server.mysql.SchemataIndexer</implementation>
-		</component>
-		<component>
 			<role>com.dianping.bee.engine.spi.SessionManager</role>
 			<implementation>com.dianping.bee.engine.spi.internal.DefaultSessionManager</implementation>
 		</component>
@@ -112,6 +103,23 @@
 					<role>com.dianping.bee.engine.spi.internal.SingleTableRowFilter</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
+			<role-hint>information_schema</role-hint>
+			<implementation>com.dianping.bee.server.mysql.InformationSchemaDatabaseProvider</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.server.mysql.SchemataIndexer</role>
+			<implementation>com.dianping.bee.server.mysql.SchemataIndexer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.server.mysql.TablesIndexer</role>
+			<implementation>com.dianping.bee.server.mysql.TablesIndexer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.server.mysql.ColumnsIndexer</role>
+			<implementation>com.dianping.bee.server.mysql.ColumnsIndexer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.bee.server.SimpleServerQueryHandler</role>

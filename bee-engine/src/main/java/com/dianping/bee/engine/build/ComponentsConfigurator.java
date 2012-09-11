@@ -44,8 +44,10 @@ import com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder;
 import com.dianping.bee.engine.spi.internal.TableHelper;
 import com.dianping.bee.server.SimpleServer;
 import com.dianping.bee.server.SimpleServerQueryHandler;
+import com.dianping.bee.server.mysql.ColumnsIndexer;
 import com.dianping.bee.server.mysql.InformationSchemaDatabaseProvider;
 import com.dianping.bee.server.mysql.SchemataIndexer;
+import com.dianping.bee.server.mysql.TablesIndexer;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -59,12 +61,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(QueryService.class, DefaultQueryService.class).is(PER_LOOKUP) //
-				.req(SessionManager.class, StatementManager.class));
+		      .req(SessionManager.class, StatementManager.class));
 
 		all.add(C(SimpleServer.class));
-
-		all.add(C(DatabaseProvider.class, InformationSchemaDatabaseProvider.ID, InformationSchemaDatabaseProvider.class));
-		all.add(C(SchemataIndexer.class));
 
 		all.add(C(SessionManager.class, DefaultSessionManager.class));
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class) //
@@ -86,6 +85,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SingleTablePreparedStatementBuilder.class).is(PER_LOOKUP)//
 		      .req(TableHelper.class, SingleTablePreparedStatement.class, SingleTableRowFilter.class));
 
+		defineInformationSchema(all);
 		defineHandlers(all);
 		defineLogicalEvaluators(all);
 		defineFunctionEvaluators(all);
@@ -111,6 +111,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(StatementManager.class));
 	}
 
+	private void defineInformationSchema(List<Component> all) {
+		all.add(C(DatabaseProvider.class, InformationSchemaDatabaseProvider.ID, InformationSchemaDatabaseProvider.class));
+		all.add(C(SchemataIndexer.class));
+		all.add(C(TablesIndexer.class));
+		all.add(C(ColumnsIndexer.class));
+	}
+
 	private void defineLogicalEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, LogicalAndEvaluator.ID, LogicalAndEvaluator.class));
 		all.add(C(Evaluator.class, LogicalOrEvaluator.ID, LogicalOrEvaluator.class));
@@ -118,7 +125,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionGreaterThanEvaluator.ID, ComparisionGreaterThanEvaluator.class));
-		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID, ComparisionGreaterThanOrEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID,
+		      ComparisionGreaterThanOrEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanEvaluator.ID, ComparisionLessThanEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanOrEqualsEvaluator.ID, ComparisionLessThanOrEqualsEvaluator.class));
 

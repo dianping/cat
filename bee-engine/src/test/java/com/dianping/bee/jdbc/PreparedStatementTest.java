@@ -15,40 +15,24 @@
 package com.dianping.bee.jdbc;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
-import com.site.lookup.ComponentTestCase;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-@RunWith(JUnit4.class)
-public class PreparedStatementTest extends ComponentTestCase {
+public class PreparedStatementTest {
 	@Test
 	public void testSingleQuery() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
 	      SQLException {
-		String url = "jdbc:mysql://localhost:2330/";
-		String dbName = "cat";
-		String driver = "com.mysql.jdbc.Driver";
-		Properties props = new Properties();
-		props.setProperty("user", "test");
-		props.setProperty("password", "test");
-		props.setProperty("useServerPrepStmts", "true");
 		String sql = "select type, sum(failures),domain,starttime from transaction where domain=? and starttime=?";
 
-		Class.forName(driver).newInstance();
-		DriverManager.setLoginTimeout(600);
-		Connection conn = DriverManager.getConnection(url + dbName, props);
+		Connection conn = JDBCTestHelper.getCatConnection(null);
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		Assert.assertNotNull(stmt);
 		stmt.setString(1, "MobileApi");
@@ -58,25 +42,16 @@ public class PreparedStatementTest extends ComponentTestCase {
 		Assert.assertNotNull(rs);
 		rs.last();
 		Assert.assertTrue(rs.getRow() > 0);
-		displayResultSet(rs);
+		JDBCTestHelper.displayResultSet(sql, rs);
 		conn.close();
 	}
 
 	@Test
 	public void testSingleQueryWithoutParameter() throws InstantiationException, IllegalAccessException,
 	      ClassNotFoundException, SQLException {
-		String url = "jdbc:mysql://localhost:2330/";
-		String dbName = "cat";
-		String driver = "com.mysql.jdbc.Driver";
-		Properties props = new Properties();
-		props.setProperty("user", "test");
-		props.setProperty("password", "test");
-		props.setProperty("useServerPrepStmts", "true");
 		String sql = "select type, sum(failures) ,domain,starttime from transaction";
 
-		Class.forName(driver).newInstance();
-		DriverManager.setLoginTimeout(600);
-		Connection conn = DriverManager.getConnection(url + dbName, props);
+		Connection conn = JDBCTestHelper.getCatConnection(null);
 		PreparedStatement stmt = conn.prepareStatement(sql);
 		Assert.assertNotNull(stmt);
 		ResultSet rs = stmt.executeQuery();
@@ -84,24 +59,7 @@ public class PreparedStatementTest extends ComponentTestCase {
 		Assert.assertNotNull(rs);
 		rs.last();
 		Assert.assertTrue(rs.getRow() > 0);
-		displayResultSet(rs);
+		JDBCTestHelper.displayResultSet(sql, rs);
 		conn.close();
-	}
-
-	private void displayResultSet(ResultSet rs) throws SQLException {
-		ResultSetMetaData meta = rs.getMetaData();
-		int columns = meta.getColumnCount();
-		for (int column = 1; column <= columns; column++) {
-			String columnName = meta.getColumnName(column);
-			System.out.print(columnName + "\t");
-		}
-		System.out.println();
-		rs.beforeFirst();
-		while (rs.next()) {
-			for (int column = 1; column <= columns; column++) {
-				System.out.print(rs.getString(column) + "\t");
-			}
-			System.out.println();
-		}
 	}
 }
