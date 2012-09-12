@@ -46,6 +46,8 @@ public class SelectHandler extends AbstractHandler {
 
 		if ("@@VERSION_COMMENT".equalsIgnoreCase(first)) {
 			SelectVersionComment.response(c);
+		} else if ("@@session.tx_isolation".equalsIgnoreCase(first)) {
+			selectSessionTxIsolation(c);
 		} else if ("DATABASE".equalsIgnoreCase(first)) {
 			SelectDatabase.response(c);
 		} else if ("DATABASE()".equalsIgnoreCase(first)) {
@@ -64,6 +66,26 @@ public class SelectHandler extends AbstractHandler {
 				error(c, ErrorCode.ER_SYNTAX_ERROR, e.getMessage());
 			}
 		}
+	}
+
+	/**
+	 * @param c
+	 */
+	private void selectSessionTxIsolation(ServerConnection c) {
+		CommandContext ctx = new CommandContext(c);
+		String[] names = { "@@session.tx_isolation" };
+
+		ctx.writeHeader(names.length);
+		for (String name : names) {
+			ctx.writeField(name, Fields.FIELD_TYPE_VAR_STRING);
+		}
+
+		ctx.writeEOF();
+
+		ctx.writeRow("REPEATABLE-READ");
+
+		ctx.writeEOF();
+		ctx.complete();
 	}
 
 	/**
