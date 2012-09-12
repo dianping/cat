@@ -1,19 +1,16 @@
 package com.dianping.dog.alarm.rule;
 
-import com.dianping.dog.alarm.data.DataEvent;
-import com.dianping.dog.alarm.entity.RuleEntity;
+import java.util.List;
 
-<<<<<<< HEAD
+import com.dianping.dog.alarm.entity.Duration;
+import com.dianping.dog.alarm.entity.RuleEntity;
+import com.dianping.dog.event.Event;
+
 public class ExceptionRule implements Rule {
 
 	RuleEntity m_entity;
 	
 	private String reportType;
-=======
-public class ExceptionRule implements Rule{
-	
-	private RuleEntity m_entity;
->>>>>>> 854fa5bb6a802ca4c6ab6325e495912ef0a1c662
 	
 	private String domain;
 	
@@ -32,7 +29,6 @@ public class ExceptionRule implements Rule{
 	}
 
 	@Override
-<<<<<<< HEAD
 	public boolean isEligible(Event event) {
 		
 		return false;
@@ -47,17 +43,5 @@ public class ExceptionRule implements Rule{
 		}
 		return false;
 	}
-=======
-   public boolean isEligible(DataEvent event) {
-	   return false;
-   }
-
-	@Override
-   public boolean apply(DataEvent event) {
-		
-		
-	   return false;
-   }
->>>>>>> 854fa5bb6a802ca4c6ab6325e495912ef0a1c662
 
 }
