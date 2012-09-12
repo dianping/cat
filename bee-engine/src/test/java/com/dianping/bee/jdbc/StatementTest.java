@@ -21,16 +21,11 @@ import java.sql.Statement;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
-import com.site.lookup.ComponentTestCase;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-@RunWith(JUnit4.class)
-public class StatementTest extends ComponentTestCase {
+public class StatementTest {
 	@Test
 	public void testConnection() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
 	      SQLException {

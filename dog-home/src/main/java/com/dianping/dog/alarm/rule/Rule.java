@@ -1,16 +1,13 @@
 package com.dianping.dog.alarm.rule;
 
-import com.dianping.dog.alarm.entity.RuleEntity;
-import com.dianping.dog.event.Event;
+import com.dianping.dog.alarm.data.DataEvent;
 
 public interface Rule {
 	
-	public boolean init(RuleEntity entity);
-	
 	public String getName();
 	
-	public boolean isEligible(Event event);
+	public boolean isEligible(DataEvent event);
 
-	public boolean apply(Event event);
+	public boolean apply(DataEvent event);
 			
 }

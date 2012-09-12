@@ -33,13 +33,13 @@ public class InformationSchemaTest {
 	@Test
 	public void testDatabaseMeta() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
 	      SQLException {
-		// Connection conn = JDBCTestHelper.getCatConnection(null);
-		Connection conn = JDBCTestHelper.getMySQLConnection(null);
+		 Connection conn = JDBCTestHelper.getCatConnection(null);
+//		Connection conn = JDBCTestHelper.getMySQLConnection(null);
 		DatabaseMetaData metadata = conn.getMetaData();
 		ResultSet databaseRs = metadata.getCatalogs();
 		JDBCTestHelper.displayResultSet("metadata.getCatalogs()", databaseRs);
 
-		String[] tableTypes = new String[] { "TABLES" };
+		String[] tableTypes = new String[] { "TABLE", "SYSTEM TABLE" };
 		databaseRs.beforeFirst();
 		while (databaseRs.next()) {
 			String database = databaseRs.getString(1);

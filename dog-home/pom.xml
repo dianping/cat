@@ -24,6 +24,11 @@
          <version>1.0.15</version>
       </dependency>
       <dependency>
+         <groupId>org.json</groupId>
+         <artifactId>org.json</artifactId>
+         <version>chargebee-1.0</version>
+      </dependency>
+      <dependency>
          <groupId>com.site.common</groupId>
          <artifactId>test-framework</artifactId>
          <version>1.0.3</version>

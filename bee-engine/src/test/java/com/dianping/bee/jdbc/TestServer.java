@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.alibaba.cobar.CobarServer;
 import com.dianping.bee.server.SimpleServer;
 import com.site.lookup.ComponentTestCase;
 
@@ -32,8 +31,6 @@ public class TestServer extends ComponentTestCase {
 		SimpleServer server = lookup(SimpleServer.class);
 
 		server.startup();
-
-		System.out.println(CobarServer.getInstance().getConfig().getUsers());
 
 		System.out.println("Press any key to continue ...");
 		System.in.read();
