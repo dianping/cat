@@ -9,7 +9,7 @@ public class ProblemFilterListener extends AbstractReactorListener<ProblemEvent>
 	@Override
    public void onEvent(ProblemEvent event) {
 		ProblemViolationEvent vEvent  = new ProblemViolationEvent(event);
-		m_dispatcher.dispatch(vEvent);
+		m_eventdispatcher.dispatch(vEvent);
    }
 	   
 }

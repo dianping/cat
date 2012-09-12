@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
- import com.dianping.cat.message.spi.MessageStatistics;
+import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.GcInfo;
@@ -194,6 +194,8 @@ class StatusInfoCollector extends BaseVisitor {
 
 		runtime.setStartTime(bean.getStartTime());
 		runtime.setUpTime(bean.getUptime());
+		runtime.setJavaClasspath(System.getProperty("java.class.path"));
+		runtime.setJavaVersion(System.getProperty("java.version"));
 	}
 
 	@Override

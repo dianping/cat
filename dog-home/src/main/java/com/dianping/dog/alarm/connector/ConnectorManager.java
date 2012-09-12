@@ -5,8 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.dog.alarm.entity.ConnectEntity;
+import com.dianping.dog.alarm.parser.DataParserFactory;
+import com.site.lookup.annotation.Inject;
+
 public class ConnectorManager {
 	
+	@Inject
+	private DataParserFactory m_dataParserFactory;
 
 	Map<Long, Connector> m_connectors = new HashMap<Long, Connector>();
 
@@ -18,20 +24,20 @@ public class ConnectorManager {
 		return connectorList;
 	}
 
-	public void registerConnector(ConnectorContext ctx) {
+	public void registerConnector(ConnectEntity entity) {
 		synchronized (m_connectors) {
-			Connector con = m_connectors.get(ctx.getRuleId());
+			Connector con = m_connectors.get(entity.getConId());
 			if (con != null) {
-				if (con.getConnectorContext().compareTo(ctx) == 0) {
+				if (con.getConnectorEntity().compareTo(entity) == 0) {
 					return;
 				}
-				m_connectors.remove(ctx.getRuleId());
+				m_connectors.remove(entity.getConId());
 			}
-			if (ctx.getType() == ConnectorType.HTTP) {
+			if (entity.getConType() == ConnectorType.HTTP) {
 				con = new HttpConnector();
-				con.init(ctx);
+				con.init(entity,m_dataParserFactory);
 			}
-			m_connectors.put(ctx.getRuleId(), con);
+			m_connectors.put(entity.getConId(), con);
 		}
 	}
 

@@ -49,10 +49,6 @@ public class RuleEntity {
 		return type;
 	}
 
-	public void setType(String type) {
-		this.type = type;
-	}
-
 	public long getId() {
 		return id;
 	}
@@ -102,7 +98,6 @@ public class RuleEntity {
 		connect.setType(type);
 		connect.setReport(reportType);
 		connect.setConnectSource(CONNECT_SOURCE);
-		connect.setConnectType(CONNECT_TYPE);
 		return connect;
 	}
 

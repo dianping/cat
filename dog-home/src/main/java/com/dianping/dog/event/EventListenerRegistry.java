@@ -4,8 +4,8 @@ import java.util.List;
 
 public interface EventListenerRegistry{
 	
-	public List<EventListener<Event>> getListeners(EventType type);
+	public  List<EventListener<Event>> getListeners();
 
-	public void register(EventType type, EventListener<?> listener);
+	public void register(EventListener<? extends Event> listener);
 	
 }

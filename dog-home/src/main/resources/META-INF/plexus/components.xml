@@ -1,6 +1,11 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.dog.alarm.merge.DefaultEventQueue</role>
+			<implementation>com.dianping.dog.alarm.merge.DefaultEventQueue</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
 			<role>com.dianping.dog.event.EventListenerRegistry</role>
 			<implementation>com.dianping.dog.event.DefaultEventListenerRegistry</implementation>
 		</component>
@@ -10,6 +15,49 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.dog.event.EventListenerRegistry</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.filter.ProblemFilterListener</role>
+			<implementation>com.dianping.dog.alarm.filter.ProblemFilterListener</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.event.EventDispatcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.merge.ProblemMergeListener</role>
+			<implementation>com.dianping.dog.alarm.merge.ProblemMergeListener</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.alarm.merge.DefaultEventQueue</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.parser.DataParserFactory</role>
+			<implementation>com.dianping.dog.alarm.parser.DataParserFactory</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.connector.ConnectorManager</role>
+			<implementation>com.dianping.dog.alarm.connector.ConnectorManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.alarm.parser.DataParserFactory</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.connector.DataService</role>
+			<implementation>com.dianping.dog.alarm.connector.DataService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.alarm.connector.ConnectorManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.event.EventDispatcher</role>
 				</requirement>
 			</requirements>
 		</component>
