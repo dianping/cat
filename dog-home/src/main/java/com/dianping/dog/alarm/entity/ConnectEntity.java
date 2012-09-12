@@ -12,7 +12,7 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
 
 	private String domain;
 
-	private String report;
+	private String reportType;
 
 	private String type;
 
@@ -34,7 +34,7 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
 	   StringBuilder sb = new StringBuilder();
 	   sb.append(this.baseUrl);
 	   sb.append("?");
-	   sb.append(String.format("%s=%s", "report",this.report));
+	   sb.append(String.format("%s=%s", "report",this.reportType));
 	   sb.append(String.format("&%s=%s", "domain",this.domain));
 	   sb.append(String.format("&%s=%s", "type",this.type));
    	return sb.toString();
@@ -68,13 +68,14 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
 		this.domain = domain;
 	}
 
-	public String getReport() {
-		return report;
-	}
+	
+	public String getReportType() {
+   	return reportType;
+   }
 
-	public void setReport(String report) {
-		this.report = report;
-	}
+	public void setReportType(String reportType) {
+   	this.reportType = reportType;
+   }
 
 	public String getType() {
 		return type;

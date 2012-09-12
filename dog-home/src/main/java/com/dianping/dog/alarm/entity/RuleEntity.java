@@ -4,18 +4,17 @@ import java.util.Date;
 import java.util.List;
 
 import com.dianping.dog.alarm.rule.RuleTemplateEntity;
-import com.dianping.dog.alarm.rule.RuleType;
+import com.site.dal.jdbc.QueryDef;
 
 /***
- *  @author yanchun.yang 
- *  从数据库中读取的规则配置实体类
+ * @author yanchun.yang 从数据库中读取的规则配置实体类
  **/
 public class RuleEntity {
-	
-	private static String CONNECT_TYPE="http";
 
-	private static String CONNECT_SOURCE="cat";
-	
+	public static final QueryDef DELETE_BY_PK = null;
+
+	private static String CONNECT_SOURCE = "cat";
+
 	private long id;
 
 	private String domain;
@@ -23,7 +22,7 @@ public class RuleEntity {
 	private String name;
 
 	private String type;
-	
+
 	private String reportType;
 
 	private List<Duration> durations;
@@ -31,8 +30,10 @@ public class RuleEntity {
 	private ConnectEntity connect;
 
 	private long interval;
-	
+
 	private RuleTemplateEntity ruleTemplateEntity;
+
+	private Date gmtModified;
 
 	public String getDomain() {
 		return domain;
@@ -45,12 +46,6 @@ public class RuleEntity {
 	public String getType() {
 		return type;
 	}
-	
-	
-	private RuleType ruleType;
-
-	
-	private Date gmtModified;
 
 	public long getId() {
 		return id;
@@ -59,18 +54,18 @@ public class RuleEntity {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	public String getName() {
-   	return name;
-   }
+		return name;
+	}
 
 	public void setName(String name) {
-   	this.name = name;
-   }
+		this.name = name;
+	}
 
 	public long getInterval() {
-		if(interval==0){
-			interval=ruleTemplateEntity.getInterval();
+		if (interval == 0) {
+			interval = ruleTemplateEntity.getInterval();
 		}
 		return interval;
 	}
@@ -79,21 +74,22 @@ public class RuleEntity {
 		this.interval = interval;
 	}
 
-	public String getRuleType() {
-		return reportType;
-	}
 
-	public void setRuleType(String ruleType) {
-		this.reportType = ruleType;
-	}
+	public static QueryDef getDeleteByPk() {
+   	return DELETE_BY_PK;
+   }
 
-	public void setRuleType(RuleType ruleType) {
-		this.ruleType = ruleType;
-	}
+	public static String getCONNECT_SOURCE() {
+   	return CONNECT_SOURCE;
+   }
+
+	public String getReportType() {
+   	return reportType;
+   }
 
 	public List<Duration> getDurations() {
-		if(durations==null||durations.size()==0){
-			durations=ruleTemplateEntity.getDurations();
+		if (durations == null || durations.size() == 0) {
+			durations = ruleTemplateEntity.getDurations();
 		}
 		return durations;
 	}
@@ -103,33 +99,29 @@ public class RuleEntity {
 	}
 
 	public ConnectEntity getConnect() {
-		ConnectEntity connect=new ConnectEntity();
+		connect = new ConnectEntity();
 		connect.setDomain(domain);
 		connect.setName(name);
 		connect.setType(type);
-		connect.setReport(reportType);
+		connect.setReportType(reportType);
 		connect.setConnectSource(CONNECT_SOURCE);
 		return connect;
 	}
 
-	public void setConnect(ConnectEntity connect) {
-		this.connect = connect;
+	public RuleTemplateEntity getRuleTemplateEntity() {
+		return ruleTemplateEntity;
 	}
 
-	public RuleTemplateEntity getRuleTemplateEntity() {
-   	return ruleTemplateEntity;
-   }
-
 	public void setRuleTemplateEntity(RuleTemplateEntity ruleTemplateEntity) {
-   	this.ruleTemplateEntity = ruleTemplateEntity;
-   }
+		this.ruleTemplateEntity = ruleTemplateEntity;
+	}
 
 	public Date getGmtModified() {
-   	return gmtModified;
-   }
+		return gmtModified;
+	}
 
 	public void setGmtModified(Date gmtModified) {
-   	this.gmtModified = gmtModified;
-   }
-	
+		this.gmtModified = gmtModified;
+	}
+
 }

@@ -40,7 +40,7 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 	@Override
 	public void query(String sql) {
 		ServerConnection c = m_conn;
-
+		System.out.println(sql);
 		int rs = SimpleServerParse.parse(sql);
 		switch (rs & 0xff) {
 		case SimpleServerParse.EXPLAIN:

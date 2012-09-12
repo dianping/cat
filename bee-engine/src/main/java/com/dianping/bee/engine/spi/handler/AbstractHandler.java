@@ -60,6 +60,8 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 
 		if (str.charAt(0) == '`' && str.charAt(length - 1) == '`') {
 			return str.substring(1, length - 1);
+		} else if (str.charAt(0) == '\'' && str.charAt(length - 1) == '\'') {
+			return str.substring(1, length - 1);
 		} else {
 			return str;
 		}
@@ -203,8 +205,8 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 						break;
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!", column.getName(),
-					      value), e);
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!",
+					      column.getName(), value), e);
 				}
 			}
 
@@ -280,8 +282,8 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 						break;
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!", column.getName(),
-					      value), e);
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!",
+					      column.getName(), value), e);
 				}
 			}
 

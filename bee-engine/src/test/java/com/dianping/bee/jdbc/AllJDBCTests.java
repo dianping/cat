@@ -30,9 +30,10 @@ StatementTest.class,
 
 PreparedStatementTest.class,
 
-InformationSchemaTest.class
+InformationSchemaTest.class,
+
+DMLStatementTest.class
 
 })
 public class AllJDBCTests {
-
 }
