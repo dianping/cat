@@ -15,10 +15,7 @@ import com.dianping.cat.consumer.cross.model.entity.Name;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
-import com.dianping.cat.hadoop.dal.Hostinfo;
-import com.dianping.cat.hadoop.dal.HostinfoDao;
-import com.dianping.cat.hadoop.dal.HostinfoEntity;
-import com.site.dal.jdbc.DalException;
+import com.dianping.cat.report.page.cross.DomainManager;
 
 public class MethodInfo extends BaseVisitor {
 
@@ -46,9 +43,7 @@ public class MethodInfo extends BaseVisitor {
 
 	private String m_serviceSortBy = "Avg";
 
-	private HostinfoDao m_hostInfoDao;
-
-	private static final String UNKNOWN_PROJECT = "UnknownProject";
+	private DomainManager m_domainManager;
 
 	public MethodInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
@@ -195,10 +190,6 @@ public class MethodInfo extends BaseVisitor {
 		m_remoteProject = remoteProject;
 	}
 
-	public void setHostInfoDao(HostinfoDao hostInfoDao) {
-		m_hostInfoDao = hostInfoDao;
-	}
-
 	private boolean projectContains(String projectName, String ip, String role) {
 		if (m_remoteIp.startsWith("All")) {
 			if (m_remoteProject.startsWith("AllClient") && role.endsWith("Client")) {
@@ -209,21 +200,20 @@ public class MethodInfo extends BaseVisitor {
 			if (ip.indexOf(':') > 0) {
 				ip = ip.substring(0, ip.indexOf(':'));
 			}
-			try {
-				Hostinfo hostInfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
-				if (hostInfo != null) {
-					if (projectName.equalsIgnoreCase(hostInfo.getDomain())) {
-						return true;
-					} else {
-						return false;
-					}
-				}
-			} catch (DalException e) {
-				if (projectName.equals(UNKNOWN_PROJECT)) {
-					return true;
-				}
+			String domain = m_domainManager.getDomainByIp(ip);
+
+			if (projectName.equalsIgnoreCase(domain)) {
+				return true;
+			}
+			else {
+				return false;
 			}
 		}
 		return false;
 	}
+
+	public void setDomainManager(DomainManager domainManager) {
+		m_domainManager = domainManager;
+	}
+
 }

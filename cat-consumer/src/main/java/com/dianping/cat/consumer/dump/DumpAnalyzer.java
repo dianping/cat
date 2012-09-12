@@ -117,14 +117,30 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 						channel.write(tree);
 					}
 				} catch (Exception e) {
-					m_logger.error("Error when dumping to local file system!", e);
+					m_logger.error("Error when dumping to local file system, version 1!", e);
 				}
 			}
 		} else {
 			try {
 				m_bucketManager.storeMessage(tree);
-			} catch (IOException e) {
-				m_logger.error("Error when dumping to local file system!", e);
+			} catch (IOException e1) {
+				m_logger.error("Error when dumping to local file system, version 2!", e1);
+			}
+
+			String realDomain = tree.getDomain();
+			String rootDomain = id.getDomain();
+			// Store an other messagetree for mapreduce, sample for domain A invoke domain B
+			if (!realDomain.equals(rootDomain)) {
+				try {
+					String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+					long timestamp = tree.getMessage().getTimestamp();
+					String domain = tree.getDomain();
+					String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
+					DumpChannel channel = m_channelManager.openChannel(path, false, m_startTime);
+					channel.write(tree.getMessageId());
+				} catch (Exception e) {
+					m_logger.error("Error when dumping to local file system!", e);
+				}
 			}
 		}
 	}

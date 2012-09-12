@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.dog.alarm.entity.ConnectEntity;
+import com.dianping.dog.alarm.parser.DataParserFactory;
+import com.site.lookup.annotation.Inject;
 
 public class ConnectorManager {
 	
+	@Inject
+	private DataParserFactory m_dataParserFactory;
 
 	Map<Long, Connector> m_connectors = new HashMap<Long, Connector>();
 
@@ -31,7 +35,7 @@ public class ConnectorManager {
 			}
 			if (entity.getConType() == ConnectorType.HTTP) {
 				con = new HttpConnector();
-				con.init(entity);
+				con.init(entity,m_dataParserFactory);
 			}
 			m_connectors.put(entity.getConId(), con);
 		}

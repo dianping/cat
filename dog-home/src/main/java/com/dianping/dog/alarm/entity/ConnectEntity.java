@@ -8,8 +8,6 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
 	
 	private long conId;
 	
-	private String connectType;// http
-
 	private String connectSource;// cat
 
 	private String domain;
@@ -20,12 +18,12 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
 
 	private String name;
 	
-	private String url;
+	private String baseUrl;
 	
 	private Date gmtModified;
 	
 	public ConnectorType getConType(){
-		if(url.startsWith("http://")){
+		if(baseUrl.startsWith("http://")){
 			return ConnectorType.HTTP;
 		}else{
 			return ConnectorType.UNSUPPORT;
@@ -33,7 +31,17 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
 	}
 	
 	public String getUrl() {
-   	return url;
+	   StringBuilder sb = new StringBuilder();
+	   sb.append(this.baseUrl);
+	   sb.append("?");
+	   sb.append(String.format("%s=%s", "report",this.report));
+	   sb.append(String.format("&%s=%s", "domain",this.domain));
+	   sb.append(String.format("&%s=%s", "type",this.type));
+   	return sb.toString();
+   }
+
+	public void setBaseUrl(String url) {
+   	this.baseUrl = url;
    }
 
 	public long getConId() {
@@ -43,14 +51,6 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
 	public void setConId(long conId) {
    	this.conId = conId;
    }
-
-	public String getConnectType() {
-		return connectType;
-	}
-
-	public void setConnectType(String connectType) {
-		this.connectType = connectType;
-	}
 
 	public String getConnectSource() {
 		return connectSource;

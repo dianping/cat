@@ -651,6 +651,12 @@
 				WHERE <FIELD name='ip'/> = ${ip}
 				]]></statement>
 		</query>
+		<query name="find-all-ip" type="SELECT"  multiple="true">
+			<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				]]></statement>
+		</query>
 		<query name="insert" type="INSERT">
 			<statement><![CDATA[
 			INSERT INTO <TABLE/>

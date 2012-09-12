@@ -11,19 +11,20 @@ public abstract class AbstractConnector<T> implements Connector {
 	private long connectorId;
 
 	private ConnectEntity m_entity;
-	
-   private DataParserFactory m_parserFactory;
-   
+
+	private DataParserFactory m_parserFactory;
+
 	@Override
-	public void init(ConnectEntity entity) {
-		m_entity = entity;
+	public void init(ConnectEntity entity,DataParserFactory parserFactory) {
+		this.m_entity = entity;
+		this.m_parserFactory = parserFactory;
 		this.connectorId = m_entity.getConId();
 	}
-	
+
 	@Override
-   public ConnectEntity getConnectorEntity() {
-	   return m_entity;
-   }
+	public ConnectEntity getConnectorEntity() {
+		return m_entity;
+	}
 
 	@Override
 	public long getConnectorId() {
@@ -32,10 +33,18 @@ public abstract class AbstractConnector<T> implements Connector {
 
 	public abstract T fetchContent(ConnectEntity m_entity);
 
-	public final RowData produceData(Date currentTime){
+	public final RowData produceData(Date currentTime) {
 		T content = fetchContent(m_entity);
 		DataParser parser = m_parserFactory.getDataParser(m_entity.getUrl());
-		return parser.parse(content);
+		RowData rowData = parser.parse(content);
+		rowData.addData("domain",m_entity.getDomain());
+		rowData.addData("type",m_entity.getType());
+		rowData.addData("report",m_entity.getReport());
+		return rowData;
+	}
+
+	public void setParserFactory(DataParserFactory factory) {
+		this.m_parserFactory = factory;
 	}
 
 }

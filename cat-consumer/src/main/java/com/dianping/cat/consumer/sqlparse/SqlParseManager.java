@@ -77,7 +77,6 @@ public class SqlParseManager {
 			return;
 		}
 		try {
-			System.out.println("Load domain:" + domain);
 			List<Sqltable> sqltables = m_sqltableDao.findAllByDomain(domain, SqltableEntity.READSET_FULL);
 
 			for (Sqltable sqltable : sqltables) {

@@ -1,9 +1,6 @@
 package com.dianping.dog.alarm.rule;
 
-import java.util.List;
-
 import com.dianping.dog.alarm.data.DataEvent;
-import com.dianping.dog.alarm.entity.Duration;
 import com.dianping.dog.alarm.entity.RuleEntity;
 
 public class ExceptionRule implements Rule{
@@ -29,7 +26,6 @@ public class ExceptionRule implements Rule{
 	@Override
    public boolean apply(DataEvent event) {
 		
-		List<Duration> durations = m_entity.getDurations();
 		
 	   return false;
    }

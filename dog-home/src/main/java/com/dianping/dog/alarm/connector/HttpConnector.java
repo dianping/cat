@@ -8,8 +8,8 @@ import com.site.helper.Files;
 public class HttpConnector extends AbstractConnector<String> {
 
 	@Override
-   public String fetchContent(ConnectEntity ctx) {
-		String url = ctx.getUrl();
+   public String fetchContent(ConnectEntity entity) {
+		String url = entity.getUrl();
 		try {
 	      URL data = new URL(url);
 	      String content = Files.forIO().readFrom(data.openStream(), "utf-8");

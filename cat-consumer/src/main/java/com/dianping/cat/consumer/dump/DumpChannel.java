@@ -17,7 +17,7 @@ public class DumpChannel {
 	private MessageCodec m_codec;
 
 	private GZIPOutputStream m_out;
-	
+
 	private File m_file;
 
 	private String m_path;
@@ -75,9 +75,17 @@ public class DumpChannel {
 		m_lastChunkAdjust = lastChunkAdjust;
 	}
 
+	public int write(String messageId) throws IOException {
+		byte[] bytes = messageId.getBytes();
+		
+		m_out.write(bytes);
+		m_out.write('\n');
+		return bytes.length + 1;
+	}
+
 	public int write(MessageTree tree) throws IOException {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
-		
+
 		m_codec.encode(tree, buf);
 
 		int length = buf.readInt();
@@ -92,8 +100,8 @@ public class DumpChannel {
 
 		// a blank line used to separate two message trees
 		m_out.write('\n');
-		//m_out.flush();
-		
+		// m_out.flush();
+
 		return length + 1;
 	}
 }
