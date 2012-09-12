@@ -57,6 +57,11 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 	}
 
 	@Override
+	public IndexMeta getIndexMeta() {
+		return m_index;
+	}
+
+	@Override
 	public RowSet query() {
 		Index index = lookup(m_index.getIndexClass());
 		List<ColumnMeta> columns = new ArrayList<ColumnMeta>(m_allColumns.keySet());

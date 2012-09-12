@@ -44,7 +44,7 @@ public class TypeUtils {
 	public static String convertFieldTypeToString(int field) {
 		switch (field) {
 		case Fields.FIELD_TYPE_STRING:
-			return "CHAR";
+			return "VARCHAR";
 		case Fields.FIELD_TYPE_INT24:
 			return "INTEGER";
 		case Fields.FIELD_TYPE_DECIMAL:

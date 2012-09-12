@@ -13,10 +13,5 @@
 			<role>com.dianping.bee.testdb.TransactionIndexer</role>
 			<implementation>com.dianping.bee.testdb.TransactionIndexer</implementation>
 		</component>
-		<component>
-			<role>com.dianping.bee.engine.spi.DatabaseProvider</role>
-			<role-hint>dog</role-hint>
-			<implementation>com.dianping.bee.testdb.DogDatabase</implementation>
-		</component>
 	</components>
 </plexus>

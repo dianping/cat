@@ -106,6 +106,10 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 		} else {
 			m_stmt.setIndex(m_helper.findDefaultIndex(m_databaseName, m_tableName));
 		}
+
+		if (m_stmt.getIndexMeta() == null) {
+			throw new BadSQLSyntaxException("Invalid index column!");
+		}
 	}
 
 	@Override

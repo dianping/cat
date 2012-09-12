@@ -9,9 +9,9 @@ import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.Fields;
 import com.alibaba.cobar.config.model.SchemaConfig;
 import com.alibaba.cobar.server.ServerConnection;
-import com.alibaba.cobar.server.response.ShowDatabases;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.TableProvider;
+import com.site.lookup.LookupException;
 
 public class ShowHandler extends AbstractHandler {
 	@Override
@@ -23,7 +23,7 @@ public class ShowHandler extends AbstractHandler {
 		String forth = len > 3 ? parts.get(3) : null;
 
 		if ("databases".equalsIgnoreCase(first)) {
-			ShowDatabases.response(c);
+			showDatabases(c);
 		} else if ("tables".equalsIgnoreCase(first)) {
 			showTables(c);
 		} else if ("table".equalsIgnoreCase(first)) {
@@ -44,6 +44,35 @@ public class ShowHandler extends AbstractHandler {
 	/**
 	 * @param c
 	 */
+	private void showDatabases(ServerConnection c) {
+		CommandContext ctx = new CommandContext(c);
+		String[] names = { "Database" };
+
+		ctx.writeHeader(names.length);
+
+		for (String name : names) {
+			ctx.writeField(name, Fields.FIELD_TYPE_VARCHAR);
+		}
+
+		ctx.writeEOF();
+
+		List<DatabaseProvider> databases = null;
+		try {
+			databases = lookupList(DatabaseProvider.class);
+		} catch (LookupException e) {
+		}
+		if (databases != null) {
+			for (DatabaseProvider database : databases) {
+				ctx.writeRow(database.getName());
+			}
+		}
+		ctx.writeEOF();
+		ctx.complete();
+	}
+
+	/**
+	 * @param c
+	 */
 	private void showCollation(ServerConnection c) {
 		CommandContext ctx = new CommandContext(c);
 		String[] names = { "Collation", "Charset", "Id", "Default", "Compiled", "Sortlen" };
@@ -51,7 +80,7 @@ public class ShowHandler extends AbstractHandler {
 		ctx.writeHeader(names.length);
 
 		for (String name : names) {
-			ctx.writeField(name, Fields.FIELD_TYPE_VAR_STRING);
+			ctx.writeField(name, Fields.FIELD_TYPE_VARCHAR);
 		}
 
 		ctx.writeEOF();
@@ -74,7 +103,7 @@ public class ShowHandler extends AbstractHandler {
 		ctx.writeHeader(names.length);
 
 		for (String name : names) {
-			ctx.writeField(name, Fields.FIELD_TYPE_VAR_STRING);
+			ctx.writeField(name, Fields.FIELD_TYPE_VARCHAR);
 		}
 
 		ctx.writeEOF();
@@ -122,7 +151,7 @@ public class ShowHandler extends AbstractHandler {
 		CommandContext ctx = new CommandContext(c);
 
 		ctx.writeHeader(1);
-		ctx.writeField("TABLE", Fields.FIELD_TYPE_VAR_STRING);
+		ctx.writeField("TABLE", Fields.FIELD_TYPE_VARCHAR);
 		ctx.writeEOF();
 
 		for (TableProvider table : tables) {
@@ -157,7 +186,7 @@ public class ShowHandler extends AbstractHandler {
 		ctx.writeHeader(names.length);
 
 		for (String name : names) {
-			ctx.writeField(name, Fields.FIELD_TYPE_VAR_STRING);
+			ctx.writeField(name, Fields.FIELD_TYPE_VARCHAR);
 		}
 
 		ctx.writeEOF();
@@ -208,7 +237,7 @@ public class ShowHandler extends AbstractHandler {
 		ctx.writeHeader(names.length);
 
 		for (String name : names) {
-			ctx.writeField(name, Fields.FIELD_TYPE_VAR_STRING);
+			ctx.writeField(name, Fields.FIELD_TYPE_VARCHAR);
 		}
 
 		ctx.writeEOF();
