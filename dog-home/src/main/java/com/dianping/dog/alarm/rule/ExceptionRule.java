@@ -6,35 +6,42 @@ import com.dianping.dog.alarm.entity.Duration;
 import com.dianping.dog.alarm.entity.RuleEntity;
 import com.dianping.dog.event.Event;
 
-public class ExceptionRule implements Rule{
-	
+public class ExceptionRule implements Rule {
+
 	RuleEntity m_entity;
 	
+	private String reportType;
 	
-	@Override
-   public boolean init(RuleEntity entity) {
+	private String domain;
+	
+	private String name;
+	
+	private String type;
+	
+
+	public ExceptionRule(RuleEntity entity) {
 		m_entity = entity;
-	   return true;
-   }
+	}
 
 	@Override
-   public String getName() {
-	   return m_entity.getName();
-   }
+	public String getName() {
+		return m_entity.getName();
+	}
 
 	@Override
-   public boolean isEligible(Event event) {
-	   return false;
-   }
+	public boolean isEligible(Event event) {
+		
+		return false;
+	}
 
 	@Override
-   public boolean apply(Event event) {
+	public boolean apply(Event event) {
 		
 		List<Duration> durations = m_entity.getDurations();
-		for(Duration duration:durations){
+		for (Duration duration : durations) {
 			
 		}
-	   return false;
-   }
+		return false;
+	}
 
 }
