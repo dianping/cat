@@ -16,6 +16,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -118,7 +119,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			MessageId id = MessageId.parse(messageId);
 			final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
 			final File dir = new File(m_baseDir, path);
-			final String key = "-" + id.getDomain() + "-";
+			//final String key = "-" + id.getDomain() + "-";
+			final String key = id.getDomain() + '-' + id.getIpAddress();
 			final List<String> paths = new ArrayList<String>();
 
 			Scanners.forDir().scan(dir, new FileMatcher() {
@@ -191,7 +193,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	public void storeMessage(MessageTree tree) throws IOException {
 		MessageId id = MessageId.parse(tree.getMessageId());
 		// <callee domain> - <caller domain> - <callee ip>
-		String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
+		//String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
+		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String name = id.getDomain() + '-' + tree.getIpAddress() + '-' + localIp;
 		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
 		LocalMessageBucket bucket = m_buckets.get(dataFile);
 
@@ -233,7 +237,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							m_errors++;
 
 							if (m_errors == 1 || m_errors % 1000 == 0) {
-								Cat.getProducer().logError(new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
+								Cat.getProducer().logError(
+								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
 							}
 						}
 					}

@@ -15,7 +15,6 @@ import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.HostinfoDao;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
@@ -54,7 +53,7 @@ public class Handler implements PageHandler<Context> {
 	private CrossMerger m_crossMerger;
 
 	@Inject
-	private HostinfoDao m_hostinfoDao;
+	private DomainManager m_domainManager;
 
 	@Inject(type = ModelService.class, value = "cross")
 	private ModelService<CrossReport> m_service;
@@ -138,12 +137,14 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
+		long historyTime =payload.getHistoryEndDate().getTime()-payload.getHistoryStartDate().getTime();
+		
 		switch (payload.getAction()) {
 		case HOURLY_PROJECT:
 			CrossReport projectReport = getHourlyReport(payload);
 			ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
 
-			projectInfo.setHostInfoDao(m_hostinfoDao);
+			projectInfo.setDomainManager(m_domainManager);
 			projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			projectInfo.visitCrossReport(projectReport);
@@ -154,7 +155,7 @@ public class Handler implements PageHandler<Context> {
 			CrossReport hostReport = getHourlyReport(payload);
 			HostInfo hostInfo = new HostInfo(payload.getHourDuration());
 
-			hostInfo.setHostInfoDao(m_hostinfoDao);
+			hostInfo.setDomainManager(m_domainManager);
 			hostInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			hostInfo.setProjectName(payload.getProjectName());
@@ -166,7 +167,7 @@ public class Handler implements PageHandler<Context> {
 			CrossReport methodReport = getHourlyReport(payload);
 			MethodInfo methodInfo = new MethodInfo(payload.getHourDuration());
 
-			methodInfo.setHostInfoDao(m_hostinfoDao);
+			methodInfo.setDomainManager(m_domainManager);
 			methodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
 			methodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
@@ -176,9 +177,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_PROJECT:
 			CrossReport historyProjectReport = getSummarizeReport(payload);
-			ProjectInfo historyProjectInfo = new ProjectInfo(payload.getHourDuration());
+			ProjectInfo historyProjectInfo = new ProjectInfo(historyTime);
 
-			historyProjectInfo.setHostInfoDao(m_hostinfoDao);
+			historyProjectInfo.setDomainManager(m_domainManager);
 			historyProjectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			historyProjectInfo.visitCrossReport(historyProjectReport);
@@ -187,9 +188,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_HOST:
 			CrossReport historyHostReport = getSummarizeReport(payload);
-			HostInfo historyHostInfo = new HostInfo(payload.getHourDuration());
+			HostInfo historyHostInfo = new HostInfo(historyTime);
 
-			historyHostInfo.setHostInfoDao(m_hostinfoDao);
+			historyHostInfo.setDomainManager(m_domainManager);
 			historyHostInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort());
 			historyHostInfo.setProjectName(payload.getProjectName());
@@ -199,9 +200,9 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_METHOD:
 			CrossReport historyMethodReport = getSummarizeReport(payload);
-			MethodInfo historyMethodInfo = new MethodInfo(payload.getHourDuration());
+			MethodInfo historyMethodInfo = new MethodInfo(historyTime);
 
-			historyMethodInfo.setHostInfoDao(m_hostinfoDao);
+			historyMethodInfo.setDomainManager(m_domainManager);
 			historyMethodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
 			      .setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
 			historyMethodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());

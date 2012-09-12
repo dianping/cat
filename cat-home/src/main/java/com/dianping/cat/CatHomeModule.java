@@ -33,9 +33,11 @@ public class CatHomeModule extends AbstractModule {
 		DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);
 		MonthReportBuilderTask monthReportBuilder = ctx.lookup(MonthReportBuilderTask.class);
 
-		Threads.forGroup("Cat").start(dailyTaskProducer);
-		Threads.forGroup("Cat").start(taskConsumer);
-		Threads.forGroup("Cat").start(monthReportBuilder);
+		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
+			Threads.forGroup("Cat").start(dailyTaskProducer);
+			Threads.forGroup("Cat").start(taskConsumer);
+			Threads.forGroup("Cat").start(monthReportBuilder);
+		}
 	}
 
 	@Override

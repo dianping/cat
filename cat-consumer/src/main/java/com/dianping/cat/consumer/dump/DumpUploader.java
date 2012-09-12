@@ -162,7 +162,6 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 						long start = System.currentTimeMillis();
 
-//						m_logger.info(String.format("Start uploading(%s) to HDFS(%s) ...", file.getCanonicalPath(), path));
 						Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
 
 						double sec = (System.currentTimeMillis() - start) / 1000d;
@@ -172,9 +171,6 @@ public class DumpUploader implements Initializable, LogEnabled {
 						t.addData("size", size);
 						t.addData("speed", speed);
 						t.setStatus(Message.SUCCESS);
-
-//						m_logger.info(String.format("Finish uploading(%s) to HDFS(%s) with size(%s) at %s.", file.getCanonicalPath(),
-//						      path, size, speed));
 
 						if (!file.delete()) {
 							m_logger.warn("Can't delete file: " + file);

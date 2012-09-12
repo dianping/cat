@@ -299,6 +299,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.cross.DomainManager</role>
+			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
@@ -1843,7 +1855,7 @@
 					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+					<role>com.dianping.cat.report.page.cross.DomainManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1855,6 +1867,18 @@
 		<component>
 			<role>com.dianping.cat.report.page.cross.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.cross.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cross.DomainManager</role>
+			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
