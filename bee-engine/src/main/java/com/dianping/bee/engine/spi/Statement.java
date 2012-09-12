@@ -1,7 +1,6 @@
 package com.dianping.bee.engine.spi;
 
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.RowSet;
+import com.dianping.bee.engine.RowSet;
 
 public interface Statement {
 
@@ -10,4 +9,6 @@ public interface Statement {
 	public int getColumnSize();
 
 	public RowSet query();
+	
+	public IndexMeta getIndexMeta();
 }

@@ -2,10 +2,10 @@ package com.dianping.bee.engine.spi.internal;
 
 import java.util.List;
 
+import com.dianping.bee.engine.spi.ColumnMeta;
+import com.dianping.bee.engine.spi.IndexMeta;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.site.lookup.annotation.Inject;
 
 public class TableHelper {
@@ -23,8 +23,8 @@ public class TableHelper {
 				}
 			}
 		}
+		
 		throw new BadSQLSyntaxException("Column(%s) of table(%s) is not found!", columnName, tableName);
-
 	}
 
 	public IndexMeta findIndex(String databaseName, String tableName, List<ColumnMeta> columns) {

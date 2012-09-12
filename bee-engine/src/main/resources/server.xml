@@ -34,9 +34,8 @@
   -->
 
   <!-- 用户访问定义，用户名、密码、schema等信息。 -->
-  <user name="test">
-    <property name="password">test</property>
-    <property name="schemas">cat,dog,information_schema</property>
+  <user name="bee">
+    <property name="password">beebee</property>
   </user>
   <!--
   <user name="root">

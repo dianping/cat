@@ -3,7 +3,11 @@ package com.dianping.bee.engine.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.bee.engine.QueryService;
+import com.dianping.bee.engine.internal.DefaultQueryService;
 import com.dianping.bee.engine.spi.DatabaseProvider;
+import com.dianping.bee.engine.spi.RowContext;
+import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
 import com.dianping.bee.engine.spi.evaluator.Evaluator;
@@ -23,11 +27,13 @@ import com.dianping.bee.engine.spi.evaluator.logical.LiteralStringEvaluator;
 import com.dianping.bee.engine.spi.evaluator.logical.LogicalAndEvaluator;
 import com.dianping.bee.engine.spi.evaluator.logical.LogicalOrEvaluator;
 import com.dianping.bee.engine.spi.evaluator.logical.ParamMarkerEvaluator;
-import com.dianping.bee.engine.spi.handler.internal.DescHandler;
-import com.dianping.bee.engine.spi.handler.internal.PrepareHandler;
-import com.dianping.bee.engine.spi.handler.internal.SelectHandler;
-import com.dianping.bee.engine.spi.handler.internal.ShowHandler;
-import com.dianping.bee.engine.spi.handler.internal.UseHandler;
+import com.dianping.bee.engine.spi.handler.DescHandler;
+import com.dianping.bee.engine.spi.handler.PrepareHandler;
+import com.dianping.bee.engine.spi.handler.SelectHandler;
+import com.dianping.bee.engine.spi.handler.ShowHandler;
+import com.dianping.bee.engine.spi.handler.UseHandler;
+import com.dianping.bee.engine.spi.internal.DefaultRowContext;
+import com.dianping.bee.engine.spi.internal.DefaultSessionManager;
 import com.dianping.bee.engine.spi.internal.DefaultStatementManager;
 import com.dianping.bee.engine.spi.internal.DefaultTableProviderManager;
 import com.dianping.bee.engine.spi.internal.SingleTablePreparedStatement;
@@ -36,14 +42,12 @@ import com.dianping.bee.engine.spi.internal.SingleTableRowFilter;
 import com.dianping.bee.engine.spi.internal.SingleTableStatement;
 import com.dianping.bee.engine.spi.internal.SingleTableStatementBuilder;
 import com.dianping.bee.engine.spi.internal.TableHelper;
-import com.dianping.bee.engine.spi.row.DefaultRowContext;
-import com.dianping.bee.engine.spi.row.RowContext;
-import com.dianping.bee.engine.spi.session.DefaultSessionManager;
-import com.dianping.bee.engine.spi.session.SessionManager;
 import com.dianping.bee.server.SimpleServer;
 import com.dianping.bee.server.SimpleServerQueryHandler;
-import com.dianping.bee.server.is.InformationSchemaDatabaseProvider;
-import com.dianping.bee.server.is.schema.SchemataIndexer;
+import com.dianping.bee.server.mysql.ColumnsIndexer;
+import com.dianping.bee.server.mysql.InformationSchemaDatabaseProvider;
+import com.dianping.bee.server.mysql.SchemataIndexer;
+import com.dianping.bee.server.mysql.TablesIndexer;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -56,10 +60,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(SimpleServer.class));
+		all.add(C(QueryService.class, DefaultQueryService.class).is(PER_LOOKUP) //
+		      .req(SessionManager.class, StatementManager.class));
 
-		all.add(C(DatabaseProvider.class, InformationSchemaDatabaseProvider.ID, InformationSchemaDatabaseProvider.class));
-		all.add(C(SchemataIndexer.class));
+		all.add(C(SimpleServer.class));
 
 		all.add(C(SessionManager.class, DefaultSessionManager.class));
 		all.add(C(TableProviderManager.class, DefaultTableProviderManager.class) //
@@ -81,6 +85,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SingleTablePreparedStatementBuilder.class).is(PER_LOOKUP)//
 		      .req(TableHelper.class, SingleTablePreparedStatement.class, SingleTableRowFilter.class));
 
+		defineInformationSchema(all);
 		defineHandlers(all);
 		defineLogicalEvaluators(all);
 		defineFunctionEvaluators(all);
@@ -104,6 +109,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(StatementManager.class));
 		all.add(C(PrepareHandler.class)//
 		      .req(StatementManager.class));
+	}
+
+	private void defineInformationSchema(List<Component> all) {
+		all.add(C(DatabaseProvider.class, InformationSchemaDatabaseProvider.ID, InformationSchemaDatabaseProvider.class));
+		all.add(C(SchemataIndexer.class));
+		all.add(C(TablesIndexer.class));
+		all.add(C(ColumnsIndexer.class));
 	}
 
 	private void defineLogicalEvaluators(List<Component> all) {

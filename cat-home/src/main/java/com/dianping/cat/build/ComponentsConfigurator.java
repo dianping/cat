@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.CatHomeModule;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.GraphDao;
+import com.dianping.cat.hadoop.dal.HostinfoDao;
 import com.dianping.cat.hadoop.dal.MonthreportDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.TaskDao;
@@ -16,6 +18,7 @@ import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
+import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
@@ -114,7 +117,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
-		            DatabaseReportBuilder.class, SqlReportBuilder.class,TaskDao.class));
+		            DatabaseReportBuilder.class, SqlReportBuilder.class, TaskDao.class));
+
+		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

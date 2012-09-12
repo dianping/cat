@@ -6,15 +6,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.bee.engine.RowSet;
+import com.dianping.bee.engine.spi.ColumnMeta;
+import com.dianping.bee.engine.spi.Index;
+import com.dianping.bee.engine.spi.IndexMeta;
+import com.dianping.bee.engine.spi.RowContext;
+import com.dianping.bee.engine.spi.RowFilter;
+import com.dianping.bee.engine.spi.RowListener;
 import com.dianping.bee.engine.spi.Statement;
-import com.dianping.bee.engine.spi.index.Index;
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.IndexMeta;
-import com.dianping.bee.engine.spi.meta.RowSet;
-import com.dianping.bee.engine.spi.row.DefaultRowListener;
-import com.dianping.bee.engine.spi.row.RowContext;
-import com.dianping.bee.engine.spi.row.RowFilter;
-import com.dianping.bee.engine.spi.row.RowListener;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
@@ -55,6 +54,11 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 	@Override
 	public int getColumnSize() {
 		return m_selectColumns.length;
+	}
+
+	@Override
+	public IndexMeta getIndexMeta() {
+		return m_index;
 	}
 
 	@Override

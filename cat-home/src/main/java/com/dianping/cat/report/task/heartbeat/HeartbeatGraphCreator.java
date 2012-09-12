@@ -45,6 +45,10 @@ public class HeartbeatGraphCreator implements GraphCreator<HeartbeatReport> {
 			graph.setPeriod(reportPeriod);
 			graph.setType(3);
 			com.dianping.cat.consumer.heartbeat.model.entity.Machine machine = heartbeatReport.getMachines().get(ip);
+
+			if (machine == null) {
+				continue;
+			}
 			List<Period> periods = machine.getPeriods();
 
 			Map<String, GraphLine> detailCache = new TreeMap<String, GraphLine>();

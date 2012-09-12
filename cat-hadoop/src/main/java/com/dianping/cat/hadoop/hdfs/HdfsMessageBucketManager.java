@@ -76,11 +76,15 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 			sb.append('/').append(path);
 
-			final String key = "-" + id.getDomain() + "-";
+			final String key = id.getDomain() + '-' + id.getIpAddress();
 			final String str = sb.toString();
 			final Path basePath = new Path(str);
 			final List<String> paths = new ArrayList<String>();
+			//final String key = "-" + id.getDomain() + "-";
+			
 
+			//final String dataFile =path + id.getDomain() + "-" + id.getIpAddress();
+			
 			fs.listStatus(basePath, new PathFilter() {
 				@Override
 				public boolean accept(Path p) {

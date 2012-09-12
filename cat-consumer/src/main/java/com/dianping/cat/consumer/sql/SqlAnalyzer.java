@@ -109,8 +109,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 			m_reports.put(domain, report);
 		}
-
-		report.addDomain(domain);
+		report.addDomainName(domain);
 
 		if (message instanceof Transaction) {
 			processTransaction(report, tree, (Transaction) message);

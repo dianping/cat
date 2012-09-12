@@ -1,8 +1,8 @@
 package com.dianping.cat.data;
 
+import com.dianping.bee.engine.spi.ColumnMeta;
+import com.dianping.bee.engine.spi.IndexMeta;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
-import com.dianping.bee.engine.spi.meta.IndexMeta;
 import com.dianping.cat.data.event.EventColumn;
 import com.dianping.cat.data.event.EventIndex;
 import com.dianping.cat.data.node.NodeColumn;

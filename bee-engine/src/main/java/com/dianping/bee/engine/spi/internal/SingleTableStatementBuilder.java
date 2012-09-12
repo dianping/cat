@@ -13,8 +13,8 @@ import com.alibaba.cobar.parser.ast.fragment.tableref.TableReference;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
 import com.alibaba.cobar.parser.util.Pair;
 import com.alibaba.cobar.parser.visitor.EmptySQLASTVisitor;
+import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.dianping.bee.engine.spi.meta.ColumnMeta;
 import com.site.lookup.annotation.Inject;
 
 public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
@@ -25,13 +25,13 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	private SingleTableRowFilter m_rowFilter;
 
 	@Inject
-	protected TableHelper m_helper;
+	private TableHelper m_helper;
 
 	private String m_alias;
 
-	protected String m_tableName;
+	private String m_tableName;
 
-	protected String m_databaseName;
+	private String m_databaseName;
 
 	private Clause m_clause;
 
@@ -46,13 +46,17 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 			}
 		}
 
-		ColumnMeta column = m_helper.findColumn(m_databaseName, m_tableName, columnName);
+		ColumnMeta column = findColumnBy(columnName);
 
 		columns.add(column);
 		return column;
 	}
 
-	public SingleTableStatement getStatement() {
+	protected ColumnMeta findColumnBy(String columnName) {
+		return m_helper.findColumn(m_databaseName, m_tableName, columnName);
+	}
+
+	protected SingleTableStatement getStatement() {
 		return m_stmt;
 	}
 
@@ -101,6 +105,10 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 			m_stmt.setIndex(m_helper.findIndex(m_databaseName, m_tableName, m_whereColumns));
 		} else {
 			m_stmt.setIndex(m_helper.findDefaultIndex(m_databaseName, m_tableName));
+		}
+
+		if (m_stmt.getIndexMeta() == null) {
+			throw new BadSQLSyntaxException("Invalid index column!");
 		}
 	}
 

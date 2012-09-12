@@ -1,6 +1,7 @@
 package com.dianping.dog.alarm.rule;
 
 public enum RuleType {
+<<<<<<< HEAD
 	Exception("exception"),
 
 	Service("service");
@@ -20,4 +21,8 @@ public enum RuleType {
    }
 	
 	
+=======
+    Exception,
+    Service
+>>>>>>> c6a52ce6cad28d0ed83daaaeff837d65f97edb26
 }

@@ -3,8 +3,8 @@ package com.dianping.bee.engine.spi.evaluator.logical;
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.logical.LogicalOrExpression;
 import com.alibaba.cobar.parser.util.ExprEvalUtils;
+import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.evaluator.AbstractEvaluator;
-import com.dianping.bee.engine.spi.row.RowContext;
 
 public class LogicalOrEvaluator extends AbstractEvaluator<LogicalOrExpression, Boolean> {
 	public static final String ID = LogicalOrExpression.class.getName();

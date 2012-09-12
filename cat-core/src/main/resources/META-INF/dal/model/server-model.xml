@@ -2,6 +2,7 @@
 <model model-package="com.dianping.cat.configuration.server" enable-xml-parser="true" enable-validator="true">
 	<entity name="config" class-name="ServerConfig">
 		<attribute name="local-mode" value-type="boolean" default-value="true"/>
+		<attribute name="job-machine" value-type="boolean" default-value="false"/>
 	</entity>
 	<entity name="storage" class-name="StorageConfig">
 		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />

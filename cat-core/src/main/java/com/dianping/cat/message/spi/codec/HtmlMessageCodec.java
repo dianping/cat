@@ -47,10 +47,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	private DateHelper m_dateHelper = new DateHelper();
 
 	protected String buildLink(Message message) {
-		String messageId = message.getData().toString();
-		String path = m_builder.getLogViewPath(messageId);
-
-		return path;
+		return message.getData().toString();
 	}
 
 	@Override
@@ -87,29 +84,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	protected int encodeFooter(MessageTree tree, ChannelBuffer buf) {
-		
-//		BufferHelper helper = m_bufferHelper;
-//		int count = 0;
-//		String uri = "/cat/r/m/" + m_builder.getLogViewPath(tree.getMessageId());
-//
-//		count += helper.tr1(buf, "nav");
-//		count += helper.td1(buf, "colspan=\"4\" align=\"left\"");
-//		count += helper.nbsp(buf, 3);
-//		count += helper.write(buf, "<a href=\"");
-//		count += helper.write(buf, uri);
-//		count += helper.write(buf, "?tag1=t:");
-//		count += helper.write(buf, tree.getThreadId());
-//		count += helper.write(buf, "\">&lt;&lt;&lt; Thread &nbsp;&nbsp;</a>");
-//		count += helper.write(buf, "<a href=\"");
-//		count += helper.write(buf, uri);
-//		count += helper.write(buf, "?tag2=t:");
-//		count += helper.write(buf, tree.getThreadId());
-//		count += helper.write(buf, "\"> &nbsp;&nbsp;Thread &gt;&gt;&gt;</a>");
-//		count += helper.nbsp(buf, 3);
-//		count += helper.td2(buf);
-//		count += helper.tr2(buf);
-//		count += helper.crlf(buf);
-
 		return 0;
 	}
 
@@ -214,16 +188,15 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		}
 
 		String link = buildLink(message);
-		String id = tree.getMessageId();
 
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
 		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: show ::]</a>",
-		      m_logViewPrefix, link, id));
+		      m_logViewPrefix, link, link));
 		count += helper.td2(buf);
 
-		count += helper.td(buf, "<div id=\"" + id + "\"></div>", "colspan=\"4\"");
+		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
 
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);

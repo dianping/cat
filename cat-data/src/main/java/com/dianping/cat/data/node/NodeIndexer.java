@@ -1,7 +1,7 @@
 package com.dianping.cat.data.node;
 
-import com.dianping.bee.engine.spi.index.Index;
-import com.dianping.bee.engine.spi.row.RowContext;
+import com.dianping.bee.engine.spi.Index;
+import com.dianping.bee.engine.spi.RowContext;
 
 public class NodeIndexer implements Index {
 	@Override

@@ -3,7 +3,7 @@ package com.dianping.bee.engine.spi.evaluator;
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.util.ExprEvalUtils;
 import com.alibaba.cobar.parser.util.Pair;
-import com.dianping.bee.engine.spi.row.RowContext;
+import com.dianping.bee.engine.spi.RowContext;
 import com.site.lookup.ContainerHolder;
 
 public abstract class AbstractEvaluator<S extends Expression, T> extends ContainerHolder implements Evaluator<S, T> {

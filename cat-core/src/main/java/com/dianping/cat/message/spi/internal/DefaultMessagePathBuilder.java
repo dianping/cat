@@ -51,11 +51,6 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	}
 
 	@Override
-	public String getLogViewPath(String messageId) {
-		return messageId + "/logview.html";
-	}
-
-	@Override
 	public String getLogViewPath(String domain, Date timestamp) {
 		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/logview-{1}");
 

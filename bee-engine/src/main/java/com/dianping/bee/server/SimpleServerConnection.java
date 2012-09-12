@@ -25,7 +25,7 @@ import com.alibaba.cobar.net.util.MySQLMessage;
 import com.alibaba.cobar.protocol.mysql.OkPacket;
 import com.alibaba.cobar.server.ServerConnection;
 import com.dianping.bee.engine.spi.PreparedStatement;
-import com.dianping.bee.engine.spi.session.SessionManager;
+import com.dianping.bee.engine.spi.SessionManager;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
@@ -122,7 +122,9 @@ public class SimpleServerConnection extends ServerConnection {
 				PreparedStatement stmt = ((SimpleServerQueryHandler) queryHandler).getStatement(stmtId);
 				if (stmt == null) {
 					writeErrMessage(ErrorCode.ER_YES, "Invalid Statement Identifier");
+					return;
 				}
+
 				int parameterSize = stmt.getParameterSize();
 				List<Object> parameters = new ArrayList<Object>(parameterSize);
 				int nullBitMapSize = (parameterSize + 7) / 8;

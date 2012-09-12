@@ -47,8 +47,8 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 			if (report == null) {
 				report = new CrossReport(domain);
 			
-				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(hour), new Date(
-						hour + 60 * 60 * 1000), null, "cross", ReportEntity.READSET_DOMAIN_NAME);
+				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(date), new Date(
+						date + 60 * 60 * 1000), null, "cross", ReportEntity.READSET_DOMAIN_NAME);
 
 				Set<String> domainNames = report.getDomainNames();
 				for (Report temp : historyReports) {

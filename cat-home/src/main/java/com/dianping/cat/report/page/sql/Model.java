@@ -19,9 +19,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		super(ctx);
 	}
 
-	@Override
-	public Action getDefaultAction() {
-		return Action.HOURLY_REPORT;
+	public String getDatabase() {
+		return m_database;
 	}
 
 	public List<String> getDatabases(){
@@ -33,28 +32,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 	
 	@Override
+	public Action getDefaultAction() {
+		return Action.HOURLY_REPORT;
+	}
+	
+	public DisplaySqlReport getDisplaySqlReport() {
+		return m_displaySqlReport;
+	}
+
+	@Override
 	public String getDomain() {
 		if (m_report == null) {
 			return getDisplayDomain();
 		} else {
 			return m_report.getDomain();
 		}
-	}
-	
-	public SqlReport getReport() {
-		return m_report;
-	}
-
-	public void setReport(SqlReport sqlReport) {
-		m_report = sqlReport;
-	}
-
-	public DisplaySqlReport getDisplaySqlReport() {
-		return m_displaySqlReport;
-	}
-
-	public void setDisplaySqlReport(DisplaySqlReport displaySqlReport) {
-		m_displaySqlReport = displaySqlReport;
 	}
 
 	@Override
@@ -66,12 +58,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public SqlReport getReport() {
+		return m_report;
+	}
+
 	public void setDatabase(String database) {
 		m_database = database;
    }
 
-	public String getDatabase() {
-		return m_database;
+	public void setDisplaySqlReport(DisplaySqlReport displaySqlReport) {
+		m_displaySqlReport = displaySqlReport;
+	}
+
+	public void setReport(SqlReport sqlReport) {
+		m_report = sqlReport;
 	}
 	
 	
