@@ -2,6 +2,7 @@ package com.dianping.dog.alarm.connector;
 
 import java.util.Date;
 
+import com.dianping.dog.alarm.entity.ConnectEntity;
 import com.dianping.dog.alarm.parser.DataParser;
 import com.dianping.dog.alarm.parser.DataParserFactory;
 
@@ -9,32 +10,31 @@ public abstract class AbstractConnector<T> implements Connector {
 
 	private long connectorId;
 
-	private ConnectorContext m_ctx;
+	private ConnectEntity m_entity;
 	
    private DataParserFactory m_parserFactory;
    
 	@Override
-	public void init(ConnectorContext rule) {
-		m_ctx = rule;
-		this.connectorId = rule.getRuleId();
+	public void init(ConnectEntity entity) {
+		m_entity = entity;
+		this.connectorId = m_entity.getConId();
 	}
+	
+	@Override
+   public ConnectEntity getConnectorEntity() {
+	   return m_entity;
+   }
 
 	@Override
 	public long getConnectorId() {
 		return connectorId;
 	}
 
-	@Override
-	public ConnectorContext getConnectorContext() {
-		return m_ctx;
-	}
-	
-	public abstract T fetchContent(ConnectorContext ctx);
+	public abstract T fetchContent(ConnectEntity m_entity);
 
 	public final RowData produceData(Date currentTime){
-		m_ctx.touch(currentTime);
-		T content = fetchContent(m_ctx);
-		DataParser parser = m_parserFactory.getDataParser(m_ctx.getUrl());
+		T content = fetchContent(m_entity);
+		DataParser parser = m_parserFactory.getDataParser(m_entity.getUrl());
 		return parser.parse(content);
 	}
 

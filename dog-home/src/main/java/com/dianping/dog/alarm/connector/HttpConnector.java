@@ -2,12 +2,13 @@ package com.dianping.dog.alarm.connector;
 
 import java.net.URL;
 
+import com.dianping.dog.alarm.entity.ConnectEntity;
 import com.site.helper.Files;
 
 public class HttpConnector extends AbstractConnector<String> {
 
 	@Override
-   public String fetchContent(ConnectorContext ctx) {
+   public String fetchContent(ConnectEntity ctx) {
 		String url = ctx.getUrl();
 		try {
 	      URL data = new URL(url);
@@ -18,5 +19,4 @@ public class HttpConnector extends AbstractConnector<String> {
       }
 		return null;
    }
-
 }

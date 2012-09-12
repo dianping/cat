@@ -2,13 +2,15 @@ package com.dianping.dog.alarm.connector;
 
 import java.util.Date;
 
+import com.dianping.dog.alarm.entity.ConnectEntity;
+
 
 
 public interface Connector {
 	
-	ConnectorContext getConnectorContext();
+	void init(ConnectEntity entity);
 	
-	void init(ConnectorContext ctx);
+	ConnectEntity getConnectorEntity();
 	
 	long getConnectorId();
  

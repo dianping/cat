@@ -1,7 +1,7 @@
 package com.dianping.dog.alarm.rule;
 
+import com.dianping.dog.alarm.data.DataEvent;
 import com.dianping.dog.alarm.entity.RuleEntity;
-import com.dianping.dog.event.Event;
 
 public interface Rule {
 	
@@ -9,8 +9,8 @@ public interface Rule {
 	
 	public String getName();
 	
-	public boolean isEligible(Event event);
+	public boolean isEligible(DataEvent event);
 
-	public boolean apply(Event event);
+	public boolean apply(DataEvent event);
 			
 }

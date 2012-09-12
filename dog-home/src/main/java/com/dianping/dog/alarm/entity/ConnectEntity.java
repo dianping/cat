@@ -2,7 +2,11 @@ package com.dianping.dog.alarm.entity;
 
 import java.util.Date;
 
-public class ConnectEntity {
+import com.dianping.dog.alarm.connector.ConnectorType;
+
+public class ConnectEntity implements Comparable<ConnectEntity>{
+	
+	private long conId;
 	
 	private String connectType;// http
 
@@ -16,7 +20,29 @@ public class ConnectEntity {
 
 	private String name;
 	
+	private String url;
+	
 	private Date gmtModified;
+	
+	public ConnectorType getConType(){
+		if(url.startsWith("http://")){
+			return ConnectorType.HTTP;
+		}else{
+			return ConnectorType.UNSUPPORT;
+		}
+	}
+	
+	public String getUrl() {
+   	return url;
+   }
+
+	public long getConId() {
+   	return conId;
+   }
+
+	public void setConId(long conId) {
+   	this.conId = conId;
+   }
 
 	public String getConnectType() {
 		return connectType;
@@ -72,6 +98,11 @@ public class ConnectEntity {
 
 	public void setGmtModified(Date gmtModified) {
    	this.gmtModified = gmtModified;
+   }
+
+	@Override
+   public int compareTo(ConnectEntity o) {
+		return (int) (this.getGmtModified().getTime() - o.getGmtModified().getTime());
    }
 	
 }

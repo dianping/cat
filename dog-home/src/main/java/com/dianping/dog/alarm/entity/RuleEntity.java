@@ -22,7 +22,7 @@ public class RuleEntity {
 	private ConnectEntity connect;
 	
 	private Date gmtModified;
-
+	
 	private long interval;
 
 	public long getId() {

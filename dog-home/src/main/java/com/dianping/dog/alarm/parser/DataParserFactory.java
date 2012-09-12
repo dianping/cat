@@ -4,7 +4,7 @@ public class DataParserFactory {
 	
    public DataParser getDataParser(String url){
    	
-   	return null;
+   	return new DefaultDataParser();
    }
     
 }
