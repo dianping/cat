@@ -51,15 +51,6 @@ public class RuleEntity {
 
 	
 	private Date gmtModified;
-<<<<<<< HEAD
-	
-	private long interval;
-=======
-
-	public void setType(String type) {
-		this.type = type;
-	}
->>>>>>> 4c70c6a27d39481554dc56fa7d5a7a98b3ad3b78
 
 	public long getId() {
 		return id;
@@ -118,7 +109,6 @@ public class RuleEntity {
 		connect.setType(type);
 		connect.setReport(reportType);
 		connect.setConnectSource(CONNECT_SOURCE);
-		connect.setConnectType(CONNECT_TYPE);
 		return connect;
 	}
 
