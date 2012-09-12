@@ -2,6 +2,8 @@ package com.dianping.dog.alarm.rule;
 
 import java.util.List;
 
+import com.dianping.dog.alarm.entity.Duration;
+
 public class RuleTemplateEntity {
 	
 	private int ruleTemplateID;

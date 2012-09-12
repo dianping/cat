@@ -1,7 +1,6 @@
 package com.dianping.dog.alarm.rule;
 
 public enum RuleType {
-<<<<<<< HEAD
 	Exception("exception"),
 
 	Service("service");
@@ -19,10 +18,4 @@ public enum RuleType {
 	public void setName(String name) {
    	m_name = name;
    }
-	
-	
-=======
-    Exception,
-    Service
->>>>>>> c6a52ce6cad28d0ed83daaaeff837d65f97edb26
 }

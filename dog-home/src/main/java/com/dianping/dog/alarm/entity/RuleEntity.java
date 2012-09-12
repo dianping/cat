@@ -3,6 +3,7 @@ package com.dianping.dog.alarm.entity;
 import java.util.Date;
 import java.util.List;
 
+import com.dianping.dog.alarm.rule.RuleTemplateEntity;
 import com.dianping.dog.alarm.rule.RuleType;
 
 /***
@@ -16,7 +17,6 @@ public class RuleEntity {
 	private static String CONNECT_SOURCE="cat";
 	
 	private long id;
-<<<<<<< HEAD:dog-home/src/main/java/com/dianping/dog/alarm/rule/RuleEntity.java
 
 	private String domain;
 
@@ -42,29 +42,15 @@ public class RuleEntity {
 		this.domain = domain;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public String getType() {
 		return type;
 	}
-=======
 	
-	private String name;
 	
 	private RuleType ruleType;
 
-	private List<Duration> durations;
-
-	private ConnectEntity connect;
 	
 	private Date gmtModified;
->>>>>>> c6a52ce6cad28d0ed83daaaeff837d65f97edb26:dog-home/src/main/java/com/dianping/dog/alarm/entity/RuleEntity.java
 
 	public void setType(String type) {
 		this.type = type;
@@ -97,21 +83,16 @@ public class RuleEntity {
 		this.interval = interval;
 	}
 
-<<<<<<< HEAD:dog-home/src/main/java/com/dianping/dog/alarm/rule/RuleEntity.java
 	public String getRuleType() {
 		return reportType;
 	}
 
 	public void setRuleType(String ruleType) {
 		this.reportType = ruleType;
-=======
-	public RuleType getRuleType() {
-		return ruleType;
 	}
 
 	public void setRuleType(RuleType ruleType) {
 		this.ruleType = ruleType;
->>>>>>> c6a52ce6cad28d0ed83daaaeff837d65f97edb26:dog-home/src/main/java/com/dianping/dog/alarm/entity/RuleEntity.java
 	}
 
 	public List<Duration> getDurations() {
@@ -140,7 +121,6 @@ public class RuleEntity {
 		this.connect = connect;
 	}
 
-<<<<<<< HEAD:dog-home/src/main/java/com/dianping/dog/alarm/rule/RuleEntity.java
 	public RuleTemplateEntity getRuleTemplateEntity() {
    	return ruleTemplateEntity;
    }
@@ -149,7 +129,6 @@ public class RuleEntity {
    	this.ruleTemplateEntity = ruleTemplateEntity;
    }
 
-=======
 	public Date getGmtModified() {
    	return gmtModified;
    }
@@ -158,5 +137,4 @@ public class RuleEntity {
    	this.gmtModified = gmtModified;
    }
 	
->>>>>>> c6a52ce6cad28d0ed83daaaeff837d65f97edb26:dog-home/src/main/java/com/dianping/dog/alarm/entity/RuleEntity.java
 }
