@@ -13,8 +13,6 @@ public class RuleEntity {
 
 	public static final QueryDef DELETE_BY_PK = null;
 
-	private static String CONNECT_TYPE = "http";
-
 	private static String CONNECT_SOURCE = "cat";
 
 	private long id;
@@ -76,9 +74,18 @@ public class RuleEntity {
 		this.interval = interval;
 	}
 
-	public String getRuleType() {
-		return reportType;
-	}
+
+	public static QueryDef getDeleteByPk() {
+   	return DELETE_BY_PK;
+   }
+
+	public static String getCONNECT_SOURCE() {
+   	return CONNECT_SOURCE;
+   }
+
+	public String getReportType() {
+   	return reportType;
+   }
 
 	public List<Duration> getDurations() {
 		if (durations == null || durations.size() == 0) {
@@ -96,7 +103,7 @@ public class RuleEntity {
 		connect.setDomain(domain);
 		connect.setName(name);
 		connect.setType(type);
-		connect.setReport(reportType);
+		connect.setReportType(reportType);
 		connect.setConnectSource(CONNECT_SOURCE);
 		return connect;
 	}
