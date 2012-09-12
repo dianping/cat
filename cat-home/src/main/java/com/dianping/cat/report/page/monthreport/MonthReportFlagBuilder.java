@@ -45,7 +45,7 @@ public class MonthReportFlagBuilder extends BaseVisitor {
 	      } else if (m_currentCache.equals("webCache")) {
 	      	lastCache = m_lastMonthReport.getWebCache().getBaseCacheInfo();
 	      } else {
-	      	throw new RuntimeException("inter error in build cache flag！");
+	      	throw new RuntimeException("inter error in build cache flag");
 	      }
 
 	      if (baseCacheInfo.getTotal() > lastCache.getTotal()) {
@@ -87,7 +87,7 @@ public class MonthReportFlagBuilder extends BaseVisitor {
 	      } else if (m_currentType.equals("Service")) {
 	      	lastBaseInfo = m_lastMonthReport.getService().getBaseInfo();
 	      } else {
-	      	throw new RuntimeException("inter error in build baseInfo flag！");
+	      	throw new RuntimeException("inter error in build baseInfo flag");
 	      }
 
 	      if (baseInfo.getAvg() > lastBaseInfo.getAvg()) {

@@ -1,11 +1,11 @@
 package com.dianping.dog.alarm.rule.exception;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.dianping.dog.alarm.rule.AlarmStrategy;
 import com.dianping.dog.alarm.rule.Level;
-import com.sun.tools.javac.util.List;
 
 public class ExceptionRuleDef {
 
