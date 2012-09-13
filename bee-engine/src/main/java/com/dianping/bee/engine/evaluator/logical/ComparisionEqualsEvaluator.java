@@ -19,4 +19,9 @@ public class ComparisionEqualsEvaluator extends AbstractEvaluator<ComparisionEqu
 			return Boolean.FALSE;
 		}
 	}
+
+	@Override
+   public Class<?> getResultType(ComparisionEqualsExpression expr) {
+		 return Boolean.class;
+   }
 }

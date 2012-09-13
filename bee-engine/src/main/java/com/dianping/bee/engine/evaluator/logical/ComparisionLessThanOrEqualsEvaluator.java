@@ -19,4 +19,9 @@ public class ComparisionLessThanOrEqualsEvaluator extends AbstractEvaluator<Comp
 			return Boolean.FALSE;
 		}
 	}
+
+	@Override
+   public Class<?> getResultType(ComparisionLessThanOrEqualsExpression expr) {
+		 return Boolean.class;
+   }
 }

@@ -19,4 +19,9 @@ public class ComparisionGreaterThanEvaluator extends AbstractEvaluator<Comparisi
 			return Boolean.FALSE;
 		}
 	}
+
+	@Override
+   public Class<?> getResultType(ComparisionGreaterThanExpression expr) {
+		 return Boolean.class;
+   }
 }

@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-public class SQLRegex {
+public class SqlWildcard {
 
 	/**
 	 * Support ? and %

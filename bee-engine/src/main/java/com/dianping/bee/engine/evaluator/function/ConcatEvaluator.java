@@ -25,4 +25,9 @@ public class ConcatEvaluator extends AbstractEvaluator<Concat, String> {
 
 		return sb.toString();
 	}
+
+	@Override
+   public Class<?> getResultType(Concat expr) {
+	   return String.class;
+   }
 }

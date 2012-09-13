@@ -9,6 +9,7 @@ import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.Fields;
 import com.alibaba.cobar.config.model.SchemaConfig;
 import com.alibaba.cobar.server.ServerConnection;
+import com.dianping.bee.engine.helper.SqlParsers;
 import com.dianping.bee.engine.helper.TypeUtils;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.TableProvider;
@@ -24,7 +25,7 @@ public class DescHandler extends AbstractHandler {
 
 	@Override
 	protected void handle(ServerConnection c, List<String> parts) {
-		String tableName = unescape(parts.get(0));
+		String tableName = SqlParsers.forEscape().unescape(parts.get(0));
 		LOGGER.info("DESC : " + tableName);
 
 		String db = c.getSchema();

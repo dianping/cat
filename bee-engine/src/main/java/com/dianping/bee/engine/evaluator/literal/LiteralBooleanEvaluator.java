@@ -1,4 +1,4 @@
-package com.dianping.bee.engine.evaluator.logical;
+package com.dianping.bee.engine.evaluator.literal;
 
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralBoolean;
 import com.dianping.bee.engine.evaluator.AbstractEvaluator;
@@ -11,4 +11,9 @@ public class LiteralBooleanEvaluator extends AbstractEvaluator<LiteralBoolean, B
 	public Boolean evaluate(RowContext ctx, LiteralBoolean expr) {
 		return expr.isTrue();
 	}
+
+	@Override
+   public Class<?> getResultType(LiteralBoolean expr) {
+		 return Boolean.class;
+   }
 }

@@ -26,4 +26,9 @@ public class LogicalAndEvaluator extends AbstractEvaluator<LogicalAndExpression,
 
 		return Boolean.TRUE;
 	}
+
+	@Override
+   public Class<?> getResultType(LogicalAndExpression expr) {
+		 return Boolean.class;
+   }
 }

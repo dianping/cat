@@ -23,7 +23,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.bee.engine.TestEnvConfig;
+import com.dianping.bee.engine.TestEnvConfigurator;
 import com.dianping.bee.mysql.InformationSchemaTest;
 import com.dianping.bee.server.SimpleServer;
 import com.site.lookup.ContainerLoader;
@@ -64,7 +64,7 @@ public class AllInOneJDBCTests {
 
 	private static ContainerConfiguration getConfiguration() {
 		ContainerConfiguration configuration = new DefaultContainerConfiguration().setName("test");
-		String resource = TestEnvConfig.class.getName().replace('.', '/') + ".xml";
+		String resource = TestEnvConfigurator.class.getName().replace('.', '/') + ".xml";
 
 		configuration.setContainerConfiguration(resource);
 		return configuration;

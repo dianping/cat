@@ -39,4 +39,9 @@ public class ComparisionIsEvaluator extends AbstractEvaluator<ComparisionIsExpre
 
 		return Boolean.FALSE;
 	}
+
+	@Override
+   public Class<?> getResultType(ComparisionIsExpression expr) {
+		 return Boolean.class;
+   }
 }

@@ -37,7 +37,7 @@ public class SQLWildcardTest {
 	}
 
 	private void checkLike(String str, String pattern, boolean expected) {
-		boolean actual = SQLRegex.like(str, pattern);
+		boolean actual = SqlWildcard.like(str, pattern);
 		Assert.assertEquals(expected, actual);
 	}
 }

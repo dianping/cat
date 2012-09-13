@@ -1,4 +1,4 @@
-package com.dianping.bee.engine.evaluator.logical;
+package com.dianping.bee.engine.evaluator.literal;
 
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString;
 import com.dianping.bee.engine.evaluator.AbstractEvaluator;
@@ -13,4 +13,9 @@ public class LiteralStringEvaluator extends AbstractEvaluator<LiteralString, Str
 
 		return value;
 	}
+
+	@Override
+   public Class<?> getResultType(LiteralString expr) {
+		 return String.class;
+   }
 }

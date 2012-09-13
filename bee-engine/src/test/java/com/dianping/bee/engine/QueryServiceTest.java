@@ -11,7 +11,7 @@ import com.site.lookup.ComponentTestCase;
 public class QueryServiceTest extends ComponentTestCase {
 
 	protected String getCustomConfigurationName() {
-		return TestEnvConfig.class.getName().replace('.', '/') + ".xml";
+		return TestEnvConfigurator.class.getName().replace('.', '/') + ".xml";
 	}
 
 	@Test

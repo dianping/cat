@@ -1,7 +1,6 @@
-package com.dianping.bee.engine.evaluator.logical;
+package com.dianping.bee.engine.evaluator;
 
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
-import com.dianping.bee.engine.evaluator.AbstractEvaluator;
 import com.dianping.bee.engine.spi.RowContext;
 
 public class IdentifierEvaluator extends AbstractEvaluator<Identifier, Object> {
@@ -13,5 +12,10 @@ public class IdentifierEvaluator extends AbstractEvaluator<Identifier, Object> {
 		Object value = ctx.getValue(id);
 
 		return value;
+	}
+
+	@Override
+	public Class<?> getResultType(Identifier expr) {
+		throw new UnsupportedOperationException("This method should not be called!");
 	}
 }

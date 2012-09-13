@@ -5,8 +5,13 @@ import java.util.List;
 
 import com.dianping.bee.engine.QueryService;
 import com.dianping.bee.engine.evaluator.Evaluator;
+import com.dianping.bee.engine.evaluator.IdentifierEvaluator;
+import com.dianping.bee.engine.evaluator.ParamMarkerEvaluator;
 import com.dianping.bee.engine.evaluator.function.ConcatEvaluator;
 import com.dianping.bee.engine.evaluator.function.SumEvaluator;
+import com.dianping.bee.engine.evaluator.literal.LiteralBooleanEvaluator;
+import com.dianping.bee.engine.evaluator.literal.LiteralNumberEvaluator;
+import com.dianping.bee.engine.evaluator.literal.LiteralStringEvaluator;
 import com.dianping.bee.engine.evaluator.logical.BetweenAndEvaluator;
 import com.dianping.bee.engine.evaluator.logical.ComparisionEqualsEvaluator;
 import com.dianping.bee.engine.evaluator.logical.ComparisionGreaterThanEvaluator;
@@ -14,14 +19,9 @@ import com.dianping.bee.engine.evaluator.logical.ComparisionGreaterThanOrEqualsE
 import com.dianping.bee.engine.evaluator.logical.ComparisionIsEvaluator;
 import com.dianping.bee.engine.evaluator.logical.ComparisionLessThanEvaluator;
 import com.dianping.bee.engine.evaluator.logical.ComparisionLessThanOrEqualsEvaluator;
-import com.dianping.bee.engine.evaluator.logical.IdentifierEvaluator;
 import com.dianping.bee.engine.evaluator.logical.InEvaluator;
-import com.dianping.bee.engine.evaluator.logical.LiteralBooleanEvaluator;
-import com.dianping.bee.engine.evaluator.logical.LiteralNumberEvaluator;
-import com.dianping.bee.engine.evaluator.logical.LiteralStringEvaluator;
 import com.dianping.bee.engine.evaluator.logical.LogicalAndEvaluator;
 import com.dianping.bee.engine.evaluator.logical.LogicalOrEvaluator;
-import com.dianping.bee.engine.evaluator.logical.ParamMarkerEvaluator;
 import com.dianping.bee.engine.internal.DefaultQueryService;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.RowContext;
@@ -89,6 +89,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		defineInformationSchema(all);
 		defineHandlers(all);
+		definePrimaryEvaluators(all);
+		defineLiteralEvaluators(all);
 		defineLogicalEvaluators(all);
 		defineFunctionEvaluators(all);
 
@@ -123,6 +125,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ColumnsIndexer.class));
 	}
 
+	private void defineLiteralEvaluators(List<Component> all) {
+		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
+		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
+		all.add(C(Evaluator.class, LiteralBooleanEvaluator.ID, LiteralBooleanEvaluator.class));
+	}
+
 	private void defineLogicalEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, LogicalAndEvaluator.ID, LogicalAndEvaluator.class));
 		all.add(C(Evaluator.class, LogicalOrEvaluator.ID, LogicalOrEvaluator.class));
@@ -130,19 +138,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionGreaterThanEvaluator.ID, ComparisionGreaterThanEvaluator.class));
-		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID,
-		      ComparisionGreaterThanOrEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID, ComparisionGreaterThanOrEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanEvaluator.ID, ComparisionLessThanEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanOrEqualsEvaluator.ID, ComparisionLessThanOrEqualsEvaluator.class));
 
 		all.add(C(Evaluator.class, BetweenAndEvaluator.ID, BetweenAndEvaluator.class));
 		all.add(C(Evaluator.class, InEvaluator.ID, InEvaluator.class));
+	}
 
+	private void definePrimaryEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, IdentifierEvaluator.ID, IdentifierEvaluator.class));
 		all.add(C(Evaluator.class, ParamMarkerEvaluator.ID, ParamMarkerEvaluator.class));
-
-		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
-		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
-		all.add(C(Evaluator.class, LiteralBooleanEvaluator.ID, LiteralBooleanEvaluator.class));
 	}
 }

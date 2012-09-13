@@ -21,9 +21,9 @@ class SelectField implements ColumnMeta {
 		m_type = column.getType();
 	}
 
-	public SelectField(Expression expr, String alias) {
+	public SelectField(Expression expr, String alias, Class<?> type) {
 		m_expr = expr;
-		m_type = String.class; // TODO fix it
+		m_type = type;
 
 		if (alias != null) {
 			m_name = alias;

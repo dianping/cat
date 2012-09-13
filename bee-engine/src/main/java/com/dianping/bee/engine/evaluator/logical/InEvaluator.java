@@ -44,4 +44,9 @@ public class InEvaluator extends AbstractEvaluator<InExpression, Boolean> {
 
 		return isNot ? Boolean.TRUE : Boolean.FALSE;
 	}
+
+	@Override
+   public Class<?> getResultType(InExpression expr) {
+		 return Boolean.class;
+   }
 }

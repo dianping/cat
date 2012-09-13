@@ -26,4 +26,9 @@ public class LogicalOrEvaluator extends AbstractEvaluator<LogicalOrExpression, B
 
 		return Boolean.FALSE;
 	}
+
+	@Override
+	public Class<?> getResultType(LogicalOrExpression expr) {
+		return Boolean.class;
+	}
 }

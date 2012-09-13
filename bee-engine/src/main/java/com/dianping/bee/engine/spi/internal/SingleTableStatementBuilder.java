@@ -3,10 +3,17 @@ package com.dianping.bee.engine.spi.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
 import com.alibaba.cobar.parser.ast.expression.primary.Wildcard;
+import com.alibaba.cobar.parser.ast.expression.primary.function.FunctionExpression;
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber;
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString;
 import com.alibaba.cobar.parser.ast.fragment.tableref.TableRefFactor;
@@ -14,11 +21,13 @@ import com.alibaba.cobar.parser.ast.fragment.tableref.TableReference;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
 import com.alibaba.cobar.parser.util.Pair;
 import com.alibaba.cobar.parser.visitor.EmptySQLASTVisitor;
+import com.dianping.bee.engine.evaluator.Evaluator;
+import com.dianping.bee.engine.helper.SqlParsers;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.site.lookup.annotation.Inject;
 
-public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
+public class SingleTableStatementBuilder extends EmptySQLASTVisitor implements Contextualizable {
 	@Inject
 	private SingleTableStatement m_stmt;
 
@@ -27,6 +36,8 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 
 	@Inject
 	private TableHelper m_helper;
+
+	private PlexusContainer m_container;
 
 	private String m_alias;
 
@@ -40,11 +51,15 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 
 	private List<ColumnMeta> m_whereColumns = new ArrayList<ColumnMeta>();
 
+	public void contextualize(Context context) throws ContextException {
+		m_container = (PlexusContainer) context.get("plexus");
+	}
+
 	protected ColumnMeta findColumnBy(String columnName) {
 		return m_helper.findColumn(m_databaseName, m_tableName, columnName);
 	}
 
-	private ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
+	protected ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
 		for (ColumnMeta column : columns) {
 			if (column.getName().equals(columnName)) {
 				return column;
@@ -59,6 +74,17 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 
 	protected SingleTableStatement getStatement() {
 		return m_stmt;
+	}
+
+	@SuppressWarnings("unchecked")
+	protected Class<?> getTypeForExpression(Expression expr) {
+		try {
+			Evaluator<Expression, Object> evaluator = m_container.lookup(Evaluator.class, expr.getClass().getName());
+
+			return evaluator.getResultType(expr);
+		} catch (ComponentLookupException e) {
+			throw new RuntimeException(String.format("No evaluator defined for %s.", expr.getClass().getName()), e);
+		}
 	}
 
 	@Override
@@ -120,11 +146,11 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 				}
 			} else if (expr instanceof Identifier) { // column
 				String columnName = ((Identifier) expr).getIdText();
-				ColumnMeta column = findColumnBy(columnName);
+				ColumnMeta column = findColumnBy(SqlParsers.forEscape().unescape(columnName));
 
 				fields.add(new SelectField(column, alias));
 			} else { // expression
-				fields.add(new SelectField(expr, alias));
+				fields.add(new SelectField(expr, alias, getTypeForExpression(expr)));
 			}
 
 			expr.accept(this);

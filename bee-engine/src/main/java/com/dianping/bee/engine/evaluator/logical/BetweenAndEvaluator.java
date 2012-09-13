@@ -28,4 +28,9 @@ public class BetweenAndEvaluator extends AbstractEvaluator<BetweenAndExpression,
 			return isNot ? Boolean.FALSE : Boolean.TRUE;
 		}
 	}
+
+	@Override
+   public Class<?> getResultType(BetweenAndExpression expr) {
+	   return Boolean.class;
+   }
 }

@@ -8,6 +8,7 @@ import org.apache.log4j.Logger;
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.handler.FrontendPrivileges;
 import com.alibaba.cobar.server.ServerConnection;
+import com.dianping.bee.engine.helper.SqlParsers;
 
 public class UseHandler extends AbstractHandler {
 
@@ -15,7 +16,7 @@ public class UseHandler extends AbstractHandler {
 
 	@Override
 	protected void handle(ServerConnection c, List<String> parts) {
-		String schema = unescape(parts.get(0));
+		String schema = SqlParsers.forEscape().unescape(parts.get(0));
 		LOGGER.info("use : " + schema);
 		// 检查schema的有效性
 		FrontendPrivileges privileges = c.getPrivileges();

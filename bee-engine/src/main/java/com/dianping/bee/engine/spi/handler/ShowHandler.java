@@ -9,7 +9,8 @@ import org.apache.log4j.Logger;
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.Fields;
 import com.alibaba.cobar.server.ServerConnection;
-import com.dianping.bee.engine.helper.SQLRegex;
+import com.dianping.bee.engine.helper.SqlParsers;
+import com.dianping.bee.engine.helper.SqlWildcard;
 import com.dianping.bee.engine.helper.TypeUtils;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.DatabaseProvider;
@@ -41,32 +42,36 @@ public class ShowHandler extends AbstractHandler {
 			String databaseName = len > 2 && "from".equalsIgnoreCase(parts.get(1)) ? parts.get(2) : c.getSchema();
 			String pattern = len > 2 && "like".equalsIgnoreCase(parts.get(1)) ? parts.get(2) : null;
 			pattern = len > 4 && "like".equalsIgnoreCase(parts.get(3)) ? parts.get(4) : pattern;
-			showTables(c, unescape(databaseName), unescape(pattern), false);
+			showTables(c, SqlParsers.forEscape().unescape(databaseName), SqlParsers.forEscape().unescape(pattern), false);
 		} else if ("columns".equalsIgnoreCase(first) && len > 2) {
 			String databaseName = len > 5 ? parts.get(4) : c.getSchema();
 			String pattern = len > 4 && "like".equalsIgnoreCase(parts.get(3)) ? parts.get(4) : null;
 			pattern = len > 6 && "like".equalsIgnoreCase(parts.get(5)) ? parts.get(6) : pattern;
-			showColumns(c, unescape(databaseName), unescape(third), unescape(pattern), false);
+			showColumns(c, SqlParsers.forEscape().unescape(databaseName), SqlParsers.forEscape().unescape(third), SqlParsers
+			      .forEscape().unescape(pattern), false);
 		} else if ("keys".equalsIgnoreCase(first) && "from".equalsIgnoreCase(second)) {
 			String databaseName = len > 5 ? parts.get(4) : c.getSchema();
 			String pattern = len > 4 && "like".equalsIgnoreCase(parts.get(3)) ? parts.get(4) : null;
 			pattern = len > 6 && "like".equalsIgnoreCase(parts.get(5)) ? parts.get(6) : pattern;
-			showIndexes(c, unescape(databaseName), unescape(third), unescape(pattern));
+			showIndexes(c, SqlParsers.forEscape().unescape(databaseName), SqlParsers.forEscape().unescape(third), SqlParsers
+			      .forEscape().unescape(pattern));
 		} else if ("index".equalsIgnoreCase(first)) {
 			String databaseName = len > 5 ? parts.get(4) : c.getSchema();
 			String pattern = len > 4 && "like".equalsIgnoreCase(parts.get(3)) ? parts.get(4) : null;
 			pattern = len > 6 && "like".equalsIgnoreCase(parts.get(5)) ? parts.get(6) : pattern;
-			showIndexes(c, unescape(databaseName), unescape(third), unescape(pattern));
+			showIndexes(c, SqlParsers.forEscape().unescape(databaseName), SqlParsers.forEscape().unescape(third), SqlParsers
+			      .forEscape().unescape(pattern));
 		} else if ("indexes".equalsIgnoreCase(first)) {
 			String databaseName = len > 5 ? parts.get(4) : c.getSchema();
 			String pattern = len > 4 && "like".equalsIgnoreCase(parts.get(3)) ? parts.get(4) : null;
 			pattern = len > 6 && "like".equalsIgnoreCase(parts.get(5)) ? parts.get(6) : pattern;
-			showIndexes(c, unescape(databaseName), unescape(third), unescape(pattern));
+			showIndexes(c, SqlParsers.forEscape().unescape(databaseName), SqlParsers.forEscape().unescape(third), SqlParsers
+			      .forEscape().unescape(pattern));
 		} else if ("table".equalsIgnoreCase(first) && "status".equalsIgnoreCase(second)) {
 			String databaseName = len > 3 ? parts.get(3) : c.getSchema();
 			String pattern = len > 3 && "like".equalsIgnoreCase(parts.get(2)) ? parts.get(3) : null;
 			pattern = len > 5 && "like".equalsIgnoreCase(parts.get(4)) ? parts.get(5) : pattern;
-			showTableStatus(c, unescape(databaseName), unescape(pattern));
+			showTableStatus(c, SqlParsers.forEscape().unescape(databaseName), SqlParsers.forEscape().unescape(pattern));
 		} else if ("status".equalsIgnoreCase(first)) {
 			showStatus(c);
 		} else if ("variables".equalsIgnoreCase(first)) {
@@ -75,12 +80,13 @@ public class ShowHandler extends AbstractHandler {
 			showCollation(c);
 		} else if ("full".equalsIgnoreCase(first) && "tables".equalsIgnoreCase(second) && "from".equalsIgnoreCase(third)) {
 			String pattern = len > 5 && "like".equalsIgnoreCase(parts.get(4)) ? parts.get(5) : null;
-			showTables(c, unescape(forth), unescape(pattern), true);
+			showTables(c, SqlParsers.forEscape().unescape(forth), SqlParsers.forEscape().unescape(pattern), true);
 		} else if ("full".equalsIgnoreCase(first) && "columns".equalsIgnoreCase(second) && "from".equalsIgnoreCase(third)) {
 			String databaseName = len > 5 && "from".equalsIgnoreCase(parts.get(4)) ? parts.get(5) : c.getSchema();
 			String pattern = len > 5 && "like".equalsIgnoreCase(parts.get(4)) ? parts.get(5) : null;
 			pattern = len > 7 && "like".equalsIgnoreCase(parts.get(6)) ? parts.get(7) : pattern;
-			showColumns(c, unescape(databaseName), unescape(forth), unescape(pattern), true);
+			showColumns(c, SqlParsers.forEscape().unescape(databaseName), SqlParsers.forEscape().unescape(forth), SqlParsers
+			      .forEscape().unescape(pattern), true);
 		} else {
 			error(c, ErrorCode.ER_UNKNOWN_COM_ERROR, String.format("Unsupported show command(%s)", parts.toString()));
 		}
@@ -135,8 +141,7 @@ public class ShowHandler extends AbstractHandler {
 		CommandContext ctx = new CommandContext(c);
 		String[] names = null;
 		if (isFull) {
-			names = new String[] { "Field", "Type", "Collation", "Null", "Key", "Default", "Extra", "Privileges",
-			      "Comment" };
+			names = new String[] { "Field", "Type", "Collation", "Null", "Key", "Default", "Extra", "Privileges", "Comment" };
 		} else {
 			names = new String[] { "Field", "Type", "Null", "Key", "Default", "Extra" };
 		}
@@ -148,8 +153,7 @@ public class ShowHandler extends AbstractHandler {
 
 		if (columns != null) {
 			for (ColumnMeta column : columns) {
-				String dataType = TypeUtils
-				      .convertFieldTypeToString(TypeUtils.convertJavaTypeToFieldType(column.getType()));
+				String dataType = TypeUtils.convertFieldTypeToString(TypeUtils.convertJavaTypeToFieldType(column.getType()));
 
 				IndexMeta[] indexes = table.getIndexes();
 				boolean isIndex = false;
@@ -162,7 +166,7 @@ public class ShowHandler extends AbstractHandler {
 					}
 				}
 
-				boolean isFilter = pattern != null ? SQLRegex.like(column.getName(), pattern) : true;
+				boolean isFilter = pattern != null ? SqlWildcard.like(column.getName(), pattern) : true;
 				if (isFilter) {
 					if (isFull) {
 						ctx.writeRow(column.getName(), dataType, null, null, isIndex ? "PRI" : "", null, null,
@@ -238,8 +242,8 @@ public class ShowHandler extends AbstractHandler {
 		}
 
 		CommandContext ctx = new CommandContext(c);
-		String[] names = new String[] { "Table", "Non_unique", "Key_name", "Seq_in_index", "Column_name", "Collation",
-		      "Cardinality", "Sub_part", "Packed", "Null", "Index_type", "Comment", "Index_comment" };
+		String[] names = new String[] { "Table", "Non_unique", "Key_name", "Seq_in_index", "Column_name", "Collation", "Cardinality",
+		      "Sub_part", "Packed", "Null", "Index_type", "Comment", "Index_comment" };
 		ctx.writeHeader(names.length);
 		for (String name : names) {
 			ctx.writeField(name, Fields.FIELD_TYPE_VARCHAR);
@@ -249,11 +253,11 @@ public class ShowHandler extends AbstractHandler {
 		if (indexes != null) {
 			for (IndexMeta index : indexes) {
 				for (int i = 0; i < index.getLength(); i++) {
-					boolean isFilter = pattern != null ? SQLRegex.like(index.getColumn(i).getName(), pattern) : true;
+					boolean isFilter = pattern != null ? SqlWildcard.like(index.getColumn(i).getName(), pattern) : true;
 					if (isFilter) {
 						ctx.writeRow(table.getName(), "1", "PRIMARY", String.valueOf(1 + i), index.getColumn(i).getName(),
-						      index.isAscend(i) ? "A" : "NULL", String.valueOf(((Enum<?>) index.getColumn(i)).ordinal()),
-						      "NULL", "NULL", null, "BTREE", "", "");
+						      index.isAscend(i) ? "A" : "NULL", String.valueOf(((Enum<?>) index.getColumn(i)).ordinal()), "NULL", "NULL",
+						      null, "BTREE", "", "");
 					}
 				}
 			}
@@ -324,7 +328,7 @@ public class ShowHandler extends AbstractHandler {
 		TableProvider[] tables = provider.getTables();
 		if (tables != null) {
 			for (TableProvider table : tables) {
-				boolean isFilter = pattern != null ? SQLRegex.like(table.getName(), pattern) : true;
+				boolean isFilter = pattern != null ? SqlWildcard.like(table.getName(), pattern) : true;
 				if (isFilter) {
 					if (isFull) {
 						if (provider instanceof InformationSchemaDatabaseProvider) {
@@ -359,9 +363,9 @@ public class ShowHandler extends AbstractHandler {
 
 		TableProvider[] tables = provider.getTables();
 		CommandContext ctx = new CommandContext(c);
-		String[] names = { "Name", "Engine", "Version", "Row_format", "Rows", "Avg_row_length", "Data_length",
-		      "Max_data_length", "Index_length", "Data_free", "Auto_increment", "Create_time", "Update_time",
-		      "Check_time", "Collation", "Checksum", "Create_options", "Comment" };
+		String[] names = { "Name", "Engine", "Version", "Row_format", "Rows", "Avg_row_length", "Data_length", "Max_data_length",
+		      "Index_length", "Data_free", "Auto_increment", "Create_time", "Update_time", "Check_time", "Collation", "Checksum",
+		      "Create_options", "Comment" };
 
 		ctx.writeHeader(names.length);
 
@@ -372,7 +376,7 @@ public class ShowHandler extends AbstractHandler {
 		ctx.writeEOF();
 
 		for (TableProvider table : tables) {
-			boolean isFilter = pattern != null ? SQLRegex.like(table.getName(), pattern) : true;
+			boolean isFilter = pattern != null ? SqlWildcard.like(table.getName(), pattern) : true;
 			if (isFilter) {
 				String[] values = new String[names.length];
 				int index = 0;

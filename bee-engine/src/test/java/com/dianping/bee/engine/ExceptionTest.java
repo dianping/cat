@@ -29,7 +29,7 @@ import com.site.lookup.ComponentTestCase;
 @RunWith(JUnit4.class)
 public class ExceptionTest extends ComponentTestCase {
 	protected String getCustomConfigurationName() {
-		return TestEnvConfig.class.getName().replace('.', '/') + ".xml";
+		return TestEnvConfigurator.class.getName().replace('.', '/') + ".xml";
 	}
 
 	@Test

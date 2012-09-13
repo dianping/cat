@@ -1,4 +1,4 @@
-package com.dianping.bee.engine.evaluator.logical;
+package com.dianping.bee.engine.evaluator.literal;
 
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber;
 import com.dianping.bee.engine.evaluator.AbstractEvaluator;
@@ -13,4 +13,9 @@ public class LiteralNumberEvaluator extends AbstractEvaluator<LiteralNumber, Num
 
 		return value;
 	}
+
+	@Override
+   public Class<?> getResultType(LiteralNumber expr) {
+		 return Number.class; // TODO should be int or long, double etc.?
+   }
 }

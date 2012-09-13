@@ -25,4 +25,9 @@ public class SumEvaluator extends AbstractEvaluator<Sum, String> {
 
 		return sb.toString();
 	}
+
+	@Override
+	public Class<?> getResultType(Sum expr) {
+		return Number.class;
+	}
 }

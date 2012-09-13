@@ -57,22 +57,6 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 		handle(c, parts);
 	}
 
-	protected String unescape(String str) {
-		if (str == null || str.length() < 2) {
-			return str;
-		}
-
-		int length = str.length();
-
-		if (str.charAt(0) == '`' && str.charAt(length - 1) == '`') {
-			return str.substring(1, length - 1);
-		} else if (str.charAt(0) == '\'' && str.charAt(length - 1) == '\'') {
-			return str.substring(1, length - 1);
-		} else {
-			return str;
-		}
-	}
-
 	static class BinaryRowDataPacket extends MySQLPacket {
 		private final byte header = 0;
 
@@ -211,8 +195,8 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 						break;
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!",
-					      column.getName(), value), e);
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!", column.getName(),
+					      value), e);
 				}
 			}
 
@@ -288,8 +272,8 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 						break;
 					}
 				} catch (Exception e) {
-					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!",
-					      column.getName(), value), e);
+					throw new RuntimeException(String.format("Error when writing row for column(%s) with value(%s)!", column.getName(),
+					      value), e);
 				}
 			}
 
