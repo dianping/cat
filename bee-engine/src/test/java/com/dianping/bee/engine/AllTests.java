@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.bee.engine.helper.SQLRegexTest;
+import com.dianping.bee.engine.helper.SQLWildcardTest;
 import com.dianping.bee.engine.helper.SqlParsersTest;
 
 @RunWith(Suite.class)
@@ -16,7 +16,9 @@ EvaluatorTest.class,
 
 SqlParsersTest.class,
 
-SQLRegexTest.class
+SQLWildcardTest.class,
+
+ExceptionTest.class
 
 })
 public class AllTests {

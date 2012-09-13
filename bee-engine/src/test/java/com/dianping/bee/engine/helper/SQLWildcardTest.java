@@ -21,7 +21,7 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-public class SQLRegexTest {
+public class SQLWildcardTest {
 	@Test
 	public void testLikes() {
 		checkLike("abc", "%", true);
