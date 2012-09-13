@@ -56,8 +56,8 @@ public class DataService extends ContainerHolder implements LifeCycle {
 					for (Connector con : connectors) {
 						try {
 							RowData data = con.produceData(currentTime);
-							if(data == null){
-							    continue;
+							if (data == null) {
+								continue;
 							}
 							Event event = null;
 							if (data.getType() == EventType.ProblemEvent) {
@@ -76,7 +76,7 @@ public class DataService extends ContainerHolder implements LifeCycle {
 				Thread.sleep(SLEEP_TIME);
 			}
 		} catch (InterruptedException e) {
-		    // TODO logger
+			// TODO logger
 		}
 	}
 
