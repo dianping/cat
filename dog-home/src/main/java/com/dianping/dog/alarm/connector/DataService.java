@@ -12,12 +12,15 @@ import com.dianping.dog.event.EventType;
 import com.dianping.dog.lifecycle.LifeCycle;
 import com.dianping.dog.lifecycle.LifeCycleException;
 import com.site.lookup.ContainerHolder;
+import com.site.lookup.annotation.Inject;
 
 public class DataService extends ContainerHolder implements LifeCycle {
 
+	@Inject
 	private ConnectorManager m_connectorMananger;
 
-	private EventDispatcher m_dispatcher;
+	@Inject
+	private EventDispatcher m_eventDispatcher;
 
 	private static final long SLEEP_TIME = 5 * 1000;// sleep for five seconds
 
@@ -27,12 +30,11 @@ public class DataService extends ContainerHolder implements LifeCycle {
 
 	@Override
 	public void init() throws LifeCycleException {
-		m_connectorMananger = lookup(ConnectorManager.class);
-		m_dispatcher = lookup(DefaultEventDispatcher.class);
-		if (m_connectorMananger == null || m_dispatcher == null) {
+		if (m_connectorMananger == null || m_eventDispatcher == null) {
 			throw new LifeCycleException("can not find component:" + ConnectorManager.class.getName() + " or "
 			      + DefaultEventDispatcher.class.getName());
 		}
+		m_active.set(true);
 	}
 
 	@Override
@@ -45,7 +47,7 @@ public class DataService extends ContainerHolder implements LifeCycle {
 		serviceTask.start();
 	}
 
-	private void doService() {
+	protected void doService() {
 		try {
 			while (m_active.get()) {
 				Date currentTime = new Date(System.currentTimeMillis());// MilliSecondTimer.currentTimeMicros();
@@ -54,15 +56,18 @@ public class DataService extends ContainerHolder implements LifeCycle {
 					for (Connector con : connectors) {
 						try {
 							RowData data = con.produceData(currentTime);
+							if (data == null) {
+								continue;
+							}
 							Event event = null;
-							if (data.getType() == EventType.ProblemEvent) {
+							if (data.getType() == EventType.ProblemDataEvent) {
 								event = new ProblemEvent(data);
 							}
 							if (event != null) {
-								m_dispatcher.dispatch(event);
+								m_eventDispatcher.dispatch(event);
 							}
 						} catch (Exception ex) {
-							// TODO logger
+							System.out.println(ex.toString());
 						}
 					}
 				} catch (Exception ex) {
@@ -71,7 +76,7 @@ public class DataService extends ContainerHolder implements LifeCycle {
 				Thread.sleep(SLEEP_TIME);
 			}
 		} catch (InterruptedException e) {
-		    // TODO logger
+			// TODO logger
 		}
 	}
 

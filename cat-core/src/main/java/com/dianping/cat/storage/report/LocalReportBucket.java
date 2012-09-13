@@ -180,7 +180,7 @@ public class LocalReportBucket implements Bucket<String>, LogEnabled {
 		}
 
 		final File dir = dataFile.getParentFile();
-		
+
 		if (!dir.exists() && !dir.mkdirs()) {
 			throw new IOException(String.format("Fail to create directory(%s)!", dir));
 		}

@@ -15,11 +15,11 @@ public class CrossReportMerger extends DefaultMerger {
 	protected void mergeName(Name old, Name other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
 		old.setFailCount(old.getFailCount() + other.getFailCount());
-		old.setSum(old.getSum()+other.getSum());
+		old.setSum(old.getSum() + other.getSum());
 
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
-			old.setAvg(old.getSum()/old.getTotalCount());
+			old.setAvg(old.getSum() / old.getTotalCount());
 		}
 	}
 
@@ -27,14 +27,14 @@ public class CrossReportMerger extends DefaultMerger {
 	protected void mergeType(Type old, Type other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
 		old.setFailCount(old.getFailCount() + other.getFailCount());
-		old.setSum(old.getSum()+other.getSum());
-	
-		if(old.getId()==null){
+		old.setSum(old.getSum() + other.getSum());
+
+		if (old.getId() == null) {
 			old.setId(other.getId());
 		}
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
-			old.setAvg(old.getSum()/old.getTotalCount());
+			old.setAvg(old.getSum() / old.getTotalCount());
 		}
 	}
 

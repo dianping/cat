@@ -57,7 +57,7 @@ public class SqlParseManager {
 		List<String> tables = SqlParsers.forTable().parse(sqlStatement);
 		String result = "";
 		boolean first = true;
-		
+
 		if (tables != null && tables.size() > 0) {
 			for (String table : tables) {
 				if (first) {

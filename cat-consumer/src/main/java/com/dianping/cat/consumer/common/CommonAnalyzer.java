@@ -66,7 +66,7 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 		Date period = new Date(m_startTime);
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-		//Create task for health report
+		// Create task for health report
 		for (String domain : m_reports.keySet()) {
 			try {
 				Task task = m_taskDao.createLocal();

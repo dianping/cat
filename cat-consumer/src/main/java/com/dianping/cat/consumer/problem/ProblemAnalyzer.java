@@ -190,30 +190,30 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 				for (ProblemReport report : m_reports.values()) {
 					try {
-	               Report r = m_reportDao.createLocal();
-	               String xml = builder.buildXml(report);
-	               String domain = report.getDomain();
+						Report r = m_reportDao.createLocal();
+						String xml = builder.buildXml(report);
+						String domain = report.getDomain();
 
-	               r.setName("problem");
-	               r.setDomain(domain);
-	               r.setPeriod(period);
-	               r.setIp(ip);
-	               r.setType(1);
-	               r.setContent(xml);
+						r.setName("problem");
+						r.setDomain(domain);
+						r.setPeriod(period);
+						r.setIp(ip);
+						r.setType(1);
+						r.setContent(xml);
 
-	               m_reportDao.insert(r);
+						m_reportDao.insert(r);
 
-	               Task task = m_taskDao.createLocal();
-	               task.setCreationDate(new Date());
-	               task.setProducer(ip);
-	               task.setReportDomain(domain);
-	               task.setReportName("problem");
-	               task.setReportPeriod(period);
-	               task.setStatus(1);
-	               m_taskDao.insert(task);
-                } catch (Throwable e) {
-         			Cat.getProducer().logError(e);
-               }
+						Task task = m_taskDao.createLocal();
+						task.setCreationDate(new Date());
+						task.setProducer(ip);
+						task.setReportDomain(domain);
+						task.setReportName("problem");
+						task.setReportPeriod(period);
+						task.setStatus(1);
+						m_taskDao.insert(task);
+					} catch (Throwable e) {
+						Cat.getProducer().logError(e);
+					}
 				}
 			}
 

@@ -7,7 +7,7 @@ import org.junit.runners.JUnit4;
 import com.dianping.cat.Cat;
 
 @RunWith(JUnit4.class)
-public class EventTest{
+public class EventTest {
 	@Test
 	public void testNormal() {
 		Event event = Cat.getProducer().newEvent("Review", "New");

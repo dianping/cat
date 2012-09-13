@@ -24,7 +24,7 @@ public class ClientConfigValidator extends DefaultValidator {
 			log("WARN", "CAT client was disabled due to no CAT servers configured!");
 		} else if (config.getEnabled() != null && !config.isEnabled()) {
 			log("WARN", "CAT client was globally disabled!");
-		} 
+		}
 
 		m_config = config;
 		super.visitConfig(config);
@@ -33,7 +33,7 @@ public class ClientConfigValidator extends DefaultValidator {
 	@Override
 	public void visitDomain(Domain domain) {
 		super.visitDomain(domain);
- 
+
 		// set default values
 		if (domain.getEnabled() == null) {
 			domain.setEnabled(true);

@@ -13,7 +13,7 @@ import com.dianping.cat.report.task.transaction.HistoryTransactionReportMerger;
 public class HistoryTransactionMergerTest {
 
 	@Test
-	public void testMerge() throws Exception{
+	public void testMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("HistoryTransaction.xml"), "utf-8");
 		TransactionReport report1 = new DefaultDomParser().parse(oldXml);
 		TransactionReport report2 = new DefaultDomParser().parse(oldXml);

@@ -258,7 +258,7 @@ public class Handler implements PageHandler<Context> {
 			request.setProperty("type", "Cache.kvdb");
 			ModelResponse<EventReport> kvdbResponse = m_eventService.invoke(request);
 			EventReport kvdbReport = kvdbResponse.getModel();
-			
+
 			request.setProperty("type", "Cache.memcached-tuangou");
 			ModelResponse<EventReport> tuangouResponse = m_eventService.invoke(request);
 			EventReport tuangouReport = tuangouResponse.getModel();
@@ -300,7 +300,7 @@ public class Handler implements PageHandler<Context> {
 			request.setProperty("type", "Cache.kvdb");
 			ModelResponse<TransactionReport> kvdbResponse = m_transactionService.invoke(request);
 			TransactionReport kvdbReport = kvdbResponse.getModel();
-			
+
 			request.setProperty("type", "Cache.memcached-tuangou");
 			ModelResponse<TransactionReport> tuangouResponse = m_transactionService.invoke(request);
 			TransactionReport tuangouReport = tuangouResponse.getModel();

@@ -107,7 +107,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "cross", CompositeCrossService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "cross-historical" }, "m_services"));
-		
+
 		all.add(C(ModelService.class, "database-local", LocalDatabaseService.class) //
 		      .req(BucketManager.class, ReportDao.class) //
 		      .req(MessageConsumer.class, "realtime"));
@@ -116,7 +116,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "database", CompositeDatabaseService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "database-historical" }, "m_services"));
-		
+
 		all.add(C(ModelService.class, "sql-local", LocalSqlService.class) //
 		      .req(BucketManager.class, ReportDao.class) //
 		      .req(MessageConsumer.class, "realtime"));
@@ -125,7 +125,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "sql", CompositeSqlService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "sql-historical" }, "m_services"));
-		
+
 		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
 		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class, "realtime"));
@@ -140,9 +140,9 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID) //
 		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "message-historical", HistoricalMessageService.class) //
-				.req(MessageBucketManager.class, LocalMessageBucketManager.ID, "m_localBucketManager") //
-				.req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
-				.req(MessageCodec.class, "html"));
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID, "m_localBucketManager") //
+		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
+		      .req(MessageCodec.class, "html"));
 
 		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 		      .req(MessageConsumer.class, "realtime") //

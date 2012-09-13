@@ -80,35 +80,38 @@ public class TransactionIndexer implements Index {
 			}
 		}
 
-		ctx.apply();
+		ctx.applyRow();
 	}
 
 	static class TransactionSampleData {
-		private static Object[][] sampleData;
+		private static Object[][] sampleData = new Object[10][];
 
 		static {
-			sampleData = new Object[10][];
-			int columnSize = TransactionColumn.values().length;
+			TransactionColumn[] columns = TransactionColumn.values();
+			int columnSize = columns.length;
+
 			for (int i = 0; i < sampleData.length; i++) {
 				sampleData[i] = new Object[columnSize];
 
 				for (int j = 0; j < columnSize; j++) {
-					if (TransactionColumn.values()[j].getName().equalsIgnoreCase("Domain")) {
-						sampleData[i][j] = i % 2 == 1 ? "MobileApi" : RandomStringUtils.randomAlphabetic(5);
-						continue;
-					} else if (TransactionColumn.values()[j].getName().equalsIgnoreCase("StartTime")) {
-						sampleData[i][j] = i % 2 == 1 ? "20120822" : RandomStringUtils.randomNumeric(8);
-						continue;
-					}
+					String name = columns[j].getName();
 
-					if (TransactionColumn.values()[j].getType().getSimpleName().equals("String")) {
-						sampleData[i][j] = RandomStringUtils.randomAlphabetic(5);
-					} else if (TransactionColumn.values()[j].getType().getSimpleName().equals("Integer")) {
-						sampleData[i][j] = RandomStringUtils.randomNumeric(3);
-					} else if (TransactionColumn.values()[j].getType().getSimpleName().equals("Long")) {
-						sampleData[i][j] = RandomStringUtils.randomNumeric(6);
+					if (name.equalsIgnoreCase("Domain")) {
+						sampleData[i][j] = i % 2 == 1 ? "MobileApi" : RandomStringUtils.randomAlphabetic(5);
+					} else if (name.equalsIgnoreCase("StartTime")) {
+						sampleData[i][j] = i % 2 == 1 ? "20120822" : RandomStringUtils.randomNumeric(8);
 					} else {
-						sampleData[i][j] = RandomStringUtils.randomAlphanumeric(5);
+						String typeName = columns[j].getType().getSimpleName();
+
+						if (typeName.equals("String")) {
+							sampleData[i][j] = RandomStringUtils.randomAlphabetic(5);
+						} else if (columns[j].getType().getSimpleName().equals("Integer")) {
+							sampleData[i][j] = Integer.parseInt(RandomStringUtils.randomNumeric(3));
+						} else if (columns[j].getType().getSimpleName().equals("Long")) {
+							sampleData[i][j] = Long.parseLong(RandomStringUtils.randomNumeric(6));
+						} else {
+							sampleData[i][j] = RandomStringUtils.randomAlphanumeric(5);
+						}
 					}
 				}
 			}

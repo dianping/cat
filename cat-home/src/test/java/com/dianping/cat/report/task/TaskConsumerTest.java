@@ -13,7 +13,7 @@ import org.junit.Test;
 import com.dianping.cat.hadoop.dal.Task;
 
 public class TaskConsumerTest {
-	
+
 	public static class TaskConsumerWrap extends TaskConsumer {
 
 		final List<Integer> replayer = new ArrayList<Integer>();
@@ -35,7 +35,7 @@ public class TaskConsumerTest {
 			try {
 				Thread.sleep(10);
 			} catch (InterruptedException e) {
-				
+
 			}
 			replayer.add(4);
 			this.stop();
@@ -71,9 +71,9 @@ public class TaskConsumerTest {
 		}
 
 		@Override
-      protected long getSleepTime() {
-	      return 100;
-      }
+		protected long getSleepTime() {
+			return 100;
+		}
 	};
 
 	/**
@@ -110,13 +110,13 @@ public class TaskConsumerTest {
 			}
 
 		};
-		
+
 		new Thread(consumer).start();
 		while (!consumer.isStopped()) {
 			Thread.sleep(10);
 		}
-		
-		String expectValue=Arrays.toString(consumer.replayer.toArray());
+
+		String expectValue = Arrays.toString(consumer.replayer.toArray());
 
 		Assert.assertEquals("[1, 10, 3, 1, 8, 4]", expectValue);
 
@@ -145,7 +145,7 @@ public class TaskConsumerTest {
 			}
 
 		};
-		
+
 		new Thread(consumer).start();
 		while (!consumer.isStopped()) {
 			Thread.sleep(10);
@@ -196,7 +196,7 @@ public class TaskConsumerTest {
 			}
 
 		};
-		
+
 		new Thread(consumer).start();
 		while (!consumer.isStopped()) {
 			Thread.sleep(10);
@@ -241,7 +241,7 @@ public class TaskConsumerTest {
 			}
 
 		};
-		
+
 		new Thread(consumer).start();
 		while (!consumer.isStopped()) {
 			Thread.sleep(10);
@@ -250,29 +250,29 @@ public class TaskConsumerTest {
 		Assert.assertEquals("[1, 8, 7, 10, 11, 10, 11, 10, 5, 1, 8, 4]", Arrays.toString(consumer.replayer.toArray()));
 		Assert.assertEquals(TaskConsumer.STATUS_FAIL, t.getStatus());
 	}
-	
+
 	@Test
-	public void testCompeteForTask() throws InterruptedException{
+	public void testCompeteForTask() throws InterruptedException {
 		final Task t = new Task();
 		t.setStatus(TaskConsumer.STATUS_TODO);
 
 		final List<Task> taskList = Collections.synchronizedList(new ArrayList<Task>());
 		taskList.add(t);
 
-		final CountDownLatch latch =new CountDownLatch(2);
-		
+		final CountDownLatch latch = new CountDownLatch(2);
+
 		TaskConsumerWrap consumerOne = new TaskConsumerWrap() {
-			
+
 			@Override
-			public void run(){
+			public void run() {
 				try {
-	            latch.await();
-            } catch (InterruptedException e) {
-	            
-            }
+					latch.await();
+				} catch (InterruptedException e) {
+
+				}
 				super.run();
 			}
-			
+
 			@Override
 			protected boolean updateTodoToDoing(Task todo) {
 				super.updateTodoToDoing(todo);
@@ -299,19 +299,19 @@ public class TaskConsumerTest {
 			}
 
 		};
-		
+
 		TaskConsumerWrap consumerTwo = new TaskConsumerWrap() {
 
 			@Override
-			public void run(){
+			public void run() {
 				try {
-	            latch.await();
-            } catch (InterruptedException e) {
-	            
-            }
+					latch.await();
+				} catch (InterruptedException e) {
+
+				}
 				super.run();
 			}
-			
+
 			@Override
 			protected boolean processTask(Task doing) {
 				super.processTask(doing);
@@ -338,25 +338,25 @@ public class TaskConsumerTest {
 		while (!consumerOne.isStopped()) {
 			Thread.sleep(10);
 		}
-		
+
 		while (!consumerTwo.isStopped()) {
 			Thread.sleep(500);
 		}
 
 		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumerOne.replayer.toArray()));
-		
-		String consumerTwoResult= Arrays.toString(consumerTwo.replayer.toArray());
-		
-		Assert.assertEquals(true,possibleResult(consumerTwoResult));
+
+		String consumerTwoResult = Arrays.toString(consumerTwo.replayer.toArray());
+
+		Assert.assertEquals(true, possibleResult(consumerTwoResult));
 		Assert.assertEquals(TaskConsumer.STATUS_DONE, t.getStatus());
 	}
-	
-	public boolean possibleResult(String actual){
-		//当抢占到同一TODO task时
-		final String  expect1="[1, 8, 1, 8, 4]";
-		//当未抢占到同一TODO task时
-		final String  expect2="[1, 8, 4]";
-		
-		return actual.equals(expect1)||actual.equals(expect2);
+
+	public boolean possibleResult(String actual) {
+		// 当抢占到同一TODO task时
+		final String expect1 = "[1, 8, 1, 8, 4]";
+		// 当未抢占到同一TODO task时
+		final String expect2 = "[1, 8, 4]";
+
+		return actual.equals(expect1) || actual.equals(expect2);
 	}
 }

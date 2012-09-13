@@ -15,7 +15,7 @@ public class DefaultInputChannel implements InputChannel {
 	private MessageCodec m_codec;
 
 	private FSDataInputStream m_in;
-	
+
 	private String path;
 
 	@Override

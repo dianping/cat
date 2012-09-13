@@ -84,10 +84,11 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		HeartbeatReport heartbeatReport = queryHeartbeatReport(reportDomain, reportPeriod);
 
 		m_serviceCollector.buildCrossInfo(reportPeriod.getTime());
-		Map<String,ServiceInfo> infos = m_serviceCollector.getServiceInfos();
+		Map<String, ServiceInfo> infos = m_serviceCollector.getServiceInfos();
 
 		HealthReportCreator healthReportCreator = new HealthReportCreator();
-		HealthReport report = healthReportCreator.build(transactionReport, eventReport, problemReport, heartbeatReport,infos);
+		HealthReport report = healthReportCreator.build(transactionReport, eventReport, problemReport, heartbeatReport,
+		      infos);
 		return report;
 	}
 

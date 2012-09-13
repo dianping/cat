@@ -66,12 +66,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public List<String> getDomains() {
 		if (m_report == null) {
 			ArrayList<String> arrayList = new ArrayList<String>();
-			
+
 			arrayList.add(getDomain());
 			return arrayList;
 		} else {
 			Set<String> domainNames = m_report.getDomainNames();
-			
+
 			return StringSortHelper.sortDomain(domainNames);
 		}
 	}

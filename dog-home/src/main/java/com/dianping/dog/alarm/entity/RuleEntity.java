@@ -3,27 +3,44 @@ package com.dianping.dog.alarm.entity;
 import java.util.Date;
 import java.util.List;
 
-import com.dianping.dog.alarm.rule.RuleType;
+import com.site.dal.jdbc.QueryDef;
 
 /***
- *  @author yanchun.yang 
- *  从数据库中读取的规则配置实体类
+ * @author yanchun.yang 从数据库中读取的规则配置实体类
  **/
 public class RuleEntity {
 
+	public static final QueryDef DELETE_BY_PK = null;
+
 	private long id;
-	
+
+	private String domain;
+
 	private String name;
-	
-	private RuleType ruleType;
+
+	private String type;
+
+	private String reportType;
 
 	private List<Duration> durations;
 
 	private ConnectEntity connect;
-	
+
+	private int period;
+
 	private Date gmtModified;
 
-	private long interval;
+	public String getDomain() {
+		return domain;
+	}
+
+	public void setDomain(String domain) {
+		this.domain = domain;
+	}
+
+	public String getType() {
+		return type;
+	}
 
 	public long getId() {
 		return id;
@@ -32,30 +49,26 @@ public class RuleEntity {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
+
 	public String getName() {
-   	return name;
-   }
+		return name;
+	}
 
 	public void setName(String name) {
-   	this.name = name;
+		this.name = name;
+	}
+
+	public int getPeriod() {
+   	return period;
    }
 
-	public long getInterval() {
-		return interval;
-	}
+	public void setPeriod(int period) {
+   	this.period = period;
+   }
 
-	public void setInterval(long interval) {
-		this.interval = interval;
-	}
-
-	public RuleType getRuleType() {
-		return ruleType;
-	}
-
-	public void setRuleType(RuleType ruleType) {
-		this.ruleType = ruleType;
-	}
+	public String getReportType() {
+   	return reportType;
+   }
 
 	public List<Duration> getDurations() {
 		return durations;
@@ -69,16 +82,12 @@ public class RuleEntity {
 		return connect;
 	}
 
-	public void setConnect(ConnectEntity connect) {
-		this.connect = connect;
+	public Date getGmtModified() {
+		return gmtModified;
 	}
 
-	public Date getGmtModified() {
-   	return gmtModified;
-   }
-
 	public void setGmtModified(Date gmtModified) {
-   	this.gmtModified = gmtModified;
-   }
-	
+		this.gmtModified = gmtModified;
+	}
+
 }

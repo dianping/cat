@@ -5,101 +5,101 @@ import com.site.web.mvc.annotation.ModuleMeta;
 
 public enum ReportPage implements Page {
 
-   HOME("home", "home", "Home", "Home Page", true),
+	HOME("home", "home", "Home", "Home Page", true),
 
-   PROBLEM("problem", "p", "Problem", "Problem Discovered", true),
+	PROBLEM("problem", "p", "Problem", "Problem Discovered", true),
 
-   TRANSACTION("transaction", "t", "Transaction", "Transaction Summary Report", true),
+	TRANSACTION("transaction", "t", "Transaction", "Transaction Summary Report", true),
 
-   EVENT("event", "e", "Event", "Event Summary Report", true),
+	EVENT("event", "e", "Event", "Event Summary Report", true),
 
-   HEARTBEAT("heartbeat", "h", "Heartbeat", "Heartbeat Summary Report", true),
+	HEARTBEAT("heartbeat", "h", "Heartbeat", "Heartbeat Summary Report", true),
 
-   LOGVIEW("logview", "m", "Logview", "Log View Details", false),
+	LOGVIEW("logview", "m", "Logview", "Log View Details", false),
 
-   IP("ip", "ip", "Top IP", "Top Visited IP", false),
+	IP("ip", "ip", "Top IP", "Top Visited IP", false),
 
-   MODEL("model", "model", "Model", "Service Model", false),
+	MODEL("model", "model", "Model", "Service Model", false),
 
-   SQL("sql", "sql", "SQL", "SQL Report", true),
+	SQL("sql", "sql", "SQL", "SQL Report", true),
 
-   HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", false),
+	HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", false),
 
-   DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
+	DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
 
-   TASK("task", "task", "Task", "Task", false),
+	TASK("task", "task", "Task", "Task", false),
 
-   MATRIX("matrix", "matrix", "Matrix", "Matrix", true),
+	MATRIX("matrix", "matrix", "Matrix", "Matrix", true),
 
-   HEALTH("health", "health", "Health", "Health", true),
+	HEALTH("health", "health", "Health", "Health", true),
 
-   CROSS("cross", "cross", "Cross", "Cross", true),
+	CROSS("cross", "cross", "Cross", "Cross", true),
 
-   CACHE("cache", "cache", "Cache", "Cache", true),
+	CACHE("cache", "cache", "Cache", "Cache", true),
 
-   DATABASE("database", "database", "Database", "Database", true);
+	DATABASE("database", "database", "Database", "Database", true);
 
-   private String m_name;
+	private String m_name;
 
-   private String m_path;
+	private String m_path;
 
-   private String m_title;
+	private String m_title;
 
-   private String m_description;
+	private String m_description;
 
-   private boolean m_standalone;
+	private boolean m_standalone;
 
-   private ReportPage(String name, String path, String title, String description, boolean standalone) {
-      m_name = name;
-      m_path = path;
-      m_title = title;
-      m_description = description;
-      m_standalone = standalone;
-   }
+	private ReportPage(String name, String path, String title, String description, boolean standalone) {
+		m_name = name;
+		m_path = path;
+		m_title = title;
+		m_description = description;
+		m_standalone = standalone;
+	}
 
-   public static ReportPage getByName(String name, ReportPage defaultPage) {
-      for (ReportPage action : ReportPage.values()) {
-         if (action.getName().equals(name)) {
-            return action;
-         }
-      }
+	public static ReportPage getByName(String name, ReportPage defaultPage) {
+		for (ReportPage action : ReportPage.values()) {
+			if (action.getName().equals(name)) {
+				return action;
+			}
+		}
 
-      return defaultPage;
-   }
+		return defaultPage;
+	}
 
-   public String getDescription() {
-      return m_description;
-   }
+	public String getDescription() {
+		return m_description;
+	}
 
-   public String getModuleName() {
-      ModuleMeta meta = ReportModule.class.getAnnotation(ModuleMeta.class);
+	public String getModuleName() {
+		ModuleMeta meta = ReportModule.class.getAnnotation(ModuleMeta.class);
 
-      if (meta != null) {
-         return meta.name();
-      } else {
-         return null;
-      }
-   }
+		if (meta != null) {
+			return meta.name();
+		} else {
+			return null;
+		}
+	}
 
-   @Override
-   public String getName() {
-      return m_name;
-   }
+	@Override
+	public String getName() {
+		return m_name;
+	}
 
-   @Override
-   public String getPath() {
-      return m_path;
-   }
+	@Override
+	public String getPath() {
+		return m_path;
+	}
 
-   public String getTitle() {
-      return m_title;
-   }
+	public String getTitle() {
+		return m_title;
+	}
 
-   public boolean isStandalone() {
-      return m_standalone;
-   }
+	public boolean isStandalone() {
+		return m_standalone;
+	}
 
-   public ReportPage[] getValues() {
-      return ReportPage.values();
-   }
+	public ReportPage[] getValues() {
+		return ReportPage.values();
+	}
 }

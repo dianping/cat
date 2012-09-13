@@ -22,7 +22,7 @@ public class LocalDatabaseService extends BaseLocalModelService<DatabaseReport> 
 
 	@Inject
 	private ReportDao m_reportDao;
-	
+
 	public LocalDatabaseService() {
 		super("database");
 	}
@@ -46,9 +46,9 @@ public class LocalDatabaseService extends BaseLocalModelService<DatabaseReport> 
 
 			if (report == null) {
 				report = new DatabaseReport(database);
-				
+
 				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(date), new Date(
-						date + 60 * 60 * 1000), null, "database", ReportEntity.READSET_DOMAIN_NAME);
+				      date + 60 * 60 * 1000), null, "database", ReportEntity.READSET_DOMAIN_NAME);
 
 				Set<String> databaseNames = report.getDatabaseNames();
 				for (Report temp : historyReports) {

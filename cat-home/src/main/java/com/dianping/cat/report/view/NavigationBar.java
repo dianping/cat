@@ -18,9 +18,9 @@ public class NavigationBar {
 		ReportPage.HEARTBEAT,
 
 		ReportPage.MATRIX,
-		
+
 		ReportPage.CROSS,
-		
+
 		ReportPage.CACHE,
 
 		ReportPage.IP,
@@ -34,7 +34,7 @@ public class NavigationBar {
 		ReportPage.LOGVIEW,
 
 		ReportPage.DATABASE,
-		
+
 		ReportPage.HEALTH
 
 		};

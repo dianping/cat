@@ -72,7 +72,7 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;
-		} 
+		}
 
 		throw new RuntimeException(String.format("No analyzer(%s) found!", name));
 	}

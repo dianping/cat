@@ -84,6 +84,10 @@ public class HealthServiceCollector {
 		}
 	}
 
+	public Map<String, ServiceInfo> getServiceInfos() {
+		return m_serviceInfos;
+	}
+
 	private Set<String> queryAllDomains(Date date) {
 		List<Report> historyReports = null;
 		try {
@@ -119,10 +123,6 @@ public class HealthServiceCollector {
 		CrossReport crossReport = merger.getCrossReport();
 
 		return crossReport;
-	}
-
-	public Map<String, ServiceInfo> getServiceInfos() {
-		return m_serviceInfos;
 	}
 
 	public static class ServiceInfo {

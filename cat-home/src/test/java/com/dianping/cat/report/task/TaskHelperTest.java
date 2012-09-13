@@ -60,7 +60,6 @@ public class TaskHelperTest {
 
 		Date todayStart = TaskHelper.todayZero(new Date());
 		Assert.assertEquals(new Date(todayStart.getTime() + day + nineMissecond), nextTaskTime);
-		
 
 		cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -68,6 +67,6 @@ public class TaskHelperTest {
 
 		date = cal.getTime();
 		nextTaskTime = TaskHelper.startDateOfNextTask(date);
-		Assert.assertEquals(new Date(todayStart.getTime() +  nineMissecond), nextTaskTime);
+		Assert.assertEquals(new Date(todayStart.getTime() + nineMissecond), nextTaskTime);
 	}
 }

@@ -77,7 +77,7 @@ public class DumpChannel {
 
 	public int write(String messageId) throws IOException {
 		byte[] bytes = messageId.getBytes();
-		
+
 		m_out.write(bytes);
 		m_out.write('\n');
 		return bytes.length + 1;

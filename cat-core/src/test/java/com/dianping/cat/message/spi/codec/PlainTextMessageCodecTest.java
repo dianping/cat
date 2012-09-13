@@ -152,13 +152,20 @@ public class PlainTextMessageCodecTest {
 		      "select title,content from Review where id = ?"));
 		root.addChild(newEvent("URL", "View", timestamp + 40, "0", "view=HTML"));
 
-		check(root, "t2012-01-02 15:33:41.987\tURL\tReview\t\n" + //
-		      "E2012-01-02 15:33:41.987\tURL\tPayload\t0\tip=127.0.0.1&ua=Mozilla 5.0...&refer=...&...\t\n" + //
-		      "A2012-01-02 15:33:41.987\tService\tAuth\t0\t20000us\tuserId=1357&token=...\t\n" + //
-		      "t2012-01-02 15:33:42.009\tCache\tfindReviewByPK\t\n" + //
-		      "E2012-01-02 15:33:42.009\tCacheHost\thost-1\t0\tip=192.168.8.123\t\n" + //
-		      "T2012-01-02 15:33:42.010\tCache\tfindReviewByPK\tMissing\t1000us\t2468\t\n" + //
-		      "A2012-01-02 15:33:42.012\tDAL\tfindReviewByPK\t0\t5000us\tselect title,content from Review where id = ?\t\n" + //
+		check(root, "t2012-01-02 15:33:41.987\tURL\tReview\t\n"
+		      + //
+		      "E2012-01-02 15:33:41.987\tURL\tPayload\t0\tip=127.0.0.1&ua=Mozilla 5.0...&refer=...&...\t\n"
+		      + //
+		      "A2012-01-02 15:33:41.987\tService\tAuth\t0\t20000us\tuserId=1357&token=...\t\n"
+		      + //
+		      "t2012-01-02 15:33:42.009\tCache\tfindReviewByPK\t\n"
+		      + //
+		      "E2012-01-02 15:33:42.009\tCacheHost\thost-1\t0\tip=192.168.8.123\t\n"
+		      + //
+		      "T2012-01-02 15:33:42.010\tCache\tfindReviewByPK\tMissing\t1000us\t2468\t\n"
+		      + //
+		      "A2012-01-02 15:33:42.012\tDAL\tfindReviewByPK\t0\t5000us\tselect title,content from Review where id = ?\t\n"
+		      + //
 		      "E2012-01-02 15:33:42.027\tURL\tView\t0\tview=HTML\t\n" + //
 		      "T2012-01-02 15:33:42.087\tURL\tReview\t0\t100000us\t/review/2468\t\n");
 	}

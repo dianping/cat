@@ -3,9 +3,16 @@ package com.dianping.bee.engine.spi.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.plexus.PlexusContainer;
+import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.codehaus.plexus.context.Context;
+import org.codehaus.plexus.context.ContextException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Contextualizable;
+
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
+import com.alibaba.cobar.parser.ast.expression.primary.Wildcard;
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber;
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString;
 import com.alibaba.cobar.parser.ast.fragment.tableref.TableRefFactor;
@@ -13,11 +20,13 @@ import com.alibaba.cobar.parser.ast.fragment.tableref.TableReference;
 import com.alibaba.cobar.parser.ast.stmt.dml.DMLSelectStatement;
 import com.alibaba.cobar.parser.util.Pair;
 import com.alibaba.cobar.parser.visitor.EmptySQLASTVisitor;
+import com.dianping.bee.engine.evaluator.Evaluator;
+import com.dianping.bee.engine.helper.SqlParsers;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.site.lookup.annotation.Inject;
 
-public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
+public class SingleTableStatementBuilder extends EmptySQLASTVisitor implements Contextualizable {
 	@Inject
 	private SingleTableStatement m_stmt;
 
@@ -27,6 +36,8 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 	@Inject
 	private TableHelper m_helper;
 
+	private PlexusContainer m_container;
+
 	private String m_alias;
 
 	private String m_tableName;
@@ -35,11 +46,19 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 
 	private Clause m_clause;
 
-	private List<ColumnMeta> m_selectColumns = new ArrayList<ColumnMeta>();
+	private List<ColumnMeta> m_columns = new ArrayList<ColumnMeta>();
 
 	private List<ColumnMeta> m_whereColumns = new ArrayList<ColumnMeta>();
 
-	private ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
+	public void contextualize(Context context) throws ContextException {
+		m_container = (PlexusContainer) context.get("plexus");
+	}
+
+	protected ColumnMeta findColumnBy(String columnName) {
+		return m_helper.findColumn(m_databaseName, m_tableName, columnName);
+	}
+
+	protected ColumnMeta findOrCreateColumnFrom(List<ColumnMeta> columns, String columnName) {
 		for (ColumnMeta column : columns) {
 			if (column.getName().equals(columnName)) {
 				return column;
@@ -52,99 +71,18 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 		return column;
 	}
 
-	protected ColumnMeta findColumnBy(String columnName) {
-		return m_helper.findColumn(m_databaseName, m_tableName, columnName);
-	}
-
 	protected SingleTableStatement getStatement() {
 		return m_stmt;
 	}
 
-	@Override
-	public void visit(DMLSelectStatement node) {
-		// for from clause
-		m_clause = Clause.TABLE;
+	@SuppressWarnings("unchecked")
+	protected Class<?> getTypeForExpression(Expression expr) {
+		try {
+			Evaluator<Expression, Object> evaluator = m_container.lookup(Evaluator.class, expr.getClass().getName());
 
-		TableReference tr = node.getTables();
-
-		if (tr.isSingleTable()) {
-			tr.accept(this);
-		} else {
-			throw new RuntimeException("Not a single table query!");
-		}
-
-		// for select clause
-		m_clause = Clause.SELECT;
-
-		List<Pair<Expression, String>> exprList = node.getSelectExprList();
-
-		for (Pair<Expression, String> expr : exprList) {
-			String alias = expr.getValue();
-
-			if (alias != null && !alias.equals(m_alias)) {
-				throw new BadSQLSyntaxException("Invalid select alias(%s), expected: null or %s!", alias, m_alias);
-			}
-
-			expr.getKey().accept(this);
-		}
-
-		m_stmt.setSelectColumns(m_selectColumns);
-
-		// for where clause
-		m_clause = Clause.WHERE;
-
-		Expression where = node.getWhere();
-
-		if (where != null) {
-			// to get columns from where clause
-			where.accept(this);
-
-			// to evaluate where clause
-			m_stmt.setWhereColumns(m_whereColumns);
-			m_stmt.setRowFilter(m_rowFilter.setExpression(where));
-			m_stmt.setIndex(m_helper.findIndex(m_databaseName, m_tableName, m_whereColumns));
-		} else {
-			m_stmt.setIndex(m_helper.findDefaultIndex(m_databaseName, m_tableName));
-		}
-
-		if (m_stmt.getIndexMeta() == null) {
-			throw new BadSQLSyntaxException("Invalid index column!");
-		}
-	}
-
-	@Override
-	public void visit(Identifier node) {
-		switch (m_clause) {
-		case SELECT:
-			String selectColumnName = node.getIdTextUpUnescape();
-
-			if ("*".equals(selectColumnName)) { // expand it
-				TableProvider table = m_helper.findTable(m_databaseName, m_tableName);
-				ColumnMeta[] columnMetas = table.getColumns();
-
-				for (ColumnMeta meta : columnMetas) {
-					m_selectColumns.add(meta);
-				}
-			} else {
-				findOrCreateColumnFrom(m_selectColumns, selectColumnName);
-			}
-
-			break;
-		case WHERE:
-			String whereColumnName = node.getIdTextUpUnescape();
-
-			findOrCreateColumnFrom(m_whereColumns, whereColumnName);
-			break;
-		case TABLE:
-			break;
-		case GROUP:
-			break;
-		case HAVING:
-			break;
-		case ORDER:
-			break;
-		default:
-			break;
+			return evaluator.getResultType(expr);
+		} catch (ComponentLookupException e) {
+			throw new RuntimeException(String.format("No evaluator defined for %s.", expr.getClass().getName()), e);
 		}
 	}
 
@@ -169,6 +107,114 @@ public class SingleTableStatementBuilder extends EmptySQLASTVisitor {
 		}
 
 		super.visit(node);
+	}
+
+	@Override
+	public void visit(DMLSelectStatement node) {
+		// for from clause
+		m_clause = Clause.TABLE;
+
+		TableReference tr = node.getTables();
+
+		if (tr.isSingleTable()) {
+			tr.accept(this);
+		} else {
+			throw new RuntimeException("Not a single table query!");
+		}
+
+		// for select clause
+		m_clause = Clause.SELECT;
+
+		List<Pair<Expression, String>> exprList = node.getSelectExprList();
+		List<SelectField> fields = new ArrayList<SelectField>();
+
+		for (Pair<Expression, String> item : exprList) {
+			String alias = item.getValue();
+
+			if (alias != null && !alias.equals(m_alias)) {
+				throw new BadSQLSyntaxException("Invalid select alias(%s), expected: null or %s!", alias, m_alias);
+			}
+
+			Expression expr = item.getKey();
+
+			if (expr instanceof Wildcard) { // "*", expand it
+				TableProvider table = m_helper.findTable(m_databaseName, m_tableName);
+
+				for (ColumnMeta column : table.getColumns()) {
+					fields.add(new SelectField(column, null));
+				}
+			} else if (expr instanceof Identifier) { // column
+				String columnName = ((Identifier) expr).getIdText();
+				ColumnMeta column = findColumnBy(SqlParsers.forEscape().unescape(columnName));
+
+				fields.add(new SelectField(column, alias));
+			} else { // expression
+				fields.add(new SelectField(expr, alias, getTypeForExpression(expr)));
+			}
+
+			expr.accept(this);
+		}
+
+		m_stmt.setSelectFields(fields);
+
+		// for where clause
+		m_clause = Clause.WHERE;
+
+		Expression where = node.getWhere();
+
+		if (where != null) {
+			// to get columns from where clause
+			where.accept(this);
+
+			// to evaluate where clause
+			m_stmt.setRowFilter(m_rowFilter.setExpression(where));
+			m_stmt.setColumns(m_columns);
+			m_stmt.setIndex(m_helper.findIndex(m_databaseName, m_tableName, m_whereColumns));
+		} else {
+			m_stmt.setColumns(m_columns);
+			m_stmt.setIndex(m_helper.findDefaultIndex(m_databaseName, m_tableName));
+		}
+
+		if (m_stmt.getIndexMeta() == null) {
+			throw new BadSQLSyntaxException("Invalid index column!");
+		}
+	}
+
+	@Override
+	public void visit(Identifier node) {
+		switch (m_clause) {
+		case SELECT:
+			String selectColumnName = node.getIdTextUpUnescape();
+
+			if (node instanceof Wildcard) { // expand it
+				TableProvider table = m_helper.findTable(m_databaseName, m_tableName);
+				ColumnMeta[] columnMetas = table.getColumns();
+
+				for (ColumnMeta meta : columnMetas) {
+					m_columns.add(meta);
+				}
+			} else {
+				findOrCreateColumnFrom(m_columns, selectColumnName);
+			}
+
+			break;
+		case WHERE:
+			String whereColumnName = node.getIdTextUpUnescape();
+
+			findOrCreateColumnFrom(m_columns, whereColumnName);
+			findOrCreateColumnFrom(m_whereColumns, whereColumnName);
+			break;
+		case TABLE:
+			break;
+		case GROUP:
+			break;
+		case HAVING:
+			break;
+		case ORDER:
+			break;
+		default:
+			break;
+		}
 	}
 
 	@Override

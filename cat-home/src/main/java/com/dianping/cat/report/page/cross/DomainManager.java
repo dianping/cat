@@ -35,7 +35,7 @@ public class DomainManager implements Initializable {
 
 	public String getDomainByIp(String ip) {
 		String project = m_ipDomains.get(ip);
-		
+
 		if (project == null) {
 			m_unknownIps.add(ip);
 			return UNKNOWN_PROJECT;

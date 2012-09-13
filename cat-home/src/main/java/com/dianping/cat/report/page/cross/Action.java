@@ -4,16 +4,15 @@ public enum Action implements com.site.web.mvc.Action {
 	HOURLY_HOST("host"),
 
 	HOURLY_METHOD("method"),
-	
+
 	HOURLY_PROJECT("view"),
-	
+
 	HISTORY_HOST("historyHost"),
 
 	HISTORY_METHOD("historyMethod"),
-	
+
 	HISTORY_PROJECT("history");
-	
-	
+
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
 			if (action.getName().equals(name)) {

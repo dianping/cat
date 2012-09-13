@@ -25,7 +25,7 @@ public class LongExecutionHandler extends Handler implements Initializable {
 
 	private int[] m_defaultLongServiceDuration = { 50, 100, 200 };
 
-	private int[] m_defaultLongSqlDuration = { 100, 500, 1000 ,2000 };
+	private int[] m_defaultLongSqlDuration = { 100, 500, 1000, 2000 };
 
 	private int[] m_defaultLongUrlDuration = { 1000, 2000, 3000, 4000, 5000 };
 
@@ -38,13 +38,13 @@ public class LongExecutionHandler extends Handler implements Initializable {
 	public int computeLongDuration(long duration, String domain, int[] m_defaultLongDuration,
 	      Map<String, Integer> longThresholds) {
 		int[] messageDuration = m_defaultLongDuration;
-		
+
 		for (int i = messageDuration.length - 1; i >= 0; i--) {
 			if (duration >= messageDuration[i]) {
 				return messageDuration[i];
 			}
 		}
-		
+
 		Integer value = longThresholds.get(domain);
 		if (value == null) {
 			return -1;
@@ -59,7 +59,7 @@ public class LongExecutionHandler extends Handler implements Initializable {
 	public int handle(Machine machine, MessageTree tree) {
 		Message message = tree.getMessage();
 		int count = 0;
-		
+
 		count += processLongUrl(machine, tree);
 		count += processLongService(machine, tree);
 
@@ -80,7 +80,7 @@ public class LongExecutionHandler extends Handler implements Initializable {
 			Integer serviceThreshold = domain.getServiceThreshold();
 			Integer urlThreshold = domain.getUrlThreshold();
 			Integer sqlThreshold = domain.getSqlThreshold();
-			
+
 			if (serviceThreshold != null) {
 				m_longServiceThresholds.put(domain.getName(), serviceThreshold);
 			}

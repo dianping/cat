@@ -40,7 +40,7 @@ public class TcpSocketTest extends ComponentTestCase {
 		final CountDownLatch forReceiver = new CountDownLatch(numSenders * len);
 
 		receiver.initialize();
-		
+
 		Thread receiverthread = new Thread(new Runnable() {
 			public void run() {
 				receiver.onMessage(new MockMessageHandler(sb, forReceiver));
@@ -76,7 +76,7 @@ public class TcpSocketTest extends ComponentTestCase {
 
 		receiver.shutdown();
 		receiverthread.join();
-		
+
 		pool.shutdown();
 
 		for (int i = 0; i < senders.length; i++) {
@@ -124,7 +124,7 @@ public class TcpSocketTest extends ComponentTestCase {
 		pool.shutdown();
 		receiver.shutdown();
 		receiverthread.join();
-		
+
 		sender.shutdown();
 
 		Assert.assertEquals(len, sb.length());
@@ -142,9 +142,9 @@ public class TcpSocketTest extends ComponentTestCase {
 
 	public static class MockMessageCodec implements MessageCodec {
 		@Override
-      public MessageTree decode(ChannelBuffer buf) {
-	      throw new UnsupportedOperationException();
-      }
+		public MessageTree decode(ChannelBuffer buf) {
+			throw new UnsupportedOperationException();
+		}
 
 		@Override
 		public void decode(ChannelBuffer buf, MessageTree tree) {

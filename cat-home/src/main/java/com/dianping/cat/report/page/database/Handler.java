@@ -96,8 +96,7 @@ public class Handler implements PageHandler<Context> {
 			DatabaseReport historyReport = showSummarizeReport(model, payload);
 
 			long historyDuration = historyReport.getEndTime().getTime() - historyReport.getStartTime().getTime();
-			DisplayDatabase displayHistoryDatabase = new DisplayDatabase().setDomain(domain).setDuration(
-			      historyDuration);
+			DisplayDatabase displayHistoryDatabase = new DisplayDatabase().setDomain(domain).setDuration(historyDuration);
 
 			displayHistoryDatabase.setSortBy(payload.getSortBy()).visitDatabaseReport(historyReport);
 			model.setReport(historyReport);
@@ -179,8 +178,8 @@ public class Handler implements PageHandler<Context> {
 			}
 		} else {
 			try {
-				List<Dailyreport> reports = m_dailyreportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
-				      DailyreportEntity.READSET_FULL);
+				List<Dailyreport> reports = m_dailyreportDao.findDatabaseAllByDomainNameDuration(start, end, database,
+				      "database", DailyreportEntity.READSET_FULL);
 				DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
 				for (Dailyreport report : reports) {
 					String xml = report.getContent();

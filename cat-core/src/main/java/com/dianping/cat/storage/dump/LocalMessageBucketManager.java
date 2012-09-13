@@ -119,7 +119,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			MessageId id = MessageId.parse(messageId);
 			final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
 			final File dir = new File(m_baseDir, path);
-			//final String key = "-" + id.getDomain() + "-";
+			// final String key = "-" + id.getDomain() + "-";
 			final String key = id.getDomain() + '-' + id.getIpAddress();
 			final List<String> paths = new ArrayList<String>();
 
@@ -193,7 +193,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	public void storeMessage(MessageTree tree) throws IOException {
 		MessageId id = MessageId.parse(tree.getMessageId());
 		// <callee domain> - <caller domain> - <callee ip>
-		//String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
+		// String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		String name = id.getDomain() + '-' + tree.getIpAddress() + '-' + localIp;
 		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);

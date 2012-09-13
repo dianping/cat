@@ -45,14 +45,16 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 					closedKeySet.add(key); // add closed channel key
 					closeChannel(channel);
 				} else {
-					m_logger.info(String.format("still open DumpChannel:%s in %s", channel.getFile().getAbsolutePath(), startTime));
+					m_logger.info(String.format("still open DumpChannel:%s in %s", channel.getFile().getAbsolutePath(),
+					      startTime));
 				}
 			}
 
 			for (String key : closedKeySet) { // remove closed channel
 				DumpChannel channel = m_channels.remove(key);
 
-				m_logger.info(String.format("close&remove DumpChannel:%s in %s", channel.getFile().getAbsolutePath(), startTime));
+				m_logger.info(String.format("close&remove DumpChannel:%s in %s", channel.getFile().getAbsolutePath(),
+				      startTime));
 			}
 		}
 	}
@@ -95,7 +97,8 @@ public class DumpChannelManager extends ContainerHolder implements Initializable
 			file = path + ".gz";
 		}
 
-		DumpChannel channel = new DumpChannel(m_codec, new File(m_baseDir, "draft"), file, m_maxSize, m_lastChunkAdjust, startTime);
+		DumpChannel channel = new DumpChannel(m_codec, new File(m_baseDir, "draft"), file, m_maxSize, m_lastChunkAdjust,
+		      startTime);
 		m_logger.info(String.format("new DumpChannel %s", file));
 
 		m_channels.put(key, channel);

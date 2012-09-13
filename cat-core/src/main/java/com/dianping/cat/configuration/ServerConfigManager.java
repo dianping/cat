@@ -223,7 +223,7 @@ public class ServerConfigManager implements LogEnabled {
 			return true;
 		}
 	}
-	
+
 	public boolean isJobMachine() {
 		if (m_config != null) {
 			return m_config.isJobMachine();

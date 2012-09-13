@@ -23,7 +23,7 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_rootMessageId;
 
 	private String m_sessionToken;
-	
+
 	private String m_threadGroupName;
 
 	private String m_threadId;
@@ -92,8 +92,8 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	public String getThreadGroupName() {
-   	return m_threadGroupName;
-   }
+		return m_threadGroupName;
+	}
 
 	@Override
 	public String getThreadId() {
@@ -151,9 +151,9 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	public void setThreadGroupName(String threadGroupName) {
-   	m_threadGroupName = threadGroupName;
-   }
-	
+		m_threadGroupName = threadGroupName;
+	}
+
 	@Override
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;

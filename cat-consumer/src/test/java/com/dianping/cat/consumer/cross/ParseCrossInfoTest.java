@@ -56,9 +56,9 @@ public class ParseCrossInfoTest {
 		Assert.assertEquals(info.getDetailType(), "PigeonService");
 		Assert.assertEquals(info.getRemoteRole(), "Pigeon.Client");
 	}
-	
-	@Test 
-	public void testParsePigeonServerTransactionWithPort(){
+
+	@Test
+	public void testParsePigeonServerTransactionWithPort() {
 		CrossAnalyzer analyzer = new CrossAnalyzer();
 
 		DefaultTransaction t = new DefaultTransaction("Service", "method1", null);
@@ -75,7 +75,7 @@ public class ParseCrossInfoTest {
 		Assert.assertEquals(info.getDetailType(), "PigeonService");
 		Assert.assertEquals(info.getRemoteRole(), "Pigeon.Client");
 	}
-	
+
 	@Test
 	public void testParseOtherTransaction() {
 		CrossAnalyzer analyzer = new CrossAnalyzer();
@@ -84,13 +84,12 @@ public class ParseCrossInfoTest {
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
 
-		Assert.assertEquals(true,info==null);
+		Assert.assertEquals(true, info == null);
 	}
-	
 
 	public MessageTree buildMockMessageTree() {
 		MessageTree tree = new DefaultMessageTree();
-		tree.setMessageId("Cat-c0a80746-373452-6");//192.168.7.70 machine logview
+		tree.setMessageId("Cat-c0a80746-373452-6");// 192.168.7.70 machine logview
 		tree.setIpAddress("192.168.0.1");
 		return tree;
 	}

@@ -13,9 +13,9 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class MatrixMerger implements ReportMerger<MatrixReport> {
-	
+
 	@Override
-   public MatrixReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+	public MatrixReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(reportDomain));
 		for (Report report : reports) {
 			String xml = report.getContent();
@@ -33,11 +33,11 @@ public class MatrixMerger implements ReportMerger<MatrixReport> {
 		matrixReport.setStartTime(TaskHelper.todayZero(date));
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
 		matrixReport.setEndTime(end);
-	   return matrixReport;
-   }
+		return matrixReport;
+	}
 
 	@Override
-   public MatrixReport mergeForGraph(String reportDomain, List<Report> reports) {
+	public MatrixReport mergeForGraph(String reportDomain, List<Report> reports) {
 		throw new RuntimeException("Matrix report don't need graph!");
 	}
 }

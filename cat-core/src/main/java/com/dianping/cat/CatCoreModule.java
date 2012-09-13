@@ -55,7 +55,7 @@ public class CatCoreModule extends AbstractModule {
 			LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 		}
 		ClientConfig config = clientConfigManager.getClientConfig();
-		Threads.forGroup("Cat").start(new ClientConfigReloader(clientConfigFile.getAbsolutePath(),config));
+		Threads.forGroup("Cat").start(new ClientConfigReloader(clientConfigFile.getAbsolutePath(), config));
 	}
 
 	@Override

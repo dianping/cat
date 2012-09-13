@@ -56,7 +56,7 @@ public abstract class TaskConsumer implements Runnable {
 				if (task == null) {
 					task = findTodoTask();
 				}
-				
+
 				boolean again = false;
 				if (task != null) {
 					task.setConsumer(localIp);

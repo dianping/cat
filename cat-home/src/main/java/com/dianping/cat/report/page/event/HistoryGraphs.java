@@ -69,7 +69,7 @@ public class HistoryGraphs {
 				}
 			}
 		}
-		
+
 		result.put("total_count", total_count);
 		result.put("failure_count", failure_count);
 		return result;
@@ -113,19 +113,19 @@ public class HistoryGraphs {
 		List<Graph> events = new ArrayList<Graph>();
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + ONE_HOUR) {
 			try {
-				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain,
-				      "event", GraphEntity.READSET_FULL);
+				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain, "event",
+				      GraphEntity.READSET_FULL);
 				events.add(graph);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
-//		try {
-//			events = this.m_graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event",
-//			      GraphEntity.READSET_FULL);
-//		} catch (Exception e) {
-//			Cat.logError(e);
-//		}
+		// try {
+		// events = this.m_graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "event",
+		// GraphEntity.READSET_FULL);
+		// } catch (Exception e) {
+		// Cat.logError(e);
+		// }
 		Map<String, double[]> result = buildGraphDatas(start, end, type, name, events);
 		return result;
 	}

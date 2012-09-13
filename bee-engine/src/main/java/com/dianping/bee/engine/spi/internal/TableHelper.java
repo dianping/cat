@@ -23,7 +23,7 @@ public class TableHelper {
 				}
 			}
 		}
-		
+
 		throw new BadSQLSyntaxException("Column(%s) of table(%s) is not found!", columnName, tableName);
 	}
 
@@ -36,7 +36,6 @@ public class TableHelper {
 				// if first column of index is in columns, then pick it up
 				ColumnMeta first = index.getColumn(0);
 				String columnName = first.getName();
-
 				for (ColumnMeta column : columns) {
 					if (column.getName().equalsIgnoreCase(columnName)) {
 						return index;

@@ -4,32 +4,38 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.bee.engine.QueryService;
+import com.dianping.bee.engine.evaluator.Evaluator;
+import com.dianping.bee.engine.evaluator.IdentifierEvaluator;
+import com.dianping.bee.engine.evaluator.ParamMarkerEvaluator;
+import com.dianping.bee.engine.evaluator.function.AvgEvaluator;
+import com.dianping.bee.engine.evaluator.function.ConcatEvaluator;
+import com.dianping.bee.engine.evaluator.function.CountEvaluator;
+import com.dianping.bee.engine.evaluator.function.MaxEvaluator;
+import com.dianping.bee.engine.evaluator.function.MinEvaluator;
+import com.dianping.bee.engine.evaluator.function.SumEvaluator;
+import com.dianping.bee.engine.evaluator.literal.LiteralBooleanEvaluator;
+import com.dianping.bee.engine.evaluator.literal.LiteralNumberEvaluator;
+import com.dianping.bee.engine.evaluator.literal.LiteralStringEvaluator;
+import com.dianping.bee.engine.evaluator.logical.BetweenAndEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionEqualsEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionGreaterThanEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionGreaterThanOrEqualsEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionIsEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionLessThanEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionLessThanOrEqualsEvaluator;
+import com.dianping.bee.engine.evaluator.logical.InEvaluator;
+import com.dianping.bee.engine.evaluator.logical.LogicalAndEvaluator;
+import com.dianping.bee.engine.evaluator.logical.LogicalOrEvaluator;
 import com.dianping.bee.engine.internal.DefaultQueryService;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.dianping.bee.engine.spi.evaluator.Evaluator;
-import com.dianping.bee.engine.spi.evaluator.function.ConcatEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.BetweenAndEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionEqualsEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanOrEqualsEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionIsEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanOrEqualsEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.IdentifierEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.InEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LiteralBooleanEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LiteralNumberEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LiteralStringEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LogicalAndEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LogicalOrEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ParamMarkerEvaluator;
 import com.dianping.bee.engine.spi.handler.DescHandler;
 import com.dianping.bee.engine.spi.handler.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.SelectHandler;
+import com.dianping.bee.engine.spi.handler.SetHandler;
 import com.dianping.bee.engine.spi.handler.ShowHandler;
 import com.dianping.bee.engine.spi.handler.UseHandler;
 import com.dianping.bee.engine.spi.internal.DefaultRowContext;
@@ -87,6 +93,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		defineInformationSchema(all);
 		defineHandlers(all);
+		definePrimaryEvaluators(all);
+		defineLiteralEvaluators(all);
 		defineLogicalEvaluators(all);
 		defineFunctionEvaluators(all);
 
@@ -95,18 +103,25 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 	private void defineFunctionEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, ConcatEvaluator.ID, ConcatEvaluator.class));
+		all.add(C(Evaluator.class, SumEvaluator.ID, SumEvaluator.class).is(PER_LOOKUP));
+		all.add(C(Evaluator.class, CountEvaluator.ID, CountEvaluator.class).is(PER_LOOKUP));
+		all.add(C(Evaluator.class, MaxEvaluator.ID, MaxEvaluator.class).is(PER_LOOKUP));
+		all.add(C(Evaluator.class, MinEvaluator.ID, MinEvaluator.class).is(PER_LOOKUP));
+		all.add(C(Evaluator.class, AvgEvaluator.ID, AvgEvaluator.class).is(PER_LOOKUP));
 	}
 
 	private void defineHandlers(List<Component> all) {
 		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class, PrepareHandler.class));
+		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class, SetHandler.class,
+		            PrepareHandler.class));
 
 		all.add(C(UseHandler.class));
-		all.add(C(ShowHandler.class));
+		all.add(C(SetHandler.class).req(SessionManager.class));
+		all.add(C(ShowHandler.class).req(SessionManager.class));
 		all.add(C(DescHandler.class) //
 		      .req(TableProviderManager.class));
 		all.add(C(SelectHandler.class) //
-		      .req(StatementManager.class));
+		      .req(StatementManager.class, SessionManager.class));
 		all.add(C(PrepareHandler.class)//
 		      .req(StatementManager.class));
 	}
@@ -116,6 +131,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SchemataIndexer.class));
 		all.add(C(TablesIndexer.class));
 		all.add(C(ColumnsIndexer.class));
+	}
+
+	private void defineLiteralEvaluators(List<Component> all) {
+		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
+		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
+		all.add(C(Evaluator.class, LiteralBooleanEvaluator.ID, LiteralBooleanEvaluator.class));
 	}
 
 	private void defineLogicalEvaluators(List<Component> all) {
@@ -132,12 +153,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Evaluator.class, BetweenAndEvaluator.ID, BetweenAndEvaluator.class));
 		all.add(C(Evaluator.class, InEvaluator.ID, InEvaluator.class));
+	}
 
+	private void definePrimaryEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, IdentifierEvaluator.ID, IdentifierEvaluator.class));
 		all.add(C(Evaluator.class, ParamMarkerEvaluator.ID, ParamMarkerEvaluator.class));
-
-		all.add(C(Evaluator.class, LiteralStringEvaluator.ID, LiteralStringEvaluator.class));
-		all.add(C(Evaluator.class, LiteralNumberEvaluator.ID, LiteralNumberEvaluator.class));
-		all.add(C(Evaluator.class, LiteralBooleanEvaluator.ID, LiteralBooleanEvaluator.class));
 	}
 }

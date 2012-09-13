@@ -25,7 +25,7 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class HtmlMessageCodecTest extends ComponentTestCase {
-	
+
 	private void check(MessageTree tree, Message message, String expected) throws Exception {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
@@ -102,7 +102,8 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 
 		MessageTree tree = new DefaultMessageTree();
 		tree.setMessage(event);
-		check(tree, event, "<tr><td>E15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>here is the data.</td></tr>\r\n");
+		check(tree, event,
+		      "<tr><td>E15:33:41.987</td><td>type</td><td>name</td><td>&nbsp;</td><td>here is the data.</td></tr>\r\n");
 	}
 
 	@Test
@@ -115,7 +116,8 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 
 		MessageTree tree = new DefaultMessageTree();
 		tree.setMessage(event);
-		check(tree, event,
+		check(tree,
+		      event,
 		      "<tr><td>E15:33:41.987</td><td>Exception</td><td>java.lang.Exception</td><td class=\"error\">ERROR</td><td>java.lang.Exception\n<br>"
 		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:112)\n<br>"
 		            + "\tat com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest.testEventForException(PlainTextMessageCodecTest.java:108)\n<br>"
@@ -168,7 +170,8 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 
 		MessageTree tree = new DefaultMessageTree();
 		tree.setMessage(root);
-		check(tree, root,
+		check(tree,
+		      root,
 		      "<tr><td>t15:33:41.987</td><td>URL</td><td>Review</td><td></td><td></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:41.987</td><td>URL</td><td>Payload</td><td>&nbsp;</td><td>ip=127.0.0.1&amp;ua=Mozilla 5.0...&amp;refer=...&amp;...</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;A15:33:41.987</td><td>Service</td><td>Auth</td><td>&nbsp;</td><td>20ms userId=1357&amp;token=...</td></tr>\r\n"
@@ -198,7 +201,8 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		MessageTree tree = new DefaultMessageTree();
 		tree.setMessage(root);
 		tree.setMessageId("1637924287");
-		check(tree, root,
+		check(tree,
+		      root,
 		      "<tr><td>t15:33:41.987</td><td>URL</td><td>Review</td><td></td><td></td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;E15:33:41.987</td><td>URL</td><td>Payload</td><td>&nbsp;</td><td>ip=127.0.0.1&amp;ua=Mozilla 5.0...&amp;refer=...&amp;...</td></tr>\r\n"
 		            + "<tr><td>&nbsp;&nbsp;A15:33:41.987</td><td>Service</td><td>Auth</td><td>&nbsp;</td><td>20ms userId=1357&amp;token=...</td></tr>\r\n"

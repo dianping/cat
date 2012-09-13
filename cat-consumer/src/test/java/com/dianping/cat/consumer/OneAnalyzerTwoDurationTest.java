@@ -29,11 +29,11 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 	private static int s_count2;
 
 	private static int s_period = 0;
-	
+
 	@Before
-	public void before(){
+	public void before() {
 	}
-	
+
 	@Test
 	public void test() throws Exception {
 		MessageConsumer consumer = lookup(MessageConsumer.class, "mock");
@@ -102,8 +102,8 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		}
 
 		public int getIntType() {
-      	return m_type;
-      }
+			return m_type;
+		}
 
 		@Override
 		public long getTimestamp() {

@@ -204,8 +204,7 @@ public class MethodInfo extends BaseVisitor {
 
 			if (projectName.equalsIgnoreCase(domain)) {
 				return true;
-			}
-			else {
+			} else {
 				return false;
 			}
 		}

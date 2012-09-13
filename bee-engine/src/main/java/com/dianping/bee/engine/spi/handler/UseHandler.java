@@ -3,15 +3,21 @@ package com.dianping.bee.engine.spi.handler;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.handler.FrontendPrivileges;
 import com.alibaba.cobar.server.ServerConnection;
+import com.dianping.bee.engine.helper.SqlParsers;
 
 public class UseHandler extends AbstractHandler {
+
+	private static final Logger LOGGER = Logger.getLogger(UseHandler.class);
+
 	@Override
 	protected void handle(ServerConnection c, List<String> parts) {
-		String schema = unescape(parts.get(0));
-
+		String schema = SqlParsers.forEscape().unescape(parts.get(0));
+		LOGGER.info("use : " + schema);
 		// 检查schema的有效性
 		FrontendPrivileges privileges = c.getPrivileges();
 
@@ -36,7 +42,8 @@ public class UseHandler extends AbstractHandler {
 			ctx.writeOk();
 			ctx.complete();
 		} else {
-			error(c, ErrorCode.ER_DBACCESS_DENIED_ERROR, "Access denied for user '%s' to database '%s'", c.getUser(), schema);
+			error(c, ErrorCode.ER_DBACCESS_DENIED_ERROR, "Access denied for user '%s' to database '%s'", c.getUser(),
+			      schema);
 		}
 	}
 }

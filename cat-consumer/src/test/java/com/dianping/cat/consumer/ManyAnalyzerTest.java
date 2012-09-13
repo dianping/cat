@@ -25,9 +25,9 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 	private static int s_count3;
 
 	@Before
-	public void before(){
+	public void before() {
 	}
-	
+
 	@Test
 	public void test() throws Exception {
 		MessageConsumer consumer = lookup(MessageConsumer.class, "mockManyAnalyzers");

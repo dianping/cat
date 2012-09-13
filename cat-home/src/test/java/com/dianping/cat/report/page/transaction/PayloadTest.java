@@ -198,8 +198,8 @@ public class PayloadTest {
 		checkDate(lastOne, payload.getHistoryStartDate());
 		checkDate(current, adjustEndDate(payload.getHistoryEndDate()));
 	}
-	
-	private Date adjustEndDate(Date date){
+
+	private Date adjustEndDate(Date date) {
 		return new Date(date.getTime());
 	}
 }

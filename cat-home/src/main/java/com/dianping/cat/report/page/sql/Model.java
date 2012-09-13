@@ -10,7 +10,7 @@ import com.dianping.cat.report.view.StringSortHelper;
 public class Model extends AbstractReportModel<Action, Context> {
 
 	private SqlReport m_report;
-	
+
 	private DisplaySqlReport m_displaySqlReport;
 
 	private String m_database;
@@ -23,19 +23,19 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_database;
 	}
 
-	public List<String> getDatabases(){
+	public List<String> getDatabases() {
 		if (m_report == null) {
 			return new ArrayList<String>();
 		} else {
 			return StringSortHelper.sortDomain(m_report.getDatabaseNames());
 		}
 	}
-	
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.HOURLY_REPORT;
 	}
-	
+
 	public DisplaySqlReport getDisplaySqlReport() {
 		return m_displaySqlReport;
 	}
@@ -64,7 +64,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setDatabase(String database) {
 		m_database = database;
-   }
+	}
 
 	public void setDisplaySqlReport(DisplaySqlReport displaySqlReport) {
 		m_displaySqlReport = displaySqlReport;
@@ -73,6 +73,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setReport(SqlReport sqlReport) {
 		m_report = sqlReport;
 	}
-	
-	
+
 }

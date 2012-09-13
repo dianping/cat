@@ -42,7 +42,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	@FieldMeta("database")
 	private String m_database;
-	
+
 	@Override
 	public Action getAction() {
 		return m_action;

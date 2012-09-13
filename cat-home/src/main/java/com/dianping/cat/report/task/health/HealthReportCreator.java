@@ -50,23 +50,6 @@ public class HealthReportCreator {
 		return m_healthReport;
 	}
 
-	private void buildClientServiceInfo(Map<String, ServiceInfo> infos) {
-		BaseInfo info = new BaseInfo();
-
-		ClientService clientService = new ClientService();
-		m_healthReport.setClientService(clientService);
-		m_healthReport.getClientService().setBaseInfo(info);
-
-		String domain = m_healthReport.getDomain();
-		ServiceInfo serviceInfo = infos.get(domain);
-		if (serviceInfo != null) {
-			info.setTotal(serviceInfo.getTotalCount());
-			info.setErrorTotal(serviceInfo.getFailCount());
-			info.setResponseTime(serviceInfo.getAvgTime());
-			info.setErrorPercent(serviceInfo.getFailCount() / (double) serviceInfo.getTotalCount());
-		}
-	}
-
 	private BaseCacheInfo buildBaseCacheInfo(TransactionReport transactionReport, EventReport eventReport, String type) {
 		Map<String, TransactionType> transactionTypes = transactionReport.findOrCreateMachine("All").getTypes();
 		Map<String, EventType> eventTypes = eventReport.findOrCreateMachine("All").getTypes();
@@ -144,6 +127,23 @@ public class HealthReportCreator {
 		m_healthReport.setMemCache(memCache);
 	}
 
+	private void buildClientServiceInfo(Map<String, ServiceInfo> infos) {
+		BaseInfo info = new BaseInfo();
+
+		ClientService clientService = new ClientService();
+		m_healthReport.setClientService(clientService);
+		m_healthReport.getClientService().setBaseInfo(info);
+
+		String domain = m_healthReport.getDomain();
+		ServiceInfo serviceInfo = infos.get(domain);
+		if (serviceInfo != null) {
+			info.setTotal(serviceInfo.getTotalCount());
+			info.setErrorTotal(serviceInfo.getFailCount());
+			info.setResponseTime(serviceInfo.getAvgTime());
+			info.setErrorPercent(serviceInfo.getFailCount() / (double) serviceInfo.getTotalCount());
+		}
+	}
+
 	private void buildMachinInfo(HeartbeatReport heartbeatReport) {
 		MachineInfo info = new MachineInfo();
 
@@ -193,30 +193,40 @@ public class HealthReportCreator {
 		info.setAvgLoad(entry.getAvg());
 		info.setAvgMaxLoad(entry.getMax());
 		info.setAvgMaxLoadMachine(entry.getIp());
+		info.setAvgLoadCount(1);
+		info.setAvgLoadSum(entry.getAvg());
 
 		entry = findMaxEntry(gcs);
 
 		info.setAvgOldgc(entry.getAvg());
 		info.setAvgMaxOldgc(entry.getMax());
 		info.setAvgMaxOldgcMachine(entry.getIp());
+		info.setAvgOldgcCount(1);
+		info.setAvgOldgcSum(entry.getAvg());
 
 		entry = findMaxEntry(https);
 
 		info.setAvgHttp(entry.getAvg());
 		info.setAvgMaxHttp(entry.getMax());
 		info.setAvgMaxHttpMachine(entry.getIp());
+		info.setAvgHttpCount(1);
+		info.setAvgHttpSum(entry.getAvg());
 
 		entry = findMaxEntry(pigeons);
 
 		info.setAvgPigeon(entry.getAvg());
 		info.setAvgMaxPigeon(entry.getMax());
 		info.setAvgMaxPigeonMachine(entry.getIp());
+		info.setAvgPigeonCount(1);
+		info.setAvgPigeonSum(entry.getAvg());
 
 		entry = findMaxEntry(memory);
 
 		info.setAvgMemoryUsed(entry.getAvg());
 		info.setAvgMaxMemoryUsed(entry.getMax());
 		info.setAvgMaxMemoryUsedMachine(entry.getIp());
+		info.setAvgMemoryUsedCount(1);
+		info.setAvgMemoryUsedSum(entry.getAvg());
 
 	}
 

@@ -69,7 +69,7 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	private String m_logicalPath;
 
 	private long m_timestamp;
-	
+
 	private String m_domain;
 
 	@Override
@@ -182,8 +182,8 @@ public class LocalLogviewBucket implements Bucket<MessageTree>, LogEnabled {
 	}
 
 	public String getDomain() {
-   	return m_domain;
-   }
+		return m_domain;
+	}
 
 	@Override
 	public Collection<String> getIds() {

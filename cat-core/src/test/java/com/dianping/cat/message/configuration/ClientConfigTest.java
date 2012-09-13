@@ -52,7 +52,7 @@ public class ClientConfigTest {
 		InputStream in = getClass().getResourceAsStream(configXml);
 		String xml = Files.forIO().readFrom(in, "utf-8");
 		ClientConfig clientConfig = new DefaultDomParser().parse(xml);
-		
+
 		return clientConfig;
 	}
 

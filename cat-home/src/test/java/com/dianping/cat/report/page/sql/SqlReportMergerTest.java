@@ -16,18 +16,21 @@ public class SqlReportMergerTest {
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("SqlReportNew.xml"), "utf-8");
 		SqlReport reportOld = new DefaultDomParser().parse(oldXml);
 		SqlReport reportNew = new DefaultDomParser().parse(newXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("SqlReportMergeResult.xml"),
-		      "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("SqlReportMergeResult.xml"), "utf-8");
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(reportOld.getDomain()));
 
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		//Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), merger.getSqlReport().toString().replaceAll("\r", ""));
-		
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), merger.getSqlReport().toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""), reportNew.toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""), reportOld.toString().replaceAll("\\s*", ""));
+		// Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""),
+		// merger.getSqlReport().toString().replaceAll("\r", ""));
+
+		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), merger.getSqlReport().toString()
+		      .replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""),
+		      reportNew.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""),
+		      reportOld.toString().replaceAll("\\s*", ""));
 	}
 
 	@Test
@@ -36,8 +39,7 @@ public class SqlReportMergerTest {
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("SqlReportNew.xml"), "utf-8");
 		SqlReport reportOld = new DefaultDomParser().parse(oldXml);
 		SqlReport reportNew = new DefaultDomParser().parse(newXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("SqlReportMergeAllResult.xml"),
-		      "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("SqlReportMergeAllResult.xml"), "utf-8");
 
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(reportOld.getDomain()));
 
@@ -48,10 +50,12 @@ public class SqlReportMergerTest {
 
 		String actual = new DefaultXmlBuilder().buildXml(merger.getSqlReport());
 
-		//Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), actual.replaceAll("\r", ""));
+		// Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), actual.replaceAll("\r", ""));
 
 		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), actual.replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""), reportOld.toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""), reportNew.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""),
+		      reportOld.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""),
+		      reportNew.toString().replaceAll("\\s*", ""));
 	}
 }

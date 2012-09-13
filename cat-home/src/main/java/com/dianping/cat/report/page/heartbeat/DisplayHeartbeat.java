@@ -92,7 +92,7 @@ public class DisplayHeartbeat {
 			m_httpThreads[minute] = period.getHttpThreadCount();
 			m_catMessageProduced[minute] = period.getCatMessageProduced();
 			m_catMessageOverflow[minute] = period.getCatMessageOverflow();
-			period.setCatMessageSize((double)(period.getCatMessageSize() / K / K));
+			period.setCatMessageSize((double) (period.getCatMessageSize() / K / K));
 			m_catMessageSize[minute] = period.getCatMessageSize();
 			m_newGcCount[minute] = period.getNewGcCount();
 			m_oldGcCount[minute] = period.getOldGcCount();

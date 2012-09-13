@@ -17,7 +17,7 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class MatrixReportBuilder extends AbstractReportBuilder implements ReportBuilder {
-	
+
 	@Inject
 	private MatrixMerger m_matrixMerger;
 
@@ -51,9 +51,9 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 		report.setType(1);
 		return report;
 	}
-	
+
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod){
+	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Matrix report don't support HourReport!");
 	}
 

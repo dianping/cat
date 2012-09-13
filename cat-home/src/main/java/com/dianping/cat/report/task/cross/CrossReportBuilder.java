@@ -17,7 +17,7 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class CrossReportBuilder extends AbstractReportBuilder implements ReportBuilder {
-	
+
 	@Inject
 	private CrossMerger m_crossMerger;
 
@@ -51,9 +51,9 @@ public class CrossReportBuilder extends AbstractReportBuilder implements ReportB
 		report.setType(1);
 		return report;
 	}
-	
+
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod){
+	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Cross report don't support HourReport!");
 	}
 

@@ -137,8 +137,8 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
-		long historyTime =payload.getHistoryEndDate().getTime()-payload.getHistoryStartDate().getTime();
-		
+		long historyTime = payload.getHistoryEndDate().getTime() - payload.getHistoryStartDate().getTime();
+
 		switch (payload.getAction()) {
 		case HOURLY_PROJECT:
 			CrossReport projectReport = getHourlyReport(payload);
@@ -265,7 +265,7 @@ public class Handler implements PageHandler<Context> {
 		action = payload.getAction();
 		model.setAction(action);
 
-		if (action == Action.HISTORY_PROJECT || action == Action.HISTORY_METHOD||action==Action.HISTORY_HOST) {
+		if (action == Action.HISTORY_PROJECT || action == Action.HISTORY_METHOD || action == Action.HISTORY_HOST) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {
 				payload.setReportType("day");

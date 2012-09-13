@@ -78,13 +78,13 @@ public class TestSendMessage {
 		}
 		Thread.sleep(1000);
 	}
-	
+
 	@Test
-	public void sentHackPigenTransaction()throws Exception {
+	public void sentHackPigenTransaction() throws Exception {
 		for (int i = 0; i < 200; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
 			Cat.getProducer().newEvent("PigeonCall.server", "192.168.7.24:8080");
-			Cat.getProducer().logEvent("RemoteCall", "Pigeon",Message.SUCCESS,"MessageID");
+			Cat.getProducer().logEvent("RemoteCall", "Pigeon", Message.SUCCESS, "MessageID");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -107,7 +107,7 @@ public class TestSendMessage {
 		for (int i = 0; i < 200; i++) {
 			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
 			Cat.getProducer().newEvent("PigeonCall.server", "192.168.7.24:8080");
-			Cat.getProducer().logEvent("RemoteCall", "Test",Message.SUCCESS,"MessageID");
+			Cat.getProducer().logEvent("RemoteCall", "Test", Message.SUCCESS, "MessageID");
 			t.addData("key and value");
 
 			Thread.sleep(1);

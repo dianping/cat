@@ -23,18 +23,28 @@
      <attribute name="numbers" value-type="int" primitive="true" />
    	 <attribute name="avg-load" value-type="double" primitive="true"  format="0.000000"/>
    	 <attribute name="avg-max-load" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-load-count" value-type="int" primitive="true"/>
+   	 <attribute name="avg-load-sum" value-type="double" primitive="true"  format="0.000000"/>
      <attribute name="avg-max-load-machine" value-type="String"/>
    	 <attribute name="avg-oldgc" value-type="double" primitive="true"  format="0.000000"/>
    	 <attribute name="avg-max-oldgc" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-oldgc-count" value-type="int" primitive="true"/>
+   	 <attribute name="avg-oldgc-sum" value-type="double" primitive="true"  format="0.000000"/>
      <attribute name="avg-max-oldgc-machine" value-type="String"/>
    	 <attribute name="avg-http" value-type="double" primitive="true"  format="0.000000"/>
    	 <attribute name="avg-max-http" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-http-count" value-type="int" primitive="true" />
+   	 <attribute name="avg-http-sum" value-type="double" primitive="true"  format="0.000000"/>
      <attribute name="avg-max-http-machine" value-type="String"/>
    	 <attribute name="avg-pigeon" value-type="double" primitive="true"  format="0.000000"/>
    	 <attribute name="avg-max-pigeon" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-pigeon-count" value-type="int" primitive="true"/>
+   	 <attribute name="avg-pigeon-sum" value-type="double" primitive="true"  format="0.000000"/>
      <attribute name="avg-max-pigeon-machine" value-type="String"/>
    	 <attribute name="avg-memory-used" value-type="double" primitive="true"  format="0.000000"/>
    	 <attribute name="avg-max-memory-used" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-memory-used-count" value-type="int" primitive="true"/>
+   	 <attribute name="avg-memory-used-sum" value-type="double" primitive="true"  format="0.000000"/>
      <attribute name="avg-max-memory-used-machine" value-type="String"/>
   </entity>
   <entity name="problem-info">

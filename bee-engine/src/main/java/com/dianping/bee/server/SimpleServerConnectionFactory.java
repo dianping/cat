@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
@@ -23,12 +24,16 @@ import com.dianping.bee.engine.spi.SessionManager;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
+
+	private static final Logger LOGGER = Logger.getLogger(SimpleServerConnectionFactory.class);
+
 	private PlexusContainer m_container;
 
 	private Set<String> m_databases;
 
 	@Override
 	protected FrontendConnection getConnection(SocketChannel channel) {
+		LOGGER.info("getConnection : " + channel);
 		SimpleServerConnection c = new SimpleServerConnection(channel);
 		FrontendQueryHandler queryHandler = getQueryHandler(c); // TODO use
 		                                                        // another one for
@@ -53,6 +58,8 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 				}
 				m_databases = databaseNames;
 			} catch (ComponentLookupException e) {
+				LOGGER.fatal(
+				      "Unable to get DatabaseProvider instance, please check if the environment is setup correctly!", e);
 				throw new RuntimeException(
 				      "Unable to get DatabaseProvider instance, please check if the environment is setup correctly!", e);
 			}
@@ -67,6 +74,9 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 			queryHandler.setServerConnection(c);
 			return queryHandler;
 		} catch (ComponentLookupException e) {
+			LOGGER.fatal(
+			      "Unable to get SimpleServerQueryHandler instance, please check if the environment is setup correctly!",
+			      e);
 			throw new RuntimeException(
 			      "Unable to get SimpleServerQueryHandler instance, please check if the environment is setup correctly!",
 			      e);
@@ -79,6 +89,7 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 
 			return sessionManager;
 		} catch (ComponentLookupException e) {
+			LOGGER.fatal("Unable to get SessionManager instance, please check if the environment is setup correctly!", e);
 			throw new RuntimeException(
 			      "Unable to get SessionManager instance, please check if the environment is setup correctly!", e);
 		}

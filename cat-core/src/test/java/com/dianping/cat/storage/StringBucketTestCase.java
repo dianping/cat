@@ -25,14 +25,16 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 	protected Bucket<String> bucket = null;
 
 	protected void printFails(final int fails, final long start) {
-		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:" + threadNum * timesPerThread + " fails:" + fails + " waste:" + (System.currentTimeMillis() - start) + "ms");
+		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"
+		      + threadNum * timesPerThread + " fails:" + fails + " waste:" + (System.currentTimeMillis() - start) + "ms");
 		if (fails > 0) {
 			Assert.fail("fails:" + fails);
 		}
 	}
 
 	protected void print(final long start) {
-		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:" + threadNum * timesPerThread + " waste:" + (System.currentTimeMillis() - start) + "ms");
+		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"
+		      + threadNum * timesPerThread + " waste:" + (System.currentTimeMillis() - start) + "ms");
 	}
 
 	protected void resetSerial(final AtomicInteger serial) {
@@ -176,20 +178,20 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 		serialRead(serial);
 		print(start);
 	}
-	
+
 	@Test
 	public void testReload() throws Exception {
 		final AtomicInteger serial = createSerial();
 		this.serialWrite(serial);
-		
+
 		resetSerial(serial);
-		
+
 		this.bucket.close();
-		
+
 		long start = System.currentTimeMillis();
 		bucket = createBucket();
 		print(start);
-		
+
 		serialRead(serial);
 	}
 

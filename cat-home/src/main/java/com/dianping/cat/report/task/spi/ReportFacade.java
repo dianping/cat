@@ -41,16 +41,16 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private TransactionReportBuilder m_tansactionBuilder;
-	
+
 	@Inject
 	private MatrixReportBuilder m_matrixReportBuilder;
-	
+
 	@Inject
 	private CrossReportBuilder m_crossReportBuilder;
-	
+
 	@Inject
 	private DatabaseReportBuilder m_databaseReportBuilder;
-	
+
 	@Inject
 	private SqlReportBuilder m_sqlReportBuilder;
 

@@ -22,10 +22,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("remote")
 	private String m_remoteIp;
-	
+
 	@FieldMeta("serviceSort")
 	private String m_serviceSort;
-	
+
 	@FieldMeta("queryName")
 	private String m_queryName;
 

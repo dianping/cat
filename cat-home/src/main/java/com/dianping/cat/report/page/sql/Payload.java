@@ -12,7 +12,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("sort")
 	private String m_sortBy;
-	
+
 	@FieldMeta("database")
 	private String m_database;
 
@@ -47,7 +47,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
-		if(m_action==null){
+		if (m_action == null) {
 			m_action = Action.HOURLY_REPORT;
 		}
 	}

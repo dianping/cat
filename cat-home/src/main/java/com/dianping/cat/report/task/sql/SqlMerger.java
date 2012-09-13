@@ -23,7 +23,7 @@ public class SqlMerger implements ReportMerger<SqlReport> {
 		sqlReport.addDatabase(sqlReport2.findDatabase(CatString.ALL_Database));
 		sqlReport.getDomainNames().add(CatString.ALL_Database);
 		sqlReport.getDomainNames().addAll(domains);
-		
+
 		Date date = sqlReport.getStartTime();
 		sqlReport.setStartTime(TaskHelper.todayZero(date));
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);

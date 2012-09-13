@@ -31,7 +31,7 @@ public class SqlJobDataProduceTest extends CatTestCase {
 		long currentTimeMillis = System.currentTimeMillis();
 		long currentHour = currentTimeMillis - currentTimeMillis % (60 * 60 * 1000);
 		for (int i = 0; i < 3; i++) {
-	
+
 			for (int j = 0; j < 12000; j++) {
 				Transaction t = producer.newTransaction("URL", "MyPage" + (int) (j / 500));
 
@@ -53,7 +53,8 @@ public class SqlJobDataProduceTest extends CatTestCase {
 					String sqlStatement = "select * from	table where id=\"1\"\n	order by id	desc";
 					Transaction sqlTran = producer.newTransaction("SQL", sqlName);
 
-					producer.logEvent("SQL.PARAM", sqlParaMeter, Transaction.SUCCESS, Stringizers.forJson().compact().from(sqlParaMeter));
+					producer.logEvent("SQL.PARAM", sqlParaMeter, Transaction.SUCCESS,
+					      Stringizers.forJson().compact().from(sqlParaMeter));
 					sqlTran.addData(sqlStatement);
 
 					sqlTran.complete();

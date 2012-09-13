@@ -22,7 +22,7 @@ public class DatabaseMerger implements ReportMerger<DatabaseReport> {
 
 		databaseReport.addDomain(databaseReport2.findDomain(CatString.ALL_Domain));
 		databaseReport.getDomainNames().add(CatString.ALL_Domain);
-		
+
 		Date date = databaseReport.getStartTime();
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
 

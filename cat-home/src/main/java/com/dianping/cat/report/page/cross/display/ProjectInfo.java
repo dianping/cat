@@ -19,7 +19,7 @@ import com.dianping.cat.report.page.cross.DomainManager;
 public class ProjectInfo extends BaseVisitor {
 
 	public static final String ALL_SERVER = "AllServers";
-	
+
 	public static final String ALL_CLIENT = "AllClients";
 
 	private static final String UNKNOWN_PROJECT = "UnknownProject";
@@ -35,10 +35,10 @@ public class ProjectInfo extends BaseVisitor {
 	private String m_callSortBy = "Avg";
 
 	private String m_serviceSortBy = "Avg";
-	
+
 	private DomainManager m_domainManager;
 
-//	private HostinfoDao m_hostInfoDao;
+	// private HostinfoDao m_hostInfoDao;
 
 	public ProjectInfo(long reportDuration) {
 		m_reportDuration = reportDuration;

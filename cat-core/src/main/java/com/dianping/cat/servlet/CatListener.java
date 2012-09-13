@@ -22,7 +22,7 @@ public class CatListener implements ServletContextListener {
 		if (catClientXml == null) {
 			catClientXml = "/data/appdatas/cat/client.xml";
 		}
-		
+
 		Cat.initialize(new File(catClientXml));
 	}
 }

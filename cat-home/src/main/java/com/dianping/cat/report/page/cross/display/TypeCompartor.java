@@ -12,16 +12,16 @@ public class TypeCompartor implements Comparator<TypeDetailInfo> {
 
 	@Override
 	public int compare(TypeDetailInfo m1, TypeDetailInfo m2) {
-		if (m1.getProjectName()!=null&&m1.getProjectName().startsWith("All")) {
+		if (m1.getProjectName() != null && m1.getProjectName().startsWith("All")) {
 			return -1;
 		}
-		if (m2.getProjectName()!=null&&m2.getProjectName().startsWith("All")) {
+		if (m2.getProjectName() != null && m2.getProjectName().startsWith("All")) {
 			return 1;
 		}
-		if (m1.getIp()!=null&&m1.getIp().startsWith("All")) {
+		if (m1.getIp() != null && m1.getIp().startsWith("All")) {
 			return -1;
 		}
-		if (m2.getIp()!=null&&m2.getIp().startsWith("All")) {
+		if (m2.getIp() != null && m2.getIp().startsWith("All")) {
 			return 1;
 		}
 		if (!m1.getType().equals(m2.getType())) {

@@ -12,7 +12,7 @@ import com.dianping.cat.data.transaction.TransactionIndex;
 
 public enum CatTableProvider implements TableProvider {
 	Node("node", NodeColumn.values(), NodeIndex.values()),
-	
+
 	Transaction("transaction", TransactionColumn.values(), TransactionIndex.values()),
 
 	Event("event", EventColumn.values(), EventIndex.values()),

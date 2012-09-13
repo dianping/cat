@@ -31,7 +31,7 @@ public class LogviewUploaderTest extends ComponentTestCase {
 
 		bucket.flush();
 		uploader.addBucket(timestamp, domain);
-		
+
 	}
 
 	private DefaultMessageTree newMessageTree(int i, long timestamp) {

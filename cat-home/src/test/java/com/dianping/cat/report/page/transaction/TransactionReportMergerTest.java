@@ -24,7 +24,8 @@ public class TransactionReportMergerTest {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), merger.getTransactionReport().toString().replace("\r", ""));
+		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), merger.getTransactionReport()
+		      .toString().replace("\r", ""));
 		Assert.assertEquals("Source report is changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
 	}
 

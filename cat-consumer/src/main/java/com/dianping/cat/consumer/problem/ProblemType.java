@@ -4,17 +4,17 @@ public enum ProblemType {
 	ERROR("error"),
 
 	FAILURE("failure"),
-	
+
 	HEARTBEAT("heartbeat"),
 
 	LONG_SQL("long-sql"),
-	
+
 	LONG_URL("long-url"),
 
 	LONG_SERVICE("long-service"),
 
 	LONG_CACHE("long-cache");
-	
+
 	private String m_name;
 
 	private ProblemType(String name) {

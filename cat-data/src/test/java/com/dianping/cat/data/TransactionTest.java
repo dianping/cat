@@ -56,7 +56,7 @@ public class TransactionTest extends ComponentTestCase {
 		System.out.println();
 
 		rs.beforeFirst();
-		
+
 		while (rs.next()) {
 			for (int column = 1; column <= columns; column++) {
 				System.out.print(rs.getString(column) + "\t");

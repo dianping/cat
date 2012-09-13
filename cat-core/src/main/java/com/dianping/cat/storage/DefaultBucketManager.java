@@ -62,7 +62,7 @@ public class DefaultBucketManager extends ContainerHolder implements BucketManag
 		}
 
 		Entry key = null;
-		
+
 		synchronized (m_map) {
 			for (Map.Entry<Entry, Bucket<?>> e : m_map.entrySet()) {
 				if (e.getValue() == bucket) {

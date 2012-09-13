@@ -6,7 +6,7 @@ public enum TransactionColumn implements ColumnMeta {
 	StartTime(String.class), // 20120822(for daily), 2012082213(for hour)
 
 	Domain(String.class), // MobileApi
-	
+
 	Ip(String.class), // 127.0.0.1
 
 	Type(String.class), // URL
@@ -47,7 +47,8 @@ public enum TransactionColumn implements ColumnMeta {
 			}
 		}
 
-		throw new RuntimeException(String.format("Column(%s) is not found in %s", name, TransactionColumn.class.getName()));
+		throw new RuntimeException(
+		      String.format("Column(%s) is not found in %s", name, TransactionColumn.class.getName()));
 	}
 
 	@Override

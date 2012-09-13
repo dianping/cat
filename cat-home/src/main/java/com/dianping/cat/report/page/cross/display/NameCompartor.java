@@ -12,13 +12,13 @@ public class NameCompartor implements Comparator<NameDetailInfo> {
 
 	@Override
 	public int compare(NameDetailInfo m1, NameDetailInfo m2) {
-		if (m1.getId()!=null&&m1.getId().startsWith("All")) {
+		if (m1.getId() != null && m1.getId().startsWith("All")) {
 			return -1;
 		}
-		if (m2.getId()!=null&&m2.getId().startsWith("All")) {
+		if (m2.getId() != null && m2.getId().startsWith("All")) {
 			return 1;
 		}
-		
+
 		if (m_sorted.equals("name")) {
 			return m1.getId().compareTo(m2.getId());
 		}

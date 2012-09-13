@@ -33,7 +33,7 @@ public interface OutputChannel {
 	 * @throws IOException
 	 */
 	public int write(MessageTree tree) throws IOException;
-	
+
 	/**
 	 * Get the size of data written to the output channel.
 	 * 

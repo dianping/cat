@@ -100,14 +100,14 @@ public class Handler implements PageHandler<Context> {
 			HealthReport healthReport = merger.getHealthReport();
 
 			merger.setDuration(ONE_HOUR);
-			
+
 			for (Report report : reports) {
 				String xml = report.getContent();
 				HealthReport model = DefaultSaxParser.parse(xml);
 				model.accept(merger);
 				healthReport.getDomainNames().addAll(model.getDomainNames());
 			}
-			
+
 			return healthReport;
 		} catch (Exception e) {
 			Cat.logError(e);

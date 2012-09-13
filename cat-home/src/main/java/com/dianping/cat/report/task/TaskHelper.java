@@ -108,7 +108,7 @@ public class TaskHelper {
 	}
 
 	public static Date todayZero(Date reportPeriod) {
-		if(reportPeriod==null){
+		if (reportPeriod == null) {
 			reportPeriod = new Date();
 		}
 		Calendar cal = Calendar.getInstance();
@@ -121,7 +121,7 @@ public class TaskHelper {
 	}
 
 	public static Date tomorrowZero(Date reportPeriod) {
-		if(reportPeriod==null){
+		if (reportPeriod == null) {
 			reportPeriod = new Date();
 		}
 		Calendar cal = Calendar.getInstance();

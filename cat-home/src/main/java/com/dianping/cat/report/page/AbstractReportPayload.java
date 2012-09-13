@@ -45,7 +45,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	@FieldMeta("today")
 	private boolean m_today;
-	
+
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;
 	}
@@ -267,5 +267,5 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	public void setToday(boolean today) {
 		m_today = today;
 	}
-	
+
 }

@@ -17,15 +17,16 @@ public class EventReportMergerTest {
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportNew.xml"), "utf-8");
 		EventReport reportOld = new DefaultDomParser().parse(oldXml);
 		EventReport reportNew = new DefaultDomParser().parse(newXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportMergeResult.xml"),
-		      "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportMergeResult.xml"), "utf-8");
 		EventReportMerger merger = new EventReportMerger(new EventReport(reportOld.getDomain()));
 
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), merger.getEventReport().toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""), reportNew.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), merger.getEventReport()
+		      .toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""),
+		      reportNew.toString().replaceAll("\\s*", ""));
 	}
 
 	@Test
@@ -34,8 +35,8 @@ public class EventReportMergerTest {
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportNew.xml"), "utf-8");
 		EventReport reportOld = new DefaultDomParser().parse(oldXml);
 		EventReport reportNew = new DefaultDomParser().parse(newXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportMergeAllResult.xml"),
-		      "utf-8");
+		String expected = Files.forIO()
+		      .readFrom(getClass().getResourceAsStream("EventReportMergeAllResult.xml"), "utf-8");
 
 		EventReportMerger merger = new EventReportMerger(new EventReport(reportOld.getDomain()));
 
@@ -47,8 +48,10 @@ public class EventReportMergerTest {
 		String actual = new DefaultXmlBuilder().buildXml(merger.getEventReport());
 
 		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), actual.replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""), reportOld.toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""), reportNew.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""),
+		      reportOld.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""),
+		      reportNew.toString().replaceAll("\\s*", ""));
 	}
 
 	@Test
@@ -57,8 +60,8 @@ public class EventReportMergerTest {
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportNew.xml"), "utf-8");
 		EventReport reportOld = new DefaultDomParser().parse(oldXml);
 		EventReport reportNew = new DefaultDomParser().parse(newXml);
-		String expected = Files.forIO().readFrom(
-		      getClass().getResourceAsStream("EventReportMergeAllIpAllName.xml"), "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportMergeAllIpAllName.xml"),
+		      "utf-8");
 
 		EventReportMerger merger = new EventReportMerger(new EventReport(reportOld.getDomain()));
 
@@ -73,7 +76,9 @@ public class EventReportMergerTest {
 		String actual = new DefaultXmlBuilder().buildXml(merger.getEventReport());
 
 		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), actual.replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""), reportOld.toString().replaceAll("\\s*", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""), reportNew.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\\s*", ""),
+		      reportOld.toString().replaceAll("\\s*", ""));
+		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\\s*", ""),
+		      reportNew.toString().replaceAll("\\s*", ""));
 	}
 }

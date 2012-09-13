@@ -48,7 +48,7 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 				report = new TransactionReport(domain);
 
 				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(date), new Date(
-						date + 60 * 60 * 1000), null, "transaction", ReportEntity.READSET_DOMAIN_NAME);
+				      date + 60 * 60 * 1000), null, "transaction", ReportEntity.READSET_DOMAIN_NAME);
 
 				Set<String> domainNames = report.getDomainNames();
 				for (Report temp : historyReports) {

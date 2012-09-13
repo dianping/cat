@@ -80,7 +80,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public void setName(String name) {
 		m_name = name;
 	}
-	
+
 	public String getIp() {
 		if (StringUtils.isEmpty(m_ip)) {
 			return ALL;

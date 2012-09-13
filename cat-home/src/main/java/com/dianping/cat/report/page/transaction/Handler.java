@@ -57,7 +57,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JspViewer m_jspViewer;
-	
+
 	@Inject
 	private XmlViewer m_xmlViewer;
 
@@ -279,8 +279,8 @@ public class Handler implements PageHandler<Context> {
 
 		String graph1 = m_builder.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count", name));
 		String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", name));
-		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)", "Average Duration (ms)",
-		      name));
+		String graph3 = m_builder.build(new AverageTimePayload("Average Duration Over Time", "Time (min)",
+		      "Average Duration (ms)", name));
 		String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", name));
 
 		model.setGraph1(graph1);
@@ -373,7 +373,8 @@ public class Handler implements PageHandler<Context> {
 		calculateTps(payload, transactionReport);
 		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {
-			model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, transactionReport, payload.getQueryName()));
+			model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, transactionReport,
+			      payload.getQueryName()));
 		} else {
 			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, transactionReport));
 		}

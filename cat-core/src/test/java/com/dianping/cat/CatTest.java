@@ -10,7 +10,7 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
 public class CatTest {
-	
+
 	@Test
 	public void testWithoutInitialize() throws InterruptedException {
 		MessageProducer cat = Cat.getProducer();

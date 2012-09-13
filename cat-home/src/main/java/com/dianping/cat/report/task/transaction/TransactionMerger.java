@@ -33,7 +33,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 				model.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
-				
+
 				Event event = Cat.getProducer().newEvent("Transaction", "XML");
 				event.setStatus(Event.SUCCESS);
 				event.addData(xml);

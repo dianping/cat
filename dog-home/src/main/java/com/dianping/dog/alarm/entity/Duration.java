@@ -2,13 +2,15 @@ package com.dianping.dog.alarm.entity;
 
 import java.util.List;
 
+import com.dianping.dog.alarm.rule.AlarmType;
+
 public class Duration {
-	
+
 	private int min;
 
 	private int max;
 
-	private List<AlarmStrategyEntity> strategys;
+	private List<AlarmType> alarmType;
 
 	public int getMin() {
 		return min;
@@ -26,12 +28,19 @@ public class Duration {
 		this.max = max;
 	}
 
-	public List<AlarmStrategyEntity> getStrategys() {
-		return strategys;
+	public boolean isIn(int count) {
+		if (min <= count && count < max) {
+			return true;
+		}
+		return false;
 	}
 
-	public void setStrategys(List<AlarmStrategyEntity> strategys) {
-		this.strategys = strategys;
+	public List<AlarmType> getAlarmType() {
+		return alarmType;
+	}
+
+	public void setAlarmType(List<AlarmType> alarmType) {
+		this.alarmType = alarmType;
 	}
 
 }

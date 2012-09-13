@@ -19,7 +19,7 @@ public class ModuleInitializerTest {
 
 		ctx.setAttribute("cat-client-config-file", new File("/data/appdatas/cat/client.xml"));
 		initializer.execute(ctx, catCoreModule);
-		
+
 		Thread.sleep(1000);
 	}
 }

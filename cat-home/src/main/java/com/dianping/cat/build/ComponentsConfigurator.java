@@ -113,7 +113,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HealthReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,//
-		      		HealthServiceCollector.class));
+		            HealthServiceCollector.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
@@ -124,7 +124,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
 		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
-		
+
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));

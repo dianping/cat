@@ -36,13 +36,13 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 
 	public static final long ONE_HOUR = 3600 * 1000L;
-	
+
 	@Inject
 	protected ReportDao m_reportDao;
-	
+
 	@Inject
 	private MatrixMerger m_matrixMerger;
-	
+
 	@Inject
 	private DailyreportDao m_dailyreportDao;
 
@@ -132,7 +132,7 @@ public class Handler implements PageHandler<Context> {
 					MatrixReport reportModel = DefaultSaxParser.parse(xml);
 					reportModel.accept(merger);
 				}
-				matrixReport  = merger.getMatrixReport();
+				matrixReport = merger.getMatrixReport();
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
@@ -147,7 +147,6 @@ public class Handler implements PageHandler<Context> {
 		model.setMatrix(new DisplayMatrix(matrixReport).setSortBy(payload.getSortBy()));
 	}
 
-	
 	public void normalize(Model model, Payload payload) {
 		Action action = payload.getAction();
 		model.setAction(action);

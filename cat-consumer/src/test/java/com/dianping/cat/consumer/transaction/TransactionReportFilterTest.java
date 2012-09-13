@@ -19,7 +19,7 @@ public class TransactionReportFilterTest {
 		TransactionReportFilter f1 = new TransactionReportFilter(1);
 		String expected1 = Files.forIO().readFrom(getClass().getResourceAsStream("transactionFilter.xml"), "utf-8");
 		report.accept(f1);
-		
+
 		Assert.assertEquals(expected1.replaceAll("\\s", ""), report.toString().replaceAll("\\s", ""));
 	}
 }

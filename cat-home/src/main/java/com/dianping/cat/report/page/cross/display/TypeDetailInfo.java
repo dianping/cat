@@ -19,16 +19,16 @@ public class TypeDetailInfo {
 	private long m_totalCount;
 
 	private double m_tps;
-	
+
 	private String m_type;
-	
+
 	private String m_ip;
 
-	public TypeDetailInfo(long seconds){
+	public TypeDetailInfo(long seconds) {
 		m_seconds = seconds;
 	}
-	
-	public TypeDetailInfo(long seconds,String projectName) {
+
+	public TypeDetailInfo(long seconds, String projectName) {
 		m_seconds = seconds;
 		m_projectName = projectName;
 	}
@@ -76,11 +76,11 @@ public class TypeDetailInfo {
 		m_sum += type.getSum();
 
 		if (m_totalCount > 0) {
-			m_avg = m_sum /  (double)m_totalCount;
-			m_failurePercent = (double)m_failureCount /  (double)m_totalCount;
+			m_avg = m_sum / (double) m_totalCount;
+			m_failurePercent = (double) m_failureCount / (double) m_totalCount;
 		}
 		if (m_seconds > 0) {
-			m_tps = m_totalCount / (double)m_seconds;
+			m_tps = m_totalCount / (double) m_seconds;
 		}
 	}
 
@@ -111,5 +111,5 @@ public class TypeDetailInfo {
 	public void setType(String type) {
 		m_type = type;
 	}
-	
+
 }

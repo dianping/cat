@@ -50,7 +50,7 @@ public class GsonTest {
 		check(new Date(1330079278861L), "\"2012-02-24 18:27:58\"");
 		check(Date.class, "\"class java.util.Date\"");
 		check(new Object[] { "x", "y", new Object[] { 1, 2.3, true, map(null) } }, //
-				"[\"x\",\"y\",[1,2.3,true,{\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}}]]");
+		      "[\"x\",\"y\",[1,2.3,true,{\"second\":{\"x\":2,\"y\":\"y\"},\"third\":{\"x\":3,\"y\":\"z\"},\"first\":{\"x\":1,\"y\":\"x\"}}]]");
 	}
 
 	public static class Pojo {

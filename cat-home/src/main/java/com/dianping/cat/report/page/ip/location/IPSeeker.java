@@ -509,8 +509,7 @@ public class IPSeeker {
 	}
 
 	/**
-	 * 从offset位置读取四个字节的ip地址放入ip数组中，读取后的ip为big-endian格式，但是
-	 * 文件中是little-endian形式，将会进行转换
+	 * 从offset位置读取四个字节的ip地址放入ip数组中，读取后的ip为big-endian格式，但是 文件中是little-endian形式，将会进行转换
 	 * 
 	 * @param offset
 	 * @param ip
@@ -527,8 +526,7 @@ public class IPSeeker {
 	}
 
 	/**
-	 * 从offset位置读取四个字节的ip地址放入ip数组中，读取后的ip为big-endian格式，但是
-	 * 文件中是little-endian形式，将会进行转换
+	 * 从offset位置读取四个字节的ip地址放入ip数组中，读取后的ip为big-endian格式，但是 文件中是little-endian形式，将会进行转换
 	 * 
 	 * @param offset
 	 * @param ip

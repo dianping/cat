@@ -2,7 +2,7 @@ package com.dianping.cat.report.page.health;
 
 public enum Action implements com.site.web.mvc.Action {
 	HOURLY_REPORT("hourly"),
-	
+
 	HISTORY_REPORT("history");
 
 	private String m_name;

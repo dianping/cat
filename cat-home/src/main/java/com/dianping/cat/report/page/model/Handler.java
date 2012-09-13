@@ -350,13 +350,12 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			}
 		}
 
-		
 		@Override
-      public void visitTransactionReport(TransactionReport transactionReport) {
+		public void visitTransactionReport(TransactionReport transactionReport) {
 			synchronized (transactionReport) {
 				super.visitTransactionReport(transactionReport);
-         }
-      }
+			}
+		}
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.transaction.model.entity.Machine machine) {

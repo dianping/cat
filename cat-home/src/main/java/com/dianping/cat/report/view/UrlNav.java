@@ -12,7 +12,7 @@ public enum UrlNav {
 	TWO_HOURS_LATER("+2h", 2),
 
 	ONE_DAY_LATER("+1d", 24);
-	
+
 	private int m_hours;
 
 	private String m_title;

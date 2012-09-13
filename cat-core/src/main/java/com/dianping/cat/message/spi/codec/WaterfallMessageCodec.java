@@ -15,8 +15,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
 /**
- * Local use only, do not use it over network since it only supports one-way
- * encoding
+ * Local use only, do not use it over network since it only supports one-way encoding
  */
 public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	public static final String ID = "waterfall";

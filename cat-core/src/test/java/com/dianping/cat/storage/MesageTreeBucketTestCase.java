@@ -27,14 +27,16 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 	protected Bucket<MessageTree> bucket = null;
 
 	protected void printFails(final int fails, final long start) {
-		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:" + threadNum * timesPerThread + " fails:" + fails + " waste:" + (System.currentTimeMillis() - start) + "ms");
+		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"
+		      + threadNum * timesPerThread + " fails:" + fails + " waste:" + (System.currentTimeMillis() - start) + "ms");
 		if (fails > 0) {
 			Assert.fail("fails:" + fails);
 		}
 	}
 
 	protected void print(final long start) {
-		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:" + threadNum * timesPerThread + " waste:" + (System.currentTimeMillis() - start) + "ms");
+		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"
+		      + threadNum * timesPerThread + " waste:" + (System.currentTimeMillis() - start) + "ms");
 	}
 
 	protected void resetSerial(final AtomicInteger serial) {
@@ -62,7 +64,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		
+
 		try {
 			pool = Executors.newFixedThreadPool(threadNum);
 			bucket = createBucket();
@@ -78,20 +80,20 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 		super.tearDown();
 		bucket.close();
 	}
-	
+
 	@Test
 	public void testReload() throws Exception {
 		final AtomicInteger serial = createSerial();
 		this.serialWrite(serial);
-		
+
 		resetSerial(serial);
-		
+
 		this.bucket.close();
-		
+
 		long start = System.currentTimeMillis();
 		bucket = createBucket();
 		print(start);
-		
+
 		serialRead(serial);
 	}
 
@@ -143,7 +145,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 						DefaultMessageTree mt = new DefaultMessageTree();
 						mt.setMessageId(id);
 						Assert.assertTrue(bucket.storeById(id, mt));
-						
+
 						MessageTree target = bucket.findById(id);
 						Assert.assertEquals(id, target.getMessageId());
 					} catch (Throwable e) {

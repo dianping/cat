@@ -97,8 +97,7 @@ public class Handler implements PageHandler<Context> {
 			SqlReport historyReport = showSummarizeReport(model, payload);
 
 			long historyDuration = historyReport.getEndTime().getTime() - historyReport.getStartTime().getTime();
-			DisplaySqlReport displayHistorySql = new DisplaySqlReport().setDatabase(database).setDuration(
-			      historyDuration);
+			DisplaySqlReport displayHistorySql = new DisplaySqlReport().setDatabase(database).setDuration(historyDuration);
 
 			displayHistorySql.setSortBy(payload.getSortBy()).visitSqlReport(historyReport);
 			model.setReport(historyReport);
@@ -128,13 +127,13 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isEmpty(payload.getDomain())) {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
-		
+
 		if (StringUtils.isEmpty(payload.getDatabase())) {
 			payload.setDatabase(CatString.ALL_Database);
 		}
 		model.setDisplayDomain(payload.getDomain());
 		model.setDatabase(payload.getDatabase());
-		
+
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());
 		} else {

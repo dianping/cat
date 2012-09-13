@@ -13,11 +13,11 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class CrossMerger implements ReportMerger<CrossReport> {
-	
+
 	@Override
-   public CrossReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
+	public CrossReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(reportDomain));
-		
+
 		for (Report report : reports) {
 			String xml = report.getContent();
 			try {
@@ -34,11 +34,11 @@ public class CrossMerger implements ReportMerger<CrossReport> {
 		crossReport.setStartTime(TaskHelper.todayZero(date));
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
 		crossReport.setEndTime(end);
-	   return crossReport;
-   }
+		return crossReport;
+	}
 
 	@Override
-   public CrossReport mergeForGraph(String reportDomain, List<Report> reports) {
+	public CrossReport mergeForGraph(String reportDomain, List<Report> reports) {
 		throw new RuntimeException("Cross report don't need graph!");
 	}
 }

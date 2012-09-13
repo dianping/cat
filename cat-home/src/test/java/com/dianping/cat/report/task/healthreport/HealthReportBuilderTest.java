@@ -21,7 +21,7 @@ public class HealthReportBuilderTest {
 		EventReport eventReport = getEventReportFromFile("EventReport.xml");
 		ProblemReport problemReport = getProblemReportFromFile("ProblemReport.xml");
 
-		HealthReport real = builder.build(transactionReport, eventReport, problemReport, null,null);
+		HealthReport real = builder.build(transactionReport, eventReport, problemReport, null, null);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("HealthReport.xml"), "utf-8");
 
 		Assert.assertEquals(expected.replaceAll("\\s*", ""), real.toString().replaceAll("\\s*", ""));

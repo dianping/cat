@@ -54,7 +54,7 @@ public class DatabaseReportMerger extends DefaultMerger {
 		old.setFailPercent(old.getFailCount() / (double) old.getTotalCount());
 		old.setSum(old.getSum() + method.getSum());
 		old.setAvg(old.getSum() / (double) old.getTotalCount());
-		
+
 		old.getSqlNames().addAll(method.getSqlNames());
 	}
 

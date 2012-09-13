@@ -26,11 +26,11 @@ public class CompositeDatabaseService extends BaseCompositeModelService<Database
 		}
 		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(request.getProperty("database")));
 		String domain = request.getDomain();
-		
-		if(domain.equals(CatString.ALL_Domain)){
+
+		if (domain.equals(CatString.ALL_Domain)) {
 			merger.setAllDomain(true);
 		}
-		
+
 		for (ModelResponse<DatabaseReport> response : responses) {
 			DatabaseReport model = response.getModel();
 			if (model != null) {

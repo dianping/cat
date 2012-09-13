@@ -66,7 +66,7 @@ public class Demo extends ComponentTestCase {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					
+
 				}
 				t.setStatus("child");
 				t.complete();
@@ -102,7 +102,7 @@ public class Demo extends ComponentTestCase {
 								try {
 									Thread.sleep(1000);
 								} catch (InterruptedException e) {
-									//ignore it
+									// ignore it
 								}
 							} finally {
 								t.setStatus("child");
@@ -114,17 +114,17 @@ public class Demo extends ComponentTestCase {
 					try {
 						semaphore.acquire(1);
 					} catch (InterruptedException e) {
-						//ignore it
+						// ignore it
 					}
 					f.setStatus("father");
 					f.complete();
-					
+
 					ss.release();
 				}
 			});
 
 		}
-		
+
 		ss.acquire(count);
 	}
 }

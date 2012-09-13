@@ -2,13 +2,12 @@ package com.dianping.cat.message;
 
 /**
  * <p>
- * Message represents data collected during application runtime. It will be sent
- * to back-end system asynchronous for further processing.
+ * Message represents data collected during application runtime. It will be sent to back-end system asynchronous for
+ * further processing.
  * </p>
  * 
  * <p>
- * Super interface of <code>Event</code>, <code>Heartbeat</code> and
- * <code>Transaction</code>.
+ * Super interface of <code>Event</code>, <code>Heartbeat</code> and <code>Transaction</code>.
  * </p>
  * 
  * @see Event, Heartbeat, Transaction
@@ -42,7 +41,7 @@ public interface Message {
 	 * @return key value pairs data
 	 */
 	public Object getData();
-	
+
 	/**
 	 * Message name.
 	 * 
@@ -89,7 +88,7 @@ public interface Message {
 	 * @return true means the complete() method was called, false otherwise.
 	 */
 	public boolean isCompleted();
-	
+
 	/**
 	 * @return
 	 */

@@ -16,7 +16,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("database")
 	private String m_database;
-	
+
 	public Payload() {
 		super(ReportPage.DATABASE);
 	}

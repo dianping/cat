@@ -34,7 +34,7 @@ public class LogviewUploaderSample extends ComponentTestCase {
 		uploader.addBucket(timestamp, domain);
 		Threads.forGroup("Cat").start(uploader);
 		Thread.sleep(60 * 100 * 1000);
-		
+
 	}
 
 	private DefaultMessageTree newMessageTree(int i, long timestamp) {

@@ -35,56 +35,56 @@ import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 /* .http */
-//TestHttp.class,
+// TestHttp.class,
 
-/* .report.page.model.event */
-EventModelServiceTest.class, EventGraphDataTest.class,
+      /* .report.page.model.event */
+      EventModelServiceTest.class, EventGraphDataTest.class,
 
-/* .report.page.model.transaction */
-TransactionModelServiceTest.class,
+      /* .report.page.model.transaction */
+      TransactionModelServiceTest.class,
 
-/* .report.page.transaction */
-TransactionReportMergerTest.class,
+      /* .report.page.transaction */
+      TransactionReportMergerTest.class,
 
-/* .report.graph */
-ValueTranslaterTest.class,
+      /* .report.graph */
+      ValueTranslaterTest.class,
 
-/* .report.page.ip */
-DisplayModelTest.class,
+      /* .report.page.ip */
+      DisplayModelTest.class,
 
-/* .report.page.heartbeart */
-HeartbeatGraphDataTest.class,
+      /* .report.page.heartbeart */
+      HeartbeatGraphDataTest.class,
 
-/* .report.page.model */
-EventReportFilterTest.class, TransactionReportFilterTest.class,
+      /* .report.page.model */
+      EventReportFilterTest.class, TransactionReportFilterTest.class,
 
-/* . report.page.transcation */
-PayloadTest.class, TransactionReportMergerTest.class,
+      /* . report.page.transcation */
+      PayloadTest.class, TransactionReportMergerTest.class,
 
-/* . report.page.cross */
-CrossReportMergerTest.class,
+      /* . report.page.cross */
+      CrossReportMergerTest.class,
 
-/* graph test */
-EventGraphDataTest.class, HeartbeatGraphDataTest.class,
+      /* graph test */
+      EventGraphDataTest.class, HeartbeatGraphDataTest.class,
 
-ProblemGraphDataTest.class, TransactionGraphDataTest.class,
+      ProblemGraphDataTest.class, TransactionGraphDataTest.class,
 
-ProblemReportMergerTest.class,
-/* database test*/
-DatabaseReportMergerTest.class,
+      ProblemReportMergerTest.class,
+      /* database test */
+      DatabaseReportMergerTest.class,
 
-/* sql test*/
-SqlReportMergerTest.class,
+      /* sql test */
+      SqlReportMergerTest.class,
 
-/* .report.task */
-TaskConsumerTest.class, TaskHelperTest.class,
+      /* .report.task */
+      TaskConsumerTest.class, TaskHelperTest.class,
 
-HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
+      HistoryEventMergerTest.class, HistoryTransactionMergerTest.class,
 
-ProblemCreateGraphDataTest.class, ProblemGraphCreatorTest.class,
+      ProblemCreateGraphDataTest.class, ProblemGraphCreatorTest.class,
 
-TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
+      TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
 
-TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class })
+      TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class })
 public class AllTests {
 }

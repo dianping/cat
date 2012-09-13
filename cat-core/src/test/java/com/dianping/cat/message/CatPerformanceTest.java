@@ -34,9 +34,10 @@ public class CatPerformanceTest {
 	public void after() {
 
 	}
+
 	@Test
-	public void tes1t(){
-		if(Cat.getProducer().isEnabled()){
+	public void tes1t() {
+		if (Cat.getProducer().isEnabled()) {
 			String id = Cat.getProducer().createMessageId();
 			System.out.println(id);
 		}
@@ -202,7 +203,7 @@ public class CatPerformanceTest {
 		try {
 			end.await();
 		} catch (InterruptedException e) {
-			//ignore
+			// ignore
 		}
 
 		System.out.println("Done with errors: " + error);
@@ -226,7 +227,7 @@ public class CatPerformanceTest {
 			try {
 				m_latch.await();
 			} catch (InterruptedException e) {
-				//ignore
+				// ignore
 			}
 			long time = System.currentTimeMillis();
 			for (int i = 0; i < count; i++) {
@@ -234,7 +235,8 @@ public class CatPerformanceTest {
 			}
 			long endtime = System.currentTimeMillis();
 
-			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count + "ms");
+			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count
+			      + "ms");
 			m_end.countDown();
 		}
 	}

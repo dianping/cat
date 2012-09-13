@@ -12,6 +12,10 @@
   <entity name="runtime">
     <attribute name="start-time" value-type="int" />
     <attribute name="up-time" value-type="int" />
+    <attribute name="java-version" value-type="String" />
+    <attribute name="user-name" value-type="String" />
+    <element name="user-dir" value-type="String" />
+    <element name="java-classpath" value-type="String" />
   </entity>
   <entity name="os">
     <attribute name="name" value-type="String" />

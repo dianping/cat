@@ -17,7 +17,7 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class SqlReportBuilder extends AbstractReportBuilder implements ReportBuilder {
-	
+
 	@Inject
 	private SqlMerger m_sqlMerger;
 
@@ -51,9 +51,9 @@ public class SqlReportBuilder extends AbstractReportBuilder implements ReportBui
 		report.setType(1);
 		return report;
 	}
-	
+
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod){
+	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Sql report don't support HourReport!");
 	}
 

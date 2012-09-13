@@ -17,7 +17,7 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class DatabaseReportBuilder extends AbstractReportBuilder implements ReportBuilder {
-	
+
 	@Inject
 	private DatabaseMerger m_databaseMerger;
 
@@ -37,8 +37,8 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> databaseSet = new HashSet<String>();
 		getDatabaseSet(databaseSet, reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(reportPeriod, endDate, reportDatabase, reportName,
-		      ReportEntity.READSET_FULL);
+		List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(reportPeriod, endDate, reportDatabase,
+		      reportName, ReportEntity.READSET_FULL);
 		String content = m_databaseMerger.mergeForDaily(reportDatabase, reports, databaseSet).toString();
 
 		Dailyreport report = m_dailyReportDao.createLocal();
@@ -51,9 +51,9 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 		report.setType(2);
 		return report;
 	}
-	
+
 	@Override
-	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod){
+	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Database report don't support HourReport!");
 	}
 
@@ -69,12 +69,12 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 			return false;
 		}
 	}
-	
+
 	@Override
 	protected void clearDailyReport(Dailyreport report) throws DalException {
 		this.m_dailyReportDao.deleteDatabaseByDomainNamePeriod(report);
 	}
-	
+
 	@Override
 	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Database report don't support redo HourReport!");

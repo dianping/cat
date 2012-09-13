@@ -48,7 +48,7 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 				report = new MatrixReport(domain);
 
 				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(date), new Date(
-						date + 60 * 60 * 1000), null, "matrix", ReportEntity.READSET_DOMAIN_NAME);
+				      date + 60 * 60 * 1000), null, "matrix", ReportEntity.READSET_DOMAIN_NAME);
 
 				Set<String> domainNames = report.getDomainNames();
 				for (Report temp : historyReports) {

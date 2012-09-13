@@ -148,7 +148,7 @@ public interface MessageProducer {
 	 *           event name
 	 */
 	public void logEvent(String type, String name);
-	
+
 	/**
 	 * Log an event in one shot.
 	 * 

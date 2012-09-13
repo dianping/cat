@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.bee.engine.evaluator.Evaluator;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.RowListener;
+import com.site.lookup.ContainerHolder;
 
-public class DefaultRowContext implements RowContext {
+public class DefaultRowContext extends ContainerHolder implements RowContext {
 	private ColumnMeta[] m_columns;
 
 	private Object[] m_parameters;
@@ -19,15 +21,21 @@ public class DefaultRowContext implements RowContext {
 
 	private Map<String, List<Object>> m_attributes;
 
-	public DefaultRowContext() {
-
-	}
+	@Override
+   public void afterQuery() {
+		m_listener.onEnd(this);
+   }
 
 	@Override
-	public void apply() {
+	public void applyRow() {
 		m_listener.onRow(this);
 		Arrays.fill(m_values, null);
 	}
+
+	@Override
+   public void beforeQuery() {
+		m_listener.onBegin(this);
+   }
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -44,6 +52,10 @@ public class DefaultRowContext implements RowContext {
 	@Override
 	public int getColumnSize() {
 		return m_columns.length;
+	}
+
+	public Evaluator<?, ?> getEvaluator(String name) {
+		return lookup(Evaluator.class, name);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -63,7 +75,7 @@ public class DefaultRowContext implements RowContext {
 	public <T> T getParameter(int colIndex) {
 		return (T) m_parameters[colIndex];
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getValue(int colIndex) {
@@ -91,7 +103,7 @@ public class DefaultRowContext implements RowContext {
 	}
 
 	@Override
-	public void setColumnMeta(ColumnMeta[] columns) {
+	public void setColumns(ColumnMeta[] columns) {
 		m_columns = columns;
 		m_values = new Object[columns.length];
 	}

@@ -42,7 +42,7 @@ public class CatClientTest extends CatTestCase {
 
 		Files.forIO().writeTo(configFile, clientConfig.toString());
 
-		//Cat.destroy();
+		// Cat.destroy();
 		Cat.initialize(configFile);
 	}
 
@@ -55,8 +55,7 @@ public class CatClientTest extends CatTestCase {
 		queue.initialize();
 		m_queue = Reflects.forField().getDeclaredFieldValue(queue.getClass(), "m_queue", queue);
 	}
-	
-	
+
 	@Test
 	public void testEvent() throws Exception {
 		MessageProducer cat = Cat.getProducer();
@@ -111,5 +110,5 @@ public class CatClientTest extends CatTestCase {
 		Assert.assertEquals("0", c.getStatus());
 		Assert.assertEquals("host=my-host&ip=127.0.0.1&agent=...", c.getData().toString());
 	}
-	
+
 }

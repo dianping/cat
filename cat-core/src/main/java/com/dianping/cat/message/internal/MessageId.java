@@ -64,9 +64,9 @@ public class MessageId {
 
 	public String getIpAddress() {
 		StringBuilder sb = new StringBuilder();
-		String local=m_ipAddressInHex;
+		String local = m_ipAddressInHex;
 		int length = local.length();
-		
+
 		for (int i = 0; i < length; i += 2) {
 			char first = local.charAt(i);
 			char next = local.charAt(i + 1);

@@ -55,7 +55,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 		}
 
 		Set<String> databaseSet = getDatabaseSet(day, new Date(day.getTime() + DAY));
-		int total =  allReports.size();
+		int total = allReports.size();
 
 		if (total != databaseSet.size()) {
 			return false;

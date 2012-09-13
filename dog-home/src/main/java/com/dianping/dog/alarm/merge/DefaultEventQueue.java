@@ -4,22 +4,18 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-
 import com.dianping.dog.alarm.problem.ProblemEvent;
 import com.dianping.dog.event.EventQueue;
 import com.site.lookup.annotation.Inject;
 
 
-public class DefaultEventQueue implements EventQueue<ProblemEvent>, Initializable {
+public class DefaultEventQueue implements EventQueue<ProblemEvent>{
 	private BlockingQueue<ProblemEvent> m_queue;
 
 	@Inject
 	private int m_size;
 
-	@Override
-	public void initialize() throws InitializationException {
+	public DefaultEventQueue(){
 		if (m_size > 0) {
 			m_queue = new LinkedBlockingQueue<ProblemEvent>(m_size);
 		} else {

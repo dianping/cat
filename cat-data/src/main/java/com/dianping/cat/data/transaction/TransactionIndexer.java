@@ -15,7 +15,8 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
 public class TransactionIndexer implements Index {
-	private void applyRow(RowContext ctx, TransactionReport report, Machine machine, TransactionType type, TransactionName name) {
+	private void applyRow(RowContext ctx, TransactionReport report, Machine machine, TransactionType type,
+	      TransactionName name) {
 		int cols = ctx.getColumnSize();
 
 		for (int i = 0; i < cols; i++) {
@@ -84,14 +85,15 @@ public class TransactionIndexer implements Index {
 			}
 		}
 
-		ctx.apply();
+		ctx.applyRow();
 	}
 
 	private TransactionReport getHourlyReport(RowContext ctx) throws IOException, SAXException {
 		String domain = ctx.getFirstAttribute("domain", "Cat");
 		String date = ctx.getFirstAttribute("starttime", "");
 		String ip = ctx.getFirstAttribute("ip", "All");
-		URL url = new URL(String.format("http://localhost:2281/cat/r/t?domain=%s&date=%s&ip=%s&xml=true", domain, date, ip));
+		URL url = new URL(String.format("http://localhost:2281/cat/r/t?domain=%s&date=%s&ip=%s&xml=true", domain, date,
+		      ip));
 		InputStream in = url.openStream();
 
 		try {

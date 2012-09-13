@@ -15,11 +15,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private DisplayDatabase m_displayDatabase;
 
 	private String m_ipAddress;
-	
+
 	private String m_domain;
-	
+
 	private String m_database;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -49,7 +49,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public DisplayDatabase getDisplayDatabase() {
 		return m_displayDatabase;
 	}
-	
+
 	@Override
 	public String getDomain() {
 		return m_domain;
@@ -63,7 +63,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 			return arrayList;
 		} else {
 			Set<String> domainNames = m_report.getDomainNames();
-	
+
 			return StringSortHelper.sortDomain(domainNames);
 		}
 	}
@@ -71,7 +71,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public String getIpAddress() {
 		return m_ipAddress;
 	}
-	
+
 	public List<String> getIps() {
 		if (m_report == null) {
 			ArrayList<String> arrayList = new ArrayList<String>();
@@ -94,7 +94,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_database = database;
 	}
 
-	
 	public void setDisplayDatabase(DisplayDatabase displayDatabase) {
 		m_displayDatabase = displayDatabase;
 	}
@@ -110,5 +109,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setReport(DatabaseReport report) {
 		m_report = report;
 	}
-	
+
 }

@@ -13,7 +13,7 @@ public class FileSystemManagerTest extends ComponentTestCase {
 	public void test() throws Exception {
 		FileSystemManager manager = lookup(FileSystemManager.class);
 		StringBuilder baseDir = new StringBuilder();
-		
+
 		System.out.println(manager.getFileSystem("test", baseDir));
 		System.out.println(baseDir);
 	}

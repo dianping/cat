@@ -34,7 +34,7 @@ public class TransactionGraphCreatorTest {
 		for (String str : realResult.keySet()) {
 			Range realRange = realResult.get(str);
 			Range exceptedRange = excepectedResult.get(str);
-			
+
 			assertStr(realRange.total, exceptedRange.total);
 			assertStr(realRange.fail, exceptedRange.fail);
 			assertStr(realRange.sum, exceptedRange.sum);

@@ -16,6 +16,9 @@ package com.dianping.bee.engine.spi.handler;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.Fields;
@@ -27,6 +30,7 @@ import com.alibaba.cobar.server.response.SelectVersionComment;
 import com.dianping.bee.engine.Row;
 import com.dianping.bee.engine.RowSet;
 import com.dianping.bee.engine.helper.TypeUtils;
+import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.site.helper.Joiners;
@@ -36,8 +40,14 @@ import com.site.lookup.annotation.Inject;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SelectHandler extends AbstractHandler {
+
+	private static final Logger LOGGER = Logger.getLogger(SelectHandler.class);
+
 	@Inject
 	private StatementManager m_manager;
+
+	@Inject
+	private SessionManager m_sessionManager;
 
 	@Override
 	protected void handle(ServerConnection c, List<String> parts) {
@@ -70,6 +80,7 @@ public class SelectHandler extends AbstractHandler {
 	 * @param c
 	 */
 	private void selectCurrentDatabase(ServerConnection c) {
+		LOGGER.info("selectCurrentDatabase");
 		CommandContext ctx = new CommandContext(c);
 		String[] names = { "database()" };
 
@@ -93,6 +104,7 @@ public class SelectHandler extends AbstractHandler {
 	 * @param string
 	 */
 	private void selectSession(ServerConnection c, String sessionVariable) {
+		LOGGER.info("selectSession : " + sessionVariable);
 		CommandContext ctx = new CommandContext(c);
 		String[] names = { sessionVariable };
 
@@ -104,8 +116,10 @@ public class SelectHandler extends AbstractHandler {
 
 		ctx.writeEOF();
 
-		// TODO real data here
-		ctx.writeRow("1");
+		Map<String, Object> metadata = m_sessionManager.getSession().getMetadata();
+		if (metadata.containsKey(sessionVariable)) {
+			ctx.writeRow(String.valueOf(metadata.get(sessionVariable)));
+		}
 
 		ctx.writeEOF();
 		ctx.complete();
@@ -117,6 +131,7 @@ public class SelectHandler extends AbstractHandler {
 	 * @throws SQLSyntaxErrorException
 	 */
 	private void selectStatement(ServerConnection c, String sql) throws SQLSyntaxErrorException {
+		LOGGER.info("select : " + sql);
 		if (c.getSchema() == null) {
 			error(c, ErrorCode.ER_BAD_DB_ERROR, "No database selected");
 			return;
@@ -139,7 +154,9 @@ public class SelectHandler extends AbstractHandler {
 
 		ctx.writeEOF();
 
-		for (int rowIndex = 0; rowIndex < rowset.getRowSize(); rowIndex++) {
+		int rows = rowset.getRowSize();
+		
+		for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
 			Row row = rowset.getRow(rowIndex);
 			ctx.writeRow(row);
 		}

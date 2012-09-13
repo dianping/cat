@@ -17,10 +17,10 @@ import com.site.helper.Files;
 
 @RunWith(JUnit4.class)
 public class EventGraphDataTest {
-	
+
 	@Test
-	public void testBuildGraphDatasByType() throws IOException{
-	
+	public void testBuildGraphDatasByType() throws IOException {
+
 		HistoryGraphs handler = new HistoryGraphs();
 		long time = System.currentTimeMillis();
 		time = time - time % (3600 * 1000 * 24);
@@ -33,15 +33,15 @@ public class EventGraphDataTest {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
-		Map<String, double[]> graphDatas=handler.buildGraphDatas(start, end, "URL", "", graphs);
-		double[] total_count=graphDatas.get("total_count");
-		double[] failure_count=graphDatas.get("failure_count");
-		assertArray(30,total_count);
-		assertArray(0,failure_count);
+		Map<String, double[]> graphDatas = handler.buildGraphDatas(start, end, "URL", "", graphs);
+		double[] total_count = graphDatas.get("total_count");
+		double[] failure_count = graphDatas.get("failure_count");
+		assertArray(30, total_count);
+		assertArray(0, failure_count);
 	}
-	
+
 	@Test
-	public void testBuildGraphDatasByTypeAndName() throws IOException{
+	public void testBuildGraphDatasByTypeAndName() throws IOException {
 		HistoryGraphs handler = new HistoryGraphs();
 		long time = System.currentTimeMillis();
 		time = time - time % (3600 * 1000 * 24);
@@ -54,17 +54,17 @@ public class EventGraphDataTest {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
-		Map<String, double[]> graphDatas=handler.buildGraphDatas(start, end, "URL", "ClientInfo", graphs);
-		double[] total_count=graphDatas.get("total_count");
-		double[] failure_count=graphDatas.get("failure_count");
-		assertArray(15,total_count);
-		assertArray(0,failure_count);
+		Map<String, double[]> graphDatas = handler.buildGraphDatas(start, end, "URL", "ClientInfo", graphs);
+		double[] total_count = graphDatas.get("total_count");
+		double[] failure_count = graphDatas.get("failure_count");
+		assertArray(15, total_count);
+		assertArray(0, failure_count);
 	}
-	
+
 	private String getContent(String fileName) throws IOException {
 		return Files.forIO().readFrom(getClass().getResourceAsStream(fileName), "utf-8");
 	}
-	
+
 	private Graph creatGraph(Date period) throws IOException {
 		Graph graph = new Graph();
 		graph.setPeriod(period);
@@ -72,7 +72,7 @@ public class EventGraphDataTest {
 		graph.setSummaryContent(getContent("summary"));
 		return graph;
 	}
-	
+
 	public void assertArray(double expected, double[] real) {
 		for (int i = 0; i < real.length; i++) {
 			Assert.assertEquals(expected, real[i]);

@@ -126,7 +126,7 @@ public class EventGraphCreator implements GraphCreator<EventReport> {
 				}
 				summaryLine.totalCounts = arrayAdd(summaryLine.totalCounts, typeCounts);
 				summaryLine.failCounts = arrayAdd(summaryLine.failCounts, typeFails);
-				
+
 				summaryBuilder.append(eventType.getId());
 				summaryBuilder.append('\t');
 				summaryBuilder.append(arrayToString(typeCounts));

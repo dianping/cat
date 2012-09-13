@@ -50,7 +50,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
 
 		all.add(C(SqlParseManager.class, SqlParseManager.class)//
-				.req(SqltableDao.class));
+		      .req(SqltableDao.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class, LogviewUploader.class) //
@@ -90,7 +90,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(CommonAnalyzer.class).is(PER_LOOKUP)//
-		      .req(HostinfoDao.class,TaskDao.class)//
+		      .req(HostinfoDao.class, TaskDao.class)//
 		      .req(BucketManager.class));
 
 		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //

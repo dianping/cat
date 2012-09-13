@@ -175,7 +175,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 				buffer.resetReaderIndex();
 				return null;
 			}
-			
+
 			return buffer.readBytes(length);
 		}
 	}

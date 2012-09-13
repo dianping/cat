@@ -28,23 +28,22 @@ TransactionReportMessageAnalyzerTest.class,
 
 TransactionReportTest.class,
 
-//ManyAnalyzerTest.class,
+// ManyAnalyzerTest.class,
 
-//OneAnalyzerTwoDurationTest.class,
+      // OneAnalyzerTwoDurationTest.class,
 
-ProblemReportTest.class,
+      ProblemReportTest.class,
 
-FormatTest.class, GsonTest.class,
+      FormatTest.class, GsonTest.class,
 
-NumberFormatTest.class,
+      NumberFormatTest.class,
 
-MatrixReportFilterTest.class,
+      MatrixReportFilterTest.class,
 
-TransactionReportFilterTest.class,
+      TransactionReportFilterTest.class,
 
-/*cross analyzer */
-ParseCrossInfoTest.class
-})
+      /* cross analyzer */
+      ParseCrossInfoTest.class })
 public class AllTests {
 
 }
