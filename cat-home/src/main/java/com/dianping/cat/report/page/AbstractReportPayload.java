@@ -103,6 +103,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	public long getCurrentStartDay() {
 		long timestamp = System.currentTimeMillis();
 		Calendar cal = Calendar.getInstance();
+
 		cal.setTime(new Date(timestamp));
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		return cal.getTimeInMillis();
@@ -252,6 +253,7 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		if ("day".equals(m_reportType)) {
 			Calendar today = Calendar.getInstance();
 			long current = getCurrentDate();
+
 			today.setTimeInMillis(current);
 			today.set(Calendar.HOUR_OF_DAY, 0);
 			if (m_date == today.getTimeInMillis()) {

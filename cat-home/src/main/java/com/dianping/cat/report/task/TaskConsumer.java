@@ -7,10 +7,10 @@ import java.util.concurrent.locks.LockSupport;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.hadoop.dal.Task;
+import com.site.helper.Threads.Task;
 import com.dianping.cat.message.Transaction;
 
-public abstract class TaskConsumer implements Runnable {
+public abstract class TaskConsumer implements Task {
 
 	private static final int MAX_TODO_RETRY_TIMES = 3;
 
@@ -28,9 +28,9 @@ public abstract class TaskConsumer implements Runnable {
 
 	private volatile boolean stopped = false;
 
-	protected abstract Task findDoingTask(String consumerIp);
+	protected abstract com.dianping.cat.hadoop.dal.Task findDoingTask(String consumerIp);
 
-	protected abstract Task findTodoTask();
+	protected abstract com.dianping.cat.hadoop.dal.Task findTodoTask();
 
 	protected String getLoaclIp() {
 		return NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
@@ -44,7 +44,7 @@ public abstract class TaskConsumer implements Runnable {
 		return this.stopped;
 	}
 
-	protected abstract boolean processTask(Task doing);
+	protected abstract boolean processTask(com.dianping.cat.hadoop.dal.Task doing);
 
 	public void run() {
 		String localIp = getLoaclIp();
@@ -52,7 +52,7 @@ public abstract class TaskConsumer implements Runnable {
 			LockSupport.parkNanos(getSleepTime());
 			Transaction t = Cat.newTransaction("System", "MergeJob-" + localIp);
 			try {
-				Task task = findDoingTask(localIp);
+				com.dianping.cat.hadoop.dal.Task task = findDoingTask(localIp);
 				if (task == null) {
 					task = findTodoTask();
 				}
@@ -98,9 +98,9 @@ public abstract class TaskConsumer implements Runnable {
 
 	protected abstract void taskRetryDuration();
 
-	protected abstract boolean updateDoingToDone(Task doing);
+	protected abstract boolean updateDoingToDone(com.dianping.cat.hadoop.dal.Task doing);
 
-	protected abstract boolean updateDoingToFailure(Task todo);
+	protected abstract boolean updateDoingToFailure(com.dianping.cat.hadoop.dal.Task todo);
 
-	protected abstract boolean updateTodoToDoing(Task todo);
+	protected abstract boolean updateTodoToDoing(com.dianping.cat.hadoop.dal.Task todo);
 }

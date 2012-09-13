@@ -100,4 +100,14 @@ public class DefaultTaskConsumer extends TaskConsumer {
 			return false;
 		}
 	}
+
+	@Override
+   public String getName() {
+	   return "Task-Consumer";
+   }
+
+	@Override
+   public void shutdown() {
+	   
+   }
 }

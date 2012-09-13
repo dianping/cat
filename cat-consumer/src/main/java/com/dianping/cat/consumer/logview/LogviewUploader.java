@@ -3,7 +3,6 @@ package com.dianping.cat.consumer.logview;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -136,8 +135,7 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 
 		MessageProducer cat = Cat.getProducer();
 		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		String ts = new SimpleDateFormat("mmss").format(new Date());
-		Transaction root = cat.newTransaction("System", "Logview-" + ip + "-" + ts);
+		Transaction root = cat.newTransaction("System", "Logview-" + ip);
 		int count = 0;
 
 		root.addData("logview", bucket.getLogicalPath());

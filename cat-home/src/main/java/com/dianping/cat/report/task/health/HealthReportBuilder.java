@@ -73,7 +73,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		report.setName(reportName);
 		report.setPeriod(reportPeriod);
 		report.setType(1);
-		return false;
+		return true;
 	}
 
 	private HealthReport buildHealthHourlyReport(String reportDomain, Date reportPeriod) throws DalException,
@@ -103,10 +103,9 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 
 			Report r = m_reportDao.createLocal();
 			String xml = builder.buildXml(report);
-			String domain = report.getDomain();
 
 			r.setName("health");
-			r.setDomain(domain);
+			r.setDomain(reportDomain);
 			r.setPeriod(reportPeriod);
 			r.setIp(ip);
 			r.setType(1);

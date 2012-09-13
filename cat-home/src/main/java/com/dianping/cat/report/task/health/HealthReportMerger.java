@@ -4,6 +4,7 @@ import com.dianping.cat.consumer.health.model.entity.BaseCacheInfo;
 import com.dianping.cat.consumer.health.model.entity.BaseInfo;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.health.model.entity.MachineInfo;
+import com.dianping.cat.consumer.health.model.entity.ProblemInfo;
 import com.dianping.cat.consumer.health.model.transform.DefaultMerger;
 
 public class HealthReportMerger extends DefaultMerger {
@@ -11,6 +12,60 @@ public class HealthReportMerger extends DefaultMerger {
 
 	public HealthReportMerger(HealthReport healthReport) {
 		super(healthReport);
+	}
+
+	@Override
+	protected void mergeProblemInfo(ProblemInfo old, ProblemInfo problemInfo) {
+		old.setExceptions(old.getExceptions() + problemInfo.getExceptions());
+
+		long longUrl = old.getLongUrls() + problemInfo.getLongUrls();
+		double sum = 0;
+		if (old.getLongUrlPercent() > 0) {
+			sum += old.getLongUrls() / old.getLongUrlPercent();
+		}
+		if (problemInfo.getLongUrlPercent() > 0) {
+			sum += problemInfo.getLongUrls() / problemInfo.getLongUrlPercent();
+		}
+		if (sum > 0) {
+			old.setLongUrlPercent(longUrl / sum);
+		}
+		
+		long longService = old.getLongServices() + problemInfo.getLongServices();
+		sum = 0;
+		if (old.getLongServicePercent() > 0) {
+			sum += old.getLongServices() / old.getLongServicePercent();
+		}
+		if (problemInfo.getLongServicePercent() > 0) {
+			sum += problemInfo.getLongServices() / problemInfo.getLongServicePercent();
+		}
+		if (sum > 0) {
+			old.setLongServicePercent(longService / sum);
+		}
+		
+		long longCache = old.getLongCaches() + problemInfo.getLongCaches();
+		sum = 0;
+		if (old.getLongCachePercent() > 0) {
+			sum += old.getLongCaches() / old.getLongCachePercent();
+		}
+		if (problemInfo.getLongCachePercent() > 0) {
+			sum += problemInfo.getLongCaches() / problemInfo.getLongCachePercent();
+		}
+		if (sum > 0) {
+			old.setLongCachePercent(longCache / sum);
+		}
+		
+		long longSql = old.getLongSqls() + problemInfo.getLongSqls();
+		sum = 0;
+		if (old.getLongSqlPercent() > 0) {
+			sum += old.getLongSqls() / old.getLongSqlPercent();
+		}
+		if (problemInfo.getLongSqlPercent() > 0) {
+			sum += problemInfo.getLongSqls() / problemInfo.getLongSqlPercent();
+		}
+		if (sum > 0) {
+			old.setLongSqlPercent(longSql / sum);
+		}
+
 	}
 
 	@Override
@@ -76,6 +131,27 @@ public class HealthReportMerger extends DefaultMerger {
 		double avgMemoryUsedSum = old.getAvgMemoryUsedSum() + machineInfo.getAvgMemoryUsedSum();
 		if (avgMemoryUsedCount > 0) {
 			old.setAvgMemoryUsed(avgMemoryUsedSum / avgMemoryUsedCount);
+		}
+
+		if (machineInfo.getAvgMaxLoad() > old.getAvgMaxLoad()) {
+			old.setAvgMaxLoad(machineInfo.getAvgMaxLoad());
+			old.setAvgMaxLoadMachine(machineInfo.getAvgMaxLoadMachine());
+		}
+		if (machineInfo.getAvgMaxOldgc() > old.getAvgMaxOldgc()) {
+			old.setAvgMaxOldgc(machineInfo.getAvgMaxOldgc());
+			old.setAvgMaxOldgcMachine(machineInfo.getAvgMaxOldgcMachine());
+		}
+		if (machineInfo.getAvgMaxHttp() > old.getAvgMaxHttp()) {
+			old.setAvgMaxHttp(machineInfo.getAvgMaxHttp());
+			old.setAvgMaxHttpMachine(machineInfo.getAvgMaxHttpMachine());
+		}
+		if (machineInfo.getAvgMaxPigeon() > old.getAvgMaxPigeon()) {
+			old.setAvgMaxPigeon(machineInfo.getAvgMaxPigeon());
+			old.setAvgMaxPigeonMachine(machineInfo.getAvgMaxPigeonMachine());
+		}
+		if (machineInfo.getAvgMaxMemoryUsed() > old.getAvgMaxMemoryUsed()) {
+			old.setAvgMaxMemoryUsed(machineInfo.getAvgMaxMemoryUsed());
+			old.setAvgMaxMemoryUsedMachine(machineInfo.getAvgMaxMemoryUsedMachine());
 		}
 	}
 

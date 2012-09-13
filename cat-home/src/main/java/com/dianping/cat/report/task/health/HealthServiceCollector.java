@@ -66,6 +66,7 @@ public class HealthServiceCollector {
 
 	public synchronized void buildCrossInfo(long time) {
 		if (m_timestamp != time) {
+			m_timestamp = time;
 			m_serviceInfos.clear();
 			Set<String> domains = queryAllDomains(new Date(time));
 			for (String domain : domains) {

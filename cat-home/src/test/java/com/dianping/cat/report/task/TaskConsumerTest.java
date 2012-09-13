@@ -74,6 +74,15 @@ public class TaskConsumerTest {
 		protected long getSleepTime() {
 			return 100;
 		}
+
+		@Override
+      public String getName() {
+	      return "MockConsumer";
+      }
+
+		@Override
+      public void shutdown() {
+      }
 	};
 
 	/**

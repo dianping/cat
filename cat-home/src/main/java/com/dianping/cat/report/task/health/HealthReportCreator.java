@@ -36,10 +36,12 @@ import com.dianping.cat.report.task.health.HealthServiceCollector.ServiceInfo;
 
 public class HealthReportCreator {
 
-	private HealthReport m_healthReport = new HealthReport();
+	private HealthReport m_healthReport;
 
 	public HealthReport build(TransactionReport transactionReport, EventReport eventReport, ProblemReport problemReport,
 	      HeartbeatReport heartbeatReport, Map<String, ServiceInfo> infos) {
+		m_healthReport = new HealthReport(transactionReport.getDomain());
+		
 		buildReportInfo(transactionReport);
 		buildProblemInfo(problemReport);
 		buildTansactionInfo(transactionReport);
@@ -58,24 +60,31 @@ public class HealthReportCreator {
 		List<EventType> eventTypeList = new ArrayList<EventType>();
 
 		for (Entry<String, TransactionType> transactionEntry : transactionTypes.entrySet()) {
-			if (transactionEntry.getKey().equals(type) || transactionEntry.getKey().startsWith(type)) {
+			String key = transactionEntry.getKey();
+
+			if (key.equals(type) || key.startsWith(type)) {
 				transactionTypeList.add(transactionEntry.getValue());
 			}
 		}
 		for (Entry<String, EventType> eventEntry : eventTypes.entrySet()) {
-			if (eventEntry.getKey().equals(type) || eventEntry.getKey().startsWith(type)) {
+			String key = eventEntry.getKey();
+
+			if (key.equals(type) || key.startsWith(type)) {
 				eventTypeList.add(eventEntry.getValue());
 			}
 		}
 
 		long totalCount = 0;
 		long missCount = 0;
-		double sum = 0;
+		double timeSum = 0;
+
 		for (TransactionType temp : transactionTypeList) {
 			for (TransactionName name : temp.getNames().values()) {
-				if (name.getId().endsWith(":get")) {
+				String id = name.getId();
+
+				if (id.endsWith("get") || id.endsWith("mGet")) {
 					totalCount += name.getTotalCount();
-					sum = name.getTotalCount() * name.getAvg();
+					timeSum += name.getTotalCount() * name.getAvg();
 				}
 			}
 		}
@@ -84,9 +93,10 @@ public class HealthReportCreator {
 		}
 
 		BaseCacheInfo info = new BaseCacheInfo();
+
 		if (totalCount > 0) {
 			info.setTotal(totalCount);
-			info.setResponseTime(sum / totalCount);
+			info.setResponseTime(timeSum / totalCount);
 			info.setHitPercent(1 - (double) missCount / totalCount);
 		}
 		return info;

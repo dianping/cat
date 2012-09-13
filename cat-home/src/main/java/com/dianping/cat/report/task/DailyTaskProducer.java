@@ -18,14 +18,14 @@ import com.dianping.cat.hadoop.dal.DailyreportEntity;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
-import com.dianping.cat.hadoop.dal.Task;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.site.dal.jdbc.DalException;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class DailyTaskProducer implements Runnable, Initializable {
+public class DailyTaskProducer implements Task, Initializable {
 
 	private static final long DAY = 24 * 60 * 60 * 1000L;
 
@@ -90,7 +90,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 			Set<String> databaseSet = getDatabaseSet(day, new Date(day.getTime() + DAY));
 
 			for (String domain : databaseSet) {
-				Task task = m_taskDao.createLocal();
+				com.dianping.cat.hadoop.dal.Task task = m_taskDao.createLocal();
 
 				task.setCreationDate(new Date());
 				task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -122,7 +122,7 @@ public class DailyTaskProducer implements Runnable, Initializable {
 
 			for (String domain : domainSet) {
 				for (String name : m_dailyReportNameSet) {
-					Task task = m_taskDao.createLocal();
+					com.dianping.cat.hadoop.dal.Task task = m_taskDao.createLocal();
 
 					task.setCreationDate(new Date());
 					task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -217,4 +217,13 @@ public class DailyTaskProducer implements Runnable, Initializable {
 			}
 		}
 	}
+
+	@Override
+   public String getName() {
+	   return "DailyTask-Producer";
+   }
+
+	@Override
+   public void shutdown() {
+   }
 }

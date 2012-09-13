@@ -131,6 +131,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setLongDate(payload.getDate());
 		}
+		
 		if (action == Action.HISTORY_REPORT) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {
