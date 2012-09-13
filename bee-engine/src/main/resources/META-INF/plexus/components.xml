@@ -290,5 +290,23 @@
 			<implementation>com.dianping.bee.engine.evaluator.function.CountEvaluator</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
+		<component>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.groupby.Max</role-hint>
+			<implementation>com.dianping.bee.engine.evaluator.function.MaxEvaluator</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.groupby.Min</role-hint>
+			<implementation>com.dianping.bee.engine.evaluator.function.MinEvaluator</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.groupby.Avg</role-hint>
+			<implementation>com.dianping.bee.engine.evaluator.function.AvgEvaluator</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
 	</components>
 </plexus>

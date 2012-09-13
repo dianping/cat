@@ -7,8 +7,11 @@ import com.dianping.bee.engine.QueryService;
 import com.dianping.bee.engine.evaluator.Evaluator;
 import com.dianping.bee.engine.evaluator.IdentifierEvaluator;
 import com.dianping.bee.engine.evaluator.ParamMarkerEvaluator;
+import com.dianping.bee.engine.evaluator.function.AvgEvaluator;
 import com.dianping.bee.engine.evaluator.function.ConcatEvaluator;
 import com.dianping.bee.engine.evaluator.function.CountEvaluator;
+import com.dianping.bee.engine.evaluator.function.MaxEvaluator;
+import com.dianping.bee.engine.evaluator.function.MinEvaluator;
 import com.dianping.bee.engine.evaluator.function.SumEvaluator;
 import com.dianping.bee.engine.evaluator.literal.LiteralBooleanEvaluator;
 import com.dianping.bee.engine.evaluator.literal.LiteralNumberEvaluator;
@@ -102,6 +105,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Evaluator.class, ConcatEvaluator.ID, ConcatEvaluator.class));
 		all.add(C(Evaluator.class, SumEvaluator.ID, SumEvaluator.class).is(PER_LOOKUP));
 		all.add(C(Evaluator.class, CountEvaluator.ID, CountEvaluator.class).is(PER_LOOKUP));
+		all.add(C(Evaluator.class, MaxEvaluator.ID, MaxEvaluator.class).is(PER_LOOKUP));
+		all.add(C(Evaluator.class, MinEvaluator.ID, MinEvaluator.class).is(PER_LOOKUP));
+		all.add(C(Evaluator.class, AvgEvaluator.ID, AvgEvaluator.class).is(PER_LOOKUP));
 	}
 
 	private void defineHandlers(List<Component> all) {

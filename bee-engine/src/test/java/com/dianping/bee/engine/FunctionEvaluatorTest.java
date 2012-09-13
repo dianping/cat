@@ -32,6 +32,26 @@ public class FunctionEvaluatorTest extends ComponentTestCase {
 	}
 
 	@Test
+	public void testAvgEvaluator() throws Exception {
+		String database = "cat";
+		String sql1 = "select avg(failures) from transaction";
+		QueryService service = lookup(QueryService.class);
+		service.use(database);
+		RowSet rs1 = service.query(sql1);
+		Assert.assertEquals(1, rs1.getRowSize());
+
+		String sql2 = "select failures from transaction";
+		RowSet rs2 = service.query(sql2);
+		long sum = 0;
+		long count = 0;
+		for (int i = 0; i < rs2.getRowSize(); i++) {
+			count++;
+			sum += Long.parseLong(rs2.getRow(i).getCell(0).getValue().toString());
+		}
+		Assert.assertEquals((sum / count), ((Number) (rs1.getRow(0).getCell(0).getValue())).longValue());
+	}
+
+	@Test
 	public void testConcatEvaluator() throws Exception {
 		String database = "cat";
 		String sql1 = "select concat(domain, starttime) from transaction where domain = 'MobileApi' and starttime = '20120822'";
@@ -59,12 +79,63 @@ public class FunctionEvaluatorTest extends ComponentTestCase {
 	}
 
 	@Test
-	public void testSumEvaluator() throws Exception {
+	public void testMaxEvaluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction";
+		String sql1 = "select max(failures) from transaction";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
 		Assert.assertEquals(1, rs1.getRowSize());
+
+		String sql2 = "select failures from transaction";
+		RowSet rs2 = service.query(sql2);
+		long max = Long.MIN_VALUE;
+		for (int i = 0; i < rs2.getRowSize(); i++) {
+			long item = Long.parseLong(rs2.getRow(i).getCell(0).getValue().toString());
+			if (item > max) {
+				max = item;
+			}
+		}
+		Assert.assertEquals(max, ((Number) (rs1.getRow(0).getCell(0).getValue())).longValue());
+	}
+
+	@Test
+	public void testMinEvaluator() throws Exception {
+		String database = "cat";
+		String sql1 = "select min(failures) from transaction";
+		QueryService service = lookup(QueryService.class);
+		service.use(database);
+		RowSet rs1 = service.query(sql1);
+		Assert.assertEquals(1, rs1.getRowSize());
+
+		String sql2 = "select failures from transaction";
+		RowSet rs2 = service.query(sql2);
+		long min = Long.MAX_VALUE;
+		for (int i = 0; i < rs2.getRowSize(); i++) {
+			long item = Long.parseLong(rs2.getRow(i).getCell(0).getValue().toString());
+			if (item < min) {
+				min = item;
+			}
+		}
+		Assert.assertEquals(min, ((Number) (rs1.getRow(0).getCell(0).getValue())).longValue());
+
+	}
+
+	@Test
+	public void testSumEvaluator() throws Exception {
+		String database = "cat";
+		String sql1 = "select sum(failures) from transaction";
+		QueryService service = lookup(QueryService.class);
+		service.use(database);
+		RowSet rs1 = service.query(sql1);
+		Assert.assertEquals(1, rs1.getRowSize());
+
+		String sql2 = "select failures from transaction";
+		RowSet rs2 = service.query(sql2);
+		long sum = 0;
+		for (int i = 0; i < rs2.getRowSize(); i++) {
+			sum += Long.parseLong(rs2.getRow(i).getCell(0).getValue().toString());
+		}
+		Assert.assertEquals(sum, ((Number) (rs1.getRow(0).getCell(0).getValue())).longValue());
 	}
 }
