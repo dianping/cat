@@ -13,7 +13,9 @@ import com.dianping.bee.jdbc.AllJDBCTests;
 
 QueryServiceTest.class,
 
-EvaluatorTest.class,
+LogicEvaluatorTest.class,
+
+FunctionEvaluatorTest.class,
 
 SqlParsersTest.class,
 

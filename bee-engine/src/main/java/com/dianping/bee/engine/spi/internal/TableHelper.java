@@ -1,6 +1,5 @@
 package com.dianping.bee.engine.spi.internal;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.bee.engine.spi.ColumnMeta;
@@ -35,20 +34,12 @@ public class TableHelper {
 		if (indexes != null && indexes.length > 0) {
 			for (IndexMeta index : indexes) {
 				// if first column of index is in columns, then pick it up
-				// ColumnMeta first = index.getColumn(0);
-				// String columnName = first.getName();
-				// TODO how to determine index
-				List<String> indexColumnNames = new ArrayList<String>();
-				for (int i = 0; i < index.getLength(); i++) {
-					indexColumnNames.add(index.getColumn(i).getName().toLowerCase());
-				}
+				ColumnMeta first = index.getColumn(0);
+				String columnName = first.getName();
 				for (ColumnMeta column : columns) {
-					if (indexColumnNames.contains(column.getName().toLowerCase())) {
+					if (column.getName().equalsIgnoreCase(columnName)) {
 						return index;
 					}
-					// if (column.getName().equalsIgnoreCase(columnName)) {
-					// return index;
-					// }
 				}
 			}
 		}

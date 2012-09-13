@@ -34,8 +34,8 @@ public class DefaultRowListener extends ContainerHolder implements RowListener {
 
 	@Override
 	public void onRow(RowContext ctx) {
-		if (m_filter == null || m_filter.filter(ctx)) {
-			return;
+		if (m_filter != null && !m_filter.filter(ctx)) {
+ 			return;
 		}
 
 		int len = m_fields.length;

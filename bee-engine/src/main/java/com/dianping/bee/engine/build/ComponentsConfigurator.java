@@ -8,6 +8,7 @@ import com.dianping.bee.engine.evaluator.Evaluator;
 import com.dianping.bee.engine.evaluator.IdentifierEvaluator;
 import com.dianping.bee.engine.evaluator.ParamMarkerEvaluator;
 import com.dianping.bee.engine.evaluator.function.ConcatEvaluator;
+import com.dianping.bee.engine.evaluator.function.CountEvaluator;
 import com.dianping.bee.engine.evaluator.function.SumEvaluator;
 import com.dianping.bee.engine.evaluator.literal.LiteralBooleanEvaluator;
 import com.dianping.bee.engine.evaluator.literal.LiteralNumberEvaluator;
@@ -99,7 +100,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 	private void defineFunctionEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, ConcatEvaluator.ID, ConcatEvaluator.class));
-		all.add(C(Evaluator.class, SumEvaluator.ID, SumEvaluator.class));
+		all.add(C(Evaluator.class, SumEvaluator.ID, SumEvaluator.class).is(PER_LOOKUP));
+		all.add(C(Evaluator.class, CountEvaluator.ID, CountEvaluator.class).is(PER_LOOKUP));
 	}
 
 	private void defineHandlers(List<Component> all) {
@@ -138,7 +140,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionGreaterThanEvaluator.ID, ComparisionGreaterThanEvaluator.class));
-		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID, ComparisionGreaterThanOrEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID,
+		      ComparisionGreaterThanOrEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanEvaluator.ID, ComparisionLessThanEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanOrEqualsEvaluator.ID, ComparisionLessThanOrEqualsEvaluator.class));
 

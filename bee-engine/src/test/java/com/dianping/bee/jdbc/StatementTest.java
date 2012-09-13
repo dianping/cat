@@ -74,26 +74,9 @@ public class StatementTest {
 	}
 
 	@Test
-	public void testQueryInformationSchema() throws InstantiationException, IllegalAccessException,
-	      ClassNotFoundException, SQLException {
-		String sql = "SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='cat'";
-
-		Connection conn = JDBCTestHelper.getCatConnection(null);
-		Statement stmt = conn.createStatement();
-		Assert.assertNotNull(stmt);
-		ResultSet rs = stmt.executeQuery(sql);
-		Assert.assertEquals(1, rs.getMetaData().getColumnCount());
-		Assert.assertNotNull(rs);
-		rs.last();
-		Assert.assertEquals(0, rs.getRow());
-		JDBCTestHelper.displayResultSet(sql, rs);
-		conn.close();
-	}
-
-	@Test
 	public void testSingleQuery() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
 	      SQLException {
-		String sql = "select type, sum(failures), domain from transaction where domain='MobileApi' and starttime='20120822'";
+		String sql = "select `type`, sum(failures), domain from transaction where domain='MobileApi' and starttime='20120822'";
 
 		Connection conn = JDBCTestHelper.getCatConnection(null);
 		Statement stmt = conn.createStatement();

@@ -25,7 +25,7 @@ import com.site.lookup.ComponentTestCase;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 @RunWith(JUnit4.class)
-public class EvaluatorTest extends ComponentTestCase {
+public class LogicEvaluatorTest extends ComponentTestCase {
 
 	protected String getCustomConfigurationName() {
 		return TestEnvConfigurator.class.getName().replace('.', '/') + ".xml";
@@ -34,13 +34,13 @@ public class EvaluatorTest extends ComponentTestCase {
 	@Test
 	public void testBetweenAndEvaluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction where starttime between '20120820' and '20120824'";
+		String sql1 = "select type, failures from transaction where domain = 'MobileApi' and starttime between '20120820' and '20120824'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
 		Assert.assertEquals(5, rs1.getRowSize());
 
-		String sql2 = "select type, sum(failures) from transaction where starttime between '20120823' and '20120824'";
+		String sql2 = "select type, failures from transaction where domain = 'MobileApi' and starttime between '20120823' and '20120824'";
 		RowSet rs2 = service.query(sql2);
 		Assert.assertEquals(0, rs2.getRowSize());
 	}
@@ -48,13 +48,13 @@ public class EvaluatorTest extends ComponentTestCase {
 	@Test
 	public void testComparisionIsEvluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction where domain is NOT NULL";
+		String sql1 = "select type, failures from transaction where domain is NOT NULL and starttime='20120822'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
-		Assert.assertEquals(10, rs1.getRowSize());
+		Assert.assertEquals(5, rs1.getRowSize());
 
-		String sql2 = "select type, sum(failures) from transaction where domain is NULL";
+		String sql2 = "select type, failures from transaction where domain is NULL and starttime='20120822'";
 		RowSet rs2 = service.query(sql2);
 		Assert.assertEquals(0, rs2.getRowSize());
 	}
@@ -62,7 +62,7 @@ public class EvaluatorTest extends ComponentTestCase {
 	@Test
 	public void testGreaterThanEvaluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction where starttime > '20120821'";
+		String sql1 = "select type, failures from transaction where domain = 'MobileApi' and starttime > '20120821'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
@@ -72,7 +72,7 @@ public class EvaluatorTest extends ComponentTestCase {
 	@Test
 	public void testGreaterThanOrEqualsEvaluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction where starttime >= '20120822'";
+		String sql1 = "select type, failures from transaction where domain = 'MobileApi' and starttime >= '20120822'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
@@ -82,21 +82,21 @@ public class EvaluatorTest extends ComponentTestCase {
 	@Test
 	public void testInEvaluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction where domain in ('Mobile','Api','MobileApi')";
+		String sql1 = "select type, failures from transaction where domain in ('Mobile','Api','MobileApi') and starttime='20120822'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
 		Assert.assertEquals(5, rs1.getRowSize());
 
-		String sql2 = "select type, sum(failures) from transaction where domain not in ('Mobile','Api','MobileApi')";
+		String sql2 = "select type, failures from transaction where domain not in ('Mobile','Api','MobileApi') and starttime='20120822'";
 		RowSet rs2 = service.query(sql2);
-		Assert.assertEquals(5, rs2.getRowSize());
+		Assert.assertEquals(0, rs2.getRowSize());
 	}
 
 	@Test
 	public void testLessThanEvaluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction where starttime < '20120823'";
+		String sql1 = "select type, failures from transaction where domain = 'MobileApi' and starttime < '20120823'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
@@ -106,7 +106,7 @@ public class EvaluatorTest extends ComponentTestCase {
 	@Test
 	public void testLessThanOrEqualsEvaluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction where starttime <= '20120822'";
+		String sql1 = "select type, failures from transaction where domain = 'MobileApi' and starttime <= '20120822'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
@@ -116,13 +116,13 @@ public class EvaluatorTest extends ComponentTestCase {
 	@Test
 	public void testLogicOrEvaluator() throws Exception {
 		String database = "cat";
-		String sql1 = "select type, sum(failures) from transaction where domain ='MobileApi' or starttime='201208'";
+		String sql1 = "select type, failures from transaction where domain ='MobileApi' or starttime='201208'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs1 = service.query(sql1);
 		Assert.assertEquals(5, rs1.getRowSize());
 
-		String sql2 = "select type, sum(failures) from transaction where domain ='Mobile' or starttime='20120822'";
+		String sql2 = "select type, failures from transaction where domain ='Mobile' or starttime='20120822'";
 		RowSet rs2 = service.query(sql2);
 		Assert.assertEquals(5, rs2.getRowSize());
 	}

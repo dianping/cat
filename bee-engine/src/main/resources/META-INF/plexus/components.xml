@@ -282,6 +282,13 @@
 			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.groupby.Sum</role-hint>
 			<implementation>com.dianping.bee.engine.evaluator.function.SumEvaluator</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.groupby.Count</role-hint>
+			<implementation>com.dianping.bee.engine.evaluator.function.CountEvaluator</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 	</components>
 </plexus>
