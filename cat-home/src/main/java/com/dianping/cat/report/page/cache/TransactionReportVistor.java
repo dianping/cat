@@ -1,8 +1,5 @@
 package com.dianping.cat.report.page.cache;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -17,8 +14,6 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 public class TransactionReportVistor extends BaseVisitor {
 
 	private CacheReport m_cacheReport = new CacheReport();
-
-	private Set<String> m_cacheTypes = new HashSet<String>();
 
 	private String m_currentIp;
 
@@ -110,9 +105,6 @@ public class TransactionReportVistor extends BaseVisitor {
 
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
-		m_cacheTypes.add("Cache.memcached");
-		m_cacheTypes.add("Cache.web");
-		m_cacheTypes.add("Cache.kvdb");
 		m_cacheReport.setSortBy(m_sortBy);
 
 		super.visitTransactionReport(transactionReport);
@@ -126,7 +118,7 @@ public class TransactionReportVistor extends BaseVisitor {
 	@Override
 	public void visitType(TransactionType transactionType) {
 		String id = transactionType.getId();
-		if (m_cacheTypes.contains(id)) {
+		if (id.startsWith("Cache.")) {
 			if (StringUtils.isEmpty(m_type)) {
 				m_currentType = transactionType.getId();
 				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport

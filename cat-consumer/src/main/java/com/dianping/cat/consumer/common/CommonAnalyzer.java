@@ -9,9 +9,12 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.common.model.entity.CommonReport;
 import com.dianping.cat.hadoop.dal.Hostinfo;
 import com.dianping.cat.hadoop.dal.HostinfoDao;
+import com.dianping.cat.hadoop.dal.Task;
+import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.BucketManager;
@@ -23,10 +26,13 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 	private Map<String, CommonReport> m_reports = new HashMap<String, CommonReport>();
 
 	@Inject
+	private BucketManager m_bucketManager;
+
+	@Inject
 	private HostinfoDao m_hostInfoDao;
 
 	@Inject
-	private BucketManager m_bucketManager;
+	private TaskDao m_taskDao;
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -55,6 +61,24 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 				} catch (DalException e) {
 					Cat.logError(e);
 				}
+			}
+		}
+		Date period = new Date(m_startTime);
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+		//Create task for health report
+		for (String domain : m_reports.keySet()) {
+			try {
+				Task task = m_taskDao.createLocal();
+				task.setCreationDate(new Date());
+				task.setProducer(ip);
+				task.setReportDomain(domain);
+				task.setReportName("health");
+				task.setReportPeriod(period);
+				task.setStatus(1); // status todo
+				m_taskDao.insert(task);
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}

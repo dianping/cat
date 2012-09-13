@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.monthreport;
+package com.dianping.cat.report.page.health;
 
 import com.dianping.cat.report.ReportContext;
 

@@ -1,9 +1,15 @@
-package com.dianping.cat.report.page.monthreport;
+package com.dianping.cat.report.page.health;
 
 public enum Action implements com.site.web.mvc.Action {
-	ALL("all"),
+	HOURLY_REPORT("hourly"),
+	
+	HISTORY_REPORT("history");
 
-	VIEW("view");
+	private String m_name;
+
+	private Action(String name) {
+		m_name = name;
+	}
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
@@ -13,12 +19,6 @@ public enum Action implements com.site.web.mvc.Action {
 		}
 
 		return defaultAction;
-	}
-
-	private String m_name;
-
-	private Action(String name) {
-		m_name = name;
 	}
 
 	@Override

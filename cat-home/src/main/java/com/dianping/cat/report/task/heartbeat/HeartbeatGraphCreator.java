@@ -15,9 +15,9 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.hadoop.dal.Graph;
-import com.dianping.cat.report.task.GraphCreator;
-import com.dianping.cat.report.task.GraphLine;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.spi.GraphCreator;
+import com.dianping.cat.report.task.spi.GraphLine;
 
 public class HeartbeatGraphCreator implements GraphCreator<HeartbeatReport> {
 

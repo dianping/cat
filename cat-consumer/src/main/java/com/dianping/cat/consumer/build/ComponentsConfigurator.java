@@ -90,7 +90,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(CommonAnalyzer.class).is(PER_LOOKUP)//
-		      .req(HostinfoDao.class)//
+		      .req(HostinfoDao.class,TaskDao.class)//
 		      .req(BucketManager.class));
 
 		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //

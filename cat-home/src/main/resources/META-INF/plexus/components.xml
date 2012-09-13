@@ -27,18 +27,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.monthreport.MonthReportBuilderTask</role>
-			<implementation>com.dianping.cat.report.task.monthreport.MonthReportBuilderTask</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.TaskConsumer</role>
 			<implementation>com.dianping.cat.report.task.DefaultTaskConsumer</implementation>
 			<requirements>
@@ -46,7 +34,7 @@
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.ReportFacade</role>
+					<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -266,8 +254,26 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.ReportFacade</role>
-			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
+			<role>com.dianping.cat.report.task.health.HealthReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.health.HealthReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.health.HealthServiceCollector</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
+			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
@@ -294,6 +300,9 @@
 					<role>com.dianping.cat.report.task.sql.SqlReportBuilder</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.task.health.HealthReportBuilder</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 				</requirement>
 			</requirements>
@@ -307,6 +316,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.health.HealthServiceCollector</role>
+			<implementation>com.dianping.cat.report.task.health.HealthServiceCollector</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.cross.DomainManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1536,7 +1557,7 @@
 					<role>com.dianping.cat.report.page.task.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.task.ReportFacade</role>
+					<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
@@ -1548,8 +1569,8 @@
 			<implementation>com.dianping.cat.report.page.task.JspViewer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.ReportFacade</role>
-			<implementation>com.dianping.cat.report.task.ReportFacade</implementation>
+			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
+			<implementation>com.dianping.cat.report.task.spi.ReportFacade</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.task.event.EventReportBuilder</role>
@@ -1574,6 +1595,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.sql.SqlReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.health.HealthReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
@@ -1769,6 +1793,57 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.health.HealthReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.health.HealthReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.health.HealthServiceCollector</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.health.HealthServiceCollector</role>
+			<implementation>com.dianping.cat.report.task.health.HealthServiceCollector</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.cross.DomainManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cross.DomainManager</role>
+			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.HostinfoDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
 			<implementation>com.dianping.cat.hadoop.dal.TaskDao</implementation>
 			<requirements>
@@ -1808,32 +1883,26 @@
 			<implementation>com.dianping.cat.report.page.matrix.JspViewer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.monthreport.Handler</role>
-			<implementation>com.dianping.cat.report.page.monthreport.Handler</implementation>
+			<role>com.dianping.cat.report.page.health.Handler</role>
+			<implementation>com.dianping.cat.report.page.health.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
+					<role>com.dianping.cat.report.page.health.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.monthreport.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.MonthreportDao</implementation>
-			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.health.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.health.JspViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.cross.Handler</role>
@@ -1867,27 +1936,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.cross.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.cross.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cross.DomainManager</role>
-			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.HostinfoDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.cache.Handler</role>

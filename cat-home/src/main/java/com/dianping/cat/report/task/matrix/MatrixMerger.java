@@ -9,8 +9,8 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
-import com.dianping.cat.report.task.ReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class MatrixMerger implements ReportMerger<MatrixReport> {
 	

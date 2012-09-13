@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
-  <entity name="month-report" root="true">
+  <entity name="health-report" root="true">
     <attribute name="domain" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
@@ -17,18 +17,13 @@
   </entity>
   <entity name="problem-info">
     <attribute name="exceptions" value-type="long" />
-    <attribute name="avg-exceptions" value-type="double" />
     <attribute name="longSqls" value-type="long" />
-    <attribute name="avg-longSqls" value-type="double" />
     <attribute name="long-sqlPercent" value-type="double" />
     <attribute name="longUrls" value-type="long" />
-    <attribute name="avg-longUrls" value-type="double" />
     <attribute name="long-urlPercent" value-type="double" />
     <attribute name="longServices" value-type="long" />
-    <attribute name="avg-longServices" value-type="double" />
     <attribute name="long-servicePercent" value-type="double" />
     <attribute name="longCaches" value-type="long" />
-    <attribute name="avg-longCaches" value-type="double" />
     <attribute name="long-cachePercent" value-type="double" />
   </entity>
   <entity name="url">
@@ -36,10 +31,8 @@
   </entity>
   <entity name="base-info">
     <attribute name="total" value-type="int" />
-    <attribute name="avg" value-type="double" />
     <attribute name="response-time" value-type="double" />
     <attribute name="error-total" value-type="int" />
-    <attribute name="error-avg" value-type="double" />
     <attribute name="error-percent" value-type="double" />
   </entity>
   <entity name="service">
@@ -56,7 +49,6 @@
   </entity>
   <entity name="base-cache-info">
     <attribute name="total" value-type="int" />
-    <attribute name="avg" value-type="double" />
     <attribute name="response-time" value-type="double" />
     <attribute name="hit-percent" value-type="double" />
   </entity>

@@ -1,4 +1,4 @@
-<month-report domain="GroupWeb" startTime="2012-07-20 13:00:00"
+<daily-report domain="GroupWeb" startTime="2012-07-20 13:00:00"
 	endTime="2012-07-20 13:59:59" day="10">
 	<domain>Cat</domain>
 	<domain>MobileApi</domain>
@@ -39,4 +39,4 @@
 	<mem-cache>
 		<base-cache-info total="199" avg="100.0" response-time="0.2" hit-percent="12.0"></base-cache-info>
 	</mem-cache>
-</month-report>
+</daily-report>

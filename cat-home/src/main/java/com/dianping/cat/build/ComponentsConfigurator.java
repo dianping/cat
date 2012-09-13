@@ -8,7 +8,6 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.GraphDao;
 import com.dianping.cat.hadoop.dal.HostinfoDao;
-import com.dianping.cat.hadoop.dal.MonthreportDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -21,7 +20,6 @@ import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
-import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.TaskConsumer;
 import com.dianping.cat.report.task.cross.CrossMerger;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
@@ -30,15 +28,17 @@ import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.event.EventGraphCreator;
 import com.dianping.cat.report.task.event.EventMerger;
 import com.dianping.cat.report.task.event.EventReportBuilder;
+import com.dianping.cat.report.task.health.HealthReportBuilder;
+import com.dianping.cat.report.task.health.HealthServiceCollector;
 import com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator;
 import com.dianping.cat.report.task.heartbeat.HeartbeatMerger;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixMerger;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
-import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
+import com.dianping.cat.report.task.spi.ReportFacade;
 import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
@@ -65,9 +65,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
 		      .req(ValueTranslater.class));
-
-		all.add(C(MonthReportBuilderTask.class)//
-		      .req(MonthreportDao.class, DailyreportDao.class));
 
 		all.add(C(TaskConsumer.class, DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
@@ -114,13 +111,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DailyTaskProducer.class, DailyTaskProducer.class) //
 		      .req(TaskDao.class, ReportDao.class, DailyreportDao.class));
 
+		all.add(C(HealthReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,//
+		      		HealthServiceCollector.class));
+
 		all.add(C(ReportFacade.class)//
-		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,
-		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,
-		            DatabaseReportBuilder.class, SqlReportBuilder.class, TaskDao.class));
+		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
+		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,//
+		            DatabaseReportBuilder.class, SqlReportBuilder.class, HealthReportBuilder.class,//
+		            TaskDao.class));
 
 		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
+		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
+		
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));

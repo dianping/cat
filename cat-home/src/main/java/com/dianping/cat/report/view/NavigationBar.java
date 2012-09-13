@@ -33,9 +33,9 @@ public class NavigationBar {
 
 		ReportPage.LOGVIEW,
 
-		ReportPage.MONTHREPORT,
+		ReportPage.DATABASE,
 		
-		ReportPage.DATABASE
+		ReportPage.HEALTH
 
 		};
 	}

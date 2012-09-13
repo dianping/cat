@@ -21,6 +21,8 @@ public enum ReportPage implements Page {
 
    MODEL("model", "model", "Model", "Service Model", false),
 
+   SQL("sql", "sql", "SQL", "SQL Report", true),
+
    HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", false),
 
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
@@ -29,14 +31,12 @@ public enum ReportPage implements Page {
 
    MATRIX("matrix", "matrix", "Matrix", "Matrix", true),
 
-   MONTHREPORT("monthreport", "monthreport", "Monthreport", "Monthreport", false),
+   HEALTH("health", "health", "Health", "Health", true),
 
    CROSS("cross", "cross", "Cross", "Cross", true),
 
    CACHE("cache", "cache", "Cache", "Cache", true),
 
-   SQL("sql", "sql", "SQL", "SQL Report", true),
- 
    DATABASE("database", "database", "Database", "Database", true);
 
    private String m_name;

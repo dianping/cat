@@ -258,12 +258,17 @@ public class Handler implements PageHandler<Context> {
 			request.setProperty("type", "Cache.kvdb");
 			ModelResponse<EventReport> kvdbResponse = m_eventService.invoke(request);
 			EventReport kvdbReport = kvdbResponse.getModel();
+			
+			request.setProperty("type", "Cache.memcached-tuangou");
+			ModelResponse<EventReport> tuangouResponse = m_eventService.invoke(request);
+			EventReport tuangouReport = tuangouResponse.getModel();
 
 			EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 
 			merger.visitEventReport(webCacheReport);
 			merger.visitEventReport(memcachedReport);
 			merger.visitEventReport(kvdbReport);
+			merger.visitEventReport(tuangouReport);
 			return merger.getEventReport();
 
 		} else {
@@ -295,12 +300,17 @@ public class Handler implements PageHandler<Context> {
 			request.setProperty("type", "Cache.kvdb");
 			ModelResponse<TransactionReport> kvdbResponse = m_transactionService.invoke(request);
 			TransactionReport kvdbReport = kvdbResponse.getModel();
+			
+			request.setProperty("type", "Cache.memcached-tuangou");
+			ModelResponse<TransactionReport> tuangouResponse = m_transactionService.invoke(request);
+			TransactionReport tuangouReport = tuangouResponse.getModel();
 
 			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
 			merger.visitTransactionReport(webCacheReport);
 			merger.visitTransactionReport(memcachedReport);
 			merger.visitTransactionReport(kvdbReport);
+			merger.visitTransactionReport(tuangouReport);
 			return merger.getTransactionReport();
 		} else {
 			request.setProperty("type", type);

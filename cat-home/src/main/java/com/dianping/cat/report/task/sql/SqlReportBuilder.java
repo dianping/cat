@@ -10,9 +10,9 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportEntity;
-import com.dianping.cat.report.task.AbstractReportBuilder;
-import com.dianping.cat.report.task.ReportBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.spi.AbstractReportBuilder;
+import com.dianping.cat.report.task.spi.ReportBuilder;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 

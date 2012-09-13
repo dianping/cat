@@ -9,8 +9,8 @@ import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
-import com.dianping.cat.report.task.ReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class CrossMerger implements ReportMerger<CrossReport> {
 	

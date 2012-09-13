@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.monthreport;
+package com.dianping.cat.report.page.health;
 
 import com.dianping.cat.report.ReportPage;
 import com.site.web.mvc.view.BaseJspViewer;
@@ -9,10 +9,11 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case VIEW:
-			return JspFile.VIEW.getPath();
-		case ALL:
-			return JspFile.ALL.getPath();
+		case HOURLY_REPORT:
+			return JspFile.HOURLY.getPath();
+		case HISTORY_REPORT:
+			return JspFile.HISTORY.getPath();
+		default:
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

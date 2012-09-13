@@ -13,8 +13,8 @@ import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
-import com.dianping.cat.report.task.ReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class EventMerger implements ReportMerger<EventReport> {
 

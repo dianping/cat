@@ -33,7 +33,7 @@ com.dianping.cat.report.page.task.Handler.class,
 
 com.dianping.cat.report.page.matrix.Handler.class,
 
-com.dianping.cat.report.page.monthreport.Handler.class,
+com.dianping.cat.report.page.health.Handler.class,
 
 com.dianping.cat.report.page.cross.Handler.class,
 

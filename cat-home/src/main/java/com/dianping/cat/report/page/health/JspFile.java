@@ -1,9 +1,11 @@
-package com.dianping.cat.report.page.monthreport;
+package com.dianping.cat.report.page.health;
 
 public enum JspFile {
-	ALL("/jsp/report/monthreportAll.jsp"),
+	HOURLY("/jsp/report/health.jsp"),
 
-	VIEW("/jsp/report/monthreport.jsp"), ;
+	HISTORY("/jsp/report/healthHistory.jsp"),
+
+	;
 
 	private String m_path;
 

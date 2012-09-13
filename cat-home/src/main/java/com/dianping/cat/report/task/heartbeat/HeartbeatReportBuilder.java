@@ -9,8 +9,8 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportEntity;
-import com.dianping.cat.report.task.AbstractReportBuilder;
-import com.dianping.cat.report.task.ReportBuilder;
+import com.dianping.cat.report.task.spi.AbstractReportBuilder;
+import com.dianping.cat.report.task.spi.ReportBuilder;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 

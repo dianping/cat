@@ -11,7 +11,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
-import com.dianping.cat.report.task.ReportMerger;
+import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class HeartbeatMerger implements ReportMerger<HeartbeatReport> {
 

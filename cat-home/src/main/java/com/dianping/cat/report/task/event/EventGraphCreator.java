@@ -17,8 +17,8 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.hadoop.dal.Graph;
-import com.dianping.cat.report.task.GraphCreator;
-import com.dianping.cat.report.task.GraphLine;
+import com.dianping.cat.report.task.spi.GraphCreator;
+import com.dianping.cat.report.task.spi.GraphLine;
 
 public class EventGraphCreator implements GraphCreator<EventReport> {
 

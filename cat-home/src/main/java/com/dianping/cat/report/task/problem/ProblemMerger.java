@@ -12,8 +12,8 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
-import com.dianping.cat.report.task.ReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class ProblemMerger implements ReportMerger<ProblemReport> {
 

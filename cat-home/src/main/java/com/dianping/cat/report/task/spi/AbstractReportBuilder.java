@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.spi;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,12 +28,12 @@ public abstract class AbstractReportBuilder {
 	protected ReportDao m_reportDao;
 
 	protected void clearDailyReport(Dailyreport report) throws DalException {
-		this.m_dailyReportDao.deleteByDomainNamePeriod(report);
+		m_dailyReportDao.deleteByDomainNamePeriod(report);
 	}
 
 	protected void clearHourlyGraphs(List<Graph> graphs) throws DalException {
 		for (Graph graph : graphs) {
-			this.m_graphDao.deleteByDomainNamePeriodIp(graph);
+			m_graphDao.deleteByDomainNamePeriodIp(graph);
 		}
 	}
 

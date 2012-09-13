@@ -10,8 +10,8 @@ import com.dianping.cat.consumer.database.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
-import com.dianping.cat.report.task.ReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.spi.ReportMerger;
 
 public class DatabaseMerger implements ReportMerger<DatabaseReport> {
 
