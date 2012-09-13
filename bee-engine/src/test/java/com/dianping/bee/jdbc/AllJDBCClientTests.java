@@ -32,8 +32,8 @@ PreparedStatementTest.class,
 
 InformationSchemaTest.class,
 
-DMLStatementTest.class
+DCLtatementTest.class
 
 })
-public class AllJDBCTests {
+public class AllJDBCClientTests {
 }

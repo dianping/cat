@@ -11,9 +11,9 @@ import com.dianping.bee.testdb.TransactionIndexer;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
-public class QueryServiceTestConfigurator extends AbstractResourceConfigurator {
+public class TestEnvConfig extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new QueryServiceTestConfigurator());
+		generatePlexusComponentsXmlFile(new TestEnvConfig());
 	}
 
 	@Override
@@ -29,6 +29,6 @@ public class QueryServiceTestConfigurator extends AbstractResourceConfigurator {
 
 	@Override
 	protected File getConfigurationFile() {
-		return new File("src/test/resources/" + QueryServiceTest.class.getName().replace('.', '/') + ".xml");
+		return new File("src/test/resources/" + TestEnvConfig.class.getName().replace('.', '/') + ".xml");
 	}
 }

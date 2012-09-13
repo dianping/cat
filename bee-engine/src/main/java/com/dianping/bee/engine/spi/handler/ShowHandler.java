@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.Fields;
 import com.alibaba.cobar.server.ServerConnection;
@@ -12,11 +14,19 @@ import com.dianping.bee.engine.helper.TypeUtils;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.IndexMeta;
+import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.server.mysql.InformationSchemaDatabaseProvider;
 import com.site.lookup.LookupException;
+import com.site.lookup.annotation.Inject;
 
 public class ShowHandler extends AbstractHandler {
+
+	private static final Logger LOGGER = Logger.getLogger(ShowHandler.class);
+
+	@Inject
+	private SessionManager m_sessionManager;
+
 	@Override
 	protected void handle(ServerConnection c, List<String> parts) {
 		int len = parts.size();
@@ -52,10 +62,8 @@ public class ShowHandler extends AbstractHandler {
 			String pattern = len > 4 && "like".equalsIgnoreCase(parts.get(3)) ? parts.get(4) : null;
 			pattern = len > 6 && "like".equalsIgnoreCase(parts.get(5)) ? parts.get(6) : pattern;
 			showIndexes(c, unescape(databaseName), unescape(third), unescape(pattern));
-		} else if ("table".equalsIgnoreCase(first)) {
-			if ("status".equalsIgnoreCase(second) && "from".equalsIgnoreCase(third)) {
-				showTableStatus(c, unescape(forth));
-			}
+		} else if ("table".equalsIgnoreCase(first) && "status".equalsIgnoreCase(second) && "from".equalsIgnoreCase(third)) {
+			showTableStatus(c, unescape(forth));
 		} else if ("status".equalsIgnoreCase(first)) {
 			showStatus(c);
 		} else if ("variables".equalsIgnoreCase(first)) {
@@ -76,6 +84,7 @@ public class ShowHandler extends AbstractHandler {
 	}
 
 	private void showCollation(ServerConnection c) {
+		LOGGER.info("showCollation");
 		CommandContext ctx = new CommandContext(c);
 		String[] names = { "Collation", "Charset", "Id", "Default", "Compiled", "Sortlen" };
 
@@ -94,6 +103,7 @@ public class ShowHandler extends AbstractHandler {
 	}
 
 	private void showColumns(ServerConnection c, String databaseName, String tableName, String pattern, boolean isFull) {
+		LOGGER.info("showColumns: " + databaseName + " " + tableName + " " + pattern);
 		if (databaseName == null) {
 			c.writeErrMessage(ErrorCode.ER_NO_DB_ERROR, "No database selected");
 			return;
@@ -148,7 +158,9 @@ public class ShowHandler extends AbstractHandler {
 						}
 					}
 				}
-				if (SQLRegex.like(column.getName(), pattern)) {
+
+				boolean isFilter = pattern != null ? SQLRegex.like(column.getName(), pattern) : true;
+				if (isFilter) {
 					if (isFull) {
 						ctx.writeRow(column.getName(), dataType, null, null, isIndex ? "PRI" : "", null, null,
 						      "select,insert,update,references", null);
@@ -167,6 +179,7 @@ public class ShowHandler extends AbstractHandler {
 	 * @param c
 	 */
 	private void showDatabases(ServerConnection c) {
+		LOGGER.info("showDatabases");
 		CommandContext ctx = new CommandContext(c);
 		String[] names = { "Database" };
 
@@ -195,6 +208,7 @@ public class ShowHandler extends AbstractHandler {
 	}
 
 	private void showIndexes(ServerConnection c, String databaseName, String tableName, String pattern) {
+		LOGGER.info("showIndexes: " + databaseName + " " + tableName + " " + pattern);
 		if (databaseName == null) {
 			c.writeErrMessage(ErrorCode.ER_NO_DB_ERROR, "No database selected");
 			return;
@@ -232,7 +246,8 @@ public class ShowHandler extends AbstractHandler {
 		if (indexes != null) {
 			for (IndexMeta index : indexes) {
 				for (int i = 0; i < index.getLength(); i++) {
-					if (SQLRegex.like(index.getColumn(i).getName(), pattern)) {
+					boolean isFilter = pattern != null ? SQLRegex.like(index.getColumn(i).getName(), pattern) : true;
+					if (isFilter) {
 						ctx.writeRow(table.getName(), "1", "PRIMARY", String.valueOf(1 + i), index.getColumn(i).getName(),
 						      index.isAscend(i) ? "A" : "NULL", String.valueOf(((Enum<?>) index.getColumn(i)).ordinal()),
 						      "NULL", "NULL", null, "BTREE", "", "");
@@ -246,6 +261,7 @@ public class ShowHandler extends AbstractHandler {
 	}
 
 	private void showStatus(ServerConnection c) {
+		LOGGER.info("showStatus");
 		Map<String, String> map = new HashMap<String, String>();
 
 		map.put("SampleName", "SampleValue");
@@ -276,6 +292,7 @@ public class ShowHandler extends AbstractHandler {
 	}
 
 	private void showTables(ServerConnection c, String databaseName, String pattern, boolean isFull) {
+		LOGGER.info("showTables: " + databaseName + " " + pattern);
 		if (databaseName == null) {
 			c.writeErrMessage(ErrorCode.ER_NO_DB_ERROR, "No database selected");
 			return;
@@ -304,7 +321,8 @@ public class ShowHandler extends AbstractHandler {
 		TableProvider[] tables = provider.getTables();
 		if (tables != null) {
 			for (TableProvider table : tables) {
-				if (SQLRegex.like(table.getName(), pattern)) {
+				boolean isFilter = pattern != null ? SQLRegex.like(table.getName(), pattern) : true;
+				if (isFilter) {
 					if (isFull) {
 						if (provider instanceof InformationSchemaDatabaseProvider) {
 							ctx.writeRow(table.getName(), "SYSTEM TABLE");
@@ -323,6 +341,7 @@ public class ShowHandler extends AbstractHandler {
 	}
 
 	private void showTableStatus(ServerConnection c, String dbName) {
+		LOGGER.info("showTableStatus: " + dbName);
 		if (dbName == null) {
 			error(c, ErrorCode.ER_NO_DB_ERROR, "No database specified");
 			return;
@@ -364,30 +383,8 @@ public class ShowHandler extends AbstractHandler {
 	}
 
 	private void showVariables(ServerConnection c) {
-		Map<String, String> map = new HashMap<String, String>();
-
-		// map.put("language","");
-		map.put("net_write_timeout", "60");
-		map.put("interactive_timeout", "28800");
-		map.put("wait_timeout", "28800");
-		map.put("character_set_client", System.getProperty("sun.jnu.encoding"));
-		map.put("character_set_connection", System.getProperty("sun.jnu.encoding"));
-		// map.put("character_set","");
-		map.put("character_set_server", System.getProperty("sun.jnu.encoding"));
-		map.put("tx_isolation", "REPEATABLE-READ");
-		map.put("transaction_isolation", "");
-		map.put("character_set_results", System.getProperty("sun.jnu.encoding"));
-		// map.put("timezone","");
-		map.put("time_zone", "SYSTEM");
-		map.put("system_time_zone", "");
-		map.put("lower_case_table_names", "1");
-		map.put("max_allowed_packet", "1048576");
-		map.put("net_buffer_length", "8192");
-		map.put("sql_mode", "");
-		map.put("query_cache_type", "ON");
-		map.put("query_cache_size", "0");
-		map.put("init_connect", "");
-		// TODO real data here
+		LOGGER.info("showVariables");
+		Map<String, Object> metadata = m_sessionManager.getSession().getMetadata();
 
 		CommandContext ctx = new CommandContext(c);
 		String[] names = { "Variable_name", "Value" };
@@ -400,12 +397,12 @@ public class ShowHandler extends AbstractHandler {
 
 		ctx.writeEOF();
 
-		for (Map.Entry<String, String> e : map.entrySet()) {
+		for (Map.Entry<String, Object> e : metadata.entrySet()) {
 			String[] values = new String[names.length];
 			int index = 0;
 
 			values[index++] = e.getKey();
-			values[index++] = e.getValue();
+			values[index++] = String.valueOf(e.getValue());
 			ctx.writeRow(values);
 		}
 

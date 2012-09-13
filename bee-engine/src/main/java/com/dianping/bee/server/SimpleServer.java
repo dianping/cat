@@ -2,8 +2,7 @@ package com.dianping.bee.server;
 
 import java.io.IOException;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
+import org.apache.log4j.Logger;
 
 import com.alibaba.cobar.CobarServer;
 import com.alibaba.cobar.config.model.SystemConfig;
@@ -16,22 +15,53 @@ import com.site.helper.Threads.Task;
 import com.site.lookup.ContainerLoader;
 import com.site.lookup.annotation.Inject;
 
-public class SimpleServer implements LogEnabled {
+public class SimpleServer {
+	static class ProcessorCheckTask implements Task {
+		private NIOProcessor[] m_processors;
+
+		public ProcessorCheckTask(NIOProcessor[] processors) {
+			m_processors = processors;
+		}
+
+		@Override
+		public String getName() {
+			return getClass().getSimpleName();
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					Thread.sleep(1000);
+
+					for (NIOProcessor processor : m_processors) {
+						try {
+							processor.check();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+
 	/**
 	 * The mysql version can not be changed, JDBC Driver will parse mysql major
 	 * and minor version information
 	 */
 	public static final String VERSION = "5.1.48-bee-0.0.1";
 
+	private static final Logger LOGGER = Logger.getLogger(SimpleServer.class);
+
 	@Inject
 	private int m_port = 2330;
-
-	private Logger m_logger;
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
 
 	public void setPort(int port) {
 		m_port = port;
@@ -71,42 +101,6 @@ public class SimpleServer implements LogEnabled {
 
 		Threads.forGroup("Bee").start(new ProcessorCheckTask(processors));
 
-		m_logger.info(String.format("BEE server started at %s", m_port));
-	}
-
-	static class ProcessorCheckTask implements Task {
-		private NIOProcessor[] m_processors;
-
-		public ProcessorCheckTask(NIOProcessor[] processors) {
-			m_processors = processors;
-		}
-
-		@Override
-		public String getName() {
-			return getClass().getSimpleName();
-		}
-
-		@Override
-		public void run() {
-			try {
-				while (true) {
-					Thread.sleep(1000);
-
-					for (NIOProcessor processor : m_processors) {
-						try {
-							processor.check();
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-				}
-			} catch (InterruptedException e) {
-				// ignore it
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
+		LOGGER.info(String.format("BEE server started at %s", m_port));
 	}
 }

@@ -9,6 +9,11 @@ import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class QueryServiceTest extends ComponentTestCase {
+
+	protected String getCustomConfigurationName() {
+		return TestEnvConfig.class.getName().replace('.', '/') + ".xml";
+	}
+
 	@Test
 	public void testStatement() throws Exception {
 		String database = "cat";

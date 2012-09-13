@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.util.MySQLMessage;
 import com.alibaba.cobar.protocol.mysql.OkPacket;
@@ -31,6 +33,8 @@ import com.dianping.bee.engine.spi.SessionManager;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class SimpleServerConnection extends ServerConnection {
+
+	private static final Logger LOGGER = Logger.getLogger(SimpleServerConnection.class);
 
 	private SessionManager m_sessionManager;
 
@@ -46,6 +50,7 @@ public class SimpleServerConnection extends ServerConnection {
 	 * Override parent method in FrontendConnection
 	 */
 	public void initDB(byte[] data) {
+		LOGGER.info("initDB : " + data);
 		MySQLMessage mm = new MySQLMessage(data);
 		mm.position(5);
 		String db = mm.readString();
@@ -77,6 +82,7 @@ public class SimpleServerConnection extends ServerConnection {
 
 	@Override
 	public void stmtPrepare(byte[] data) {
+		LOGGER.info("StmtPrepare : " + data);
 		m_sessionManager.getSession().setDatabase(getSchema());
 		try {
 			// 取得查询语句
@@ -107,6 +113,7 @@ public class SimpleServerConnection extends ServerConnection {
 
 	@Override
 	public void stmtExecute(byte[] data) {
+		LOGGER.info("StmtExecute : " + data);
 		m_sessionManager.getSession().setDatabase(getSchema());
 		try {
 			// 取得查询语句
@@ -147,27 +154,6 @@ public class SimpleServerConnection extends ServerConnection {
 					}
 				}
 				((SimpleServerQueryHandler) queryHandler).stmtExecute(stmtId, parameters);
-			} else {
-				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
-			}
-		} finally {
-			m_sessionManager.removeSession();
-		}
-	}
-
-	@Override
-	public void stmtClose(byte[] data) {
-		m_sessionManager.getSession().setDatabase(getSchema());
-		try {
-			// 取得查询语句
-			MySQLMessage mm = new MySQLMessage(data);
-			Long stmtId;
-			mm.position(1);
-			stmtId = mm.readUB4();
-
-			// 执行查询
-			if (queryHandler != null) {
-				((SimpleServerQueryHandler) queryHandler).stmtClose(stmtId);
 			} else {
 				writeErrMessage(ErrorCode.ER_YES, "Empty QueryHandler");
 			}

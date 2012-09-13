@@ -4,6 +4,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.cobar.Fields;
 import com.alibaba.cobar.net.FrontendConnection;
 import com.alibaba.cobar.net.util.BufferUtil;
@@ -25,6 +27,9 @@ import com.site.helper.Splitters;
 import com.site.lookup.ContainerHolder;
 
 public abstract class AbstractHandler extends ContainerHolder implements Handler {
+
+	private static final Logger LOGGER = Logger.getLogger(AbstractHandler.class);
+
 	private static byte[] convertIntToBytes(int i) {
 		byte[] result = new byte[4];
 		result[0] = (byte) (i & 0xff);
@@ -46,6 +51,7 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 
 	@Override
 	public void handle(String sql, ServerConnection c, int offset) {
+		LOGGER.info("handle : " + sql);
 		List<String> parts = Splitters.by(' ').noEmptyItem().trim().split(sql.substring(offset + 1));
 
 		handle(c, parts);
@@ -296,6 +302,17 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 
 			for (int i = 0; i < cols; i++) {
 				row.add(StringUtil.encode(values[i], m_charset));
+			}
+
+			write(row);
+		}
+
+		public void writeRow(Object... values) {
+			int cols = values.length;
+			RowDataPacket row = new RowDataPacket(cols);
+
+			for (int i = 0; i < cols; i++) {
+				row.add(StringUtil.encode(String.valueOf(values[i]), m_charset));
 			}
 
 			write(row);

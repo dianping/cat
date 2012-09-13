@@ -18,6 +18,8 @@ import java.nio.ByteBuffer;
 import java.sql.SQLSyntaxErrorException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.FrontendConnection;
 import com.alibaba.cobar.net.util.BufferUtil;
@@ -38,6 +40,9 @@ import com.site.lookup.annotation.Inject;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class PrepareHandler extends AbstractHandler {
+
+	private static final Logger LOGGER = Logger.getLogger(PrepareHandler.class);
+
 	@Inject
 	private StatementManager m_manager;
 
@@ -47,18 +52,11 @@ public class PrepareHandler extends AbstractHandler {
 
 	/**
 	 * @param stmtId
-	 * @param c
-	 */
-	public void close(Long stmtId, ServerConnection c) {
-
-	}
-
-	/**
-	 * @param stmtId
 	 * @param parameters
 	 * @param c
 	 */
 	public void execute(Long stmtId, List<Object> parameters, ServerConnection c) {
+		LOGGER.info("execute : " + stmtId);
 		PreparedStatement stmt = m_manager.getPreparedStatement(stmtId);
 		int len = parameters.size();
 
@@ -100,6 +98,7 @@ public class PrepareHandler extends AbstractHandler {
 	 * @param c
 	 */
 	public void prepare(String sql, ServerConnection c) {
+		LOGGER.info("prepare : " + sql);
 		Statement ori_stmt;
 
 		try {
@@ -120,14 +119,16 @@ public class PrepareHandler extends AbstractHandler {
 
 		for (int i = 0; i < parameterSize; i++) {
 			ColumnMeta paramMeta = stmt.getParameterMeta(i);
-			FieldPacket field = PacketUtil.getField(paramMeta.getName(), TypeUtils.convertJavaTypeToFieldType(paramMeta.getType()));
+			FieldPacket field = PacketUtil.getField(paramMeta.getName(),
+			      TypeUtils.convertJavaTypeToFieldType(paramMeta.getType()));
 			ctx.write(field);
 		}
 		ctx.writeEOF();
 
 		for (int i = 0; i < columnSize; i++) {
 			ColumnMeta colMeta = stmt.getColumnMeta(i);
-			FieldPacket field = PacketUtil.getField(colMeta.getName(), TypeUtils.convertJavaTypeToFieldType(colMeta.getType()));
+			FieldPacket field = PacketUtil.getField(colMeta.getName(),
+			      TypeUtils.convertJavaTypeToFieldType(colMeta.getType()));
 			ctx.write(field);
 		}
 		ctx.writeEOF();

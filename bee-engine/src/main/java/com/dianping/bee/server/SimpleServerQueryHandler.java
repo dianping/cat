@@ -2,6 +2,8 @@ package com.dianping.bee.server;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 import com.alibaba.cobar.ErrorCode;
 import com.alibaba.cobar.net.handler.FrontendQueryHandler;
 import com.alibaba.cobar.server.ServerConnection;
@@ -9,17 +11,20 @@ import com.alibaba.cobar.server.handler.BeginHandler;
 import com.alibaba.cobar.server.handler.ExplainHandler;
 import com.alibaba.cobar.server.handler.KillHandler;
 import com.alibaba.cobar.server.handler.SavepointHandler;
-import com.alibaba.cobar.server.handler.SetHandler;
 import com.alibaba.cobar.server.handler.StartHandler;
 import com.dianping.bee.engine.spi.PreparedStatement;
 import com.dianping.bee.engine.spi.handler.DescHandler;
 import com.dianping.bee.engine.spi.handler.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.SelectHandler;
+import com.dianping.bee.engine.spi.handler.SetHandler;
 import com.dianping.bee.engine.spi.handler.ShowHandler;
 import com.dianping.bee.engine.spi.handler.UseHandler;
 import com.site.lookup.annotation.Inject;
 
 public class SimpleServerQueryHandler implements FrontendQueryHandler {
+
+	private static final Logger LOGGER = Logger.getLogger(SimpleServerQueryHandler.class);
+
 	@Inject
 	private SelectHandler m_selectHandler;
 
@@ -35,19 +40,26 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 	@Inject
 	private PrepareHandler m_prepareHandler;
 
+	@Inject
+	private SetHandler m_setHandler;
+
 	private ServerConnection m_conn;
+
+	public PreparedStatement getStatement(Long stmtId) {
+		return m_prepareHandler.getStatement(stmtId);
+	}
 
 	@Override
 	public void query(String sql) {
 		ServerConnection c = m_conn;
-		System.out.println(sql);
+		LOGGER.info("query : " + sql);
 		int rs = SimpleServerParse.parse(sql);
 		switch (rs & 0xff) {
 		case SimpleServerParse.EXPLAIN:
 			ExplainHandler.handle(sql, c, rs >>> 8);
 			break;
 		case SimpleServerParse.SET:
-			SetHandler.handle(sql, c, rs >>> 8);
+			m_setHandler.handle(sql, c, rs >>> 8);
 			break;
 		case SimpleServerParse.DESC:
 			m_descHandler.handle(sql, c, rs >>> 8);
@@ -91,18 +103,6 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 		m_conn = c;
 	}
 
-	/**
-	 * @param sql
-	 */
-	public void stmtClose(Long stmtId) {
-		ServerConnection c = m_conn;
-		m_prepareHandler.close(stmtId, c);
-	}
-
-	/**
-	 * @param sql
-	 * @param parameters
-	 */
 	public void stmtExecute(Long stmtId, List<Object> parameters) {
 		ServerConnection c = m_conn;
 		m_prepareHandler.execute(stmtId, parameters, c);
@@ -111,9 +111,5 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 	public void stmtPrepare(String sql) {
 		ServerConnection c = m_conn;
 		m_prepareHandler.prepare(sql, c);
-	}
-
-	public PreparedStatement getStatement(Long stmtId) {
-		return m_prepareHandler.getStatement(stmtId);
 	}
 }

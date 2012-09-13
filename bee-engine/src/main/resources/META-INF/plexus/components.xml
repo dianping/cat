@@ -139,6 +139,9 @@
 					<role>com.dianping.bee.engine.spi.handler.UseHandler</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.bee.engine.spi.handler.SetHandler</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.bee.engine.spi.handler.PrepareHandler</role>
 				</requirement>
 			</requirements>
@@ -148,8 +151,22 @@
 			<implementation>com.dianping.bee.engine.spi.handler.UseHandler</implementation>
 		</component>
 		<component>
+			<role>com.dianping.bee.engine.spi.handler.SetHandler</role>
+			<implementation>com.dianping.bee.engine.spi.handler.SetHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.SessionManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.bee.engine.spi.handler.ShowHandler</role>
 			<implementation>com.dianping.bee.engine.spi.handler.ShowHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.SessionManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.bee.engine.spi.handler.DescHandler</role>
@@ -166,6 +183,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.bee.engine.spi.StatementManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.bee.engine.spi.SessionManager</role>
 				</requirement>
 			</requirements>
 		</component>

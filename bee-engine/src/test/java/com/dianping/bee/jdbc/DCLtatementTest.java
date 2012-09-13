@@ -26,7 +26,7 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-public class DMLStatementTest {
+public class DCLtatementTest {
 
 	@Test
 	public void testShowColumns() throws InstantiationException, IllegalAccessException, ClassNotFoundException,

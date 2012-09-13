@@ -18,6 +18,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import com.dianping.bee.engine.TestEnvConfig;
 import com.dianping.bee.server.SimpleServer;
 import com.site.lookup.ComponentTestCase;
 
@@ -26,6 +27,11 @@ import com.site.lookup.ComponentTestCase;
  */
 @RunWith(JUnit4.class)
 public class TestServer extends ComponentTestCase {
+
+	protected String getCustomConfigurationName() {
+		return TestEnvConfig.class.getName().replace('.', '/') + ".xml";
+	}
+
 	@Test
 	public void runServer() throws Exception {
 		SimpleServer server = lookup(SimpleServer.class);

@@ -78,7 +78,6 @@ public class EventIndexer implements Index {
 			case Failures:
 				ctx.setColumnValue(i, row[5]);
 			default:
-				// TODO more here
 			}
 		}
 

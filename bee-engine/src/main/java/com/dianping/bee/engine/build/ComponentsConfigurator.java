@@ -30,6 +30,7 @@ import com.dianping.bee.engine.spi.evaluator.logical.ParamMarkerEvaluator;
 import com.dianping.bee.engine.spi.handler.DescHandler;
 import com.dianping.bee.engine.spi.handler.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.SelectHandler;
+import com.dianping.bee.engine.spi.handler.SetHandler;
 import com.dianping.bee.engine.spi.handler.ShowHandler;
 import com.dianping.bee.engine.spi.handler.UseHandler;
 import com.dianping.bee.engine.spi.internal.DefaultRowContext;
@@ -99,14 +100,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 	private void defineHandlers(List<Component> all) {
 		all.add(C(SimpleServerQueryHandler.class).is(PER_LOOKUP) //
-		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class, PrepareHandler.class));
+		      .req(SelectHandler.class, ShowHandler.class, DescHandler.class, UseHandler.class, SetHandler.class,
+		            PrepareHandler.class));
 
 		all.add(C(UseHandler.class));
-		all.add(C(ShowHandler.class));
+		all.add(C(SetHandler.class).req(SessionManager.class));
+		all.add(C(ShowHandler.class).req(SessionManager.class));
 		all.add(C(DescHandler.class) //
 		      .req(TableProviderManager.class));
 		all.add(C(SelectHandler.class) //
-		      .req(StatementManager.class));
+		      .req(StatementManager.class, SessionManager.class));
 		all.add(C(PrepareHandler.class)//
 		      .req(StatementManager.class));
 	}
