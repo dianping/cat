@@ -25,7 +25,6 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.bee.engine.AllTests;
 import com.dianping.bee.engine.TestEnvConfig;
-import com.dianping.bee.mysql.InformationSchemaTest;
 import com.dianping.bee.server.SimpleServer;
 import com.site.lookup.ContainerLoader;
 
@@ -35,15 +34,9 @@ import com.site.lookup.ContainerLoader;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-StatementTest.class,
+AllTests.class,
 
-PreparedStatementTest.class,
-
-InformationSchemaTest.class,
-
-DCLtatementTest.class,
-
-AllTests.class })
+AllJDBCClientTests.class })
 public class AllInOneJDBCTests {
 	private static SimpleServer server;
 

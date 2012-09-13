@@ -62,8 +62,11 @@ public class ShowHandler extends AbstractHandler {
 			String pattern = len > 4 && "like".equalsIgnoreCase(parts.get(3)) ? parts.get(4) : null;
 			pattern = len > 6 && "like".equalsIgnoreCase(parts.get(5)) ? parts.get(6) : pattern;
 			showIndexes(c, unescape(databaseName), unescape(third), unescape(pattern));
-		} else if ("table".equalsIgnoreCase(first) && "status".equalsIgnoreCase(second) && "from".equalsIgnoreCase(third)) {
-			showTableStatus(c, unescape(forth));
+		} else if ("table".equalsIgnoreCase(first) && "status".equalsIgnoreCase(second)) {
+			String databaseName = len > 3 ? parts.get(3) : c.getSchema();
+			String pattern = len > 3 && "like".equalsIgnoreCase(parts.get(2)) ? parts.get(3) : null;
+			pattern = len > 5 && "like".equalsIgnoreCase(parts.get(4)) ? parts.get(5) : pattern;
+			showTableStatus(c, unescape(databaseName), unescape(pattern));
 		} else if ("status".equalsIgnoreCase(first)) {
 			showStatus(c);
 		} else if ("variables".equalsIgnoreCase(first)) {
@@ -340,17 +343,17 @@ public class ShowHandler extends AbstractHandler {
 		ctx.complete();
 	}
 
-	private void showTableStatus(ServerConnection c, String dbName) {
-		LOGGER.info("showTableStatus: " + dbName);
-		if (dbName == null) {
+	private void showTableStatus(ServerConnection c, String databaseName, String pattern) {
+		LOGGER.info("showTableStatus: " + databaseName + " " + pattern);
+		if (databaseName == null) {
 			error(c, ErrorCode.ER_NO_DB_ERROR, "No database specified");
 			return;
 		}
 
-		DatabaseProvider provider = lookup(DatabaseProvider.class, dbName);
+		DatabaseProvider provider = lookup(DatabaseProvider.class, databaseName);
 
 		if (provider == null) {
-			error(c, ErrorCode.ER_BAD_DB_ERROR, "Can not load database '%s'", dbName);
+			error(c, ErrorCode.ER_BAD_DB_ERROR, "Can not load database '%s'", databaseName);
 			return;
 		}
 
@@ -369,13 +372,16 @@ public class ShowHandler extends AbstractHandler {
 		ctx.writeEOF();
 
 		for (TableProvider table : tables) {
-			String[] values = new String[names.length];
-			int index = 0;
+			boolean isFilter = pattern != null ? SQLRegex.like(table.getName(), pattern) : true;
+			if (isFilter) {
+				String[] values = new String[names.length];
+				int index = 0;
 
-			values[index++] = table.getName();
-			values[index++] = "Bee";
-			values[index++] = "1.0";
-			ctx.writeRow(values);
+				values[index++] = table.getName();
+				values[index++] = "Bee";
+				values[index++] = "10";
+				ctx.writeRow(values);
+			}
 		}
 
 		ctx.writeEOF();

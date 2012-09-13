@@ -306,17 +306,6 @@ public abstract class AbstractHandler extends ContainerHolder implements Handler
 
 			write(row);
 		}
-
-		public void writeRow(Object... values) {
-			int cols = values.length;
-			RowDataPacket row = new RowDataPacket(cols);
-
-			for (int i = 0; i < cols; i++) {
-				row.add(StringUtil.encode(String.valueOf(values[i]), m_charset));
-			}
-
-			write(row);
-		}
 	}
 
 }

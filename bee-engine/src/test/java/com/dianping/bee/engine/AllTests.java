@@ -12,6 +12,8 @@ import com.dianping.bee.engine.helper.SqlParsersTest;
 
 QueryServiceTest.class,
 
+EvaluatorTest.class,
+
 SqlParsersTest.class,
 
 SQLRegexTest.class

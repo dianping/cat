@@ -15,7 +15,6 @@
 package com.dianping.bee.jdbc;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -27,6 +26,21 @@ import org.junit.Test;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class DCLtatementTest {
+
+	@Test
+	public void testDesc() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		String sql1 = "DESC TRANSACTION";
+
+		Connection conn = JDBCTestHelper.getCatConnection(null);
+		Statement stmt1 = conn.createStatement();
+		Assert.assertNotNull(stmt1);
+		ResultSet rs1 = stmt1.executeQuery(sql1);
+		Assert.assertEquals(6, rs1.getMetaData().getColumnCount());
+		Assert.assertNotNull(rs1);
+		rs1.last();
+		Assert.assertTrue(rs1.getRow() > 0);
+		JDBCTestHelper.displayResultSet(sql1, rs1);
+	}
 
 	@Test
 	public void testShowColumns() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
@@ -128,14 +142,21 @@ public class DCLtatementTest {
 	}
 
 	@Test
-	public void test() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
-		Connection conn = JDBCTestHelper.getCatConnection(null);
-		DatabaseMetaData meta = conn.getMetaData();
+	public void testShowStatus() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
+	      SQLException {
+		String sql1 = "SHOW Status";
 
-		JDBCTestHelper.displayResultSet("tables", meta.getTables(null, null, "%", null));
-		JDBCTestHelper.displayResultSet("columns", meta.getColumns(null, null, "transaction", "%"));
+		Connection conn = JDBCTestHelper.getCatConnection(null);
+		Statement stmt1 = conn.createStatement();
+		Assert.assertNotNull(stmt1);
+		ResultSet rs1 = stmt1.executeQuery(sql1);
+		Assert.assertEquals(2, rs1.getMetaData().getColumnCount());
+		Assert.assertNotNull(rs1);
+		rs1.last();
+		Assert.assertTrue(rs1.getRow() > 0);
+		JDBCTestHelper.displayResultSet(sql1, rs1);
 	}
-	
+
 	@Test
 	public void testShowTables() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
 	      SQLException {
@@ -172,5 +193,58 @@ public class DCLtatementTest {
 		JDBCTestHelper.displayResultSet(sql3, rs3);
 
 		conn.close();
+	}
+
+	@Test
+	public void testShowTableStatus() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
+	      SQLException {
+		String sql1 = "SHOW Table Status";
+
+		Connection conn = JDBCTestHelper.getCatConnection(null);
+		Statement stmt1 = conn.createStatement();
+		Assert.assertNotNull(stmt1);
+		ResultSet rs1 = stmt1.executeQuery(sql1);
+		Assert.assertEquals(18, rs1.getMetaData().getColumnCount());
+		Assert.assertNotNull(rs1);
+		rs1.last();
+		Assert.assertTrue(rs1.getRow() > 0);
+		JDBCTestHelper.displayResultSet(sql1, rs1);
+	}
+
+	@Test
+	public void testUse() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {
+		String sql1 = "USE information_schema";
+
+		Connection conn = JDBCTestHelper.getCatConnection(null);
+		Statement stmt1 = conn.createStatement();
+		Assert.assertNotNull(stmt1);
+		boolean result = stmt1.execute(sql1);
+		Assert.assertFalse(result);
+	}
+
+	@Test
+	public void testSelectDatabase() throws InstantiationException, IllegalAccessException, ClassNotFoundException,
+	      SQLException {
+		String sql1 = "SELECT DATABASE()";
+
+		Connection conn = JDBCTestHelper.getCatConnection(null);
+		Statement stmt1 = conn.createStatement();
+		Assert.assertNotNull(stmt1);
+		ResultSet rs1 = stmt1.executeQuery(sql1);
+		Assert.assertEquals(1, rs1.getMetaData().getColumnCount());
+		Assert.assertNotNull(rs1);
+		rs1.last();
+		Assert.assertEquals(1, rs1.getRow());
+		JDBCTestHelper.displayResultSet(sql1, rs1);
+
+		String sql2 = "SELECT DATABASE";
+
+		Statement stmt2 = conn.createStatement();
+		ResultSet rs2 = stmt2.executeQuery(sql2);
+		Assert.assertEquals(1, rs2.getMetaData().getColumnCount());
+		Assert.assertNotNull(rs2);
+		rs2.last();
+		Assert.assertTrue(rs2.getRow() > 0);
+		JDBCTestHelper.displayResultSet(sql2, rs2);
 	}
 }
