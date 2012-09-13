@@ -6,7 +6,11 @@ import java.util.Map;
 import com.dianping.bee.engine.evaluator.Evaluator;
 
 public interface RowContext {
-	public void apply();
+	public void afterQuery();
+
+	public void applyRow();
+
+	public void beforeQuery();
 
 	public <T> List<T> getAttributeValues(String name);
 

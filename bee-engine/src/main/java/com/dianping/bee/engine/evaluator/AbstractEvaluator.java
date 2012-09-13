@@ -50,4 +50,14 @@ public abstract class AbstractEvaluator<S extends Expression, T> extends Contain
 
 		return (V) evaluator.evaluate(ctx, child);
 	}
+
+	@Override
+	public Object getAggregatedValue() {
+		throw new UnsupportedOperationException("Not an aggregator!");
+	}
+
+	@Override
+	public boolean isAggregator() {
+		return false;
+	}
 }

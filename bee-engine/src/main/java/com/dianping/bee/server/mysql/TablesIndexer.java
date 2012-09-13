@@ -112,6 +112,6 @@ public class TablesIndexer implements Index {
 			}
 		}
 
-		ctx.apply();
+		ctx.applyRow();
 	}
 }

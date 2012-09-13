@@ -25,7 +25,7 @@ import org.junit.Test;
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
-public class DCLtatementTest {
+public class DCLStatementTest {
 
 	@Test
 	public void testDesc() throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException {

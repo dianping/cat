@@ -67,12 +67,14 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 		ctx.setAttributes(m_attributes);
 
 		try {
+			ctx.beforeQuery();
 			index.query(ctx);
 
 			return listener.getRowSet();
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		} finally {
+			ctx.afterQuery();
 			release(index);
 		}
 	}

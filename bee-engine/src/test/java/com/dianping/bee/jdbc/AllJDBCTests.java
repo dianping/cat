@@ -40,12 +40,12 @@ PreparedStatementTest.class,
 
 InformationSchemaTest.class,
 
-DCLtatementTest.class,
+DCLStatementTest.class,
 
 JDBCMetaTest.class
 
 })
-public class AllInOneJDBCTests {
+public class AllJDBCTests {
 	private static SimpleServer server;
 
 	@AfterClass

@@ -138,6 +138,6 @@ public class ColumnsIndexer implements Index {
 			}
 		}
 
-		ctx.apply();
+		ctx.applyRow();
 	}
 }

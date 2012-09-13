@@ -84,7 +84,7 @@ public class TransactionIndexer implements Index {
 			}
 		}
 
-		ctx.apply();
+		ctx.applyRow();
 	}
 
 	private TransactionReport getHourlyReport(RowContext ctx) throws IOException, SAXException {

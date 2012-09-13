@@ -62,6 +62,6 @@ public class SchemataIndexer implements Index {
 			}
 		}
 
-		ctx.apply();
+		ctx.applyRow();
 	}
 }

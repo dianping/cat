@@ -1,33 +1,39 @@
 package com.dianping.bee.engine.evaluator.function;
 
-import java.util.List;
-
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.primary.function.groupby.Sum;
 import com.dianping.bee.engine.evaluator.AbstractEvaluator;
 import com.dianping.bee.engine.spi.RowContext;
 
-public class SumEvaluator extends AbstractEvaluator<Sum, String> {
+public class SumEvaluator extends AbstractEvaluator<Sum, Number> {
 	public static final String ID = Sum.class.getName();
 
+	private double m_sum;
+
 	@Override
-	public String evaluate(RowContext ctx, Sum expr) {
-		List<Expression> args = expr.getArguments();
-		StringBuilder sb = new StringBuilder();
+	public Number evaluate(RowContext ctx, Sum expr) {
+		Expression first = expr.getArguments().get(0);
+		Object val = eval(ctx, first);
 
-		for (Expression arg : args) {
-			Object val = eval(ctx, arg);
-
-			if (val != null) {
-				sb.append(val);
-			}
+		if (val != null) {
+			m_sum += ((Number) val).doubleValue();
 		}
 
-		return sb.toString();
+		return 0;
+	}
+
+	@Override
+	public Object getAggregatedValue() {
+		return m_sum;
 	}
 
 	@Override
 	public Class<?> getResultType(Sum expr) {
 		return Number.class;
+	}
+
+	@Override
+	public boolean isAggregator() {
+		return true;
 	}
 }

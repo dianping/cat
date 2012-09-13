@@ -15,6 +15,8 @@ class SelectField implements ColumnMeta {
 
 	private Expression m_expr;
 
+	private Evaluator<Expression, Object> m_evaluator;
+
 	public SelectField(ColumnMeta column, String name) {
 		m_column = column;
 		m_name = name != null ? name : column.getName();
@@ -40,17 +42,38 @@ class SelectField implements ColumnMeta {
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unchecked")
 	public Object evaluate(RowContext ctx, int colIndex) {
 		if (m_column != null) {
 			return ctx.getValue(colIndex);
 		} else if (m_expr != null) {
-			Evaluator<Expression, Object> evaluator = (Evaluator<Expression, Object>) ctx.getEvaluator(m_expr.getClass().getName());
+			Evaluator<Expression, Object> evaluator = getEvaluator(ctx);
 			Object value = evaluator.evaluate(ctx, m_expr);
 
 			return value;
 		} else {
 			throw new RuntimeException("Internal error: should not reach here!");
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private Evaluator<Expression, Object> getEvaluator(RowContext ctx) {
+		if (m_evaluator == null) {
+			Evaluator<Expression, Object> evaluator = (Evaluator<Expression, Object>) ctx.getEvaluator(m_expr.getClass().getName());
+
+			m_evaluator = evaluator;
+		}
+
+		return m_evaluator;
+	}
+
+	@SuppressWarnings("unchecked")
+	public boolean isAggregator(RowContext ctx) {
+		if (m_expr != null) {
+			Evaluator<Expression, Object> evaluator = (Evaluator<Expression, Object>) ctx.getEvaluator(m_expr.getClass().getName());
+
+			return evaluator.isAggregator();
+		} else {
+			return false;
 		}
 	}
 
@@ -60,5 +83,9 @@ class SelectField implements ColumnMeta {
 
 	public Class<?> getType() {
 		return m_type;
+	}
+
+	public Object getAggregatedValue() {
+		return getEvaluator(null).getAggregatedValue();
 	}
 }

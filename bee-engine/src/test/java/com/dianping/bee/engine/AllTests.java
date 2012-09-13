@@ -6,6 +6,7 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.bee.engine.helper.SQLWildcardTest;
 import com.dianping.bee.engine.helper.SqlParsersTest;
+import com.dianping.bee.jdbc.AllJDBCTests;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -18,7 +19,9 @@ SqlParsersTest.class,
 
 SQLWildcardTest.class,
 
-ExceptionTest.class
+ExceptionTest.class,
+
+AllJDBCTests.class
 
 })
 public class AllTests {

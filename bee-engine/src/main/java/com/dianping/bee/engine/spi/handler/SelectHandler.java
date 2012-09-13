@@ -154,7 +154,9 @@ public class SelectHandler extends AbstractHandler {
 
 		ctx.writeEOF();
 
-		for (int rowIndex = 0; rowIndex < rowset.getRowSize(); rowIndex++) {
+		int rows = rowset.getRowSize();
+		
+		for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
 			Row row = rowset.getRow(rowIndex);
 			ctx.writeRow(row);
 		}

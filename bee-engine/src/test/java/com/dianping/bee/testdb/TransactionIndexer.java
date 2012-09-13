@@ -80,7 +80,7 @@ public class TransactionIndexer implements Index {
 			}
 		}
 
-		ctx.apply();
+		ctx.applyRow();
 	}
 
 	static class TransactionSampleData {
@@ -106,9 +106,9 @@ public class TransactionIndexer implements Index {
 						if (typeName.equals("String")) {
 							sampleData[i][j] = RandomStringUtils.randomAlphabetic(5);
 						} else if (columns[j].getType().getSimpleName().equals("Integer")) {
-							sampleData[i][j] = RandomStringUtils.randomNumeric(3);
+							sampleData[i][j] = Integer.parseInt(RandomStringUtils.randomNumeric(3));
 						} else if (columns[j].getType().getSimpleName().equals("Long")) {
-							sampleData[i][j] = RandomStringUtils.randomNumeric(6);
+							sampleData[i][j] = Long.parseLong(RandomStringUtils.randomNumeric(6));
 						} else {
 							sampleData[i][j] = RandomStringUtils.randomAlphanumeric(5);
 						}

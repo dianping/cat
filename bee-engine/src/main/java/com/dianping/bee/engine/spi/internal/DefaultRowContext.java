@@ -22,10 +22,20 @@ public class DefaultRowContext extends ContainerHolder implements RowContext {
 	private Map<String, List<Object>> m_attributes;
 
 	@Override
-	public void apply() {
+   public void afterQuery() {
+		m_listener.onEnd(this);
+   }
+
+	@Override
+	public void applyRow() {
 		m_listener.onRow(this);
 		Arrays.fill(m_values, null);
 	}
+
+	@Override
+   public void beforeQuery() {
+		m_listener.onBegin(this);
+   }
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -65,7 +75,7 @@ public class DefaultRowContext extends ContainerHolder implements RowContext {
 	public <T> T getParameter(int colIndex) {
 		return (T) m_parameters[colIndex];
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getValue(int colIndex) {
@@ -87,7 +97,7 @@ public class DefaultRowContext extends ContainerHolder implements RowContext {
 
 		return null;
 	}
-	
+
 	public void setAttributes(Map<String, List<Object>> attributes) {
 		m_attributes = attributes;
 	}

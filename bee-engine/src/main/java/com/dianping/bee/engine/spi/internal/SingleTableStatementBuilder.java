@@ -13,7 +13,6 @@ import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression;
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
 import com.alibaba.cobar.parser.ast.expression.primary.Wildcard;
-import com.alibaba.cobar.parser.ast.expression.primary.function.FunctionExpression;
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber;
 import com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString;
 import com.alibaba.cobar.parser.ast.fragment.tableref.TableRefFactor;
