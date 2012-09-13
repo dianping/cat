@@ -13,6 +13,8 @@ public abstract class AbstractConnector<T> implements Connector {
 	private ConnectEntity m_entity;
 
 	private DataParserFactory m_parserFactory;
+	
+	private RowData lastRowData;
 
 	@Override
 	public void init(ConnectEntity entity,DataParserFactory parserFactory) {
@@ -40,9 +42,14 @@ public abstract class AbstractConnector<T> implements Connector {
 		rowData.addData("domain",m_entity.getDomain());
 		rowData.addData("type",m_entity.getType());
 		rowData.addData("report",m_entity.getReport());
+		if(lastRowData == null){
+			lastRowData = rowData;
+			return null;
+		}
+		
 		return rowData;
 	}
-
+	
 	public void setParserFactory(DataParserFactory factory) {
 		this.m_parserFactory = factory;
 	}

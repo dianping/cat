@@ -15,7 +15,7 @@ public class DefaultDataParser implements DataParser {
       	JSONObject jsonObject = new JSONObject(context.toString().trim());  
 	      long timeStamp = Long.parseLong(jsonObject.get("timestamp").toString());
 	      long totalCount = Long.parseLong(jsonObject.get("Count").toString());
-	      data.addData("time", timeStamp);
+	      data.setTimeStamp(timeStamp);
 	      data.addData("totalCount",totalCount);
       } catch (JSONException e) {
 	      e.printStackTrace();

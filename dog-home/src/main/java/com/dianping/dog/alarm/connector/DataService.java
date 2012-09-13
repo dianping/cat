@@ -56,6 +56,9 @@ public class DataService extends ContainerHolder implements LifeCycle {
 					for (Connector con : connectors) {
 						try {
 							RowData data = con.produceData(currentTime);
+							if(data == null){
+							    continue;
+							}
 							Event event = null;
 							if (data.getType() == EventType.ProblemEvent) {
 								event = new ProblemEvent(data);

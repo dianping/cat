@@ -8,9 +8,7 @@ import com.dianping.dog.event.EventType;
 
 public class RowData {
  
-	private long startTime;
-
-	private long endTime;
+	private long timeStamp;
 	
    private Map<String,Object> datas = new HashMap<String,Object>();
    
@@ -27,23 +25,15 @@ public class RowData {
    		return null;
    	}
    }
-
-	public long getStartTime() {
-   	return startTime;
-   }
-
-	public void setStartTime(long startTime) {
-   	this.startTime = startTime;
-   }
-
-	public long getEndTime() {
-   	return endTime;
-   }
-
-	public void setEndTime(long endTime) {
-   	this.endTime = endTime;
-   }
 	
+	public long getTimeStamp() {
+   	return timeStamp;
+   }
+
+	public void setTimeStamp(long timeStamp) {
+   	this.timeStamp = timeStamp;
+   }
+
 	public EventType getType(){
 		String type = this.getData("report");
 		if(type.equals("problem")){

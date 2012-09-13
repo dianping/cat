@@ -103,7 +103,7 @@ public class RuleEntity {
 		connect.setDomain(domain);
 		connect.setName(name);
 		connect.setType(type);
-		connect.setReportType(reportType);
+		connect.setReport(reportType);
 		connect.setConnectSource(CONNECT_SOURCE);
 		return connect;
 	}
