@@ -10,9 +10,9 @@ public class DefaultEventDispatcher implements EventDispatcher {
 
 	@Override
 	public void dispatch(Event event) {
-		List<EventListener<Event>> listeners = m_registry.getListeners();
+		List<EventListener> listeners = m_registry.getListeners();
 		if (listeners != null && !listeners.isEmpty()) {
-			for (EventListener<Event> listener : listeners) {
+			for (EventListener listener : listeners) {
 				try {
 					if(listener.isEligible(event)){
 						listener.onEvent(event);

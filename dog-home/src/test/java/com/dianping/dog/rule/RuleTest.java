@@ -1,18 +1,8 @@
 package com.dianping.dog.rule;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.dog.alarm.rule.Rule;
-import com.dianping.dog.alarm.rule.RuleContext;
-import com.dianping.dog.event.Event;
-import com.dianping.dog.event.EventDispatcher;
-import com.dianping.dog.event.EventListener;
-import com.dianping.dog.event.EventListenerRegistry;
-import com.dianping.dog.event.EventType;
 import com.site.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)

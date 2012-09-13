@@ -56,7 +56,7 @@ public class ProblemEvent implements DataEvent {
 
 	@Override
 	public EventType getEventType() {
-		return EventType.ProblemEvent;
+		return EventType.ProblemDataEvent;
 	}
 
 }

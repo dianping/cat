@@ -20,4 +20,5 @@ public interface DataEvent extends Event{
 	public long getTotalCount();
 
 	public long getFailCount();
+	
 }

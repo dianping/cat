@@ -8,10 +8,15 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.dog.alarm.problem.ProblemEvent;
 import com.dianping.dog.alarm.rule.Rule;
 import com.dianping.dog.alarm.rule.RuleManager;
-import com.dianping.dog.event.AbstractReactorListener;
+import com.dianping.dog.event.Event;
+import com.dianping.dog.event.EventDispatcher;
+import com.dianping.dog.event.EventListener;
 import com.site.lookup.annotation.Inject;
 
-public class ProblemMergeListener extends AbstractReactorListener<ProblemEvent> implements Initializable, Runnable {
+public class ProblemMergeListener implements Initializable,EventListener, Runnable {
+	
+	@Inject
+	protected EventDispatcher m_eventdispatcher;
 
 	@Inject
 	private DefaultEventQueue m_defaultEventQueue;
@@ -27,6 +32,12 @@ public class ProblemMergeListener extends AbstractReactorListener<ProblemEvent> 
 	private static final long SLEEP_TIME = 1 * 1000;// sleep for 1 seconds
 
 	@Override
+   public boolean isEligible(Event event) {
+	   return true;
+   }
+
+	
+	@Override
 	public void run() {
 		while (isActive()) {
 			try {
@@ -41,15 +52,13 @@ public class ProblemMergeListener extends AbstractReactorListener<ProblemEvent> 
 				}
 				Thread.sleep(SLEEP_TIME);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
 
-	@Override
-	public void onEvent(ProblemEvent event) {
-		boolean result = m_defaultEventQueue.offer(event);
+	public void onEvent(Event event) {
+		boolean result = m_defaultEventQueue.offer((ProblemEvent)event);
 		if (!result) { // trace queue overflow
 			m_queueOverflow++;
 			if (m_queueOverflow % 1000 == 0) {
@@ -75,5 +84,5 @@ public class ProblemMergeListener extends AbstractReactorListener<ProblemEvent> 
 		serviceTask = new Thread(this, "ProblemMerge-task");
 		serviceTask.start();
 	}
-
+	
 }

@@ -60,7 +60,7 @@ public class DataService extends ContainerHolder implements LifeCycle {
 								continue;
 							}
 							Event event = null;
-							if (data.getType() == EventType.ProblemEvent) {
+							if (data.getType() == EventType.ProblemDataEvent) {
 								event = new ProblemEvent(data);
 							}
 							if (event != null) {
