@@ -43,7 +43,7 @@ class SelectField implements ColumnMeta {
 	@SuppressWarnings("unchecked")
 	public Object evaluate(RowContext ctx, int colIndex) {
 		if (m_column != null) {
-			return ctx.getColumn(colIndex);
+			return ctx.getValue(colIndex);
 		} else if (m_expr != null) {
 			Evaluator<Expression, Object> evaluator = (Evaluator<Expression, Object>) ctx.getEvaluator(m_expr.getClass().getName());
 			Object value = evaluator.evaluate(ctx, m_expr);
