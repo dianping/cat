@@ -26,7 +26,6 @@ import com.dianping.bee.engine.spi.ColumnMeta;
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
  */
 public class DefaultRowSet implements RowSet {
-
 	private ColumnMeta[] m_columnMetas;
 
 	private List<Row> m_rows;

@@ -2,7 +2,6 @@ package com.dianping.bee.engine.spi.internal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +24,9 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	private RowFilter m_rowFilter;
 
-	private ColumnMeta[] m_selectColumns;
+	private ColumnMeta[] m_columns;
 
-	private Map<ColumnMeta, Integer> m_allColumns = new LinkedHashMap<ColumnMeta, Integer>();
+	private List<SelectField> m_fields;
 
 	private Map<String, List<Object>> m_attributes = new HashMap<String, List<Object>>();
 
@@ -44,16 +43,12 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	@Override
 	public ColumnMeta getColumnMeta(int colIndex) {
-		if (colIndex >= 0 && colIndex < m_selectColumns.length) {
-			return m_selectColumns[colIndex];
-		} else {
-			throw new IndexOutOfBoundsException("size: " + m_selectColumns.length + ", index: " + colIndex);
-		}
+		return m_fields.get(colIndex);
 	}
 
 	@Override
 	public int getColumnSize() {
-		return m_selectColumns.length;
+		return m_fields.size();
 	}
 
 	@Override
@@ -64,11 +59,10 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 	@Override
 	public RowSet query() {
 		Index index = lookup(m_index.getIndexClass());
-		List<ColumnMeta> columns = new ArrayList<ColumnMeta>(m_allColumns.keySet());
-		RowListener listener = new DefaultRowListener(m_selectColumns);
-		listener.setRowFilter(m_rowFilter);
+		RowListener listener = new DefaultRowListener(m_fields);
 
-		ctx.setColumnMeta(columns.toArray(new ColumnMeta[0]));
+		listener.setRowFilter(m_rowFilter);
+		ctx.setColumns(m_columns);
 		ctx.setRowListener(listener);
 		ctx.setAttributes(m_attributes);
 
@@ -83,6 +77,10 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 		}
 	}
 
+	public void setColumns(List<ColumnMeta> columns) {
+		m_columns = columns.toArray(new ColumnMeta[0]);
+	}
+
 	public void setIndex(IndexMeta index) {
 		m_index = index;
 	}
@@ -91,25 +89,7 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 		m_rowFilter = rowFilter;
 	}
 
-	public void setSelectColumns(List<ColumnMeta> selectColumns) {
-		int len = selectColumns.size();
-		ColumnMeta[] columns = new ColumnMeta[len];
-
-		for (int i = 0; i < len; i++) {
-			ColumnMeta column = selectColumns.get(i);
-
-			columns[i] = column;
-			m_allColumns.put(column, i);
-		}
-
-		m_selectColumns = columns;
-	}
-
-	public void setWhereColumns(List<ColumnMeta> whereColumns) {
-		for (ColumnMeta column : whereColumns) {
-			if (!m_allColumns.containsKey(column)) {
-				m_allColumns.put(column, -1);
-			}
-		}
+	public void setSelectFields(List<SelectField> fields) {
+		m_fields = fields;
 	}
 }

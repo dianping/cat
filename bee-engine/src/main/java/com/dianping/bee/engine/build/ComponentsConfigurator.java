@@ -4,29 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.bee.engine.QueryService;
+import com.dianping.bee.engine.evaluator.Evaluator;
+import com.dianping.bee.engine.evaluator.function.ConcatEvaluator;
+import com.dianping.bee.engine.evaluator.function.SumEvaluator;
+import com.dianping.bee.engine.evaluator.logical.BetweenAndEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionEqualsEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionGreaterThanEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionGreaterThanOrEqualsEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionIsEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionLessThanEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ComparisionLessThanOrEqualsEvaluator;
+import com.dianping.bee.engine.evaluator.logical.IdentifierEvaluator;
+import com.dianping.bee.engine.evaluator.logical.InEvaluator;
+import com.dianping.bee.engine.evaluator.logical.LiteralBooleanEvaluator;
+import com.dianping.bee.engine.evaluator.logical.LiteralNumberEvaluator;
+import com.dianping.bee.engine.evaluator.logical.LiteralStringEvaluator;
+import com.dianping.bee.engine.evaluator.logical.LogicalAndEvaluator;
+import com.dianping.bee.engine.evaluator.logical.LogicalOrEvaluator;
+import com.dianping.bee.engine.evaluator.logical.ParamMarkerEvaluator;
 import com.dianping.bee.engine.internal.DefaultQueryService;
 import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.StatementManager;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.dianping.bee.engine.spi.evaluator.Evaluator;
-import com.dianping.bee.engine.spi.evaluator.function.ConcatEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.BetweenAndEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionEqualsEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanOrEqualsEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionIsEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanOrEqualsEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.IdentifierEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.InEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LiteralBooleanEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LiteralNumberEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LiteralStringEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LogicalAndEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.LogicalOrEvaluator;
-import com.dianping.bee.engine.spi.evaluator.logical.ParamMarkerEvaluator;
 import com.dianping.bee.engine.spi.handler.DescHandler;
 import com.dianping.bee.engine.spi.handler.PrepareHandler;
 import com.dianping.bee.engine.spi.handler.SelectHandler;
@@ -96,6 +97,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 	private void defineFunctionEvaluators(List<Component> all) {
 		all.add(C(Evaluator.class, ConcatEvaluator.ID, ConcatEvaluator.class));
+		all.add(C(Evaluator.class, SumEvaluator.ID, SumEvaluator.class));
 	}
 
 	private void defineHandlers(List<Component> all) {

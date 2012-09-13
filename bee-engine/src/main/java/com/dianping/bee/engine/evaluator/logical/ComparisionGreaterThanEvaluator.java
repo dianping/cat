@@ -1,8 +1,8 @@
-package com.dianping.bee.engine.spi.evaluator.logical;
+package com.dianping.bee.engine.evaluator.logical;
 
 import com.alibaba.cobar.parser.ast.expression.comparison.ComparisionGreaterThanExpression;
+import com.dianping.bee.engine.evaluator.AbstractEvaluator;
 import com.dianping.bee.engine.spi.RowContext;
-import com.dianping.bee.engine.spi.evaluator.AbstractEvaluator;
 
 public class ComparisionGreaterThanEvaluator extends AbstractEvaluator<ComparisionGreaterThanExpression, Boolean> {
 	public static final String ID = ComparisionGreaterThanExpression.class.getName();

@@ -1,10 +1,10 @@
-package com.dianping.bee.engine.spi.evaluator.logical;
+package com.dianping.bee.engine.evaluator.logical;
 
 import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.logical.LogicalOrExpression;
 import com.alibaba.cobar.parser.util.ExprEvalUtils;
+import com.dianping.bee.engine.evaluator.AbstractEvaluator;
 import com.dianping.bee.engine.spi.RowContext;
-import com.dianping.bee.engine.spi.evaluator.AbstractEvaluator;
 
 public class LogicalOrEvaluator extends AbstractEvaluator<LogicalOrExpression, Boolean> {
 	public static final String ID = LogicalOrExpression.class.getName();

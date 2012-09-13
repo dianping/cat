@@ -4,11 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.bee.engine.evaluator.Evaluator;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.RowListener;
+import com.site.lookup.ContainerHolder;
 
-public class DefaultRowContext implements RowContext {
+public class DefaultRowContext extends ContainerHolder implements RowContext {
 	private ColumnMeta[] m_columns;
 
 	private Object[] m_parameters;
@@ -18,10 +20,6 @@ public class DefaultRowContext implements RowContext {
 	private RowListener m_listener;
 
 	private Map<String, List<Object>> m_attributes;
-
-	public DefaultRowContext() {
-
-	}
 
 	@Override
 	public void apply() {
@@ -44,6 +42,10 @@ public class DefaultRowContext implements RowContext {
 	@Override
 	public int getColumnSize() {
 		return m_columns.length;
+	}
+
+	public Evaluator<?, ?> getEvaluator(String name) {
+		return lookup(Evaluator.class, name);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -85,13 +87,13 @@ public class DefaultRowContext implements RowContext {
 
 		return null;
 	}
-
+	
 	public void setAttributes(Map<String, List<Object>> attributes) {
 		m_attributes = attributes;
 	}
 
 	@Override
-	public void setColumnMeta(ColumnMeta[] columns) {
+	public void setColumns(ColumnMeta[] columns) {
 		m_columns = columns;
 		m_values = new Object[columns.length];
 	}

@@ -199,84 +199,89 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.logical.LogicalAndExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LogicalAndEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.LogicalAndEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.logical.LogicalOrExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LogicalOrEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.LogicalOrEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.ComparisionEqualsExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.ComparisionEqualsEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.ComparisionEqualsEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.ComparisionIsExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.ComparisionIsEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.ComparisionIsEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.ComparisionGreaterThanExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.ComparisionGreaterThanEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.ComparisionGreaterThanOrEqualsExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.ComparisionGreaterThanOrEqualsEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.ComparisionGreaterThanOrEqualsEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.ComparisionLessThanExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.ComparisionLessThanEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.ComparisionLessThanOrEqualsExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.ComparisionLessThanOrEqualsEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.ComparisionLessThanOrEqualsEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.BetweenAndExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.BetweenAndEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.BetweenAndEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.comparison.InExpression</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.InEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.InEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.Identifier</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.IdentifierEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.IdentifierEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.ParamMarker</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.ParamMarkerEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.ParamMarkerEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralString</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LiteralStringEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.LiteralStringEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralNumber</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LiteralNumberEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.LiteralNumberEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.literal.LiteralBoolean</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.logical.LiteralBooleanEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.logical.LiteralBooleanEvaluator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.bee.engine.spi.evaluator.Evaluator</role>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
 			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.string.Concat</role-hint>
-			<implementation>com.dianping.bee.engine.spi.evaluator.function.ConcatEvaluator</implementation>
+			<implementation>com.dianping.bee.engine.evaluator.function.ConcatEvaluator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.bee.engine.evaluator.Evaluator</role>
+			<role-hint>com.alibaba.cobar.parser.ast.expression.primary.function.groupby.Sum</role-hint>
+			<implementation>com.dianping.bee.engine.evaluator.function.SumEvaluator</implementation>
 		</component>
 	</components>
 </plexus>

@@ -3,9 +3,9 @@ package com.dianping.bee.engine.spi;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.bee.engine.evaluator.Evaluator;
 
 public interface RowContext {
-
 	public void apply();
 
 	public <T> List<T> getAttributeValues(String name);
@@ -13,6 +13,8 @@ public interface RowContext {
 	public <T extends ColumnMeta> T getColumn(int colIndex);
 
 	public int getColumnSize();
+
+	public Evaluator<?, ?> getEvaluator(String name);
 
 	public <T> T getFirstAttribute(String name, T defaultValue);
 
@@ -24,7 +26,7 @@ public interface RowContext {
 
 	public void setAttributes(Map<String, List<Object>> m_attributes);
 
-	public void setColumnMeta(ColumnMeta[] columns);
+	public void setColumns(ColumnMeta[] columns);
 
 	public void setColumnValue(int colIndex, Object value);
 

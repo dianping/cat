@@ -1,8 +1,8 @@
-package com.dianping.bee.engine.spi.evaluator.logical;
+package com.dianping.bee.engine.evaluator.logical;
 
 import com.alibaba.cobar.parser.ast.expression.primary.Identifier;
+import com.dianping.bee.engine.evaluator.AbstractEvaluator;
 import com.dianping.bee.engine.spi.RowContext;
-import com.dianping.bee.engine.spi.evaluator.AbstractEvaluator;
 
 public class IdentifierEvaluator extends AbstractEvaluator<Identifier, Object> {
 	public static final String ID = Identifier.class.getName();

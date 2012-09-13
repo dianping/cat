@@ -1,4 +1,4 @@
-package com.dianping.bee.engine.spi.evaluator.logical;
+package com.dianping.bee.engine.evaluator.logical;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import com.alibaba.cobar.parser.ast.expression.Expression;
 import com.alibaba.cobar.parser.ast.expression.comparison.InExpression;
 import com.alibaba.cobar.parser.ast.expression.misc.InExpressionList;
 import com.alibaba.cobar.parser.ast.expression.misc.QueryExpression;
+import com.dianping.bee.engine.evaluator.AbstractEvaluator;
 import com.dianping.bee.engine.spi.RowContext;
-import com.dianping.bee.engine.spi.evaluator.AbstractEvaluator;
 
 public class InEvaluator extends AbstractEvaluator<InExpression, Boolean> {
 	public static final String ID = InExpression.class.getName();

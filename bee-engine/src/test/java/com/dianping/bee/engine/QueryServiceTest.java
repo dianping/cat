@@ -17,11 +17,11 @@ public class QueryServiceTest extends ComponentTestCase {
 	@Test
 	public void testStatement() throws Exception {
 		String database = "cat";
-		String sql = "select type, sum(failures) from transaction where domain='MobileApi' and starttime='20120822'";
+		String sql = "select type, sum(failures),sum(1) from transaction where domain='MobileApi' and starttime='20120822'";
 		QueryService service = lookup(QueryService.class);
 		service.use(database);
 		RowSet rs = service.query(sql);
-
+System.out.println(rs);
 		Assert.assertEquals(5, rs.getRowSize());
 	}
 

@@ -1,8 +1,8 @@
-package com.dianping.bee.engine.spi.evaluator.logical;
+package com.dianping.bee.engine.evaluator.logical;
 
 import com.alibaba.cobar.parser.ast.expression.comparison.BetweenAndExpression;
+import com.dianping.bee.engine.evaluator.AbstractEvaluator;
 import com.dianping.bee.engine.spi.RowContext;
-import com.dianping.bee.engine.spi.evaluator.AbstractEvaluator;
 
 public class BetweenAndEvaluator extends AbstractEvaluator<BetweenAndExpression, Boolean> {
 	public static final String ID = BetweenAndExpression.class.getName();
