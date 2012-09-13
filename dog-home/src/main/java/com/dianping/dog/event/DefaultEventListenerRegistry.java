@@ -4,24 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultEventListenerRegistry implements EventListenerRegistry {
-	private List<EventListener<Event>> m_listeners = new ArrayList<EventListener<Event>>();
+	private List<EventListener> m_listeners = new ArrayList<EventListener>();
 
 	@Override
-	public synchronized List<EventListener<Event>> getListeners() {
-		List<EventListener<Event>> listeners = new ArrayList<EventListener<Event>>();
-		for (EventListener<Event> listener : m_listeners) {
+	public synchronized List<EventListener> getListeners() {
+		List<EventListener> listeners = new ArrayList<EventListener>();
+		for (EventListener listener : m_listeners) {
 			listeners.add(listener);
 		}
 		return listeners;
 	}
 
-	@SuppressWarnings("unchecked")
    @Override
-	public synchronized void register(EventListener<? extends Event> listener) {
+	public synchronized void register(EventListener listener) {
 		if (m_listeners == null) {
-			m_listeners = new ArrayList<EventListener<Event>>();
+			m_listeners = new ArrayList<EventListener>();
 		}
-		m_listeners.add((EventListener<Event>) listener);
+		m_listeners.add((EventListener) listener);
 	}
 
 }

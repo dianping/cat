@@ -3,7 +3,6 @@ package com.dianping.dog.alarm.entity;
 import java.util.Date;
 import java.util.List;
 
-import com.dianping.dog.alarm.rule.RuleTemplateEntity;
 import com.site.dal.jdbc.QueryDef;
 
 /***
@@ -12,8 +11,6 @@ import com.site.dal.jdbc.QueryDef;
 public class RuleEntity {
 
 	public static final QueryDef DELETE_BY_PK = null;
-
-	private static String CONNECT_SOURCE = "cat";
 
 	private long id;
 
@@ -29,9 +26,7 @@ public class RuleEntity {
 
 	private ConnectEntity connect;
 
-	private long interval;
-
-	private RuleTemplateEntity ruleTemplateEntity;
+	private int period;
 
 	private Date gmtModified;
 
@@ -63,24 +58,12 @@ public class RuleEntity {
 		this.name = name;
 	}
 
-	public long getInterval() {
-		if (interval == 0) {
-			interval = ruleTemplateEntity.getInterval();
-		}
-		return interval;
-	}
-
-	public void setInterval(long interval) {
-		this.interval = interval;
-	}
-
-
-	public static QueryDef getDeleteByPk() {
-   	return DELETE_BY_PK;
+	public int getPeriod() {
+   	return period;
    }
 
-	public static String getCONNECT_SOURCE() {
-   	return CONNECT_SOURCE;
+	public void setPeriod(int period) {
+   	this.period = period;
    }
 
 	public String getReportType() {
@@ -88,9 +71,6 @@ public class RuleEntity {
    }
 
 	public List<Duration> getDurations() {
-		if (durations == null || durations.size() == 0) {
-			durations = ruleTemplateEntity.getDurations();
-		}
 		return durations;
 	}
 
@@ -99,21 +79,7 @@ public class RuleEntity {
 	}
 
 	public ConnectEntity getConnect() {
-		connect = new ConnectEntity();
-		connect.setDomain(domain);
-		connect.setName(name);
-		connect.setType(type);
-		connect.setReport(reportType);
-		connect.setConnectSource(CONNECT_SOURCE);
 		return connect;
-	}
-
-	public RuleTemplateEntity getRuleTemplateEntity() {
-		return ruleTemplateEntity;
-	}
-
-	public void setRuleTemplateEntity(RuleTemplateEntity ruleTemplateEntity) {
-		this.ruleTemplateEntity = ruleTemplateEntity;
 	}
 
 	public Date getGmtModified() {

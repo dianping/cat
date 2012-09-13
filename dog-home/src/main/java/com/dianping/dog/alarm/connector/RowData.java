@@ -36,7 +36,7 @@ public class RowData {
 	public EventType getType() {
 		String type = this.getData("report");
 		if (type.equals("problem")) {
-			return EventType.ProblemEvent;
+			return EventType.ProblemDataEvent;
 		}
 		return null;
 	}
