@@ -29,7 +29,7 @@ public class HealthReportMerger extends DefaultMerger {
 		if (sum > 0) {
 			old.setLongUrlPercent(longUrl / sum);
 		}
-		
+
 		long longService = old.getLongServices() + problemInfo.getLongServices();
 		sum = 0;
 		if (old.getLongServicePercent() > 0) {
@@ -41,7 +41,7 @@ public class HealthReportMerger extends DefaultMerger {
 		if (sum > 0) {
 			old.setLongServicePercent(longService / sum);
 		}
-		
+
 		long longCache = old.getLongCaches() + problemInfo.getLongCaches();
 		sum = 0;
 		if (old.getLongCachePercent() > 0) {
@@ -53,7 +53,7 @@ public class HealthReportMerger extends DefaultMerger {
 		if (sum > 0) {
 			old.setLongCachePercent(longCache / sum);
 		}
-		
+
 		long longSql = old.getLongSqls() + problemInfo.getLongSqls();
 		sum = 0;
 		if (old.getLongSqlPercent() > 0) {
