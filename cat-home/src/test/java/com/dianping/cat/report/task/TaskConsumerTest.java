@@ -349,7 +349,7 @@ public class TaskConsumerTest {
 		}
 
 		while (!consumerTwo.isStopped()) {
-			Thread.sleep(500);
+			Thread.sleep(1500);
 		}
 
 		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumerOne.replayer.toArray()));

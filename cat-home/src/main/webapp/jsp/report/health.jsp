@@ -12,7 +12,7 @@
 	<jsp:body>	
 	<res:useCss value="${res.css.local.health_css}" target="head-css" />
 <br>
-<h2>综合指标：***</h2>
+<h2>健康指数：***</h2>
 <div style="float: left;width:100%">
 	<div style="width: 33%; float: left">
 				<table class="health">
