@@ -10,7 +10,6 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
@@ -24,9 +23,6 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 	@Inject
 	private BufferWriter m_writer;
-
-	@Inject
-	private MessagePathBuilder m_builder;
 
 	@Inject
 	private boolean m_showNav = true;
@@ -139,10 +135,6 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
-	}
-
-	public void setMessagePathBuilder(MessagePathBuilder builder) {
-		m_builder = builder;
 	}
 
 	public void setShowNav(boolean showNav) {

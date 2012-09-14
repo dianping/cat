@@ -87,7 +87,7 @@ public class DefaultRowListener extends ContainerHolder implements RowListener {
 
 				if (field.isAggregator(ctx)) {
 					m_values[i] = field.getAggregatedValue();
-					field.reset();
+					field.reset(ctx);
 				}
 
 				cells[i] = new DefaultCell(field, m_values[i]);

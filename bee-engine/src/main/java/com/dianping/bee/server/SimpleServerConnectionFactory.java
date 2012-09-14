@@ -35,9 +35,7 @@ public class SimpleServerConnectionFactory extends FrontendConnectionFactory {
 	protected FrontendConnection getConnection(SocketChannel channel) {
 		LOGGER.info("getConnection : " + channel);
 		SimpleServerConnection c = new SimpleServerConnection(channel);
-		FrontendQueryHandler queryHandler = getQueryHandler(c); // TODO use
-		                                                        // another one for
-		                                                        // test
+		FrontendQueryHandler queryHandler = getQueryHandler(c); 
 
 		c.setSessionManager(getSessionManager());
 		c.setQueryHandler(queryHandler);

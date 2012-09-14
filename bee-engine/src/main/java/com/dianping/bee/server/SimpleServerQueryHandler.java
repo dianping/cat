@@ -19,9 +19,10 @@ import com.dianping.bee.engine.spi.handler.SelectHandler;
 import com.dianping.bee.engine.spi.handler.SetHandler;
 import com.dianping.bee.engine.spi.handler.ShowHandler;
 import com.dianping.bee.engine.spi.handler.UseHandler;
+import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class SimpleServerQueryHandler implements FrontendQueryHandler {
+public class SimpleServerQueryHandler extends ContainerHolder implements FrontendQueryHandler {
 
 	private static final Logger LOGGER = Logger.getLogger(SimpleServerQueryHandler.class);
 
@@ -44,6 +45,10 @@ public class SimpleServerQueryHandler implements FrontendQueryHandler {
 	private SetHandler m_setHandler;
 
 	private ServerConnection m_conn;
+
+	public void close() {
+		release(this);
+	}
 
 	public PreparedStatement getStatement(Long stmtId) {
 		return m_prepareHandler.getStatement(stmtId);

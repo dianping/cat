@@ -62,7 +62,8 @@ class SelectField implements ColumnMeta {
 	@SuppressWarnings("unchecked")
 	private Evaluator<Expression, Object> getEvaluator(RowContext ctx) {
 		if (m_evaluator == null) {
-			Evaluator<Expression, Object> evaluator = (Evaluator<Expression, Object>) ctx.getEvaluator(m_expr.getClass().getName());
+			String name = m_expr.getClass().getName();
+			Evaluator<Expression, Object> evaluator = (Evaluator<Expression, Object>) ctx.lookupComponent(Evaluator.class, name);
 
 			m_evaluator = evaluator;
 		}
@@ -81,7 +82,8 @@ class SelectField implements ColumnMeta {
 	@SuppressWarnings("unchecked")
 	public boolean isAggregator(RowContext ctx) {
 		if (m_expr != null) {
-			Evaluator<Expression, Object> evaluator = (Evaluator<Expression, Object>) ctx.getEvaluator(m_expr.getClass().getName());
+			String name = m_expr.getClass().getName();
+			Evaluator<Expression, Object> evaluator = (Evaluator<Expression, Object>) ctx.lookupComponent(Evaluator.class, name);
 
 			return evaluator.isAggregator();
 		} else {
@@ -89,7 +91,10 @@ class SelectField implements ColumnMeta {
 		}
 	}
 
-	public void reset() {
-		m_evaluator = null;
+	public void reset(RowContext ctx) {
+		if (m_evaluator != null) {
+			ctx.releaseComponent(m_evaluator);
+			m_evaluator = null;
+		}
 	}
 }

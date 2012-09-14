@@ -92,7 +92,13 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 
 		@Override
 		protected boolean removeEldestEntry(Entry<K, V> eldest) {
-			return size() > m_capacity;
+			boolean shouldRemove = size() > m_capacity;
+
+			if (shouldRemove) {
+				release(eldest.getValue());
+			}
+
+			return shouldRemove;
 		}
 	}
 }
