@@ -3,24 +3,21 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.task.health.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.task.health.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.task.health.Model"
-	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.health.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.health.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.health.Model" scope="request" />
 
 <a:report title="Health Report" navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
 	<res:useCss value="${res.css.local.health_css}" target="head-css" />
 <br>
-<h2>综合指标：99</h2>
+<h2>健康指数：***</h2>
 <div style="float: left;width:100%">
 	<div style="width: 33%; float: left">
 				<table class="health">
 				<tr class="odd">
-					<th>URL请求平均响应时间（ms）</th>
+					<th>URL请求平均响应时间</th>
 					<td>${w:formatNumber(model.report.url.baseInfo.responseTime,'0.0','ms')}</td>
 				</tr>
 				<tr class="even">
@@ -42,7 +39,7 @@
 				</tr>
 
 				<tr class="odd">
-					<th>(从服务端看)Service请求平均响应时间（ms）</th>
+					<th>(从服务端看)Service请求平均响应时间</th>
 					<td>${w:formatNumber(model.report.service.baseInfo.responseTime,'0.0','ms')}</td>
 				</tr>
 				<tr class="even">
@@ -64,7 +61,7 @@
 				</tr>
 
 				<tr class="odd">
-					<th>(从客户端看)Service请求平均响应时间（ms）</th>
+					<th>(从客户端看)Service请求平均响应时间</th>
 					<td>${w:formatNumber(model.report.clientService.baseInfo.responseTime,'0.0','ms')}</td>
 				</tr>
 				<tr class="even">
@@ -86,7 +83,7 @@
 				</tr>
 
 				<tr class="odd">
-					<th>远程调用平均响应时间（ms）</th>
+					<th>远程调用平均响应时间</th>
 					<td>${w:formatNumber(model.report.call.baseInfo.responseTime,'0.0','ms')}</td>
 				</tr>
 				<tr class="even">
@@ -108,7 +105,7 @@
 				</tr>
 
 				<tr class="odd">
-					<th>数据库平均响应时间（ms）</th>
+					<th>数据库平均响应时间</th>
 					<td>${w:formatNumber(model.report.sql.baseInfo.responseTime,'0.0','ms')}</td>
 				</tr>
 				<tr class="even">
@@ -128,48 +125,48 @@
 	<div style="width: 33%; float:left">
 				<table>
 				<tr class="odd">
-					<th>memcached缓存平均响应时间（ms）</th>
+					<th>Memcached缓存平均响应时间</th>
 					<td>${w:formatNumber(model.report.memCache.baseCacheInfo.responseTime,'0.0','ms')}</td>
 				</tr>
 				<tr class="even">
-					<th>memcached缓存月总访问量</th>
+					<th>Memcached缓存总访问量</th>
 					<td>${w:formatNumber(model.report.memCache.baseCacheInfo.total,'0.0','')}</td>
 				</tr>
 				<tr class="odd">
-					<th>memcached缓存命中率</th>
-					<td>${w:format(model.report.memCache.baseCacheInfo.hitPercent,'00.0000%')}</td>
+					<th>Memcached缓存命中率</th>
+					<td>${w:format(model.report.memCache.baseCacheInfo.hitPercent,'00.0%')}</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr class="odd">
-					<th>kvdbCache缓存平均响应时间（ms）</th>
+					<th>KvdbCache缓存平均响应时间</th>
 					<td>${w:formatNumber(model.report.kvdbCache.baseCacheInfo.responseTime,'0.0','ms')}</td>
 				</tr>
 				<tr class="even">
-					<th>kvdbCache缓存月总访问量</th>
+					<th>KvdbCache缓存总访问量</th>
 					<td>${w:formatNumber(model.report.kvdbCache.baseCacheInfo.total,'0.0','')}</td>
 				</tr>
 				<tr class="odd">
-					<th>kvdbCache缓存命中率</th>
-					<td>${w:format(model.report.kvdbCache.baseCacheInfo.hitPercent,'00.0000%')}</td>
+					<th>KvdbCache缓存命中率</th>
+					<td>${w:format(model.report.kvdbCache.baseCacheInfo.hitPercent,'00.0%')}</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
 					<td>&nbsp;</td>
 				</tr>
 				<tr class="odd">
-					<th>webCache缓存平均响应时间（ms）</th>
+					<th>WebCache缓存平均响应时间</th>
 					<td>${w:formatNumber(model.report.webCache.baseCacheInfo.responseTime,'0.0','ms')}</td>
 				</tr>
 				<tr class="even">
-					<th>webCache缓存月总访问量</th>
+					<th>WebCache缓存总访问量</th>
 					<td>${w:formatNumber(model.report.webCache.baseCacheInfo.total,'0.0','')}</td>
 				</tr>
 				<tr class="odd">
-					<th>webCache缓存命中率</th>
-					<td>${w:format(model.report.webCache.baseCacheInfo.hitPercent,'00.0000%')}</td>
+					<th>WebCache缓存命中率</th>
+					<td>${w:format(model.report.webCache.baseCacheInfo.hitPercent,'00.0%')}</td>
 				</tr>
 
 				<tr>
@@ -178,17 +175,17 @@
 				</tr>
 
 				<tr class="odd">
-					<th>Exception月异常数</th>
+					<th>Exception异常数</th>
 					<td>${w:formatNumber(model.report.problemInfo.exceptions,'0.0','')}</td>
 				</tr>
 
 				<tr class="even">
-					<th>Long-url月总次数（大于1000ms）</th>
+					<th>Long-url总次数（大于1000ms）</th>
 					<td>${w:formatNumber(model.report.problemInfo.longUrls,'0.0','')}</td>
 				</tr>
 				<tr class="odd">
 					<th>Long-url百分比</th>
-					<td>${w:format(model.report.problemInfo.longUrlPercent,'00.0000%')}</td>
+					<td>${w:format(model.report.problemInfo.longUrlPercent,'00.0%')}</td>
 				</tr>
 
 				<tr>
@@ -197,12 +194,12 @@
 				</tr>
 
 				<tr class="odd">
-					<th>Long-service月总次数（大于1000ms）</th>
+					<th>Long-service总次数（大于50ms）</th>
 					<td>${w:formatNumber(model.report.problemInfo.longServices,'0.0','')}</td>
 				</tr>
 				<tr class="even">
 					<th>Long-service百分比</th>
-					<td>${w:format(model.report.problemInfo.longServicePercent,'00.0000%')}</td>
+					<td>${w:format(model.report.problemInfo.longServicePercent,'00.0%')}</td>
 				</tr>
 
 				<tr>
@@ -211,23 +208,23 @@
 				</tr>
 
 				<tr class="odd">
-					<th>Long-sql月总次数（大于100ms）</th>
+					<th>Long-sql总次数（大于100ms）</th>
 					<td>${w:formatNumber(model.report.problemInfo.longSqls,'0.0','')}</td>
 				</tr>
 				<tr class="even">
 					<th>Long-sql百分比</th>
-					<td>${w:format(model.report.problemInfo.longSqlPercent,'00.0000%')}</td>
+					<td>${w:format(model.report.problemInfo.longSqlPercent,'00.0%')}</td>
 				</tr>
 
 				<tr><td>&nbsp;</td><td>&nbsp;</td></tr>
 
 				<tr class="odd">
-					<th>Long-cache月总次数（大于10ms）</th>
+					<th>Long-cache总次数（大于10ms）</th>
 					<td>${w:formatNumber(model.report.problemInfo.longCaches,'0.0','')}</td>
 				</tr>
 				<tr class="even">
 					<th>Long-cache百分比</th>
-					<td>${w:format(model.report.problemInfo.longCachePercent,'00.0000%')}</td>
+					<td>${w:format(model.report.problemInfo.longCachePercent,'00.0%')}</td>
 				</tr>
 			</table>
 			</div>
