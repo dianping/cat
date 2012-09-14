@@ -35,7 +35,7 @@ public class DefaultRowListener extends ContainerHolder implements RowListener {
 	@Override
 	public void onRow(RowContext ctx) {
 		if (m_filter != null && !m_filter.filter(ctx)) {
- 			return;
+			return;
 		}
 
 		int len = m_fields.length;
@@ -87,6 +87,7 @@ public class DefaultRowListener extends ContainerHolder implements RowListener {
 
 				if (field.isAggregator(ctx)) {
 					m_values[i] = field.getAggregatedValue();
+					field.reset();
 				}
 
 				cells[i] = new DefaultCell(field, m_values[i]);

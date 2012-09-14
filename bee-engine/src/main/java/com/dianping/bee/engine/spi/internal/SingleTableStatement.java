@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
 import com.dianping.bee.engine.RowSet;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.Index;
@@ -16,9 +19,11 @@ import com.dianping.bee.engine.spi.Statement;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class SingleTableStatement extends ContainerHolder implements Statement {
+public class SingleTableStatement extends ContainerHolder implements Statement, LogEnabled {
 	@Inject
 	protected RowContext ctx;
+
+	private String m_sql;
 
 	private IndexMeta m_index;
 
@@ -30,6 +35,8 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	private Map<String, List<Object>> m_attributes = new HashMap<String, List<Object>>();
 
+	private Logger m_logger;
+
 	public void addAttribute(String name, Object value) {
 		List<Object> list = m_attributes.get(name);
 
@@ -39,6 +46,11 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 		}
 
 		list.add(value);
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	@Override
@@ -57,6 +69,11 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 	}
 
 	@Override
+	public String getSQL() {
+		return m_sql;
+	}
+
+	@Override
 	public RowSet query() {
 		Index index = lookup(m_index.getIndexClass());
 		RowListener listener = new DefaultRowListener(m_fields);
@@ -72,6 +89,7 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 			return listener.getRowSet();
 		} catch (Exception e) {
+			m_logger.error(String.format("Error when handling query(%s)!", this), e);
 			throw new RuntimeException(e);
 		} finally {
 			ctx.afterQuery();
@@ -93,5 +111,9 @@ public class SingleTableStatement extends ContainerHolder implements Statement {
 
 	public void setSelectFields(List<SelectField> fields) {
 		m_fields = fields;
+	}
+
+	public void setSQL(String sql) {
+		m_sql = sql;
 	}
 }

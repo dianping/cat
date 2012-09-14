@@ -55,6 +55,10 @@ class SelectField implements ColumnMeta {
 		}
 	}
 
+	public Object getAggregatedValue() {
+		return getEvaluator(null).getAggregatedValue();
+	}
+
 	@SuppressWarnings("unchecked")
 	private Evaluator<Expression, Object> getEvaluator(RowContext ctx) {
 		if (m_evaluator == null) {
@@ -64,6 +68,14 @@ class SelectField implements ColumnMeta {
 		}
 
 		return m_evaluator;
+	}
+
+	public String getName() {
+		return m_name;
+	}
+
+	public Class<?> getType() {
+		return m_type;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -77,15 +89,7 @@ class SelectField implements ColumnMeta {
 		}
 	}
 
-	public String getName() {
-		return m_name;
-	}
-
-	public Class<?> getType() {
-		return m_type;
-	}
-
-	public Object getAggregatedValue() {
-		return getEvaluator(null).getAggregatedValue();
+	public void reset() {
+		m_evaluator = null;
 	}
 }

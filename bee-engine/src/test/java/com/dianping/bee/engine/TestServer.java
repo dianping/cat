@@ -12,13 +12,12 @@
  * accordance with the terms of the license agreement you entered into
  * with dianping.com.
  */
-package com.dianping.bee.jdbc;
+package com.dianping.bee.engine;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.bee.engine.TestEnvConfigurator;
 import com.dianping.bee.server.SimpleServer;
 import com.site.lookup.ComponentTestCase;
 
