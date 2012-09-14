@@ -17,7 +17,6 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
 
@@ -31,9 +30,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 	@Inject
 	private BufferWriter m_writer;
-
-	@Inject
-	private MessagePathBuilder m_builder;
 
 	@Inject
 	private String m_logViewPrefix = "/cat/r/m/";
@@ -191,8 +187,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: show ::]</a>",
-		      m_logViewPrefix, link, link));
+		count += helper.write(buf,
+		      String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: show ::]</a>", m_logViewPrefix, link, link));
 		count += helper.td2(buf);
 
 		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
@@ -254,10 +250,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 	public void setLogViewPrefix(String logViewPrefix) {
 		m_logViewPrefix = logViewPrefix;
-	}
-
-	public void setMessagePathBuilder(MessagePathBuilder builder) {
-		m_builder = builder;
 	}
 
 	public void setShowNav(boolean showNav) {

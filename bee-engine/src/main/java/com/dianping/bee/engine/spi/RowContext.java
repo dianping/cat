@@ -3,8 +3,6 @@ package com.dianping.bee.engine.spi;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.bee.engine.evaluator.Evaluator;
-
 public interface RowContext {
 	public void afterQuery();
 
@@ -18,8 +16,6 @@ public interface RowContext {
 
 	public int getColumnSize();
 
-	public Evaluator<?, ?> getEvaluator(String name);
-
 	public <T> T getFirstAttribute(String name, T defaultValue);
 
 	public <T> T getParameter(int colIndex);
@@ -27,6 +23,12 @@ public interface RowContext {
 	public <T> T getValue(int colIndex);
 
 	public <T> T getValue(String columnName);
+
+	public <T> T lookupComponent(Class<T> role);
+
+	public <T> T lookupComponent(Class<T> role, String roleHint);
+
+	public void releaseComponent(Object component);
 
 	public void setAttributes(Map<String, List<Object>> m_attributes);
 

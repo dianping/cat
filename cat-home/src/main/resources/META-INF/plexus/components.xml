@@ -1992,9 +1992,6 @@
 					<role>com.dianping.cat.report.page.database.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>database</role-hint>
 					<field-name>m_service</field-name>

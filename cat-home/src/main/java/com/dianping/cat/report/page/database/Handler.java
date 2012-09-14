@@ -9,7 +9,6 @@ import java.util.Set;
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.database.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
@@ -38,7 +37,6 @@ import com.site.web.mvc.annotation.PayloadMeta;
  * @author youyong
  */
 public class Handler implements PageHandler<Context> {
-
 	public static final long ONE_HOUR = 3600 * 1000L;
 
 	@Inject
@@ -52,9 +50,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JspViewer m_jspViewer;
-
-	@Inject
-	private ServerConfigManager m_manager;
 
 	@Inject(type = ModelService.class, value = "database")
 	private ModelService<DatabaseReport> m_service;
@@ -178,8 +173,8 @@ public class Handler implements PageHandler<Context> {
 			}
 		} else {
 			try {
-				List<Dailyreport> reports = m_dailyreportDao.findDatabaseAllByDomainNameDuration(start, end, database,
-				      "database", DailyreportEntity.READSET_FULL);
+				List<Dailyreport> reports = m_dailyreportDao.findDatabaseAllByDomainNameDuration(start, end, database, "database",
+				      DailyreportEntity.READSET_FULL);
 				DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
 				for (Dailyreport report : reports) {
 					String xml = report.getContent();

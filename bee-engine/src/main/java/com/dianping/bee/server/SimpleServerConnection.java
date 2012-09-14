@@ -45,6 +45,13 @@ public class SimpleServerConnection extends ServerConnection {
 		super(channel);
 	}
 
+	@Override
+	public boolean close() {
+		((SimpleServerQueryHandler) queryHandler).close();
+
+		return super.close();
+	}
+
 	// commands --------------------------------------------------------------
 	/**
 	 * Override parent method in FrontendConnection
@@ -111,7 +118,8 @@ public class SimpleServerConnection extends ServerConnection {
 		}
 	}
 
-	@Override
+	@SuppressWarnings("unused")
+   @Override
 	public void stmtExecute(byte[] data) {
 		LOGGER.info("StmtExecute : " + data);
 		m_sessionManager.getSession().setDatabase(getSchema());

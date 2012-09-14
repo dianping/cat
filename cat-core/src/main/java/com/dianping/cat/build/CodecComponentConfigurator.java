@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.codec.BufferWriter;
 import com.dianping.cat.message.spi.codec.EscapingBufferWriter;
 import com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter;
@@ -24,7 +23,6 @@ class CodecComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageCodec.class, PlainTextMessageCodec.ID, PlainTextMessageCodec.class) //
 		      .req(BufferWriter.class, EscapingBufferWriter.ID));
 		all.add(C(MessageCodec.class, HtmlMessageCodec.ID, HtmlMessageCodec.class) //
-		      .req(MessagePathBuilder.class) //
 		      .req(BufferWriter.class, HtmlEncodingBufferWriter.ID));
 
 		return all;

@@ -79,7 +79,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TableHelper.class) //
 		      .req(TableProviderManager.class));
 
-		all.add(C(RowContext.class, DefaultRowContext.class));
+		all.add(C(RowContext.class, DefaultRowContext.class).is(PER_LOOKUP));
 		all.add(C(SingleTableStatement.class).is(PER_LOOKUP)//
 		      .req(RowContext.class));
 		all.add(C(SingleTableRowFilter.class).is(PER_LOOKUP));
@@ -146,8 +146,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Evaluator.class, ComparisionEqualsEvaluator.ID, ComparisionEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionIsEvaluator.ID, ComparisionIsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionGreaterThanEvaluator.ID, ComparisionGreaterThanEvaluator.class));
-		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID,
-		      ComparisionGreaterThanOrEqualsEvaluator.class));
+		all.add(C(Evaluator.class, ComparisionGreaterThanOrEqualsEvaluator.ID, ComparisionGreaterThanOrEqualsEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanEvaluator.ID, ComparisionLessThanEvaluator.class));
 		all.add(C(Evaluator.class, ComparisionLessThanOrEqualsEvaluator.ID, ComparisionLessThanOrEqualsEvaluator.class));
 
