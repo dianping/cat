@@ -4,7 +4,6 @@
     <attribute name="domain" value-type="String" />
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <attribute name="day" value-type="int" />
     <element name="domain" value-type="String" type="list" names="domains" />
     <entity-ref name="problem-info" />
     <entity-ref name="url" />

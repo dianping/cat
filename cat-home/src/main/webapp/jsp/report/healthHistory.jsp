@@ -3,11 +3,11 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.health.Context"
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.task.health.Context"
 	scope="request" />
 <jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.health.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.health.Model"
+	type="com.dianping.cat.report.page.task.health.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.task.health.Model"
 	scope="request" />
 
 <a:historyReport title="Health Report" navUrlPrefix="domain=${model.domain}&reportType=${model.reportType}">

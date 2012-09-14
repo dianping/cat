@@ -28,6 +28,7 @@ public class HealthReportMerger extends DefaultMerger {
 		}
 		if (sum > 0) {
 			old.setLongUrlPercent(longUrl / sum);
+			old.setLongUrls(longUrl);
 		}
 
 		long longService = old.getLongServices() + problemInfo.getLongServices();
@@ -40,6 +41,7 @@ public class HealthReportMerger extends DefaultMerger {
 		}
 		if (sum > 0) {
 			old.setLongServicePercent(longService / sum);
+			old.setLongServices(longService);
 		}
 
 		long longCache = old.getLongCaches() + problemInfo.getLongCaches();
@@ -52,6 +54,7 @@ public class HealthReportMerger extends DefaultMerger {
 		}
 		if (sum > 0) {
 			old.setLongCachePercent(longCache / sum);
+			old.setLongCaches(longCache);
 		}
 
 		long longSql = old.getLongSqls() + problemInfo.getLongSqls();
@@ -64,6 +67,7 @@ public class HealthReportMerger extends DefaultMerger {
 		}
 		if (sum > 0) {
 			old.setLongSqlPercent(longSql / sum);
+			old.setLongSqls(longSql);
 		}
 
 	}
@@ -108,30 +112,40 @@ public class HealthReportMerger extends DefaultMerger {
 		if (avgLoadCount > 0) {
 			old.setAvgLoad(avgLoadSum / avgLoadCount);
 		}
+		old.setAvgLoadCount(avgLoadCount);
+		old.setAvgLoadSum(avgLoadSum);
 
 		int avgOldgcCount = old.getAvgOldgcCount() + machineInfo.getAvgOldgcCount();
 		double avgOldgcSum = old.getAvgOldgcSum() + machineInfo.getAvgOldgcSum();
 		if (avgOldgcCount > 0) {
 			old.setAvgOldgc(avgOldgcSum / avgOldgcCount);
 		}
+		old.setAvgOldgcCount(avgOldgcCount);
+		old.setAvgOldgcSum(avgOldgcSum);
 
 		int avgHttpCount = old.getAvgHttpCount() + machineInfo.getAvgHttpCount();
 		double avgHttpSum = old.getAvgHttpSum() + machineInfo.getAvgHttpSum();
 		if (avgHttpCount > 0) {
 			old.setAvgHttp(avgHttpSum / avgHttpCount);
 		}
+		old.setAvgHttpCount(avgHttpCount);
+		old.setAvgHttpSum(avgHttpSum);
 
 		int avgPigeonCount = old.getAvgPigeonCount() + machineInfo.getAvgPigeonCount();
 		double avgPigeonSum = old.getAvgPigeonSum() + machineInfo.getAvgPigeonSum();
 		if (avgPigeonCount > 0) {
 			old.setAvgPigeon(avgPigeonSum / avgPigeonCount);
 		}
+		old.setAvgPigeonCount(avgPigeonCount);
+		old.setAvgPigeonSum(avgPigeonSum);
 
 		int avgMemoryUsedCount = old.getAvgMemoryUsedCount() + machineInfo.getAvgMemoryUsedCount();
 		double avgMemoryUsedSum = old.getAvgMemoryUsedSum() + machineInfo.getAvgMemoryUsedSum();
 		if (avgMemoryUsedCount > 0) {
 			old.setAvgMemoryUsed(avgMemoryUsedSum / avgMemoryUsedCount);
 		}
+		old.setAvgMemoryUsedCount(avgMemoryUsedCount);
+		old.setAvgMemoryUsedSum(avgMemoryUsedSum);
 
 		if (machineInfo.getAvgMaxLoad() > old.getAvgMaxLoad()) {
 			old.setAvgMaxLoad(machineInfo.getAvgMaxLoad());
@@ -162,6 +176,7 @@ public class HealthReportMerger extends DefaultMerger {
 
 	@Override
 	public void visitHealthReport(HealthReport healthReport) {
+		getHealthReport().getDomainNames().addAll((healthReport.getDomainNames()));
 		super.visitHealthReport(healthReport);
 	}
 
