@@ -17,21 +17,22 @@ public class AvgEvaluator extends AbstractEvaluator<Avg, Number> {
 		Expression first = expr.getArguments().get(0);
 		Object val = eval(ctx, first);
 
-		if (val != null) {
+		if (val != null && val instanceof Number) {
 			m_sum += ((Number) val).doubleValue();
 			m_count++;
 		}
+
 		return 0;
 	}
 
 	@Override
 	public Object getAggregatedValue() {
-		return m_sum / m_count;
+		return m_count == 0 ? 0 : m_sum / m_count;
 	}
 
 	@Override
 	public Class<?> getResultType(Avg expr) {
-		return Number.class;
+		return Double.class;
 	}
 
 	@Override

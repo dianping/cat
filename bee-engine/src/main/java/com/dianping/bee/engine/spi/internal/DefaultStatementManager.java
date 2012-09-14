@@ -66,7 +66,11 @@ public class DefaultStatementManager extends ContainerHolder implements Statemen
 
 			try {
 				statement.accept(builder);
-				return builder.getStatement();
+
+				SingleTableStatement stmt = builder.getStatement();
+
+				stmt.setSQL(sql);
+				return stmt;
 			} finally {
 				release(builder);
 			}

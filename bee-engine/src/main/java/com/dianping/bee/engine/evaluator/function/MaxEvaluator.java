@@ -16,8 +16,10 @@ public class MaxEvaluator extends AbstractEvaluator<Max, Number> {
 		Object val = eval(ctx, first);
 
 		if (val != null && val instanceof Number) {
-			if (((Number) val).doubleValue() > m_max) {
-				m_max = ((Number) val).doubleValue();
+			Number value = (Number) val;
+
+			if (value.doubleValue() > m_max) {
+				m_max = value.doubleValue();
 			}
 		}
 
@@ -26,12 +28,12 @@ public class MaxEvaluator extends AbstractEvaluator<Max, Number> {
 
 	@Override
 	public Object getAggregatedValue() {
-		return m_max;
+		return m_max == Double.MIN_VALUE ? 0 : m_max;
 	}
 
 	@Override
 	public Class<?> getResultType(Max expr) {
-		return Number.class;
+		return Double.class;
 	}
 
 	@Override

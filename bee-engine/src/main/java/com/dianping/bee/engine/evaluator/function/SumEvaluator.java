@@ -16,7 +16,9 @@ public class SumEvaluator extends AbstractEvaluator<Sum, Number> {
 		Object val = eval(ctx, first);
 
 		if (val != null) {
-			m_sum += ((Number) val).doubleValue();
+			Number value = (Number) val;
+
+			m_sum += value.doubleValue();
 		}
 
 		return 0;
@@ -29,7 +31,7 @@ public class SumEvaluator extends AbstractEvaluator<Sum, Number> {
 
 	@Override
 	public Class<?> getResultType(Sum expr) {
-		return Number.class;
+		return Double.class;
 	}
 
 	@Override

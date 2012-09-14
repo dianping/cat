@@ -16,8 +16,10 @@ public class MinEvaluator extends AbstractEvaluator<Min, Number> {
 		Object val = eval(ctx, first);
 
 		if (val != null && val instanceof Number) {
-			if (((Number) val).doubleValue() < m_min) {
-				m_min = ((Number) val).doubleValue();
+			Number value = (Number) val;
+
+			if (value.doubleValue() < m_min) {
+				m_min = value.doubleValue();
 			}
 		}
 
@@ -26,12 +28,12 @@ public class MinEvaluator extends AbstractEvaluator<Min, Number> {
 
 	@Override
 	public Object getAggregatedValue() {
-		return m_min;
+		return m_min == Double.MAX_VALUE ? 0 : m_min;
 	}
 
 	@Override
 	public Class<?> getResultType(Min expr) {
-		return Number.class;
+		return Double.class;
 	}
 
 	@Override
