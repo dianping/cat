@@ -32,8 +32,8 @@ public class ProblemDataParser implements DataParser {
    public RowData mergeRowData(RowData newData, RowData oldData) {
 		RowData rowData = newData.copy();
 		rowData.setTimeStamp(newData.getTimeStamp());
-		long nTotalCount = newData.getData("totalCount");
-		long oTotalCount = oldData.getData("totalCount");
+		long nTotalCount = (Long)newData.getData("totalCount");
+		long oTotalCount = (Long)oldData.getData("totalCount");
 		rowData.addData("totalCount", nTotalCount - oTotalCount);
 		return rowData;
    } 
