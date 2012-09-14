@@ -12,6 +12,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -31,7 +33,8 @@ import com.site.helper.Threads.Task;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
+public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
+      LogEnabled {
 	public static final String ID = "local";
 
 	@Inject
@@ -46,7 +49,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private BlockingQueue<MessageBlock> m_blockQueue = new LinkedBlockingQueue<MessageBlock>(1000);
 
-	public void archive(long startTime) throws IOException {
+	private Logger m_logger;
+
+	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
 
@@ -60,8 +65,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			for (String key : keys) {
 				LocalMessageBucket bucket = m_buckets.remove(key);
 
-				bucket.close();
-				bucket.archive();
+				try {
+					bucket.close();
+				} catch (IOException e) {
+					// ignore
+				}
+				try {
+					bucket.archive();
+				} catch (IOException e) {
+					m_logger.error("Error when archive the buck " + key, e);
+				}
 			}
 		}
 	}
@@ -279,5 +292,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void shutdown() {
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

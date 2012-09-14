@@ -72,8 +72,12 @@ public class LocalMessageBucket implements MessageBucket {
 
 	@Override
 	public void close() throws IOException {
-		m_reader.close();
-		m_writer.close();
+		if (m_reader != null) {
+			m_reader.close();
+			m_writer.close();
+			m_reader = null;
+			m_writer = null;
+		}
 	}
 
 	@Override
