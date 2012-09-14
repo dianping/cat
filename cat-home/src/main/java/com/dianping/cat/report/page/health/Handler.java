@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.health;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case HOURLY_REPORT:
-			HealthReport report = getHourlyReport(payload.getDate(), payload.getDomain());
+			HealthReport report = getHourlyReport(getLastDate(payload), payload.getDomain());
 			model.setReport(report);
 			break;
 		case HISTORY_REPORT:
@@ -68,6 +69,25 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private long getLastDate(Payload payload) {
+		long date = payload.getDate();
+		long lastHour = payload.getCurrentDate() - ONE_HOUR;
+		long lastTwoHour = payload.getCurrentDate() - 2 * ONE_HOUR;
+		Calendar cal = Calendar.getInstance();
+		int minute = cal.get(Calendar.MINUTE);
+
+		if (minute > 15) {
+			if (date > lastHour) {
+				date = lastHour;
+			}
+		} else {
+			if (date >= lastTwoHour) {
+				date = lastTwoHour;
+			}
+		}
+		return date;
 	}
 
 	private HealthReport getHistoryReport(Date startDate, Date endDate, String domain) {
@@ -131,7 +151,7 @@ public class Handler implements PageHandler<Context> {
 		} else {
 			model.setLongDate(payload.getDate());
 		}
-		
+
 		if (action == Action.HISTORY_REPORT) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {
