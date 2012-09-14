@@ -1,13 +1,10 @@
 package com.dianping.cat.report.task.health;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -33,6 +30,8 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class HealthReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+
+	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	@Inject
 	private HealthServiceCollector m_serviceCollector;
@@ -76,8 +75,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		return true;
 	}
 
-	private HealthReport buildHealthHourlyReport(String reportDomain, Date reportPeriod) throws DalException,
-	      SAXException, IOException {
+	private HealthReport buildHealthHourlyReport(String reportDomain, Date reportPeriod) {
 		TransactionReport transactionReport = queryTransactionReport(reportDomain, reportPeriod);
 		EventReport eventReport = queryEventReport(reportDomain, reportPeriod);
 		ProblemReport problemReport = queryProblemReport(reportDomain, reportPeriod);
@@ -119,65 +117,93 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		return true;
 	}
 
-	private EventReport queryEventReport(String domain, Date reportPeriod) throws DalException, SAXException,
-	      IOException {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "event",
-		      ReportEntity.READSET_FULL);
+	private EventReport queryEventReport(String domain, Date reportPeriod) {
 		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
-		merger.setAllIp(true);
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			EventReport model = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
 		EventReport eventReport = merger.getEventReport();
+		try {
+			List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "event",
+			      ReportEntity.READSET_FULL);
+			merger.setAllIp(true);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+				EventReport model = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
+				model.accept(merger);	
+				eventReport.getDomainNames().addAll(model.getDomainNames());
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		
+		eventReport.setStartTime(reportPeriod);
+		eventReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
 		return eventReport;
 	}
 
-	private HeartbeatReport queryHeartbeatReport(String domain, Date reportPeriod) throws DalException, SAXException,
-	      IOException {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "heartbeat",
-		      ReportEntity.READSET_FULL);
+	private HeartbeatReport queryHeartbeatReport(String domain, Date reportPeriod) {
 		HeartbeatReportMerger merger = new HeartbeatReportMerger(new HeartbeatReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			HeartbeatReport model = com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
 		HeartbeatReport heartbeatReport = merger.getHeartbeatReport();
+		try {
+			List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "heartbeat",
+			      ReportEntity.READSET_FULL);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+				HeartbeatReport model = com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser.parse(xml);
+				model.accept(merger);
+				heartbeatReport.getDomainNames().addAll(model.getDomainNames());
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		
+		heartbeatReport.setStartTime(reportPeriod);
+		heartbeatReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
 		return heartbeatReport;
 	}
 
-	private ProblemReport queryProblemReport(String domain, Date reportPeriod) throws DalException, SAXException,
-	      IOException {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "problem",
-		      ReportEntity.READSET_FULL);
+	private ProblemReport queryProblemReport(String domain, Date reportPeriod) {
 		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			ProblemReport model = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
 		ProblemReport problemReport = merger.getProblemReport();
+		try {
+			List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "problem",
+			      ReportEntity.READSET_FULL);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+				ProblemReport model = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(xml);
+				model.accept(merger);
+				problemReport.getDomainNames().addAll(model.getDomainNames());
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		
+		problemReport.setStartTime(reportPeriod);
+		problemReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
 		return problemReport;
 	}
 
-	private TransactionReport queryTransactionReport(String domain, Date reportPeriod) throws DalException,
-	      SAXException, IOException {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "transaction",
-		      ReportEntity.READSET_FULL);
+	private TransactionReport queryTransactionReport(String domain, Date reportPeriod) {
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
-		merger.setAllIp(true);
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			TransactionReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
 		TransactionReport transactionReport = merger.getTransactionReport();
+		merger.setAllIp(true);
+		try {
+			List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "transaction",
+			      ReportEntity.READSET_FULL);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+				TransactionReport model = DefaultSaxParser.parse(xml);
+				model.accept(merger);
+				transactionReport.getDomainNames().addAll(model.getDomainNames());
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		
+		transactionReport.setStartTime(reportPeriod);
+		transactionReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
 		return transactionReport;
 	}
 

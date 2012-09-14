@@ -30,6 +30,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 import com.dianping.cat.report.task.health.HealthServiceCollector.ServiceInfo;
@@ -40,8 +41,9 @@ public class HealthReportCreator {
 
 	public HealthReport build(TransactionReport transactionReport, EventReport eventReport, ProblemReport problemReport,
 	      HeartbeatReport heartbeatReport, Map<String, ServiceInfo> infos) {
+
 		m_healthReport = new HealthReport(transactionReport.getDomain());
-		
+
 		buildReportInfo(transactionReport);
 		buildProblemInfo(problemReport);
 		buildTansactionInfo(transactionReport);
@@ -53,8 +55,9 @@ public class HealthReportCreator {
 	}
 
 	private BaseCacheInfo buildBaseCacheInfo(TransactionReport transactionReport, EventReport eventReport, String type) {
-		Map<String, TransactionType> transactionTypes = transactionReport.findOrCreateMachine("All").getTypes();
-		Map<String, EventType> eventTypes = eventReport.findOrCreateMachine("All").getTypes();
+		Map<String, TransactionType> transactionTypes = transactionReport.findOrCreateMachine(CatString.ALL_IP)
+		      .getTypes();
+		Map<String, EventType> eventTypes = eventReport.findOrCreateMachine(CatString.ALL_IP).getTypes();
 
 		List<TransactionType> transactionTypeList = new ArrayList<TransactionType>();
 		List<EventType> eventTypeList = new ArrayList<EventType>();
@@ -102,7 +105,7 @@ public class HealthReportCreator {
 		return info;
 	}
 
-	private BaseInfo buildBaseInfo(TransactionType type, int days) {
+	private BaseInfo buildBaseInfo(TransactionType type) {
 		BaseInfo info = new BaseInfo();
 		double responseTime = type.getAvg();
 		long total = type.getTotalCount();
@@ -160,11 +163,11 @@ public class HealthReportCreator {
 		int number = heartbeatReport.getMachines().size();
 		info.setNumbers(number);
 
-		buildMachinLoadInfo(info, heartbeatReport);
+		buildMachinInfos(info, heartbeatReport);
 		m_healthReport.setMachineInfo(info);
 	}
 
-	private void buildMachinLoadInfo(MachineInfo info, HeartbeatReport heartBeatReport) {
+	private void buildMachinInfos(MachineInfo info, HeartbeatReport heartBeatReport) {
 		Map<String, Double> loads = new HashMap<String, Double>();
 		Map<String, Double> gcs = new HashMap<String, Double>();
 		Map<String, Double> https = new HashMap<String, Double>();
@@ -325,7 +328,6 @@ public class HealthReportCreator {
 	}
 
 	private void buildReportInfo(TransactionReport transactionReport) {
-		long day = 24 * 60 * 60 * 1000L;
 		Date startTime = transactionReport.getStartTime();
 		Date endTime = transactionReport.getEndTime();
 
@@ -333,18 +335,16 @@ public class HealthReportCreator {
 		m_healthReport.setStartTime(startTime);
 		m_healthReport.setEndTime(endTime);
 		m_healthReport.setDomain(transactionReport.getDomain());
-		m_healthReport.setDay((int) ((endTime.getTime() - startTime.getTime()) / day) + 1);
 	}
 
 	private void buildTansactionInfo(TransactionReport transactionReport) {
-		Machine machine = transactionReport.getMachines().get("All");
+		Machine machine = transactionReport.findOrCreateMachine(CatString.ALL_IP);
 		Map<String, TransactionType> types = machine.getTypes();
-		int days = m_healthReport.getDay();
 
 		TransactionType url = types.get("URL");
 		if (url != null) {
 			Url temp = new Url();
-			BaseInfo urlBaseInfo = buildBaseInfo(url, days);
+			BaseInfo urlBaseInfo = buildBaseInfo(url);
 			temp.setBaseInfo(urlBaseInfo);
 			m_healthReport.setUrl(temp);
 		} else {
@@ -356,7 +356,7 @@ public class HealthReportCreator {
 
 		TransactionType service = types.get("Service");
 		if (service != null) {
-			BaseInfo serviceBaseInfo = buildBaseInfo(service, days);
+			BaseInfo serviceBaseInfo = buildBaseInfo(service);
 			Service temp = new Service();
 			temp.setBaseInfo(serviceBaseInfo);
 			m_healthReport.setService(temp);
@@ -369,7 +369,7 @@ public class HealthReportCreator {
 
 		TransactionType call = types.get("Call");
 		if (call != null) {
-			BaseInfo callBaseInfo = buildBaseInfo(call, days);
+			BaseInfo callBaseInfo = buildBaseInfo(call);
 			Call temp = new Call();
 			temp.setBaseInfo(callBaseInfo);
 			m_healthReport.setCall(temp);
@@ -382,7 +382,7 @@ public class HealthReportCreator {
 
 		TransactionType sql = types.get("SQL");
 		if (sql != null) {
-			BaseInfo sqlBaseInfo = buildBaseInfo(sql, days);
+			BaseInfo sqlBaseInfo = buildBaseInfo(sql);
 			Sql temp = new Sql();
 			temp.setBaseInfo(sqlBaseInfo);
 			m_healthReport.setSql(temp);
@@ -407,7 +407,10 @@ public class HealthReportCreator {
 		}
 		MapEntry result = new MapEntry();
 
-		result.setAvg(total / maps.size()).setIp(ip).setMax(max);
+		if (maps.size() > 0) {
+			result.setAvg(total / maps.size());
+		}
+		result.setIp(ip).setMax(max);
 		return result;
 	}
 
@@ -444,7 +447,6 @@ public class HealthReportCreator {
 			m_max = max;
 			return this;
 		}
-
 	}
 
 }

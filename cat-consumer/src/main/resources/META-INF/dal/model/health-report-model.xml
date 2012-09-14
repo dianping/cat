@@ -6,7 +6,6 @@
     <attribute name="domain" value-type="String"  key="true"/>
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
-    <attribute name="day" value-type="int"  primitive="true"/>
     <element name="domain" value-type="String" type="set" names="domainNames" />
     <entity-ref name="problem-info" />
     <entity-ref name="url" />
