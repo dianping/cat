@@ -105,8 +105,10 @@ public class HealthReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeMachineInfo(MachineInfo old, MachineInfo machineInfo) {
-		old.setNumbers(machineInfo.getNumbers());
-
+		if (machineInfo.getNumbers() > 0) {
+			old.setNumbers(machineInfo.getNumbers());
+		}
+		
 		int avgLoadCount = old.getAvgLoadCount() + machineInfo.getAvgLoadCount();
 		double avgLoadSum = old.getAvgLoadSum() + machineInfo.getAvgLoadSum();
 		if (avgLoadCount > 0) {

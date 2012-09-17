@@ -33,7 +33,7 @@ public enum ReportPage implements Page {
 
    HEALTH("health", "health", "Health", "Health", true),
 
-   MONTHREPORT("monthreport", "monthreport", "monthreport", "Month Report", true),
+   MONTHREPORT("monthreport", "monthreport", "monthreport", "Month Report", false),
 
    CROSS("cross", "cross", "Cross", "Cross", true),
 

@@ -38,9 +38,9 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = new HashSet<String>();
+		
 		getDomainSet(domainSet, reportPeriod, endDate);
 		HealthReportMerger merger = new HealthReportMerger(new HealthReport(reportDomain));
 
@@ -72,6 +72,12 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		report.setName(reportName);
 		report.setPeriod(reportPeriod);
 		report.setType(1);
+
+		try {
+			m_dailyReportDao.insert(report);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 		return true;
 	}
 
@@ -128,13 +134,13 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 			for (Report report : reports) {
 				String xml = report.getContent();
 				EventReport model = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
-				model.accept(merger);	
+				model.accept(merger);
 				eventReport.getDomainNames().addAll(model.getDomainNames());
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		
+
 		eventReport.setStartTime(reportPeriod);
 		eventReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
 		return eventReport;
@@ -156,7 +162,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		
+
 		heartbeatReport.setStartTime(reportPeriod);
 		heartbeatReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
 		return heartbeatReport;
@@ -178,7 +184,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		
+
 		problemReport.setStartTime(reportPeriod);
 		problemReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
 		return problemReport;
@@ -201,7 +207,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		
+
 		transactionReport.setStartTime(reportPeriod);
 		transactionReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
 		return transactionReport;
