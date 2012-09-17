@@ -6,8 +6,8 @@ public class SmsAlarmStrategy implements AlarmStrategy {
 
 	@Override
 	public boolean doStrategy(Message message) {
-		// TODO Auto-generated method stub
-		return false;
+		 System.out.println("begin to send SMS message "+ message.getContent());		
+		 return false;
 	}
 
 }

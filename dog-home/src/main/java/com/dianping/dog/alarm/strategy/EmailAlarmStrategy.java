@@ -6,7 +6,7 @@ public class EmailAlarmStrategy implements AlarmStrategy {
 
 	@Override
    public boolean doStrategy(Message message) {
-	   // TODO Auto-generated method stub
+	   System.out.println("begin to send email message "+ message.getContent());
 	   return false;
    }
 

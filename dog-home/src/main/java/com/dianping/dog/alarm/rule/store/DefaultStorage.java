@@ -17,6 +17,10 @@ public class DefaultStorage<T extends Data> implements Storage<T> {
 
 	@Override
 	public synchronized void add(T data) {
+		if(currentData == null){
+			currentData = data;
+			return;
+		}
 		long timeSpan = compare(data.getTimeStamp(), currentData.getTimeStamp());
 		//TODO need to check the hour and date first!
 		if (timeSpan == 0) {

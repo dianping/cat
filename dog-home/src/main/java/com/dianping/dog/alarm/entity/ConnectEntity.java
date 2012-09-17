@@ -22,6 +22,16 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
 	
 	private Date gmtModified;
 	
+	private RuleEntity entity;
+	
+	public void setEntity(RuleEntity entity) {
+   	this.entity = entity;
+   }
+
+	public RuleEntity getEntity() {
+   	return entity;
+   }
+
 	public ConnectorType getConType(){
 		if(baseUrl.startsWith("http://")){
 			return ConnectorType.HTTP;

@@ -1,9 +1,7 @@
 package com.dianping.dog.alarm.problem;
 
-import java.util.List;
-
+import com.dianping.dog.alarm.entity.Duration;
 import com.dianping.dog.alarm.entity.RuleEntity;
-import com.dianping.dog.alarm.rule.AlarmType;
 import com.dianping.dog.event.Event;
 import com.dianping.dog.event.EventType;
 
@@ -13,7 +11,7 @@ public class AlertEvent implements Event{
 
 	private long time;
 
-	private List<AlarmType> typeList;
+	private Duration duration;
 
 	private int count;
 
@@ -33,13 +31,13 @@ public class AlertEvent implements Event{
    	this.time = time;
    }
 
-	public List<AlarmType> getTypeList() {
-		return typeList;
-	}
+	public Duration getDuration() {
+   	return duration;
+   }
 
-	public void setTypeList(List<AlarmType> typeList) {
-		this.typeList = typeList;
-	}
+	public void setDuration(Duration duration) {
+   	this.duration = duration;
+   }
 
 	public int getCount() {
 		return count;

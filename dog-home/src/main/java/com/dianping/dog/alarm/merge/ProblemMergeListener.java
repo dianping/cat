@@ -5,12 +5,14 @@ import java.util.List;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.dog.alarm.problem.ProblemEvent;
+import com.dianping.dog.alarm.problem.ProblemDataEvent;
+import com.dianping.dog.alarm.problem.ProblemViolationEvent;
 import com.dianping.dog.alarm.rule.Rule;
 import com.dianping.dog.alarm.rule.RuleManager;
 import com.dianping.dog.event.Event;
 import com.dianping.dog.event.EventDispatcher;
 import com.dianping.dog.event.EventListener;
+import com.dianping.dog.event.EventType;
 import com.site.lookup.annotation.Inject;
 
 public class ProblemMergeListener implements Initializable,EventListener, Runnable {
@@ -21,9 +23,10 @@ public class ProblemMergeListener implements Initializable,EventListener, Runnab
 	@Inject
 	private DefaultEventQueue m_defaultEventQueue;
 
-	private int m_queueOverflow;
-
+	@Inject
 	private RuleManager m_ruleManager;
+	
+	private int m_queueOverflow;
 
 	private volatile boolean m_active = true;
 
@@ -33,7 +36,10 @@ public class ProblemMergeListener implements Initializable,EventListener, Runnab
 
 	@Override
    public boolean isEligible(Event event) {
-	   return true;
+		if(event.getEventType() == EventType.ProblemViolationEvent){
+			return true;
+		}
+	   return false;
    }
 
 	
@@ -41,7 +47,7 @@ public class ProblemMergeListener implements Initializable,EventListener, Runnab
 	public void run() {
 		while (isActive()) {
 			try {
-				ProblemEvent event = m_defaultEventQueue.poll();
+				ProblemDataEvent event = m_defaultEventQueue.poll();
 				if (event != null) {
 					List<Rule> rules = m_ruleManager.getRules();
 					for (Rule rule : rules) {
@@ -58,7 +64,9 @@ public class ProblemMergeListener implements Initializable,EventListener, Runnab
 	}
 
 	public void onEvent(Event event) {
-		boolean result = m_defaultEventQueue.offer((ProblemEvent)event);
+		ProblemViolationEvent problemViolationEvent = (ProblemViolationEvent)event;
+		ProblemDataEvent problemEvent = problemViolationEvent.getOrigin();
+		boolean result = m_defaultEventQueue.offer(problemEvent);
 		if (!result) { // trace queue overflow
 			m_queueOverflow++;
 			if (m_queueOverflow % 1000 == 0) {

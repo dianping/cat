@@ -74,7 +74,7 @@ public class LinkedStoreQueue<T extends Data> extends ReentrantLock implements S
 		List<T> dataList = new ArrayList<T>();
 		try {
 			if (head == null) {
-				throw new NullPointerException("data");
+				return null;
 			}
 
 			Entry ctx = head;

@@ -4,27 +4,27 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import com.dianping.dog.alarm.problem.ProblemEvent;
+import com.dianping.dog.alarm.problem.ProblemDataEvent;
 import com.dianping.dog.event.EventQueue;
 import com.site.lookup.annotation.Inject;
 
 
-public class DefaultEventQueue implements EventQueue<ProblemEvent>{
-	private BlockingQueue<ProblemEvent> m_queue;
+public class DefaultEventQueue implements EventQueue<ProblemDataEvent>{
+	private BlockingQueue<ProblemDataEvent> m_queue;
 
 	@Inject
 	private int m_size;
 
 	public DefaultEventQueue(){
 		if (m_size > 0) {
-			m_queue = new LinkedBlockingQueue<ProblemEvent>(m_size);
+			m_queue = new LinkedBlockingQueue<ProblemDataEvent>(m_size);
 		} else {
-			m_queue = new LinkedBlockingQueue<ProblemEvent>(10000);
+			m_queue = new LinkedBlockingQueue<ProblemDataEvent>(10000);
 		}
 	}
 
 	@Override
-	public ProblemEvent poll() {
+	public ProblemDataEvent poll() {
 		try {
 			return m_queue.poll(5, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
@@ -33,7 +33,7 @@ public class DefaultEventQueue implements EventQueue<ProblemEvent>{
 	}
 
 	@Override
-	public boolean offer(ProblemEvent event) {
+	public boolean offer(ProblemDataEvent event) {
 		return m_queue.offer(event);
 	}
 

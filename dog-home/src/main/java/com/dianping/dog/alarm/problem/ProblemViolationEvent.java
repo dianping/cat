@@ -4,13 +4,13 @@ import com.dianping.dog.event.Event;
 import com.dianping.dog.event.EventType;
 
 public class ProblemViolationEvent implements Event {
-	private ProblemEvent m_event;
+	private ProblemDataEvent m_event;
 
-	public ProblemViolationEvent(ProblemEvent event) {
+	public ProblemViolationEvent(ProblemDataEvent event) {
 		m_event = event;
 	}
 
-	public ProblemEvent getOrigin() {
+	public ProblemDataEvent getOrigin() {
 		return m_event;
 	}
 
