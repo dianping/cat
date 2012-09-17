@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.matrix;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +34,8 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 
 	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = new HashSet<String>();
-		getDomainSet(domainSet, reportPeriod, endDate);
+		Set<String> domainSet = getDomains(reportPeriod, endDate);
+		
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
 		String content = m_matrixMerger.mergeForDaily(reportDomain, reports, domainSet).toString();

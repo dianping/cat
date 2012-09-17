@@ -2,6 +2,7 @@ package com.dianping.cat.report.task.spi;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -37,9 +38,9 @@ public abstract class AbstractReportBuilder {
 		}
 	}
 
-	protected void getDomainSet(Set<String> domainSet, Date start, Date end) {
+	protected Set<String> getDomains(Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
-
+		Set<String> result = new HashSet<String>();
 		try {
 			domainNames = m_reportDao
 			      .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
@@ -47,15 +48,17 @@ public abstract class AbstractReportBuilder {
 			Cat.logError(e);
 		}
 		if (domainNames == null || domainNames.size() == 0) {
-			return;
+			return result;
 		}
 		for (Report domainName : domainNames) {
-			domainSet.add(domainName.getDomain());
+			result.add(domainName.getDomain());
 		}
+		return result;
 	}
 
-	protected void getDatabaseSet(Set<String> domainSet, Date start, Date end) {
+	protected Set<String> getDatabases(Date start, Date end) {
 		List<Report> databaseNames = new ArrayList<Report>();
+		Set<String> result = new HashSet<String>();
 
 		try {
 			databaseNames = m_reportDao.findAllByDomainNameDuration(start, end, null, "database",
@@ -64,10 +67,11 @@ public abstract class AbstractReportBuilder {
 			Cat.logError(e);
 		}
 		if (databaseNames == null || databaseNames.size() == 0) {
-			return;
+			return result;
 		}
 		for (Report domainName : databaseNames) {
-			domainSet.add(domainName.getDomain());
+			result.add(domainName.getDomain());
 		}
+		return result;
 	}
 }

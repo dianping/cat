@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer;
 
-import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer1;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer2;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer3;

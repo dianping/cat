@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
+import com.dianping.cat.consumer.ip.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.ip.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.consumer.ip.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.ip.model.transform.DefaultDomParser;
 import com.site.helper.Files;
 
 public class IpReportTest {

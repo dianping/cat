@@ -2,7 +2,6 @@ package com.dianping.cat.report.task.event;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -58,13 +57,13 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 	private Dailyreport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
 	      throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = new HashSet<String>();
-		getDomainSet(domainSet, reportPeriod, endDate);
+		Set<String> domainSet = getDomains(reportPeriod, endDate);
 		String content = null;
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
 		content = m_eventMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 		Dailyreport report = m_dailyReportDao.createLocal();
+		
 		report.setContent(content);
 		report.setCreationDate(new Date());
 		report.setDomain(reportDomain);

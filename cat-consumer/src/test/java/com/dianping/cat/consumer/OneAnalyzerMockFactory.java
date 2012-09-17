@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer;
 
-import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.OneAnalyzerTwoDurationTest.MockAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 

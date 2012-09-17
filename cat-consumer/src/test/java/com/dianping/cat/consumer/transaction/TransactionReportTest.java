@@ -4,9 +4,9 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.site.helper.Files;
 
 public class TransactionReportTest {

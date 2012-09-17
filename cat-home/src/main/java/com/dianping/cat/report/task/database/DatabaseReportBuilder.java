@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.database;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +34,7 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 
 	private Dailyreport getDailyReport(String reportName, String reportDatabase, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> databaseSet = new HashSet<String>();
-		getDatabaseSet(databaseSet, reportPeriod, endDate);
+		Set<String> databaseSet = getDatabases(reportPeriod, endDate);
 		List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(reportPeriod, endDate, reportDatabase,
 		      reportName, ReportEntity.READSET_FULL);
 		String content = m_databaseMerger.mergeForDaily(reportDatabase, reports, databaseSet).toString();

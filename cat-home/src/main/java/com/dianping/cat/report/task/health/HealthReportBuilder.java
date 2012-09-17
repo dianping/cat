@@ -1,7 +1,6 @@
 package com.dianping.cat.report.task.health;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -39,9 +38,6 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = new HashSet<String>();
-		
-		getDomainSet(domainSet, reportPeriod, endDate);
 		HealthReportMerger merger = new HealthReportMerger(new HealthReport(reportDomain));
 
 		List<Report> reports = null;
@@ -93,6 +89,8 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		HealthReportCreator healthReportCreator = new HealthReportCreator();
 		HealthReport report = healthReportCreator.build(transactionReport, eventReport, problemReport, heartbeatReport,
 		      infos);
+		Set<String> domains = getDomains(reportPeriod, new Date(reportPeriod.getTime() + ONE_HOUR));
+		report.getDomainNames().addAll(domains);
 		return report;
 	}
 
