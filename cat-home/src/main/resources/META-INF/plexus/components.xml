@@ -332,6 +332,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.monthreport.MonthReportBuilderTask</role>
+			<implementation>com.dianping.cat.report.task.monthreport.MonthReportBuilderTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
@@ -1903,6 +1915,34 @@
 		<component>
 			<role>com.dianping.cat.report.page.health.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.health.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.monthreport.Handler</role>
+			<implementation>com.dianping.cat.report.page.monthreport.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.monthreport.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
+			<implementation>com.dianping.cat.hadoop.dal.MonthreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.cross.Handler</role>

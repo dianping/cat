@@ -1,0 +1,38 @@
+<problem-report domain="Cat" startTime="2012-06-26 16:00:00"
+	endTime="2012-06-26 16:59:59">
+	<domain>Cat</domain>
+	<ip>All</ip>
+	<machine ip="192.168.165.1">
+		<entry type="error" status="home">
+			<duration value="0" count="310">
+				<message>Cat-c0a8a501-1340700793743-0</message>
+			</duration>
+		</entry>
+		<entry type="long-url" status="home">
+			<duration value="500" count="155">
+				<message>Cat-c0a8a501-1340700793743-0</message>
+			</duration>
+			<duration value="1500" count="155">
+				<message>Cat-c0a8a501-1340700793743-0</message>
+			</duration>
+		</entry>
+		<entry type="long-cache" status="home">
+			<duration value="0" count="620">
+				<message>Cat-c0a8a501-1340700793743-0</message>
+			</duration>
+		</entry>
+		<entry type="long-service" status="home">
+			<duration value="0" count="62">
+				<message>Cat-c0a8a501-1340700793743-0</message>
+			</duration>
+		</entry>
+		<entry type="long-sql" status="home">
+			<duration value="50" count="31">
+				<message>Cat-c0a8a501-1340700793743-0</message>
+			</duration>
+			<duration value="150" count="31">
+				<message>Cat-c0a8a501-1340700793743-0</message>
+			</duration>
+		</entry>
+	</machine>
+</problem-report>

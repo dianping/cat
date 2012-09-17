@@ -56,6 +56,9 @@
          <page name="database" title="Database" path="database">
             <description>Database</description>
          </page>
+         <page name="14" title="14" path="monthreport">
+            <description>14</description>
+         </page>
       </module>
    </webapp>
 </wizard>

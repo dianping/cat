@@ -11,6 +11,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.report.page.ip.location.IPSeekerManager;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.TaskConsumer;
+import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
 import com.site.helper.Threads;
 import com.site.initialization.AbstractModule;
 import com.site.initialization.Module;
@@ -30,10 +31,12 @@ public class CatHomeModule extends AbstractModule {
 
 		TaskConsumer taskConsumer = ctx.lookup(TaskConsumer.class);
 		DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);
+		MonthReportBuilderTask monthReportTask = ctx.lookup(MonthReportBuilderTask.class);
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 			Threads.forGroup("Cat").start(taskConsumer);
+			Threads.forGroup("Cat").start(monthReportTask);
 		}
 	}
 

@@ -8,6 +8,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.dal.DailyreportDao;
 import com.dianping.cat.hadoop.dal.GraphDao;
 import com.dianping.cat.hadoop.dal.HostinfoDao;
+import com.dianping.cat.hadoop.dal.MonthreportDao;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -35,6 +36,7 @@ import com.dianping.cat.report.task.heartbeat.HeartbeatMerger;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixMerger;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
+import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
@@ -124,6 +126,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
 		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
+
+		all.add(C(MonthReportBuilderTask.class, MonthReportBuilderTask.class).//
+		      req(DailyreportDao.class, MonthreportDao.class));
 
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

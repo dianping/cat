@@ -32,22 +32,6 @@
     <attribute name="longCaches" value-type="long" primitive="true" />
     <attribute name="avg-longCaches" value-type="double" primitive="true" format="0.00"/>
     <attribute name="long-cachePercent" value-type="double" primitive="true"  format="0.000000"/>
-    
-    <attribute name="exceptions-flag" value-type="int"  primitive="true"/>
-    <attribute name="avg-exceptions-flag" value-type="int" primitive="true" />
-    <attribute name="longSqls-flag" value-type="int"  primitive="true"/>
-    <attribute name="avg-longSqls-flag" value-type="int" primitive="true" />
-    <attribute name="long-sqlPercent-flag" value-type="int" primitive="true" />
-    <attribute name="longUrls-flag" value-type="int"  primitive="true"/>
-    <attribute name="avg-longUrls-flag" value-type="int" primitive="true" />
-    <attribute name="long-urlPercent-flag" value-type="int" primitive="true" />
-    <attribute name="longServices-flag" value-type="int"  primitive="true"/>
-    <attribute name="avg-longServices-flag" value-type="int" primitive="true" />
-    <attribute name="long-servicePercent-flag" value-type="int" primitive="true" />
-    <attribute name="longCaches-flag" value-type="int" primitive="true" />
-    <attribute name="avg-longCaches-flag" value-type="int" primitive="true" />
-    <attribute name="long-cachePercent-flag" value-type="int" primitive="true" />
-    
   </entity>
   <entity name="url">
     <entity-ref name="base-info" />
@@ -60,14 +44,6 @@
     <attribute name="error-avg" value-type="double" primitive="true" format="0.00"/>
     <attribute name="error-percent" value-type="double" primitive="true"  format="0.000000"/>
     <attribute name="success-percent" value-type="double" primitive="true"  format="0.000000"/>
-    
-    <attribute name="total-flag" value-type="int"  primitive="true"/>
-    <attribute name="avg-flag" value-type="int" primitive="true" />
-    <attribute name="response-time-flag" value-type="int" primitive="true" />
-    <attribute name="error-total-flag" value-type="int"  primitive="true"/>
-    <attribute name="error-avg-flag" value-type="int" primitive="true" />
-    <attribute name="error-percent-flag" value-type="int" primitive="true" />
-    <attribute name="success-percent-flag" value-type="int" primitive="true"/>
   </entity>
   <entity name="service">
     <entity-ref name="base-info" />
@@ -86,11 +62,6 @@
     <attribute name="avg" value-type="double" primitive="true" format="0.00"/>
     <attribute name="response-time" value-type="double" primitive="true" format="0.00"/>
     <attribute name="hit-percent" value-type="double" primitive="true" format="0.000000"/>
-    
-    <attribute name="total-flag" value-type="int"  primitive="true"/>
-    <attribute name="avg-flag" value-type="int" primitive="true" />
-    <attribute name="response-time-flag" value-type="int" primitive="true" />
-    <attribute name="hit-percent-flag" value-type="int" primitive="true" />
   </entity>
   <entity name="kvdb-cache">
     <entity-ref name="base-cache-info" />
