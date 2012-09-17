@@ -44,6 +44,9 @@
          <page name="health" title="Health" path="health">
             <description>Health</description>
          </page>
+         <page name="monthreport" title="monthreport" path="monthreport">
+            <description>Month Report</description>
+         </page>
          <page name="cross" title="Cross" path="cross">
             <description>Cross</description>
          </page>

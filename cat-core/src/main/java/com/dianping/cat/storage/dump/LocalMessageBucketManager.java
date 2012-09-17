@@ -72,6 +72,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 				try {
 					bucket.archive();
+					m_logger.info("archive the buck " + key);
 				} catch (IOException e) {
 					m_logger.error("Error when archive the buck " + key, e);
 				}
