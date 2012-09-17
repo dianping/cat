@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.dianping.dog.alarm.problem.ProblemEvent;
+import com.dianping.dog.alarm.problem.ProblemDataEvent;
 import com.dianping.dog.event.DefaultEventDispatcher;
 import com.dianping.dog.event.Event;
 import com.dianping.dog.event.EventDispatcher;
@@ -61,7 +61,8 @@ public class DataService extends ContainerHolder implements LifeCycle {
 							}
 							Event event = null;
 							if (data.getType() == EventType.ProblemDataEvent) {
-								event = new ProblemEvent(data);
+								//System.out.println("get Data from:"+con.getConnectorEntity().getUrl());
+								event = new ProblemDataEvent(data);
 							}
 							if (event != null) {
 								m_eventDispatcher.dispatch(event);

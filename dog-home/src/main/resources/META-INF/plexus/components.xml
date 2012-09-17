@@ -6,6 +6,14 @@
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
+			<role>com.dianping.dog.alarm.rule.message.MessageCreaterFactory</role>
+			<implementation>com.dianping.dog.alarm.rule.message.MessageCreaterFactory</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.strategy.AlarmStrategyFactory</role>
+			<implementation>com.dianping.dog.alarm.strategy.AlarmStrategyFactory</implementation>
+		</component>
+		<component>
 			<role>com.dianping.dog.event.EventListenerRegistry</role>
 			<implementation>com.dianping.dog.event.DefaultEventListenerRegistry</implementation>
 		</component>
@@ -28,11 +36,35 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.dog.alarm.rule.RuleManager</role>
+			<implementation>com.dianping.dog.alarm.rule.DefaultRuleManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.event.EventDispatcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.dog.alarm.merge.ProblemMergeListener</role>
 			<implementation>com.dianping.dog.alarm.merge.ProblemMergeListener</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.dog.alarm.merge.DefaultEventQueue</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.alarm.rule.RuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.alert.AlertEventListener</role>
+			<implementation>com.dianping.dog.alarm.alert.AlertEventListener</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.alarm.rule.message.MessageCreaterFactory</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.alarm.strategy.AlarmStrategyFactory</role>
 				</requirement>
 			</requirements>
 		</component>

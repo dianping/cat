@@ -1,22 +1,20 @@
 package com.dianping.dog.alarm.problem;
 
-import java.util.Date;
-
 import com.dianping.dog.alarm.connector.RowData;
 import com.dianping.dog.alarm.data.DataEvent;
 import com.dianping.dog.event.EventType;
 
-public class ProblemEvent implements DataEvent {
+public class ProblemDataEvent implements DataEvent {
 	
    private RowData rowData;
 
-	public ProblemEvent(RowData rowData){
+	public ProblemDataEvent(RowData rowData){
 	   this.rowData = rowData;
    }
 
 	@Override
-	public Date getTimestamp() {
-		return rowData.getData("time");
+	public long getTimestamp() {
+		return rowData.getTimeStamp();
 	}
 
 	@Override
@@ -57,6 +55,16 @@ public class ProblemEvent implements DataEvent {
 	@Override
 	public EventType getEventType() {
 		return EventType.ProblemDataEvent;
+	}
+	
+	public String getUnicodeString(){
+		StringBuilder sb = new StringBuilder();
+		sb.append(this.getIp() + "@");
+		sb.append(this.getReport()+"@");
+		sb.append(this.getDomain() + "@");
+		sb.append(this.getType() + "@");
+		sb.append(this.getName());
+		return sb.toString();
 	}
 
 }

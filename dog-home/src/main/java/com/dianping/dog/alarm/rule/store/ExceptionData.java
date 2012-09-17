@@ -15,7 +15,7 @@ public class ExceptionData implements Data {
 	public ExceptionData merge(Data data) {
 		ExceptionData eData = (ExceptionData) data;
 		this.timeStamp = data.getTimeStamp();
-		this.totalCount += eData.getTotalCount();
+		this.totalCount = this.totalCount + eData.getTotalCount();
 		return this;
 	}
 

@@ -1,6 +1,6 @@
 package com.dianping.dog.alarm.filter;
 
-import com.dianping.dog.alarm.problem.ProblemEvent;
+import com.dianping.dog.alarm.problem.ProblemDataEvent;
 import com.dianping.dog.alarm.problem.ProblemViolationEvent;
 import com.dianping.dog.event.Event;
 import com.dianping.dog.event.EventDispatcher;
@@ -15,7 +15,7 @@ public class ProblemFilterListener implements EventListener{
 
 	@Override
    public void onEvent(Event event) {
-		ProblemViolationEvent vEvent  = new ProblemViolationEvent((ProblemEvent) event);
+		ProblemViolationEvent vEvent  = new ProblemViolationEvent((ProblemDataEvent) event);
 		m_eventdispatcher.dispatch(vEvent);
    }
 

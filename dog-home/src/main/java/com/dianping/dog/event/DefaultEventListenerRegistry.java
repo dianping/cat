@@ -7,20 +7,24 @@ public class DefaultEventListenerRegistry implements EventListenerRegistry {
 	private List<EventListener> m_listeners = new ArrayList<EventListener>();
 
 	@Override
-	public synchronized List<EventListener> getListeners() {
+	public List<EventListener> getListeners() {
 		List<EventListener> listeners = new ArrayList<EventListener>();
-		for (EventListener listener : m_listeners) {
-			listeners.add(listener);
+		synchronized (m_listeners) {
+			for (EventListener listener : m_listeners) {
+				listeners.add(listener);
+			}
 		}
 		return listeners;
 	}
 
-   @Override
-	public synchronized void register(EventListener listener) {
-		if (m_listeners == null) {
-			m_listeners = new ArrayList<EventListener>();
+	@Override
+	public void register(EventListener listener) {
+		synchronized (m_listeners) {
+			if (m_listeners == null) {
+				m_listeners = new ArrayList<EventListener>();
+			}
+			m_listeners.add((EventListener) listener);
 		}
-		m_listeners.add((EventListener) listener);
 	}
 
 }

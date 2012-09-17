@@ -6,12 +6,15 @@ import com.dianping.dog.alarm.data.DataEvent;
 import com.dianping.dog.alarm.entity.Duration;
 import com.dianping.dog.alarm.entity.RuleEntity;
 import com.dianping.dog.alarm.problem.AlertEvent;
+import com.dianping.dog.alarm.problem.ProblemDataEvent;
 import com.dianping.dog.alarm.rule.Rule;
 import com.dianping.dog.alarm.rule.store.Data;
 import com.dianping.dog.alarm.rule.store.DefaultStorage;
 import com.dianping.dog.alarm.rule.store.ExceptionData;
 import com.dianping.dog.alarm.rule.store.Storage;
+import com.dianping.dog.event.Event;
 import com.dianping.dog.event.EventDispatcher;
+import com.dianping.dog.event.EventType;
 
 public class ExceptionRule implements Rule {
 	private Storage<ExceptionData> storage = null;
@@ -37,18 +40,33 @@ public class ExceptionRule implements Rule {
 	public String getName() {
 		return "Exception rule";
 	}
+	
+	@Override
+   public long getRuleId() {
+	   return m_entity.getId();
+   }
 
 	@Override
-	public boolean isEligible(DataEvent event) {
-
+	public boolean isEligible(Event event) {
+		if(event.getEventType() != EventType.ProblemDataEvent){
+			return false;
+		}
+		ProblemDataEvent dataEvent = (ProblemDataEvent) event;
+		if(this.m_entity.getUnicodeString().equals(dataEvent.getUnicodeString())){
+			return true;
+		}
 		return false;
 	}
 
 	@Override
-	public boolean apply(DataEvent event) {
-		saveData(event);
+	public boolean apply(Event event) {
+		DataEvent dataEvent = (DataEvent) event;
+		saveData(dataEvent);
 		long currentTime = getCurrentTime();
 		List<ExceptionData>  dataList = storage.getDataList();
+		if(dataList == null){
+			return false;
+		}
 		int totalCount = 0;
 		for(ExceptionData data:dataList){
 			if(!isIn(data,currentTime)){
@@ -62,7 +80,7 @@ public class ExceptionRule implements Rule {
 				AlertEvent alarmEvent = new AlertEvent();
 				alarmEvent.setEntity(m_entity);
 				alarmEvent.setTime(currentTime);
-				alarmEvent.setTypeList(duration.getAlarmType());
+				alarmEvent.setDuration(duration);
 				alarmEvent.setCount(totalCount);
 				dispatcher.dispatch(alarmEvent);
 				return true;
@@ -73,7 +91,7 @@ public class ExceptionRule implements Rule {
 
 	public void saveData(DataEvent event) {
 		ExceptionData data = new ExceptionData();
-		data.setTimeStamp(event.getTimestamp().getTime());
+		data.setTimeStamp(event.getTimestamp());
 		data.setTotalCount(event.getTotalCount());
 		storage.add(data);
 	}
@@ -95,4 +113,5 @@ public class ExceptionRule implements Rule {
    public void setDispatcher(EventDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
    }
+		
 }
