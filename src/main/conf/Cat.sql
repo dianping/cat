@@ -136,3 +136,26 @@ CREATE TABLE `location` (
 ) DEFAULT CHARSET=utf8 COMMENT='热点数据';
 
 CREATE UNIQUE INDEX transaction_date_lat_lng ON location (transaction_date, lat, lng); 
+
+CREATE TABLE `hostinfo` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(50) NOT NULL COMMENT '机器的IP信息',
+  `domain` varchar(50) NOT NULL COMMENT 'IP对应项目信息',
+  `creation_date` datetime NOT NULL,
+  `last_modified_date` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ip_index` (`ip`)
+) 
+
+CREATE TABLE `sqltable` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(50) DEFAULT NULL COMMENT '这条sql语句的属于项目名',
+  `sql_name` varchar(100) DEFAULT NULL COMMENT 'sql 语句的简写',
+  `table_name` varchar(100) DEFAULT NULL COMMENT 'sql语句操作的表名',
+  `sql_statement` varchar(1000) DEFAULT NULL COMMENT '具体的sql名称',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`),
+  KEY `domain` (`domain`),
+  KEY `sql_name` (`sql_name`)
+)
