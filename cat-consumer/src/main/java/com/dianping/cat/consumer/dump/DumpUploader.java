@@ -175,11 +175,6 @@ public class DumpUploader implements Initializable, LogEnabled {
 						if (!file.delete()) {
 							m_logger.warn("Can't delete file: " + file);
 						}
-
-						if (i == len - 1) {
-							file.getParentFile().delete(); // try to delete parent dir
-							file.getParentFile().getParentFile().delete(); // try to delete parent dir
-						}
 					} catch (AccessControlException e) {
 						cat.logError(e);
 						t.setStatus(e);
@@ -195,6 +190,28 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 				root.complete();
 				Cat.reset();
+			}
+			
+			// the path has two depth
+			for (int i = 0; i < 2; i++) {
+				final List<String> directionPaths = new ArrayList<String>();
+				Scanners.forDir().scan(baseDir, new FileMatcher() {
+					@Override
+					public Direction matches(File base, String path) {
+						if (new File(base, path).isDirectory()) {
+							directionPaths.add(path);
+						}
+
+						return Direction.DOWN;
+					}
+				});
+				for (String path : directionPaths) {
+					try {
+						File file = new File(baseDir, path);
+						file.delete();
+					} catch (Exception e) {
+					}
+				}
 			}
 		}
 	}

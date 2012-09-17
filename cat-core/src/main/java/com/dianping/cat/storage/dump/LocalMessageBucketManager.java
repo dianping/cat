@@ -2,6 +2,7 @@ package com.dianping.cat.storage.dump;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,6 +27,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.site.helper.Files;
 import com.site.helper.Scanners;
 import com.site.helper.Scanners.FileMatcher;
 import com.site.helper.Threads;
@@ -36,6 +38,8 @@ import com.site.lookup.annotation.Inject;
 public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
       LogEnabled {
 	public static final String ID = "local";
+
+	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -72,7 +76,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 				try {
 					bucket.archive();
-					m_logger.info("archive the buck " + key);
+					m_logger.info("archive the bucket " + key);
 				} catch (IOException e) {
 					m_logger.error("Error when archive the buck " + key, e);
 				}
@@ -120,6 +124,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		Threads.forGroup("Cat").start(new BlockDumper());
 		Threads.forGroup("Cat").start(new IdleChecker());
+		Threads.forGroup("Cat").start(new OldMessageUploader());
 	}
 
 	@Override
@@ -265,6 +270,97 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void shutdown() {
 		}
+	}
+
+	private boolean isFit(String path) {
+		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
+			return false;
+		}
+		long current = System.currentTimeMillis();
+		long currentHour = current - current % ONE_HOUR;
+		long lastHour = currentHour - ONE_HOUR;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
+		String currentHourStr = sdf.format(new Date(currentHour));
+		String lastHourStr = sdf.format(new Date(lastHour));
+
+		int indexOf = path.indexOf(currentHourStr);
+		int indexOf2 = path.indexOf(lastHourStr);
+		if (indexOf > -1 || indexOf2 > -1) {
+			return false;
+		}
+		return true;
+	}
+
+	private void uploadOld() {
+		final List<String> paths = new ArrayList<String>();
+
+		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (new File(base, path).isFile()) {
+					if (isFit(path)) {
+						paths.add(path);
+					}
+				}
+				return Direction.DOWN;
+			}
+		});
+		if (paths.size() > 0) {
+			Transaction t = Cat.newTransaction("System", "MoveOldMessages");
+			t.setStatus(Message.SUCCESS);
+
+			for (String path : paths) {
+				try {
+					Cat.getProducer().logEvent("System", "MoveOldMessages", Message.SUCCESS, path);
+					File outbox = new File(m_baseDir, "outbox");
+					File from = new File(m_baseDir, path);
+					File to = new File(outbox, path);
+
+					to.getParentFile().mkdirs();
+					Files.forDir().copyFile(from, to);
+					Files.forDir().delete(from);
+
+					File parentFile = from.getParentFile();
+
+					parentFile.delete(); // delete it if empty
+					parentFile.getParentFile().delete(); // delete it if empty
+				} catch (Exception e) {
+					t.setStatus(Message.SUCCESS);
+					Cat.logError(e);
+				} finally {
+				}
+			}
+			t.complete();
+		}
+	}
+
+	class OldMessageUploader implements Task {
+
+		@Override
+		public void run() {
+			while (true) {
+				try {
+					uploadOld();
+				} catch (Throwable e) {
+					Cat.logError(e);
+				}
+				try {
+					Thread.sleep(60 * 1000L);
+				} catch (InterruptedException e) {
+					// ignore
+				}
+			}
+		}
+
+		@Override
+		public String getName() {
+			return "MessageUpload-Clean";
+		}
+
+		@Override
+		public void shutdown() {
+		}
+
 	}
 
 	class IdleChecker implements Task {

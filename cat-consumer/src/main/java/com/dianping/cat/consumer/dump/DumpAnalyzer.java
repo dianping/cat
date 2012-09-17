@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -18,6 +21,8 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.site.helper.Threads;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
@@ -40,12 +45,17 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	private Logger m_logger;
 
+	private final BlockingQueue<MessageTree> m_messages = new LinkedBlockingDeque<MessageTree>(10000);
+
+	private boolean m_writeMessagesEnd = true;
+
+	private int m_overflow;
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
-		if (atEnd) {
-			m_bucketManager.archive(m_startTime);
-			m_channelManager.closeAllChannels(m_startTime);
-		}
+		m_writeMessagesEnd = false;
+		m_bucketManager.archive(m_startTime);
+		m_channelManager.closeAllChannels(m_startTime);
 	}
 
 	@Override
@@ -74,6 +84,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		if (!m_localMode) {
 			m_uploader.start();
 		}
+
+		Threads.forGroup("Cat").start(new WriteOldMessage());
 	}
 
 	@Override
@@ -95,22 +107,14 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 		if (id.getVersion() == 1) {
 			if (!m_localMode) {
-				try {
-					String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-					long timestamp = tree.getMessage().getTimestamp();
-					String domain = tree.getDomain();
-					String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
-					DumpChannel channel = m_channelManager.openChannel(path, false, m_startTime);
-					int length = channel.write(tree);
+				boolean result = m_messages.offer(tree);
 
-					if (length <= 0) {
-						m_channelManager.closeChannel(channel);
+				if (result == false) {
+					m_overflow++;
 
-						channel = m_channelManager.openChannel(path, true, m_startTime);
-						channel.write(tree);
+					if (m_overflow == 1 || m_overflow % 10000 == 1) {
+						m_logger.error("Error when dumping to local file system, version 2 ! overflow:" + m_overflow);
 					}
-				} catch (Exception e) {
-					m_logger.error("Error when dumping to local file system, version 1!", e);
 				}
 			}
 		} else {
@@ -120,21 +124,21 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 				m_logger.error("Error when dumping to local file system, version 2!", e1);
 			}
 
-			String realDomain = tree.getDomain();
-			String rootDomain = id.getDomain();
-			// Store an other messagetree for mapreduce, sample for domain A invoke domain B
-			if (!realDomain.equals(rootDomain)) {
-				try {
-					String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-					long timestamp = tree.getMessage().getTimestamp();
-					String domain = tree.getDomain();
-					String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
-					DumpChannel channel = m_channelManager.openChannel(path, false, m_startTime);
-					channel.write(tree.getMessageId());
-				} catch (Exception e) {
-					m_logger.error("Error when dumping to local file system!", e);
-				}
-			}
+			// String realDomain = tree.getDomain();
+			// String rootDomain = id.getDomain();
+			// // Store an other messagetree for mapreduce, sample for domain A invoke domain B
+			// if (!realDomain.equals(rootDomain)) {
+			// try {
+			// String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			// long timestamp = tree.getMessage().getTimestamp();
+			// String domain = tree.getDomain();
+			// String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
+			// DumpChannel channel = m_channelManager.openChannel(path, false, m_startTime);
+			// channel.write(tree.getMessageId());
+			// } catch (Exception e) {
+			// m_logger.error("Error when dumping to local file system!", e);
+			// }
+			// }
 		}
 	}
 
@@ -143,4 +147,53 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		m_startTime = startTime;
 		m_duration = duration;
 	}
+
+	public class WriteOldMessage implements Task {
+
+		private int m_errors = 0;
+
+		@Override
+		public void run() {
+			while (m_writeMessagesEnd) {
+				try {
+					MessageTree tree = m_messages.poll(5, TimeUnit.MILLISECONDS);
+					if (tree != null) {
+						String ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+						long timestamp = tree.getMessage().getTimestamp();
+						String domain = tree.getDomain();
+						String path = m_builder.getMessagePath(domain + "-" + ipAddress, new Date(timestamp));
+						DumpChannel channel = m_channelManager.openChannel(path, false, m_startTime);
+						int length = channel.write(tree);
+
+						if (length <= 0) {
+							m_channelManager.closeChannel(channel);
+
+							channel = m_channelManager.openChannel(path, true, m_startTime);
+							channel.write(tree);
+						}
+					} else {
+						if (m_writeMessagesEnd == false) {
+							m_logger.info("write version 1 message tree end");
+							break;
+						}
+					}
+				} catch (Exception e) {
+					m_errors++;
+					if (m_errors == 1 || m_errors % 1000 == 1) {
+						m_logger.error("Error when dumping to local file system, version 1!", e);
+					}
+				}
+			}
+		}
+
+		@Override
+		public String getName() {
+			return "Write-OldMessageTree";
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+
 }

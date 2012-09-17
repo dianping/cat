@@ -28,6 +28,7 @@ public class MonthReportBuilder {
 	private MonthReport m_monthReport = new MonthReport();
 
 	public MonthReport build(TransactionReport transactionReport, EventReport eventReport, ProblemReport problemReport) {
+		
 		buildReportInfo(transactionReport);
 		buildProblemInfo(problemReport);
 		buildTansactionInfo(transactionReport);

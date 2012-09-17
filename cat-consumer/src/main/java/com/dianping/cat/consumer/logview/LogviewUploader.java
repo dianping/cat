@@ -86,7 +86,6 @@ public class LogviewUploader implements Task, Initializable, LogEnabled {
 		m_active = true;
 	}
 
-	// TODO try to remove it
 	public boolean isLocalMode() {
 		return m_localMode;
 	}
