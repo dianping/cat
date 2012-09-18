@@ -191,10 +191,11 @@ public class DumpUploader implements Initializable, LogEnabled {
 				root.complete();
 				Cat.reset();
 			}
-			
+
 			// the path has two depth
 			for (int i = 0; i < 2; i++) {
 				final List<String> directionPaths = new ArrayList<String>();
+				
 				Scanners.forDir().scan(baseDir, new FileMatcher() {
 					@Override
 					public Direction matches(File base, String path) {
@@ -208,6 +209,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 				for (String path : directionPaths) {
 					try {
 						File file = new File(baseDir, path);
+				
 						file.delete();
 					} catch (Exception e) {
 					}
