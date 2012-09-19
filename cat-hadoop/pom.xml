@@ -71,7 +71,7 @@
 							<goal>dal-jdbc</goal>
 						</goals>
 						<configuration>
-							<manifest>${basedir}/src/main/resources/META-INF/dal/model/manifest.xml</manifest>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/jdbc/manifest.xml</manifest>
 						</configuration>
 					</execution>
 					<execution>

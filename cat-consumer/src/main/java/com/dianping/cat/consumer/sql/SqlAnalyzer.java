@@ -284,6 +284,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 			index = temp.indexOf("/");
 			int index2 = temp.indexOf("?");
 			String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
+			
 			return schema;
 		} catch (Exception e) {
 		}

@@ -11,7 +11,7 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class ParseCrossInfoTest {
+public class ParseCrossInfoTest{
 
 	@Test
 	public void testParsePigeonClientTransaction() {
