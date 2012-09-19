@@ -15,7 +15,6 @@
 	<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
 	<res:useJs value="${res.js.local.trendGraph_js}" target="head-js" />
 <br>
-<h2 style="text-algin:center;">健康指数：***</h2>
 <div style="float: left;width:100%">
 	<div style="width: 33%; float: left;">
 				<table class="health">
