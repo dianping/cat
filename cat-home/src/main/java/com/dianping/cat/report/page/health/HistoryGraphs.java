@@ -70,40 +70,40 @@ public class HistoryGraphs {
 					result[i] = report.getUrl().getBaseInfo().getTotal();
 				} else if (key.equalsIgnoreCase("UrlErrorTotal")) {
 					result[i] = report.getUrl().getBaseInfo().getErrorTotal();
-				} else if (key.equalsIgnoreCase("UrlErrorPercent")) {
-					result[i] = report.getUrl().getBaseInfo().getErrorPercent();
+				} else if (key.equalsIgnoreCase("UrlSuccessPercent")) {
+					result[i] = report.getUrl().getBaseInfo().getSuccessPercent();
 				} else if (key.equalsIgnoreCase("ServiceResponseTime")) {
 					result[i] = report.getService().getBaseInfo().getResponseTime();
 				} else if (key.equalsIgnoreCase("ServiceTotal")) {
 					result[i] = report.getService().getBaseInfo().getTotal();
 				} else if (key.equalsIgnoreCase("ServiceErrorTotal")) {
 					result[i] = report.getService().getBaseInfo().getErrorTotal();
-				} else if (key.equalsIgnoreCase("ServiceErrorPercent")) {
-					result[i] = report.getService().getBaseInfo().getErrorPercent();
+				} else if (key.equalsIgnoreCase("ServiceSuccessPercent")) {
+					result[i] = report.getService().getBaseInfo().getSuccessPercent();
 				} else if (key.equalsIgnoreCase("ClientServiceResponseTime")) {
 					result[i] = report.getClientService().getBaseInfo().getResponseTime();
 				} else if (key.equalsIgnoreCase("ClientServiceTotal")) {
 					result[i] = report.getClientService().getBaseInfo().getTotal();
 				} else if (key.equalsIgnoreCase("ClientServiceErrorTotal")) {
 					result[i] = report.getClientService().getBaseInfo().getErrorTotal();
-				} else if (key.equalsIgnoreCase("ClientServiceErrorPercent")) {
-					result[i] = report.getClientService().getBaseInfo().getErrorPercent();
+				} else if (key.equalsIgnoreCase("ClientServiceSuccessPercent")) {
+					result[i] = report.getClientService().getBaseInfo().getSuccessPercent();
 				} else if (key.equalsIgnoreCase("CallResponseTime")) {
 					result[i] = report.getCall().getBaseInfo().getResponseTime();
 				} else if (key.equalsIgnoreCase("CallTotal")) {
 					result[i] = report.getCall().getBaseInfo().getTotal();
 				} else if (key.equalsIgnoreCase("CallErrorTotal")) {
 					result[i] = report.getCall().getBaseInfo().getErrorTotal();
-				} else if (key.equalsIgnoreCase("CallErrorPercent")) {
-					result[i] = report.getCall().getBaseInfo().getErrorPercent();
+				} else if (key.equalsIgnoreCase("CallSuccessPercent")) {
+					result[i] = report.getCall().getBaseInfo().getSuccessPercent();
 				} else if (key.equalsIgnoreCase("SqlResponseTime")) {
 					result[i] = report.getSql().getBaseInfo().getResponseTime();
 				} else if (key.equalsIgnoreCase("SqlTotal")) {
 					result[i] = report.getSql().getBaseInfo().getTotal();
 				} else if (key.equalsIgnoreCase("SqlErrorTotal")) {
 					result[i] = report.getSql().getBaseInfo().getErrorTotal();
-				} else if (key.equalsIgnoreCase("SqlErrorPercent")) {
-					result[i] = report.getSql().getBaseInfo().getErrorPercent();
+				} else if (key.equalsIgnoreCase("SqlSuccessPercent")) {
+					result[i] = report.getSql().getBaseInfo().getSuccessPercent();
 				} else if (key.equalsIgnoreCase("MemResponseTime")) {
 					result[i] = report.getMemCache().getBaseCacheInfo().getResponseTime();
 				} else if (key.equalsIgnoreCase("MemTotal")) {
@@ -162,6 +162,8 @@ public class HistoryGraphs {
 					result[i] = report.getMachineInfo().getAvgMemoryUsed();
 				} else if (key.equalsIgnoreCase("MahineMaxMemoryUsed")) {
 					result[i] = report.getMachineInfo().getAvgMaxMemoryUsed();
+				} else {
+					result[i] = -1;
 				}
 			} catch (NullPointerException e) {
 				//ignore

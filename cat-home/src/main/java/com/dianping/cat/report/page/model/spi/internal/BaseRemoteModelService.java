@@ -40,7 +40,6 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 		for (Entry<String, String> e : request.getProperties().entrySet()) {
 			if (e.getValue() != null) {
 				sb.append('&');
-				// TODO do url encode here
 				sb.append(e.getKey()).append('=').append(e.getValue());
 			}
 		}

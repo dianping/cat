@@ -11,6 +11,7 @@
 <script type="text/javascript" src="/cat/js/flotr2.js"></script>
 <script type="text/javascript" src="/cat/js/baseTools.js"></script>
 <script type="text/javascript" src="/cat/js/problemHistory.js"></script>
+<script type="text/javascript" src="/cat/js/trendGraph.js"></script>
 
 <table>
 	<tr>
@@ -22,5 +23,5 @@
 </table>
 <script type="text/javascript">
 	var errorData = ${model.errorsTrend};
-	graph(document.getElementById('errorTrend'), errorData);
+	graphReal(document.getElementById('errorTrend'), errorData , 60*1000);
 </script>

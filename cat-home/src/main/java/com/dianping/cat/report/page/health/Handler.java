@@ -202,14 +202,9 @@ public class Handler implements PageHandler<Context> {
 			model.setLongDate(payload.getDate());
 		}
 
-		String reportType = payload.getReportType();
-
-		if (StringUtils.isEmpty(reportType)) {
-			payload.setReportType("hourly");
-		}
-		if (action == Action.HISTORY_REPORT) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
+		if (action == Action.HISTORY_REPORT || action == Action.HISTORY_GRAPH) {
+			String reportType = payload.getReportType();
+			if (reportType == null || reportType.length() == 0) {
 				payload.setReportType("day");
 			}
 			model.setReportType(payload.getReportType());
@@ -219,6 +214,12 @@ public class Handler implements PageHandler<Context> {
 			}
 			model.setLongDate(payload.getDate());
 			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
+		} else {
+			String reportType = payload.getReportType();
+
+			if (StringUtils.isEmpty(reportType)) {
+				payload.setReportType("hourly");
+			}
 		}
 	}
 }
