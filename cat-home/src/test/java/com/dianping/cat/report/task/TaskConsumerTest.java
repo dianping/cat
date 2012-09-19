@@ -344,13 +344,15 @@ public class TaskConsumerTest {
 		latch.countDown();
 		new Thread(consumerTwo).start();
 		latch.countDown();
+		Thread.sleep(500);
 		while (!consumerOne.isStopped()) {
-			Thread.sleep(10);
+			Thread.sleep(500);
 		}
 
 		while (!consumerTwo.isStopped()) {
-			Thread.sleep(1500);
+			Thread.sleep(500);
 		}
+
 
 		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumerOne.replayer.toArray()));
 
