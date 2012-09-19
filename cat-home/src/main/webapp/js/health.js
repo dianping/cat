@@ -17,7 +17,7 @@ $(document).delegate('.history_graph_link', 'click', function(e){
 
 		if (cell.nodeName == 'IMG') { // <img src='...'/>
 			cell.src=anchor.href;
-		} else { // <div>...</div>
+		} else { 
 			$.ajax({
 				type: "get",
 				url: anchor.href,
@@ -27,8 +27,12 @@ $(document).delegate('.history_graph_link', 'click', function(e){
 					cell.innerHTML = response;
 					
 					var data = $('#trendMeta',cell).text();
-					console.log(data);
-					graphReal($('#trendGraph',cell)[0],eval('('+data+')'),60*60*1000);
+					var type=$('#reportType',cell).text();
+					if(type.trim()=='day'){
+						graphReal($('#trendGraph',cell)[0],eval('('+data+')'),60*60*1000);
+					}else{
+						graphReal($('#trendGraph',cell)[0],eval('('+data+')'),60*60*1000*24);
+					}
 				}
 			});
 		}
