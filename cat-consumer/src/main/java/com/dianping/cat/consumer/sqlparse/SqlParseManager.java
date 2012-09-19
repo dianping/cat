@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dainping.cat.consumer.dal.report.Sqltable;
+import com.dainping.cat.consumer.dal.report.SqltableDao;
+import com.dainping.cat.consumer.dal.report.SqltableEntity;
 import com.dianping.bee.engine.helper.SqlParsers;
 import com.dianping.cat.Cat;
-import com.dianping.cat.hadoop.dal.Sqltable;
-import com.dianping.cat.hadoop.dal.SqltableDao;
-import com.dianping.cat.hadoop.dal.SqltableEntity;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 

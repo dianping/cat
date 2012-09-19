@@ -9,10 +9,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.hadoop.dal.Graph;
-import com.dianping.cat.hadoop.dal.GraphDao;
-import com.dianping.cat.hadoop.dal.GraphEntity;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dal.report.Graph;
+import com.dianping.cat.home.dal.report.GraphDao;
+import com.dianping.cat.home.dal.report.GraphEntity;
 import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
 import com.google.gson.Gson;

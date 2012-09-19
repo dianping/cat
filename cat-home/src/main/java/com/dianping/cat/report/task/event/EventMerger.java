@@ -7,11 +7,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dainping.cat.consumer.dal.report.Report;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.Machine;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
-import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;

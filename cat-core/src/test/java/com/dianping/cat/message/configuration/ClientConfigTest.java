@@ -20,8 +20,8 @@ import com.dianping.cat.configuration.ClientConfigValidator;
 import com.dianping.cat.configuration.client.IEntity;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
-import com.dianping.cat.configuration.client.transform.DefaultXmlBuilder;
 import com.dianping.cat.configuration.client.transform.DefaultDomParser;
+import com.dianping.cat.configuration.client.transform.DefaultXmlBuilder;
 import com.site.helper.Files;
 
 public class ClientConfigTest {

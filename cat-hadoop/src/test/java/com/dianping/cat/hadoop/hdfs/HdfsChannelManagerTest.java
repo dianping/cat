@@ -12,10 +12,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.InputChannel;
-import com.dianping.cat.hadoop.hdfs.InputChannelManager;
-import com.dianping.cat.hadoop.hdfs.OutputChannel;
-import com.dianping.cat.hadoop.hdfs.OutputChannelManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;

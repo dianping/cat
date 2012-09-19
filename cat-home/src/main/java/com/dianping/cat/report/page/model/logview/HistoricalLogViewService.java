@@ -8,9 +8,9 @@ import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
-import com.dianping.cat.hadoop.dal.Logview;
-import com.dianping.cat.hadoop.dal.LogviewDao;
-import com.dianping.cat.hadoop.dal.LogviewEntity;
+import com.dainping.cat.consumer.dal.report.Logview;
+import com.dainping.cat.consumer.dal.report.LogviewDao;
+import com.dainping.cat.consumer.dal.report.LogviewEntity;
 import com.dianping.cat.hadoop.hdfs.InputChannel;
 import com.dianping.cat.hadoop.hdfs.InputChannelManager;
 import com.dianping.cat.message.internal.MessageId;

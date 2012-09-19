@@ -31,7 +31,7 @@
 			<implementation>com.dianping.cat.report.task.DefaultTaskConsumer</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.spi.ReportFacade</role>
@@ -87,13 +87,13 @@
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.transaction.TransactionGraphCreator</role>
@@ -108,13 +108,13 @@
 			<implementation>com.dianping.cat.report.task.event.EventReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.event.EventGraphCreator</role>
@@ -129,13 +129,13 @@
 			<implementation>com.dianping.cat.report.task.problem.ProblemReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.problem.ProblemGraphCreator</role>
@@ -150,13 +150,13 @@
 			<implementation>com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.heartbeat.HeartbeatGraphCreator</role>
@@ -171,13 +171,13 @@
 			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
@@ -189,13 +189,13 @@
 			<implementation>com.dianping.cat.report.task.database.DatabaseReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
@@ -207,13 +207,13 @@
 			<implementation>com.dianping.cat.report.task.sql.SqlReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
@@ -225,13 +225,13 @@
 			<implementation>com.dianping.cat.report.task.cross.CrossReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
@@ -243,13 +243,13 @@
 			<implementation>com.dianping.cat.report.task.DailyTaskProducer</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -258,13 +258,13 @@
 			<implementation>com.dianping.cat.report.task.health.HealthReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.health.HealthServiceCollector</role>
@@ -303,7 +303,7 @@
 					<role>com.dianping.cat.report.task.health.HealthReportBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -315,7 +315,7 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+					<role>com.dainping.cat.consumer.dal.report.HostinfoDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -327,7 +327,7 @@
 					<role>com.dianping.cat.report.page.cross.DomainManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -336,10 +336,10 @@
 			<implementation>com.dianping.cat.report.task.monthreport.MonthReportBuilderTask</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
+					<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -348,12 +348,24 @@
 			<implementation>com.dianping.cat.report.page.health.HistoryGraphs</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.site.initialization.Module</role>
+			<role-hint>cat-home</role-hint>
+			<implementation>com.dianping.cat.CatHomeModule</implementation>
+		</component>
+		<component>
+			<role>com.site.initialization.ModuleManager</role>
+			<implementation>com.site.initialization.DefaultModuleManager</implementation>
+			<configuration>
+				<topLevelModules>cat-home</topLevelModules>
+			</configuration>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -364,7 +376,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -381,7 +393,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -411,7 +423,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -428,7 +440,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -458,7 +470,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -475,7 +487,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -505,7 +517,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -522,7 +534,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -552,7 +564,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -569,7 +581,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -599,7 +611,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -616,7 +628,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -646,7 +658,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -663,7 +675,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -693,7 +705,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -710,7 +722,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -754,7 +766,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -842,7 +854,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+					<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.hadoop.hdfs.InputChannelManager</role>
@@ -872,16 +884,130 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.initialization.Module</role>
-			<role-hint>cat-home</role-hint>
-			<implementation>com.dianping.cat.CatHomeModule</implementation>
+			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
+			<configuration>
+				<datasourceFile>datasources.xml</datasourceFile>
+			</configuration>
 		</component>
 		<component>
-			<role>com.site.initialization.ModuleManager</role>
-			<implementation>com.site.initialization.DefaultModuleManager</implementation>
+			<role>com.site.dal.jdbc.datasource.DataSource</role>
+			<role-hint>cat</role-hint>
+			<implementation>com.site.dal.jdbc.datasource.JdbcDataSource</implementation>
 			<configuration>
-				<topLevelModules>cat-home</topLevelModules>
+				<id>cat</id>
+				<maximum-pool-size>3</maximum-pool-size>
+				<connection-timeout>1s</connection-timeout>
+				<idle-timeout>10m</idle-timeout>
+				<statement-cache-size>1000</statement-cache-size>
+				<properties>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
+					<user>dpcom_cat</user>
+					<password>password</password>
+					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+				</properties>
 			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>dailygraph</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>dailygraph</logical-table-name>
+				<physical-table-name>dailygraph</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>dailyreport</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>dailyreport</logical-table-name>
+				<physical-table-name>dailyreport</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>graph</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>graph</logical-table-name>
+				<physical-table-name>graph</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>monthreport</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>monthreport</logical-table-name>
+				<physical-table-name>monthreport</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>location</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>location</logical-table-name>
+				<physical-table-name>location</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.DailyreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.GraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.GraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.MonthreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.LocationDao</role>
+			<implementation>com.dianping.cat.home.dal.report.LocationDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.site.web.mvc.model.ModuleRegistry</role>
@@ -949,7 +1075,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
+					<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -967,8 +1093,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.LogviewDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.LogviewDao</implementation>
+			<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.LogviewDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -980,7 +1106,7 @@
 			<implementation>com.dianping.cat.report.page.problem.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.problem.HistoryGraphs</role>
@@ -992,7 +1118,7 @@
 					<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -1005,8 +1131,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.DailyreportDao</implementation>
+			<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.DailyreportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -1018,13 +1144,13 @@
 			<implementation>com.dianping.cat.report.page.problem.HistoryGraphs</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.GraphDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.GraphDao</implementation>
+			<role>com.dianping.cat.home.dal.report.GraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.GraphDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -1040,8 +1166,8 @@
 			<implementation>com.dianping.cat.report.task.problem.ProblemMerger</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.ReportDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.ReportDao</implementation>
+			<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -1056,7 +1182,7 @@
 					<role>com.dianping.cat.report.graph.GraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
@@ -1071,7 +1197,7 @@
 					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -1088,7 +1214,7 @@
 			<implementation>com.dianping.cat.report.page.transaction.HistoryGraphs</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1112,7 +1238,7 @@
 					<role>com.dianping.cat.report.graph.GraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.HistoryGraphs</role>
@@ -1127,7 +1253,7 @@
 					<role>com.dianping.cat.report.task.event.EventMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1141,7 +1267,7 @@
 			<implementation>com.dianping.cat.report.page.event.HistoryGraphs</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1161,7 +1287,7 @@
 					<role>com.dianping.cat.report.graph.GraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.HistoryGraphs</role>
@@ -1184,7 +1310,7 @@
 			<implementation>com.dianping.cat.report.page.heartbeat.HistoryGraphs</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1307,7 +1433,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1324,7 +1450,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1392,7 +1518,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1409,7 +1535,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1426,7 +1552,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1443,7 +1569,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1460,7 +1586,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1477,7 +1603,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1491,13 +1617,13 @@
 			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.sql.JspViewer</role>
@@ -1584,7 +1710,7 @@
 					<role>com.dianping.cat.report.task.spi.ReportFacade</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1624,7 +1750,7 @@
 					<role>com.dianping.cat.report.task.health.HealthReportBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.TaskDao</role>
+					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1639,13 +1765,13 @@
 					<role>com.dianping.cat.report.task.event.EventMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1664,13 +1790,13 @@
 					<role>com.dianping.cat.report.task.heartbeat.HeartbeatMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1693,13 +1819,13 @@
 					<role>com.dianping.cat.report.task.problem.ProblemMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1718,13 +1844,13 @@
 					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1740,13 +1866,13 @@
 					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1762,13 +1888,13 @@
 					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1784,13 +1910,13 @@
 					<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1806,13 +1932,13 @@
 					<role>com.dianping.cat.report.task.sql.SqlMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1824,13 +1950,13 @@
 					<role>com.dianping.cat.report.task.health.HealthServiceCollector</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.GraphDao</role>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1839,7 +1965,7 @@
 			<implementation>com.dianping.cat.report.task.health.HealthServiceCollector</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.cross.DomainManager</role>
@@ -1851,7 +1977,7 @@
 			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
+					<role>com.dainping.cat.consumer.dal.report.HostinfoDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -1859,8 +1985,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.HostinfoDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.HostinfoDao</implementation>
+			<role>com.dainping.cat.consumer.dal.report.HostinfoDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.HostinfoDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -1868,8 +1994,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.TaskDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.TaskDao</implementation>
+			<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.TaskDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -1881,13 +2007,13 @@
 			<implementation>com.dianping.cat.report.page.matrix.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
@@ -1917,10 +2043,10 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.health.HistoryGraphs</role>
@@ -1936,10 +2062,10 @@
 			<implementation>com.dianping.cat.report.page.health.HistoryGraphs</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1951,7 +2077,7 @@
 					<role>com.dianping.cat.report.page.monthreport.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
+					<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -1963,8 +2089,8 @@
 			<implementation>com.dianping.cat.report.page.monthreport.JspViewer</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.dal.MonthreportDao</role>
-			<implementation>com.dianping.cat.hadoop.dal.MonthreportDao</implementation>
+			<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
+			<implementation>com.dianping.cat.home.dal.report.MonthreportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -1982,10 +2108,10 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.cross.CrossMerger</role>
@@ -2009,7 +2135,7 @@
 			<implementation>com.dianping.cat.report.page.cache.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.event.EventMerger</role>
@@ -2026,7 +2152,7 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.transaction.TransactionMerger</role>
@@ -2047,13 +2173,13 @@
 			<implementation>com.dianping.cat.report.page.database.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.database.JspViewer</role>

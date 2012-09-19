@@ -8,8 +8,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.consumer.sql.model.entity.Database;
-import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.entity.Method;
+import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.consumer.sql.model.transform.BaseVisitor;
 

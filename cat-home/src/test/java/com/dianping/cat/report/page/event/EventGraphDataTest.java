@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.home.dal.report.Graph;
 import com.site.helper.Files;
 
 @RunWith(JUnit4.class)

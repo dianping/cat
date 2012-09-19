@@ -11,7 +11,7 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
-import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.report.page.event.Handler.DetailOrder;
 import com.dianping.cat.report.page.event.Handler.SummaryOrder;
 

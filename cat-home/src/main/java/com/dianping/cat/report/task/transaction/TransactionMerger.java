@@ -7,10 +7,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dainping.cat.consumer.dal.report.Report;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.TaskHelper;

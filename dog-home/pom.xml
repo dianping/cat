@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<groupId>com.dianping.cat</groupId>
-		<artifactId>parent</artifactId>
-		<version>0.4.2</version>
-	</parent>
+   <parent>
+      <groupId>com.dianping.cat</groupId>
+      <artifactId>parent</artifactId>
+      <version>0.4.2</version>
+   </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>dog-home</artifactId>
    <name>Dog Home</name>
@@ -14,10 +14,10 @@
          <groupId>com.dianping.cat</groupId>
          <artifactId>dog-gateway</artifactId>
       </dependency>
-		<dependency>
-			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-consumer</artifactId>
-		</dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>cat-consumer</artifactId>
+      </dependency>
       <dependency>
          <groupId>com.site.common</groupId>
          <artifactId>web-framework</artifactId>
@@ -63,6 +63,17 @@
          <version>6.1.14</version>
          <scope>test</scope>
       </dependency>
+      <dependency>
+         <groupId>com.site.dal</groupId>
+         <artifactId>dal-jdbc</artifactId>
+         <version>1.1.6</version>
+      </dependency>
+      <dependency>
+         <groupId>mysql</groupId>
+         <artifactId>mysql-connector-java</artifactId>
+         <version>5.1.20</version>
+         <scope>runtime</scope>
+      </dependency>
    </dependencies>
    <build>
       <pluginManagement>
@@ -98,7 +109,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>1.1.4</version>
+            <version>1.1.8</version>
             <executions>
                <execution>
                   <id>generate plexus component descriptor</id>
@@ -108,6 +119,19 @@ org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
                   </goals>
                   <configuration>
                      <className>com.dianping.dog.build.ComponentsConfigurator</className>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate dal jdbc model</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-jdbc</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/notification-manifest.xml,
+                     ]]></manifest>
                   </configuration>
                </execution>
             </executions>

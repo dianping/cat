@@ -1,8 +1,8 @@
 package com.dianping.cat.report.page.model.sql;
 
-import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.entity.Database;
 import com.dianping.cat.consumer.sql.model.entity.Method;
+import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.consumer.sql.model.transform.DefaultMerger;
 import com.dianping.cat.helper.CatString;

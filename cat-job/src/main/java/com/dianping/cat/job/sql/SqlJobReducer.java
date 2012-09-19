@@ -1,6 +1,7 @@
 package com.dianping.cat.job.sql;
 
 import java.io.IOException;
+
 import org.apache.hadoop.mapreduce.Reducer;
 
 public class SqlJobReducer extends Reducer<UrlStatementKey, UrlStatementValue, UrlStatementKey, SqlJobResult> {

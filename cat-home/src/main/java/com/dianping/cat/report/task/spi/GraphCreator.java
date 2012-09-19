@@ -6,7 +6,7 @@ package com.dianping.cat.report.task.spi;
 import java.util.Date;
 import java.util.List;
 
-import com.dianping.cat.hadoop.dal.Graph;
+import com.dianping.cat.home.dal.report.Graph;
 
 public interface GraphCreator<E> {
 

@@ -1,0 +1,19 @@
+<wizard package="com.dianping.dog.home">
+   <jdbc package="com.dianping.dog.home.dal" name="cat">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://192.168.7.43:3306/cat</url>
+         <user>dpcom_cat</user>
+         <password>password</password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="alarm" package="com.dianping.dog.home.dal.alarm">
+         <table name="ruleinstance"/>
+         <table name="ruletemplate"/>
+         <table name="subscriber"/>
+      </group>
+      <group name="notification" package="com.dianping.dog.home.dal.notification">
+         <table name="maillog"/>
+      </group>
+   </jdbc>
+</wizard>

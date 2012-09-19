@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.dog.alarm.AlarmModule;
-
 import com.site.lookup.configuration.Component;
 import com.site.web.configuration.AbstractWebComponentsConfigurator;
 

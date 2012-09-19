@@ -6,11 +6,11 @@ package com.dianping.cat.report.task;
 import java.util.Date;
 import java.util.concurrent.locks.LockSupport;
 
+import com.dainping.cat.consumer.dal.report.Task;
+import com.dainping.cat.consumer.dal.report.TaskDao;
+import com.dainping.cat.consumer.dal.report.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.hadoop.dal.Task;
-import com.dianping.cat.hadoop.dal.TaskDao;
-import com.dianping.cat.hadoop.dal.TaskEntity;
 import com.dianping.cat.report.task.spi.ReportFacade;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;

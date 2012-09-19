@@ -6,14 +6,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.dal.report.ReportDao;
+import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
-import com.dianping.cat.hadoop.dal.Dailyreport;
-import com.dianping.cat.hadoop.dal.DailyreportDao;
-import com.dianping.cat.hadoop.dal.Graph;
-import com.dianping.cat.hadoop.dal.GraphDao;
-import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.ReportEntity;
+import com.dianping.cat.home.dal.report.Dailyreport;
+import com.dianping.cat.home.dal.report.DailyreportDao;
+import com.dianping.cat.home.dal.report.Graph;
+import com.dianping.cat.home.dal.report.GraphDao;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 

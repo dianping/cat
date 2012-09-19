@@ -3,6 +3,11 @@ package com.dianping.cat.consumer.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dainping.cat.consumer.dal.report.HostinfoDao;
+import com.dainping.cat.consumer.dal.report.LogviewDao;
+import com.dainping.cat.consumer.dal.report.ReportDao;
+import com.dainping.cat.consumer.dal.report.SqltableDao;
+import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.CatConsumerModule;
@@ -26,15 +31,9 @@ import com.dianping.cat.consumer.problem.handler.LongExecutionHandler;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sqlparse.SqlParseManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.hadoop.dal.HostinfoDao;
-import com.dianping.cat.hadoop.dal.LogviewDao;
-import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.SqltableDao;
-import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
@@ -100,7 +99,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ServerConfigManager.class, MessagePathBuilder.class) //
+		      .req(ServerConfigManager.class) //
 		      .req(DumpUploader.class, DumpChannelManager.class)//
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
 
@@ -115,6 +114,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, LogviewDao.class));
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
+
+		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		return all;
 	}
