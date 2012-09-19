@@ -8,13 +8,13 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.dainping.cat.consumer.dal.report.Hostinfo;
+import com.dainping.cat.consumer.dal.report.HostinfoDao;
+import com.dainping.cat.consumer.dal.report.Task;
+import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.common.model.entity.CommonReport;
-import com.dianping.cat.hadoop.dal.Hostinfo;
-import com.dianping.cat.hadoop.dal.HostinfoDao;
-import com.dianping.cat.hadoop.dal.Task;
-import com.dianping.cat.hadoop.dal.TaskDao;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.BucketManager;

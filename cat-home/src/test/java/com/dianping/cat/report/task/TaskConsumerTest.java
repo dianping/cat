@@ -10,7 +10,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.hadoop.dal.Task;
+import com.dainping.cat.consumer.dal.report.Task;
 
 public class TaskConsumerTest {
 

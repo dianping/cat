@@ -13,6 +13,8 @@ import java.util.Set;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 
+import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.matrix.model.entity.Matrix;
@@ -20,8 +22,6 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.entity.Ratio;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;

@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.status.model.entity.StatusInfo;
-import com.dianping.cat.status.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.status.model.transform.DefaultDomParser;
+import com.dianping.cat.status.model.transform.DefaultXmlBuilder;
 import com.site.helper.Files;
 
 public class StatusInfoTest {

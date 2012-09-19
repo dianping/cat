@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.dal.report.ReportDao;
+import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
-import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;

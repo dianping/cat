@@ -3,9 +3,9 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dainping.cat.consumer.dal.report.LogviewDao;
+import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.dal.LogviewDao;
-import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.hadoop.hdfs.InputChannelManager;
 import com.dianping.cat.message.spi.MessageCodec;

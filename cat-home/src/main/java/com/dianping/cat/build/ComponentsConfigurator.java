@@ -3,14 +3,14 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dainping.cat.consumer.dal.report.HostinfoDao;
+import com.dainping.cat.consumer.dal.report.ReportDao;
+import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.dal.DailyreportDao;
-import com.dianping.cat.hadoop.dal.GraphDao;
-import com.dianping.cat.hadoop.dal.HostinfoDao;
-import com.dianping.cat.hadoop.dal.MonthreportDao;
-import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.TaskDao;
+import com.dianping.cat.home.dal.report.DailyreportDao;
+import com.dianping.cat.home.dal.report.GraphDao;
+import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
@@ -86,8 +86,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SqlMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class,
-		            TransactionMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class, TransactionMerger.class));
 
 		all.add(C(EventReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, EventGraphCreator.class, EventMerger.class));
@@ -96,8 +95,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, ProblemGraphCreator.class, ProblemMerger.class));
 
 		all.add(C(HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class,
-		            HeartbeatMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class, HeartbeatMerger.class));
 
 		all.add(C(MatrixReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class));
@@ -134,11 +132,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(HistoryGraphs.class, HistoryGraphs.class).//
 		      req(ReportDao.class, DailyreportDao.class));
 
-		all.addAll(new ServiceComponentConfigurator().defineComponents());
-
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
+
+		all.addAll(new ServiceComponentConfigurator().defineComponents());
+		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		// Please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());

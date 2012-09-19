@@ -9,10 +9,10 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dainping.cat.consumer.dal.report.Task;
+import com.dainping.cat.consumer.dal.report.TaskDao;
+import com.dainping.cat.consumer.dal.report.TaskEntity;
 import com.dianping.cat.Cat;
-import com.dianping.cat.hadoop.dal.Task;
-import com.dianping.cat.hadoop.dal.TaskDao;
-import com.dianping.cat.hadoop.dal.TaskEntity;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseReportBuilder;
 import com.dianping.cat.report.task.event.EventReportBuilder;

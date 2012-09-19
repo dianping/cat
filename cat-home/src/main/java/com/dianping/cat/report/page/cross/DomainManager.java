@@ -9,11 +9,11 @@ import java.util.Set;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dainping.cat.consumer.dal.report.Hostinfo;
+import com.dainping.cat.consumer.dal.report.HostinfoDao;
+import com.dainping.cat.consumer.dal.report.HostinfoEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.dal.Hostinfo;
-import com.dianping.cat.hadoop.dal.HostinfoDao;
-import com.dianping.cat.hadoop.dal.HostinfoEntity;
 import com.site.dal.jdbc.DalException;
 import com.site.helper.Threads;
 import com.site.helper.Threads.Task;

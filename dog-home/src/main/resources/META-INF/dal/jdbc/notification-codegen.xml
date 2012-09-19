@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+  <entity name="maillog" table="maillog" alias="m">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="address" field="address" value-type="String" length="500" nullable="false" />
+    <member name="title" field="title" value-type="String" length="500" nullable="false" />
+    <member name="content" field="content" value-type="String" length="65535" nullable="false" />
+    <member name="sendtime" field="sendtime" value-type="Date" nullable="false" />
+    <member name="status" field="status" value-type="int" length="10" nullable="false" />
+    <member name="error" field="error" value-type="String" length="1000" />
+    <member name="cc" field="cc" value-type="String" length="500" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>
+

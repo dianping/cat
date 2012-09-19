@@ -5,13 +5,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.hadoop.dal.Dailyreport;
-import com.dianping.cat.hadoop.dal.Graph;
-import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.hadoop.dal.ReportEntity;
+import com.dianping.cat.home.dal.report.Dailyreport;
+import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
 import com.dianping.cat.report.task.spi.ReportBuilder;

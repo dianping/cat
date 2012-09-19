@@ -6,7 +6,7 @@ package com.dianping.cat.report.task.spi;
 import java.util.List;
 import java.util.Set;
 
-import com.dianping.cat.hadoop.dal.Report;
+import com.dainping.cat.consumer.dal.report.Report;
 
 public interface ReportMerger<E> {
 

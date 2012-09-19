@@ -12,7 +12,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
-import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
@@ -21,9 +20,6 @@ import com.site.lookup.annotation.Inject;
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
-
-	@Inject
-	private MessagePathBuilder m_builder;
 
 	@Inject
 	private DumpChannelManager m_channelManager;

@@ -10,22 +10,22 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.dal.report.ReportDao;
+import com.dainping.cat.consumer.dal.report.ReportEntity;
+import com.dainping.cat.consumer.dal.report.Task;
+import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.hadoop.dal.Dailyreport;
-import com.dianping.cat.hadoop.dal.DailyreportDao;
-import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.ReportEntity;
-import com.dianping.cat.hadoop.dal.TaskDao;
+import com.dianping.cat.home.dal.report.Dailyreport;
+import com.dianping.cat.home.dal.report.DailyreportDao;
+import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.site.dal.jdbc.DalException;
-import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class DailyTaskProducer implements Task, Initializable {
+public class DailyTaskProducer implements com.site.helper.Threads.Task, Initializable {
 
 	private static final long DAY = 24 * 60 * 60 * 1000L;
 
@@ -90,7 +90,7 @@ public class DailyTaskProducer implements Task, Initializable {
 			Set<String> databaseSet = getDatabaseSet(day, new Date(day.getTime() + DAY));
 
 			for (String domain : databaseSet) {
-				com.dianping.cat.hadoop.dal.Task task = m_taskDao.createLocal();
+				Task task = m_taskDao.createLocal();
 
 				task.setCreationDate(new Date());
 				task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
@@ -122,7 +122,7 @@ public class DailyTaskProducer implements Task, Initializable {
 
 			for (String domain : domainSet) {
 				for (String name : m_dailyReportNameSet) {
-					com.dianping.cat.hadoop.dal.Task task = m_taskDao.createLocal();
+					Task task = m_taskDao.createLocal();
 
 					task.setCreationDate(new Date());
 					task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

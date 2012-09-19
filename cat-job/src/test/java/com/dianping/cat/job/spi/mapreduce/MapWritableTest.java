@@ -12,7 +12,6 @@ import junit.framework.Assert;
 import org.apache.hadoop.io.Text;
 import org.junit.Test;
 
-import com.dianping.cat.job.spi.mapreduce.MapWritable;
 import com.dianping.cat.job.spi.mapreduce.MapWritable.KeyValueInput;
 import com.dianping.cat.job.spi.mapreduce.MapWritable.KeyValueOutput;
 

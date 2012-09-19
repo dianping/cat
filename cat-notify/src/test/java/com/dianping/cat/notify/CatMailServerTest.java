@@ -4,8 +4,6 @@ import java.text.DecimalFormat;
 
 import org.junit.Test;
 
-import com.dianping.cat.notify.CatNotifyServer;
-
 public class CatMailServerTest {
 	
 	

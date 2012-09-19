@@ -8,7 +8,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
-import com.dianping.cat.report.task.transaction.HistoryTransactionReportMerger;
 
 public class HistoryTransactionMergerTest {
 

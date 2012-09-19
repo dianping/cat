@@ -3,11 +3,11 @@ package com.dianping.cat.report.page.model.ip;
 import java.util.Date;
 import java.util.List;
 
+import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.dal.report.ReportDao;
+import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.transform.DefaultSaxParser;
-import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.storage.Bucket;

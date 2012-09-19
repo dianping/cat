@@ -20,7 +20,6 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.site.initialization.Module;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -48,10 +47,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageBucketManager.class, HdfsMessageBucketManager.ID, HdfsMessageBucketManager.class) //
 		      .req(FileSystemManager.class) //
 		      .req(MessagePathBuilder.class));
-
-		all.add(C(Module.class, CatHadoopModule.ID, CatHadoopModule.class));
-
-		all.addAll(new DatabaseConfigurator().defineComponents());
 
 		return all;
 	}

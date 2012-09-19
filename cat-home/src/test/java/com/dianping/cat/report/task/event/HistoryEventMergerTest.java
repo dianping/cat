@@ -8,7 +8,6 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
-import com.dianping.cat.report.task.event.HistoryEventReportMerger;
 
 public class HistoryEventMergerTest {
 	@Test

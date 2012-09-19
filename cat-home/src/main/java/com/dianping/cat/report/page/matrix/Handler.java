@@ -8,16 +8,16 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.dal.report.ReportDao;
+import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
-import com.dianping.cat.hadoop.dal.Dailyreport;
-import com.dianping.cat.hadoop.dal.DailyreportDao;
-import com.dianping.cat.hadoop.dal.DailyreportEntity;
-import com.dianping.cat.hadoop.dal.Report;
-import com.dianping.cat.hadoop.dal.ReportDao;
-import com.dianping.cat.hadoop.dal.ReportEntity;
+import com.dianping.cat.home.dal.report.Dailyreport;
+import com.dianping.cat.home.dal.report.DailyreportDao;
+import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
