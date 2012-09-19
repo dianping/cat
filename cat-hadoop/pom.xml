@@ -70,6 +70,9 @@
 						<goals>
 							<goal>dal-jdbc</goal>
 						</goals>
+						<configuration>
+							<manifest>${basedir}/src/main/resources/META-INF/dal/model/manifest.xml</manifest>
+						</configuration>
 					</execution>
 					<execution>
 						<id>generate plexus component descriptor</id>
