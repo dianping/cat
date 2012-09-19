@@ -66,35 +66,37 @@ public class HistoryGraphItem {
 		return this.ylable;
 	}
 
-	public void setSize(int size) {
+	public HistoryGraphItem setSize(int size) {
 		this.size = size;
+		return this;
 	}
 
-	public void setStart(Date start) {
+	public HistoryGraphItem setStart(Date start) {
 		this.start = sdf.format(start);
+		return this;
 	}
 
-	public void setStart(String start) {
-		this.start = start;
-	}
-
-	public void setSubTitles(List<String> subTitles) {
+	public HistoryGraphItem setSubTitles(List<String> subTitles) {
 		this.subTitles = subTitles;
+		return this;
 	}
 
-	public void setTitles(String titles) {
+	public HistoryGraphItem setTitles(String titles) {
 		this.titles = titles;
+		return this;
 	}
 
-	public void setValues(List<double[]> values) {
+	public HistoryGraphItem setValues(List<double[]> values) {
 		this.values = values;
+		return this;
 	}
 
-	public void setYlable(double[] ylable) {
+	public HistoryGraphItem setYlable(double[] ylable) {
 		if (ylable == null) {
 			this.ylable = new double[0];
 		} else {
 			this.ylable = Arrays.copyOf(ylable, ylable.length);
 		}
+		return this;
 	}
 }

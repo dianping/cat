@@ -10,6 +10,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.hadoop.dal.GraphDao;
 import com.dianping.cat.hadoop.dal.GraphEntity;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.page.problem.Handler.DetailOrder;
 import com.dianping.cat.report.page.problem.Handler.SummaryOrder;
@@ -20,19 +21,17 @@ public class HistoryGraphs {
 
 	private static final String ERROR = "errors";
 
-	public static final long ONE_HOUR = 3600 * 1000L;
-
 	@Inject
 	private GraphDao m_graphDao;
 
 	public Map<String, double[]> buildGraphDatas(Date start, Date end, String type, String status, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR) * 60;
+		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR) * 60;
 		double[] errors = new double[size];
 
 		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(status)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 60);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
 				String summaryContent = graph.getSummaryContent();
 				String[] allLines = summaryContent.split("\n");
 
@@ -54,7 +53,7 @@ public class HistoryGraphs {
 			}
 		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(status)) {
 			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR * 60);
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
 				String detailContent = graph.getDetailContent();
 				String[] allLines = detailContent.split("\n");
 
@@ -107,7 +106,7 @@ public class HistoryGraphs {
 		String queryIP = "All".equals(ip) == true ? "all" : ip;
 		List<Graph> graphs = new ArrayList<Graph>();
 
-		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + ONE_HOUR) {
+		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_HOUR) {
 			try {
 				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain, "problem",
 				      GraphEntity.READSET_FULL);

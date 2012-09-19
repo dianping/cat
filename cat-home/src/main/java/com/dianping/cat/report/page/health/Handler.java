@@ -17,8 +17,11 @@ import com.dianping.cat.hadoop.dal.DailyreportEntity;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.task.health.HealthReportMerger;
+import com.google.gson.Gson;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -27,8 +30,6 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
-
-	public static final long ONE_HOUR = 3600 * 1000L;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -42,39 +43,13 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DailyreportDao m_dailyReportDao;
 
-	@Override
-	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "health")
-	public void handleInbound(Context ctx) throws ServletException, IOException {
-		// display only, no action here
-	}
+	@Inject
+	private HistoryGraphs m_graphs;
 
-	@Override
-	@OutboundActionMeta(name = "health")
-	public void handleOutbound(Context ctx) throws ServletException, IOException {
-		Model model = new Model(ctx);
-		Payload payload = ctx.getPayload();
-
-		normalize(model, payload);
-
-		switch (payload.getAction()) {
-		case HOURLY_REPORT:
-			HealthReport report = getHourlyReport(getLastDate(payload), payload.getDomain());
-			model.setReport(report);
-			break;
-		case HISTORY_REPORT:
-			HealthReport historyReport = getHistoryReport(payload.getHistoryStartDate(), payload.getHistoryEndDate(),
-			      payload.getDomain());
-			model.setReport(historyReport);
-			break;
-		}
-		m_jspViewer.view(ctx, model);
-	}
-
-	private long getLastDate(Payload payload) {
+	private long getCurrentDate(Payload payload) {
 		long date = payload.getDate();
-		long lastHour = payload.getCurrentDate() - ONE_HOUR;
-		long lastTwoHour = payload.getCurrentDate() - 2 * ONE_HOUR;
+		long lastHour = payload.getCurrentDate() - TimeUtil.ONE_HOUR;
+		long lastTwoHour = payload.getCurrentDate() - 2 * TimeUtil.ONE_HOUR;
 		Calendar cal = Calendar.getInstance();
 		int minute = cal.get(Calendar.MINUTE);
 
@@ -119,7 +94,7 @@ public class Handler implements PageHandler<Context> {
 			HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
 			HealthReport healthReport = merger.getHealthReport();
 
-			merger.setDuration(ONE_HOUR);
+			merger.setDuration(TimeUtil.ONE_HOUR);
 
 			for (Report report : reports) {
 				String xml = report.getContent();
@@ -133,6 +108,81 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return new HealthReport(domain);
+	}
+
+	private long getLastDate(long current, String reportType) {
+		if (reportType.equalsIgnoreCase("day")) {
+			current = current - TimeUtil.ONE_HOUR * 24;
+		} else if (reportType.equalsIgnoreCase("week")) {
+			current = current - TimeUtil.ONE_HOUR * 24 * 7;
+		} else if (reportType.equalsIgnoreCase("month")) {
+			Calendar cal = Calendar.getInstance();
+
+			cal.setTime(new Date(current));
+			cal.add(Calendar.MONTH, -1);
+			return cal.getTimeInMillis();
+		}
+		return current;
+	}
+
+	@Override
+	@PayloadMeta(Payload.class)
+	@InboundActionMeta(name = "health")
+	public void handleInbound(Context ctx) throws ServletException, IOException {
+		// display only, no action here
+	}
+
+	@Override
+	@OutboundActionMeta(name = "health")
+	public void handleOutbound(Context ctx) throws ServletException, IOException {
+		Model model = new Model(ctx);
+		Payload payload = ctx.getPayload();
+
+		normalize(model, payload);
+
+		switch (payload.getAction()) {
+		case HOURLY_REPORT:
+			long currentDate = getCurrentDate(payload);
+			HealthReport report = getHourlyReport(currentDate, payload.getDomain());
+			HealthReport lastReport = getHourlyReport(currentDate - TimeUtil.ONE_HOUR, payload.getDomain());
+			HealthReport lastTwoReport = getHourlyReport(currentDate - TimeUtil.ONE_HOUR * 2, payload.getDomain());
+
+			model.setReport(report);
+			model.setLastReport(lastReport);
+			model.setLastTwoReport(lastTwoReport);
+			break;
+		case HISTORY_REPORT:
+			Date historyStartDate = payload.getHistoryStartDate();
+			Date historyEndDate = payload.getHistoryEndDate();
+
+			long current = historyStartDate.getTime();
+			long currentEnd = historyEndDate.getTime();
+			long lastStart = getLastDate(current, payload.getReportType());
+			long lastEnd = getLastDate(currentEnd, payload.getReportType());
+			long lastTwoStart = getLastDate(lastStart, payload.getReportType());
+			long lastTwoEnd = getLastDate(lastEnd, payload.getReportType());
+
+			HealthReport historyReport = getHistoryReport(historyStartDate, historyEndDate, payload.getDomain());
+			HealthReport historyLastReport = getHistoryReport(new Date(lastStart), new Date(lastEnd), payload.getDomain());
+			HealthReport historyLastTwoReport = getHistoryReport(new Date(lastTwoStart), new Date(lastTwoEnd),
+			      payload.getDomain());
+			model.setReport(historyReport);
+			model.setLastReport(historyLastReport);
+			model.setLastTwoReport(historyLastTwoReport);
+			break;
+
+		case HISTORY_GRAPH:
+			Date graphStartDate = payload.getHistoryStartDate();
+			Date graphEndDate = payload.getHistoryEndDate();
+			String key = payload.getKey();
+
+			HistoryGraphItem item = m_graphs.buildHistoryGraph(model.getDomain(), graphStartDate, graphEndDate,
+			      payload.getReportType(), key);
+			Gson gson = new Gson();
+			model.setHistoryGraph(gson.toJson(item));
+			break;
+		}
+		m_jspViewer.view(ctx, model);
 	}
 
 	public void normalize(Model model, Payload payload) {
@@ -152,6 +202,11 @@ public class Handler implements PageHandler<Context> {
 			model.setLongDate(payload.getDate());
 		}
 
+		String reportType = payload.getReportType();
+
+		if (StringUtils.isEmpty(reportType)) {
+			payload.setReportType("hourly");
+		}
 		if (action == Action.HISTORY_REPORT) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {

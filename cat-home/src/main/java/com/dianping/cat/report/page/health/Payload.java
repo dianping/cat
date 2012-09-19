@@ -6,17 +6,16 @@ import com.site.web.mvc.ActionContext;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
-	public Payload() {
-		super(ReportPage.HEALTH);
-	}
-
-	private ReportPage m_page;
-
 	@FieldMeta("op")
 	private Action m_action;
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	@FieldMeta("key")
+	private String m_key;
+	
+	private ReportPage m_page;
+
+	public Payload() {
+		super(ReportPage.HEALTH);
 	}
 
 	@Override
@@ -24,9 +23,22 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public String getKey() {
+		return m_key;
+	}
+
+	
 	@Override
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	}
+
+	public void setKey(String key) {
+		m_key = key;
 	}
 
 	@Override

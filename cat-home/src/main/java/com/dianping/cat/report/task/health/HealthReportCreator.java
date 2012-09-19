@@ -186,7 +186,12 @@ public class HealthReportCreator {
 			int i = 0;
 
 			List<Period> periods = machine.getPeriods();
-			oldgcTotal = periods.get(periods.size() - 1).getOldGcCount() - periods.get(0).getOldGcCount();
+			long l = periods.get(periods.size() - 1).getOldGcCount() - periods.get(0).getOldGcCount();
+			if (l > 0) {
+				oldgcTotal = l;
+			} else {
+				oldgcTotal = periods.get(periods.size() - 1).getOldGcCount();
+			}
 
 			for (; i < periods.size(); i++) {
 				loadTotal += periods.get(i).getSystemLoadAverage();

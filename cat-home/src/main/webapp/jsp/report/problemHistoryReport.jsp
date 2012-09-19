@@ -15,6 +15,7 @@
 	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['baseTools_js']}" target="head-js"/>
 	<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
+	<res:useJs value="${res.js.local.trendGraph_js}" target="head-js" />
 </br>
 <table class="machines">
 	<tr style="text-align:left">

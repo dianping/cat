@@ -17,6 +17,7 @@ import com.dianping.cat.hadoop.dal.DailyreportEntity;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
@@ -37,7 +38,6 @@ import com.site.web.mvc.annotation.PayloadMeta;
  * @author youyong
  */
 public class Handler implements PageHandler<Context> {
-	public static final long ONE_HOUR = 3600 * 1000L;
 
 	@Inject
 	protected ReportDao m_reportDao;
@@ -98,9 +98,9 @@ public class Handler implements PageHandler<Context> {
 			model.setDisplayDatabase(displayHistoryDatabase);
 			break;
 		case HOURLY_REPORT:
-			long hourlyDuration = ONE_HOUR;
+			long hourlyDuration = TimeUtil.ONE_HOUR;
 			if (ModelPeriod.CURRENT == payload.getPeriod()) {
-				hourlyDuration = System.currentTimeMillis() % ONE_HOUR;
+				hourlyDuration = System.currentTimeMillis() % TimeUtil.ONE_HOUR;
 			}
 			DatabaseReport hourlyReport = getHourlyReport(payload);
 			DisplayDatabase displayDatabase = new DisplayDatabase().setDomain(domain).setDuration(hourlyDuration);

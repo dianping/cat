@@ -5,7 +5,7 @@ public enum JspFile {
 
 	HISTORY("/jsp/report/healthHistory.jsp"),
 
-	;
+	HISTORY_GRAPH("/jsp/report/healthGraphs.jsp");
 
 	private String m_path;
 

@@ -1,10 +1,9 @@
-function graph(container, data) {
-	var minute = 1000 * 60;
+function graphReal(container, data, step) {
 	var real = data.values[0];
 	var d1 = [], start = new Date(data.start).getTime(), options, graph, i, x, o;
 	console.log(new Date(data.start));
 	for (i = 0; i < data.size; i++) {
-		x = start + (i * minute * 5);
+		x = start + (i * step);
 		d1.push([ x, real[i] ]);
 	}
 	options = {
@@ -61,4 +60,9 @@ function graph(container, data) {
 	Flotr.EventAdapter.observe(container, 'flotr:click', function() {
 		graph = drawGraph();
 	});
+}
+
+//default is five minutes
+function graph(container, data) {
+	graphReal(container, data, 5 * 60 * 1000);
 }

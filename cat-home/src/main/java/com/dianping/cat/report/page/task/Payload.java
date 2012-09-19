@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.task;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.task.TaskHelper;
 import com.site.web.mvc.ActionContext;
@@ -10,8 +11,6 @@ import com.site.web.mvc.ActionPayload;
 import com.site.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
-
-	protected static final long ONE_HOUR = 3600 * 1000L;
 
 	@FieldMeta("currentPage")
 	private int currentPage;
@@ -68,7 +67,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	public long getDate() {
 		long current = getCurrentDate();
 
-		long extra = step * ONE_HOUR;
+		long extra = step * TimeUtil.ONE_HOUR;
 		if (reportType != null && (reportType.equals("day") || reportType.equals("month") || reportType.equals("week"))) {
 			extra = 0;
 		}
@@ -90,7 +89,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public long getEndDate() {
 		long start = this.getDate();
-		return start + ONE_HOUR * 24;
+		return start + TimeUtil.ONE_HOUR * 24;
 	}
 
 	public String getName() {

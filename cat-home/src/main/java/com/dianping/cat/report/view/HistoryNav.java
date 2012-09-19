@@ -2,8 +2,6 @@ package com.dianping.cat.report.view;
 
 public enum HistoryNav {
 
-	MONTH("month", "-1m", "+1m"),
-
 	WEEK("week", "-1w", "+1w"),
 
 	DAY("day", "-1d", "+1d");

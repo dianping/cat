@@ -22,7 +22,7 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implements LogEnabled {
-
+	
 	private Map<String, CommonReport> m_reports = new HashMap<String, CommonReport>();
 
 	@Inject

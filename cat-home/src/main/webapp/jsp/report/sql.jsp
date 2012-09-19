@@ -24,7 +24,7 @@
 </br>
 <table class="databases">
 	<tr style="text-align: left">
-		<th>Machines: &nbsp;[&nbsp; <c:choose>
+		<th>Domains: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.database eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}"
 								class="current">All</a>

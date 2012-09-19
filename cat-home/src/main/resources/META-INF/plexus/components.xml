@@ -344,6 +344,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.health.HistoryGraphs</role>
+			<implementation>com.dianping.cat.report.page.health.HistoryGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
@@ -1910,11 +1922,26 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.health.HistoryGraphs</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.health.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.health.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.health.HistoryGraphs</role>
+			<implementation>com.dianping.cat.report.page.health.HistoryGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.hadoop.dal.DailyreportDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.monthreport.Handler</role>

@@ -19,6 +19,7 @@ import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.cross.DomainManager;
+import com.dianping.cat.report.page.health.HistoryGraphs;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.TaskConsumer;
@@ -129,6 +130,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MonthReportBuilderTask.class, MonthReportBuilderTask.class).//
 		      req(DailyreportDao.class, MonthreportDao.class));
+
+		all.add(C(HistoryGraphs.class, HistoryGraphs.class).//
+		      req(ReportDao.class, DailyreportDao.class));
 
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

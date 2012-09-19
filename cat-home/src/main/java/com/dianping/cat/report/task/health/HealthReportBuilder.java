@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.hadoop.dal.Dailyreport;
 import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportEntity;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
@@ -29,8 +30,6 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class HealthReportBuilder extends AbstractReportBuilder implements ReportBuilder {
-
-	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	@Inject
 	private HealthServiceCollector m_serviceCollector;
@@ -89,7 +88,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		HealthReportCreator healthReportCreator = new HealthReportCreator();
 		HealthReport report = healthReportCreator.build(transactionReport, eventReport, problemReport, heartbeatReport,
 		      infos);
-		Set<String> domains = getDomains(reportPeriod, new Date(reportPeriod.getTime() + ONE_HOUR));
+		Set<String> domains = getDomains(reportPeriod, new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
 		report.getDomainNames().addAll(domains);
 		return report;
 	}
@@ -140,7 +139,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		}
 
 		eventReport.setStartTime(reportPeriod);
-		eventReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
+		eventReport.setEndTime(new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
 		return eventReport;
 	}
 
@@ -162,7 +161,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		}
 
 		heartbeatReport.setStartTime(reportPeriod);
-		heartbeatReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
+		heartbeatReport.setEndTime(new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
 		return heartbeatReport;
 	}
 
@@ -184,7 +183,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		}
 
 		problemReport.setStartTime(reportPeriod);
-		problemReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
+		problemReport.setEndTime(new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
 		return problemReport;
 	}
 
@@ -207,7 +206,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		}
 
 		transactionReport.setStartTime(reportPeriod);
-		transactionReport.setEndTime(new Date(reportPeriod.getTime() + ONE_HOUR));
+		transactionReport.setEndTime(new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
 		return transactionReport;
 	}
 

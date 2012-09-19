@@ -1,9 +1,9 @@
 package com.dianping.cat.report.page.model.spi;
 
+import com.dianping.cat.helper.TimeUtil;
+
 public enum ModelPeriod {
 	CURRENT, FUTURE, HISTORICAL, LAST;
-
-	private static final long ONE_HOUR = 3600 * 1000L;
 
 	public static ModelPeriod getByName(String name, ModelPeriod defaultValue) {
 		for (ModelPeriod period : values()) {
@@ -18,13 +18,13 @@ public enum ModelPeriod {
 	public static ModelPeriod getByTime(long timestamp) {
 		long current = System.currentTimeMillis();
 
-		current -= current % ONE_HOUR;
+		current -= current % TimeUtil.ONE_HOUR;
 
-		if (timestamp >= current + ONE_HOUR) {
+		if (timestamp >= current + TimeUtil.ONE_HOUR) {
 			return ModelPeriod.FUTURE;
 		} else if (timestamp >= current) {
 			return ModelPeriod.CURRENT;
-		} else if (timestamp >= current - ONE_HOUR) {
+		} else if (timestamp >= current - TimeUtil.ONE_HOUR) {
 			return ModelPeriod.LAST;
 		} else {
 			return ModelPeriod.HISTORICAL;

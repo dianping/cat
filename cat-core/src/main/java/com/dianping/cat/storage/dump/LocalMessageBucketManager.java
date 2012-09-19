@@ -51,7 +51,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Map<String, LocalMessageBucket> m_buckets = new HashMap<String, LocalMessageBucket>();
 
-	private BlockingQueue<MessageBlock> m_blockQueue = new LinkedBlockingQueue<MessageBlock>(1000);
+	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(1000);
 
 	private Logger m_logger;
 
@@ -172,7 +172,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageBlock block = bucket.flushBlock();
 
 					if (block != null) {
-						m_blockQueue.offer(block);
+						m_messageBlocks.offer(block);
 
 						LockSupport.parkNanos(50 * 1000 * 1000L); // wait 50 ms
 					}
@@ -214,7 +214,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		// <callee domain> - <caller domain> - <callee ip>
 		// String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		String name = id.getDomain() + '-' + tree.getIpAddress() + '-' + localIp;
+		String name = id.getDomain() + '-' + id.getIpAddress() + '-' + localIp;
 		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
 		LocalMessageBucket bucket = m_buckets.get(dataFile);
 
@@ -228,7 +228,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		MessageBlock block = bucket.store(tree);
 
 		if (block != null) {
-			m_blockQueue.offer(block);
+			m_messageBlocks.offer(block);
 		}
 	}
 
@@ -244,7 +244,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		public void run() {
 			try {
 				while (true) {
-					MessageBlock block = m_blockQueue.poll(5, TimeUnit.MILLISECONDS);
+					MessageBlock block = m_messageBlocks.poll(5, TimeUnit.MILLISECONDS);
 
 					if (block != null) {
 						String dataFile = block.getDataFile();

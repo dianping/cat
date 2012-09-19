@@ -15,6 +15,7 @@ import com.dianping.cat.hadoop.dal.Report;
 import com.dianping.cat.hadoop.dal.ReportDao;
 import com.dianping.cat.hadoop.dal.ReportEntity;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
@@ -23,8 +24,6 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class HealthServiceCollector {
-
-	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	@Inject
 	private ReportDao m_reportDao;
@@ -71,7 +70,7 @@ public class HealthServiceCollector {
 			Set<String> domains = queryAllDomains(new Date(time));
 			for (String domain : domains) {
 				CrossReport report = queryCrossReport(new Date(time), domain);
-				ProjectInfo projectInfo = new ProjectInfo(ONE_HOUR);
+				ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
 
 				projectInfo.setDomainManager(m_domainManager);
 				projectInfo.setClientIp(CatString.ALL_IP);
@@ -92,7 +91,7 @@ public class HealthServiceCollector {
 	private Set<String> queryAllDomains(Date date) {
 		List<Report> historyReports = null;
 		try {
-			historyReports = m_reportDao.findAllByDomainNameDuration(date, new Date(date.getTime() + ONE_HOUR), null,
+			historyReports = m_reportDao.findAllByDomainNameDuration(date, new Date(date.getTime() + TimeUtil.ONE_HOUR), null,
 			      "cross", ReportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			Cat.logError(e);

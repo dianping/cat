@@ -12,6 +12,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.hadoop.dal.Graph;
 import com.dianping.cat.hadoop.dal.GraphDao;
 import com.dianping.cat.hadoop.dal.GraphEntity;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
 import com.google.gson.Gson;
@@ -22,13 +23,11 @@ public class HistoryGraphs {
 
 	public static final int K = 1024;
 
-	public static final long ONE_HOUR = 3600 * 1000L;
-
 	@Inject
 	private GraphDao m_graphDao;
 
 	public Map<String, double[]> buildHeartbeatDatas(Date start, Date end, List<Graph> graphs) {
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR);
 		Map<String, String[]> hourlyDate = getHourlyDatas(graphs, start, size);
 		return getHeartBeatDatesEveryMinute(hourlyDate, size);
 	}
@@ -150,7 +149,7 @@ public class HistoryGraphs {
 	private Map<String, String[]> getHourlyDatas(List<Graph> graphs, Date start, int size) {
 		Map<String, String[]> heartBeats = initial(size);
 		for (Graph graph : graphs) {
-			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / ONE_HOUR);
+			int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) / TimeUtil.ONE_HOUR);
 			String detailContent = graph.getDetailContent();
 			String[] alldates = detailContent.split("\n");
 
@@ -204,7 +203,7 @@ public class HistoryGraphs {
 	public void showHeartBeatGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		int size = (int) ((end.getTime() - start.getTime()) / ONE_HOUR * 60);
+		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
 		Map<String, double[]> graphData = getHeartBeatData(model, payload);
 
 		model.setActiveThreadGraph(getGraphItem("Thread (Count) ", "ActiveThread", start, size, graphData)

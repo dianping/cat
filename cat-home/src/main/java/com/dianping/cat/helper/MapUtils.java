@@ -19,19 +19,4 @@ public class MapUtils {
 
 		return result;
 	}
-
-	// public <T,S> List<String> sort(T model, String xpath, Comparator<S>
-	// comparator) {
-	// TransactionReport report = null;
-	// List<String> keys = sort(report,
-	// "/transaction-report/type[@name='URL']/name", new
-	// Comparator<TransactionName>() {
-	// @Override
-	// public int compare(TransactionName n1, TransactionName n2) {
-	// return 0;
-	// }
-	// });
-	//
-	// return null;
-	// }
 }

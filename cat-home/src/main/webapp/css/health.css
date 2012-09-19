@@ -1,6 +1,8 @@
 .health {
 	width: auto;
 	font-size: small;
+	margin-left:auto;
+	margin-right:auto;
 }
 
 .health .odd td {

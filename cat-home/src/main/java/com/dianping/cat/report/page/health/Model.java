@@ -11,6 +11,12 @@ import com.dianping.cat.report.view.StringSortHelper;
 public class Model extends AbstractReportModel<Action, Context> {
 	private HealthReport m_report;
 
+	private HealthReport m_lastReport;
+
+	private HealthReport m_lastTwoReport;
+
+	private String m_historyGraph;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -42,8 +48,32 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	public String getHistoryGraph() {
+		return m_historyGraph;
+	}
+
+	public HealthReport getLastReport() {
+		return m_lastReport;
+	}
+
+	public HealthReport getLastTwoReport() {
+		return m_lastTwoReport;
+	}
+
 	public HealthReport getReport() {
 		return m_report;
+	}
+
+	public void setHistoryGraph(String historyGraph) {
+		m_historyGraph = historyGraph;
+	}
+
+	public void setLastReport(HealthReport lastReport) {
+		m_lastReport = lastReport;
+	}
+
+	public void setLastTwoReport(HealthReport lastTwoReport) {
+		m_lastTwoReport = lastTwoReport;
 	}
 
 	public void setReport(HealthReport report) {
