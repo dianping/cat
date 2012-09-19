@@ -1,6 +1,7 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=utf-8"%>
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.health.Model" scope="request" />
+<jsp:useBean id="payload"	type="com.dianping.cat.report.page.health.Payload" scope="request" />
 <style type="text/css">
 .graph {
 	width: 450px;
@@ -20,10 +21,17 @@
 	<tr>
 	<td  style="display:none">
 		<div id ="trendMeta">${model.historyGraph}</div>
+		<div id ="reportType">${payload.reportType}</div>
 	</td>
 	</tr>
 </table>
 <script type="text/javascript">
 	var data = ${model.historyGraph};
-	graph(document.getElementById('trendGraph'), data);	
+	var type =${payload.reportType};
+	type = type.trim();
+	if(type=='day'){
+		graphReal(document.getElementById('trendGraph'), data,60*60*1000);	
+	}else if{
+		graphReal(document.getElementById('trendGraph'), data,60*60*1000*24);	
+	}
 </script>
