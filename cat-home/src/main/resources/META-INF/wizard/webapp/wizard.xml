@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <wizard package="com.dianping.cat">
    <webapp package="com.dianping.cat" webres="true">
       <module name="report" path="r">
@@ -44,7 +43,7 @@
          <page name="health" title="Health" path="health">
             <description>Health</description>
          </page>
-         <page name="monthreport" title="monthreport" path="monthreport"  standalone="false">
+         <page name="monthreport" title="monthreport" path="monthreport" standalone="false">
             <description>Month Report</description>
          </page>
          <page name="cross" title="Cross" path="cross">
@@ -56,10 +55,14 @@
          <page name="database" title="Database" path="database">
             <description>Database</description>
          </page>
-         <page name="14" title="14" path="monthreport">
-            <description>14</description>
+      </module>
+      <module name="system" path="s" default="false">
+         <page name="alarm" title="Alarm" default="true" path="alarm">
+            <description>Alarm</description>
+         </page>
+         <page name="login" title="Login" default="true" path="login" standalone="false">
+            <description>Login</description>
          </page>
       </module>
    </webapp>
 </wizard>
-

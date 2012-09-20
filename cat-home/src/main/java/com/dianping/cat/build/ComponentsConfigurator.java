@@ -136,10 +136,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
 
+		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
-		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
-		// Please keep it last
+		// database
+		all.addAll(new CatDatabaseConfigurator().defineComponents());
+		all.addAll(new UserDatabaseConfigurator().defineComponents());
+
+		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
 
 		return all;

@@ -17,6 +17,12 @@ final class CatDatabaseConfigurator extends AbstractJdbcResourceConfigurator {
       defineSimpleTableProviderComponents(all, "cat", com.dianping.cat.home.dal.report._INDEX.getEntityClasses());
       defineDaoComponents(all, com.dianping.cat.home.dal.report._INDEX.getDaoClasses());
 
+      defineSimpleTableProviderComponents(all, "cat", com.dianping.cat.home.dal.alarm._INDEX.getEntityClasses());
+      defineDaoComponents(all, com.dianping.cat.home.dal.alarm._INDEX.getDaoClasses());
+
+      defineSimpleTableProviderComponents(all, "cat", com.dianping.cat.home.dal.notification._INDEX.getEntityClasses());
+      defineDaoComponents(all, com.dianping.cat.home.dal.notification._INDEX.getDaoClasses());
+
       return all;
    }
 }

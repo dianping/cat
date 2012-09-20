@@ -25,7 +25,7 @@
 		<url-pattern>/r/*</url-pattern>
 	</servlet-mapping>
 	<servlet-mapping>
-		<servlet-name>cat-servlet</servlet-name>
+		<servlet-name>mvc-servlet</servlet-name>
 		<url-pattern>/s/*</url-pattern>
 	</servlet-mapping>
 	<jsp-config>
