@@ -52,6 +52,23 @@ public class SqlParseManager {
 		}
 	}
 
+	private synchronized void loadAllFromDatabase(String domain) {
+		if (m_domains.contains(domain)) {
+			return;
+		}
+		try {
+			List<Sqltable> sqltables = m_sqltableDao.findAllByDomain(domain, SqltableEntity.READSET_FULL);
+
+			for (Sqltable sqltable : sqltables) {
+				m_sqltables.put(sqltable.getSqlName(), sqltable.getTableName());
+			}
+
+			m_domains.add(domain);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	private String parseSql(String sqlStatement) {
 		List<String> tables = SqlParsers.forTable().parse(sqlStatement);
 		String result = "";
@@ -69,22 +86,5 @@ public class SqlParseManager {
 			result = "UnKnownTable";
 		}
 		return result;
-	}
-
-	private synchronized void loadAllFromDatabase(String domain) {
-		if (m_domains.contains(domain)) {
-			return;
-		}
-		try {
-			List<Sqltable> sqltables = m_sqltableDao.findAllByDomain(domain, SqltableEntity.READSET_FULL);
-
-			for (Sqltable sqltable : sqltables) {
-				m_sqltables.put(sqltable.getSqlName(), sqltable.getTableName());
-			}
-
-			m_domains.add(domain);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
 	}
 }

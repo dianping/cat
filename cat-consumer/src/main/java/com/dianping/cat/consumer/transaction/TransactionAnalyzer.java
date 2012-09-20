@@ -402,6 +402,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			m_domain = transactionReport.getDomain();
+			super.visitTransactionReport(transactionReport);
+		}
+
+		@Override
 		public void visitType(TransactionType type) {
 			long totalCount = type.getTotalCount();
 			int value = (int) (totalCount / 10000);
@@ -439,12 +445,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				}
 			}
 			super.visitType(type);
-		}
-
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			m_domain = transactionReport.getDomain();
-			super.visitTransactionReport(transactionReport);
 		}
 	}
 }

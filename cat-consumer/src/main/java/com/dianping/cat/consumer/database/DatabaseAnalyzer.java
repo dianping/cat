@@ -41,6 +41,35 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 
 	private Map<String, DatabaseReport> m_reports = new HashMap<String, DatabaseReport>();
 
+	private DatabaseItem buildDataBaseItem(String domain, Transaction t) {
+		List<Message> messages = t.getChildren();
+		String connection = null;
+		String method = null;
+		String sqlName = t.getName();
+		String sqlStatement = (String) t.getData();
+
+		for (Message message : messages) {
+			if (message instanceof Event) {
+				String type = message.getType();
+
+				if (type.equals("SQL.Method")) {
+					method = message.getName();
+				} else if (type.equals("SQL.Database")) {
+					connection = message.getName();
+				}
+			}
+		}
+		if (connection != null && method != null) {
+			DatabaseItem item = new DatabaseItem();
+			String tables = m_sqlParseManeger.getTableNames(sqlName, sqlStatement, domain);
+			String database = getDataBaseName(connection);
+
+			item.setDatabase(database).setTables(tables).setMethod(method).setConnectionUrl(connection);
+			return item;
+		}
+		return null;
+	}
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
@@ -49,6 +78,19 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	private String getDataBaseName(String url) {
+		try {
+			int index = url.indexOf("://");
+			String temp = url.substring(index + 3);
+			index = temp.indexOf("/");
+			int index2 = temp.indexOf("?");
+			String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
+			return schema;
+		} catch (Exception e) {
+		}
+		return "Unknown";
 	}
 
 	@Override
@@ -145,29 +187,6 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		}
 	}
 
-	private void updateTableInfo(Table table, String method, String sqlName, Transaction t) {
-		String status = t.getStatus();
-		double duration = t.getDurationInMicros() / 1000d;
-
-		Method m = table.findOrCreateMethod(method);
-
-		if (!status.equals(Message.SUCCESS)) {
-			m.incFailCount();
-			table.incFailCount();
-		}
-		m.addSql(sqlName);
-
-		m.incTotalCount();
-		m.setSum(m.getSum() + duration);
-		m.setAvg(m.getSum() / (double) m.getTotalCount());
-		m.setFailPercent(m.getFailCount() / (double) m.getTotalCount());
-
-		table.incTotalCount();
-		table.setSum(table.getSum() + duration);
-		table.setAvg(table.getSum() / (double) table.getTotalCount());
-		table.setFailPercent(table.getFailCount() / (double) table.getTotalCount());
-	}
-
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
 		m_extraTime = extraTime;
 		m_startTime = startTime;
@@ -238,46 +257,27 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		}
 	}
 
-	private DatabaseItem buildDataBaseItem(String domain, Transaction t) {
-		List<Message> messages = t.getChildren();
-		String connection = null;
-		String method = null;
-		String sqlName = t.getName();
-		String sqlStatement = (String) t.getData();
+	private void updateTableInfo(Table table, String method, String sqlName, Transaction t) {
+		String status = t.getStatus();
+		double duration = t.getDurationInMicros() / 1000d;
 
-		for (Message message : messages) {
-			if (message instanceof Event) {
-				String type = message.getType();
+		Method m = table.findOrCreateMethod(method);
 
-				if (type.equals("SQL.Method")) {
-					method = message.getName();
-				} else if (type.equals("SQL.Database")) {
-					connection = message.getName();
-				}
-			}
+		if (!status.equals(Message.SUCCESS)) {
+			m.incFailCount();
+			table.incFailCount();
 		}
-		if (connection != null && method != null) {
-			DatabaseItem item = new DatabaseItem();
-			String tables = m_sqlParseManeger.getTableNames(sqlName, sqlStatement, domain);
-			String database = getDataBaseName(connection);
+		m.addSql(sqlName);
 
-			item.setDatabase(database).setTables(tables).setMethod(method).setConnectionUrl(connection);
-			return item;
-		}
-		return null;
-	}
+		m.incTotalCount();
+		m.setSum(m.getSum() + duration);
+		m.setAvg(m.getSum() / (double) m.getTotalCount());
+		m.setFailPercent(m.getFailCount() / (double) m.getTotalCount());
 
-	private String getDataBaseName(String url) {
-		try {
-			int index = url.indexOf("://");
-			String temp = url.substring(index + 3);
-			index = temp.indexOf("/");
-			int index2 = temp.indexOf("?");
-			String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
-			return schema;
-		} catch (Exception e) {
-		}
-		return "Unknown";
+		table.incTotalCount();
+		table.setSum(table.getSum() + duration);
+		table.setAvg(table.getSum() / (double) table.getTotalCount());
+		table.setFailPercent(table.getFailCount() / (double) table.getTotalCount());
 	}
 
 	public static class DatabaseItem {
@@ -289,12 +289,20 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 
 		private String m_method;
 
+		public String getConnectionUrl() {
+			return m_connectionUrl;
+		}
+
 		public String getDatabase() {
 			return m_database;
 		}
 
-		public String getConnectionUrl() {
-			return m_connectionUrl;
+		public String getMethod() {
+			return m_method;
+		}
+
+		public String getTables() {
+			return m_tables;
 		}
 
 		public DatabaseItem setConnectionUrl(String connectionUrl) {
@@ -307,21 +315,13 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 			return this;
 		}
 
-		public String getTables() {
-			return m_tables;
+		public DatabaseItem setMethod(String method) {
+			m_method = method;
+			return this;
 		}
 
 		public DatabaseItem setTables(String tables) {
 			m_tables = tables;
-			return this;
-		}
-
-		public String getMethod() {
-			return m_method;
-		}
-
-		public DatabaseItem setMethod(String method) {
-			m_method = method;
 			return this;
 		}
 	}

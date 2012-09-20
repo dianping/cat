@@ -48,6 +48,52 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 		}
 	}
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
+	public Set<String> getDomains() {
+		return m_reports.keySet();
+	}
+
+	@Override
+	public CommonReport getReport(String domain) {
+		throw new RuntimeException("Can't invoke get report in common anayler!");
+	}
+
+	@Override
+	protected boolean isTimeout() {
+		long currentTime = System.currentTimeMillis();
+		long endTime = m_startTime + m_duration + m_extraTime;
+
+		return currentTime > endTime;
+	}
+
+	@Override
+	protected void process(MessageTree tree) {
+		String domain = tree.getDomain();
+		CommonReport report = m_reports.get(domain);
+
+		if (report == null) {
+			report = new CommonReport(domain);
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+
+			m_reports.put(domain, report);
+		}
+
+		String ip = tree.getIpAddress();
+		report.getIps().add(ip);
+	}
+
+	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
+		m_extraTime = extraTime;
+		m_startTime = startTime;
+		m_duration = duration;
+	}
+
 	private void storeReport() {
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
@@ -96,51 +142,5 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 		} finally {
 			t.complete();
 		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
-	@Override
-	protected boolean isTimeout() {
-		long currentTime = System.currentTimeMillis();
-		long endTime = m_startTime + m_duration + m_extraTime;
-
-		return currentTime > endTime;
-	}
-
-	@Override
-	protected void process(MessageTree tree) {
-		String domain = tree.getDomain();
-		CommonReport report = m_reports.get(domain);
-
-		if (report == null) {
-			report = new CommonReport(domain);
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-
-			m_reports.put(domain, report);
-		}
-
-		String ip = tree.getIpAddress();
-		report.getIps().add(ip);
-	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-	}
-
-	@Override
-	public CommonReport getReport(String domain) {
-		throw new RuntimeException("Can't invoke get report in common anayler!");
 	}
 }
