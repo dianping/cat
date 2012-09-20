@@ -29,7 +29,7 @@ import com.dianping.cat.consumer.problem.handler.DefaultProblemHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongExecutionHandler;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
-import com.dianping.cat.consumer.sqlparse.SqlParseManager;
+import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.spi.MessageCodec;

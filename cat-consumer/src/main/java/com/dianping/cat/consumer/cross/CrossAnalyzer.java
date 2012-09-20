@@ -246,19 +246,25 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-
+		
+		t.setStatus(Message.SUCCESS);
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "cross");
 
 			for (CrossReport report : m_reports.values()) {
-				Set<String> domainNames = report.getDomainNames();
-				domainNames.clear();
-				domainNames.addAll(getDomains());
+				try {
+					Set<String> domainNames = report.getDomainNames();
+					domainNames.clear();
+					domainNames.addAll(getDomains());
 
-				String xml = builder.buildXml(report);
-				String domain = report.getDomain();
+					String xml = builder.buildXml(report);
+					String domain = report.getDomain();
 
-				reportBucket.storeById(domain, xml);
+					reportBucket.storeById(domain, xml);
+				} catch (Exception e) {
+					Cat.getProducer().logError(e);
+					t.setStatus(e);
+				}
 			}
 
 			if (atEnd && !isLocalMode()) {
@@ -280,22 +286,13 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 						m_reportDao.insert(r);
 
-						// Task task = m_taskDao.createLocal();
-						// task.setCreationDate(new Date());
-						// task.setProducer(ip);
-						// task.setReportDomain(domain);
-						// task.setReportName("cross");
-						// task.setReportPeriod(period);
-						// task.setStatus(1); // status todo
-						// m_taskDao.insert(task);
-						// m_logger.info("insert cross task:" + task.toString());
 					} catch (Throwable e) {
 						Cat.getProducer().logError(e);
+						t.setStatus(e);
 					}
 				}
 			}
 
-			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);
 			t.setStatus(e);

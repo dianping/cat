@@ -19,7 +19,7 @@ import com.dianping.cat.consumer.database.model.entity.Method;
 import com.dianping.cat.consumer.database.model.entity.Table;
 import com.dianping.cat.consumer.database.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.database.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.sqlparse.SqlParseManager;
+import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -180,19 +180,25 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-
+		
+		t.setStatus(Message.SUCCESS);
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "database");
 
 			for (DatabaseReport report : m_reports.values()) {
-				Set<String> domainNames = report.getDatabaseNames();
-				domainNames.clear();
-				domainNames.addAll(getDomains());
+				try {
+					Set<String> domainNames = report.getDatabaseNames();
+					domainNames.clear();
+					domainNames.addAll(getDomains());
 
-				String xml = builder.buildXml(report);
-				String domain = report.getDatabase();
+					String xml = builder.buildXml(report);
+					String domain = report.getDatabase();
 
-				reportBucket.storeById(domain, xml);
+					reportBucket.storeById(domain, xml);
+				} catch (Exception e) {
+					Cat.logError(e);
+					t.setStatus(e);
+				}
 			}
 
 			if (atEnd && !isLocalMode()) {
@@ -213,25 +219,14 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 						r.setContent(xml);
 
 						m_reportDao.insert(r);
-
-						// Task task = m_taskDao.createLocal();
-						// task.setCreationDate(new Date());
-						// task.setProducer(ip);
-						// task.setReportDomain(domain);
-						// task.setReportName("database");
-						// task.setReportPeriod(period);
-						// task.setStatus(1); // status todo
-						// m_taskDao.insert(task);
-						// m_logger.info("insert database task:" + task.toString());
 					} catch (Throwable e) {
-						Cat.getProducer().logError(e);
+						Cat.logError(e);
+						t.setStatus(e);
 					}
 				}
 			}
-
-			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
-			Cat.getProducer().logError(e);
+			Cat.logError(e);
 			t.setStatus(e);
 			m_logger.error(String.format("Error when storing database reports of %s!", new Date(m_startTime)), e);
 		} finally {
@@ -241,7 +236,6 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
-
 	}
 
 	private DatabaseItem buildDataBaseItem(String domain, Transaction t) {

@@ -19,7 +19,6 @@ import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.sqlparse.SqlParseManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -185,18 +184,24 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
+		t.setStatus(Message.SUCCESS);
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "sql");
 
 			for (SqlReport report : m_reports.values()) {
-				Set<String> domainNames = report.getDomainNames();
-				domainNames.clear();
-				domainNames.addAll(getDomains());
+				try {
+	            Set<String> domainNames = report.getDomainNames();
+	            domainNames.clear();
+	            domainNames.addAll(getDomains());
 
-				String xml = builder.buildXml(report);
-				String domain = report.getDomain();
+	            String xml = builder.buildXml(report);
+	            String domain = report.getDomain();
 
-				reportBucket.storeById(domain, xml);
+	            reportBucket.storeById(domain, xml);
+            } catch (Exception e) {
+					t.setStatus(e);
+					Cat.getProducer().logError(e);
+            }
 			}
 
 			if (atEnd && !isLocalMode()) {
@@ -217,23 +222,12 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 						r.setContent(xml);
 
 						m_reportDao.insert(r);
-
-						// Task task = m_taskDao.createLocal();
-						// task.setCreationDate(new Date());
-						// task.setProducer(ip);
-						// task.setReportDomain(domain);
-						// task.setReportName("sql");
-						// task.setReportPeriod(period);
-						// task.setStatus(1); // status todo
-						// m_taskDao.insert(task);
-						// m_logger.info("insert sql task:" + task.toString());
 					} catch (Throwable e) {
+						t.setStatus(e);
 						Cat.getProducer().logError(e);
 					}
 				}
 			}
-
-			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);
 			t.setStatus(e);

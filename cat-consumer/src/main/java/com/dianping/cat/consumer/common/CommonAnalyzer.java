@@ -15,6 +15,8 @@ import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.common.model.entity.CommonReport;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.BucketManager;
@@ -22,7 +24,7 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implements LogEnabled {
-	
+
 	private Map<String, CommonReport> m_reports = new HashMap<String, CommonReport>();
 
 	@Inject
@@ -47,39 +49,52 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 	}
 
 	private void storeReport() {
-		for (CommonReport report : m_reports.values()) {
-			String domain = report.getDomain();
-			Set<String> ips = report.getIps();
+		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
-			for (String ip : ips) {
-				Hostinfo info = m_hostInfoDao.createLocal();
+		t.setStatus(Message.SUCCESS);
+		try {
+			for (CommonReport report : m_reports.values()) {
+				String domain = report.getDomain();
+				Set<String> ips = report.getIps();
 
-				info.setDomain(domain);
-				info.setIp(ip);
-				try {
-					m_hostInfoDao.insert(info);
-				} catch (DalException e) {
-					Cat.logError(e);
+				for (String ip : ips) {
+					try {
+						Hostinfo info = m_hostInfoDao.createLocal();
+
+						info.setDomain(domain);
+						info.setIp(ip);
+						m_hostInfoDao.insert(info);
+					} catch (DalException e) {
+						Cat.logError(e);
+						t.setStatus(e);
+					}
 				}
 			}
-		}
-		Date period = new Date(m_startTime);
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			Date period = new Date(m_startTime);
+			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-		// Create task for health report
-		for (String domain : m_reports.keySet()) {
-			try {
-				Task task = m_taskDao.createLocal();
-				task.setCreationDate(new Date());
-				task.setProducer(ip);
-				task.setReportDomain(domain);
-				task.setReportName("health");
-				task.setReportPeriod(period);
-				task.setStatus(1); // status todo
-				m_taskDao.insert(task);
-			} catch (Exception e) {
-				Cat.logError(e);
+			// Create task for health report
+			for (String domain : m_reports.keySet()) {
+				try {
+					Task task = m_taskDao.createLocal();
+
+					task.setCreationDate(new Date());
+					task.setProducer(ip);
+					task.setReportDomain(domain);
+					task.setReportName("health");
+					task.setReportPeriod(period);
+					task.setStatus(1); // status todo
+					m_taskDao.insert(task);
+				} catch (Exception e) {
+					Cat.logError(e);
+					t.setStatus(e);
+				}
 			}
+		} catch (Exception e) {
+			t.setStatus(e);
+			Cat.logError(e);
+		} finally {
+			t.complete();
 		}
 	}
 

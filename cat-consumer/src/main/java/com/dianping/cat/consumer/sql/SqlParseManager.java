@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.sqlparse;
+package com.dianping.cat.consumer.sql;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +15,6 @@ import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
 public class SqlParseManager {
-
 	@Inject
 	private SqltableDao m_sqltableDao;
 

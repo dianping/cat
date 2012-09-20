@@ -165,23 +165,28 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	private void storeReports(boolean atEnd) {
-
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-
+		
+		t.setStatus(Message.SUCCESS);
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "problem");
 
 			for (ProblemReport report : m_reports.values()) {
-				Set<String> domainNames = report.getDomainNames();
-				domainNames.clear();
-				domainNames.addAll(getDomains());
+				try {
+	            Set<String> domainNames = report.getDomainNames();
+	            domainNames.clear();
+	            domainNames.addAll(getDomains());
 
-				String xml = builder.buildXml(report);
-				String domain = report.getDomain();
+	            String xml = builder.buildXml(report);
+	            String domain = report.getDomain();
 
-				reportBucket.storeById(domain, xml);
+	            reportBucket.storeById(domain, xml);
+            } catch (Exception e) {
+					t.setStatus(e);
+					Cat.getProducer().logError(e);
+            }
 			}
 
 			if (atEnd && !isLocalMode()) {
@@ -212,15 +217,14 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 						task.setStatus(1);
 						m_taskDao.insert(task);
 					} catch (Throwable e) {
+						t.setStatus(e);
 						Cat.getProducer().logError(e);
 					}
 				}
 			}
-
-			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
-			Cat.getProducer().logError(e);
 			t.setStatus(e);
+			Cat.getProducer().logError(e);
 			m_logger.error(String.format("Error when storing problem reports to %s!", new Date(m_startTime)), e);
 		} finally {
 			t.complete();

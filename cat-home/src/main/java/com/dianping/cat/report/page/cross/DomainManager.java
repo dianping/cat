@@ -74,7 +74,7 @@ public class DomainManager implements Initializable {
 								addIps.add(hostinfo.getIp());
 								m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
 							} catch (Exception e) {
-								Cat.logError(e);
+								//ignore
 							}
 						}
 						for (String ip : addIps) {
