@@ -3,10 +3,8 @@ package com.dianping.cat.consumer.dump;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -141,8 +139,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 				MessageProducer cat = Cat.getProducer();
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				String ts = new SimpleDateFormat("mmss").format(new Date());
-				Transaction root = cat.newTransaction("System", "Dump-" + ip + "-" + ts);
+				Transaction root = cat.newTransaction("System", "Dump-" + ip);
 
 				Collections.sort(paths);
 
@@ -195,7 +192,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 			// the path has two depth
 			for (int i = 0; i < 2; i++) {
 				final List<String> directionPaths = new ArrayList<String>();
-				
+
 				Scanners.forDir().scan(baseDir, new FileMatcher() {
 					@Override
 					public Direction matches(File base, String path) {
@@ -209,7 +206,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 				for (String path : directionPaths) {
 					try {
 						File file = new File(baseDir, path);
-				
+
 						file.delete();
 					} catch (Exception e) {
 					}

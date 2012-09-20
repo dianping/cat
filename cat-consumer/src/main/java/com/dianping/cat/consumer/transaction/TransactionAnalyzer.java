@@ -53,9 +53,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private void clearAllDuration(TransactionReport report) {
 		Collection<Machine> machines = report.getMachines().values();
+		
 		for (Machine machine : machines) {
 			for (TransactionType type : machine.getTypes().values()) {
 				type.getAllDurations().clear();
+				
 				for (TransactionName name : type.getNames().values()) {
 					name.getAllDurations().clear();
 				}
@@ -104,9 +106,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (report == null) {
 			report = new TransactionReport(domain);
 		}
-		// report.accept(new TransactionReportFilter());
 		report.getDomainNames().addAll(m_reports.keySet());
-
 		report.accept(new StatisticsComputer());
 		set95Line(report);
 		return report;
@@ -319,24 +319,30 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	private void storeReports(boolean atEnd) {
-		// DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
-		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 		Bucket<String> reportBucket = null;
+		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
+		
+		t.setStatus(Message.SUCCESS);
 
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "transaction");
 
 			for (TransactionReport report : m_reports.values()) {
-				Set<String> domainNames = report.getDomainNames();
-				domainNames.clear();
-				domainNames.addAll(getDomains());
+				try {
+	            Set<String> domainNames = report.getDomainNames();
+	            domainNames.clear();
+	            domainNames.addAll(getDomains());
 
-				set95Line(report);
-				clearAllDuration(report);
-				String xml = new TransactionReportFilter(50).buildXml(report);
-				String domain = report.getDomain();
+	            set95Line(report);
+	            clearAllDuration(report);
+	            String xml = new TransactionReportFilter(50).buildXml(report);
+	            String domain = report.getDomain();
 
-				reportBucket.storeById(domain, xml);
+	            reportBucket.storeById(domain, xml);
+            } catch (Exception e) {
+					t.setStatus(e);
+					Cat.getProducer().logError(e); 
+            }
 			}
 
 			if (atEnd && !isLocalMode()) {
@@ -367,11 +373,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 						task.setStatus(1); // status todo
 						m_taskDao.insert(task);
 					} catch (Throwable e) {
+						t.setStatus(e);
 						Cat.getProducer().logError(e);
 					}
 				}
 			}
-			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
 			Cat.getProducer().logError(e);
 			t.setStatus(e);
@@ -393,6 +399,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		public TransactionReportFilter(int maxItem) {
 			m_maxItems = maxItem;
+		}
+
+		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			m_domain = transactionReport.getDomain();
+			super.visitTransactionReport(transactionReport);
 		}
 
 		@Override
@@ -433,12 +445,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				}
 			}
 			super.visitType(type);
-		}
-
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			m_domain = transactionReport.getDomain();
-			super.visitTransactionReport(transactionReport);
 		}
 	}
 }

@@ -19,7 +19,6 @@ import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.entity.Table;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder;
-import com.dianping.cat.consumer.sqlparse.SqlParseManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -41,6 +40,35 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 	private Map<String, SqlReport> m_reports = new HashMap<String, SqlReport>();
 
+	private DatabaseItem buildDataBaseItem(String domain, Transaction t) {
+		List<Message> messages = t.getChildren();
+		String connection = null;
+		String method = null;
+		String sqlName = t.getName();
+		String sqlStatement = (String) t.getData();
+
+		for (Message message : messages) {
+			if (message instanceof Event) {
+				String type = message.getType();
+
+				if (type.equals("SQL.Method")) {
+					method = message.getName();
+				} else if (type.equals("SQL.Database")) {
+					connection = message.getName();
+				}
+			}
+		}
+		if (connection != null && method != null) {
+			DatabaseItem item = new DatabaseItem();
+			String tables = m_sqlParseManager.getTableNames(sqlName, sqlStatement, domain);
+			String database = getDataBaseName(connection);
+
+			item.setDatabase(database).setTables(tables).setMethod(method).setConnectionUrl(connection);
+			return item;
+		}
+		return null;
+	}
+
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
@@ -49,6 +77,20 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	private String getDataBaseName(String url) {
+		try {
+			int index = url.indexOf("://");
+			String temp = url.substring(index + 3);
+			index = temp.indexOf("/");
+			int index2 = temp.indexOf("?");
+			String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
+			
+			return schema;
+		} catch (Exception e) {
+		}
+		return "Unknown";
 	}
 
 	@Override
@@ -149,6 +191,77 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 		}
 	}
 
+	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
+		m_extraTime = extraTime;
+		m_startTime = startTime;
+		m_duration = duration;
+
+		loadReports();
+	}
+
+	private void storeReports(boolean atEnd) {
+		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
+		Bucket<String> reportBucket = null;
+		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
+
+		t.setStatus(Message.SUCCESS);
+		try {
+			reportBucket = m_bucketManager.getReportBucket(m_startTime, "sql");
+
+			for (SqlReport report : m_reports.values()) {
+				try {
+	            Set<String> domainNames = report.getDomainNames();
+	            domainNames.clear();
+	            domainNames.addAll(getDomains());
+
+	            String xml = builder.buildXml(report);
+	            String domain = report.getDomain();
+
+	            reportBucket.storeById(domain, xml);
+            } catch (Exception e) {
+					t.setStatus(e);
+					Cat.getProducer().logError(e);
+            }
+			}
+
+			if (atEnd && !isLocalMode()) {
+				Date period = new Date(m_startTime);
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+
+				for (SqlReport report : m_reports.values()) {
+					try {
+						Report r = m_reportDao.createLocal();
+						String xml = builder.buildXml(report);
+						String domain = report.getDomain();
+
+						r.setName("sql");
+						r.setDomain(domain);
+						r.setPeriod(period);
+						r.setIp(ip);
+						r.setType(1);
+						r.setContent(xml);
+
+						m_reportDao.insert(r);
+					} catch (Throwable e) {
+						t.setStatus(e);
+						Cat.getProducer().logError(e);
+					}
+				}
+			}
+		} catch (Exception e) {
+			Cat.getProducer().logError(e);
+			t.setStatus(e);
+			m_logger.error(String.format("Error when storing sql reports of %s!", new Date(m_startTime)), e);
+		} finally {
+			t.complete();
+
+			if (reportBucket != null) {
+				m_bucketManager.closeBucket(reportBucket);
+			}
+		}
+
+	}
+
 	private void updateTableInfo(Table table, String method, String sqlName, Transaction t) {
 		String status = t.getStatus();
 		double duration = t.getDurationInMicros() / 1000d;
@@ -172,125 +285,6 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 		table.setFailPercent(table.getFailCount() / (double) table.getTotalCount());
 	}
 
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-
-		loadReports();
-	}
-
-	private void storeReports(boolean atEnd) {
-		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
-		Bucket<String> reportBucket = null;
-		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-
-		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, "sql");
-
-			for (SqlReport report : m_reports.values()) {
-				Set<String> domainNames = report.getDomainNames();
-				domainNames.clear();
-				domainNames.addAll(getDomains());
-
-				String xml = builder.buildXml(report);
-				String domain = report.getDomain();
-
-				reportBucket.storeById(domain, xml);
-			}
-
-			if (atEnd && !isLocalMode()) {
-				Date period = new Date(m_startTime);
-				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-				for (SqlReport report : m_reports.values()) {
-					try {
-						Report r = m_reportDao.createLocal();
-						String xml = builder.buildXml(report);
-						String domain = report.getDomain();
-
-						r.setName("sql");
-						r.setDomain(domain);
-						r.setPeriod(period);
-						r.setIp(ip);
-						r.setType(1);
-						r.setContent(xml);
-
-						m_reportDao.insert(r);
-
-						// Task task = m_taskDao.createLocal();
-						// task.setCreationDate(new Date());
-						// task.setProducer(ip);
-						// task.setReportDomain(domain);
-						// task.setReportName("sql");
-						// task.setReportPeriod(period);
-						// task.setStatus(1); // status todo
-						// m_taskDao.insert(task);
-						// m_logger.info("insert sql task:" + task.toString());
-					} catch (Throwable e) {
-						Cat.getProducer().logError(e);
-					}
-				}
-			}
-
-			t.setStatus(Message.SUCCESS);
-		} catch (Exception e) {
-			Cat.getProducer().logError(e);
-			t.setStatus(e);
-			m_logger.error(String.format("Error when storing sql reports of %s!", new Date(m_startTime)), e);
-		} finally {
-			t.complete();
-
-			if (reportBucket != null) {
-				m_bucketManager.closeBucket(reportBucket);
-			}
-		}
-
-	}
-
-	private DatabaseItem buildDataBaseItem(String domain, Transaction t) {
-		List<Message> messages = t.getChildren();
-		String connection = null;
-		String method = null;
-		String sqlName = t.getName();
-		String sqlStatement = (String) t.getData();
-
-		for (Message message : messages) {
-			if (message instanceof Event) {
-				String type = message.getType();
-
-				if (type.equals("SQL.Method")) {
-					method = message.getName();
-				} else if (type.equals("SQL.Database")) {
-					connection = message.getName();
-				}
-			}
-		}
-		if (connection != null && method != null) {
-			DatabaseItem item = new DatabaseItem();
-			String tables = m_sqlParseManager.getTableNames(sqlName, sqlStatement, domain);
-			String database = getDataBaseName(connection);
-
-			item.setDatabase(database).setTables(tables).setMethod(method).setConnectionUrl(connection);
-			return item;
-		}
-		return null;
-	}
-
-	private String getDataBaseName(String url) {
-		try {
-			int index = url.indexOf("://");
-			String temp = url.substring(index + 3);
-			index = temp.indexOf("/");
-			int index2 = temp.indexOf("?");
-			String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
-			
-			return schema;
-		} catch (Exception e) {
-		}
-		return "Unknown";
-	}
-
 	public static class DatabaseItem {
 		private String m_connectionUrl;
 
@@ -300,12 +294,20 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 		private String m_method;
 
+		public String getConnectionUrl() {
+			return m_connectionUrl;
+		}
+
 		public String getDatabase() {
 			return m_database;
 		}
 
-		public String getConnectionUrl() {
-			return m_connectionUrl;
+		public String getMethod() {
+			return m_method;
+		}
+
+		public String getTables() {
+			return m_tables;
 		}
 
 		public DatabaseItem setConnectionUrl(String connectionUrl) {
@@ -318,21 +320,13 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 			return this;
 		}
 
-		public String getTables() {
-			return m_tables;
+		public DatabaseItem setMethod(String method) {
+			m_method = method;
+			return this;
 		}
 
 		public DatabaseItem setTables(String tables) {
 			m_tables = tables;
-			return this;
-		}
-
-		public String getMethod() {
-			return m_method;
-		}
-
-		public DatabaseItem setMethod(String method) {
-			m_method = method;
 			return this;
 		}
 	}

@@ -124,7 +124,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		Threads.forGroup("Cat").start(new BlockDumper());
 		Threads.forGroup("Cat").start(new IdleChecker());
-		Threads.forGroup("Cat").start(new OldMessageUploader());
+		Threads.forGroup("Cat").start(new OldMessageMover());
 	}
 
 	@Override
@@ -138,7 +138,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			MessageId id = MessageId.parse(messageId);
 			final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
 			final File dir = new File(m_baseDir, path);
-			// final String key = "-" + id.getDomain() + "-";
 			final String key = id.getDomain() + '-' + id.getIpAddress();
 			final List<String> paths = new ArrayList<String>();
 
@@ -211,8 +210,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void storeMessage(MessageTree tree) throws IOException {
 		MessageId id = MessageId.parse(tree.getMessageId());
-		// <callee domain> - <caller domain> - <callee ip>
-		// String name = tree.getDomain() + "-" + id.getDomain() + "-" + tree.getIpAddress();
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		String name = id.getDomain() + '-' + id.getIpAddress() + '-' + localIp;
 		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
@@ -276,22 +273,28 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
 			return false;
 		}
+		
 		long current = System.currentTimeMillis();
 		long currentHour = current - current % ONE_HOUR;
 		long lastHour = currentHour - ONE_HOUR;
+		long nextHour = currentHour + ONE_HOUR;
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
 		String currentHourStr = sdf.format(new Date(currentHour));
 		String lastHourStr = sdf.format(new Date(lastHour));
+		String nextHourStr = sdf.format(new Date(nextHour));
 
 		int indexOf = path.indexOf(currentHourStr);
-		int indexOf2 = path.indexOf(lastHourStr);
-		if (indexOf > -1 || indexOf2 > -1) {
+		int indexOfLast = path.indexOf(lastHourStr);
+		int indexOfNext = path.indexOf(nextHourStr);
+
+		if (indexOf > -1 || indexOfLast > -1 || indexOfNext > -1) {
 			return false;
 		}
 		return true;
 	}
 
-	private void uploadOld() {
+	private void moverOldMessages() {
 		final List<String> paths = new ArrayList<String>();
 
 		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
@@ -334,18 +337,18 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	class OldMessageUploader implements Task {
+	class OldMessageMover implements Task {
 
 		@Override
 		public void run() {
 			while (true) {
 				try {
-					uploadOld();
+					moverOldMessages();
 				} catch (Throwable e) {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(60 * 1000L);
+					Thread.sleep(2 * 60 * 1000L);
 				} catch (InterruptedException e) {
 					// ignore
 				}
@@ -354,7 +357,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		@Override
 		public String getName() {
-			return "MessageUpload-Clean";
+			return "LocalMessageBucketManager-OldMessageMover";
 		}
 
 		@Override

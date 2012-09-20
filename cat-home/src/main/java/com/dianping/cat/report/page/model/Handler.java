@@ -89,9 +89,18 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		String report = payload.getReport();
 		String ipAddress = payload.getIpAddress();
 		if ("transaction".equals(report)) {
-			TransactionReportFilter filter = new TransactionReportFilter(payload.getType(), payload.getName(), ipAddress);
+			try {
+				TransactionReportFilter filter = new TransactionReportFilter(payload.getType(), payload.getName(),
+				      ipAddress);
 
-			return filter.buildXml((IEntity<?>) dataModel);
+				return filter.buildXml((IEntity<?>) dataModel);
+			} catch (Exception e) {
+				TransactionReportFilter filter = new TransactionReportFilter(payload.getType(), payload.getName(),
+				      ipAddress);
+
+				return filter.buildXml((IEntity<?>) dataModel);
+			}
+
 		} else if ("event".equals(report)) {
 			EventReportFilter filter = new EventReportFilter(payload.getType(), payload.getName(), ipAddress);
 
