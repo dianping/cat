@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +27,8 @@ import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -77,6 +81,21 @@ public class Handler implements PageHandler<Context> {
 
 	private Gson m_gson = new Gson();
 
+	private void buildTransactionNameGraph(String ip, String type, TransactionReport report, Model model) {
+		PieChart chart = new PieChart();
+		Collection<TransactionName> values = report.findOrCreateMachine(ip).findOrCreateType(type).getNames().values();
+		List<Item> items = new ArrayList<Item>();
+		for (TransactionName name : values) {
+			Item item = new Item();
+			item.setNumber(name.getTotalCount()).setTitle(name.getId());
+			items.add(item);
+		}
+
+		chart.setItems(items);
+		Gson gson = new Gson();
+		model.setPieChart(gson.toJson(chart));
+	}
+
 	private void calculateTps(Payload payload, TransactionReport report) {
 		if (payload != null && report != null) {
 			boolean isCurrent = payload.getPeriod().isCurrent();
@@ -107,6 +126,7 @@ public class Handler implements PageHandler<Context> {
 						nameTps = totalNameCount / (double) time;
 					}
 					transName.setTps(nameTps);
+					transName.setTotalPercent((double) totalNameCount / totalCount);
 				}
 			}
 		}
@@ -303,6 +323,7 @@ public class Handler implements PageHandler<Context> {
 				String ip = payload.getIpAddress();
 				if (!StringUtils.isEmpty(type)) {
 					model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, report, queryName));
+					buildTransactionNameGraph(ip, type, report, model);
 				} else {
 					model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
 				}
@@ -375,6 +396,7 @@ public class Handler implements PageHandler<Context> {
 		if (!StringUtils.isEmpty(type)) {
 			model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, transactionReport,
 			      payload.getQueryName()));
+			buildTransactionNameGraph(ip, type, transactionReport, model);
 		} else {
 			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, transactionReport));
 		}

@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.event;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -25,6 +27,8 @@ import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.page.PieChart;
+import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -98,6 +102,7 @@ public class Handler implements PageHandler<Context> {
 						nameTps = totalNameCount / (double) time;
 					}
 					transName.setTps(nameTps);
+					transName.setTotalPercent(totalNameCount / (double) totalCount);
 				}
 			}
 		}
@@ -279,6 +284,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (!StringUtils.isEmpty(type)) {
 				model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, report));
+				buildEventNameGraph(ip, type, report, model);
 			} else {
 				model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, payload.isShowAll(), report));
 			}
@@ -286,6 +292,21 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 			model.setException(e);
 		}
+	}
+
+	private void buildEventNameGraph(String ip, String type, EventReport report, Model model) {
+		PieChart chart = new PieChart();
+		Collection<EventName> values = report.findOrCreateMachine(ip).findOrCreateType(type).getNames().values();
+		List<Item> items = new ArrayList<Item>();
+		for (EventName name : values) {
+			Item item = new Item();
+			item.setNumber(name.getTotalCount()).setTitle(name.getId());
+			items.add(item);
+		}
+
+		chart.setItems(items);
+		Gson gson = new Gson();
+		model.setPieChart(gson.toJson(chart));
 	}
 
 	private MobileGraphs showMobileGraphs(Model model, Payload payload) {
@@ -349,6 +370,7 @@ public class Handler implements PageHandler<Context> {
 		model.setReport(eventReport);
 		if (!StringUtils.isEmpty(type)) {
 			model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, eventReport));
+			buildEventNameGraph(ip, type, eventReport, model);
 		} else {
 			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, payload.isShowAll(), eventReport));
 		}

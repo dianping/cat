@@ -26,6 +26,7 @@
 		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
+		<attribute name="totalPercent" value-type="double" primitive="true" format="0.00" render="false"/>
 		<entity-ref name="range" type="list" names="ranges" method-find-or-create="true" />
 	</entity>
 	<entity name="range">

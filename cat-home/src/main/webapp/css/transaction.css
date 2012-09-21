@@ -55,3 +55,10 @@ tr.link td {
 	margin: 4px auto;
 }
 
+.pieChart {
+	text-align:left;
+	width: 700px;
+	height: 450px;
+	margin: 4px auto;
+}
+

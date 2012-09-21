@@ -1,7 +1,7 @@
 function graphReal(container, data, step) {
 	var real = data.values[0];
 	var d1 = [], start = new Date(data.start).getTime(), options, graph, i, x, o;
-	console.log(new Date(data.start));
+	
 	for (i = 0; i < data.size; i++) {
 		x = start + (i * step);
 		d1.push([ x, real[i] ]);

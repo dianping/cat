@@ -11,6 +11,9 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		switch (action) {
 		case LOGIN:
 			return JspFile.LOGIN.getPath();
+		case LOGOUT:
+			return com.dianping.cat.report.page.home.JspFile.VIEW.getPath();
+		default:
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

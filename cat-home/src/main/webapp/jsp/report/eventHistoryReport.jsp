@@ -42,8 +42,8 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total${model.customDate}">Total Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
-			<th class="right">Sample Link</th><th class="right">TPS</th>
-					</tr>
+			<th class="right">Sample Link</th><th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total${model.customDate}">TPS</a></th>
+			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
@@ -67,7 +67,9 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}">Total Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure${model.customDate}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent${model.customDate}">Failure%</a></th>
-			<th class="right">Sample Link</th><th class="right">TPS</th>
+			<th class="right">Sample Link</th><th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}">TPS</a></th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}">Percent%</a></th>
+					
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"
 						varStatus="status">
@@ -82,6 +84,7 @@
 					<td>${w:format(e.failPercent/100,'0.00%')}</td>
 					<td><a	href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
+					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
 				<tr class="graphs"><td colspan="5"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
@@ -90,6 +93,19 @@
 </table>
 
 <font color="white">${lastIndex+1}</font>
+<c:choose>
+	<c:when test="${not empty payload.type}">
+		<table>
+			<tr>
+				<td><div id="eventGraph" class="graph" ></div>
+				</td>
+			</tr>
+		</table>
+		<script type="text/javascript">
+			var data = ${model.pieChart};
+		</script>
+	</c:when>
+</c:choose>
 <res:useJs value="${res.js.local.event_js}" target="bottom-js" />
 </jsp:body>
 </a:historyReport>
