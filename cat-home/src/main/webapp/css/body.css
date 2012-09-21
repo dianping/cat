@@ -161,3 +161,11 @@ a.heartbeat {
 .right {
 	text-align: right;
 }
+
+.login{
+	height:12px;
+	width:97%;
+	text-align:right;
+	margin-right:20px;
+	pedding-right:20px;
+}

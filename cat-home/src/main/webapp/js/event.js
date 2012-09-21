@@ -76,3 +76,41 @@ $(document).delegate('.history_graph_link', 'click', function(e){
 		cell.parentNode.style.display = 'none';
 	}	
 });
+
+
+function graphPieChart(container,data){
+	 var showData=[];
+	 
+	 for(i = 0; i < data.items.length; i++){
+		 var dataItem = [];
+		 var graphItem ={};
+		
+		 dataItem.push([0,data.items[i].number]);
+		 graphItem.data=dataItem;
+		 graphItem.label=data.items[i].title;
+		 showData.push(graphItem);
+	 }
+
+	 var graph = Flotr.draw(container,showData, {
+	    HtmlText : true,
+	    grid : {
+	      verticalLines : false,
+	      horizontalLines : false
+	    },
+	    xaxis : { showLabels : false },
+	    yaxis : { showLabels : false },
+	    pie : {
+	      show : true, 
+	      position : 'ne',
+	      explode : 6
+	    },
+	    mouse : { track : true },
+	    legend : {
+	      position : 'ne',
+	      backgroundColor : '#D2E8FF'
+	    }
+	  });
+}
+
+graphPieChart(document.getElementById('eventGraph'), data );
+

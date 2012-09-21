@@ -1118,11 +1118,11 @@
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>DP_AdminLogin</role-hint>
+			<role-hint>dp-admin-login</role-hint>
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>DP_AdminLogin</logical-table-name>
-				<physical-table-name>DP_AdminLogin</physical-table-name>
+				<logical-table-name>dp-admin-login</logical-table-name>
+				<physical-table-name>dp_admin_login</physical-table-name>
 				<data-source-name>user</data-source-name>
 			</configuration>
 		</component>

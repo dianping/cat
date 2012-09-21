@@ -30,6 +30,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private EventReport m_report;
 
 	private String m_type;
+	
+	private String m_pieChart;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -158,6 +160,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public String getPieChart() {
+		return m_pieChart;
+	}
+
+	public void setPieChart(String pieChart) {
+		m_pieChart = pieChart;
 	}
 
 }

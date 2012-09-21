@@ -50,3 +50,10 @@ tr.link td {
 .graph_link{
 	font-weight: normal;
 }
+
+.graph {
+	text-align:left;
+	width: 650px;
+	height: 450px;
+	margin: 4px auto;
+}
