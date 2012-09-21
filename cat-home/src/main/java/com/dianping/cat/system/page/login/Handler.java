@@ -63,8 +63,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				if (session == null) {
 					ctx.addError(new ErrorObject("biz.login"));
 				} else {
-					ctx.redirect(payload.getRtnUrl());
-					ctx.stopProcess();
+					redirect(ctx, payload);
 					return;
 				}
 			} else {
@@ -74,8 +73,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			SigninContext sc = createSigninContext(ctx);
 
 			m_signinService.signout(sc);
-			ctx.redirect(payload.getRtnUrl());
-			ctx.stopProcess();
+			redirect(ctx, payload);
 			return;
 		} else {
 			SigninContext sc = createSigninContext(ctx);
@@ -99,6 +97,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 		// skip actual action, show sign-in form
 		ctx.skipAction();
+	}
+
+	private void redirect(Context ctx, Payload payload) {
+		String url = payload.getRtnUrl();
+		String loginUrl = ctx.getRequestContext().getActionUri(SystemPage.LOGIN.getName());
+
+		if (url == null || url.length() == 0 || url.equals(loginUrl)) {
+			url = ctx.getRequestContext().getActionUri("");
+		}
+
+		ctx.redirect(url);
+		ctx.stopProcess();
 	}
 
 	@Override

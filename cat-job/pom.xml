@@ -34,7 +34,7 @@
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
-				<version>1.1.5</version>
+				<version>1.1.9</version>
 				<executions>
 					<execution>
 						<id>generate dal jdbc model</id>
@@ -66,7 +66,6 @@
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>lib/</classpathPrefix>
 							<mainClass>com.dianping.cat.job.JobApp</mainClass>
-							<!-- <mainClass>com.dianping.cat.job.sql.SqlJobMain</mainClass> -->
 						</manifest>
 					</archive>
 				</configuration>

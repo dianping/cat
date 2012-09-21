@@ -40,37 +40,19 @@
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
-				<version>1.1.5</version>
+				<version>1.1.9</version>
 				<executions>
 					<execution>
-						<id>generate configuration model</id>
+						<id>generate data model</id>
 						<phase>generate-sources</phase>
 						<goals>
 							<goal>dal-model</goal>
 						</goals>
 						<configuration>
-							<manifest>${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml
-							</manifest>
-						</configuration>
-					</execution>
-					<execution>
-						<id>generate server configuration model</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>dal-model</goal>
-						</goals>
-						<configuration>
-							<manifest>${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml</manifest>
-						</configuration>
-					</execution>
-					<execution>
-						<id>default-cli</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>dal-model</goal>
-						</goals>
-						<configuration>
-							<manifest>${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml
+							<manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

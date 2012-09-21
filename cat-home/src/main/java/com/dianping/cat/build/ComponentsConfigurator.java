@@ -47,6 +47,7 @@ import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
 import com.site.initialization.DefaultModuleManager;
 import com.site.initialization.Module;
 import com.site.initialization.ModuleManager;
@@ -140,6 +141,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		// database
+		all.add(C(JdbcDataSourceConfigurationManager.class).config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
 

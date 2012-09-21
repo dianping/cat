@@ -31,7 +31,7 @@
       <dependency>
          <groupId>com.site.dal</groupId>
          <artifactId>dal-jdbc</artifactId>
-         <version>1.1.6</version>
+         <version>1.1.7</version>
       </dependency>
       <dependency>
          <groupId>mysql</groupId>
@@ -45,7 +45,7 @@
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
-            <version>1.1.8</version>
+            <version>1.1.9</version>
             <executions>
                <execution>
                   <id>generate report models</id>

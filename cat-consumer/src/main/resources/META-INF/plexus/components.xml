@@ -5,8 +5,8 @@
 			<implementation>com.dianping.cat.consumer.DefaultAnalyzerFactory</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.sqlparse.SqlParseManager</role>
-			<implementation>com.dianping.cat.consumer.sqlparse.SqlParseManager</implementation>
+			<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
+			<implementation>com.dianping.cat.consumer.sql.SqlParseManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.SqltableDao</role>
@@ -130,7 +130,7 @@
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.sqlparse.SqlParseManager</role>
+					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -146,7 +146,7 @@
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.sqlparse.SqlParseManager</role>
+					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -272,13 +272,6 @@
 			<role>com.site.initialization.Module</role>
 			<role-hint>cat-consumer</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerModule</implementation>
-		</component>
-		<component>
-			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
-			<configuration>
-				<datasourceFile>datasources.xml</datasourceFile>
-			</configuration>
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.datasource.DataSource</role>
