@@ -8,7 +8,6 @@
    <modelVersion>4.0.0</modelVersion>
    <artifactId>dog-home</artifactId>
    <name>Dog Home</name>
-   <packaging>war</packaging>
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>
@@ -19,60 +18,15 @@
          <artifactId>cat-consumer</artifactId>
       </dependency>
       <dependency>
-         <groupId>com.site.common</groupId>
-         <artifactId>web-framework</artifactId>
-         <version>1.0.15</version>
-      </dependency>
-      <dependency>
          <groupId>org.json</groupId>
          <artifactId>org.json</artifactId>
          <version>chargebee-1.0</version>
-      </dependency>
-      <dependency>
-         <groupId>com.site.common</groupId>
-         <artifactId>test-framework</artifactId>
-         <version>1.0.3</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.unidal.webres</groupId>
-         <artifactId>WebResServer</artifactId>
-         <version>1.2.0</version>
-      </dependency>
-      <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>servlet-api</artifactId>
-         <version>2.5</version>
-         <scope>provided</scope>
       </dependency>
       <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
          <version>4.8.1</version>
          <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.mortbay.jetty</groupId>
-         <artifactId>jetty</artifactId>
-         <version>6.1.14</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.mortbay.jetty</groupId>
-         <artifactId>jsp-2.1</artifactId>
-         <version>6.1.14</version>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>com.site.dal</groupId>
-         <artifactId>dal-jdbc</artifactId>
-         <version>1.1.6</version>
-      </dependency>
-      <dependency>
-         <groupId>mysql</groupId>
-         <artifactId>mysql-connector-java</artifactId>
-         <version>5.1.20</version>
-         <scope>runtime</scope>
       </dependency>
    </dependencies>
    <build>
@@ -119,19 +73,6 @@ org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
                   </goals>
                   <configuration>
                      <className>com.dianping.dog.build.ComponentsConfigurator</className>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate dal jdbc model</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>dal-jdbc</goal>
-                  </goals>
-                  <configuration>
-                     <manifest><![CDATA[
-                     ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
-                     ${basedir}/src/main/resources/META-INF/dal/jdbc/notification-manifest.xml,
-                     ]]></manifest>
                   </configuration>
                </execution>
             </executions>

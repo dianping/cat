@@ -56,10 +56,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DataService.class, DataService.class)
 				.req(ConnectorManager.class)
 				.req(EventDispatcher.class));
-		
-
-		// Please keep it as last
-		all.addAll(new WebComponentConfigurator().defineComponents());
 
 		return all;
 	}

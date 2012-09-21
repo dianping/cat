@@ -99,7 +99,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		byte identifier = buf.readByte();
 		String timestamp = helper.read(buf, TAB);
 		String type = helper.read(buf, TAB);
-		String name = helper.read(buf, TAB);
+		String name = helper.readRaw(buf, TAB);
 
 		if (identifier == 'E') {
 			DefaultEvent event = new DefaultEvent(type, name);
@@ -267,7 +267,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		count += helper.write(buf, TAB);
 		count += helper.write(buf, message.getType());
 		count += helper.write(buf, TAB);
-		count += helper.write(buf, message.getName());
+		count += helper.writeRaw(buf, message.getName());
 		count += helper.write(buf, TAB);
 
 		if (policy != Policy.WITHOUT_STATUS) {

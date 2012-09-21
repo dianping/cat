@@ -123,7 +123,12 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
+                     <manifest><![CDATA[
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/notification-manifest.xml,
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,
+                     ]]></manifest>
                   </configuration>
                </execution>
             </executions>
