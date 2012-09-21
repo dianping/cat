@@ -359,7 +359,10 @@ public class HealthReportCreator {
 			m_healthReport.setUrl(temp);
 		}
 
-		TransactionType service = types.get("Service");
+		TransactionType service = types.get("PigeonService");
+		if (service == null) {
+			service = types.get("Service");
+		}
 		if (service != null) {
 			BaseInfo serviceBaseInfo = buildBaseInfo(service);
 			Service temp = new Service();
@@ -372,7 +375,10 @@ public class HealthReportCreator {
 			m_healthReport.setService(temp);
 		}
 
-		TransactionType call = types.get("Call");
+		TransactionType call = types.get("PigeonCall");
+		if (call == null) {
+			call = types.get("Call");
+		}
 		if (call != null) {
 			BaseInfo callBaseInfo = buildBaseInfo(call);
 			Call temp = new Call();

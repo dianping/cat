@@ -31,14 +31,13 @@ public class NavigationBar {
 
 		ReportPage.TASK,
 
-		ReportPage.LOGVIEW,
-
 		ReportPage.DATABASE,
 
 		ReportPage.HEALTH,
 		
-		ReportPage.MONTHREPORT
+		ReportPage.MONTHREPORT,
 
+		ReportPage.LOGVIEW
 		};
 	}
 }

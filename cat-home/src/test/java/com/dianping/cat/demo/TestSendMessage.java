@@ -10,6 +10,14 @@ import com.dianping.cat.message.Transaction;
 public class TestSendMessage {
 
 	@Test
+	public void sendException() throws Exception {
+		for (int i = 0; i < 100; i++) {
+			Cat.getProducer().logError(new OutOfMemoryError());
+		}
+		Thread.sleep(1000);
+	}
+
+	@Test
 	public void sendSendUrlErrorMessage() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("URL", "Test");
