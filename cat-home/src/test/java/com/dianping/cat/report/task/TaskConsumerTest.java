@@ -344,7 +344,7 @@ public class TaskConsumerTest {
 		latch.countDown();
 		new Thread(consumerTwo).start();
 		latch.countDown();
-		Thread.sleep(500);
+		Thread.sleep(1500);
 		while (!consumerOne.isStopped()) {
 			Thread.sleep(500);
 		}

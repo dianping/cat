@@ -85,7 +85,7 @@ function graphPieChart(container,data){
 		 var dataItem = [];
 		 var graphItem ={};
 		
-		 dataItem.push([0,data.items[i].number]);
+		 dataItem.push([i+1,data.items[i].number]);
 		 graphItem.data=dataItem;
 		 graphItem.label=data.items[i].title;
 		 showData.push(graphItem);

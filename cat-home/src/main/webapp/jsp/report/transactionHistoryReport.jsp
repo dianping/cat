@@ -100,7 +100,8 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=avg${model.customDate}&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=95line${model.customDate}&queryname=${model.queryName}">95Line</a>(ms)</th>
 			<th class="right">Std(ms)</th>
-						<th class="right">TPS</th>
+						<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">TPS</a></th>
+						<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Percent%</a></th>
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"
 						varStatus="status">
@@ -124,16 +125,29 @@
 					<td>${w:format(e.line95Value,'0.0')}</td>
 					<td>${w:format(e.std,'0.0')}</td>
 					<td>${w:format(e.tps,'0.0')}</td>
+					<td>${w:format(e.totalPercent,'0.00%')}</td>
 				</tr>
-				<tr class="graphs"><td colspan="11"><div id="${status.index}" style="display:none"></div></td></tr>
+				<tr class="graphs"><td colspan="12"><div id="${status.index}" style="display:none"></div></td></tr>
 			</c:forEach>
 		</c:otherwise>
 	</c:choose>
 </table>
 
 <font color="white">${lastIndex+1}</font>
+<c:choose>
+	<c:when test="${not empty payload.type}">
+		<table>
+			<tr>
+				<td><div id="transactionGraph" class="pieChart"></div>
+				</td>
+			</tr>
+		</table>
+		<script type="text/javascript">
+			var data = ${model.pieChart};
+		</script>
+	</c:when>
+</c:choose>
 </br>
-
 <res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
 </jsp:body>
 

@@ -34,6 +34,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_responseTrend;
 
 	private String m_type;
+	
+	private String m_pieChart;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -112,6 +114,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_mobileResponse;
 	}
 
+	public String getPieChart() {
+		return m_pieChart;
+	}
+
 	public String getQueryName() {
 		return m_queryName;
 	}
@@ -164,6 +170,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_mobileResponse = mobileResponse;
 	}
 
+	public void setPieChart(String pieChart) {
+		m_pieChart = pieChart;
+	}
+
 	public void setQueryName(String queryName) {
 		m_queryName = queryName;
 	}
@@ -179,4 +189,5 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setType(String type) {
 		m_type = type;
 	}
+	
 }
