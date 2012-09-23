@@ -30,7 +30,6 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
-		codec.setShowNav(false);
 		codec.encodeMessage(tree, message, buf, 0, null);
 		String actual = buf.toString(Charset.forName("utf-8"));
 
@@ -41,7 +40,6 @@ public class HtmlMessageCodecTest extends ComponentTestCase {
 		HtmlMessageCodec codec = (HtmlMessageCodec) lookup(MessageCodec.class, "html");
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer();
 
-		codec.setShowNav(false);
 		codec.encode(tree, buf);
 		buf.readInt(); // get rid of length
 		String actual = buf.toString(Charset.forName("utf-8"));

@@ -260,6 +260,17 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.message.spi.MessageCodec</role>
+			<role-hint>waterfall</role-hint>
+			<implementation>com.dianping.cat.message.spi.codec.WaterfallMessageCodec</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.message.spi.codec.BufferWriter</role>
+					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.storage.BucketManager</role>
 			<implementation>com.dianping.cat.storage.DefaultBucketManager</implementation>
 			<requirements>

@@ -34,9 +34,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	@Inject
 	private String m_logViewPrefix = "/cat/r/m/";
 
-	@Inject
-	private boolean m_showNav = true;
-
 	private BufferHelper m_bufferHelper;
 
 	private DateHelper m_dateHelper = new DateHelper();
@@ -65,9 +62,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		count += helper.table1(buf);
 		count += helper.crlf(buf);
-		if (m_showNav) {
-			count += encodeFooter(tree, buf);
-		}
 		count += encodeHeader(tree, buf);
 
 		if (tree.getMessage() != null) {
@@ -84,7 +78,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
 		BufferHelper helper = m_bufferHelper;
-		StringBuilder sb = new StringBuilder();
+		StringBuilder sb = new StringBuilder(1024);
 
 		sb.append("<tr class=\"header\"><td colspan=5>");
 		sb.append(VERSION).append(" ").append(tree.getDomain()).append(" ");
@@ -250,10 +244,6 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 	public void setLogViewPrefix(String logViewPrefix) {
 		m_logViewPrefix = logViewPrefix;
-	}
-
-	public void setShowNav(boolean showNav) {
-		m_showNav = showNav;
 	}
 
 	protected static class BufferHelper {

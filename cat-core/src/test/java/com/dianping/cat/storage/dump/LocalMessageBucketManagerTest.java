@@ -52,12 +52,16 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		long now = 1343532130488L;
 		int num = 100;
 
+		Thread.sleep(100);
+
 		factory.setIpAddress("7f000001");
 		factory.initialize("source");
 
 		for (int i = 0; i < num; i++) {
 			manager.storeMessage(newMessageTree(factory.getNextId(), i, now + i * 10L));
 		}
+
+		Thread.yield();
 
 		for (int i = 0; i < num; i++) {
 			String messageId = "source-7f000001-373203-" + i;
@@ -66,6 +70,8 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 			Assert.assertNotNull("Message " + i + " not found.", tree);
 			Assert.assertEquals(messageId, tree.getMessageId());
 		}
+
+		manager.close();
 	}
 
 	static class MockMessageIdFactory extends MessageIdFactory {

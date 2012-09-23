@@ -13,14 +13,14 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("op")
 	private Action m_action;
 
-	@FieldMeta("direction")
-	private String m_direction;
-
 	@FieldMeta("ip")
 	private String m_ipAddress;
 
 	@FieldMeta("messageId")
 	private String m_messageId;
+
+	@FieldMeta("waterfall")
+	private boolean m_waterfall;
 
 	@FieldMeta("name")
 	private String m_name;
@@ -30,9 +30,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 	// /<report>/<domain>/<period>
 	@PathMeta("path")
 	private String[] m_path;
-
-	@FieldMeta("tag")
-	private String m_tag;
 
 	@FieldMeta("thread")
 	private String m_threadId;
@@ -48,8 +45,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_action;
 	}
 
-	public String getDirection() {
-		return m_direction;
+	public String getDatabase() {
+		return m_database;
 	}
 
 	public String getDomain() {
@@ -93,10 +90,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
-	public String getTag() {
-		return m_tag;
-	}
-
 	public String getThreadId() {
 		return m_threadId;
 	}
@@ -105,12 +98,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_type;
 	}
 
+	public boolean isWaterfall() {
+		return m_waterfall;
+	}
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.XML);
 	}
 
-	public void setDirection(String direction) {
-		m_direction = direction;
+	public void setDatabase(String database) {
+		m_database = database;
 	}
 
 	public void setIpAddress(String ipAddress) {
@@ -138,10 +135,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
-	public void setTag(String tag) {
-		m_tag = tag;
-	}
-
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
 	}
@@ -150,12 +143,8 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_type = type;
 	}
 
-	public String getDatabase() {
-		return m_database;
-	}
-
-	public void setDatabase(String database) {
-		m_database = database;
+	public void setWaterfall(boolean waterfall) {
+		m_waterfall = waterfall;
 	}
 
 	@Override

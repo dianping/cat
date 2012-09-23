@@ -1,7 +1,9 @@
 package com.dianping.cat.message.spi.codec;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -9,6 +11,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.lookup.annotation.Inject;
@@ -24,10 +27,21 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	@Inject
 	private BufferWriter m_writer;
 
-	@Inject
-	private boolean m_showNav = true;
-
 	private BufferHelper m_bufferHelper;
+
+	private boolean m_mockMode = false;
+
+	protected int countTransactions(Transaction t) {
+		int count = 1;
+
+		for (Message child : t.getChildren()) {
+			if (child instanceof Transaction) {
+				count += countTransactions((Transaction) child);
+			}
+		}
+
+		return count;
+	}
 
 	@Override
 	public MessageTree decode(ChannelBuffer buf) {
@@ -41,58 +55,60 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 	@Override
 	public void encode(MessageTree tree, ChannelBuffer buf) {
-		int count = 0;
-		int index = buf.writerIndex();
-		BufferHelper helper = m_bufferHelper;
+		Message message = tree.getMessage();
 
-		buf.writeInt(0); // place-holder
+		if (m_mockMode) {
+			message = mockTransaction();
+			tree.setMessage(message);
+		}
 
-		count += helper.table1(buf);
-		count += helper.crlf(buf);
-		if (m_showNav) {
+		if (message instanceof Transaction) {
+			int count = 0;
+			int index = buf.writerIndex();
+			BufferHelper helper = m_bufferHelper;
+			Transaction t = (Transaction) message;
+			Locator locator = new Locator();
+			Ruler ruler = new Ruler((int) t.getDurationInMicros());
+
+			ruler.setWidth(1400);
+			ruler.setHeight(18 * countTransactions(t) + 10);
+			ruler.setOffsetX(200);
+			ruler.setOffsetY(10);
+
+			buf.writeInt(0); // place-holder
+
+			count += helper.table1(buf);
+			count += helper.crlf(buf);
+			count += encodeHeader(tree, buf, ruler);
+
+			count += encodeRuler(buf, locator, ruler);
+			count += encodeTransaction(tree, t, buf, locator, ruler);
+
 			count += encodeFooter(tree, buf);
+			count += helper.table2(buf);
+			buf.setInt(index, count);
 		}
-		count += encodeHeader(tree, buf);
-
-		if (tree.getMessage() != null) {
-			count += encodeMessage(tree, tree.getMessage(), buf, 0);
-		}
-
-		count += helper.table2(buf);
-		buf.setInt(index, count);
 	}
 
 	protected int encodeFooter(MessageTree tree, ChannelBuffer buf) {
 		BufferHelper helper = m_bufferHelper;
-		int count = 0;
-		String uri = "/cat/r/m/" + tree.getMessageId();
+		XmlBuilder b = new XmlBuilder();
+		StringBuilder sb = b.getResult();
 
-		count += helper.tr1(buf, "nav");
-		count += helper.td1(buf, "colspan=\"4\" align=\"left\"");
-		count += helper.nbsp(buf, 3);
-		count += helper.write(buf, "<a href=\"");
-		count += helper.write(buf, uri);
-		count += helper.write(buf, "?tag1=t:");
-		count += helper.write(buf, tree.getThreadId());
-		count += helper.write(buf, "\">&lt;&lt;&lt; Thread &nbsp;&nbsp;</a>");
-		count += helper.write(buf, "<a href=\"");
-		count += helper.write(buf, uri);
-		count += helper.write(buf, "?tag2=t:");
-		count += helper.write(buf, tree.getThreadId());
-		count += helper.write(buf, "\"> &nbsp;&nbsp;Thread &gt;&gt;&gt;</a>");
-		count += helper.nbsp(buf, 3);
-		count += helper.td2(buf);
-		count += helper.tr2(buf);
-		count += helper.crlf(buf);
+		b.tag2("g");
+		b.tag2("svg");
+		sb.append("</td></tr>");
 
+		int count = helper.write(buf, sb.toString());
 		return count;
 	}
 
-	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
+	protected int encodeHeader(MessageTree tree, ChannelBuffer buf, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
-		StringBuilder sb = new StringBuilder();
+		XmlBuilder b = new XmlBuilder();
+		StringBuilder sb = b.getResult();
 
-		sb.append("<tr class=\"header\"><td colspan=5>");
+		sb.append("<tr class=\"header\"><td>");
 		sb.append(VERSION).append(" ").append(tree.getDomain()).append(" ");
 		sb.append(tree.getHostName()).append(" ").append(tree.getIpAddress()).append(" ");
 		sb.append(tree.getThreadGroupName()).append(" ").append(tree.getThreadId()).append(" ");
@@ -100,31 +116,122 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		sb.append(tree.getParentMessageId()).append(" ").append(tree.getRootMessageId()).append(" ");
 		sb.append(tree.getSessionToken()).append(" ");
 		sb.append("</td></tr>");
+		sb.append("<tr><td>");
+
+		int height = ruler.getHeight();
+		int width = ruler.getWidth();
+
+		b.add("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n");
+		b.tag1("svg", "x", 0, "y", 0, "width", width, "height", height, "viewBox", "0,0," + width + "," + height, "xmlns",
+		      "http://www.w3.org/2000/svg");
+		b.tag1("g", "font-size", "12", "stroke", "gray");
 
 		int count = helper.write(buf, sb.toString());
 		return count;
 	}
 
-	protected int encodeLine(MessageTree tree, Message message, ChannelBuffer buf, int level) {
-		return 0;
+	protected int encodeLine(MessageTree tree, Transaction t, ChannelBuffer buf, Locator locator, Ruler ruler) {
+		BufferHelper helper = m_bufferHelper;
+		XmlBuilder b = new XmlBuilder();
+		StringBuilder sb = b.getResult();
+		int width = 6;
+		int height = 18;
+		int x = 0;
+		int y = locator.getLine() * height + ruler.getOffsetY();
+
+		b.branch(locator, x, y, width, height);
+
+		x += locator.getLevel() * width;
+
+		if (t.getStatus().equals("0")) {
+			b.tagWithText("text", t.getType(), "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0");
+		} else {
+			b.tagWithText("text", t.getType(), "x", x, "y", y - 5, "font-weight", "bold", "stroke-width", "0", "fill", "red");
+		}
+
+		long t0 = tree.getMessage().getTimestamp();
+		long t1 = t.getTimestamp();
+		long d = t.getDurationInMicros();
+
+		int rx = ruler.calcX((t1 - t0) * 1000);
+		int rw = ruler.calcX(d) - ruler.getOffsetX();
+
+		b.tag("rect", "x", rx, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
+		b.tagWithText("text", String.format("%.3f %s", t.getDurationInMicros() / 1000.0, t.getName()), "x", rx + 5, "y", y - 3,
+		      "font-size", "11", "stroke-width", "0");
+
+		int count = helper.write(buf, sb.toString());
+		return count;
 	}
 
-	protected int encodeMessage(MessageTree tree, Message message, ChannelBuffer buf, int level) {
-		if (message instanceof Transaction) {
-			Transaction transaction = (Transaction) message;
-			List<Message> children = transaction.getChildren();
-			int count = 0;
+	protected int encodeRuler(ChannelBuffer buf, Locator locator, Ruler ruler) {
+		BufferHelper helper = m_bufferHelper;
+		XmlBuilder b = new XmlBuilder();
+		StringBuilder sb = b.getResult();
+		PathBuilder p = new PathBuilder();
+		int height = 600;
 
-			count += encodeLine(tree, transaction, buf, level);
+		b.tag1("g", "id", "ruler", "font-size", "12", "text-anchor", "middle", "stroke", "black", "stroke-width", "1");
 
-			for (Message child : children) {
-				count += encodeMessage(tree, child, buf, level + 1);
+		int unitNum = ruler.getUnitNum();
+		int unitStep = ruler.getUnitStep();
+		int unit = (int) ruler.getUnit();
+		int x = ruler.getOffsetX();
+		int y = 10;
+
+		for (int i = 0; i <= unitNum; i++) {
+			String text;
+
+			if (unitStep >= 1000) {
+				text = (i * unitStep / 1000) + "ms";
+			} else {
+				text = (i * unitStep) + "us";
 			}
 
-			return count;
-		} else {
-			return 0;
+			b.tagWithText("text", text, "x", x + i * unit, "y", y, "stroke-width", "0");
 		}
+
+		for (int i = 0; i <= unitNum; i++) {
+			b.tag("path", "d", p.moveTo(x + i * unit, y + 6).v(height).build(), "stroke-dasharray", "3,4");
+		}
+
+		b.tag2("g");
+
+		int count = helper.write(buf, sb.toString());
+		return count;
+	}
+
+	protected int encodeTransaction(MessageTree tree, Transaction transaction, ChannelBuffer buf, Locator locator, Ruler ruler) {
+		List<Transaction> children = getChildTransactions(transaction);
+		int count = 0;
+
+		locator.downLevel(children.isEmpty());
+		locator.nextLine();
+		count += encodeLine(tree, transaction, buf, locator, ruler);
+
+		int len = children.size();
+
+		for (int i = 0; i < len; i++) {
+			Transaction child = children.get(i);
+
+			locator.setLast(i == len - 1);
+			count += encodeTransaction(tree, child, buf, locator, ruler);
+		}
+
+		locator.upLevel();
+		return count;
+	}
+
+	protected List<Transaction> getChildTransactions(Transaction transaction) {
+		List<Transaction> children = new ArrayList<Transaction>();
+
+		for (Message child : transaction.getChildren()) {
+			if (child instanceof Transaction) {
+				children.add((Transaction) child);
+			}
+		}
+
+		return children;
 	}
 
 	@Override
@@ -132,13 +239,44 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		m_bufferHelper = new BufferHelper(m_writer);
 	}
 
+	protected Transaction mockTransaction() { // for test/debug purpose
+		return (Transaction) new MockMessageBuilder() {
+			@Override
+			public MessageHolder define() {
+				TransactionHolder t = t("WEB CLUSTER", "GET", 112819) //
+				      .at(1348374838231L) //
+				      .after(1300).child(t("QUICKIE SERVICE", "gimme_stuff", 1571)) //
+				      .after(100).child(e("SERVICE", "event1")) //
+				      .after(100).child(h("SERVICE", "heartbeat1")) //
+				      .after(100).child(t("WEB SERVER", "GET", 109358).status("1") //
+				            .after(1000).child(t("SOME SERVICE", "get", 4345) //
+				                  .after(4000).child(t("MEMCACHED", "Get", 279))) //
+				            .mark().after(200).child(t("MEMCACHED", "Inc", 319)) //
+				            .reset().after(500).child(t("BIG ASS SERVICE", "getThemDatar", 97155) //
+				                  .after(1000).mark().child(t("SERVICE", "getStuff", 3760)) //
+				                  .reset().child(t("DATAR", "findThings", 94537)) //
+				                  .after(200).child(t("THINGIE", "getMoar", 1435)) //
+				            ) //
+				            .after(100).mark().child(t("OTHER DATA SERVICE", "get", 4394) //
+				                  .after(800).mark().child(t("MEMCACHED", "Get", 378)) //
+				                  .reset().child(t("MEMCACHED", "Get", 3496)) //
+				            ) //
+				            .reset().child(t("FINAL DATA SERVICE", "get", 1902) //
+				                  .after(1000).mark().child(t("MEMCACHED", "Get", 386)) //
+				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				                  .reset().child(t("MEMCACHED", "Get", 322)) //
+				            ) //
+				      ) //
+				;
+
+				return t;
+			}
+		}.build();
+	}
+
 	public void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
-	}
-
-	public void setShowNav(boolean showNav) {
-		m_showNav = showNav;
 	}
 
 	protected static class BufferHelper {
@@ -290,6 +428,400 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			}
 
 			return m_writer.writeTo(buf, data);
+		}
+	}
+
+	protected static class Locator {
+		private int m_level;
+
+		private int m_line;
+
+		private Stack<Boolean> m_last = new Stack<Boolean>();
+
+		private Stack<Integer> m_flags = new Stack<Integer>();
+
+		public void downLevel(boolean atomic) {
+			if (m_level > 0) {
+				boolean last = m_last.peek();
+
+				m_flags.pop();
+
+				if (last) {
+					m_flags.push(6); // 00110
+				} else {
+					m_flags.push(22); // 10110
+				}
+
+				for (int i = 0; i < m_level - 1; i++) {
+					Integer flag = m_flags.get(i);
+					int f = flag;
+
+					if (flag == 6) { // 00110
+						f = 0; // 00000
+					} else if (flag == 22) { // 10110
+						f = 20; // 10100
+					}
+
+					m_flags.set(i, f);
+				}
+			}
+
+			boolean root = m_level == 0;
+
+			if (atomic) {
+				if (root) {
+					m_flags.push(1); // 00001
+				} else {
+					m_flags.push(9); // 01001
+				}
+			} else {
+				if (root) {
+					m_flags.push(17); // 10001
+				} else {
+					m_flags.push(25); // 11001
+				}
+			}
+
+			m_last.push(root ? true : false);
+			m_level++;
+		}
+
+		public Stack<Integer> getFlags() {
+			return m_flags;
+		}
+
+		public boolean getLast(int level) {
+			return m_last.get(level);
+		}
+
+		public int getLevel() {
+			return m_level;
+		}
+
+		public int getLine() {
+			return m_line;
+		}
+
+		public boolean isFirst() {
+			return m_level == 1;
+		}
+
+		public boolean isLast() {
+			return m_last.peek();
+		}
+
+		public void nextLine() {
+			m_line++;
+		}
+
+		public void setLast(boolean last) {
+			m_last.pop();
+			m_last.push(last);
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Locator[level=%s, line=%s, first=%s, last=%s]", m_level, m_line, isFirst(), isLast());
+		}
+
+		public void upLevel() {
+			m_level--;
+			m_last.pop();
+			m_flags.pop();
+		}
+	}
+
+	protected static class PathBuilder {
+		private int m_marker;
+
+		private StringBuilder m_sb = new StringBuilder(64);
+
+		public String build() {
+			String result = m_sb.toString();
+
+			m_sb.setLength(0);
+			return result;
+		}
+
+		public PathBuilder h(int deltaX) {
+			m_sb.append(" h").append(deltaX);
+			return this;
+		}
+
+		public PathBuilder m(int deltaX, int deltaY) {
+			m_sb.append(" m").append(deltaX).append(',').append(deltaY);
+			return this;
+		}
+
+		public PathBuilder mark() {
+			m_marker = m_sb.length();
+			return this;
+		}
+
+		public PathBuilder moveTo(int x, int y) {
+			m_sb.append('M').append(x).append(',').append(y);
+			return this;
+		}
+
+		public PathBuilder repeat(int count) {
+			int pos = m_sb.length();
+
+			for (int i = 0; i < count; i++) {
+				m_sb.append(m_sb.subSequence(m_marker, pos));
+			}
+
+			return this;
+		}
+
+		public PathBuilder v(int deltaY) {
+			m_sb.append(" v").append(deltaY);
+			return this;
+		}
+	}
+
+	protected static class Ruler {
+		private static final int[] UNITS = { 1, 2, 3, 5 };
+
+		private int m_maxValue;
+
+		private int m_unitNum;
+
+		private int m_unitStep;
+
+		public int m_width;
+
+		private int m_height;
+
+		private int m_offsetX;
+
+		private int m_offsetY;
+
+		public Ruler(int maxValue) {
+			m_maxValue = maxValue;
+
+			int e = 1;
+			int value = maxValue;
+
+			while (true) {
+				if (value > 50) {
+					value = (value + 9) / 10;
+					e *= 10;
+				} else {
+					if (value < 6) {
+						m_unitNum = value;
+						m_unitStep = e;
+					} else {
+						for (int unit : UNITS) {
+							int num = (value + unit - 1) / unit;
+
+							if (num >= 6 && num <= 10) {
+								m_unitNum = num;
+								m_unitStep = unit * e;
+								break;
+							}
+						}
+					}
+
+					break;
+				}
+			}
+		}
+
+		public int calcX(long value) {
+			int w = (int) (value * getUnit() / m_unitStep);
+
+			if (w == 0 && value > 0) {
+				w = 1;
+			}
+
+			return w + m_offsetX;
+		}
+
+		public int getHeight() {
+			return m_height;
+		}
+
+		public int getMaxValue() {
+			return m_maxValue;
+		}
+
+		public int getOffsetX() {
+			return m_offsetX;
+		}
+
+		public int getOffsetY() {
+			return m_offsetY;
+		}
+
+		public double getUnit() {
+			return (m_width - m_offsetX - 20) * 1.0 / m_unitNum;
+		}
+
+		public int getUnitNum() {
+			return m_unitNum;
+		}
+
+		public int getUnitStep() {
+			return m_unitStep;
+		}
+
+		public int getWidth() {
+			return m_width;
+		}
+
+		public void setHeight(int height) {
+			m_height = height;
+		}
+
+		public void setOffsetX(int offsetX) {
+			m_offsetX = offsetX;
+		}
+
+		public void setOffsetY(int offsetY) {
+			m_offsetY = offsetY;
+		}
+
+		public void setWidth(int width) {
+			m_width = width;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("[%s, %s, %s]", m_maxValue, m_unitNum, m_unitStep);
+		}
+	}
+
+	protected static class XmlBuilder {
+		private boolean m_compact;
+
+		private int m_level;
+
+		private StringBuilder m_sb = new StringBuilder(8192);
+
+		public XmlBuilder add(String text) {
+			m_sb.append(text);
+			return this;
+		}
+
+		public void branch(Locator locator, int x, int y, int width, int height) {
+			PathBuilder p = new PathBuilder();
+			int w = width / 2;
+			int h = height / 2;
+			int r = 2;
+
+			for (Integer flag : locator.getFlags()) {
+				int cx = x + w;
+				int cy = y - h;
+
+				if ((flag & 2) != 0) { // 00010
+					tag("path", "d", p.moveTo(cx, cy).h(w).build());
+				}
+
+				if ((flag & 4) != 0) { // 00100
+					tag("path", "d", p.moveTo(cx, cy).v(-h).build());
+				}
+
+				if ((flag & 8) != 0) { // 01000
+					tag("path", "d", p.moveTo(cx, cy).h(-w).build());
+				}
+
+				if ((flag & 16) != 0) { // 10000
+					tag("path", "d", p.moveTo(cx, cy).v(h).build());
+				}
+
+				if ((flag & 1) != 0) { // 00001
+					m_sb.append("<circle cx=\"").append(cx).append("\" cy=\"").append(cy).append("\" r=\"").append(r)
+					      .append("\" stroke=\"red\" fill=\"white\"/>");
+				}
+
+				x += width;
+			}
+		}
+
+		public XmlBuilder element(String name, String value) {
+			indent();
+			m_sb.append('<').append(name).append('>');
+			m_sb.append(value);
+			m_sb.append("</").append(name).append(">");
+			newLine();
+			return this;
+		}
+
+		public StringBuilder getResult() {
+			return m_sb;
+		}
+
+		public XmlBuilder indent() {
+			if (!m_compact) {
+				for (int i = m_level - 1; i >= 0; i--) {
+					m_sb.append("  ");
+				}
+			}
+
+			return this;
+		}
+
+		public XmlBuilder newLine() {
+			m_sb.append("\r\n");
+			return this;
+		}
+
+		public XmlBuilder tag(String name, Object... attributes) {
+			return tagWithText(name, null, attributes);
+		}
+
+		public XmlBuilder tag1(String name, Object... attributes) {
+			indent();
+
+			m_sb.append('<').append(name);
+
+			int len = attributes.length;
+			for (int i = 0; i < len; i += 2) {
+				Object key = attributes[i];
+				Object val = attributes[i + 1];
+
+				if (val != null) {
+					m_sb.append(' ').append(key).append("=\"").append(val).append('"');
+				}
+			}
+
+			m_sb.append(">");
+			newLine();
+			m_level++;
+			return this;
+		}
+
+		public XmlBuilder tag2(String name) {
+			m_level--;
+			indent();
+			m_sb.append("</").append(name).append(">");
+			newLine();
+			return this;
+		}
+
+		public XmlBuilder tagWithText(String name, Object text, Object... attributes) {
+			indent();
+
+			m_sb.append('<').append(name);
+
+			int len = attributes.length;
+			for (int i = 0; i < len; i += 2) {
+				Object key = attributes[i];
+				Object val = attributes[i + 1];
+
+				if (val != null) {
+					m_sb.append(' ').append(key).append("=\"").append(val).append('"');
+				}
+			}
+
+			if (text == null) {
+				m_sb.append("/>");
+			} else {
+				m_sb.append('>').append(text).append("</").append(name).append('>');
+			}
+
+			newLine();
+			return this;
 		}
 	}
 }

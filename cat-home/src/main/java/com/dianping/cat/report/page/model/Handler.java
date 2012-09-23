@@ -168,13 +168,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				MessageId id = MessageId.parse(messageId);
 
 				request.setProperty("messageId", messageId);
-
-				if (!StringUtils.isEmpty(payload.getDirection())) {
-					request.setProperty("direction", payload.getDirection());
-				}
-				if (!StringUtils.isEmpty(payload.getTag())) {
-					request.setProperty("tag", payload.getTag());
-				}
+				request.setProperty("waterfall", String.valueOf(payload.isWaterfall()));
 
 				if (id.getVersion() == 1) {
 					response = m_logviewService.invoke(request);
