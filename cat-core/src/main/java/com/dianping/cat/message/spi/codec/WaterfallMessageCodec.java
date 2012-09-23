@@ -156,7 +156,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		int rx = ruler.calcX((t1 - t0) * 1000);
 		int rw = ruler.calcX(d) - ruler.getOffsetX();
 
-		b.tag("rect", "x", rx, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
+		b.tag("rect", "x", rx + 1, "y", y - 15, "width", rw, "height", height - 2, "fill", "#0066ff", "opacity", "0.5");
 		b.tagWithText("text", String.format("%.3f %s", t.getDurationInMicros() / 1000.0, t.getName()), "x", rx + 5, "y", y - 3,
 		      "font-size", "11", "stroke-width", "0");
 

@@ -18,7 +18,17 @@
 	<c:when test="${empty model.table}">
 		<div class="error"></div>Sorry, this message had already been archived.</div>
 	</c:when>
-	<c:otherwise>${model.table}</c:otherwise>
+	<c:otherwise>
+		<c:choose>
+			<c:when test="${payload.waterfall=='true'}">
+				<div>&nbsp;&nbsp;<a href="?domain=${model.domain}">HTML version</a>&nbsp;&nbsp;&nbsp;&nbsp;Graph version</div>
+			</c:when>
+			<c:otherwise>
+				<div>&nbsp;&nbsp;HTML version&nbsp;&nbsp;&nbsp;&nbsp;<a href="?domain=${model.domain}&waterfall=true">Graph version</a></div>
+			</c:otherwise>
+		</c:choose>
+		${model.table}
+	</c:otherwise>
 </c:choose>
 
 <br>
