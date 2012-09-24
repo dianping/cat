@@ -11,7 +11,7 @@ import com.dianping.dog.alarm.rule.RuleType;
  **/
 public class RuleEntity {
 
-	private long id;
+	private int id;
 
 	private String domain;
 
@@ -81,11 +81,11 @@ public class RuleEntity {
 		return type;
 	}
 
-	public long getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -125,6 +125,7 @@ public class RuleEntity {
 		if (durations == null) {
 			durations = new ArrayList<Duration>();
 		}
+		duration.setGmtModified(this.gmtModified);
 		durations.add(duration);
 	}
 	

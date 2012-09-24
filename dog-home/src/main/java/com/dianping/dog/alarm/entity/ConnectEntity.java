@@ -6,7 +6,7 @@ import com.dianping.dog.alarm.connector.ConnectorType;
 
 public class ConnectEntity implements Comparable<ConnectEntity>{
 	
-	private long conId;
+	private int conId;
 	
 	private String connectSource;// cat
 
@@ -54,11 +54,11 @@ public class ConnectEntity implements Comparable<ConnectEntity>{
    	this.baseUrl = url;
    }
 
-	public long getConId() {
+	public int getConId() {
    	return conId;
    }
 
-	public void setConId(long conId) {
+	public void setConId(int conId) {
    	this.conId = conId;
    }
 

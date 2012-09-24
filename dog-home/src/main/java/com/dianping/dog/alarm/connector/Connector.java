@@ -13,7 +13,7 @@ public interface Connector {
 	
 	ConnectEntity getConnectorEntity();
 	
-	long getConnectorId();
+	int getConnectorId();
  
 	RowData produceData(Date currentTime);
 	

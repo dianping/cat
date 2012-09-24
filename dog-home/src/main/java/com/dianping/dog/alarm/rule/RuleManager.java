@@ -8,7 +8,7 @@ public interface RuleManager {
 
 	List<Rule> getRules();
 	
-	Rule getRuleById(long id);
+	Rule getRuleById(int id);
 	
 	boolean addRule(RuleEntity entity);
 

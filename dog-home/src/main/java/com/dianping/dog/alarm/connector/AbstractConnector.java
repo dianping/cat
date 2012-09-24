@@ -9,8 +9,6 @@ import com.dianping.dog.alarm.parser.DataParserFactory;
 
 public abstract class AbstractConnector<T> implements Connector {
 
-	private long connectorId;
-
 	private ConnectEntity m_entity;
 
 	private DataParserFactory m_parserFactory;
@@ -21,7 +19,6 @@ public abstract class AbstractConnector<T> implements Connector {
 	public void init(ConnectEntity entity, DataParserFactory parserFactory) {
 		this.m_entity = entity;
 		this.m_parserFactory = parserFactory;
-		this.connectorId = m_entity.getConId();
 	}
 
 	@Override
@@ -30,8 +27,8 @@ public abstract class AbstractConnector<T> implements Connector {
 	}
 
 	@Override
-	public long getConnectorId() {
-		return connectorId;
+	public int getConnectorId() {
+		return m_entity.getConId();
 	}
 
 	public abstract T fetchContent(ConnectEntity m_entity);

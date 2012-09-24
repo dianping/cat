@@ -4,6 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
+import com.dianping.cat.Cat;
 import com.dianping.dog.alarm.problem.ProblemDataEvent;
 import com.dianping.dog.event.DefaultEventDispatcher;
 import com.dianping.dog.event.Event;
@@ -11,11 +15,11 @@ import com.dianping.dog.event.EventDispatcher;
 import com.dianping.dog.event.EventType;
 import com.dianping.dog.lifecycle.LifeCycle;
 import com.dianping.dog.lifecycle.LifeCycleException;
+import com.site.helper.Threads;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class DataService extends ContainerHolder implements LifeCycle {
-
+public class DataService extends ContainerHolder implements LifeCycle, Runnable, LogEnabled {
 	@Inject
 	private ConnectorManager m_connectorMananger;
 
@@ -26,7 +30,7 @@ public class DataService extends ContainerHolder implements LifeCycle {
 
 	private AtomicBoolean m_active = new AtomicBoolean();
 
-	private Thread serviceTask = null;
+	private Logger m_logger;
 
 	@Override
 	public void init() throws LifeCycleException {
@@ -39,51 +43,53 @@ public class DataService extends ContainerHolder implements LifeCycle {
 
 	@Override
 	public void start() throws LifeCycleException {
-		serviceTask = new Thread(new Runnable() {
-			public void run() {
-				doService();
-			}
-		}, "DataService-Thread");
-		serviceTask.start();
+		Threads.forGroup("Dog-DataService").start(this);
 	}
 
-	protected void doService() {
-		try {
-			while (m_active.get()) {
+	@Override
+	public void run() {
+		while (m_active.get()) {
+			try {
 				Date currentTime = new Date(System.currentTimeMillis());// MilliSecondTimer.currentTimeMicros();
 				List<Connector> connectors = m_connectorMananger.getConnectors();
-				try {
-					for (Connector con : connectors) {
-						try {
-							RowData data = con.produceData(currentTime);
-							if (data == null) {
-								continue;
-							}
-							Event event = null;
-							if (data.getType() == EventType.ProblemDataEvent) {
-								//System.out.println("get Data from:"+con.getConnectorEntity().getUrl());
-								event = new ProblemDataEvent(data);
-							}
-							if (event != null) {
-								m_eventDispatcher.dispatch(event);
-							}
-						} catch (Exception ex) {
-							System.out.println(ex.toString());
+				for (Connector con : connectors) {
+					try {
+						RowData data = con.produceData(currentTime);
+						if (data == null) {
+							continue;
 						}
+						Event event = null;
+						if (data.getType() == EventType.ProblemDataEvent) {
+							event = new ProblemDataEvent(data);
+						}
+						if (event != null) {
+							m_logger.debug("RowData:" + data);
+							m_eventDispatcher.dispatch(event);
+						}
+					} catch (Exception ex) {
+						m_logger.error(ex.getMessage());
 					}
-				} catch (Exception ex) {
-					// TODO logger
 				}
-				Thread.sleep(SLEEP_TIME);
+			} catch (Exception e) {
+				m_logger.error(e.getMessage());
+				Cat.logError(e);
 			}
-		} catch (InterruptedException e) {
-			// TODO logger
+			try {
+				Thread.sleep(SLEEP_TIME);
+			} catch (Exception e) {
+				m_logger.error(String.format("fail to sleep for [Time]:%s ,[error]: %s", SLEEP_TIME, e.getMessage()));
+			}
 		}
 	}
 
 	@Override
 	public void stop() throws LifeCycleException {
 		m_active.set(false);
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		this.m_logger = logger;
 	}
 
 }

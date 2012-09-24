@@ -36,11 +36,28 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.dog.alarm.rule.ProblemRuleLoader</role>
+			<implementation>com.dianping.dog.alarm.rule.ProblemRuleLoader</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.rule.RuleLoaderFactory</role>
+			<implementation>com.dianping.dog.alarm.rule.RuleLoaderFactory</implementation>
+		</component>
+		<component>
 			<role>com.dianping.dog.alarm.rule.RuleManager</role>
 			<implementation>com.dianping.dog.alarm.rule.DefaultRuleManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.dog.event.EventDispatcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.dal.RuleinstanceDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.dal.RuletemplateDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.alarm.rule.RuleLoaderFactory</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -66,6 +83,9 @@
 				<requirement>
 					<role>com.dianping.dog.alarm.strategy.AlarmStrategyFactory</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.dog.alarm.rule.RuleManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -78,6 +98,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.dog.alarm.parser.DataParserFactory</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.alarm.rule.RuleManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -92,6 +115,208 @@
 					<role>com.dianping.dog.event.EventDispatcher</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.notify.config.ConfigContext</role>
+			<implementation>com.dianping.dog.notify.config.ConfigContext</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.notify.render.IRender</role>
+			<implementation>com.dianping.dog.notify.render.VelocityRender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.notify.config.ConfigContext</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.service.CommonService</role>
+			<implementation>com.dianping.dog.service.CommonServiceImp</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.notify.report.ReportCreaterRegistry</role>
+			<implementation>com.dianping.dog.notify.report.StandardReportCreaterRegistry</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.notify.job.ScheduleJob</role>
+			<role-hint>MailJob</role-hint>
+			<implementation>com.dianping.dog.notify.job.SendReportMailJob</implementation>
+			<configuration>
+				<defaultReceivers>yong.you@dianping.com,yanchun.yang@dianping.com</defaultReceivers>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.notify.report.ReportCreaterRegistry</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.notify.report.DefaultContainerHolder</role>
+			<implementation>com.dianping.dog.notify.report.DefaultContainerHolder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.notify.job.StandardScheduleJobRunner</role>
+			<implementation>com.dianping.dog.notify.job.StandardScheduleJobRunner</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.notify.report.DefaultContainerHolder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.notify.config.ConfigContext</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.dog.notify.job.ScheduleJob</role>
+					<role-hints>
+						<role-hint>MailJob</role-hint>
+					</role-hints>
+					<field-name>m_jobs</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.datasource.DataSource</role>
+			<role-hint>cat</role-hint>
+			<implementation>com.site.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<configuration>
+				<id>cat</id>
+				<maximum-pool-size>3</maximum-pool-size>
+				<connection-timeout>1s</connection-timeout>
+				<idle-timeout>10m</idle-timeout>
+				<statement-cache-size>1000</statement-cache-size>
+				<properties>
+					<driver>com.mysql.jdbc.Driver</driver>
+					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
+					<user>dpcom_cat</user>
+					<password>password</password>
+					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+				</properties>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>report</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>report</logical-table-name>
+				<physical-table-name></physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>hostinfo</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>hostinfo</logical-table-name>
+				<physical-table-name></physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>sqltable</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>sqltable</logical-table-name>
+				<physical-table-name></physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>task</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>task</logical-table-name>
+				<physical-table-name></physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>logview</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>logview</logical-table-name>
+				<physical-table-name></physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.dal.report.HostinfoDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.HostinfoDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.dal.report.SqltableDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.SqltableDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.TaskDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.LogviewDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.site.web.mvc.model.ModuleRegistry</role>
+			<implementation>com.site.web.mvc.model.ModuleRegistry</implementation>
+			<configuration>
+				<modules>
+					<module default="true">com.dianping.dog.alarm.AlarmModule</module>
+				</modules>
+			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.AlarmModule</role>
+			<implementation>com.dianping.dog.alarm.AlarmModule</implementation>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.page.home.Handler</role>
+			<implementation>com.dianping.dog.alarm.page.home.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.dog.alarm.page.home.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.dog.alarm.page.home.JspViewer</role>
+			<implementation>com.dianping.dog.alarm.page.home.JspViewer</implementation>
 		</component>
 	</components>
 </plexus>

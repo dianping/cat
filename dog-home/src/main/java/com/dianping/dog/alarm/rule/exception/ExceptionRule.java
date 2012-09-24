@@ -2,6 +2,8 @@ package com.dianping.dog.alarm.rule.exception;
 
 import java.util.List;
 
+import org.codehaus.plexus.logging.Logger;
+
 import com.dianping.dog.alarm.data.DataEvent;
 import com.dianping.dog.alarm.entity.Duration;
 import com.dianping.dog.alarm.entity.RuleEntity;
@@ -17,20 +19,21 @@ import com.dianping.dog.event.EventDispatcher;
 import com.dianping.dog.event.EventType;
 
 public class ExceptionRule implements Rule {
-	private Storage<ExceptionData> storage = null;
-	
+	private Storage<ExceptionData> storage = new DefaultStorage<ExceptionData>();
+
 	private EventDispatcher dispatcher;
-	
-	private static long MINUTE = 60*1000L;
-	
+
+	private static long MINUTE = 60 * 1000L;
+
 	private long millisPeriod = 0;
 
 	private RuleEntity m_entity;
 
+	private Logger m_logger;
+
 	@Override
 	public boolean init(RuleEntity entity) {
 		m_entity = entity;
-		storage = new DefaultStorage<ExceptionData>();
 		storage.init(m_entity.getPeriod());
 		millisPeriod = entity.getPeriod() * MINUTE;
 		return true;
@@ -40,19 +43,21 @@ public class ExceptionRule implements Rule {
 	public String getName() {
 		return "Exception rule";
 	}
-	
+
 	@Override
-   public long getRuleId() {
-	   return m_entity.getId();
-   }
+	public int getRuleId() {
+		return m_entity.getId();
+	}
 
 	@Override
 	public boolean isEligible(Event event) {
-		if(event.getEventType() != EventType.ProblemDataEvent){
+		if (event.getEventType() != EventType.ProblemDataEvent) {
 			return false;
 		}
 		ProblemDataEvent dataEvent = (ProblemDataEvent) event;
-		if(this.m_entity.getUnicodeString().equals(dataEvent.getUnicodeString())){
+		m_logger.debug(this.m_entity.getUnicodeString());
+		m_logger.debug("Match event by Data Id:" + dataEvent.getDataId());
+		if (this.m_entity.getId() == dataEvent.getDataId()) {
 			return true;
 		}
 		return false;
@@ -63,20 +68,20 @@ public class ExceptionRule implements Rule {
 		DataEvent dataEvent = (DataEvent) event;
 		saveData(dataEvent);
 		long currentTime = getCurrentTime();
-		List<ExceptionData>  dataList = storage.getDataList();
-		if(dataList == null){
+		List<ExceptionData> dataList = storage.getDataList();
+		if (dataList == null) {
 			return false;
 		}
 		int totalCount = 0;
-		for(ExceptionData data:dataList){
-			if(!isIn(data,currentTime)){
+		for (ExceptionData data : dataList) {
+			if (!isIn(data, currentTime)) {
 				continue;
 			}
 			totalCount += data.getTotalCount();
 		}
 		List<Duration> durationList = m_entity.getDurations();
-		for(Duration duration : durationList){
-			if(duration.isIn(totalCount)){
+		for (Duration duration : durationList) {
+			if (duration.isIn(totalCount)) {
 				AlertEvent alarmEvent = new AlertEvent();
 				alarmEvent.setEntity(m_entity);
 				alarmEvent.setTime(currentTime);
@@ -95,23 +100,32 @@ public class ExceptionRule implements Rule {
 		data.setTotalCount(event.getTotalCount());
 		storage.add(data);
 	}
-	
-	
-	private boolean isIn(Data data,long currentTime){
+
+	private boolean isIn(Data data, long currentTime) {
 		long beginTime = currentTime - millisPeriod;
-		if(data.getTimeStamp() >= beginTime && data.getTimeStamp() <=currentTime){
+		if (data.getTimeStamp() >= beginTime && data.getTimeStamp() <= currentTime) {
 			return true;
 		}
 		return false;
 	}
-	
-	private long getCurrentTime(){
+
+	private long getCurrentTime() {
 		return System.currentTimeMillis();
 	}
 
 	@Override
-   public void setDispatcher(EventDispatcher dispatcher) {
+	public void setDispatcher(EventDispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-   }
-		
+	}
+
+	@Override
+	public RuleEntity getRuleEntity() {
+		return this.m_entity;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		this.m_logger = logger;
+	}
+
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="threshold-template-codegen.xml" />
+  <file path="threshold-template-model.xml" />
+</manifest>
+

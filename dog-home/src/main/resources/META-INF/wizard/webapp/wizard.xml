@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wizard>
+   <webapp package="com.dianping.dog" name="dog" webres="true" cat="true">
+      <module name="alarm" path="alarm" default="true">
+         <page name="home" title="Home" default="true" path="home">
+            <description>Home</description>
+         </page>
+      </module>
+   </webapp>
+</wizard>
+

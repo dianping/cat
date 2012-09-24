@@ -57,7 +57,7 @@ public class ProblemDataEvent implements DataEvent {
 		return EventType.ProblemDataEvent;
 	}
 	
-	public String getUnicodeString(){
+	/*public String getUnicodeString(){
 		StringBuilder sb = new StringBuilder();
 		sb.append(this.getIp() + "@");
 		sb.append(this.getReport()+"@");
@@ -65,6 +65,11 @@ public class ProblemDataEvent implements DataEvent {
 		sb.append(this.getType() + "@");
 		sb.append(this.getName());
 		return sb.toString();
-	}
+	}*/
+
+	@Override
+   public int getDataId() {
+	   return rowData.getId();
+   }
 
 }

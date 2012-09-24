@@ -15,7 +15,7 @@ public class HttpConnector extends AbstractConnector<String> {
 			String content = Files.forIO().readFrom(data.openStream(), "utf-8");
 			return content;
 		} catch (Exception e) {
-			
+			//Retry one time
 		}
 		return null;
 	}

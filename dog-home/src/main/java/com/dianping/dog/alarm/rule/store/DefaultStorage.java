@@ -8,6 +8,8 @@ public class DefaultStorage<T extends Data> implements Storage<T> {
 	private StoreQueue<T> queue;
 
 	private volatile T currentData;
+	
+	//private static final long HOUR = 60 * 1000;
 
 	@Override
 	public boolean init(int period) {

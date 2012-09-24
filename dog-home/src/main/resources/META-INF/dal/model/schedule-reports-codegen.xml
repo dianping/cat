@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="schedule-reports" root="true">
+    <entity-ref name="default-reports" />
+    <entity-ref name="report" type="list" names="reports" />
+  </entity>
+  <entity name="default-reports">
+    <attribute name="exclude" value-type="String" />
+    <entity-ref name="template-report" type="list" names="template-reports" />
+  </entity>
+  <entity name="template-report">
+    <attribute name="createClass" value-type="String" />
+    <attribute name="schedule" value-type="int" />
+    <entity-ref name="template" type="list" names="templates" />
+  </entity>
+  <entity name="template">
+    <attribute name="id" value-type="String" />
+    <attribute name="path" value-type="String" />
+  </entity>
+  <entity name="report">
+    <attribute name="domain" value-type="String" />
+    <attribute name="createClass" value-type="String" />
+    <attribute name="schedule" value-type="int" />
+    <entity-ref name="template" type="list" names="templates" />
+  </entity>
+</model>
+

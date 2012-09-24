@@ -1,0 +1,32 @@
+<html>
+<head>
+<title>Reports</title>
+</head>
+<body>
+<br/>
+<br/>
+<table rules="all">
+    <tr>
+		<td colspan="5" >${title}&nbsp;&nbsp;${preWeakLastDay}&nbsp;&nbsp;${preWeakDay}
+		</td>
+	</tr>
+    <tr>
+        <td></td>
+		<td>Type</td>
+		<td>Total</td>
+		<td>Link</td>
+	    <td></td>
+	</tr>
+	#foreach( $problem in ${typeList})
+	      <tr>
+	          <td ></td>
+		      <td >$!problem.type</td>
+		      <td style="text-align:right">$!problem.count</td>
+		      <td >$!problem.trendUrl</td>
+		      <td ></td>
+		  </tr>
+    #end
+    <tr></tr>
+</table>
+</body>
+</html>
