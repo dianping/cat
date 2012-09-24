@@ -10,6 +10,8 @@ import java.util.zip.GZIPOutputStream;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -52,8 +54,11 @@ public class LocalMessageBucket implements MessageBucket {
 	private int m_blockSize;
 
 	public void archive() throws IOException {
-		File outbox = new File(m_baseDir, "outbox");
 		File from = new File(m_baseDir, m_dataFile);
+
+		Cat.getProducer().logEvent("Dump", "Outbox.Normal", Message.SUCCESS, from.getPath());
+
+		File outbox = new File(m_baseDir, "outbox");
 		File to = new File(outbox, m_dataFile);
 		File fromIndex = new File(m_baseDir, m_dataFile + ".idx");
 		File toIndex = new File(outbox, m_dataFile + ".idx");

@@ -13,8 +13,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -35,8 +33,7 @@ import com.site.helper.Threads.Task;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
-      LogEnabled {
+public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
 	public static final String ID = "local";
 
 	private static final long ONE_HOUR = 60 * 60 * 1000L;
@@ -53,8 +50,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(1000);
 
-	private Logger m_logger;
-
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
 		List<String> keys = new ArrayList<String>();
@@ -66,6 +61,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 			}
 
+			Transaction t = Cat.newTransaction("System", "Dump");
+			t.setStatus(Message.SUCCESS);
+
 			for (String key : keys) {
 				LocalMessageBucket bucket = m_buckets.remove(key);
 
@@ -74,13 +72,15 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				} catch (IOException e) {
 					// ignore
 				}
+
 				try {
 					bucket.archive();
-					m_logger.info("archive the bucket " + key);
-				} catch (IOException e) {
-					m_logger.error("Error when archive the buck " + key, e);
+				} catch (Exception e) {
+					Cat.getProducer().logError(e);
 				}
 			}
+
+			t.complete();
 		}
 	}
 
@@ -253,8 +253,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							m_errors++;
 
 							if (m_errors == 1 || m_errors % 1000 == 0) {
-								Cat.getProducer().logError(
-								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
+								Cat.getProducer().logError(new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
 							}
 						}
 					}
@@ -273,7 +272,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
 			return false;
 		}
-		
+
 		long current = System.currentTimeMillis();
 		long currentHour = current - current % ONE_HOUR;
 		long lastHour = currentHour - ONE_HOUR;
@@ -294,7 +293,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		return true;
 	}
 
-	private void moverOldMessages() {
+	private void moveOldMessages() {
 		final List<String> paths = new ArrayList<String>();
 
 		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
@@ -309,12 +308,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 		});
 		if (paths.size() > 0) {
-			Transaction t = Cat.newTransaction("System", "MoveOldMessages");
+			Transaction t = Cat.newTransaction("System", "Dump");
 			t.setStatus(Message.SUCCESS);
 
 			for (String path : paths) {
 				try {
-					Cat.getProducer().logEvent("System", "MoveOldMessages", Message.SUCCESS, path);
+					Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, path);
+
 					File outbox = new File(m_baseDir, "outbox");
 					File from = new File(m_baseDir, path);
 					File to = new File(outbox, path);
@@ -330,20 +330,19 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				} catch (Exception e) {
 					t.setStatus(Message.SUCCESS);
 					Cat.logError(e);
-				} finally {
 				}
 			}
+
 			t.complete();
 		}
 	}
 
 	class OldMessageMover implements Task {
-
 		@Override
 		public void run() {
 			while (true) {
 				try {
-					moverOldMessages();
+					moveOldMessages();
 				} catch (Throwable e) {
 					Cat.logError(e);
 				}
@@ -392,10 +391,5 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void shutdown() {
 		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }
