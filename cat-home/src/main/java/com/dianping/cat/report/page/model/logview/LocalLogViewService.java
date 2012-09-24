@@ -7,6 +7,7 @@ import java.util.List;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -77,7 +78,7 @@ public class LocalLogViewService extends BaseLocalModelService<String> {
 		if (tree != null) {
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
-			if (request.getProperty("waterfall", "false").equals("true")) {
+			if (tree.getMessage() instanceof Transaction && request.getProperty("waterfall", "false").equals("true")) {
 				// to work around a plexus injection bug
 				MessageCodec codec = lookup(MessageCodec.class, "waterfall");
 
