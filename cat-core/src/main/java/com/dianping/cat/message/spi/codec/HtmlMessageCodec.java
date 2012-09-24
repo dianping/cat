@@ -140,10 +140,9 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 				long durationInMillis = durationInMicro / 1000L;
 
 				if (durationInMicro < 100L) {
-					count += helper.write(buf, "0");
+					count += helper.write(buf, String.format("%.2f", durationInMicro / 1000.0));
 				} else if (durationInMicro < 10000L) { // less than 10 ms
-					count += helper.write(buf, Long.toString(durationInMillis) + "."
-					      + (int) ((durationInMicro - durationInMillis * 1000L) / 100L));
+					count += helper.write(buf, String.format("%.2f", durationInMicro / 1000.0));
 				} else { // no fraction
 					count += helper.write(buf, Long.toString(durationInMillis));
 				}
