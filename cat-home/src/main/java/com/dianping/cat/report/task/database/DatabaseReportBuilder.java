@@ -34,10 +34,10 @@ public class DatabaseReportBuilder extends AbstractReportBuilder implements Repo
 
 	private Dailyreport getDailyReport(String reportName, String reportDatabase, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> databaseSet = getDatabases(reportPeriod, endDate);
+		Set<String> databases = getDatabases(reportPeriod, endDate);
 		List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(reportPeriod, endDate, reportDatabase,
 		      reportName, ReportEntity.READSET_FULL);
-		String content = m_databaseMerger.mergeForDaily(reportDatabase, reports, databaseSet).toString();
+		String content = m_databaseMerger.mergeForDaily(reportDatabase, reports, databases).toString();
 
 		Dailyreport report = m_dailyReportDao.createLocal();
 		report.setContent(content);

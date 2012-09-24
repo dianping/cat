@@ -29,7 +29,7 @@
 						</c:if>
 					</c:forEach>
 				</ul></td>
-			<td width="20%"><ul class="tabs">
+			<%-- <td width="20%"><ul class="tabs">
 					<c:forEach var="page" items="${navBar.systemPages}">
 						<c:if test="${page.standalone}">
 							<li ${model.page.name == page.name ? 'class="selected"' : ''}><a
@@ -40,7 +40,7 @@
 							<li class="selected">${page.title}</li>
 						</c:if>
 					</c:forEach>
-				</ul></td>
+				</ul></td> --%>
 		</tr>
 	</table>
 	<jsp:doBody />

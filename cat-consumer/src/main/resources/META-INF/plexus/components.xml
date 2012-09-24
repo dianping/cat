@@ -303,7 +303,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>report</logical-table-name>
-				<physical-table-name>report</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -313,7 +313,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>hostinfo</logical-table-name>
-				<physical-table-name>hostinfo</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -323,7 +323,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>sqltable</logical-table-name>
-				<physical-table-name>sqltable</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -333,7 +333,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>task</logical-table-name>
-				<physical-table-name>task</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -343,7 +343,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>logview</logical-table-name>
-				<physical-table-name>logview</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
