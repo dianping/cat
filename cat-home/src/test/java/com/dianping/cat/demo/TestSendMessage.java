@@ -13,6 +13,7 @@ public class TestSendMessage {
 	public void sendException() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			Cat.getProducer().logError(new OutOfMemoryError());
+			Cat.getProducer().logError(new NullPointerException());
 		}
 		Thread.sleep(1000);
 	}
