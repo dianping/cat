@@ -169,7 +169,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		XmlBuilder b = new XmlBuilder();
 		StringBuilder sb = b.getResult();
 		PathBuilder p = new PathBuilder();
-		int height = 600;
+		int height = ruler.getHeight();
 
 		b.tag1("g", "id", "ruler", "font-size", "12", "text-anchor", "middle", "stroke", "black", "stroke-width", "1");
 
