@@ -124,7 +124,7 @@
 		</c:otherwise>
 	</c:choose>
 </table>
-<font color="white">${lastIndex+1}</font>
+<font color="white">${lastIndex}</font>
 
 <c:choose>
 	<c:when test="${not empty payload.type}">

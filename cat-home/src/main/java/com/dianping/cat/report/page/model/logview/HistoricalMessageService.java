@@ -42,13 +42,13 @@ public class HistoricalMessageService extends BaseLocalModelService<String> {
 		MessageTree tree = m_localBucketManager.loadMessage(messageId);
 
 		if (tree != null) {
-			return toString(tree);
+			return toString(request, tree);
 		}
 
 		tree = m_hdfsBucketManager.loadMessage(messageId);
 
 		if (tree != null) {
-			return toString(tree);
+			return toString(request, tree);
 		} else {
 			return null;
 		}
@@ -68,10 +68,18 @@ public class HistoricalMessageService extends BaseLocalModelService<String> {
 		return eligibale;
 	}
 
-	private String toString(MessageTree tree) {
+	protected String toString(ModelRequest request, MessageTree tree) {
 		ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
-		m_codec.encode(tree, buf);
+		if (request.getProperty("waterfall", "false").equals("true")) {
+			// to work around a plexus injection bug
+			MessageCodec codec = lookup(MessageCodec.class, "waterfall");
+
+			codec.encode(tree, buf);
+		} else {
+			m_codec.encode(tree, buf);
+		}
+
 		buf.readInt(); // get rid of length
 		return buf.toString(Charset.forName("utf-8"));
 	}

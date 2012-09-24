@@ -10,19 +10,16 @@ import com.site.web.mvc.payload.annotation.PathMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
-	private Action m_action;
+	private Action m_action = Action.VIEW;
 
 	@PathMeta("path")
 	private String[] m_path;
 
 	@FieldMeta("header")
 	private boolean m_showHeader = true;
-
-	@FieldMeta("tag1")
-	private String m_tag1;
-
-	@FieldMeta("tag2")
-	private String m_tag2;
+	
+	@FieldMeta("waterfall")
+	private boolean m_waterfall;
 
 	public Payload() {
 		super(ReportPage.LOGVIEW);
@@ -30,42 +27,23 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@Override
 	public Action getAction() {
-		if (m_action == null) {
-			return Action.VIEW;
-		}
 		return m_action;
-	}
-
-	public String getDirection() {
-		if (m_tag1 != null) {
-			return "false";
-		} else if (m_tag2 != null) {
-			return "true";
-		} else {
-			return null;
-		}
 	}
 
 	public String[] getPath() {
 		return m_path;
 	}
 
-	public String getTag() {
-		if (m_tag1 != null) {
-			return m_tag1;
-		} else if (m_tag2 != null) {
-			return m_tag2;
-		} else {
-			return null;
-		}
-	}
-
 	public boolean isShowHeader() {
 		return m_showHeader;
 	}
 
+	public boolean isWaterfall() {
+   	return m_waterfall;
+   }
+
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
+		m_action = Action.getByName(action, m_action);
 	}
 
 	public void setPath(String[] path) {
@@ -80,13 +58,9 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_showHeader = !"no".equals(showHeader);
 	}
 
-	public void setTag1(String tag1) {
-		m_tag1 = tag1;
-	}
-
-	public void setTag2(String tag2) {
-		m_tag2 = tag2;
-	}
+	public void setWaterfall(boolean waterfall) {
+   	m_waterfall = waterfall;
+   }
 
 	@Override
 	public void validate(ActionContext<?> ctx) {

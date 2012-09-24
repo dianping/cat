@@ -85,6 +85,7 @@ public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSuppor
 				t.setStatus("NoReportFound");
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			logError(e);
 			t.setStatus(e);
 			response.setException(e);

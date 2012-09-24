@@ -9,6 +9,7 @@ import com.dianping.cat.message.spi.codec.EscapingBufferWriter;
 import com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter;
 import com.dianping.cat.message.spi.codec.HtmlMessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.spi.codec.WaterfallMessageCodec;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
 
@@ -24,6 +25,8 @@ class CodecComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(BufferWriter.class, EscapingBufferWriter.ID));
 		all.add(C(MessageCodec.class, HtmlMessageCodec.ID, HtmlMessageCodec.class) //
 		      .req(BufferWriter.class, HtmlEncodingBufferWriter.ID));
+		all.add(C(MessageCodec.class, WaterfallMessageCodec.ID, WaterfallMessageCodec.class) //
+				.req(BufferWriter.class, HtmlEncodingBufferWriter.ID));
 
 		return all;
 	}

@@ -24,18 +24,14 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "logview")
 	private ModelService<String> m_service;
 
-	private String getLogView(String messageId, String direction, String tag) {
+	private String getLogView(String messageId, boolean waterfall) {
 		try {
 			if (messageId != null) {
 				MessageId id = MessageId.parse(messageId);
 				ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
 				ModelRequest request = new ModelRequest(id.getDomain(), period) //
-				      .setProperty("messageId", messageId);
-
-				if (direction != null && tag != null) {
-					request.setProperty("direction", String.valueOf(direction));
-					request.setProperty("tag", tag);
-				}
+				      .setProperty("messageId", messageId) //
+				      .setProperty("waterfall", String.valueOf(waterfall));
 
 				if (m_service.isEligable(request)) {
 					ModelResponse<String> response = m_service.invoke(request);
@@ -83,7 +79,7 @@ public class Handler implements PageHandler<Context> {
 		model.setLongDate(payload.getDate());
 
 		String messageId = getMessageId(payload);
-		String logView = getLogView(messageId, payload.getDirection(), payload.getTag());
+		String logView = getLogView(messageId, payload.isWaterfall());
 
 		switch (payload.getAction()) {
 		case VIEW:
