@@ -60,12 +60,24 @@ public class HistoricalLogViewService extends BaseHistoricalModelService<String>
 		if (tree != null) {
 			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8192);
 
-			m_codec.encode(tree, buf);
-			buf.readInt(); // get rid of length
-			return buf.toString(Charset.forName("utf-8"));
-		} else {
-			return null;
+			if (request.getProperty("waterfall", "false").equals("true")) {
+				// to work around a plexus injection bug
+				MessageCodec codec = lookup(MessageCodec.class, "waterfall");
+
+				codec.encode(tree, buf);
+			} else {
+				m_codec.encode(tree, buf);
+			}
+
+			try {
+				buf.readInt(); // get rid of length
+				return buf.toString(Charset.forName("utf-8"));
+			} catch (Exception e) {
+				// ignore it
+			}
 		}
+
+		return null;
 	}
 
 	@Override

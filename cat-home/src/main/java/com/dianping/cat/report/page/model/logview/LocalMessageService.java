@@ -52,9 +52,8 @@ public class LocalMessageService extends BaseLocalModelService<String> {
 				buf.readInt(); // get rid of length
 				return buf.toString(Charset.forName("utf-8"));
 			} catch (Exception e) {
+				// ignore it
 			}
-			
-			return null;
 		}
 
 		return null;

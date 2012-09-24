@@ -80,7 +80,13 @@ public class HistoricalMessageService extends BaseLocalModelService<String> {
 			m_codec.encode(tree, buf);
 		}
 
-		buf.readInt(); // get rid of length
-		return buf.toString(Charset.forName("utf-8"));
+		try {
+			buf.readInt(); // get rid of length
+			return buf.toString(Charset.forName("utf-8"));
+		} catch (Exception e) {
+			// ignore it
+		}
+		
+		return null;
 	}
 }
