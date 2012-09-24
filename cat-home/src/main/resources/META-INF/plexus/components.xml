@@ -920,7 +920,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>dailygraph</logical-table-name>
-				<physical-table-name>dailygraph</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -930,7 +930,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>dailyreport</logical-table-name>
-				<physical-table-name>dailyreport</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -940,7 +940,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>graph</logical-table-name>
-				<physical-table-name>graph</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -950,7 +950,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>monthreport</logical-table-name>
-				<physical-table-name>monthreport</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -960,7 +960,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>location</logical-table-name>
-				<physical-table-name>location</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1015,7 +1015,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>ruleinstance</logical-table-name>
-				<physical-table-name>ruleinstance</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1025,7 +1025,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>ruletemplate</logical-table-name>
-				<physical-table-name>ruletemplate</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1035,7 +1035,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>subscriber</logical-table-name>
-				<physical-table-name>subscriber</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1072,7 +1072,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>maillog</logical-table-name>
-				<physical-table-name>maillog</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1111,11 +1111,11 @@
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>dp-admin-login</role-hint>
+			<role-hint>DP_AdminLogin</role-hint>
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>dp-admin-login</logical-table-name>
-				<physical-table-name>DP_AdminLogin</physical-table-name>
+				<logical-table-name>DP_AdminLogin</logical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>user</data-source-name>
 			</configuration>
 		</component>

@@ -47,11 +47,10 @@ public abstract class AbstractReportBuilder {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-		if (domainNames == null || domainNames.size() == 0) {
-			return result;
-		}
-		for (Report domainName : domainNames) {
-			result.add(domainName.getDomain());
+		if (domainNames != null) {
+			for (Report domainName : domainNames) {
+				result.add(domainName.getDomain());
+			}
 		}
 		return result;
 	}
@@ -61,16 +60,15 @@ public abstract class AbstractReportBuilder {
 		Set<String> result = new HashSet<String>();
 
 		try {
-			databaseNames = m_reportDao.findAllByDomainNameDuration(start, end, null, "database",
+			databaseNames = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, "database",
 			      ReportEntity.READSET_DOMAIN_NAME);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-		if (databaseNames == null || databaseNames.size() == 0) {
-			return result;
-		}
-		for (Report domainName : databaseNames) {
-			result.add(domainName.getDomain());
+		if (databaseNames != null) {
+			for (Report domainName : databaseNames) {
+				result.add(domainName.getDomain());
+			}
 		}
 		return result;
 	}

@@ -93,6 +93,8 @@
 </table>
 
 <font color="white">${lastIndex+1}</font>
+
+</br>
 <c:choose>
 	<c:when test="${not empty payload.type}">
 		<table>

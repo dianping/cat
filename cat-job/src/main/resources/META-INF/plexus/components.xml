@@ -123,17 +123,17 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>location</logical-table-name>
-				<physical-table-name>location</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
 			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>sqlreport</role-hint>
+			<role-hint>SqlReport</role-hint>
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>sqlreport</logical-table-name>
-				<physical-table-name>SqlReport</physical-table-name>
+				<logical-table-name>SqlReport</logical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>

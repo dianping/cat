@@ -28,7 +28,7 @@ public class MonthReportBuilder {
 	private MonthReport m_monthReport = new MonthReport();
 
 	public MonthReport build(TransactionReport transactionReport, EventReport eventReport, ProblemReport problemReport) {
-		
+
 		buildReportInfo(transactionReport);
 		buildProblemInfo(problemReport);
 		buildTansactionInfo(transactionReport);
@@ -70,11 +70,11 @@ public class MonthReportBuilder {
 		int days = m_monthReport.getDay();
 		ProblemInfo info = new ProblemInfo();
 		ProblemStatistics statistics = new ProblemStatistics();
-		
+
 		statistics.setSqlThreshold(0);
 		statistics.setUrlThreshold(0);
 		statistics.setServiceThreshold(0);
-		
+
 		statistics.setAllIp(true);
 		statistics.visitProblemReport(problemReport);
 
@@ -197,7 +197,15 @@ public class MonthReportBuilder {
 			m_monthReport.setUrl(temp);
 		}
 
-		TransactionType service = types.get("Service");
+		TransactionType service = machine.findOrCreateType("Service");
+		TransactionType pigeonService = types.get("PigeonService");
+
+		if (pigeonService != null && service != null) {
+			service.setFailCount(service.getFailCount() + pigeonService.getFailCount());
+			service.setSum(service.getSum() + pigeonService.getSum());
+			service.setTotalCount(service.getTotalCount() + pigeonService.getTotalCount());
+			service.setAvg(service.getSum() / service.getTotalCount());
+		}
 		if (service != null) {
 			BaseInfo serviceBaseInfo = buildBaseInfo(service, days);
 			Service temp = new Service();
@@ -210,7 +218,15 @@ public class MonthReportBuilder {
 			m_monthReport.setService(temp);
 		}
 
-		TransactionType call = types.get("Call");
+		TransactionType call = machine.findOrCreateType("Call");
+		TransactionType pigeonCall = types.get("PigeonService");
+
+		if (pigeonCall != null && call != null) {
+			call.setFailCount(call.getFailCount() + pigeonCall.getFailCount());
+			call.setSum(call.getSum() + pigeonCall.getSum());
+			call.setTotalCount(call.getTotalCount() + pigeonCall.getTotalCount());
+			call.setAvg(call.getSum() / call.getTotalCount());
+		}
 		if (call != null) {
 			BaseInfo callBaseInfo = buildBaseInfo(call, days);
 			Call temp = new Call();
