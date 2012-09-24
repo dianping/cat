@@ -33,6 +33,7 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
+import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameModel;
 import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
@@ -81,13 +82,15 @@ public class Handler implements PageHandler<Context> {
 
 	private Gson m_gson = new Gson();
 
-	private void buildTransactionNameGraph(String ip, String type, TransactionReport report, Model model) {
+	private void buildTransactionNameGraph(List<TransactionNameModel> names, Model model) {
 		PieChart chart = new PieChart();
-		Collection<TransactionName> values = report.findOrCreateMachine(ip).findOrCreateType(type).getNames().values();
 		List<Item> items = new ArrayList<Item>();
-		for (TransactionName name : values) {
+
+		for (int i = 1; i < names.size(); i++) {
+			TransactionNameModel name = names.get(i);
 			Item item = new Item();
-			item.setNumber(name.getTotalCount()).setTitle(name.getId());
+			TransactionName transaction = name.getDetail();
+			item.setNumber(transaction.getTotalCount()).setTitle(transaction.getId());
 			items.add(item);
 		}
 
@@ -197,12 +200,21 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 
 		normalize(model, payload);
+		String type = payload.getType();
 		switch (payload.getAction()) {
 		case HOURLY_REPORT:
 			showHourlyReport(model, payload);
+			if (!StringUtils.isEmpty(type)) {
+				buildTransactionNameGraph(model.getDisplayNameReport().getResults(), model);
+			}
+
 			break;
 		case HISTORY_REPORT:
 			showSummarizeReport(model, payload);
+			if (!StringUtils.isEmpty(type)) {
+				buildTransactionNameGraph(model.getDisplayNameReport().getResults(), model);
+			}
+
 			break;
 		case HISTORY_GRAPH:
 			m_historyGraph.buildTrendGraph(model, payload);
@@ -323,7 +335,6 @@ public class Handler implements PageHandler<Context> {
 				String ip = payload.getIpAddress();
 				if (!StringUtils.isEmpty(type)) {
 					model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, report, queryName));
-					buildTransactionNameGraph(ip, type, report, model);
 				} else {
 					model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, report));
 				}
@@ -396,7 +407,6 @@ public class Handler implements PageHandler<Context> {
 		if (!StringUtils.isEmpty(type)) {
 			model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, transactionReport,
 			      payload.getQueryName()));
-			buildTransactionNameGraph(ip, type, transactionReport, model);
 		} else {
 			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, transactionReport));
 		}

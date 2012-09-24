@@ -21,6 +21,7 @@ public class DisplayNames {
 	public DisplayNames display(String sorted, String type, String ip, TransactionReport report, String queryName) {
 		Map<String, TransactionType> types = report.getMachines().get(ip).getTypes();
 		TransactionName all = new TransactionName("TOTAL");
+		all.setTotalPercent(1);
 		if (types != null) {
 			TransactionType names = types.get(type);
 
@@ -40,6 +41,11 @@ public class DisplayNames {
 		}
 		Collections.sort(m_results, new TransactionNameComparator(sorted));
 
+		long total = all.getTotalCount();
+		for (TransactionNameModel nameModel : m_results) {
+			TransactionName transactionName = nameModel.getDetail();
+			transactionName.setTotalPercent(transactionName.getTotalCount() / (double) total);
+		}
 		m_results.add(0, new TransactionNameModel("TOTAL", all));
 		return this;
 	}
