@@ -21,7 +21,7 @@
 	<c:otherwise>
 		<c:choose>
 			<c:when test="${payload.waterfall=='true'}">
-				<div>&nbsp;&nbsp;<a href="?domain=${model.domain}">Text</a>&nbsp;&nbsp;&nbsp;&nbsp;Graph</div>
+				<div>&nbsp;&nbsp;<a href="?domain=${model.domain}&waterfall=false">Text</a>&nbsp;&nbsp;&nbsp;&nbsp;Graph</div>
 			</c:when>
 			<c:otherwise>
 				<div>&nbsp;&nbsp;Text&nbsp;&nbsp;&nbsp;&nbsp;<a href="?domain=${model.domain}&waterfall=true">Graph</a></div>
