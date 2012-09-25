@@ -253,7 +253,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							m_errors++;
 
 							if (m_errors == 1 || m_errors % 1000 == 0) {
-								Cat.getProducer().logError(new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
+								Cat.getProducer().logError(
+								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
 							}
 						}
 					}
@@ -308,7 +309,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 		});
 		if (paths.size() > 0) {
-			Transaction t = Cat.newTransaction("System", "Dump");
+			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			Transaction t = Cat.newTransaction("System", "Dump" + "-" + ip);
 			t.setStatus(Message.SUCCESS);
 
 			for (String path : paths) {

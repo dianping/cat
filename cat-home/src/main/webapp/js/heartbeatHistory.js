@@ -23,3 +23,7 @@ function disksGraph(size, diskHistoryGraph) {
 		}
 	}
 }
+
+function graphOnMinute(div,graphData){
+	graphReal(div, graphData,60*1000);
+}

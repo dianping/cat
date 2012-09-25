@@ -9,7 +9,10 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
@@ -36,8 +39,18 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
-		m_bucketManager.archive(m_startTime);
-		m_channelManager.closeAllChannels(m_startTime);
+		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
+		t.setStatus(Message.SUCCESS);
+
+		try {
+			m_bucketManager.archive(m_startTime);
+			m_channelManager.closeAllChannels(m_startTime);
+		} catch (Exception e) {
+			t.setStatus(e);
+			Cat.logError(e);
+		} finally {
+			t.complete();
+		}
 	}
 
 	@Override

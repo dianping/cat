@@ -83,51 +83,51 @@
 <script>
 	//01
 	var activeThreadGraphData = ${model.activeThreadGraph};
-	graph(document.getElementById('ActiveThread'), activeThreadGraphData);
+	graphOnMinute(document.getElementById('ActiveThread'), activeThreadGraphData);
 	//02
 	var startedThreadGraphData = ${model.startedThreadGraph};
-	graph(document.getElementById('StartedThread'), startedThreadGraphData);
+	graphOnMinute(document.getElementById('StartedThread'), startedThreadGraphData);
 	//03
 	var totalThreadGraphData = ${model.totalThreadGraph};
-	graph(document.getElementById('TotalStartedThread'), totalThreadGraphData);
+	graphOnMinute(document.getElementById('TotalStartedThread'), totalThreadGraphData);
 	//04
 	var httpThreadGraphData = ${model.httpThreadGraph};
-	graph(document.getElementById('HttpStartedThread'), httpThreadGraphData);
+	graphOnMinute(document.getElementById('HttpStartedThread'), httpThreadGraphData);
 	//05
 	var catThreadGraphData = ${model.catThreadGraph};
-	graph(document.getElementById('CatStartedThread'), catThreadGraphData);
+	graphOnMinute(document.getElementById('CatStartedThread'), catThreadGraphData);
 	//06
 	var pigeonThreadGraphData = ${model.pigeonThreadGraph};
-	graph(document.getElementById('PigeonStartedThread'), pigeonThreadGraphData);
+	graphOnMinute(document.getElementById('PigeonStartedThread'), pigeonThreadGraphData);
 	//07
 	var newGcCountGraphData = ${model.newGcCountGraph};
-	graph(document.getElementById('NewGcCount'), newGcCountGraphData);
+	graphOnMinute(document.getElementById('NewGcCount'), newGcCountGraphData);
 	//08
 	var oldGcCountGraphData = ${model.oldGcCountGraph};
-	graph(document.getElementById('OldGcCount'), oldGcCountGraphData);
+	graphOnMinute(document.getElementById('OldGcCount'), oldGcCountGraphData);
 	//09
 	var systemLoadAverageGraphData = ${model.systemLoadAverageGraph};
-	graph(document.getElementById('SystemLoadAverage'), systemLoadAverageGraphData);
+	graphOnMinute(document.getElementById('SystemLoadAverage'), systemLoadAverageGraphData);
 	//10
 	var memoryFreeGraphData = ${model.memoryFreeGraph};
-	graph(document.getElementById('MemoryFree'), memoryFreeGraphData);
+	graphOnMinute(document.getElementById('MemoryFree'), memoryFreeGraphData);
 	//11
 	var heapUsageGraphData = ${model.heapUsageGraph};
-	graph(document.getElementById('HeapUsage'), heapUsageGraphData);
+	graphOnMinute(document.getElementById('HeapUsage'), heapUsageGraphData);
 	//12
 	var noneHeapUsageGraphData = ${model.noneHeapUsageGraph};
-	graph(document.getElementById('NoneHeapUsage'), noneHeapUsageGraphData);
+	graphOnMinute(document.getElementById('NoneHeapUsage'), noneHeapUsageGraphData);
 	//19
 	
 	//16
 	var catMessageProducedGraphData = ${model.catMessageProducedGraph};
-	graph(document.getElementById('CatMessageProduced'), catMessageProducedGraphData);
+	graphOnMinute(document.getElementById('CatMessageProduced'), catMessageProducedGraphData);
 	//17
 	var catMessageOverflowGraphData = ${model.catMessageOverflowGraph};
-	graph(document.getElementById('CatMessageOverflow'), catMessageOverflowGraphData);
+	graphOnMinute(document.getElementById('CatMessageOverflow'), catMessageOverflowGraphData);
 	//18
 	var catMessageSizeGraphData = ${model.catMessageSizeGraph};
-	graph(document.getElementById('CatMessageSize'), catMessageSizeGraphData);
+	graphOnMinute(document.getElementById('CatMessageSize'), catMessageSizeGraphData);
 
 	var diskHistoryGraph=${model.diskHistoryGraph};
 	var size=${model.disks};

@@ -1,6 +1,7 @@
 package com.dianping.cat.report.task;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -205,13 +206,20 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 	public void run() {
 		while (true) {
 			try {
-				Date yestoday = TaskHelper.yesterdayZero(new Date());
-				if (!checkDomainTaskGenerated(yestoday)) {
-					generateDomainDailyTasks(yestoday);
+				Calendar cal = Calendar.getInstance();
+				int minute = cal.get(Calendar.MINUTE);
+
+				// Daily report should created after last day reports all insert to database
+				if (minute > 10) {
+					Date yestoday = TaskHelper.yesterdayZero(new Date());
+					if (!checkDomainTaskGenerated(yestoday)) {
+						generateDomainDailyTasks(yestoday);
+					}
+					if (!checkDatabaseTaskGenerated(yestoday)) {
+						generateDatabaseTasks(yestoday);
+					}
 				}
-				if (!checkDatabaseTaskGenerated(yestoday)) {
-					generateDatabaseTasks(yestoday);
-				}
+
 				Thread.sleep(10 * 60 * 1000);
 			} catch (Exception e) {
 			}
@@ -219,11 +227,11 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 	}
 
 	@Override
-   public String getName() {
-	   return "DailyTask-Producer";
-   }
+	public String getName() {
+		return "DailyTask-Producer";
+	}
 
 	@Override
-   public void shutdown() {
-   }
+	public void shutdown() {
+	}
 }

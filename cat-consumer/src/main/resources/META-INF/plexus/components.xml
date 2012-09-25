@@ -19,7 +19,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,heartbeat,matrix,cross,common,database,sql,dump</analyzers>
+				<analyzers>problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,common</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>

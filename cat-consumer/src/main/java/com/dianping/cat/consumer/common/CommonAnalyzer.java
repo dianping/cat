@@ -38,9 +38,7 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
-		if (atEnd) {
-			storeReport();
-		}
+		storeReport(atEnd);
 		try {
 			m_bucketManager.closeAllLogviewBuckets();
 		} catch (Exception e) {
@@ -94,7 +92,7 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 		m_duration = duration;
 	}
 
-	private void storeReport() {
+	private void storeReport(boolean atEnd) {
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
 		t.setStatus(Message.SUCCESS);
@@ -116,24 +114,25 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 					}
 				}
 			}
-			Date period = new Date(m_startTime);
-			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+			if (atEnd) {
+				Date period = new Date(m_startTime);
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				// Create task for health report
+				for (String domain : m_reports.keySet()) {
+					try {
+						Task task = m_taskDao.createLocal();
 
-			// Create task for health report
-			for (String domain : m_reports.keySet()) {
-				try {
-					Task task = m_taskDao.createLocal();
-
-					task.setCreationDate(new Date());
-					task.setProducer(ip);
-					task.setReportDomain(domain);
-					task.setReportName("health");
-					task.setReportPeriod(period);
-					task.setStatus(1); // status todo
-					m_taskDao.insert(task);
-				} catch (Exception e) {
-					Cat.logError(e);
-					t.setStatus(e);
+						task.setCreationDate(new Date());
+						task.setProducer(ip);
+						task.setReportDomain(domain);
+						task.setReportName("health");
+						task.setReportPeriod(period);
+						task.setStatus(1); // status todo
+						m_taskDao.insert(task);
+					} catch (Exception e) {
+						Cat.logError(e);
+						t.setStatus(e);
+					}
 				}
 			}
 		} catch (Exception e) {

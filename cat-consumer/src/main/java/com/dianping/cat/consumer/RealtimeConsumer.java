@@ -487,7 +487,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void run() {
 			try {
 				m_analyzer.analyze(m_queue);
-			} catch (RuntimeException e) {
+			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}

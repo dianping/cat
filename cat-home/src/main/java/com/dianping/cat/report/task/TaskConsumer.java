@@ -1,7 +1,5 @@
 package com.dianping.cat.report.task;
 
-import java.util.concurrent.locks.LockSupport;
-
 import com.dainping.cat.consumer.dal.report.Task;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -46,8 +44,6 @@ public abstract class TaskConsumer implements com.site.helper.Threads.Task {
 	public void run() {
 		String localIp = getLoaclIp();
 		while (running) {
-			LockSupport.parkNanos(getSleepTime());
-			Transaction t = Cat.newTransaction("System", "MergeJob-" + localIp);
 			try {
 				Task task = findDoingTask(localIp);
 				if (task == null) {
@@ -56,33 +52,40 @@ public abstract class TaskConsumer implements com.site.helper.Threads.Task {
 
 				boolean again = false;
 				if (task != null) {
-					task.setConsumer(localIp);
-					if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) { // confirm
-						int retryTimes = 0;
-						while (!processTask(task)) {
-							retryTimes++;
-							if (retryTimes < MAX_TODO_RETRY_TIMES) {
-								taskRetryDuration();
-							} else {
-								updateDoingToFailure(task);
-								again = true;
-								break;
+					Transaction t = Cat.newTransaction("Task", task.getReportDomain());
+					try {
+						task.setConsumer(localIp);
+						if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) {
+							int retryTimes = 0;
+							while (!processTask(task)) {
+								retryTimes++;
+								if (retryTimes < MAX_TODO_RETRY_TIMES) {
+									taskRetryDuration();
+								} else {
+									updateDoingToFailure(task);
+									again = true;
+									break;
+								}
+							}
+							if (!again) {
+								updateDoingToDone(task);
 							}
 						}
-						if (!again) {
-							updateDoingToDone(task);
-						}
+
+						t.setStatus(Transaction.SUCCESS);
+					} catch (Throwable e) {
+						t.setStatus(e);
+						Cat.logError(e);
+					} finally {
+						t.complete();
 					}
 				} else {
 					taskNotFoundDuration();
 				}
-				t.setStatus(Transaction.SUCCESS);
 			} catch (Throwable e) {
 				Cat.logError(e);
-				t.setStatus(e);
-			} finally {
-				t.complete();
 			}
+
 		}
 		this.stopped = true;
 	}
