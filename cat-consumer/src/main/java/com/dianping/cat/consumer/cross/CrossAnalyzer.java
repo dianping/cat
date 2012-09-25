@@ -133,22 +133,33 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	public boolean isIp(String ip) {
 		boolean result = false;
+		// try {
+		// if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
+		// String s[] = ip.split("\\.");
+		//
+		// if (Integer.parseInt(s[0]) <= 255) {
+		// if (Integer.parseInt(s[1]) <= 255) {
+		// if (Integer.parseInt(s[2]) <= 255) {
+		// if (Integer.parseInt(s[3]) <= 255) {
+		// result = true;
+		// }
+		// }
+		// }
+		// }
+		// }
+		// } catch (Exception e) {
+		// //ignore
+		// }
 		try {
-			if (ip.matches("\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}")) {
-				String s[] = ip.split("\\.");
-
-				if (Integer.parseInt(s[0]) <= 255) {
-					if (Integer.parseInt(s[1]) <= 255) {
-						if (Integer.parseInt(s[2]) <= 255) {
-							if (Integer.parseInt(s[3]) <= 255) {
-								result = true;
-							}
-						}
-					}
+			char first = ip.charAt(0);
+			char next = ip.charAt(1);
+			if (first >= '0' && first <= '9') {
+				if (next >= '0' && next <= '9') {
+					return true;
 				}
 			}
 		} catch (Exception e) {
-			//ignore
+
 		}
 		return result;
 	}
@@ -157,22 +168,23 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		CrossInfo crossInfo = new CrossInfo();
 		String localIp = tree.getIpAddress();
 
-//		List<Message> messages = t.getChildren();
-//		for (Message message : messages) {
-//			if (message instanceof Event) {
-//				if (message.getType().equals("PigeonService.client")) {
-//					String name = message.getName();
-//					int index = name.indexOf(":");
-//					if (index > 0) {
-//						name = name.substring(0, index);
-//					}
-//					if (isIp(name)) {
-//						crossInfo.setRemoteAddress(name);
-//					}
-//					break;
-//				}
-//			}
-//		}
+		List<Message> messages = t.getChildren();
+		for (Message message : messages) {
+			if (message instanceof Event) {
+				if (message.getType().equals("PigeonService.client")) {
+					String name = message.getName();
+					int index = name.indexOf(":");
+					if (index > 0) {
+						name = name.substring(0, index);
+					}
+					if (isIp(name)) {
+						crossInfo.setRemoteAddress(name);
+					}
+					break;
+				}
+			}
+		}
+
 		if (crossInfo.getRemoteAddress().equals(UNKNOWN)) {
 			MessageId id = MessageId.parse(tree.getMessageId());
 			String remoteIp = id.getIpAddress();

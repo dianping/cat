@@ -11,6 +11,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_mobileResponse;
 
 	private String m_table;
+	
+	private String m_logviewPath;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -50,4 +52,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTable(String table) {
 		m_table = table;
 	}
+
+	public String getLogviewPath() {
+		return m_logviewPath;
+	}
+
+	public void setLogviewPath(String logviewPath) {
+		m_logviewPath = logviewPath;
+	}
+	
 }

@@ -52,8 +52,7 @@ public class DefaultTaskConsumer extends TaskConsumer {
 
 	@Override
 	protected void taskNotFoundDuration() {
-		Date awakeTime = TaskHelper.nextTaskTime();
-		LockSupport.parkUntil(awakeTime.getTime());
+		LockSupport.parkNanos(5 * 60 * 1000 * 1000 * 1000);// sleep 5 min
 	}
 
 	@Override
@@ -102,12 +101,12 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	}
 
 	@Override
-   public String getName() {
-	   return "Task-Consumer";
-   }
+	public String getName() {
+		return "Task-Consumer";
+	}
 
 	@Override
-   public void shutdown() {
-	   
-   }
+	public void shutdown() {
+
+	}
 }

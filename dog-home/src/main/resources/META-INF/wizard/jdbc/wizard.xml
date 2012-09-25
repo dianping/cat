@@ -1,5 +1,5 @@
 <wizard package="com.dianping.cat.consumer">
-   <jdbc package="com.dainping.dog.dal" name="cat">
+   <jdbc package="com.diannping.dog.dal" name="cat">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://192.168.7.43:3306/cat</url>
@@ -7,7 +7,7 @@
          <password>password</password>
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
-      <group name="alarm" package="com.dainping.dog.dal">
+      <group name="alarm" package="com.diannping.dog.dal">
          <table name="ruleinstance"/>
          <table name="ruletemplate"/>
          <table name="subscriber"/>

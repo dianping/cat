@@ -70,7 +70,13 @@ public class SqlParseManager {
 	}
 
 	private String parseSql(String sqlStatement) {
-		List<String> tables = SqlParsers.forTable().parse(sqlStatement);
+		List<String> tables = null;
+		try {
+			tables = SqlParsers.forTable().parse(sqlStatement);
+		} catch (Exception e) {
+			Cat.logError(e);
+			Cat.getProducer().logEvent("Parse", "SQL", "Error", sqlStatement);
+		}
 		String result = "";
 		boolean first = true;
 

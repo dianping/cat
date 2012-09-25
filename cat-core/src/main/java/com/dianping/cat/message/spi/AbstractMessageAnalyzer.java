@@ -84,7 +84,8 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	protected boolean shouldDiscard(Transaction t) {
 		// pigeon default heartbeat is no use
-		if (("Service").equals(t.getType()) && ("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
+		if ((("Service").equals(t.getType()) || ("PigeonService").equals(t.getType()))
+		      && ("piegonService:heartTaskService:heartBeat").equals(t.getName())) {
 			return true;
 		}
 		return false;

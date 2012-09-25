@@ -5,7 +5,9 @@ public enum JspFile {
 
 	LOGVIEW_NO_HEADER("/jsp/report/logview_no_header.jsp"),
 
-	MOBILE("/jsp/report/logview_mobile.jsp");
+	MOBILE("/jsp/report/logview_mobile.jsp"), 
+	
+	DETAIL("/jsp/report/logview_detail.jsp");
 
 	private String m_path;
 

@@ -1450,6 +1450,9 @@
 					<role-hint>logview</role-hint>
 					<field-name>m_service</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

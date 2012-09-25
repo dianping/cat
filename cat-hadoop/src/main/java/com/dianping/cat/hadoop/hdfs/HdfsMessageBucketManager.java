@@ -80,9 +80,6 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 			final String str = sb.toString();
 			final Path basePath = new Path(str);
 			final List<String> paths = new ArrayList<String>();
-			// final String key = "-" + id.getDomain() + "-";
-
-			// final String dataFile =path + id.getDomain() + "-" + id.getIpAddress();
 
 			fs.listStatus(basePath, new PathFilter() {
 				@Override
@@ -97,7 +94,9 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 				}
 			});
 
+			t.addData(paths.toString());
 			for (String dataFile : paths) {
+				Cat.getProducer().logEvent("HDFSBucket", dataFile);
 				HdfsMessageBucket bucket = m_buckets.get(dataFile);
 
 				if (bucket == null) {

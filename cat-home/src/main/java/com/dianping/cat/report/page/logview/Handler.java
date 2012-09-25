@@ -1,11 +1,13 @@
 package com.dianping.cat.report.page.logview;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -23,6 +25,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "logview")
 	private ModelService<String> m_service;
+
+	@Inject
+	private MessagePathBuilder m_pathBuilder;
 
 	private String getLogView(String messageId, boolean waterfall) {
 		try {
@@ -88,8 +93,23 @@ public class Handler implements PageHandler<Context> {
 		case MOBILE:
 			model.setMobileResponse(logView);
 			break;
+		case DETAIL:
+			String path = getPath(messageId);
+			model.setLogviewPath(path);
+			break;
 		}
 
 		m_jspViewer.view(ctx, model);
 	}
+
+	private String getPath(String messageId) {
+		MessageId id = MessageId.parse(messageId);
+		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
+		final StringBuilder sb = new StringBuilder();
+		sb.append('/').append(path);
+
+		final String key = id.getDomain() + '-' + id.getIpAddress();
+	   return path+key;
+   }
+	
 }

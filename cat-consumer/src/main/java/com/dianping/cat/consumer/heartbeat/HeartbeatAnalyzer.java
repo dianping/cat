@@ -145,7 +145,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 
 		return period;

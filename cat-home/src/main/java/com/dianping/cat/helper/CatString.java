@@ -6,4 +6,6 @@ public class CatString {
 	public static final String ALL_Domain = "All";
 
 	public static final String ALL_Database = "All";
+	
+	public static final String ALL_NAME = "All";
 }

@@ -375,10 +375,10 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.CACHE);
 		model.setDisplayDomain(payload.getDomain());
 		model.setQueryName(payload.getQueryName());
-		if (payload.getPeriod().isCurrent()) {
-			model.setCreatTime(new Date());
+		if (payload.getPeriod().isFuture()) {
+			model.setLongDate(payload.getCurrentDate());
 		} else {
-			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
+			model.setLongDate(payload.getDate());
 		}
 		if (payload.getAction() == Action.HISTORY_REPORT) {
 			String type = payload.getReportType();

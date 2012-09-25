@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.task;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dainping.cat.consumer.dal.report.TaskEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.task.spi.ReportFacade;
 import com.site.dal.jdbc.DalException;
@@ -22,8 +22,6 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
-
-	private static final String ALL = "All";
 
 	private static final int PAGE_SIZE = 1000000;
 
@@ -42,8 +40,8 @@ public class Handler implements PageHandler<Context> {
 		int type = payload.getType();
 		int status = payload.getStatus();
 
-		List<String> domains = new ArrayList<String>(Arrays.asList(ALL));
-		List<String> names = new ArrayList<String>(Arrays.asList(ALL));
+		List<String> domains = new ArrayList<String>();
+		List<String> names = new ArrayList<String>();
 		List<Task> tasks = new ArrayList<Task>();
 		try {
 			List<Task> domainSet = m_taskDao.findAllDistinct(start, end, TaskEntity.READSET_REPORT_DOMAIN);
@@ -117,15 +115,15 @@ public class Handler implements PageHandler<Context> {
 		model.setType(payload.getType());
 		model.setStatus(payload.getStatus());
 
-		if (isEmpty(domain) || ALL.equals(domain)) {
-			model.setDomain(ALL);
-			queryDomain = null;
+		if (isEmpty(domain)) {
+			model.setDomain("Cat");
+			queryDomain = "Cat";
 		} else {
 			model.setDomain(domain);
 		}
 
-		if (isEmpty(name) || ALL.equals(name)) {
-			model.setName(ALL);
+		if (isEmpty(name) || CatString.ALL_NAME.equals(name)) {
+			model.setName(CatString.ALL_NAME);
 			queryName = null;
 		} else {
 			model.setName(name);
