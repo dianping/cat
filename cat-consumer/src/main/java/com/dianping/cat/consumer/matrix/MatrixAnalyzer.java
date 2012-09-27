@@ -211,7 +211,12 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 			for (MatrixReport report : m_reports.values()) {
 				try {
-					report.accept(new MatrixReportFilter(50));
+					try {
+						report.accept(new MatrixReportFilter(50));
+					} catch (Exception e) {
+						//ConcurrentModificationException
+						report.accept(new MatrixReportFilter(50));
+					}
 					Set<String> domainNames = report.getDomainNames();
 					domainNames.clear();
 					domainNames.addAll(getDomains());

@@ -167,6 +167,18 @@ public class HealthReportCreator {
 		m_healthReport.setMachineInfo(info);
 	}
 
+	private double queryOldgcNumber(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine){
+		double oldgcTotal =0;
+		List<Period> periods = machine.getPeriods();
+		long l = periods.get(periods.size() - 1).getOldGcCount() - periods.get(0).getOldGcCount();
+		if (l >= 0) {
+			oldgcTotal = l;
+		} else {
+			oldgcTotal = periods.get(periods.size() - 1).getOldGcCount();
+		}
+		return oldgcTotal;
+	}
+	
 	private void buildMachinInfos(MachineInfo info, HeartbeatReport heartBeatReport) {
 		Map<String, Double> loads = new HashMap<String, Double>();
 		Map<String, Double> gcs = new HashMap<String, Double>();
@@ -186,12 +198,7 @@ public class HealthReportCreator {
 			int i = 0;
 
 			List<Period> periods = machine.getPeriods();
-			long l = periods.get(periods.size() - 1).getOldGcCount() - periods.get(0).getOldGcCount();
-			if (l > 0) {
-				oldgcTotal = l;
-			} else {
-				oldgcTotal = periods.get(periods.size() - 1).getOldGcCount();
-			}
+			oldgcTotal = queryOldgcNumber(machine);
 
 			for (; i < periods.size(); i++) {
 				loadTotal += periods.get(i).getSystemLoadAverage();

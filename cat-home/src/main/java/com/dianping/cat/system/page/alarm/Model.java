@@ -12,4 +12,11 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public Action getDefaultAction() {
 		return Action.VIEW;
 	}
+	
+	public String getDomain(){
+		return "";
+	}
+	public String getDate(){
+		return "";
+	}
 }

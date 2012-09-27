@@ -29,6 +29,7 @@ import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.site.dal.jdbc.DalException;
+import com.site.dal.jdbc.DalNotFoundException;
 import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
@@ -50,7 +51,7 @@ public class MonthReportBuilderTask implements Task {
 
 		MonthReportBuilder builder = new MonthReportBuilder();
 		MonthReport report = builder.build(transactionReport, eventReport, problemReport);
-		
+
 		report.setStartTime(start);
 		report.setEndTime(end);
 		return report;
@@ -120,8 +121,9 @@ public class MonthReportBuilderTask implements Task {
 			for (Monthreport report : monthreports) {
 				domains.add(report.getDomain());
 			}
+		} catch (DalNotFoundException e1) {
 		} catch (DalException e) {
-			e.printStackTrace();
+			Cat.logError(e);
 		}
 
 		return domains;
@@ -211,12 +213,13 @@ public class MonthReportBuilderTask implements Task {
 				Date currentMonth = getMonthFirstDay(0);
 				Set<String> allDomains = getAllDomains(lastMonth, currentMonth);
 				List<String> createdDomains = getMonthReportCreatedDomin(lastMonth);
-
+					
 				for (String temp : createdDomains) {
 					allDomains.remove(temp);
 				}
 				for (String domain : allDomains) {
 					Transaction t = Cat.newTransaction("MonthReport", domain);
+					t.setStatus(Transaction.SUCCESS);
 					try {
 						MonthReport report = buildMonthReport(domain, lastMonth, currentMonth);
 
@@ -227,7 +230,6 @@ public class MonthReportBuilderTask implements Task {
 						entity.setPeriod(lastMonth);
 
 						m_monthreportDao.insert(entity);
-						t.setStatus(Transaction.SUCCESS);
 					} catch (Exception e) {
 						Cat.logError(e);
 						t.setStatus(e);

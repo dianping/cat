@@ -30,6 +30,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_page = SystemPage.getByName(page, SystemPage.ALARM);
 	}
 
+	public String getReportType(){
+		return "";
+	}
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
 	}

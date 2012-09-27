@@ -23,6 +23,7 @@ import com.dianping.cat.report.page.health.HistoryGraphs;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.TaskConsumer;
+import com.dianping.cat.report.task.OtherJobReport;
 import com.dianping.cat.report.task.cross.CrossMerger;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseMerger;
@@ -87,7 +88,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SqlMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class, TransactionMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class,
+		            TransactionMerger.class));
 
 		all.add(C(EventReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, EventGraphCreator.class, EventMerger.class));
@@ -96,7 +98,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, ProblemGraphCreator.class, ProblemMerger.class));
 
 		all.add(C(HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class, HeartbeatMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class,
+		            HeartbeatMerger.class));
 
 		all.add(C(MatrixReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class));
@@ -137,11 +140,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
 
+		all.add(C(OtherJobReport.class).//
+		      req(DailyreportDao.class, DomainManager.class));
+
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		// database
-		all.add(C(JdbcDataSourceConfigurationManager.class).config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		all.add(C(JdbcDataSourceConfigurationManager.class).config(
+		      E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
 

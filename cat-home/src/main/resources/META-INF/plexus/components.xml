@@ -368,6 +368,18 @@
 			</configuration>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.OtherJobReport</role>
+			<implementation>com.dianping.cat.report.task.OtherJobReport</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.cross.DomainManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>

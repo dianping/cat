@@ -46,14 +46,22 @@ public class DefaultTaskConsumer extends TaskConsumer {
 	}
 
 	@Override
+	public String getName() {
+		return "Task-Consumer";
+	}
+
+	@Override
 	protected boolean processTask(Task doing) {
 		return m_reportFacade.builderReport(doing);
 	}
 
 	@Override
+	public void shutdown() {
+
+	}
+
+	@Override
 	protected void taskNotFoundDuration() {
-		// Date awakeTime = TaskHelper.nextTaskTime();
-		// LockSupport.parkUntil(awakeTime.getTime());
 		try {
 			Thread.sleep(2 * 60 * 1000);
 		} catch (InterruptedException e) {
@@ -104,15 +112,5 @@ public class DefaultTaskConsumer extends TaskConsumer {
 			Cat.logError(e);
 			return false;
 		}
-	}
-
-	@Override
-	public String getName() {
-		return "Task-Consumer";
-	}
-
-	@Override
-	public void shutdown() {
-
 	}
 }

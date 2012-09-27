@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -24,6 +23,7 @@ import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.site.dal.jdbc.DalException;
+import com.site.dal.jdbc.DalNotFoundException;
 import com.site.lookup.annotation.Inject;
 
 public class DailyTaskProducer implements com.site.helper.Threads.Task, Initializable {
@@ -37,8 +37,6 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 
 	private Set<String> m_dailyReportNameSet = new HashSet<String>();
 
-	private Logger m_logger;
-
 	@Inject
 	private ReportDao m_reportDao;
 
@@ -51,8 +49,10 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 		try {
 			allReports = m_dailyReportDao.findDatabaseAllByPeriod(day, new Date(day.getTime() + DAY),
 			      DailyreportEntity.READSET_DOMAIN_NAME);
+		} catch (DalNotFoundException notFoundException) {
+			// Ignore
 		} catch (DalException e) {
-			m_logger.warn("DailyTaskProducer isYesterdayTaskGenerated", e);
+			Cat.logError(e);
 		}
 
 		Set<String> databaseSet = getDatabaseSet(day, new Date(day.getTime() + DAY));
@@ -70,8 +70,10 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 		try {
 			allReports = m_dailyReportDao.findAllByPeriod(day, new Date(day.getTime() + DAY),
 			      DailyreportEntity.READSET_DOMAIN_NAME);
+		} catch (DalNotFoundException notFoundException) {
+			// Ignore
 		} catch (DalException e) {
-			m_logger.warn("DailyTaskProducer isYesterdayTaskGenerated", e);
+			Cat.logError(e);
 		}
 
 		Set<String> domainSet = getDomainSet(day, new Date(day.getTime() + DAY));
@@ -192,6 +194,11 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 	}
 
 	@Override
+	public String getName() {
+		return "DailyTask-Producer";
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		m_dailyReportNameSet.add("event");
 		m_dailyReportNameSet.add("transaction");
@@ -224,11 +231,6 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 			} catch (Exception e) {
 			}
 		}
-	}
-
-	@Override
-	public String getName() {
-		return "DailyTask-Producer";
 	}
 
 	@Override
