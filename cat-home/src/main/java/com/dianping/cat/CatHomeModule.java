@@ -39,8 +39,8 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(monthReportTask);
 		}
 		
-		//OtherJobReport tuangouMonth = ctx.lookup(OtherJobReport.class);
-		//Threads.forGroup("Cat").start(tuangouMonth);
+//		OtherJobReport tuangouMonth = ctx.lookup(OtherJobReport.class);
+//		Threads.forGroup("Cat").start(tuangouMonth);
 	}
 
 	@Override

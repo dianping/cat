@@ -106,7 +106,7 @@
 					<a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&name=${e.id}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
 					</c:when>
 					</c:choose>
-					${w:shorten(e.id, 80)}</td>
+					${w:shorten(e.id, 120)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.00%')}</td>

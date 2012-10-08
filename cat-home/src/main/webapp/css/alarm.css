@@ -16,3 +16,7 @@
 	float: left;
 	width: 85%;
 }
+
+.alarm  th .left{
+	text-align:left;
+}

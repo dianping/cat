@@ -1,36 +1,20 @@
 <%@ page contentType="text/html; charset=utf-8"%>
-<%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
-
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.alarm.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.alarm.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model" scope="request" />
-
-
-<a:body>
-
-	<res:useJs value="${res.js.local['dtree.js']}" target="head-js"/>
-	<res:useCss value='${res.css.local.dtree_css}' target="head-css" />
-	<res:useCss value='${res.css.local.alarm_css}' target="head-css" />
-	
-	<div class="body-content">
-		<div class="content-left">
-			<p align="center">
-				<script type="text/javascript">
-					d = new dTree('d');
-					d.add(0, -1, 'CAT告警', '');
-					d.add(1, 0, '个人告警记录', 'javascript:getJRobinGraphList()');
-					d.add(2, 0, '告警规则订阅', '');
-					d.add(3, 0, '告警模板配置', '');
-					document.write(d);
-					d.openAll();
-				</script>
-		</div>
-		<div class="content-right">
-			<br>
-			TODO
-		</div>
-	</div>
-</a:body>
+<div class="content-left">
+	<p align="center">
+		<script type="text/javascript">
+			d = new dTree('d');
+			d.add(0, -1, 'CAT告警', '');
+			d.add(1, 0, '个人邮件记录', '#');
+			d.add(2, 1, '告警邮件记录', 'javascript:getAlarmMails()');
+			d.add(3, 1, '报表邮件记录', 'javascript:getReportMails()');
+			d.add(4, 0, '报表告警订阅', '#');
+			d.add(5, 4, '异常告警订阅', 'javascript:exceptionAlarmRules()');
+			d.add(6, 4, '服务告警订阅', 'javascript:serviceAlarmRules()');
+			d.add(7, 4, '日常报表订阅', 'javascript:scheduledReports()');
+			d.add(8, 0, '告警模板配置', '#');
+			d.add(9, 8, '异常模板配置', 'javascript:exceptionTemplateDetail()');
+			d.add(10, 8, '服务调用配置', 'javascript:serviceTemplateDetail()');
+			document.write(d);
+			d.closeAll();
+		</script>
+</div>

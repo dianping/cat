@@ -30,25 +30,21 @@
 	<tr style="text-align: left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a
-								href="?domain=${model.domain}&date=${model.date}&type=${payload.type}"
+					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}"
 								class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a
-								href="?domain=${model.domain}&date=${model.date}&type=${payload.type}">All</a>
+					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a
-									href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}"
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a
-									href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}">${ip}</a>
+						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&type=${payload.type}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;

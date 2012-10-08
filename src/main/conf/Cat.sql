@@ -1,4 +1,3 @@
-
 CREATE TABLE `dailygraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
@@ -25,7 +24,7 @@ CREATE TABLE `dailyreport` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `period` (`period`,`domain`,`name`),
   KEY `type` (`type`)
-) ENGINE=InnoDB AUTO_INCREMENT=16027 DEFAULT CHARSET=utf8 COMMENT='天报表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天报表';
 
 CREATE TABLE `graph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -39,7 +38,7 @@ CREATE TABLE `graph` (
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `graph_period_ip_domain_name` (`period`,`ip`,`domain`,`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=1588163 DEFAULT CHARSET=utf8 COMMENT='小时图表曲线';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='小时图表曲线';
 
 CREATE TABLE `hostinfo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -49,7 +48,7 @@ CREATE TABLE `hostinfo` (
   `last_modified_date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ip_index` (`ip`)
-) ENGINE=InnoDB AUTO_INCREMENT=226602 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='IP和项目名的对应关系';
 
 CREATE TABLE `location` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -60,7 +59,7 @@ CREATE TABLE `location` (
   `creation_date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `transaction_date_lat_lng` (`transaction_date`,`lat`,`lng`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='çƒ­ç‚¹æ•°æ®';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于热点图地理位置表';
 
 CREATE TABLE `maillog` (
   `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -72,7 +71,7 @@ CREATE TABLE `maillog` (
   `error` varchar(1000) DEFAULT NULL COMMENT '发送失败错误信息',
   `cc` varchar(500) DEFAULT NULL COMMENT '邮件抄送人',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2224 DEFAULT CHARSET=utf8 COMMENT='邮件提醒发送记录';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='邮件提醒发送记录';
 
 CREATE TABLE `monthreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -83,7 +82,7 @@ CREATE TABLE `monthreport` (
   `creation_date` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_2` (`name`,`domain`,`period`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `report` (
@@ -99,7 +98,7 @@ CREATE TABLE `report` (
   KEY `IX_Domain_Name_Period` (`domain`,`name`,`period`),
   KEY `IX_Name_Period` (`name`,`period`),
   KEY `IX_Period` (`period`)
-) ENGINE=InnoDB AUTO_INCREMENT=433981 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放实时报表信息，处理之后的结果';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放实时报表信息，处理之后的结果';
 
 CREATE TABLE `sqlreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -122,7 +121,7 @@ CREATE TABLE `sqlreport` (
   `duration_over_time` varchar(512) NOT NULL COMMENT 'SQL处理时间的信息',
   `failure_over_time` varchar(512) NOT NULL COMMENT '在一个小时内的错误分布',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=196645 DEFAULT CHARSET=utf8 COMMENT='用于存放Hadoop处理的SQL报表信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存放Hadoop处理的SQL报表信息';
 
 
 CREATE TABLE `sqltable` (
@@ -136,7 +135,7 @@ CREATE TABLE `sqltable` (
   PRIMARY KEY (`id`),
   KEY `domain` (`domain`),
   KEY `sql_name` (`sql_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=767 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存放SQL和操作的表名的关系';
 
 CREATE TABLE `subscriber` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
@@ -146,7 +145,7 @@ CREATE TABLE `subscriber` (
   `address` varchar(1000) NOT NULL COMMENT '订阅者地址',
   `type` int(4) NOT NULL DEFAULT '0' COMMENT '订阅类型(0,表示邮件；1，表示短信)',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8 COMMENT='通知订阅者表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='通知订阅者表';
 
 CREATE TABLE `task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -163,5 +162,76 @@ CREATE TABLE `task` (
   `end_date`      datetime NULL  COMMENT '结束时间, 这次执行结束时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `task_period_domain_name_type` (`report_period`,`report_domain`,`report_name`,`task_type`)
-) ENGINE=InnoDB AUTO_INCREMENT=471692 DEFAULT CHARSET=utf8 COMMENT='后台任务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台任务';
+
+CREATE TABLE `alarmTemplate` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(64) DEFAULT NULL COMMENT '告警模板名称',
+  `content` text DEFAULT NULL COMMENT '告警模板内容',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='告警模板';
+
+CREATE TABLE `alarmRule` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `template_id` int(11) NOT NULL   COMMENT '告警模板ID' ,
+  `domain` varchar(64) DEFAULT NULL COMMENT '具体项目名称',
+  `content` text DEFAULT NULL COMMENT '自定义告警模板内容',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='告警规则实例表';
+
+CREATE TABLE `alarmRuleSubscription` (
+  `alarm_rule_id` int(11) NOT NULL COMMENT '告警规则ID',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间'
+  PRIMARY KEY (`alarm_rule_id`,`user_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅告警记录表'
+
+CREATE TABLE `mailRecord` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL COMMENT '发送邮件的内容，1表示告警邮件，2表示每日报表邮件',
+  `rule_id` int(11) NOT NULL COMMENT '用户订阅ID外间',
+  `receivers` varchar(500) NOT NULL COMMENT '接受用户邮件列表',
+  `title` varchar(200) NOT NULL COMMENT '邮件标题',
+  `content` text NOT NULL COMMENT '邮件具体内容',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间'
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='邮件通知记录表'
+
+CREATE TABLE `scheduledReport` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `domain` varchar(64) DEFAULT NULL COMMENT '具体项目名称',
+  `names` varchar(200) DEFAULT NULL COMMENT '发送具体的报表,逗号分割',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='告警规则实例表';
+
+CREATE TABLE `scheduledReportSubscription` (
+  `scheduled_report_id` int(11) NOT NULL COMMENT '定时任务ID',
+  `user_id` int(11) NOT NULL COMMENT '用户ID',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间'
+  PRIMARY KEY (`scheduled_report_id`,`user_id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅定时报表记录表';
+
+CREATE TABLE 'department'(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '部门名称',
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公司部门基本信息';
+
+CREATE TABLE 'domainInfo'(
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL COMMENT '项目名称',
+  `parent_name` varchar(50) DEFAULT NULL COMMENT '父项目名称',
+  `department_id` int(11) DEFAULT -1 COMMENT '项目所属部门名称',
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目的基本信息';
+
+
+
+
+
 

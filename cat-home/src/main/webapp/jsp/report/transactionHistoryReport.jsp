@@ -114,7 +114,7 @@
 					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
 					</c:when>
 					<c:otherwise></c:otherwise></c:choose>
-					${w:shorten(e.id, 80)}</td>
+					${w:shorten(e.id, 120)}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.00%')}</td>

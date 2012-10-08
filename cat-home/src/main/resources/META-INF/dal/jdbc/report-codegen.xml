@@ -4,7 +4,7 @@
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="name" field="name" value-type="String" length="20" nullable="false" />
     <member name="ip" field="ip" value-type="String" length="20" />
-    <member name="domain" field="domain" value-type="String" length="200" nullable="false" />
+    <member name="domain" field="domain" value-type="String" length="20" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
     <member name="detail-content" field="detail_content" value-type="String" length="16777215" nullable="false" />
@@ -41,14 +41,15 @@
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="name" field="name" value-type="String" length="20" nullable="false" />
     <member name="ip" field="ip" value-type="String" length="20" nullable="false" />
-    <member name="domain" field="domain" value-type="String" length="50" />
+    <member name="domain" field="domain" value-type="String" length="20" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
-    <member name="content" field="content" value-type="String" length="2147483647" nullable="false" />
+    <member name="content" field="content" value-type="String" length="16777215" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
     <index name="period" unique="true" members="period ASC, domain ASC, name ASC" />
+    <index name="type" members="type ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -77,7 +78,7 @@
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="name" field="name" value-type="String" length="20" nullable="false" />
     <member name="ip" field="ip" value-type="String" length="20" />
-    <member name="domain" field="domain" value-type="String" length="200" nullable="false" />
+    <member name="domain" field="domain" value-type="String" length="20" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
     <member name="detail-content" field="detail_content" value-type="String" length="16777215" nullable="false" />
@@ -113,13 +114,13 @@
   <entity name="monthreport" table="monthreport" alias="m">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="name" field="name" value-type="String" length="50" />
-    <member name="domain" field="domain" value-type="String" length="500" />
+    <member name="domain" field="domain" value-type="String" length="100" />
     <member name="period" field="period" value-type="Date" />
     <member name="content" field="content" value-type="String" length="16777215" />
     <member name="creation-date" field="creation_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="domainperiod" members="domain ASC, period ASC" />
+    <index name="name_2" unique="true" members="name ASC, domain ASC, period ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
