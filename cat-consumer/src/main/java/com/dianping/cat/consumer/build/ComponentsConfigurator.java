@@ -37,6 +37,7 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
 import com.site.initialization.Module;
 import com.site.lookup.configuration.AbstractResourceConfigurator;
 import com.site.lookup.configuration.Component;
@@ -115,6 +116,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
+		// database
+		all.add(C(JdbcDataSourceConfigurationManager.class).config(
+		      E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		return all;
