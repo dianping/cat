@@ -91,9 +91,6 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 		assertEquals(1000.0, n2.getMax());
 		assertEquals(500.5, n2.getAvg());
 		assertEquals(500500.0, n2.getSum());
-
-		// System.out.println(new DefaultJsonBuilder().buildJson(report));
-		// System.out.println(report.toString());
 	}
 
 }

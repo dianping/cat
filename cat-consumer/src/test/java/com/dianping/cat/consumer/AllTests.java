@@ -11,10 +11,7 @@ import com.dianping.cat.consumer.problem.model.ProblemReportTest;
 import com.dianping.cat.consumer.transaction.FormatTest;
 import com.dianping.cat.consumer.transaction.GsonTest;
 import com.dianping.cat.consumer.transaction.NumberFormatTest;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
-import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzerTest;
-import com.dianping.cat.consumer.transaction.TransactionReportTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -22,28 +19,28 @@ import com.dianping.cat.consumer.transaction.TransactionReportTest;
 /* .ip */
 IpReportTest.class,
 
-TransactionAnalyzerTest.class,
+//TransactionAnalyzerTest.class,
 
-TransactionReportMessageAnalyzerTest.class,
+//TransactionReportMessageAnalyzerTest.class,
 
-TransactionReportTest.class,
+//TransactionReportTest.class,
 
 // ManyAnalyzerTest.class,
 
-      // OneAnalyzerTwoDurationTest.class,
+// OneAnalyzerTwoDurationTest.class,
 
-      ProblemReportTest.class,
+ProblemReportTest.class,
 
-      FormatTest.class, GsonTest.class,
+FormatTest.class, GsonTest.class,
 
-      NumberFormatTest.class,
+NumberFormatTest.class,
 
-      MatrixReportFilterTest.class,
+MatrixReportFilterTest.class,
 
-      TransactionReportFilterTest.class,
+TransactionReportFilterTest.class,
 
-      /* cross analyzer */
-      ParseCrossInfoTest.class })
+/* cross analyzer */
+ParseCrossInfoTest.class })
 public class AllTests {
 
 }

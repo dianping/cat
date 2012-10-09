@@ -43,7 +43,7 @@
 			<query name="find-all-alarm-rule" type="SELECT" multiple="true">
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
-					FROM <TABLE/> 
+					FROM <TABLE/> ORDER BY <FIELD name='domain'/> ASC
 				]]></statement>
 			</query>
 			<query name="find-all-alarm-rule-by-template-id" type="SELECT"
@@ -52,7 +52,7 @@
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
-					WHERE <FIELD name='template-id'/> = ${template-id} 
+					WHERE <FIELD name='template-id'/> = ${template-id} ORDER BY <FIELD name='domain'/> ASC
 				]]></statement>
 			</query>
 		</query-defs>
@@ -114,6 +114,7 @@
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
+					ORDER BY <FIELD name='domain'/> ASC
 				]]></statement>
 			</query>
 			</query-defs>
