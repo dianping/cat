@@ -79,21 +79,19 @@ public class MonthReportBuilderTask implements Task {
 		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 
 		for (int i = 0; i < days; i++) {
-			Dailyreport report = null;
 			try {
-				report = m_dailyreportDao.findByNameDomainPeriod(new Date(startTime + i * DAY), domain, "event",
-				      DailyreportEntity.READSET_FULL);
-			} catch (DalException e) {
-			}
-			if (report != null) {
+				Dailyreport report = m_dailyreportDao.findByNameDomainPeriod(new Date(startTime + i * DAY), domain,
+				      "event", DailyreportEntity.READSET_FULL);
 				String xml = report.getContent();
 				EventReport reportModel = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
 				startLong = Math.min(startLong, reportModel.getStartTime().getTime());
 				endLong = Math.max(startLong, reportModel.getEndTime().getTime());
 				reportModel.accept(merger);
-			} else {
+			} catch (DalNotFoundException e) {
 				Cat.getProducer().logEvent("MonthReport", "event", "NotFound",
 				      domain + sdf.format(new Date(startTime + i * DAY)));
+			} catch (DalException e) {
+				Cat.logError(e);
 			}
 		}
 		EventReport eventReport = merger.getEventReport();
@@ -213,7 +211,7 @@ public class MonthReportBuilderTask implements Task {
 				Date currentMonth = getMonthFirstDay(0);
 				Set<String> allDomains = getAllDomains(lastMonth, currentMonth);
 				List<String> createdDomains = getMonthReportCreatedDomin(lastMonth);
-					
+
 				for (String temp : createdDomains) {
 					allDomains.remove(temp);
 				}

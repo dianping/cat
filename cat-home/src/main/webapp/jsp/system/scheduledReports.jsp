@@ -33,7 +33,7 @@
 					varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${item.scheduledReport.domain}</td>
-						<td>${item.scheduledReport.content}</td>
+						<td>${item.scheduledReport.names}</td>
 						<td><c:choose>
 								<c:when test="${item.subscriberState == 0}">
 									<a href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=0">订阅</a>

@@ -155,6 +155,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
 
+		// for alarm module
+		all.addAll(new AlarmComponentConfigurator().defineComponents());
 		return all;
 	}
 }

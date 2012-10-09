@@ -2582,5 +2582,27 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.system.alarm.DefaultAlarmCreator</role>
+			<implementation>com.dianping.cat.system.alarm.DefaultAlarmCreator</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.AlarmRuleDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>event</role-hint>
+				</requirement>
+			</requirements>
+		</component>
 	</components>
 </plexus>

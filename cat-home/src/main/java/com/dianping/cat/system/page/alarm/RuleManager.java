@@ -90,7 +90,7 @@ public class RuleManager {
 			Cat.logError(e);
 		}
 
-		throw new RuntimeException("ExceptionTemplate Can't be null!");
+		throw new RuntimeException("Template Can't be null!");
 	}
 
 	public void ruleAdd(Payload payload, Model model) {
