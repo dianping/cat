@@ -12,10 +12,6 @@
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>
-         <artifactId>dog-gateway</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping.cat</groupId>
          <artifactId>cat-consumer</artifactId>
       </dependency>
       <dependency>
