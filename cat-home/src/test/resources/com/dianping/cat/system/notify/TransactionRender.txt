@@ -1,0 +1,44 @@
+<html>
+<body>
+<br/>
+<h3><a href="http://cat.dianpingoa.com/cat/r/t?op=history&domain=Cat&date=2012051713&reportType=day target="_blank">TransactionReport</a></h3>
+<table rules="all">
+	<tr>
+	</tr>
+	<tr>
+		<td></td>
+		<td>Type</td>
+		<td>Total Count</td>
+		<td>Failure Count</td>
+		<td>Failure%</td>
+		<td>Avg(ms)</td>
+		<td>TPS</td>
+		<td>Link</td>
+		<td></td>
+	</tr>
+		<tr>
+			<td></td>
+			<td>Task1</td>
+			<td>2</td>
+			<td>0</td>
+			<td>0%</td>
+			<td>24.96</td>
+			<td>0.00</td>
+			<td><a href="http://cat.dianpingoa.com/cat/r/t?op=historyGraph&domain=Cat&date=2012051713&ip=All&reportType=day&type=Task1">Graph</a></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>URL</td>
+			<td>1</td>
+			<td>0</td>
+			<td>0%</td>
+			<td>39780.33</td>
+			<td>0.00</td>
+			<td><a href="http://cat.dianpingoa.com/cat/r/t?op=historyGraph&domain=Cat&date=2012051713&ip=All&reportType=day&type=URL">Graph</a></td>
+		</tr>
+	<tr></tr>
+</table>
+</body>
+</html>
+
+

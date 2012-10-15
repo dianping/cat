@@ -13,6 +13,7 @@ import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.TaskConsumer;
 import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
 import com.dianping.cat.system.alarm.DefaultAlarmCreator;
+import com.dianping.cat.system.notify.ScheduledTask;
 import com.site.helper.Threads;
 import com.site.initialization.AbstractModule;
 import com.site.initialization.Module;
@@ -41,9 +42,13 @@ public class CatHomeModule extends AbstractModule {
 		}
 
 		DefaultAlarmCreator alarmCreator = ctx.lookup(DefaultAlarmCreator.class);
+		ScheduledTask scheduledTask = ctx.lookup(ScheduledTask.class);
+
 		if (serverConfigManager.isJobMachine()) {
-			Threads.forGroup("Alarm").start(alarmCreator);
+			Threads.forGroup("Cat-Alarm").start(alarmCreator);
+			Threads.forGroup("Cat-Alarm").start(scheduledTask);
 		}
+
 		// OtherJobReport tuangouMonth = ctx.lookup(OtherJobReport.class);
 		// Threads.forGroup("Cat").start(tuangouMonth);
 	}

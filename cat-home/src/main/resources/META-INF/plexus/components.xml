@@ -380,6 +380,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.service.DailyReportService</role>
+			<implementation>com.dianping.cat.report.service.impl.DailyReportServiceImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
@@ -2505,11 +2514,23 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
 			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
+			<implementation>com.dainping.cat.home.dal.user.DpAdminLoginDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -2574,15 +2595,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
-			<implementation>com.dainping.cat.home.dal.user.DpAdminLoginDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.alarm.DefaultAlarmCreator</role>
 			<implementation>com.dianping.cat.system.alarm.DefaultAlarmCreator</implementation>
 			<requirements>
@@ -2601,6 +2613,32 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>event</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.tool.MailSMS</role>
+			<implementation>com.dianping.cat.system.tool.MailSMSImpl</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.notify.ReportRender</role>
+			<implementation>com.dianping.cat.system.notify.render.ReportRenderImpl</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.notify.ScheduledTask</role>
+			<implementation>com.dianping.cat.system.notify.ScheduledTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.notify.ReportRender</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.DailyReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
 				</requirement>
 			</requirements>
 		</component>

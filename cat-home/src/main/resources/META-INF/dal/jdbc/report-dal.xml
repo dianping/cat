@@ -23,6 +23,33 @@
 						(<VALUES/>)
 					]]></statement>
 			</query>
+			<query name="find-report-by-domain-name-period" type="SELECT">
+				<param name="start-date" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> == ${start-date}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name} 
+					]]></statement>
+			</query>
+			<query name="find-all-by-domain-name-duration" type="SELECT" multiple="true">
+				<param name="start-date" />
+				<param name="end-date" />
+				<param name="domain" />
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> >= ${start-date}
+					AND <FIELD name='period'/> < ${end-date}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name} 
+					AND type = 1
+					]]></statement>
+			</query>
 			<query name="find-all-by-domain-name-duration" type="SELECT" multiple="true">
 				<param name="start-date" />
 				<param name="end-date" />

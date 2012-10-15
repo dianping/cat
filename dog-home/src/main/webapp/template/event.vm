@@ -19,6 +19,26 @@
 		<td >Link</td>
 	    <td ></td>
 	</tr>
+	
+	<#list type as typeList>
+		<tr>
+			<td>${type.totalCount}</td>
+			<td>${type.failCount}</td>
+			<td>${type.failPercent}</td>
+			<td a href="${type.link}">趋势图</td>
+			<td>${service.avg[0]}</td>
+			<td>${service.count[1]}</td>
+			<td>${service.avg[1]}</td>
+			<td>${service.max[1]}</td>
+			<td>${service.count[2]}</td>
+			<td>${service.avg[2]}</td>
+			<td>${service.max[2]}</td>
+			<td>${service.count[3]}</td>
+			<td>${service.count[4]}</td>
+			<td>${service.avg[4]}</td>
+			<td>${service.max[4]}</td>
+		</tr>
+	</#list>
 	#foreach( $type in $typeList)
 	<tr>
 		<td ></td>

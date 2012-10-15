@@ -115,7 +115,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			if (shouldDiscard((Transaction) message)) {
 				return;
 			}
-			if (messageType.equals("URL") || messageType.equals("Service")) {
+			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("PigeonService")) {
 				Matrix matrix = report.findOrCreateMatrix(message.getName());
 				matrix.setType(message.getType());
 				matrix.setName(message.getName());
@@ -214,7 +214,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 					try {
 						report.accept(new MatrixReportFilter(50));
 					} catch (Exception e) {
-						//ConcurrentModificationException
+						// ConcurrentModificationException
 						report.accept(new MatrixReportFilter(50));
 					}
 					Set<String> domainNames = report.getDomainNames();

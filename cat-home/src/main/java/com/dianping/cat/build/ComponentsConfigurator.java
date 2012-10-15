@@ -20,6 +20,8 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
+import com.dianping.cat.report.service.impl.DailyReportServiceImpl;
+import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.TaskConsumer;
@@ -140,8 +142,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
 
+		// TODO delete
 		all.add(C(OtherJobReport.class).//
 		      req(DailyreportDao.class, DomainManager.class));
+
+		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
+		      .req(DailyreportDao.class));
 
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());

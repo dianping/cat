@@ -3,6 +3,9 @@ package com.dianping.cat.system.page.alarm;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dainping.cat.home.dal.user.DpAdminLogin;
+import com.dainping.cat.home.dal.user.DpAdminLoginDao;
+import com.dainping.cat.home.dal.user.DpAdminLoginEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
@@ -21,6 +24,30 @@ public class ScheduledManager {
 	
 	@Inject
 	private ScheduledReportSubscriptionDao m_scheduledReportSubscriptionDao;
+	
+	@Inject
+	private DpAdminLoginDao m_loginDao;
+	
+	public List<ScheduledReport> queryScheduledReports() throws DalException{
+		List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+		
+		return reports;
+	}
+	
+	public List<String> queryEmailsBySchReportId(int scheduledReportId) throws DalException {
+		List<String> emails = new ArrayList<String>();
+		List<ScheduledReportSubscription> subscriptions = m_scheduledReportSubscriptionDao.findByScheduledReportId(scheduledReportId,
+		      ScheduledReportSubscriptionEntity.READSET_FULL);
+
+		for (ScheduledReportSubscription subscription : subscriptions) {
+			DpAdminLogin login = m_loginDao.findByPK(subscription.getUserId(), DpAdminLoginEntity.READSET_FULL);
+			emails.add(login.getEmail());
+		}
+		if (emails.size() == 0) {
+			emails.add("yong.you@dianping.com");
+		}
+		return emails;
+	}
 	
 	public void queryScheduledReports(Model model,int userId) {
 		List<UserReportSubState> userRules = new ArrayList<UserReportSubState>();

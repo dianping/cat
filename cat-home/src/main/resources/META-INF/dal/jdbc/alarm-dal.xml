@@ -92,7 +92,7 @@
 				]]></statement>
 			</query>
 			<query name="find-by-scheduled-report-id" type="SELECT" multiple="true">
-				<param name="user-id" />
+				<param name="scheduled-report-id" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
