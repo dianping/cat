@@ -4,12 +4,14 @@ import java.io.IOException;
 
 import javax.servlet.ServletException;
 
+import com.dainping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.system.SystemPage;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
 import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
+import com.site.web.mvc.annotation.PreInboundActionMeta;
 
 public class Handler implements PageHandler<Context> {
 	public static final String FAIL = "Fail";
@@ -31,13 +33,13 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ScheduledManager m_scheduledManager;
 
-	private int getLoginUserId() {
-		// TODO
-		return 1;
+	private int getLoginUserId(Context ctx) {
+		DpAdminLogin member = ctx.getSigninMember();
+		return member.getLoginId();
 	}
 
 	@Override
-	// @PreInboundActionMeta("login")
+	@PreInboundActionMeta("login")
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "alarm")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
@@ -49,7 +51,7 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-		int userId = getLoginUserId();
+		int userId = getLoginUserId(ctx);
 
 		switch (action) {
 		case ALARM_RECORD_LIST:

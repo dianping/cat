@@ -13,14 +13,24 @@
 				WHERE <FIELD name='login-id'/> = ${key-login-id}
 				]]></statement>
 			</query>
-			<query name="authenticate" type="SELECT">
+			<query name="find-by-email" type="SELECT">
+				<param name="email" />
+				<param name="password" />
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='email'/> = ${email}
+				AND <FIELD name='password'/> = UPPER(md5(${password}))
+				]]></statement>
+			</query>
+			<query name="find-by-login-name" type="SELECT">
 				<param name="login-name" />
 				<param name="password" />
 				<statement><![CDATA[
 				SELECT <FIELDS/> 
 				FROM <TABLE/> 
 				WHERE <FIELD name='login-name'/> = ${login-name}
-					AND <FIELD name='password'/> = md5(${password})
+				AND <FIELD name='password'/> = UPPER(md5(${password}))
 				]]></statement>
 			</query>
 		</query-defs>

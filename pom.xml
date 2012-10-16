@@ -14,9 +14,6 @@
 		<module>cat-consumer</module>
 		<module>cat-job</module>
 		<module>cat-home</module>
-		<module>cat-notify</module>
-		<module>dog-gateway</module>
-		<module>dog-home</module>
 		<module>bee-engine</module>
 		<module>cat-data</module>
 	</modules>

@@ -1,6 +1,5 @@
 package com.dianping.cat.system.page.alarm;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.Cat;
@@ -14,13 +13,14 @@ import com.dianping.cat.home.dal.alarm.ScheduledReportSubscription;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionEntity;
 import com.site.dal.jdbc.DalException;
+import com.site.dal.jdbc.DalNotFoundException;
 import com.site.lookup.annotation.Inject;
 
 public class RecordManager {
 
 	@Inject
 	private AlarmRuleSubscriptionDao m_alarmRuleSubscriptionDao;
-	
+
 	@Inject
 	private ScheduledReportSubscriptionDao m_scheduledReportSubscriptionDao;
 
@@ -37,50 +37,46 @@ public class RecordManager {
 			Cat.logError(e);
 		}
 	}
-	
-	public void queryUserReportRecords(Model model,int userId){
-		List<MailRecord> records = new ArrayList<MailRecord>();
 
+	public void queryUserReportRecords(Model model, int userId) {
 		try {
-			List<ScheduledReportSubscription> scheduledReportSubscriptions = m_scheduledReportSubscriptionDao.findByUserId(userId, ScheduledReportSubscriptionEntity.READSET_FULL);
-			for (ScheduledReportSubscription scheduledReportSubscription : scheduledReportSubscriptions) {
-				int scheduledReportId = scheduledReportSubscription.getScheduledReportId();
-				
-				try {
-					List<MailRecord> mails = m_mailRecordDao.findReportRecordByRuleId(scheduledReportId, MailRecordEntity.READSET_FULL);
+			List<ScheduledReportSubscription> scheduledReportSubscriptions = m_scheduledReportSubscriptionDao
+			      .findByUserId(userId, ScheduledReportSubscriptionEntity.READSET_FULL);
+			int size = scheduledReportSubscriptions.size();
+			int ruleIds[] = new int[size];
 
-					for (MailRecord record : mails) {
-						records.add(record);
-					}
-				} catch (DalException e) {
-				}
+			for (int i = 0; i < size; i++) {
+				ScheduledReportSubscription scheduledReportSubscription = scheduledReportSubscriptions.get(i);
+				ruleIds[i] = scheduledReportSubscription.getScheduledReportId();
 			}
+			List<MailRecord> mails = m_mailRecordDao.findReportRecordByRuleId(ruleIds, MailRecordEntity.READSET_FULL);
+			model.setMailRecords(mails);
+		} catch (DalNotFoundException e) {
 		} catch (DalException e) {
+			Cat.logError(e);
 		}
-		model.setMailRecords(records);
 		model.setTemplateIndex(3);
 	}
 
 	public void queryUserAlarmRecords(Model model, int userId) {
-		List<MailRecord> records = new ArrayList<MailRecord>();
-
 		try {
-			List<AlarmRuleSubscription> alarmRuleSubscriptions = m_alarmRuleSubscriptionDao.findByUserId(userId, AlarmRuleSubscriptionEntity.READSET_FULL);
-			for (AlarmRuleSubscription alarmRuleSubscription : alarmRuleSubscriptions) {
-				int alarmRuleId = alarmRuleSubscription.getAlarmRuleId();
+			List<AlarmRuleSubscription> alarmRuleSubscriptions = m_alarmRuleSubscriptionDao.findByUserId(userId,
+			      AlarmRuleSubscriptionEntity.READSET_FULL);
 
-				try {
-					List<MailRecord> mails = m_mailRecordDao.findAlarmRecordByRuleId(alarmRuleId, MailRecordEntity.READSET_FULL);
+			int size = alarmRuleSubscriptions.size();
+			int alarmRuleIds[] = new int[size];
 
-					for (MailRecord record : mails) {
-						records.add(record);
-					}
-				} catch (DalException e) {
-				}
+			for (int i = 0; i < size; i++) {
+				AlarmRuleSubscription alarmRuleSubscription = alarmRuleSubscriptions.get(i);
+				alarmRuleIds[i] = alarmRuleSubscription.getAlarmRuleId();
 			}
+
+			List<MailRecord> mails = m_mailRecordDao.findAlarmRecordByRuleId(alarmRuleIds, MailRecordEntity.READSET_FULL);
+			model.setMailRecords(mails);
+		} catch (DalNotFoundException e) {
 		} catch (DalException e) {
+			Cat.logError(e);
 		}
-		model.setMailRecords(records);
 		model.setTemplateIndex(2);
 	}
 }

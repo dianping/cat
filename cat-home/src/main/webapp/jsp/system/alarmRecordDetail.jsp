@@ -11,21 +11,40 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model"
 	scope="request" />
 
-<table border="0">
-	<tr>
-		<td>&nbsp;&nbsp;收件人</td>
-		<td>${model.mailRecord.receivers}</td>
-	</tr>
-	<tr>
-		<td>发送时间</td>
-		<td>${model.mailRecord.sendtime}</td>
-	</tr>
-	<tr>
-		<td>邮件标题</td>
-		<td>${model.mailRecord.title}</td>
-	</tr>
-	<tr>
-		<td>邮件内容</td>
-		<td><textarea style="height: 500px; width: 500px" readonly>${model.mailRecord.content}</textarea></td>
-	</tr>
-</table>
+<a:body>
+
+	<res:useJs value="${res.js.local['dtree.js']}" target="head-js" />
+	<res:useCss value='${res.css.local.dtree_css}' target="head-css" />
+	<res:useCss value='${res.css.local.alarm_css}' target="head-css" />
+	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+
+	<div class="body-content">
+		<%@include file="./alarm.jsp"%>
+		<script type="text/javascript">
+			d.openAll();
+			d.s(${model.templateIndex});
+		</script>
+		<div class="content-right">
+			</br>
+			<table border="1" rules="all">
+				<tr>
+					<td>&nbsp;&nbsp;收件人</td>
+					<td>${model.mailRecord.receivers}</td>
+				</tr>
+				<tr>
+					<td>发送时间</td>
+					<td>${w:format(model.mailRecord.creationDate,'yyyy-MM-dd
+						HH:mm:ss')}</td>
+				</tr>
+				<tr>
+					<td>邮件标题</td>
+					<td>${model.mailRecord.title}</td>
+				</tr>
+				<tr>
+					<td>邮件内容</td>
+					<td><div>${model.mailRecord.content}</div></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</a:body>

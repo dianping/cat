@@ -58,23 +58,35 @@
 		</query-defs>
 	</entity>
 	<entity name="mail-record" table="mailRecord" alias="m">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="rule-ids" value-type="int[]" />
 		<query-defs>
-			<query name="find-alarm-record-by-rule-id" type="SELECT" multiple="true">
-				<param name="rule-id" />
+			<query name="find-last-report-record" type="SELECT">
 				<statement><![CDATA[
         	SELECT <FIELDS/>
         	FROM <TABLE/> 
-        	WHERE <FIELD name='rule-id'/> = ${rule-id}
-        	AND <FIELD name='type'/> = 1
+        	WHERE <FIELD name='type'/> = 2
+        	ORDER BY <FIELD name='id'/> desc limit 100
+        	]]></statement>
+			</query>
+			<query name="find-alarm-record-by-rule-id" type="SELECT" multiple="true">
+				<param name="rule-ids" />
+				<statement><![CDATA[
+        	SELECT <FIELDS/>
+        	FROM <TABLE/> 
+        	WHERE <FIELD name='rule-id'/> in <IN>${rule-ids}</IN>
+        	AND <FIELD name='type'/> = 1 
+        	ORDER BY <FIELD name='id'/> desc limit 100
         	]]></statement>
 			</query>
 			<query name="find-report-record-by-rule-id" type="SELECT" multiple="true">
-				<param name="rule-id" />
+				<param name="rule-ids" />
 				<statement><![CDATA[
         	SELECT <FIELDS/> 
         	FROM <TABLE/> 
-        	WHERE <FIELD name='rule-id'/> = ${rule-id}
+        	WHERE <FIELD name='rule-id'/> in <IN>${rule-ids}</IN>
         	AND <FIELD name='type'/> = 2
+        	ORDER BY <FIELD name='id'/> desc limit 100
         	]]></statement>
 			</query>
 		</query-defs>

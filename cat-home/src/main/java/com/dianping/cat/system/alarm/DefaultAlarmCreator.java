@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.helper.CatString;
@@ -36,14 +35,12 @@ public class DefaultAlarmCreator implements Task {
 	private AlarmTemplateDao m_alarmTemplateDao;
 
 	@Inject
-	private ReportDao m_reportDao;
-
-	@Inject
 	private ScheduledReportDao m_scheduledReportDao;
 
 	@Inject
 	private ModelService<EventReport> m_service;
 
+	//get all domains for realtime
 	private Set<String> getAllDomains() throws DalException {
 		String domain = "Cat";
 		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT)//

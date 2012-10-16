@@ -6,8 +6,6 @@
 		<server ip="192.168.33.38" port="2280" />
 -->	
 	<server ip="127.0.0.1" port="2280" />
-	<server ip="192.168.7.71" port="2280" />
-	<server ip="192.168.33.38" port="2280" />
+	<server ip="192.168.7.70" port="2280" />
 	</servers>
-	<domain id="Cat" enabled="true" max-threads="10000"/>
 </config>

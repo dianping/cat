@@ -106,7 +106,8 @@
     <member name="receivers" field="receivers" value-type="String" length="500" nullable="false" />
     <member name="title" field="title" value-type="String" length="200" nullable="false" />
     <member name="content" field="content" value-type="String" length="65535" nullable="false" />
-    <member name="creation-date" field="creation_date" value-type="Date" />
+    <member name="status" field="status" value-type="int" length="10" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
     <readsets>

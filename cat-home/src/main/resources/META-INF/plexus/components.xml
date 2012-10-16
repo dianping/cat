@@ -2622,11 +2622,11 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.system.notify.ReportRender</role>
-			<implementation>com.dianping.cat.system.notify.render.ReportRenderImpl</implementation>
+			<implementation>com.dianping.cat.system.notify.ReportRenderImpl</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.notify.ScheduledTask</role>
-			<implementation>com.dianping.cat.system.notify.ScheduledTask</implementation>
+			<role>com.dianping.cat.system.notify.ScheduledMailTask</role>
+			<implementation>com.dianping.cat.system.notify.ScheduledMailTask</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.system.notify.ReportRender</role>
@@ -2639,6 +2639,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
 				</requirement>
 			</requirements>
 		</component>

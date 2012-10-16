@@ -34,7 +34,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	@Inject
 	private SigninService m_signinService;
 
-	private Logger m_logger;
+	public Logger m_logger;
 
 	private SigninContext createSigninContext(Context ctx) {
 		return new SigninContext(ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
@@ -172,6 +172,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			sb.append(actionUri);
 		}
 
-		m_logger.info(sb.toString());
+		// m_logger.info(sb.toString());
 	}
 }

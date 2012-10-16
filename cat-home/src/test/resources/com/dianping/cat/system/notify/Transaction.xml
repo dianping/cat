@@ -1,7 +1,7 @@
 <transaction-report domain="Cat" startTime="2012-05-17 13:00:00" endTime="2012-05-17 13:59:59">
    <domain>Cat</domain>
    <ip>192.168.165.1</ip>
-   <machine ip="192.168.165.1">
+   <machine ip="All">
       <type id="Task1" totalCount="2" failCount="0" failPercent="0.00" min="21.422" max="28.35" avg="24.955555555" sum="49.8" sum2="1262.6" std="3.5" tps="0.00" line95Value="28.00" line95Sum="28.00" line95Count="1">
          <successMessageUrl>Cat-c0a8a501-1337230848968-0</successMessageUrl>
          <name id="Status1" totalCount="2" failCount="0" failPercent="0.00" min="21.422" max="28.35" avg="24.9" sum="49.8" sum2="1262.6" std="3.5" tps="0.00" line95Value="28.00" line95Sum="28.00" line95Count="1">

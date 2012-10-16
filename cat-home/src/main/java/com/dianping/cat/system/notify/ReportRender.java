@@ -7,11 +7,11 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
 public interface ReportRender {
 
-	public String renderReport(TransactionReport report);
-
 	public String renderReport(EventReport report);
+
+	public String renderReport(HealthReport report);
 
 	public String renderReport(ProblemReport report);
 
-	public String renderReport(HealthReport report);
+	public String renderReport(TransactionReport report);
 }

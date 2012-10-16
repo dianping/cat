@@ -17,7 +17,7 @@ import com.site.lookup.util.StringUtils;
 
 public class DisplayTypes {
 
-	private static final Set<String> s_unusedTypes = new HashSet<String>();
+	public static final Set<String> s_unusedTypes = new HashSet<String>();
 
 	static {
 		s_unusedTypes.add(CatConstants.TYPE_URL);

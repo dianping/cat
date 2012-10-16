@@ -1,6 +1,7 @@
 package com.dianping.cat.system.page.alarm;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.dainping.cat.home.dal.user.DpAdminLogin;
@@ -13,6 +14,7 @@ import com.dianping.cat.home.dal.alarm.ScheduledReportEntity;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscription;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionEntity;
+import com.dianping.cat.system.page.alarm.UserReportSubState.UserReportSubStateCompartor;
 import com.site.dal.jdbc.DalException;
 import com.site.dal.jdbc.DalNotFoundException;
 import com.site.lookup.annotation.Inject;
@@ -40,8 +42,11 @@ public class ScheduledManager {
 		      ScheduledReportSubscriptionEntity.READSET_FULL);
 
 		for (ScheduledReportSubscription subscription : subscriptions) {
-			DpAdminLogin login = m_loginDao.findByPK(subscription.getUserId(), DpAdminLoginEntity.READSET_FULL);
-			emails.add(login.getEmail());
+			try {
+	         DpAdminLogin login = m_loginDao.findByPK(subscription.getUserId(), DpAdminLoginEntity.READSET_FULL);
+	         emails.add(login.getEmail());
+         } catch (Exception e) {
+         }
 		}
 		if (emails.size() == 0) {
 			emails.add("yong.you@dianping.com");
@@ -71,6 +76,7 @@ public class ScheduledManager {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
+		Collections.sort(userRules,new UserReportSubStateCompartor());
 		model.setUserReportSubStates(userRules);
 	}
 

@@ -7,37 +7,70 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 
 public class TransactionRender extends BaseVisitor {
 
-	private String m_domain;
+	private Date m_date;
 
 	private String m_dateStr;
 
-	private Date m_date;
+	private String m_domain;
+
+	private Map<Object, Object> m_result = new HashMap<Object, Object>();
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
 
+	private int m_totalDays;
+
+	private String m_currentIp;
+
+	private String m_host;
+
+	private String m_transactionLink = "http://%s/cat/r/t?op=history&domain=%s&date=%s&reportType=day";
+
+	private String m_typeGraphLink = "http://%s/cat/r/t?op=historyGraph&domain=%s&date=%s&ip=All&reportType=day&type=%s";
+
 	private List<Type> m_types = new ArrayList<Type>();
 
-	private String m_transactionLink = "http://cat.dianpingoa.com/cat/r/t?op=history&domain=%s&date=%s&reportType=day";
+	public TransactionRender(Date date, String domain, int day) {
+		m_domain = domain;
+		m_date = date;
+		m_dateStr = m_sdf.format(date);
+		m_totalDays = day;
 
-	private String m_typeGraphLink = "http://cat.dianpingoa.com/cat/r/t?op=historyGraph&domain=%s&date=%s&ip=All&reportType=day&type=%s";
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		if (ip.startsWith("10.")) {
+			m_host = CatString.ONLINE;
+		} else {
+			m_host = CatString.OFFLINE;
+		}
+	}
 
-	private Map<Object, Object> m_result = new HashMap<Object, Object>();
+	private String buildGraphUrl(TransactionType type) {
+		return String.format(m_typeGraphLink, m_host, m_domain, m_dateStr, type.getId());
+	}
+
+	private String buildTransactionUrl(Date date) {
+		String dateStr = m_sdf.format(m_date);
+
+		return String.format(m_transactionLink, m_host, m_domain, dateStr);
+	}
 
 	public Map<Object, Object> getRenderResult() {
 		return m_result;
 	}
 
-	public TransactionRender(Date date, String domain) {
-		m_domain = domain;
-		m_date = date;
-		m_dateStr = m_sdf.format(date);
+	@Override
+	public void visitMachine(Machine machine) {
+		m_currentIp = machine.getIp();
+		super.visitMachine(machine);
 	}
 
 	@Override
@@ -58,22 +91,14 @@ public class TransactionRender extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
-		Type temp = new Type();
+		if (m_currentIp.equals(CatString.ALL_IP)) {
+			Type temp = new Type();
 
-		type.setTps(type.getTotalCount() / (double) TimeUtil.ONE_DAY);
-		temp.setType(type);
-		temp.setUrl(buildGraphUrl(type));
-		m_types.add(temp);
-	}
-
-	private String buildTransactionUrl(Date date) {
-		String dateStr = m_sdf.format(m_date);
-
-		return String.format(m_transactionLink, m_domain, dateStr);
-	}
-
-	private String buildGraphUrl(TransactionType type) {
-		return String.format(m_typeGraphLink, m_domain, m_dateStr, type.getId());
+			type.setTps(type.getTotalCount() / (double) TimeUtil.ONE_DAY / m_totalDays);
+			temp.setType(type);
+			temp.setUrl(buildGraphUrl(type));
+			m_types.add(temp);
+		}
 	}
 
 	public static class Type {
@@ -85,12 +110,12 @@ public class TransactionRender extends BaseVisitor {
 			return m_type;
 		}
 
-		public void setType(TransactionType type) {
-			m_type = type;
-		}
-
 		public String getUrl() {
 			return m_url;
+		}
+
+		public void setType(TransactionType type) {
+			m_type = type;
 		}
 
 		public void setUrl(String url) {

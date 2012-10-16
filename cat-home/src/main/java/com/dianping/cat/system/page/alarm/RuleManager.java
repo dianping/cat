@@ -1,6 +1,7 @@
 package com.dianping.cat.system.page.alarm;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.Cat;
@@ -13,6 +14,7 @@ import com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionEntity;
 import com.dianping.cat.home.dal.alarm.AlarmTemplate;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateDao;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateEntity;
+import com.dianping.cat.system.page.alarm.UserAlarmSubState.UserAlarmSubStateCompartor;
 import com.site.dal.jdbc.DalException;
 import com.site.dal.jdbc.DalNotFoundException;
 import com.site.lookup.annotation.Inject;
@@ -51,6 +53,7 @@ public class RuleManager {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
+		Collections.sort(userRules,new UserAlarmSubStateCompartor());
 		model.setUserSubStates(userRules);
 	}
 
@@ -77,6 +80,7 @@ public class RuleManager {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
+		Collections.sort(userRules,new UserAlarmSubStateCompartor());
 		model.setUserSubStates(userRules);
 	}
 

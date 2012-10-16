@@ -23,19 +23,18 @@
 		</script>
 		<div class="content-right">
 			</br>
-			<h2>开发中...</h2>
 			<table class="alarm" width="100%">
 				<tr class="odd">
-					<td>标题</td>
-					<td>时间</td>
-					<td>操作</td>
+					<td>邮件标题</td>
+					<td>发送时间</td>
+					<td>详细信息</td>
 				</tr>
 				<c:forEach var="item" items="${model.mailRecords}"
 					varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${item.title}</td>
-						<td>${item.sendtime}</td>
-						<td><a href="?op=alarmRecordDetail&alarmRecordId=${item.id}" target="_blank">详情</a></td>
+						<td>${w:format(item.creationDate,'yyyy-MM-dd HH:mm:ss')}</td>
+						<td><a href="?op=alarmRecordDetail&alarmRecordId=${item.id}">详情</a></td>
 					</tr>
 				</c:forEach>
 			</table>

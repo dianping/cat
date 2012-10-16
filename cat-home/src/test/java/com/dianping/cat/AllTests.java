@@ -32,7 +32,7 @@ import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
-import com.dianping.cat.system.notify.TransactionRenderTest;
+import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -93,6 +93,6 @@ import com.dianping.cat.system.notify.TransactionRenderTest;
       TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class,
       
 		/* .render*/
-      TransactionRenderTest.class})
+      RenderTest.class})
 public class AllTests {
 }
