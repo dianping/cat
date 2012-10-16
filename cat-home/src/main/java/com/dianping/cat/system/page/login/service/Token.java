@@ -7,13 +7,23 @@ public class Token implements IToken {
 
 	private int m_memberId;
 
-	public Token(int memberId) {
+	private String m_realName;
+	
+	public static final String TOKEN = "ct";
+
+	public Token(int memberId, String realName) {
 		m_memberId = memberId;
+		m_realName = realName;
 	}
 
-	public Token(int adminId, int memberId) {
+	public Token(int adminId, int memberId, String realName) {
 		m_adminId = adminId;
 		m_memberId = memberId;
+		m_realName = realName;
+	}
+
+	public String getRealName() {
+		return m_realName;
 	}
 
 	public int getAdminId() {
@@ -26,6 +36,6 @@ public class Token implements IToken {
 
 	@Override
 	public String getName() {
-		return "token";
+		return TOKEN;
 	}
 }

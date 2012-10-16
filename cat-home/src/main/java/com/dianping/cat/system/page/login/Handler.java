@@ -8,9 +8,6 @@ import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-
 import com.dainping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.system.SystemContext;
 import com.dianping.cat.system.SystemPage;
@@ -27,21 +24,15 @@ import com.site.web.mvc.annotation.InboundActionMeta;
 import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
-public class Handler implements PageHandler<Context>, LogEnabled {
+public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
 	private SigninService m_signinService;
 
-	public Logger m_logger;
-
 	private SigninContext createSigninContext(Context ctx) {
 		return new SigninContext(ctx.getHttpServletRequest(), ctx.getHttpServletResponse());
-	}
-
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 	@Override
@@ -171,7 +162,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		} else {
 			sb.append(actionUri);
 		}
-
 		// m_logger.info(sb.toString());
 	}
 }

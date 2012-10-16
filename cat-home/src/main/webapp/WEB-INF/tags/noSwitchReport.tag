@@ -1,4 +1,4 @@
-<%@ tag trimDirectiveWhitespaces="true"%>
+<%@ tag trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>

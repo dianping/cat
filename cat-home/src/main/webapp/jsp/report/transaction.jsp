@@ -140,6 +140,7 @@
 	</c:when>
 </c:choose>
 
+
 <res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
 </jsp:body>
 

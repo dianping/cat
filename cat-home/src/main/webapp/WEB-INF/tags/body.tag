@@ -14,7 +14,37 @@
 <res:useCss value='${res.css.local.body_css}' target="head-css" />
 </head>
 <body>
-	<div class="login"><a href="">Login</a></div>
+	<table id="login" width="100%">
+		<tr>
+			<td width="90%"></td>
+			<td id="loginInfo"></td>
+		</tr>
+	</table>
+	<script>
+		function getcookie(objname) {
+			var arrstr = document.cookie.split("; ");
+			for ( var i = 0; i < arrstr.length; i++) {
+				var temp = arrstr[i].split("=");
+				if (temp[0] == objname) {
+					return temp[1];
+				}
+			}
+			return "";
+		}
+		var ct = getcookie("ct");
+		if (ct != "") {
+			var length = ct.length;
+			ct = ct.substring(1, length - 1);
+			var realName = ct.split("|");
+			var name = decodeURI(realName[0]);
+
+			var loginInfo=document.getElementById('loginInfo');
+			loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a href="/cat/s/login?op=logout"> Logout</a>';
+		}else{
+			var loginInfo=document.getElementById('loginInfo');
+			loginInfo.innerHTML ='<a href="/cat/s/login"> Login</a>';
+		}
+	</script>
 	<table width="100%" cellspacing="0" cellpadding="0">
 		<tr>
 			<td width="80%"><ul class="tabs">
@@ -30,17 +60,17 @@
 					</c:forEach>
 				</ul></td>
 			<td width="20%"><ul class="tabs">
-				<c:forEach var="page" items="${navBar.systemPages}">
-					<c:if test="${page.standalone}">
-						<li ${model.page.name == page.name ? 'class="selected"' : ''}><a
-							href="${model.webapp}/${page.moduleName}/${page.path}">${page.title}</a></li>
-					</c:if>
-					<c:if
-						test="${not page.standalone and model.page.name == page.name}">
-						<li class="selected">${page.title}</li>
-					</c:if>
-				</c:forEach>
-			</ul></td>
+					<c:forEach var="page" items="${navBar.systemPages}">
+						<c:if test="${page.standalone}">
+							<li ${model.page.name == page.name ? 'class="selected"' : ''}><a
+								href="${model.webapp}/${page.moduleName}/${page.path}">${page.title}</a></li>
+						</c:if>
+						<c:if
+							test="${not page.standalone and model.page.name == page.name}">
+							<li class="selected">${page.title}</li>
+						</c:if>
+					</c:forEach>
+				</ul></td>
 		</tr>
 	</table>
 	<jsp:doBody />

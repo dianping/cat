@@ -22,7 +22,7 @@ public class SessionManager implements ISessionManager<Session, Token, Credentia
 
 		try {
 			DpAdminLogin member = m_memberDao.findByLoginName(normalAccount, password, DpAdminLoginEntity.READSET_FULL);
-			return new Token(member.getLoginId());
+			return new Token(member.getLoginId(), member.getRealName());
 		} catch (DalNotFoundException e) {
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -38,7 +38,7 @@ public class SessionManager implements ISessionManager<Session, Token, Credentia
 		try {
 			DpAdminLogin member = m_memberDao.findByEmail(email, password, DpAdminLoginEntity.READSET_FULL);
 
-			return new Token(member.getLoginId());
+			return new Token(member.getLoginId(), member.getRealName());
 		} catch (DalNotFoundException e) {
 		} catch (Exception e) {
 			Cat.logError(e);

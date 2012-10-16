@@ -40,7 +40,12 @@ public class DefaultAlarmCreator implements Task {
 	@Inject
 	private ModelService<EventReport> m_service;
 
-	//get all domains for realtime
+	/**
+	 * Get all domains for realtime
+	 * 
+	 * @return
+	 * @throws DalException
+	 */
 	private Set<String> getAllDomains() throws DalException {
 		String domain = "Cat";
 		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT)//
@@ -73,7 +78,7 @@ public class DefaultAlarmCreator implements Task {
 		ScheduledReport entity = m_scheduledReportDao.createLocal();
 		entity.setDomain(domain);
 		entity.setNames("transaction;event;problem;health");
-		
+
 		m_scheduledReportDao.insert(entity);
 	}
 
