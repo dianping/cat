@@ -55,7 +55,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
@@ -79,7 +79,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
@@ -95,7 +95,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
@@ -111,7 +111,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -124,7 +124,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
@@ -140,7 +140,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
@@ -156,7 +156,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -185,7 +185,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -198,7 +198,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role></role>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
@@ -331,8 +331,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role></role>
-			<implementation></implementation>
+			<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
