@@ -1,22 +1,12 @@
-package com.dianping.cat.system.alarm.entity;
+package com.dianping.cat.system.alarm.exception;
 
 import java.util.Date;
 
-public class AlarmData {
-
-	private String m_type;
+public class ExceptionDataEntity {
 
 	private Date m_date;
 
 	private long m_count;
-
-	public String getType() {
-		return m_type;
-	}
-
-	public void setType(String type) {
-		m_type = type;
-	}
 
 	public Date getDate() {
 		return m_date;

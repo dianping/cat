@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.transaction;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -175,11 +174,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		report.addIp(tree.getIpAddress());
 
 		if (message instanceof Transaction) {
-			int count = processTransaction(report, tree, (Transaction) message);
-
-			if (count > 0) {
-				storeMessage(tree);
-			}
+			processTransaction(report, tree, (Transaction) message);
 		}
 	}
 
@@ -303,19 +298,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_duration = duration;
 
 		loadReports();
-	}
-
-	private void storeMessage(MessageTree tree) {
-		String messageId = tree.getMessageId();
-		String domain = tree.getDomain();
-
-		try {
-			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
-
-			logviewBucket.storeById(messageId, tree);
-		} catch (IOException e) {
-			m_logger.error("Error when storing logview for transaction analyzer!", e);
-		}
 	}
 
 	private void storeReports(boolean atEnd) {

@@ -1,8 +1,8 @@
 package com.dianping.cat.system.alarm.connector;
 
-import com.dianping.cat.system.alarm.entity.AlarmData;
+import com.dianping.cat.system.alarm.exception.ExceptionDataEntity;
 
 public interface Connector {
 
-	public AlarmData fetchAlarmData(String url);
+	public ExceptionDataEntity fetchAlarmData(String url);
 }

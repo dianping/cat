@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.matrix;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -149,7 +148,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 				// the message is required by some matrixs
 				if (matrix.getUrl() == null) {
 					matrix.setUrl(tree.getMessageId());
-					storeMessage(tree);
 				}
 			}
 		}
@@ -185,19 +183,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		m_duration = duration;
 
 		loadReports();
-	}
-
-	private void storeMessage(MessageTree tree) {
-		String messageId = tree.getMessageId();
-		String domain = tree.getDomain();
-
-		try {
-			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
-
-			logviewBucket.storeById(messageId, tree);
-		} catch (IOException e) {
-			m_logger.error("Error when storing logview for matrix analyzer!", e);
-		}
 	}
 
 	private void storeReports(boolean atEnd) {

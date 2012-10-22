@@ -8,7 +8,7 @@ import java.util.Map;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.system.alarm.connector.Connector;
-import com.dianping.cat.system.alarm.entity.AlarmData;
+import com.dianping.cat.system.alarm.exception.ExceptionDataEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.site.helper.Files;
@@ -16,7 +16,7 @@ import com.site.helper.Files;
 public class CatConnector implements Connector {
 
 	@Override
-	public AlarmData fetchAlarmData(String url) {
+	public ExceptionDataEntity fetchAlarmData(String url) {
 		try {
 			return getContent(url);
 		} catch (Exception e) {
@@ -29,19 +29,19 @@ public class CatConnector implements Connector {
 		return null;
 	}
 
-	private AlarmData getContent(String url) throws MalformedURLException, IOException {
+	private ExceptionDataEntity getContent(String url) throws MalformedURLException, IOException {
 		URL data = new URL(url);
 		String content = Files.forIO().readFrom(data.openStream(), "utf-8");
 
 		return parseContent(content);
 	}
 
-	private AlarmData parseContent(String content) {
+	private ExceptionDataEntity parseContent(String content) {
 		Gson gson = new Gson();
 		Map<String, String> obj = gson.fromJson(content.trim(), new TypeToken<Map<String, String>>() {
 		}.getType());
 
-		AlarmData data = new AlarmData();
+		ExceptionDataEntity data = new ExceptionDataEntity();
 		String count = obj.get("Count");
 
 		if (count != null) {
@@ -52,7 +52,6 @@ public class CatConnector implements Connector {
 		if (timestamp != null) {
 			data.setDate(new Date(Long.parseLong(timestamp)));
 		}
-		data.setType("Exception");
 		return data;
 	}
 }

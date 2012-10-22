@@ -27,7 +27,7 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.TaskConsumer</role>
+			<role>com.dianping.cat.report.task.DefaultTaskConsumer</role>
 			<implementation>com.dianping.cat.report.task.DefaultTaskConsumer</implementation>
 			<requirements>
 				<requirement>
@@ -366,18 +366,6 @@
 			<configuration>
 				<topLevelModules>cat-home</topLevelModules>
 			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.OtherJobReport</role>
-			<implementation>com.dianping.cat.report.task.OtherJobReport</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.cross.DomainManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.service.DailyReportService</role>
@@ -850,44 +838,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>logview-local</role-hint>
-			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>logview-historical</role-hint>
-			<implementation>com.dianping.cat.report.page.model.logview.HistoricalLogViewService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.InputChannelManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>logview</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.CompositeLogViewService</implementation>
 			<requirements>
@@ -930,7 +880,7 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
+					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
 					<user>root</user>
 					<password></password>
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
@@ -993,6 +943,16 @@
 			</configuration>
 		</component>
 		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>hostinfo</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>hostinfo</logical-table-name>
+				<physical-table-name></physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
 			<requirements>
@@ -1031,6 +991,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.LocationDao</role>
 			<implementation>com.dianping.cat.home.dal.report.LocationDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.HostinfoDao</role>
+			<implementation>com.dianping.cat.home.dal.report.HostinfoDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -1241,9 +1210,6 @@
 					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
-				</requirement>
-				<requirement>
 					<role>long</role>
 				</requirement>
 				<requirement>
@@ -1251,46 +1217,6 @@
 				</requirement>
 				<requirement>
 					<role>java.util.List</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
-			<implementation>com.dianping.cat.consumer.logview.LogviewUploader</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.configuration.ServerConfigManager</role>
-			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.FileSystemManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
-			<implementation>com.dainping.cat.consumer.dal.report.LogviewDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1366,6 +1292,10 @@
 					<role>com.site.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.configuration.ServerConfigManager</role>
+			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
@@ -1577,11 +1507,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>logview-local</role-hint>
-					<field-name>m_logviewService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>message-local</role-hint>
 					<field-name>m_messageService</field-name>
 				</requirement>
@@ -1661,24 +1586,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-					<field-name>m_consumer</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.logview.LocalLogViewService</role>
-			<implementation>com.dianping.cat.report.page.model.logview.LocalLogViewService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html</role-hint>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -2605,9 +2512,6 @@
 					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
 				</requirement>
 				<requirement>
@@ -2642,6 +2546,46 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.event.EventListenerRegistry</role>
+			<implementation>com.dianping.cat.system.event.DefaultEventListenerRegistry</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.event.EventDispatcher</role>
+			<implementation>com.dianping.cat.system.event.DefaultEventDispatcher</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.event.EventListenerRegistry</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.alarm.exception.listener.ExceptionAlertListener</role>
+			<implementation>com.dianping.cat.system.alarm.exception.listener.ExceptionAlertListener</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.event.EventDispatcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.alarm.exception.listener.ExceptionDataListener</role>
+			<implementation>com.dianping.cat.system.alarm.exception.listener.ExceptionDataListener</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.event.EventDispatcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.alarm.ExceptionAlarmTask</role>
+			<implementation>com.dianping.cat.system.alarm.ExceptionAlarmTask</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.event.EventDispatcher</role>
 				</requirement>
 			</requirements>
 		</component>

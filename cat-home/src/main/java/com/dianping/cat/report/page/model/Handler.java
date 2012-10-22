@@ -31,7 +31,6 @@ import com.dianping.cat.report.page.model.database.LocalDatabaseService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
-import com.dianping.cat.report.page.model.logview.LocalLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalMessageService;
 import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
@@ -60,9 +59,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "ip-local")
 	private LocalIpService m_ipService;
-
-	@Inject(type = ModelService.class, value = "logview-local")
-	private LocalLogViewService m_logviewService;
 
 	@Inject(type = ModelService.class, value = "message-local")
 	private LocalMessageService m_messageService;
@@ -171,7 +167,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				request.setProperty("waterfall", String.valueOf(payload.isWaterfall()));
 
 				if (id.getVersion() == 1) {
-					response = m_logviewService.invoke(request);
 				} else {
 					response = m_messageService.invoke(request);
 				}

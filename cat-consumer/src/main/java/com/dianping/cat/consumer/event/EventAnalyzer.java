@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.event;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -114,17 +113,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 		Message message = tree.getMessage();
 
-		int count = 0;
-
 		if (message instanceof Transaction) {
-			count += processTransaction(report, tree, (Transaction) message);
+			processTransaction(report, tree, (Transaction) message);
 		} else if (message instanceof Event) {
-			count += processEvent(report, tree, (Event) message);
-		}
-
-		// the message is required by some events
-		if (count > 0) {
-			storeMessage(tree);
+			processEvent(report, tree, (Event) message);
 		}
 	}
 
@@ -210,19 +202,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		m_duration = duration;
 
 		loadReports();
-	}
-
-	private void storeMessage(MessageTree tree) {
-		String messageId = tree.getMessageId();
-		String domain = tree.getDomain();
-
-		try {
-			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
-
-			logviewBucket.storeById(messageId, tree);
-		} catch (IOException e) {
-			m_logger.error("Error when storing logview for event analyzer!", e);
-		}
 	}
 
 	private void storeReports(boolean atEnd) {

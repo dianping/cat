@@ -16,7 +16,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.logview.LogviewUploader;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -25,8 +24,6 @@ import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
 import com.site.helper.Splitters;
 import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
@@ -49,9 +46,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Inject
 	private AnalyzerFactory m_factory;
-
-	@Inject
-	private LogviewUploader m_uploader;
 
 	@Inject
 	private long m_duration = 1 * HOUR;
@@ -93,11 +87,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			}
 		} else {
 			long now = System.currentTimeMillis();
-			SimpleDateFormat sdf =new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 			// ensure not output too much, and then run out of disk
 			if (now - m_lastTime > 1000L) {
 				m_lastTime = now;
-				m_logger.warn("The timestamp of message is out of range, IGNORED!" + sdf.format(new Date(tree.getMessage().getTimestamp())));
+				m_logger.warn("The timestamp of message is out of range, IGNORED!"
+				      + sdf.format(new Date(tree.getMessage().getTimestamp())));
 			}
 		}
 	}
@@ -218,9 +213,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 					domains.addAll(task.getAnalyzer().getDomains());
 				}
 
-				flushLogviewBuckets(domains);
-				uploadLogviewBuckets(domains);
-
 				t.setStatus(Message.SUCCESS);
 			} catch (Throwable e) {
 				cat.logError(e);
@@ -233,20 +225,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			}
 
 			Cat.reset();
-		}
-
-		private void flushLogviewBuckets(Set<String> domains) {
-			BucketManager manager = lookup(BucketManager.class);
-
-			try {
-				for (String domain : domains) {
-					Bucket<MessageTree> bucket = manager.getLogviewBucket(m_startTime, domain);
-
-					bucket.flush();
-				}
-			} catch (Exception e) {
-				m_logger.warn("Error when flushing logview bucket for domains: " + domains, e);
-			}
 		}
 
 		public MessageAnalyzer getAnalyzer(String name) {
@@ -283,12 +261,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			for (PeriodTask task : m_tasks) {
 				Threads.forGroup("Cat-RealtimeConsumer").start(task);
-			}
-		}
-
-		private void uploadLogviewBuckets(Set<String> domains) {
-			for (String domain : domains) {
-				m_uploader.addBucket(m_startTime, domain);
 			}
 		}
 	}

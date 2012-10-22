@@ -13,6 +13,7 @@
          <table name="graph"/>
          <table name="monthreport"/>
          <table name="location"/>
+         <table name="hostinfo"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
          <table name="alarmTemplate"/>

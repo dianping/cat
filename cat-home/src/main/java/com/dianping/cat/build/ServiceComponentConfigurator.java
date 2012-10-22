@@ -3,11 +3,9 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dainping.cat.consumer.dal.report.LogviewDao;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
-import com.dianping.cat.hadoop.hdfs.InputChannelManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.page.model.cross.CompositeCrossService;
@@ -26,9 +24,7 @@ import com.dianping.cat.report.page.model.ip.CompositeIpService;
 import com.dianping.cat.report.page.model.ip.HistoricalIpService;
 import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
-import com.dianping.cat.report.page.model.logview.HistoricalLogViewService;
 import com.dianping.cat.report.page.model.logview.HistoricalMessageService;
-import com.dianping.cat.report.page.model.logview.LocalLogViewService;
 import com.dianping.cat.report.page.model.logview.LocalMessageService;
 import com.dianping.cat.report.page.model.matrix.CompositeMatrixService;
 import com.dianping.cat.report.page.model.matrix.HistoricalMatrixService;
@@ -144,13 +140,13 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
 		      .req(MessageCodec.class, "html"));
 
-		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
-		      .req(MessageConsumer.class, "realtime") //
-		      .req(BucketManager.class) //
-		      .req(MessageCodec.class, "html"));
-		all.add(C(ModelService.class, "logview-historical", HistoricalLogViewService.class) //
-		      .req(BucketManager.class, LogviewDao.class, InputChannelManager.class) //
-		      .req(MessageCodec.class, "html"));
+//		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
+//		      .req(MessageConsumer.class, "realtime") //
+//		      .req(BucketManager.class) //
+//		      .req(MessageCodec.class, "html"));
+//		all.add(C(ModelService.class, "logview-historical", HistoricalLogViewService.class) //
+//		      .req(BucketManager.class, InputChannelManager.class) //
+//		      .req(MessageCodec.class, "html"));
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "message-historical", "logview-historical" }, "m_services"));

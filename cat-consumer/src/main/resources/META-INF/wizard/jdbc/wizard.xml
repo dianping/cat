@@ -12,7 +12,6 @@
          <table name="hostinfo"/>
          <table name="sqltable"/>
          <table name="task"/>
-         <table name="logview"/>
       </group>
    </jdbc>
 </wizard>

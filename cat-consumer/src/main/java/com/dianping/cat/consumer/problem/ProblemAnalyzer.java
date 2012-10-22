@@ -43,28 +43,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
 
-	private void closeMessageBuckets() {
-		Date timestamp = new Date(m_startTime);
-
-		for (String domain : m_reports.keySet()) {
-			Bucket<MessageTree> logviewBucket = null;
-
-			try {
-				logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
-			} catch (Exception e) {
-				m_logger.error(String.format("Error when getting logview bucket of %s!", timestamp), e);
-			} finally {
-				if (logviewBucket != null) {
-					m_bucketManager.closeBucket(logviewBucket);
-				}
-			}
-		}
-	}
-
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
-		closeMessageBuckets();
 	}
 
 	@Override
@@ -132,14 +113,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 		report.addIp(tree.getIpAddress());
 		Machine machine = report.findOrCreateMachine(tree.getIpAddress());
-		int count = 0;
 
 		for (Handler handler : m_handlers) {
-			count += handler.handle(machine, tree);
-		}
-
-		if (count > 0) {
-			storeMessage(tree);
+			handler.handle(machine, tree);
 		}
 	}
 
@@ -151,42 +127,29 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		loadReports();
 	}
 
-	private void storeMessage(MessageTree tree) {
-		String messageId = tree.getMessageId();
-		String domain = tree.getDomain();
-
-		try {
-			Bucket<MessageTree> logviewBucket = m_bucketManager.getLogviewBucket(m_startTime, domain);
-
-			logviewBucket.storeById(messageId, tree);
-		} catch (Exception e) {
-			m_logger.error("Error when storing message for problem analyzer!", e);
-		}
-	}
-
 	private void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-		
+
 		t.setStatus(Message.SUCCESS);
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "problem");
 
 			for (ProblemReport report : m_reports.values()) {
 				try {
-	            Set<String> domainNames = report.getDomainNames();
-	            domainNames.clear();
-	            domainNames.addAll(getDomains());
+					Set<String> domainNames = report.getDomainNames();
+					domainNames.clear();
+					domainNames.addAll(getDomains());
 
-	            String xml = builder.buildXml(report);
-	            String domain = report.getDomain();
+					String xml = builder.buildXml(report);
+					String domain = report.getDomain();
 
-	            reportBucket.storeById(domain, xml);
-            } catch (Exception e) {
+					reportBucket.storeById(domain, xml);
+				} catch (Exception e) {
 					t.setStatus(e);
 					Cat.getProducer().logError(e);
-            }
+				}
 			}
 
 			if (atEnd && !isLocalMode()) {

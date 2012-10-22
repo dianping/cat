@@ -2,10 +2,8 @@ package com.dianping.cat.system.event;
 
 public enum EventType {
 
-	ProblemDataEvent,
+	ExceptionDataEvent,
 
-	ProblemViolationEvent,
-
-	ProblemAlarmEvent,
+	ExceptionAlertEvent,
 
 }

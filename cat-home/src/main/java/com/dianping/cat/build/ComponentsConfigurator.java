@@ -20,12 +20,10 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
-import com.dianping.cat.report.service.impl.DailyReportServiceImpl;
 import com.dianping.cat.report.service.DailyReportService;
+import com.dianping.cat.report.service.impl.DailyReportServiceImpl;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
-import com.dianping.cat.report.task.TaskConsumer;
-import com.dianping.cat.report.task.OtherJobReport;
 import com.dianping.cat.report.task.cross.CrossMerger;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseMerger;
@@ -73,7 +71,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
 		      .req(ValueTranslater.class));
 
-		all.add(C(TaskConsumer.class, DefaultTaskConsumer.class) //
+		all.add(C(DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
 
 		all.add(C(TransactionGraphCreator.class));
@@ -142,9 +140,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
 
-		// TODO delete
-		all.add(C(OtherJobReport.class).//
-		      req(DailyreportDao.class, DomainManager.class));
+		// TODO
+		//all.add(C(OtherJobReport.class).//
+		//      req(DailyreportDao.class, DomainManager.class));
 
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
 		      .req(DailyreportDao.class));

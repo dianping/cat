@@ -1,12 +1,12 @@
 package com.dianping.cat.system.alarm.template;
 
-import com.dianping.cat.system.alarm.entity.AlarmData;
+import com.dianping.cat.system.alarm.exception.ExceptionDataEntity;
 
 public interface ThresholdRule {
 
 	public String getConnectUrl();
 
-	public void addData(AlarmData data);
+	public void addData(ExceptionDataEntity data);
 
 	public String match();
 

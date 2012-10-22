@@ -8,11 +8,14 @@ import com.dianping.cat.job.CatJobModule;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
-import com.dianping.cat.report.page.ip.location.IPSeekerManager;
 import com.dianping.cat.report.task.DailyTaskProducer;
-import com.dianping.cat.report.task.TaskConsumer;
+import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
 import com.dianping.cat.system.alarm.DefaultAlarmCreator;
+import com.dianping.cat.system.alarm.ExceptionAlarmTask;
+import com.dianping.cat.system.alarm.exception.listener.ExceptionAlertListener;
+import com.dianping.cat.system.alarm.exception.listener.ExceptionDataListener;
+import com.dianping.cat.system.event.EventListenerRegistry;
 import com.dianping.cat.system.notify.ScheduledMailTask;
 import com.site.helper.Threads;
 import com.site.initialization.AbstractModule;
@@ -24,14 +27,13 @@ public class CatHomeModule extends AbstractModule {
 
 	@Override
 	protected void execute(ModuleContext ctx) throws Exception {
+		// warm up IP seeker
+		// IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		ctx.lookup(MessageConsumer.class, "realtime");
 
-		// warm up IP seeker
-		IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
-
-		TaskConsumer taskConsumer = ctx.lookup(TaskConsumer.class);
+		DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 		DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);
 		MonthReportBuilderTask monthReportTask = ctx.lookup(MonthReportBuilderTask.class);
 
@@ -41,11 +43,24 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(monthReportTask);
 		}
 
-		DefaultAlarmCreator alarmCreator = ctx.lookup(DefaultAlarmCreator.class);
+		//executeAlarmModule(ctx, serverConfigManager);
+	}
+
+	private void executeAlarmModule(ModuleContext ctx, ServerConfigManager serverConfigManager) throws Exception {
+		EventListenerRegistry registry = ctx.lookup(EventListenerRegistry.class);
+		ExceptionDataListener exceptionDataListener = ctx.lookup(ExceptionDataListener.class);
+		ExceptionAlertListener exceptionAlertListener = ctx.lookup(ExceptionAlertListener.class);
+
+		registry.register(exceptionDataListener);
+		registry.register(exceptionAlertListener);
+
+		ExceptionAlarmTask exceptionAlarmTask = ctx.lookup(ExceptionAlarmTask.class);
+		DefaultAlarmCreator alarmCreatorTask = ctx.lookup(DefaultAlarmCreator.class);
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
 
 		if (serverConfigManager.isJobMachine()) {
-			Threads.forGroup("Cat-Alarm").start(alarmCreator);
+			Threads.forGroup("Cat-Alarm").start(exceptionAlarmTask);
+			Threads.forGroup("Cat-Alarm").start(alarmCreatorTask);
 			Threads.forGroup("Cat-Alarm").start(scheduledTask);
 		}
 

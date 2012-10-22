@@ -39,11 +39,6 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReport(atEnd);
-		try {
-			m_bucketManager.closeAllLogviewBuckets();
-		} catch (Exception e) {
-			m_logger.error("Close logviewbucket error", e);
-		}
 	}
 
 	@Override

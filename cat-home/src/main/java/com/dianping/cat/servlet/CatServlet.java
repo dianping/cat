@@ -37,6 +37,7 @@ public class CatServlet extends AbstractContainerServlet {
 			initializer.execute(ctx);
 		} catch (Exception e) {
 			m_exception = e;
+			throw new ServletException(e);
 		}
 	}
 

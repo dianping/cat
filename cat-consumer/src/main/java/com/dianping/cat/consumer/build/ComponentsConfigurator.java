@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dainping.cat.consumer.dal.report.HostinfoDao;
-import com.dainping.cat.consumer.dal.report.LogviewDao;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dainping.cat.consumer.dal.report.SqltableDao;
 import com.dainping.cat.consumer.dal.report.TaskDao;
@@ -22,7 +21,6 @@ import com.dianping.cat.consumer.dump.DumpUploader;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.ip.TopIpAnalyzer;
-import com.dianping.cat.consumer.logview.LogviewUploader;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.handler.DefaultProblemHandler;
@@ -53,7 +51,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(SqltableDao.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
-		      .req(AnalyzerFactory.class, LogviewUploader.class) //
+		      .req(AnalyzerFactory.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
 		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,common")));
 
@@ -110,15 +108,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DumpUploader.class) //
 		      .req(ServerConfigManager.class, FileSystemManager.class));
 
-		all.add(C(LogviewUploader.class) //
-		      .req(ServerConfigManager.class, FileSystemManager.class) //
-		      .req(BucketManager.class, LogviewDao.class));
-
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class).config(
 		      E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		return all;

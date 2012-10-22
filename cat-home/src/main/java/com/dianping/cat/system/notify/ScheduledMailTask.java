@@ -146,6 +146,9 @@ public class ScheduledMailTask implements Task {
 						}
 						t.complete();
 					}
+				} else {
+					Event t = Cat.newEvent("ScheduledReport", "SendNot");
+					t.setStatus(Event.SUCCESS);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);

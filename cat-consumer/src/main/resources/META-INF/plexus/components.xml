@@ -25,9 +25,6 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -251,24 +248,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.logview.LogviewUploader</role>
-			<implementation>com.dianping.cat.consumer.logview.LogviewUploader</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.site.initialization.Module</role>
 			<role-hint>cat-consumer</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerModule</implementation>
@@ -292,9 +271,9 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
-					<user>root</user>
-					<password></password>
+					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
+					<user>dpcom_cat</user>
+					<password>password</password>
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
 			</configuration>
@@ -310,7 +289,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>report</logical-table-name>
-				<physical-table-name>report</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -320,7 +299,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>hostinfo</logical-table-name>
-				<physical-table-name>hostinfo</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -330,7 +309,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>sqltable</logical-table-name>
-				<physical-table-name>sqltable</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -340,17 +319,7 @@
 			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>task</logical-table-name>
-				<physical-table-name>task</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>logview</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>logview</logical-table-name>
-				<physical-table-name>logview</physical-table-name>
+				<physical-table-name></physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -384,15 +353,6 @@
 		<component>
 			<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 			<implementation>com.dainping.cat.consumer.dal.report.TaskDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dainping.cat.consumer.dal.report.LogviewDao</role>
-			<implementation>com.dainping.cat.consumer.dal.report.LogviewDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>

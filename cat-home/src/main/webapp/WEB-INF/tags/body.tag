@@ -1,4 +1,4 @@
-<%@ tag trimDirectiveWhitespaces="true"%>
+<%@ tag trimDirectiveWhitespaces="true" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <jsp:useBean id="navBar"
@@ -17,7 +17,8 @@
 	<table id="login" width="100%">
 		<tr>
 			<td width="90%"></td>
-			<td id="loginInfo"></td>
+			<td id="loginInfo" style="text-align:right"></td>
+			<td width="2%">&nbsp;</td>
 		</tr>
 	</table>
 	<script>
@@ -37,9 +38,8 @@
 			ct = ct.substring(1, length - 1);
 			var realName = ct.split("|");
 			var name = decodeURI(realName[0]);
-
 			var loginInfo=document.getElementById('loginInfo');
-			loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a href="/cat/s/login?op=logout"> Logout</a>';
+			loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a href="/cat/s/login?op=logout">Logout</a>';
 		}else{
 			var loginInfo=document.getElementById('loginInfo');
 			loginInfo.innerHTML ='<a href="/cat/s/login"> Login</a>';
