@@ -1,8 +1,8 @@
 package com.dianping.cat.system.alarm.connector;
 
-import com.dianping.cat.system.alarm.exception.ExceptionDataEntity;
+import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
 
 public interface Connector {
 
-	public ExceptionDataEntity fetchAlarmData(String url);
+	public ThresholdDataEntity fetchAlarmData(String url);
 }

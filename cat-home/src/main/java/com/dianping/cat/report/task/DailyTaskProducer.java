@@ -50,7 +50,6 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 			allReports = m_dailyReportDao.findDatabaseAllByPeriod(day, new Date(day.getTime() + DAY),
 			      DailyreportEntity.READSET_DOMAIN_NAME);
 		} catch (DalNotFoundException notFoundException) {
-			// Ignore
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
@@ -71,7 +70,6 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 			allReports = m_dailyReportDao.findAllByPeriod(day, new Date(day.getTime() + DAY),
 			      DailyreportEntity.READSET_DOMAIN_NAME);
 		} catch (DalNotFoundException notFoundException) {
-			// Ignore
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
@@ -211,7 +209,9 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 
 	@Override
 	public void run() {
-		while (true) {
+		boolean active = true;
+		
+		while (active) {
 			try {
 				Calendar cal = Calendar.getInstance();
 				int minute = cal.get(Calendar.MINUTE);
@@ -226,9 +226,13 @@ public class DailyTaskProducer implements com.site.helper.Threads.Task, Initiali
 						generateDatabaseTasks(yestoday);
 					}
 				}
-
-				Thread.sleep(10 * 60 * 1000);
 			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			try {
+				Thread.sleep(10 * 60 * 1000);
+			} catch (InterruptedException e) {
+				active = false;
 			}
 		}
 	}

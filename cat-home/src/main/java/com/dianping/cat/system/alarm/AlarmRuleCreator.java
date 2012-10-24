@@ -26,7 +26,7 @@ import com.site.dal.jdbc.DalNotFoundException;
 import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class DefaultAlarmCreator implements Task {
+public class AlarmRuleCreator implements Task {
 
 	@Inject
 	private AlarmRuleDao m_alarmRuleDao;
@@ -41,13 +41,13 @@ public class DefaultAlarmCreator implements Task {
 	private ModelService<EventReport> m_service;
 
 	/**
-	 * Get all domains for realtime
+	 * Get all domains from realtime
 	 * 
 	 * @return
 	 * @throws DalException
 	 */
 	private Set<String> getAllDomains() throws DalException {
-		String domain = "Cat";
+		String domain = CatString.CAT;
 		ModelRequest request = new ModelRequest(domain, ModelPeriod.CURRENT)//
 		      .setProperty("ip", CatString.ALL_IP);
 
@@ -76,9 +76,9 @@ public class DefaultAlarmCreator implements Task {
 
 	private void insertScheduled(String domain) throws DalException {
 		ScheduledReport entity = m_scheduledReportDao.createLocal();
+
 		entity.setDomain(domain);
 		entity.setNames("transaction;event;problem;health");
-
 		m_scheduledReportDao.insert(entity);
 	}
 
@@ -98,10 +98,12 @@ public class DefaultAlarmCreator implements Task {
 	@Override
 	public void run() {
 		try {
-			Thread.sleep(5 * 1000);
+			Thread.sleep(10 * 1000);
 		} catch (InterruptedException e1) {
 		}
-		while (true) {
+		boolean active = true;
+
+		while (active) {
 			try {
 				int exceptionTemplateId = queryTemplateByName("exception").getId();
 				int serviceTemplateId = queryTemplateByName("service").getId();
@@ -167,7 +169,7 @@ public class DefaultAlarmCreator implements Task {
 			try {
 				Thread.sleep(10 * 60 * 1000);
 			} catch (Exception e) {
-				// ignore
+				active = false;
 			}
 		}
 

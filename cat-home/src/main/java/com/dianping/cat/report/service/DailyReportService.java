@@ -33,5 +33,4 @@ public interface DailyReportService {
 
 	public HealthReport queryHealthReport(String domain, Date start, Date end);
 	
-	
 }

@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.dainping.cat.home.dal.user.DpAdminLogin;
+import com.dainping.cat.home.dal.user.DpAdminLoginDao;
+import com.dainping.cat.home.dal.user.DpAdminLoginEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.alarm.AlarmRule;
 import com.dianping.cat.home.dal.alarm.AlarmRuleDao;
@@ -20,17 +23,20 @@ import com.site.dal.jdbc.DalNotFoundException;
 import com.site.lookup.annotation.Inject;
 
 public class RuleManager {
-	
+
 	@Inject
 	private AlarmRuleDao m_alarmRuleDao;
-	
+
 	@Inject
 	private AlarmRuleSubscriptionDao m_alarmRuleSubscriptionDao;
-	
+
 	@Inject
 	private AlarmTemplateDao m_alarmTemplateDao;
-	
-	public void queryExceptionRuleList(Model model,int userId) {
+
+	@Inject
+	private DpAdminLoginDao m_dpAdminLoginDao;
+
+	public void queryExceptionRuleList(Model model, int userId) {
 		List<UserAlarmSubState> userRules = new ArrayList<UserAlarmSubState>();
 		try {
 			int templateId = queryTemplateByName("exception").getId();
@@ -53,11 +59,11 @@ public class RuleManager {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-		Collections.sort(userRules,new UserAlarmSubStateCompartor());
+		Collections.sort(userRules, new UserAlarmSubStateCompartor());
 		model.setUserSubStates(userRules);
 	}
 
-	public void queryServiceRuleList(Model model,int userId) {
+	public void queryServiceRuleList(Model model, int userId) {
 		List<UserAlarmSubState> userRules = new ArrayList<UserAlarmSubState>();
 		try {
 			int templateId = queryTemplateByName("service").getId();
@@ -80,7 +86,7 @@ public class RuleManager {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-		Collections.sort(userRules,new UserAlarmSubStateCompartor());
+		Collections.sort(userRules, new UserAlarmSubStateCompartor());
 		model.setUserSubStates(userRules);
 	}
 
@@ -95,6 +101,51 @@ public class RuleManager {
 		}
 
 		throw new RuntimeException("Template Can't be null!");
+	}
+
+	public List<String> queryUserMailsByRuleId(int alarmRuleId) {
+		List<String> mails = new ArrayList<String>();
+		try {
+			List<AlarmRuleSubscription> alarmRuleSubscriptions = m_alarmRuleSubscriptionDao.findByAlarmRuleId(alarmRuleId,
+			      AlarmRuleSubscriptionEntity.READSET_FULL);
+
+			for (AlarmRuleSubscription alarmRule : alarmRuleSubscriptions) {
+				int userId = alarmRule.getUserId();
+
+				try {
+					DpAdminLogin entity = m_dpAdminLoginDao.findByPK(userId, DpAdminLoginEntity.READSET_FULL);
+					mails.add(entity.getEmail());
+				} catch (Exception e) {
+				}
+			}
+		} catch (DalNotFoundException e) {
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return mails;
+	}
+
+	public List<String> queryUserPhonesByRuleId(int alarmRuleId) {
+		List<String> phones = new ArrayList<String>();
+		try {
+			List<AlarmRuleSubscription> alarmRuleSubscriptions = m_alarmRuleSubscriptionDao.findByAlarmRuleId(alarmRuleId,
+			      AlarmRuleSubscriptionEntity.READSET_FULL);
+
+			for (AlarmRuleSubscription alarmRule : alarmRuleSubscriptions) {
+				int userId = alarmRule.getUserId();
+
+				try {
+					DpAdminLogin entity = m_dpAdminLoginDao.findByPK(userId, DpAdminLoginEntity.READSET_FULL);
+					// TODO
+					phones.add(entity.getEmail());
+				} catch (Exception e) {
+				}
+			}
+		} catch (DalNotFoundException e) {
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return phones;
 	}
 
 	public void ruleAdd(Payload payload, Model model) {
@@ -135,8 +186,8 @@ public class RuleManager {
 			Cat.logError(e);
 		}
 	}
-	
-	public void ruleSub(Payload payload,int loginId) {
+
+	public void ruleSub(Payload payload, int loginId) {
 		int subState = payload.getUserSubState();
 		int alarmRuleId = payload.getAlarmRuleId();
 
@@ -168,6 +219,7 @@ public class RuleManager {
 			Cat.logError(e);
 		}
 	}
+
 	public void ruleUpdateSubmit(Payload payload, Model model) {
 		int id = payload.getAlarmRuleId();
 		String content = payload.getContent();

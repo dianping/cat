@@ -205,7 +205,9 @@ public class MonthReportBuilderTask implements Task {
 	}
 
 	public void run() {
-		while (true) {
+		boolean active = true;
+		
+		while (active) {
 			try {
 				Date lastMonth = getMonthFirstDay(-1);
 				Date currentMonth = getMonthFirstDay(0);
@@ -242,7 +244,7 @@ public class MonthReportBuilderTask implements Task {
 				long sleepTime = getSleepTime();
 				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
-				// Ignore
+				active = false;
 			}
 		}
 	}

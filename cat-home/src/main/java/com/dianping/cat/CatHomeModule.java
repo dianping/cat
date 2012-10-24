@@ -11,10 +11,11 @@ import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
-import com.dianping.cat.system.alarm.DefaultAlarmCreator;
-import com.dianping.cat.system.alarm.ExceptionAlarmTask;
-import com.dianping.cat.system.alarm.exception.listener.ExceptionAlertListener;
-import com.dianping.cat.system.alarm.exception.listener.ExceptionDataListener;
+import com.dianping.cat.system.alarm.AlarmRuleCreator;
+import com.dianping.cat.system.alarm.AlarmTask;
+import com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener;
+import com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener;
+import com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener;
 import com.dianping.cat.system.event.EventListenerRegistry;
 import com.dianping.cat.system.notify.ScheduledMailTask;
 import com.site.helper.Threads;
@@ -43,19 +44,23 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(monthReportTask);
 		}
 
-		//executeAlarmModule(ctx, serverConfigManager);
+		executeAlarmModule(ctx);
 	}
 
-	private void executeAlarmModule(ModuleContext ctx, ServerConfigManager serverConfigManager) throws Exception {
+	private void executeAlarmModule(ModuleContext ctx) throws Exception {
+		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
+
 		EventListenerRegistry registry = ctx.lookup(EventListenerRegistry.class);
 		ExceptionDataListener exceptionDataListener = ctx.lookup(ExceptionDataListener.class);
-		ExceptionAlertListener exceptionAlertListener = ctx.lookup(ExceptionAlertListener.class);
+		ServiceDataListener serviceDataListener = ctx.lookup(ServiceDataListener.class);
+		ThresholdAlertListener thresholdAlertListener = ctx.lookup(ThresholdAlertListener.class);
 
 		registry.register(exceptionDataListener);
-		registry.register(exceptionAlertListener);
+		registry.register(serviceDataListener);
+		registry.register(thresholdAlertListener);
 
-		ExceptionAlarmTask exceptionAlarmTask = ctx.lookup(ExceptionAlarmTask.class);
-		DefaultAlarmCreator alarmCreatorTask = ctx.lookup(DefaultAlarmCreator.class);
+		AlarmTask exceptionAlarmTask = ctx.lookup(AlarmTask.class);
+		AlarmRuleCreator alarmCreatorTask = ctx.lookup(AlarmRuleCreator.class);
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
 
 		if (serverConfigManager.isJobMachine()) {

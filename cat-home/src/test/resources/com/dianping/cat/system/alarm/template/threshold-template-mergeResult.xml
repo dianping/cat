@@ -3,14 +3,10 @@
 		<param type="name" value="status" />
 		<param type="report" value="problem" />
 		<param type="type" value="heartbeat" />
-		<param type="domain" value="UserService" />
+		<param type="domain" value="MobileApi" />
 	</connection>
-	<threshold period="2">
-		<duration id="duration1" min="-2" max="10" interval="60000"
-			alarm="EMAIL" />
-		<duration id="duration2" min="10" max="30" interval="60000"
-			alarm="SMS" />
-		<duration id="duration3" min="30" max="-1" interval="60000"
-			alarm="EMAIL,SMS" />
-	</threshold>
+	<duration id="duration1" min="-2" max="10" interval="60000" alarm="EMAIL"/>
+	<duration id="duration2" min="-10" max="40" interval="70000" alarm="EMAIL,SMS"/>
+	<duration id="duration3" min="30" max="-1" interval="60000" alarm="EMAIL,SMS" />
+	<duration id="duration4" min="30" max="-1" interval="80000" alarm="EMAIL,SMS"/>
 </threshold-template>

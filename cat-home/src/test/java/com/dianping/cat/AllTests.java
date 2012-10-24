@@ -32,6 +32,8 @@ import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
+import com.dianping.cat.system.alarm.template.TemplateMergerTest;
+import com.dianping.cat.system.alarm.template.ThresholdRuleTest;
 import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
@@ -80,7 +82,7 @@ import com.dianping.cat.system.notify.RenderTest;
 
       /* .report.task */
       TaskConsumerTest.class, TaskHelperTest.class,
-      
+
       /* .health report */
       HealthReportBuilderTest.class,
 
@@ -91,8 +93,8 @@ import com.dianping.cat.system.notify.RenderTest;
       TransactionGraphCreatorTest.class, EventGraphCreatorTest.class, EventDailyGraphMergerTest.class,
 
       TransactionDailyGraphMergerTest.class, ProblemDailyGraphMergerTest.class,
-      
-		/* .render*/
-      RenderTest.class})
+
+      /* alarm .render */
+      RenderTest.class, ThresholdRuleTest.class, TemplateMergerTest.class })
 public class AllTests {
 }

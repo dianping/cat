@@ -28,6 +28,11 @@
 				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${user-id}
 				]]></statement>
 			</query>
+			<query name="find-by-alarm-rule-id" type="SELECT" multiple="true">
+				<param name="alarm-rule-id" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='alarm-rule-id'/> = ${alarm-rule-id}
+				]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 	<entity name="alarm-rule" table="alarmRule" alias="a2">

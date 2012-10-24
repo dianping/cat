@@ -113,7 +113,9 @@ public class ScheduledMailTask implements Task {
 
 	@Override
 	public void run() {
-		while (true) {
+		boolean active = true;
+
+		while (active) {
 			try {
 				MailRecord mailRecord = null;
 				try {
@@ -157,7 +159,7 @@ public class ScheduledMailTask implements Task {
 			try {
 				Thread.sleep(getSleepTime());
 			} catch (Exception e) {
-				// ignore;
+				active = false;
 			}
 		}
 

@@ -6,6 +6,7 @@ import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.home.template.entity.ThresholdTemplate;
 import com.dianping.cat.home.template.transform.DefaultDomParser;
+import com.dianping.cat.system.alarm.threshold.template.ThresholdTemplateMerger;
 
 
 public class TemplateMergerTest {
@@ -16,12 +17,13 @@ public class TemplateMergerTest {
 		ThresholdTemplate templateOld = new DefaultDomParser().parse(oldXml);
 		ThresholdTemplate templateNew = new DefaultDomParser().parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("threshold-template-mergeResult.xml"), "utf-8");
-		TemplateMerger merger = new TemplateMerger(new ThresholdTemplate());
+		ThresholdTemplateMerger merger = new ThresholdTemplateMerger(new ThresholdTemplate());
 
-		templateOld.accept(merger);
 		templateNew.accept(merger);
+		templateOld.accept(merger);
+		
 		ThresholdTemplate mergeResult = merger.getThresholdTemplate();
-		String resultStr = mergeResult.toString().replaceAll("\\s*", "");
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), resultStr);
+		//Assert.assertEquals("Check the merge result!", expected, mergeResult.toString());
+		Assert.assertEquals("Check the merge result!", expected.replaceAll("\\s*", ""), mergeResult.toString().replaceAll("\\s*", ""));
 	}
 }

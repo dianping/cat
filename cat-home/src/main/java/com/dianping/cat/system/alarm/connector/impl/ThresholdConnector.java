@@ -7,46 +7,53 @@ import java.util.Date;
 import java.util.Map;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.system.alarm.connector.Connector;
-import com.dianping.cat.system.alarm.exception.ExceptionDataEntity;
+import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.site.helper.Files;
 
-public class CatConnector implements Connector {
+public class ThresholdConnector implements Connector {
+	public static int index = 1;
 
 	@Override
-	public ExceptionDataEntity fetchAlarmData(String url) {
+	public ThresholdDataEntity fetchAlarmData(String url) {
+		Cat.getProducer().logEvent("System", "AlarmUrl", Event.SUCCESS, url);
 		try {
 			return getContent(url);
 		} catch (Exception e) {
 			try {
 				return getContent(url);
-			} catch (Exception e1) {
-				Cat.logError(e1);
+			} catch (Exception ex) {
+				Cat.logError(ex);
 			}
 		}
 		return null;
 	}
 
-	private ExceptionDataEntity getContent(String url) throws MalformedURLException, IOException {
+	private ThresholdDataEntity getContent(String url) throws MalformedURLException, IOException {
 		URL data = new URL(url);
 		String content = Files.forIO().readFrom(data.openStream(), "utf-8");
 
 		return parseContent(content);
 	}
 
-	private ExceptionDataEntity parseContent(String content) {
+	private ThresholdDataEntity parseContent(String content) {
 		Gson gson = new Gson();
 		Map<String, String> obj = gson.fromJson(content.trim(), new TypeToken<Map<String, String>>() {
 		}.getType());
 
-		ExceptionDataEntity data = new ExceptionDataEntity();
+		ThresholdDataEntity data = new ThresholdDataEntity();
 		String count = obj.get("Count");
 
 		if (count != null) {
 			data.setCount(Long.parseLong(count));
+
 		}
+		// TODO
+		data.setCount(index * 100);
+		index++;
 
 		String timestamp = obj.get("timestamp");
 		if (timestamp != null) {

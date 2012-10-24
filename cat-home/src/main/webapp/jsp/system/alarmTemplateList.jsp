@@ -28,7 +28,11 @@
 			<table>
 				<tr><td><a href="?op=alarmTemplateUpdate&alarmTemplateId=${model.alarmTemplate.id}" target="_blank">修改</a></td></tr>
 				<tr><td>模板名称</td><td>${model.alarmTemplate.name}</td></tr>
-				<tr><td>模板内容</td><td>${model.alarmTemplate.content}</td></tr>
+				<tr><td>模板内容</td>
+					<td>
+						<textarea style="height:500px;width:500px" id="content" name="content">${model.alarmTemplate.content}</textarea>
+					</td>
+					</tr>
 			</table>
 		</div>
 	</div>

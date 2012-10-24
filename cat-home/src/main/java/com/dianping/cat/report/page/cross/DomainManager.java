@@ -55,14 +55,16 @@ public class DomainManager implements Initializable {
 				Cat.logError(e);
 			}
 
-			Threads.forGroup("Cat").start(new Reload());
+			Threads.forGroup("Cat").start(new ReloadDomainTask());
 		}
 	}
 
-	class Reload implements Task {
+	class ReloadDomainTask implements Task {
 		@Override
 		public void run() {
-			while (true) {
+			boolean active = true;
+
+			while (active) {
 				try {
 					Set<String> addIps = new HashSet<String>();
 					synchronized (m_unknownIps) {
@@ -87,7 +89,7 @@ public class DomainManager implements Initializable {
 				try {
 					Thread.sleep(60 * 60 * 1000);
 				} catch (InterruptedException e) {
-					// igonre
+					active = false;
 				}
 			}
 		}

@@ -312,20 +312,20 @@ public class OtherJobReport implements Task {
 		}
 		buildServiceTotalInfo(domain, lastMonth, nextMonth);
 		buildServiceDetailInfo(domain, lastMonth, nextMonth, functionNames);
-		 buildOtherDomainCrossInfo(domain, lastMonth, nextMonth, otherDomains);
-		
-		 domain = "TuanGouWeb";
-		 urls.add("/index");
-		 urls.add("/detail");
-		 buildUrlTotalInfo(domain, lastMonth, nextMonth);
-		 buildUrlDetailsInfo(domain, lastMonth, nextMonth, urls);
-		
-		 domain = "BCTuangouWeb";
-		 buildUrlTotalInfo(domain, lastMonth, nextMonth);
-		 domain = "TuanGouApi";
-		 buildUrlTotalInfo(domain, lastMonth, nextMonth);
-		 domain = "TuanGouApiMobile";
-		 buildUrlTotalInfo(domain, lastMonth, nextMonth);
+		buildOtherDomainCrossInfo(domain, lastMonth, nextMonth, otherDomains);
+
+		domain = "TuanGouWeb";
+		urls.add("/index");
+		urls.add("/detail");
+		buildUrlTotalInfo(domain, lastMonth, nextMonth);
+		buildUrlDetailsInfo(domain, lastMonth, nextMonth, urls);
+
+		domain = "BCTuangouWeb";
+		buildUrlTotalInfo(domain, lastMonth, nextMonth);
+		domain = "TuanGouApi";
+		buildUrlTotalInfo(domain, lastMonth, nextMonth);
+		domain = "TuanGouApiMobile";
+		buildUrlTotalInfo(domain, lastMonth, nextMonth);
 
 	}
 

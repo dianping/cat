@@ -342,7 +342,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	class OldMessageMover implements Task {
 		@Override
 		public void run() {
-			while (true) {
+			boolean active = true;
+			
+			while (active) {
 				try {
 					moveOldMessages();
 				} catch (Throwable e) {
@@ -351,7 +353,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				try {
 					Thread.sleep(2 * 60 * 1000L);
 				} catch (InterruptedException e) {
-					// ignore
+					active = false;
 				}
 			}
 		}

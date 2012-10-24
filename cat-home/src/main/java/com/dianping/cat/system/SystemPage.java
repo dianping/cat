@@ -9,24 +9,6 @@ public enum SystemPage implements Page {
 
    LOGIN("login", "login", "Login", "Login", false);
 
-   private String m_name;
-
-   private String m_path;
-
-   private String m_title;
-
-   private String m_description;
-
-   private boolean m_standalone;
-
-   private SystemPage(String name, String path, String title, String description, boolean standalone) {
-      m_name = name;
-      m_path = path;
-      m_title = title;
-      m_description = description;
-      m_standalone = standalone;
-   }
-
    public static SystemPage getByName(String name, SystemPage defaultPage) {
       for (SystemPage action : SystemPage.values()) {
          if (action.getName().equals(name)) {
@@ -35,6 +17,24 @@ public enum SystemPage implements Page {
       }
 
       return defaultPage;
+   }
+
+   private String m_description;
+
+   private String m_name;
+
+   private String m_path;
+
+   private boolean m_standalone;
+
+   private String m_title;
+
+   private SystemPage(String name, String path, String title, String description, boolean standalone) {
+      m_name = name;
+      m_path = path;
+      m_title = title;
+      m_description = description;
+      m_standalone = standalone;
    }
 
    public String getDescription() {
@@ -65,11 +65,11 @@ public enum SystemPage implements Page {
       return m_title;
    }
 
-   public boolean isStandalone() {
-      return m_standalone;
-   }
-
    public SystemPage[] getValues() {
       return SystemPage.values();
+   }
+
+   public boolean isStandalone() {
+      return m_standalone;
    }
 }

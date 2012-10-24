@@ -9,10 +9,15 @@ import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.DailyReportService;
-import com.dianping.cat.system.alarm.DefaultAlarmCreator;
-import com.dianping.cat.system.alarm.ExceptionAlarmTask;
-import com.dianping.cat.system.alarm.exception.listener.ExceptionAlertListener;
-import com.dianping.cat.system.alarm.exception.listener.ExceptionDataListener;
+import com.dianping.cat.system.alarm.AlarmRuleCreator;
+import com.dianping.cat.system.alarm.AlarmTask;
+import com.dianping.cat.system.alarm.alert.AlertManager;
+import com.dianping.cat.system.alarm.connector.Connector;
+import com.dianping.cat.system.alarm.connector.impl.ThresholdConnector;
+import com.dianping.cat.system.alarm.threshold.ThresholdRuleManager;
+import com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener;
+import com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener;
+import com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener;
 import com.dianping.cat.system.event.DefaultEventDispatcher;
 import com.dianping.cat.system.event.DefaultEventListenerRegistry;
 import com.dianping.cat.system.event.EventDispatcher;
@@ -20,6 +25,7 @@ import com.dianping.cat.system.event.EventListenerRegistry;
 import com.dianping.cat.system.notify.ReportRender;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 import com.dianping.cat.system.notify.ScheduledMailTask;
+import com.dianping.cat.system.page.alarm.RuleManager;
 import com.dianping.cat.system.page.alarm.ScheduledManager;
 import com.dianping.cat.system.tool.MailSMS;
 import com.dianping.cat.system.tool.MailSMSImpl;
@@ -32,7 +38,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(DefaultAlarmCreator.class)//
+		all.add(C(AlarmRuleCreator.class)//
 		      .req(AlarmRuleDao.class, AlarmTemplateDao.class, ScheduledReportDao.class)//
 		      .req(ModelService.class, "event"));
 
@@ -50,14 +56,24 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(EventDispatcher.class, DefaultEventDispatcher.class)//
 		      .req(EventListenerRegistry.class));
 
-		all.add(C(ExceptionAlertListener.class).//
-		      req(EventDispatcher.class));
+		all.add(C(Connector.class, ThresholdConnector.class));
+
+		all.add(C(AlertManager.class).req(MailRecordDao.class));
+
+		all.add(C(ThresholdRuleManager.class).//
+		      req(AlarmTemplateDao.class, AlarmRuleDao.class));
 
 		all.add(C(ExceptionDataListener.class).//
-		      req(EventDispatcher.class));
+				req(EventDispatcher.class, ThresholdRuleManager.class));
 
-		all.add(C(ExceptionAlarmTask.class).//
-		      req(EventDispatcher.class));
+		all.add(C(ServiceDataListener.class).//
+				req(EventDispatcher.class, ThresholdRuleManager.class));
+
+		all.add(C(ThresholdAlertListener.class).//
+		      req(AlertManager.class, RuleManager.class));
+
+		all.add(C(AlarmTask.class).//
+		      req(EventDispatcher.class, Connector.class, ThresholdRuleManager.class));
 
 		return all;
 	}

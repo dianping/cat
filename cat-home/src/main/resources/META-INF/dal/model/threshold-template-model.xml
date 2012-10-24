@@ -3,7 +3,6 @@
 	enable-xml-parser="true"  enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true">
 	<entity name="threshold-template" root="true">
     <entity-ref name="connection" />
-    <entity-ref name="threshold" />
     <entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
   </entity>
   <entity name="connection">
@@ -19,6 +18,7 @@
     <attribute name="min" value-type="int" />
     <attribute name="max" value-type="int" />
     <attribute name="interval" value-type="int" />
+    <attribute name="alarm-interval" value-type="int" />
   </entity>
 </model>
 
