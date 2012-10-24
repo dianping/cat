@@ -35,9 +35,13 @@
 		var ct = getcookie("ct");
 		if (ct != "") {
 			var length = ct.length;
-			ct = ct.substring(1, length - 1);
 			var realName = ct.split("|");
-			var name = decodeURI(realName[0]);
+			var temp = realName[0];
+			
+			if(temp.charAt(0)=='"'){
+				temp =temp.substring(1,temp.length);
+			}
+			var name = decodeURI(temp);
 			var loginInfo=document.getElementById('loginInfo');
 			loginInfo.innerHTML =name +"&nbsp;&nbsp;"+ '<a href="/cat/s/login?op=logout">Logout</a>';
 		}else{
