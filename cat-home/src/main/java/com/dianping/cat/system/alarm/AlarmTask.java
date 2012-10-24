@@ -48,8 +48,11 @@ public class AlarmTask implements Task {
 			t.complete();
 
 			long duration = System.currentTimeMillis() - time;
+
 			try {
-				Thread.sleep(20 * 1000 - duration);
+				if (duration < 30 * 1000) {
+					Thread.sleep(30 * 1000 - duration);
+				}
 			} catch (InterruptedException e) {
 				active = false;
 			}
@@ -58,15 +61,15 @@ public class AlarmTask implements Task {
 
 	private void getServiceRule() {
 		List<ThresholdRule> rules = m_manager.getAllServiceRules();
-		
+
 		for (ThresholdRule rule : rules) {
 			Transaction t = Cat.newTransaction("ServiceAlarm", rule.getDomain());
-			
+
 			try {
 				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());
-				
+
 				entity.setDomain(rule.getDomain());
-				
+
 				ServiceDataEvent event = new ServiceDataEvent(entity);
 
 				m_dispatcher.dispatch(event);
@@ -83,13 +86,13 @@ public class AlarmTask implements Task {
 
 	private void getExceptionRule() {
 		List<ThresholdRule> rules = m_manager.getAllExceptionRules();
-		
+
 		for (ThresholdRule rule : rules) {
 			Transaction t = Cat.newTransaction("ExceptionAlarm", rule.getDomain());
-			
+
 			try {
 				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());
-				
+
 				entity.setDomain(rule.getDomain());
 				ExceptionDataEvent event = new ExceptionDataEvent(entity);
 
