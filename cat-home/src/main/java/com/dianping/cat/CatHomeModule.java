@@ -64,9 +64,9 @@ public class CatHomeModule extends AbstractModule {
 		ScheduledMailTask scheduledTask = ctx.lookup(ScheduledMailTask.class);
 
 		if (serverConfigManager.isJobMachine()) {
-			Threads.forGroup("Cat-Alarm").start(exceptionAlarmTask);
-			Threads.forGroup("Cat-Alarm").start(alarmCreatorTask);
-			Threads.forGroup("Cat-Alarm").start(scheduledTask);
+			Threads.forGroup("Cat").start(exceptionAlarmTask);
+			Threads.forGroup("Cat").start(alarmCreatorTask);
+			Threads.forGroup("Cat").start(scheduledTask);
 		}
 
 		// OtherJobReport tuangouMonth = ctx.lookup(OtherJobReport.class);

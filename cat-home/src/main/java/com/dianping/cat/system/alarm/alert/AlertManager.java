@@ -44,7 +44,7 @@ public class AlertManager implements Initializable {
 	public void initialize() throws InitializationException {
 		SendAlarmTask sendAlarmTask = new SendAlarmTask();
 
-		Threads.forGroup("Cat-Alarm").start(sendAlarmTask);
+		Threads.forGroup("Cat").start(sendAlarmTask);
 	}
 
 	private void insert(AlertInfo info, int status) {
@@ -67,7 +67,7 @@ public class AlertManager implements Initializable {
 
 		@Override
 		public String getName() {
-			return "Send-Alarm";
+			return "Send-Notifycation";
 		}
 
 		@Override

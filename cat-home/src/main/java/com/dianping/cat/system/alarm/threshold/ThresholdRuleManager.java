@@ -118,7 +118,7 @@ public class ThresholdRuleManager implements Initializable {
 
 		ReloadThresholdRuleTask task = new ReloadThresholdRuleTask();
 
-		Threads.forGroup("Cat-Alarm").start(task);
+		Threads.forGroup("Cat").start(task);
 	}
 
 	private void initalizeExceptionRule() {
@@ -337,7 +337,7 @@ public class ThresholdRuleManager implements Initializable {
 
 		@Override
 		public String getName() {
-			return "exception-reload-rule";
+			return "Threshold-Rule-Reload";
 		}
 
 		@Override

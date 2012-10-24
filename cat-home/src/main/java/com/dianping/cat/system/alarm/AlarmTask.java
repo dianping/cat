@@ -27,7 +27,7 @@ public class AlarmTask implements Task {
 
 	@Override
 	public String getName() {
-		return "Exception-Alarm";
+		return "Exception-Service-Alarm";
 	}
 
 	@Override

@@ -62,7 +62,7 @@ public class AlarmRuleCreator implements Task {
 
 	@Override
 	public String getName() {
-		return "Default-Alarm-Creator";
+		return "Default-Rule-Creator";
 	}
 
 	private void insertAlarmRule(int templateId, String domain) throws DalException {
