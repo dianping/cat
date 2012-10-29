@@ -66,9 +66,9 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 		String type = meta.getType();
 
 		if (type.equalsIgnoreCase(AlertInfo.EXCEPTION)) {
-			return String.valueOf(meta.getDomain()) + CatString.EXCEPTION;
+			return CatString.EXCEPTION + "[ " + String.valueOf(meta.getDomain()) + " ]";
 		} else if (type.equalsIgnoreCase(AlertInfo.SERVICE)) {
-			return String.valueOf(meta.getDomain()) + CatString.SERVICE;
+			return CatString.SERVICE + "[ " + String.valueOf(meta.getDomain()) + " ]";
 		}
 
 		return "Default";

@@ -15,7 +15,7 @@ public class CatString {
 
 	public static final String CAT = "Cat";
 
-	public static final String EXCEPTION = " 系统异常过多告警";
+	public static final String EXCEPTION = " 异常过多告警";
 
-	public static final String SERVICE = " 服务调用失败告警";
+	public static final String SERVICE = " 服务调用告警";
 }

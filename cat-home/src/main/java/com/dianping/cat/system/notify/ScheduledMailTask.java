@@ -108,7 +108,7 @@ public class ScheduledMailTask implements Task {
 	}
 
 	private String renderTitle(String names, String domain) {
-		return "CAT Daily Report [ " + domain + " ]";
+		return "Daily Report [ " + domain + " ]";
 	}
 
 	@Override
