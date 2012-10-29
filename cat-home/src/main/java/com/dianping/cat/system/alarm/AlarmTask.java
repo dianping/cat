@@ -35,17 +35,14 @@ public class AlarmTask implements Task {
 		boolean active = true;
 
 		while (active) {
-			Transaction t = Cat.newTransaction("System", "Alarm");
 			long time = System.currentTimeMillis();
 
 			try {
-				getExceptionRule();
-				getServiceRule();
-				t.setStatus(Transaction.SUCCESS);
+				processExceptionRule();
+				processServiceRule();
 			} catch (Exception e) {
-				t.setStatus(e);
+				Cat.logError(e);
 			}
-			t.complete();
 
 			long duration = System.currentTimeMillis() - time;
 
@@ -59,7 +56,7 @@ public class AlarmTask implements Task {
 		}
 	}
 
-	private void getServiceRule() {
+	private void processServiceRule() {
 		List<ThresholdRule> rules = m_manager.getAllServiceRules();
 
 		for (ThresholdRule rule : rules) {
@@ -86,11 +83,11 @@ public class AlarmTask implements Task {
 		}
 	}
 
-	private void getExceptionRule() {
+	private void processExceptionRule() {
 		List<ThresholdRule> rules = m_manager.getAllExceptionRules();
 
 		for (ThresholdRule rule : rules) {
-			Transaction t = Cat.newTransaction("System", "ExceptionAlarm");
+			Transaction t = Cat.newTransaction("System", "ProcessExceptionRule");
 
 			try {
 				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());

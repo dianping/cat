@@ -1,5 +1,6 @@
 package com.dianping.cat.system.alarm.threshold;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ThresholdDataEntity {
@@ -35,9 +36,10 @@ public class ThresholdDataEntity {
 	}
 
 	public String toString() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		StringBuilder sb = new StringBuilder(100);
-		
-		sb.append("[").append("Date:").append(m_date).append(";");
+
+		sb.append("[").append("Date:").append(sdf.format(m_date)).append(";");
 		sb.append("Count:").append(m_count).append(";");
 		sb.append("Domain:").append(m_domain).append("]");
 
