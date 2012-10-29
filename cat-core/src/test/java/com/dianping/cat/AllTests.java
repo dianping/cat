@@ -62,7 +62,7 @@ LocalReportBucketTest.class,
 /* .storage.dump */
 LocalMessageBucketTest.class,
 
-LocalMessageBucketManagerTest.class,
+LocalMessageBucketManagerTest.class
 
 
 })
