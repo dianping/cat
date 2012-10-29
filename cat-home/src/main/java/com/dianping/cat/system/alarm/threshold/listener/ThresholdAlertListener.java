@@ -43,6 +43,7 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 		root.put("domain", meta.getDomain());
 		root.put("date", meta.getDate());
 		root.put("url", buildProblemUrl(meta.getBaseUrl(), meta.getDomain(), meta.getDate()));
+
 		try {
 			String type = meta.getType();
 
@@ -66,9 +67,11 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 
 		if (type.equalsIgnoreCase(AlertInfo.EXCEPTION)) {
 			return String.valueOf(meta.getDomain()) + CatString.EXCEPTION;
-		} else {
+		} else if (type.equalsIgnoreCase(AlertInfo.SERVICE)) {
 			return String.valueOf(meta.getDomain()) + CatString.SERVICE;
 		}
+
+		return "Default";
 	}
 
 	private String buildProblemUrl(String baseUrl, String domain, Date date) {
@@ -87,6 +90,7 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		m_configuration = new Configuration();
+		
 		m_configuration.setDefaultEncoding("UTF-8");
 		try {
 			m_configuration.setClassForTemplateLoading(ReportRenderImpl.class, "/freemaker");
@@ -97,7 +101,7 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 
 	@Override
 	public boolean isEligible(Event event) {
-		if (event.getEventType() == EventType.ExceptionAlertEvent) {
+		if (event.getEventType() == EventType.AlertEvent) {
 			return true;
 		}
 		return false;

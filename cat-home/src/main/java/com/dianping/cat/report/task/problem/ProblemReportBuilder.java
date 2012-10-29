@@ -58,13 +58,11 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 	      throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = getDomains(reportPeriod, endDate);
-		
-		String content = "";
-
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
-		content = m_problemMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+		String content = m_problemMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
 		Dailyreport report = m_dailyReportDao.createLocal();
+		
 		report.setContent(content);
 		report.setCreationDate(new Date());
 		report.setDomain(reportDomain);

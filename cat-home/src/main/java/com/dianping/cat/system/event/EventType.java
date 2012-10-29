@@ -4,10 +4,8 @@ public enum EventType {
 
 	ExceptionDataEvent,
 
-	ExceptionAlertEvent,
+	AlertEvent,
 
 	ServiceDataEvent,
-
-	ServiceAlertEvent,
 
 }

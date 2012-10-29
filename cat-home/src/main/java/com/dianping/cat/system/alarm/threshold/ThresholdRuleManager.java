@@ -22,12 +22,15 @@ import com.dianping.cat.home.template.entity.ThresholdTemplate;
 import com.dianping.cat.home.template.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.system.alarm.alert.AlertInfo;
 import com.dianping.cat.system.alarm.threshold.template.ThresholdTemplateMerger;
 import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
 public class ThresholdRuleManager implements Initializable {
+
+	private final static String ALARM_RULE = "AlarmRule";
 
 	@Inject
 	private AlarmRuleDao m_alarmRuleDao;
@@ -39,11 +42,11 @@ public class ThresholdRuleManager implements Initializable {
 
 	public Map<Integer, Date> m_serviceModifyTimes = new HashMap<Integer, Date>();
 
-	public final Map<String, ArrayList<ThresholdRule>> m_exceptionRules = new HashMap<String, ArrayList<ThresholdRule>>();
+	public Map<String, ArrayList<ThresholdRule>> m_exceptionRules = new HashMap<String, ArrayList<ThresholdRule>>();
 
-	public final Map<String, ArrayList<ThresholdRule>> m_serviceRules = new HashMap<String, ArrayList<ThresholdRule>>();
+	public Map<String, ArrayList<ThresholdRule>> m_serviceRules = new HashMap<String, ArrayList<ThresholdRule>>();
 
-	private void addExceptionRule(AlarmRule rule, ThresholdTemplate template) {
+	private ThresholdRule addExceptionRule(AlarmRule rule, ThresholdTemplate template) {
 		String domain = rule.getDomain();
 		ThresholdRule thresholdRule = new ThresholdRule(rule.getId(), domain, template);
 
@@ -57,9 +60,10 @@ public class ThresholdRuleManager implements Initializable {
 		} else {
 			rules.add(thresholdRule);
 		}
+		return thresholdRule;
 	}
 
-	private void addServiceRule(AlarmRule rule, ThresholdTemplate template) {
+	private ThresholdRule addServiceRule(AlarmRule rule, ThresholdTemplate template) {
 		String domain = rule.getDomain();
 		ThresholdRule thresholdRule = new ThresholdRule(rule.getId(), domain, template);
 
@@ -73,6 +77,7 @@ public class ThresholdRuleManager implements Initializable {
 		} else {
 			rules.add(thresholdRule);
 		}
+		return thresholdRule;
 	}
 
 	public List<ThresholdRule> getAllExceptionRules() {
@@ -123,7 +128,7 @@ public class ThresholdRuleManager implements Initializable {
 
 	private void initalizeExceptionRule() {
 		try {
-			AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName("exception",
+			AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName(AlertInfo.EXCEPTION,
 			      AlarmTemplateEntity.READSET_FULL);
 			int templateId = alarmTemplate.getId();
 			String content = alarmTemplate.getContent();
@@ -153,7 +158,7 @@ public class ThresholdRuleManager implements Initializable {
 
 	private void initalizeServiceRule() {
 		try {
-			AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName("service",
+			AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName(AlertInfo.SERVICE,
 			      AlarmTemplateEntity.READSET_FULL);
 			int templateId = alarmTemplate.getId();
 			String content = alarmTemplate.getContent();
@@ -210,32 +215,34 @@ public class ThresholdRuleManager implements Initializable {
 
 				List<AlarmRule> exceptionRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId,
 				      AlarmRuleEntity.READSET_FULL);
-
 				Set<Integer> allIds = new HashSet<Integer>();
+
 				for (AlarmRule alarmRule : exceptionRules) {
 					int id = alarmRule.getId();
+
 					allIds.add(id);
 					Date date = m_exceptionModifyTimes.get(id);
+
 					if (date == null) {
 						String newContent = alarmRule.getContent();
 						ThresholdTemplate template = mergerTemplate(baseTemplate, newContent);
+						ThresholdRule rule = addExceptionRule(alarmRule, template);
 
-						addExceptionRule(alarmRule, template);
-						Cat.getProducer().logEvent("ExceptionRule", "Add", Event.SUCCESS, null);
+						Cat.getProducer().logEvent(ALARM_RULE, "ExceptionAdd", Event.SUCCESS, rule.toString());
 					} else {
 						Date modifyDate = alarmRule.getModifyDate();
 
 						if (date.getTime() < modifyDate.getTime()) {
-							Cat.getProducer().logEvent("ExceptionRule", "Update", Event.SUCCESS, null);
 							String newContent = alarmRule.getContent();
 							ThresholdTemplate template = mergerTemplate(baseTemplate, newContent);
-
 							String domain = alarmRule.getDomain();
 							ArrayList<ThresholdRule> ruleList = m_exceptionRules.get(domain);
+
 							for (ThresholdRule rule : ruleList) {
 								if (rule.getRuleId() == alarmRule.getId()) {
-									rule.refreshTemplate(template);
+									rule.resetTemplate(template);
 									m_exceptionModifyTimes.put(rule.getRuleId(), modifyDate);
+									Cat.getProducer().logEvent(ALARM_RULE, "ExceptionUpdate", Event.SUCCESS, rule.toString());
 									break;
 
 								}
@@ -257,7 +264,7 @@ public class ThresholdRuleManager implements Initializable {
 					for (ThresholdRule rule : removes) {
 						rules.remove(rule);
 						m_exceptionModifyTimes.remove(rule.getRuleId());
-						Cat.getProducer().logEvent("ExceptionRule", "Delete", Event.SUCCESS, null);
+						Cat.getProducer().logEvent(ALARM_RULE, "ExceptionDelete", Event.SUCCESS, rule.toString());
 					}
 				}
 			} catch (Exception e) {
@@ -274,35 +281,36 @@ public class ThresholdRuleManager implements Initializable {
 				int templateId = alarmTemplate.getId();
 				String content = alarmTemplate.getContent();
 				ThresholdTemplate baseTemplate = DefaultSaxParser.parse(content);
-
 				List<AlarmRule> serviceRules = m_alarmRuleDao.findAllAlarmRuleByTemplateId(templateId,
 				      AlarmRuleEntity.READSET_FULL);
-
 				Set<Integer> allIds = new HashSet<Integer>();
+
 				for (AlarmRule alarmRule : serviceRules) {
 					int id = alarmRule.getId();
+
 					allIds.add(id);
 					Date date = m_serviceModifyTimes.get(id);
+
 					if (date == null) {
 						String newContent = alarmRule.getContent();
 						ThresholdTemplate template = mergerTemplate(baseTemplate, newContent);
+						ThresholdRule rule = addServiceRule(alarmRule, template);
 
-						addServiceRule(alarmRule, template);
-						Cat.getProducer().logEvent("ServiceRule", "Add", Event.SUCCESS, null);
+						Cat.getProducer().logEvent(ALARM_RULE, "ServiceAdd", Event.SUCCESS, rule.toString());
 					} else {
 						Date modifyDate = alarmRule.getModifyDate();
 
 						if (date.getTime() < modifyDate.getTime()) {
-							Cat.getProducer().logEvent("ServiceRule", "Update", Event.SUCCESS, null);
 							String newContent = alarmRule.getContent();
 							ThresholdTemplate template = mergerTemplate(baseTemplate, newContent);
-
 							String domain = alarmRule.getDomain();
 							ArrayList<ThresholdRule> ruleList = m_serviceRules.get(domain);
+
 							for (ThresholdRule rule : ruleList) {
 								if (rule.getRuleId() == alarmRule.getId()) {
-									rule.refreshTemplate(template);
+									rule.resetTemplate(template);
 									m_serviceModifyTimes.put(rule.getRuleId(), modifyDate);
+									Cat.getProducer().logEvent(ALARM_RULE, "ServiceUpdate", Event.SUCCESS, rule.toString());
 									break;
 
 								}
@@ -324,7 +332,7 @@ public class ThresholdRuleManager implements Initializable {
 					for (ThresholdRule rule : removes) {
 						rules.remove(rule);
 						m_serviceModifyTimes.remove(rule.getRuleId());
-						Cat.getProducer().logEvent("ServiceRule", "Delete", Event.SUCCESS, null);
+						Cat.getProducer().logEvent(ALARM_RULE, "ServiceDelete", Event.SUCCESS, rule.toString());
 					}
 				}
 			} catch (Exception e) {

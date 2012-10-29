@@ -18,7 +18,7 @@ public class ThresholdAlertEvent implements Event {
 
 	@Override
 	public EventType getEventType() {
-		return EventType.ExceptionAlertEvent;
+		return EventType.AlertEvent;
 	}
 
 }

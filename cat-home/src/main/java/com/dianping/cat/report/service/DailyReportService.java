@@ -14,7 +14,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
 public interface DailyReportService {
 
-	//query many daily report
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 
 	public EventReport queryEventReport(String domain, Date start, Date end);

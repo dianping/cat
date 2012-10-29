@@ -22,9 +22,21 @@ CREATE TABLE `dailyreport` (
   `content` mediumtext NOT NULL COMMENT '报表内容',
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `period` (`period`,`domain`,`name`),
-  KEY `type` (`type`)
+  UNIQUE KEY `period` (`period`,`domain`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天报表';
+
+CREATE TABLE `monthlyreport` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
+  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
+  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
+  `period` datetime NOT NULL  COMMENT '报表开始时间',
+  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
+  `content` mediumtext NOT NULL COMMENT '报表内容',
+  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `period` (`period`,`domain`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='月报表';
 
 CREATE TABLE `graph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

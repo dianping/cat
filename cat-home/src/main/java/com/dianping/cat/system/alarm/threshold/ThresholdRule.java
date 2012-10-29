@@ -33,13 +33,17 @@ public class ThresholdRule {
 	public ThresholdRule(int ruleId, String domain, ThresholdTemplate template) {
 		m_ruleId = ruleId;
 		m_domain = domain;
-		refreshTemplate(template);
+		resetTemplate(template);
 	}
 
-	public ThresholdAlarmMeta addData(ThresholdDataEntity entity,String type) {
+	public ThresholdAlarmMeta addData(ThresholdDataEntity entity, String type) {
 		if (validateData(entity)) {
+			m_datas.add(entity);
+			m_lastData = entity;
+
 			List<Duration> durations = getDurations();
 			int length = durations.size();
+			Date date = entity.getDate();
 
 			for (int i = length - 1; i > 0; i--) {
 				Duration duration = durations.get(i);
@@ -47,25 +51,24 @@ public class ThresholdRule {
 
 				if (strategy != null && strategy.length() > 0) {
 					int interval = duration.getInterval();
-					long count = getCount(interval, entity.getDate());
+					long count = getCount(interval, date);
 
 					if (count >= duration.getMin() && count <= duration.getMax()) {
 						ThresholdAlarmMeta meta = new ThresholdAlarmMeta();
 
 						meta.setDuration(duration).setRealCount(count).setType(type);
-						meta.setRuleId(m_ruleId).setDomain(m_domain).setDate(entity.getDate());
+						meta.setRuleId(m_ruleId).setDomain(m_domain).setDate(date);
 						meta.setBaseUrl(m_template.getConnection().getBaseUrl());
 
 						if (needAlarm(entity, duration)) {
-							m_lastAlarmTime.put(m_ruleId + ":" + duration.getId(), entity.getDate().getTime());
+							m_lastAlarmTime.put(duration.getId(), date.getTime());
 							return meta;
 						}
 						return null;
 					}
 				}
 			}
-
-			cleanData(getMaxInterval(), entity.getDate().getTime());
+			cleanData(getMaxInterval(), date.getTime());
 		}
 		return null;
 	}
@@ -151,14 +154,14 @@ public class ThresholdRule {
 		}
 		return max;
 	}
-	
+
 	public int getRuleId() {
 		return m_ruleId;
 	}
 
 	private boolean needAlarm(ThresholdDataEntity entity, Duration duration) {
 		Long currentTime = entity.getDate().getTime();
-		Long lastAlarmTime = m_lastAlarmTime.get(m_ruleId + ":" + duration.getId());
+		Long lastAlarmTime = m_lastAlarmTime.get(duration.getId());
 
 		if (lastAlarmTime == null || (currentTime - lastAlarmTime) > duration.getAlarmInterval() * TimeUtil.ONE_MINUTE) {
 			return true;
@@ -166,7 +169,7 @@ public class ThresholdRule {
 		return false;
 	}
 
-	public void refreshTemplate(ThresholdTemplate template) {
+	public void resetTemplate(ThresholdTemplate template) {
 		m_template = template;
 
 		StringBuilder sb = new StringBuilder();
@@ -195,16 +198,12 @@ public class ThresholdRule {
 			return false;
 		}
 		if (m_lastData == null) {
-			m_datas.add(entity);
-			m_lastData = entity;
 			return true;
 		} else {
 			long newCount = entity.getCount();
 			long lastCount = m_lastData.getCount();
 
 			if (newCount > lastCount) {
-				m_datas.add(entity);
-				m_lastData = entity;
 				return true;
 			} else {
 				Calendar cal = Calendar.getInstance();
@@ -212,13 +211,20 @@ public class ThresholdRule {
 
 				int minute = cal.get(Calendar.MINUTE);
 				if (minute == 0) {
-					m_datas.add(entity);
-					m_lastData = entity;
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	public String toString() {
+		StringBuilder sb = new StringBuilder(500);
+		
+		sb.append("[Domain:").append(m_domain).append(";");
+		sb.append("[Template:").append(m_template.toString()).append(";").append("]");
+
+		return sb.toString();
 	}
 
 }

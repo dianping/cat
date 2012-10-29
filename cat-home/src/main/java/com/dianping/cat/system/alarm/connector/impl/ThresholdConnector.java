@@ -15,7 +15,6 @@ import com.google.gson.reflect.TypeToken;
 import com.site.helper.Files;
 
 public class ThresholdConnector implements Connector {
-	public static int index = 1;
 
 	@Override
 	public ThresholdDataEntity fetchAlarmData(String url) {
@@ -51,9 +50,6 @@ public class ThresholdConnector implements Connector {
 			data.setCount(Long.parseLong(count));
 
 		}
-		// TODO
-		data.setCount(index * 100);
-		index++;
 
 		String timestamp = obj.get("timestamp");
 		if (timestamp != null) {

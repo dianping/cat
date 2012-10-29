@@ -174,7 +174,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 			Range range = name.findOrCreateRange(tk);
 
 			range.incCount();
-
 			if (!t.isSuccess()) {
 				range.incFails();
 			}

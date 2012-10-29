@@ -14,21 +14,21 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
 public interface MonthReportService {
 
-	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
+	public TransactionReport queryTransactionReport(String domain, Date start);
 
-	public EventReport queryEventReport(String domain, Date start, Date end);
+	public EventReport queryEventReport(String domain, Date start);
 
-	public ProblemReport queryProblemReport(String domain, Date start, Date end);
+	public ProblemReport queryProblemReport(String domain, Date start);
 
-	public HeartbeatReport queryHeartbeatReport(String domain, Date start, Date end);
+	public HeartbeatReport queryHeartbeatReport(String domain, Date start);
 
-	public MatrixReport queryMatrixReport(String domain, Date start, Date end);
+	public MatrixReport queryMatrixReport(String domain, Date start);
 
-	public CrossReport queryCrossReport(String domain, Date start, Date end);
+	public CrossReport queryCrossReport(String domain, Date start);
 
-	public SqlReport querySqlReport(String domain, Date start, Date end);
+	public SqlReport querySqlReport(String domain, Date start);
 
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end);
+	public DatabaseReport queryDatabaseReport(String database, Date start);
 
-	public HealthReport queryHealthReport(String domain, Date start, Date end);
+	public HealthReport queryHealthReport(String domain, Date start);
 }

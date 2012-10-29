@@ -81,12 +81,6 @@ public class DisplayNames {
 
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
-
-		// old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
-		// old.setLine95Count(old.getLine95Count() + other.getLine95Count());
-		// if (old.getLine95Count() > 0) {
-		// old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
-		// }
 		old.setLine95Value(0);
 		if (old.getTotalCount() > 0) {
 			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());

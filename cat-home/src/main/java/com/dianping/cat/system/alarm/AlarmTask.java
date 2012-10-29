@@ -63,17 +63,19 @@ public class AlarmTask implements Task {
 		List<ThresholdRule> rules = m_manager.getAllServiceRules();
 
 		for (ThresholdRule rule : rules) {
-			Transaction t = Cat.newTransaction("ServiceAlarm", rule.getDomain());
+			Transaction t = Cat.newTransaction("System", "ServiceAlarm");
 
 			try {
 				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());
 
-				entity.setDomain(rule.getDomain());
+				if (entity != null) {
+					entity.setDomain(rule.getDomain());
 
-				ServiceDataEvent event = new ServiceDataEvent(entity);
+					ServiceDataEvent event = new ServiceDataEvent(entity);
 
-				m_dispatcher.dispatch(event);
-				t.addData(event.toString());
+					m_dispatcher.dispatch(event);
+					t.addData(event.toString());
+				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
@@ -88,16 +90,18 @@ public class AlarmTask implements Task {
 		List<ThresholdRule> rules = m_manager.getAllExceptionRules();
 
 		for (ThresholdRule rule : rules) {
-			Transaction t = Cat.newTransaction("ExceptionAlarm", rule.getDomain());
+			Transaction t = Cat.newTransaction("System", "ExceptionAlarm");
 
 			try {
 				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());
 
-				entity.setDomain(rule.getDomain());
-				ExceptionDataEvent event = new ExceptionDataEvent(entity);
+				if (entity != null) {
+					entity.setDomain(rule.getDomain());
+					ExceptionDataEvent event = new ExceptionDataEvent(entity);
 
-				m_dispatcher.dispatch(event);
-				t.addData(event.toString());
+					m_dispatcher.dispatch(event);
+					t.addData(event.toString());
+				}
 				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
