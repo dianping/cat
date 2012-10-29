@@ -22,6 +22,10 @@ public class AlertManager implements Initializable {
 	@Inject
 	private MailRecordDao m_mailRecordDao;
 
+	public void addAlarmInfo(AlertInfo info) {
+		m_alarmInfos.offer(info);
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
 		SendAlarmTask sendAlarmTask = new SendAlarmTask();
@@ -29,15 +33,20 @@ public class AlertManager implements Initializable {
 		Threads.forGroup("Cat").start(sendAlarmTask);
 	}
 
-	private void insert(AlertInfo info, int type) {
+	private void insert(AlertInfo info, int type, boolean sendResult) {
 		MailRecord record = m_mailRecordDao.createLocal();
 
 		record.setContent(info.getContent());
 		record.setTitle(info.getTitle());
 		record.setRuleId(info.getRuleId());
 		record.setReceivers(info.getMails().toString());
-		record.setStatus(1);
+		if (sendResult) {
+			record.setStatus(1);
+		} else {
+			record.setStatus(0);
+		}
 		record.setType(type);// for alarm type
+
 		try {
 			m_mailRecordDao.insert(record);
 		} catch (Exception e) {
@@ -45,11 +54,16 @@ public class AlertManager implements Initializable {
 		}
 	}
 
-	public class SendAlarmTask implements Task {
+	public class SendAlarmTask implements Task, Initializable {
 
 		@Override
 		public String getName() {
 			return "Send-Notifycation";
+		}
+
+		@Override
+		public void initialize() throws InitializationException {
+
 		}
 
 		@Override
@@ -63,12 +77,14 @@ public class AlertManager implements Initializable {
 					if (entity != null) {
 						Transaction t = Cat.newTransaction("System", "Email");
 						String alarmType = entity.getRuleType();
+						boolean sendResult = false;
 
 						if (alarmType.equals(AlertInfo.EXCEPTION)) {
-							insert(entity, 2);
+							insert(entity, 2, sendResult);
 						} else if (alarmType.equals(AlertInfo.SERVICE)) {
-							insert(entity, 3);
+							insert(entity, 3, sendResult);
 						}
+
 						t.addData(entity.getContent() + entity.getTitle());
 						t.setStatus(Transaction.SUCCESS);
 						t.complete();
@@ -82,17 +98,12 @@ public class AlertManager implements Initializable {
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
-
 			}
 		}
 
 		@Override
 		public void shutdown() {
 		}
-	}
-
-	public void addAlarmInfo(AlertInfo info) {
-		m_alarmInfos.offer(info);
 	}
 
 }

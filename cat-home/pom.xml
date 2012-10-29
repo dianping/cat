@@ -12,26 +12,6 @@
 	<packaging>war</packaging>
 	<dependencies>
 		<dependency>
-              <groupId>com.dianping.dpsf</groupId>
-              <artifactId>dpsf-net</artifactId>
-             <version>1.7.3</version>
-       </dependency>
-       <dependency>
-              <groupId>com.dianping.hawk</groupId>
-              <artifactId>hawk-client</artifactId>
-             <version>0.6.7</version>
-       </dependency>
-       <dependency>
-              <groupId>com.dianping.lion</groupId>
-              <artifactId>lion-client</artifactId>
-             <version>0.2.2</version>
-       </dependency>
-       <dependency>
-              <groupId>com.dianping.lion</groupId>
-              <artifactId>lion-${env}</artifactId>
-             <version>1.0.0</version>
-       </dependency>
-		<dependency>
 			<groupId>com.dianping.cat</groupId>
 			<artifactId>cat-consumer</artifactId>
 		</dependency>

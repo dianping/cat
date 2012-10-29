@@ -36,6 +36,10 @@ public class RuleManager {
 	@Inject
 	private DpAdminLoginDao m_dpAdminLoginDao;
 
+	private final static String DEFAULT_EMAIL_ADDRESS = "yong.you@dianping.com";
+
+	private final static String DEFAULT_PHONE_ADDRESS = "18616671676";
+
 	public void queryExceptionRuleList(Model model, int userId) {
 		List<UserAlarmSubState> userRules = new ArrayList<UserAlarmSubState>();
 		try {
@@ -122,6 +126,9 @@ public class RuleManager {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+
+		mails.clear();
+		mails.add(DEFAULT_EMAIL_ADDRESS);
 		return mails;
 	}
 
@@ -145,6 +152,9 @@ public class RuleManager {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+
+		phones.clear();
+		phones.add(DEFAULT_PHONE_ADDRESS);
 		return phones;
 	}
 
