@@ -31,7 +31,7 @@ TransactionReportMessageAnalyzerTest.class,
 
 TransactionReportTest.class,
 
-ManyAnalyzerTest.class,
+//ManyAnalyzerTest.class,
 
 FormatTest.class, GsonTest.class,
 
