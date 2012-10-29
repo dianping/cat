@@ -58,10 +58,9 @@ public class AlarmTask implements Task {
 
 	private void processServiceRule() {
 		List<ThresholdRule> rules = m_manager.getAllServiceRules();
+		Transaction t = Cat.newTransaction("System", "ProcessServiceRule");
 
 		for (ThresholdRule rule : rules) {
-			Transaction t = Cat.newTransaction("System", "ServiceAlarm");
-
 			try {
 				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());
 
@@ -69,26 +68,23 @@ public class AlarmTask implements Task {
 					entity.setDomain(rule.getDomain());
 
 					ServiceDataEvent event = new ServiceDataEvent(entity);
-
 					m_dispatcher.dispatch(event);
 					t.addData(event.toString());
 				}
-				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
 				Cat.logError(e);
-			} finally {
-				t.complete();
 			}
 		}
+		t.setStatus(Transaction.SUCCESS);
+		t.complete();
 	}
 
 	private void processExceptionRule() {
 		List<ThresholdRule> rules = m_manager.getAllExceptionRules();
+		Transaction t = Cat.newTransaction("System", "ProcessExceptionRule");
 
 		for (ThresholdRule rule : rules) {
-			Transaction t = Cat.newTransaction("System", "ProcessExceptionRule");
-
 			try {
 				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());
 
@@ -103,10 +99,9 @@ public class AlarmTask implements Task {
 			} catch (Exception e) {
 				t.setStatus(e);
 				Cat.logError(e);
-			} finally {
-				t.complete();
 			}
 		}
+		t.complete();
 	}
 
 	@Override

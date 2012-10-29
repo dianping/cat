@@ -29,7 +29,7 @@ import freemarker.template.Template;
 
 public class ThresholdAlertListener implements EventListener, Initializable {
 	@Inject
-	private AlertManager m_alarmManager;
+	private AlertManager m_alertManager;
 
 	public Configuration m_configuration;
 
@@ -90,7 +90,7 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		m_configuration = new Configuration();
-		
+
 		m_configuration.setDefaultEncoding("UTF-8");
 		try {
 			m_configuration.setClassForTemplateLoading(ReportRenderImpl.class, "/freemaker");
@@ -114,23 +114,33 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 		ThresholdAlarmMeta meta = alertEvent.getAlarmMeta();
 		String title = buildAlarmTitle(meta);
 		String content = buildAlarmContent(meta);
-		String alarmType = meta.getDuration().getAlarm().toLowerCase();
+		String alertType = meta.getDuration().getAlarm().toLowerCase();
+		String ruleType = meta.getType();
 
-		if (alarmType != null && alarmType.length() > 0) {
-			String[] types = alarmType.split(",");
+		if (alertType != null && alertType.length() > 0) {
+			String[] types = alertType.split(",");
 
 			for (String type : types) {
+				AlertInfo info = new AlertInfo();
+
+				info.setContent(content);
+				info.setTitle(title);
+				info.setRuleId(meta.getRuleId());
+				info.setDate(meta.getDate());
+				info.setRuleType(ruleType);
+
 				if (type.equalsIgnoreCase(AlertInfo.EMAIL)) {
 					List<String> address = m_ruleManager.queryUserMailsByRuleId(meta.getRuleId());
 
-					m_alarmManager.addAlarmInfo(AlertInfo.EMAIL_TYPE, title, content, address, meta.getRuleId(),
-					      meta.getDate());
-
+					info.setAlertType(AlertInfo.EMAIL_TYPE);
+					info.setMails(address);
+					m_alertManager.addAlarmInfo(info);
 				} else if (type.equalsIgnoreCase(AlertInfo.SMS)) {
 					List<String> address = m_ruleManager.queryUserPhonesByRuleId(meta.getRuleId());
 
-					m_alarmManager.addAlarmInfo(AlertInfo.SMS_TYPE, title, content, address, meta.getRuleId(),
-					      meta.getDate());
+					info.setAlertType(AlertInfo.SMS_TYPE);
+					info.setPhones(address);
+					m_alertManager.addAlarmInfo(info);
 				}
 			}
 		}

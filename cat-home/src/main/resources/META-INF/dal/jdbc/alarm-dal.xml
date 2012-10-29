@@ -70,7 +70,7 @@
 				<statement><![CDATA[
         	SELECT <FIELDS/>
         	FROM <TABLE/> 
-        	WHERE <FIELD name='type'/> = 2
+        	WHERE <FIELD name='type'/> = 1
         	ORDER BY <FIELD name='id'/> desc limit 100
         	]]></statement>
 			</query>
@@ -80,7 +80,7 @@
         	SELECT <FIELDS/>
         	FROM <TABLE/> 
         	WHERE <FIELD name='rule-id'/> in <IN>${rule-ids}</IN>
-        	AND <FIELD name='type'/> = 1 
+        	AND <FIELD name='type'/> > 1 
         	ORDER BY <FIELD name='id'/> desc limit 100
         	]]></statement>
 			</query>
@@ -90,7 +90,7 @@
         	SELECT <FIELDS/> 
         	FROM <TABLE/> 
         	WHERE <FIELD name='rule-id'/> in <IN>${rule-ids}</IN>
-        	AND <FIELD name='type'/> = 2
+        	AND <FIELD name='type'/> = 1
         	ORDER BY <FIELD name='id'/> desc limit 100
         	]]></statement>
 			</query>

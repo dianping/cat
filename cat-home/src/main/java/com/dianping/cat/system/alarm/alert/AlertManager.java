@@ -1,7 +1,5 @@
 package com.dianping.cat.system.alarm.alert;
 
-import java.util.Date;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -24,22 +22,6 @@ public class AlertManager implements Initializable {
 	@Inject
 	private MailRecordDao m_mailRecordDao;
 
-	public void addAlarmInfo(int type, String title, String content, List<String> address, int ruleId, Date date) {
-		AlertInfo info = new AlertInfo();
-
-		info.setContent(content);
-		info.setTitle(title);
-		info.setType(type);
-		info.setRuleId(ruleId);
-		info.setDate(date);
-		if (type == AlertInfo.EMAIL_TYPE) {
-			info.setMails(address);
-		} else {
-			info.setPhones(address);
-		}
-		m_alarmInfos.offer(info);
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		SendAlarmTask sendAlarmTask = new SendAlarmTask();
@@ -47,15 +29,15 @@ public class AlertManager implements Initializable {
 		Threads.forGroup("Cat").start(sendAlarmTask);
 	}
 
-	private void insert(AlertInfo info, int status) {
+	private void insert(AlertInfo info, int type) {
 		MailRecord record = m_mailRecordDao.createLocal();
 
 		record.setContent(info.getContent());
 		record.setTitle(info.getTitle());
 		record.setRuleId(info.getRuleId());
 		record.setReceivers(info.getMails().toString());
-		record.setStatus(status);
-		record.setType(1);// for alarm type
+		record.setStatus(1);
+		record.setType(type);// for alarm type
 		try {
 			m_mailRecordDao.insert(record);
 		} catch (Exception e) {
@@ -73,16 +55,20 @@ public class AlertManager implements Initializable {
 		@Override
 		public void run() {
 			boolean active = true;
-			
+
 			while (active) {
 				try {
 					AlertInfo entity = m_alarmInfos.poll(5, TimeUnit.MILLISECONDS);
 
 					if (entity != null) {
 						Transaction t = Cat.newTransaction("System", "Email");
-						// Send Email
-						// boolean result
-						insert(entity, 1);
+						String alarmType = entity.getRuleType();
+
+						if (alarmType.equals(AlertInfo.EXCEPTION)) {
+							insert(entity, 2);
+						} else if (alarmType.equals(AlertInfo.SERVICE)) {
+							insert(entity, 3);
+						}
 						t.addData(entity.getContent() + entity.getTitle());
 						t.setStatus(Transaction.SUCCESS);
 						t.complete();
@@ -103,6 +89,10 @@ public class AlertManager implements Initializable {
 		@Override
 		public void shutdown() {
 		}
+	}
+
+	public void addAlarmInfo(AlertInfo info) {
+		m_alarmInfos.offer(info);
 	}
 
 }

@@ -28,9 +28,11 @@ public class AlertInfo {
 
 	private int m_ruleId;
 
-	private String m_title;
+	private String m_ruleType;
 
-	private int m_type;
+	private String m_title;
+	
+	private int m_alertType;
 
 	public String getContent() {
 		return m_content;
@@ -58,12 +60,20 @@ public class AlertInfo {
 		return m_ruleId;
 	}
 
+	public String getRuleType() {
+		return m_ruleType;
+	}
+
 	public String getTitle() {
 		return m_title;
 	}
 
-	public int getType() {
-		return m_type;
+	public int getAlertType() {
+		return m_alertType;
+	}
+
+	public void setAlertType(int alertType) {
+		m_alertType = alertType;
 	}
 
 	public AlertInfo setContent(String content) {
@@ -89,13 +99,13 @@ public class AlertInfo {
 		m_ruleId = ruleId;
 	}
 
+	public void setRuleType(String ruleType) {
+		m_ruleType = ruleType;
+	}
+
 	public AlertInfo setTitle(String title) {
 		m_title = title;
 		return this;
-	}
-
-	public void setType(int type) {
-		m_type = type;
 	}
 
 }

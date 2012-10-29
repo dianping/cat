@@ -67,7 +67,7 @@ public class ScheduledMailTask implements Task {
 		entity.setTitle(title);
 		entity.setContent(content);
 		entity.setRuleId(reportId);
-		entity.setType(2);
+		entity.setType(1);
 		entity.setReceivers(emails.toString());
 		if (result) {
 			entity.setStatus(0);

@@ -10,9 +10,6 @@
 	<artifactId>cat-home</artifactId>
 	<name>CAT Home</name>
 	<packaging>war</packaging>
-	<properties>
-		<env>alpha</env>
-	</properties>
 	<dependencies>
 		<dependency>
               <groupId>com.dianping.dpsf</groupId>
@@ -219,6 +216,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
 	</build>
 	<properties>
 		<packaging>war</packaging>
+		<env>alpha</env>
 		<test-framework.scope>test</test-framework.scope>
 	</properties>
 </project>

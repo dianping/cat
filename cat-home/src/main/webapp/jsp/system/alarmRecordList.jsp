@@ -25,6 +25,7 @@
 			</br>
 			<table class="alarm" width="100%">
 				<tr class="odd">
+					<td>邮件类型</td>
 					<td>邮件标题</td>
 					<td>发送时间</td>
 					<td>详细信息</td>
@@ -32,6 +33,11 @@
 				<c:forEach var="item" items="${model.mailRecords}"
 					varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+						<td>
+							<c:if test="${item.type == 1}">日常报表</c:if>
+							<c:if test="${item.type == 2}">异常告警</c:if>
+							<c:if test="${item.type == 3}">服务告警</c:if>
+						</td>
 						<td>${item.title}</td>
 						<td>${w:format(item.creationDate,'yyyy-MM-dd HH:mm:ss')}</td>
 						<td><a href="?op=alarmRecordDetail&alarmRecordId=${item.id}">详情</a></td>
