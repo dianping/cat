@@ -25,6 +25,8 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 
 	private final SMSType DEFAULT_MESSAGE_TYPE = SMSType.MONITOR;
 
+	private boolean m_active = false;
+
 	private Logger m_logger;
 
 	private MailService m_mailService;
@@ -81,14 +83,17 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 		if (m_serverConfig.isJobMachine()) {
 			if (phones != null && phones.size() > 0) {
 				for (String phone : phones) {
-					try {
-						Map<String, String> pair = new HashMap<String, String>();
+					m_logger.info("CAT sms send to ! " + phone + " " + content);
+					if (m_active) {
+						try {
+							Map<String, String> pair = new HashMap<String, String>();
 
-						pair.put("content", content);
-						m_smsService.send(DEFAULT_MESSAGE_TYPE, phone, pair);
-						sendResult = true;
-					} catch (Exception e) {
-						Cat.logError(e);
+							pair.put("content", content);
+							m_smsService.send(DEFAULT_MESSAGE_TYPE, phone, pair);
+							sendResult = true;
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
 					}
 				}
 			} else {
