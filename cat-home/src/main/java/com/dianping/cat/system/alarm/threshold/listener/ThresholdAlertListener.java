@@ -135,7 +135,6 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 	@Override
 	public void onEvent(Event event) {
 		ThresholdAlertEvent alertEvent = (ThresholdAlertEvent) event;
-
 		ThresholdAlarmMeta meta = alertEvent.getAlarmMeta();
 		String title = buildAlarmTitle(meta);
 		String content = buildEmailAlarmContent(meta);
@@ -154,7 +153,6 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 					m_alertManager.addAlarmInfo(info);
 				}
 				if (type.equalsIgnoreCase(AlertInfo.SMS)) {
-
 					List<String> emails = m_ruleManager.queryUserMailsByRuleId(meta.getRuleId());
 					AlertInfo emailsInfo = buildAlertInfo(meta, title, content, ruleType, emails);
 
