@@ -880,7 +880,7 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
+					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
 					<user>root</user>
 					<password></password>
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>

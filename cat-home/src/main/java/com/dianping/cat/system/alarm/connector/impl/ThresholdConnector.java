@@ -15,8 +15,6 @@ import com.site.helper.Files;
 
 public class ThresholdConnector implements Connector {
 
-	static long index = 1000;
-
 	@Override
 	public ThresholdDataEntity fetchAlarmData(String url) {
 		try {
@@ -51,8 +49,6 @@ public class ThresholdConnector implements Connector {
 
 		}
 
-		index += 100;
-		data.setCount(index);
 		String timestamp = obj.get("timestamp");
 		if (timestamp != null) {
 			data.setDate(new Date(Long.parseLong(timestamp)));
