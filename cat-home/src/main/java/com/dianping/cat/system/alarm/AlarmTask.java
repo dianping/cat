@@ -3,6 +3,7 @@ package com.dianping.cat.system.alarm;
 import java.util.List;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.system.alarm.connector.Connector;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
@@ -58,18 +59,22 @@ public class AlarmTask implements Task {
 
 	private void processServiceRule() {
 		List<ThresholdRule> rules = m_manager.getAllServiceRules();
-		Transaction t = Cat.newTransaction("System", "ProcessServiceRule");
+		Transaction t = Cat.newTransaction("Alarm", "ProcessServiceRule");
 
 		for (ThresholdRule rule : rules) {
 			try {
-				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());
+				String connectUrl = rule.getConnectUrl();
+				ThresholdDataEntity entity = m_connector.fetchAlarmData(connectUrl);
 
 				if (entity != null) {
-					entity.setDomain(rule.getDomain());
+					String domain = rule.getDomain();
+
+					entity.setDomain(domain);
+					Cat.getProducer().logEvent("AlarmRule", domain + "[" + rule.getRuleId() + "]", Event.SUCCESS,
+					      entity.toString());
 
 					ServiceDataEvent event = new ServiceDataEvent(entity);
 					m_dispatcher.dispatch(event);
-					t.addData(event.toString());
 				}
 			} catch (Exception e) {
 				t.setStatus(e);
@@ -82,25 +87,27 @@ public class AlarmTask implements Task {
 
 	private void processExceptionRule() {
 		List<ThresholdRule> rules = m_manager.getAllExceptionRules();
-		Transaction t = Cat.newTransaction("System", "ProcessExceptionRule");
+		Transaction t = Cat.newTransaction("Alarm", "ProcessExceptionRule");
 
 		for (ThresholdRule rule : rules) {
 			try {
-				ThresholdDataEntity entity = m_connector.fetchAlarmData(rule.getConnectUrl());
+				String connectUrl = rule.getConnectUrl();
+				ThresholdDataEntity entity = m_connector.fetchAlarmData(connectUrl);
 
 				if (entity != null) {
 					entity.setDomain(rule.getDomain());
+					Cat.getProducer().logEvent("AlarmUrl", connectUrl, Event.SUCCESS, entity.toString());
+
 					ExceptionDataEvent event = new ExceptionDataEvent(entity);
 
 					m_dispatcher.dispatch(event);
-					t.addData(event.toString());
 				}
-				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				t.setStatus(e);
 				Cat.logError(e);
 			}
 		}
+		t.setStatus(Transaction.SUCCESS);
 		t.complete();
 	}
 

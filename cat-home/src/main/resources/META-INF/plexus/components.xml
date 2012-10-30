@@ -2526,6 +2526,11 @@
 		<component>
 			<role>com.dianping.cat.system.tool.MailSMS</role>
 			<implementation>com.dianping.cat.system.tool.MailSMSImpl</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.notify.ReportRender</role>
@@ -2575,6 +2580,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.tool.MailSMS</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

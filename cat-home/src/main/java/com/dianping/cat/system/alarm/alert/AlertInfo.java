@@ -18,6 +18,8 @@ public class AlertInfo {
 
 	public static final int SMS_TYPE = 1;
 
+	private int m_alertType;
+
 	private String m_content;
 
 	private Date m_date;
@@ -29,10 +31,12 @@ public class AlertInfo {
 	private int m_ruleId;
 
 	private String m_ruleType;
-
-	private String m_title;
 	
-	private int m_alertType;
+	private String m_title;
+
+	public int getAlertType() {
+		return m_alertType;
+	}
 
 	public String getContent() {
 		return m_content;
@@ -66,10 +70,6 @@ public class AlertInfo {
 
 	public String getTitle() {
 		return m_title;
-	}
-
-	public int getAlertType() {
-		return m_alertType;
 	}
 
 	public void setAlertType(int alertType) {

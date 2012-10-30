@@ -3,6 +3,7 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.home.dal.alarm.AlarmRuleDao;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateDao;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
@@ -15,9 +16,9 @@ import com.dianping.cat.system.alarm.alert.AlertManager;
 import com.dianping.cat.system.alarm.connector.Connector;
 import com.dianping.cat.system.alarm.connector.impl.ThresholdConnector;
 import com.dianping.cat.system.alarm.threshold.ThresholdRuleManager;
+import com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener;
 import com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener;
 import com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener;
-import com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener;
 import com.dianping.cat.system.event.DefaultEventDispatcher;
 import com.dianping.cat.system.event.DefaultEventListenerRegistry;
 import com.dianping.cat.system.event.EventDispatcher;
@@ -42,7 +43,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(AlarmRuleDao.class, AlarmTemplateDao.class, ScheduledReportDao.class)//
 		      .req(ModelService.class, "event"));
 
-		all.add(C(MailSMS.class, MailSMSImpl.class));
+		all.add(C(MailSMS.class, MailSMSImpl.class).req(ServerConfigManager.class));
 
 		all.add(C(ReportRender.class, ReportRenderImpl.class));
 
@@ -58,16 +59,17 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Connector.class, ThresholdConnector.class));
 
-		all.add(C(AlertManager.class).req(MailRecordDao.class));
+		all.add(C(AlertManager.class).//
+		      req(MailRecordDao.class, MailSMS.class, ServerConfigManager.class));
 
 		all.add(C(ThresholdRuleManager.class).//
 		      req(AlarmTemplateDao.class, AlarmRuleDao.class));
 
 		all.add(C(ExceptionDataListener.class).//
-				req(EventDispatcher.class, ThresholdRuleManager.class));
+		      req(EventDispatcher.class, ThresholdRuleManager.class));
 
 		all.add(C(ServiceDataListener.class).//
-				req(EventDispatcher.class, ThresholdRuleManager.class));
+		      req(EventDispatcher.class, ThresholdRuleManager.class));
 
 		all.add(C(ThresholdAlertListener.class).//
 		      req(AlertManager.class, RuleManager.class));

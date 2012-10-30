@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.Map;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.system.alarm.connector.Connector;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
 import com.google.gson.Gson;
@@ -16,10 +15,10 @@ import com.site.helper.Files;
 
 public class ThresholdConnector implements Connector {
 
-	public static long index = 1000;
+	static long index = 1000;
+
 	@Override
 	public ThresholdDataEntity fetchAlarmData(String url) {
-		Cat.getProducer().logEvent("System", "AlarmUrl", Event.SUCCESS, url);
 		try {
 			return getContent(url);
 		} catch (Exception e) {
@@ -51,9 +50,9 @@ public class ThresholdConnector implements Connector {
 			data.setCount(Long.parseLong(count));
 
 		}
-		index +=100;
-		data.setCount(index );
 
+		index += 100;
+		data.setCount(index);
 		String timestamp = obj.get("timestamp");
 		if (timestamp != null) {
 			data.setDate(new Date(Long.parseLong(timestamp)));

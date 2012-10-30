@@ -23,49 +23,47 @@ public class ScheduledManager {
 
 	@Inject
 	private ScheduledReportDao m_scheduledReportDao;
-	
+
 	@Inject
 	private ScheduledReportSubscriptionDao m_scheduledReportSubscriptionDao;
-	
+
 	@Inject
 	private DpAdminLoginDao m_loginDao;
-	
-	public List<ScheduledReport> queryScheduledReports() throws DalException{
+
+	public List<ScheduledReport> queryScheduledReports() throws DalException {
 		List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
-		
+
 		return reports;
 	}
-	
+
 	public List<String> queryEmailsBySchReportId(int scheduledReportId) throws DalException {
 		List<String> emails = new ArrayList<String>();
-		List<ScheduledReportSubscription> subscriptions = m_scheduledReportSubscriptionDao.findByScheduledReportId(scheduledReportId,
-		      ScheduledReportSubscriptionEntity.READSET_FULL);
+		List<ScheduledReportSubscription> subscriptions = m_scheduledReportSubscriptionDao.findByScheduledReportId(
+		      scheduledReportId, ScheduledReportSubscriptionEntity.READSET_FULL);
 
 		for (ScheduledReportSubscription subscription : subscriptions) {
 			try {
-	         DpAdminLogin login = m_loginDao.findByPK(subscription.getUserId(), DpAdminLoginEntity.READSET_FULL);
-	         emails.add(login.getEmail());
-         } catch (Exception e) {
-         }
-		}
-		if (emails.size() == 0) {
-			emails.add("yong.you@dianping.com");
+				DpAdminLogin login = m_loginDao.findByPK(subscription.getUserId(), DpAdminLoginEntity.READSET_FULL);
+				emails.add(login.getEmail());
+			} catch (Exception e) {
+			}
 		}
 		return emails;
 	}
-	
-	public void queryScheduledReports(Model model,int userId) {
+
+	public void queryScheduledReports(Model model, int userId) {
 		List<UserReportSubState> userRules = new ArrayList<UserReportSubState>();
 		try {
 			List<ScheduledReport> lists = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
-			
+
 			for (ScheduledReport report : lists) {
 				int scheduledReportId = report.getId();
 				UserReportSubState userSubState = new UserReportSubState(report);
 
 				userRules.add(userSubState);
 				try {
-					m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userId, ScheduledReportSubscriptionEntity.READSET_FULL);
+					m_scheduledReportSubscriptionDao.findByPK(scheduledReportId, userId,
+					      ScheduledReportSubscriptionEntity.READSET_FULL);
 					userSubState.setSubscriberState(1);
 				} catch (DalNotFoundException nfe) {
 				} catch (DalException e) {
@@ -76,10 +74,9 @@ public class ScheduledManager {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-		Collections.sort(userRules,new UserReportSubStateCompartor());
+		Collections.sort(userRules, new UserReportSubStateCompartor());
 		model.setUserReportSubStates(userRules);
 	}
-
 
 	public void scheduledReportAdd(Payload payload, Model model) {
 		List<String> domains = new ArrayList<String>();
@@ -90,7 +87,7 @@ public class ScheduledManager {
 	public void scheduledReportAddSubmit(Payload payload, Model model) {
 		String domain = payload.getDomain();
 		String content = payload.getContent();
-		
+
 		ScheduledReport entity = m_scheduledReportDao.createLocal();
 		entity.setNames(content);
 		entity.setDomain(domain);
@@ -115,8 +112,8 @@ public class ScheduledManager {
 			Cat.logError(e);
 		}
 	}
-	
-	public void scheduledReportSub(Payload payload,int loginId) {
+
+	public void scheduledReportSub(Payload payload, int loginId) {
 		int subState = payload.getUserSubState();
 		int scheduledReportId = payload.getScheduledReportId();
 
@@ -148,6 +145,7 @@ public class ScheduledManager {
 			Cat.logError(e);
 		}
 	}
+
 	public void scheduledReportUpdateSubmit(Payload payload, Model model) {
 		int id = payload.getScheduledReportId();
 		String content = payload.getContent();

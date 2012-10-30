@@ -3,6 +3,7 @@ package com.dianping.cat.system.alarm.threshold.listener;
 import java.util.List;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.system.alarm.alert.AlertInfo;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
@@ -50,6 +51,7 @@ public class ServiceDataListener implements EventListener {
 				try {
 					ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(alarmMeta);
 
+					Cat.getProducer().logEvent("ServiceAlarm", "Domain", Message.SUCCESS, alarmMeta.getRuleId() + "");
 					m_dispatcher.dispatch(alertEvent);
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {

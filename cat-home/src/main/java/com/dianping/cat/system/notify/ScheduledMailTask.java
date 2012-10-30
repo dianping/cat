@@ -108,7 +108,7 @@ public class ScheduledMailTask implements Task {
 	}
 
 	private String renderTitle(String names, String domain) {
-		return "Daily Report [ " + domain + " ]";
+		return " CAT 日常报表 [ " + domain + " ]";
 	}
 
 	@Override
@@ -139,6 +139,7 @@ public class ScheduledMailTask implements Task {
 							List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
 
 							boolean result = m_mailSms.sendEmail(title, content, emails);
+
 							insertMailLog(report.getId(), content, title, result, emails);
 							t.setStatus(Transaction.SUCCESS);
 							Cat.getProducer().logEvent("ScheduledReport", "Email", Event.SUCCESS, emails.toString());

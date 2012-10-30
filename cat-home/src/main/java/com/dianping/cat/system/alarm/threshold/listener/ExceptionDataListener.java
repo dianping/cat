@@ -3,13 +3,13 @@ package com.dianping.cat.system.alarm.threshold.listener;
 import java.util.List;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.system.alarm.alert.AlertInfo;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
 import com.dianping.cat.system.alarm.threshold.ThresholdRule;
 import com.dianping.cat.system.alarm.threshold.ThresholdRuleManager;
-import com.dianping.cat.system.alarm.threshold.event.ThresholdAlertEvent;
 import com.dianping.cat.system.alarm.threshold.event.ExceptionDataEvent;
+import com.dianping.cat.system.alarm.threshold.event.ThresholdAlertEvent;
 import com.dianping.cat.system.alarm.threshold.template.ThresholdAlarmMeta;
 import com.dianping.cat.system.event.Event;
 import com.dianping.cat.system.event.EventDispatcher;
@@ -41,22 +41,17 @@ public class ExceptionDataListener implements EventListener {
 		List<ThresholdRule> rules = m_manager.getExceptionRuleByDomain(data.getDomain());
 
 		for (ThresholdRule rule : rules) {
-			ThresholdAlarmMeta alarmMeta = rule.addData(data,AlertInfo.EXCEPTION);
+			ThresholdAlarmMeta alarmMeta = rule.addData(data, AlertInfo.EXCEPTION);
 
 			if (alarmMeta != null) {
-				Transaction t = Cat.newTransaction("SendAlarm", "Exception");
-				t.addData(alarmMeta.toString());
-	
 				try {
-	            ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(alarmMeta);
-	           
-	            m_dispatcher.dispatch(alertEvent);
-	            t.setStatus(Transaction.SUCCESS);
-            } catch (Exception e) {
-            	t.setStatus(e);
-            }finally{
-            	t.complete();
-            }
+					ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(alarmMeta);
+					
+					Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS, alarmMeta.getRuleId() + "");
+					m_dispatcher.dispatch(alertEvent);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 			}
 		}
 	}

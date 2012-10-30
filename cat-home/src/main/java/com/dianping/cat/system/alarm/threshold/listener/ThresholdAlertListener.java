@@ -13,6 +13,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.template.entity.Duration;
 import com.dianping.cat.system.alarm.alert.AlertInfo;
 import com.dianping.cat.system.alarm.alert.AlertManager;
 import com.dianping.cat.system.alarm.threshold.event.ThresholdAlertEvent;
@@ -36,10 +37,37 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 	@Inject
 	private RuleManager m_ruleManager;
 
-	private String buildAlarmContent(ThresholdAlarmMeta meta) {
+	private String buildAlarmTitle(ThresholdAlarmMeta meta) {
+		String type = meta.getType();
+
+		if (type.equalsIgnoreCase(AlertInfo.EXCEPTION)) {
+			return CatString.EXCEPTION + "[ " + String.valueOf(meta.getDomain()) + " ]";
+		} else if (type.equalsIgnoreCase(AlertInfo.SERVICE)) {
+			return CatString.SERVICE + "[ " + String.valueOf(meta.getDomain()) + " ]";
+		}
+
+		return "Default";
+	}
+
+	private AlertInfo buildAlertInfo(ThresholdAlarmMeta meta, String title, String content, String ruleType,
+	      List<String> address) {
+		AlertInfo info = new AlertInfo();
+
+		info.setContent(content);
+		info.setTitle(title);
+		info.setRuleId(meta.getRuleId());
+		info.setDate(meta.getDate());
+		info.setRuleType(ruleType);
+		info.setMails(address);
+		return info;
+	}
+
+	private String buildEmailAlarmContent(ThresholdAlarmMeta meta) {
 		Map<Object, Object> root = new HashMap<Object, Object>();
 		StringWriter sw = new StringWriter(5000);
 
+		root.put("rule", buildRuleMeta(meta.getDuration()));
+		root.put("count", meta.getRealCount());
 		root.put("domain", meta.getDomain());
 		root.put("date", meta.getDate());
 		root.put("url", buildProblemUrl(meta.getBaseUrl(), meta.getDomain(), meta.getDate()));
@@ -62,18 +90,6 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 		return sw.toString();
 	}
 
-	private String buildAlarmTitle(ThresholdAlarmMeta meta) {
-		String type = meta.getType();
-
-		if (type.equalsIgnoreCase(AlertInfo.EXCEPTION)) {
-			return CatString.EXCEPTION + "[ " + String.valueOf(meta.getDomain()) + " ]";
-		} else if (type.equalsIgnoreCase(AlertInfo.SERVICE)) {
-			return CatString.SERVICE + "[ " + String.valueOf(meta.getDomain()) + " ]";
-		}
-
-		return "Default";
-	}
-
 	private String buildProblemUrl(String baseUrl, String domain, Date date) {
 		long time = date.getTime();
 
@@ -84,6 +100,15 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 		StringBuilder sb = new StringBuilder(baseUrl);
 
 		sb.append("?").append("domain=").append(domain).append("&date=").append(sdf.format(new Date(time)));
+		return sb.toString();
+	}
+
+	private Object buildRuleMeta(Duration duration) {
+		StringBuilder sb = new StringBuilder(100);
+
+		sb.append("[ Interval:").append(duration.getInterval()).append(";");
+		sb.append(" Min:").append(duration.getMin()).append(";");
+		sb.append(" Max:").append(duration.getMax()).append("]");
 		return sb.toString();
 	}
 
@@ -113,7 +138,7 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 
 		ThresholdAlarmMeta meta = alertEvent.getAlarmMeta();
 		String title = buildAlarmTitle(meta);
-		String content = buildAlarmContent(meta);
+		String content = buildEmailAlarmContent(meta);
 		String alertType = meta.getDuration().getAlarm().toLowerCase();
 		String ruleType = meta.getType();
 
@@ -121,25 +146,26 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 			String[] types = alertType.split(",");
 
 			for (String type : types) {
-				AlertInfo info = new AlertInfo();
-
-				info.setContent(content);
-				info.setTitle(title);
-				info.setRuleId(meta.getRuleId());
-				info.setDate(meta.getDate());
-				info.setRuleType(ruleType);
-
 				if (type.equalsIgnoreCase(AlertInfo.EMAIL)) {
 					List<String> address = m_ruleManager.queryUserMailsByRuleId(meta.getRuleId());
+					AlertInfo info = buildAlertInfo(meta, title, content, ruleType, address);
 
 					info.setAlertType(AlertInfo.EMAIL_TYPE);
-					info.setMails(address);
 					m_alertManager.addAlarmInfo(info);
-				} else if (type.equalsIgnoreCase(AlertInfo.SMS)) {
+				}
+				if (type.equalsIgnoreCase(AlertInfo.SMS)) {
+
+					List<String> emails = m_ruleManager.queryUserMailsByRuleId(meta.getRuleId());
+					AlertInfo emailsInfo = buildAlertInfo(meta, title, content, ruleType, emails);
+
+					emailsInfo.setAlertType(AlertInfo.EMAIL_TYPE);
+					m_alertManager.addAlarmInfo(emailsInfo);
+					
+
 					List<String> address = m_ruleManager.queryUserPhonesByRuleId(meta.getRuleId());
+					AlertInfo info = buildAlertInfo(meta, title, title, ruleType, address);
 
 					info.setAlertType(AlertInfo.SMS_TYPE);
-					info.setPhones(address);
 					m_alertManager.addAlarmInfo(info);
 				}
 			}

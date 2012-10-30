@@ -16,6 +16,18 @@
 	</tr>
 	<tr>
 		<td></td>
+		<td>告警规则</td>
+		<td>${rule}</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
+		<td>错误个数</td>
+		<td>${count}</td>
+		<td></td>
+	</tr>
+	<tr>
+		<td></td>
 		<td>CAT链接</td>
 		<td> <a href="${url}" target="_blank">link</a></td>
 		<td></td>

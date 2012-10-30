@@ -7,6 +7,7 @@
     <member name="password" field="Password" value-type="String" length="96" />
     <member name="email" field="Email" value-type="String" length="120" />
     <member name="real-name" field="RealName" value-type="String" length="48" />
+    <member name="mobile-no" field="MobileNo" value-type="String" length="12" />
     <primary-key />
     <readsets>
       <readset name="FULL" all="true" />

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.template.entity.Duration;
 import com.dianping.cat.home.template.entity.Param;
@@ -63,8 +62,6 @@ public class ThresholdRule {
 
 						if (needAlarm(entity, duration)) {
 							m_lastAlarmTime.put(duration.getId(), date.getTime());
-							Cat.getProducer().logEvent("System", "Domain", "Alarm",
-							      "RealCount:" + count + " Min:" + duration.getMin() + " Max:" + duration.getMax());
 							return meta;
 						}
 						return null;

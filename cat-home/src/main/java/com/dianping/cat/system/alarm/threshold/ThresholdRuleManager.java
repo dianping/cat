@@ -353,7 +353,7 @@ public class ThresholdRuleManager implements Initializable {
 			boolean active = true;
 
 			while (active) {
-				Transaction t = Cat.newTransaction("System", "RefreshRule");
+				Transaction t = Cat.newTransaction("Alarm", "RefreshRule");
 
 				t.setStatus(Transaction.SUCCESS);
 				try {
