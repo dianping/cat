@@ -231,7 +231,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
 	</build>
 	<properties>
 		<packaging>war</packaging>
-		<env>alpha</env>
+		<env>product</env>
 		<test-framework.scope>test</test-framework.scope>
 	</properties>
 </project>
