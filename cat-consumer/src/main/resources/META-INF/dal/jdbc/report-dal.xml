@@ -349,4 +349,23 @@
 			</query>
 		</query-defs>
 	</entity>
+	<entity name="project" table="project" alias="p">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
+		<query-defs>
+			<query name="find-all" type="SELECT" multiple="true">
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				]]></statement>
+			</query>
+			<query name="find-by-domain" type="SELECT">
+				<param name="domain" />
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/>  WHERE <FIELD name='domain'/> = ${domain}
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
 </entities>

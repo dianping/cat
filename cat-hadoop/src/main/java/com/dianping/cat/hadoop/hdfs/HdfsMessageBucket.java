@@ -76,7 +76,7 @@ public class HdfsMessageBucket implements MessageBucket {
 	}
 
 	@Override
-	public MessageBlock store(MessageTree tree) throws IOException {
+	public MessageBlock store(MessageTree tree,MessageId id) throws IOException {
 		throw new UnsupportedOperationException("Not supported by HDFS!");
 	}
 

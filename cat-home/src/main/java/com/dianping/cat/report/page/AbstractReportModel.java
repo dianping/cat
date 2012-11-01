@@ -4,10 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Map;
 
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.report.view.HistoryNav;
 import com.dianping.cat.report.view.UrlNav;
+import com.dianping.cat.report.view.DomainNavManager.Department;
 import com.site.web.mvc.Action;
 import com.site.web.mvc.ActionContext;
 import com.site.web.mvc.ViewModel;
@@ -85,6 +88,10 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 
 	// required by report tag
 	public abstract Collection<String> getDomains();
+
+	public Map<String, Department> getDomainGroups() {
+		return DomainNavManager.getDepartment(getDomains());
+	}
 
 	public Throwable getException() {
 		return m_exception;

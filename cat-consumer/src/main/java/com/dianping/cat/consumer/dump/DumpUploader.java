@@ -183,6 +183,12 @@ public class DumpUploader implements Initializable, LogEnabled {
 					} finally {
 						t.complete();
 					}
+
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+						break;
+					}
 				}
 
 				root.complete();

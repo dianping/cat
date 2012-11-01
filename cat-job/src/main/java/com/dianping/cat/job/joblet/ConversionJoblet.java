@@ -10,6 +10,7 @@ import com.dianping.cat.job.spi.joblet.Joblet;
 import com.dianping.cat.job.spi.joblet.JobletContext;
 import com.dianping.cat.job.spi.joblet.JobletMeta;
 import com.dianping.cat.job.spi.mapreduce.MessageTreeWritable;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
@@ -56,7 +57,8 @@ public class ConversionJoblet extends ContainerHolder implements Joblet<IntWrita
 
 		try {
 			tree.setMessageId(m_factory.getNextId());
-			 m_bucket.store(tree);
+			MessageId id = MessageId.parse(tree.getMessageId());
+			m_bucket.store(tree, id);
 		} catch (Exception e) {
 			System.out.println(e);
 		}

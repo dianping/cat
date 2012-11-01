@@ -1,37 +1,28 @@
 <h4><a href="http://cat.qa.dianpingoa.com/cat/r/p?op=history&domain=Cat&date=2012062616&reportType=day" target="_blank">ProblemReport</a></h4>
-<table rules="all">
+<table rules="all" border="1">
 	<tr>
-	</tr>
-	<tr>
-		<td></td>
 		<td>Type</td>
 		<td>Total Count</td>
 		<td>Link</td>
-		<td></td>
 	</tr>
 		<tr>
-			<td></td>
 			<td>error</td>
 			<td style="text-align:right">10</td>
 			<td style="text-align:right"><a href="http://cat.qa.dianpingoa.com/cat/r/p?op=historyGraph&domain=Cat&date=2012062616&ip=All&reportType=day&type=error" target="_blank">Graph</a></td>
 		</tr>
 		<tr>
-			<td></td>
 			<td>failure</td>
 			<td style="text-align:right">10</td>
 			<td style="text-align:right"><a href="http://cat.qa.dianpingoa.com/cat/r/p?op=historyGraph&domain=Cat&date=2012062616&ip=All&reportType=day&type=failure" target="_blank">Graph</a></td>
 		</tr>
 		<tr>
-			<td></td>
 			<td>heartbeat</td>
 			<td style="text-align:right">1</td>
 			<td style="text-align:right"><a href="http://cat.qa.dianpingoa.com/cat/r/p?op=historyGraph&domain=Cat&date=2012062616&ip=All&reportType=day&type=heartbeat" target="_blank">Graph</a></td>
 		</tr>
 		<tr>
-			<td></td>
 			<td>url</td>
 			<td style="text-align:right">10</td>
 			<td style="text-align:right"><a href="http://cat.qa.dianpingoa.com/cat/r/p?op=historyGraph&domain=Cat&date=2012062616&ip=All&reportType=day&type=url" target="_blank">Graph</a></td>
 		</tr>
-	<tr></tr>
 </table>

@@ -73,18 +73,6 @@ CREATE TABLE `location` (
   UNIQUE KEY `transaction_date_lat_lng` (`transaction_date`,`lat`,`lng`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于热点图地理位置表';
 
-CREATE TABLE `maillog` (
-  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `address` varchar(500) NOT NULL COMMENT '收件人',
-  `title` varchar(500) NOT NULL COMMENT '邮件标题',
-  `content` text NOT NULL COMMENT '邮件内容',
-  `sendtime` datetime NOT NULL COMMENT '发送时间',
-  `status` int(11) NOT NULL COMMENT '发送状态（0、发送成功；1、发送失败）',
-  `error` varchar(1000) DEFAULT NULL COMMENT '发送失败错误信息',
-  `cc` varchar(500) DEFAULT NULL COMMENT '邮件抄送人',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='邮件提醒发送记录';
-
 CREATE TABLE `monthreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
@@ -230,18 +218,19 @@ CREATE TABLE `scheduledReportSubscription` (
   PRIMARY KEY (`scheduled_report_id`,`user_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户订阅定时报表记录表';
 
-CREATE TABLE 'department'(
+CREATE TABLE `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL COMMENT '部门名称',
+  `domain` varchar(50) NOT NULL COMMENT '项目名称',
+  `project_line` varchar(50)  DEFAULT NULL COMMENT '关联产品线名称',
+  `department` varchar(50) DEFAULT NULL COMMENT '关联项目组名称',  
+  `owner` varchar(50)  DEFAULT NULL COMMENT '项目负责人',
+  `email` varchar(200)  DEFAULT NULL COMMENT '项目组邮件',
+  `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
+  `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='公司部门基本信息';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目基本信息';
 
-CREATE TABLE 'domainInfo'(
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) NOT NULL COMMENT '项目名称',
-  `parent_name` varchar(50) DEFAULT NULL COMMENT '父项目名称',
-  `department_id` int(11) DEFAULT -1 COMMENT '项目所属部门名称',
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目的基本信息';
+
 
 
 

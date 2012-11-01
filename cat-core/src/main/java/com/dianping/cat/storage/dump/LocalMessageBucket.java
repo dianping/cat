@@ -166,14 +166,13 @@ public class LocalMessageBucket implements MessageBucket {
 	}
 
 	@Override
-	public synchronized MessageBlock store(MessageTree tree) throws IOException {
-		ChannelBuffer buf = m_bufferManager.allocate();
+	public MessageBlock store(final MessageTree tree, final MessageId id) throws IOException {
+		final ChannelBuffer buf = m_bufferManager.allocate();
 
 		m_lastAccessTime = System.currentTimeMillis();
 		m_codec.encode(tree, buf);
 
 		int size = buf.readableBytes();
-		MessageId id = MessageId.parse(tree.getMessageId());
 
 		m_dirty.set(true);
 		m_blockSize += size;

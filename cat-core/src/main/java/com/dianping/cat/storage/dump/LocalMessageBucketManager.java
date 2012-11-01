@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
@@ -38,17 +39,19 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
-	@Inject
-	private ServerConfigManager m_configManager;
-
-	@Inject
-	private MessagePathBuilder m_pathBuilder;
-
 	private File m_baseDir;
 
 	private Map<String, LocalMessageBucket> m_buckets = new HashMap<String, LocalMessageBucket>();
 
+	@Inject
+	private ServerConfigManager m_configManager;
+
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(1000);
+
+	@Inject
+	private MessagePathBuilder m_pathBuilder;
+
+	private ExecutorService m_pool = Threads.forPool().getFixedThreadPool("Cat-Encoder", 3);
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -127,6 +130,31 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("Cat").start(new OldMessageMover());
 	}
 
+	private boolean isFit(String path) {
+		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
+			return false;
+		}
+
+		long current = System.currentTimeMillis();
+		long currentHour = current - current % ONE_HOUR;
+		long lastHour = currentHour - ONE_HOUR;
+		long nextHour = currentHour + ONE_HOUR;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
+		String currentHourStr = sdf.format(new Date(currentHour));
+		String lastHourStr = sdf.format(new Date(lastHour));
+		String nextHourStr = sdf.format(new Date(nextHour));
+
+		int indexOf = path.indexOf(currentHourStr);
+		int indexOfLast = path.indexOf(lastHourStr);
+		int indexOfNext = path.indexOf(nextHourStr);
+
+		if (indexOf > -1 || indexOfLast > -1 || indexOfNext > -1) {
+			return false;
+		}
+		return true;
+	}
+
 	@Override
 	public MessageTree loadMessage(String messageId) throws IOException {
 		MessageProducer cat = Cat.getProducer();
@@ -203,97 +231,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	public void setBaseDir(File baseDir) {
-		m_baseDir = baseDir;
-	}
-
-	@Override
-	public void storeMessage(MessageTree tree) throws IOException {
-		MessageId id = MessageId.parse(tree.getMessageId());
-		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		String name = id.getDomain() + '-' + id.getIpAddress() + '-' + localIp;
-		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
-		LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-		if (bucket == null) {
-			bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-			bucket.setBaseDir(m_baseDir);
-			bucket.initialize(dataFile);
-			m_buckets.put(dataFile, bucket);
-		}
-
-		MessageBlock block = bucket.store(tree);
-
-		if (block != null) {
-			m_messageBlocks.offer(block);
-		}
-	}
-
-	class BlockDumper implements Task {
-		private int m_errors;
-
-		@Override
-		public String getName() {
-			return "LocalMessageBucketManager-BlockDumper";
-		}
-
-		@Override
-		public void run() {
-			try {
-				while (true) {
-					MessageBlock block = m_messageBlocks.poll(5, TimeUnit.MILLISECONDS);
-
-					if (block != null) {
-						String dataFile = block.getDataFile();
-						LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-						try {
-							bucket.getWriter().writeBlock(block);
-						} catch (Throwable e) {
-							m_errors++;
-
-							if (m_errors == 1 || m_errors % 1000 == 0) {
-								Cat.getProducer().logError(
-								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
-							}
-						}
-					}
-				}
-			} catch (InterruptedException e) {
-				// ignore it
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
-
-	private boolean isFit(String path) {
-		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
-			return false;
-		}
-
-		long current = System.currentTimeMillis();
-		long currentHour = current - current % ONE_HOUR;
-		long lastHour = currentHour - ONE_HOUR;
-		long nextHour = currentHour + ONE_HOUR;
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
-		String currentHourStr = sdf.format(new Date(currentHour));
-		String lastHourStr = sdf.format(new Date(lastHour));
-		String nextHourStr = sdf.format(new Date(nextHour));
-
-		int indexOf = path.indexOf(currentHourStr);
-		int indexOfLast = path.indexOf(lastHourStr);
-		int indexOfNext = path.indexOf(nextHourStr);
-
-		if (indexOf > -1 || indexOfLast > -1 || indexOfNext > -1) {
-			return false;
-		}
-		return true;
-	}
-
 	private void moveOldMessages() {
 		final List<String> paths = new ArrayList<String>();
 
@@ -339,34 +276,80 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	class OldMessageMover implements Task {
-		@Override
-		public void run() {
-			boolean active = true;
-			
-			while (active) {
+	public void setBaseDir(File baseDir) {
+		m_baseDir = baseDir;
+	}
+
+	@Override
+	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
+		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String name = id.getDomain() + '-' + id.getIpAddress() + '-' + localIp;
+		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+		LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+		if (bucket == null) {
+			bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+			bucket.setBaseDir(m_baseDir);
+			bucket.initialize(dataFile);
+			m_buckets.put(dataFile, bucket);
+		}
+
+		final LocalMessageBucket b = bucket;
+
+		m_pool.submit(new Runnable() {
+			@Override
+			public void run() {
 				try {
-					moveOldMessages();
-				} catch (Throwable e) {
+					MessageBlock block = b.store(tree, id);
+
+					if (block != null) {
+						m_messageBlocks.offer(block);
+					}
+				} catch (Exception e) {
 					Cat.logError(e);
 				}
-				try {
-					Thread.sleep(2 * 60 * 1000L);
-				} catch (InterruptedException e) {
-					active = false;
-				}
 			}
-		}
+		});
+	}
+
+	class BlockDumper implements Task {
+		private int m_errors;
 
 		@Override
 		public String getName() {
-			return "LocalMessageBucketManager-OldMessageMover";
+			return "LocalMessageBucketManager-BlockDumper";
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					MessageBlock block = m_messageBlocks.poll(5, TimeUnit.MILLISECONDS);
+
+					if (block != null) {
+						String dataFile = block.getDataFile();
+						LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+						try {
+							bucket.getWriter().writeBlock(block);
+						} catch (Throwable e) {
+							m_errors++;
+
+							if (m_errors == 1 || m_errors % 100 == 0) {
+								Cat.getProducer().logError(
+								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
+							}
+						}
+					}
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
 		}
 
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
 	class IdleChecker implements Task {
@@ -395,5 +378,35 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void shutdown() {
 		}
+	}
+
+	class OldMessageMover implements Task {
+		@Override
+		public String getName() {
+			return "LocalMessageBucketManager-OldMessageMover";
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				try {
+					moveOldMessages();
+				} catch (Throwable e) {
+					Cat.logError(e);
+				}
+				try {
+					Thread.sleep(2 * 60 * 1000L);
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+
 	}
 }

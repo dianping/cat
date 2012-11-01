@@ -32,7 +32,7 @@
 			<role-hint>DefaultHandler</role-hint>
 			<implementation>com.dianping.cat.consumer.problem.handler.DefaultProblemHandler</implementation>
 			<configuration>
-				<failureType>URL,SQL,Call,Cache</failureType>
+				<failureType>URL,SQL,Call,PigeonCall,Cache</failureType>
 				<errorType>Error,RuntimeException,Exception</errorType>
 			</configuration>
 		</component>
@@ -170,6 +170,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -331,6 +334,16 @@
 			</configuration>
 		</component>
 		<component>
+			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>project</role-hint>
+			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>project</logical-table-name>
+				<physical-table-name></physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
 			<requirements>
@@ -360,6 +373,15 @@
 		<component>
 			<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 			<implementation>com.dainping.cat.consumer.dal.report.TaskDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.ProjectDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>

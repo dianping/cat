@@ -63,7 +63,7 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      req(MailRecordDao.class, MailSMS.class, ServerConfigManager.class));
 
 		all.add(C(ThresholdRuleManager.class).//
-		      req(AlarmTemplateDao.class, AlarmRuleDao.class));
+		      req(AlarmTemplateDao.class, AlarmRuleDao.class, ServerConfigManager.class));
 
 		all.add(C(ExceptionDataListener.class).//
 		      req(EventDispatcher.class, ThresholdRuleManager.class));

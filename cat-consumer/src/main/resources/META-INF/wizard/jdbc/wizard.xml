@@ -12,6 +12,7 @@
          <table name="hostinfo"/>
          <table name="sqltable"/>
          <table name="task"/>
+         <table name="project"/>
       </group>
    </jdbc>
 </wizard>

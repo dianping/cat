@@ -169,3 +169,16 @@ a.heartbeat {
 	margin-right:20px;
 	pedding-right:20px;
 }
+
+.department{
+	text-align:center;
+	font-size:medium;
+	font-weight: bold;
+	width:80px;
+}
+
+.domain{
+	text-align: left;
+	font-weight: bold;
+	padding-left:4px;
+}

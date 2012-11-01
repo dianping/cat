@@ -131,7 +131,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	}
 
 	@Override
-	public void storeMessage(MessageTree tree) throws IOException {
+	public void storeMessage(MessageTree tree,MessageId id) throws IOException {
 		throw new UnsupportedOperationException("Not supported by HDFS!");
 	}
 

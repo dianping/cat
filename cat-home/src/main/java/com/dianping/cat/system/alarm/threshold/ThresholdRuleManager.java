@@ -12,6 +12,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.home.dal.alarm.AlarmRule;
 import com.dianping.cat.home.dal.alarm.AlarmRuleDao;
 import com.dianping.cat.home.dal.alarm.AlarmRuleEntity;
@@ -37,6 +38,9 @@ public class ThresholdRuleManager implements Initializable {
 
 	@Inject
 	private AlarmTemplateDao m_alarmTemplateDao;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	public Map<Integer, Date> m_exceptionModifyTimes = new HashMap<Integer, Date>();
 
@@ -123,7 +127,9 @@ public class ThresholdRuleManager implements Initializable {
 
 		ReloadThresholdRuleTask task = new ReloadThresholdRuleTask();
 
-		Threads.forGroup("Cat").start(task);
+		if (m_configManager.isJobMachine()) {
+			Threads.forGroup("Cat").start(task);
+		}
 	}
 
 	private void initalizeExceptionRule() {

@@ -1,36 +1,23 @@
 <h4>异常超过阀值告警</h4>
-<table rules="all">
+<table rules="all" border="1" >
 	<tr>
-	</tr>
-	<tr>
-		<td></td>
 		<td>项目名称</td>
 		<td>${domain}</td>
-		<td></td>
 	</tr>
 	<tr>
-		<td></td>
 		<td>告警时间</td>
 		<td>${date?string("yyyy-MM-dd HH:mm:ss")}</td>
-		<td></td>
 	</tr>
 	<tr>
-		<td></td>
 		<td>告警规则</td>
 		<td>${rule}</td>
-		<td></td>
 	</tr>
 	<tr>
-		<td></td>
 		<td>错误个数</td>
 		<td>${count}</td>
-		<td></td>
 	</tr>
 	<tr>
-		<td></td>
 		<td>CAT链接</td>
 		<td> <a href="${url}" target="_blank">link</a></td>
-		<td></td>
 	</tr>
-	<tr></tr>
 </table>

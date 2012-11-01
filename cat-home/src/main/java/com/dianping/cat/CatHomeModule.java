@@ -11,6 +11,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
+import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.alarm.AlarmRuleCreator;
 import com.dianping.cat.system.alarm.AlarmTask;
 import com.dianping.cat.system.alarm.threshold.listener.ExceptionDataListener;
@@ -33,6 +34,7 @@ public class CatHomeModule extends AbstractModule {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		ctx.lookup(MessageConsumer.class, "realtime");
+		ctx.lookup(DomainNavManager.class);
 
 		DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 		DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);

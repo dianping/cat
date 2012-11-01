@@ -95,12 +95,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			return;
 		}
 
-		String messageId = tree.getMessageId();
-		MessageId id = MessageId.parse(messageId);
+		MessageId id = MessageId.parse(tree.getMessageId());
 
 		if (id.getVersion() == 2) {
 			try {
-				m_bucketManager.storeMessage(tree);
+				m_bucketManager.storeMessage(tree,id);
 			} catch (IOException e1) {
 				m_logger.error("Error when dumping to local file system, version 2!", e1);
 			}

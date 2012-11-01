@@ -368,6 +368,15 @@
 			</configuration>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.view.DomainNavManager</role>
+			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.service.DailyReportService</role>
 			<implementation>com.dianping.cat.report.service.impl.DailyReportServiceImpl</implementation>
 			<requirements>
@@ -2598,6 +2607,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.AlarmRuleDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

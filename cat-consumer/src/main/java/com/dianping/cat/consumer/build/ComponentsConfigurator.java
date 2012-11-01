@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dainping.cat.consumer.dal.report.HostinfoDao;
+import com.dainping.cat.consumer.dal.report.ProjectDao;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dainping.cat.consumer.dal.report.SqltableDao;
 import com.dainping.cat.consumer.dal.report.TaskDao;
@@ -56,7 +57,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,common")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
-		String failureTypes = "URL,SQL,Call,Cache";
+		String failureTypes = "URL,SQL,Call,PigeonCall,Cache";
 
 		all.add(C(Handler.class, "DefaultHandler", DefaultProblemHandler.class)//
 		      .config(E("failureType").value(failureTypes))//
@@ -88,7 +89,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(CommonAnalyzer.class).is(PER_LOOKUP)//
-		      .req(HostinfoDao.class, TaskDao.class)//
+		      .req(HostinfoDao.class, TaskDao.class, ProjectDao.class)//
 		      .req(BucketManager.class));
 
 		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //
@@ -113,7 +114,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class).config(
 		      E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
-		
+
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		return all;

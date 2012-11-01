@@ -9,6 +9,7 @@ import org.junit.runners.JUnit4;
 
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
@@ -61,7 +62,9 @@ public class HdfsMessageBucketManagerTest extends ComponentTestCase {
 		localManager.setBaseDir(new File("target/bucket/hdfs/dump")); // make local and hdfs base dir same
 
 		for (int i = 0; i < num; i++) {
-			localManager.storeMessage(newMessageTree(factory.getNextId(), i, now + i * 10L));
+			DefaultMessageTree tree = newMessageTree(factory.getNextId(), i, now + i * 10L);
+			MessageId id = MessageId.parse(tree.getMessageId());
+			localManager.storeMessage(tree,id);
 		}
 
 		localManager.close();

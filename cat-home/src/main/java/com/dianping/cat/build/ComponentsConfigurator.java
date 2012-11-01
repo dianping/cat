@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dainping.cat.consumer.dal.report.HostinfoDao;
+import com.dainping.cat.consumer.dal.report.ProjectDao;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.CatHomeModule;
@@ -48,6 +49,7 @@ import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
+import com.dianping.cat.report.view.DomainNavManager;
 import com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
 import com.site.initialization.DefaultModuleManager;
 import com.site.initialization.Module;
@@ -140,9 +142,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
 
+		all.add(C(DomainNavManager.class).req(ProjectDao.class));
+
 		// TODO
-		//all.add(C(OtherJobReport.class).//
-		//      req(DailyreportDao.class, DomainManager.class));
+		// all.add(C(OtherJobReport.class).//
+		// req(DailyreportDao.class, DomainManager.class));
 
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
 		      .req(DailyreportDao.class));

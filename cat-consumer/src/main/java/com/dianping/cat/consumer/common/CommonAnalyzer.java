@@ -10,6 +10,9 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dainping.cat.consumer.dal.report.Hostinfo;
 import com.dainping.cat.consumer.dal.report.HostinfoDao;
+import com.dainping.cat.consumer.dal.report.Project;
+import com.dainping.cat.consumer.dal.report.ProjectDao;
+import com.dainping.cat.consumer.dal.report.ProjectEntity;
 import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
@@ -21,6 +24,7 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.BucketManager;
 import com.site.dal.jdbc.DalException;
+import com.site.dal.jdbc.DalNotFoundException;
 import com.site.lookup.annotation.Inject;
 
 public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implements LogEnabled {
@@ -35,6 +39,9 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 
 	@Inject
 	private TaskDao m_taskDao;
+
+	@Inject
+	private ProjectDao m_projectDao;
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -108,6 +115,7 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 						t.setStatus(e);
 					}
 				}
+				insetDomainInfo(domain);
 			}
 			if (atEnd) {
 				Date period = new Date(m_startTime);
@@ -136,5 +144,125 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 		} finally {
 			t.complete();
 		}
+	}
+
+	private void insetDomainInfo(String domain) {
+		try {
+			m_projectDao.findByDomain(domain, ProjectEntity.READSET_FULL);
+		} catch (DalNotFoundException e) {
+			Project project = m_projectDao.createLocal();
+
+			project.setDomain(domain);
+			project.setProjectLine("Default");
+
+			String temp = domain.toLowerCase();
+
+			setProjectInfo(project, temp);
+
+			try {
+				m_projectDao.insert(project);
+			} catch (Exception ex) {
+				Cat.logError(ex);
+			}
+
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
+	private void setProjectInfo(Project project, String temp) {
+		String account = " magicMirror AccountMQ      AccountServer      AccountWeb   MessageAdminWeb      MessageMQ      MessageServer      MessageWeb DecoratorServer FeedMQ      FeedServer  SmsServer      SocialFeedMQ      SocialFeedServer      SocialRelationshipServer  ";
+		String guanggao = "AdwordsWeb PromoWeb OpenWeb ";
+		String group = "AuditbackService      AuditbackWeb      AutoauditMQ  GroupService      GroupWeb  ReviewServer BadgeMQ      BaseDataServer  UserBaseService      UserService      UserWeb";
+		String shop = "DPIndexWeb KeywordService      KeywordWeb  PiccenterDisplay      PiccenterService      PiccenterUpload      PiccenterWeb  ShopAccountAdminWeb      ShopAccountServer      ShopAccountWeb      ShopBusinessWeb      ShopSearchWeb      ShopServer      ShopWeb      ShoppicService      ShoppicWeb";
+
+		String tuangouWeb = "BCTuangouWeb  TuanGouApi            TuanGouRemote            TuanGouWeb tuangou-paygate";
+		String tuangouMobile = "TuanGouApiMobile TuanGouWap";
+		String zhifu = "   PayChannel      PayEngine      PayOrder Unipay ";
+
+		String mobile = "      MConfigAPI      MLocationService      MYellowPageAPI      MapService MobileApi";
+		String mobileBooking = "MBookingCallcenter      MBookingService      MBookingWeb";
+		String mobileMembercard = "MobileMembercardBcWeb      MobileMembercardMainApiWeb      MobileMembercardMainServer";
+		String search = "DPSearch";
+		String middleware = " Swallow Cat";
+
+		if (account.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.WWW);
+			project.setProjectLine(Department.ACCOUT);
+		} else if (middleware.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.ARCH);
+			project.setProjectLine(Department.MIDDLDWARE);
+		} else if (guanggao.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.WWW);
+			project.setProjectLine(Department.PROMO);
+		} else if (group.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.WWW);
+			project.setProjectLine(Department.GROUP);
+		} else if (shop.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.WWW);
+			project.setProjectLine(Department.SHOP);
+		} else if (tuangouWeb.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.TUANGOU);
+			project.setProjectLine(Department.TUANGOUTWEB);
+		} else if (tuangouMobile.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.TUANGOU);
+			project.setProjectLine(Department.TUANGOUMOBILE);
+		} else if (zhifu.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.TUANGOU);
+			project.setProjectLine(Department.TUANGOUZHIFU);
+		} else if (mobile.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.MOBILE);
+			project.setProjectLine(Department.MOBILEWEB);
+		} else if (mobileBooking.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.MOBILE);
+			project.setProjectLine(Department.MOBILEBOOKING);
+		} else if (mobileMembercard.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.MOBILE);
+			project.setProjectLine(Department.MOBILEMEM);
+		} else if (search.toLowerCase().indexOf(temp) > -1) {
+			project.setDepartment(Department.SEARCH);
+			project.setProjectLine(Department.SEARCH);
+		} else {
+			project.setDepartment("Default");
+			project.setProjectLine("Default");
+
+		}
+	}
+
+	public class Department {
+
+		public static final String MOBILE = "手机";
+
+		public static final String SEARCH = "搜索";
+
+		public static final String ARCH = "架构";
+
+		public static final String WWW = "主站";
+
+		public static final String TUANGOU = "团购";
+
+		public static final String ACCOUT = "账户、消息";
+
+		public static final String USER = "用户、社交";
+
+		public static final String GROUP = "社区、用户";
+
+		public static final String SHOP = "商户、图片";
+
+		public static final String PROMO = "广告、优惠";
+
+		public static final String TUANGOUTWEB = "团购主页";
+
+		public static final String TUANGOUMOBILE = "团购手机";
+
+		public static final String TUANGOUZHIFU = "支付中心";
+
+		public static final String MIDDLDWARE = "基础组建";
+
+		public static final String MOBILEWEB = "手机后台";
+
+		public static final String MOBILEBOOKING = "预约预定";
+
+		public static final String MOBILEMEM = "会员卡";
 	}
 }

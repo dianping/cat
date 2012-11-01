@@ -23,6 +23,7 @@
 	text-align: left;
 	font-size: small;
 	font-weight: bold;
+	padding-left:4px;
 }
 
 .report .navbar .domain A {

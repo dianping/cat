@@ -9,6 +9,7 @@ import org.junit.runners.JUnit4;
 
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
@@ -58,7 +59,10 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		factory.initialize("source");
 
 		for (int i = 0; i < num; i++) {
-			manager.storeMessage(newMessageTree(factory.getNextId(), i, now + i * 10L));
+			DefaultMessageTree tree = newMessageTree(factory.getNextId(), i, now + i * 10L);
+			MessageId id = MessageId.parse(tree.getMessageId());
+
+			manager.storeMessage(tree, id);
 		}
 
 		Thread.yield();

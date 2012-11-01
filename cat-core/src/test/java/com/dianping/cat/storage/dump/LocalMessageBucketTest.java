@@ -41,8 +41,10 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		int count = 2000;
 
 		for (int i = 0; i < count; i++) {
+			MessageId id = MessageId.parse(tree.getMessageId());
+	
 			tree.setMessageId(factory.getNextId());
-			bucket.store(tree);
+			bucket.store(tree,id);
 		}
 
 		for (int i = 0; i < count; i++) {
@@ -71,8 +73,10 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 		int count = 2000;
 
 		for (int i = 0; i < count; i++) {
+			MessageId id = MessageId.parse(tree.getMessageId());
+			
 			tree.setMessageId(factory.getNextId());
-			buckets[i % buckets.length].store(tree);
+			buckets[i % buckets.length].store(tree,id);
 		}
 
 		for (int i = 0; i < count; i++) {
