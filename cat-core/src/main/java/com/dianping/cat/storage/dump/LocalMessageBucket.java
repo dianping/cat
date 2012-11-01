@@ -110,9 +110,10 @@ public class LocalMessageBucket implements MessageBucket {
 	}
 
 	protected synchronized MessageBlock flushBlock() throws IOException {
-		if (m_dirty.get()) {
-			m_out.close();
+		boolean b = m_dirty.get();
 
+		if (b) {
+			m_out.close();
 			byte[] data = m_buf.toByteArray();
 
 			try {
@@ -127,7 +128,6 @@ public class LocalMessageBucket implements MessageBucket {
 				m_block = new MessageBlock(m_dataFile);
 			}
 		}
-
 		return null;
 	}
 
@@ -166,7 +166,7 @@ public class LocalMessageBucket implements MessageBucket {
 	}
 
 	@Override
-	public MessageBlock store(final MessageTree tree, final MessageId id) throws IOException {
+	public synchronized MessageBlock store(final MessageTree tree, final MessageId id) throws IOException {
 		final ChannelBuffer buf = m_bufferManager.allocate();
 
 		m_lastAccessTime = System.currentTimeMillis();
@@ -185,4 +185,5 @@ public class LocalMessageBucket implements MessageBucket {
 			return null;
 		}
 	}
+
 }

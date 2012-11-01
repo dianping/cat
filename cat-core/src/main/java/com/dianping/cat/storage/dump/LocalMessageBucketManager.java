@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -34,7 +36,8 @@ import com.site.helper.Threads.Task;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 
-public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
+public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
+      LogEnabled {
 	public static final String ID = "local";
 
 	private static final long ONE_HOUR = 60 * 60 * 1000L;
@@ -46,12 +49,20 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Inject
 	private ServerConfigManager m_configManager;
 
+	private BlockingQueue<EncodeItem> m_encodeItems = new LinkedBlockingQueue<EncodeItem>(10000);
+
+	private int m_error;
+
+	private int m_offered;
+
+	private AtomicInteger m_encodeNumbers = new AtomicInteger(0);
+
+	private Logger m_logger;
+
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(1000);
 
 	@Inject
 	private MessagePathBuilder m_pathBuilder;
-
-	private ExecutorService m_pool = Threads.forPool().getFixedThreadPool("Cat-Encoder", 3);
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -120,6 +131,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		if (m_baseDir == null) {
 			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir("dump"));
@@ -128,6 +144,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("Cat").start(new BlockDumper());
 		Threads.forGroup("Cat").start(new IdleChecker());
 		Threads.forGroup("Cat").start(new OldMessageMover());
+
+		Threads.forGroup("Cat").start(new MessageEncode(1));
+		Threads.forGroup("Cat").start(new MessageEncode(2));
+		Threads.forGroup("Cat").start(new MessageEncode(3));
 	}
 
 	private boolean isFit(String path) {
@@ -294,22 +314,22 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_buckets.put(dataFile, bucket);
 		}
 
-		final LocalMessageBucket b = bucket;
+		EncodeItem item = new EncodeItem(tree, id, bucket);
+		boolean result = m_encodeItems.offer(item);
 
-		m_pool.submit(new Runnable() {
-			@Override
-			public void run() {
-				try {
-					MessageBlock block = b.store(tree, id);
-
-					if (block != null) {
-						m_messageBlocks.offer(block);
-					}
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
+		if (result == false) {
+			m_error++;
+			if (m_error == 1 || m_error % 1000 == 0) {
+				m_logger.error("Encode message tree overflow. Overflow Number :" + m_error + " Offered Number:" + m_offered
+				      + " Encoded Number:" + m_encodeNumbers.get());
+				m_logger.error(tree.getMessageId());
 			}
-		});
+		} else {
+			m_offered++;
+			if (m_offered % 100000 == 0) {
+				m_logger.info("Encode message number " + m_offered + " Encoded Number:" + m_encodeNumbers.get());
+			}
+		}
 	}
 
 	class BlockDumper implements Task {
@@ -352,6 +372,34 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
+	class EncodeItem {
+		private LocalMessageBucket m_bucket;
+
+		private MessageId m_id;
+
+		private MessageTree m_tree;
+
+		public EncodeItem(MessageTree tree, MessageId id, LocalMessageBucket bucket) {
+			m_tree = tree;
+			m_id = id;
+			m_bucket = bucket;
+
+		}
+
+		public LocalMessageBucket getBucket() {
+			return m_bucket;
+		}
+
+		public MessageId getId() {
+			return m_id;
+		}
+
+		public MessageTree getTree() {
+			return m_tree;
+		}
+
+	}
+
 	class IdleChecker implements Task {
 		@Override
 		public String getName() {
@@ -378,6 +426,64 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void shutdown() {
 		}
+	}
+
+	class MessageEncode implements Task {
+
+		private int m_index;
+
+		private int m_encodeErrors;
+
+		public MessageEncode(int index) {
+			m_index = index;
+		}
+
+		@Override
+		public String getName() {
+			return "MessageEncoder-" + m_index;
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				try {
+					EncodeItem item = m_encodeItems.poll(5, TimeUnit.MILLISECONDS);
+
+					if (item != null) {
+						MessageTree tree = item.getTree();
+						LocalMessageBucket bucket = item.getBucket();
+						MessageId id = item.getId();
+
+						try {
+							MessageBlock bolck = bucket.store(tree, id);
+
+							if (bolck != null) {
+								boolean result = m_messageBlocks.offer(bolck);
+
+								if (!result) {
+									m_logger.error("Error where offer message bolck overflow!");
+								}
+							}
+							m_encodeNumbers.incrementAndGet();
+						} catch (Exception e) {
+							m_encodeErrors++;
+							if (m_encodeErrors == 1 || m_encodeErrors % 1000 == 0) {
+								m_logger.error("Error when writing the bucket!", e);
+							}
+						}
+					}
+				} catch (Exception e) {
+					m_logger.error("Error when writing the bucket runtime exception!", e);
+				}
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+
 	}
 
 	class OldMessageMover implements Task {

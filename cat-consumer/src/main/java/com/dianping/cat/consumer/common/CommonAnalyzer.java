@@ -171,14 +171,15 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 	}
 
 	private void setProjectInfo(Project project, String temp) {
+		
 		String account = " magicMirror AccountMQ      AccountServer      AccountWeb   MessageAdminWeb      MessageMQ      MessageServer      MessageWeb DecoratorServer FeedMQ      FeedServer  SmsServer      SocialFeedMQ      SocialFeedServer      SocialRelationshipServer  ";
-		String guanggao = "AdwordsWeb PromoWeb OpenWeb ";
-		String group = "AuditbackService      AuditbackWeb      AutoauditMQ  GroupService      GroupWeb  ReviewServer BadgeMQ      BaseDataServer  UserBaseService      UserService      UserWeb";
-		String shop = "DPIndexWeb KeywordService      KeywordWeb  PiccenterDisplay      PiccenterService      PiccenterUpload      PiccenterWeb  ShopAccountAdminWeb      ShopAccountServer      ShopAccountWeb      ShopBusinessWeb      ShopSearchWeb      ShopServer      ShopWeb      ShoppicService      ShoppicWeb";
+		String guanggao = "AdwordsWeb PromoWeb OpenWeb KeywordService KeywordWeb";
+		String group = "AuditbackService    BaseDataServer  AuditbackWeb      AutoauditMQ  GroupService      GroupWeb  ReviewServer BadgeMQ      BaseDataServer  UserBaseService      UserService      UserWeb";
+		String shop = "DPIndexWeb KeywordService  ShopAccountAdminWeb      PiccenterDisplay      PiccenterService      PiccenterUpload      PiccenterWeb  ShopAccountAdminWeb      ShopAccountServer      ShopAccountWeb      ShopBusinessWeb      ShopSearchWeb      ShopServer      ShopWeb      ShoppicService      ShoppicWeb";
 
-		String tuangouWeb = "BCTuangouWeb  TuanGouApi            TuanGouRemote            TuanGouWeb tuangou-paygate";
+		String tuangouWeb = "BCTuangouWeb  TuanGouApi     TuanGouApi       TuanGouRemote            TuanGouWeb tuangou-paygate";
 		String tuangouMobile = "TuanGouApiMobile TuanGouWap";
-		String zhifu = "   PayChannel      PayEngine      PayOrder Unipay ";
+		String zhifu = "   PayChannel      PayEngine   tuangou-paygate   PayOrder Unipay ";
 
 		String mobile = "      MConfigAPI      MLocationService      MYellowPageAPI      MapService MobileApi";
 		String mobileBooking = "MBookingCallcenter      MBookingService      MBookingWeb";
@@ -243,9 +244,7 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 
 		public static final String ACCOUT = "账户、消息";
 
-		public static final String USER = "用户、社交";
-
-		public static final String GROUP = "社区、用户";
+		public static final String GROUP = "社区、审核";
 
 		public static final String SHOP = "商户、图片";
 
