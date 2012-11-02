@@ -144,10 +144,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DomainNavManager.class).req(ProjectDao.class));
 
-		// TODO
-		// all.add(C(OtherJobReport.class).//
-		// req(DailyreportDao.class, DomainManager.class));
-
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
 		      .req(DailyreportDao.class));
 

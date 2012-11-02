@@ -1,10 +1,15 @@
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.analyzer;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -23,16 +28,33 @@ import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.health.HealthReportMerger;
-import com.site.helper.Threads.Task;
+import com.site.lookup.ComponentTestCase;
 import com.site.lookup.annotation.Inject;
 
-public class OtherJobReport implements Task {
+@RunWith(JUnit4.class)
+public class TuanGouMonthAnalyzer extends ComponentTestCase {
 
 	@Inject
 	private DailyreportDao m_dailyreportDao;
 
 	@Inject
 	private DomainManager m_domainManager;
+
+	@Before
+	public void setUp() throws Exception {
+		super.setUp();
+		m_dailyreportDao = lookup(DailyreportDao.class);
+		m_domainManager = lookup(DomainManager.class);
+	}
+
+	@Test
+	public void test() {
+		try {
+			buildData();
+		} catch (Exception e) {
+			System.out.println("BuildError" + e);
+		}
+	}
 
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
@@ -138,11 +160,6 @@ public class OtherJobReport implements Task {
 		return indicator;
 	}
 
-	@Override
-	public String getName() {
-		return "TuanGouRemote";
-	}
-
 	private Indicator getOtherDomainCrossInfo(String otherDomain, CrossReport report) {
 		ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
 		projectInfo.setDomainManager(m_domainManager);
@@ -156,7 +173,7 @@ public class OtherJobReport implements Task {
 			if (info.getProjectName().equals(otherDomain)) {
 				indicator.setAvg(info.getAvg());
 				indicator.setTotalCount(info.getTotalCount());
-				indicator.setFailureCount(info.getTotalCount());
+				indicator.setFailureCount(info.getFailureCount());
 				break;
 			}
 		}
@@ -289,13 +306,13 @@ public class OtherJobReport implements Task {
 		return transactionReport;
 	}
 
-	@Override
-	public void run() {
-		Date lastMonth = calMonthFirstDay(-2);
-		Date nextMonth = calMonthFirstDay(1);
+	public void buildData() throws Exception {
+		Date lastMonth = calMonthFirstDay(-1);
+		Date nextMonth = calMonthFirstDay(0);
 		List<String> otherDomains = new ArrayList<String>();
 		List<String> urls = new ArrayList<String>();
 		String domain = "TuanGouRemote";
+
 		otherDomains.add("MobileApi");
 		otherDomains.add("TuanGouWeb");
 		otherDomains.add("TuanGouApiMobile");
@@ -317,6 +334,7 @@ public class OtherJobReport implements Task {
 		domain = "TuanGouWeb";
 		urls.add("/index");
 		urls.add("/detail");
+		urls.add("/ajax/getaids");
 		buildUrlTotalInfo(domain, lastMonth, nextMonth);
 		buildUrlDetailsInfo(domain, lastMonth, nextMonth, urls);
 
@@ -326,11 +344,7 @@ public class OtherJobReport implements Task {
 		buildUrlTotalInfo(domain, lastMonth, nextMonth);
 		domain = "TuanGouApiMobile";
 		buildUrlTotalInfo(domain, lastMonth, nextMonth);
-
-	}
-
-	@Override
-	public void shutdown() {
+		
 	}
 
 	public static class Indicator {

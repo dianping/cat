@@ -952,16 +952,6 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>hostinfo</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>hostinfo</logical-table-name>
-				<physical-table-name></physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
 			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
 			<requirements>
@@ -1000,15 +990,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.LocationDao</role>
 			<implementation>com.dianping.cat.home.dal.report.LocationDao</implementation>
-			<requirements>
-				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.HostinfoDao</role>
-			<implementation>com.dianping.cat.home.dal.report.HostinfoDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
