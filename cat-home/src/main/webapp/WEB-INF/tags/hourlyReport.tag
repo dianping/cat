@@ -11,6 +11,7 @@
 <a:body>
 
 <res:useCss value='${res.css.local.report_css}' target="head-css" />
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 
 <div class="report">
 	<table class="header">
@@ -26,26 +27,23 @@
 			</td>
 		</tr>
 	</table>
-
-	<%-- <table class="navbar">
-		<tr>
-			<td class="domain">
-				<div class="domain">
-					<c:forEach var="domain" items="${model.domains}">
-						&nbsp;<c:choose>
-							<c:when test="${model.domain eq domain}">
-								<a href="${model.baseUri}?domain=${domain}&date=${model.date}" class="current">[&nbsp;${domain}&nbsp;]</a>
-							</c:when>
-							<c:otherwise>
-								<a href="${model.baseUri}?domain=${domain}&date=${model.date}">[&nbsp;${domain}&nbsp;]</a>
-							</c:otherwise>
-						</c:choose>&nbsp;
-					</c:forEach>
-				</div>
-			</td>
-		</tr>
-	</table> --%>
-	<div class="navbar">
+	<div class="position">	Current Domain:&nbsp;&nbsp;${model.department} &nbsp;&nbsp;>&nbsp;&nbsp;${model.projectLine} &nbsp;&nbsp;
+	>&nbsp;&nbsp;${model.domain}&nbsp;&nbsp;
+	&nbsp;&nbsp;[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">ShowDomain</a>&nbsp;&nbsp;]&nbsp;&nbsp;
+			<script>
+				function showDomain() {
+					var b = $('#switch').html();
+					if (b == 'ShowDomain') {
+						$('.navbar').slideDown();
+						$('#switch').html("HiddenDomain");
+					} else {
+						$('.navbar').slideUp();
+						$('#switch').html("ShowDomain");
+					}
+				}
+			</script>
+	</div> 
+	<div class="navbar" style="display:none">
 			<table border="1" rules="all">
 				<c:forEach var="item" items="${model.domainGroups}">
 					<tr>

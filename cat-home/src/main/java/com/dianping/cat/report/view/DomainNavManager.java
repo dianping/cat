@@ -27,6 +27,10 @@ public class DomainNavManager implements Initializable {
 
 	private static Map<String, Project> m_projects = new HashMap<String, Project>();
 
+	public static Project getProjectByName(String domain) {
+		return m_projects.get(domain);
+	}
+
 	public static Map<String, Department> getDepartment(Collection<String> domains) {
 		Map<String, Department> result = new TreeMap<String, Department>();
 

@@ -69,42 +69,40 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 		Set<String> domains = queryAllDomain(start, end);
 
 		for (int i = 0; i < 31; i++) {
-			long t = start.getTime() + i * TimeUtil.ONE_DAY;
-			Date date = new Date(t);
-			System.out.println("Process " + date);
-			for (String domain : domains) {
-				try {
-					Dailyreport report = m_dailyreportDao.findByNameDomainPeriod(date, domain, "transaction",
-					      DailyreportEntity.READSET_FULL);
-
-					TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());
-					Machine machine = transactionReport.findOrCreateMachine(CatString.ALL_IP);
-
-					Indicator indicator = indicators.get(date.getTime());
-					if (indicator == null) {
-						indicator = new Indicator();
-						indicators.put(t, indicator);
-					}
-					indicator.accept(machine);
-				} catch (DalNotFoundException e) {
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			Date date = new Date(start.getTime() + i * TimeUtil.ONE_DAY);
+			System.out.println("process day " + date);
+			processOneDay(date, domains);
 		}
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		for (Entry<Long, Indicator> entry : indicators.entrySet()) {
 			Date time = new Date(entry.getKey());
 			Indicator indicator = entry.getValue();
-			
+
 			System.out.println(sdf.format(time) + "\t" + indicator);
 		}
+	}
 
-		String timestamp = new SimpleDateFormat("MM-dd HH:mm:ss.SSS").format(new Date());
+	private void processOneDay(Date date, Set<String> domains) {
+		for (String domain : domains) {
+			try {
+				Dailyreport report = m_dailyreportDao.findByNameDomainPeriod(date, domain, "transaction",
+				      DailyreportEntity.READSET_FULL);
 
-		System.out.println(String.format("[%s] [INFO] Press any key to stop  ... ", timestamp));
-		System.in.read();
+				TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());
+				Machine machine = transactionReport.findOrCreateMachine(CatString.ALL_IP);
+
+				Indicator indicator = indicators.get(date.getTime());
+				if (indicator == null) {
+					indicator = new Indicator();
+					indicators.put(date.getTime(), indicator);
+				}
+				indicator.accept(machine, transactionReport);
+			} catch (DalNotFoundException e) {
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public static class Indicator {
@@ -122,7 +120,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 
 		private Item m_webCache = new Item();
 
-		public void accept(Machine machine) {
+		public void accept(Machine machine, TransactionReport report) {
 			Collection<TransactionType> types = machine.getTypes().values();
 			for (TransactionType type : types) {
 				String name = type.getId();
@@ -130,8 +128,17 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 				long error = type.getFailCount();
 				double sum = type.getSum();
 				if (name.equalsIgnoreCase("url")) {
-					m_url.add(count, error, sum);
+					m_url.add(count, error, sum);double avg = type.getAvg();
+					if (avg > 90) {
+						System.out.println(report.getDomain());
+						System.out.println(count + " " + avg);
+					}
 				} else if (name.equalsIgnoreCase("service") || name.equalsIgnoreCase("pigeonService")) {
+					double avg = type.getAvg();
+					if (avg > 10) {
+						System.out.println(report.getDomain());
+						System.out.println(count + " " + avg);
+					}
 					m_service.add(count, error, sum);
 				} else if (name.equalsIgnoreCase("call") || name.equalsIgnoreCase("pigeonCall")) {
 					m_call.add(count, error, sum);
@@ -141,9 +148,12 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 					m_kvdbCache.add(count, error, sum);
 				} else if (name.startsWith("Cache.memcached")) {
 					m_memCache.add(count, error, sum);
+					if (error > 1000) {
+						System.out.println(report.getDomain());
+						System.out.println(machine.getIp());
+					}
 				} else if (name.equalsIgnoreCase("Cache.web")) {
 					m_webCache.add(count, error, sum);
-				} else {
 				}
 			}
 		}

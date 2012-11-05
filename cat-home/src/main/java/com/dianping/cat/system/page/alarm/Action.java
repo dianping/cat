@@ -3,8 +3,6 @@ package com.dianping.cat.system.page.alarm;
 public enum Action implements com.site.web.mvc.Action {
 	ALARM_RECORD_DETAIL("alarmRecordDetail"),
 	
-	REPORT_RECORD_LIST("reportRecordList"),
-
 	ALARM_RECORD_LIST("alarmRecordList"),
 
 	ALARM_RULE_ADD("alarmRuleAdd"),
@@ -33,25 +31,27 @@ public enum Action implements com.site.web.mvc.Action {
 
 	EXCEPTION_ALARM_RULE_SUB("exceptionAlarmRuleSub"),
 
-	SERVICE_ALARM_RULE_DELETE("serviceAlarmRuleDelete"),
-
-	SERVICE_ALARM_RULE_LIST("serviceAlarmRules"),
-
-	SERVICE_ALARM_RULE_SUB("serviceAlarmRuleSub"),
-
-	SCHEDULED_REPORT_LIST("scheduledReports"),
+	REPORT_RECORD_LIST("reportRecordList"),
 
 	SCHEDULED_REPORT_ADD("scheduledReportAdd"),
 
 	SCHEDULED_REPORT_ADD_SUBMIT("scheduledReportAddSubmit"),
 
+	SCHEDULED_REPORT_DELETE("scheduledReportDelete"),
+
+	SCHEDULED_REPORT_LIST("scheduledReports"),
+
+	SCHEDULED_REPORT_SUB("scheduledReportSub"),
+
 	SCHEDULED_REPORT_UPDATE("scheduledReportUpdate"),
 
 	SCHEDULED_REPORT_UPDATE_SUBMIT("scheduledReportUpdateSubmit"),
 
-	SCHEDULED_REPORT_DELETE("scheduledReportDelete"),
+	SERVICE_ALARM_RULE_DELETE("serviceAlarmRuleDelete"),
 
-	SCHEDULED_REPORT_SUB("scheduledReportSub")
+	SERVICE_ALARM_RULE_LIST("serviceAlarmRules"),
+
+	SERVICE_ALARM_RULE_SUB("serviceAlarmRuleSub")
 
 	;
 

@@ -9,7 +9,9 @@ import com.site.web.mvc.annotation.ModulePagesMeta;
 
 com.dianping.cat.system.page.alarm.Handler.class,
 
-com.dianping.cat.system.page.login.Handler.class
+com.dianping.cat.system.page.login.Handler.class,
+
+com.dianping.cat.system.page.project.Handler.class
 })
 public class SystemModule extends AbstractModule {
 

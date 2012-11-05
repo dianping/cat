@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
+import com.dainping.cat.consumer.dal.report.Project;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.report.view.HistoryNav;
@@ -89,6 +90,30 @@ public abstract class AbstractReportModel<A extends Action, M extends ActionCont
 	// required by report tag
 	public abstract Collection<String> getDomains();
 
+	public String getDepartment() {
+		String domain = getDomain();
+		
+		if (domain != null) {
+			Project project = DomainNavManager.getProjectByName(domain);
+			if (project != null) {
+				return project.getDepartment();
+			}
+		}
+		return "Default";
+	}
+
+	public String getProjectLine() {
+		String domain = getDomain();
+		
+		if (domain != null) {
+			Project project = DomainNavManager.getProjectByName(domain);
+			if (project != null) {
+				return project.getProjectLine();
+			}
+		}
+		return "Default";
+	}
+	
 	public Map<String, Department> getDomainGroups() {
 		return DomainNavManager.getDepartment(getDomains());
 	}

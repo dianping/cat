@@ -103,7 +103,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID) //
 		      .req(ChannelBufferManager.class));
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
-		      .req(ServerConfigManager.class, MessagePathBuilder.class));
+		      .req(ServerConfigManager.class, MessagePathBuilder.class)//
+		      .req(MessageCodec.class, ChannelBufferManager.class));
 		all.add(C(ChannelBufferManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));

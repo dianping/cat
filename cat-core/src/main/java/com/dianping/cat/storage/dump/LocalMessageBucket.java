@@ -109,25 +109,28 @@ public class LocalMessageBucket implements MessageBucket {
 		}
 	}
 
-	protected synchronized MessageBlock flushBlock() throws IOException {
+	protected MessageBlock flushBlock() throws IOException {
 		boolean b = m_dirty.get();
 
 		if (b) {
-			m_out.close();
-			byte[] data = m_buf.toByteArray();
+			synchronized (m_out) {
+				m_out.close();
+				byte[] data = m_buf.toByteArray();
 
-			try {
-				m_block.setData(data);
-				m_blockSize = 0;
-				m_buf.reset();
-				m_out = new GZIPOutputStream(m_buf);
-				m_dirty.set(false);
+				try {
+					m_block.setData(data);
+					m_blockSize = 0;
+					m_buf.reset();
+					m_out = new GZIPOutputStream(m_buf);
+					m_dirty.set(false);
 
-				return m_block;
-			} finally {
-				m_block = new MessageBlock(m_dataFile);
+					return m_block;
+				} finally {
+					m_block = new MessageBlock(m_dataFile);
+				}
 			}
 		}
+
 		return null;
 	}
 
@@ -166,15 +169,19 @@ public class LocalMessageBucket implements MessageBucket {
 	}
 
 	@Override
-	public synchronized MessageBlock store(final MessageTree tree, final MessageId id) throws IOException {
+	public MessageBlock store(final MessageTree tree, final MessageId id) throws IOException {
 		final ChannelBuffer buf = m_bufferManager.allocate();
-
-		m_lastAccessTime = System.currentTimeMillis();
+	
 		m_codec.encode(tree, buf);
 
+		return storeMessage(buf, id);
+	}
+
+	synchronized MessageBlock storeMessage(final ChannelBuffer buf, final MessageId id) throws IOException {
 		int size = buf.readableBytes();
 
 		m_dirty.set(true);
+		m_lastAccessTime = System.currentTimeMillis();
 		m_blockSize += size;
 		m_block.addIndex(id.getIndex(), size);
 		buf.getBytes(0, m_out, size); // write buffer and compress it

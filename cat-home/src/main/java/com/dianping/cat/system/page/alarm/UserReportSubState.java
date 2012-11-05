@@ -18,12 +18,12 @@ public class UserReportSubState {
 		return m_scheduledReport;
 	}
 
-	public void setScheduledReport(ScheduledReport scheduledReport) {
-		m_scheduledReport = scheduledReport;
-	}
-
 	public int getSubscriberState() {
 		return m_subscriberState;
+	}
+
+	public void setScheduledReport(ScheduledReport scheduledReport) {
+		m_scheduledReport = scheduledReport;
 	}
 
 	public void setSubscriberState(int subscriberState) {

@@ -1,5 +1,5 @@
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" webres="true">
+   <webapp package="com.dianping.cat" webres="true" plugin-management="true">
       <module name="report" path="r">
          <page name="home" title="Home" default="true">
             <description>Home Page</description>
@@ -62,6 +62,9 @@
          </page>
          <page name="login" title="Login" default="true" path="login" standalone="false">
             <description>Login</description>
+         </page>
+         <page name="project" title="Project" path="project">
+            <description>Project</description>
          </page>
       </module>
    </webapp>

@@ -15,9 +15,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("alarmRuleId")
 	private int m_alarmRuleId;
 
-	@FieldMeta("scheduledReportId")
-	private int m_scheduledReportId;
-	
 	@FieldMeta("alarmTemplateId")
 	private int m_alarmTemplateId;
 	
@@ -28,6 +25,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	private String m_domain;
 	
 	private SystemPage m_page;
+	
+	@FieldMeta("scheduledReportId")
+	private int m_scheduledReportId;
 
 	@FieldMeta("templateName")
 	private String m_templateName;
@@ -72,6 +72,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return "";
 	}
 
+	public int getScheduledReportId() {
+		return m_scheduledReportId;
+	}
+
 	public String getTemplateName() {
 		return m_templateName;
 	}
@@ -99,11 +103,11 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setAlarmTemplateId(int alarmTemplateId) {
 		m_alarmTemplateId = alarmTemplateId;
 	}
-
+	
 	public void setContent(String content) {
 		m_content = content;
 	}
-	
+
 	public void setDomain(String domain) {
 		m_domain = domain;
 	}
@@ -113,24 +117,20 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_page = SystemPage.getByName(page, SystemPage.ALARM);
 	}
 
+	public void setScheduledReportId(int scheduledReportId) {
+		m_scheduledReportId = scheduledReportId;
+	}
+
 	public void setTemplateName(String templateName) {
 		m_templateName = templateName;
 	}
-
+	
 	public void setType(String type) {
 		m_type = type;
 	}
 
 	public void setUserSubState(int userSubState) {
 		m_userSubState = userSubState;
-	}
-	
-	public int getScheduledReportId() {
-		return m_scheduledReportId;
-	}
-
-	public void setScheduledReportId(int scheduledReportId) {
-		m_scheduledReportId = scheduledReportId;
 	}
 
 	@Override

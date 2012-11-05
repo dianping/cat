@@ -20,17 +20,17 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<MailRecord> m_mailRecords;
 
-	private ScheduledReport m_scheduledReport;
+	private String m_opState;
 
 	private List<ScheduledReport> m_schduledReports;
 
-	private String m_opState;
+	private ScheduledReport m_scheduledReport;
 
 	private int m_templateIndex;
 
-	private List<UserAlarmSubState> m_userSubStates;
-
 	private List<UserReportSubState> m_userReportSubStates;
+
+	private List<UserAlarmSubState> m_userSubStates;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -73,8 +73,20 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_opState;
 	}
 
+	public List<ScheduledReport> getSchduledReports() {
+		return m_schduledReports;
+	}
+
+	public ScheduledReport getScheduledReport() {
+		return m_scheduledReport;
+	}
+
 	public int getTemplateIndex() {
 		return m_templateIndex;
+	}
+
+	public List<UserReportSubState> getUserReportSubStates() {
+		return m_userReportSubStates;
 	}
 
 	public List<UserAlarmSubState> getUserSubStates() {
@@ -105,28 +117,16 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_opState = opState;
 	}
 
-	public void setTemplateIndex(int templateIndex) {
-		m_templateIndex = templateIndex;
-	}
-
-	public ScheduledReport getScheduledReport() {
-		return m_scheduledReport;
+	public void setSchduledReports(List<ScheduledReport> schduledReports) {
+		m_schduledReports = schduledReports;
 	}
 
 	public void setScheduledReport(ScheduledReport scheduledReport) {
 		m_scheduledReport = scheduledReport;
 	}
 
-	public List<ScheduledReport> getSchduledReports() {
-		return m_schduledReports;
-	}
-
-	public void setSchduledReports(List<ScheduledReport> schduledReports) {
-		m_schduledReports = schduledReports;
-	}
-
-	public List<UserReportSubState> getUserReportSubStates() {
-		return m_userReportSubStates;
+	public void setTemplateIndex(int templateIndex) {
+		m_templateIndex = templateIndex;
 	}
 
 	public void setUserReportSubStates(List<UserReportSubState> userReportSubStates) {

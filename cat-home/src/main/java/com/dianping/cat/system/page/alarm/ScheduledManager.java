@@ -22,19 +22,13 @@ import com.site.lookup.annotation.Inject;
 public class ScheduledManager {
 
 	@Inject
+	private DpAdminLoginDao m_loginDao;
+
+	@Inject
 	private ScheduledReportDao m_scheduledReportDao;
 
 	@Inject
 	private ScheduledReportSubscriptionDao m_scheduledReportSubscriptionDao;
-
-	@Inject
-	private DpAdminLoginDao m_loginDao;
-
-	public List<ScheduledReport> queryScheduledReports() throws DalException {
-		List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
-
-		return reports;
-	}
 
 	public List<String> queryEmailsBySchReportId(int scheduledReportId) throws DalException {
 		List<String> emails = new ArrayList<String>();
@@ -49,6 +43,12 @@ public class ScheduledManager {
 			}
 		}
 		return emails;
+	}
+
+	public List<ScheduledReport> queryScheduledReports() throws DalException {
+		List<ScheduledReport> reports = m_scheduledReportDao.findAll(ScheduledReportEntity.READSET_FULL);
+
+		return reports;
 	}
 
 	public void queryScheduledReports(Model model, int userId) {

@@ -31,25 +31,25 @@ public enum JspFile {
 	
 	EXCEPTION_ALARM_RULE_SUB("/jsp/system/alarmExceptionRules.jsp"),
 
-	SERVICE_ALARM_RULE_DELETE("/jsp/system/alarmServiceRules.jsp"),
-
-	SERVICE_ALARM_RULE_LIST("/jsp/system/alarmServiceRules.jsp"),
-
-	SERVICE_ALARM_RULE_SUB("/jsp/system/alarmServiceRules.jsp"),
-	
-	SCHEDULED_REPORT_LIST("/jsp/system/scheduledReports.jsp"),
-
 	SCHEDULED_REPORT_ADD("/jsp/system/scheduledReportAdd.jsp"),
 
 	SCHEDULED_REPORT_ADD_SUBMIT("/jsp/system/alarmOpState.jsp"),
+
+	SCHEDULED_REPORT_DELETE("/jsp/system/scheduledReports.jsp"),
+	
+	SCHEDULED_REPORT_LIST("/jsp/system/scheduledReports.jsp"),
+
+	SCHEDULED_REPORT_SUB("/jsp/system/scheduledReports.jsp"),
 
 	SCHEDULED_REPORT_UPDATE("/jsp/system/scheduledReportUpdate.jsp"),
 
 	SCHEDULED_REPORT_UPDATE_SUBMIT("/jsp/system/alarmOpState.jsp"),
 
-	SCHEDULED_REPORT_DELETE("/jsp/system/scheduledReports.jsp"),
+	SERVICE_ALARM_RULE_DELETE("/jsp/system/alarmServiceRules.jsp"),
 
-	SCHEDULED_REPORT_SUB("/jsp/system/scheduledReports.jsp")
+	SERVICE_ALARM_RULE_LIST("/jsp/system/alarmServiceRules.jsp"),
+
+	SERVICE_ALARM_RULE_SUB("/jsp/system/alarmServiceRules.jsp")
 
 	;
 

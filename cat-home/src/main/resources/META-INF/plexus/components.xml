@@ -2306,10 +2306,10 @@
 					<role>com.dianping.cat.system.page.alarm.RuleManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.alarm.TemplateManager</role>
+					<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
+					<role>com.dianping.cat.system.page.alarm.TemplateManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2325,10 +2325,10 @@
 					<role>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
+					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
+					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2342,8 +2342,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
+			<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
+			<implementation>com.dianping.cat.home.dal.alarm.MailRecordDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -2351,8 +2351,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.alarm.MailRecordDao</role>
-			<implementation>com.dianping.cat.home.dal.alarm.MailRecordDao</implementation>
+			<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
+			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
@@ -2405,26 +2405,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.alarm.TemplateManager</role>
-			<implementation>com.dianping.cat.system.page.alarm.TemplateManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.system.page.alarm.ScheduledManager</role>
 			<implementation>com.dianping.cat.system.page.alarm.ScheduledManager</implementation>
 			<requirements>
+				<requirement>
+					<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
+				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2434,6 +2425,15 @@
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.alarm.TemplateManager</role>
+			<implementation>com.dianping.cat.system.page.alarm.TemplateManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2491,6 +2491,31 @@
 			<requirements>
 				<requirement>
 					<role>com.dainping.cat.home.dal.user.DpAdminLoginDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.project.Handler</role>
+			<implementation>com.dianping.cat.system.page.project.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.project.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.project.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.project.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.ProjectDao</implementation>
+			<requirements>
+				<requirement>
+					<role>com.site.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

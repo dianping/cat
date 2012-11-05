@@ -256,7 +256,7 @@ public class CommonAnalyzer extends AbstractMessageAnalyzer<CommonReport> implem
 
 		public static final String TUANGOUZHIFU = "支付中心";
 
-		public static final String MIDDLDWARE = "基础组建";
+		public static final String MIDDLDWARE = "基础组件";
 
 		public static final String MOBILEWEB = "手机后台";
 

@@ -48,6 +48,8 @@ public class NavigationBar {
 				
 		SystemPage.ALARM, 
 		
+		SystemPage.PROJECT, 
+		
 		SystemPage.LOGIN 
 		
 		};

@@ -18,6 +18,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -26,6 +27,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.site.helper.Files;
@@ -48,6 +50,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Inject
 	private ServerConfigManager m_configManager;
+
+	@Inject
+	private MessageCodec m_codec;
+
+	@Inject
+	private ChannelBufferManager m_bufferManager;
 
 	private BlockingQueue<EncodeItem> m_encodeItems = new LinkedBlockingQueue<EncodeItem>(10000);
 
@@ -148,6 +156,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("Cat").start(new MessageEncode(1));
 		Threads.forGroup("Cat").start(new MessageEncode(2));
 		Threads.forGroup("Cat").start(new MessageEncode(3));
+		Threads.forGroup("Cat").start(new MessageEncode(4));
 	}
 
 	private boolean isFit(String path) {
@@ -457,7 +466,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						MessageId id = item.getId();
 
 						try {
-							MessageBlock bolck = bucket.store(tree, id);
+							final ChannelBuffer buf = m_bufferManager.allocate();
+							m_codec.encode(tree, buf);
+
+							MessageBlock bolck = bucket.storeMessage(buf, id);
 
 							if (bolck != null) {
 								boolean result = m_messageBlocks.offer(bolck);

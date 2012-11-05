@@ -216,6 +216,12 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageCodec</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.dump.ChannelBufferManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

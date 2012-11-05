@@ -28,10 +28,10 @@ public class Handler implements PageHandler<Context> {
 	private RuleManager m_ruleManager;
 
 	@Inject
-	private TemplateManager m_templateManager;
+	private ScheduledManager m_scheduledManager;
 
 	@Inject
-	private ScheduledManager m_scheduledManager;
+	private TemplateManager m_templateManager;
 
 	private int getLoginUserId(Context ctx) {
 		DpAdminLogin member = ctx.getSigninMember();

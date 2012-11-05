@@ -251,9 +251,10 @@ public class TestSendMessage {
 	public void sendMaxMessage() throws Exception {
 		long time = System.currentTimeMillis();
 		int i = 10;
-		while (i > 0) {
-			i = 10 * 1000000 - (int) (System.currentTimeMillis() - time);
 
+		while (i > 0) {
+			i++;
+			Transaction total = Cat.newTransaction("Cat", "Test");
 			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method" + i % 10);
 			t.setStatus(Message.SUCCESS);
 			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
@@ -300,6 +301,14 @@ public class TestSendMessage {
 			t9.setStatus(Message.SUCCESS);
 			t9.complete();
 			t.complete();
+
+			total.setStatus(Transaction.SUCCESS);
+			t.complete();
+
+			if (i % 10000 == 0) {
+				long duration = System.currentTimeMillis() - time;
+				System.out.println("[" + duration + "ms]" + "[total]" + i + "[每秒" + i / duration * 1000 + "]");
+			}
 		}
 		Thread.sleep(10 * 1000);
 	}
