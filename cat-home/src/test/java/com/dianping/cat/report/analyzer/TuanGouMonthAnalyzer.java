@@ -15,9 +15,11 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.health.model.transform.DefaultSaxParser;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
@@ -306,6 +308,36 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 		return transactionReport;
 	}
 
+	@Test
+	public void build() throws Exception{
+		String domain = "TuanGouApiMobile";
+		Date lastMonth = calMonthFirstDay(-2);
+		Date nextMonth = calMonthFirstDay(-1);
+		
+		nextMonth = new Date(nextMonth.getTime()-TimeUtil.ONE_DAY*5);
+		
+		TransactionReportMerger meger = new TransactionReportMerger(new TransactionReport(domain));
+		
+		for (long current = lastMonth.getTime(); current < nextMonth.getTime(); current += TimeUtil.ONE_DAY) {
+			Date startDate = new Date(current);
+			System.out.println(startDate);
+			Date endDate = new Date(current + TimeUtil.ONE_DAY);
+			TransactionReport transactionReport = queryTransactionReport(startDate, endDate, domain);
+			
+			transactionReport.accept(meger);
+		}
+
+		TransactionReport transactionReport = meger.getTransactionReport();
+		System.out.println(transactionReport);
+		
+		Machine machine = transactionReport.findMachine(CatString.ALL_IP);
+		TransactionType type = machine.getTypes().get("URL");
+		
+		for(TransactionName name :type.getNames().values()){
+			System.out.println(name.getId()+"\t"+name.getTotalCount()+"\t"+name.getFailCount()+"\t"+name.getAvg());
+		}
+	}
+	
 	public void buildData() throws Exception {
 		Date lastMonth = calMonthFirstDay(-1);
 		Date nextMonth = calMonthFirstDay(0);
@@ -313,7 +345,7 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 		List<String> urls = new ArrayList<String>();
 		String domain = "TuanGouRemote";
 
-		otherDomains.add("MobileApi");
+		otherDomains.add("TuanMobileApi");
 		otherDomains.add("TuanGouWeb");
 		otherDomains.add("TuanGouApiMobile");
 		otherDomains.add("ShopWeb");

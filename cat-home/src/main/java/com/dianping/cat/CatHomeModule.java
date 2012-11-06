@@ -70,9 +70,6 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(alarmCreatorTask);
 			Threads.forGroup("Cat").start(scheduledTask);
 		}
-
-		// OtherJobReport tuangouMonth = ctx.lookup(OtherJobReport.class);
-		// Threads.forGroup("Cat").start(tuangouMonth);
 	}
 
 	@Override
