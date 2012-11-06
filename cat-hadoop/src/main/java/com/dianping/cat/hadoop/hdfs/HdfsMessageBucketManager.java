@@ -14,6 +14,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -35,6 +36,9 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	@Inject
 	private MessagePathBuilder m_pathBuilder;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private Map<String, HdfsMessageBucket> m_buckets = new HashMap<String, HdfsMessageBucket>();
 
@@ -58,7 +62,9 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(new IdleChecker());
+		if (!m_serverConfigManager.isLocalMode()) {
+			Threads.forGroup("Cat").start(new IdleChecker());
+		}
 	}
 
 	@Override
@@ -131,7 +137,7 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	}
 
 	@Override
-	public void storeMessage(MessageTree tree,MessageId id) throws IOException {
+	public void storeMessage(MessageTree tree, MessageId id) throws IOException {
 		throw new UnsupportedOperationException("Not supported by HDFS!");
 	}
 

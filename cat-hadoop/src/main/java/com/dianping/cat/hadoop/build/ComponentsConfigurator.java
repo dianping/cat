@@ -45,7 +45,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(FileSystemManager.class) //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
 		all.add(C(MessageBucketManager.class, HdfsMessageBucketManager.ID, HdfsMessageBucketManager.class) //
-		      .req(FileSystemManager.class) //
+		      .req(FileSystemManager.class, ServerConfigManager.class) //
 		      .req(MessagePathBuilder.class));
 
 		return all;

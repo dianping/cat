@@ -91,8 +91,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			// ensure not output too much, and then run out of disk
 			if (now - m_lastTime > 1000L) {
 				m_lastTime = now;
-				m_logger.warn("The timestamp of message is out of range, IGNORED!"
-				      + sdf.format(new Date(tree.getMessage().getTimestamp())));
+				m_logger.warn("The timestamp of message is out of range, IGNORED! "
+				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain());
 			}
 		}
 	}
@@ -425,9 +425,10 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		public boolean enqueue(MessageTree tree) {
 			boolean result = m_queue.offer(tree);
+
 			if (!result) { // trace queue overflow
 				m_queueOverflow++;
-				if (m_queueOverflow % 1000 == 0) {
+				if (m_queueOverflow == 1 || m_queueOverflow % 1000 == 0) {
 					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
 				}
 			}

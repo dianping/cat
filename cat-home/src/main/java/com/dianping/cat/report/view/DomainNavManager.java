@@ -14,6 +14,7 @@ import com.dainping.cat.consumer.dal.report.Project;
 import com.dainping.cat.consumer.dal.report.ProjectDao;
 import com.dainping.cat.consumer.dal.report.ProjectEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.helper.TimeUtil;
 import com.site.dal.jdbc.DalException;
 import com.site.helper.Threads;
@@ -24,6 +25,9 @@ public class DomainNavManager implements Initializable {
 
 	@Inject
 	private ProjectDao m_projectDao;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	private static Map<String, Project> m_projects = new HashMap<String, Project>();
 
@@ -62,12 +66,14 @@ public class DomainNavManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		try {
-			DomainReload reload = new DomainReload();
+		if (!m_serverConfigManager.isLocalMode()) {
+			try {
+				DomainReload reload = new DomainReload();
 
-			Threads.forGroup("Cat").start(reload);
-		} catch (Exception e) {
-			Cat.logError(e);
+				Threads.forGroup("Cat").start(reload);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
 	}
 

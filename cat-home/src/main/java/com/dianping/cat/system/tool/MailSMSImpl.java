@@ -43,7 +43,7 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		if (m_serverConfig.isJobMachine()) {
+		if (m_serverConfig.isJobMachine() && !m_serverConfig.isLocalMode()) {
 			try {
 				ApplicationContext ctx = new ClassPathXmlApplicationContext("spring/remoteService.xml");
 

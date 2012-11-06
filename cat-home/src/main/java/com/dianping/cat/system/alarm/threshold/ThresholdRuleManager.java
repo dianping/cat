@@ -122,12 +122,11 @@ public class ThresholdRuleManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		initalizeExceptionRule();
-		initalizeServiceRule();
+		if (m_configManager.isJobMachine() && !m_configManager.isLocalMode()) {
+			initalizeExceptionRule();
+			initalizeServiceRule();
 
-		ReloadThresholdRuleTask task = new ReloadThresholdRuleTask();
-
-		if (m_configManager.isJobMachine()) {
+			ReloadThresholdRuleTask task = new ReloadThresholdRuleTask();
 			Threads.forGroup("Cat").start(task);
 		}
 	}
