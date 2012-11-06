@@ -12,6 +12,7 @@ import com.dainping.cat.consumer.dal.report.Project;
 import com.dainping.cat.consumer.dal.report.ProjectDao;
 import com.dainping.cat.consumer.dal.report.ProjectEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
@@ -26,6 +27,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ProjectDao m_projectDao;
+
+	@Inject
+	private DomainNavManager m_domainNavManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -59,7 +63,8 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void updateProject(Payload payload) {
+	@SuppressWarnings("static-access")
+   private void updateProject(Payload payload) {
 		int projectId = payload.getProjectId();
 		String department = payload.getDepartment();
 		String email = payload.getEmail();
@@ -78,6 +83,7 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			m_projectDao.updateByPK(project, ProjectEntity.UPDATESET_FULL);
+			m_domainNavManager.getProjects().put(project.getDomain(), project);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
@@ -121,7 +127,7 @@ public class Handler implements PageHandler<Context> {
 					return productLine1.compareTo(productLine2);
 				}
 			} else {
-				return department1.compareTo(productLine2);
+				return department1.compareTo(department2);
 			}
 		}
 

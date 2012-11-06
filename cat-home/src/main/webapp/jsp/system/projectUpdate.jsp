@@ -21,22 +21,27 @@
 		<tr>
 			<td>项目名称</td>
 			<td>${model.project.domain}</td>
+			<td></td>
 		</tr>
 		<tr>
 			<td>所属部门</td>
 			<td><input type="name" name="department" value="${model.project.department}"/></td>
+			<td style='color:red'>（一级分类）建议填写，主站、手机、团购、搜索、架构</td>
 		</tr>
 		<tr>
 			<td>产品线</td>
 			<td><input type="name" name="projectLine" value="${model.project.projectLine}"/></td>
-		</tr>
-		<tr>
-			<td>项目组邮件(多个，逗号分割)</td>
-			<td><input type="name" name="email" value="${model.project.email}"/></td>
+			<td style='color:red'>（二级分类）由各自业务线决定,建议字数小于4</td>
 		</tr>
 		<tr>
 			<td>负责人</td>
 			<td><input type="name" name="owner" value="${model.project.owner}"/></td>
+			<td>可选字段</td>
+		</tr>
+		<tr>
+			<td>项目组邮件</td>
+			<td><input type="name" name="email" size="50" value="${model.project.email}"/></td>
+			<td>可选字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>

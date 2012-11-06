@@ -2504,6 +2504,9 @@
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.view.DomainNavManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2516,6 +2519,15 @@
 			<requirements>
 				<requirement>
 					<role>com.site.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.view.DomainNavManager</role>
+			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
 				</requirement>
 			</requirements>
 		</component>

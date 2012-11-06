@@ -29,16 +29,16 @@
 	</table>
 	<div class="position">	Current Domain:&nbsp;&nbsp;${model.department} &nbsp;&nbsp;>&nbsp;&nbsp;${model.projectLine} &nbsp;&nbsp;
 	>&nbsp;&nbsp;${model.domain}&nbsp;&nbsp;
-	&nbsp;&nbsp;[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">ShowDomain</a>&nbsp;&nbsp;]&nbsp;&nbsp;
+	&nbsp;&nbsp;[&nbsp;&nbsp;<a href="javascript:showDomain()" id="switch">More</a>&nbsp;&nbsp;]&nbsp;&nbsp;
 			<script>
 				function showDomain() {
 					var b = $('#switch').html();
-					if (b == 'ShowDomain') {
+					if (b == 'More') {
 						$('.navbar').slideDown();
-						$('#switch').html("HiddenDomain");
+						$('#switch').html("Less");
 					} else {
 						$('.navbar').slideUp();
-						$('#switch').html("ShowDomain");
+						$('#switch').html("More");
 					}
 				}
 			</script>
