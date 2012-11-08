@@ -29,46 +29,54 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
-import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.helper.Threads;
+import com.site.helper.Threads.Task;
 import com.site.lookup.annotation.Inject;
 
-public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
-	@Inject
-	private String m_host;
+public class TcpSocketReceiver implements LogEnabled {
+	private boolean m_active = true;
 
-	@Inject
-	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
+	private ChannelGroup m_channelGroup = new DefaultChannelGroup();
 
 	@Inject
 	private MessageCodec m_codec;
 
+	private ChannelFactory m_factory;
+
 	@Inject
-	private int m_queueSize = 100000;
+	private MessageHandler m_handler;
+
+	@Inject
+	private String m_host;
+
+	private Logger m_logger;
+
+	@Inject
+	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
 
 	private BlockingQueue<ChannelBuffer> m_queue;
 
-	private ChannelFactory m_factory;
+	private int m_queueSize = 100000;
 
-	private ChannelGroup m_channelGroup = new DefaultChannelGroup();
-
-	private boolean m_active = true;
-
-	private Logger m_logger;
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
-	@Override
-	public void initialize() {
-		// disable thread renaming of Netty
+	public void init() {
 		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
 
 		InetSocketAddress address;
+
+		m_host = m_serverConfigManager.getBindHost();
+		m_port = m_serverConfigManager.getBindPort();
 
 		if (m_host == null) {
 			address = new InetSocketAddress(m_port);
@@ -85,7 +93,7 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
 			public ChannelPipeline getPipeline() {
-				return Channels.pipeline(new MyDecoder(), new MyHandler());
+				return Channels.pipeline(new MessageDecoder(), new MyHandler());
 			}
 		});
 
@@ -103,61 +111,76 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 		}
 	}
 
-	@Override
-	public void onMessage(MessageHandler handler) {
-		try {
-			while (true) {
-				ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
-
-				if (buf != null) {
-					try {
-						MessageTree tree = m_codec.decode(buf);
-
-						handler.handle(tree);
-					} catch (Throwable e) {
-						buf.resetReaderIndex();
-
-						String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
-						m_logger.error("Error when handling message! Raw buffer: " + raw, e);
-					}
-				} else if (!isActive()) {
-					break;
-				}
-			}
-		} catch (InterruptedException e) {
-			// ignore it
-		}
-
-		ChannelGroupFuture future = m_channelGroup.close();
-
-		future.awaitUninterruptibly();
-		m_factory.releaseExternalResources();
-	}
-
 	public void setCodec(MessageCodec codec) {
 		m_codec = codec;
-	}
-
-	public void setHost(String host) {
-		m_host = host;
-	}
-
-	public void setPort(int port) {
-		m_port = port;
 	}
 
 	public void setQueueSize(int queueSize) {
 		m_queueSize = queueSize;
 	}
 
-	@Override
-	public void shutdown() {
-		synchronized (this) {
-			m_active = false;
+	public class DecodeMessageTask implements Task {
+
+		private int m_index;
+
+		public DecodeMessageTask(int index) {
+			m_index = index;
 		}
+
+		@Override
+		public String getName() {
+			return "Message-Decode-" + m_index;
+		}
+
+		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				try {
+					ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
+
+					if (buf != null) {
+						try {
+							buf.markReaderIndex();
+							// read the size of the message
+							buf.readInt();
+							DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
+
+							buf.resetReaderIndex();
+							tree.setBuf(buf);
+							m_handler.handle(tree);
+						} catch (Throwable e) {
+							buf.resetReaderIndex();
+
+							String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
+							m_logger.error("Error when handling message! Raw buffer: " + raw, e);
+						}
+					}
+				} catch (Exception e) {
+					active = false;
+				}
+			}
+			try {
+				if (m_index == 1) {
+					ChannelGroupFuture future = m_channelGroup.close();
+
+					future.awaitUninterruptibly();
+					m_factory.releaseExternalResources();
+				}
+
+			} catch (Exception e) {
+				m_logger.error(e.getMessage(), e);
+			}
+		}
+
+		@Override
+		public void shutdown() {
+		}
+
 	}
 
-	public static class MyDecoder extends FrameDecoder {
+	public static class MessageDecoder extends FrameDecoder {
 		@Override
 		/**
 		 * return null means not all data is ready, so waiting for next network package.
@@ -171,16 +194,21 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 
 			int length = buffer.readInt();
 
+			buffer.resetReaderIndex();
 			if (buffer.readableBytes() < length) {
-				buffer.resetReaderIndex();
 				return null;
 			}
 
-			return buffer.readBytes(length);
+			return buffer.readBytes(length + 4);
 		}
 	}
 
 	class MyHandler extends SimpleChannelHandler {
+
+		private int m_error;
+
+		private int m_process;
+
 		@Override
 		public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent event) throws Exception {
 			m_channelGroup.add(event.getChannel());
@@ -197,7 +225,27 @@ public class TcpSocketReceiver implements MessageReceiver, LogEnabled {
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
 			ChannelBuffer buf = (ChannelBuffer) event.getMessage();
 
-			m_queue.offer(buf);
+			boolean result = m_queue.offer(buf);
+
+			if (result == false) {
+				m_error++;
+				if (m_error == 1 || m_error % 10000 == 0) {
+					m_logger.warn("The server can't process the tree! overflow : " + m_error);
+				}
+			} else {
+				m_process++;
+				if (m_process % 1000000 == 0) {
+					m_logger.info("The server processes message number " + m_process);
+				}
+			}
+		}
+	}
+
+	public void startEncoder(int size) {
+		for (int i = 0; i < size; i++) {
+			DecodeMessageTask messageDecoder = new DecodeMessageTask(i);
+
+			Threads.forGroup("Cat").start(messageDecoder);
 		}
 	}
 }

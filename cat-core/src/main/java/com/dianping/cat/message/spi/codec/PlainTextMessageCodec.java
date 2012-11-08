@@ -54,10 +54,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
-		buf.markReaderIndex();
-
 		decodeHeader(buf, tree);
-
+		
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
 		}

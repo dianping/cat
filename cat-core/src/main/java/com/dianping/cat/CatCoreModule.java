@@ -11,6 +11,7 @@ import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ClientConfigReloader;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.message.internal.MilliSecondTimer;
+import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
 import com.site.helper.Threads;
@@ -54,8 +55,16 @@ public class CatCoreModule extends AbstractModule {
 			Threads.forGroup("Cat").start(statusUpdateTask);
 			LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 		}
+
 		ClientConfig config = clientConfigManager.getClientConfig();
-		Threads.forGroup("Cat").start(new ClientConfigReloader(clientConfigFile.getAbsolutePath(), config));
+
+		if (config != null) {
+			Threads.forGroup("Cat").start(new ClientConfigReloader(clientConfigFile.getAbsolutePath(), config));
+		}
+
+		TcpSocketReceiver receiver = ctx.lookup(TcpSocketReceiver.class);
+
+		receiver.startEncoder(3);
 	}
 
 	@Override

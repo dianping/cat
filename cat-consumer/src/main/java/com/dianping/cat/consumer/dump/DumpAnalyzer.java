@@ -25,9 +25,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	private ServerConfigManager m_configManager;
 
 	@Inject
-	private DumpChannelManager m_channelManager;
-
-	@Inject
 	private DumpUploader m_uploader;
 
 	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
@@ -44,7 +41,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 		try {
 			m_bucketManager.archive(m_startTime);
-			m_channelManager.closeAllChannels(m_startTime);
 		} catch (Exception e) {
 			t.setStatus(e);
 			Cat.logError(e);
@@ -100,8 +96,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		if (id.getVersion() == 2) {
 			try {
 				m_bucketManager.storeMessage(tree,id);
-			} catch (IOException e1) {
-				m_logger.error("Error when dumping to local file system, version 2!", e1);
+			} catch (IOException e) {
+				m_logger.error("Error when dumping to local file system, version 2!", e);
 			}
 		}
 	}

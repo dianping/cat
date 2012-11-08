@@ -57,6 +57,7 @@ public class HdfsMessageBucket implements MessageBucket {
 			m_lastAccessTime = System.currentTimeMillis();
 			return tree;
 		} catch (EOFException e) {
+			System.out.println(e);
 			return null;
 		}
 	}

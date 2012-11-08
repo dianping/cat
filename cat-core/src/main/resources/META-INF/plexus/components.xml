@@ -145,14 +145,18 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.io.MessageReceiver</role>
-			<role-hint>tcp-socket</role-hint>
+			<role>com.dianping.cat.message.io.TcpSocketReceiver</role>
 			<implementation>com.dianping.cat.message.io.TcpSocketReceiver</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageHandler</role>
 				</requirement>
 			</requirements>
 		</component>

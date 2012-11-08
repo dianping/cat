@@ -12,7 +12,6 @@ import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.io.DefaultTransportManager;
-import com.dianping.cat.message.io.MessageReceiver;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TcpSocketHierarchySender;
 import com.dianping.cat.message.io.TcpSocketReceiver;
@@ -86,9 +85,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageStatistics.class, "default", "m_statistics") //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec")//
 		      .req(MessageQueue.class, "default", "m_queue"));
-		all.add(C(MessageReceiver.class, "tcp-socket", TcpSocketReceiver.class) //
-		      .is(PER_LOOKUP) //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
+		all.add(C(TcpSocketReceiver.class) //
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID)//
+		      .req(ServerConfigManager.class, MessageHandler.class));
 		all.add(C(TransportManager.class, DefaultTransportManager.class) //
 		      .req(ClientConfigManager.class));
 

@@ -2,6 +2,8 @@ package com.dianping.cat.storage.dump;
 
 import java.io.IOException;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +13,9 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MessageIdFactory;
+import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.lookup.ComponentTestCase;
 
@@ -49,6 +53,7 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 	@Test
 	public void testReadWrite() throws Exception {
 		MessageBucketManager manager = lookup(MessageBucketManager.class, LocalMessageBucketManager.ID);
+		MessageCodec codec =lookup(MessageCodec.class,PlainTextMessageCodec.ID);
 		MessageIdFactory factory = new MockMessageIdFactory();
 		long now = 1343532130488L;
 		int num = 100;
@@ -61,12 +66,18 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		for (int i = 0; i < num; i++) {
 			DefaultMessageTree tree = newMessageTree(factory.getNextId(), i, now + i * 10L);
 			MessageId id = MessageId.parse(tree.getMessageId());
-
+			
+			ChannelBuffer buf = ChannelBuffers.dynamicBuffer(8 * 1024); // 8K
+			codec.encode(tree, buf);
+			
+			tree.setBuf(buf);
 			manager.storeMessage(tree, id);
 		}
 
 		Thread.yield();
 
+		manager.loadMessage("source-7f000001-373203-1");
+		
 		for (int i = 0; i < num; i++) {
 			String messageId = "source-7f000001-373203-" + i;
 			MessageTree tree = manager.loadMessage(messageId);

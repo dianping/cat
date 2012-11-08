@@ -99,4 +99,5 @@ public class TcpSocketHierarchyTest extends ComponentTestCase {
 			return buffer.readBytes(length);
 		}
 	}
+
 }

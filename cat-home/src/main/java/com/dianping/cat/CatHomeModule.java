@@ -5,9 +5,8 @@ import java.io.File;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.job.CatJobModule;
+import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.message.spi.MessageHandler;
-import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.report.task.DailyTaskProducer;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
@@ -84,8 +83,8 @@ public class CatHomeModule extends AbstractModule {
 
 		serverConfigManager.initialize(serverConfigFile);
 
-		DefaultMessageHandler handler = (DefaultMessageHandler) ctx.lookup(MessageHandler.class);
-
-		Threads.forGroup("Cat").start(handler);
+		TcpSocketReceiver server = ctx.lookup(TcpSocketReceiver.class);
+		server.init();
 	}
+
 }

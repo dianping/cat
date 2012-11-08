@@ -17,7 +17,6 @@ import com.dianping.cat.consumer.common.CommonAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
-import com.dianping.cat.consumer.dump.DumpChannelManager;
 import com.dianping.cat.consumer.dump.DumpUploader;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
@@ -31,7 +30,6 @@ import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
-import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -100,11 +98,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerConfigManager.class) //
-		      .req(DumpUploader.class, DumpChannelManager.class)//
+		      .req(DumpUploader.class)//
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
-
-		all.add(C(DumpChannelManager.class) //
-		      .req(MessageCodec.class, "plain-text"));
 
 		all.add(C(DumpUploader.class) //
 		      .req(ServerConfigManager.class, FileSystemManager.class));

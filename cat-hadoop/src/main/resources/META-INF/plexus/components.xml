@@ -10,46 +10,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.hadoop.hdfs.OutputChannel</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.DefaultOutputChannel</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.hadoop.hdfs.OutputChannelManager</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.DefaultOutputChannelManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.hadoop.hdfs.InputChannel</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.DefaultInputChannel</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>plain-text</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.hadoop.hdfs.InputChannelManager</role>
-			<implementation>com.dianping.cat.hadoop.hdfs.DefaultInputChannelManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.storage.dump.MessageBucket</role>
 			<role-hint>hdfs</role-hint>
 			<implementation>com.dianping.cat.hadoop.hdfs.HdfsMessageBucket</implementation>

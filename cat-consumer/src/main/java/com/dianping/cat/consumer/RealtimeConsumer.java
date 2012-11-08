@@ -92,7 +92,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			if (now - m_lastTime > 1000L) {
 				m_lastTime = now;
 				m_logger.warn("The timestamp of message is out of range, IGNORED! "
-				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain());
+				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "
+				      + tree.getIpAddress());
 			}
 		}
 	}

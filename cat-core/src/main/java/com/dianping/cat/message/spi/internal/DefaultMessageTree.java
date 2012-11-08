@@ -10,11 +10,15 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public class DefaultMessageTree implements MessageTree {
+	private ChannelBuffer m_buf;
+
 	private String m_domain;
 
 	private String m_hostName;
 
 	private String m_ipAddress;
+
+	private Message m_message;
 
 	private String m_messageId;
 
@@ -29,8 +33,6 @@ public class DefaultMessageTree implements MessageTree {
 	private String m_threadId;
 
 	private String m_threadName;
-
-	private Message m_message;
 
 	@Override
 	public DefaultMessageTree copy() {
@@ -49,6 +51,10 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setMessage(m_message);
 
 		return tree;
+	}
+
+	public ChannelBuffer getBuf() {
+		return m_buf;
 	}
 
 	@Override
@@ -102,6 +108,10 @@ public class DefaultMessageTree implements MessageTree {
 
 	public String getThreadName() {
 		return m_threadName;
+	}
+
+	public void setBuf(ChannelBuffer buf) {
+		m_buf = buf;
 	}
 
 	@Override

@@ -48,8 +48,9 @@ class MessageBlockReader {
 
 		try {
 			in.skip(blockOffset);
-
+			
 			int len = in.readInt();
+			
 			byte[] data = new byte[len];
 
 			in.readFully(data);

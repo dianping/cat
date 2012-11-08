@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.LockSupport;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -30,6 +29,7 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.site.helper.Files;
 import com.site.helper.Scanners;
 import com.site.helper.Scanners.FileMatcher;
@@ -57,13 +57,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Inject
 	private ChannelBufferManager m_bufferManager;
 
-	private BlockingQueue<EncodeItem> m_encodeItems = new LinkedBlockingQueue<EncodeItem>(10000);
-
 	private int m_error;
 
-	private int m_offered;
-
-	private AtomicInteger m_encodeNumbers = new AtomicInteger(0);
+	private int m_total;
 
 	private Logger m_logger;
 
@@ -153,10 +149,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("Cat").start(new IdleChecker());
 		Threads.forGroup("Cat").start(new OldMessageMover());
 
-		Threads.forGroup("Cat").start(new MessageEncode(1));
-		Threads.forGroup("Cat").start(new MessageEncode(2));
-		Threads.forGroup("Cat").start(new MessageEncode(3));
-		Threads.forGroup("Cat").start(new MessageEncode(4));
 	}
 
 	private boolean isFit(String path) {
@@ -323,22 +315,26 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_buckets.put(dataFile, bucket);
 		}
 
-		EncodeItem item = new EncodeItem(tree, id, bucket);
-		boolean result = m_encodeItems.offer(item);
+		DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
+		ChannelBuffer buf = defaultTree.getBuf();
+		MessageBlock bolck = bucket.storeMessage(buf, id);
 
-		if (result == false) {
-			m_error++;
-			if (m_error == 1 || m_error % 1000 == 0) {
-				m_logger.error("Encode message tree overflow. Overflow Number :" + m_error + " Offered Number:" + m_offered
-				      + " Encoded Number:" + m_encodeNumbers.get());
-				m_logger.error(tree.getMessageId());
-			}
-		} else {
-			m_offered++;
-			if (m_offered % 100000 == 0) {
-				m_logger.info("Encode message number " + m_offered + " Encoded Number:" + m_encodeNumbers.get());
+		if (bolck != null) {
+			boolean result = m_messageBlocks.offer(bolck);
+
+			if (!result) {
+				m_error++;
+				if (m_error == 1 || m_error % 1000 == 0) {
+					m_logger.error("Error when offer the block to the dump! Error :" + m_error);
+				}
 			}
 		}
+
+		m_total++;
+		if (m_total % 100000 == 0) {
+			m_logger.info("Encode the message number " + m_total);
+		}
+
 	}
 
 	class BlockDumper implements Task {
@@ -437,67 +433,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	class MessageEncode implements Task {
-
-		private int m_index;
-
-		private int m_encodeErrors;
-
-		public MessageEncode(int index) {
-			m_index = index;
-		}
-
-		@Override
-		public String getName() {
-			return "MessageEncoder-" + m_index;
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-
-			while (active) {
-				try {
-					EncodeItem item = m_encodeItems.poll(5, TimeUnit.MILLISECONDS);
-
-					if (item != null) {
-						MessageTree tree = item.getTree();
-						LocalMessageBucket bucket = item.getBucket();
-						MessageId id = item.getId();
-
-						try {
-							final ChannelBuffer buf = m_bufferManager.allocate();
-							m_codec.encode(tree, buf);
-
-							MessageBlock bolck = bucket.storeMessage(buf, id);
-
-							if (bolck != null) {
-								boolean result = m_messageBlocks.offer(bolck);
-
-								if (!result) {
-									m_logger.error("Error where offer message bolck overflow!");
-								}
-							}
-							m_encodeNumbers.incrementAndGet();
-						} catch (Exception e) {
-							m_encodeErrors++;
-							if (m_encodeErrors == 1 || m_encodeErrors % 1000 == 0) {
-								m_logger.error("Error when writing the bucket!", e);
-							}
-						}
-					}
-				} catch (Exception e) {
-					m_logger.error("Error when writing the bucket runtime exception!", e);
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-
-	}
-
 	class OldMessageMover implements Task {
 		@Override
 		public String getName() {
@@ -512,7 +447,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				try {
 					moveOldMessages();
 				} catch (Throwable e) {
-					Cat.logError(e);
+					m_logger.error(e.getMessage(),e);
 				}
 				try {
 					Thread.sleep(2 * 60 * 1000L);

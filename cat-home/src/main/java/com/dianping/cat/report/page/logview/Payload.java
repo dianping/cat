@@ -19,7 +19,7 @@ public class Payload extends AbstractReportPayload<Action> {
 	private boolean m_showHeader = true;
 	
 	@FieldMeta("waterfall")
-	private boolean m_waterfall = true;
+	private boolean m_waterfall = false;
 
 	public Payload() {
 		super(ReportPage.LOGVIEW);
