@@ -57,7 +57,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 	private Dailyreport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
 	      throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = getDomains(reportPeriod, endDate);
+		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
 		String content = null;
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);

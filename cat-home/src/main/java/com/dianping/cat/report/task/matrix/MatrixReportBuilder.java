@@ -34,7 +34,7 @@ public class MatrixReportBuilder extends AbstractReportBuilder implements Report
 
 	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = getDomains(reportPeriod, endDate);
+		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
 		
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);

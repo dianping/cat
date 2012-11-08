@@ -26,9 +26,13 @@ import com.site.lookup.annotation.Inject;
 
 public class ReportFacade implements LogEnabled, Initializable {
 
+	private static final int TYPE_HOUR = 0;
+
 	private static final int TYPE_DAILY = 1;
 
-	private static final int TYPE_HOUR = 0;
+	private static final int TYPE_WEEK = 2;
+
+	private static final int TYPE_MONTH = 3;
 
 	@Inject
 	private EventReportBuilder m_eventBuilder;
@@ -69,7 +73,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 	}
 
 	public boolean builderReport(Task task) {
-		int task_type = task.getTaskType();
+		int type = task.getTaskType();
 		String reportName = task.getReportName();
 		String reportDomain = task.getReportDomain();
 		Date reportPeriod = task.getReportPeriod();
@@ -79,10 +83,14 @@ public class ReportFacade implements LogEnabled, Initializable {
 			m_logger.info("no report builder for type:" + " " + reportName);
 			return false;
 		} else {
-			if (task_type == TYPE_DAILY) {
+			if (type == TYPE_DAILY) {
 				return reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
-			} else if (task_type == TYPE_HOUR) {
+			} else if (type == TYPE_HOUR) {
 				return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
+			} else if (type == TYPE_WEEK) {
+				// return reportBuilder.buildWeekReport(reportName, reportDomain, reportPeriod);
+			} else if (type == TYPE_MONTH) {
+				// return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
 			}
 		}
 		return false;

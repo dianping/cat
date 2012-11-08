@@ -88,7 +88,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		HealthReportCreator healthReportCreator = new HealthReportCreator();
 		HealthReport report = healthReportCreator.build(transactionReport, eventReport, problemReport, heartbeatReport,
 		      infos);
-		Set<String> domains = getDomains(reportPeriod, new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
+		Set<String> domains = getDomainsFromHourlyReport(reportPeriod, new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
 		report.getDomainNames().addAll(domains);
 		return report;
 	}

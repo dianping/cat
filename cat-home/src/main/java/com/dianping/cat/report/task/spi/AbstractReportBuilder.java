@@ -38,9 +38,10 @@ public abstract class AbstractReportBuilder {
 		}
 	}
 
-	protected Set<String> getDomains(Date start, Date end) {
+	protected Set<String> getDomainsFromHourlyReport(Date start, Date end) {
 		List<Report> domainNames = new ArrayList<Report>();
 		Set<String> result = new HashSet<String>();
+		
 		try {
 			domainNames = m_reportDao
 			      .findAllByDomainNameDuration(start, end, null, null, ReportEntity.READSET_DOMAIN_NAME);
@@ -55,7 +56,7 @@ public abstract class AbstractReportBuilder {
 		return result;
 	}
 
-	protected Set<String> getDatabases(Date start, Date end) {
+	protected Set<String> getDatabasesFromHoulyReport(Date start, Date end) {
 		List<Report> databaseNames = new ArrayList<Report>();
 		Set<String> result = new HashSet<String>();
 
