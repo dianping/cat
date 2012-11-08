@@ -43,7 +43,8 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 	<tr class="even"><td>2</td><td>集成了CAT，测试环境看不到信息</td><td>请Check相关步骤<a href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E9%9B%86%E6%88%90%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3" target="_blank">CAT集成帮助文档</a></td></tr>
 	<tr class="odd"><td>3</td><td>Transaction、Event报表区间</<td><td>Transaction、Event历史报表，图表X轴以5分钟为刻度，Y轴表示每5分钟的值</td></tr>
 	<tr class="even"><td>4</td><td>Problem、Hearbeat报表区间</<td><td>Problem、Heartbeat历史报表，图表X轴以1分钟为刻度，Y轴表示每1分钟的值</td></tr>
-	<tr class="odd"><td>5</td><td>项目信息修改</<td><td style="color:red;">请项目负责人到Project标签下，修改项目所在分组的基本信息</td></tr>
+	<tr class="odd"><td>5</td><td style="color:red;">项目信息修改</<td><td style="color:red;">请项目负责人到Project标签下，修改项目所在分组的基本信息</td></tr>
+	<tr class="odd"><td>6</td><td style="color:red;">默认告警，邮件订阅</<td><td style="color:red;">请项目负责人到Alarm标签下，订阅相关异常告警、服务调用失败告警、日常邮件，Hawk会逐步下线中。</td></tr>
 </table>
 <br>
 <br>
