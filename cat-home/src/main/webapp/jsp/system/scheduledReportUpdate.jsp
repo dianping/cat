@@ -17,7 +17,7 @@
 		</tr>
 		<tr>
 			<td>订阅内容</td>
-			<td><textarea style="height:200px;width:200px" id="content" name="content">${model.scheduledReport.content}</textarea></td>
+			<td><textarea style="height:200px;width:200px" id="content" name="content">${model.scheduledReport.names}</textarea></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
