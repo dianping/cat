@@ -241,8 +241,8 @@ public class TcpSocketReceiver implements LogEnabled {
 		}
 	}
 
-	public void startEncoder(int size) {
-		for (int i = 0; i < size; i++) {
+	public void startEncoderThreads(int threadSize) {
+		for (int i = 0; i < threadSize; i++) {
 			DecodeMessageTask messageDecoder = new DecodeMessageTask(i);
 
 			Threads.forGroup("Cat").start(messageDecoder);
