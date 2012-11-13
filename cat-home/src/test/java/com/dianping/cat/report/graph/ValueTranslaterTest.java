@@ -16,6 +16,7 @@ public class ValueTranslaterTest extends ComponentTestCase {
 		check(5, 1, 3, 5);
 		check(0.5, 0.1, 0.3, 0.4);
 		check(0.25, 0.01, 0.2, 0.1);
+		
 	}
 
 	void check(double expected, double... values) throws Exception {
