@@ -73,4 +73,14 @@ public class CrossReportBuilder extends AbstractReportBuilder implements ReportB
 		throw new RuntimeException("Cross report don't support redo HourReport!");
 	}
 
+	@Override
+   public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
+	   return false;
+   }
+
+	@Override
+   public boolean buildMonthReport(String reportName, String reportDomain, Date reportPeriod) {
+	   return false;
+   }
+
 }

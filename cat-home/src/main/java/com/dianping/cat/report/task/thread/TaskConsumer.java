@@ -1,4 +1,4 @@
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.thread;
 
 import com.dainping.cat.consumer.dal.report.Task;
 import com.dianping.cat.Cat;

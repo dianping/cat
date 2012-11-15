@@ -47,4 +47,19 @@ public class TimeUtil {
 		cal.add(Calendar.MONTH, -1);
 		return cal.getTime();
 	}
+
+	public static Date getLastWeek() {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+		 
+		cal.add(Calendar.DATE, -1 - dayOfWeek);
+		return cal.getTime();
+	}
+	
 }

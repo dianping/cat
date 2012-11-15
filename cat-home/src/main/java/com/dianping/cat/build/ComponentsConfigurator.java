@@ -12,6 +12,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.MonthreportDao;
+import com.dianping.cat.home.dal.report.WeeklyreportDao;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
@@ -23,8 +24,6 @@ import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.impl.DailyReportServiceImpl;
-import com.dianping.cat.report.task.DailyTaskProducer;
-import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.cross.CrossMerger;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseMerger;
@@ -39,13 +38,14 @@ import com.dianping.cat.report.task.heartbeat.HeartbeatMerger;
 import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixMerger;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
-import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
 import com.dianping.cat.report.task.problem.ProblemGraphCreator;
 import com.dianping.cat.report.task.problem.ProblemMerger;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
 import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
+import com.dianping.cat.report.task.thread.TaskProducer;
+import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
@@ -90,32 +90,38 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(SqlMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class,
-		            TransactionMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class)//
+		      .req(TransactionMerger.class, WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(EventReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, EventGraphCreator.class, EventMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, EventGraphCreator.class, EventMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(ProblemReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, ProblemGraphCreator.class, ProblemMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, ProblemGraphCreator.class) //
+		      .req(WeeklyreportDao.class, MonthreportDao.class, ProblemMerger.class));
 
 		all.add(C(HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class,
-		            HeartbeatMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class).req(
+		            HeartbeatMerger.class, WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(MatrixReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(DatabaseReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, DatabaseMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, DatabaseMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(SqlReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, SqlMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, SqlMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(CrossReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
-		all.add(C(DailyTaskProducer.class, DailyTaskProducer.class) //
+		all.add(C(TaskProducer.class, TaskProducer.class) //
 		      .req(TaskDao.class, ReportDao.class, DailyreportDao.class));
 
 		all.add(C(HealthReportBuilder.class) //
@@ -132,9 +138,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
 
-		all.add(C(MonthReportBuilderTask.class, MonthReportBuilderTask.class).//
-		      req(DailyreportDao.class, MonthreportDao.class));
-
 		all.add(C(HistoryGraphs.class, HistoryGraphs.class).//
 		      req(ReportDao.class, DailyreportDao.class));
 
@@ -142,7 +145,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
 
-		all.add(C(DomainNavManager.class).req(ProjectDao.class,ServerConfigManager.class));
+		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
 
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
 		      .req(DailyreportDao.class));

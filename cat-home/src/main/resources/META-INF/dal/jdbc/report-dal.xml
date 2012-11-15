@@ -303,32 +303,38 @@
 			</query>
 		</query-defs>
 	</entity>
-	<entity name="monthreport" table="monthreport" alias="m2">
+	<entity name="monthreport" table="monthreport" alias="m">
 		<member name="creation-date" insert-expr="NOW()" />
-		<readsets>
-			<readset name="DOMAIN_PERIOD">
-				<member name="domain" />
-				<member name="period" />
-			</readset>
-		</readsets>
 		<query-defs>
-			<query name="find-by-domain-period" type="SELECT">
+			<query name="find-report-by-domain-name-period" type="SELECT">
+				<param name="period" />
 				<param name="domain" />
-				<param name="period" />
+				<param name="name" />
 				<statement><![CDATA[
-				SELECT <FIELDS/> 
-				FROM <TABLE/> 
-				WHERE <FIELD name='domain'/> = ${domain} 
-				AND <FIELD name='period'/> = ${period} 
-				]]></statement>
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> == ${period}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name} 
+					]]></statement>
 			</query>
-			<query name="find-by-period" type="SELECT" multiple="true">
+		</query-defs>
+	</entity>
+	
+	<entity name="weeklyreport" table="weeklyreport" alias="w">
+		<member name="creation-date" insert-expr="NOW()" />
+		<query-defs>
+			<query name="find-report-by-domain-name-period" type="SELECT">
 				<param name="period" />
+				<param name="domain" />
+				<param name="name" />
 				<statement><![CDATA[
-				SELECT <FIELDS/> 
-				FROM <TABLE/> 
-				WHERE <FIELD name='period'/> = ${period} 
-				]]></statement>
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> == ${period}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name} 
+					]]></statement>
 			</query>
 		</query-defs>
 	</entity>

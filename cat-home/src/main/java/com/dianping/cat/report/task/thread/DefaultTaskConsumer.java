@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.dianping.cat.report.task;
+package com.dianping.cat.report.task.thread;
 
 import java.util.Date;
 import java.util.concurrent.locks.LockSupport;

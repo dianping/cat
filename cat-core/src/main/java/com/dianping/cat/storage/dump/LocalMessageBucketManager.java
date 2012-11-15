@@ -447,7 +447,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				try {
 					moveOldMessages();
 				} catch (Throwable e) {
-					m_logger.error(e.getMessage(),e);
+					m_logger.error(e.getMessage(), e);
 				}
 				try {
 					Thread.sleep(2 * 60 * 1000L);
@@ -460,6 +460,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void shutdown() {
 		}
-
 	}
+
 }

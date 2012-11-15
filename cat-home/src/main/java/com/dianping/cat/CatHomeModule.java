@@ -7,9 +7,8 @@ import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.job.CatJobModule;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.task.DailyTaskProducer;
-import com.dianping.cat.report.task.DefaultTaskConsumer;
-import com.dianping.cat.report.task.monthreport.MonthReportBuilderTask;
+import com.dianping.cat.report.task.thread.TaskProducer;
+import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.alarm.AlarmRuleCreator;
 import com.dianping.cat.system.alarm.AlarmTask;
@@ -36,13 +35,11 @@ public class CatHomeModule extends AbstractModule {
 		ctx.lookup(DomainNavManager.class);
 
 		DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
-		DailyTaskProducer dailyTaskProducer = ctx.lookup(DailyTaskProducer.class);
-		MonthReportBuilderTask monthReportTask = ctx.lookup(MonthReportBuilderTask.class);
+		TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
 
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 			Threads.forGroup("Cat").start(taskConsumer);
-			Threads.forGroup("Cat").start(monthReportTask);
 		}
 
 		executeAlarmModule(ctx);

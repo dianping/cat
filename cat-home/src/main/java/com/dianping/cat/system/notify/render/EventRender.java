@@ -109,7 +109,7 @@ public class EventRender extends BaseVisitor {
 			if (!types.contains(id)) {
 				Type temp = new Type();
 
-				type.setTps(type.getTotalCount() / (double) TimeUtil.ONE_DAY / m_totalDays);
+				type.setTps(type.getTotalCount() * 1000d / TimeUtil.ONE_DAY / m_totalDays);
 				temp.setType(type);
 				temp.setUrl(buildGraphUrl(type));
 				m_types.add(temp);

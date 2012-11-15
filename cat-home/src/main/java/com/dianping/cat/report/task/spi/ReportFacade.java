@@ -26,13 +26,13 @@ import com.site.lookup.annotation.Inject;
 
 public class ReportFacade implements LogEnabled, Initializable {
 
-	private static final int TYPE_HOUR = 0;
+	public static final int TYPE_HOUR = 0;
 
-	private static final int TYPE_DAILY = 1;
+	public static final int TYPE_DAILY = 1;
 
-	private static final int TYPE_WEEK = 2;
+	public static final int TYPE_WEEK = 2;
 
-	private static final int TYPE_MONTH = 3;
+	public static final int TYPE_MONTH = 3;
 
 	@Inject
 	private EventReportBuilder m_eventBuilder;
@@ -88,9 +88,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 			} else if (type == TYPE_HOUR) {
 				return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
 			} else if (type == TYPE_WEEK) {
-				// return reportBuilder.buildWeekReport(reportName, reportDomain, reportPeriod);
+				return reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
 			} else if (type == TYPE_MONTH) {
-				// return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+				return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
 			}
 		}
 		return false;

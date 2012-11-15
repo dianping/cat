@@ -14,6 +14,8 @@ import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
+import com.dianping.cat.home.dal.report.MonthreportDao;
+import com.dianping.cat.home.dal.report.WeeklyreportDao;
 import com.site.dal.jdbc.DalException;
 import com.site.lookup.annotation.Inject;
 
@@ -21,6 +23,12 @@ public abstract class AbstractReportBuilder {
 
 	@Inject
 	protected DailyreportDao m_dailyReportDao;
+	
+	@Inject
+	protected WeeklyreportDao m_weeklyreportDao;
+	
+	@Inject
+	protected MonthreportDao m_monthreportDao;
 
 	@Inject
 	protected GraphDao m_graphDao;
