@@ -228,7 +228,7 @@ public class TaskProducer implements com.site.helper.Threads.Task, Initializable
 		m_dailyReportNameSet.add("health");
 
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.MONTH, -2);
+		cal.add(Calendar.MONTH, -3);
 		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 

@@ -61,6 +61,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_total;
 
+	private long m_totalSize = 0;
+
 	private Logger m_logger;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(1000);
@@ -151,7 +153,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	}
 
-	private boolean isFit(String path) {
+	private boolean shouldMove(String path) {
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
 			return false;
 		}
@@ -259,7 +261,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					if (isFit(path)) {
+					if (shouldMove(path)) {
 						paths.add(path);
 					}
 				}
@@ -317,6 +319,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
 		ChannelBuffer buf = defaultTree.getBuf();
+
+		int size = buf.readableBytes();
+		m_totalSize += size;
+
 		MessageBlock bolck = bucket.storeMessage(buf, id);
 
 		if (bolck != null) {
@@ -332,9 +338,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		m_total++;
 		if (m_total % 100000 == 0) {
-			m_logger.info("Encode the message number " + m_total);
+			m_logger.info("Encode the message number: " + m_total + " Size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024
+			      + "GB");
 		}
-
 	}
 
 	class BlockDumper implements Task {

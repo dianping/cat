@@ -315,6 +315,12 @@
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.task.health.HealthServiceCollector</role>
 				</requirement>
 			</requirements>

@@ -125,8 +125,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(TaskDao.class, ReportDao.class, DailyreportDao.class));
 
 		all.add(C(HealthReportBuilder.class) //
-		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class,//
-		            HealthServiceCollector.class));
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class,HealthServiceCollector.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//

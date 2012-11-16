@@ -71,11 +71,11 @@ public abstract class TaskConsumer implements com.site.helper.Threads.Task {
 								updateDoingToDone(task);
 							}
 						}
-
+						t.addData(task.toString());
 						t.setStatus(Transaction.SUCCESS);
 					} catch (Throwable e) {
-						t.setStatus(e);
 						Cat.logError(e);
+						t.setStatus(e);
 					} finally {
 						t.complete();
 					}

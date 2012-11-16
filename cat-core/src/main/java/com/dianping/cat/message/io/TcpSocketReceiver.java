@@ -195,7 +195,8 @@ public class TcpSocketReceiver implements LogEnabled {
 			int length = buffer.readInt();
 
 			buffer.resetReaderIndex();
-			if (buffer.readableBytes() < length) {
+
+			if (buffer.readableBytes() < length + 4) {
 				return null;
 			}
 
