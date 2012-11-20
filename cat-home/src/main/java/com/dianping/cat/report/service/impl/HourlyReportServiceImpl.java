@@ -36,8 +36,24 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 
 	@Inject
 	private ReportDao m_reportDao;
+	
+	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
+		Set<String> domains = new HashSet<String>();
 
-	private Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
+		try {
+			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, reportName,
+			      ReportEntity.READSET_DOMAIN_NAME);
+
+			for (Report report : reports) {
+				domains.add(report.getDomain());
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return domains;
+	}
+
+	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
 		Set<String> domains = new HashSet<String>();
 
 		try {

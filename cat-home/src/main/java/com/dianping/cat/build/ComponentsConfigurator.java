@@ -23,7 +23,17 @@ import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
 import com.dianping.cat.report.service.DailyReportService;
+import com.dianping.cat.report.service.HourlyReportService;
+import com.dianping.cat.report.service.MonthReportCache;
+import com.dianping.cat.report.service.MonthReportService;
+import com.dianping.cat.report.service.ReportService;
+import com.dianping.cat.report.service.WeeklyReportCache;
+import com.dianping.cat.report.service.WeeklyReportService;
 import com.dianping.cat.report.service.impl.DailyReportServiceImpl;
+import com.dianping.cat.report.service.impl.HourlyReportServiceImpl;
+import com.dianping.cat.report.service.impl.MonthReportServiceImpl;
+import com.dianping.cat.report.service.impl.ReportServiceImpl;
+import com.dianping.cat.report.service.impl.WeeklyReportServiceImpl;
 import com.dianping.cat.report.task.cross.CrossMerger;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseMerger;
@@ -44,8 +54,8 @@ import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
 import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
-import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
+import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
@@ -72,8 +82,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
 		      .req(ValueTranslater.class));
-
-		all.add(C(DefaultTaskConsumer.class) //
+		
+				all.add(C(DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
 
 		all.add(C(TransactionGraphCreator.class));
@@ -122,11 +132,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(TaskProducer.class, TaskProducer.class) //
-		      .req(TaskDao.class, ReportDao.class, DailyreportDao.class));
+		      .req(TaskDao.class, ReportDao.class));
 
 		all.add(C(HealthReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class)//
-		      .req(WeeklyreportDao.class, MonthreportDao.class,HealthServiceCollector.class));
+		      .req(WeeklyreportDao.class, MonthreportDao.class, HealthServiceCollector.class));
 
 		all.add(C(ReportFacade.class)//
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
@@ -139,7 +149,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
 
 		all.add(C(HistoryGraphs.class, HistoryGraphs.class).//
-		      req(ReportDao.class, DailyreportDao.class));
+		      req(ReportService.class));
 
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
@@ -147,9 +157,28 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
 
+		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class)//
+		      .req(ReportDao.class));
+
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
 		      .req(DailyreportDao.class));
 
+		all.add(C(WeeklyReportService.class, WeeklyReportServiceImpl.class)//
+		      .req(WeeklyreportDao.class));
+
+		all.add(C(MonthReportService.class, MonthReportServiceImpl.class)//
+		      .req(MonthreportDao.class));
+
+		all.add(C(WeeklyReportCache.class)//
+		      .req(DailyReportService.class, HourlyReportService.class, ServerConfigManager.class));
+
+		all.add(C(MonthReportCache.class)//
+		      .req(DailyReportService.class, HourlyReportService.class, ServerConfigManager.class));
+
+		all.add(C(ReportService.class, ReportServiceImpl.class)//
+		      .req(HourlyReportService.class, DailyReportService.class, WeeklyReportService.class,
+		            MonthReportService.class)//
+		      .req(WeeklyReportCache.class, MonthReportCache.class));
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

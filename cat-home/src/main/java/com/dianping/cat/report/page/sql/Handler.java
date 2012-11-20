@@ -2,33 +2,19 @@ package com.dianping.cat.report.page.sql;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
-import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
-import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.model.sql.SqlReportMerger;
-import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.sql.SqlMerger;
-import com.site.dal.jdbc.DalException;
+import com.dianping.cat.report.service.ReportService;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -42,14 +28,8 @@ import com.site.web.mvc.annotation.PayloadMeta;
 public class Handler implements PageHandler<Context> {
 
 	@Inject
-	protected ReportDao m_reportDao;
-
-	@Inject
-	private SqlMerger m_sqlMerger;
-
-	@Inject
-	private DailyreportDao m_dailyreportDao;
-
+	private ReportService m_reportService;
+	
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -154,46 +134,10 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private SqlReport showSummarizeReport(Model model, Payload payload) {
-		SqlReport sqlReport = null;
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		Date currentDayStart = TaskHelper.todayZero(new Date());
 
-		if (currentDayStart.getTime() == start.getTime()) {
-			try {
-				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "sql",
-				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "sql",
-				      ReportEntity.READSET_DOMAIN_NAME);
-
-				Set<String> sqls = new HashSet<String>();
-				for (Report report : allReports) {
-					sqls.add(report.getDomain());
-				}
-				sqlReport = m_sqlMerger.mergeForDaily(domain, reports, sqls);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		} else {
-			try {
-				List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "sql",
-				      DailyreportEntity.READSET_FULL);
-				SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
-				for (Dailyreport report : reports) {
-					String xml = report.getContent();
-					SqlReport reportModel = DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				}
-				sqlReport = merger.getSqlReport();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
-		sqlReport.setStartTime(start);
-		sqlReport.setEndTime(end);
-
-		return sqlReport;
+		return m_reportService.querySqlReport(domain, start, end);
 	}
 }

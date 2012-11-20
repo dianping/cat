@@ -2,16 +2,9 @@ package com.dianping.cat.report.page.cache;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
-import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -20,21 +13,14 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
-import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.event.EventMerger;
-import com.dianping.cat.report.task.transaction.TransactionMerger;
-import com.site.dal.jdbc.DalException;
+import com.dianping.cat.report.service.ReportService;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -43,11 +29,6 @@ import com.site.web.mvc.annotation.OutboundActionMeta;
 import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
-	@Inject
-	private DailyreportDao m_dailyreportDao;
-
-	@Inject
-	private EventMerger m_eventMerger;
 
 	@Inject(type = ModelService.class, value = "event")
 	private ModelService<EventReport> m_eventService;
@@ -59,10 +40,7 @@ public class Handler implements PageHandler<Context> {
 	private ServerConfigManager m_manager;
 
 	@Inject
-	protected ReportDao m_reportDao;
-
-	@Inject
-	private TransactionMerger m_transactionMerger;
+	private ReportService m_reportService;
 
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_transactionService;
@@ -150,44 +128,8 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		Date currentDayStart = TaskHelper.todayZero(new Date());
 
-		EventReport eventReport = null;
-		if (currentDayStart.getTime() == start.getTime()) {
-			try {
-				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "event",
-				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "event",
-				      ReportEntity.READSET_DOMAIN_NAME);
-
-				Set<String> domains = new HashSet<String>();
-				for (Report report : allReports) {
-					domains.add(report.getDomain());
-				}
-				eventReport = m_eventMerger.mergeForDaily(domain, reports, domains);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		} else {
-			try {
-				List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "event",
-				      DailyreportEntity.READSET_FULL);
-				EventReportMerger merger = new EventReportMerger(new EventReport(domain));
-				for (Dailyreport report : reports) {
-					String xml = report.getContent();
-					EventReport reportModel = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				}
-				eventReport = merger.getEventReport();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
-		if (eventReport != null) {
-			eventReport.setStartTime(start);
-			eventReport.setEndTime(end);
-		}
+		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
 		return eventReport;
 	}
 
@@ -195,45 +137,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		Date currentDayStart = TaskHelper.todayZero(new Date());
-
-		TransactionReport transactionReport = null;
-		if (currentDayStart.getTime() == start.getTime()) {
-			try {
-				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
-				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "transaction",
-				      ReportEntity.READSET_DOMAIN_NAME);
-
-				Set<String> domains = new HashSet<String>();
-				for (Report report : allReports) {
-					domains.add(report.getDomain());
-				}
-				transactionReport = m_transactionMerger.mergeForDaily(domain, reports, domains);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		} else {
-			try {
-				List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
-				      DailyreportEntity.READSET_FULL);
-				TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
-				for (Dailyreport report : reports) {
-					String xml = report.getContent();
-					TransactionReport reportModel = DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				}
-				transactionReport = merger.getTransactionReport();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
-		if (transactionReport != null) {
-			transactionReport.setStartTime(start);
-			transactionReport.setEndTime(end);
-		}
-		return transactionReport;
+		return m_reportService.queryTransactionReport(domain, start, end);
 	}
 
 	private EventReport getHourlyEventReport(Payload payload) {

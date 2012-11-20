@@ -2,33 +2,19 @@ package com.dianping.cat.report.page.cross;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
-import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.cross.display.HostInfo;
 import com.dianping.cat.report.page.cross.display.MethodInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
-import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.cross.CrossMerger;
-import com.site.dal.jdbc.DalException;
+import com.dianping.cat.report.service.ReportService;
 import com.site.lookup.annotation.Inject;
 import com.site.lookup.util.StringUtils;
 import com.site.web.mvc.PageHandler;
@@ -41,16 +27,10 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
+	private ReportService m_reportService;
+
+	@Inject
 	private ServerConfigManager m_manager;
-
-	@Inject
-	private ReportDao m_reportDao;
-
-	@Inject
-	private DailyreportDao m_dailyreportDao;
-
-	@Inject
-	private CrossMerger m_crossMerger;
 
 	@Inject
 	private DomainManager m_domainManager;
@@ -78,49 +58,10 @@ public class Handler implements PageHandler<Context> {
 	private CrossReport getSummarizeReport(Payload payload) {
 		String domain = payload.getDomain();
 
-		CrossReport crossReport = null;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		Date currentDayStart = TaskHelper.todayZero(new Date());
 
-		if (currentDayStart.getTime() == start.getTime()) {
-			try {
-				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "cross",
-				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "cross",
-				      ReportEntity.READSET_DOMAIN_NAME);
-
-				Set<String> domains = new HashSet<String>();
-				for (Report report : allReports) {
-					domains.add(report.getDomain());
-				}
-				crossReport = m_crossMerger.mergeForDaily(domain, reports, domains);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		} else {
-			try {
-				List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "cross",
-				      DailyreportEntity.READSET_FULL);
-				CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
-				for (Dailyreport report : reports) {
-					String xml = report.getContent();
-					CrossReport reportModel = DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				}
-				crossReport = merger.getCrossReport();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
-		if (crossReport == null) {
-			return null;
-		}
-		crossReport.setStartTime(start);
-		crossReport.setEndTime(end);
-
-		return crossReport;
+		return m_reportService.queryCrossReport(domain, start, end);
 	}
 
 	@Override

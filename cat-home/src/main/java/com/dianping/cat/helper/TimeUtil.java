@@ -48,7 +48,8 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 
-	public static Date getLastWeek() {
+	// get lastest sarterday
+	public static Date getCurrentWeek() {
 		Calendar cal = Calendar.getInstance();
 
 		cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -57,9 +58,28 @@ public class TimeUtil {
 		cal.set(Calendar.MILLISECOND, 0);
 
 		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-		 
+
+		if (dayOfWeek == 7) {
+			return cal.getTime();
+		} else {
+			cal.add(Calendar.DATE,  - dayOfWeek);
+		}
+		return cal.getTime();
+	}
+
+	// last week sarterday
+	public static Date getLastWeekEnd() {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+
+		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+
 		cal.add(Calendar.DATE, -1 - dayOfWeek);
 		return cal.getTime();
 	}
-	
+
 }

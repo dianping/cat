@@ -19,7 +19,6 @@ import com.dainping.cat.consumer.dal.report.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.home.dal.report.WeeklyreportDao;
 import com.dianping.cat.message.Transaction;
@@ -30,9 +29,6 @@ import com.site.dal.jdbc.DalNotFoundException;
 import com.site.lookup.annotation.Inject;
 
 public class TaskProducer implements com.site.helper.Threads.Task, Initializable {
-
-	@Inject
-	private DailyreportDao m_dailyReportDao;
 
 	@Inject
 	private WeeklyreportDao m_weeklyReportDao;
@@ -226,14 +222,16 @@ public class TaskProducer implements com.site.helper.Threads.Task, Initializable
 		m_dailyReportNameSet.add("cross");
 		m_dailyReportNameSet.add("sql");
 		m_dailyReportNameSet.add("health");
+	}
 
+	private void firstInit() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -3);
 		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 
 		Date currentMonth = TimeUtil.getCurrentMonth();
-		Date lastWeekEnd = TimeUtil.getLastWeek();
+		Date lastWeekEnd = TimeUtil.getLastWeekEnd();
 
 		generateWeeklyReportTasks(cal.getTime(), lastWeekEnd);
 		generateWeeklyDatabaseReportTasks(cal.getTime(), lastWeekEnd);
@@ -304,8 +302,13 @@ public class TaskProducer implements com.site.helper.Threads.Task, Initializable
 
 	@Override
 	public void run() {
+		boolean first = true;
 		boolean active = true;
 
+		if (first) {
+			firstInit();
+			first = false;
+		}
 		while (active) {
 			try {
 				Calendar cal = Calendar.getInstance();
@@ -318,7 +321,7 @@ public class TaskProducer implements com.site.helper.Threads.Task, Initializable
 						generateDailyReportTasks(yestoday);
 						generateDailyDatabaseTasks(yestoday);
 
-						Date lastWeekEnd = TimeUtil.getLastWeek();
+						Date lastWeekEnd = TimeUtil.getLastWeekEnd();
 						Date lastWeekStart = new Date(lastWeekEnd.getTime() - TimeUtil.ONE_WEEK);
 
 						generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);

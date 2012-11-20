@@ -4,26 +4,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
-import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
-import com.dianping.cat.consumer.health.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.page.HistoryGraphItem;
-import com.dianping.cat.report.task.health.HealthReportMerger;
+import com.dianping.cat.report.service.ReportService;
 import com.site.lookup.annotation.Inject;
 
 public class HistoryGraphs {
-	@Inject
-	private ReportDao m_reportDao;
 
 	@Inject
-	private DailyreportDao m_dailyReportDao;
+	private ReportService m_reportService;
 
 	public HistoryGraphItem buildHistoryGraph(String domain, Date start, Date end, String reportType, String key) {
 		if (reportType.equalsIgnoreCase("day")) {
@@ -60,7 +50,7 @@ public class HistoryGraphs {
 	private double[] getDateFromReports(List<HealthReport> reports, int size, String key) {
 		double[] result = new double[size];
 		int length = reports.size();
-		
+
 		for (int i = 0; i < length; i++) {
 			HealthReport report = reports.get(i);
 			try {
@@ -166,54 +156,17 @@ public class HistoryGraphs {
 					result[i] = -1;
 				}
 			} catch (NullPointerException e) {
-				//ignore
+				// ignore
 			}
 		}
 		return result;
 	}
-	
-	private HealthReport getHistoryReport(Date startDate, Date endDate, String domain) {
-		try {
-			List<Dailyreport> reports = m_dailyReportDao.findAllByDomainNameDuration(startDate, endDate, domain, "health",
-			      DailyreportEntity.READSET_FULL);
-			HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
-			HealthReport healthReport = merger.getHealthReport();
-			merger.setDuration(endDate.getTime() - startDate.getTime());
 
-			for (Dailyreport report : reports) {
-				String xml = report.getContent();
-				HealthReport model = DefaultSaxParser.parse(xml);
-				model.accept(merger);
-				healthReport.getDomainNames().addAll(model.getDomainNames());
-			}
-			return healthReport;
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new HealthReport(domain);
+	private HealthReport getHistoryReport(Date startDate, Date endDate, String domain) {
+		return m_reportService.queryHealthReport(domain, startDate, endDate);
 	}
 
 	private HealthReport getHourlyReport(long date, String domain) {
-		try {
-			List<Report> reports = m_reportDao.findAllByPeriodDomainName(new Date(date), domain, "health",
-			      ReportEntity.READSET_FULL);
-
-			HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
-			HealthReport healthReport = merger.getHealthReport();
-
-			merger.setDuration(TimeUtil.ONE_HOUR);
-
-			for (Report report : reports) {
-				String xml = report.getContent();
-				HealthReport model = DefaultSaxParser.parse(xml);
-				model.accept(merger);
-				healthReport.getDomainNames().addAll(model.getDomainNames());
-			}
-
-			return healthReport;
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new HealthReport(domain);
+		return m_reportService.queryHealthReport(domain, new Date(date), new Date(date + TimeUtil.ONE_HOUR));
 	}
 }
