@@ -9,11 +9,18 @@ import org.junit.Test;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.impl.ReportServiceImpl;
+import com.site.lookup.ComponentTestCase;
 
-public class ReportServiceImplTest {
+public class ReportServiceImplTest extends ComponentTestCase{
 
 	private ReportServiceImpl m_impl = new ReportServiceImpl();
 
+	@Test
+	public void testWeeklyCache() throws Exception {
+	      lookup(WeeklyReportCache.class);
+	      
+	      System.in.read();
+	}
 	@Test
 	public void test() {
 		Date currentDay = TimeUtil.getCurrentDay();

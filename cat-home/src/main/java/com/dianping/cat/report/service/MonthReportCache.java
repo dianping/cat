@@ -116,7 +116,7 @@ public class MonthReportCache implements Initializable {
 				m_healthReports.put(domain, m_dailyReportService.queryHealthReport(domain, start, end));
 			}
 
-			Set<String> databases = m_hourReportService.queryAllDatabaseNames(start, start, "database");
+			Set<String> databases = m_hourReportService.queryAllDatabaseNames(start, end, "database");
 
 			for (String database : databases) {
 				m_databaseRepors.put(database, m_dailyReportService.queryDatabaseReport(database, start, end));

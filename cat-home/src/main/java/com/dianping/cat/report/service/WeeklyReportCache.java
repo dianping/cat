@@ -53,40 +53,40 @@ public class WeeklyReportCache implements Initializable {
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
-	
-	public TransactionReport queryTransactionReport(String domain, Date start){
+
+	public TransactionReport queryTransactionReport(String domain, Date start) {
 		return m_transactionReports.get(domain);
 	}
-	
-	public EventReport queryEventReport(String domain, Date start){
+
+	public EventReport queryEventReport(String domain, Date start) {
 		return m_eventReports.get(domain);
 	}
 
-	public ProblemReport queryProblemReport(String domain, Date start){
+	public ProblemReport queryProblemReport(String domain, Date start) {
 		return m_problemReports.get(domain);
 	}
 
-	public HeartbeatReport queryHeartbeatReport(String domain, Date start){
+	public HeartbeatReport queryHeartbeatReport(String domain, Date start) {
 		return null;
 	}
 
-	public MatrixReport queryMatrixReport(String domain, Date start){
+	public MatrixReport queryMatrixReport(String domain, Date start) {
 		return m_matrixReports.get(domain);
 	}
 
-	public CrossReport queryCrossReport(String domain, Date start){
+	public CrossReport queryCrossReport(String domain, Date start) {
 		return m_crossReports.get(domain);
 	}
 
-	public SqlReport querySqlReport(String domain, Date start){
+	public SqlReport querySqlReport(String domain, Date start) {
 		return m_sqlReports.get(domain);
 	}
 
-	public DatabaseReport queryDatabaseReport(String database, Date start){
+	public DatabaseReport queryDatabaseReport(String database, Date start) {
 		return m_databaseRepors.get(database);
 	}
 
-	public HealthReport queryHealthReport(String domain, Date start){
+	public HealthReport queryHealthReport(String domain, Date start) {
 		return m_healthReports.get(domain);
 	}
 
@@ -98,7 +98,7 @@ public class WeeklyReportCache implements Initializable {
 		}
 	}
 
-	public class Reload implements Task{
+	public class Reload implements Task {
 		private void reload() {
 			Date start = TimeUtil.getCurrentWeek();
 			Date end = TimeUtil.getCurrentDay();
@@ -116,7 +116,7 @@ public class WeeklyReportCache implements Initializable {
 				m_healthReports.put(domain, m_dailyReportService.queryHealthReport(domain, start, end));
 			}
 
-			Set<String> databases = m_hourReportService.queryAllDatabaseNames(start, start, "database");
+			Set<String> databases = m_hourReportService.queryAllDatabaseNames(start, end, "database");
 
 			for (String database : databases) {
 				m_databaseRepors.put(database, m_dailyReportService.queryDatabaseReport(database, start, end));
