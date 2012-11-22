@@ -6,6 +6,12 @@ import java.util.Set;
 import javax.servlet.ServletException;
 
 import org.apache.commons.lang.StringUtils;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.database.model.entity.Domain;
@@ -38,15 +44,9 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.sql.LocalSqlService;
+import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.view.StringSortHelper;
-import com.dianping.cat.status.ServerStateManager;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler extends ContainerHolder implements PageHandler<Context> {
 	@Inject
@@ -81,6 +81,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "sql-local")
 	private LocalSqlService m_sqlService;
+
+	@Inject(type = ModelService.class, value = "state-local")
+	private LocalStateService m_stateService;
 	
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -185,6 +188,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_databaseService.invoke(database);
 			} else if ("sql".equals(report)) {
 				response = m_sqlService.invoke(request);
+			} else if ("state".equals(report)) {
+				response = m_stateService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}

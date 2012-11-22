@@ -13,6 +13,7 @@ import com.dianping.cat.report.page.ip.DisplayModelTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.model.event.EventModelServiceTest;
+import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionModelServiceTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
@@ -97,7 +98,7 @@ import com.dianping.cat.system.notify.RenderTest;
 
       /* alarm .render */
       RenderTest.class, ThresholdRuleTest.class, TemplateMergerTest.class,
-      
-		ReportServiceImpl.class})
+
+      ReportServiceImpl.class, StateReportMerger.class })
 public class AllTests {
 }

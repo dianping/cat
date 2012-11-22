@@ -352,8 +352,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
 			m_serverStateManager.addMessageSize(amount);
 
-			long delay = System.currentTimeMillis() - id.getTimestamp();
-			m_serverStateManager.addProcessDelay(delay);
+			Message message = tree.getMessage();
+			if (message instanceof Transaction) {
+				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp() - ((Transaction)message).getDurationInMillis();
+				m_serverStateManager.addProcessDelay(delay);
+			}
 
 			m_logger
 			      .info("Dump the message number: " + m_total + " Size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");

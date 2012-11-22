@@ -3,6 +3,11 @@ package com.dianping.cat.consumer.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
+import org.unidal.initialization.Module;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
+
 import com.dainping.cat.consumer.dal.report.HostinfoDao;
 import com.dainping.cat.consumer.dal.report.ProjectDao;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -13,7 +18,6 @@ import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.common.StateAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
@@ -28,6 +32,7 @@ import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.handler.LongExecutionHandler;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.SqlParseManager;
+import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -35,10 +40,6 @@ import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
-import org.unidal.initialization.Module;
-import org.unidal.lookup.configuration.AbstractResourceConfigurator;
-import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -53,7 +54,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class, ServerStateManager.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
-		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,common")));
+		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,PigeonCall,Cache";
@@ -89,7 +90,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(StateAnalyzer.class).is(PER_LOOKUP)//
 		      .req(HostinfoDao.class, TaskDao.class, ReportDao.class, ProjectDao.class)//
-		      .req(BucketManager.class));
+		      .req(BucketManager.class,ServerStateManager.class));
 
 		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));

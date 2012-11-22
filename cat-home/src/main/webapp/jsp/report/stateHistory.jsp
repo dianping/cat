@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.state.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.state.Model" scope="request"/>
 
-<a:report title="CAT State Report" navUrlPrefix="domain=${model.domain}">
+<a:historyReport title="CAT State Report" navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}  &nbsp;&nbsp;&nbsp;&nbsp;CAT项目指标</jsp:attribute>
 	<jsp:body>	
 	<res:useCss value="${res.css.local.matrix_css}" target="head-css" />
@@ -20,21 +20,21 @@
 	<tr style="text-align:left">
 		<th>Machines: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
-					<a href="?domain=${model.domain}&date=${model.date}"
+					<a href="?op=history&domain=${model.domain}&date=${model.date}"
 						class="current">All</a>
 				</c:when>
 				<c:otherwise>
-					<a href="?domain=${model.domain}&date=${model.date}">All</a>
+					<a href="?op=history&domain=${model.domain}&date=${model.date}">All</a>
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}"
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}"
 							class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -83,7 +83,7 @@
 </table>
 <br>
 </jsp:body>
-</a:report>
+</a:historyReport>
 
 <script type="text/javascript">
 $(document).ready(function(){

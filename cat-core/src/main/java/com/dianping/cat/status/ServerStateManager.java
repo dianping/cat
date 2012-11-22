@@ -48,7 +48,7 @@ public class ServerStateManager {
 
 	public Long getCurrentMinute() {
 		long time = System.currentTimeMillis();
-		return time % (60 * 1000);
+		return time -time % (60 * 1000);
 	}
 
 	public void RemoveState(long time){

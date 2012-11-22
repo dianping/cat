@@ -83,6 +83,10 @@
 			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.state.StateMerger</role>
+			<implementation>com.dianping.cat.report.task.state.StateMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.transaction.TransactionReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.transaction.TransactionReportBuilder</implementation>
 			<requirements>
@@ -287,6 +291,30 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.state.StateMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.thread.TaskProducer</role>
 			<implementation>com.dianping.cat.report.task.thread.TaskProducer</implementation>
 			<requirements>
@@ -352,6 +380,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.health.HealthReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
@@ -742,6 +773,53 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>state-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.state.LocalStateService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>state-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.state.HistoricalStateService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>state</role-hint>
+			<implementation>com.dianping.cat.report.page.model.state.CompositeStateService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>state-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>cross-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.cross.LocalCrossService</implementation>
 			<requirements>
@@ -1020,7 +1098,7 @@
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>dailygraph</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>dailygraph</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1030,7 +1108,7 @@
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>dailyreport</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>dailyreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1040,7 +1118,7 @@
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>graph</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>graph</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1050,7 +1128,7 @@
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>weeklyreport</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>weeklyreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1060,7 +1138,7 @@
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>monthreport</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>monthreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1070,7 +1148,7 @@
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>location</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>location</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1130,61 +1208,61 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>alarmTemplate</role-hint>
+			<role-hint>alarm-template</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>alarmTemplate</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<logical-table-name>alarm-template</logical-table-name>
+				<physical-table-name>alarmTemplate</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>alarmRule</role-hint>
+			<role-hint>alarm-rule</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>alarmRule</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<logical-table-name>alarm-rule</logical-table-name>
+				<physical-table-name>alarmRule</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>alarmRuleSubscription</role-hint>
+			<role-hint>alarm-rule-subscription</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>alarmRuleSubscription</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<logical-table-name>alarm-rule-subscription</logical-table-name>
+				<physical-table-name>alarmRuleSubscription</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>mailRecord</role-hint>
+			<role-hint>mail-record</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>mailRecord</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<logical-table-name>mail-record</logical-table-name>
+				<physical-table-name>mailRecord</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>scheduledReport</role-hint>
+			<role-hint>scheduled-report</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>scheduledReport</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<logical-table-name>scheduled-report</logical-table-name>
+				<physical-table-name>scheduledReport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>scheduledReportSubscription</role-hint>
+			<role-hint>scheduled-report-subscription</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>scheduledReportSubscription</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<logical-table-name>scheduled-report-subscription</logical-table-name>
+				<physical-table-name>scheduledReportSubscription</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -1268,11 +1346,11 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>DP_AdminLogin</role-hint>
+			<role-hint>dp-admin-login</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>DP_AdminLogin</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<logical-table-name>dp-admin-login</logical-table-name>
+				<physical-table-name>DP_AdminLogin</physical-table-name>
 				<data-source-name>user</data-source-name>
 			</configuration>
 		</component>
@@ -1331,9 +1409,16 @@
 					<role>long</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.status.ServerStateManager</role>
+				</requirement>
+				<requirement>
 					<role>java.util.List</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.status.ServerStateManager</role>
+			<implementation>com.dianping.cat.status.ServerStateManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.problem.Handler</role>
@@ -1607,6 +1692,11 @@
 					<role-hint>sql-local</role-hint>
 					<field-name>m_sqlService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>state-local</role-hint>
+					<field-name>m_stateService</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1792,6 +1882,23 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.state.LocalStateService</role>
+			<implementation>com.dianping.cat.report.page.model.state.LocalStateService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.sql.Handler</role>
 			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
@@ -1917,6 +2024,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.health.HealthReportBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
@@ -2260,6 +2370,34 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.state.StateReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.task.state.StateMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.state.StateMerger</role>
+			<implementation>com.dianping.cat.report.task.state.StateMerger</implementation>
+		</component>
+		<component>
 			<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 			<implementation>com.dainping.cat.consumer.dal.report.TaskDao</implementation>
 			<requirements>
@@ -2399,6 +2537,33 @@
 		<component>
 			<role>com.dianping.cat.report.page.database.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.database.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.state.Handler</role>
+			<implementation>com.dianping.cat.report.page.state.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.state.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.status.ServerStateManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>state</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.state.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.state.JspViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

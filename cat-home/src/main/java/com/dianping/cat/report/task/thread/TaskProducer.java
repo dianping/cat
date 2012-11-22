@@ -18,6 +18,7 @@ import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dainping.cat.consumer.dal.report.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.home.dal.report.WeeklyreportDao;
@@ -45,6 +46,8 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 	private Set<String> m_dailyReportNameSet = new HashSet<String>();
 
 	private Set<String> m_graphReportNameSet = new HashSet<String>();
+
+	private static final String STATE = "state";
 
 	private void generateDailyDatabaseTasks(Date date) {
 		try {
@@ -76,6 +79,16 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 						insertTask(domain, name, date, ReportFacade.TYPE_DAILY);
 					}
 				}
+			}
+			try {
+				try {
+					m_taskDao.findByDomainNameTypePeriod(STATE, CatString.CAT, ReportFacade.TYPE_DAILY, date,
+					      TaskEntity.READSET_FULL);
+				} catch (DalNotFoundException e) {
+					insertTask(CatString.CAT, STATE, date, ReportFacade.TYPE_DAILY);
+				}
+			} catch (DalException e) {
+				Cat.logError(e);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -138,7 +151,7 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 					for (String domain : domainSet) {
 						try {
 							try {
-								m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_WEEK, date,
+								m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_MONTH, date,
 								      TaskEntity.READSET_FULL);
 							} catch (DalNotFoundException e) {
 								insertTask(domain, name, date, ReportFacade.TYPE_MONTH);
@@ -147,6 +160,17 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 							Cat.logError(e);
 						}
 					}
+				}
+
+				try {
+					try {
+						m_taskDao.findByDomainNameTypePeriod(STATE, CatString.CAT, ReportFacade.TYPE_WEEK, date,
+						      TaskEntity.READSET_FULL);
+					} catch (DalNotFoundException e) {
+						insertTask(CatString.CAT, STATE, date, ReportFacade.TYPE_MONTH);
+					}
+				} catch (DalException e) {
+					Cat.logError(e);
 				}
 			}
 		}
@@ -205,6 +229,16 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 							Cat.logError(e);
 						}
 					}
+				}
+				try {
+					try {
+						m_taskDao.findByDomainNameTypePeriod(STATE, CatString.CAT, ReportFacade.TYPE_WEEK, date,
+						      TaskEntity.READSET_FULL);
+					} catch (DalNotFoundException e) {
+						insertTask(CatString.CAT, STATE, date, ReportFacade.TYPE_WEEK);
+					}
+				} catch (DalException e) {
+					Cat.logError(e);
 				}
 			}
 		}

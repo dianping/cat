@@ -5,21 +5,21 @@ import java.util.Date;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.status.ServerStateManager;
-import com.dianping.cat.status.ServerState.State;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -31,6 +31,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
+	@Inject
+	private ServerConfigManager m_manager;
+
 	@Inject(type = ModelService.class, value = "state")
 	private ModelService<StateReport> m_service;
 
@@ -38,7 +41,8 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date);
+		      .setProperty("date", date)//
+		      .setProperty("ip", payload.getIpAddress());
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<StateReport> response = m_service.invoke(request);
@@ -73,15 +77,21 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 
 		normalize(model, payload);
+		StateReport report = null;
 		switch (action) {
 		case HOURLY:
-			StateReport report = getHourlyReport(payload);
+			report = getHourlyReport(payload);
 			break;
 		case HISTORY:
-			StateReport historyReport = getHistoryReport(payload);
+			report = getHistoryReport(payload);
 			break;
 		}
-		model.setAction(Action.HOURLY);
+
+		StateShow show = new StateShow(payload.getIpAddress());
+		show.visitStateReport(report);
+		model.setState(show);
+		model.setReport(report);
+
 		m_jspViewer.view(ctx, model);
 	}
 
@@ -90,12 +100,20 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(action);
 		model.setPage(ReportPage.STATE);
 		model.setDisplayDomain(payload.getDomain());
+		// Only for cat
+		payload.setDomain(m_manager.getConsoleDefaultDomain());
+		String ip = payload.getIpAddress();
 
+		if (ip == null || ip.length() == 0) {
+			payload.setIpAddress(CatString.ALL_IP);
+		}
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());
 		} else {
 			model.setLongDate(payload.getDate());
 		}
+		model.setIpAddress(payload.getIpAddress());
+		
 		if (action == Action.HISTORY) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {

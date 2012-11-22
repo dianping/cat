@@ -3,6 +3,13 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
+import org.unidal.initialization.DefaultModuleManager;
+import org.unidal.initialization.Module;
+import org.unidal.initialization.ModuleManager;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
+
 import com.dainping.cat.consumer.dal.report.HostinfoDao;
 import com.dainping.cat.consumer.dal.report.ProjectDao;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -54,18 +61,14 @@ import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.spi.ReportFacade;
 import com.dianping.cat.report.task.sql.SqlMerger;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
+import com.dianping.cat.report.task.state.StateMerger;
+import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
 import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
-import org.unidal.initialization.DefaultModuleManager;
-import org.unidal.initialization.Module;
-import org.unidal.initialization.ModuleManager;
-import org.unidal.lookup.configuration.AbstractResourceConfigurator;
-import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -98,6 +101,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(CrossMerger.class));
 		all.add(C(DatabaseMerger.class));
 		all.add(C(SqlMerger.class));
+		all.add(C(StateMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class)//
@@ -130,6 +134,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(CrossReportBuilder.class) //
 		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class)//
 		      .req(WeeklyreportDao.class, MonthreportDao.class));
+		
+		all.add(C(StateReportBuilder.class) //
+		      .req(GraphDao.class, ReportDao.class, DailyreportDao.class, StateMerger.class)//
+		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(TaskProducer.class, TaskProducer.class) //
 		      .req(TaskDao.class, ReportDao.class));
@@ -142,7 +150,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,//
 		            DatabaseReportBuilder.class, SqlReportBuilder.class, HealthReportBuilder.class,//
-		            TaskDao.class));
+		            StateReportBuilder.class,TaskDao.class));
 
 		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 

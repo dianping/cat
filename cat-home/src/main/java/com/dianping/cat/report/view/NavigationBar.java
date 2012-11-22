@@ -35,6 +35,8 @@ public class NavigationBar {
 		ReportPage.DATABASE,
 
 		ReportPage.HEALTH,
+		
+		ReportPage.STATE,
 
 		ReportPage.LOGVIEW
 
