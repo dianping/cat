@@ -11,6 +11,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.DailyReportService;
@@ -40,7 +41,7 @@ public class ReportServiceImpl implements ReportService {
 
 	@Inject
 	private MonthReportCache m_monthReportCache;
-
+	
 	public static final int s_hourly = 1;
 
 	public static final int s_daily = 2;
@@ -296,5 +297,27 @@ public class ReportServiceImpl implements ReportService {
 			return m_dailyReportService.queryHealthReport(domain, start, end);
 		}
 	}
+
+	@Override
+   public StateReport queryStateReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		if (type == s_hourly) {
+			return m_hourlyReportService.queryStateReport(domain, start, end);
+		} else if (type == s_daily) {
+			return m_dailyReportService.queryStateReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			return m_dailyReportService.queryStateReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			return m_weeklyReportService.queryStateReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			return m_weeklyReportCache.queryStateReport(domain, start);
+		} else if (type == s_historyMonth) {
+			return m_monthReportService.queryStateReport(domain, start);
+		} else if (type == s_currentMonth) {
+			return m_monthReportCache.queryStateReport(domain, start);
+		} else {
+			return m_dailyReportService.queryStateReport(domain, start, end);
+		}
+   }
 
 }

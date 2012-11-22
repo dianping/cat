@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.common.CommonAnalyzer;
+import com.dianping.cat.consumer.common.StateAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
@@ -31,6 +31,7 @@ import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
@@ -50,7 +51,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(SqltableDao.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
-		      .req(AnalyzerFactory.class) //
+		      .req(AnalyzerFactory.class, ServerStateManager.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
 		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,common")));
 
@@ -86,8 +87,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MatrixAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
 
-		all.add(C(CommonAnalyzer.class).is(PER_LOOKUP)//
-		      .req(HostinfoDao.class, TaskDao.class, ProjectDao.class)//
+		all.add(C(StateAnalyzer.class).is(PER_LOOKUP)//
+		      .req(HostinfoDao.class, TaskDao.class, ReportDao.class, ProjectDao.class)//
 		      .req(BucketManager.class));
 
 		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //

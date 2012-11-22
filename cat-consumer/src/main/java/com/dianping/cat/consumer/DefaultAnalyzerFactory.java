@@ -1,6 +1,6 @@
 package com.dianping.cat.consumer;
 
-import com.dianping.cat.consumer.common.CommonAnalyzer;
+import com.dianping.cat.consumer.common.StateAnalyzer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
@@ -68,7 +68,7 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;
 		} else if (name.equals("common")) {
-			CommonAnalyzer analyzer = lookup(CommonAnalyzer.class);
+			StateAnalyzer analyzer = lookup(StateAnalyzer.class);
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;

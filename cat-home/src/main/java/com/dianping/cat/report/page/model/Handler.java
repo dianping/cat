@@ -40,6 +40,7 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.sql.LocalSqlService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.view.StringSortHelper;
+import com.dianping.cat.status.ServerStateManager;
 import com.site.lookup.ContainerHolder;
 import com.site.lookup.annotation.Inject;
 import com.site.web.mvc.PageHandler;
@@ -80,7 +81,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "sql-local")
 	private LocalSqlService m_sqlService;
-
+	
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
 		String ipAddress = payload.getIpAddress();
@@ -126,7 +127,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			SqlReportFilter filter = new SqlReportFilter(database);
 
 			return filter.buildXml((com.dianping.cat.consumer.sql.model.IEntity<?>) dataModel);
-		} else {
+		}  else {
 			return String.valueOf(dataModel);
 		}
 	}
@@ -435,6 +436,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitDatabase(database);
 			}
 		}
-
 	}
+	
 }

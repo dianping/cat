@@ -18,6 +18,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
@@ -44,6 +45,8 @@ public class MonthReportCache implements Initializable {
 	private Map<String, DatabaseReport> m_databaseRepors = new HashMap<String, DatabaseReport>();
 
 	private Map<String, HealthReport> m_healthReports = new HashMap<String, HealthReport>();
+	
+	private Map<String,StateReport> m_stateReports = new HashMap<String,StateReport>();
 
 	@Inject
 	private DailyReportService m_dailyReportService;
@@ -98,6 +101,10 @@ public class MonthReportCache implements Initializable {
 		return m_healthReports.get(domain);
 	}
 
+	public StateReport queryStateReport(String domain,Date start){
+		return m_stateReports.get(domain);
+	}
+	
 	public class Reload implements Task {
 		private void reload() {
 			Date start = TimeUtil.getCurrentMonth();
@@ -121,6 +128,9 @@ public class MonthReportCache implements Initializable {
 			for (String database : databases) {
 				m_databaseRepors.put(database, m_dailyReportService.queryDatabaseReport(database, start, end));
 			}
+			
+			String domain="Cat";
+			m_stateReports.put(domain, m_dailyReportService.queryStateReport(domain, start, end));
 		}
 
 		@Override
@@ -134,6 +144,7 @@ public class MonthReportCache implements Initializable {
 				if (time > m_end) {
 					Transaction t = Cat.newTransaction("ReportReload", "Month");
 					try {
+						
 						reload();
 						t.setStatus(Transaction.SUCCESS);
 					} catch (Exception e) {

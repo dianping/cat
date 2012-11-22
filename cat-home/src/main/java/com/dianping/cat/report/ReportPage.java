@@ -33,13 +33,13 @@ public enum ReportPage implements Page {
 
    HEALTH("health", "health", "Health", "Health", true),
 
-   MONTHREPORT("monthreport", "monthreport", "monthreport", "Month Report", false),
-
    CROSS("cross", "cross", "Cross", "Cross", true),
 
    CACHE("cache", "cache", "Cache", "Cache", true),
 
-   DATABASE("database", "database", "Database", "Database", true);
+   DATABASE("database", "database", "Database", "Database", true),
+
+   STATE("state", "state", "State", "State", true);
 
    private String m_name;
 

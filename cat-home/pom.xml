@@ -59,10 +59,6 @@
          <version>1.6</version>
       </dependency>
       <dependency>
-         <groupId>com.site.common</groupId>
-         <artifactId>web-framework</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.unidal.webres</groupId>
          <artifactId>WebResServer</artifactId>
       </dependency>
@@ -95,11 +91,6 @@
          <scope>runtime</scope>
       </dependency>
       <dependency>
-         <groupId>com.site.common</groupId>
-         <artifactId>test-framework</artifactId>
-         <scope>${test-framework.scope}</scope>
-      </dependency>
-      <dependency>
          <groupId>com.site.dal</groupId>
          <artifactId>dal-jdbc</artifactId>
          <version>1.1.8</version>
@@ -108,6 +99,27 @@
          <groupId>org.freemarker</groupId>
          <artifactId>freemarker</artifactId>
          <version>2.3.9</version>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.8.1</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.mortbay.jetty</groupId>
+         <artifactId>jetty</artifactId>
+         <version>6.1.14</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.site.common</groupId>
+         <artifactId>web-framework</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.site.common</groupId>
+         <artifactId>test-framework</artifactId>
+         <scope>${test-framework.scope}</scope>
       </dependency>
    </dependencies>
    <build>
@@ -216,6 +228,12 @@
                      <file>
                         <name>.settings/org.eclipse.jdt.core.prefs</name>
                         <content><![CDATA[org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.source=1.6
+org.eclipse.jdt.core.compiler.compliance=1.6org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+eclipse.preferences.version=1
+org.eclipse.jdt.core.compiler.source=1.6
+org.eclipse.jdt.core.compiler.compliance=1.6org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.source=1.6
 org.eclipse.jdt.core.compiler.compliance=1.6]]><![CDATA[org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6

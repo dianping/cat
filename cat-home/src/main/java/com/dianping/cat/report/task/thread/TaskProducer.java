@@ -44,6 +44,8 @@ public class TaskProducer implements com.site.helper.Threads.Task, Initializable
 
 	private Set<String> m_dailyReportNameSet = new HashSet<String>();
 
+	private Set<String> m_graphReportNameSet = new HashSet<String>();
+
 	private void generateDailyDatabaseTasks(Date date) {
 		try {
 			Set<String> databaseSet = queryDatabaseSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
@@ -222,6 +224,11 @@ public class TaskProducer implements com.site.helper.Threads.Task, Initializable
 		m_dailyReportNameSet.add("cross");
 		m_dailyReportNameSet.add("sql");
 		m_dailyReportNameSet.add("health");
+
+		m_graphReportNameSet.add("transaction");
+		m_graphReportNameSet.add("event");
+		m_graphReportNameSet.add("problem");
+		m_graphReportNameSet.add("heartbeat");
 	}
 
 	private void firstInit() {
@@ -238,6 +245,34 @@ public class TaskProducer implements com.site.helper.Threads.Task, Initializable
 
 		generateMonthReportTasks(cal.getTime(), currentMonth);
 		generateMonthDatabaseReportTasks(cal.getTime(), currentMonth);
+
+		Date yesterday = TimeUtil.getYesterday();
+		generateDailyGraphTask(cal.getTime(), yesterday);
+	}
+
+	private void generateDailyGraphTask(Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			Date date = new Date(startTime);
+			Set<String> domainSet = queryDomainSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
+
+			for (String domain : domainSet) {
+				for (String name : m_graphReportNameSet) {
+					try {
+						try {
+							m_taskDao.findByDomainNameTypePeriod(name, domain, ReportFacade.TYPE_DAILY_GRAPH, date,
+							      TaskEntity.READSET_FULL);
+						} catch (DalNotFoundException e) {
+							// insertTask(domain, name, date, ReportFacade.TYPE_DAILY_GRAPH);
+						}
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+			}
+		}
 	}
 
 	private void insertTask(String domain, String name, Date date, int type) {
@@ -313,13 +348,15 @@ public class TaskProducer implements com.site.helper.Threads.Task, Initializable
 			try {
 				Calendar cal = Calendar.getInstance();
 				int minute = cal.get(Calendar.MINUTE);
-				Date yestoday = TaskHelper.yesterdayZero(new Date());
+				Date yesterday = TaskHelper.yesterdayZero(new Date());
 				// Daily report should created after last day reports all insert to database
 				if (minute > 10) {
 					Transaction t = Cat.newTransaction("System", "CreateTask");
 					try {
-						generateDailyReportTasks(yestoday);
-						generateDailyDatabaseTasks(yestoday);
+						generateDailyReportTasks(yesterday);
+						generateDailyDatabaseTasks(yesterday);
+
+						generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
 
 						Date lastWeekEnd = TimeUtil.getLastWeekEnd();
 						Date lastWeekStart = new Date(lastWeekEnd.getTime() - TimeUtil.ONE_WEEK);

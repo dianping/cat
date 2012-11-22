@@ -16,6 +16,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -24,6 +25,7 @@ import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.status.ServerStateManager;
 import com.site.helper.Splitters;
 import com.site.helper.Threads;
 import com.site.helper.Threads.Task;
@@ -52,6 +54,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Inject
 	private long m_extraTime = FIVE_MINUTES;
+
+	@Inject
+	private ServerStateManager m_serverStateManager;
 
 	@Inject
 	private List<String> m_analyzerNames;
@@ -354,7 +359,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 	}
 
-	static class PeriodStrategy {
+	public class PeriodStrategy {
 		private long m_duration;
 
 		private long m_extraTime;
@@ -399,7 +404,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 	}
 
-	static class PeriodTask implements Task, LogEnabled {
+	public class PeriodTask implements Task, LogEnabled {
 		private AnalyzerFactory m_factory;
 
 		private MessageAnalyzer m_analyzer;
@@ -429,7 +434,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			if (!result) { // trace queue overflow
 				m_queueOverflow++;
-				if (m_queueOverflow == 1 || m_queueOverflow % 1000 == 0) {
+				if (m_queueOverflow % CatConstants.ERROR_COUNT == 0) {
+					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
 					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
 				}
 			}

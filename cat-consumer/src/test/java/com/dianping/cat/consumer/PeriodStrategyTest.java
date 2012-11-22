@@ -9,7 +9,8 @@ import com.dianping.cat.consumer.RealtimeConsumer.PeriodStrategy;
 public class PeriodStrategyTest {
 	@Test
 	public void test1() {
-		PeriodStrategy strategy = new PeriodStrategy(60, 5, 3);
+		RealtimeConsumer consumer = new RealtimeConsumer();
+		PeriodStrategy strategy = consumer.new PeriodStrategy(60, 5, 3);
 
 		Assert.assertEquals(0, strategy.next(4));
 		Assert.assertEquals(0, strategy.next(5));
@@ -36,7 +37,8 @@ public class PeriodStrategyTest {
 
 	@Test
 	public void test2() {
-		PeriodStrategy strategy = new PeriodStrategy(60, 5, 3);
+		RealtimeConsumer consumer = new RealtimeConsumer();
+		PeriodStrategy strategy = consumer.new PeriodStrategy(60, 5, 3);
 
 		Assert.assertEquals(60, strategy.next(104));
 		Assert.assertEquals(0, strategy.next(105));

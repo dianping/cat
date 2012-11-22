@@ -36,6 +36,9 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.sql.CompositeSqlService;
 import com.dianping.cat.report.page.model.sql.HistoricalSqlService;
 import com.dianping.cat.report.page.model.sql.LocalSqlService;
+import com.dianping.cat.report.page.model.state.CompositeStateService;
+import com.dianping.cat.report.page.model.state.HistoricalStateService;
+import com.dianping.cat.report.page.model.state.LocalStateService;
 import com.dianping.cat.report.page.model.transaction.CompositeTransactionService;
 import com.dianping.cat.report.page.model.transaction.HistoricalTransactionService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
@@ -94,6 +97,15 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "matrix", CompositeMatrixService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
+		
+		all.add(C(ModelService.class, "state-local", LocalStateService.class) //
+		      .req(BucketManager.class, ReportDao.class) //
+		      .req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "state-historical", HistoricalStateService.class) //
+		      .req(BucketManager.class, ReportDao.class));
+		all.add(C(ModelService.class, "state", CompositeStateService.class) //
+		      .req(ServerConfigManager.class) //
+		      .req(ModelService.class, new String[] { "state-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "cross-local", LocalCrossService.class) //
 		      .req(BucketManager.class, ReportDao.class) //

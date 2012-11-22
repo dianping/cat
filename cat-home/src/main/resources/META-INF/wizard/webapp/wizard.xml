@@ -52,6 +52,9 @@
          <page name="database" title="Database" path="database">
             <description>Database</description>
          </page>
+         <page name="state" title="State" path="state">
+            <description>State</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm">

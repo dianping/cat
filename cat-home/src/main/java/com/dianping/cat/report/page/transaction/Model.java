@@ -77,7 +77,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 			return StringSortHelper.sortDomain(domainNames);
 		}
 	}
-
+	
 	public String getErrorTrend() {
 		return m_errorTrend;
 	}

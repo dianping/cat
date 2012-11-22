@@ -25,6 +25,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.status.ServerStateManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -170,6 +173,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>

@@ -24,6 +24,18 @@ public class TimeUtil {
 		return cal.getTime();
 	}
 
+	public static Date getYesterday() {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+
+		return cal.getTime();
+	}
+
 	public static Date getCurrentMonth() {
 		Calendar cal = Calendar.getInstance();
 
@@ -62,7 +74,7 @@ public class TimeUtil {
 		if (dayOfWeek == 7) {
 			return cal.getTime();
 		} else {
-			cal.add(Calendar.DATE,  - dayOfWeek);
+			cal.add(Calendar.DATE, -dayOfWeek);
 		}
 		return cal.getTime();
 	}

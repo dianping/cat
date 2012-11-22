@@ -11,6 +11,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.home.dal.report.Monthreport;
 import com.dianping.cat.home.dal.report.MonthreportDao;
@@ -148,5 +149,19 @@ public class MonthReportServiceImpl implements MonthReportService {
 		}
 		return new HealthReport(domain);
 	}
+
+	@Override
+   public StateReport queryStateReport(String domain, Date start) {
+		try {
+			Monthreport entity = m_monthreportDao.findReportByDomainNamePeriod(start, domain, "state",
+			      MonthreportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.consumer.state.model.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new StateReport(domain);
+   }
 
 }
