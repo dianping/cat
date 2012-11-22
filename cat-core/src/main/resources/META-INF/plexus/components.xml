@@ -243,7 +243,7 @@
 			<implementation>com.dianping.cat.storage.dump.ChannelBufferManager</implementation>
 		</component>
 		<component>
-			<role>com.site.initialization.Module</role>
+			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-core</role-hint>
 			<implementation>com.dianping.cat.CatCoreModule</implementation>
 		</component>

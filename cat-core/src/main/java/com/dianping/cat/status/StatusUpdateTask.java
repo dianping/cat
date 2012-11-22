@@ -15,8 +15,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.StatusInfo;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class StatusUpdateTask implements Task, Initializable {
 	@Inject

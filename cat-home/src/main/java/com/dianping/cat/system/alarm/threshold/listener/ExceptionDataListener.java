@@ -15,7 +15,7 @@ import com.dianping.cat.system.event.Event;
 import com.dianping.cat.system.event.EventDispatcher;
 import com.dianping.cat.system.event.EventListener;
 import com.dianping.cat.system.event.EventType;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class ExceptionDataListener implements EventListener {
 

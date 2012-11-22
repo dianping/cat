@@ -7,7 +7,7 @@ import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.ip.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.consumer.ip.model.transform.DefaultXmlBuilder;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class IpReportTest {
 	@Test

@@ -26,10 +26,10 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.site.dal.jdbc.DalException;
-import com.site.dal.jdbc.DalNotFoundException;
-import com.site.lookup.ComponentTestCase;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.ComponentTestCase;
+import org.unidal.lookup.annotation.Inject;
 
 @RunWith(JUnit4.class)
 public class ArchMonthAnalyzer extends ComponentTestCase {

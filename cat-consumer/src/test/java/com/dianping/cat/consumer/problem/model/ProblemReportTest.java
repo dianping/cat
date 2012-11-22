@@ -7,7 +7,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class ProblemReportTest {
 	@Test

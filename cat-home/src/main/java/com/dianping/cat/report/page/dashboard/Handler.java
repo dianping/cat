@@ -30,11 +30,11 @@ import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.StatusStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
 import com.google.gson.Gson;
-import com.site.lookup.annotation.Inject;
-import com.site.web.mvc.PageHandler;
-import com.site.web.mvc.annotation.InboundActionMeta;
-import com.site.web.mvc.annotation.OutboundActionMeta;
-import com.site.web.mvc.annotation.PayloadMeta;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

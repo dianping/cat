@@ -7,7 +7,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class TransactionReportTest {
 	@Test

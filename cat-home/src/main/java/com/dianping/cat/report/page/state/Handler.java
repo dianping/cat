@@ -15,11 +15,11 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.status.ServerState.State;
-import com.site.lookup.annotation.Inject;
-import com.site.web.mvc.PageHandler;
-import com.site.web.mvc.annotation.InboundActionMeta;
-import com.site.web.mvc.annotation.OutboundActionMeta;
-import com.site.web.mvc.annotation.PayloadMeta;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

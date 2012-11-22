@@ -14,7 +14,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.MapUtils;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class DetailStatistics extends BaseVisitor {
 

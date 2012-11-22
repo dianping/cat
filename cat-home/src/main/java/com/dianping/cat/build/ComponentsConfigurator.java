@@ -60,12 +60,12 @@ import com.dianping.cat.report.task.transaction.TransactionGraphCreator;
 import com.dianping.cat.report.task.transaction.TransactionMerger;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
 import com.dianping.cat.report.view.DomainNavManager;
-import com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
-import com.site.initialization.DefaultModuleManager;
-import com.site.initialization.Module;
-import com.site.initialization.ModuleManager;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
+import org.unidal.initialization.DefaultModuleManager;
+import org.unidal.initialization.Module;
+import org.unidal.initialization.ModuleManager;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {

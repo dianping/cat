@@ -13,7 +13,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessagePathBuilder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable, LogEnabled {
 	@Inject

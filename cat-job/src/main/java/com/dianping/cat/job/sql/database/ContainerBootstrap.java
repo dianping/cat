@@ -3,7 +3,7 @@ package com.dianping.cat.job.sql.database;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 
-import com.site.lookup.ContainerLoader;
+import org.unidal.lookup.ContainerLoader;
 
 public enum ContainerBootstrap {
 	INSTANCE;

@@ -24,9 +24,9 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Inject

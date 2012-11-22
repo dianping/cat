@@ -14,7 +14,7 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class ManyAnalyzerTest extends ComponentTestCase {

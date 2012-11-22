@@ -9,7 +9,7 @@ import org.junit.Test;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.impl.ReportServiceImpl;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 public class ReportServiceImplTest extends ComponentTestCase{
 

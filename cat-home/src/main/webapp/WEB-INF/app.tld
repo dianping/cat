@@ -34,21 +34,21 @@
       <description>Build form action for given id</description>
       <name>action</name>
       <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
-      <function-signature>String action(com.site.web.mvc.ViewModel, java.lang.Object)</function-signature>
+      <function-signature>String action(org.unidal.web.mvc.ViewModel, java.lang.Object)</function-signature>
       <example>${a:action(model, 123)}</example>
    </function>
    <function>
       <description>Build uri for given id</description>
       <name>uri</name>
       <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
-      <function-signature>String uri(com.site.web.mvc.ViewModel, java.lang.Object)</function-signature>
+      <function-signature>String uri(org.unidal.web.mvc.ViewModel, java.lang.Object)</function-signature>
       <example>${a:uri(model, 123)}</example>
    </function>
    <function>
       <description>Build uri for given id with additional query string</description>
       <name>uri2</name>
       <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
-      <function-signature>String uri2(com.site.web.mvc.ViewModel, java.lang.Object, java.lang.String)</function-signature>
+      <function-signature>String uri2(org.unidal.web.mvc.ViewModel, java.lang.Object, java.lang.String)</function-signature>
       <example>${a:uri2(model, 123, 'a=1&amp;b=2')}</example>
    </function>
    <function>

@@ -14,7 +14,7 @@ import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultDomParser;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class ClientConfigManager implements LogEnabled {
 	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";

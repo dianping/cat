@@ -13,12 +13,12 @@ import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
-import com.site.helper.Threads;
-import com.site.helper.Threads.DefaultThreadListener;
-import com.site.initialization.AbstractModule;
-import com.site.initialization.DefaultModuleContext;
-import com.site.initialization.Module;
-import com.site.initialization.ModuleContext;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.DefaultThreadListener;
+import org.unidal.initialization.AbstractModule;
+import org.unidal.initialization.DefaultModuleContext;
+import org.unidal.initialization.Module;
+import org.unidal.initialization.ModuleContext;
 
 public class CatCoreModule extends AbstractModule {
 	public static final String ID = "cat-core";

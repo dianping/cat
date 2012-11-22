@@ -42,9 +42,9 @@ import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.site.initialization.Module;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.initialization.Module;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override

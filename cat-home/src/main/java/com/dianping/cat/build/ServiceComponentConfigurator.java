@@ -45,8 +45,8 @@ import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override

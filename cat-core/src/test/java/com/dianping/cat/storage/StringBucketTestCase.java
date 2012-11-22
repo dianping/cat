@@ -12,7 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 public abstract class StringBucketTestCase extends ComponentTestCase {
 

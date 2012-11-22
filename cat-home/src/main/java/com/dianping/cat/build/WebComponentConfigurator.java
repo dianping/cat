@@ -5,8 +5,8 @@ import java.util.List;
 
 import com.dianping.cat.report.ReportModule;
 import com.dianping.cat.system.SystemModule;
-import com.site.lookup.configuration.Component;
-import com.site.web.configuration.AbstractWebComponentsConfigurator;
+import org.unidal.lookup.configuration.Component;
+import org.unidal.web.configuration.AbstractWebComponentsConfigurator;
 
 class WebComponentConfigurator extends AbstractWebComponentsConfigurator {
 	@SuppressWarnings("unchecked")

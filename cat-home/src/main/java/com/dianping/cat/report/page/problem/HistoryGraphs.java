@@ -14,8 +14,8 @@ import com.dianping.cat.home.dal.report.GraphEntity;
 import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.page.problem.Handler.DetailOrder;
 import com.dianping.cat.report.page.problem.Handler.SummaryOrder;
-import com.site.lookup.annotation.Inject;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 public class HistoryGraphs {
 

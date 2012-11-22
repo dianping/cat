@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.Handler.EventReportFilter;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class EventReportFilterTest {
 	@Test

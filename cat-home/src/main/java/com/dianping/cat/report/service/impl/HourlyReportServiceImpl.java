@@ -31,8 +31,8 @@ import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.task.health.HealthReportMerger;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
 
 public class HourlyReportServiceImpl implements HourlyReportService {
 

@@ -11,7 +11,7 @@ import org.codehaus.plexus.component.repository.exception.ComponentLifecycleExce
 import com.dianping.cat.job.spi.JobCmdLine;
 import com.dianping.cat.job.spi.JobFactory;
 import com.dianping.cat.job.spi.joblet.Joblet;
-import com.site.lookup.ContainerLoader;
+import org.unidal.lookup.ContainerLoader;
 
 public class JobApp extends Configured implements Tool {
 	private static final JobApp s_instance = new JobApp();
@@ -32,7 +32,7 @@ public class JobApp extends Configured implements Tool {
 		try {
 			return (T) s_instance.m_container.lookup(role, roleHint == null ? "default" : roleHint.toString());
 		} catch (Exception e) {
-			throw new com.site.lookup.LookupException("Component(" + role.getName() + ":"
+			throw new org.unidal.lookup.LookupException("Component(" + role.getName() + ":"
 			      + (roleHint == null ? "default" : roleHint.toString()) + ") lookup failure. details: " + e.getMessage(),
 			      e);
 		}

@@ -35,9 +35,9 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.status.ServerStateManager;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class TcpSocketReceiver implements LogEnabled {
 	private boolean m_active = true;

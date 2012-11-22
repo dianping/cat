@@ -392,13 +392,13 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.initialization.Module</role>
+			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-home</role-hint>
 			<implementation>com.dianping.cat.CatHomeModule</implementation>
 		</component>
 		<component>
-			<role>com.site.initialization.ModuleManager</role>
-			<implementation>com.site.initialization.DefaultModuleManager</implementation>
+			<role>org.unidal.initialization.ModuleManager</role>
+			<implementation>org.unidal.initialization.DefaultModuleManager</implementation>
 			<configuration>
 				<topLevelModules>cat-home</topLevelModules>
 			</configuration>
@@ -984,16 +984,16 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.datasource.DataSource</role>
+			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
 			<role-hint>cat</role-hint>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
 			<configuration>
 				<id>cat</id>
 				<maximum-pool-size>3</maximum-pool-size>
@@ -1010,14 +1010,14 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>dailygraph</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>dailygraph</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1025,9 +1025,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>dailyreport</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>dailyreport</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1035,9 +1035,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>graph</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>graph</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1045,9 +1045,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>weeklyreport</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>weeklyreport</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1055,9 +1055,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>monthreport</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>monthreport</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1065,9 +1065,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>location</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>location</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1079,7 +1079,7 @@
 			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1088,7 +1088,7 @@
 			<implementation>com.dianping.cat.home.dal.report.DailyreportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1097,7 +1097,7 @@
 			<implementation>com.dianping.cat.home.dal.report.GraphDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1106,7 +1106,7 @@
 			<implementation>com.dianping.cat.home.dal.report.WeeklyreportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1115,7 +1115,7 @@
 			<implementation>com.dianping.cat.home.dal.report.MonthreportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1124,14 +1124,14 @@
 			<implementation>com.dianping.cat.home.dal.report.LocationDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>alarmTemplate</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>alarmTemplate</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1139,9 +1139,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>alarmRule</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>alarmRule</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1149,9 +1149,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>alarmRuleSubscription</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>alarmRuleSubscription</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1159,9 +1159,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>mailRecord</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>mailRecord</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1169,9 +1169,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>scheduledReport</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>scheduledReport</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1179,9 +1179,9 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>scheduledReportSubscription</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>scheduledReportSubscription</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1193,7 +1193,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1202,7 +1202,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.AlarmRuleDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1211,7 +1211,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1220,7 +1220,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.MailRecordDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1229,7 +1229,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1238,14 +1238,14 @@
 			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.datasource.DataSource</role>
+			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
 			<role-hint>user</role-hint>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
 			<configuration>
 				<id>user</id>
 				<maximum-pool-size>3</maximum-pool-size>
@@ -1262,14 +1262,14 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>DP_AdminLogin</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>DP_AdminLogin</logical-table-name>
 				<physical-table-name></physical-table-name>
@@ -1281,13 +1281,13 @@
 			<implementation>com.dainping.cat.home.dal.user.DpAdminLoginDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.web.mvc.model.ModuleRegistry</role>
-			<implementation>com.site.web.mvc.model.ModuleRegistry</implementation>
+			<role>org.unidal.web.mvc.model.ModuleRegistry</role>
+			<implementation>org.unidal.web.mvc.model.ModuleRegistry</implementation>
 			<configuration>
 				<modules>
 					<module default="true">com.dianping.cat.report.ReportModule</module>
@@ -1372,7 +1372,7 @@
 			<implementation>com.dianping.cat.home.dal.report.GraphDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1635,7 +1635,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1832,7 +1832,7 @@
 			<implementation>com.dianping.cat.job.sql.dal.LocationRecordDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1963,7 +1963,7 @@
 			<implementation>com.dianping.cat.home.dal.report.DailyreportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1972,7 +1972,7 @@
 			<implementation>com.dianping.cat.home.dal.report.WeeklyreportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1981,7 +1981,7 @@
 			<implementation>com.dianping.cat.home.dal.report.MonthreportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2255,7 +2255,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.HostinfoDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2264,7 +2264,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.TaskDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2449,7 +2449,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2458,7 +2458,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.MailRecordDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2467,7 +2467,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2494,7 +2494,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.AlarmRuleDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2503,7 +2503,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.AlarmTemplateDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2512,7 +2512,7 @@
 			<implementation>com.dainping.cat.home.dal.user.DpAdminLoginDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2536,7 +2536,7 @@
 			<implementation>com.dianping.cat.home.dal.alarm.ScheduledReportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2630,7 +2630,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.ProjectDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

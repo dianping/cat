@@ -29,7 +29,7 @@ import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.task.health.HealthReportMerger;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class DailyReportServiceImpl implements DailyReportService {
 

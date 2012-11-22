@@ -3,9 +3,9 @@ package com.dianping.cat.report.page.dashboard;
 import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.report.ReportPage;
-import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.ActionPayload;
-import com.site.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.ActionPayload;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("op")

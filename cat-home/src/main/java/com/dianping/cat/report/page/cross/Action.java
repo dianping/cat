@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.cross;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	HOURLY_HOST("host"),
 
 	HOURLY_METHOD("method"),

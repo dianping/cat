@@ -35,10 +35,10 @@ import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
-import com.site.initialization.Module;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
+import org.unidal.initialization.Module;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override

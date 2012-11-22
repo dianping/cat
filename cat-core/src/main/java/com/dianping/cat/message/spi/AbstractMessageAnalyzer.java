@@ -5,7 +5,7 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
-import com.site.lookup.ContainerHolder;
+import org.unidal.lookup.ContainerHolder;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 

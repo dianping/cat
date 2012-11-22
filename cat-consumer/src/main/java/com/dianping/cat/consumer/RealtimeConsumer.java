@@ -26,11 +26,11 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
-import com.site.helper.Splitters;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 /**
  * This is the real time consumer process framework.

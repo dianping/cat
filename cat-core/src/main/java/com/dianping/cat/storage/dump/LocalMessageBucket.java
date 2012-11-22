@@ -16,8 +16,8 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.helper.Files;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
 
 public class LocalMessageBucket implements MessageBucket {
 	public static final String ID = "local";

@@ -14,7 +14,7 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {

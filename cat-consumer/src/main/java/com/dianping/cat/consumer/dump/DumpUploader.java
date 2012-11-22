@@ -23,14 +23,14 @@ import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
-import com.site.helper.Files;
-import com.site.helper.Files.AutoClose;
-import com.site.helper.Formats;
-import com.site.helper.Scanners;
-import com.site.helper.Scanners.FileMatcher;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Files;
+import org.unidal.helper.Files.AutoClose;
+import org.unidal.helper.Formats;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class DumpUploader implements Initializable, LogEnabled {
 	@Inject

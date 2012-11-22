@@ -2,8 +2,8 @@ package com.dianping.cat.report.page.health;
 
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
-import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")

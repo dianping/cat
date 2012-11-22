@@ -4,9 +4,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.alarm.AlarmTemplate;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateDao;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateEntity;
-import com.site.dal.jdbc.DalException;
-import com.site.dal.jdbc.DalNotFoundException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
 
 public class TemplateManager {
 

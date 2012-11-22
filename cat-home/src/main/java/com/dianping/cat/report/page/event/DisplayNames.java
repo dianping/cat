@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.site.lookup.util.StringUtils;
+import org.unidal.lookup.util.StringUtils;
 
 public class DisplayNames {
 

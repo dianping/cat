@@ -24,11 +24,11 @@ import com.dianping.cat.home.dal.report.WeeklyreportDao;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportFacade;
-import com.site.dal.jdbc.DalException;
-import com.site.dal.jdbc.DalNotFoundException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
 
-public class TaskProducer implements com.site.helper.Threads.Task, Initializable {
+public class TaskProducer implements org.unidal.helper.Threads.Task, Initializable {
 
 	@Inject
 	private WeeklyreportDao m_weeklyReportDao;

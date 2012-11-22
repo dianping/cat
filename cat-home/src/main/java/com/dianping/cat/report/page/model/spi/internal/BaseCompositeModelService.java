@@ -16,9 +16,9 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.site.helper.Splitters;
-import com.site.helper.Threads;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.annotation.Inject;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {

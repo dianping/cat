@@ -4,10 +4,10 @@ import java.util.Arrays;
 
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
-import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.ActionPayload;
-import com.site.web.mvc.payload.annotation.FieldMeta;
-import com.site.web.mvc.payload.annotation.PathMeta;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.ActionPayload;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.payload.annotation.PathMeta;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("op")

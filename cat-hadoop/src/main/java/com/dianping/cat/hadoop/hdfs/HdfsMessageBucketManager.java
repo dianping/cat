@@ -23,10 +23,10 @@ import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class HdfsMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
 	public static final String ID = "hdfs";

@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.logview;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	MOBILE("mobile"), VIEW("view"), DETAIL("detail");
 
 	public static Action getByName(String name, Action defaultAction) {

@@ -20,10 +20,10 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.system.page.alarm.ScheduledManager;
 import com.dianping.cat.system.tool.MailSMS;
-import com.site.dal.jdbc.DalException;
-import com.site.dal.jdbc.DalNotFoundException;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class ScheduledMailTask implements Task {
 

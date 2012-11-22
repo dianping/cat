@@ -21,7 +21,7 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class HtmlMessageCodecTest extends ComponentTestCase {

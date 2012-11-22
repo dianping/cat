@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.dianping.cat.Cat;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 public abstract class CatTestCase extends ComponentTestCase {
 	@Before

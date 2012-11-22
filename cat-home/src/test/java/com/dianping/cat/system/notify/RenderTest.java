@@ -9,7 +9,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 public class RenderTest extends ComponentTestCase {
 

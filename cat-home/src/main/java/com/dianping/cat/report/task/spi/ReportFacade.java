@@ -22,7 +22,7 @@ import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class ReportFacade implements LogEnabled, Initializable {
 

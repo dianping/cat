@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.state;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	HOURLY("view"),
 	
 	HISTORY("history");

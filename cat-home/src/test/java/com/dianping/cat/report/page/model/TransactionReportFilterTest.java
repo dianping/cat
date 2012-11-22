@@ -7,7 +7,7 @@ import org.junit.Test;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.Handler.TransactionReportFilter;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class TransactionReportFilterTest {
 	@Test

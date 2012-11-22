@@ -20,8 +20,8 @@ import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
 
 public class HealthServiceCollector {
 

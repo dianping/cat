@@ -20,8 +20,8 @@ import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
 import com.dianping.cat.report.task.spi.ReportBuilder;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
 
 public class SqlReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 

@@ -8,7 +8,7 @@ import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.service.ReportService;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class HistoryGraphs {
 

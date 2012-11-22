@@ -10,8 +10,8 @@ import com.dianping.cat.message.spi.codec.HtmlEncodingBufferWriter;
 import com.dianping.cat.message.spi.codec.HtmlMessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.codec.WaterfallMessageCodec;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 class CodecComponentConfigurator extends AbstractResourceConfigurator {
 	@Override

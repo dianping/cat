@@ -9,8 +9,8 @@ import org.codehaus.plexus.component.repository.exception.ComponentLookupExcepti
 
 import com.dianping.cat.job.sql.dal.SqlReportRecord;
 import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
-import com.site.dal.jdbc.DalException;
-import com.site.helper.Formats;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Formats;
 
 public class SqlRecordJobReducer extends Reducer<Text, Text, Text, Text> {
 	public void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {

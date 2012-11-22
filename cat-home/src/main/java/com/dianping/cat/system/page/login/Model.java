@@ -1,7 +1,7 @@
 package com.dianping.cat.system.page.login;
 
 import com.dianping.cat.system.SystemPage;
-import com.site.web.mvc.ViewModel;
+import org.unidal.web.mvc.ViewModel;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 	public Model(Context ctx) {

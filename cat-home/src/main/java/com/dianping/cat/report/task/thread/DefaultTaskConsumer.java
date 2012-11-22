@@ -12,8 +12,8 @@ import com.dainping.cat.consumer.dal.report.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.report.task.spi.ReportFacade;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultTaskConsumer extends TaskConsumer {
 

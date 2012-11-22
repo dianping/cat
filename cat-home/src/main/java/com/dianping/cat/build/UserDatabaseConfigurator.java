@@ -3,8 +3,8 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.site.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 final class UserDatabaseConfigurator extends AbstractJdbcResourceConfigurator {
    @Override

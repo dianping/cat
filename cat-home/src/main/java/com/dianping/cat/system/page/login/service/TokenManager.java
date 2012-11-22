@@ -2,7 +2,7 @@ package com.dianping.cat.system.page.login.service;
 
 
 import com.dianping.cat.system.page.login.spi.ITokenManager;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class TokenManager implements ITokenManager<SigninContext, Token> {
 	@Inject

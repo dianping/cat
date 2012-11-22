@@ -12,11 +12,11 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
-import com.site.initialization.DefaultModuleContext;
-import com.site.initialization.Module;
-import com.site.initialization.ModuleContext;
-import com.site.initialization.ModuleInitializer;
-import com.site.lookup.ContainerLoader;
+import org.unidal.initialization.DefaultModuleContext;
+import org.unidal.initialization.Module;
+import org.unidal.initialization.ModuleContext;
+import org.unidal.initialization.ModuleInitializer;
+import org.unidal.lookup.ContainerLoader;
 
 /**
  * This is the main entry point to the system.

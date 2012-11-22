@@ -17,7 +17,7 @@ import com.dianping.cat.home.dal.report.Monthreport;
 import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.home.dal.report.MonthreportEntity;
 import com.dianping.cat.report.service.MonthReportService;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class MonthReportServiceImpl implements MonthReportService {
 

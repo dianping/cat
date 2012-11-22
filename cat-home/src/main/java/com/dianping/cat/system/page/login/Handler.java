@@ -8,6 +8,15 @@ import java.util.Enumeration;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.jsp.function.CodecFunction;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.ErrorObject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
 import com.dainping.cat.home.dal.user.DpAdminLogin;
 import com.dianping.cat.system.SystemContext;
 import com.dianping.cat.system.SystemPage;
@@ -15,14 +24,6 @@ import com.dianping.cat.system.page.login.service.Credential;
 import com.dianping.cat.system.page.login.service.Session;
 import com.dianping.cat.system.page.login.service.SigninContext;
 import com.dianping.cat.system.page.login.service.SigninService;
-import com.site.lookup.annotation.Inject;
-import com.site.web.jsp.function.Encoder;
-import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.ErrorObject;
-import com.site.web.mvc.PageHandler;
-import com.site.web.mvc.annotation.InboundActionMeta;
-import com.site.web.mvc.annotation.OutboundActionMeta;
-import com.site.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -155,7 +156,7 @@ public class Handler implements PageHandler<Context> {
 							sb.append('&');
 						}
 
-						sb.append(name).append('=').append(Encoder.urlEncode(attribute));
+						sb.append(name).append('=').append(CodecFunction.urlEncode(attribute));
 					}
 				}
 			}

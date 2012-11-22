@@ -16,8 +16,8 @@ import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.home.dal.report.WeeklyreportDao;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
 
 public abstract class AbstractReportBuilder {
 

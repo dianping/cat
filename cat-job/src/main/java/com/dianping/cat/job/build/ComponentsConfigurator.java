@@ -20,9 +20,9 @@ import com.dianping.cat.job.spi.joblet.Joblet;
 import com.dianping.cat.job.spi.joblet.JobletRunner;
 import com.dianping.cat.job.sql.dal.LocationRecordDao;
 import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
-import com.site.initialization.Module;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.initialization.Module;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override

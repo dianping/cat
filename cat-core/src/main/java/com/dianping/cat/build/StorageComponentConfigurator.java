@@ -9,8 +9,8 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.DefaultBucketManager;
 import com.dianping.cat.storage.report.LocalReportBucket;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 class StorageComponentConfigurator extends AbstractResourceConfigurator {
 	@Override

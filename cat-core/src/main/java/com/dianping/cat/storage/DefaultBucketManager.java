@@ -7,8 +7,8 @@ import java.util.Map;
 
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultBucketManager extends ContainerHolder implements BucketManager {
 	private Map<Entry, Bucket<?>> m_map = new HashMap<Entry, Bucket<?>>();

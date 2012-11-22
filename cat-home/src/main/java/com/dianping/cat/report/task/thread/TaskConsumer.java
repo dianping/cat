@@ -5,7 +5,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Transaction;
 
-public abstract class TaskConsumer implements com.site.helper.Threads.Task {
+public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
 	private static final int MAX_TODO_RETRY_TIMES = 3;
 

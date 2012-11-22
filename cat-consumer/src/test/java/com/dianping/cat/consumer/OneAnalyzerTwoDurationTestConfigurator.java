@@ -7,8 +7,8 @@ import java.util.List;
 import com.dianping.cat.consumer.OneAnalyzerTwoDurationTest.MockAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class OneAnalyzerTwoDurationTestConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {

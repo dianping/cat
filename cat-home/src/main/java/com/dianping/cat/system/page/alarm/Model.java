@@ -7,7 +7,7 @@ import com.dianping.cat.home.dal.alarm.AlarmTemplate;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.system.SystemPage;
-import com.site.web.mvc.ViewModel;
+import org.unidal.web.mvc.ViewModel;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 	private AlarmRule m_alarmRule;

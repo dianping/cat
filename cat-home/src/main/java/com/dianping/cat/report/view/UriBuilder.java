@@ -1,9 +1,9 @@
 package com.dianping.cat.report.view;
 
-import com.site.web.mvc.Action;
-import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.Page;
-import com.site.web.mvc.ViewModel;
+import org.unidal.web.mvc.Action;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.Page;
+import org.unidal.web.mvc.ViewModel;
 
 public class UriBuilder {
 	public static String action(ViewModel<? extends Page, ? extends Action, ? extends ActionContext<?>> model, Object id) {

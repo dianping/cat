@@ -12,7 +12,7 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
-import com.site.lookup.ContainerHolder;
+import org.unidal.lookup.ContainerHolder;
 
 public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerFactory {
 	@Override

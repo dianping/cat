@@ -15,7 +15,7 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class LongExecutionHandler extends Handler implements Initializable {
 	@Inject

@@ -18,7 +18,7 @@ import com.dianping.cat.job.spi.joblet.JobletMapper;
 import com.dianping.cat.job.spi.joblet.JobletMeta;
 import com.dianping.cat.job.spi.joblet.JobletReducer;
 import com.dianping.cat.job.spi.mapreduce.MessageTreeInputFormat;
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public enum JobFactory {
 	INSTANCE;

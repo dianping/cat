@@ -4,11 +4,11 @@ import java.io.File;
 
 import org.junit.Test;
 
-import com.site.initialization.DefaultModuleContext;
-import com.site.initialization.Module;
-import com.site.initialization.ModuleContext;
-import com.site.initialization.ModuleInitializer;
-import com.site.lookup.ContainerLoader;
+import org.unidal.initialization.DefaultModuleContext;
+import org.unidal.initialization.Module;
+import org.unidal.initialization.ModuleContext;
+import org.unidal.initialization.ModuleInitializer;
+import org.unidal.lookup.ContainerLoader;
 
 public class ModuleInitializerTest {
 	@Test

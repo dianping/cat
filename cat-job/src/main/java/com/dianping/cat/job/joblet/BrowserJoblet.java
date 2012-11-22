@@ -23,8 +23,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 @JobletMeta(name = "browser", description = "Browser analysis", keyClass = Browser.class, valueClass = BrowserStat.class, combine = true, reducerNum = 1)
 public class BrowserJoblet extends ContainerHolder implements Joblet<Browser, BrowserStat> {

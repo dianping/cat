@@ -9,7 +9,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultMessageProducer implements MessageProducer {
 	@Inject

@@ -9,8 +9,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
-import com.site.lookup.ComponentTestCase;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ComponentTestCase;
+import org.unidal.lookup.annotation.Inject;
 
 @RunWith(JUnit4.class)
 public class TransactionReportBuilderTest extends ComponentTestCase {
