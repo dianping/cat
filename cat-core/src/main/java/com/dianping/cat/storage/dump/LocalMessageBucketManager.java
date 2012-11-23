@@ -18,6 +18,13 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.unidal.helper.Files;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
@@ -27,18 +34,10 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.status.ServerStateManager;
-import org.unidal.helper.Files;
-import org.unidal.helper.Scanners;
-import org.unidal.helper.Scanners.FileMatcher;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
 
 public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
       LogEnabled {
@@ -54,13 +53,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private ServerConfigManager m_configManager;
 
 	@Inject
-	private MessageCodec m_codec;
-
-	@Inject
-	private ChannelBufferManager m_bufferManager;
-
-	@Inject
 	private ServerStateManager m_serverStateManager;
+	
+	@Inject
+	private MessagePathBuilder m_pathBuilder;
 
 	private int m_error;
 
@@ -73,9 +69,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private Logger m_logger;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(1000);
-
-	@Inject
-	private MessagePathBuilder m_pathBuilder;
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");

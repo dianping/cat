@@ -3,6 +3,9 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
+
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
@@ -45,8 +48,6 @@ import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import org.unidal.lookup.configuration.AbstractResourceConfigurator;
-import org.unidal.lookup.configuration.Component;
 
 class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -99,7 +100,7 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 		
 		all.add(C(ModelService.class, "state-local", LocalStateService.class) //
-		      .req(BucketManager.class, ReportDao.class) //
+		      .req(BucketManager.class) //
 		      .req(MessageConsumer.class, "realtime"));
 		all.add(C(ModelService.class, "state-historical", HistoricalStateService.class) //
 		      .req(BucketManager.class, ReportDao.class));

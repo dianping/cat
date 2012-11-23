@@ -4,19 +4,14 @@ import java.util.List;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.ContainerHolder;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
 
 public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, LogEnabled {
-	@Inject
-	private ServerConfigManager m_configManager;
-
 	private MessageConsumerRegistry m_registry;
 
 	private Logger m_logger;
@@ -25,7 +20,6 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
-
 
 	@Override
 	public void handle(MessageTree tree) {
