@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.state;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +20,9 @@ public class StateShow extends BaseVisitor {
 
 	private Map<Long, Message> m_messages = new LinkedHashMap<Long, Message>();
 
-	private List<ProcessDomain> m_processDomains = new ArrayList<ProcessDomain>();
+	private Map<String, ProcessDomain> m_processDomains = new LinkedHashMap<String, ProcessDomain>();
+
+	private String m_currentIp;
 
 	private String m_ip;
 
@@ -28,8 +32,8 @@ public class StateShow extends BaseVisitor {
 
 	public int getTotalSize() {
 		int size = 0;
-		
-		for (ProcessDomain domain : m_processDomains) {
+
+		for (ProcessDomain domain : m_processDomains.values()) {
 			size += domain.getIps().size();
 		}
 		return size;
@@ -49,7 +53,9 @@ public class StateShow extends BaseVisitor {
 	}
 
 	public List<ProcessDomain> getProcessDomains() {
-		return m_processDomains;
+		List<ProcessDomain> temp = new ArrayList<ProcessDomain>(m_processDomains.values());
+		Collections.sort(temp, new DomainCompartor());
+		return temp;
 	}
 
 	public StateShow(String ip) {
@@ -59,6 +65,8 @@ public class StateShow extends BaseVisitor {
 	@Override
 	public void visitMachine(Machine machine) {
 		String ip = machine.getIp();
+		m_currentIp = ip;
+
 		if (m_total == null) {
 			m_total = new Machine();
 			m_total.setIp(ip);
@@ -125,11 +133,27 @@ public class StateShow extends BaseVisitor {
 
 	@Override
 	public void visitProcessDomain(ProcessDomain processDomain) {
-		m_processDomains.add(processDomain);
+		if (m_ip.equals(m_currentIp) || m_ip.equals(CatString.ALL_IP)) {
+			ProcessDomain temp = m_processDomains.get(processDomain.getName());
+			if (temp == null) {
+				m_processDomains.put(processDomain.getName(), processDomain);
+			} else {
+				temp.getIps().addAll(processDomain.getIps());
+			}
+		}
 	}
 
 	@Override
 	public void visitStateReport(StateReport stateReport) {
 		super.visitStateReport(stateReport);
+	}
+
+	public static class DomainCompartor implements Comparator<ProcessDomain> {
+
+		@Override
+		public int compare(ProcessDomain o1, ProcessDomain o2) {
+			return o1.getName().compareTo(o2.getName());
+		}
+
 	}
 }
