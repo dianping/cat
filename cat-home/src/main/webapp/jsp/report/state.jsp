@@ -81,7 +81,7 @@
 			<td>${item.ips}</td>
 		</tr>
 	</c:forEach>
-	<tr>${lastIndex}</tr>
+	<tr><td>${lastIndex}</td><td>${model.state.totalSize}</td></tr>
 </table>
 <br>
 </jsp:body>

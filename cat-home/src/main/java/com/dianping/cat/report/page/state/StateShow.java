@@ -26,6 +26,15 @@ public class StateShow extends BaseVisitor {
 		return m_total;
 	}
 
+	public int getTotalSize() {
+		int size = 0;
+		
+		for (ProcessDomain domain : m_processDomains) {
+			size += domain.getIps().size();
+		}
+		return size;
+	}
+
 	public List<Message> getMessages() {
 		List<Message> all = new ArrayList<Message>(m_messages.values());
 		List<Message> result = new ArrayList<Message>();
