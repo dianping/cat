@@ -12,9 +12,9 @@ import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.report.view.HistoryNav;
 import com.dianping.cat.report.view.UrlNav;
 import com.dianping.cat.report.view.DomainNavManager.Department;
-import com.site.web.mvc.Action;
-import com.site.web.mvc.ActionContext;
-import com.site.web.mvc.ViewModel;
+import org.unidal.web.mvc.Action;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.ViewModel;
 
 public abstract class AbstractReportModel<A extends Action, M extends ActionContext<?>> extends
       ViewModel<ReportPage, A, M> {

@@ -21,8 +21,8 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultMessageManager extends ContainerHolder implements MessageManager, Initializable, LogEnabled {
 	@Inject

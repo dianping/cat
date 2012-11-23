@@ -1,6 +1,6 @@
 package com.dianping.cat.system.page.login;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	LOGIN("login"),
 
 	LOGOUT("logout");

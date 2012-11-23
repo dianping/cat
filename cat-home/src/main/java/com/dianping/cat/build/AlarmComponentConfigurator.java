@@ -30,8 +30,8 @@ import com.dianping.cat.system.page.alarm.RuleManager;
 import com.dianping.cat.system.page.alarm.ScheduledManager;
 import com.dianping.cat.system.tool.MailSMS;
 import com.dianping.cat.system.tool.MailSMSImpl;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 

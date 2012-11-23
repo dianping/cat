@@ -5,8 +5,8 @@ import java.util.Set;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.DailyReportService;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class MonthReportBuilder implements Task {
 

@@ -6,42 +6,28 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
-import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.problem.ProblemMerger;
+import com.dianping.cat.report.service.ReportService;
 import com.google.gson.Gson;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
-import com.site.lookup.util.StringUtils;
-import com.site.web.mvc.PageHandler;
-import com.site.web.mvc.annotation.InboundActionMeta;
-import com.site.web.mvc.annotation.OutboundActionMeta;
-import com.site.web.mvc.annotation.PayloadMeta;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
@@ -50,22 +36,16 @@ public class Handler implements PageHandler<Context> {
 	private static final String VIEW = "view";
 
 	@Inject
-	private DailyreportDao m_dailyreportDao;
-
-	@Inject
 	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ProblemMerger m_problemMerger;
-
-	@Inject
-	protected ReportDao m_reportDao;
-
-	@Inject
 	private ServerConfigManager m_manager;
+	
+	@Inject
+	private ReportService m_reportService;
 
 	@Inject(type = ModelService.class, value = "problem")
 	private ModelService<ProblemReport> m_service;
@@ -322,39 +302,8 @@ public class Handler implements PageHandler<Context> {
 		String domain = model.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		ProblemReport problemReport = null;
-		Date currentDayStart = TaskHelper.todayZero(new Date());
-
-		if (currentDayStart.getTime() == start.getTime()) {
-			try {
-				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "problem",
-				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "problem",
-				      ReportEntity.READSET_DOMAIN_NAME);
-
-				Set<String> domains = new HashSet<String>();
-				for (Report report : allReports) {
-					domains.add(report.getDomain());
-				}
-				return m_problemMerger.mergeForDaily(domain, reports, domains);
-			} catch (DalException e) {
-				Cat.logError(e);
-				return new ProblemReport(domain);
-			}
-		}
-		try {
-			List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "problem",
-			      DailyreportEntity.READSET_FULL);
-			ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
-			for (Dailyreport report : reports) {
-				String xml = report.getContent();
-				ProblemReport reportModel = DefaultSaxParser.parse(xml);
-				reportModel.accept(merger);
-			}
-			problemReport = merger.getProblemReport();
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
+		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
+		
 		return problemReport;
 	}
 

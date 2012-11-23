@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.heatmap;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	JSONP("jsonp"),
 
 	VIEW("view");

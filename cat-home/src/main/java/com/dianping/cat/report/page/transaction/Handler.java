@@ -3,15 +3,10 @@ package com.dianping.cat.report.page.transaction;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
@@ -19,11 +14,7 @@ import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.page.PieChart;
@@ -31,30 +22,24 @@ import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.page.transaction.DisplayNames.TransactionNameModel;
 import com.dianping.cat.report.page.transaction.GraphPayload.AverageTimePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.DurationPayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
-import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.transaction.TransactionMerger;
+import com.dianping.cat.report.service.ReportService;
 import com.google.gson.Gson;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
-import com.site.lookup.util.StringUtils;
-import com.site.web.mvc.PageHandler;
-import com.site.web.mvc.annotation.InboundActionMeta;
-import com.site.web.mvc.annotation.OutboundActionMeta;
-import com.site.web.mvc.annotation.PayloadMeta;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GraphBuilder m_builder;
-
-	@Inject
-	private DailyreportDao m_dailyreportDao;
 
 	@Inject
 	private HistoryGraphs m_historyGraph;
@@ -66,10 +51,7 @@ public class Handler implements PageHandler<Context> {
 	private XmlViewer m_xmlViewer;
 
 	@Inject
-	private TransactionMerger m_transactionMerger;
-
-	@Inject
-	protected ReportDao m_reportDao;
+	private ReportService m_reportService;
 
 	@Inject
 	private ServerConfigManager m_manager;
@@ -360,47 +342,9 @@ public class Handler implements PageHandler<Context> {
 		String ip = payload.getIpAddress();
 		String domain = model.getDomain();
 
-		TransactionReport transactionReport = null;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		Date currentDayStart = TaskHelper.todayZero(new Date());
-
-		if (currentDayStart.getTime() == start.getTime()) {
-			try {
-				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
-				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "transaction",
-				      ReportEntity.READSET_DOMAIN_NAME);
-
-				Set<String> domains = new HashSet<String>();
-				for (Report report : allReports) {
-					domains.add(report.getDomain());
-				}
-				transactionReport = m_transactionMerger.mergeForDaily(domain, reports, domains);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		} else {
-			try {
-				List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "transaction",
-				      DailyreportEntity.READSET_FULL);
-				TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
-				for (Dailyreport report : reports) {
-					String xml = report.getContent();
-					TransactionReport reportModel = DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				}
-				transactionReport = merger.getTransactionReport();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
-		if (transactionReport == null) {
-			return;
-		}
-		transactionReport.setStartTime(start);
-		transactionReport.setEndTime(end);
+		TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
 		calculateTps(payload, transactionReport);
 		model.setReport(transactionReport);
 		if (!StringUtils.isEmpty(type)) {

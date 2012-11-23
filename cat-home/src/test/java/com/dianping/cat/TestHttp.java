@@ -13,7 +13,7 @@ import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
 
-import com.site.helper.Files;
+import org.unidal.helper.Files;
 
 public class TestHttp {
 

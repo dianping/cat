@@ -6,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
-import com.site.helper.Files;
-import com.site.helper.Files.AutoClose;
+import org.unidal.helper.Files;
+import org.unidal.helper.Files.AutoClose;
 
 public class IPSeekerManager {
 	private static IPSeeker s_seeker;

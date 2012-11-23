@@ -2,7 +2,7 @@ package com.dianping.cat.report.graph;
 
 import java.text.DecimalFormat;
 
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultGraphBuilder implements GraphBuilder {
 	private static final int BAR = 1;

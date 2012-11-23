@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dainping.cat.consumer.dal.report.Task;
+import com.dianping.cat.report.task.thread.TaskConsumer;
 
 public class TaskConsumerTest {
 

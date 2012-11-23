@@ -13,8 +13,8 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.site.helper.Files;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
 
 public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
 	@Inject

@@ -1,6 +1,6 @@
 package com.dianping.cat.system.page.alarm;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	ALARM_RECORD_DETAIL("alarmRecordDetail"),
 	
 	ALARM_RECORD_LIST("alarmRecordList"),

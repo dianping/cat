@@ -8,6 +8,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
@@ -21,18 +22,20 @@ import com.dianping.cat.report.task.heartbeat.HeartbeatReportBuilder;
 import com.dianping.cat.report.task.matrix.MatrixReportBuilder;
 import com.dianping.cat.report.task.problem.ProblemReportBuilder;
 import com.dianping.cat.report.task.sql.SqlReportBuilder;
+import com.dianping.cat.report.task.state.StateReportBuilder;
 import com.dianping.cat.report.task.transaction.TransactionReportBuilder;
-import com.site.lookup.annotation.Inject;
 
 public class ReportFacade implements LogEnabled, Initializable {
 
-	private static final int TYPE_HOUR = 0;
+	public static final int TYPE_HOUR = 0;
 
-	private static final int TYPE_DAILY = 1;
+	public static final int TYPE_DAILY = 1;
 
-	private static final int TYPE_WEEK = 2;
+	public static final int TYPE_WEEK = 2;
 
-	private static final int TYPE_MONTH = 3;
+	public static final int TYPE_MONTH = 3;
+
+	public static final int TYPE_DAILY_GRAPH = 4;
 
 	@Inject
 	private EventReportBuilder m_eventBuilder;
@@ -60,6 +63,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private HealthReportBuilder m_healthReportBuilder;
+	
+	@Inject
+	private StateReportBuilder m_stateReportBuilder;
 
 	@Inject
 	private TaskDao m_taskDao;
@@ -88,9 +94,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 			} else if (type == TYPE_HOUR) {
 				return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
 			} else if (type == TYPE_WEEK) {
-				// return reportBuilder.buildWeekReport(reportName, reportDomain, reportPeriod);
+				return reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
 			} else if (type == TYPE_MONTH) {
-				// return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+				return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
 			}
 		}
 		return false;
@@ -116,6 +122,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("database", m_databaseReportBuilder);
 		m_reportBuilders.put("sql", m_sqlReportBuilder);
 		m_reportBuilders.put("health", m_healthReportBuilder);
+		m_reportBuilders.put("state", m_stateReportBuilder);
 	}
 
 	public boolean redoTask(int taskID) {

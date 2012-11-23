@@ -23,8 +23,8 @@ import com.dianping.cat.job.sql.dal.SqlReportRecordDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.Formats;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Formats;
+import org.unidal.lookup.annotation.Inject;
 
 @JobletMeta(name = "sql", description = "Sql analysis", keyClass = Sql.class, valueClass = SqlStat.class)
 public class SqlJoblet implements Joblet<Sql, SqlStat> {

@@ -1,7 +1,7 @@
 package com.dianping.cat.report.page.logview;
 
 import com.dianping.cat.report.ReportPage;
-import com.site.web.mvc.view.BaseJspViewer;
+import org.unidal.web.mvc.view.BaseJspViewer;
 
 public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model> {
 	@Override

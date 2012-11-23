@@ -8,7 +8,7 @@ import com.dainping.cat.consumer.dal.report.Task;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.report.view.TaskUrlNav;
-import com.site.web.mvc.ViewModel;
+import org.unidal.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 

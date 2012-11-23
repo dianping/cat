@@ -12,8 +12,8 @@ import com.dianping.cat.system.alarm.threshold.ThresholdRuleManager;
 import com.dianping.cat.system.alarm.threshold.event.ExceptionDataEvent;
 import com.dianping.cat.system.alarm.threshold.event.ServiceDataEvent;
 import com.dianping.cat.system.event.EventDispatcher;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class AlarmTask implements Task {
 

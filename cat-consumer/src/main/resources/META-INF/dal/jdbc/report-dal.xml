@@ -276,7 +276,21 @@
 					</IF>
 				]]></statement>
 			</query>
-
+			<query name="find-by-domain-name-type-period" type="SELECT">
+				<param name="report-name" />
+				<param name="report-domain" />
+				<param name="task-type" />
+				<param name="report-period" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='report-period'/> = ${report-period}
+					AND <FIELD name='report-domain'/> = ${report-domain}
+					AND <FIELD name='report-name'/> = ${report-name}
+					AND <FIELD name='task-type'/> = ${task-type}
+				]]></statement>
+			</query>
+			
 			<query name="find-by-status-type-name" type="SELECT" multiple="true">
 				<param name="status" />
 				<param name="start-date" />

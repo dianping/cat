@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.ReportPage;
-import com.site.web.mvc.view.Viewer;
+import org.unidal.web.mvc.view.Viewer;
 
 public class XmlViewer implements Viewer<ReportPage, Action, Context, Model> {
 	public void view(Context ctx, Model model) throws ServletException, IOException {

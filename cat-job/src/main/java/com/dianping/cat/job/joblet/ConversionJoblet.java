@@ -15,7 +15,7 @@ import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.MessageBucket;
-import com.site.lookup.ContainerHolder;
+import org.unidal.lookup.ContainerHolder;
 
 @JobletMeta(name = "conversion", description = "File Conversion", keyClass = IntWritable.class, valueClass = IntWritable.class, reducerNum = 1)
 public class ConversionJoblet extends ContainerHolder implements Joblet<IntWritable, IntWritable> {

@@ -25,9 +25,9 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 @JobletMeta(name = "location", description = "Location analysis", keyClass = Location.class, valueClass = LocationStat.class, combine = true, reducerNum = 1)
 public class LocationJoblet extends ContainerHolder implements Joblet<Location, LocationStat> {

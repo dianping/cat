@@ -18,8 +18,8 @@ import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultDomParser;
-import com.site.helper.Files;
-import com.site.helper.Threads.Task;
+import org.unidal.helper.Files;
+import org.unidal.helper.Threads.Task;
 
 public class ServerConfigManager implements LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M

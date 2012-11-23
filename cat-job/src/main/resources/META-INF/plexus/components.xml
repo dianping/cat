@@ -82,21 +82,21 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.initialization.Module</role>
+			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-job</role-hint>
 			<implementation>com.dianping.cat.job.CatJobModule</implementation>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.datasource.DataSource</role>
+			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
 			<role-hint>cat</role-hint>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
 			<configuration>
 				<id>cat</id>
 				<maximum-pool-size>3</maximum-pool-size>
@@ -113,27 +113,27 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>location</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>location</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>location</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>SqlReport</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>sqlreport</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>SqlReport</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<logical-table-name>sqlreport</logical-table-name>
+				<physical-table-name>SqlReport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -142,7 +142,7 @@
 			<implementation>com.dianping.cat.job.sql.dal.LocationRecordDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -151,7 +151,7 @@
 			<implementation>com.dianping.cat.job.sql.dal.SqlReportRecordDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.dashboard;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view");
 
 	public static Action getByName(String name, Action defaultAction) {

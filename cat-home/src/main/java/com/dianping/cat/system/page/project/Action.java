@@ -1,6 +1,6 @@
 package com.dianping.cat.system.page.project;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	ALL("view"),
 
 	PROJECT_UPDATE("update"),

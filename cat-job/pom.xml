@@ -15,10 +15,6 @@
 			<artifactId>cat-hadoop</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.site.dal</groupId>
-			<artifactId>dal-jdbc</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
@@ -34,7 +30,7 @@
 			<plugin>
 				<groupId>org.unidal.maven.plugins</groupId>
 				<artifactId>codegen-maven-plugin</artifactId>
-				<version>1.1.9</version>
+				<version>2.0.2-SNAPSHOT</version>
 				<executions>
 					<execution>
 						<id>generate dal jdbc model</id>

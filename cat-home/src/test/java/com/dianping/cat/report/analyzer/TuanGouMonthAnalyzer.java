@@ -30,8 +30,8 @@ import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.health.HealthReportMerger;
-import com.site.lookup.ComponentTestCase;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ComponentTestCase;
+import org.unidal.lookup.annotation.Inject;
 
 @RunWith(JUnit4.class)
 public class TuanGouMonthAnalyzer extends ComponentTestCase {

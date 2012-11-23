@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
@@ -24,10 +25,11 @@ import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.sql.SqlReportMerger;
+import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.task.health.HealthReportMerger;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class DailyReportServiceImpl implements DailyReportService {
 
@@ -292,5 +294,35 @@ public class DailyReportServiceImpl implements DailyReportService {
 		healthReport.setEndTime(end);
 		return healthReport;
 	}
+
+	@Override
+   public StateReport queryStateReport(String domain, Date start, Date end) {
+		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
+
+		try {
+			List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "state",
+			      DailyreportEntity.READSET_FULL);
+
+			for (Dailyreport report : reports) {
+				String xml = report.getContent();
+
+				try {
+					StateReport reportModel = com.dianping.cat.consumer.state.model.transform.DefaultSaxParser
+					      .parse(xml);
+					reportModel.accept(merger);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", "state", Event.SUCCESS, xml);
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		StateReport stateReport = merger.getStateReport();
+		
+		stateReport.setStartTime(start);
+		stateReport.setEndTime(end);
+		return stateReport;
+   }
 
 }

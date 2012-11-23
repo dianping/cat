@@ -14,10 +14,10 @@ import com.dainping.cat.consumer.dal.report.HostinfoDao;
 import com.dainping.cat.consumer.dal.report.HostinfoEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.site.dal.jdbc.DalException;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class DomainManager implements Initializable {
 

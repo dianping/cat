@@ -11,7 +11,7 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class DumpToHtmlConsumer implements MessageConsumer, Initializable, LogEnabled {
 	public static final String ID = "dump-to-html";

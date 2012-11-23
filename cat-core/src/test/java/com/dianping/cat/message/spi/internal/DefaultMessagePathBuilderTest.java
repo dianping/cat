@@ -9,7 +9,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.site.helper.Splitters;
+import org.unidal.helper.Splitters;
 
 public class DefaultMessagePathBuilderTest {
 	private String convertToHex(String ip) {

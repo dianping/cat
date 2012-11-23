@@ -13,9 +13,9 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.system.tool.MailSMS;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class AlertManager implements Initializable {
 

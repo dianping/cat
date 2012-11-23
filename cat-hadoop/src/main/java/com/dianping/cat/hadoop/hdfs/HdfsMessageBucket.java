@@ -18,7 +18,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.storage.dump.MessageBlock;
 import com.dianping.cat.storage.dump.MessageBucket;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class HdfsMessageBucket implements MessageBucket {
 	public static final String ID = "hdfs";

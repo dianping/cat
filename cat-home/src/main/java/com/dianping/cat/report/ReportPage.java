@@ -1,7 +1,7 @@
 package com.dianping.cat.report;
 
-import com.site.web.mvc.Page;
-import com.site.web.mvc.annotation.ModuleMeta;
+import org.unidal.web.mvc.Page;
+import org.unidal.web.mvc.annotation.ModuleMeta;
 
 public enum ReportPage implements Page {
 
@@ -33,13 +33,13 @@ public enum ReportPage implements Page {
 
    HEALTH("health", "health", "Health", "Health", true),
 
-   MONTHREPORT("monthreport", "monthreport", "monthreport", "Month Report", false),
-
    CROSS("cross", "cross", "Cross", "Cross", true),
 
    CACHE("cache", "cache", "Cache", "Cache", true),
 
-   DATABASE("database", "database", "Database", "Database", true);
+   DATABASE("database", "database", "Database", "Database", true),
+
+   STATE("state", "state", "State", "State", true);
 
    private String m_name;
 

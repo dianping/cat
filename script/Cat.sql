@@ -2,7 +2,7 @@ CREATE TABLE `dailygraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(20) NULL COMMENT '报表来自于哪台cat-client机器ip, 空串表示合并同domain所有ip',
-  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
+  `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
   `detail_content` mediumtext NOT NULL COMMENT '详细绘图内容',
@@ -16,7 +16,7 @@ CREATE TABLE `dailyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
   `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
-  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
+  `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
   `content` mediumtext NOT NULL COMMENT '报表内容',
@@ -25,12 +25,25 @@ CREATE TABLE `dailyreport` (
   UNIQUE KEY `period` (`period`,`domain`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天报表';
 
-CREATE TABLE `monthlyreport` (
+CREATE TABLE `weeklyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
   `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
-  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
-  `period` datetime NOT NULL  COMMENT '报表开始时间',
+  `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
+  `period` datetime NOT NULL  COMMENT '报表时间段',
+  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
+  `content` mediumtext NOT NULL COMMENT '报表内容',
+  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `period` (`period`,`domain`,`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='周报表';
+
+CREATE TABLE `monthreport` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
+  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
+  `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
+  `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
   `content` mediumtext NOT NULL COMMENT '报表内容',
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
@@ -38,11 +51,24 @@ CREATE TABLE `monthlyreport` (
   UNIQUE KEY `period` (`period`,`domain`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='月报表';
 
+#CREATE TABLE `monthlyreport` (
+#  `id` int(11) NOT NULL AUTO_INCREMENT,
+#  `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
+#  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
+#  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
+#  `period` datetime NOT NULL  COMMENT '报表开始时间',
+#  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
+#  `content` mediumtext NOT NULL COMMENT '报表内容',
+#  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
+#  PRIMARY KEY (`id`),
+#  UNIQUE KEY `period` (`period`,`domain`,`name`)
+#) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='月报表';
+
 CREATE TABLE `graph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(20) NULL COMMENT '报表来自于哪台cat-client机器ip, NULL表示合并同domain所有ip',
-  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
+  `domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 3/csv, 默认3',
   `detail_content` mediumtext NOT NULL COMMENT '详细绘图内容',
@@ -72,17 +98,6 @@ CREATE TABLE `location` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `transaction_date_lat_lng` (`transaction_date`,`lat`,`lng`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于热点图地理位置表';
-
-CREATE TABLE `monthreport` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(50) DEFAULT NULL,
-  `domain` varchar(100) DEFAULT NULL,
-  `period` datetime DEFAULT NULL,
-  `content` mediumtext,
-  `creation_date` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `name_2` (`name`,`domain`,`period`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 CREATE TABLE `report` (
@@ -153,7 +168,7 @@ CREATE TABLE `task` (
   `consumer`      varchar(20) NULL COMMENT '任务执行者ip',
   `failure_count` tinyint(4) NOT NULL COMMENT '任务失败次数',
   `report_name`   varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
-  `report_domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',  
+  `report_domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',  
   `report_period` datetime NOT NULL  COMMENT '报表时间',
   `status`        tinyint(4) NOT NULL COMMENT '执行状态: 1/todo, 2/doing, 3/done 4/failed',  
   `task_type`     tinyint(4) NOT NULL DEFAULT '1' COMMENT '0表示小时任务，1表示天任务',

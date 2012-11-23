@@ -10,7 +10,7 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class DumpAnalyzerTest extends ComponentTestCase {

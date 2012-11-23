@@ -17,7 +17,7 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class LocalMessageBucketManagerTest extends ComponentTestCase {

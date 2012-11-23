@@ -35,15 +35,16 @@ import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageStatistics;
 import com.dianping.cat.message.spi.internal.DefaultMessageStorage;
+import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.status.StatusUpdateTask;
 import com.dianping.cat.storage.dump.ChannelBufferManager;
 import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.site.initialization.Module;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.initialization.Module;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -52,6 +53,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ClientConfigManager.class));
 		all.add(C(ServerConfigManager.class));
+		all.add(C(ServerStateManager.class));
 
 		all.add(C(MessageManager.class, DefaultMessageManager.class) //
 		      .req(ClientConfigManager.class, TransportManager.class, MessageStatistics.class));
@@ -87,7 +89,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageQueue.class, "default", "m_queue"));
 		all.add(C(TcpSocketReceiver.class) //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID)//
-		      .req(ServerConfigManager.class, MessageHandler.class));
+		      .req(ServerConfigManager.class, MessageHandler.class)//
+		      .req(ServerStateManager.class));
 		all.add(C(TransportManager.class, DefaultTransportManager.class) //
 		      .req(ClientConfigManager.class));
 
@@ -103,7 +106,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ChannelBufferManager.class));
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class)//
-		      .req(MessageCodec.class, ChannelBufferManager.class));
+		      .req(MessageCodec.class, ChannelBufferManager.class, ServerStateManager.class));
 		all.add(C(ChannelBufferManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));

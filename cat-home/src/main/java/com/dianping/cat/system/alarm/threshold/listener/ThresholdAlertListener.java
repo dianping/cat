@@ -23,7 +23,7 @@ import com.dianping.cat.system.event.EventListener;
 import com.dianping.cat.system.event.EventType;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 import com.dianping.cat.system.page.alarm.RuleManager;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

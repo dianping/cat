@@ -20,6 +20,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.jboss.netty.buffer.ChannelBuffer;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Message;
@@ -30,13 +31,14 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.helper.Files;
-import com.site.helper.Scanners;
-import com.site.helper.Scanners.FileMatcher;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import com.dianping.cat.status.ServerStateManager;
+import org.unidal.helper.Files;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
       LogEnabled {
@@ -57,9 +59,16 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Inject
 	private ChannelBufferManager m_bufferManager;
 
+	@Inject
+	private ServerStateManager m_serverStateManager;
+
 	private int m_error;
 
 	private int m_total;
+
+	private long m_totalSize = 0;
+
+	private long m_lastTotalSize = 0;
 
 	private Logger m_logger;
 
@@ -151,7 +160,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	}
 
-	private boolean isFit(String path) {
+	private boolean shouldMove(String path) {
 		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
 			return false;
 		}
@@ -259,7 +268,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					if (isFit(path)) {
+					if (shouldMove(path)) {
 						paths.add(path);
 					}
 				}
@@ -317,6 +326,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
 		ChannelBuffer buf = defaultTree.getBuf();
+
+		int size = buf.readableBytes();
+		m_totalSize += size;
+
 		MessageBlock bolck = bucket.storeMessage(buf, id);
 
 		if (bolck != null) {
@@ -324,17 +337,30 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			if (!result) {
 				m_error++;
-				if (m_error == 1 || m_error % 1000 == 0) {
+				if (m_error % CatConstants.ERROR_COUNT == 0) {
+					m_serverStateManager.addMessageDumpLoss(CatConstants.ERROR_COUNT);
 					m_logger.error("Error when offer the block to the dump! Error :" + m_error);
 				}
 			}
 		}
 
 		m_total++;
-		if (m_total % 100000 == 0) {
-			m_logger.info("Encode the message number " + m_total);
-		}
+		if (m_total % CatConstants.SUCCESS_COUNT == 0) {
+			double amount = m_totalSize - m_lastTotalSize;
+			m_lastTotalSize = m_totalSize;
 
+			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
+			m_serverStateManager.addMessageSize(amount);
+
+			Message message = tree.getMessage();
+			if (message instanceof Transaction) {
+				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp() - ((Transaction)message).getDurationInMillis();
+				m_serverStateManager.addProcessDelay(delay);
+			}
+
+			m_logger
+			      .info("Dump the message number: " + m_total + " Size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
+		}
 	}
 
 	class BlockDumper implements Task {
@@ -447,7 +473,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				try {
 					moveOldMessages();
 				} catch (Throwable e) {
-					m_logger.error(e.getMessage(),e);
+					m_logger.error(e.getMessage(), e);
 				}
 				try {
 					Thread.sleep(2 * 60 * 1000L);
@@ -460,6 +486,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void shutdown() {
 		}
-
 	}
+
 }

@@ -17,6 +17,7 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
+import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
@@ -26,18 +27,35 @@ import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.sql.SqlReportMerger;
+import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.task.health.HealthReportMerger;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
 
 public class HourlyReportServiceImpl implements HourlyReportService {
 
 	@Inject
 	private ReportDao m_reportDao;
+	
+	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
+		Set<String> domains = new HashSet<String>();
 
-	private Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
+		try {
+			List<Report> reports = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, reportName,
+			      ReportEntity.READSET_DOMAIN_NAME);
+
+			for (Report report : reports) {
+				domains.add(report.getDomain());
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+		return domains;
+	}
+
+	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
 		Set<String> domains = new HashSet<String>();
 
 		try {
@@ -337,5 +355,35 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		healthReport.getDomainNames().addAll(domains);
 		return healthReport;
 	}
+
+	@Override
+   public StateReport queryStateReport(String domain, Date start, Date end) {
+		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
+
+		try {
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "state",
+			      ReportEntity.READSET_FULL);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+
+				try {
+					StateReport reportModel = com.dianping.cat.consumer.state.model.transform.DefaultSaxParser
+					      .parse(xml);
+					reportModel.accept(merger);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", "state", Event.SUCCESS, xml);
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		StateReport stateReport = merger.getStateReport();
+		
+		stateReport.setStartTime(start);
+		stateReport.setEndTime(end);
+		return stateReport;
+   }
 
 }

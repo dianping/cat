@@ -3,9 +3,11 @@
  */
 package com.dianping.cat.consumer.transaction;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -15,7 +17,6 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.lookup.ComponentTestCase;
 
 /**
  * @author sean.wang
@@ -74,23 +75,24 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 		TransactionReport report = analyzer.getReport("group");
 		TransactionType typeA = report.getMachines().get("192.168.1.1").getTypes().get("A");
 		TransactionName n1 = typeA.getNames().get("n1");
-		assertEquals(1000, n1.getTotalCount());
-		assertEquals(500, n1.getFailCount());
-		assertEquals(50.0, n1.getFailPercent());
-		assertEquals(2.0, n1.getMin());
-		assertEquals(2000.0, n1.getMax());
-		assertEquals(1001.0, n1.getAvg());
-		assertEquals(1001000.0, n1.getSum());
+		Assert.assertEquals(1000, n1.getTotalCount());
+		Assert.assertEquals(500, n1.getFailCount());
+		double e = 0.001;
+		Assert.assertEquals(50.0, n1.getFailPercent(),e);
+		Assert.assertEquals(2.0, n1.getMin(),e);
+		Assert.assertEquals(2000.0, n1.getMax(),e);
+		Assert.assertEquals(1001.0, n1.getAvg(),e);
+		Assert.assertEquals(1001000.0, n1.getSum(),e);
 
 		TransactionType typeA1 = report.getMachines().get("192.168.1.1").getTypes().get("A-1");
 		TransactionName n2 = typeA1.getNames().get("n2");
-		assertEquals(1000, n2.getTotalCount());
-		assertEquals(500, n2.getFailCount());
-		assertEquals(50.0, n2.getFailPercent());
-		assertEquals(1.0, n2.getMin());
-		assertEquals(1000.0, n2.getMax());
-		assertEquals(500.5, n2.getAvg());
-		assertEquals(500500.0, n2.getSum());
+		Assert.assertEquals(1000, n2.getTotalCount());
+		Assert.assertEquals(500, n2.getFailCount());
+		Assert.assertEquals(50.0, n2.getFailPercent(),e);
+		Assert.assertEquals(1.0, n2.getMin(),e);
+		Assert.assertEquals(1000.0, n2.getMax(),e);
+		Assert.assertEquals(500.5, n2.getAvg(),e);
+		Assert.assertEquals(500500.0, n2.getSum(),e);
 	}
 
 }

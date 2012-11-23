@@ -2,7 +2,7 @@ package com.dianping.cat.report.view;
 
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.system.SystemPage;
-import com.site.web.mvc.Page;
+import org.unidal.web.mvc.Page;
 
 public class NavigationBar {
 	public Page[] getVisiblePages() {
@@ -35,8 +35,8 @@ public class NavigationBar {
 		ReportPage.DATABASE,
 
 		ReportPage.HEALTH,
-
-		ReportPage.MONTHREPORT,
+		
+		ReportPage.STATE,
 
 		ReportPage.LOGVIEW
 

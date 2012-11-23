@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.job.sql.dal._INDEX;
-import com.site.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 final class DatabaseConfigurator extends AbstractJdbcResourceConfigurator {
 	public List<Component> defineComponents() {

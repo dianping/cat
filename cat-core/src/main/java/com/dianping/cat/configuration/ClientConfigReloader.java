@@ -13,8 +13,8 @@ import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.transform.DefaultDomParser;
 import com.dianping.cat.message.Message;
-import com.site.helper.Files;
-import com.site.helper.Threads.Task;
+import org.unidal.helper.Files;
+import org.unidal.helper.Threads.Task;
 
 public class ClientConfigReloader implements Task {
 	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";

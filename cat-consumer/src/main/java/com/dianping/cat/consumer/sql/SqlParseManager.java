@@ -11,8 +11,8 @@ import com.dainping.cat.consumer.dal.report.SqltableDao;
 import com.dainping.cat.consumer.dal.report.SqltableEntity;
 import com.dianping.bee.engine.helper.SqlParsers;
 import com.dianping.cat.Cat;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
 
 public class SqlParseManager {
 	@Inject

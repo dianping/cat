@@ -69,7 +69,7 @@ $(document).delegate('.problem_status_graph_link', 'click', function(e){
 					cell.innerHTML = response;
 					
 					var data = $('#errorTrendMeta',cell).text();
-					graph($('#errorTrend',cell)[0],eval('('+data+')'),60*1000);
+					graphReal($('#errorTrend',cell)[0],eval('('+data+')'),60*1000);
 				}
 			});
 		}

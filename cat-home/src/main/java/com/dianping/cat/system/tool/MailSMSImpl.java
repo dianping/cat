@@ -17,7 +17,7 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.mailremote.remote.MailService;
 import com.dianping.sms.biz.SMSService;
 import com.dianping.sms.biz.SMSType;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 

@@ -43,9 +43,6 @@
          <page name="health" title="Health" path="health">
             <description>Health</description>
          </page>
-         <page name="monthreport" title="monthreport" path="monthreport" standalone="false">
-            <description>Month Report</description>
-         </page>
          <page name="cross" title="Cross" path="cross">
             <description>Cross</description>
          </page>
@@ -54,6 +51,9 @@
          </page>
          <page name="database" title="Database" path="database">
             <description>Database</description>
+         </page>
+         <page name="state" title="State" path="state">
+            <description>State</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

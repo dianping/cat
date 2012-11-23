@@ -35,7 +35,7 @@ import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.entity.ThreadsInfo;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> implements LogEnabled {
 	@Inject

@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.model;
 
-public enum Action implements com.site.web.mvc.Action {
+public enum Action implements org.unidal.web.mvc.Action {
 	XML("xml");
 
 	public static Action getByName(String name, Action defaultAction) {

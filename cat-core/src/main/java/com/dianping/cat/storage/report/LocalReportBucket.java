@@ -21,9 +21,9 @@ import org.codehaus.plexus.logging.Logger;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.storage.Bucket;
-import com.site.helper.Splitters;
-import com.site.helper.Splitters.StringSplitter;
-import com.site.lookup.annotation.Inject;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Splitters.StringSplitter;
+import org.unidal.lookup.annotation.Inject;
 
 public class LocalReportBucket implements Bucket<String>, LogEnabled {
 	@Inject

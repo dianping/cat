@@ -9,6 +9,10 @@
 			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.status.ServerStateManager</role>
+			<implementation>com.dianping.cat.status.ServerStateManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.message.spi.MessageManager</role>
 			<implementation>com.dianping.cat.message.internal.DefaultMessageManager</implementation>
 			<requirements>
@@ -158,6 +162,9 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageHandler</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.status.ServerStateManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -226,6 +233,9 @@
 				<requirement>
 					<role>com.dianping.cat.storage.dump.ChannelBufferManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.status.ServerStateManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -233,7 +243,7 @@
 			<implementation>com.dianping.cat.storage.dump.ChannelBufferManager</implementation>
 		</component>
 		<component>
-			<role>com.site.initialization.Module</role>
+			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-core</role-hint>
 			<implementation>com.dianping.cat.CatCoreModule</implementation>
 		</component>

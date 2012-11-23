@@ -1,8 +1,8 @@
 package com.dianping.cat.job;
 
-import com.site.initialization.AbstractModule;
-import com.site.initialization.Module;
-import com.site.initialization.ModuleContext;
+import org.unidal.initialization.AbstractModule;
+import org.unidal.initialization.Module;
+import org.unidal.initialization.ModuleContext;
 
 public class CatJobModule extends AbstractModule {
 	public static final String ID = "cat-job";

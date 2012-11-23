@@ -9,10 +9,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.site.initialization.DefaultModuleContext;
-import com.site.initialization.ModuleContext;
-import com.site.initialization.ModuleInitializer;
-import com.site.web.AbstractContainerServlet;
+import org.unidal.initialization.DefaultModuleContext;
+import org.unidal.initialization.ModuleContext;
+import org.unidal.initialization.ModuleInitializer;
+import org.unidal.web.AbstractContainerServlet;
 
 public class CatServlet extends AbstractContainerServlet {
 	private static final long serialVersionUID = 1L;

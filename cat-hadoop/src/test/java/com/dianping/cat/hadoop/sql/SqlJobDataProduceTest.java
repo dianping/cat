@@ -15,7 +15,7 @@ import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.Stringizers;
+import org.unidal.helper.Stringizers;
 
 @RunWith(JUnit4.class)
 public class SqlJobDataProduceTest extends CatTestCase {

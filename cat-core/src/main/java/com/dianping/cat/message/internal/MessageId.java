@@ -2,7 +2,7 @@ package com.dianping.cat.message.internal;
 
 import java.util.List;
 
-import com.site.helper.Splitters;
+import org.unidal.helper.Splitters;
 
 public class MessageId {
 	private static final long VERSION1_THRESHOLD = 1325347200000L; // Jan. 1 2012

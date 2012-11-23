@@ -78,5 +78,11 @@ public class CatConstants {
 	public static final String NAME_CLIENT_INFO = "ClientInfo";
 
 	public static final String TYPE_ACTION = "Action";
+	
+	//TODO
+
+	public static final int ERROR_COUNT = 1000;
+
+	public static final int SUCCESS_COUNT = 10000;
 
 }

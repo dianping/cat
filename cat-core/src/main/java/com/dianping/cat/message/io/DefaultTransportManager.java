@@ -11,8 +11,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.Server;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultTransportManager extends ContainerHolder implements TransportManager, Initializable, LogEnabled {
 	@Inject

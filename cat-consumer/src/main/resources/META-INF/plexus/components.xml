@@ -19,11 +19,14 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,common</analyzers>
+				<analyzers>problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.status.ServerStateManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -161,8 +164,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.common.CommonAnalyzer</role>
-			<implementation>com.dianping.cat.consumer.common.CommonAnalyzer</implementation>
+			<role>com.dianping.cat.consumer.state.StateAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.state.StateAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
@@ -172,10 +175,16 @@
 					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.status.ServerStateManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -238,28 +247,28 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.initialization.Module</role>
+			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-consumer</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerModule</implementation>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
 				<datasourceFile>datasources.xml</datasourceFile>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.datasource.DataSource</role>
+			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
 			<role-hint>cat</role-hint>
-			<implementation>com.site.dal.jdbc.datasource.JdbcDataSource</implementation>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
 			<configuration>
 				<id>cat</id>
 				<maximum-pool-size>3</maximum-pool-size>
@@ -276,57 +285,57 @@
 			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
+					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>report</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>report</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>report</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>hostinfo</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>hostinfo</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>hostinfo</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>sqltable</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>sqltable</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>sqltable</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>task</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>task</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>task</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
-			<role>com.site.dal.jdbc.mapping.TableProvider</role>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>project</role-hint>
-			<implementation>com.site.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
 				<logical-table-name>project</logical-table-name>
-				<physical-table-name></physical-table-name>
+				<physical-table-name>project</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -335,7 +344,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -344,7 +353,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.HostinfoDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -353,7 +362,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.SqltableDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -362,7 +371,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.TaskDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -371,7 +380,7 @@
 			<implementation>com.dainping.cat.consumer.dal.report.ProjectDao</implementation>
 			<requirements>
 				<requirement>
-					<role>com.site.dal.jdbc.QueryEngine</role>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>

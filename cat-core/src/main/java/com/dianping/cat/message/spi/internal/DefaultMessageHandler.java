@@ -10,8 +10,8 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultMessageHandler extends ContainerHolder implements MessageHandler, LogEnabled {
 	@Inject

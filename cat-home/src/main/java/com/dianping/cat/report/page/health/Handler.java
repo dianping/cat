@@ -3,31 +3,23 @@ package com.dianping.cat.report.page.health;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.ServletException;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
-import com.dianping.cat.consumer.health.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.HistoryGraphItem;
-import com.dianping.cat.report.task.health.HealthReportMerger;
+import com.dianping.cat.report.service.ReportService;
 import com.google.gson.Gson;
-import com.site.lookup.annotation.Inject;
-import com.site.lookup.util.StringUtils;
-import com.site.web.mvc.PageHandler;
-import com.site.web.mvc.annotation.InboundActionMeta;
-import com.site.web.mvc.annotation.OutboundActionMeta;
-import com.site.web.mvc.annotation.PayloadMeta;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
@@ -38,10 +30,7 @@ public class Handler implements PageHandler<Context> {
 	private ServerConfigManager m_manager;
 
 	@Inject
-	private ReportDao m_reportDao;
-
-	@Inject
-	private DailyreportDao m_dailyReportDao;
+	private ReportService m_reportService;
 
 	@Inject
 	private HistoryGraphs m_graphs;
@@ -67,19 +56,7 @@ public class Handler implements PageHandler<Context> {
 
 	private HealthReport getHistoryReport(Date startDate, Date endDate, String domain) {
 		try {
-			List<Dailyreport> reports = m_dailyReportDao.findAllByDomainNameDuration(startDate, endDate, domain, "health",
-			      DailyreportEntity.READSET_FULL);
-			HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
-			HealthReport healthReport = merger.getHealthReport();
-			merger.setDuration(endDate.getTime() - startDate.getTime());
-
-			for (Dailyreport report : reports) {
-				String xml = report.getContent();
-				HealthReport model = DefaultSaxParser.parse(xml);
-				model.accept(merger);
-				healthReport.getDomainNames().addAll(model.getDomainNames());
-			}
-			return healthReport;
+			return m_reportService.queryHealthReport(domain, startDate, endDate);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -88,22 +65,7 @@ public class Handler implements PageHandler<Context> {
 
 	private HealthReport getHourlyReport(long date, String domain) {
 		try {
-			List<Report> reports = m_reportDao.findAllByPeriodDomainName(new Date(date), domain, "health",
-			      ReportEntity.READSET_FULL);
-
-			HealthReportMerger merger = new HealthReportMerger(new HealthReport(domain));
-			HealthReport healthReport = merger.getHealthReport();
-
-			merger.setDuration(TimeUtil.ONE_HOUR);
-
-			for (Report report : reports) {
-				String xml = report.getContent();
-				HealthReport model = DefaultSaxParser.parse(xml);
-				model.accept(merger);
-				healthReport.getDomainNames().addAll(model.getDomainNames());
-			}
-
-			return healthReport;
+			return m_reportService.queryHealthReport(domain, new Date(date), new Date(date + TimeUtil.ONE_HOUR));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

@@ -10,7 +10,7 @@ import com.dianping.cat.job.spi.joblet.Joblet;
 import com.dianping.cat.job.spi.joblet.JobletContext;
 import com.dianping.cat.job.spi.joblet.JobletMeta;
 import com.dianping.cat.job.spi.mapreduce.MessageTreeWritable;
-import com.site.lookup.ContainerHolder;
+import org.unidal.lookup.ContainerHolder;
 
 @JobletMeta(name = "help", description = "Print this help", keyClass = Writable.class, valueClass = Writable.class)
 public class HelpJoblet extends ContainerHolder implements Joblet<Writable, Writable> {

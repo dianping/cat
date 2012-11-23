@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="state-report-codegen.xml" />
+  <file path="state-report-model.xml" />
+</manifest>
+

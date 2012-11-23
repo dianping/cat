@@ -2,48 +2,29 @@ package com.dianping.cat.report.page.matrix;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
-import com.dianping.cat.Cat;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
-import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
-import com.dianping.cat.home.dal.report.Dailyreport;
-import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.task.matrix.MatrixMerger;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
-import com.site.lookup.util.StringUtils;
-import com.site.web.mvc.PageHandler;
-import com.site.web.mvc.annotation.InboundActionMeta;
-import com.site.web.mvc.annotation.OutboundActionMeta;
-import com.site.web.mvc.annotation.PayloadMeta;
+import com.dianping.cat.report.service.ReportService;
 
 public class Handler implements PageHandler<Context> {
 
 	@Inject
-	protected ReportDao m_reportDao;
-
-	@Inject
-	private MatrixMerger m_matrixMerger;
-
-	@Inject
-	private DailyreportDao m_dailyreportDao;
-
+	private ReportService m_reportService;
+	
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -100,42 +81,10 @@ public class Handler implements PageHandler<Context> {
 	private void showSummarizeReport(Model model, Payload payload) {
 		String domain = payload.getDomain();
 
-		MatrixReport matrixReport = null;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		Date currentDayStart = TaskHelper.todayZero(new Date());
-
-		if (currentDayStart.getTime() == start.getTime()) {
-			try {
-				List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "matrix",
-				      ReportEntity.READSET_FULL);
-				List<Report> allReports = m_reportDao.findAllByDomainNameDuration(start, end, null, "matrix",
-				      ReportEntity.READSET_DOMAIN_NAME);
-
-				Set<String> domains = new HashSet<String>();
-				for (Report report : allReports) {
-					domains.add(report.getDomain());
-				}
-				matrixReport = m_matrixMerger.mergeForDaily(domain, reports, domains);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		} else {
-			try {
-				List<Dailyreport> reports = m_dailyreportDao.findAllByDomainNameDuration(start, end, domain, "matrix",
-				      DailyreportEntity.READSET_FULL);
-				MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
-				for (Dailyreport report : reports) {
-					String xml = report.getContent();
-					MatrixReport reportModel = DefaultSaxParser.parse(xml);
-					reportModel.accept(merger);
-				}
-				matrixReport = merger.getMatrixReport();
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
+		MatrixReport matrixReport = m_reportService.queryMatrixReport(domain, start, end);
+		
 		if (matrixReport == null) {
 			return;
 		}

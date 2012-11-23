@@ -7,7 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
 import com.dianping.cat.job.spi.joblet.JobletRunner;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class SqlJobletTest extends ComponentTestCase {

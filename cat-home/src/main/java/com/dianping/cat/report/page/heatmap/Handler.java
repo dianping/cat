@@ -13,12 +13,12 @@ import com.dianping.cat.job.sql.dal.LocationRecord;
 import com.dianping.cat.job.sql.dal.LocationRecordDao;
 import com.dianping.cat.job.sql.dal.LocationRecordEntity;
 import com.dianping.cat.report.ReportPage;
-import com.site.dal.jdbc.DalException;
-import com.site.lookup.annotation.Inject;
-import com.site.web.mvc.PageHandler;
-import com.site.web.mvc.annotation.InboundActionMeta;
-import com.site.web.mvc.annotation.OutboundActionMeta;
-import com.site.web.mvc.annotation.PayloadMeta;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

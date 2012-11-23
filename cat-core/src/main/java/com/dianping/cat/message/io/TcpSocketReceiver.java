@@ -29,13 +29,15 @@ import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
 
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.site.helper.Threads;
-import com.site.helper.Threads.Task;
-import com.site.lookup.annotation.Inject;
+import com.dianping.cat.status.ServerStateManager;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 public class TcpSocketReceiver implements LogEnabled {
 	private boolean m_active = true;
@@ -62,8 +64,15 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private int m_queueSize = 100000;
 
+	private int m_error;
+
+	private int m_process;
+
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
+
+	@Inject
+	private ServerStateManager m_serverStateManager;
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -195,7 +204,8 @@ public class TcpSocketReceiver implements LogEnabled {
 			int length = buffer.readInt();
 
 			buffer.resetReaderIndex();
-			if (buffer.readableBytes() < length) {
+
+			if (buffer.readableBytes() < length + 4) {
 				return null;
 			}
 
@@ -204,10 +214,6 @@ public class TcpSocketReceiver implements LogEnabled {
 	}
 
 	class MyHandler extends SimpleChannelHandler {
-
-		private int m_error;
-
-		private int m_process;
 
 		@Override
 		public void channelOpen(ChannelHandlerContext ctx, ChannelStateEvent event) throws Exception {
@@ -229,12 +235,14 @@ public class TcpSocketReceiver implements LogEnabled {
 
 			if (result == false) {
 				m_error++;
-				if (m_error == 1 || m_error % 10000 == 0) {
+				if (m_error % CatConstants.ERROR_COUNT == 0) {
+					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
 					m_logger.warn("The server can't process the tree! overflow : " + m_error);
 				}
 			} else {
 				m_process++;
-				if (m_process % 1000000 == 0) {
+				if (m_process % CatConstants.SUCCESS_COUNT == 0) {
+					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
 					m_logger.info("The server processes message number " + m_process);
 				}
 			}
