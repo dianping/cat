@@ -6,27 +6,19 @@ import java.util.Date;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.impl.ReportServiceImpl;
-import org.unidal.lookup.ComponentTestCase;
 
 public class ReportServiceImplTest extends ComponentTestCase{
 
 	private ReportServiceImpl m_impl = new ReportServiceImpl();
 
 	@Test
-	public void testWeeklyCache() throws Exception {
-	      lookup(WeeklyReportCache.class);
-	      
-	      System.in.read();
-	}
-	@Test
 	public void test() {
 		Date currentDay = TimeUtil.getCurrentDay();
 		Date currentWeek = TimeUtil.getCurrentWeek();
-		
-		System.out.println(currentWeek);
 		
 		Date lastMonth =TimeUtil.getLastMonth();
 		Date currentMonth = TimeUtil.getCurrentMonth();

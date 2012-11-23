@@ -9,6 +9,9 @@ import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -20,22 +23,11 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.MonthreportDao;
-import com.dianping.cat.home.dal.report.WeeklyreportDao;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportFacade;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
 
 public class TaskProducer implements org.unidal.helper.Threads.Task, Initializable {
-
-	@Inject
-	private WeeklyreportDao m_weeklyReportDao;
-
-	@Inject
-	private MonthreportDao m_monthReportDao;
 
 	@Inject
 	private ReportDao m_reportDao;
