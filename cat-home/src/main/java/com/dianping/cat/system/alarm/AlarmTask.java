@@ -54,6 +54,13 @@ public class AlarmTask implements Task {
 			} catch (InterruptedException e) {
 				active = false;
 			}
+
+			try {
+				Thread.sleep(3 * 1000 - duration);
+			} catch (InterruptedException e) {
+				active = false;
+			}
+			
 		}
 	}
 

@@ -143,8 +143,8 @@ public class MonthReportCache implements Initializable {
 
 				if (time > m_end) {
 					Transaction t = Cat.newTransaction("ReportReload", "Month");
+					
 					try {
-						
 						reload();
 						t.setStatus(Transaction.SUCCESS);
 					} catch (Exception e) {
