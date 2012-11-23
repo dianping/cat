@@ -76,10 +76,12 @@
 	<c:forEach var="item" items="${model.state.processDomains}"
 				varStatus="status">
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+			<c:set var="lastIndex" value="${status.index}"/>
 			<td>${item.name}</td>
 			<td>${item.ips}</td>
 		</tr>
 	</c:forEach>
+	<tr>${lastIndex}</tr>
 </table>
 <br>
 </jsp:body>
