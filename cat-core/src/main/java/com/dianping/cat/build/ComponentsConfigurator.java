@@ -94,8 +94,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TransportManager.class, DefaultTransportManager.class) //
 		      .req(ClientConfigManager.class));
 
-		all.add(C(MessageHandler.class, DefaultMessageHandler.class) //
-		      .req(ServerConfigManager.class));
+		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
 		all.add(C(MessageStatistics.class, DefaultMessageStatistics.class));
 		all.add(C(StatusUpdateTask.class) //
 		      .req(MessageStatistics.class, ClientConfigManager.class));
@@ -105,8 +104,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID) //
 		      .req(ChannelBufferManager.class));
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
-		      .req(ServerConfigManager.class, MessagePathBuilder.class)//
-		      .req(MessageCodec.class, ChannelBufferManager.class, ServerStateManager.class));
+		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStateManager.class));
 		all.add(C(ChannelBufferManager.class));
 
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));

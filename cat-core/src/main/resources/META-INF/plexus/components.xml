@@ -179,11 +179,6 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageHandler</role>
 			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageHandler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageStatistics</role>
@@ -226,12 +221,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.dump.ChannelBufferManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.status.ServerStateManager</role>

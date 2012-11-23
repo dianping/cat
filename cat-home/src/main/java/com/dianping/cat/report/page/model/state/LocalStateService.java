@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.model.state;
 
-import com.dainping.cat.consumer.dal.report.ReportDao;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
@@ -8,14 +9,10 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class LocalStateService extends BaseLocalModelService<StateReport> {
 	@Inject
 	private BucketManager m_bucketManager;
-
-	@Inject
-	private ReportDao m_reportDao;
 
 	public LocalStateService() {
 		super("state");

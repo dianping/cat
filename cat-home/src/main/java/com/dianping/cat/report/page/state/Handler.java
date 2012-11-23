@@ -19,14 +19,10 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
-import com.dianping.cat.status.ServerStateManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
-
-	@Inject
-	private ServerStateManager m_serverStateManager;
 
 	@Inject
 	private ReportService m_reportService;
@@ -113,7 +109,7 @@ public class Handler implements PageHandler<Context> {
 			model.setLongDate(payload.getDate());
 		}
 		model.setIpAddress(payload.getIpAddress());
-		
+
 		if (action == Action.HISTORY) {
 			String type = payload.getReportType();
 			if (type == null || type.length() == 0) {
