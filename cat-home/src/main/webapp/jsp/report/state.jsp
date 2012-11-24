@@ -47,19 +47,19 @@
 <table width="50%">
 	<tr class='odd'>
 		<td width="30%">处理消息总量</td>
-		<td width="20%">${w:format(model.state.total.total,'0.#')}</td>
+		<td width="20%">${w:format(model.state.total.total,'#,###,###,###,##0.#')}</td>
 		<td width="40%">丢失消息总量</td>
-		<td width="10%">${w:format(model.state.total.totalLoss,'0.#')}</td>
+		<td width="10%">${w:format(model.state.total.totalLoss,'#,###,###,###,##0.#')}</td>
 	</tr>
 	<tr class='even'>
 		<td>每分钟平均处理数</td>
-		<td>${w:format(model.state.total.avgTps,'0.#')}</td>
+		<td>${w:format(model.state.total.avgTps,'###,###,###,##0.#')}</td>
 		<td>每分钟最大处理数</td>
-		<td>${w:format(model.state.total.maxTps,'0.#')}</td>
+		<td>${w:format(model.state.total.maxTps,'###,###,###,##0.#')}</td>
 	</tr>
 	<tr class='odd'>
 		<td>存储消息数量</td>
-		<td>${w:format(model.state.total.dump,'0.#')}</td>
+		<td>${w:format(model.state.total.dump,'###,###,###,##0.#')}</td>
 		<td>压缩前消息大小(GB)</td>
 		<td>${w:format(model.state.total.size/1024/1024/1024,'0.00#')}</td>
 	</tr>
@@ -81,7 +81,7 @@
 			<td>${item.ips}</td>
 		</tr>
 	</c:forEach>
-	<tr>${lastIndex}</tr>
+	<tr style="color:white;"><td>${lastIndex+1}</td><td>${model.state.totalSize}</td></tr>
 </table>
 <br>
 </jsp:body>

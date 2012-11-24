@@ -46,8 +46,8 @@ public class WeeklyReportCache implements Initializable {
 
 	private Map<String, HealthReport> m_healthReports = new HashMap<String, HealthReport>();
 
-	private Map<String,StateReport> m_stateReports = new HashMap<String,StateReport>();
-	
+	private Map<String, StateReport> m_stateReports = new HashMap<String, StateReport>();
+
 	@Inject
 	private DailyReportService m_dailyReportService;
 
@@ -92,9 +92,8 @@ public class WeeklyReportCache implements Initializable {
 	public HealthReport queryHealthReport(String domain, Date start) {
 		return m_healthReports.get(domain);
 	}
-	
 
-	public StateReport queryStateReport(String domain,Date start){
+	public StateReport queryStateReport(String domain, Date start) {
 		return m_stateReports.get(domain);
 	}
 
@@ -129,8 +128,8 @@ public class WeeklyReportCache implements Initializable {
 			for (String database : databases) {
 				m_databaseRepors.put(database, m_dailyReportService.queryDatabaseReport(database, start, end));
 			}
-			
-			String domain="Cat";
+
+			String domain = "Cat";
 			m_stateReports.put(domain, m_dailyReportService.queryStateReport(domain, start, end));
 		}
 

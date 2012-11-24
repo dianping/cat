@@ -32,6 +32,7 @@ public class RenderTest extends ComponentTestCase {
 		EventReport report = new com.dianping.cat.consumer.event.model.transform.DefaultDomParser().parse(oldXml);
 
 		String result = render.renderReport(report);
+//		Assert.assertEquals(excepted, result);
 		Assert.assertEquals(excepted.replaceAll("\\s*", ""), result.replaceAll("\\s*", ""));
 	}
 	

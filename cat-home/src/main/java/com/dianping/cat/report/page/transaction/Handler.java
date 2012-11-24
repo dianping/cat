@@ -347,11 +347,13 @@ public class Handler implements PageHandler<Context> {
 		TransactionReport transactionReport = m_reportService.queryTransactionReport(domain, start, end);
 		calculateTps(payload, transactionReport);
 		model.setReport(transactionReport);
-		if (!StringUtils.isEmpty(type)) {
-			model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, transactionReport,
-			      payload.getQueryName()));
-		} else {
-			model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, transactionReport));
+		if (transactionReport != null) {
+			if (!StringUtils.isEmpty(type)) {
+				model.setDisplayNameReport(new DisplayNames().display(sorted, type, ip, transactionReport,
+				      payload.getQueryName()));
+			} else {
+				model.setDisplayTypeReport(new DisplayTypes().display(sorted, ip, transactionReport));
+			}
 		}
 	}
 

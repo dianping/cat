@@ -3,7 +3,6 @@ package com.dianping.cat.report.task.thread;
 import com.dainping.cat.consumer.dal.report.Task;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.message.Transaction;
 
 public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
@@ -52,12 +51,12 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
 				boolean again = false;
 				if (task != null) {
-					Transaction t = Cat.newTransaction("Task", task.getReportDomain());
 					try {
 						task.setConsumer(localIp);
 						if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) {
 							int retryTimes = 0;
 							while (!processTask(task)) {
+								// TODO add failure count
 								retryTimes++;
 								if (retryTimes < MAX_TODO_RETRY_TIMES) {
 									taskRetryDuration();
@@ -71,14 +70,9 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 								updateDoingToDone(task);
 							}
 						}
-						t.addData(task.toString());
-						t.setStatus(Transaction.SUCCESS);
 					} catch (Throwable e) {
 						Cat.logError(e);
-						t.setStatus(e);
-					} finally {
-						t.complete();
-					}
+					} 
 				} else {
 					taskNotFoundDuration();
 				}

@@ -11,10 +11,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.ComponentTestCase;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -26,10 +31,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.DailyreportEntity;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.ComponentTestCase;
-import org.unidal.lookup.annotation.Inject;
+import com.dianping.cat.report.task.thread.TaskProducer;
 
 @RunWith(JUnit4.class)
 public class ArchMonthAnalyzer extends ComponentTestCase {
@@ -43,6 +45,15 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
+	}
+
+	@Test
+	public void test() throws Exception {
+		TaskProducer producer = lookup(TaskProducer.class);
+		Assert.assertEquals(true, producer != null);
+		// Threads.forGroup("Cat").start(producer);
+
+		// System.in.read();
 	}
 
 	private Set<String> queryAllDomain(Date start, Date end) {
@@ -128,7 +139,8 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 				long error = type.getFailCount();
 				double sum = type.getSum();
 				if (name.equalsIgnoreCase("url")) {
-					m_url.add(count, error, sum);double avg = type.getAvg();
+					m_url.add(count, error, sum);
+					double avg = type.getAvg();
 					if (avg > 90) {
 						System.out.println(report.getDomain());
 						System.out.println(count + " " + avg);

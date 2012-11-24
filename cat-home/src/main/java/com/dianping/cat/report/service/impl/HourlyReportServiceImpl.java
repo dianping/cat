@@ -19,6 +19,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
@@ -40,6 +41,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	private ReportDao m_reportDao;
 	
 	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
+		if (end.getTime() == start.getTime()) {
+			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		}
 		Set<String> domains = new HashSet<String>();
 
 		try {
@@ -56,6 +60,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	}
 
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
+		if (end.getTime() == start.getTime()) {
+			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+		}
 		Set<String> domains = new HashSet<String>();
 
 		try {

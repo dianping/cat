@@ -155,7 +155,6 @@ public class TcpSocketReceiver implements LogEnabled {
 							// read the size of the message
 							buf.readInt();
 							DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
-
 							buf.resetReaderIndex();
 							tree.setBuf(buf);
 							m_handler.handle(tree);
@@ -230,7 +229,6 @@ public class TcpSocketReceiver implements LogEnabled {
 		@Override
 		public void messageReceived(ChannelHandlerContext ctx, MessageEvent event) {
 			ChannelBuffer buf = (ChannelBuffer) event.getMessage();
-
 			boolean result = m_queue.offer(buf);
 
 			if (result == false) {

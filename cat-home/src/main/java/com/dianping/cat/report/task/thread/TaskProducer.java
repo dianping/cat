@@ -9,6 +9,9 @@ import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -20,22 +23,11 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.MonthreportDao;
-import com.dianping.cat.home.dal.report.WeeklyreportDao;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportFacade;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
 
 public class TaskProducer implements org.unidal.helper.Threads.Task, Initializable {
-
-	@Inject
-	private WeeklyreportDao m_weeklyReportDao;
-
-	@Inject
-	private MonthreportDao m_monthReportDao;
 
 	@Inject
 	private ReportDao m_reportDao;
@@ -265,14 +257,14 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 		m_graphReportNameSet.add("heartbeat");
 	}
 
-	private void firstInit() {
+	public void firstInit() {
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.MONTH, -3);
 		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), 0, 0, 0, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 
 		Date currentMonth = TimeUtil.getCurrentMonth();
-		Date lastWeekEnd = TimeUtil.getLastWeekEnd();
+		Date lastWeekEnd = TimeUtil.getCurrentWeek();
 
 		generateWeeklyReportTasks(cal.getTime(), lastWeekEnd);
 		generateWeeklyDatabaseReportTasks(cal.getTime(), lastWeekEnd);
@@ -322,7 +314,7 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 		try {
 			m_taskDao.insert(task);
-		} catch (DalException e) {
+		} catch (Exception e) {
 			Cat.logError(e);
 		}
 	}
@@ -371,55 +363,61 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	@Override
 	public void run() {
-		boolean first = true;
 		boolean active = true;
 
-		if (first) {
-			firstInit();
-			first = false;
-		}
 		while (active) {
 			try {
 				Calendar cal = Calendar.getInstance();
 				int minute = cal.get(Calendar.MINUTE);
 				Date yesterday = TaskHelper.yesterdayZero(new Date());
 				// Daily report should created after last day reports all insert to database
-				if (minute > 10) {
-					Transaction t = Cat.newTransaction("System", "CreateTask");
-					try {
-						generateDailyReportTasks(yesterday);
-						generateDailyDatabaseTasks(yesterday);
-
-						generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
-
-						Date lastWeekEnd = TimeUtil.getLastWeekEnd();
-						Date lastWeekStart = new Date(lastWeekEnd.getTime() - TimeUtil.ONE_WEEK);
-
-						generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
-						generateWeeklyDatabaseReportTasks(lastWeekStart, lastWeekEnd);
-
-						Date currentMonth = TimeUtil.getCurrentMonth();
-						Date lastMonth = TimeUtil.getLastMonth();
-
-						generateMonthReportTasks(lastMonth, currentMonth);
-						generateMonthDatabaseReportTasks(lastMonth, currentMonth);
-						t.setStatus(Transaction.SUCCESS);
-					} catch (Exception e) {
-						t.setStatus(e);
-						Cat.logError(e);
-					} finally {
-						t.complete();
+				
+				Transaction t2 = Cat.newTransaction("System", "CreateTask");
+				try {
+					if (minute > 6) {
+						creatReportTask(yesterday);
+					} else {
+						try {
+							Thread.sleep(6 * 60 * 1000);
+						} catch (InterruptedException e) {
+							active = false;
+						}
+						creatReportTask(yesterday);
 					}
+					t2.setStatus(Transaction.SUCCESS);
+				} catch (Exception e) {
+					t2.setStatus(e);
+					Cat.logError(e);
+				} finally {
+					t2.complete();
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 			try {
-				Thread.sleep(60 * 60 * 1000);
+				Thread.sleep(70 * 60 * 1000);
 			} catch (InterruptedException e) {
 				active = false;
 			}
 		}
+	}
+
+	private void creatReportTask(Date yesterday) {
+		generateDailyReportTasks(yesterday);
+		generateDailyDatabaseTasks(yesterday);
+
+		generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
+		Date lastWeekEnd = TimeUtil.getCurrentWeek();
+		Date lastWeekStart =TimeUtil.getLastWeek();
+
+		generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
+		generateWeeklyDatabaseReportTasks(lastWeekStart, lastWeekEnd);
+
+		Date currentMonth = TimeUtil.getCurrentMonth();
+		Date lastMonth = TimeUtil.getLastMonth();
+
+		generateMonthReportTasks(lastMonth, currentMonth);
+		generateMonthDatabaseReportTasks(lastMonth, currentMonth);
 	}
 
 	@Override

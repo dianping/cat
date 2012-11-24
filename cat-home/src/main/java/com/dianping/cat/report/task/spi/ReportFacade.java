@@ -79,26 +79,32 @@ public class ReportFacade implements LogEnabled, Initializable {
 	}
 
 	public boolean builderReport(Task task) {
-		int type = task.getTaskType();
-		String reportName = task.getReportName();
-		String reportDomain = task.getReportDomain();
-		Date reportPeriod = task.getReportPeriod();
-		ReportBuilder reportBuilder = getReportBuilder(reportName);
+		try {
+	      int type = task.getTaskType();
+	      String reportName = task.getReportName();
+	      String reportDomain = task.getReportDomain();
+	      Date reportPeriod = task.getReportPeriod();
+	      ReportBuilder reportBuilder = getReportBuilder(reportName);
 
-		if (reportBuilder == null) {
-			m_logger.info("no report builder for type:" + " " + reportName);
-			return false;
-		} else {
-			if (type == TYPE_DAILY) {
-				return reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
-			} else if (type == TYPE_HOUR) {
-				return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
-			} else if (type == TYPE_WEEK) {
-				return reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
-			} else if (type == TYPE_MONTH) {
-				return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
-			}
-		}
+	      if (reportBuilder == null) {
+	      	m_logger.info("no report builder for type:" + " " + reportName);
+	      	return false;
+	      } else {
+	      	if (type == TYPE_DAILY) {
+	      		return reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
+	      	} else if (type == TYPE_HOUR) {
+	      		return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
+	      	} else if (type == TYPE_WEEK) {
+	      		return reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
+	      	} else if (type == TYPE_MONTH) {
+	      		return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+	      	}
+	      }
+      } catch (Exception e) {
+      	m_logger.error(e.getMessage(), e);
+      	Cat.logError(e);
+      	return false;
+      }
 		return false;
 	}
 

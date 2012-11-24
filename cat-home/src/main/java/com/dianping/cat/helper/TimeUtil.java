@@ -80,18 +80,9 @@ public class TimeUtil {
 	}
 
 	// last week sarterday
-	public static Date getLastWeekEnd() {
-		Calendar cal = Calendar.getInstance();
-
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-
-		int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-
-		cal.add(Calendar.DATE, -1 - dayOfWeek);
-		return cal.getTime();
+	public static Date getLastWeek() {
+		Date date = getCurrentWeek();
+		return new Date(date.getTime() - 7 * ONE_DAY);
 	}
 
 }
