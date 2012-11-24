@@ -304,6 +304,9 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
 		
+		if(problemReport==null){
+			
+		}
 		return problemReport;
 	}
 
