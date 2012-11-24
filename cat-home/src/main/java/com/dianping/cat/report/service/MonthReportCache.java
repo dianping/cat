@@ -110,7 +110,7 @@ public class MonthReportCache implements Initializable {
 			Date start = TimeUtil.getCurrentMonth();
 			Date end = TimeUtil.getCurrentDay();
 			m_end = end.getTime();
-
+			
 			Set<String> domains = m_hourReportService.queryAllDomainNames(start, end, "transaction");
 
 			for (String domain : domains) {
