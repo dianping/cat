@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ip-report domain="Review" startTime="2012-01-25 13:00:00" endTime="2012-01-25 13:59:00">
    <period minute="0">
       <ip address="127.0.0.1" count="19"/>
