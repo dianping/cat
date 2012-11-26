@@ -53,13 +53,13 @@
 	</tr>
 	<tr class='even'>
 		<td>每分钟平均处理数</td>
-		<td>${w:format(model.state.total.avgTps,'###,###,###,##0.#')}</td>
+		<td>${w:format(model.state.total.avgTps,'###,###,###,##0')}</td>
 		<td>每分钟最大处理数</td>
-		<td>${w:format(model.state.total.maxTps,'###,###,###,##0.#')}</td>
+		<td>${w:format(model.state.total.maxTps,'###,###,###,##0')}</td>
 	</tr>
 	<tr class='odd'>
 		<td>存储消息数量</td>
-		<td>${w:format(model.state.total.dump,'###,###,###,##0.#')}</td>
+		<td>${w:format(model.state.total.dump,'###,###,###,##0')}</td>
 		<td>压缩前消息大小(GB)</td>
 		<td>${w:format(model.state.total.size/1024/1024/1024,'0.00#')}</td>
 	</tr>

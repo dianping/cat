@@ -14,19 +14,19 @@ public class StateReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeMachine(Machine old, Machine machine) {
-		double oldCount = 0;
-		double newCount = 0;
-		if (old.getAvgTps() > 0) {
-			oldCount = old.getTotal() / old.getAvgTps();
-		}
-		if (machine.getAvgTps() > 0) {
-			newCount = machine.getTotal() / machine.getAvgTps();
-		}
-		double totalCount = oldCount + newCount;
-		if (totalCount > 0) {
-			old.setAvgTps((old.getTotal()+machine.getTotal()) / totalCount);
-		}
-		
+//		double oldCount = 0;
+//		double newCount = 0;
+//		if (old.getAvgTps() > 0) {
+//			oldCount = old.getTotal() / old.getAvgTps();
+//		}
+//		if (machine.getAvgTps() > 0) {
+//			newCount = machine.getTotal() / machine.getAvgTps();
+//		}
+//		double totalCount = oldCount + newCount;
+//		if (totalCount > 0) {
+//			old.setAvgTps((old.getTotal()+machine.getTotal()) / totalCount);
+//		}
+//		
 		old.setTotal(old.getTotal() + machine.getTotal());
 		old.setTotalLoss(old.getTotalLoss() + machine.getTotalLoss());
 		old.setDump(old.getDump() + machine.getDump());
@@ -35,9 +35,11 @@ public class StateReportMerger extends DefaultMerger {
 		old.setDelaySum(old.getDelaySum() + machine.getDelaySum());
 		old.setDelayCount(old.getDelayCount() + machine.getDelayCount());
 
-		if (machine.getMaxTps() > old.getMaxTps()) {
-			old.setMaxTps(machine.getMaxTps());
-		}
+		old.setMaxTps(old.getMaxTps()+machine.getMaxTps());
+		old.setAvgTps(old.getAvgTps()+machine.getAvgTps());
+//		if (machine.getMaxTps() > old.getMaxTps()) {
+//			old.setMaxTps(machine.getMaxTps());
+//		}
 
 		long count = old.getDelayCount();
 		double sum = old.getDelaySum();

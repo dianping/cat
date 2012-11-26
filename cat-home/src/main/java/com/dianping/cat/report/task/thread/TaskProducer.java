@@ -41,6 +41,8 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 	private static final String STATE = "state";
 
+	private long m_currentDay;
+
 	private void generateDailyDatabaseTasks(Date date) {
 		try {
 			Set<String> databaseSet = queryDatabaseSet(date, new Date(date.getTime() + TimeUtil.ONE_DAY));
@@ -366,14 +368,16 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 		boolean active = true;
 
 		while (active) {
-			try {
+			Date currentDay = TimeUtil.getCurrentDay();
+
+			if (currentDay.getTime() > m_currentDay) {
 				Calendar cal = Calendar.getInstance();
 				int minute = cal.get(Calendar.MINUTE);
 				Date yesterday = TaskHelper.yesterdayZero(new Date());
-				// Daily report should created after last day reports all insert to database
-				
-				Transaction t2 = Cat.newTransaction("System", "CreateTask");
+
+				Transaction t = Cat.newTransaction("System", "CreateTask");
 				try {
+					// Daily report should created after last day reports all insert to database
 					if (minute > 6) {
 						creatReportTask(yesterday);
 					} else {
@@ -384,15 +388,14 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 						}
 						creatReportTask(yesterday);
 					}
-					t2.setStatus(Transaction.SUCCESS);
+					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception e) {
-					t2.setStatus(e);
+					t.setStatus(e);
 					Cat.logError(e);
 				} finally {
-					t2.complete();
+					t.complete();
 				}
-			} catch (Exception e) {
-				Cat.logError(e);
+				m_currentDay = currentDay.getTime();
 			}
 			try {
 				Thread.sleep(70 * 60 * 1000);
@@ -408,7 +411,7 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 
 		generateDailyGraphTask(yesterday, TimeUtil.getCurrentDay());
 		Date lastWeekEnd = TimeUtil.getCurrentWeek();
-		Date lastWeekStart =TimeUtil.getLastWeek();
+		Date lastWeekStart = TimeUtil.getLastWeek();
 
 		generateWeeklyReportTasks(lastWeekStart, lastWeekEnd);
 		generateWeeklyDatabaseReportTasks(lastWeekStart, lastWeekEnd);
