@@ -47,20 +47,18 @@ public class AlarmTask implements Task {
 
 			long duration = System.currentTimeMillis() - time;
 
-			try {
-				if (duration < 30 * 1000) {
-					Thread.sleep(30 * 1000 - duration);
+			if (duration < 29 * 1000) {
+				try {
+					Thread.sleep(29 * 1000 - duration);
+				} catch (InterruptedException e) {
+					active = false;
 				}
-			} catch (InterruptedException e) {
-				active = false;
 			}
-
 			try {
-				Thread.sleep(3 * 1000 - duration);
+				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				active = false;
 			}
-			
 		}
 	}
 
