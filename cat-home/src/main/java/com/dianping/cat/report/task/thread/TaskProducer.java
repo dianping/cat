@@ -382,7 +382,7 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 						creatReportTask(yesterday);
 					} else {
 						try {
-							Thread.sleep(6 * 60 * 1000);
+							Thread.sleep((7 - minute) * TimeUtil.ONE_MINUTE);
 						} catch (InterruptedException e) {
 							active = false;
 						}
@@ -398,7 +398,7 @@ public class TaskProducer implements org.unidal.helper.Threads.Task, Initializab
 				m_currentDay = currentDay.getTime();
 			}
 			try {
-				Thread.sleep(70 * 60 * 1000);
+				Thread.sleep(5 * TimeUtil.ONE_MINUTE);
 			} catch (InterruptedException e) {
 				active = false;
 			}
