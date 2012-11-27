@@ -153,31 +153,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	}
 
-	private boolean shouldMove(String path) {
-		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
-			return false;
-		}
-
-		long current = System.currentTimeMillis();
-		long currentHour = current - current % ONE_HOUR;
-		long lastHour = currentHour - ONE_HOUR;
-		long nextHour = currentHour + ONE_HOUR;
-
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
-		String currentHourStr = sdf.format(new Date(currentHour));
-		String lastHourStr = sdf.format(new Date(lastHour));
-		String nextHourStr = sdf.format(new Date(nextHour));
-
-		int indexOf = path.indexOf(currentHourStr);
-		int indexOfLast = path.indexOf(lastHourStr);
-		int indexOfNext = path.indexOf(nextHourStr);
-
-		if (indexOf > -1 || indexOfLast > -1 || indexOfNext > -1) {
-			return false;
-		}
-		return true;
-	}
-
 	@Override
 	public MessageTree loadMessage(String messageId) throws IOException {
 		MessageProducer cat = Cat.getProducer();
@@ -303,6 +278,31 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_baseDir = baseDir;
 	}
 
+	private boolean shouldMove(String path) {
+		if (path.indexOf("draft") > -1 || path.indexOf("outbox") > -1) {
+			return false;
+		}
+
+		long current = System.currentTimeMillis();
+		long currentHour = current - current % ONE_HOUR;
+		long lastHour = currentHour - ONE_HOUR;
+		long nextHour = currentHour + ONE_HOUR;
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd/HH");
+		String currentHourStr = sdf.format(new Date(currentHour));
+		String lastHourStr = sdf.format(new Date(lastHour));
+		String nextHourStr = sdf.format(new Date(nextHour));
+
+		int indexOf = path.indexOf(currentHourStr);
+		int indexOfLast = path.indexOf(lastHourStr);
+		int indexOfNext = path.indexOf(nextHourStr);
+
+		if (indexOf > -1 || indexOfLast > -1 || indexOfNext > -1) {
+			return false;
+		}
+		return true;
+	}
+
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
@@ -394,34 +394,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void shutdown() {
 		}
-	}
-
-	class EncodeItem {
-		private LocalMessageBucket m_bucket;
-
-		private MessageId m_id;
-
-		private MessageTree m_tree;
-
-		public EncodeItem(MessageTree tree, MessageId id, LocalMessageBucket bucket) {
-			m_tree = tree;
-			m_id = id;
-			m_bucket = bucket;
-
-		}
-
-		public LocalMessageBucket getBucket() {
-			return m_bucket;
-		}
-
-		public MessageId getId() {
-			return m_id;
-		}
-
-		public MessageTree getTree() {
-			return m_tree;
-		}
-
 	}
 
 	class IdleChecker implements Task {
