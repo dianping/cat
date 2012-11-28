@@ -54,7 +54,7 @@
 	<tr class='even'>
 		<td>每分钟平均处理数</td>
 		<td>${w:format(model.state.total.avgTps,'###,###,###,##0')}</td>
-		<td>每分钟最大处理数</td>
+		<td>单台机器每分钟最大处理数</td>
 		<td>${w:format(model.state.total.maxTps,'###,###,###,##0')}</td>
 	</tr>
 	<tr class='odd'>

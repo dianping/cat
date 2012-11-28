@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +30,6 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.report.task.thread.TaskProducer;
 
 @RunWith(JUnit4.class)
 public class ArchMonthAnalyzer extends ComponentTestCase {
@@ -45,15 +43,6 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
-	}
-
-	@Test
-	public void test() throws Exception {
-		TaskProducer producer = lookup(TaskProducer.class);
-		Assert.assertEquals(true, producer != null);
-		// Threads.forGroup("Cat").start(producer);
-
-		// System.in.read();
 	}
 
 	private Set<String> queryAllDomain(Date start, Date end) {
@@ -74,8 +63,8 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void builderData() throws IOException {
-		Date start = TimeUtil.getLastMonth();
-		Date end = TimeUtil.getCurrentMonth();
+		Date start = TimeUtil.getCurrentMonth();
+		Date end = TimeUtil.getCurrentDay();
 
 		Set<String> domains = queryAllDomain(start, end);
 

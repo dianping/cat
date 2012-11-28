@@ -88,19 +88,20 @@ public class StateShow extends BaseVisitor {
 	}
 
 	private Machine mergerMachine(Machine total, Machine machine) {
-		double oldCount = 0;
-		double newCount = 0;
-		if (total.getAvgTps() > 0) {
-			oldCount = total.getTotal() / total.getAvgTps();
-		}
-		if (machine.getAvgTps() > 0) {
-			newCount = machine.getTotal() / machine.getAvgTps();
-		}
-		double totalCount = oldCount + newCount;
-		if (totalCount > 0) {
-			total.setAvgTps((total.getTotal() + machine.getTotal()) / totalCount);
-		}
-
+		// double oldCount = 0;
+		// double newCount = 0;
+		// if (total.getAvgTps() > 0) {
+		// oldCount = total.getTotal() / total.getAvgTps();
+		// }
+		// if (machine.getAvgTps() > 0) {
+		// newCount = machine.getTotal() / machine.getAvgTps();
+		// }
+		// double totalCount = oldCount + newCount;
+		// if (totalCount > 0) {
+		// total.setAvgTps((total.getTotal() + machine.getTotal()) / totalCount);
+		// }
+		//
+		total.setAvgTps(total.getAvgTps() + machine.getAvgTps());
 		total.setTotal(total.getTotal() + machine.getTotal());
 		total.setTotalLoss(total.getTotalLoss() + machine.getTotalLoss());
 		total.setDump(total.getDump() + machine.getDump());
@@ -112,6 +113,10 @@ public class StateShow extends BaseVisitor {
 		if (machine.getMaxTps() > total.getMaxTps()) {
 			total.setMaxTps(machine.getMaxTps());
 		}
+
+		// if (machine.getMaxTps() > total.getMaxTps()) {
+		// total.setMaxTps(machine.getMaxTps());
+		// }
 
 		long count = total.getDelayCount();
 		double sum = total.getDelaySum();
@@ -154,6 +159,5 @@ public class StateShow extends BaseVisitor {
 		public int compare(ProcessDomain o1, ProcessDomain o2) {
 			return o1.getName().compareTo(o2.getName());
 		}
-
 	}
 }
