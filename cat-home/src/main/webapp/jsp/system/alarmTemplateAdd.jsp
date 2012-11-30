@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.alarm.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model" scope="request" />
 
-<form name="templateAdd" method="post" action="${model.pageUri}?op=alarmTemplateAddSubmit">
+<form name="templateAdd" id="form" method="post" action="${model.pageUri}?op=alarmTemplateAddSubmit">
 	<table border="0">
 		<tr>
 			<td>模板名称</td>

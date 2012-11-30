@@ -66,6 +66,7 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 			Date endDate = new Date(current + TimeUtil.ONE_DAY);
 
 			CrossReport crossReport = queryCrossReport(startDate, endDate, domain);
+			
 			System.out.print(sdf.format(startDate) + "\t");
 			for (String otherDomain : domains) {
 				Indicator otherDomainIndicator = getOtherDomainCrossInfo(otherDomain, crossReport);
@@ -339,8 +340,8 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 	}
 	
 	public void buildData() throws Exception {
-		Date lastMonth = calMonthFirstDay(-1);
-		Date nextMonth = calMonthFirstDay(0);
+		Date lastMonth = calMonthFirstDay(0);
+		Date nextMonth = calMonthFirstDay(1);
 		List<String> otherDomains = new ArrayList<String>();
 		List<String> urls = new ArrayList<String>();
 		String domain = "TuanGouRemote";

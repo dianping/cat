@@ -2,7 +2,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.login.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.login.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.login.Model" scope="request"/>
-<form name="login" method="post" action="${model.pageUri}">
+<form name="login" id="form" method="post" action="${model.pageUri}">
 	<input type="hidden" name="rtnUrl" value="${payload.rtnUrl}" />
 	<table border="0">
 		<tr>

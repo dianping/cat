@@ -14,7 +14,7 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	
 
-<form name="projectUpdate" method="post" action="${model.pageUri}?op=updateSubmit">
+<form name="projectUpdate" id="form" method="post" action="${model.pageUri}?op=updateSubmit">
 	<table border="0">
 		<input type="hidden" name="projectId" value="${model.project.id}" />
 		<input type="hidden" name="domain" value="${model.project.domain}" />

@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.alarm.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model" scope="request" />
 
-<form name="scheduledReportModify" method="post" action="${model.pageUri}?op=scheduledReportUpdateSubmit">
+<form name="scheduledReportModify" id="form" method="post" action="${model.pageUri}?op=scheduledReportUpdateSubmit">
 	<table border="0">
 		<input type="hidden" name="scheduledReportId" value="${model.scheduledReport.id}" />
 		<tr>

@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.alarm.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model" scope="request" />
 
-<form name="scheduledReportAdd" method="post" action="${model.pageUri}?op=scheduledReportAddSubmit">
+<form name="scheduledReportAdd" id="form" method="post" action="${model.pageUri}?op=scheduledReportAddSubmit">
 	<table border="0">
 		<tr>
 			<td>项目名称</td>

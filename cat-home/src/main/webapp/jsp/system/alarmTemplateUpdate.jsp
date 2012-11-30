@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.alarm.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model" scope="request" />
 
-<form name="exceptionAlarmModify" method="post" action="${model.pageUri}?op=alarmTemplateUpdateSubmit">
+<form name="exceptionAlarmModify" id="form" method="post" action="${model.pageUri}?op=alarmTemplateUpdateSubmit">
 	<table border="0">
 		<input type="hidden" name="alarmTemplateId" value="${model.alarmTemplate.id}" />
 		<tr>
