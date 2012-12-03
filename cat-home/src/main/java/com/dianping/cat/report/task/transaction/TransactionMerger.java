@@ -11,7 +11,6 @@ import com.dainping.cat.consumer.dal.report.Report;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
@@ -33,10 +32,6 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 				model.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
-
-				Event event = Cat.getProducer().newEvent("Transaction", "XML");
-				event.setStatus(Event.SUCCESS);
-				event.addData(xml);
 			}
 		}
 
