@@ -54,9 +54,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Inject
 	private ServerStateManager m_serverStateManager;
-	
+
 	@Inject
 	private MessagePathBuilder m_pathBuilder;
+
+	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 	private int m_error;
 
@@ -305,8 +307,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
-		String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-		String name = id.getDomain() + '-' + id.getIpAddress() + '-' + localIp;
+		String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
 		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
 		LocalMessageBucket bucket = m_buckets.get(dataFile);
 
@@ -338,7 +339,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 
 		m_total++;
-		if (m_total % CatConstants.SUCCESS_COUNT == 0) {
+		if (m_total % (CatConstants.SUCCESS_COUNT * 10) == 0) {
 			double amount = m_totalSize - m_lastTotalSize;
 			m_lastTotalSize = m_totalSize;
 
@@ -347,7 +348,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			Message message = tree.getMessage();
 			if (message instanceof Transaction) {
-				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp() - ((Transaction)message).getDurationInMillis();
+				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
+				      - ((Transaction) message).getDurationInMillis();
 				m_serverStateManager.addProcessDelay(delay);
 			}
 
