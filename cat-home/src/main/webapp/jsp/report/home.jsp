@@ -51,6 +51,7 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 	<tr class="even"><td>4</td><td>Problem、Hearbeat报表区间</<td><td>Problem、Heartbeat历史报表，图表X轴以1分钟为刻度，Y轴表示每1分钟的值</td></tr>
 	<tr class="odd"><td>5</td><td>项目信息修改（仅修改线上环境）</<td><td>请项目负责人到Project标签下，修改项目所在分组的基本信息</td></tr>
 	<tr class="even"><td>6</td><td>默认告警，邮件订阅（仅修改线上环境）</<td><td>请项目负责人到Alarm标签下，订阅相关异常告警、服务调用失败告警、日常邮件，Hawk会逐步下线中。</td></tr>
+	<tr class="odd"><td>7</td><td>95Line</<td><td>由于计算95line需要数据较多，为了减少内存开销，系统做了一些优化，在单个小时内某一台机器，95Line误差是1ms，但是合并成1一天，1周，1个月误差较大（仅供参考）</td></tr>
 
 </table>
 <br>
