@@ -23,4 +23,12 @@ public class MatrixReportFilterTest {
 
 		Assert.assertEquals(expected1.replaceAll("\\s*", ""), report.toString().replaceAll("\\s*", ""));
 	}
+	
+	@Test
+	public void test1(){
+		Long i = Long.MAX_VALUE;
+		long ii=Long.MAX_VALUE;
+		System.out.println(i.toString());
+		System.out.println(ii);
+	}
 }

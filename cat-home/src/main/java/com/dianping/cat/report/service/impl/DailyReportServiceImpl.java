@@ -140,7 +140,7 @@ public class DailyReportServiceImpl implements DailyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logHeartbeat("ErrorXML", "heartbeat", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+					Cat.getProducer().logEvent("ErrorXML", "heartbeat", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {

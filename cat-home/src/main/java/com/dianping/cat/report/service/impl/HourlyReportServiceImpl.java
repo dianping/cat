@@ -95,7 +95,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "transaction", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "transaction", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -127,7 +127,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "event", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "event", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -159,7 +159,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "problem", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "problem", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -191,7 +191,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logHeartbeat("ErrorXML", "heartbeat", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "heartbeat", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -222,7 +222,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "matrix", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "matrix", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -253,7 +253,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "cross", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "cross", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -284,7 +284,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "sql", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "sql", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -316,7 +316,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "database", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "database", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -347,7 +347,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "health", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "health", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
@@ -380,7 +380,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.getProducer().logEvent("ErrorXML", "state", Event.SUCCESS, xml);
+					Cat.getProducer().logEvent("ErrorXML", "state", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
 				}
 			}
 		} catch (Exception e) {
