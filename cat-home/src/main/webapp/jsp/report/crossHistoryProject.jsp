@@ -47,7 +47,7 @@
 		<c:if test="${!empty model.projectInfo.callProjectsInfo}">
 		<tr>
 			<th class="left">Type</th>
-			<th class="left">RemoteProject</th>
+			<th class="left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=name${model.customDate}">RemoteProject</a></th>
 			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=total${model.customDate}">Total</a></th>
 			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failure${model.customDate}">Failure</a></th>
 			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failurePercent${model.customDate}">Failure%</a></th>
@@ -65,14 +65,12 @@
 		             <td>${w:format(callInfo.tps,'0.00')}</td>
 		         </tr>
 		</c:forEach>
-		<tr><td>&nbsp</td></tr>
-		<tr><td>&nbsp</td></tr>
 		</c:if>
-
+		<tr><td>&nbsp</td></tr>
 		<c:if test="${!empty model.projectInfo.serviceProjectsInfo}">
 		      <tr>
 		         <th class="left">Type</th>
-		         <th class="left">RemoteProject</th>
+		         <th class="left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=name${model.customDate}">RemoteProject</a></th>
 		         <th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=total${model.customDate}">Total</a></th>
 		         <th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure${model.customDate}">Failure</a></th>
 		         <th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent${model.customDate}">Failure%</a></th>
@@ -83,6 +81,30 @@
 		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 		            <td class="left">${serviceInfo.type}</td>
 		            <td class="left"><a href="?op=historyHost&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&project=${serviceInfo.projectName}${model.customDate}">${serviceInfo.projectName}</a></td>
+		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
+		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
+		            <td>${w:format(serviceInfo.failurePercent,'0.00%')}</td>
+		             <td>${w:format(serviceInfo.avg,'0.00')}</td>
+		             <td>${w:format(serviceInfo.tps,'0.00')}</td>
+		         </tr>
+		      </c:forEach>
+		      </c:if>
+		     <tr><td>&nbsp</td></tr>
+		 
+		       <c:if test="${!empty model.projectInfo.callServiceProjectsInfo}">
+		      <tr>
+		         <th class="left">Type(从客户端看，Pigeon服务数据)</th>
+		         <th class="left">RemoteProject</th>
+		         <th>Total</th>
+		         <th>Failure</th>
+		         <th>Failure%</th>
+		         <th>Avg(ms)</th>
+		         <th>TPS</th>
+		      </tr>
+		      <c:forEach var="serviceInfo" items="${model.projectInfo.callServiceProjectsInfo}" varStatus="status">
+		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+		            <td class="left">${serviceInfo.type}</td>
+		            <td class="left">${serviceInfo.projectName}</td>
 		            <td>${w:format(serviceInfo.totalCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failureCount,'#,###,###,###,##0')}</td>
 		            <td>${w:format(serviceInfo.failurePercent,'0.00%')}</td>

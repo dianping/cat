@@ -2,25 +2,30 @@ package com.dianping.cat.report.page.cross;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.cross.display.HostInfo;
-import com.dianping.cat.report.page.cross.display.MethodInfo;
-import com.dianping.cat.report.page.cross.display.ProjectInfo;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
-import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportService;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.cross.model.entity.CrossReport;
+import com.dianping.cat.helper.CatString;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.cross.display.HostInfo;
+import com.dianping.cat.report.page.cross.display.MethodInfo;
+import com.dianping.cat.report.page.cross.display.ProjectInfo;
+import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
+import com.dianping.cat.report.page.model.spi.ModelPeriod;
+import com.dianping.cat.report.page.model.spi.ModelRequest;
+import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ReportService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -55,12 +60,30 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private CrossReport getHourlyReport(String domain, ModelPeriod period, String date, String ip) {
+		ModelRequest request = new ModelRequest(domain, period) //
+		      .setProperty("date", date) //
+		      .setProperty("ip", ip);
+
+		if (m_service.isEligable(request)) {
+			ModelResponse<CrossReport> response = m_service.invoke(request);
+			CrossReport report = response.getModel();
+			return report;
+		} else {
+			throw new RuntimeException("Internal error: no eligable cross service registered for " + request + "!");
+		}
+	}
+
 	private CrossReport getSummarizeReport(Payload payload) {
 		String domain = payload.getDomain();
 
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
+		return m_reportService.queryCrossReport(domain, start, end);
+	}
+
+	private CrossReport getSummarizeReport(String domain, Date start, Date end) {
 		return m_reportService.queryCrossReport(domain, start, end);
 	}
 
@@ -80,6 +103,7 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 		long historyTime = payload.getHistoryEndDate().getTime() - payload.getHistoryStartDate().getTime();
 
+		String domain = payload.getDomain();
 		switch (payload.getAction()) {
 		case HOURLY_PROJECT:
 			CrossReport projectReport = getHourlyReport(payload);
@@ -91,6 +115,27 @@ public class Handler implements PageHandler<Context> {
 			projectInfo.visitCrossReport(projectReport);
 			model.setProjectInfo(projectInfo);
 			model.setReport(projectReport);
+
+			if (payload.getIpAddress().equals(CatString.ALL_IP)) {
+				List<TypeDetailInfo> details = projectInfo.getServiceProjectsInfo();
+
+				for (TypeDetailInfo info : details) {
+					String projectName = info.getProjectName();
+					if (projectName.equalsIgnoreCase(payload.getDomain()) || projectName.equalsIgnoreCase("UnknownProject")
+					      || projectName.equalsIgnoreCase(ProjectInfo.ALL_CLIENT)) {
+						continue;
+					}
+					ProjectInfo temp = buildCallProjectInfo(projectName, payload.getPeriod(),
+					      String.valueOf(payload.getDate()), payload.getHourDuration());
+
+					TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
+					
+					if (detail != null) {
+						detail.setProjectName(projectName);
+						projectInfo.getAllCallServiceProjectsInfo().put(projectName, detail);
+					}
+				}
+			}
 			break;
 		case HOURLY_HOST:
 			CrossReport hostReport = getHourlyReport(payload);
@@ -103,6 +148,8 @@ public class Handler implements PageHandler<Context> {
 			hostInfo.visitCrossReport(hostReport);
 			model.setReport(hostReport);
 			model.setHostInfo(hostInfo);
+			
+			
 			break;
 		case HOURLY_METHOD:
 			CrossReport methodReport = getHourlyReport(payload);
@@ -126,6 +173,28 @@ public class Handler implements PageHandler<Context> {
 			historyProjectInfo.visitCrossReport(historyProjectReport);
 			model.setProjectInfo(historyProjectInfo);
 			model.setReport(historyProjectReport);
+
+			if (payload.getIpAddress().equals(CatString.ALL_IP)) {
+				List<TypeDetailInfo> details = historyProjectInfo.getServiceProjectsInfo();
+
+				for (TypeDetailInfo info : details) {
+					String projectName = info.getProjectName();
+					if (projectName.equalsIgnoreCase(payload.getDomain()) || projectName.equalsIgnoreCase("UnknownProject")
+					      || projectName.equalsIgnoreCase(ProjectInfo.ALL_CLIENT)) {
+						continue;
+					}
+					Date start = payload.getHistoryStartDate();
+					Date end = payload.getHistoryEndDate();
+					ProjectInfo temp = buildHistoryCallProjectInfo(projectName,start,end);
+
+					TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
+					
+					if (detail != null) {
+						detail.setProjectName(projectName);
+						historyProjectInfo.getAllCallServiceProjectsInfo().put(projectName, detail);
+					}
+				}
+			}
 			break;
 		case HISTORY_HOST:
 			CrossReport historyHostReport = getSummarizeReport(payload);
@@ -155,6 +224,28 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private ProjectInfo buildCallProjectInfo(String domain, ModelPeriod period, String date, long duration) {
+		CrossReport projectReport = getHourlyReport(domain, period, date, CatString.ALL_IP);
+		ProjectInfo projectInfo = new ProjectInfo(duration);
+
+		projectInfo.setDomainManager(m_domainManager);
+		projectInfo.setClientIp(CatString.ALL_IP);
+		projectInfo.visitCrossReport(projectReport);
+
+		return projectInfo;
+	}
+	
+	private ProjectInfo buildHistoryCallProjectInfo(String domain, Date start, Date end) {
+		CrossReport projectReport = getSummarizeReport(domain, start, end);
+		ProjectInfo projectInfo = new ProjectInfo(end.getTime()-start.getTime());
+
+		projectInfo.setDomainManager(m_domainManager);
+		projectInfo.setClientIp(CatString.ALL_IP);
+		projectInfo.visitCrossReport(projectReport);
+
+		return projectInfo;
 	}
 
 	public void normalize(Model model, Payload payload) {

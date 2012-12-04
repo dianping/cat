@@ -70,7 +70,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Logger m_logger;
 
+	private int m_gzipThreads = 3;
+
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(1000);
+
+	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new HashMap<Integer, LinkedBlockingQueue<MessageItem>>();
+
+	private int[] m_processMessages = new int[m_gzipThreads];
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -153,6 +159,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("Cat").start(new IdleChecker());
 		Threads.forGroup("Cat").start(new OldMessageMover());
 
+		for (int i = 0; i < m_gzipThreads; i++) {
+			Threads.forGroup("Cat").start(new MessageGzip(i));
+		}
 	}
 
 	@Override
@@ -307,55 +316,156 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
-		String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
-		String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
-		LocalMessageBucket bucket = m_buckets.get(dataFile);
+		String domain = id.getDomain() + id.getIpAddress();
+		int bucketIndex = Math.abs(domain.hashCode()) % m_gzipThreads;
 
-		if (bucket == null) {
-			bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-			bucket.setBaseDir(m_baseDir);
-			bucket.initialize(dataFile);
-			m_buckets.put(dataFile, bucket);
+		if (bucketIndex > m_gzipThreads || bucketIndex < 0) {
+			m_logger.error("Error where compute the message bucket index!" + bucketIndex);
+		} else {
+			m_processMessages[bucketIndex]++;
 		}
 
-		DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
-		ChannelBuffer buf = defaultTree.getBuf();
+		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
 
-		int size = buf.readableBytes();
-		m_totalSize += size;
+		if (items == null) {
+			items = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(10000);
+			m_messageQueues.put(bucketIndex, items);
+		}
 
-		MessageBlock bolck = bucket.storeMessage(buf, id);
+		boolean result = items.offer(new MessageItem(tree, id));
 
-		if (bolck != null) {
-			boolean result = m_messageBlocks.offer(bolck);
-
-			if (!result) {
-				m_error++;
-				if (m_error % CatConstants.ERROR_COUNT == 0) {
-					m_serverStateManager.addMessageDumpLoss(CatConstants.ERROR_COUNT);
-					m_logger.error("Error when offer the block to the dump! Error :" + m_error);
-				}
+		if (result == false) {
+			m_error++;
+			if (m_error % CatConstants.ERROR_COUNT == 0) {
+				m_serverStateManager.addMessageDumpLoss(CatConstants.ERROR_COUNT);
+				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error);
 			}
 		}
 
 		m_total++;
-		if (m_total % (CatConstants.SUCCESS_COUNT * 10) == 0) {
-			double amount = m_totalSize - m_lastTotalSize;
-			m_lastTotalSize = m_totalSize;
-
-			m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
-			m_serverStateManager.addMessageSize(amount);
-
-			Message message = tree.getMessage();
-			if (message instanceof Transaction) {
-				long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
-				      - ((Transaction) message).getDurationInMillis();
-				m_serverStateManager.addProcessDelay(delay);
-			}
-
-			m_logger
-			      .info("Dump the message number: " + m_total + " Size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
+		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
+			logState(tree);
 		}
+	}
+
+	private void logState(final MessageTree tree) {
+		StringBuilder sb = new StringBuilder("GzipThread Process Message Number :");
+		for (int i = 0; i < m_gzipThreads; i++) {
+			sb.append(m_processMessages[i] + " \t");
+		}
+		m_logger.info(sb.toString());
+
+		double amount = m_totalSize - m_lastTotalSize;
+		m_lastTotalSize = m_totalSize;
+
+		m_serverStateManager.addMessageDump(CatConstants.SUCCESS_COUNT);
+		m_serverStateManager.addMessageSize(amount);
+
+		Message message = tree.getMessage();
+		if (message instanceof Transaction) {
+			long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
+			      - ((Transaction) message).getDurationInMillis();
+			m_serverStateManager.addProcessDelay(delay);
+		}
+		if (m_total % (CatConstants.SUCCESS_COUNT * 10) == 0) {
+			m_logger.info("Dump message number: " + m_total + " Size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
+		}
+	}
+
+	class MessageGzip implements Task {
+
+		public int m_index;
+
+		public MessageGzip(int index) {
+			m_index = index;
+		}
+
+		@Override
+		public void run() {
+			try {
+				while (true) {
+					BlockingQueue<MessageItem> items = m_messageQueues.get(m_index);
+					if (items != null) {
+						MessageItem item = items.poll(5, TimeUnit.MILLISECONDS);
+
+						if (item != null) {
+							try {
+								MessageTree tree = item.getTree();
+								MessageId id = item.getMessageId();
+
+								String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
+								String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+								LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+								if (bucket == null) {
+									bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+									bucket.setBaseDir(m_baseDir);
+									bucket.initialize(dataFile);
+									m_buckets.put(dataFile, bucket);
+								}
+
+								DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
+								ChannelBuffer buf = defaultTree.getBuf();
+
+								int size = buf.readableBytes();
+								m_totalSize += size;
+
+								MessageBlock bolck = bucket.storeMessage(buf, id);
+
+								if (bolck != null) {
+									if (!m_messageBlocks.offer(bolck)) {
+										m_logger.error("Error when offer the block to the dump!");
+									}
+								}
+							} catch (Exception e) {
+								Cat.logError(e);
+							}
+						}
+					}
+
+				}
+			} catch (InterruptedException e) {
+				// ignore it
+			}
+		}
+
+		@Override
+		public String getName() {
+			return "Message Gizp " + m_index;
+		}
+
+		@Override
+		public void shutdown() {
+
+		}
+	}
+
+	class MessageItem {
+		private MessageTree m_tree;
+
+		private MessageId m_messageId;
+
+		public MessageItem(MessageTree tree, MessageId messageId) {
+			m_tree = tree;
+			m_messageId = messageId;
+		}
+
+		public MessageTree getTree() {
+			return m_tree;
+		}
+
+		public void setTree(MessageTree tree) {
+			m_tree = tree;
+		}
+
+		public MessageId getMessageId() {
+			return m_messageId;
+		}
+
+		public void setMessageId(MessageId messageId) {
+			m_messageId = messageId;
+		}
+
 	}
 
 	class BlockDumper implements Task {

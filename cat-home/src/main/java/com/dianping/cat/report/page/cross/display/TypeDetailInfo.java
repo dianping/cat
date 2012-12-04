@@ -112,4 +112,8 @@ public class TypeDetailInfo {
 		m_type = type;
 	}
 
+	public void setProjectName(String projectName) {
+		m_projectName = projectName;
+	}
+
 }

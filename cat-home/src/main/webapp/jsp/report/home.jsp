@@ -21,12 +21,13 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 	<tr><td><a href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E7%94%A8%E6%88%B7%E6%89%8B%E5%86%8C" target="_blank">CAT用户手册</a></td>	</tr>
 	<tr><td><a href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E5%BC%80%E5%8F%91%E8%80%85%E6%96%87%E6%A1%A3" target="_blank">CAT开发者文档</a></td>	</tr>
 	<tr><td><a href="http://wiki.dianpingoa.com/bin/view/SOA%E6%9E%B6%E6%9E%84/CAT%E9%9B%86%E6%88%90%E5%B8%AE%E5%8A%A9%E6%96%87%E6%A1%A3" target="_blank">CAT集成帮助文档</a></td>	</tr>
+	<tr><td><a href="http://10.1.8.64:8080/cat/r">CAT预发环境</a><td></tr>
 </table>
 <br>
 <br>
 <table>	
-	<tr><td style="color:red;font-size:16px;font-weight:normal">项目信息修改（修改线上环境即可）</<td><td style="color:red;font-size:16px;font-weight:normal">请项目负责人到Project标签下，修改项目所在分组的基本信息</td></tr>
-	<tr><td style="color:red;font-size:16px;font-weight:normal">默认告警，邮件订阅（修改线上环境即可）</<td><td style="color:red;font-size:16px;font-weight:normal">请项目负责人到Alarm标签下，订阅相关异常告警、服务调用失败告警、日常邮件，Hawk会逐步下线中。</td></tr>
+	<tr><td style="color:red;font-size:16px;font-weight:normal">项目信息修改（修改线上环境即可)，请项目负责人到Project标签下，修改项目所在分组的基本信息</td></tr>
+	<tr><td style="color:red;font-size:16px;font-weight:normal">默认告警，邮件订阅（修改线上环境即可)，请项目负责人到Alarm标签下，订阅相关异常告警、服务调用失败告警、日常邮件，Hawk会逐步下线中。</td></tr>
 </table>
 <br>
 <br>
@@ -52,7 +53,6 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 	<tr class="odd"><td>5</td><td>项目信息修改（仅修改线上环境）</<td><td>请项目负责人到Project标签下，修改项目所在分组的基本信息</td></tr>
 	<tr class="even"><td>6</td><td>默认告警，邮件订阅（仅修改线上环境）</<td><td>请项目负责人到Alarm标签下，订阅相关异常告警、服务调用失败告警、日常邮件，Hawk会逐步下线中。</td></tr>
 	<tr class="odd"><td>7</td><td>95Line</<td><td>由于计算95line需要数据较多，为了减少内存开销，系统做了一些优化，在单个小时内某一台机器，95Line误差是1ms，但是合并成1一天，1周，1个月误差较大（仅供参考）</td></tr>
-
 </table>
 <br>
 <br>

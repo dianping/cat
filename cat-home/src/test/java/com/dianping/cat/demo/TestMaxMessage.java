@@ -5,6 +5,7 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestMaxMessage {
 
@@ -74,6 +75,21 @@ public class TestMaxMessage {
 			t5.setStatus(Message.SUCCESS);
 			t5.complete();
 
+			DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+			String messageId = tree.getMessageId();
+
+			String[] ids = messageId.split("-");
+			String ip6 = ids[1];
+
+			String newMessageId = messageId.replaceAll(ip6, ip6.substring(0, ip6.length() - 1) + "" + i % 3);
+			if (i % 3 == 1) {
+				newMessageId = newMessageId.replaceAll("Cat", "Cat1");
+			} else if (i % 3 == 2) {
+				newMessageId = newMessageId.replaceAll("Cat", "Cat2");
+			} else if (i % 3 == 0) {
+				newMessageId = newMessageId.replaceAll("Cat", "Cat0");
+			}
+			tree.setMessageId(newMessageId);
 			t.complete();
 
 			total.setStatus(Transaction.SUCCESS);

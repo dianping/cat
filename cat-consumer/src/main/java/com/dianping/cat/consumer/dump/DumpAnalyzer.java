@@ -92,7 +92,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		}
 
 		MessageId id = MessageId.parse(tree.getMessageId());
-
+		
 		if (id.getVersion() == 2) {
 			try {
 				m_bucketManager.storeMessage(tree,id);

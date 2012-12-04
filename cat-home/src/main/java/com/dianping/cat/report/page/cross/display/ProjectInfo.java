@@ -28,6 +28,8 @@ public class ProjectInfo extends BaseVisitor {
 
 	private Map<String, TypeDetailInfo> m_serviceProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
+	private Map<String,TypeDetailInfo> m_callServiceProjectsInfo = new LinkedHashMap<String,TypeDetailInfo>();
+	
 	private String m_clientIp;
 
 	private long m_reportDuration;
@@ -147,4 +149,18 @@ public class ProjectInfo extends BaseVisitor {
 		m_domainManager = domainManager;
 	}
 
+	public Map<String, TypeDetailInfo> getAllCallServiceProjectsInfo() {
+		return m_callServiceProjectsInfo;
+	}
+
+	public Map<String,TypeDetailInfo> getAllCallProjectInfo(){
+		return m_callProjectsInfo;
+	}
+	
+	public List<TypeDetailInfo> getCallServiceProjectsInfo(){
+		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callServiceProjectsInfo.values());
+		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
+		return values;
+	}
+	
 }

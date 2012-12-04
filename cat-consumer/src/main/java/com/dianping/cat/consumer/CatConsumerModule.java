@@ -17,7 +17,8 @@ public class CatConsumerModule extends AbstractModule {
 	@Override
 	protected void execute(ModuleContext ctx) {
 		TcpSocketReceiver receiver = ctx.lookup(TcpSocketReceiver.class);
+		int encodeThreadNumber = 5;
 
-		receiver.startEncoderThreads(3);
+		receiver.startEncoderThreads(encodeThreadNumber);
 	}
 }
