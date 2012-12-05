@@ -148,8 +148,6 @@ public class Handler implements PageHandler<Context> {
 			hostInfo.visitCrossReport(hostReport);
 			model.setReport(hostReport);
 			model.setHostInfo(hostInfo);
-			
-			
 			break;
 		case HOURLY_METHOD:
 			CrossReport methodReport = getHourlyReport(payload);
