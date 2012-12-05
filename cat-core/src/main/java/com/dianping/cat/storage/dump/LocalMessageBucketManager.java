@@ -367,7 +367,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			      - ((Transaction) message).getDurationInMillis();
 			m_serverStateManager.addProcessDelay(delay);
 		}
-		if (m_total % (CatConstants.SUCCESS_COUNT * 10) == 0) {
+		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
 			m_logger.info("Dump message number: " + m_total + " Size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
 		}
 	}
