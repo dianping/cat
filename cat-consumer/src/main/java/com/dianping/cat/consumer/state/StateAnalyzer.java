@@ -117,7 +117,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		double avgTps = 0;
 		if (size > 0) {
-			avgTps = machine.getTotal() / (double)size;
+			avgTps = machine.getTotal() / (double) size;
 		}
 		machine.setAvgTps(avgTps);
 		machine.setMaxTps(maxTps);
@@ -176,7 +176,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		buildStateInfo(machine);
 		StateReport base = m_reports.get(domain);
-		
+
 		machine.getProcessDomains().putAll(base.findOrCreateMachine(ip).getProcessDomains());
 		return report;
 	}
@@ -269,20 +269,8 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 				// Create task for health report
 				for (String domain : m_reports.keySet()) {
-					try {
-						Task task = m_taskDao.createLocal();
-
-						task.setCreationDate(new Date());
-						task.setProducer(ip);
-						task.setReportDomain(domain);
-						task.setReportName("health");
-						task.setReportPeriod(period);
-						task.setStatus(1); // status todo
-						m_taskDao.insert(task);
-					} catch (Exception e) {
-						Cat.logError(e);
-						t.setStatus(e);
-					}
+					StateReport report = m_reports.get(domain);
+					new HealthVisitor(ip, period).visitStateReport(report);
 				}
 			}
 		} catch (Exception e) {
@@ -315,10 +303,38 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			try {
 				insertDomainInfo(domain);
 			} catch (Exception e) {
-
 				Cat.logError(e);
 			}
 		}
+	}
 
+	public class HealthVisitor extends BaseVisitor {
+
+		private String m_ip;
+
+		private Date m_period;
+
+		public HealthVisitor(String ip, Date period) {
+			m_ip = ip;
+			m_period = period;
+		}
+
+		@Override
+		public void visitProcessDomain(ProcessDomain processDomain) {
+			String domain = processDomain.getName();
+			try {
+				Task task = m_taskDao.createLocal();
+
+				task.setCreationDate(new Date());
+				task.setProducer(m_ip);
+				task.setReportDomain(domain);
+				task.setReportName("health");
+				task.setReportPeriod(m_period);
+				task.setStatus(1); // status todo
+				m_taskDao.insert(task);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
 	}
 }
