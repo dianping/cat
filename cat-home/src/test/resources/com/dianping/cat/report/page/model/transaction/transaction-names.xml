@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<name id="ALL" totalCount="11" failCount="0" failPercent="0.00" min="1.0" max="193.0" avg="47.1" sum="518.0" sum2="73942.0" std="67.1">
+   <successMessageUrl>20120216/23/Cat/1168a02c-664b-440c-9ef4-a87bac4d9cb1.html</successMessageUrl>
+   <range value="5" count="136" sum="124692.0" avg="916.9" fails="0"/>
+   <range value="15" count="123" sum="12457.0" avg="101.3" fails="0"/>
+   <range value="10" count="12" sum="457.0" avg="38.1" fails="0"/>
+   <duration value="128" count="34"/>
+   <duration value="256" count="25"/>
+   <duration value="64" count="31"/>
+</name>

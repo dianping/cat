@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+   version="2.0">
+   <description>Application Specific JSP Tag Library</description>
+   <tlib-version>1.0</tlib-version>
+   <short-name>a</short-name>
+   <tag>
+		<name>errors</name>
+		<tag-class>com.dianping.cat.report.view.ErrorsTag</tag-class>
+		<body-content>JSP</body-content>
+   </tag>
+   <tag-file>
+      <name>body</name>
+      <path>/WEB-INF/tags/body.tag</path>
+   </tag-file>
+   <tag-file>
+      <name>report</name>
+      <path>/WEB-INF/tags/hourlyReport.tag</path>
+   </tag-file>
+   <tag-file>
+      <name>noSwitchReport</name>
+      <path>/WEB-INF/tags/noSwitchReport.tag</path>
+   </tag-file>
+   <tag-file>
+      <name>simpleReport</name>
+      <path>/WEB-INF/tags/simpleReport.tag</path>
+   </tag-file>
+   <tag-file>
+      <name>historyReport</name>
+      <path>/WEB-INF/tags/historyReport.tag</path>
+   </tag-file>
+   <function>
+      <description>Build form action for given id</description>
+      <name>action</name>
+      <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
+      <function-signature>String action(org.unidal.web.mvc.ViewModel, java.lang.Object)</function-signature>
+      <example>${a:action(model, 123)}</example>
+   </function>
+   <function>
+      <description>Build uri for given id</description>
+      <name>uri</name>
+      <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
+      <function-signature>String uri(org.unidal.web.mvc.ViewModel, java.lang.Object)</function-signature>
+      <example>${a:uri(model, 123)}</example>
+   </function>
+   <function>
+      <description>Build uri for given id with additional query string</description>
+      <name>uri2</name>
+      <function-class>com.dianping.cat.report.view.UriBuilder</function-class>
+      <function-signature>String uri2(org.unidal.web.mvc.ViewModel, java.lang.Object, java.lang.String)</function-signature>
+      <example>${a:uri2(model, 123, 'a=1&amp;b=2')}</example>
+   </function>
+   <function>
+      <description>ip location</description>
+      <name>getLocation</name>
+      <function-class>com.dianping.cat.report.page.ip.location.IPSeekerManager</function-class>
+      <function-signature>String getLocation(java.lang.String)</function-signature>
+      <example>${a:getLocation(ip)}</example>
+   </function>
+</taglib>

@@ -1,0 +1,5 @@
+<config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+	<servers>
+	<server ip="127.0.0.1" port="2280" />
+	</servers>
+</config>

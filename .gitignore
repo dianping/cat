@@ -1,0 +1,8 @@
+/ws/*
+/target/*
+/bin/*
+/*/target/*
+/*/bin/*
+/*/.*
+.*
+/*.bat

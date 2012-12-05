@@ -1,0 +1,13 @@
+<plexus>
+	<components>
+		<component>
+			<role>org.codehaus.plexus.logging.LoggerManager</role>
+			<implementation>org.unidal.lookup.logger.TimedConsoleLoggerManager</implementation>
+			<configuration>
+				<dateFormat>MM-dd HH:mm:ss.SSS</dateFormat>
+				<showClass>true</showClass>
+				<logFilePattern>/data/applogs/cat/cat_{0,date,yyyyMMdd}.log</logFilePattern>
+			</configuration>
+		</component>
+	</components>
+</plexus>

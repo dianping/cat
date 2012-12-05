@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="health-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <element name="domain" value-type="String" type="list" names="domains" />
+    <entity-ref name="problem-info" />
+    <entity-ref name="url" />
+    <entity-ref name="service" />
+    <entity-ref name="call" />
+    <entity-ref name="sql" />
+    <entity-ref name="web-cache" />
+    <entity-ref name="kvdb-cache" />
+    <entity-ref name="mem-cache" />
+  </entity>
+  <entity name="problem-info">
+    <attribute name="exceptions" value-type="long" />
+    <attribute name="longSqls" value-type="long" />
+    <attribute name="long-sqlPercent" value-type="double" />
+    <attribute name="longUrls" value-type="long" />
+    <attribute name="long-urlPercent" value-type="double" />
+    <attribute name="longServices" value-type="long" />
+    <attribute name="long-servicePercent" value-type="double" />
+    <attribute name="longCaches" value-type="long" />
+    <attribute name="long-cachePercent" value-type="double" />
+  </entity>
+  <entity name="url">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="base-info">
+    <attribute name="total" value-type="int" />
+    <attribute name="response-time" value-type="double" />
+    <attribute name="error-total" value-type="int" />
+    <attribute name="error-percent" value-type="double" />
+  </entity>
+  <entity name="service">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="call">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="sql">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="web-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+  <entity name="base-cache-info">
+    <attribute name="total" value-type="int" />
+    <attribute name="response-time" value-type="double" />
+    <attribute name="hit-percent" value-type="double" />
+  </entity>
+  <entity name="kvdb-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+  <entity name="mem-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+</model>
+

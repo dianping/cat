@@ -1,0 +1,28 @@
+<h4><a href="http://cat.qa.dianpingoa.com/cat/r/e?op=history&domain=MobileApi&date=2012051700&reportType=day" target="_blank">EventReport</a></h4>
+<table rules="all" border="1" >
+	<tr>
+		<td>Type</td>
+		<td>Total Count</td>
+		<td>Failure Count</td>
+		<td>Failure%</td>
+		<td>TPS</td>
+		<td>Link</td>
+	</tr>
+		<tr>
+			<td>User</td>
+			<td style="text-align:right">1,705</td>
+			<td style="text-align:right">0</td>
+			<td style="text-align:right">0.00</td>
+			<td style="text-align:right">0.02</td>
+			<td style="text-align:right"><a href="http://cat.qa.dianpingoa.com/cat/r/e?op=historyGraph&domain=MobileApi&date=2012051700&ip=All&reportType=day&type=User" target="_blank">Graph</a></td>
+		</tr>
+		<tr>
+			<td>User1</td>
+			<td style="text-align:right">1,705</td>
+			<td style="text-align:right">0</td>
+			<td style="text-align:right">0.00</td>
+			<td style="text-align:right">0.02</td>
+			<td style="text-align:right"><a href="http://cat.qa.dianpingoa.com/cat/r/e?op=historyGraph&domain=MobileApi&date=2012051700&ip=All&reportType=day&type=User1" target="_blank">Graph</a></td>
+		</tr>
+</table>
+

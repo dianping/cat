@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.health.model" enable-merger="true" enable-json-builder="true"
+	enable-xml-parser="true"  enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true"
+	enable-native-builder="true" enable-native-parser="true">
+ <entity name="health-report" root="true">
+    <attribute name="domain" value-type="String"  key="true"/>
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <element name="domain" value-type="String" type="set" names="domainNames" />
+    <entity-ref name="problem-info" />
+    <entity-ref name="url" />
+    <entity-ref name="service" />
+    <entity-ref name="clientService" />
+    <entity-ref name="call" />
+    <entity-ref name="sql" />
+    <entity-ref name="web-cache" />
+    <entity-ref name="kvdb-cache" />
+    <entity-ref name="mem-cache" />
+    <entity-ref name="machine-info" />
+  </entity>
+  <entity name="machine-info">
+     <attribute name="numbers" value-type="int" primitive="true" />
+   	 <attribute name="avg-load" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-max-load" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-load-count" value-type="int" primitive="true"/>
+   	 <attribute name="avg-load-sum" value-type="double" primitive="true"  format="0.000000"/>
+     <attribute name="avg-max-load-machine" value-type="String"/>
+   	 <attribute name="avg-oldgc" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-max-oldgc" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-oldgc-count" value-type="int" primitive="true"/>
+   	 <attribute name="avg-oldgc-sum" value-type="double" primitive="true"  format="0.000000"/>
+     <attribute name="avg-max-oldgc-machine" value-type="String"/>
+   	 <attribute name="avg-http" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-max-http" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-http-count" value-type="int" primitive="true" />
+   	 <attribute name="avg-http-sum" value-type="double" primitive="true"  format="0.000000"/>
+     <attribute name="avg-max-http-machine" value-type="String"/>
+   	 <attribute name="avg-pigeon" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-max-pigeon" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-pigeon-count" value-type="int" primitive="true"/>
+   	 <attribute name="avg-pigeon-sum" value-type="double" primitive="true"  format="0.000000"/>
+     <attribute name="avg-max-pigeon-machine" value-type="String"/>
+   	 <attribute name="avg-memory-used" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-max-memory-used" value-type="double" primitive="true"  format="0.000000"/>
+   	 <attribute name="avg-memory-used-count" value-type="int" primitive="true"/>
+   	 <attribute name="avg-memory-used-sum" value-type="double" primitive="true"  format="0.000000"/>
+     <attribute name="avg-max-memory-used-machine" value-type="String"/>
+  </entity>
+  <entity name="problem-info">
+    <attribute name="exceptions" value-type="long"  primitive="true"/>
+    <attribute name="longSqls" value-type="long"  primitive="true"/>
+    <attribute name="long-sqlPercent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="longUrls" value-type="long"  primitive="true"/>
+    <attribute name="long-urlPercent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="longServices" value-type="long"  primitive="true"/>
+    <attribute name="long-servicePercent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="longCaches" value-type="long" primitive="true" />
+    <attribute name="long-cachePercent" value-type="double" primitive="true"  format="0.000000"/>
+  </entity>
+  <entity name="url">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="base-info">
+    <attribute name="total" value-type="long"  primitive="true"/>
+    <attribute name="response-time" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="error-total" value-type="long"  primitive="true"/>
+    <attribute name="error-percent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="success-percent" value-type="double" primitive="true"  format="0.000000"/>
+    <attribute name="tps" value-type="double" primitive="true"  format="0.00"/>
+  </entity>
+  <entity name="service">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="clientService">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="call">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="sql">
+    <entity-ref name="base-info" />
+  </entity>
+  <entity name="web-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+  <entity name="base-cache-info">
+    <attribute name="total" value-type="long"  primitive="true"/>
+    <attribute name="response-time" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="hit-percent" value-type="double" primitive="true" format="0.000000"/>
+  </entity>
+  <entity name="kvdb-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+  <entity name="mem-cache">
+    <entity-ref name="base-cache-info" />
+  </entity>
+</model>
+

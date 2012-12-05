@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<event-report domain="MobileApi" startTime="2012-06-18 15:00:00"
+	endTime="2012-06-18 15:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<ip>10.1.77.193</ip>
+	<ip>10.1.77.191</ip>
+	<machine ip="10.1.77.193">
+		<type id="SQL.PARAM" totalCount="3842" failCount="0" failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1340002843652-0
+			</successMessageUrl>
+		</type>
+		<type id="URL" totalCount="166" failCount="0" failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1340003006374-0
+			</successMessageUrl>
+		</type>
+		<type id="User" totalCount="83" failCount="0" failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1340003006374-0
+			</successMessageUrl>
+		</type>
+		<type id="Mobile" totalCount="96" failCount="0" failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1340003006374-0
+			</successMessageUrl>
+		</type>
+		<type id="Response" totalCount="83" failCount="0" failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1340003006374-0
+			</successMessageUrl>
+		</type>
+		<type id="PigeonRespone" totalCount="233" failCount="0"
+			failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1340003346908-1
+			</successMessageUrl>
+		</type>
+		<type id="RemoteCall" totalCount="468" failCount="0" failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dc1-1340003346883-0
+			</successMessageUrl>
+		</type>
+		<type id="RuntimeException" totalCount="1" failCount="1"
+			failPercent="0.00">
+			<failMessageUrl>MobileApi-0a014dc1-1340004797204-0</failMessageUrl>
+		</type>
+		<type id="Exception" totalCount="1" failCount="1" failPercent="0.00">
+			<failMessageUrl>MobileApi-0a014dc1-1340004797204-0</failMessageUrl>
+		</type>
+	</machine>
+	<machine ip="10.1.77.191">
+		<type id="RemoteCall" totalCount="4" failCount="0" failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dbf-1340004471358-0
+			</successMessageUrl>
+		</type>
+		<type id="PigeonRespone" totalCount="2" failCount="0"
+			failPercent="0.00">
+			<successMessageUrl>MobileApi-0a014dbf-1340004471574-0
+			</successMessageUrl>
+		</type>
+	</machine>
+</event-report>

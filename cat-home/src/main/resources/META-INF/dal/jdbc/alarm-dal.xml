@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.cat.home.dal.alarm" gen="true">
+	<entity name="alarm-template" table="alarmTemplate" alias="a">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
+		<query-defs>
+			<query name="find-all-alarm-template" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+				]]></statement>
+			</query>
+			<query name="find-alarm-template-by-name" type="SELECT">
+				<param name="name" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='name'/> = ${name} 
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="alarm-rule-subscription" table="alarmRuleSubscription" alias="a3">
+		<member name="creation-date" insert-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-user-id" type="SELECT" multiple="true">
+				<param name="user-id" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='user-id'/> = ${user-id}
+				]]></statement>
+			</query>
+			<query name="find-by-alarm-rule-id" type="SELECT" multiple="true">
+				<param name="alarm-rule-id" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='alarm-rule-id'/> = ${alarm-rule-id}
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="alarm-rule" table="alarmRule" alias="a2">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
+		<updatesets>
+			<updateset name="UPDATE_CONTENT">
+				<member name="content" />
+				<member name="modify-date" />
+			</updateset>
+		</updatesets>
+		<query-defs>
+			<query name="find-all-alarm-rule" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> ORDER BY <FIELD name='domain'/> ASC
+				]]></statement>
+			</query>
+			<query name="find-all-alarm-rule-by-template-id" type="SELECT"
+				multiple="true">
+				<param name="template-id" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='template-id'/> = ${template-id} ORDER BY <FIELD name='domain'/> ASC
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="mail-record" table="mailRecord" alias="m">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="rule-ids" value-type="int[]" />
+		<query-defs>
+			<query name="find-last-report-record" type="SELECT">
+				<statement><![CDATA[
+        	SELECT <FIELDS/>
+        	FROM <TABLE/> 
+        	WHERE <FIELD name='type'/> = 1
+        	ORDER BY <FIELD name='id'/> desc limit 100
+        	]]></statement>
+			</query>
+			<query name="find-alarm-record-by-rule-id" type="SELECT" multiple="true">
+				<param name="rule-ids" />
+				<statement><![CDATA[
+        	SELECT <FIELDS/>
+        	FROM <TABLE/> 
+        	WHERE <FIELD name='rule-id'/> in <IN>${rule-ids}</IN>
+        	AND <FIELD name='type'/> > 1 
+        	ORDER BY <FIELD name='id'/> desc limit 100
+        	]]></statement>
+			</query>
+			<query name="find-report-record-by-rule-id" type="SELECT" multiple="true">
+				<param name="rule-ids" />
+				<statement><![CDATA[
+        	SELECT <FIELDS/> 
+        	FROM <TABLE/> 
+        	WHERE <FIELD name='rule-id'/> in <IN>${rule-ids}</IN>
+        	AND <FIELD name='type'/> = 1
+        	ORDER BY <FIELD name='id'/> desc limit 100
+        	]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="scheduled-report-subscription" table="scheduledReportSubscription"
+		alias="s2">
+		<member name="creation-date" insert-expr="NOW()" />
+		<query-defs>
+			<query name="find-by-user-id" type="SELECT" multiple="true">
+				<param name="user-id" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='user-id'/> = ${user-id}
+				]]></statement>
+			</query>
+			<query name="find-by-scheduled-report-id" type="SELECT" multiple="true">
+				<param name="scheduled-report-id" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='scheduled-report-id'/> = ${scheduled-report-id}
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="scheduled-report" table="scheduledReport" alias="s">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
+		<updatesets>
+			<updateset name="UPDATE_REPORTS">
+				<member name="names" />
+				<member name="modify-date" />
+			</updateset>
+		</updatesets><query-defs>
+			<query name="find-all" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					ORDER BY <FIELD name='domain'/> ASC
+				]]></statement>
+			</query>
+			</query-defs>
+	</entity>
+</entities>
+

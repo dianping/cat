@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<health-report domain="OpenWeb" startTime="2012-09-14 12:00:00"
+	endTime="2012-09-14 13:00:00">
+	<domain>OpenWeb</domain>
+	<domain>Cat</domain>
+	<domain>Cat1</domain>
+	<domain>Cat2</domain>
+	<problem-info exceptions="30" longSqls="30" long-sqlPercent="0.100000"
+		longUrls="30" long-urlPercent="0.100000" longServices="30"
+		long-servicePercent="0.100000" longCaches="90" long-cachePercent="0.100000" />
+	<url>
+		<base-info total="300" response-time="1.00" error-total="30"
+			error-percent="0.100000" success-percent="0.900000" tps="3.00" />
+	</url>
+	<service>
+		<base-info total="300" response-time="1.00" error-total="30"
+			error-percent="0.100000" success-percent="0.900000" tps="3.00" />
+	</service>
+	<call>
+		<base-info total="300" response-time="1.00" error-total="30"
+			error-percent="0.100000" success-percent="0.900000" tps="3.00" />
+	</call>
+	<sql>
+		<base-info total="300" response-time="1.00" error-total="30"
+			error-percent="0.100000" success-percent="0.900000" tps="3.00" />
+	</sql>
+	<web-cache>
+		<base-cache-info total="300" response-time="1.00"
+			hit-percent="0.900000" />
+	</web-cache>
+	<kvdb-cache>
+		<base-cache-info total="300" response-time="1.00"
+			hit-percent="0.900000" />
+	</kvdb-cache>
+	<mem-cache>
+		<base-cache-info total="300" response-time="1.00"
+			hit-percent="0.900000" />
+	</mem-cache>
+	<clientService>
+		<base-info total="300" response-time="1.00" error-total="30"
+			error-percent="0.100000" success-percent="0.900000" tps="3.00" />
+	</clientService>
+	<machine-info numbers="2" avg-load="1.000000" avg-max-load="2.000000"
+		avg-load-count="6" avg-load-sum="6.000000" avg-max-load-machine="10.1.1.1" avg-oldgc="1.000000"
+		avg-max-oldgc="3.000000" avg-oldgc-count="6" avg-oldgc-sum="6.000000"
+		avg-max-oldgc-machine="10.1.1.1" avg-http="5.000000" avg-max-http="8.000000"
+		avg-http-count="3" avg-http-sum="15.000000" avg-max-http-machine=""
+		avg-pigeon="4.000000" avg-max-pigeon="5.000000" avg-pigeon-count="3"
+		avg-pigeon-sum="12.000000" avg-max-pigeon-machine="10.1.1.1" avg-memory-used="100.000000"
+		avg-max-memory-used="116.000000" avg-memory-used-count="3"
+		avg-memory-used-sum="300.000000" avg-max-memory-used-machine="" />
+</health-report>

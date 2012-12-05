@@ -1,0 +1,42 @@
+.monthreport tr th{
+	text-align:left;
+	white-space:nowarp;
+}
+
+.monthreport tr td{
+	text-align:right;
+	white-space:nowarp;
+}
+
+
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: right;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: right;
+}
+
+tr.odd th {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+}
+
+tr.even th {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+}

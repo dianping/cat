@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transaction-report domain="MobileApi" startTime="2012-06-18 16:00:00"
+	endTime="2012-06-18 16:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<ip>10.1.77.193</ip>
+	<machine ip="10.1.77.193">
+		<type id="Result" totalCount="208" failCount="0" failPercent="0.00"
+			min="0.225" max="673.736" avg="7.8" sum="1618.0" sum2="490858.8" std="48.0"
+			tps="0.00" line95Value="44.00" line95Sum="44.00" line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403188-1
+			</successMessageUrl>
+		</type>
+		<type id="URL" totalCount="65" failCount="0" failPercent="0.00"
+			min="1.492" max="92376.562" avg="2942.2" sum="191246.2" sum2="9818761147.4"
+			std="11933.2" tps="0.00" line95Value="19399.00" line95Sum="19399.00"
+			line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="Action" totalCount="65" failCount="0" failPercent="0.00"
+			min="0.203" max="72901.539" avg="2534.1" sum="164717.0" sum2="6558693118.2"
+			std="9720.1" tps="0.00" line95Value="19395.00" line95Sum="19395.00"
+			line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="Call" totalCount="212" failCount="0" failPercent="0.00"
+			min="3.355" max="3143.928" avg="110.1" sum="23337.1" sum2="26978744.0"
+			std="339.3" tps="0.00" line95Value="562.00" line95Sum="562.00"
+			line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="SQL" totalCount="7858" failCount="0" failPercent="0.00"
+			min="0.222" max="125.143" avg="0.9" sum="7173.8" sum2="103546.3" std="3.5"
+			tps="0.00" line95Value="1.00" line95Sum="1.00" line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="Response" totalCount="65" failCount="0" failPercent="0.00"
+			min="0.027" max="78.726" avg="8.3" sum="538.7" sum2="13094.9" std="11.5"
+			tps="0.00" line95Value="22.00" line95Sum="22.00" line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006403187-0
+			</successMessageUrl>
+		</type>
+		<type id="Task" totalCount="42" failCount="0" failPercent="0.00"
+			min="82.755" max="560.798" avg="304.4" sum="12786.7" sum2="4510647.4"
+			std="121.3" tps="0.00" line95Value="506.00" line95Sum="506.00"
+			line95Count="1">
+			<successMessageUrl>MobileApi-0a014dc1-1340006430840-0
+			</successMessageUrl>
+		</type>
+	</machine>
+</transaction-report>
