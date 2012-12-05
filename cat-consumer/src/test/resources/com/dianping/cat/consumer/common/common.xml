@@ -1,0 +1,9 @@
+<common-report domain="GroupWeb" startTime="2012-07-20 13:00:00" endTime="2012-07-20 13:59:59">
+	<domain>Cat</domain>
+	<domain>MobileApi</domain>
+	<domain>GroupService</domain>
+	<domain>GroupWeb</domain>
+	<ip>192.168.1.1</ip>
+	<ip>192.168.1.1</ip>
+	<ip>192.168.1.1</ip>
+</common-report>

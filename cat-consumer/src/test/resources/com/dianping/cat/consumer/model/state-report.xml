@@ -1,0 +1,16 @@
+<state-report domain="Cat" startTime="2012-06-18 14:00:00"
+	endTime="2012-06-18 14:59:59">
+	<machine ip="10.1.77.193">
+		<business>
+			<domain name="Cat">
+				<ip>192.168.0.1</ip>
+				<ip></ip>
+			</domain>
+			<domain></domain>
+		</business>
+		<message id="122030" time="2012-06-18 14:00:00" total="123" totalLoss="12" dump="123" dumpLoss="123"
+		size="123.0" delaySum="123.0" delayCount="123"/>
+		<message/>
+	</machine>
+	<machine/>
+</state-report>

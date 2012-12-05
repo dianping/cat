@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+  <entity name="dp-admin-login" table="DP_AdminLogin" alias="da">
+    <member name="login-id" field="LoginID" value-type="int" length="10" />
+    <member name="admin-id" field="AdminID" value-type="int" length="10" />
+    <member name="login-name" field="LoginName" value-type="String" length="48" />
+    <member name="password" field="Password" value-type="String" length="96" />
+    <member name="email" field="Email" value-type="String" length="120" />
+    <member name="real-name" field="RealName" value-type="String" length="48" />
+    <member name="mobile-no" field="MobileNo" value-type="String" length="12" />
+    <primary-key />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/>]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/>]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <statement><![CDATA[DELETE FROM <TABLE/>]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>
+

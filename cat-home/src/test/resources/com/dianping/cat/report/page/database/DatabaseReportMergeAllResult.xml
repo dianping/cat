@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database-report database="database0"
+	connect-url="jdbc:mysql://192.168.7.43:3306/database0" startTime="2012-09-06 20:00:00"
+	endTime="2012-09-06 20:59:59">
+	<databaseName>database3</databaseName>
+	<databaseName>database4</databaseName>
+	<databaseName>database1</databaseName>
+	<databaseName>database2</databaseName>
+	<databaseName>database0</databaseName>
+	<domainName>Cat</domainName>
+	<domainName>Cat0</domainName>
+	<domain id="All">
+		<table id="All" totalCount="600" failCount="600"
+			failPercent="1.00" avg="1.00" sum="600.00" tps="0.00" totalPercent="0.00">
+			<method id="Update" totalCount="600" failCount="600"
+				failPercent="1.00" avg="1.00" sum="600.00" tps="0.00" totalPercent="0.00">
+			</method>
+		</table>
+		<table id="Table1" totalCount="300" failCount="300"
+			failPercent="1.00" avg="1.00" sum="300.00" tps="0.00" totalPercent="0.00">
+			<method id="Update" totalCount="300" failCount="300"
+				failPercent="1.00" avg="1.00" sum="300.00" tps="0.00" totalPercent="0.00">
+				<sql>User.insert0</sql>
+				<sql>User.insert1</sql>
+			</method>
+		</table>
+		<table id="Table2" totalCount="200" failCount="200"
+			failPercent="1.00" avg="1.00" sum="200.00" tps="0.00" totalPercent="0.00">
+			<method id="Update" totalCount="200" failCount="200"
+				failPercent="1.00" avg="1.00" sum="200.00" tps="0.00" totalPercent="0.00">
+				<sql>User.insert0</sql>
+				<sql>User.insert1</sql>
+			</method>
+		</table>
+		<table id="Table3" totalCount="100" failCount="100"
+			failPercent="1.00" avg="1.00" sum="100.00" tps="0.00" totalPercent="0.00">
+			<method id="Update" totalCount="100" failCount="100"
+				failPercent="1.00" avg="1.00" sum="100.00" tps="0.00" totalPercent="0.00">
+				<sql>User.insert0</sql>
+				<sql>User.insert1</sql>
+			</method>
+		</table>
+	</domain></database-report>

@@ -1,0 +1,34 @@
+.heartbeat {
+	width: auto;
+	font-size: small;
+}
+
+.machines {
+	font-size: small;
+}
+
+.heartbeat tr th {
+	text-align: left;
+}
+
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align:right;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align:right;
+}
+
+tr.link td {
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}

@@ -1,0 +1,184 @@
+body {
+	font-family: arial, helvetica, sans-serif;
+	font-size: small;
+	background: white;
+	color: black;
+	margin: 4px;
+	padding: 0;
+}
+
+html {
+	margin: 0
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+.current {
+	background-color: orange;
+	color: white;
+}
+
+.subtitle {
+	font-size: small;
+}
+
+.timestamp {
+	font-size: small;
+}
+
+ul.tabs {
+	border-bottom: 1px solid black;
+	list-style-type: none;
+	position: relative;
+	padding: 0em;
+	padding-top: 0.4em;
+	padding-bottom: 0.4em;
+}
+
+.tabs li {
+	display: inline;
+	margin: 0em 0.4em 0em 0.4em;
+	padding: 0.4em 0.4em 0.4em 0.4em;
+	overflow: hidden;
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+}
+
+.tabs li.selected {
+	background: #ccddff;
+	border-bottom: 1px solid white;
+}
+
+table {
+	font-size: small;
+}
+
+tr.head {
+	background-color: #e8e8e8;
+}
+
+tr.strip {
+	background-color: #f2f2f2;
+}
+
+tr.head th {
+	background-color: #f2f2f2;
+	border-bottom: 1px solid #c4c4c4;
+}
+
+tr th {
+	background-color: #f2f2f2;
+	font-size: small;
+}
+
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+}
+
+tr.odd th {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+}
+
+tr.even th {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align: left;
+}
+a.error {
+	background-color: red;
+}
+
+a.failure {
+	background-color: #770000;
+}
+
+a.long-url {
+	background-color: blue;
+}
+
+a.long-sql {
+	background-color: #6699CC;
+}
+
+a.long-service {
+	background-color: #7799FF;
+}
+
+a.url {
+	background-color: #cc0000;
+}
+
+a.sql {
+	background-color: purple;
+}
+
+a.call {
+	background-color: #9966ff;
+}
+
+a.long-cache {
+	background-color: #aa3faa;
+}
+
+a.heartbeat {
+	background-color: #009933;
+}
+
+.version {
+	text-align: left;
+	width: 80%;
+	border-radius: 6px;
+	display: table;
+	border-collapse: separate;
+	border-spacing: 2px;
+}
+
+.right {
+	text-align: right;
+}
+
+.login{
+	height:12px;
+	width:97%;
+	text-align:right;
+	margin-right:20px;
+	pedding-right:20px;
+}
+
+.department{
+	text-align:center;
+	font-size:medium;
+	font-weight: bold;
+	width:80px;
+}
+
+.domain{
+	text-align: left;
+	font-weight: bold;
+	padding-left:4px;
+}

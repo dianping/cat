@@ -1,0 +1,8 @@
+.task {
+	width: auto;
+	font-size: small;
+}
+
+.task tr th {
+	text-align: left;
+}

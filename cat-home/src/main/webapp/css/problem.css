@@ -1,0 +1,104 @@
+.problem {
+	font-size: small;
+	border-spacing: 1px;
+}
+
+.machines {
+	font-size: small;
+}
+
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+td.odd  {
+	background-color: #eee;
+	white-space: nowrap;
+}
+
+td.even  {
+	background-color: white;
+	white-space: nowrap;
+}
+
+a.error {
+	background-color: red;
+}
+
+a.failure {
+	background-color: #770000;
+}
+
+a.long-url {
+	background-color: blue;
+}
+
+a.long-sql {
+	background-color: #6699CC;
+}
+
+a.url{
+	background-color: #cc0000;
+}
+a.sql{
+	background-color: purple;
+}
+
+a.call{
+	background-color: #9966ff;
+}
+a.cache{
+	background-color: #aa3faa;
+}
+a.heartbeat{
+	background-color: #009933;
+}
+.detail {
+	font-size: small;
+	border-spacing: 1px;
+}
+.current {
+	background-color: orange;
+	color: white;
+}
+.top{
+	vertical-align: top;
+}
+
+#msgObjRef {
+	position: absolute;
+	text-align: center;
+	border: 1px solid;
+	border-color: #666699;
+	background-color: #FFFFFF;
+	line-height: 22px;
+	z-index: 102;
+}
+
+#titleBar {
+	text-align: left;
+	color: #FFFFFF;
+	cursor: move;
+	background-color: #06C;
+}
+
+#closeBtn {
+	width:10px;
+	cursor: pointer;
+	background-color: #06C;
+}
+.graph {
+	width: 550px;
+	height: 250px;
+	margin: 4px auto;
+}

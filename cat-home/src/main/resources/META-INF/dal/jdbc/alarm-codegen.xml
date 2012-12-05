@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+  <entity name="alarm-template" table="alarmTemplate" alias="a">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="name" field="name" value-type="String" length="64" />
+    <member name="content" field="content" value-type="String" length="65535" />
+    <member name="creation-date" field="creation_date" value-type="Date" />
+    <member name="modify-date" field="modify_date" value-type="Date" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="alarm-rule" table="alarmRule" alias="a2">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="template-id" field="template_id" value-type="int" length="10" nullable="false" />
+    <member name="domain" field="domain" value-type="String" length="64" />
+    <member name="content" field="content" value-type="String" length="65535" />
+    <member name="creation-date" field="creation_date" value-type="Date" />
+    <member name="modify-date" field="modify_date" value-type="Date" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="alarm-rule-subscription" table="alarmRuleSubscription" alias="a3">
+    <member name="alarm-rule-id" field="alarm_rule_id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="user-id" field="user_id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="creation-date" field="creation_date" value-type="Date" />
+    <var name="key-alarm-rule-id" value-type="int" key-member="alarm-rule-id" />
+    <var name="key-user-id" value-type="int" key-member="user-id" />
+    <primary-key name="PRIMARY" members="alarm_rule_id, user_id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-alarm-rule-id" />
+        <param name="key-user-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='alarm-rule-id'/> = ${key-alarm-rule-id} AND <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-alarm-rule-id" />
+        <param name="key-user-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='alarm-rule-id'/> = ${key-alarm-rule-id} AND <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-alarm-rule-id" />
+        <param name="key-user-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='alarm-rule-id'/> = ${key-alarm-rule-id} AND <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="mail-record" table="mailRecord" alias="m">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="type" field="type" value-type="int" length="10" nullable="false" />
+    <member name="rule-id" field="rule_id" value-type="int" length="10" nullable="false" />
+    <member name="receivers" field="receivers" value-type="String" length="500" nullable="false" />
+    <member name="title" field="title" value-type="String" length="200" nullable="false" />
+    <member name="content" field="content" value-type="String" length="65535" nullable="false" />
+    <member name="status" field="status" value-type="int" length="10" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="scheduled-report" table="scheduledReport" alias="s">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="domain" field="domain" value-type="String" length="64" />
+    <member name="names" field="names" value-type="String" length="200" />
+    <member name="creation-date" field="creation_date" value-type="Date" />
+    <member name="modify-date" field="modify_date" value-type="Date" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="scheduled-report-subscription" table="scheduledReportSubscription" alias="s2">
+    <member name="scheduled-report-id" field="scheduled_report_id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="user-id" field="user_id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="creation-date" field="creation_date" value-type="Date" />
+    <var name="key-scheduled-report-id" value-type="int" key-member="scheduled-report-id" />
+    <var name="key-user-id" value-type="int" key-member="user-id" />
+    <primary-key name="PRIMARY" members="scheduled_report_id, user_id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-scheduled-report-id" />
+        <param name="key-user-id" />
+        <statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='scheduled-report-id'/> = ${key-scheduled-report-id} AND <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>) VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-scheduled-report-id" />
+        <param name="key-user-id" />
+        <statement><![CDATA[UPDATE <TABLE/> SET <FIELDS/> WHERE <FIELD name='scheduled-report-id'/> = ${key-scheduled-report-id} AND <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-scheduled-report-id" />
+        <param name="key-user-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/> WHERE <FIELD name='scheduled-report-id'/> = ${key-scheduled-report-id} AND <FIELD name='user-id'/> = ${key-user-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>
+

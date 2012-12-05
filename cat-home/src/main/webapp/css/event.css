@@ -1,0 +1,59 @@
+.event {
+	width: auto;
+	font-size: small;
+}
+
+.event tr th {
+	text-align: left;
+}
+
+
+.event tr th.right {
+	text-align: right;
+}
+
+.machines {
+	font-size: small;
+}
+
+tr.odd td {
+	background-color: #eee;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align:right;
+}
+
+tr.even td {
+	background-color: white;
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+	text-align:right;
+}
+
+tr.link td {
+	font-size: small;
+	white-space: nowrap;
+	vertical-align: top;
+}
+
+
+.warn {
+	color: yellow;
+}
+
+.error {
+	color: red;
+}
+
+.graph_link{
+	font-weight: normal;
+}
+
+.graph {
+	text-align:left;
+	width: 700px;
+	height: 450px;
+	margin: 4px auto;
+}

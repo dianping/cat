@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="threshold-template" root="true">
+    <entity-ref name="connection" />
+  </entity>
+  <entity name="connection">
+    <attribute name="baseUrl" value-type="String" />
+    <entity-ref name="param" type="list" names="params" />
+  </entity>
+  <entity name="param">
+    <attribute name="type" value-type="String" key="true"/>
+    <attribute name="value" value-type="String" />
+  </entity>
+  <entity name="duration">
+    <attribute name="id" value-type="String" />
+    <attribute name="min" value-type="int" />
+    <attribute name="max" value-type="int" />
+    <attribute name="interval" value-type="int" />
+    <attribute name="alarm" value-type="String"/>
+  </entity>
+</model>
+

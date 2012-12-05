@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd">
+<beans default-autowire="byName" default-lazy-init="false">
+	<bean name="placeholder" lazy-init="false"
+		class="com.dianping.lion.client.SpringConfig">
+		<property name="propertiesPath" value="spring/applicationContext.properties" />
+	</bean>
+	<bean id="mailService" class="com.dianping.dpsf.spring.ProxyBeanFactory"
+		init-method="init">
+		<property name="serviceName"
+			value="http://service.dianping.com/mailService/mailService_1.0.0" />
+		<property name="iface" value="com.dianping.mailremote.remote.MailService" />
+		<property name="serialize" value="java" />
+		<property name="callMethod" value="oneway" />
+		<property name="timeout" value="5000" />
+	</bean>
+
+	<bean id="smsService" class="com.dianping.dpsf.spring.ProxyBeanFactory"
+		init-method="init">
+		<property name="serviceName"
+			value="http://service.dianping.com/smsService/smsRemoteService_1.0.0" />
+		<property name="iface" value="com.dianping.sms.biz.SMSService" />
+		<property name="serialize" value="java" />
+		<property name="callMethod" value="oneway" />
+		<property name="timeout" value="5000" />
+	</bean>
+</beans>

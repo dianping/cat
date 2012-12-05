@@ -1,0 +1,38 @@
+ul.autocomplete {
+  display:block;
+  margin: 0;
+  padding: 2px;
+  -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; 
+  border-radius: 4px;
+  background-color:#EEEEEE;
+  border: 1px solid #DDDDDD;
+  max-height: 200px;
+  overflow-y: scroll;
+  text-align:left;
+  z-index:9999;
+}
+ul.autocomplete li{
+  padding: 0;
+  cursor:default;
+  border:1px solid #EEEEEE;
+  -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; 
+  border-radius: 4px;
+  list-style: none outside none;
+}
+ul.autocomplete li.hover{
+  border:1px solid #FFA5A5;
+  background-color:#FFE0E0;
+}
+ul.autocomplete li a{
+  display:block;
+  cursor:default;
+  width:100%;
+  text-decoration: none;
+  outline: medium none;
+  -moz-border-radius: 4px; 
+  -webkit-border-radius: 4px; 
+  border-radius: 4px;
+  color: #333333;
+}

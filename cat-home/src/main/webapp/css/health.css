@@ -1,0 +1,34 @@
+.health {
+	width: auto;
+	font-size: small;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+.health .odd td {
+	background-color: #eee;
+	font-size: small;
+	text-align:right;
+}
+
+.health .even td {
+	background-color: white;
+	font-size: small;
+	text-align:right;
+}
+.health th .left{
+	text-align:left;
+}
+
+.health tr .left{
+	text-align:left;
+}
+
+.health tr .left{
+	text-align:left;
+}
+.graph {
+	width: 450px;
+	height: 200px;
+	margin: 4px auto;
+}

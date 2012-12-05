@@ -1,0 +1,71 @@
+<wizard package="com.dianping.cat">
+   <webapp package="com.dianping.cat" webres="true" plugin-management="true">
+      <module name="report" path="r">
+         <page name="home" title="Home" default="true">
+            <description>Home Page</description>
+         </page>
+         <page name="problem" title="Problem" path="p" view="/jsp/report/problemGroup.jsp">
+            <description>Problem Discovered</description>
+         </page>
+         <page name="transaction" title="Transaction" path="t">
+            <description>Transaction Summary Report</description>
+         </page>
+         <page name="event" title="Event" path="e">
+            <description>Event Summary Report</description>
+         </page>
+         <page name="heartbeat" title="Heartbeat" path="h">
+            <description>Heartbeat Summary Report</description>
+         </page>
+         <page name="logview" title="Logview" path="m" standalone="false">
+            <description>Log View Details</description>
+         </page>
+         <page name="ip" title="Top IP" standalone="false">
+            <description>Top Visited IP</description>
+         </page>
+         <page name="model" title="Model" path="model" standalone="false">
+            <description>Service Model</description>
+         </page>
+         <page name="sql" title="SQL" path="sql">
+            <description>SQL Report</description>
+         </page>
+         <page name="heatmap" title="Heatmap" path="heatmap" standalone="false">
+            <description>Heatmap</description>
+         </page>
+         <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
+            <description>Dashboard</description>
+         </page>
+         <page name="task" title="Task" path="task" standalone="false">
+            <description>Task</description>
+         </page>
+         <page name="matrix" title="Matrix" path="matrix">
+            <description>Matrix</description>
+         </page>
+         <page name="health" title="Health" path="health">
+            <description>Health</description>
+         </page>
+         <page name="cross" title="Cross" path="cross">
+            <description>Cross</description>
+         </page>
+         <page name="cache" title="Cache" path="cache">
+            <description>Cache</description>
+         </page>
+         <page name="database" title="Database" path="database">
+            <description>Database</description>
+         </page>
+         <page name="state" title="State" path="state">
+            <description>State</description>
+         </page>
+      </module>
+      <module name="system" path="s" default="false">
+         <page name="alarm" title="Alarm" default="true" path="alarm">
+            <description>Alarm</description>
+         </page>
+         <page name="login" title="Login" default="true" path="login" standalone="false">
+            <description>Login</description>
+         </page>
+         <page name="project" title="Project" path="project">
+            <description>Project</description>
+         </page>
+      </module>
+   </webapp>
+</wizard>

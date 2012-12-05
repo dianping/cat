@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dainping.cat.home.dal.user" gen="true">
+	<entity name="dp-admin-login" table="DP_AdminLogin" alias="da">
+		<member name="login-id" field="LoginID" value-type="int" length="10" key="true" />
+		<var name="key-login-id" value-type="int" key-member="login-id" />
+		<primary-key />
+		<query-defs>
+			<query name="find-by-PK" type="SELECT">
+				<param name="key-login-id" />
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='login-id'/> = ${key-login-id}
+				]]></statement>
+			</query>
+			<query name="find-by-email" type="SELECT">
+				<param name="email" />
+				<param name="password" />
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='email'/> = ${email}
+				AND <FIELD name='password'/> = UPPER(md5(${password}))
+				]]></statement>
+			</query>
+			<query name="find-by-login-name" type="SELECT">
+				<param name="login-name" />
+				<param name="password" />
+				<statement><![CDATA[
+				SELECT <FIELDS/> 
+				FROM <TABLE/> 
+				WHERE <FIELD name='login-name'/> = ${login-name}
+				AND <FIELD name='password'/> = UPPER(md5(${password}))
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+</entities>
+

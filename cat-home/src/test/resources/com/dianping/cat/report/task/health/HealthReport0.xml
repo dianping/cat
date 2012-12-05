@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<health-report domain="OpenWeb" startTime="2012-09-14 12:00:00"
+	endTime="2012-09-14 13:00:00">
+	<domain>OpenWeb</domain>
+	<domain>Cat</domain>
+	<domain>Cat1</domain>
+	<problem-info exceptions="10" longSqls="10" long-sqlPercent="0.100000"
+		longUrls="10" long-urlPercent="0.100000" longServices="10"
+		long-servicePercent="0.100000" longCaches="30" long-cachePercent="0.100000" />
+	<url>
+		<base-info total="100" response-time="1.00" error-total="10"
+			error-percent="0.100000" success-percent="0.900000" tps="0.00" />
+	</url>
+	<service>
+		<base-info total="100" response-time="1.00" error-total="10"
+			error-percent="0.100000" success-percent="0.900000" tps="0.00" />
+	</service>
+	<call>
+		<base-info total="100" response-time="1.00" error-total="10"
+			error-percent="0.100000" success-percent="0.900000" tps="0.00" />
+	</call>
+	<sql>
+		<base-info total="100" response-time="1.00" error-total="10"
+			error-percent="0.100000" success-percent="0.900000" tps="0.00" />
+	</sql>
+	<web-cache>
+		<base-cache-info total="100" response-time="1.00"
+			hit-percent="0.900000" />
+	</web-cache>
+	<kvdb-cache>
+		<base-cache-info total="100" response-time="1.00"
+			hit-percent="0.900000" />
+	</kvdb-cache>
+	<mem-cache>
+		<base-cache-info total="100" response-time="1.00"
+			hit-percent="0.900000" />
+	</mem-cache>
+	<clientService>
+		<base-info total="100" response-time="1.00" error-total="10"
+			error-percent="0.100000" success-percent="0.900000" tps="0.00" />
+	</clientService>
+	<machine-info numbers="2" avg-load="1" avg-max-load="2.000000"
+		avg-load-count="2" avg-load-sum="2" avg-max-load-machine="10.1.1.1" avg-oldgc="1"
+		avg-max-oldgc="3.000000" avg-oldgc-count="2" avg-oldgc-sum="2"
+		avg-max-oldgc-machine="10.1.1.1" avg-http="5" avg-max-http="8.000000"
+		avg-http-count="1" avg-http-sum="5" avg-max-http-machine=""
+		avg-pigeon="4" avg-max-pigeon="5.000000" avg-pigeon-count="1"
+		avg-pigeon-sum="4" avg-max-pigeon-machine="10.1.1.1" avg-memory-used="100"
+		avg-max-memory-used="116.000000" avg-memory-used-count="1"
+		avg-memory-used-sum="100" avg-max-memory-used-machine="" />
+</health-report>
