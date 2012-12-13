@@ -15,6 +15,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -36,7 +37,6 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 	@Inject
@@ -52,11 +52,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private void clearAllDuration(TransactionReport report) {
 		Collection<Machine> machines = report.getMachines().values();
-		
+
 		for (Machine machine : machines) {
 			for (TransactionType type : machine.getTypes().values()) {
 				type.getAllDurations().clear();
-				
+
 				for (TransactionName name : type.getNames().values()) {
 					name.getAllDurations().clear();
 				}
@@ -303,7 +303,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private void storeReports(boolean atEnd) {
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-		
+
 		t.setStatus(Message.SUCCESS);
 
 		try {
@@ -311,20 +311,20 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			for (TransactionReport report : m_reports.values()) {
 				try {
-	            Set<String> domainNames = report.getDomainNames();
-	            domainNames.clear();
-	            domainNames.addAll(getDomains());
+					Set<String> domainNames = report.getDomainNames();
+					domainNames.clear();
+					domainNames.addAll(getDomains());
 
-	            set95Line(report);
-	            clearAllDuration(report);
-	            String xml = new TransactionReportFilter(50).buildXml(report);
-	            String domain = report.getDomain();
+					set95Line(report);
+					clearAllDuration(report);
+					String xml = new TransactionReportUrlFilter().buildXml(report);
+					String domain = report.getDomain();
 
-	            reportBucket.storeById(domain, xml);
-            } catch (Exception e) {
+					reportBucket.storeById(domain, xml);
+				} catch (Exception e) {
 					t.setStatus(e);
-					Cat.getProducer().logError(e); 
-            }
+					Cat.getProducer().logError(e);
+				}
 			}
 
 			if (atEnd && !isLocalMode()) {
@@ -334,7 +334,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				for (TransactionReport report : m_reports.values()) {
 					try {
 						Report r = m_reportDao.createLocal();
-						String xml = new TransactionReportFilter(50).buildXml(report);
+						String xml = new TransactionReportUrlFilter().buildXml(report);
 						String domain = report.getDomain();
 
 						r.setName("transaction");
@@ -373,60 +373,4 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
-	public static class TransactionReportFilter extends
-	      com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
-		private String m_domain;
-
-		private int m_maxItems;
-
-		public TransactionReportFilter(int maxItem) {
-			m_maxItems = maxItem;
-		}
-
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			m_domain = transactionReport.getDomain();
-			super.visitTransactionReport(transactionReport);
-		}
-
-		@Override
-		public void visitType(TransactionType type) {
-			long totalCount = type.getTotalCount();
-			int value = (int) (totalCount / 10000);
-			int count = 0;
-			String successMessageUrl = null;
-
-			value = Math.min(value, 5);
-			if (!"Cat".equals(m_domain) && (value > 0)) {
-				if ("URL".equals(type.getId())) {
-					List<String> names = new ArrayList<String>();
-					Map<String, TransactionName> transactionNames = type.getNames();
-					if (transactionNames.size() > m_maxItems) {
-						for (TransactionName transactionName : transactionNames.values()) {
-							if (transactionName.getTotalCount() <= value) {
-								names.add(transactionName.getId());
-								count += transactionName.getTotalCount();
-								if (successMessageUrl == null) {
-									successMessageUrl = transactionName.getSuccessMessageUrl();
-								}
-							}
-						}
-
-						for (String name : names) {
-							transactionNames.remove(name);
-						}
-						if (count > 0) {
-							TransactionName name = new TransactionName("OTHERS");
-							name.setSuccessMessageUrl(successMessageUrl);
-							name.setTotalCount(count);
-							name.setMin(0);
-							name.setMax(0);
-							type.getNames().put("OTHERS", name);
-						}
-					}
-				}
-			}
-			super.visitType(type);
-		}
-	}
 }

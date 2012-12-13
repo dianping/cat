@@ -25,10 +25,16 @@ public class TypeCompartor implements Comparator<TypeDetailInfo> {
 			return 1;
 		}
 		if (m_sorted.equals("name")) {
-			if(m1.getProjectName().equals(m2.getProjectName())){
-				return m1.getIp().compareTo(m2.getIp());
+			if (m1.getProjectName() != null && m2.getProjectName() != null) {
+				if (!m1.getProjectName().equals(m2.getProjectName())) {
+					return m1.getProjectName().compareTo(m2.getProjectName());
+				}
 			}
-			return m1.getProjectName().compareTo(m2.getProjectName());
+			if (m1.getIp() != null && m2.getIp() != null) {
+				if (!m1.getIp().equals(m2.getIp())) {
+					return m1.getIp().compareTo(m2.getIp());
+				}
+			}
 		}
 		if (m_sorted.equals("total")) {
 			return (int) (m2.getTotalCount() - m1.getTotalCount());

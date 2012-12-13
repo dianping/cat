@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <res:bean id="res"/>
-<html>
+<!DOCTYPE html><html>
   <head>
     <style type="text/css">
       body {

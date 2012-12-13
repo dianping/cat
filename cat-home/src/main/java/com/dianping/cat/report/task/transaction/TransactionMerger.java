@@ -9,6 +9,7 @@ import java.util.Set;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
@@ -53,6 +54,8 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 		transactionReport.setStartTime(TaskHelper.todayZero(date));
 		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
 		transactionReport.setEndTime(end);
+
+		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
 	}
 
@@ -64,6 +67,8 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 		      .mergesForAllMachine(transactionReport2);
 		transactionReport.addMachine(allMachines);
 		transactionReport.getIps().add("All");
+
+		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
 	}
 }

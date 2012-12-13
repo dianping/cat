@@ -199,6 +199,7 @@ public class TransactionReportMerger extends DefaultMerger {
 		report.getIps().addAll(transactionReport.getIps());
 	}
 
+
 	@Override
 	public void visitType(TransactionType type) {
 		if (!m_allName || m_allName && m_type.equals(type.getId())) {
