@@ -162,6 +162,10 @@ a.heartbeat {
 	text-align: right;
 }
 
+.center {
+	text-align: center;
+}
+
 .login{
 	height:12px;
 	width:97%;

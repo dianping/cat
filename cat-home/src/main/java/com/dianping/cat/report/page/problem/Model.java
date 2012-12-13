@@ -36,6 +36,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private ProblemReport m_report;
 
 	private int m_sqlThreshold;
+	
+	private int m_serviceThreshold;
 
 	private String m_threadId;
 
@@ -217,6 +219,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_report = report;
 	}
 
+	public void setServiceThreshold(int serviceLongTime) {
+		m_serviceThreshold=serviceLongTime;
+   }
+
 	public void setSqlThreshold(int sqlThreshold) {
 		m_sqlThreshold = sqlThreshold;
 	}
@@ -231,6 +237,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setThreshold(int threshold) {
 		m_threshold = threshold;
+	}
+
+	public int getServiceThreshold() {
+		return m_serviceThreshold;
 	}
 
 }

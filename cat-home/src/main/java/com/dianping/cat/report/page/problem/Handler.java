@@ -110,7 +110,8 @@ public class Handler implements PageHandler<Context> {
 		String ip = model.getIpAddress();
 		int urlThreshold = payload.getLongTime();
 		int sqlThreshold = payload.getSqlLongTime();
-
+		int serviceThreshold = payload.getSeviceLongTime();
+		
 		switch (payload.getAction()) {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
@@ -120,17 +121,17 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				problemStatistics.setIp(ip);
 			}
-			problemStatistics.setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
+			problemStatistics.setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
 			problemStatistics.visitProblemReport(report);
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
 			if (ip.equals(CatString.ALL_IP)) {
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 			} else {
-				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold);
+				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 			}
 			model.setReport(report);
@@ -160,7 +161,7 @@ public class Handler implements PageHandler<Context> {
 			if (ip.equals(CatString.ALL_IP)) {
 				report = getHourlyReport(payload, VIEW);
 
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000).setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
 				String response = m_gson.toJson(problemStatistics);
@@ -168,7 +169,7 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				report = showHourlyReport(model, payload);
 
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000).setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 				ProblemStatistics statistics = model.getAllStatistics();
 				statistics.setIps(new ArrayList<String>(report.getIps()));
@@ -196,6 +197,7 @@ public class Handler implements PageHandler<Context> {
 		model.setDisplayDomain(payload.getDomain());
 		model.setThreshold(payload.getLongTime());
 		model.setSqlThreshold(payload.getSqlLongTime());
+		model.setServiceThreshold(payload.getSeviceLongTime());
 		if (payload.getPeriod().isCurrent()) {
 			model.setCreatTime(new Date());
 		} else {
