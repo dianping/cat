@@ -50,7 +50,7 @@
 				varStatus="status">
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td  class="left">${item.type}</td>
-					<td  class="left">${w:shorten(item.name, 120)}</td>
+					<td  class="left longText" >${w:shorten(item.name, 120)}</td>
 					<td>${item.count}</td>
 					<td>${w:format(item.avg,'0.0')}</td>
 					<td><a href="${model.logViewBaseUri}/${item.url}?domain=${model.domain}">Log View</a></td>
