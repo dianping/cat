@@ -109,6 +109,7 @@ tr.even th {
 	vertical-align: top;
 	text-align: left;
 }
+
 a.error {
 	background-color: red;
 }
@@ -162,23 +163,34 @@ a.heartbeat {
 	text-align: right;
 }
 
-.login{
-	height:12px;
-	width:97%;
-	text-align:right;
-	margin-right:20px;
-	pedding-right:20px;
+.center {
+	text-align: center;
 }
 
-.department{
-	text-align:center;
-	font-size:medium;
+.login {
+	height: 12px;
+	width: 97%;
+	text-align: right;
+	margin-right: 20px;
+	pedding-right: 20px;
+}
+
+.department {
+	text-align: center;
+	font-size: medium;
 	font-weight: bold;
-	width:80px;
+	width: 100px;
 }
 
-.domain{
+.domain {
 	text-align: left;
 	font-weight: bold;
-	padding-left:4px;
+	padding-left: 4px;
+}
+
+.longText {
+	text-align: left;
+	white-space: normal;
+	word-wrap: break-word;
+	word-break: break-all;
 }

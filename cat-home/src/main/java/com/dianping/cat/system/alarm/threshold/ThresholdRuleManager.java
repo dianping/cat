@@ -103,19 +103,23 @@ public class ThresholdRuleManager implements Initializable {
 	}
 
 	public List<ThresholdRule> getExceptionRuleByDomain(String domain) {
-		ArrayList<ThresholdRule> arrayList = m_exceptionRules.get(domain);
+		synchronized (m_exceptionRules) {
+			ArrayList<ThresholdRule> arrayList = m_exceptionRules.get(domain);
 
-		if (arrayList != null) {
-			return arrayList;
+			if (arrayList != null) {
+				return arrayList;
+			}
 		}
 		return new ArrayList<ThresholdRule>();
 	}
 
 	public List<ThresholdRule> getServiceRuleByDomain(String domain) {
-		ArrayList<ThresholdRule> arrayList = m_serviceRules.get(domain);
+		synchronized (m_serviceRules) {
+			ArrayList<ThresholdRule> arrayList = m_serviceRules.get(domain);
 
-		if (arrayList != null) {
-			return arrayList;
+			if (arrayList != null) {
+				return arrayList;
+			}
 		}
 		return new ArrayList<ThresholdRule>();
 	}
@@ -232,7 +236,8 @@ public class ThresholdRuleManager implements Initializable {
 						String newContent = alarmRule.getContent();
 						ThresholdTemplate template = mergerTemplate(baseTemplate, newContent);
 						ThresholdRule rule = addExceptionRule(alarmRule, template);
-
+						m_exceptionModifyTimes.put(alarmRule.getId(), alarmRule.getModifyDate());
+						
 						Cat.getProducer().logEvent(ALARM_RULE, "ExceptionAdd", Event.SUCCESS, rule.toString());
 					} else {
 						Date modifyDate = alarmRule.getModifyDate();
@@ -300,6 +305,7 @@ public class ThresholdRuleManager implements Initializable {
 						String newContent = alarmRule.getContent();
 						ThresholdTemplate template = mergerTemplate(baseTemplate, newContent);
 						ThresholdRule rule = addServiceRule(alarmRule, template);
+						m_serviceModifyTimes.put(alarmRule.getId(), alarmRule.getModifyDate());
 
 						Cat.getProducer().logEvent(ALARM_RULE, "ServiceAdd", Event.SUCCESS, rule.toString());
 					} else {

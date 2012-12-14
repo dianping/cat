@@ -23,6 +23,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("sqlThreshold")
 	private int m_sqlLongTime;
+	
+	@FieldMeta("serviceThreshold")
+	private int m_seviceLongTime;
 
 	@FieldMeta("status")
 	private String m_status;
@@ -118,6 +121,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public int getSeviceLongTime() {
+		return m_seviceLongTime;
+	}
+
+	public void setSeviceLongTime(int seviceLongTime) {
+		m_seviceLongTime = seviceLongTime;
 	}
 
 	@Override

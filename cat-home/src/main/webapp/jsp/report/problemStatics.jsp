@@ -60,6 +60,14 @@
 				<option value="500">500 ms</option>
 				<option value="1000">1000 ms</option>
 				<option value="2000">2000 ms</option>
+		</select> long-service
+		<select size="1" id="p_longService">
+				${model.defaultSqlThreshold}
+				<option value="100">50 ms</option>
+				<option value="200">200 ms</option>
+				<option value="1000">1000 ms</option>
+				<option value="2000">2000 ms</option>
+				<option value="5000">5000 ms</option>
 		</select>
 		<script>
 			var threshold='${model.threshold}';
@@ -67,10 +75,15 @@
 			
 			var sqlThreshold='${model.sqlThreshold}';
 			$("#p_longSql").val(sqlThreshold) ;
+
+			var serviceThreshold='${model.serviceThreshold}';
+			$("#p_longService").val(serviceThreshold) ;
+			
 			function longTimeChange(date,domain,ip){
 				var longtime=$("#p_longUrl").val();
 				var longSqlTime=$("#p_longSql").val();
-				window.location.href="?op=view&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime;
+				var longServiceTime=$("#p_longService").val();
+				window.location.href="?op=view&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime+"&serviceThreshold="+longServiceTime;
 			}
 		</script>
 		
