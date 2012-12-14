@@ -23,11 +23,11 @@ public class LongExecutionHandler extends Handler implements Initializable {
 
 	private int m_defaultCacheThreshold = 10;
 
-	private int[] m_defaultLongServiceDuration = { 50, 200, 1000, 2000,5000 };
+	private int[] m_defaultLongServiceDuration = { 50, 100, 500, 1000, 3000, 5000 };
 
-	private int[] m_defaultLongSqlDuration = { 100, 500, 1000, 2000 };
+	private int[] m_defaultLongSqlDuration = { 100, 500, 1000, 3000 };
 
-	private int[] m_defaultLongUrlDuration = { 1000, 2000, 3000, 4000, 5000 };
+	private int[] m_defaultLongUrlDuration = { 1000, 2000, 3000, 5000 };
 
 	private Map<String, Integer> m_longServiceThresholds = new HashMap<String, Integer>();
 

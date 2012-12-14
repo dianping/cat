@@ -19,13 +19,11 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.site.helper.Files;
 
-
 public class UrlTransasctionBugTest extends ComponentTestCase {
-
 
 	@Inject
 	private DailyreportDao m_dailyreportDao;
-	
+
 	@Inject
 	private ReportDao m_reportDao;
 
@@ -35,24 +33,23 @@ public class UrlTransasctionBugTest extends ComponentTestCase {
 		m_dailyreportDao = lookup(DailyreportDao.class);
 		m_reportDao = lookup(ReportDao.class);
 	}
-	
+
 	@Test
-	public void test() throws Exception{
+	public void test() throws Exception {
+		//fix the transaction xml parse builder
 		String dateStr = "2012-12-13 14:00:00";
-		Date  date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr);
-		
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(date, new Date(date.getTime()+TimeUtil.ONE_HOUR), "ShopWeb", "transaction", ReportEntity.READSET_FULL);
+		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr);
+
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(date,
+		      new Date(date.getTime() + TimeUtil.ONE_HOUR), "ShopWeb", "transaction", ReportEntity.READSET_FULL);
 		File file = new File("text.txt");
-		Files.forIO().writeTo(file, "12312");
-		for(Report report:reports){
-			try{
-				TransactionReport temp  = DefaultSaxParser.parse(report.getContent());
+		for (Report report : reports) {
+			try {
+				TransactionReport temp = DefaultSaxParser.parse(report.getContent());
 				System.out.println(temp);
-			}catch(Exception e){
-				//File file = new File("text.txt");
+			} catch (Exception e) {
 				Files.forIO().writeTo(file, report.getContent());
 			}
-			
 		}
 	}
 }
