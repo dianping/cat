@@ -234,7 +234,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			type.findOrCreateAllDuration(allDuration).incCount();
 		}
 
-		processTransactionGrpah(name, t);
+		processTransactionGraph(name, t);
 
 		List<Message> children = t.getChildren();
 
@@ -247,7 +247,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return count;
 	}
 
-	private void processTransactionGrpah(TransactionName name, Transaction t) {
+	private void processTransactionGraph(TransactionName name, Transaction t) {
 		double d = t.getDurationInMicros() / 1000d;
 		Calendar cal = Calendar.getInstance();
 		cal.setTimeInMillis(t.getTimestamp());

@@ -4,20 +4,53 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.5.0</version>
+		<version>0.5.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cat-job</artifactId>
-	<name>CAT Job Analysis</name>
+	<artifactId>cat-hadoop</artifactId>
+	<name>CAT Hadoop Support</name>
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
-			<artifactId>cat-hadoop</artifactId>
+			<artifactId>cat-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.unidal.framework</groupId>
+			<artifactId>dal-jdbc</artifactId>
+			<version>2.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-core</artifactId>
+			<version>0.20.203.0</version>
+			<exclusions>
+				<exclusion>
+					<groupId>tomcat</groupId>
+					<artifactId>jasper-runtime</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>tomcat</groupId>
+					<artifactId>jasper-compiler</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jetty</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.mortbay.jetty</groupId>
+					<artifactId>jetty-util</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.4</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
@@ -33,38 +66,16 @@
 				<version>2.0.2</version>
 				<executions>
 					<execution>
-						<id>generate dal jdbc model</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>dal-jdbc</goal>
-						</goals>
-					</execution>
-					<execution>
 						<id>generate plexus component descriptor</id>
 						<phase>process-classes</phase>
 						<goals>
 							<goal>plexus</goal>
 						</goals>
 						<configuration>
-							<className>com.dianping.cat.job.build.ComponentsConfigurator</className>
+							<className>com.dianping.cat.hadoop.build.ComponentsConfigurator</className>
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>com.dianping.cat.job.JobApp</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
 			</plugin>
 		</plugins>
 	</build>

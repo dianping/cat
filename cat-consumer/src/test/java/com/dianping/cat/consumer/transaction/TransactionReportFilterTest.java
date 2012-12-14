@@ -5,7 +5,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
 
 public class TransactionReportFilterTest {
@@ -15,10 +17,25 @@ public class TransactionReportFilterTest {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("transaction.xml"), "utf-8");
 		TransactionReport report = parser.parse(source);
 
-		TransactionReportUrlFilter f1 = new TransactionReportUrlFilter();
-		String expected1 = Files.forIO().readFrom(getClass().getResourceAsStream("transactionFilter.xml"), "utf-8");
-		report.accept(f1);
+		TransactionType type = report.findMachine("10.1.77.193").findType("URL");
 
-		Assert.assertEquals(expected1.replaceAll("\\s", ""), report.toString().replaceAll("\\s", ""));
+		int size = type.getNames().size();
+		System.out.println("Name size :" + size);
+		for (int i = 0; i < 3500; i++) {
+			type.addName(new TransactionName("Test" + i));
+		}
+
+		System.out.println(report.toString().length());
+		System.out.println("Name size :" + type.getNames().size());
+		
+		TransactionReportUrlFilter f1 = new TransactionReportUrlFilter();
+		String filterReport = f1.buildXml(report);
+		TransactionReport newReport = parser.parse(filterReport);
+
+		System.out.println(newReport.toString().length());
+		int newSize = newReport.findMachine("10.1.77.193").findType("URL").getNames().size();
+
+		Assert.assertEquals(501, newSize);
+
 	}
 }
