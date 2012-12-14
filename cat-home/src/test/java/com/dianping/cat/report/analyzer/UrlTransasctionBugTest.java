@@ -37,16 +37,15 @@ public class UrlTransasctionBugTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		//fix the transaction xml parse builder
-		String dateStr = "2012-12-13 14:00:00";
+		String dateStr = "2012-12-14 19:00:00";
 		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr);
 
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(date,
-		      new Date(date.getTime() + TimeUtil.ONE_HOUR), "ShopWeb", "transaction", ReportEntity.READSET_FULL);
+		      new Date(date.getTime() + TimeUtil.ONE_HOUR), "GroupWeb", "transaction", ReportEntity.READSET_FULL);
 		File file = new File("text.txt");
 		for (Report report : reports) {
 			try {
-				TransactionReport temp = DefaultSaxParser.parse(report.getContent());
-				System.out.println(temp);
+				DefaultSaxParser.parse(report.getContent());
 			} catch (Exception e) {
 				Files.forIO().writeTo(file, report.getContent());
 			}

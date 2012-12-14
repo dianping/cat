@@ -3,16 +3,24 @@ package com.dianping.cat.consumer.transaction;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 
-public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder
+      implements LogEnabled {
 
-	private int m_maxItems = 500;
+	private int m_maxItems = 200;
+
+	private Logger m_logger;
 
 	private void mergeName(TransactionName old, TransactionName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
@@ -52,6 +60,26 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 	public void visitType(TransactionType type) {
 		if ("URL".equals(type.getId())) {
 			Map<String, TransactionName> transactionNames = type.getNames();
+
+			Set<String> names = transactionNames.keySet();
+			Set<String> invalidates = new HashSet<String>();
+
+			for (String temp : names) {
+				int length = temp.length();
+
+				for (int i = 0; i < length; i++) {
+					if (temp.charAt(i) > 255 || temp.charAt(i) < 0) {
+						invalidates.add(temp);
+						continue;
+					}
+				}
+			}
+
+			for (String name : invalidates) {
+				m_logger.error("remove invalidate url " + name);
+				transactionNames.remove(name);
+			}
+
 			int size = transactionNames.size();
 
 			if (size > m_maxItems) {
@@ -79,5 +107,10 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 		public int compare(TransactionName o1, TransactionName o2) {
 			return (int) (o2.getTotalCount() - o1.getTotalCount());
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

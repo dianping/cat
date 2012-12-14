@@ -27,15 +27,24 @@ public class TransactionReportFilterTest {
 
 		System.out.println(report.toString().length());
 		System.out.println("Name size :" + type.getNames().size());
-		
+
 		TransactionReportUrlFilter f1 = new TransactionReportUrlFilter();
 		String filterReport = f1.buildXml(report);
 		TransactionReport newReport = parser.parse(filterReport);
 
 		System.out.println(newReport.toString().length());
+
 		int newSize = newReport.findMachine("10.1.77.193").findType("URL").getNames().size();
 
-		Assert.assertEquals(501, newSize);
+		Assert.assertEquals(201, newSize);
 
+		String url = "/topic/341739¬g&quot;";
+
+		size = url.length();
+		for (int i = 0; i < size; i++) {
+			if (url.charAt(i) > 255 || url.charAt(i) < 0) {
+				System.out.println(i + " " + url.charAt(i));
+			}
+		}
 	}
 }
