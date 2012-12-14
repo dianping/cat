@@ -6,6 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
@@ -30,13 +35,13 @@ import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.health.HealthServiceCollector.ServiceInfo;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
 import com.dianping.cat.report.task.spi.ReportBuilder;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
 
-public class HealthReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+public class HealthReportBuilder extends AbstractReportBuilder implements ReportBuilder, LogEnabled {
 
 	@Inject
 	private HealthServiceCollector m_serviceCollector;
+
+	private Logger m_logger;
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
@@ -92,7 +97,8 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		HealthReportCreator healthReportCreator = new HealthReportCreator();
 		HealthReport report = healthReportCreator.build(transactionReport, eventReport, problemReport, heartbeatReport,
 		      infos);
-		Set<String> domains = getDomainsFromHourlyReport(reportPeriod, new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
+		Set<String> domains = getDomainsFromHourlyReport(reportPeriod, new Date(reportPeriod.getTime()
+		      + TimeUtil.ONE_HOUR));
 		report.getDomainNames().addAll(domains);
 		return report;
 	}
@@ -206,6 +212,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 				transactionReport.getDomainNames().addAll(model.getDomainNames());
 			}
 		} catch (Exception e) {
+			m_logger.error(domain + " " + reportPeriod, e);
 			Cat.logError(e);
 		}
 
@@ -223,7 +230,7 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		return true;
 	}
-	
+
 	@Override
 	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date start = reportPeriod;
@@ -286,10 +293,10 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "health", DailyreportEntity.READSET_FULL);
+				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "health",
+				      DailyreportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
-				
+
 				HealthReport reportModel = com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -300,6 +307,11 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		healthReport.setStartTime(start);
 		healthReport.setEndTime(end);
 		return healthReport;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }

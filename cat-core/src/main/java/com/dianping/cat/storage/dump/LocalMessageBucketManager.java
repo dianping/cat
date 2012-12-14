@@ -72,7 +72,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private int m_gzipThreads = 3;
 
-	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(1000);
+	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(10000);
 
 	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new HashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
@@ -349,12 +349,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	private void logState(final MessageTree tree) {
-		StringBuilder sb = new StringBuilder("GzipThread Process Message Number :");
-		for (int i = 0; i < m_gzipThreads; i++) {
-			sb.append(m_processMessages[i] + " \t");
-		}
-		m_logger.info(sb.toString());
-
 		double amount = m_totalSize - m_lastTotalSize;
 		m_lastTotalSize = m_totalSize;
 
@@ -369,6 +363,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
 			m_logger.info("Dump message number: " + m_total + " Size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
+
+			StringBuilder sb = new StringBuilder("GzipThread Process Message Number :");
+			for (int i = 0; i < m_gzipThreads; i++) {
+				sb.append(m_processMessages[i] + " \t");
+			}
+			m_logger.info(sb.toString());
 		}
 	}
 
