@@ -10,6 +10,7 @@ import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
@@ -184,7 +185,7 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
 				      "transaction", DailyreportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
-				
+
 				TransactionReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -194,6 +195,8 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 		TransactionReport transactionReport = merger.getTransactionReport();
 		transactionReport.setStartTime(start);
 		transactionReport.setEndTime(end);
+
+		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
 	}
 }

@@ -108,7 +108,7 @@
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align: left">
+					<td class="longText" style="text-align:left;white-space:normal">
 					<c:choose>
 					<c:when test="${status.index > 0}">
 					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&name=${e.id}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 

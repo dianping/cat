@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xmlversion="1.0"encoding="utf-8"?>
 <transaction-report domain="MobileApi" startTime="2012-06-18 14:00:00"
 	endTime="2012-06-18 14:59:59">
 	<domain>Cat</domain>
@@ -64,6 +64,23 @@
 				<range value="10" count="2" sum="25.99" avg="0.0" fails="0" />
 				<duration value="16" count="2" />
 			</name>
+			<name id="/city.bin" totalCount="1" failCount="0" failPercent="0.00"
+				min="38.21" max="38.21" avg="0.0" sum="38.2" sum2="1460.0" std="0.0"
+				tps="0.00" line95Value="38.00" line95Sum="38.00" line95Count="1">
+				<successMessageUrl>MobileApi-0a014dc1-1339999961753-0
+				</successMessageUrl>
+				<range value="10" count="1" sum="38.21" avg="0.0" fails="0" />
+				<duration value="64" count="1" />
+			</name>
+			<name id="/location.bin" totalCount="1" failCount="0"
+				failPercent="0.00" min="249.694" max="249.694" avg="0.0" sum="249.7"
+				sum2="62347.1" std="0.0" tps="0.00" line95Value="249.00" line95Sum="249.00"
+				line95Count="1">
+				<successMessageUrl>MobileApi-0a014dc1-1339999968913-0
+				</successMessageUrl>
+				<range value="10" count="1" sum="249.694" avg="0.0" fails="0" />
+				<duration value="256" count="1" />
+			</name>
 			<name id="/locatecategory.bin" totalCount="10" failCount="0"
 				failPercent="0.00" min="5.392" max="5.392" avg="0.0" sum="5.4" sum2="29.1"
 				std="0.0" tps="0.00" line95Value="5.00" line95Sum="5.00"
@@ -84,12 +101,6 @@
 				<duration value="64" count="1" />
 				<duration value="256" count="1" />
 				<duration value="4096" count="1" />
-			</name>
-			<name id="OTHERS" totalCount="2" failCount="0" failPercent="0.00"
-				min="0.0" max="0.0" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00"
-				line95Value="0.00" line95Sum="0.00" line95Count="0">
-				<successMessageUrl>MobileApi-0a014dc1-1339999961753-0
-				</successMessageUrl>
 			</name>
 		</type>
 	</machine>

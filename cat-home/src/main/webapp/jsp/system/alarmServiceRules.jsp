@@ -14,6 +14,16 @@
 	<res:useCss value='${res.css.local.dtree_css}' target="head-css" />
 	<res:useCss value='${res.css.local.alarm_css}' target="head-css" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+	<res:useCss value='${res.css.local.table_css}' target="head-css" />
+	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		init();
+	});
+</script>
 
 	<div class="body-content">
 		<%@include file="./alarm.jsp"%>
@@ -23,14 +33,15 @@
 		</script>
 		<div class="content-right">
 			</br>
-			<table class="alarm" width="100%">
+			<table class="alarm" id="contents" width="100%">
+				<thead>
 				<tr class="odd">
 					<td>项目名</td>
 					<td>操作&nbsp;&nbsp;  <a href="?op=alarmRuleAdd&type=service" target="_blank">新增</a></td>
-				</tr>
+				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.userSubStates}"
 					varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<tr>
 						<td>${item.alarmRule.domain}</td>
 						<td><c:choose>
 								<c:when test="${item.subscriberState == 0}">
@@ -44,7 +55,7 @@
 							<a href="?op=serviceAlarmRuleDelete&alarmRuleId=${item.alarmRule.id}">删除</a> 
 						</td>
 					</tr>
-				</c:forEach>
+				</c:forEach></tbody>
 			</table>
 		</div>
 	</div>
