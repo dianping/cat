@@ -239,9 +239,14 @@ public class TcpSocketReceiver implements LogEnabled {
 				}
 			} else {
 				m_process++;
-				if (m_process % CatConstants.SUCCESS_COUNT == 0) {
+				int flag = m_process % CatConstants.SUCCESS_COUNT;
+
+				if (flag == 0) {
 					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
-					m_logger.info("The server processes message number " + m_process);
+
+					if (m_process % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
+						m_logger.info("The server processes message number " + m_process);
+					}
 				}
 			}
 		}

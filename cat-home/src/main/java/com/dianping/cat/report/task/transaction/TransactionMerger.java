@@ -7,6 +7,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
@@ -16,7 +19,9 @@ import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
 
-public class TransactionMerger implements ReportMerger<TransactionReport> {
+public class TransactionMerger implements ReportMerger<TransactionReport>, LogEnabled {
+
+	private Logger m_logger;
 
 	private TransactionReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
 		TransactionReportMerger merger = null;
@@ -32,6 +37,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 				model = DefaultSaxParser.parse(xml);
 				model.accept(merger);
 			} catch (Exception e) {
+				m_logger.error(report.getDomain() + " " + report.getPeriod() + " " + report.getName(), e);
 				Cat.logError(e);
 			}
 		}
@@ -70,5 +76,10 @@ public class TransactionMerger implements ReportMerger<TransactionReport> {
 
 		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

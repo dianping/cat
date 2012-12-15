@@ -49,7 +49,6 @@
 				<option value="1500">1.5 Sec</option>
 				<option value="2000">2.0 Sec</option>
 				<option value="3000">3.0 Sec</option>
-				<option value="4000">4.0 Sec</option>
 				<option value="5000">5.0 Sec</option>
 		</select> long-sql
 		<select size="1" id="p_longSql">
@@ -57,14 +56,15 @@
 				<option value="100">100 ms</option>
 				<option value="500">500 ms</option>
 				<option value="1000">1000 ms</option>
-				<option value="2000">2000 ms</option>
-		</select>
+				<option value="2000">3000 ms</option>
+		</select> long-service
 		<select size="1" id="p_longService">
 				${model.defaultSqlThreshold}
 				<option value="100">50 ms</option>
-				<option value="200">200 ms</option>
+				<option value="200">100 ms</option>
+				<option value="200">500 ms</option>
 				<option value="1000">1000 ms</option>
-				<option value="2000">2000 ms</option>
+				<option value="2000">3000 ms</option>
 				<option value="5000">5000 ms</option>
 		</select>
 		<script>
