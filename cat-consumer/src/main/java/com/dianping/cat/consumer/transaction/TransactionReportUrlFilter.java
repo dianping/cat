@@ -68,7 +68,7 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 				int length = temp.length();
 
 				for (int i = 0; i < length; i++) {
-					//invalidate char
+					// invalidate char
 					if (temp.charAt(i) > 126 || temp.charAt(i) < 33) {
 						invalidates.add(temp);
 						continue;
@@ -98,8 +98,27 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 					mergeName(other, all.get(i));
 				}
 			}
+
+			List<String> toRemove = new ArrayList<String>();
+			TransactionName other = type.findOrCreateName("OTHERS");
+
+			transactionNames = type.getNames();
+			names = transactionNames.keySet();
+			for (String temp : names) {
+				TransactionName tansactionName = transactionNames.get(temp);
+
+				if (tansactionName.getTotalCount() == 1) {
+					toRemove.add(temp);
+					mergeName(other, tansactionName);
+				}
+			}
+
+			for (String temp : toRemove) {
+				transactionNames.remove(temp);
+			}
 		}
 		super.visitType(type);
+		
 	}
 
 	public static class TransactionNameCompator implements Comparator<TransactionName> {
