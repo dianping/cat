@@ -252,6 +252,10 @@
 			<implementation>com.dianping.cat.consumer.CatConsumerModule</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.transaction.TransactionReportUrlFilter</role>
+			<implementation>com.dianping.cat.consumer.transaction.TransactionReportUrlFilter</implementation>
+		</component>
+		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>

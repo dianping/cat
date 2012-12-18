@@ -38,7 +38,7 @@ public class TransactionReportFilterTest {
 
 		Assert.assertEquals(201, newSize);
 
-		String url = "/topic/341739¬g&quot;";
+		String url = "/topic/341739¬g&quot;";
 
 		size = url.length();
 		for (int i = 0; i < size; i++) {

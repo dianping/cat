@@ -1,5 +1,5 @@
 .matrix {
-	width: auto;
+	width: 100%;
 	font-size: small;
 }
 
@@ -15,10 +15,6 @@
 	text-align:right;
 }
 .matrix th .left{
-	text-align:left;
-}
-
-.matrix tr .left{
 	text-align:left;
 }
 
