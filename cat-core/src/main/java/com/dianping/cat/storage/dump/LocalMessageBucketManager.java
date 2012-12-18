@@ -94,17 +94,26 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			for (String key : keys) {
 				LocalMessageBucket bucket = m_buckets.remove(key);
-
+				try {
+					bucket.flushBlock();
+				} catch (IOException e) {
+					Cat.logError(e);
+				}
+				try {
+					//wait the block dump thread store the block into the file
+					Thread.sleep(50);
+				} catch (InterruptedException e) {
+				}
 				try {
 					bucket.close();
 				} catch (IOException e) {
-					// ignore
+					Cat.logError(e);
 				}
 
 				try {
 					bucket.archive();
 				} catch (Exception e) {
-					Cat.getProducer().logError(e);
+					Cat.logError(e);
 				}
 			}
 
