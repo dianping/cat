@@ -68,7 +68,8 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 				int length = temp.length();
 
 				for (int i = 0; i < length; i++) {
-					if (temp.charAt(i) > 255 || temp.charAt(i) < 0) {
+					//invalidate char
+					if (temp.charAt(i) > 126 || temp.charAt(i) < 33) {
 						invalidates.add(temp);
 						continue;
 					}
