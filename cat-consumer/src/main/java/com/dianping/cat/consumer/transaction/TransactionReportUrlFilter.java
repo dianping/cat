@@ -8,20 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 
-public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder
-      implements LogEnabled {
+public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 
 	private int m_maxItems = 200;
-
-	private Logger m_logger;
-
+	
 	private void mergeName(TransactionName old, TransactionName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
 		old.setFailCount(old.getFailCount() + other.getFailCount());
@@ -77,7 +71,7 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 			}
 
 			for (String name : invalidates) {
-				m_logger.error("remove invalidate url " + name);
+
 				transactionNames.remove(name);
 			}
 
@@ -118,7 +112,7 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 			}
 		}
 		super.visitType(type);
-		
+
 	}
 
 	public static class TransactionNameCompator implements Comparator<TransactionName> {
@@ -129,8 +123,4 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 		}
 	}
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
 }
