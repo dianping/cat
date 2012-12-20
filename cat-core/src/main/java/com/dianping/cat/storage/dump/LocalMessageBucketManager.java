@@ -30,6 +30,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -90,34 +91,23 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 
 			Transaction t = Cat.newTransaction("System", "Dump");
+
 			t.setStatus(Message.SUCCESS);
-
-			for (String key : keys) {
-				LocalMessageBucket bucket = m_buckets.remove(key);
-				try {
-					bucket.flushBlock();
-				} catch (IOException e) {
-					Cat.logError(e);
+			try {
+				for (String key : keys) {
+					LocalMessageBucket bucket = m_buckets.get(key);
+					try {
+						bucket.flushBlock();
+					} catch (IOException e) {
+						Cat.logError(e);
+					}
 				}
-				try {
-					//wait the block dump thread store the block into the file
-					Thread.sleep(50);
-				} catch (InterruptedException e) {
-				}
-				try {
-					bucket.close();
-				} catch (IOException e) {
-					Cat.logError(e);
-				}
-
-				try {
-					bucket.archive();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
+			} catch (Exception e) {
+				Cat.logError(e);
+				t.setStatus(e);
+			} finally {
+				t.complete();
 			}
-
-			t.complete();
 		}
 	}
 
@@ -142,6 +132,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				LocalMessageBucket bucket = e.getValue();
 
 				if (now - bucket.getLastAccessTime() >= hour) {
+					Cat.getProducer().logEvent("Bucket", "Close.Abnormal", Event.SUCCESS, e.getKey());
 					bucket.close();
 					closedKeys.add(e.getKey());
 				}
@@ -256,42 +247,57 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					if (shouldMove(path)) {
+					if (path.indexOf(".idx") == 0 && shouldMove(path)) {
 						paths.add(path);
 					}
 				}
 				return Direction.DOWN;
 			}
 		});
+
 		if (paths.size() > 0) {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 			Transaction t = Cat.newTransaction("System", "Dump" + "-" + ip);
 			t.setStatus(Message.SUCCESS);
 
 			for (String path : paths) {
-				try {
-					Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, path);
-
-					File outbox = new File(m_baseDir, "outbox");
-					File from = new File(m_baseDir, path);
-					File to = new File(outbox, path);
-
-					to.getParentFile().mkdirs();
-					Files.forDir().copyFile(from, to);
-					Files.forDir().delete(from);
-
-					File parentFile = from.getParentFile();
-
-					parentFile.delete(); // delete it if empty
-					parentFile.getParentFile().delete(); // delete it if empty
-				} catch (Exception e) {
-					t.setStatus(Message.SUCCESS);
-					Cat.logError(e);
+				LocalMessageBucket bucket = m_buckets.get(path);
+				if (bucket != null) {
+					try {
+						bucket.close();
+						bucket.archive();
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				} else {
+					try {
+						moveFile(path);
+						moveFile(path + ".idx");
+					} catch (Exception e) {
+						t.setStatus(Message.SUCCESS);
+						Cat.logError(e);
+					}
 				}
 			}
-
 			t.complete();
 		}
+	}
+
+	private void moveFile(String path) throws IOException {
+		Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, path);
+
+		File outbox = new File(m_baseDir, "outbox");
+		File from = new File(m_baseDir, path);
+		File to = new File(outbox, path);
+
+		to.getParentFile().mkdirs();
+		Files.forDir().copyFile(from, to);
+		Files.forDir().delete(from);
+
+		File parentFile = from.getParentFile();
+
+		parentFile.delete(); // delete it if empty
+		parentFile.getParentFile().delete(); // delete it if empty
 	}
 
 	public void setBaseDir(File baseDir) {
@@ -404,6 +410,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 								String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
 								String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+
+								System.out.println("Bucket:" + dataFile);
 								LocalMessageBucket bucket = m_buckets.get(dataFile);
 
 								if (bucket == null) {
@@ -480,6 +488,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	class BlockDumper implements Task {
 		private int m_errors;
 
+		private int m_success;
+
 		@Override
 		public String getName() {
 			return "LocalMessageBucketManager-BlockDumper";
@@ -504,6 +514,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 								Cat.getProducer().logError(
 								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
 							}
+						}
+						m_success++;
+						if (m_success % 10000 == 0) {
+							m_logger.info("Block Dump lazy " + m_messageBlocks.size());
 						}
 					}
 				}

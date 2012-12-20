@@ -150,8 +150,7 @@ public class ScheduledMailTask implements Task {
 						t.complete();
 					}
 				} else {
-					Event t = Cat.newEvent("ScheduledReport", "SendNot");
-					t.setStatus(Event.SUCCESS);
+					Cat.getProducer().logEvent("ScheduledReport", "SendNot", Event.SUCCESS, null);
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -163,7 +162,6 @@ public class ScheduledMailTask implements Task {
 				active = false;
 			}
 		}
-
 	}
 
 	@Override
