@@ -90,23 +90,22 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 			}
 
-			Transaction t = Cat.newTransaction("System", "Dump");
-
-			t.setStatus(Message.SUCCESS);
 			try {
 				for (String key : keys) {
 					LocalMessageBucket bucket = m_buckets.get(key);
+
 					try {
-						bucket.flushBlock();
+						MessageBlock block = bucket.flushBlock();
+
+						if (block != null) {
+							m_messageBlocks.add(block);
+						}
 					} catch (IOException e) {
 						Cat.logError(e);
 					}
 				}
 			} catch (Exception e) {
 				Cat.logError(e);
-				t.setStatus(e);
-			} finally {
-				t.complete();
 			}
 		}
 	}
@@ -131,8 +130,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			for (Map.Entry<String, LocalMessageBucket> e : m_buckets.entrySet()) {
 				LocalMessageBucket bucket = e.getValue();
 
-				if (now - bucket.getLastAccessTime() >= hour) {
+				if (now - bucket.getLastAccessTime() > 2 * hour) {
 					Cat.getProducer().logEvent("Bucket", "Close.Abnormal", Event.SUCCESS, e.getKey());
+					m_logger.warn("close bucket abnormal " + e.getKey());
 					bucket.close();
 					closedKeys.add(e.getKey());
 				}
@@ -200,6 +200,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket.setBaseDir(m_baseDir);
 						bucket.initialize(dataFile);
 						m_buckets.put(dataFile, bucket);
+						m_logger.info("create local message bucket by read message tree,path:" + m_baseDir + dataFile);
 					}
 				}
 
@@ -212,7 +213,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 						LockSupport.parkNanos(50 * 1000 * 1000L); // wait 50 ms
 					}
-
 					MessageTree tree = bucket.findByIndex(id.getIndex());
 
 					if (tree != null && tree.getMessageId().equals(messageId)) {
@@ -261,21 +261,33 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			t.setStatus(Message.SUCCESS);
 
 			for (String path : paths) {
+				File file = new File(m_baseDir, path);
+				String loginfo = "path:" + m_baseDir + path + ",file size: " + file.length();
+
 				LocalMessageBucket bucket = m_buckets.get(path);
 				if (bucket != null) {
 					try {
 						bucket.close();
 						bucket.archive();
+
+						Cat.getProducer().logEvent("Dump", "Outbox.Normal", Message.SUCCESS, loginfo);
+						m_logger.info("move data file to outbox normal, " + loginfo);
 					} catch (Exception e) {
+						t.setStatus(e);
 						Cat.logError(e);
+						m_logger.error(e.getMessage(), e);
 					}
 				} else {
 					try {
 						moveFile(path);
 						moveFile(path + ".idx");
+
+						Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, loginfo);
+						m_logger.info("move data file to outbox abnormal, " + loginfo);
 					} catch (Exception e) {
-						t.setStatus(Message.SUCCESS);
+						t.setStatus(e);
 						Cat.logError(e);
+						m_logger.error(e.getMessage(), e);
 					}
 				}
 			}
@@ -284,8 +296,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	}
 
 	private void moveFile(String path) throws IOException {
-		Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, path);
-
 		File outbox = new File(m_baseDir, "outbox");
 		File from = new File(m_baseDir, path);
 		File to = new File(outbox, path);
@@ -411,7 +421,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 								String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
 								String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
 
-								System.out.println("Bucket:" + dataFile);
 								LocalMessageBucket bucket = m_buckets.get(dataFile);
 
 								if (bucket == null) {
