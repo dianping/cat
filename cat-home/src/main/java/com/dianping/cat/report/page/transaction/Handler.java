@@ -182,20 +182,20 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(model, payload);
 		String type = payload.getType();
+		DisplayNames displayNameReport = model.getDisplayNameReport();
+		
 		switch (payload.getAction()) {
 		case HOURLY_REPORT:
 			showHourlyReport(model, payload);
-			if (!StringUtils.isEmpty(type)) {
-				buildTransactionNameGraph(model.getDisplayNameReport().getResults(), model);
+			if (!StringUtils.isEmpty(type) && displayNameReport != null) {
+				buildTransactionNameGraph(displayNameReport.getResults(), model);
 			}
-
 			break;
 		case HISTORY_REPORT:
 			showSummarizeReport(model, payload);
-			if (!StringUtils.isEmpty(type)) {
-				buildTransactionNameGraph(model.getDisplayNameReport().getResults(), model);
+			if (!StringUtils.isEmpty(type) && displayNameReport != null) {
+				buildTransactionNameGraph(displayNameReport.getResults(), model);
 			}
-
 			break;
 		case HISTORY_GRAPH:
 			m_historyGraph.buildTrendGraph(model, payload);
@@ -206,7 +206,7 @@ public class Handler implements PageHandler<Context> {
 		case MOBILE:
 			showHourlyReport(model, payload);
 			if (!StringUtils.isEmpty(payload.getType())) {
-				DisplayNames report = model.getDisplayNameReport();
+				DisplayNames report = displayNameReport;
 				String json = m_gson.toJson(report);
 				model.setMobileResponse(json);
 			} else {

@@ -153,9 +153,10 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 					t.addData("file", path);
 
+					FSDataOutputStream fdos = null;
 					try {
+						fdos = makeHdfsOutputStream(path);
 						FileInputStream fis = new FileInputStream(file);
-						FSDataOutputStream fdos = makeHdfsOutputStream(path);
 
 						long start = System.currentTimeMillis();
 
@@ -181,6 +182,11 @@ public class DumpUploader implements Initializable, LogEnabled {
 						t.setStatus(e);
 						m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
 					} finally {
+						try {
+							fdos.close();
+						} catch (IOException e) {
+							Cat.logError(e);
+						}
 						t.complete();
 					}
 
