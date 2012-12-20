@@ -8,20 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 
-public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder
-      implements LogEnabled {
+public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 
 	private int m_maxItems = 200;
-
-	private Logger m_logger;
-
+	
 	private void mergeName(TransactionName old, TransactionName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
 		old.setFailCount(old.getFailCount() + other.getFailCount());
@@ -68,7 +62,8 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 				int length = temp.length();
 
 				for (int i = 0; i < length; i++) {
-					if (temp.charAt(i) > 255 || temp.charAt(i) < 0) {
+					// invalidate char
+					if (temp.charAt(i) > 126 || temp.charAt(i) < 33) {
 						invalidates.add(temp);
 						continue;
 					}
@@ -76,7 +71,7 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 			}
 
 			for (String name : invalidates) {
-				m_logger.error("remove invalidate url " + name);
+
 				transactionNames.remove(name);
 			}
 
@@ -97,8 +92,27 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 					mergeName(other, all.get(i));
 				}
 			}
+
+			List<String> toRemove = new ArrayList<String>();
+			TransactionName other = type.findOrCreateName("OTHERS");
+
+			transactionNames = type.getNames();
+			names = transactionNames.keySet();
+			for (String temp : names) {
+				TransactionName tansactionName = transactionNames.get(temp);
+
+				if (tansactionName.getTotalCount() == 1) {
+					toRemove.add(temp);
+					mergeName(other, tansactionName);
+				}
+			}
+
+			for (String temp : toRemove) {
+				transactionNames.remove(temp);
+			}
 		}
 		super.visitType(type);
+
 	}
 
 	public static class TransactionNameCompator implements Comparator<TransactionName> {
@@ -109,8 +123,4 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 		}
 	}
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
 }

@@ -191,6 +191,9 @@ public class Handler implements PageHandler<Context> {
 
 		TransactionReport transactionReport = getTransactionHourlyReport(domain, ip, null);
 
+		if(transactionReport==null){
+			return data;
+		}
 		Machine transactionMachine = transactionReport.getMachines().get(ip);
 		if (transactionMachine != null) {
 			Collection<TransactionType> types = transactionMachine.getTypes().values();
