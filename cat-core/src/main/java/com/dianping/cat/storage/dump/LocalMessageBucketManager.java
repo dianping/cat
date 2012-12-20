@@ -247,7 +247,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					if (path.indexOf(".idx") == 0 && shouldMove(path)) {
+					if (path.indexOf(".idx") == -1 && shouldMove(path)) {
 						paths.add(path);
 					}
 				}
@@ -516,8 +516,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							}
 						}
 						m_success++;
-						if (m_success % 10000 == 0) {
-							m_logger.info("Block Dump lazy " + m_messageBlocks.size());
+						if (m_success % 1000 == 0) {
+							m_logger.info("block queue size " + m_messageBlocks.size());
 						}
 					}
 				}
