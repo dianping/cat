@@ -23,16 +23,21 @@ import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
 import com.dianping.cat.report.task.spi.ReportBuilder;
+
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-public class TransactionReportBuilder extends AbstractReportBuilder implements ReportBuilder {
+public class TransactionReportBuilder extends AbstractReportBuilder implements ReportBuilder, LogEnabled {
 
 	@Inject
 	private TransactionGraphCreator m_transactionGraphCreator;
 
 	@Inject
 	private TransactionMerger m_transactionMerger;
+
+	private Logger m_logger;
 
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
@@ -41,6 +46,7 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 			m_dailyReportDao.insert(report);
 			return true;
 		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
 			Cat.logError(e);
 			return false;
 		}
@@ -56,6 +62,7 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 				}
 			}
 		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
 			Cat.logError(e);
 			return false;
 		}
@@ -198,5 +205,10 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 
 		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }

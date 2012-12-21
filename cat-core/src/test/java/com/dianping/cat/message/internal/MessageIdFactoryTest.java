@@ -1,6 +1,7 @@
 package com.dianping.cat.message.internal;
 
 import java.io.IOException;
+import java.util.Date;
 
 import junit.framework.Assert;
 
@@ -17,6 +18,18 @@ public class MessageIdFactoryTest {
 			return m_timestamp;
 		}
 	};
+	
+	@Test
+	public void test(){
+		String id="UNKNOWN-c0a82050-376665-314";
+		MessageId message = MessageId.parse(id);
+		System.out.println(message.getTimestamp());
+		System.out.println(message.getIpAddress());
+		System.out.println(message.getVersion());
+		
+		Date date = new Date(message.getTimestamp());
+		System.out.println(date);
+	}
 
 	private void check(String domain, String expected) {
 		m_factory.setDomain(domain);
