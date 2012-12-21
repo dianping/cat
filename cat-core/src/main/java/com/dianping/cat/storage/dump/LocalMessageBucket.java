@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.zip.GZIPOutputStream;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
 
@@ -19,7 +21,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
-public class LocalMessageBucket implements MessageBucket {
+public class LocalMessageBucket implements MessageBucket, LogEnabled {
 	public static final String ID = "local";
 
 	private static final int MAX_BLOCK_SIZE = 1 << 16; // 64K
@@ -53,10 +55,10 @@ public class LocalMessageBucket implements MessageBucket {
 
 	private int m_blockSize;
 
+	private Logger m_logger;
+
 	public void archive() throws IOException {
 		File from = new File(m_baseDir, m_dataFile);
-
-		Cat.getProducer().logEvent("Dump", "Outbox.Normal", Message.SUCCESS, from.getPath());
 
 		File outbox = new File(m_baseDir, "outbox");
 		File to = new File(outbox, m_dataFile);
@@ -83,6 +85,7 @@ public class LocalMessageBucket implements MessageBucket {
 			m_reader = null;
 			m_writer = null;
 		}
+		m_logger.info("close the local message bucket " + m_baseDir + m_dataFile);
 	}
 
 	@Override
@@ -158,6 +161,7 @@ public class LocalMessageBucket implements MessageBucket {
 		m_block = new MessageBlock(m_dataFile);
 		m_buf = new ByteArrayOutputStream(16384);
 		m_out = new GZIPOutputStream(m_buf);
+		m_logger.info("create local message bucket " + m_baseDir + m_dataFile);
 	}
 
 	public void setBaseDir(File baseDir) {
@@ -171,7 +175,7 @@ public class LocalMessageBucket implements MessageBucket {
 	@Override
 	public MessageBlock store(final MessageTree tree, final MessageId id) throws IOException {
 		final ChannelBuffer buf = m_bufferManager.allocate();
-	
+
 		m_codec.encode(tree, buf);
 
 		return storeMessage(buf, id);
@@ -191,6 +195,11 @@ public class LocalMessageBucket implements MessageBucket {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }

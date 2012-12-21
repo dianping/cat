@@ -32,6 +32,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	private boolean m_localMode = true;
 
+	private static final long HOUR = 60 * 60 * 1000L;
+
 	private Logger m_logger;
 
 	@Override
@@ -41,6 +43,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 		try {
 			m_bucketManager.archive(m_startTime);
+			// wait the block dump complete
+			Thread.sleep(10 * 10000);
 		} catch (Exception e) {
 			t.setStatus(e);
 			Cat.logError(e);
@@ -92,10 +96,20 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		}
 
 		MessageId id = MessageId.parse(tree.getMessageId());
-		
+
 		if (id.getVersion() == 2) {
 			try {
-				m_bucketManager.storeMessage(tree,id);
+				long time = tree.getMessage().getTimestamp();
+				long fixedTime = time - time % (60 * 60 * 1000);
+				long idTime = id.getTimestamp();
+				long duration = fixedTime - idTime;
+
+				if (duration == 0 || duration == HOUR || duration == -HOUR) {
+					m_bucketManager.storeMessage(tree, id);
+				} else {
+					m_logger.error("error timestamp,meesageId:" + tree.getMessageId() + ",id parse time " + idTime
+					      + ",message tree timestamp:" + time);
+				}
 			} catch (IOException e) {
 				m_logger.error("Error when dumping to local file system, version 2!", e);
 			}
