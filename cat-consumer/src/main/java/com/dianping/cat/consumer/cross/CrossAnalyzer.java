@@ -149,7 +149,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		// }
 		// } catch (Exception e) {
 		// //ignore
-		// }
+		// } 
 		try {
 			char first = ip.charAt(0);
 			char next = ip.charAt(1);

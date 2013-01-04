@@ -61,9 +61,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-	private int m_error;
+	private long m_error;
 
-	private int m_total;
+	private long m_total;
 
 	private long m_totalSize = 0;
 
@@ -71,13 +71,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Logger m_logger;
 
-	private int m_gzipThreads = 3;
+	private int m_gzipThreads = 5;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(10000);
 
 	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new HashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
-	private int[] m_processMessages = new int[m_gzipThreads];
+	private long[] m_processMessages = new long[m_gzipThreads];
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -130,7 +130,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			for (Map.Entry<String, LocalMessageBucket> e : m_buckets.entrySet()) {
 				LocalMessageBucket bucket = e.getValue();
 
-				if (now - bucket.getLastAccessTime() > 2 * hour) {
+				if (now - bucket.getLastAccessTime() > 4 * hour) {
 					Cat.getProducer().logEvent("Bucket", "Close.Abnormal", Event.SUCCESS, e.getKey());
 					m_logger.warn("close bucket abnormal " + e.getKey());
 					bucket.close();
@@ -277,6 +277,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
 					}
+					m_buckets.remove(path);
 				} else {
 					try {
 						moveFile(path);
@@ -345,7 +346,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		int bucketIndex = Math.abs(domain.hashCode()) % m_gzipThreads;
 
 		if (bucketIndex > m_gzipThreads || bucketIndex < 0) {
-			m_logger.error("Error where compute the message bucket index!" + bucketIndex);
+			m_logger.error("Error when compute the message bucket index!" + bucketIndex);
 		} else {
 			m_processMessages[bucketIndex]++;
 		}
@@ -387,11 +388,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_serverStateManager.addProcessDelay(delay);
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
-			m_logger.info("Dump message number: " + m_total + " Size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
+			m_logger.info("dump message number: " + m_total + " size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
 
-			StringBuilder sb = new StringBuilder("GzipThread Process Message Number :");
+			StringBuilder sb = new StringBuilder("gzip thread process message number :");
 			for (int i = 0; i < m_gzipThreads; i++) {
-				sb.append(m_processMessages[i] + " \t");
+				sb.append(m_processMessages[i] + "\t");
 			}
 			m_logger.info(sb.toString());
 		}
@@ -525,7 +526,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							}
 						}
 						m_success++;
-						if (m_success % 1000 == 0) {
+						if (m_success % 10000 == 0) {
 							m_logger.info("block queue size " + m_messageBlocks.size());
 						}
 					}

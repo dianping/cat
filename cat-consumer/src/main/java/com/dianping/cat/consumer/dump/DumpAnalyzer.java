@@ -1,13 +1,17 @@
 package com.dianping.cat.consumer.dump;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -18,7 +22,6 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
 	@Inject
@@ -30,9 +33,13 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
 	private LocalMessageBucketManager m_bucketManager;
 
+	private Set<String> m_oldVersionDomains = new HashSet<String>();
+
 	private boolean m_localMode = true;
 
 	private static final long HOUR = 60 * 60 * 1000L;
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private Logger m_logger;
 
@@ -51,6 +58,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		} finally {
 			t.complete();
 		}
+		m_logger.info("old version domains:" + m_oldVersionDomains);
 	}
 
 	@Override
@@ -107,12 +115,15 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 				if (duration == 0 || duration == HOUR || duration == -HOUR) {
 					m_bucketManager.storeMessage(tree, id);
 				} else {
-					m_logger.error("error timestamp,meesageId:" + tree.getMessageId() + ",id parse time " + idTime
-					      + ",message tree timestamp:" + time);
+					m_logger.error("error timestamp,meesageId:" + tree.getMessageId() + ",id parse time "
+					      + m_sdf.format(new Date(idTime)) + " " + id.getIpAddress() + " ,message tree timestamp:"
+					      + m_sdf.format(new Date(time)) + " " + tree.getIpAddress() + " duration hours:" + duration);
 				}
 			} catch (IOException e) {
 				m_logger.error("Error when dumping to local file system, version 2!", e);
 			}
+		} else {
+			m_oldVersionDomains.add(tree.getDomain());
 		}
 	}
 

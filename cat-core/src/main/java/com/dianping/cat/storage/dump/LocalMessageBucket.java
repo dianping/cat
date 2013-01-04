@@ -11,15 +11,13 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import org.unidal.helper.Files;
-import org.unidal.lookup.annotation.Inject;
 
 public class LocalMessageBucket implements MessageBucket, LogEnabled {
 	public static final String ID = "local";
@@ -68,8 +66,16 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 		to.getParentFile().mkdirs();
 		Files.forDir().copyFile(from, to);
 		Files.forDir().copyFile(fromIndex, toIndex);
-		Files.forDir().delete(from);
-		Files.forDir().delete(fromIndex);
+
+		boolean flag = Files.forDir().delete(from);
+		boolean indexFlag = Files.forDir().delete(fromIndex);
+
+		if (flag == false) {
+			m_logger.warn("delete data file error " + from);
+		}
+		if (indexFlag == false) {
+			m_logger.warn("delete index file error " + fromIndex);
+		}
 
 		File parentFile = from.getParentFile();
 
