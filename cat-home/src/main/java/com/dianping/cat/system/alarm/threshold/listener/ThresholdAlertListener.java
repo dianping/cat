@@ -154,14 +154,13 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 				}
 				if (type.equalsIgnoreCase(AlertInfo.SMS)) {
 					List<String> emails = m_ruleManager.queryUserMailsByRuleId(meta.getRuleId());
-					AlertInfo emailsInfo = buildAlertInfo(meta, title, content, ruleType, emails);
+					AlertInfo emailsInfo = buildAlertInfo(meta, title + "[SMS]", content, ruleType, emails);
 
 					emailsInfo.setAlertType(AlertInfo.EMAIL_TYPE);
 					m_alertManager.addAlarmInfo(emailsInfo);
-					
 
 					List<String> address = m_ruleManager.queryUserPhonesByRuleId(meta.getRuleId());
-					AlertInfo info = buildAlertInfo(meta, title, title, ruleType, address);
+					AlertInfo info = buildAlertInfo(meta, title, content, ruleType, address);
 
 					info.setAlertType(AlertInfo.SMS_TYPE);
 					m_alertManager.addAlarmInfo(info);
