@@ -77,7 +77,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Map<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new HashMap<Integer, LinkedBlockingQueue<MessageItem>>();
 
-	private int[] m_processMessages = new int[m_gzipThreads];
+	private long[] m_processMessages = new long[m_gzipThreads];
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getPath(new Date(startTime), "");
@@ -277,6 +277,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
 					}
+					m_buckets.remove(path);
 				} else {
 					try {
 						moveFile(path);
