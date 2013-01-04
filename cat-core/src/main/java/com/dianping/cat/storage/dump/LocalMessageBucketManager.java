@@ -130,7 +130,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			for (Map.Entry<String, LocalMessageBucket> e : m_buckets.entrySet()) {
 				LocalMessageBucket bucket = e.getValue();
 
-				if (now - bucket.getLastAccessTime() > 2 * hour) {
+				if (now - bucket.getLastAccessTime() > 4 * hour) {
 					Cat.getProducer().logEvent("Bucket", "Close.Abnormal", Event.SUCCESS, e.getKey());
 					m_logger.warn("close bucket abnormal " + e.getKey());
 					bucket.close();
