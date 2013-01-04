@@ -101,6 +101,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 	      	}
 	      }
       } catch (Exception e) {
+      	e.printStackTrace();
       	m_logger.error(e.getMessage(), e);
       	Cat.logError(e);
       	return false;
@@ -155,6 +156,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 			}
 			return update;
 		} catch (Exception e) {
+      	m_logger.error(e.getMessage(), e);
 			Cat.logError(e);
 			return false;
 		}
