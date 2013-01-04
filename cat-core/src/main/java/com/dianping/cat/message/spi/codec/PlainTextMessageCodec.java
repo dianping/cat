@@ -55,7 +55,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	@Override
 	public void decode(ChannelBuffer buf, MessageTree tree) {
 		decodeHeader(buf, tree);
-		
+
 		if (buf.readableBytes() > 0) {
 			decodeMessage(buf, tree);
 		}
@@ -177,12 +177,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 			return stack.pop();
 		} else {
-			buf.resetReaderIndex();
 			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: "
 			      + buf.toString(Charset.forName("utf-8")));
-
-			// unknown message, ignore it
-			return parent;
+			throw new RuntimeException("Unknown identifier int name");
 		}
 	}
 

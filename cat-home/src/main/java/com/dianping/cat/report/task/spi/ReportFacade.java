@@ -63,7 +63,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private HealthReportBuilder m_healthReportBuilder;
-	
+
 	@Inject
 	private StateReportBuilder m_stateReportBuilder;
 
@@ -80,37 +80,42 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	public boolean builderReport(Task task) {
 		try {
-	      int type = task.getTaskType();
-	      String reportName = task.getReportName();
-	      String reportDomain = task.getReportDomain();
-	      Date reportPeriod = task.getReportPeriod();
-	      ReportBuilder reportBuilder = getReportBuilder(reportName);
+			if (task == null) {
+				return false;
+			}
+			int type = task.getTaskType();
+			String reportName = task.getReportName();
+			String reportDomain = task.getReportDomain();
+			Date reportPeriod = task.getReportPeriod();
+			ReportBuilder reportBuilder = getReportBuilder(reportName);
 
-	      if (reportBuilder == null) {
-	      	m_logger.info("no report builder for type:" + " " + reportName);
-	      	return false;
-	      } else {
-	      	if (type == TYPE_DAILY) {
-	      		return reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
-	      	} else if (type == TYPE_HOUR) {
-	      		return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
-	      	} else if (type == TYPE_WEEK) {
-	      		return reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
-	      	} else if (type == TYPE_MONTH) {
-	      		return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
-	      	}
-	      }
-      } catch (Exception e) {
-      	m_logger.error(e.getMessage(), e);
-      	Cat.logError(e);
-      	return false;
-      }
+			if (reportBuilder == null) {
+				m_logger.info("no report builder for type:" + " " + reportName);
+				return false;
+			} else {
+				if (type == TYPE_DAILY) {
+					return reportBuilder.buildDailyReport(reportName, reportDomain, reportPeriod);
+				} else if (type == TYPE_HOUR) {
+					return reportBuilder.buildHourReport(reportName, reportDomain, reportPeriod);
+				} else if (type == TYPE_WEEK) {
+					return reportBuilder.buildWeeklyReport(reportName, reportDomain, reportPeriod);
+				} else if (type == TYPE_MONTH) {
+					return reportBuilder.buildMonthReport(reportName, reportDomain, reportPeriod);
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("hack for log");
+			e.printStackTrace();
+			m_logger.error(e.getMessage(), e);
+			Cat.logError(e);
+			return false;
+		}
 		return false;
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
-		this.m_logger = logger;
+		m_logger = logger;
 	}
 
 	private ReportBuilder getReportBuilder(String reportName) {
@@ -155,6 +160,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 			}
 			return update;
 		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
 			Cat.logError(e);
 			return false;
 		}
