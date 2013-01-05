@@ -14,6 +14,8 @@ import com.dianping.cat.home.dal.report.GraphEntity;
 import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.page.problem.Handler.DetailOrder;
 import com.dianping.cat.report.page.problem.Handler.SummaryOrder;
+
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
@@ -111,16 +113,11 @@ public class HistoryGraphs {
 				Graph graph = m_graphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIP, domain, "problem",
 				      GraphEntity.READSET_FULL);
 				graphs.add(graph);
+			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
-		// try {
-		// graphs = m_graphDao.findByDomainNameIpDuration(start, end, queryIP, domain, "problem",
-		// GraphEntity.READSET_FULL);
-		// } catch (DalException e) {
-		// Cat.logError(e);
-		// }
 		Map<String, double[]> result = buildGraphDatas(start, end, type, status, graphs);
 		return result;
 	}

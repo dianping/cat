@@ -18,8 +18,9 @@ public class HistoryGraphs {
 	public HistoryGraphItem buildHistoryGraph(String domain, Date start, Date end, String reportType, String key) {
 		if (reportType.equalsIgnoreCase("day")) {
 			return getDateFromHourlyReport(domain, start, end, key);
+		} else {
+			return getDateFromDailyReport(domain, start, end, key);
 		}
-		return getDateFromDailyReport(domain, start, end, key);
 	}
 
 	private HistoryGraphItem getDateFromDailyReport(String domain, Date start, Date end, String key) {
