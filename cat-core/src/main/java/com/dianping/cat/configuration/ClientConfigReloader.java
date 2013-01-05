@@ -5,16 +5,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Files;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.logger.LoggerFactory;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.transform.DefaultDomParser;
 import com.dianping.cat.message.Message;
-import org.unidal.helper.Files;
-import org.unidal.helper.Threads.Task;
 
 public class ClientConfigReloader implements Task {
 	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
@@ -28,6 +29,8 @@ public class ClientConfigReloader implements Task {
 	private long m_lastModifyTime;
 
 	private volatile boolean m_active = true;
+
+	private Logger m_logger = LoggerFactory.getLogger(ClientConfigReloader.class);
 
 	public ClientConfigReloader(String fileName, ClientConfig config) {
 		m_config = config;
@@ -101,14 +104,8 @@ public class ClientConfigReloader implements Task {
 							}
 						}
 					}
-				} catch (IOException e) {
-					Cat.getProducer().logEvent("System", "ReloadIOException", "IOException", null);
-				} catch (SAXParseException e) {
-					Cat.getProducer().logEvent("System", "ReloadSAXException", "SAXException", null);
-				} catch (RuntimeException e) {
-					Cat.getProducer().logEvent("System", "ReloadException", "RuntimeException", null);
 				} catch (Exception e) {
-					Cat.logError(e);
+					m_logger.error("Error when reloading client xml!", e);
 				}
 				Thread.sleep(2000L);
 			} catch (InterruptedException e) {

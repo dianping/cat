@@ -50,8 +50,8 @@ public class AlertManager implements Initializable {
 		record.setTitle(info.getTitle());
 		record.setRuleId(info.getRuleId());
 		record.setReceivers(info.getMails().toString());
-		if (sendResult) {
 
+		if (sendResult) {
 			record.setStatus(1);
 		} else {
 			record.setStatus(0);
@@ -95,7 +95,7 @@ public class AlertManager implements Initializable {
 						} else if (alertType == AlertInfo.SMS_TYPE) {
 							List<String> phones = entity.getPhones();
 
-							sendResult = m_mailSms.sendSMS(content, phones);
+							sendResult = m_mailSms.sendSMS(title + " " + content, phones);
 						}
 
 						if (alarmType.equals(AlertInfo.EXCEPTION)) {

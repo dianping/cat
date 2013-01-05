@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.servlet.ServletException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.report.ReportPage;
@@ -86,6 +87,12 @@ public class Handler implements PageHandler<Context> {
 		String messageId = getMessageId(payload);
 		String logView = getLogView(messageId, payload.isWaterfall());
 
+		if (logView == null || logView.length() == 0) {
+			Cat.getProducer().logEvent("Logview", "Success", Event.SUCCESS, null);
+		} else {
+			Cat.getProducer().logEvent("Logview", "Fail", Event.SUCCESS, null);
+		}
+		
 		switch (payload.getAction()) {
 		case VIEW:
 			model.setTable(logView);
@@ -109,7 +116,7 @@ public class Handler implements PageHandler<Context> {
 		sb.append('/').append(path);
 
 		final String key = id.getDomain() + '-' + id.getIpAddress();
-	   return path+key;
-   }
-	
+		return path + key;
+	}
+
 }

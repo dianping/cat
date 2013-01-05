@@ -162,7 +162,6 @@ public class AlarmRuleCreator implements Task {
 					}
 					t.complete();
 				}
-
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

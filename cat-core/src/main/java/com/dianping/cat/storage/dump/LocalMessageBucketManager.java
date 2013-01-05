@@ -262,7 +262,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			for (String path : paths) {
 				File file = new File(m_baseDir, path);
-				String loginfo = "path:" + m_baseDir + path + ",file size: " + file.length();
+				String loginfo = "path:" + m_baseDir + "/" + path + ",file size: " + file.length();
 
 				LocalMessageBucket bucket = m_buckets.get(path);
 				if (bucket != null) {
@@ -290,6 +290,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
 					}
+				}
+
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					break;
 				}
 			}
 			t.complete();
@@ -385,7 +391,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (message instanceof Transaction) {
 			long delay = System.currentTimeMillis() - tree.getMessage().getTimestamp()
 			      - ((Transaction) message).getDurationInMillis();
-			m_serverStateManager.addProcessDelay(delay);
+			int fiveMinute = 1000 * 60 * 5;
+
+			if (delay < fiveMinute && delay > -fiveMinute) {
+				m_serverStateManager.addProcessDelay(delay);
+			}
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
 			m_logger.info("dump message number: " + m_total + " size:" + m_totalSize * 1.0 / 1024 / 1024 / 1024 + "GB");
