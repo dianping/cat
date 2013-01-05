@@ -6,6 +6,12 @@ import java.util.concurrent.locks.LockSupport;
 
 import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.AbstractThreadListener;
+import org.unidal.initialization.AbstractModule;
+import org.unidal.initialization.DefaultModuleContext;
+import org.unidal.initialization.Module;
+import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ClientConfigReloader;
@@ -13,12 +19,6 @@ import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.DefaultThreadListener;
-import org.unidal.initialization.AbstractModule;
-import org.unidal.initialization.DefaultModuleContext;
-import org.unidal.initialization.Module;
-import org.unidal.initialization.ModuleContext;
 
 public class CatCoreModule extends AbstractModule {
 	public static final String ID = "cat-core";
@@ -67,7 +67,7 @@ public class CatCoreModule extends AbstractModule {
 		return null; // no dependencies
 	}
 
-	public final class CatThreadListener extends DefaultThreadListener {
+	public final class CatThreadListener extends AbstractThreadListener {
 		private final ModuleContext m_ctx;
 
 		private CatThreadListener(ModuleContext ctx) {

@@ -104,9 +104,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("hack for log");
+			System.err.println("Flowing is error stack trace:");
 			e.printStackTrace();
-			m_logger.error(e.getMessage(), e);
+			m_logger.error("Error when building report," + e.getMessage(), e);
 			Cat.logError(e);
 			return false;
 		}
@@ -160,7 +160,9 @@ public class ReportFacade implements LogEnabled, Initializable {
 			}
 			return update;
 		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
+			System.err.println("Flowing is error stack trace in redo:");
+			e.printStackTrace();
+			m_logger.error("Error when redo task " + taskID + " " + e.getMessage(), e);
 			Cat.logError(e);
 			return false;
 		}

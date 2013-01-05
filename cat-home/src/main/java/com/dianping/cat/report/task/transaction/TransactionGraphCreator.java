@@ -113,7 +113,7 @@ public class TransactionGraphCreator implements GraphCreator<TransactionReport> 
 			graph.setPeriod(reportPeriod);
 			graph.setType(3);
 			graph.setCreationDate(creationDate);
-			Machine machine = report.getMachines().get(ip);
+			Machine machine = report.findOrCreateMachine(ip);
 			Map<String, TransactionType> types = machine.getTypes();
 			StringBuilder detailBuilder = new StringBuilder();
 			StringBuilder summaryBuilder = new StringBuilder();

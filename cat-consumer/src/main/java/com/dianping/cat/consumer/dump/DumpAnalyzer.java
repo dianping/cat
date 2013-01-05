@@ -115,9 +115,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 				if (duration == 0 || duration == HOUR || duration == -HOUR) {
 					m_bucketManager.storeMessage(tree, id);
 				} else {
-					m_logger.error("error timestamp,meesageId:" + tree.getMessageId() + ",id parse time "
-					      + m_sdf.format(new Date(idTime)) + " " + id.getIpAddress() + " ,message tree timestamp:"
-					      + m_sdf.format(new Date(time)) + " " + tree.getIpAddress() + " duration hours:" + duration);
+					m_logger.error("timestamp:" + tree.getMessageId() + ",id timestamp " + m_sdf.format(new Date(idTime))
+					      + " " + id.getIpAddress() + " ,tree timestamp:" + m_sdf.format(new Date(time)) + " "
+					      + tree.getIpAddress() + " duration:" + duration);
 				}
 			} catch (IOException e) {
 				m_logger.error("Error when dumping to local file system, version 2!", e);
