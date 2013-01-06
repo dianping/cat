@@ -88,19 +88,6 @@ public class StateShow extends BaseVisitor {
 	}
 
 	private Machine mergerMachine(Machine total, Machine machine) {
-		// double oldCount = 0;
-		// double newCount = 0;
-		// if (total.getAvgTps() > 0) {
-		// oldCount = total.getTotal() / total.getAvgTps();
-		// }
-		// if (machine.getAvgTps() > 0) {
-		// newCount = machine.getTotal() / machine.getAvgTps();
-		// }
-		// double totalCount = oldCount + newCount;
-		// if (totalCount > 0) {
-		// total.setAvgTps((total.getTotal() + machine.getTotal()) / totalCount);
-		// }
-		//
 		total.setAvgTps(total.getAvgTps() + machine.getAvgTps());
 		total.setTotal(total.getTotal() + machine.getTotal());
 		total.setTotalLoss(total.getTotalLoss() + machine.getTotalLoss());
@@ -109,14 +96,14 @@ public class StateShow extends BaseVisitor {
 		total.setSize(total.getSize() + machine.getSize());
 		total.setDelaySum(total.getDelaySum() + machine.getDelaySum());
 		total.setDelayCount(total.getDelayCount() + machine.getDelayCount());
+		total.setBlockTotal(total.getBlockTotal() + machine.getBlockTotal());
+		total.setBlockLoss(total.getBlockLoss() + machine.getBlockLoss());
+		total.setPigeonTimeError(total.getPigeonTimeError() + machine.getPigeonTimeError());
+		total.setNetworkTimeError(total.getNetworkTimeError() + machine.getNetworkTimeError());
 
 		if (machine.getMaxTps() > total.getMaxTps()) {
 			total.setMaxTps(machine.getMaxTps());
 		}
-
-		// if (machine.getMaxTps() > total.getMaxTps()) {
-		// total.setMaxTps(machine.getMaxTps());
-		// }
 
 		long count = total.getDelayCount();
 		double sum = total.getDelaySum();
@@ -134,6 +121,10 @@ public class StateShow extends BaseVisitor {
 		total.setSize(total.getSize() + message.getSize());
 		total.setTotal(total.getTotal() + message.getTotal());
 		total.setTotalLoss(total.getTotalLoss() + message.getTotalLoss());
+		total.setBlockTotal(total.getBlockTotal() + message.getBlockTotal());
+		total.setBlockLoss(total.getBlockLoss() + message.getBlockLoss());
+		total.setPigeonTimeError(total.getPigeonTimeError() + message.getPigeonTimeError());
+		total.setNetworkTimeError(total.getNetworkTimeError() + message.getNetworkTimeError());
 	}
 
 	@Override

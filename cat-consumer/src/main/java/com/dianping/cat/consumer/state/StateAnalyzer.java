@@ -81,6 +81,22 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 				maxTps = messageTotal;
 			}
 
+			long blockTotal = state.getBlockTotal();
+			temp.setBlockTotal(blockTotal);
+			machine.setBlockTotal(machine.getBlockTotal() + blockTotal);
+			
+			long blockLoss = state.getBlockLoss();
+			temp.setBlockLoss(blockLoss);
+			machine.setBlockLoss(machine.getBlockLoss() + blockLoss);
+			
+			long pigeonTimeError = state.getPigeonTimeError();
+			temp.setPigeonTimeError(pigeonTimeError);
+			machine.setPigeonTimeError(machine.getPigeonTimeError() + pigeonTimeError);
+			
+			long networkTimeError = state.getNetworkTimeError();
+			temp.setNetworkTimeError(networkTimeError);
+			machine.setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError);
+			
 			long messageTotalLoss = state.getMessageTotalLoss();
 			temp.setTotalLoss(messageTotalLoss);
 			machine.setTotalLoss(machine.getTotalLoss() + messageTotalLoss);

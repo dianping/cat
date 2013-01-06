@@ -30,7 +30,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -121,29 +120,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	void closeIdleBuckets() throws IOException {
-		long now = System.currentTimeMillis();
-		long hour = 3600 * 1000L;
-		List<String> closedKeys = new ArrayList<String>();
-
-		synchronized (m_buckets) {
-			for (Map.Entry<String, LocalMessageBucket> e : m_buckets.entrySet()) {
-				LocalMessageBucket bucket = e.getValue();
-
-				if (now - bucket.getLastAccessTime() > 4 * hour) {
-					Cat.getProducer().logEvent("Bucket", "Close.Abnormal", Event.SUCCESS, e.getKey());
-					m_logger.warn("close bucket abnormal " + e.getKey());
-					bucket.close();
-					closedKeys.add(e.getKey());
-				}
-			}
-
-			for (String key : closedKeys) {
-				m_buckets.remove(key);
-			}
-		}
-	}
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -156,7 +132,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 
 		Threads.forGroup("Cat").start(new BlockDumper());
-		Threads.forGroup("Cat").start(new IdleChecker());
 		Threads.forGroup("Cat").start(new OldMessageMover());
 
 		for (int i = 0; i < m_gzipThreads; i++) {
@@ -367,9 +342,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		boolean result = items.offer(new MessageItem(tree, id));
 
 		if (result == false) {
+			m_serverStateManager.addMessageDumpLoss(1);
 			m_error++;
 			if (m_error % CatConstants.ERROR_COUNT == 0) {
-				m_serverStateManager.addMessageDumpLoss(CatConstants.ERROR_COUNT);
 				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error);
 			}
 		}
@@ -395,6 +370,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			if (delay < fiveMinute && delay > -fiveMinute) {
 				m_serverStateManager.addProcessDelay(delay);
+			} else {
+				m_logger.warn("Error when compute the delay duration, " + delay);
 			}
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
@@ -451,6 +428,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 								if (bolck != null) {
 									if (!m_messageBlocks.offer(bolck)) {
+										m_serverStateManager.addBlockLoss(1);
 										m_logger.error("Error when offer the block to the dump!");
 									}
 								}
@@ -468,7 +446,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		@Override
 		public String getName() {
-			return "Message Gizp " + m_index;
+			return "Message-Gzip-" + m_index;
 		}
 
 		@Override
@@ -536,37 +514,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							}
 						}
 						m_success++;
+						m_serverStateManager.addBlockTotal(1);
 						if (m_success % 10000 == 0) {
 							m_logger.info("block queue size " + m_messageBlocks.size());
 						}
-					}
-				}
-			} catch (InterruptedException e) {
-				// ignore it
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
-
-	class IdleChecker implements Task {
-		@Override
-		public String getName() {
-			return "LocalMessageBucketManager-IdleChecker";
-		}
-
-		@Override
-		public void run() {
-			try {
-				while (true) {
-					Thread.sleep(60 * 1000L); // 1 minute
-
-					try {
-						closeIdleBuckets();
-					} catch (Throwable e) {
-						Cat.getProducer().logError(e);
 					}
 				}
 			} catch (InterruptedException e) {

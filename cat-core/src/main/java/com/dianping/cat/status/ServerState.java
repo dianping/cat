@@ -35,10 +35,34 @@ public class ServerState {
 		private double m_processDelaySum;
 
 		private int m_processDelayCount;
-		
+
 		private double m_avgTps;
-		
+
 		private double m_maxTps;
+
+		private long m_blockTotal;
+
+		private long m_blockLoss;
+
+		private long m_pigeonTimeError;
+
+		private long m_networkTimeError;
+
+		public void addBlockTotal(long block) {
+			m_blockTotal += block;
+		}
+
+		public void addBlockLoss(long blockLoss) {
+			m_blockLoss += blockLoss;
+		}
+
+		public void addPigeonTimeError(long pigeonTimeError) {
+			m_pigeonTimeError += pigeonTimeError;
+		}
+
+		public void addNetworkTimeError(long networkTimeError) {
+			m_networkTimeError += networkTimeError;
+		}
 
 		public void addMessageDump(long messageDump) {
 			m_messageDump += messageDump;
@@ -123,7 +147,23 @@ public class ServerState {
 		public void setProcessDelayCount(int processDelayCount) {
 			m_processDelayCount = processDelayCount;
 		}
-		
+
+		public long getBlockTotal() {
+			return m_blockTotal;
+		}
+
+		public long getBlockLoss() {
+			return m_blockLoss;
+		}
+
+		public long getPigeonTimeError() {
+			return m_pigeonTimeError;
+		}
+
+		public long getNetworkTimeError() {
+			return m_networkTimeError;
+		}
+
 	}
 
 }

@@ -44,28 +44,66 @@
 </table>
 </br>
 
-<table width="50%">
+<table width="80%">
 	<tr class='odd'>
 		<td width="30%">处理消息总量</td>
 		<td width="20%">${w:format(model.state.total.total,'#,###,###,###,##0.#')}</td>
-		<td width="40%">丢失消息总量</td>
-		<td width="10%">${w:format(model.state.total.totalLoss,'#,###,###,###,##0.#')}</td>
+		<td width="50%">服务器接受到消息总量</td>
 	</tr>
 	<tr class='even'>
-		<td>每分钟平均处理数</td>
-		<td>${w:format(model.state.total.avgTps,'###,###,###,##0')}</td>
-		<td>单台机器每分钟最大处理数</td>
-		<td>${w:format(model.state.total.maxTps,'###,###,###,##0')}</td>
+		<td>丢失消息总量</td>
+		<td>${w:format(model.state.total.totalLoss,'#,###,###,###,##0.#')}</td>
+		<td>服务器进行encode以及analyzer处理来不及丢失消息总量</td>
 	</tr>
 	<tr class='odd'>
-		<td>存储消息数量</td>
+		<td>每分钟平均处理数</td>
+		<td>${w:format(model.state.total.avgTps,'###,###,###,##0')}</td>
+		<td>CAT集群平均每分钟处理消息量</td>
+			</tr>
+	<tr class='even'>
+		<td>单台机器每分钟最大处理数</td>
+		<td>${w:format(model.state.total.maxTps,'###,###,###,##0')}</td>
+		<td>CAT单台机器平均每分钟最大处理消息数目</td>
+	</tr>
+	<tr class='odd'>
+		<td>giz压缩成功消息数量</td>
 		<td>${w:format(model.state.total.dump,'###,###,###,##0')}</td>
-		<td>压缩前消息大小(GB)</td>
-		<td>${w:format(model.state.total.size/1024/1024/1024,'0.00#')}</td>
+		<td>将消息进行gzip压缩消息数目</td>
 	</tr>
 	<tr class='even'>
+		<td>giz压缩丢失消息数量</td>
+		<td>${w:format(model.state.total.dumpLoss,'###,###,###,##0')}</td>
+		<td>将消息进行gzip压缩消息丢失数目</td>
+	</tr>
+	<tr class='odd'>
+		<td>两台机器时钟不准导致消息存储丢失</td>
+		<td>${w:format(model.state.total.pigeonTimeError,'###,###,###,##0')}</td>
+		<td>这个场景用于Pigeon，服务端id是由客户端产生，客户端和服务端时钟差2小时，会导致存储丢失</td>
+	</tr>
+	<tr class='even'>
+		<td>网络传输或者客户端延迟发送导致消息丢失</td>
+		<td>${w:format(model.state.total.networkTimeError,'###,###,###,##0')}</td>
+		<td>CAT分小时处理，当一个小时过去了，默认会延迟3分钟技术，在3分钟后还发上个小时消息，即丢失消息</td>
+	</tr>
+	<tr class='odd'>
+		<td>存储消息块数量</td>
+		<td>${w:format(model.state.total.blockTotal,'###,###,###,##0')}</td>
+		<td>CAT是分块存储，消息块成功放入存储队列</td>
+	</tr>
+	<tr class='even'>
+		<td>存储消息块丢失数量</td>
+		<td>${w:format(model.state.total.blockLoss,'###,###,###,##0')}</td>
+		<td>存储队列溢出的消息块数量</td>
+	</tr>
+	<tr class='odd'>
+		<td>压缩前消息大小(GB)</td>
+		<td>${w:format(model.state.total.size/1024/1024/1024,'0.00#')}</td>
+		<td>压缩前所有存储消息的总大小</td>
+	</tr>
+	<tr class='odd'>
 		<td>系统处理延迟(ms)</td>
 		<td>${w:format(model.state.total.delayAvg,'0.#')}</td>
+		<td>客户端产生消息，到服务端存储之间的时钟误差。（在机器时钟完全准确的情况下）</td>
 	</tr>
 </table>
 </br>
