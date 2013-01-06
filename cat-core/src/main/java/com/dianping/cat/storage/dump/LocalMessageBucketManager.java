@@ -135,7 +135,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("Cat").start(new OldMessageMover());
 
 		for (int i = 0; i < m_gzipThreads; i++) {
-			Threads.forGroup("Cat").start(new MessageGzip(i));
+			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(
+			      10000);
+
+			m_messageQueues.put(i, messageQueue);
+			Threads.forGroup("Cat").start(new MessageGzip(messageQueue));
 		}
 	}
 
@@ -334,11 +338,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
 
-		if (items == null) {
-			items = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(10000);
-			m_messageQueues.put(bucketIndex, items);
-		}
-
 		boolean result = items.offer(new MessageItem(tree, id));
 
 		if (result == false) {
@@ -387,57 +386,53 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	class MessageGzip implements Task {
 
-		public int m_index;
+		public BlockingQueue<MessageItem> m_messageQueue;
 
-		public MessageGzip(int index) {
-			m_index = index;
+		public MessageGzip(BlockingQueue<MessageItem> messageQueue) {
+			m_messageQueue = messageQueue;
 		}
 
 		@Override
 		public void run() {
 			try {
 				while (true) {
-					BlockingQueue<MessageItem> items = m_messageQueues.get(m_index);
-					if (items != null) {
-						MessageItem item = items.poll(5, TimeUnit.MILLISECONDS);
+					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
-						if (item != null) {
-							try {
-								MessageTree tree = item.getTree();
-								MessageId id = item.getMessageId();
+					if (item != null) {
+						try {
+							MessageTree tree = item.getTree();
+							MessageId id = item.getMessageId();
 
-								String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
-								String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+							String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
+							String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
 
-								LocalMessageBucket bucket = m_buckets.get(dataFile);
+							LocalMessageBucket bucket = m_buckets.get(dataFile);
 
-								if (bucket == null) {
-									bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-									bucket.setBaseDir(m_baseDir);
-									bucket.initialize(dataFile);
-									m_buckets.put(dataFile, bucket);
-								}
-
-								DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
-								ChannelBuffer buf = defaultTree.getBuf();
-
-								int size = buf.readableBytes();
-								m_totalSize += size;
-
-								MessageBlock bolck = bucket.storeMessage(buf, id);
-
-								if (bolck != null) {
-									if (!m_messageBlocks.offer(bolck)) {
-										m_serverStateManager.addBlockLoss(1);
-										m_logger.error("Error when offer the block to the dump!");
-									}
-								}
-							} catch (Exception e) {
-								Cat.logError(e);
+							if (bucket == null) {
+								bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+								bucket.setBaseDir(m_baseDir);
+								bucket.initialize(dataFile);
+								m_buckets.put(dataFile, bucket);
 							}
+
+							DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
+							ChannelBuffer buf = defaultTree.getBuf();
+
+							int size = buf.readableBytes();
+							m_totalSize += size;
+
+							MessageBlock bolck = bucket.storeMessage(buf, id);
+
+							if (bolck != null) {
+								if (!m_messageBlocks.offer(bolck)) {
+									m_serverStateManager.addBlockLoss(1);
+									m_logger.error("Error when offer the block to the dump!");
+								}
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
 						}
 					}
-
 				}
 			} catch (InterruptedException e) {
 				// ignore it
@@ -446,7 +441,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		@Override
 		public String getName() {
-			return "Message-Gzip-" + m_index;
+			return "Message-Gzip";
 		}
 
 		@Override
