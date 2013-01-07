@@ -20,6 +20,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 
@@ -33,6 +34,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
 	private LocalMessageBucketManager m_bucketManager;
 
+	@Inject
+	private ServerStateManager m_serverStateManager;
+	
 	private Set<String> m_oldVersionDomains = new HashSet<String>();
 
 	private boolean m_localMode = true;
@@ -115,6 +119,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 				if (duration == 0 || duration == HOUR || duration == -HOUR) {
 					m_bucketManager.storeMessage(tree, id);
 				} else {
+					m_serverStateManager.addPigeonTimeError(1);
 					m_logger.error("timestamp:" + tree.getMessageId() + ",id timestamp " + m_sdf.format(new Date(idTime))
 					      + " " + id.getIpAddress() + " ,tree timestamp:" + m_sdf.format(new Date(time)) + " "
 					      + tree.getIpAddress() + " duration:" + duration);

@@ -101,7 +101,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerConfigManager.class) //
 		      .req(DumpUploader.class)//
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID)
+		      .req(ServerStateManager.class));
 
 		all.add(C(DumpUploader.class) //
 		      .req(ServerConfigManager.class, FileSystemManager.class));

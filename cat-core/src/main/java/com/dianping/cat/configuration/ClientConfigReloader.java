@@ -5,10 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.logger.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -29,8 +27,6 @@ public class ClientConfigReloader implements Task {
 	private long m_lastModifyTime;
 
 	private volatile boolean m_active = true;
-
-	private Logger m_logger = LoggerFactory.getLogger(ClientConfigReloader.class);
 
 	public ClientConfigReloader(String fileName, ClientConfig config) {
 		m_config = config;
@@ -105,7 +101,7 @@ public class ClientConfigReloader implements Task {
 						}
 					}
 				} catch (Exception e) {
-					m_logger.error("Error when reloading client xml!", e);
+					// ignore
 				}
 				Thread.sleep(2000L);
 			} catch (InterruptedException e) {

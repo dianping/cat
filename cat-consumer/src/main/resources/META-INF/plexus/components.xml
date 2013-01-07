@@ -232,6 +232,9 @@
 					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
 					<role-hint>local</role-hint>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.status.ServerStateManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
