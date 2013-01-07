@@ -61,7 +61,7 @@ public class SqlJobDataProduceTest extends CatTestCase {
 
 					DefaultTransaction sqlInternalTran = (DefaultTransaction) sqlTran;
 					sqlInternalTran.setDurationInMillis((long) Math.pow(2, j % 12));
-					if (j % 2 == 1) {
+					if (j % 2 != 0) {
 						sqlTran.setStatus(Message.SUCCESS);
 					} else {
 						sqlTran.setStatus("Error");

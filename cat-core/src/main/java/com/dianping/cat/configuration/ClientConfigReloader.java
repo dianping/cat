@@ -83,8 +83,14 @@ public class ClientConfigReloader implements Task {
 						Map<String, Domain> domains = newConfig.getDomains();
 						Domain firstDomain = domains.isEmpty() ? null : domains.values().iterator().next();
 
-						boolean catEnable = firstDomain.getEnabled();
+						boolean catEnable = false;
 						boolean oldEnabled = m_config.isEnabled();
+
+						if (firstDomain != null) {
+							if (firstDomain.getEnabled() != null && firstDomain.getEnabled() == true) {
+								catEnable = true;
+							}
+						}
 
 						if (oldEnabled != catEnable) {
 							if (oldEnabled) {

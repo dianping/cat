@@ -48,14 +48,4 @@ public class PeriodStrategyTest {
 		Assert.assertEquals(-120, strategy.next(185));
 	}
 	
-	@Test
-	public void test3(){
-		System.out.print(Math.abs("10.1.2.27".hashCode())%5+" ");
-		System.out.print(Math.abs("10.1.2.57".hashCode())%5+" ");
-		System.out.print(Math.abs("10.1.2.79".hashCode())%5+" ");
-		System.out.print(Math.abs("10.1.2.94".hashCode())%5+" ");
-		System.out.print(Math.abs("10.1.2.99".hashCode())%5+" ");
-		System.out.print(Math.abs("10.1.2.5.166".hashCode())%5+" ");
-	}
-	
 }
