@@ -101,7 +101,7 @@ public class ClientConfigReloader implements Task {
 						}
 					}
 				} catch (Exception e) {
-					// ignore
+					e.printStackTrace();
 				}
 				Thread.sleep(2000L);
 			} catch (InterruptedException e) {

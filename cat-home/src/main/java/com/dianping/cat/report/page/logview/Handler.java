@@ -88,9 +88,9 @@ public class Handler implements PageHandler<Context> {
 		String logView = getLogView(messageId, payload.isWaterfall());
 
 		if (logView == null || logView.length() == 0) {
-			Cat.getProducer().logEvent("Logview", "Success", Event.SUCCESS, null);
-		} else {
 			Cat.getProducer().logEvent("Logview", "Fail", Event.SUCCESS, null);
+		} else {
+			Cat.getProducer().logEvent("Logview", "Success", Event.SUCCESS, null);
 		}
 		
 		switch (payload.getAction()) {
