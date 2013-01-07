@@ -93,6 +93,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		} else {
 			long now = System.currentTimeMillis();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+
+			m_serverStateManager.addNetworkTimeError(1);
 			// ensure not output too much, and then run out of disk
 			if (now - m_lastTime > 1000L) {
 				m_lastTime = now;

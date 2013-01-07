@@ -24,9 +24,9 @@ public class StateReportMerger extends DefaultMerger {
 		}
 		double totalCount = oldCount + newCount;
 		if (totalCount > 0) {
-			old.setAvgTps((old.getTotal()+machine.getTotal()) / totalCount);
+			old.setAvgTps((old.getTotal() + machine.getTotal()) / totalCount);
 		}
-		
+
 		old.setTotal(old.getTotal() + machine.getTotal());
 		old.setTotalLoss(old.getTotalLoss() + machine.getTotalLoss());
 		old.setDump(old.getDump() + machine.getDump());
@@ -34,10 +34,15 @@ public class StateReportMerger extends DefaultMerger {
 		old.setSize(old.getSize() + machine.getSize());
 		old.setDelaySum(old.getDelaySum() + machine.getDelaySum());
 		old.setDelayCount(old.getDelayCount() + machine.getDelayCount());
-//		old.setMaxTps(old.getMaxTps()+machine.getMaxTps());
-		
-//		old.setAvgTps(old.getAvgTps()+machine.getAvgTps());
-		
+
+		old.setBlockTotal(old.getBlockTotal() + machine.getBlockTotal());
+		old.setBlockLoss(old.getBlockLoss() + machine.getBlockLoss());
+		old.setPigeonTimeError(old.getPigeonTimeError() + machine.getPigeonTimeError());
+		old.setNetworkTimeError(old.getNetworkTimeError() + machine.getNetworkTimeError());
+
+		// old.setMaxTps(old.getMaxTps()+machine.getMaxTps());
+		// old.setAvgTps(old.getAvgTps()+machine.getAvgTps());
+
 		if (machine.getMaxTps() > old.getMaxTps()) {
 			old.setMaxTps(machine.getMaxTps());
 		}
@@ -59,6 +64,10 @@ public class StateReportMerger extends DefaultMerger {
 		old.setDump(message.getDump());
 		old.setDelayCount(message.getDelayCount());
 		old.setDelaySum(message.getDelaySum());
+		old.setBlockTotal(message.getBlockTotal());
+		old.setBlockLoss(message.getBlockLoss());
+		old.setPigeonTimeError(message.getPigeonTimeError());
+		old.setNetworkTimeError(message.getNetworkTimeError());
 	}
 
 	@Override

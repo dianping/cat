@@ -30,7 +30,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -121,29 +120,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 	}
 
-	void closeIdleBuckets() throws IOException {
-		long now = System.currentTimeMillis();
-		long hour = 3600 * 1000L;
-		List<String> closedKeys = new ArrayList<String>();
-
-		synchronized (m_buckets) {
-			for (Map.Entry<String, LocalMessageBucket> e : m_buckets.entrySet()) {
-				LocalMessageBucket bucket = e.getValue();
-
-				if (now - bucket.getLastAccessTime() > 4 * hour) {
-					Cat.getProducer().logEvent("Bucket", "Close.Abnormal", Event.SUCCESS, e.getKey());
-					m_logger.warn("close bucket abnormal " + e.getKey());
-					bucket.close();
-					closedKeys.add(e.getKey());
-				}
-			}
-
-			for (String key : closedKeys) {
-				m_buckets.remove(key);
-			}
-		}
-	}
-
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -156,11 +132,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		}
 
 		Threads.forGroup("Cat").start(new BlockDumper());
-		Threads.forGroup("Cat").start(new IdleChecker());
 		Threads.forGroup("Cat").start(new OldMessageMover());
 
 		for (int i = 0; i < m_gzipThreads; i++) {
-			Threads.forGroup("Cat").start(new MessageGzip(i));
+			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(
+			      10000);
+
+			m_messageQueues.put(i, messageQueue);
+			Threads.forGroup("Cat").start(new MessageGzip(messageQueue));
 		}
 	}
 
@@ -359,17 +338,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
 
-		if (items == null) {
-			items = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(10000);
-			m_messageQueues.put(bucketIndex, items);
-		}
-
 		boolean result = items.offer(new MessageItem(tree, id));
 
 		if (result == false) {
+			m_serverStateManager.addMessageDumpLoss(1);
 			m_error++;
 			if (m_error % CatConstants.ERROR_COUNT == 0) {
-				m_serverStateManager.addMessageDumpLoss(CatConstants.ERROR_COUNT);
 				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error);
 			}
 		}
@@ -395,6 +369,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 			if (delay < fiveMinute && delay > -fiveMinute) {
 				m_serverStateManager.addProcessDelay(delay);
+			} else {
+				m_logger.warn("Error when compute the delay duration, " + delay);
 			}
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
@@ -410,56 +386,53 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	class MessageGzip implements Task {
 
-		public int m_index;
+		public BlockingQueue<MessageItem> m_messageQueue;
 
-		public MessageGzip(int index) {
-			m_index = index;
+		public MessageGzip(BlockingQueue<MessageItem> messageQueue) {
+			m_messageQueue = messageQueue;
 		}
 
 		@Override
 		public void run() {
 			try {
 				while (true) {
-					BlockingQueue<MessageItem> items = m_messageQueues.get(m_index);
-					if (items != null) {
-						MessageItem item = items.poll(5, TimeUnit.MILLISECONDS);
+					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
-						if (item != null) {
-							try {
-								MessageTree tree = item.getTree();
-								MessageId id = item.getMessageId();
+					if (item != null) {
+						try {
+							MessageTree tree = item.getTree();
+							MessageId id = item.getMessageId();
 
-								String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
-								String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+							String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
+							String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
 
-								LocalMessageBucket bucket = m_buckets.get(dataFile);
+							LocalMessageBucket bucket = m_buckets.get(dataFile);
 
-								if (bucket == null) {
-									bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-									bucket.setBaseDir(m_baseDir);
-									bucket.initialize(dataFile);
-									m_buckets.put(dataFile, bucket);
-								}
-
-								DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
-								ChannelBuffer buf = defaultTree.getBuf();
-
-								int size = buf.readableBytes();
-								m_totalSize += size;
-
-								MessageBlock bolck = bucket.storeMessage(buf, id);
-
-								if (bolck != null) {
-									if (!m_messageBlocks.offer(bolck)) {
-										m_logger.error("Error when offer the block to the dump!");
-									}
-								}
-							} catch (Exception e) {
-								Cat.logError(e);
+							if (bucket == null) {
+								bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+								bucket.setBaseDir(m_baseDir);
+								bucket.initialize(dataFile);
+								m_buckets.put(dataFile, bucket);
 							}
+
+							DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
+							ChannelBuffer buf = defaultTree.getBuf();
+
+							int size = buf.readableBytes();
+							m_totalSize += size;
+
+							MessageBlock bolck = bucket.storeMessage(buf, id);
+
+							if (bolck != null) {
+								if (!m_messageBlocks.offer(bolck)) {
+									m_serverStateManager.addBlockLoss(1);
+									m_logger.error("Error when offer the block to the dump!");
+								}
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
 						}
 					}
-
 				}
 			} catch (InterruptedException e) {
 				// ignore it
@@ -468,7 +441,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		@Override
 		public String getName() {
-			return "Message Gizp " + m_index;
+			return "Message-Gzip";
 		}
 
 		@Override
@@ -536,37 +509,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							}
 						}
 						m_success++;
+						m_serverStateManager.addBlockTotal(1);
 						if (m_success % 10000 == 0) {
 							m_logger.info("block queue size " + m_messageBlocks.size());
 						}
-					}
-				}
-			} catch (InterruptedException e) {
-				// ignore it
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
-
-	class IdleChecker implements Task {
-		@Override
-		public String getName() {
-			return "LocalMessageBucketManager-IdleChecker";
-		}
-
-		@Override
-		public void run() {
-			try {
-				while (true) {
-					Thread.sleep(60 * 1000L); // 1 minute
-
-					try {
-						closeIdleBuckets();
-					} catch (Throwable e) {
-						Cat.getProducer().logError(e);
 					}
 				}
 			} catch (InterruptedException e) {

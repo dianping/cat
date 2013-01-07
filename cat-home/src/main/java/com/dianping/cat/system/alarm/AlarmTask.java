@@ -34,6 +34,11 @@ public class AlarmTask implements Task {
 	@Override
 	public void run() {
 		boolean active = true;
+		try {
+			Thread.sleep(1000 * 10);
+		} catch (InterruptedException e) {
+			active = false;
+		}
 
 		while (active) {
 			long time = System.currentTimeMillis();
