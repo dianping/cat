@@ -29,7 +29,7 @@ public enum JspFile {
 
 	EXCEPTION_ALARM_RULE_LIST("/jsp/system/alarmExceptionRules.jsp"),
 	
-	EXCEPTION_ALARM_RULE_SUB("/jsp/system/alarmExceptionRules.jsp"),
+	EXCEPTION_ALARM_RULE_SUB("/jsp/system/alarmOpState.jsp"),
 
 	SCHEDULED_REPORT_ADD("/jsp/system/scheduledReportAdd.jsp"),
 
@@ -39,7 +39,7 @@ public enum JspFile {
 	
 	SCHEDULED_REPORT_LIST("/jsp/system/scheduledReports.jsp"),
 
-	SCHEDULED_REPORT_SUB("/jsp/system/scheduledReports.jsp"),
+	SCHEDULED_REPORT_SUB("/jsp/system/alarmOpState.jsp"),
 
 	SCHEDULED_REPORT_UPDATE("/jsp/system/scheduledReportUpdate.jsp"),
 
@@ -49,7 +49,7 @@ public enum JspFile {
 
 	SERVICE_ALARM_RULE_LIST("/jsp/system/alarmServiceRules.jsp"),
 
-	SERVICE_ALARM_RULE_SUB("/jsp/system/alarmServiceRules.jsp")
+	SERVICE_ALARM_RULE_SUB("/jsp/system/alarmOpState.jsp")
 
 	;
 
