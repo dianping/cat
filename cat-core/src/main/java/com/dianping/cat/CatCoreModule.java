@@ -26,27 +26,20 @@ public class CatCoreModule extends AbstractModule {
 	@Override
 	protected void execute(final ModuleContext ctx) throws Exception {
 		ctx.info("Current working directory is " + System.getProperty("user.dir"));
-
 		// initialize milli-second resolution level timer
 		MilliSecondTimer.initialize();
-
 		// disable thread renaming of Netty
 		ThreadRenamingRunnable.setThreadNameDeterminer(ThreadNameDeterminer.CURRENT);
-
 		// tracking thread start/stop
-		Threads.addListener(new CatThreadListener(ctx));
-
+		//Threads.addListener(new CatThreadListener(ctx));
 		File clientConfigFile = ctx.getAttribute("cat-client-config-file");
 		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
 
 		clientConfigManager.initialize(clientConfigFile);
-
 		// warm up Cat
 		Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
-
 		// bring up TransportManager
 		ctx.lookup(TransportManager.class);
-
 		// start status update task
 		if (clientConfigManager.isCatEnabled()) {
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);
@@ -67,7 +60,7 @@ public class CatCoreModule extends AbstractModule {
 		return null; // no dependencies
 	}
 
-	public final class CatThreadListener extends DefaultThreadListener {
+	public static final class CatThreadListener extends DefaultThreadListener {
 		private final ModuleContext m_ctx;
 
 		private CatThreadListener(ModuleContext ctx) {
