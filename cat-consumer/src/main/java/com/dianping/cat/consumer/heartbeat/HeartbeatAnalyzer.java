@@ -90,7 +90,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		try {
 			info = new com.dianping.cat.status.model.transform.DefaultDomParser().parse(xml);
 		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
+			m_logger.error("Error when parse status info in heartbeat analyzer." + xml, e);
 			Cat.getProducer().logEvent("HearbeatAnalyzer", "ErrorXml", "Error", xml);
 			return null;
 		}

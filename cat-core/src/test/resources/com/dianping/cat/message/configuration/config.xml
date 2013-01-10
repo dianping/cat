@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <config mode="client" enabled="true" dev-mode="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
    <base-log-dir>target/catlog</base-log-dir>
    <servers>

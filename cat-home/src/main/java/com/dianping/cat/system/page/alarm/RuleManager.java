@@ -188,7 +188,7 @@ public class RuleManager {
 		}
 	}
 
-	public void ruleSub(Payload payload, int loginId) {
+	public boolean ruleSub(Payload payload, int loginId) {
 		int subState = payload.getUserSubState();
 		int alarmRuleId = payload.getAlarmRuleId();
 
@@ -207,7 +207,9 @@ public class RuleManager {
 			}
 		} catch (DalException e) {
 			Cat.logError(e);
+			return false;
 		}
+		return true;
 	}
 
 	public void ruleUpdate(Payload payload, Model model) {

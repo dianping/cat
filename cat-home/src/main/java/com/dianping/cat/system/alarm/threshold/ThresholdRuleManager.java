@@ -196,7 +196,7 @@ public class ThresholdRuleManager implements Initializable {
 	}
 
 	private ThresholdTemplate mergerTemplate(ThresholdTemplate baseTemplate, String newContent) {
-		if (newContent == null || newContent.length() > 0) {
+		if (newContent != null && newContent.trim().length() > 0) {
 			try {
 				ThresholdTemplate newTemplate = DefaultSaxParser.parse(newContent);
 				ThresholdTemplateMerger merger = new ThresholdTemplateMerger(new ThresholdTemplate());
@@ -237,7 +237,7 @@ public class ThresholdRuleManager implements Initializable {
 						ThresholdTemplate template = mergerTemplate(baseTemplate, newContent);
 						ThresholdRule rule = addExceptionRule(alarmRule, template);
 						m_exceptionModifyTimes.put(alarmRule.getId(), alarmRule.getModifyDate());
-						
+
 						Cat.getProducer().logEvent(ALARM_RULE, "ExceptionAdd", Event.SUCCESS, rule.toString());
 					} else {
 						Date modifyDate = alarmRule.getModifyDate();

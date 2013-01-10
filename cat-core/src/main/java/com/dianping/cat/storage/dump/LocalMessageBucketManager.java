@@ -328,8 +328,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		String domain = id.getDomain() + id.getIpAddress();
-		int bucketIndex = Math.abs(domain.hashCode()) % m_gzipThreads;
-
+		int abs = domain.hashCode();
+		if (abs < 0) {
+			abs = -abs;
+		}
+		int bucketIndex = abs % m_gzipThreads;
 		if (bucketIndex > m_gzipThreads || bucketIndex < 0) {
 			m_logger.error("Error when compute the message bucket index!" + bucketIndex);
 		} else {

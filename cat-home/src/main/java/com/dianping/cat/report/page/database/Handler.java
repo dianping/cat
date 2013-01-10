@@ -27,7 +27,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ReportService m_reportService;
-	
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -105,9 +105,10 @@ public class Handler implements PageHandler<Context> {
 			payload.setDatabase("cat");
 		}
 		model.setDatabase(payload.getDatabase());
-		model.setDisplayDomain(payload.getDomain());
-		model.setDomain(payload.getDomain());
-
+		if (!payload.getDomain().equals("All")) {
+			model.setDisplayDomain(payload.getDomain());
+			model.setDomain(payload.getDomain());
+		}
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());
 		} else {
@@ -133,7 +134,7 @@ public class Handler implements PageHandler<Context> {
 
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		
+
 		return m_reportService.queryDatabaseReport(database, start, end);
 	}
 }

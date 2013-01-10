@@ -183,7 +183,9 @@ public class DumpUploader implements Initializable, LogEnabled {
 						m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
 					} finally {
 						try {
-							fdos.close();
+							if (fdos != null) {
+								fdos.close();
+							}
 						} catch (IOException e) {
 							Cat.logError(e);
 						}

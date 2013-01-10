@@ -45,10 +45,10 @@
 						<td>${item.alarmRule.domain}</td>
 						<td><c:choose>
 								<c:when test="${item.subscriberState == 0}">
-									<a href="?op=serviceAlarmRuleSub&alarmRuleId=${item.alarmRule.id}&subState=0">订阅</a>
+									<a href="?op=serviceAlarmRuleSub&alarmRuleId=${item.alarmRule.id}&subState=0" onclick="return sub(this)">订阅</a>
 								</c:when>
 								<c:otherwise>
-									<a href="?op=serviceAlarmRuleSub&alarmRuleId=${item.alarmRule.id}&subState=1">取消</a>
+									<a href="?op=serviceAlarmRuleSub&alarmRuleId=${item.alarmRule.id}&subState=1" onclick="return sub(this)">取消</a>
 								</c:otherwise>
 							</c:choose> 
 							<a href="?op=alarmRuleUpdate&alarmRuleId=${item.alarmRule.id}"  target="_blank">编辑</a> 

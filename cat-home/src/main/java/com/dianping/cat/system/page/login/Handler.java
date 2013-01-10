@@ -59,7 +59,8 @@ public class Handler implements PageHandler<Context> {
 					return;
 				}
 			} else {
-				ctx.addError(new ErrorObject("biz.login.input").addArgument("account", account).addArgument("password", password));
+				ctx.addError(new ErrorObject("biz.login.input").addArgument("account", account).addArgument("password",
+				      password));
 			}
 		} else if (action == Action.LOGOUT) {
 			SigninContext sc = createSigninContext(ctx);

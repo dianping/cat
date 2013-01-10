@@ -84,7 +84,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "state-local")
 	private LocalStateService m_stateService;
-	
+
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
 		String ipAddress = payload.getIpAddress();
@@ -130,7 +130,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			SqlReportFilter filter = new SqlReportFilter(database);
 
 			return filter.buildXml((com.dianping.cat.consumer.sql.model.IEntity<?>) dataModel);
-		}  else {
+		} else {
 			return String.valueOf(dataModel);
 		}
 	}
@@ -194,10 +194,12 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}
 
-			Object dataModel = response.getModel();
+			if (response != null) {
+				Object dataModel = response.getModel();
 
-			model.setModel(dataModel);
-			model.setModelInXml(dataModel == null ? "" : doFilter(payload, dataModel));
+				model.setModel(dataModel);
+				model.setModelInXml(dataModel == null ? "" : doFilter(payload, dataModel));
+			}
 		} catch (Throwable e) {
 			model.setException(e);
 			Cat.logError(e);
@@ -442,5 +444,5 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 			}
 		}
 	}
-	
+
 }
