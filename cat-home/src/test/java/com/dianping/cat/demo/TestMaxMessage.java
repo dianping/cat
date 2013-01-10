@@ -108,22 +108,23 @@ public class TestMaxMessage {
 	}
 
 	@Test
-	public void test(){
-		
-		System.out.println(testTime(1356973200000l,1356981928482l));
-		double ttt =843E2;
+	public void test() {
+
+		System.out.println(testTime(1356973200000l, 1356981928482l));
+		double ttt = 843E2;
 		System.out.println(ttt);
-		
-		double tt =Double.parseDouble("843E2");
+
+		double tt = Double.parseDouble("843E2");
 		System.out.println(tt);
 	}
-	
-	public double testTime(long time,long time2) {
-		SimpleDateFormat sdf =new SimpleDateFormat("yyyy-MM-dd HH:mm");
+
+	public double testTime(long time, long time2) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		System.out.println(sdf.format(new Date(time)));
 		System.out.println(sdf.format(new Date(time2)));
 		time2 = time2 - time2 % (60 * 60 * 1000);
-		return  (double)(time-time2)/(60*60*1000.0);
+		return (double) (time - time2) / (60 * 60 * 1000.0);
+
 	}
 
 }

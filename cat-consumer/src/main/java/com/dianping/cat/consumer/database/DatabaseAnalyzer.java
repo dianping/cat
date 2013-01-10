@@ -104,6 +104,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 			}
 		}
 
+		m_logger.error("Error connection url:"+url);
 		return "Unknown";
 	}
 

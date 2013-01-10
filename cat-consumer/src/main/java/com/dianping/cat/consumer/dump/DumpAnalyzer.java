@@ -133,10 +133,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			Integer size = m_oldVersionDomains.get(domain);
 
 			if (size == null) {
-				m_oldVersionDomains.put(domain, new Integer(1));
+				size = 1;
 			} else {
 				size++;
 			}
+			m_oldVersionDomains.put(domain, size);
 		}
 	}
 

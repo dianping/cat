@@ -103,6 +103,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 			}
 		}
 
+		m_logger.error("Error connection url:"+url);
 		return "Unknown";
 	}
 
