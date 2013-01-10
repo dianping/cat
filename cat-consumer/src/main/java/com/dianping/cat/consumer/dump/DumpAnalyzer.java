@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -36,8 +37,8 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	@Inject
 	private ServerStateManager m_serverStateManager;
-	
-	private Set<String> m_oldVersionDomains = new HashSet<String>();
+
+	private Map<String, Integer> m_oldVersionDomains = new HashMap<String, Integer>();
 
 	private boolean m_localMode = true;
 
@@ -128,7 +129,14 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 				m_logger.error("Error when dumping to local file system, version 2!", e);
 			}
 		} else {
-			m_oldVersionDomains.add(tree.getDomain());
+			String domain = tree.getDomain();
+			Integer size = m_oldVersionDomains.get(domain);
+
+			if (size == null) {
+				m_oldVersionDomains.put(domain, new Integer(1));
+			} else {
+				size++;
+			}
 		}
 	}
 

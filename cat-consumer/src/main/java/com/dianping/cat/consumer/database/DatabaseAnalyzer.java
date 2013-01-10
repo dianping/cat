@@ -80,16 +80,31 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		m_logger = logger;
 	}
 
-	private String getDataBaseName(String url) {
-		try {
-			int index = url.indexOf("://");
-			String temp = url.substring(index + 3);
-			index = temp.indexOf("/");
-			int index2 = temp.indexOf("?");
-			String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
-			return schema;
-		} catch (Exception e) {
+	public String getDataBaseName(String url) {
+		if (url != null) {
+			if (url.indexOf("mysql") > -1) {
+				try {
+					int index = url.indexOf("://");
+					String temp = url.substring(index + 3);
+					index = temp.indexOf("/");
+					int index2 = temp.indexOf("?");
+					String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
+					return schema;
+				} catch (Exception e) {
+				}
+			} else if (url.indexOf("sqlserver") > -1) {
+				String temp = url.substring(url.indexOf("databaseName"));
+
+				int first = temp.indexOf("=");
+				int end = temp.indexOf(";");
+
+				if (first > -1 && end > -1) {
+					return temp.substring(first + 1, end);
+				}
+			}
+
 		}
+
 		return "Unknown";
 	}
 
@@ -199,7 +214,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-		
+
 		t.setStatus(Message.SUCCESS);
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "database");
