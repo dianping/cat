@@ -104,6 +104,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		if (report == null) {
 			report = new TransactionReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
 		report.getDomainNames().addAll(m_reports.keySet());
 		report.accept(new StatisticsComputer());

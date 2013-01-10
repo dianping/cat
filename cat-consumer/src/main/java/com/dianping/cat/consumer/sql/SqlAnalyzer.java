@@ -80,16 +80,29 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	}
 
 	private String getDataBaseName(String url) {
-		try {
-			int index = url.indexOf("://");
-			String temp = url.substring(index + 3);
-			index = temp.indexOf("/");
-			int index2 = temp.indexOf("?");
-			String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
-			
-			return schema;
-		} catch (Exception e) {
+		if (url != null) {
+			if (url.indexOf("mysql") > -1) {
+				try {
+					int index = url.indexOf("://");
+					String temp = url.substring(index + 3);
+					index = temp.indexOf("/");
+					int index2 = temp.indexOf("?");
+					String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
+					return schema;
+				} catch (Exception e) {
+				}
+			} else if (url.indexOf("sqlserver") > -1) {
+				String temp = url.substring(url.indexOf("databaseName"));
+
+				int first = temp.indexOf("=");
+				int end = temp.indexOf(";");
+
+				if (first > -1 && end > -1) {
+					return temp.substring(first + 1, end);
+				}
+			}
 		}
+
 		return "Unknown";
 	}
 
@@ -103,6 +116,9 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 		if (report == null) {
 			report = new SqlReport(domain);
+			
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
 
 		report.getDomainNames().addAll(m_reports.keySet());

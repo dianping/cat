@@ -155,6 +155,9 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 		if (report == null) {
 			report = new HeartbeatReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
 		report.getDomainNames().addAll(m_reports.keySet());
 

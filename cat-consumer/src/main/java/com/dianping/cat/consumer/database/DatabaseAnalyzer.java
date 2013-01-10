@@ -102,7 +102,6 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 					return temp.substring(first + 1, end);
 				}
 			}
-
 		}
 
 		return "Unknown";
@@ -118,6 +117,9 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 
 		if (report == null) {
 			report = new DatabaseReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
 
 		report.getDatabaseNames().addAll(m_reports.keySet());
