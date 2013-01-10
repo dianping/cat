@@ -36,7 +36,7 @@ public class TransactionReportFilterTest {
 
 		int newSize = newReport.findMachine("10.1.77.193").findType("URL").getNames().size();
 
-		Assert.assertEquals(201, newSize);
+		Assert.assertEquals(199, newSize);
 
 		String url = "/topic/341739¬g&quot;";
 

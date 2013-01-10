@@ -113,7 +113,7 @@ public class ScheduledManager {
 		}
 	}
 
-	public void scheduledReportSub(Payload payload, int loginId) {
+	public boolean scheduledReportSub(Payload payload, int loginId) {
 		int subState = payload.getUserSubState();
 		int scheduledReportId = payload.getScheduledReportId();
 
@@ -132,7 +132,9 @@ public class ScheduledManager {
 			}
 		} catch (DalException e) {
 			Cat.logError(e);
+			return false;
 		}
+		return true;
 	}
 
 	public void scheduledReportUpdate(Payload payload, Model model) {

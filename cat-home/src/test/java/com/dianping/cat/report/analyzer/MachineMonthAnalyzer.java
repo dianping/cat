@@ -114,7 +114,7 @@ public class MachineMonthAnalyzer extends ComponentTestCase {
 		}
 
 		public DomainInfo findOrCreatDomain(Date date) {
-			DomainInfo info = m_infos.get(date);
+			DomainInfo info = m_infos.get(date.getTime());
 			if (info == null) {
 				info = new DomainInfo();
 				m_infos.put(date.getTime(), info);

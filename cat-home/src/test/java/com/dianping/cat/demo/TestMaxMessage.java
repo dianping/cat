@@ -110,7 +110,12 @@ public class TestMaxMessage {
 	@Test
 	public void test(){
 		
-		System.out.println(testTime(1356973200000l,1356981928482l));	
+		System.out.println(testTime(1356973200000l,1356981928482l));
+		double ttt =843E2;
+		System.out.println(ttt);
+		
+		double tt =Double.parseDouble("843E2");
+		System.out.println(tt);
 	}
 	
 	public double testTime(long time,long time2) {

@@ -47,10 +47,10 @@
 						<td>${item.scheduledReport.names}</td>
 						<td><c:choose>
 								<c:when test="${item.subscriberState == 0}">
-									<a href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=0">订阅</a>
+									<a href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=0" onclick="return sub(this)">订阅</a>
 								</c:when>
 								<c:otherwise>
-									<a href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=1">取消</a>
+									<a href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=1" onclick="return sub(this)">取消</a>
 								</c:otherwise>
 							</c:choose> 
 							<a href="?op=scheduledReportUpdate&scheduledReportId=${item.scheduledReport.id}"  target="_blank">编辑</a> 

@@ -52,6 +52,7 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 		int userId = getLoginUserId(ctx);
+		boolean result = false;
 
 		switch (action) {
 		case ALARM_RECORD_LIST:
@@ -74,8 +75,12 @@ public class Handler implements PageHandler<Context> {
 			m_ruleManager.queryExceptionRuleList(model, userId);
 			break;
 		case EXCEPTION_ALARM_RULE_SUB:
-			m_ruleManager.ruleSub(payload, userId);
-			m_ruleManager.queryExceptionRuleList(model, userId);
+			result = m_ruleManager.ruleSub(payload, userId);
+			if (result) {
+				model.setOpState(SUCCESS);
+			} else {
+				model.setOpState(FAIL);
+			}
 			break;
 		case EXCEPTION_ALARM_RULE_LIST:
 			m_ruleManager.queryExceptionRuleList(model, userId);
@@ -104,8 +109,12 @@ public class Handler implements PageHandler<Context> {
 			m_ruleManager.queryServiceRuleList(model, userId);
 			break;
 		case SERVICE_ALARM_RULE_SUB:
-			m_ruleManager.ruleSub(payload, userId);
-			m_ruleManager.queryServiceRuleList(model, userId);
+			result = m_ruleManager.ruleSub(payload, userId);
+			if (result) {
+				model.setOpState(SUCCESS);
+			} else {
+				model.setOpState(FAIL);
+			}
 			break;
 		case ALARM_RECORD_DETAIL:
 			m_recordManager.queryAlarmRecordDetail(payload, model);
@@ -130,8 +139,12 @@ public class Handler implements PageHandler<Context> {
 			m_scheduledManager.scheduledReportUpdateSubmit(payload, model);
 			break;
 		case SCHEDULED_REPORT_SUB:
-			m_scheduledManager.scheduledReportSub(payload, userId);
-			m_scheduledManager.queryScheduledReports(model, userId);
+			result = m_scheduledManager.scheduledReportSub(payload, userId);
+			if (result) {
+				model.setOpState(SUCCESS);
+			} else {
+				model.setOpState(FAIL);
+			}
 			break;
 		case REPORT_RECORD_LIST:
 			m_recordManager.queryUserReportRecords(model, userId);

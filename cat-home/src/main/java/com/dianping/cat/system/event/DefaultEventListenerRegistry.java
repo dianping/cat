@@ -20,10 +20,7 @@ public class DefaultEventListenerRegistry implements EventListenerRegistry {
 	@Override
 	public void register(EventListener listener) {
 		synchronized (m_listeners) {
-			if (m_listeners == null) {
-				m_listeners = new ArrayList<EventListener>();
-			}
-			m_listeners.add((EventListener) listener);
+			m_listeners.add(listener);
 		}
 	}
 

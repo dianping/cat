@@ -235,7 +235,10 @@ public class TcpSocketReceiver implements LogEnabled {
 				m_error++;
 				if (m_error % CatConstants.ERROR_COUNT == 0) {
 					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
-					m_logger.warn("The server can't process the tree! overflow : " + m_error);
+
+					if (m_error % (CatConstants.ERROR_COUNT * 100) == 0) {
+						m_logger.warn("The server can't process the tree! overflow : " + m_error);
+					}
 				}
 			} else {
 				m_process++;
