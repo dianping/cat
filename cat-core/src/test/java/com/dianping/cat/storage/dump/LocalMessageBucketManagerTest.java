@@ -75,6 +75,8 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 		}
 
 		Thread.yield();
+		
+		Thread.sleep(3000);
 
 		manager.loadMessage("source-7f000001-373203-1");
 		
