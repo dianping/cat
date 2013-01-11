@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.state;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -51,19 +52,21 @@ public class StateGraphs {
 
 		HistoryGraphItem item = new HistoryGraphItem();
 		item.setStart(start).setSize(60).setTitles(key).setStep(TimeUtil.ONE_MINUTE);
-		item.addValue(getDataFromHourlyDetail(report, 24, key, ip));
+		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));
 		return item;
 	}
 
-	private double[] getDataFromHourlyDetail(StateReport report, int size, String key, String ip) {
+	private double[] getDataFromHourlyDetail(StateReport report, long start, int size, String key, String ip) {
 		double[] result = new double[size];
 		StateShow show = new StateShow(ip);
 		show.visitStateReport(report);
-
-		Machine machine = show.getTotal();
-		Map<Long, Message> messages = machine.getMessages();
+		
+		Map<Long, Message> messages = show.getMessagesMap();
+		System.out.println(report);
+		System.out.println(messages.size());
+		System.out.println(messages);
 		for (int i = 0; i < size; i++) {
-			Message message = messages.get(i);
+			Message message = messages.get(i * 60 * 1000 + start);
 
 			if (message != null) {
 				if (key.equalsIgnoreCase("total")) {
@@ -97,6 +100,7 @@ public class StateGraphs {
 				}
 			}
 		}
+		System.out.println(Arrays.toString(result));
 		return result;
 	}
 
