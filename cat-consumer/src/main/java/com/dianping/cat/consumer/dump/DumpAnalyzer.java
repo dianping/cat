@@ -1,9 +1,7 @@
 package com.dianping.cat.consumer.dump;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -40,11 +38,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 
 	private Map<String, Integer> m_oldVersionDomains = new HashMap<String, Integer>();
 
+	private Map<String, Integer> m_errorTimestampDomains = new HashMap<String, Integer>();
+
 	private boolean m_localMode = true;
 
 	private static final long HOUR = 60 * 60 * 1000L;
-
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	private Logger m_logger;
 
@@ -64,6 +62,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			t.complete();
 		}
 		m_logger.info("old version domains:" + m_oldVersionDomains);
+		m_logger.info("Error timestamp:" + m_errorTimestampDomains);
 	}
 
 	@Override
@@ -109,6 +108,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		}
 
 		MessageId id = MessageId.parse(tree.getMessageId());
+		String domain = tree.getDomain();
 
 		if (id.getVersion() == 2) {
 			try {
@@ -121,15 +121,20 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 					m_bucketManager.storeMessage(tree, id);
 				} else {
 					m_serverStateManager.addPigeonTimeError(1);
-					m_logger.error("timestamp:" + tree.getMessageId() + ",id timestamp " + m_sdf.format(new Date(idTime))
-					      + " " + id.getIpAddress() + " ,tree timestamp:" + m_sdf.format(new Date(time)) + " "
-					      + tree.getIpAddress() + " duration:" + duration);
+
+					Integer size = m_errorTimestampDomains.get(domain);
+
+					if (size == null) {
+						size = 1;
+					} else {
+						size++;
+					}
+					m_errorTimestampDomains.put(domain, size);
 				}
 			} catch (IOException e) {
 				m_logger.error("Error when dumping to local file system, version 2!", e);
 			}
 		} else {
-			String domain = tree.getDomain();
 			Integer size = m_oldVersionDomains.get(domain);
 
 			if (size == null) {

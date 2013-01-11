@@ -15,10 +15,12 @@ import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
+import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -29,6 +31,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_manager;
+
+	@Inject
+	private StateGraphs m_stateGraphs;
 
 	@Inject(type = ModelService.class, value = "state")
 	private ModelService<StateReport> m_service;
@@ -73,7 +78,9 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 
 		normalize(model, payload);
+		String key = payload.getKey();
 		StateReport report = null;
+		HistoryGraphItem item = null;
 		switch (action) {
 		case HOURLY:
 			report = getHourlyReport(payload);
@@ -81,13 +88,26 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY:
 			report = getHistoryReport(payload);
 			break;
+		case GRAPH:
+			report = getHourlyReport(payload);
+			item = m_stateGraphs.buildHistoryGraph(report,payload.getDomain(), payload.getHistoryStartDate(),
+			      payload.getHistoryEndDate(), "graph", key, payload.getIpAddress());
+			break;
+		case HISTORY_GRAPH:
+			item = m_stateGraphs.buildHistoryGraph(null,payload.getDomain(), payload.getHistoryStartDate(),
+			      payload.getHistoryEndDate(), "historyGraph", key, payload.getIpAddress());
+			break;
 		}
 
-		StateShow show = new StateShow(payload.getIpAddress());
-		show.visitStateReport(report);
-		model.setState(show);
-		model.setReport(report);
-
+		if (action == Action.HOURLY || action == Action.HISTORY) {
+			StateShow show = new StateShow(payload.getIpAddress());
+			show.visitStateReport(report);
+			model.setState(show);
+			model.setReport(report);
+		} else {
+			Gson gson = new Gson();
+			model.setGraph(gson.toJson(item));
+		}
 		m_jspViewer.view(ctx, model);
 	}
 

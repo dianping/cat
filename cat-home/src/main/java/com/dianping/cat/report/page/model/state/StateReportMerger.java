@@ -37,6 +37,7 @@ public class StateReportMerger extends DefaultMerger {
 
 		old.setBlockTotal(old.getBlockTotal() + machine.getBlockTotal());
 		old.setBlockLoss(old.getBlockLoss() + machine.getBlockLoss());
+		old.setBlockTime(old.getBlockTime() + machine.getBlockTime());
 		old.setPigeonTimeError(old.getPigeonTimeError() + machine.getPigeonTimeError());
 		old.setNetworkTimeError(old.getNetworkTimeError() + machine.getNetworkTimeError());
 
@@ -66,6 +67,7 @@ public class StateReportMerger extends DefaultMerger {
 		old.setDelaySum(message.getDelaySum());
 		old.setBlockTotal(message.getBlockTotal());
 		old.setBlockLoss(message.getBlockLoss());
+		old.setBlockTime(message.getBlockTime());
 		old.setPigeonTimeError(message.getPigeonTimeError());
 		old.setNetworkTimeError(message.getNetworkTimeError());
 	}

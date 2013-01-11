@@ -88,6 +88,10 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			long blockLoss = state.getBlockLoss();
 			temp.setBlockLoss(blockLoss);
 			machine.setBlockLoss(machine.getBlockLoss() + blockLoss);
+
+			long blockTime = state.getBlockTime();
+			temp.setBlockTime(blockTime);
+			machine.setBlockTime(machine.getBlockTime() + blockTime);
 			
 			long pigeonTimeError = state.getPigeonTimeError();
 			temp.setPigeonTimeError(pigeonTimeError);

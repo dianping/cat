@@ -423,6 +423,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.state.StateGraphs</role>
+			<implementation>com.dianping.cat.report.page.state.StateGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-home</role-hint>
 			<implementation>com.dianping.cat.CatHomeModule</implementation>
@@ -2546,6 +2555,9 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.state.StateGraphs</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>state</role-hint>
 					<field-name>m_service</field-name>
@@ -2555,6 +2567,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.state.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.state.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.state.StateGraphs</role>
+			<implementation>com.dianping.cat.report.page.state.StateGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

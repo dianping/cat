@@ -29,6 +29,7 @@ import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
+import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.service.MonthReportCache;
@@ -157,6 +158,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
 
 		all.add(C(HistoryGraphs.class, HistoryGraphs.class).//
+		      req(ReportService.class));
+		
+		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportService.class));
 
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));

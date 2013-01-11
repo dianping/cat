@@ -98,6 +98,7 @@ public class StateShow extends BaseVisitor {
 		total.setDelayCount(total.getDelayCount() + machine.getDelayCount());
 		total.setBlockTotal(total.getBlockTotal() + machine.getBlockTotal());
 		total.setBlockLoss(total.getBlockLoss() + machine.getBlockLoss());
+		total.setBlockTime(total.getBlockTime() + machine.getBlockTime());
 		total.setPigeonTimeError(total.getPigeonTimeError() + machine.getPigeonTimeError());
 		total.setNetworkTimeError(total.getNetworkTimeError() + machine.getNetworkTimeError());
 
@@ -123,6 +124,7 @@ public class StateShow extends BaseVisitor {
 		total.setTotalLoss(total.getTotalLoss() + message.getTotalLoss());
 		total.setBlockTotal(total.getBlockTotal() + message.getBlockTotal());
 		total.setBlockLoss(total.getBlockLoss() + message.getBlockLoss());
+		total.setBlockTime(total.getBlockTime() + message.getBlockTime());
 		total.setPigeonTimeError(total.getPigeonTimeError() + message.getPigeonTimeError());
 		total.setNetworkTimeError(total.getNetworkTimeError() + message.getNetworkTimeError());
 	}

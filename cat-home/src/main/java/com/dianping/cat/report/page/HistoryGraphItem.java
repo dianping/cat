@@ -13,6 +13,8 @@ public class HistoryGraphItem {
 	private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
 	private int size;
+	
+	private long step;
 
 	private String start;
 
@@ -99,4 +101,13 @@ public class HistoryGraphItem {
 		}
 		return this;
 	}
+
+	public long getStep() {
+		return step;
+	}
+
+	public void setStep(long step) {
+		this.step = step;
+	}
+	
 }

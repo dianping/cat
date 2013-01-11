@@ -11,6 +11,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("op")
 	private Action m_action;
+	
+	@FieldMeta("key")
+	private String m_key;
 
 	public Payload() {
 		super(ReportPage.STATE);
@@ -33,6 +36,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.STATE);
+	}
+	
+	public String getKey() {
+		return m_key;
+	}
+
+	public void setKey(String key) {
+		m_key = key;
 	}
 
 	@Override

@@ -18,6 +18,12 @@ public class ServerStateManager {
 		m_serverState.findOrCreate(time).addBlockLoss(total);
 	}
 
+	public void addBlockTime(long total) {
+		Long time = getCurrentMinute();
+
+		m_serverState.findOrCreate(time).addBlockTime(total);
+	}
+
 	public void addPigeonTimeError(long total) {
 		Long time = getCurrentMinute();
 
@@ -46,7 +52,6 @@ public class ServerStateManager {
 		Long time = getCurrentMinute();
 
 		m_serverState.findOrCreate(time).addMessageSize(size);
-
 	}
 
 	public void addMessageTotal(long total) {

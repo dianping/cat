@@ -373,7 +373,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			if (delay < fiveMinute && delay > -fiveMinute) {
 				m_serverStateManager.addProcessDelay(delay);
 			} else {
-				m_logger.warn("Error when compute the delay duration, " + delay);
+				m_logger.error("Error when compute the delay duration, " + delay);
 			}
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
