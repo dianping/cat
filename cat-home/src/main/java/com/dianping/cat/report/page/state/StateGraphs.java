@@ -62,9 +62,6 @@ public class StateGraphs {
 		show.visitStateReport(report);
 		
 		Map<Long, Message> messages = show.getMessagesMap();
-		System.out.println(report);
-		System.out.println(messages.size());
-		System.out.println(messages);
 		for (int i = 0; i < size; i++) {
 			Message message = messages.get(i * 60 * 1000 + start);
 
@@ -100,7 +97,6 @@ public class StateGraphs {
 				}
 			}
 		}
-		System.out.println(Arrays.toString(result));
 		return result;
 	}
 
