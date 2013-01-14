@@ -5,8 +5,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
@@ -63,13 +65,15 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private Set<String> m_domains = new HashSet<String>();
 
+	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
+
 	private Logger m_logger;
 
 	private PeriodManager m_periodManager;
 
-	private long m_lastTime = 0;
-
 	private CountDownLatch m_latch;
+
+	private long m_networkError;
 
 	@Override
 	public void consume(MessageTree tree) {
@@ -91,13 +95,21 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				m_domains.add(domain);
 			}
 		} else {
-			long now = System.currentTimeMillis();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
-
 			m_serverStateManager.addNetworkTimeError(1);
-			// ensure not output too much, and then run out of disk
-			if (now - m_lastTime > 1000L) {
-				m_lastTime = now;
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
+			String domain = tree.getDomain();
+			Integer size = m_errorTimeDomains.get(domain);
+
+			if (size == null) {
+				size = 1;
+			} else {
+				size++;
+			}
+			m_errorTimeDomains.put(domain, size);
+
+			m_networkError++;
+			if (m_networkError % CatConstants.ERROR_COUNT == 0) {
+				m_logger.error("Error network time:" + m_errorTimeDomains);
 				m_logger.warn("The timestamp of message is out of range, IGNORED! "
 				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "
 				      + tree.getIpAddress());
