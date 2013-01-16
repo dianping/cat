@@ -1,0 +1,14 @@
+.graph {
+	width: 450px;
+	height: 200px;
+	margin: 4px auto;
+}
+.first{
+	background-color:blue;
+}
+.second{
+	background-color:yellow;
+}
+.third{
+	background-color:red;
+}

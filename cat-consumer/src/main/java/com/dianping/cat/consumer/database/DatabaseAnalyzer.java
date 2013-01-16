@@ -64,6 +64,9 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 			String tables = m_sqlParseManeger.getTableNames(sqlName, sqlStatement, domain);
 			String database = getDataBaseName(connection);
 
+			if (database == null) {
+				database = "Unknown";
+			}
 			item.setDatabase(database).setTables(tables).setMethod(method).setConnectionUrl(connection);
 			return item;
 		}
@@ -104,8 +107,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 			}
 		}
 
-		m_logger.error("Error connection url:"+url);
-		return "Unknown";
+		return null;
 	}
 
 	@Override

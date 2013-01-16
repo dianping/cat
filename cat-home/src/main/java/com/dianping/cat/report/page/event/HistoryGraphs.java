@@ -77,36 +77,77 @@ public class HistoryGraphs {
 		return result;
 	}
 
+	private HistoryGraphItem buildTotal(List<Map<String, double[]>> datas, Date start, int size, String name) {
+		HistoryGraphItem item = new HistoryGraphItem();
+
+		item.setStart(start);
+		item.setSize(size);
+		item.setTitles(name + " Hits (count)");
+
+		for (Map<String, double[]> data : datas) {
+			double[] totalCount = data.get("total_count");
+			item.addValue(totalCount);
+		}
+		return item;
+	}
+
+	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size, String name) {
+		HistoryGraphItem item = new HistoryGraphItem();
+
+		item.setStart(start);
+		item.setSize(size);
+		item.setTitles(name + " Error (count)");
+
+		for (Map<String, double[]> data : datas) {
+			item.addValue(data.get("failure_count"));
+		}
+		return item;
+	}
+
 	public void buildTrendGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		String type = payload.getType();
 		String name = payload.getName();
 		String display = name != null ? name : type;
+		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+		String queryType = payload.getReportType();
+		List<Map<String, double[]>> allDatas = new ArrayList<Map<String, double[]>>();
+		
+		if (queryType.equalsIgnoreCase("day")) {
+			Map<String, double[]> currentGraph = getGraphDatas(start, end, model, payload);
+			Map<String, double[]> lastDayGraph = getGraphDatas(new Date(start.getTime() - TimeUtil.ONE_DAY),
+			      new Date(end.getTime() - TimeUtil.ONE_DAY), model, payload);
+			Map<String, double[]> lastWeekGraph = getGraphDatas(new Date(start.getTime() - TimeUtil.ONE_WEEK), new Date(
+			      end.getTime() - TimeUtil.ONE_WEEK), model, payload);
 
-		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 12);
+			allDatas.add(currentGraph);
+			allDatas.add(lastDayGraph);
+			allDatas.add(lastWeekGraph);
+		} else if (queryType.equalsIgnoreCase("week")) {
+			Map<String, double[]> currentGraph = getGraphDatas(start, end, model, payload);
+			Map<String, double[]> lastWeek = getGraphDatas(new Date(start.getTime() - TimeUtil.ONE_WEEK),
+			      new Date(end.getTime() - TimeUtil.ONE_WEEK), model, payload);
 
-		HistoryGraphItem item = new HistoryGraphItem();
-		item.setStart(start);
-		item.setSize(size);
+			allDatas.add(currentGraph);
+			allDatas.add(lastWeek);
+		} else if (queryType.equalsIgnoreCase("month")) {
+			Map<String, double[]> graphData = getGraphDatas(start, end, model, payload);
+			
+			allDatas.add(graphData);
+		} else {
+			throw new RuntimeException("Error graph query type");
+		}
 
-		Map<String, double[]> graphData = getGraphDatas(model, payload);
-		double[] failureCount = graphData.get("failure_count");
-		double[] totalCount = graphData.get("total_count");
-
-		item.setTitles(display + " Hit Trend");
-		item.addValue(totalCount);
+		HistoryGraphItem item = buildTotal(allDatas, start, size, display);
 		model.setHitTrend(item.getJsonString());
 
-		item.getValues().clear();
-		item.setTitles(display + " Failure Trend");
-		item.addValue(failureCount);
+		item = buildFail(allDatas, start, size, display);
 		model.setFailureTrend(item.getJsonString());
 	}
+	
 
-	public Map<String, double[]> getGraphDatas(Model model, Payload payload) {
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
+	public Map<String, double[]> getGraphDatas(Date start,Date end,Model model, Payload payload) {
 		String domain = model.getDomain();
 		String type = payload.getType();
 		String name = payload.getName();

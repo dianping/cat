@@ -179,7 +179,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket.setBaseDir(m_baseDir);
 						bucket.initialize(dataFile);
 						m_buckets.put(dataFile, bucket);
-						m_logger.info("create local message bucket by read message tree,path:" + m_baseDir + dataFile);
 					}
 				}
 
@@ -250,7 +249,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket.archive();
 
 						Cat.getProducer().logEvent("Dump", "Outbox.Normal", Message.SUCCESS, loginfo);
-						m_logger.info("move data file to outbox normal, " + loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);
@@ -263,7 +261,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						moveFile(path + ".idx");
 
 						Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, loginfo);
-						m_logger.info("move data file to outbox abnormal, " + loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);
