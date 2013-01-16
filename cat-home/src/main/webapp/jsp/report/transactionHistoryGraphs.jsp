@@ -8,10 +8,10 @@
 
 <table>
 	<tr>
-		<td colspan="3">日报表：<a href="#" class="first">&nbsp;&nbsp;</a>表示当前这一天；<a href="#" class="second">&nbsp;&nbsp;</a>表示上一天；<a href="#"  class="third">&nbsp;&nbsp;</a>表示上周这一天</td>
+		<td colspan="3">日报表：<a href="#" class="first">&nbsp;&nbsp;</a>表示From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}；<a href="#" class="second">&nbsp;&nbsp;</a>表示上一天；<a href="#"  class="third">&nbsp;&nbsp;</a>表示上周这一天</td>
 	</tr>
 	<tr>
-		<td colspan="3">周报表：<a href="#" class="first">&nbsp;&nbsp;</a>表示当前这一周；<a href="#" class="second">&nbsp;&nbsp;</a>表示上一周</td>
+		<td colspan="3">周报表：<a href="#" class="first">&nbsp;&nbsp;</a>表示当前From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}；<a href="#" class="second">&nbsp;&nbsp;</a>表示上一周</td>
 	</tr>
 	<tr>
 		<td><div id="responseTrend" class="graph"></div></td>
