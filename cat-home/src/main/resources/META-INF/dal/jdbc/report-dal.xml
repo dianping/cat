@@ -25,13 +25,13 @@
 					]]></statement>
 			</query>
 			<query name="find-report-by-domain-name-period" type="SELECT">
-				<param name="start-date" />
+				<param name="period" />
 				<param name="domain" />
 				<param name="name" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> == ${start-date}
+					WHERE <FIELD name='period'/> == ${period}
 					AND <FIELD name='domain'/> = ${domain}
 					AND <FIELD name='name'/> = ${name} 
 					]]></statement>
@@ -335,9 +335,7 @@
 					FROM <TABLE/> 
 					WHERE <FIELD name='name'/> = ${name}
 					AND <FIELD name='domain'/> = ${domain}
-					<IF type='NOT_NULL' field='ip'>
-						AND  <FIELD name='ip'/> = ${ip}
-					</IF>
+					AND  <FIELD name='ip'/> = ${ip}
 					AND <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}
 					ORDER BY <FIELD name='period'/> ASC 
@@ -353,9 +351,7 @@
 					FROM <TABLE/> 
 					WHERE <FIELD name='name'/> = ${name}
 					AND <FIELD name='domain'/> = ${domain}
-					<IF type='NOT_NULL' field='ip'>
-						AND  <FIELD name='ip'/> = ${ip}
-					</IF>
+					AND <FIELD name='ip'/> = ${ip}
 					AND <FIELD name='period'/> = ${start-date}
 				]]></statement>
 			</query>

@@ -1,21 +1,22 @@
 function graphReal(container, data, step) {
 	var dataLength = data.values.length;
-	var real = data.values[0],
-		size = data.size;
+	var real = data.values[0], size = data.size;
 	var start = new Date(data.start).getTime(), options, graph, i, x, o;
 
 	// [ d1, d2, d3 ]
 	var allDataArray = [];
 
-	function _rebuild_xy(line_data){
-		var _arr=[];
+	function _rebuild_xy(line_data) {
+		var _arr = [];
 		for (i = 0; i < size; i++) {
 			x = start + (i * step);
 			_arr.push([ x, line_data[i] ]);
-		};
+		}
+		;
 		return _arr;
-	};
-	
+	}
+	;
+
 	for (j = 0; j < dataLength; j++) {
 		allDataArray.push(_rebuild_xy(data.values[j]));
 	}
@@ -77,7 +78,13 @@ function graphReal(container, data, step) {
 
 // default is five minutes
 function graph(container, data) {
-	graphReal(container, data, 5 * 60 * 1000);
+	var step = data.step;
+	if (step == 0) {
+		//deafult is five minute
+		graphReal(container, data, 5 * 60 * 1000);
+	} else {
+		graphReal(container, data, step);
+	}
 }
 
 function graphPieChart(container, data) {

@@ -495,6 +495,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageBlock block = m_messageBlocks.poll(5, TimeUnit.MILLISECONDS);
 
 					if (block != null) {
+						long time = System.currentTimeMillis();
 						String dataFile = block.getDataFile();
 						LocalMessageBucket bucket = m_buckets.get(dataFile);
 
@@ -508,11 +509,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
 							}
 						}
-						m_success++;
 						m_serverStateManager.addBlockTotal(1);
-						if (m_success % 10000 == 0) {
+						if ((++m_success) % 10000 == 0) {
 							m_logger.info("block queue size " + m_messageBlocks.size());
 						}
+						long duration = System.currentTimeMillis() - time;
+						m_serverStateManager.addBlockTime(duration);
 					}
 				}
 			} catch (InterruptedException e) {
