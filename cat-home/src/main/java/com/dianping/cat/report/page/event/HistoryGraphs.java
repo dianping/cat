@@ -203,13 +203,13 @@ public class HistoryGraphs {
 		String type = payload.getType();
 		String name = payload.getName();
 		String ip = model.getIpAddress();
-		String queryIp = "All".equals(ip) == true ? "all" : ip;
+		String queryIp = "All".equalsIgnoreCase(ip) == true ? "All" : ip;
 		List<Dailygraph> graphs = new ArrayList<Dailygraph>();
 
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_DAY) {
 			try {
 				Dailygraph graph = m_dailyGraphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
-				      name, DailygraphEntity.READSET_FULL);
+				      "event", DailygraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
