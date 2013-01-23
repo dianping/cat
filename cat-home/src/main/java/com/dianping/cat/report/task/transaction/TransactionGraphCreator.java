@@ -258,6 +258,5 @@ public class TransactionGraphCreator implements GraphCreator<TransactionReport> 
 		graphs.add(allGraph);
 
 		return graphs;
-
 	}
 }

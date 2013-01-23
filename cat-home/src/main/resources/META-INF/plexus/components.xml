@@ -94,6 +94,9 @@
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
@@ -119,6 +122,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
@@ -148,6 +154,9 @@
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
@@ -173,6 +182,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
@@ -202,6 +214,9 @@
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
@@ -224,6 +239,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
@@ -250,6 +268,9 @@
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
@@ -274,6 +295,9 @@
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
+				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
 				<requirement>
@@ -296,6 +320,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
@@ -416,6 +443,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.health.HistoryGraphs</role>
 			<implementation>com.dianping.cat.report.page.health.HistoryGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.state.StateGraphs</role>
+			<implementation>com.dianping.cat.report.page.state.StateGraphs</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
@@ -1502,6 +1538,18 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1544,6 +1592,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2052,6 +2103,9 @@
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2114,6 +2168,9 @@
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2148,6 +2205,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2184,6 +2244,9 @@
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2216,6 +2279,9 @@
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2243,6 +2309,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2272,6 +2341,9 @@
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2300,6 +2372,9 @@
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2327,6 +2402,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2384,6 +2462,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2546,6 +2627,9 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.state.StateGraphs</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>state</role-hint>
 					<field-name>m_service</field-name>
@@ -2555,6 +2639,15 @@
 		<component>
 			<role>com.dianping.cat.report.page.state.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.state.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.state.StateGraphs</role>
+			<implementation>com.dianping.cat.report.page.state.StateGraphs</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

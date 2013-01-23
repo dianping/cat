@@ -33,7 +33,7 @@ public class TransactionGraphDataTest {
 			Date end = sf.parse("20120607");
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "URL";
-			Map<String, double[]> graphDates = handler.buildGraphDatas(start, end, type, null, graphs);
+			Map<String, double[]> graphDates = handler.buildGraphDatasForHour(start, end, type, null, graphs);
 			double[] expectTotalCount = graphDates.get("total_count");
 			double[] expectFailureCount = graphDates.get("failure_count");
 			double[] expectSum = graphDates.get("sum");
@@ -55,7 +55,7 @@ public class TransactionGraphDataTest {
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "Result";
 			String name = "cacheService:cacheConfigService_1.0.0:getKeyConfigurations";
-			Map<String, double[]> graphDates = handler.buildGraphDatas(start, end, type, name, graphs);
+			Map<String, double[]> graphDates = handler.buildGraphDatasForHour(start, end, type, name, graphs);
 			double[] expectTotalCount = graphDates.get("total_count");
 			double[] expectFailureCount = graphDates.get("failure_count");
 			double[] expectSum = graphDates.get("sum");
@@ -78,7 +78,7 @@ public class TransactionGraphDataTest {
 			List<Graph> graphs = buildGraph(start, end);
 			String type = "Result";
 			String name = "Result";
-			Map<String, double[]> graphDates = handler.buildGraphDatas(start, end, type, name, graphs);
+			Map<String, double[]> graphDates = handler.buildGraphDatasForHour(start, end, type, name, graphs);
 			double[] sum = graphDates.get("sum");
 			assertArray(-1.0, sum);
 		} catch (ParseException e) {

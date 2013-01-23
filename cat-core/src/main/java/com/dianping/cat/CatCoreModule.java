@@ -7,7 +7,7 @@ import java.util.concurrent.locks.LockSupport;
 import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
 import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.DefaultThreadListener;
+import org.unidal.helper.Threads.AbstractThreadListener;
 import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
@@ -60,7 +60,7 @@ public class CatCoreModule extends AbstractModule {
 		return null; // no dependencies
 	}
 
-	public static final class CatThreadListener extends DefaultThreadListener {
+	public static final class CatThreadListener extends AbstractThreadListener {
 		private final ModuleContext m_ctx;
 
 		private CatThreadListener(ModuleContext ctx) {

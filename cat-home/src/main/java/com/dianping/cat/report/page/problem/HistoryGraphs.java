@@ -26,6 +26,53 @@ public class HistoryGraphs {
 	@Inject
 	private GraphDao m_graphDao;
 
+	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size) {
+		HistoryGraphItem item = new HistoryGraphItem();
+
+		item.setStart(start);
+		item.setSize(size);
+
+		for (Map<String, double[]> data : datas) {
+			item.addValue(data.get(ERROR));
+		}
+		return item;
+	}
+
+	public void buildTrendGraph(Model model, Payload payload) {
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+		String queryType = payload.getReportType();
+		List<Map<String, double[]>> allDatas = new ArrayList<Map<String, double[]>>();
+		
+		if (queryType.equalsIgnoreCase("day")) {
+			Map<String, double[]> currentGraph = getGraphDatas(start, end, model, payload);
+			Map<String, double[]> lastDayGraph = getGraphDatas(new Date(start.getTime() - TimeUtil.ONE_DAY),
+			      new Date(end.getTime() - TimeUtil.ONE_DAY), model, payload);
+			Map<String, double[]> lastWeekGraph = getGraphDatas(new Date(start.getTime() - TimeUtil.ONE_WEEK), new Date(
+			      end.getTime() - TimeUtil.ONE_WEEK), model, payload);
+
+			allDatas.add(currentGraph);
+			allDatas.add(lastDayGraph);
+			allDatas.add(lastWeekGraph);
+		} else if (queryType.equalsIgnoreCase("week")) {
+			Map<String, double[]> currentGraph = getGraphDatas(start, end, model, payload);
+			Map<String, double[]> lastWeek = getGraphDatas(new Date(start.getTime() - TimeUtil.ONE_WEEK),
+			      new Date(end.getTime() - TimeUtil.ONE_WEEK), model, payload);
+
+			allDatas.add(currentGraph);
+			allDatas.add(lastWeek);
+		} else if (queryType.equalsIgnoreCase("month")) {
+			Map<String, double[]> graphData = getGraphDatas(start, end, model, payload);
+			
+			allDatas.add(graphData);
+		} else {
+			throw new RuntimeException("Error graph query type");
+		}
+		HistoryGraphItem item =buildFail(allDatas, start, size);
+		model.setErrorsTrend(item.getJsonString());
+	}
+	
 	public Map<String, double[]> buildGraphDatas(Date start, Date end, String type, String status, List<Graph> graphs) {
 		Map<String, double[]> result = new HashMap<String, double[]>();
 		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR) * 60;
@@ -80,27 +127,7 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	public void buildTrendGraph(Model model, Payload payload) {
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-		int size = (int) ((end.getTime() - start.getTime()) / (60 * 1000));
-
-		HistoryGraphItem item = new HistoryGraphItem();
-		item.setStart(start);
-
-		double[] data = getGraphData(model, payload).get(ERROR);
-		String type = payload.getType();
-		String status = payload.getStatus();
-
-		item.setTitles(StringUtils.isEmpty(status) ? type : status);
-		item.addValue(data);
-		item.setSize(size);
-		model.setErrorsTrend(item.getJsonString());
-	}
-
-	public Map<String, double[]> getGraphData(Model model, Payload payload) {
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
+	public Map<String, double[]> getGraphDatas(Date start,Date end ,Model model, Payload payload) {
 		String domain = model.getDomain();
 		String type = payload.getType();
 		String status = payload.getStatus();

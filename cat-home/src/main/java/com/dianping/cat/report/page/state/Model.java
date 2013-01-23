@@ -13,6 +13,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public StateShow m_state;
 
+	public String m_graph;
+
 	public List<String> getIps() {
 		if (m_report == null) {
 			return new ArrayList<String>();
@@ -48,6 +50,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public String getDomain() {
 		return "Cat";
+	}
+
+	public String getGraph() {
+		return m_graph;
+	}
+
+	public void setGraph(String graph) {
+		m_graph = graph;
 	}
 
 	@Override

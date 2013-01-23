@@ -5,6 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.cross.ParseCrossInfoTest;
+import com.dianping.cat.consumer.database.DatabaseAnalyzerTest;
 import com.dianping.cat.consumer.ip.IpReportTest;
 import com.dianping.cat.consumer.matrix.MatrixReportFilterTest;
 import com.dianping.cat.consumer.transaction.FormatTest;
@@ -42,7 +43,9 @@ MatrixReportFilterTest.class,
 TransactionReportFilterTest.class,
 
 /* cross analyzer */
-ParseCrossInfoTest.class })
+ParseCrossInfoTest.class,
+
+DatabaseAnalyzerTest.class})
 public class AllTests {
 
 }

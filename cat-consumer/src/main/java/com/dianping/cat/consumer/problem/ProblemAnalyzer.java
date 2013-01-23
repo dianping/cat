@@ -63,6 +63,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 		if (report == null) {
 			report = new ProblemReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
 		report.getDomainNames().addAll(m_reports.keySet());
 

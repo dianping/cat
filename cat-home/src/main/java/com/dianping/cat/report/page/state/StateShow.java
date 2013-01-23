@@ -39,11 +39,15 @@ public class StateShow extends BaseVisitor {
 		return size;
 	}
 
+	public Map<Long, Message> getMessagesMap() {
+		return m_messages;
+	}
+
 	public List<Message> getMessages() {
 		List<Message> all = new ArrayList<Message>(m_messages.values());
 		List<Message> result = new ArrayList<Message>();
-
 		long current = System.currentTimeMillis();
+
 		for (Message message : all) {
 			if (message.getId() < current) {
 				result.add(message);
@@ -81,7 +85,7 @@ public class StateShow extends BaseVisitor {
 	public void visitMessage(Message message) {
 		Message temp = m_messages.get(message.getId());
 		if (temp == null) {
-			m_messages.put(message.getId(), temp);
+			m_messages.put(message.getId(), message);
 		} else {
 			mergerMessage(temp, message);
 		}
@@ -98,6 +102,7 @@ public class StateShow extends BaseVisitor {
 		total.setDelayCount(total.getDelayCount() + machine.getDelayCount());
 		total.setBlockTotal(total.getBlockTotal() + machine.getBlockTotal());
 		total.setBlockLoss(total.getBlockLoss() + machine.getBlockLoss());
+		total.setBlockTime(total.getBlockTime() + machine.getBlockTime());
 		total.setPigeonTimeError(total.getPigeonTimeError() + machine.getPigeonTimeError());
 		total.setNetworkTimeError(total.getNetworkTimeError() + machine.getNetworkTimeError());
 
@@ -110,6 +115,7 @@ public class StateShow extends BaseVisitor {
 		if (count > 0) {
 			total.setDelayAvg(sum / count);
 		}
+
 		return total;
 	}
 
@@ -123,6 +129,7 @@ public class StateShow extends BaseVisitor {
 		total.setTotalLoss(total.getTotalLoss() + message.getTotalLoss());
 		total.setBlockTotal(total.getBlockTotal() + message.getBlockTotal());
 		total.setBlockLoss(total.getBlockLoss() + message.getBlockLoss());
+		total.setBlockTime(total.getBlockTime() + message.getBlockTime());
 		total.setPigeonTimeError(total.getPigeonTimeError() + message.getPigeonTimeError());
 		total.setNetworkTimeError(total.getNetworkTimeError() + message.getNetworkTimeError());
 	}
@@ -131,6 +138,7 @@ public class StateShow extends BaseVisitor {
 	public void visitProcessDomain(ProcessDomain processDomain) {
 		if (m_ip.equals(m_currentIp) || m_ip.equals(CatString.ALL_IP)) {
 			ProcessDomain temp = m_processDomains.get(processDomain.getName());
+
 			if (temp == null) {
 				m_processDomains.put(processDomain.getName(), processDomain);
 			} else {

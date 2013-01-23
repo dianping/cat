@@ -4,6 +4,10 @@ public enum JspFile {
 	HOURLY("/jsp/report/state.jsp"),
 
 	HISTORY("/jsp/report/stateHistory.jsp"),
+	
+	GRAPH("/jsp/report/stateGraphs.jsp"),
+	
+	HISTORY_GRAPH("/jsp/report/stateGraphs.jsp")
 	;
 
 	private String m_path;

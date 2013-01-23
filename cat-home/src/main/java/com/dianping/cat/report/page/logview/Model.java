@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.logview;
 import java.util.Collection;
 import java.util.Collections;
 
+import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.page.AbstractReportModel;
 
 public class Model extends AbstractReportModel<Action, Context> {
@@ -13,6 +14,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private String m_table;
 	
 	private String m_logviewPath;
+	
+	private MessageTree m_tree;
+	
+	public MessageTree getTree() {
+		return m_tree;
+	}
+
+	public void setTree(MessageTree tree) {
+		m_tree = tree;
+	}
 
 	public Model(Context ctx) {
 		super(ctx);
