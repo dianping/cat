@@ -61,6 +61,9 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		if (report == null) {
 			report = new CrossReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
 
 		report.getDomainNames().addAll(m_reports.keySet());

@@ -17,6 +17,7 @@ public class StateReportMergerTest {
 		StateReport reportNew = new DefaultDomParser().parse(newXml);
 		String expected = Files.forIO()
 		      .readFrom(getClass().getResourceAsStream("result.xml"), "utf-8");
+		
 		StateReportMerger merger = new StateReportMerger(new StateReport(reportOld.getDomain()));
 
 		reportOld.accept(merger);

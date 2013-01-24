@@ -63,6 +63,9 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 		if (report == null) {
 			report = new EventReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
 
 		report.getDomainNames().addAll(m_reports.keySet());

@@ -44,6 +44,8 @@ public class ServerState {
 
 		private long m_blockLoss;
 
+		private long m_blockTime;
+
 		private long m_pigeonTimeError;
 
 		private long m_networkTimeError;
@@ -82,6 +84,10 @@ public class ServerState {
 
 		public void addMessageTotalLoss(long messageTotalLoss) {
 			m_messageTotalLoss += messageTotalLoss;
+		}
+
+		public void addBlockTime(long blockTime) {
+			m_blockTime += blockTime;
 		}
 
 		public void addProcessDelay(double processDelay) {
@@ -162,6 +168,10 @@ public class ServerState {
 
 		public long getNetworkTimeError() {
 			return m_networkTimeError;
+		}
+
+		public long getBlockTime() {
+			return m_blockTime;
 		}
 
 	}

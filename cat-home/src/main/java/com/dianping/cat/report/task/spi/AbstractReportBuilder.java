@@ -6,18 +6,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.home.dal.report.DailygraphDao;
 import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.home.dal.report.WeeklyreportDao;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
 
 public abstract class AbstractReportBuilder {
 
@@ -36,6 +38,9 @@ public abstract class AbstractReportBuilder {
 	@Inject
 	protected ReportDao m_reportDao;
 
+	@Inject
+	protected DailygraphDao m_dailygraphDao;
+	
 	protected void clearDailyReport(Dailyreport report) throws DalException {
 		m_dailyReportDao.deleteByDomainNamePeriod(report);
 	}

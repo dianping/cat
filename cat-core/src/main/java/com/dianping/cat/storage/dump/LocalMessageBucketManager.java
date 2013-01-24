@@ -179,7 +179,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket.setBaseDir(m_baseDir);
 						bucket.initialize(dataFile);
 						m_buckets.put(dataFile, bucket);
-						m_logger.info("create local message bucket by read message tree,path:" + m_baseDir + dataFile);
 					}
 				}
 
@@ -250,7 +249,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket.archive();
 
 						Cat.getProducer().logEvent("Dump", "Outbox.Normal", Message.SUCCESS, loginfo);
-						m_logger.info("move data file to outbox normal, " + loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);
@@ -263,7 +261,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						moveFile(path + ".idx");
 
 						Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, loginfo);
-						m_logger.info("move data file to outbox abnormal, " + loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);
@@ -373,7 +370,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			if (delay < fiveMinute && delay > -fiveMinute) {
 				m_serverStateManager.addProcessDelay(delay);
 			} else {
-				m_logger.warn("Error when compute the delay duration, " + delay);
+				m_logger.error("Error when compute the delay duration, " + delay);
 			}
 		}
 		if (m_total % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
@@ -498,6 +495,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageBlock block = m_messageBlocks.poll(5, TimeUnit.MILLISECONDS);
 
 					if (block != null) {
+						long time = System.currentTimeMillis();
 						String dataFile = block.getDataFile();
 						LocalMessageBucket bucket = m_buckets.get(dataFile);
 
@@ -511,11 +509,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 								      new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
 							}
 						}
-						m_success++;
 						m_serverStateManager.addBlockTotal(1);
-						if (m_success % 10000 == 0) {
+						if ((++m_success) % 10000 == 0) {
 							m_logger.info("block queue size " + m_messageBlocks.size());
 						}
+						long duration = System.currentTimeMillis() - time;
+						m_serverStateManager.addBlockTime(duration);
 					}
 				}
 			} catch (InterruptedException e) {

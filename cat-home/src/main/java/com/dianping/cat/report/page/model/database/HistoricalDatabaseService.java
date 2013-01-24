@@ -43,7 +43,7 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 	}
 
 	private DatabaseReport getReportFromDatabase(long timestamp, String database) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), database, 2, getName(),
+		List<Report> reports = m_reportDao.findDatabaseAllByPeriodDomainTypeName(new Date(timestamp), database, 2, getName(),
 		      ReportEntity.READSET_FULL);
 		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
 
@@ -54,7 +54,7 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 		}
 		DatabaseReport databaseReport = merger.getDatabaseReport();
 
-		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
+		List<Report> historyReports = m_reportDao.findDatabaseAllByDomainNameDuration(new Date(timestamp), new Date(
 		      timestamp + 60 * 60 * 1000), null, "database", ReportEntity.READSET_DOMAIN_NAME);
 
 		if (databaseReport == null) {

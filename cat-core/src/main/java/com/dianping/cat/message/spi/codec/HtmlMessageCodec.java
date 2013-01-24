@@ -79,13 +79,23 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	protected int encodeHeader(MessageTree tree, ChannelBuffer buf) {
 		BufferHelper helper = m_bufferHelper;
 		StringBuilder sb = new StringBuilder(1024);
+		String parentMessageId = tree.getParentMessageId();
+		String rootMessageId = tree.getRootMessageId();
+		String domain = tree.getDomain();
 
 		sb.append("<tr class=\"header\"><td colspan=5>");
+		if (rootMessageId != null && !rootMessageId.equalsIgnoreCase("null")) {
+			sb.append(String.format("<a href='%s?domain=%s'>RootLogview</a>&nbsp;&nbsp;", rootMessageId, domain));
+
+			if (!parentMessageId.equals(rootMessageId)) {
+				sb.append(String.format("<a href='%s?domain=%s'>ParentLogview</a> ", parentMessageId, domain));
+			}
+		}
 		sb.append(VERSION).append(" ").append(tree.getDomain()).append(" ");
 		sb.append(tree.getHostName()).append(" ").append(tree.getIpAddress()).append(" ");
 		sb.append(tree.getThreadGroupName()).append(" ").append(tree.getThreadId()).append(" ");
 		sb.append(tree.getThreadName()).append(" ").append(tree.getMessageId()).append(" ");
-		sb.append(tree.getParentMessageId()).append(" ").append(tree.getRootMessageId()).append(" ");
+		sb.append(parentMessageId).append(" ").append(rootMessageId).append(" ");
 		sb.append(tree.getSessionToken()).append(" ");
 		sb.append("</td></tr>");
 
@@ -180,8 +190,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 		count += helper.td1(buf);
 
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		count += helper.write(buf,
-		      String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: show ::]</a>", m_logViewPrefix, link, link));
+		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: show ::]</a>",
+		      m_logViewPrefix, link, link));
 		count += helper.td2(buf);
 
 		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");

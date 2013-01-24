@@ -2,12 +2,14 @@ package com.dianping.cat.consumer.sql;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -26,7 +28,6 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements LogEnabled {
 	@Inject
@@ -39,6 +40,8 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	private SqlParseManager m_sqlParseManager;
 
 	private Map<String, SqlReport> m_reports = new HashMap<String, SqlReport>();
+
+	private Set<String> m_errorConnectionUrls = new HashSet<String>();
 
 	private DatabaseItem buildDataBaseItem(String domain, Transaction t) {
 		List<Message> messages = t.getChildren();
@@ -63,6 +66,10 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 			String tables = m_sqlParseManager.getTableNames(sqlName, sqlStatement, domain);
 			String database = getDataBaseName(connection);
 
+			if (database == null) {
+				m_errorConnectionUrls.add(domain + ":" + connection);
+				database = "unknown";
+			}
 			item.setDatabase(database).setTables(tables).setMethod(method).setConnectionUrl(connection);
 			return item;
 		}
@@ -72,6 +79,10 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
+
+		if (m_errorConnectionUrls.size() > 0) {
+			m_logger.error(m_errorConnectionUrls.toString());
+		}
 	}
 
 	@Override
@@ -80,17 +91,30 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	}
 
 	private String getDataBaseName(String url) {
-		try {
-			int index = url.indexOf("://");
-			String temp = url.substring(index + 3);
-			index = temp.indexOf("/");
-			int index2 = temp.indexOf("?");
-			String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
-			
-			return schema;
-		} catch (Exception e) {
+		if (url != null) {
+			if (url.indexOf("mysql") > -1) {
+				try {
+					int index = url.indexOf("://");
+					String temp = url.substring(index + 3);
+					index = temp.indexOf("/");
+					int index2 = temp.indexOf("?");
+					String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
+					return schema;
+				} catch (Exception e) {
+				}
+			} else if (url.indexOf("sqlserver") > -1) {
+				String temp = url.substring(url.indexOf("databaseName"));
+
+				int first = temp.indexOf("=");
+				int end = temp.indexOf(";");
+
+				if (first > -1 && end > -1) {
+					return temp.substring(first + 1, end);
+				}
+			}
 		}
-		return "Unknown";
+
+		return null;
 	}
 
 	@Override
@@ -103,6 +127,9 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 		if (report == null) {
 			report = new SqlReport(domain);
+
+			report.setStartTime(new Date(m_startTime));
+			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		}
 
 		report.getDomainNames().addAll(m_reports.keySet());
@@ -210,18 +237,18 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 
 			for (SqlReport report : m_reports.values()) {
 				try {
-	            Set<String> domainNames = report.getDomainNames();
-	            domainNames.clear();
-	            domainNames.addAll(getDomains());
+					Set<String> domainNames = report.getDomainNames();
+					domainNames.clear();
+					domainNames.addAll(getDomains());
 
-	            String xml = builder.buildXml(report);
-	            String domain = report.getDomain();
+					String xml = builder.buildXml(report);
+					String domain = report.getDomain();
 
-	            reportBucket.storeById(domain, xml);
-            } catch (Exception e) {
+					reportBucket.storeById(domain, xml);
+				} catch (Exception e) {
 					t.setStatus(e);
 					Cat.getProducer().logError(e);
-            }
+				}
 			}
 
 			if (atEnd && !isLocalMode()) {
