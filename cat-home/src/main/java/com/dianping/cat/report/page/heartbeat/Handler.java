@@ -132,6 +132,11 @@ public class Handler implements PageHandler<Context> {
 				m_historyGraphs.showHeartBeatGraph(model, payload);
 			}
 			break;
+		case PART_HISTORY:
+			if (model.getIpAddress() != null) {
+				m_historyGraphs.showHeartBeatGraph(model, payload);
+			}
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
@@ -143,7 +148,11 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HEARTBEAT);
 		model.setIpAddress(payload.getIpAddress());
+		String queryType = payload.getType();
 
+		if (queryType == null || queryType.trim().length() == 0) {
+			payload.setType("frameworkThread");
+		}
 		Action action = payload.getAction();
 		if (action == Action.HISTORY) {
 			String type = payload.getReportType();

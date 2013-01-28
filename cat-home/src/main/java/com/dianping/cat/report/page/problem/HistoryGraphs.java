@@ -41,7 +41,7 @@ public class HistoryGraphs {
 	public void buildTrendGraph(Model model, Payload payload) {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+		int size = (int) ((end.getTime() - start.getTime()) * 60 / TimeUtil.ONE_HOUR);
 		String queryType = payload.getReportType();
 		List<Map<String, double[]>> allDatas = new ArrayList<Map<String, double[]>>();
 		

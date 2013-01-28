@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Graph;
@@ -16,8 +19,6 @@ import com.dianping.cat.home.dal.report.GraphEntity;
 import com.dianping.cat.report.page.HistoryGraphItem;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
 import com.google.gson.Gson;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoryGraphs {
 
@@ -205,39 +206,49 @@ public class HistoryGraphs {
 		Date end = payload.getHistoryEndDate();
 		int size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR * 60);
 		Map<String, double[]> graphData = getHeartBeatData(model, payload);
+		String queryType = payload.getType();
 
-		model.setActiveThreadGraph(getGraphItem("Thread (Count) ", "ActiveThread", start, size, graphData)
-		      .getJsonString());
-		model.setHttpThreadGraph(getGraphItem("Http Thread (Count) ", "HttpThread", start, size, graphData)
-		      .getJsonString());
-		model.setDaemonThreadGraph(getGraphItem("Daemon Thread (Count) ", "DaemonThread", start, size, graphData)
-		      .getJsonString());
-		model.setTotalThreadGraph(getGraphItem("Total Started Thread (Count) ", "TotalStartedThread", start, size,
-		      graphData).getJsonString());
-		model.setStartedThreadGraph(getGraphItem("Started Thread (Count) ", "StartedThread", start, size, graphData)
-		      .getJsonString());
-		model.setCatThreadGraph(getGraphItem("Cat Started Thread (Count) ", "CatThreadCount", start, size, graphData)
-		      .getJsonString());
-		model.setPigeonThreadGraph(getGraphItem("Pigeon Started Thread (Count) ", "PigeonStartedThread", start, size,
-		      graphData).getJsonString());
-		model.setNewGcCountGraph(getGraphItem("NewGc Count (Count) ", "NewGcCount", start, size, graphData)
-		      .getJsonString());
-		model.setOldGcCountGraph(getGraphItem("OldGc Count (Count) ", "OldGcCount", start, size, graphData)
-		      .getJsonString());
-		model.setSystemLoadAverageGraph(getGraphItem("System Load Average ", "SystemLoadAverage", start, size, graphData)
-		      .getJsonString());
-		model.setMemoryFreeGraph(getGraphItem("Memory Free (MB) ", "MemoryFree", start, size, graphData).getJsonString());
-		model.setHeapUsageGraph(getGraphItem("Heap Usage (MB) ", "HeapUsage", start, size, graphData).getJsonString());
-		model.setNoneHeapUsageGraph(getGraphItem("None Heap Usage (MB) ", "NoneHeapUsage", start, size, graphData)
-		      .getJsonString());
-		model.setCatMessageProducedGraph(getGraphItem("Cat Message Produced (Count) / Minute", "CatMessageProduced",
-		      start, size, graphData).getJsonString());
-		model.setCatMessageOverflowGraph(getGraphItem("Cat Message Overflow (Count) / Minute", "CatMessageOverflow",
-		      start, size, graphData).getJsonString());
-		model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
-		      graphData).getJsonString());
-		List<HistoryGraphItem> diskInfo = getDiskInfo(graphData, start, size);
-		model.setDisks(diskInfo.size());
-		model.setDiskHistoryGraph(new Gson().toJson(diskInfo));
+		if (queryType.equalsIgnoreCase("thread")) {
+			model.setActiveThreadGraph(getGraphItem("Thread (Count) ", "ActiveThread", start, size, graphData)
+			      .getJsonString());
+			model.setDaemonThreadGraph(getGraphItem("Daemon Thread (Count) ", "DaemonThread", start, size, graphData)
+			      .getJsonString());
+			model.setTotalThreadGraph(getGraphItem("Total Started Thread (Count) ", "TotalStartedThread", start, size,
+			      graphData).getJsonString());
+			model.setStartedThreadGraph(getGraphItem("Started Thread (Count) ", "StartedThread", start, size, graphData)
+			      .getJsonString());
+		}else if(queryType.equalsIgnoreCase("frameworkThread")){
+			model.setHttpThreadGraph(getGraphItem("Http Thread (Count) ", "HttpThread", start, size, graphData)
+			      .getJsonString());
+			model.setCatThreadGraph(getGraphItem("Cat Started Thread (Count) ", "CatThreadCount", start, size, graphData)
+			      .getJsonString());
+			model.setPigeonThreadGraph(getGraphItem("Pigeon Started Thread (Count) ", "PigeonStartedThread", start, size,
+			      graphData).getJsonString());
+		}
+		else if (queryType.equalsIgnoreCase("system")) {
+			model.setNewGcCountGraph(getGraphItem("NewGc Count (Count) ", "NewGcCount", start, size, graphData)
+			      .getJsonString());
+			model.setOldGcCountGraph(getGraphItem("OldGc Count (Count) ", "OldGcCount", start, size, graphData)
+			      .getJsonString());
+			model.setSystemLoadAverageGraph(getGraphItem("System Load Average ", "SystemLoadAverage", start, size,
+			      graphData).getJsonString());
+		} else if (queryType.equalsIgnoreCase("memory")) {
+			model.setMemoryFreeGraph(getGraphItem("Memory Free (MB) ", "MemoryFree", start, size, graphData)
+			      .getJsonString());
+			model.setHeapUsageGraph(getGraphItem("Heap Usage (MB) ", "HeapUsage", start, size, graphData).getJsonString());
+			model.setNoneHeapUsageGraph(getGraphItem("None Heap Usage (MB) ", "NoneHeapUsage", start, size, graphData)
+			      .getJsonString());
+		} else if (queryType.equalsIgnoreCase("disk")) {
+			List<HistoryGraphItem> diskInfo = getDiskInfo(graphData, start, size);
+			model.setDisks(diskInfo.size());
+			model.setDiskHistoryGraph(new Gson().toJson(diskInfo));
+		} else if (queryType.equalsIgnoreCase("cat")) {
+			model.setCatMessageProducedGraph(getGraphItem("Cat Message Produced (Count) / Minute", "CatMessageProduced",
+			      start, size, graphData).getJsonString());
+			model.setCatMessageOverflowGraph(getGraphItem("Cat Message Overflow (Count) / Minute", "CatMessageOverflow",
+			      start, size, graphData).getJsonString());
+			model.setCatMessageSizeGraph(getGraphItem("Cat Message Size (MB) / Minute", "CatMessageSize", start, size,
+			      graphData).getJsonString());
+		}
 	}
 }

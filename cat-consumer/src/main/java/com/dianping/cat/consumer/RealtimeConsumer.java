@@ -108,7 +108,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			m_errorTimeDomains.put(domain, size);
 
 			m_networkError++;
-			if (m_networkError % CatConstants.ERROR_COUNT == 0) {
+			if (m_networkError % (CatConstants.ERROR_COUNT * 10) == 0) {
 				m_logger.error("Error network time:" + m_errorTimeDomains);
 				m_logger.error("The timestamp of message is out of range, IGNORED! "
 				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "

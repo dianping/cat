@@ -11,7 +11,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("ip")
 	private String m_ipAddress;
-
+	
+	@FieldMeta("type")
+	private String m_type;
+	
 	public Payload() {
 		super(ReportPage.HEARTBEAT);
 	}
@@ -31,6 +34,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setIpAddress(String ip) {
 		m_ipAddress = ip;
+	}
+
+	public String getType() {
+		return m_type;
+	}
+
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	@Override
