@@ -54,11 +54,11 @@ public class HistoryGraphs {
 		long step = TimeUtil.ONE_MINUTE;
 
 		if (queryType.equalsIgnoreCase("day")) {
-			Map<String, double[]> currentGraph = getGraphDatas(start, end, model, payload);
-			Map<String, double[]> lastDayGraph = getGraphDatas(new Date(start.getTime() - TimeUtil.ONE_DAY),
+			Map<String, double[]> currentGraph = getGraphDatasFromHour(start, end, model, payload);
+			Map<String, double[]> lastDayGraph = getGraphDatasFromHour(new Date(start.getTime() - TimeUtil.ONE_DAY),
 			      new Date(end.getTime() - TimeUtil.ONE_DAY), model, payload);
-			Map<String, double[]> lastWeekGraph = getGraphDatas(new Date(start.getTime() - TimeUtil.ONE_WEEK), new Date(
-			      end.getTime() - TimeUtil.ONE_WEEK), model, payload);
+			Map<String, double[]> lastWeekGraph = getGraphDatasFromHour(new Date(start.getTime() - TimeUtil.ONE_WEEK),
+			      new Date(end.getTime() - TimeUtil.ONE_WEEK), model, payload);
 
 			allDatas.add(currentGraph);
 			allDatas.add(lastDayGraph);
@@ -67,7 +67,8 @@ public class HistoryGraphs {
 			size = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
 			step = TimeUtil.ONE_DAY;
 			Map<String, double[]> currentGraph = getGraphDatasFromDaily(start, end, model, payload);
-			Map<String, double[]> lastWeek = getGraphDatasFromDaily(start, end, model, payload);
+			Map<String, double[]> lastWeek = getGraphDatasFromDaily(new Date(start.getTime() - TimeUtil.ONE_WEEK),
+			      new Date(end.getTime() - TimeUtil.ONE_WEEK), model, payload);
 
 			allDatas.add(currentGraph);
 			allDatas.add(lastWeek);
@@ -95,7 +96,7 @@ public class HistoryGraphs {
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_DAY) {
 			try {
 				Dailygraph graph = m_dailyGraphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
-				      "event", DailygraphEntity.READSET_FULL);
+				      "problem", DailygraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
@@ -198,7 +199,7 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	public Map<String, double[]> getGraphDatas(Date start, Date end, Model model, Payload payload) {
+	public Map<String, double[]> getGraphDatasFromHour(Date start, Date end, Model model, Payload payload) {
 		String domain = model.getDomain();
 		String type = payload.getType();
 		String status = payload.getStatus();

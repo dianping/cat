@@ -1483,11 +1483,23 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.GraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.GraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -1540,15 +1552,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
-			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
