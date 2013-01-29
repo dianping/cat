@@ -197,7 +197,6 @@ public class HistoryGraphs {
 		model.setFailureTrend(item.getJsonString());
 	}
 	
-
 	private Map<String, double[]> getGraphDatasFromDaily(Date start, Date end, Model model, Payload payload) {
 		String domain = model.getDomain();
 		String type = payload.getType();

@@ -13,6 +13,7 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dal.report.Dailygraph;
 import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.home.dal.report.Graph;
@@ -33,10 +34,37 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 	@Inject
 	private ProblemMerger m_problemMerger;
 
+	private void buildDailyGraph(ProblemReport report) {
+		try {
+			ProblemDailyGraphCreator creator = new ProblemDailyGraphCreator();
+			creator.visitProblemReport(report);
+
+			List<Dailygraph> graphs = creator.buildDailyGraph();
+
+			for (Dailygraph temp : graphs) {
+				m_dailygraphDao.insert(temp);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
+
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
-			Dailyreport report = getDailyReportData(reportName, reportDomain, reportPeriod);
+			ProblemReport problemReport = getDailyReportData(reportName, reportDomain, reportPeriod);
+			buildDailyGraph(problemReport);
+
+			String content = problemReport.toString();
+			Dailyreport report = m_dailyReportDao.createLocal();
+
+			report.setContent(content);
+			report.setCreationDate(new Date());
+			report.setDomain(reportDomain);
+			report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+			report.setName(reportName);
+			report.setPeriod(reportPeriod);
+			report.setType(1);
 			m_dailyReportDao.insert(report);
 			return true;
 		} catch (DalException e) {
@@ -61,23 +89,14 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		return true;
 	}
 
-	private Dailyreport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
+	private ProblemReport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
 	      throws DalException {
 		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
 		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
-		String content = m_problemMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
-		Dailyreport report = m_dailyReportDao.createLocal();
-		
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-		return report;
+
+		return m_problemMerger.mergeForDaily(reportDomain, reports, domainSet);
 	}
 
 	private List<Graph> getHourlyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
@@ -85,21 +104,14 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
 		ProblemReport transactionReport = m_problemMerger.mergeForGraph(reportDomain, reports);
+		
 		graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
 		return graphs;
 	}
 
 	@Override
 	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		try {
-			Dailyreport report = this.getDailyReportData(reportName, reportDomain, reportPeriod);
-			clearDailyReport(report);
-			m_dailyReportDao.insert(report);
-			return true;
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
+		return false;
 	}
 
 	@Override
@@ -118,6 +130,7 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		}
 		return true;
 	}
+
 	@Override
 	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date start = reportPeriod;
@@ -180,10 +193,10 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "problem", DailyreportEntity.READSET_FULL);
+				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "problem",
+				      DailyreportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
-				
+
 				ProblemReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			} catch (Exception e) {

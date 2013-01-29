@@ -41,5 +41,5 @@
 </table>
 <script type="text/javascript">
 	var errorData = ${model.errorsTrend};
-	graphReal(document.getElementById('errorTrend'), errorData , 60*1000);
+	graph(document.getElementById('errorTrend'), errorData);
 </script>
