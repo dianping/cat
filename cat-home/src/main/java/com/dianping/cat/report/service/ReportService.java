@@ -1,6 +1,7 @@
 package com.dianping.cat.report.service;
 
 import java.util.Date;
+import java.util.Set;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
@@ -14,6 +15,10 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
 public interface ReportService {
+
+	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName);
+	
+	public Set<String> queryAllDomainNames(Date start, Date end, String reportName);
 
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 

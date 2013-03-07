@@ -10,6 +10,8 @@ public class NavigationBar {
 
 		ReportPage.HOME,
 
+		ReportPage.TOP,
+
 		ReportPage.TRANSACTION,
 
 		ReportPage.EVENT,
@@ -34,8 +36,10 @@ public class NavigationBar {
 
 		ReportPage.DATABASE,
 
+		ReportPage.QUERY,
+
 		ReportPage.HEALTH,
-		
+
 		ReportPage.STATE,
 
 		ReportPage.LOGVIEW
@@ -44,14 +48,14 @@ public class NavigationBar {
 	}
 
 	public Page[] getSystemPages() {
-		return new Page[] { 
-				
-		SystemPage.ALARM, 
-		
-		SystemPage.PROJECT, 
-		
-		SystemPage.LOGIN 
-		
+		return new Page[] {
+
+		SystemPage.ALARM,
+
+		SystemPage.PROJECT,
+
+		SystemPage.LOGIN
+
 		};
 	}
 }

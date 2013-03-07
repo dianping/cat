@@ -1,5 +1,7 @@
 package com.dianping.cat.consumer;
 
+import org.unidal.lookup.ContainerHolder;
+
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.database.DatabaseAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
@@ -10,9 +12,9 @@ import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
-import org.unidal.lookup.ContainerHolder;
 
 public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerFactory {
 	@Override
@@ -69,6 +71,11 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 			return analyzer;
 		} else if (name.equals("state")) {
 			StateAnalyzer analyzer = lookup(StateAnalyzer.class);
+
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
+			return analyzer;
+		} else if(name.equals("top")){
+			TopAnalyzer analyzer = lookup(TopAnalyzer.class);
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;

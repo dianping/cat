@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dianping.cat.report.ReportModule;
 import com.dianping.cat.system.SystemModule;
+
 import org.unidal.lookup.configuration.Component;
 import org.unidal.web.configuration.AbstractWebComponentsConfigurator;
 

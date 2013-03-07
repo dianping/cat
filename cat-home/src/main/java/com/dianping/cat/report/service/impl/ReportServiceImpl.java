@@ -2,6 +2,7 @@ package com.dianping.cat.report.service.impl;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
@@ -41,7 +42,7 @@ public class ReportServiceImpl implements ReportService {
 
 	@Inject
 	private MonthReportCache m_monthReportCache;
-	
+
 	public static final int s_hourly = 1;
 
 	public static final int s_daily = 2;
@@ -299,7 +300,7 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-   public StateReport queryStateReport(String domain, Date start, Date end) {
+	public StateReport queryStateReport(String domain, Date start, Date end) {
 		int type = getQueryType(start, end);
 		if (type == s_hourly) {
 			return m_hourlyReportService.queryStateReport(domain, start, end);
@@ -318,6 +319,16 @@ public class ReportServiceImpl implements ReportService {
 		} else {
 			return m_dailyReportService.queryStateReport(domain, start, end);
 		}
-   }
+	}
+
+	@Override
+	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
+		return m_hourlyReportService.queryAllDatabaseNames(start, end, reportName);
+	}
+
+	@Override
+	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
+		return m_hourlyReportService.queryAllDomainNames(start, end, reportName);
+	}
 
 }

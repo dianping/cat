@@ -19,6 +19,9 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.consumer.problem.ProblemAnalyzer;
+import com.dianping.cat.consumer.top.TopAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -197,14 +200,25 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			m_endTime = endTime;
 			m_tasks = new ArrayList<PeriodTask>(m_analyzerNames.size());
 
+			Map<String, MessageAnalyzer> analyzers = new HashMap<String, MessageAnalyzer>();
+
 			for (String name : m_analyzerNames) {
 				MessageAnalyzer analyzer = m_factory.create(name, startTime, m_duration, m_extraTime);
 				MessageQueue queue = lookup(MessageQueue.class);
 				PeriodTask task = new PeriodTask(m_factory, analyzer, queue, startTime);
 
+				analyzers.put(name, analyzer);
 				task.enableLogging(m_logger);
 				m_tasks.add(task);
 			}
+
+			// hack for dependency
+			MessageAnalyzer top = analyzers.get("top");
+			MessageAnalyzer transaction = analyzers.get("transaction");
+			MessageAnalyzer problem = analyzers.get("problem");
+
+			((TopAnalyzer) top).setTransactionAnalyzer((TransactionAnalyzer) transaction);
+			((TopAnalyzer) top).setProblemAnalyzer((ProblemAnalyzer) problem);
 		}
 
 		public void distribute(MessageTree tree) {

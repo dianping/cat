@@ -14,51 +14,53 @@ import org.unidal.webres.resource.spi.IResourceRegistry;
 import org.unidal.webres.tag.resource.ResourceTagConfigurator;
 import org.unidal.webres.taglib.basic.ResourceTagLibConfigurator;
 
-import com.dainping.cat.home.dal.user.DpAdminLogin;
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.Page;
 
+import com.dainping.cat.home.dal.user.DpAdminLogin;
+
 public class SystemContext<T extends ActionPayload<? extends Page, ? extends Action>> extends ActionContext<T> {
+
 	private DpAdminLogin m_signinMember;
 
 	public DpAdminLogin getSigninMember() {
 		return m_signinMember;
 	}
 	
-   @Override
-   public void initialize(HttpServletRequest request, HttpServletResponse response) {
-      super.initialize(request, response);
-
-      String contextPath = request.getContextPath();
-
-      synchronized (ResourceRuntime.INSTANCE) {
-         if (!ResourceRuntime.INSTANCE.hasConfig(contextPath)) {
-            ServletContext servletContext = request.getSession().getServletContext();
-            File warRoot = new File(servletContext.getRealPath("/"));
-   
-            System.out.println("[INFO] Working directory is "+ System.getProperty("user.dir"));
-            System.out.println("[INFO] War root is " + warRoot);
-   
-            ResourceRuntime.INSTANCE.removeConfig(contextPath);
-            ResourceInitializer.initialize(contextPath, warRoot);
-   
-            IResourceRegistry registry = ResourceRuntime.INSTANCE.getConfig(contextPath).getRegistry();
-   
-            new ResourceConfigurator().configure(registry);
-            new ResourceTagConfigurator().configure(registry);
-            new ResourceTagLibConfigurator().configure(registry);
-   
-            registry.lock();
-         }
-   
-         ResourceRuntimeContext.setup(contextPath);
-      }
-   }
-
 	public void setSigninMember(DpAdminLogin signinMember) {
-   	m_signinMember = signinMember;
-   }
+		m_signinMember = signinMember;
+	}
+
+	@Override
+	public void initialize(HttpServletRequest request, HttpServletResponse response) {
+		super.initialize(request, response);
+
+		String contextPath = request.getContextPath();
+
+		synchronized (ResourceRuntime.INSTANCE) {
+			if (!ResourceRuntime.INSTANCE.hasConfig(contextPath)) {
+				ServletContext servletContext = request.getSession().getServletContext();
+				File warRoot = new File(servletContext.getRealPath("/"));
+
+				System.out.println("[INFO] Working directory is " + System.getProperty("user.dir"));
+				System.out.println("[INFO] War root is " + warRoot);
+
+				ResourceRuntime.INSTANCE.removeConfig(contextPath);
+				ResourceInitializer.initialize(contextPath, warRoot);
+
+				IResourceRegistry registry = ResourceRuntime.INSTANCE.getConfig(contextPath).getRegistry();
+
+				new ResourceConfigurator().configure(registry);
+				new ResourceTagConfigurator().configure(registry);
+				new ResourceTagLibConfigurator().configure(registry);
+
+				registry.lock();
+			}
+
+			ResourceRuntimeContext.setup(contextPath);
+		}
+	}
 
 }

@@ -27,6 +27,7 @@ import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
+import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -238,6 +239,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		processTransactionGraph(name, t);
+		processTransactionRange(t, type);
 
 		List<Message> children = t.getChildren();
 
@@ -248,6 +250,21 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		return count;
+	}
+
+	private void processTransactionRange(Transaction t, TransactionType type) {
+		double d = t.getDurationInMicros() / 1000d;
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(t.getTimestamp());
+		int min = cal.get(Calendar.MINUTE);
+
+		Range2 range = type.findOrCreateRange2(min);
+
+		if (!t.isSuccess()) {
+			range.incFails();
+		}
+		range.incCount();
+		range.setSum(range.getSum() + d);
 	}
 
 	private void processTransactionGraph(TransactionName name, Transaction t) {
@@ -275,6 +292,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			range.setSum(range.getSum() + d);
 		}
+
 	}
 
 	private void set95Line(TransactionReport report) {

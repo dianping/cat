@@ -33,6 +33,7 @@ import com.dianping.cat.consumer.problem.handler.LongExecutionHandler;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
+import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -54,7 +55,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class, ServerStateManager.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
-		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state")));
+		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state,top")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,PigeonCall,Cache";
@@ -101,8 +102,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ServerConfigManager.class) //
 		      .req(DumpUploader.class)//
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID)
-		      .req(ServerStateManager.class));
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID).req(ServerStateManager.class));
+
+		all.add(C(TopAnalyzer.class).is(PER_LOOKUP) //
+		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 
 		all.add(C(DumpUploader.class) //
 		      .req(ServerConfigManager.class, FileSystemManager.class));

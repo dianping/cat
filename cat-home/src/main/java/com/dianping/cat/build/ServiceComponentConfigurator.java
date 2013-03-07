@@ -42,6 +42,9 @@ import com.dianping.cat.report.page.model.sql.LocalSqlService;
 import com.dianping.cat.report.page.model.state.CompositeStateService;
 import com.dianping.cat.report.page.model.state.HistoricalStateService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
+import com.dianping.cat.report.page.model.top.CompositeTopService;
+import com.dianping.cat.report.page.model.top.HistoricalTopService;
+import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.CompositeTransactionService;
 import com.dianping.cat.report.page.model.transaction.HistoricalTransactionService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
@@ -152,6 +155,15 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID, "m_localBucketManager") //
 		      .req(MessageBucketManager.class, HdfsMessageBucketManager.ID, "m_hdfsBucketManager") //
 		      .req(MessageCodec.class, "html"));
+
+		all.add(C(ModelService.class, "top-local", LocalTopService.class) //
+		      .req(BucketManager.class, ReportDao.class) //
+		      .req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "top-historical", HistoricalTopService.class) //
+		      .req(BucketManager.class, ReportDao.class));
+		all.add(C(ModelService.class, "top", CompositeTopService.class) //
+		      .req(ServerConfigManager.class) //
+		      .req(ModelService.class, new String[] { "top-historical" }, "m_services"));
 
 //		all.add(C(ModelService.class, "logview-local", LocalLogViewService.class) //
 //		      .req(MessageConsumer.class, "realtime") //

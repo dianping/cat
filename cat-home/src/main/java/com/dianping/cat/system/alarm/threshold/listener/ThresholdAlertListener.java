@@ -70,7 +70,7 @@ public class ThresholdAlertListener implements EventListener, Initializable {
 		root.put("count", meta.getRealCount());
 		root.put("domain", meta.getDomain());
 		root.put("date", meta.getDate());
-		root.put("url", buildProblemUrl(meta.getBaseUrl(), meta.getDomain(), meta.getDate()));
+		root.put("url", buildProblemUrl(meta.getBaseShowUrl(), meta.getDomain(), meta.getDate()));
 
 		try {
 			String type = meta.getType();

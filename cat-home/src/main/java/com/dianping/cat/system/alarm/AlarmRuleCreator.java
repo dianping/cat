@@ -54,7 +54,12 @@ public class AlarmRuleCreator implements Task {
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
 			EventReport report = response.getModel();
-			return report.getDomainNames();
+
+			if (report != null) {
+				return report.getDomainNames();
+			} else {
+				return new HashSet<String>();
+			}
 		} else {
 			throw new RuntimeException("Internal error: no eligable event service registered for " + request + "!");
 		}
