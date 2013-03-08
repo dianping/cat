@@ -6,12 +6,13 @@ import java.net.URL;
 import java.util.Date;
 import java.util.Map;
 
+import org.unidal.helper.Files;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.system.alarm.connector.Connector;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.unidal.helper.Files;
 
 public class ThresholdConnector implements Connector {
 

@@ -11,6 +11,9 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("op")
 	private Action m_action;
+	
+	@FieldMeta("count")
+	private int m_count;
 
 	public Payload() {
 		super(ReportPage.TOP);
@@ -33,6 +36,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.TOP);
+	}
+
+	public int getCount() {
+		return m_count;
+	}
+
+	public void setCount(int count) {
+		m_count = count;
 	}
 
 	@Override

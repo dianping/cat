@@ -8,14 +8,15 @@ import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 
-import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.ReportPage;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import com.dianping.cat.consumer.RealtimeConsumer;
+import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {
 	@Inject

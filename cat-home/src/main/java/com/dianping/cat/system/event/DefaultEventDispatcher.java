@@ -2,8 +2,9 @@ package com.dianping.cat.system.event;
 
 import java.util.List;
 
-import com.dianping.cat.Cat;
 import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.Cat;
 
 public class DefaultEventDispatcher implements EventDispatcher {
 	@Inject

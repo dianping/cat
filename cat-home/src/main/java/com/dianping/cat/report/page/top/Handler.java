@@ -13,6 +13,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -60,9 +61,16 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 
 		TopReport report = getReport(payload);
-		
-		System.out.println(report);
+		ModelPeriod period = payload.getPeriod();
+		int count = payload.getCount();
 		Metrix metrix = new Metrix();
+		
+		if (!period.isCurrent()) {
+			metrix = new Metrix(60);
+		}
+		if (count > 0) {
+			metrix = new Metrix(count);
+		}
 
 		metrix.visitTopReport(report);
 		model.setTopReport(report);

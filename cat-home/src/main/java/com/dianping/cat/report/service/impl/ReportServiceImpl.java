@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -13,6 +15,7 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.service.DailyReportService;
@@ -22,7 +25,6 @@ import com.dianping.cat.report.service.MonthReportService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.service.WeeklyReportCache;
 import com.dianping.cat.report.service.WeeklyReportService;
-import org.unidal.lookup.annotation.Inject;
 
 public class ReportServiceImpl implements ReportService {
 	@Inject
@@ -331,4 +333,13 @@ public class ReportServiceImpl implements ReportService {
 		return m_hourlyReportService.queryAllDomainNames(start, end, reportName);
 	}
 
+	@Override
+   public TopReport queryTopReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		if (type == s_hourly) {
+			return m_hourlyReportService.queryTopReport(domain, start, end);
+		} else {
+			throw new RuntimeException("Top report don't have other report type but houly!");
+		}
+	}
 }

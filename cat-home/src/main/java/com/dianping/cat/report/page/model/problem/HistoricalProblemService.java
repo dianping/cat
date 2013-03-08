@@ -1,26 +1,24 @@
 package com.dianping.cat.report.page.model.problem;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoricalProblemService extends BaseHistoricalModelService<ProblemReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalProblemService() {
 		super("problem");
@@ -42,28 +40,7 @@ public class HistoricalProblemService extends BaseHistoricalModelService<Problem
 	}
 
 	private ProblemReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
-		      ReportEntity.READSET_FULL);
-		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			ProblemReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
-		ProblemReport problemReport = merger.getProblemReport();
-
-		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, "problem", ReportEntity.READSET_DOMAIN_NAME);
-
-		if (problemReport == null) {
-			problemReport = new ProblemReport(domain);
-		}
-		Set<String> domainNames = problemReport.getDomainNames();
-		for (Report report : historyReports) {
-			domainNames.add(report.getDomain());
-		}
-		return problemReport;
+		return m_reportSerivce.queryProblemReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private ProblemReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

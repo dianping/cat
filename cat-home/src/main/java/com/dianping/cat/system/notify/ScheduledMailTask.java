@@ -5,6 +5,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
@@ -20,10 +25,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.system.page.alarm.ScheduledManager;
 import com.dianping.cat.system.tool.MailSMS;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
 public class ScheduledMailTask implements Task {
 

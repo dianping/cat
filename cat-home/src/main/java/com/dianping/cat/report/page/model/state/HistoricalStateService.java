@@ -1,25 +1,24 @@
 package com.dianping.cat.report.page.model.state;
 
 import java.util.Date;
-import java.util.List;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoricalStateService extends BaseHistoricalModelService<StateReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalStateService() {
 		super("state");
@@ -41,18 +40,7 @@ public class HistoricalStateService extends BaseHistoricalModelService<StateRepo
 	}
 
 	private StateReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
-		      ReportEntity.READSET_FULL);
-		StateReportMerger merger = new StateReportMerger(new StateReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			StateReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
-		StateReport stateReport = merger.getStateReport();
-
-		return merger == null ? null : stateReport;
+		return m_reportSerivce.queryStateReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private StateReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

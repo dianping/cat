@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dainping.cat.consumer.dal.report.ReportEntity;
@@ -20,8 +23,6 @@ import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
 
 public class HealthServiceCollector {
 

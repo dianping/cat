@@ -6,15 +6,16 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
-import com.dainping.cat.consumer.dal.report.Project;
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.view.DomainNavManager;
-import com.dianping.cat.report.view.HistoryNav;
-import com.dianping.cat.report.view.UrlNav;
-import com.dianping.cat.report.view.DomainNavManager.Department;
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ViewModel;
+
+import com.dainping.cat.consumer.dal.report.Project;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.view.DomainNavManager;
+import com.dianping.cat.report.view.DomainNavManager.Department;
+import com.dianping.cat.report.view.HistoryNav;
+import com.dianping.cat.report.view.UrlNav;
 
 public abstract class AbstractReportModel<A extends Action, M extends ActionContext<?>> extends
       ViewModel<ReportPage, A, M> {

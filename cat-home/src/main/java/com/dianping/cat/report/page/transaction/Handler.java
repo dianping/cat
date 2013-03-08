@@ -7,6 +7,13 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.transaction.StatisticsComputer;
@@ -29,12 +36,6 @@ import com.dianping.cat.report.page.transaction.GraphPayload.FailurePayload;
 import com.dianping.cat.report.page.transaction.GraphPayload.HitPayload;
 import com.dianping.cat.report.service.ReportService;
 import com.google.gson.Gson;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
@@ -81,38 +82,42 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void calculateTps(Payload payload, TransactionReport report) {
-		if (payload != null && report != null) {
-			boolean isCurrent = payload.getPeriod().isCurrent();
-			String ip = payload.getIpAddress();
-			Machine machine = report.getMachines().get(ip);
-			if (machine == null) {
-				return;
-			}
-			for (TransactionType transType : machine.getTypes().values()) {
-				long totalCount = transType.getTotalCount();
-				double tps = 0;
-				if (isCurrent) {
-					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-					tps = totalCount / seconds;
-				} else {
-					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-					tps = totalCount / (double) time;
+		try {
+			if (payload != null && report != null) {
+				boolean isCurrent = payload.getPeriod().isCurrent();
+				String ip = payload.getIpAddress();
+				Machine machine = report.getMachines().get(ip);
+				if (machine == null) {
+					return;
 				}
-				transType.setTps(tps);
-				for (TransactionName transName : transType.getNames().values()) {
-					long totalNameCount = transName.getTotalCount();
-					double nameTps = 0;
+				for (TransactionType transType : machine.getTypes().values()) {
+					long totalCount = transType.getTotalCount();
+					double tps = 0;
 					if (isCurrent) {
 						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
-						nameTps = totalNameCount / seconds;
+						tps = totalCount / seconds;
 					} else {
 						double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
-						nameTps = totalNameCount / (double) time;
+						tps = totalCount / (double) time;
 					}
-					transName.setTps(nameTps);
-					transName.setTotalPercent((double) totalNameCount / totalCount);
+					transType.setTps(tps);
+					for (TransactionName transName : transType.getNames().values()) {
+						long totalNameCount = transName.getTotalCount();
+						double nameTps = 0;
+						if (isCurrent) {
+							double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
+							nameTps = totalNameCount / seconds;
+						} else {
+							double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
+							nameTps = totalNameCount / (double) time;
+						}
+						transName.setTps(nameTps);
+						transName.setTotalPercent((double) totalNameCount / totalCount);
+					}
 				}
 			}
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
 	}
 
@@ -182,7 +187,7 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(model, payload);
 		String type = payload.getType();
-		
+
 		switch (payload.getAction()) {
 		case HOURLY_REPORT:
 			showHourlyReport(model, payload);
@@ -207,7 +212,7 @@ public class Handler implements PageHandler<Context> {
 		case MOBILE:
 			showHourlyReport(model, payload);
 			if (!StringUtils.isEmpty(payload.getType())) {
-				DisplayNames report =  model.getDisplayNameReport();
+				DisplayNames report = model.getDisplayNameReport();
 				String json = m_gson.toJson(report);
 				model.setMobileResponse(json);
 			} else {

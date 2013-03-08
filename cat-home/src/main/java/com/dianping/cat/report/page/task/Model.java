@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.unidal.web.mvc.ViewModel;
+
 import com.dainping.cat.consumer.dal.report.Task;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.dianping.cat.report.view.TaskUrlNav;
-import org.unidal.web.mvc.ViewModel;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 

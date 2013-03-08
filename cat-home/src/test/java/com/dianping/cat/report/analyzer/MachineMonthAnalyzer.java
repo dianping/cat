@@ -13,6 +13,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.ComponentTestCase;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
@@ -23,10 +27,6 @@ import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.DailyreportEntity;
 import com.dianping.cat.report.view.StringSortHelper;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.ComponentTestCase;
-import org.unidal.lookup.annotation.Inject;
 
 @RunWith(JUnit4.class)
 public class MachineMonthAnalyzer extends ComponentTestCase {

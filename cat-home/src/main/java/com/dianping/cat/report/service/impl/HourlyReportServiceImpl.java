@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dainping.cat.consumer.dal.report.ReportEntity;
@@ -18,6 +21,7 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Event;
@@ -29,11 +33,10 @@ import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.sql.SqlReportMerger;
 import com.dianping.cat.report.page.model.state.StateReportMerger;
+import com.dianping.cat.report.page.model.top.TopReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.HourlyReportService;
 import com.dianping.cat.report.task.health.HealthReportMerger;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
 
 public class HourlyReportServiceImpl implements HourlyReportService {
 
@@ -391,6 +394,36 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		stateReport.setStartTime(start);
 		stateReport.setEndTime(end);
 		return stateReport;
+   }
+
+	@Override
+   public TopReport queryTopReport(String domain, Date start, Date end) {
+		TopReportMerger merger = new TopReportMerger(new TopReport(domain));
+
+		try {
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "top",
+			      ReportEntity.READSET_FULL);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+
+				try {
+					TopReport reportModel = com.dianping.cat.consumer.top.model.transform.DefaultSaxParser
+					      .parse(xml);
+					reportModel.accept(merger);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", "top", Event.SUCCESS, report.getDomain()+" "+report.getPeriod()+" "+report.getId());
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		TopReport topReport = merger.getTopReport();
+		
+		topReport.setStartTime(start);
+		topReport.setEndTime(end);
+		return topReport;
    }
 
 }

@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
 public interface ReportService {
@@ -39,4 +40,6 @@ public interface ReportService {
 	public HealthReport queryHealthReport(String domain, Date start, Date end);
 	
 	public StateReport queryStateReport(String domain,Date start,Date end);
+
+	public TopReport queryTopReport(String domain,Date start,Date end);
 }

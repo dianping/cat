@@ -23,6 +23,8 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	private volatile boolean m_active = true;
 
+	protected static final String ALL = "All";
+
 	@Override
 	public void analyze(MessageQueue queue) {
 		while (!isTimeout() && isActive()) {
@@ -86,7 +88,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		// pigeon default heartbeat is no use
 		String type = t.getType();
 		String name = t.getName();
-		
+
 		if ((("Service").equals(type) || ("PigeonService").equals(type))
 		      && (("piegonService:heartTaskService:heartBeat").equals(name)
 		            || ("piegonService:heartTaskService:heartBeat()").equals(name) || ("pigeon:HeartBeatService:null")

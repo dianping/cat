@@ -1,26 +1,24 @@
 package com.dianping.cat.report.page.model.transaction;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoricalTransactionService extends BaseHistoricalModelService<TransactionReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalTransactionService() {
 		super("transaction");
@@ -42,28 +40,8 @@ public class HistoricalTransactionService extends BaseHistoricalModelService<Tra
 	}
 
 	private TransactionReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
-		      ReportEntity.READSET_FULL);
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			TransactionReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
-		TransactionReport transactionReport = merger.getTransactionReport();
-
-		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, "transaction", ReportEntity.READSET_DOMAIN_NAME);
-
-		if (transactionReport == null) {
-			transactionReport = new TransactionReport(domain);
-		}
-		Set<String> domainNames = transactionReport.getDomainNames();
-		for (Report report : historyReports) {
-			domainNames.add(report.getDomain());
-		}
-		return transactionReport;
+		return m_reportSerivce.queryTransactionReport(domain, new Date(timestamp),
+		      new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private TransactionReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

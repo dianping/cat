@@ -30,9 +30,9 @@
 		<tr><th>系统异常Top10（最近5分钟）</th></tr>
 	</table>					
 	<c:forEach var="item" items="${model.metrix.error.result}" varStatus="status">
-		<table width="16%" style="float:left">  
+		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th>系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>值</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
@@ -45,9 +45,9 @@
 		<tr><th>Url访问最慢Top10（最近5分钟）</th></tr>
 	</table>					
 	<c:forEach var="item" items="${model.metrix.url.result}" varStatus="status">
-		<table width="16%" style="float:left">  
+		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th>系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>值</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
@@ -61,9 +61,9 @@
 		<tr><th>Service访问最慢Top10（最近5分钟）</th></tr>
 	</table>					
 	<c:forEach var="item" items="${model.metrix.service.result}" varStatus="status">
-		<table width="16%" style="float:left">  
+		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th>系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>值</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
@@ -76,9 +76,9 @@
 		<tr><th>Call访问最慢Top10（最近5分钟）</th></tr>
 	</table>					
 	<c:forEach var="item" items="${model.metrix.call.result}" varStatus="status">
-		<table width="16%" style="float:left">  
+		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th>系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>值</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
@@ -91,9 +91,9 @@
 		<tr><th>SQL访问最慢Top10（最近5分钟）</th></tr>
 	</table>					
 	<c:forEach var="item" items="${model.metrix.sql.result}" varStatus="status">
-		<table width="16%" style="float:left">  
+		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th>系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>值</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
@@ -106,9 +106,9 @@
 		<tr><th>Cache访问最慢Top10（最近5分钟）</th></tr>
 	</table>					
 	<c:forEach var="item" items="${model.metrix.cache.result}" varStatus="status">
-		<table width="16%" style="float:left">  
+		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th>系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>值</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>

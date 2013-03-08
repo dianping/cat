@@ -1,25 +1,21 @@
 package com.dianping.cat.report.page.model.ip;
 
-import java.util.Date;
-import java.util.List;
+import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalIpService() {
 		super("ip");
@@ -41,22 +37,7 @@ public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 	}
 
 	private IpReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
-		      ReportEntity.READSET_FULL);
-		IpReportMerger merger = null;
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			IpReport model = DefaultSaxParser.parse(xml);
-
-			if (merger == null) {
-				merger = new IpReportMerger(model);
-			} else {
-				model.accept(merger);
-			}
-		}
-
-		return merger == null ? null : merger.getIpReport();
+		return new IpReport();
 	}
 
 	private IpReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

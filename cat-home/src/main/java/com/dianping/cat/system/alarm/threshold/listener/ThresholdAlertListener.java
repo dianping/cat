@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.CatString;
@@ -23,7 +24,6 @@ import com.dianping.cat.system.event.EventListener;
 import com.dianping.cat.system.event.EventType;
 import com.dianping.cat.system.notify.ReportRenderImpl;
 import com.dianping.cat.system.page.alarm.RuleManager;
-import org.unidal.lookup.annotation.Inject;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

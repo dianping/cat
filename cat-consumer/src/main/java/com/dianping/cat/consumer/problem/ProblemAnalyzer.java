@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -26,7 +27,6 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled {
 	@Inject
@@ -129,6 +129,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 		loadReports();
 	}
+	
+//	private ProblemReport buildAllReport(){
+//		ProblemReport report = new ProblemReport(ALL);
+//		
+//		return report;
+//	}
 
 	private void storeReports(boolean atEnd) {
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
@@ -200,4 +206,33 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			}
 		}
 	}
+	
+//	static class ProblemReportVisitor extends BaseVisitor{
+//
+//		private ProblemReport m_report;
+//		
+//		private String m_currentDomain;
+//		
+//		private String m_currentType;
+//		
+//		@Override
+//      public void visitProblemReport(ProblemReport problemReport) {
+//			m_currentDomain = problemReport.getDomain();
+//	      super.visitProblemReport(problemReport);
+//      }
+//
+//		@Override
+//      public void visitSegment(Segment segment) {
+//			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
+//			machine.addEntry(entry);
+//			super.visitSegment(segment);
+//      }
+//
+//		@Override
+//      public void visitEntry(Entry entry) {
+//			m_currentType = entry.getType();
+//	      super.visitEntry(entry);
+//      }
+//		
+//	}
 }

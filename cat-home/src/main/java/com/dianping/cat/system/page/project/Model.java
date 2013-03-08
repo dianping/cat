@@ -3,9 +3,10 @@ package com.dianping.cat.system.page.project;
 import java.util.Collections;
 import java.util.List;
 
+import org.unidal.web.mvc.ViewModel;
+
 import com.dainping.cat.consumer.dal.report.Project;
 import com.dianping.cat.system.SystemPage;
-import org.unidal.web.mvc.ViewModel;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 	

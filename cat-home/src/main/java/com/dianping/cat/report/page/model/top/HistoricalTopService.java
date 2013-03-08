@@ -1,17 +1,15 @@
 package com.dianping.cat.report.page.model.top;
 
 import java.util.Date;
-import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
@@ -20,7 +18,7 @@ public class HistoricalTopService extends BaseHistoricalModelService<TopReport> 
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalTopService() {
 		super("top");
@@ -42,18 +40,7 @@ public class HistoricalTopService extends BaseHistoricalModelService<TopReport> 
 	}
 
 	private TopReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
-		      ReportEntity.READSET_FULL);
-		TopReportMerger merger = new TopReportMerger(new TopReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			TopReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
-		TopReport topReport = merger.getTopReport();
-
-		return topReport;
+		return m_reportSerivce.queryTopReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private TopReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

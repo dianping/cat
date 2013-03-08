@@ -2,11 +2,12 @@ package com.dianping.cat.report.page.logview;
 
 import java.util.Arrays;
 
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.PathMeta;
+
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportPayload;
 
 public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")

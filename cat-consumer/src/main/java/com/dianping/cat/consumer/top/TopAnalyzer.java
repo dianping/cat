@@ -18,7 +18,6 @@ import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
-import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.top.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
@@ -41,8 +40,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	@Inject
 	private TaskDao m_taskDao;
 
-	private TopReport m_report;
-
 	private TransactionAnalyzer m_transactionAnalyzer;
 
 	private ProblemAnalyzer m_problemAnalyzer;
@@ -63,22 +60,22 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	public synchronized TopReport getReport(String domain) {
-		m_report = new TopReport("Cat");
-		m_report.setStartTime(new Date(m_startTime));
-		m_report.setEndTime(new Date(m_startTime + 59 * MINUTE));
+		TopReport topReport = new TopReport("Cat");
+		topReport.setStartTime(new Date(m_startTime));
+		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 
 		Set<String> domains = m_transactionAnalyzer.getDomains();
 		for (String temp : domains) {
 			TransactionReport report = m_transactionAnalyzer.getReport(temp);
 
-			new TransactionReportVisitor().visitTransactionReport(report);
+			new TransactionReportVisitor(topReport).visitTransactionReport(report);
 		}
 		for (String temp : domains) {
 			ProblemReport report = m_problemAnalyzer.getReport(temp);
 
-			new ProblemReportVisitor().visitProblemReport(report);
+			new ProblemReportVisitor(topReport).visitProblemReport(report);
 		}
-		return m_report;
+		return topReport;
 	}
 
 	@Override
@@ -90,24 +87,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	private void loadReports() {
-		Bucket<String> reportBucket = null;
-
-		try {
-			reportBucket = m_bucketManager.getReportBucket(m_startTime, "top");
-
-			for (String id : reportBucket.getIds()) {
-				String xml = reportBucket.findById(id);
-				TopReport report = DefaultSaxParser.parse(xml);
-
-				m_report = report;
-			}
-		} catch (Exception e) {
-			m_logger.error(String.format("Error when loading top reports of %s!", new Date(m_startTime)), e);
-		} finally {
-			if (reportBucket != null) {
-				m_bucketManager.closeBucket(reportBucket);
-			}
-		}
 	}
 
 	@Override
@@ -131,26 +110,14 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		try {
 			if (atEnd && !isLocalMode()) {
-				getReport("Cat");
-				reportBucket = m_bucketManager.getReportBucket(m_startTime, "top");
-
-				try {
-					String xml = builder.buildXml(m_report);
-					String domain = m_report.getDomain();
-
-					reportBucket.storeById(domain, xml);
-				} catch (Exception e) {
-					t.setStatus(e);
-					Cat.logError(e);
-				}
-
+				TopReport report = getReport("Cat");
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 				try {
 					Report r = m_reportDao.createLocal();
-					String xml = builder.buildXml(m_report);
-					String domain = m_report.getDomain();
+					String xml = builder.buildXml(report);
+					String domain = report.getDomain();
 
 					r.setName("top");
 					r.setDomain(domain);
@@ -191,6 +158,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		private String m_domain;
 
 		private String m_type;
+
+		private TopReport m_report;
+
+		public TransactionReportVisitor(TopReport report) {
+			m_report = report;
+		}
 
 		@Override
 		public void visitTransactionReport(TransactionReport transactionReport) {
@@ -241,6 +214,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		private String m_domain;
 
 		private String m_type;
+
+		private TopReport m_report;
+
+		public ProblemReportVisitor(TopReport report) {
+			m_report = report;
+		}
 
 		@Override
 		public void visitProblemReport(ProblemReport problemReport) {
