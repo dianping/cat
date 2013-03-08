@@ -12,22 +12,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private Metrix m_metrix;
 	
-	public Metrix getMetrix() {
-		return m_metrix;
-	}
-
-	public void setMetrix(Metrix metrix) {
-		m_metrix = metrix;
-	}
-
-	public TopReport getTopReport() {
-		return m_topReport;
-	}
-
-	public void setTopReport(TopReport topReport) {
-		m_topReport = topReport;
-	}
-
+	private boolean m_refresh = false;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -45,5 +31,29 @@ public class Model extends AbstractReportModel<Action, Context> {
 	@Override
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
+	}
+
+	public Metrix getMetrix() {
+		return m_metrix;
+	}
+	
+	public TopReport getTopReport() {
+		return m_topReport;
+	}
+
+	public boolean isRefresh() {
+		return m_refresh;
+	}
+
+	public void setMetrix(Metrix metrix) {
+		m_metrix = metrix;
+	}
+
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
+	}
+
+	public void setTopReport(TopReport topReport) {
+		m_topReport = topReport;
 	}
 }

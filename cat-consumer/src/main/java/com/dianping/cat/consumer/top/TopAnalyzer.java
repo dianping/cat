@@ -212,7 +212,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		},
 
 		Service {
-
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
@@ -224,7 +223,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		},
 
 		PigeonService {
-
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
@@ -236,7 +234,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		},
 
 		Call {
-
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
@@ -249,7 +246,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		},
 
 		PigeonCall {
-
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
@@ -261,7 +257,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		},
 
 		SQL {
-
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();

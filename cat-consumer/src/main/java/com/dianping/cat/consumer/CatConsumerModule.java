@@ -10,15 +10,15 @@ public class CatConsumerModule extends AbstractModule {
 	public static final String ID = "cat-consumer";
 
 	@Override
-	public Module[] getDependencies(ModuleContext ctx) {
-		return ctx.getModules(CatCoreModule.ID);
-	}
-
-	@Override
 	protected void execute(ModuleContext ctx) {
 		TcpSocketReceiver receiver = ctx.lookup(TcpSocketReceiver.class);
 		int encodeThreadNumber = 5;
 
 		receiver.startEncoderThreads(encodeThreadNumber);
+	}
+
+	@Override
+	public Module[] getDependencies(ModuleContext ctx) {
+		return ctx.getModules(CatCoreModule.ID);
 	}
 }

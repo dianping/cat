@@ -37,10 +37,10 @@ public class Metrix extends BaseVisitor {
 
 	private MetrixItem m_cache;
 
-	private static final int FIVE = 5;
+	private static final int DEFAULT = 10;
 
 	public Metrix() {
-		this(FIVE);
+		this(DEFAULT);
 	}
 
 	public Metrix(int count) {
@@ -53,28 +53,28 @@ public class Metrix extends BaseVisitor {
 		m_cache = new MetrixItem(m_count);
 	}
 
-	public MetrixItem getError() {
-		return m_error;
+	public MetrixItem getCache() {
+		return m_cache;
 	}
 	
-	public MetrixItem getUrl() {
-		return m_url;
+	public MetrixItem getCall() {
+		return m_call;
+	}
+
+	public MetrixItem getError() {
+		return m_error;
 	}
 
 	public MetrixItem getService() {
 		return m_service;
 	}
 
-	public MetrixItem getCall() {
-		return m_call;
-	}
-
 	public MetrixItem getSql() {
 		return m_sql;
 	}
 
-	public MetrixItem getCache() {
-		return m_cache;
+	public MetrixItem getUrl() {
+		return m_url;
 	}
 
 	public void setError(MetrixItem error) {

@@ -10,6 +10,13 @@
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
 <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
+<script type="text/javascript">
+	if(${model.refresh}){
+		setTimeout(function refresh(){
+			window.location.href="?count=10";
+		},10000);		
+	}
+</script>
 <a:body>
 <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 <res:useCss value='${res.css.local.report_css}' target="head-css" />

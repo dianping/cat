@@ -24,6 +24,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
+	public int getCount() {
+		return m_count;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -33,17 +37,13 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
+	public void setCount(int count) {
+		m_count = count;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.TOP);
-	}
-
-	public int getCount() {
-		return m_count;
-	}
-
-	public void setCount(int count) {
-		m_count = count;
 	}
 
 	@Override

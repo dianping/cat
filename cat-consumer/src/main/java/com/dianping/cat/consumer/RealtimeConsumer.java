@@ -445,16 +445,16 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		private Logger m_logger;
 
-		@Override
-		public void enableLogging(Logger logger) {
-			m_logger = logger;
-		}
-
 		public PeriodTask(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
 			m_factory = factory;
 			m_analyzer = analyzer;
 			m_queue = queue;
 			m_startTime = startTime;
+		}
+
+		@Override
+		public void enableLogging(Logger logger) {
+			m_logger = logger;
 		}
 
 		public boolean enqueue(MessageTree tree) {

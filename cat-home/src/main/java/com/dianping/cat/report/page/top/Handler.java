@@ -64,9 +64,11 @@ public class Handler implements PageHandler<Context> {
 		ModelPeriod period = payload.getPeriod();
 		int count = payload.getCount();
 		Metrix metrix = new Metrix();
-		
+
 		if (!period.isCurrent()) {
 			metrix = new Metrix(60);
+		} else {
+			model.setRefresh(true);
 		}
 		if (count > 0) {
 			metrix = new Metrix(count);
