@@ -1,7 +1,9 @@
 package com.dianping.cat.consumer.top;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -91,6 +93,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Override
 	protected void process(MessageTree tree) {
+		// do nothing
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
@@ -182,32 +185,107 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			int minute = range2.getValue();
 			long count = range2.getCount();
 			double sum = range2.getSum();
-
 			com.dianping.cat.consumer.top.model.entity.Segment detail = m_report.findOrCreateDomain(m_domain)
 			      .findOrCreateSegment(minute);
+			Range2Function function = Range2Function.getByName(m_type);
 
-			if ("URL".equals(m_type)) {
-				detail.setUrl(count + detail.getUrl());
-				detail.setUrlSum(sum + detail.getUrlSum());
-				detail.setUrlDuration(detail.getUrlSum() / detail.getUrl());
-			} else if ("PigeonService".equals(m_type) || "Service".equals(m_type)) {
-				detail.setService(count + detail.getService());
-				detail.setServiceSum(sum + detail.getServiceSum());
-				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
-			} else if ("PigeonCall".equals(m_type) || "Call".equals(m_type)) {
-				detail.setCall(count + detail.getCall());
-				detail.setCallSum(sum + detail.getCallSum());
-				detail.setCallDuration(detail.getCallSum() / detail.getCall());
+			if (function != null) {
+				function.apply(range2, detail);
 			} else if (m_type.startsWith("Cache.memcached")) {
 				detail.setCache(count + detail.getCache());
 				detail.setCacheSum(sum + detail.getCacheSum());
 				detail.setCacheDuration(detail.getCacheSum() / detail.getCache());
-			} else if ("SQL".equals(m_type)) {
+			}
+		}
+	}
+
+	public static enum Range2Function {
+		URL {
+			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
+				long count = range2.getCount();
+				double sum = range2.getSum();
+
+				detail.setUrl(count + detail.getUrl());
+				detail.setUrlSum(sum + detail.getUrlSum());
+				detail.setUrlDuration(detail.getUrlSum() / detail.getUrl());
+			}
+		},
+
+		Service {
+
+			@Override
+			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
+				long count = range2.getCount();
+				double sum = range2.getSum();
+				detail.setService(count + detail.getService());
+				detail.setServiceSum(sum + detail.getServiceSum());
+				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
+			}
+		},
+
+		PigeonService {
+
+			@Override
+			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
+				long count = range2.getCount();
+				double sum = range2.getSum();
+				detail.setService(count + detail.getService());
+				detail.setServiceSum(sum + detail.getServiceSum());
+				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
+			}
+		},
+
+		Call {
+
+			@Override
+			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
+				long count = range2.getCount();
+				double sum = range2.getSum();
+				detail.setCall(count + detail.getCall());
+				detail.setCallSum(sum + detail.getCallSum());
+				detail.setCallDuration(detail.getCallSum() / detail.getCall());
+
+			}
+		},
+
+		PigeonCall {
+
+			@Override
+			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
+				long count = range2.getCount();
+				double sum = range2.getSum();
+				detail.setCall(count + detail.getCall());
+				detail.setCallSum(sum + detail.getCallSum());
+				detail.setCallDuration(detail.getCallSum() / detail.getCall());
+			}
+		},
+
+		SQL {
+
+			@Override
+			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
+				long count = range2.getCount();
+				double sum = range2.getSum();
 				detail.setSql(count + detail.getSql());
 				detail.setSqlSum(sum + detail.getSqlSum());
 				detail.setSqlDuration(detail.getSqlSum() / detail.getSql());
 			}
+		},
+		;
+
+		private static Map<String, Range2Function> s_map = new HashMap<String, Range2Function>();
+
+		static {
+			for (Range2Function f : values()) {
+				s_map.put(f.name(), f);
+			}
 		}
+
+		public static Range2Function getByName(String name) {
+			return s_map.get(name);
+		}
+
+		public abstract void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail);
 	}
 
 	class ProblemReportVisitor extends com.dianping.cat.consumer.problem.model.transform.BaseVisitor {

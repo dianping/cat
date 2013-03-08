@@ -11,25 +11,49 @@
 <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 <a:body>
+<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 <res:useCss value='${res.css.local.report_css}' target="head-css" />
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
+<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;Top Index Of Dianping</td>
+			<td class="title">&nbsp;&nbsp;From ${w:format(model.topReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.topReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 		<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>
+		</tr>
 	</table>
 	
-	<table width="100%">
-		<tr><th>系统异常Top10（最近5分钟）</th></tr>
-	</table>					
-	<c:forEach var="item" items="${model.metrix.error.result}" varStatus="status">
+	<div class="tabbable"> <!-- Only required for left/right tabs -->
+  <ul class="nav nav-tabs">
+    <li class="active"><a href="#tab1" data-toggle="tab">异常最多Top10</a></li>
+    <li><a href="#tab2" data-toggle="tab">URL最慢Top10</a></li>
+    <li><a href="#tab3" data-toggle="tab">Service最慢Top10</a></li>
+    <li><a href="#tab4" data-toggle="tab">SQL最慢Top10</a></li>
+    <li><a href="#tab5" data-toggle="tab">Call最慢Top10</a></li>
+    <li><a href="#tab6" data-toggle="tab">Cache最慢Top10</a></li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane active" id="tab1">
+      <c:forEach var="item" items="${model.metrix.error.result}" varStatus="status">
+		<table width="20%" style="float:left" border=1>  
+				<tr><th colspan="2">${item.key}</th></tr>
+				<tr><th width="80%">系统</th>		<th>值</th></tr>
+				<c:forEach var="detail" items="${item.value}" varStatus="status">
+					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
+					</tr>
+				</c:forEach>
+		</table>
+		</c:forEach>
+    </div>
+    <div class="tab-pane" id="tab2">
+    	<c:forEach var="item" items="${model.metrix.url.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
 				<tr><th width="80%">系统</th>		<th>值</th></tr>
@@ -40,11 +64,9 @@
 				</c:forEach>
 		</table>
 	</c:forEach>
-	
-	<table width="100%">
-		<tr><th>Url访问最慢Top10（最近5分钟）</th></tr>
-	</table>					
-	<c:forEach var="item" items="${model.metrix.url.result}" varStatus="status">
+    </div>
+    <div class="tab-pane" id="tab3">
+    	<c:forEach var="item" items="${model.metrix.service.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
 				<tr><th width="80%">系统</th>		<th>值</th></tr>
@@ -55,12 +77,9 @@
 				</c:forEach>
 		</table>
 	</c:forEach>
-	
-	
-	<table width="100%">
-		<tr><th>Service访问最慢Top10（最近5分钟）</th></tr>
-	</table>					
-	<c:forEach var="item" items="${model.metrix.service.result}" varStatus="status">
+    </div>
+    <div class="tab-pane" id="tab4">
+    	<c:forEach var="item" items="${model.metrix.sql.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
 				<tr><th width="80%">系统</th>		<th>值</th></tr>
@@ -71,11 +90,9 @@
 				</c:forEach>
 		</table>
 	</c:forEach>
-	
-	<table width="100%">
-		<tr><th>Call访问最慢Top10（最近5分钟）</th></tr>
-	</table>					
-	<c:forEach var="item" items="${model.metrix.call.result}" varStatus="status">
+    </div>
+    <div class="tab-pane" id="tab5">
+    	<c:forEach var="item" items="${model.metrix.call.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
 				<tr><th width="80%">系统</th>		<th>值</th></tr>
@@ -86,11 +103,9 @@
 				</c:forEach>
 		</table>
 	</c:forEach>
-	
-	<table width="100%">
-		<tr><th>SQL访问最慢Top10（最近5分钟）</th></tr>
-	</table>					
-	<c:forEach var="item" items="${model.metrix.sql.result}" varStatus="status">
+    </div>
+    <div class="tab-pane" id="tab6">
+    	<c:forEach var="item" items="${model.metrix.cache.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
 				<tr><th width="80%">系统</th>		<th>值</th></tr>
@@ -101,23 +116,9 @@
 				</c:forEach>
 		</table>
 	</c:forEach>
-	
-	<table width="100%">
-		<tr><th>Cache访问最慢Top10（最近5分钟）</th></tr>
-	</table>					
-	<c:forEach var="item" items="${model.metrix.cache.result}" varStatus="status">
-		<table width="20%" style="float:left" border=1>  
-				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>值</th></tr>
-				<c:forEach var="detail" items="${item.value}" varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
-					</tr>
-				</c:forEach>
-		</table>
-	</c:forEach>
-
-	<table class="footer">
+    </div>
+  </div>
+	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>
 		</tr>
