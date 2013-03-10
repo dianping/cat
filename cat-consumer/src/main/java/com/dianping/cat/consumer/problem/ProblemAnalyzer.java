@@ -52,8 +52,8 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 		try {
 	      for (ProblemReport temp : m_reports.values()) {
-	      	temp.getIps().add(temp.getDomain());
-	      	temp.getDomainNames().add(temp.getDomain());
+	      	report.getIps().add(temp.getDomain());
+	      	report.getDomainNames().add(temp.getDomain());
 	      	visitor.visitProblemReport(temp);
 	      }
       } catch (Exception e) {

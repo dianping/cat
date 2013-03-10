@@ -104,9 +104,9 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		List<Graph> graphs = new ArrayList<Graph>();
 		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
-		ProblemReport transactionReport = m_problemMerger.mergeForGraph(reportDomain, reports);
+		ProblemReport problemReport = m_problemMerger.mergeForGraph(reportDomain, reports);
 		
-		graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+		graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
 		return graphs;
 	}
 
