@@ -39,6 +39,8 @@ public class Metrix extends BaseVisitor {
 
 	private static final int DEFAULT = 10;
 
+	private long m_currentTime = System.currentTimeMillis();
+
 	public Metrix() {
 		this(DEFAULT);
 	}
@@ -56,7 +58,7 @@ public class Metrix extends BaseVisitor {
 	public MetrixItem getCache() {
 		return m_cache;
 	}
-	
+
 	public MetrixItem getCall() {
 		return m_call;
 	}
@@ -90,13 +92,23 @@ public class Metrix extends BaseVisitor {
 	@Override
 	public void visitSegment(Segment segment) {
 		int minute = segment.getId();
+		long time = m_start.getTime() + minute * TimeUtil.ONE_MINUTE;
 
-		m_error.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain, segment.getError());
-		m_url.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain, segment.getUrlDuration());
-		m_service.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain, segment.getServiceDuration());
-		m_call.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain, segment.getCallDuration());
-		m_sql.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain, segment.getSqlDuration());
-		m_cache.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain, segment.getCacheDuration());
+		if (time <= m_currentTime + TimeUtil.ONE_MINUTE) {
+
+			m_error.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
+			      segment.getError());
+			m_url.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
+			      segment.getUrlDuration());
+			m_service.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
+			      segment.getServiceDuration());
+			m_call.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
+			      segment.getCallDuration());
+			m_sql.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
+			      segment.getSqlDuration());
+			m_cache.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
+			      segment.getCacheDuration());
+		}
 	}
 
 	@Override
