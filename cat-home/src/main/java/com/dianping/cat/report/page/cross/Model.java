@@ -8,6 +8,7 @@ import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.cross.display.HostInfo;
 import com.dianping.cat.report.page.cross.display.MethodInfo;
+import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.view.StringSortHelper;
 
@@ -26,6 +27,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private CrossReport m_report;
 
 	private String m_serviceSort;
+	
+	private MethodQueryInfo m_info;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -122,5 +125,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
 	}
+
+	public MethodQueryInfo getInfo() {
+		return m_info;
+	}
+
+	public void setInfo(MethodQueryInfo info) {
+		m_info = info;
+	}
+	
 
 }

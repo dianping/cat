@@ -30,6 +30,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("queryName")
 	private String m_queryName;
 
+	@FieldMeta("method")
+	private String m_method;
+
 	public Payload() {
 		super(ReportPage.CROSS);
 	}
@@ -99,6 +102,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
+	}
+	
+	public String getMethod() {
+		return m_method;
+	}
+
+	public void setMethod(String method) {
+		m_method = method;
 	}
 
 	@Override

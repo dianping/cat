@@ -45,15 +45,12 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 			if (report == null) {
 				Date start = new Date(date);
 				Date end = new Date(date + TimeUtil.ONE_HOUR);
-				report = m_reportSerivce.queryEventReport(domain, start, end);
 
-				if (report == null) {
-					report = new EventReport(domain);
-					Set<String> domains = m_reportSerivce.queryAllDomainNames(start, end, domain);
-					Set<String> domainNames = report.getDomainNames();
+				report = new EventReport(domain);
+				Set<String> domains = m_reportSerivce.queryAllDomainNames(start, end, domain);
+				Set<String> domainNames = report.getDomainNames();
 
-					domainNames.addAll(domains);
-				}
+				domainNames.addAll(domains);
 			}
 		}
 

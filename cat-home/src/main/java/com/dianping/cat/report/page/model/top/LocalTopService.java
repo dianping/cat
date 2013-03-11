@@ -45,13 +45,10 @@ public class LocalTopService extends BaseLocalModelService<TopReport> {
 			if (report == null) {
 				Date start = new Date(date);
 				Date end = new Date(date + TimeUtil.ONE_HOUR);
-				report = m_reportSerivce.queryTopReport(domain, start, end);
-
-				if (report == null) {
-					report = new TopReport(domain);
-					report.setStartTime(start);
-					report.setEndTime(end);
-				}
+				
+				report = new TopReport(domain);
+				report.setStartTime(start);
+				report.setEndTime(end);
 			}
 		}
 		return report;

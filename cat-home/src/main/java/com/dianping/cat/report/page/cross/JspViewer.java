@@ -22,6 +22,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.HISTORY_METHOD.getPath();
 		case HISTORY_PROJECT:
 			return JspFile.HISTORY_PROJECT.getPath();
+		case METHOD_QUERY:
+			return JspFile.METHOD_QUERY.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

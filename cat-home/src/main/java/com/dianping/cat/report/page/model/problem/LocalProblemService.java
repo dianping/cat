@@ -45,15 +45,12 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 			if (report == null) {
 				Date start = new Date(date);
 				Date end = new Date(date + TimeUtil.ONE_HOUR);
-				report = m_reportSerivce.queryProblemReport(domain, start, end);
+				
+				report = new ProblemReport(domain);
+				Set<String> domains = m_reportSerivce.queryAllDomainNames(start, end, domain);
+				Set<String> domainNames = report.getDomainNames();
 
-				if (report == null) {
-					report = new ProblemReport(domain);
-					Set<String> domains = m_reportSerivce.queryAllDomainNames(start, end, domain);
-					Set<String> domainNames = report.getDomainNames();
-
-					domainNames.addAll(domains);
-				}
+				domainNames.addAll(domains);
 			}
 		}
 

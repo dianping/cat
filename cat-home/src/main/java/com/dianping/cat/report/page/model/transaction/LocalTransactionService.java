@@ -45,15 +45,12 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 			if (report == null) {
 				Date start = new Date(date);
 				Date end = new Date(date + TimeUtil.ONE_HOUR);
-				report = m_reportSerivce.queryTransactionReport(domain, start, end);
 
-				if (report == null) {
-					report = new TransactionReport(domain);
-					Set<String> domains = m_reportSerivce.queryAllDomainNames(start, end, domain);
-					Set<String> domainNames = report.getDomainNames();
+				report = new TransactionReport(domain);
+				Set<String> domains = m_reportSerivce.queryAllDomainNames(start, end, domain);
+				Set<String> domainNames = report.getDomainNames();
 
-					domainNames.addAll(domains);
-				}
+				domainNames.addAll(domains);
 			}
 		}
 

@@ -129,7 +129,7 @@ public class Handler implements PageHandler<Context> {
 					      String.valueOf(payload.getDate()), payload.getHourDuration());
 
 					TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
-					
+
 					if (detail != null) {
 						detail.setProjectName(projectName);
 						projectInfo.getAllCallServiceProjectsInfo().put(projectName, detail);
@@ -183,10 +183,10 @@ public class Handler implements PageHandler<Context> {
 					}
 					Date start = payload.getHistoryStartDate();
 					Date end = payload.getHistoryEndDate();
-					ProjectInfo temp = buildHistoryCallProjectInfo(projectName,start,end);
+					ProjectInfo temp = buildHistoryCallProjectInfo(projectName, start, end);
 
 					TypeDetailInfo detail = temp.getAllCallProjectInfo().get(domain);
-					
+
 					if (detail != null) {
 						detail.setProjectName(projectName);
 						historyProjectInfo.getAllCallServiceProjectsInfo().put(projectName, detail);
@@ -218,7 +218,22 @@ public class Handler implements PageHandler<Context> {
 			model.setReport(historyMethodReport);
 			model.setMethodInfo(historyMethodInfo);
 			break;
-		default:
+
+		case METHOD_QUERY:
+			String method = payload.getMethod();
+			CrossMethodVisitor info = new CrossMethodVisitor(method, m_domainManager);
+			String reportType = payload.getReportType();
+			CrossReport queryReport = null;
+
+			if (reportType != null
+			      && (reportType.equals("day") || reportType.equals("week") || reportType.equals("month"))) {
+				queryReport = getSummarizeReport(payload);
+			} else {
+				queryReport = getHourlyReport(payload);
+			}
+			info.visitCrossReport(queryReport);
+			model.setReport(queryReport);
+			model.setInfo(info.getInfo());
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -234,15 +249,14 @@ public class Handler implements PageHandler<Context> {
 
 		return projectInfo;
 	}
-	
+
 	private ProjectInfo buildHistoryCallProjectInfo(String domain, Date start, Date end) {
 		CrossReport projectReport = getSummarizeReport(domain, start, end);
-		ProjectInfo projectInfo = new ProjectInfo(end.getTime()-start.getTime());
+		ProjectInfo projectInfo = new ProjectInfo(end.getTime() - start.getTime());
 
 		projectInfo.setDomainManager(m_domainManager);
 		projectInfo.setClientIp(CatString.ALL_IP);
 		projectInfo.visitCrossReport(projectReport);
-
 		return projectInfo;
 	}
 
