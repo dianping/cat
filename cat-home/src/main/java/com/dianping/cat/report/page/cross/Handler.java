@@ -322,6 +322,11 @@ public class Handler implements PageHandler<Context> {
 			model.setLongDate(payload.getDate());
 			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
+
+		if (action == Action.METHOD_QUERY && StringUtils.isEmpty(payload.getMethod())) {
+			payload.setAction(Action.HOURLY_PROJECT.getName());
+			model.setAction(Action.HOURLY_PROJECT);
+		}
 	}
 
 }
