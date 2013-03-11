@@ -14,10 +14,19 @@
 	<jsp:body>
 
 <res:useCss value="${res.css.local.cross_css}" target="head-css" />
+<res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
+<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
+<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
+<script type="text/javascript">
+	$(document).ready(function() {
+		init();
+	});
+</script>
 <%@ include file="crossQuery.jsp" %>
 </br>
-<table>
+<table id="contents" width="100%">
+	<thead>
 	<tr>
 		<th>类型</th>
 		<th>项目</th>
@@ -27,19 +36,19 @@
 		<th>Failure</th>
 		<th>Failure%</th>
 		<th>Avg(ms)</th>
-	</tr>
+	</tr></thead><tbody>
 	<c:forEach var="item" items="${model.info.items}" varStatus="status">
 		<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 			<td>${item.type}</td>
 			<td>${item.domain}</td>
 			<td>${item.ip}</td>
 			<td>${item.method}</td>
-			 <td>${w:format(item.totalCount,'#,###,###,###,##0')}</td>
+			 <td>${item.totalCount}</td>
 		     <td>${w:format(item.failureCount,'#,###,###,###,##0')}</td>
 		     <td>${w:format(item.failurePercent,'0.00%')}</td>
 		     <td>${w:format(item.avg,'0.00')}</td>
 		</tr>
-	</c:forEach>
+	</c:forEach></tbody>
 </table>
 </br>
 </jsp:body>
