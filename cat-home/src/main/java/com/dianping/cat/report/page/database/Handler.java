@@ -49,7 +49,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDatabaseNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_DAY), "database");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "database");
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);

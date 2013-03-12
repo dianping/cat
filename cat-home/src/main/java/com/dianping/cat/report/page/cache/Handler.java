@@ -222,7 +222,7 @@ public class Handler implements PageHandler<Context> {
 			TransactionReport report = merger.getTransactionReport();
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_DAY), "transaction");
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "transaction");
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
