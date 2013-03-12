@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.top;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 
@@ -12,6 +13,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -41,6 +43,11 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<TopReport> response = m_service.invoke(request);
 			TopReport report = response.getModel();
+
+			if (report == null) {
+				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
+				      + TimeUtil.ONE_HOUR));
+			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
