@@ -17,6 +17,12 @@
 <script>
 $(document).ready(function() {
 	init();
+	
+	var report = '${payload.queryType}';
+	var reportLevel = '${payload.reportLevel}';
+	
+	$('#reportType').val(report);
+	$('#reportLevel').val(reportLevel);
 });
 </script> 
 <div class="report">
@@ -86,11 +92,16 @@ $(document).ready(function() {
 		</tbody>
 	</table>
 	</br></br>
-	<table class="project" id="contents" width="100%">
+	
+	<c:if test="${payload.queryType eq 'transaction' }">
+		<table class="project" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
 					<td>Date</td>
 					<td>Type</td>
+					<c:if test="${not empty payload.name}">
+						<td>Name</td>
+					</c:if>
 					<td>TotalCount</td>
 					<td>FailureCount</td>
 					<td>Failure%</td>
@@ -104,6 +115,9 @@ $(document).ready(function() {
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td>${w:format(e.date,'yyyy-MM-dd HH:mm:ss')}</td>
 					<td>${e.type}</td>
+					<c:if test="${not empty payload.name}">
+						<td>${e.name}</td>
+					</c:if>
 					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
@@ -112,7 +126,57 @@ $(document).ready(function() {
 					<td>${w:format(e.avg,'0.0')}</td>
 					<td>${w:format(e.line95Value,'0.0')}</td>
 					</tr></c:forEach></tbody></table>
-					
+	</c:if>
+	
+	<c:if test="${payload.queryType eq 'event' }">
+		<table class="project" id="contents" width="100%">
+			<thead>
+				<tr class="odd">
+					<td>Date</td>
+					<td>Type</td>
+					<c:if test="${not empty payload.name}">
+						<td>Name</td>
+					</c:if>
+					<td>TotalCount</td>
+					<td>FailureCount</td>
+					<td>Failure%</td>
+				</tr></thead><tbody>
+				<c:forEach var="e" items="${model.eventItems}"
+					varStatus="status">
+					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<td>${w:format(e.date,'yyyy-MM-dd HH:mm:ss')}</td>
+					<td>${e.type}</td>
+					<c:if test="${not empty payload.name}">
+						<td>${e.name}</td>
+					</c:if>
+					<td>${e.totalCount}</td>
+					<td>${e.failCount}</td>
+					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
+					</tr></c:forEach></tbody></table>
+	</c:if>
+	
+	<c:if test="${payload.queryType eq 'problem' }">
+		<table class="project" id="contents" width="100%">
+			<thead>
+				<tr class="odd">
+					<td>Date</td>
+					<td>Type</td>
+					<c:if test="${not empty payload.name}">
+						<td>Name</td>
+					</c:if>
+					<td>FailureCount</td>
+				</tr></thead><tbody>
+				<c:forEach var="e" items="${model.problemItems}"
+					varStatus="status">
+					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
+					<td>${w:format(e.date,'yyyy-MM-dd HH:mm:ss')}</td>
+					<td>${e.type}</td>
+					<c:if test="${not empty payload.name}">
+						<td>${e.name}</td>
+					</c:if>
+					<td>${e.totalCount}</td>
+					</tr></c:forEach></tbody></table>
+	</c:if>
 	<table class="footer">
 		<tr>
 			<td>[ end ]</td>

@@ -13,12 +13,17 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.query.display.EventQueryItem;
+import com.dianping.cat.report.page.query.display.EventReportVisitor;
+import com.dianping.cat.report.page.query.display.ProblemQueryItem;
+import com.dianping.cat.report.page.query.display.ProblemReportVisitor;
+import com.dianping.cat.report.page.query.display.TransactionQueryItem;
+import com.dianping.cat.report.page.query.display.TransactionReportVisitor;
 import com.dianping.cat.report.service.ReportService;
 
 public class Handler implements PageHandler<Context> {
@@ -28,34 +33,92 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
+	private static final String HOUR = "hour";
+
+	private static final String DAY = "day";
+
 	private List<TransactionQueryItem> buildTransactionItems(Date start, Date end, String domain, String type,
 	      String name, String reportLevel) {
 		List<TransactionQueryItem> items = new ArrayList<TransactionQueryItem>();
 
-		if ("hour".equalsIgnoreCase(reportLevel)) {
+		if (HOUR.equalsIgnoreCase(reportLevel)) {
 			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_HOUR) {
 				TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(i), new Date(i
 				      + TimeUtil.ONE_HOUR));
 
 				items.add(convert(report, type, name));
 			}
-		} else if ("day".equalsIgnoreCase(reportLevel)) {
+		} else if (DAY.equalsIgnoreCase(reportLevel)) {
 			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_DAY) {
 				TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(i), new Date(i
 				      + TimeUtil.ONE_DAY));
 
 				items.add(convert(report, type, name));
 			}
-		} else {
-			throw new RuntimeException("Invalid query type");
 		}
 		return items;
+	}
+
+	private List<EventQueryItem> buildEventItems(Date start, Date end, String domain, String type, String name,
+	      String reportLevel) {
+		List<EventQueryItem> items = new ArrayList<EventQueryItem>();
+
+		if (HOUR.equalsIgnoreCase(reportLevel)) {
+			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_HOUR) {
+				EventReport report = m_reportService.queryEventReport(domain, new Date(i), new Date(i + TimeUtil.ONE_HOUR));
+
+				items.add(convert(report, type, name));
+			}
+		} else if (DAY.equalsIgnoreCase(reportLevel)) {
+			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_DAY) {
+				EventReport report = m_reportService.queryEventReport(domain, new Date(i), new Date(i + TimeUtil.ONE_DAY));
+
+				items.add(convert(report, type, name));
+			}
+		}
+		return items;
+	}
+
+	private List<ProblemQueryItem> buildProblemItems(Date start, Date end, String domain, String type, String name,
+	      String reportLevel) {
+		List<ProblemQueryItem> items = new ArrayList<ProblemQueryItem>();
+
+		if (HOUR.equalsIgnoreCase(reportLevel)) {
+			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_HOUR) {
+				ProblemReport report = m_reportService.queryProblemReport(domain, new Date(i), new Date(i
+				      + TimeUtil.ONE_HOUR));
+
+				items.add(convert(report, type, name));
+			}
+		} else if (DAY.equalsIgnoreCase(reportLevel)) {
+			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_DAY) {
+				ProblemReport report = m_reportService.queryProblemReport(domain, new Date(i), new Date(i
+				      + TimeUtil.ONE_DAY));
+
+				items.add(convert(report, type, name));
+			}
+		}
+		return items;
+	}
+
+	private ProblemQueryItem convert(ProblemReport report, String type, String name) {
+		ProblemReportVisitor vistitor = new ProblemReportVisitor(type, name);
+		vistitor.visitProblemReport(report);
+
+		return vistitor.getItem();
 	}
 
 	private TransactionQueryItem convert(TransactionReport report, String type, String name) {
 		TransactionReportVisitor vistitor = new TransactionReportVisitor(type, name);
 		vistitor.visitTransactionReport(report);
-		
+
+		return vistitor.getItem();
+	}
+
+	private EventQueryItem convert(EventReport report, String type, String name) {
+		EventReportVisitor vistitor = new EventReportVisitor(type, name);
+		vistitor.visitEventReport(report);
+
 		return vistitor.getItem();
 	}
 
@@ -87,196 +150,15 @@ public class Handler implements PageHandler<Context> {
 
 			model.setTransactionItems(items);
 		} else if ("event".equals(queryType)) {
+			List<EventQueryItem> items = buildEventItems(start, end, domain, type, name, reportLevel);
+
+			model.setEventItems(items);
 		} else if ("problem".equals(queryType)) {
+			List<ProblemQueryItem> items = buildProblemItems(start, end, domain, type, name, reportLevel);
+
+			model.setProblemItems(items);
 		}
 		m_jspViewer.view(ctx, model);
 	}
 
-	public static class TransactionQueryItem {
-		private Date m_date;
-
-		private String m_type;
-
-		private String m_name;
-
-		private long m_totalCount;
-
-		private long m_failCount;
-
-		private double m_failPercent;
-
-		private double m_min = 86400000d;
-
-		private double m_max = -1d;
-
-		private double m_avg;
-
-		private double m_tps;
-
-		private double m_line95Value;
-
-		public double getAvg() {
-			return m_avg;
-		}
-
-		public Date getDate() {
-			return m_date;
-		}
-
-		public long getFailCount() {
-			return m_failCount;
-		}
-
-		public double getFailPercent() {
-			return m_failPercent;
-		}
-
-		public double getLine95Value() {
-			return m_line95Value;
-		}
-
-		public double getMax() {
-			return m_max;
-		}
-
-		public double getMin() {
-			return m_min;
-		}
-
-		public String getName() {
-			return m_name;
-		}
-
-		public long getTotalCount() {
-			return m_totalCount;
-		}
-
-		public double getTps() {
-			return m_tps;
-		}
-
-		public String getType() {
-			return m_type;
-		}
-
-		public void setAvg(double avg) {
-			m_avg = avg;
-		}
-
-		public TransactionQueryItem setDate(Date date) {
-			m_date = date;
-			return this;
-		}
-
-		public TransactionQueryItem setFailCount(long failCount) {
-			m_failCount = failCount;
-			return this;
-		}
-
-		public TransactionQueryItem setFailPercent(double failPercent) {
-			m_failPercent = failPercent;
-			return this;
-		}
-
-		public TransactionQueryItem setLine95Value(double line95Value) {
-			m_line95Value = line95Value;
-			return this;
-		}
-
-		public TransactionQueryItem setMax(double max) {
-			m_max = max;
-			return this;
-		}
-
-		public TransactionQueryItem setMin(double min) {
-			m_min = min;
-			return this;
-		}
-
-		public TransactionQueryItem setName(String name) {
-			m_name = name;
-			return this;
-		}
-
-		public TransactionQueryItem setTotalCount(long totalCount) {
-			m_totalCount = totalCount;
-			return this;
-		}
-
-		public TransactionQueryItem setTps(double tps) {
-			m_tps = tps;
-			return this;
-		}
-
-		public TransactionQueryItem setType(String type) {
-			m_type = type;
-			return this;
-		}
-	}
-
-	public static class TransactionReportVisitor extends BaseVisitor {
-		private String m_type;
-
-		private String m_name;
-
-		private String m_currentType;
-
-		private String m_currentName;
-
-		public TransactionQueryItem m_item = new TransactionQueryItem();
-
-		public TransactionReportVisitor(String type, String name) {
-			m_type = type;
-			m_name = name;
-			m_item.setType(type);
-			m_item.setName(name);
-		}
-
-		@Override
-		public void visitName(TransactionName name) {
-			m_currentName = name.getId();
-			if (m_type.equalsIgnoreCase(m_currentType) && m_name.equalsIgnoreCase(m_currentName)) {
-				m_item.setTotalCount(name.getTotalCount());
-				m_item.setFailCount(name.getFailCount());
-				m_item.setFailPercent(name.getFailPercent());
-				m_item.setMin(name.getMin());
-				m_item.setMax(name.getMax());
-				m_item.setAvg(name.getAvg());
-				m_item.setLine95Value(name.getLine95Value());
-			}
-		}
-
-		@Override
-		public void visitType(TransactionType type) {
-			m_currentType = type.getId();
-			if (m_name == null || m_name.trim().length() == 0) {
-				if (m_type.equalsIgnoreCase(m_currentType)) {
-					m_item.setTotalCount(type.getTotalCount());
-					m_item.setFailCount(type.getFailCount());
-					m_item.setFailPercent(type.getFailPercent());
-					m_item.setMin(type.getMin());
-					m_item.setMax(type.getMax());
-					m_item.setAvg(type.getAvg());
-					m_item.setLine95Value(type.getLine95Value());
-				}
-			} else {
-				super.visitType(type);
-			}
-		}
-
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			super.visitTransactionReport(transactionReport);
-			m_item.setDate(transactionReport.getStartTime());
-		}
-
-		public TransactionQueryItem getItem() {
-			return m_item;
-		}
-
-		public void setItem(TransactionQueryItem item) {
-			m_item = item;
-		}
-
-	}
 }
