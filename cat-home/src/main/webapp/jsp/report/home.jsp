@@ -34,7 +34,7 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 	<tr class="odd"><td>3</td><td style="color:red">Transaction\Event报表日报表、周报表支持趋势图对比,时间精度为15分钟</td><td>2013-01-01</td></tr>
 	<tr class="even"><td>4</td><td style="color:red">Transaction\Event月报表支持每天的趋势图，以天为单位</td><td>2013-01-21</td></tr>
 	<tr class="odd"><td>5</td><td style="color:red">Top报表,根据分钟级别实时展现线上异常最多、访问最慢(URL\Service\SQL\Call\Cache)的应用</td><td>2013-03-11</td></tr>
-	<tr class="even"><td>5</td><td style="color:red">Cross报表支持根据方法名称查询是哪些客户端调用此方法</td><td>2013-03-11</td></tr>
+	<tr class="even"><td>6</td><td style="color:red">Cross报表支持根据方法名称查询是哪些客户端调用此方法</td><td>2013-03-11</td></tr>
 </table>
 <br>
 <table class='version' rules="all">
