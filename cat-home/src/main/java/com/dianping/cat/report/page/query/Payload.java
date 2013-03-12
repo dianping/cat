@@ -37,6 +37,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("end")
 	private Date m_end;
+	
+	private String m_startStr;
+	
+	private String m_endStr;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -92,6 +96,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setEnd(String end) {
 		try {
+			m_endStr = end;
 			m_end = m_sdf.parse(end);
 		} catch (ParseException e) {
 			Cat.logError(e);
@@ -121,6 +126,7 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setStart(String start) {
 		try {
+			m_startStr = start;
 			m_start = m_sdf.parse(start);
 		} catch (ParseException e) {
 			Cat.logError(e);
@@ -129,6 +135,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public String getStartStr() {
+		return m_startStr;
+	}
+
+	public String getEndStr() {
+		return m_endStr;
 	}
 
 	@Override

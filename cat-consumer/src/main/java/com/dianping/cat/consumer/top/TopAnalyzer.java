@@ -314,11 +314,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			if ("error".equals(m_type)) {
 				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
 				      .findOrCreateSegment(id);
-				temp.setError(count);
+				temp.setError(temp.getError() + count);
 			} else if ("call".equals(m_type)) {
 				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
 				      .findOrCreateSegment(id);
-				temp.setCallError(count);
+				temp.setCallError(temp.getCallError() + count);
 			}
 		}
 	}

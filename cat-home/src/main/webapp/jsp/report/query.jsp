@@ -9,79 +9,83 @@
 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
 <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
-<res:useCss value="${res.css.local.transaction_css}" target="head-css"/>
-<script>
-$(function() {
-   $( "#start" ).datepicker();
-   $( "#end" ).datepicker();
-});
- 
-function query(){
-  var queryDomain=$("#domain").val();
-  var queryType=$("#reportType").val();
-  var reportLevel=$("#reportLevel").val();
-  var type=$("#type").val();
-  var name=$("#name").val();
-  var start=$("#start").val();
-  var end=$("#end").val();
-  
-  window.location.href="?queryDomain="+queryDomain+"&queryType="+queryType+"&reportLevel="+reportLevel+"&type="+type+"&name="+name+'&start='+start+"&end="+end;
-}
-$(document).ready(function() {
-	$('#contents').dataTable({
-		"sPaginationType": "full_numbers",
-		'iDisplayLength': 100,
-		"oLanguage": {
-            "sProcessing": "正在加载中......",
-            "sLengthMenu": "每页显示 _MENU_ 条记录",
-            "sZeroRecords": "对不起，查询不到相关数据！",
-            "sEmptyTable": "表中无数据存在！",
-            "sInfo": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
-            "sInfoFiltered": "数据表中共为 _MAX_ 条记录",
-            "sSearch": "搜索",
-            "oPaginate": {
-                "sFirst": "首页",
-                "sPrevious": "上一页",
-                "sNext": "下一页",
-                "sLast": "末页"
-            }
-        }
-	});
-});
-</script>  
 <a:body>
 <res:useCss value='${res.css.local.report_css}' target="head-css" />
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
+<res:useJs value="${res.js.local['query.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
-
+<script>
+$(document).ready(function() {
+	init();
+});
+</script> 
 <div class="report">
 	<table class="header">
 		<tr>
-			<td class="title">&nbsp;&nbsp;Query Transaction\Event\Problem Data By Day</td>
+			<td class="title">&nbsp;&nbsp;Query Data</td>
 	</table>
-	<table>
+	</br>
+	<table align="center" width="60%" rules="all" border=1>
+		<thead>
+			<tr>
+				<th colspan="3">
+				查询一段时间内的综合数据
+			</th>
+			</tr>
+		</thead>
+		<tbody>
 		<tr>
-			<th>
-				Report: 
-				<select id="reportType">
+			<td>
+				<span class="required">&nbsp;*</span><span class="lable">查询报表</span>
+			</td>
+			<td><select id="reportType" style="width:150px">
 						<option value="transaction">transaction</option>
 						<option value="event">event</option>
 						<option value="problem">problem</option>
-				</select> 
-				ReportType: 
-				<select id="reportLevel">
+				</select></td>
+			<td>报表支持Transaction\Event\Problem报表</td>
+		</tr>
+		<tr>
+			<td><span class="required">&nbsp;*</span><span class="lable">报表类型</span>
+			<td><select id="reportLevel" style="width:150px">
 						<option value="day">day</option>
 						<option value="hour">hour</option>
-				</select> 
-				Domain:<input type="text" size="30" id="domain"></inpupt>
-				Type:<input type="text" size="30" id="type"></inpupt>
-				Name:<input type="text" size="30" id="name"></inpupt>
-				StartTime:<input type="text" size="20" id="start"></inpupt>
-				EndTime:<input type="text" size="20" id="end"></inpupt>
-				<input type="submit" onclick="query()"></input>
-			</th>
+				</select></td>
+			<td>报表类型支持小时、天</td>
 		</tr>
+		<tr>
+			<td><span class="required">&nbsp;*</span><span class="lable">项目名称</span>
+			<td><input type="text" size="30" id="domain" value="${payload.queryDomain}"></inpupt></td>
+			<td class="required">大小写敏感</td>
+		</tr>
+		<tr>
+			<td><span class="required">&nbsp;*</span><span class="lable">Type</span>
+			<td><input type="text" size="30" id="type" value="${payload.type}"></inpupt></td>
+			<td>查询的第一级</td>
+		</tr>
+		<tr>
+			<td><span class="required">&nbsp;&nbsp;</span><span class="lable">Name</span>
+			<td><input type="text" size="30" id="name" value="${payload.name}"></inpupt></td>
+			<td>查询的第二级（有此项即查询第二级的数据）</td>
+		</tr>
+		<tr>
+			<td><span class="required">&nbsp;*</span><span class="lable">开始时间</span>
+			<td><input type="text" size="30" id="start" value="${payload.startStr}"></inpupt></td>
+			<td>查询开始时间</td>
+		</tr>
+		<tr>
+			<td><span class="required">&nbsp;*</span><span class="lable">结束时间</span>
+			<td><input type="text" size="30" id="end" value="${payload.endStr}"></inpupt></td>
+			<td>查询结束时间<span class="required">（时间间隔不允许超过一个月）</span></td>
+		</tr>
+		<tr>
+			<th colspan="3">
+				<input type="submit" onclick="query()" style="width:100px;">
+				</th>
+		</tr>
+		</tbody>
 	</table>
+	</br></br>
 	<table class="project" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
@@ -90,17 +94,17 @@ $(document).ready(function() {
 					<td>TotalCount</td>
 					<td>FailureCount</td>
 					<td>Failure%</td>
-					<td>Min</td>
-					<td>Max</td>
-					<td>Avg</td>
-					<td>Line95</td>
+					<td>Min(ms)</td>
+					<td>Max(ms)</td>
+					<td>Avg(ms)</td>
+					<td>Line95(ms)</td>
 				</tr></thead><tbody>
 				<c:forEach var="e" items="${model.transactionItems}"
 					varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td>${w:format(e.date,'yyyy-MM-dd HH:mm:ss')}</td>
 					<td>${e.type}</td>
-					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
+					<td>${e.totalCount}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
 					<td>${w:format(e.min,'0.#')}</td>

@@ -19,6 +19,8 @@ public class TopReportMerger extends DefaultMerger {
 	@Override
 	protected void mergeSegment(Segment old, Segment segment) {
 		old.setError(old.getError() + segment.getError());
+		old.setCallError(old.getCallError() + segment.getCallError());
+		
 		old.setCache(old.getCache() + segment.getCache());
 		old.setCacheSum(old.getCacheSum() + segment.getCacheSum());
 		if (old.getCache() > 0) {
