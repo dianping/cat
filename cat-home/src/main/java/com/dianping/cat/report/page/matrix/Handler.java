@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.matrix;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -14,6 +15,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -45,6 +47,14 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<MatrixReport> response = m_service.invoke(request);
 			MatrixReport report = response.getModel();
+			
+			if (payload.getPeriod().isLast()) {
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
+				      new Date(payload.getDate() + TimeUtil.ONE_DAY), "matrix");
+				Set<String> domainNames = report.getDomainNames();
+
+				domainNames.addAll(domains);
+			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable matrix service registered for " + request + "!");

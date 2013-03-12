@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.cache;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -21,6 +22,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -216,7 +218,16 @@ public class Handler implements PageHandler<Context> {
 			merger.visitTransactionReport(memcachedReport);
 			merger.visitTransactionReport(kvdbReport);
 			merger.visitTransactionReport(tuangouReport);
-			return merger.getTransactionReport();
+
+			TransactionReport report = merger.getTransactionReport();
+			if (payload.getPeriod().isLast()) {
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
+				      new Date(payload.getDate() + TimeUtil.ONE_DAY), "transaction");
+				Set<String> domainNames = report.getDomainNames();
+
+				domainNames.addAll(domains);
+			}
+			return report;
 		} else {
 			request.setProperty("type", type);
 			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);

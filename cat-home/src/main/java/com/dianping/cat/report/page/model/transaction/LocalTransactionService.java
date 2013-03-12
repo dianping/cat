@@ -1,8 +1,5 @@
 package com.dianping.cat.report.page.model.transaction;
 
-import java.util.Date;
-import java.util.Set;
-
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -43,14 +40,7 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 			report = getLocalReport(date, domain);
 
 			if (report == null) {
-				Date start = new Date(date);
-				Date end = new Date(date + TimeUtil.ONE_HOUR);
-
 				report = new TransactionReport(domain);
-				Set<String> domains = m_reportSerivce.queryAllDomainNames(start, end, domain);
-				Set<String> domainNames = report.getDomainNames();
-
-				domainNames.addAll(domains);
 			}
 		}
 

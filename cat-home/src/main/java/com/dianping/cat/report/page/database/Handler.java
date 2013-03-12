@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.database;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Set;
 
 import javax.servlet.ServletException;
 
@@ -45,6 +46,14 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<DatabaseReport> response = m_service.invoke(request);
 			DatabaseReport report = response.getModel();
+
+			if (payload.getPeriod().isLast()) {
+				Set<String> domains = m_reportService.queryAllDatabaseNames(new Date(payload.getDate()),
+				      new Date(payload.getDate() + TimeUtil.ONE_DAY), "database");
+				Set<String> domainNames = report.getDomainNames();
+
+				domainNames.addAll(domains);
+			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable database service registered for " + request + "!");

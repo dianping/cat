@@ -1,8 +1,5 @@
 package com.dianping.cat.report.page.model.cross;
 
-import java.util.Date;
-import java.util.Set;
-
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -43,14 +40,7 @@ public class LocalCrossService extends BaseLocalModelService<CrossReport> {
 			report = getLocalReport(date, domain);
 
 			if (report == null) {
-				Date start = new Date(date);
-				Date end = new Date(date + TimeUtil.ONE_HOUR);
-			
 				report = new CrossReport(domain);
-				Set<String> domains = m_reportSerivce.queryAllDomainNames(start, end, domain);
-				Set<String> domainNames = report.getDomainNames();
-
-				domainNames.addAll(domains);
 			}
 		}
 
