@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.transaction;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -41,6 +43,8 @@ public class LocalTransactionService extends BaseLocalModelService<TransactionRe
 
 			if (report == null) {
 				report = new TransactionReport(domain);
+				report.setStartTime(new Date(date));
+				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
 			}
 		}
 

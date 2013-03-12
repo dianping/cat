@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.matrix;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
@@ -41,6 +43,8 @@ public class LocalMatrixService extends BaseLocalModelService<MatrixReport> {
 
 			if (report == null) {
 				report = new MatrixReport(domain);
+				report.setStartTime(new Date(date));
+				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
 			}
 		}
 

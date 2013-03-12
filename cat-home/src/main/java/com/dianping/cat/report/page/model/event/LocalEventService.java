@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.event;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -41,6 +43,8 @@ public class LocalEventService extends BaseLocalModelService<EventReport> {
 
 			if (report == null) {
 				report = new EventReport(domain);
+				report.setStartTime(new Date(date));
+				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
 			}
 		}
 

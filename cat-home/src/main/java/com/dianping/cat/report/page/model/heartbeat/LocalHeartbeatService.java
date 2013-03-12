@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.heartbeat;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -41,6 +43,8 @@ public class LocalHeartbeatService extends BaseLocalModelService<HeartbeatReport
 
 			if (report == null) {
 				report = new HeartbeatReport(domain);
+				report.setStartTime(new Date(date));
+				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
 			}
 		}
 

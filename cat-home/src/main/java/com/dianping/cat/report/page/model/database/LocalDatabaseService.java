@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.database;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
@@ -41,6 +43,8 @@ public class LocalDatabaseService extends BaseLocalModelService<DatabaseReport> 
 
 			if (report == null) {
 				report = new DatabaseReport(database);
+				report.setStartTime(new Date(date));
+				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
 			}
 		}
 

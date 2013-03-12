@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.sql;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
@@ -41,6 +43,8 @@ public class LocalSqlService extends BaseLocalModelService<SqlReport> {
 
 			if (report == null) {
 				report = new SqlReport(domain);
+				report.setStartTime(new Date(date));
+				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
 			}
 		}
 

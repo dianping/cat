@@ -1,5 +1,7 @@
 package com.dianping.cat.report.page.model.problem;
 
+import java.util.Date;
+
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -41,6 +43,8 @@ public class LocalProblemService extends BaseLocalModelService<ProblemReport> {
 
 			if (report == null) {
 				report = new ProblemReport(domain);
+				report.setStartTime(new Date(date));
+				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
 			}
 		}
 
