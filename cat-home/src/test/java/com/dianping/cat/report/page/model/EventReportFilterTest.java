@@ -3,11 +3,11 @@ package com.dianping.cat.report.page.model;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
 import com.dianping.cat.report.page.model.Handler.EventReportFilter;
-import org.unidal.helper.Files;
 
 public class EventReportFilterTest {
 	@Test

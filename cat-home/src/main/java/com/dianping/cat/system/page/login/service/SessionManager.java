@@ -1,13 +1,14 @@
 package com.dianping.cat.system.page.login.service;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dainping.cat.home.dal.user.DpAdminLogin;
 import com.dainping.cat.home.dal.user.DpAdminLoginDao;
 import com.dainping.cat.home.dal.user.DpAdminLoginEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.system.page.login.spi.ISessionManager;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
 
 public class SessionManager implements ISessionManager<Session, Token, Credential> {
 	@Inject

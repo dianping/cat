@@ -7,6 +7,8 @@ public enum JspFile {
 	DETAIL("/jsp/report/problemDetail.jsp"),
 
 	GROUP("/jsp/report/problemGroup.jsp"),
+	
+	HOUR_GRAPH("/jsp/report/problemHourlyGraphs.jsp"),
 
 	HISTORY("/jsp/report/problemHistoryReport.jsp"),
 

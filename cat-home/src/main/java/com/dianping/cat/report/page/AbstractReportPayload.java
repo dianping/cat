@@ -5,12 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.model.spi.ModelPeriod;
 
 public abstract class AbstractReportPayload<A extends Action> implements ActionPayload<ReportPage, A> {
 

@@ -3,11 +3,12 @@ package com.dianping.cat.report.page.model.spi.internal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.unidal.lookup.ContainerHolder;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
-import org.unidal.lookup.ContainerHolder;
 
 public abstract class ModelServiceWithCalSupport extends ContainerHolder {
 	private Transaction m_current;

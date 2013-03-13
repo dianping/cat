@@ -2,7 +2,7 @@ package com.dianping.cat.consumer.problem;
 
 public enum ProblemType {
 	ERROR("error"),
-
+	
 	FAILURE("failure"),
 
 	HEARTBEAT("heartbeat"),

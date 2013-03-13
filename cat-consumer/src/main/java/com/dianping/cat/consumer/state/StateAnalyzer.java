@@ -84,7 +84,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			long blockTotal = state.getBlockTotal();
 			temp.setBlockTotal(blockTotal);
 			machine.setBlockTotal(machine.getBlockTotal() + blockTotal);
-			
+
 			long blockLoss = state.getBlockLoss();
 			temp.setBlockLoss(blockLoss);
 			machine.setBlockLoss(machine.getBlockLoss() + blockLoss);
@@ -92,15 +92,15 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			long blockTime = state.getBlockTime();
 			temp.setBlockTime(blockTime);
 			machine.setBlockTime(machine.getBlockTime() + blockTime);
-			
+
 			long pigeonTimeError = state.getPigeonTimeError();
 			temp.setPigeonTimeError(pigeonTimeError);
 			machine.setPigeonTimeError(machine.getPigeonTimeError() + pigeonTimeError);
-			
+
 			long networkTimeError = state.getNetworkTimeError();
 			temp.setNetworkTimeError(networkTimeError);
 			machine.setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError);
-			
+
 			long messageTotalLoss = state.getMessageTotalLoss();
 			temp.setTotalLoss(messageTotalLoss);
 			machine.setTotalLoss(machine.getTotalLoss() + messageTotalLoss);
@@ -310,11 +310,14 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 			for (String ip : ips) {
 				try {
-					Hostinfo info = m_hostInfoDao.createLocal();
+					//Hack For PhoenixAgent
+					if (!domain.equals("PhoenixAgent")) {
+						Hostinfo info = m_hostInfoDao.createLocal();
 
-					info.setDomain(domain);
-					info.setIp(ip);
-					m_hostInfoDao.insert(info);
+						info.setDomain(domain);
+						info.setIp(ip);
+						m_hostInfoDao.insert(info);
+					}
 				} catch (DalException e) {
 					Cat.logError(e);
 				}

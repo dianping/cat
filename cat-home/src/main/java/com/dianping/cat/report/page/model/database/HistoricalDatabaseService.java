@@ -1,26 +1,24 @@
 package com.dianping.cat.report.page.model.database;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.database.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoricalDatabaseService extends BaseHistoricalModelService<DatabaseReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalDatabaseService() {
 		super("database");
@@ -43,28 +41,7 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 	}
 
 	private DatabaseReport getReportFromDatabase(long timestamp, String database) throws Exception {
-		List<Report> reports = m_reportDao.findDatabaseAllByPeriodDomainTypeName(new Date(timestamp), database, 2, getName(),
-		      ReportEntity.READSET_FULL);
-		DatabaseReportMerger merger = new DatabaseReportMerger(new DatabaseReport(database));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			DatabaseReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
-		DatabaseReport databaseReport = merger.getDatabaseReport();
-
-		List<Report> historyReports = m_reportDao.findDatabaseAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, "database", ReportEntity.READSET_DOMAIN_NAME);
-
-		if (databaseReport == null) {
-			databaseReport = new DatabaseReport(database);
-		}
-		Set<String> dataBaseNames = databaseReport.getDatabaseNames();
-		for (Report report : historyReports) {
-			dataBaseNames.add(report.getDomain());
-		}
-		return databaseReport;
+		return m_reportSerivce.queryDatabaseReport(database, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private DatabaseReport getReportFromLocalDisk(long timestamp, String database) throws Exception {

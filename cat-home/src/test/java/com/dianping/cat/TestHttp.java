@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.webapp.WebAppContext;
-
 import org.unidal.helper.Files;
 
 public class TestHttp {

@@ -9,6 +9,10 @@ import java.util.TreeMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Project;
 import com.dainping.cat.consumer.dal.report.ProjectDao;
@@ -16,10 +20,6 @@ import com.dainping.cat.consumer.dal.report.ProjectEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.helper.TimeUtil;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
 public class DomainNavManager implements Initializable {
 

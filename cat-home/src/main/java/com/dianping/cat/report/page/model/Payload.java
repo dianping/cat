@@ -2,12 +2,13 @@ package com.dianping.cat.report.page.model;
 
 import java.util.Arrays;
 
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.PathMeta;
+
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.model.spi.ModelPeriod;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
 	@FieldMeta("op")

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.top.model"
+	enable-merger="true" enable-json-builder="true" enable-xml-parser="true"
+	enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true"
+	enable-native-builder="true" enable-native-parser="true">
+  <entity name="top-report" root="true">
+    <attribute name="domain" value-type="String" key="true" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="map" names="domains"  method-find-or-create="true"/>
+  </entity>
+  <entity name="domain">
+    <attribute name="name" value-type="String" key="true"/>
+    <entity-ref name="segment" type="map" names="segments"  method-find-or-create="true"/>
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="int" key="true"/>
+    <attribute name="error" value-type="long"  primitive="true"/>
+    <attribute name="call-error" value-type="long"  primitive="true"/>
+    <attribute name="url" value-type="long"  primitive="true"/>
+    <attribute name="url-duration" value-type="double" primitive="true" format="0.00" />
+    <attribute name="url-sum" value-type="double" primitive="true" format="0.00" />
+    <attribute name="service" value-type="long"  primitive="true"/>
+    <attribute name="service-duration" value-type="double" primitive="true" format="0.00" />
+    <attribute name="service-sum" value-type="double" primitive="true" format="0.00" />
+    <attribute name="sql" value-type="long"  primitive="true"/>
+    <attribute name="sql-duration" value-type="double"  primitive="true" format="0.00"/>
+    <attribute name="sql-sum" value-type="double"  primitive="true" format="0.00"/>
+    <attribute name="call" value-type="long"  primitive="true"/>
+    <attribute name="call-duration" value-type="double" primitive="true" format="0.00" />
+    <attribute name="call-sum" value-type="double" primitive="true" format="0.00" />
+    <attribute name="cache" value-type="long"  primitive="true"/>
+    <attribute name="cache-duration" value-type="double" primitive="true" format="0.00" />
+    <attribute name="cache-sum" value-type="double" primitive="true" format="0.00" />
+  </entity>
+</model>

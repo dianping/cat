@@ -8,10 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import com.dianping.cat.report.task.thread.TaskProducer;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.ComponentTestCase;
+
+import com.dianping.cat.report.task.thread.TaskProducer;
 
 @RunWith(JUnit4.class)
 public class TestTaskProducer extends ComponentTestCase {

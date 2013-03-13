@@ -2,6 +2,8 @@ package com.dianping.cat.report.service.impl;
 
 import java.util.Date;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
@@ -17,7 +19,6 @@ import com.dianping.cat.home.dal.report.Weeklyreport;
 import com.dianping.cat.home.dal.report.WeeklyreportDao;
 import com.dianping.cat.home.dal.report.WeeklyreportEntity;
 import com.dianping.cat.report.service.WeeklyReportService;
-import org.unidal.lookup.annotation.Inject;
 
 public class WeeklyReportServiceImpl implements WeeklyReportService {
 

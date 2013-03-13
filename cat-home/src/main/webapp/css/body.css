@@ -194,3 +194,11 @@ a.heartbeat {
 	word-wrap: break-word;
 	word-break: break-all;
 }
+
+.lable{
+	font-weight:bold;
+}
+
+.required{
+	color:red;
+}

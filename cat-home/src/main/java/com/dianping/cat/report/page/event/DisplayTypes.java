@@ -9,11 +9,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.unidal.lookup.util.StringUtils;
+
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Machine;
-import org.unidal.lookup.util.StringUtils;
 
 public class DisplayTypes {
 

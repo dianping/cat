@@ -3,9 +3,11 @@ package com.dianping.cat.report.page.state;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
@@ -31,12 +33,12 @@ public class StateShow extends BaseVisitor {
 	}
 
 	public int getTotalSize() {
-		int size = 0;
+		Set<String> ips = new HashSet<String>();
 
 		for (ProcessDomain domain : m_processDomains.values()) {
-			size += domain.getIps().size();
+			ips.addAll(domain.getIps());
 		}
-		return size;
+		return ips.size();
 	}
 
 	public Map<Long, Message> getMessagesMap() {

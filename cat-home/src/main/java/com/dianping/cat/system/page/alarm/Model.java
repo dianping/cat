@@ -2,12 +2,13 @@ package com.dianping.cat.system.page.alarm;
 
 import java.util.List;
 
+import org.unidal.web.mvc.ViewModel;
+
 import com.dianping.cat.home.dal.alarm.AlarmRule;
 import com.dianping.cat.home.dal.alarm.AlarmTemplate;
 import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.ScheduledReport;
 import com.dianping.cat.system.SystemPage;
-import org.unidal.web.mvc.ViewModel;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
 	private AlarmRule m_alarmRule;

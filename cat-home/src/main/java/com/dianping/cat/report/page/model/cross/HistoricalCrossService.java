@@ -1,26 +1,24 @@
 package com.dianping.cat.report.page.model.cross;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoricalCrossService extends BaseHistoricalModelService<CrossReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalCrossService() {
 		super("cross");
@@ -42,28 +40,7 @@ public class HistoricalCrossService extends BaseHistoricalModelService<CrossRepo
 	}
 
 	private CrossReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
-		      ReportEntity.READSET_FULL);
-		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			CrossReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
-		CrossReport crossReport = merger.getCrossReport();
-
-		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, "cross", ReportEntity.READSET_DOMAIN_NAME);
-
-		if (crossReport == null) {
-			crossReport = new CrossReport(domain);
-		}
-		Set<String> domainNames = crossReport.getDomainNames();
-		for (Report report : historyReports) {
-			domainNames.add(report.getDomain());
-		}
-		return crossReport;
+		return m_reportSerivce.queryCrossReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private CrossReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.model.spi.internal;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
@@ -14,7 +15,6 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import org.unidal.lookup.annotation.Inject;
 
 public abstract class BaseLocalModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {

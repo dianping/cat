@@ -3,6 +3,8 @@ package com.dianping.cat.report.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
@@ -29,7 +31,6 @@ import com.dianping.cat.report.page.model.state.StateReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.task.health.HealthReportMerger;
-import org.unidal.lookup.annotation.Inject;
 
 public class DailyReportServiceImpl implements DailyReportService {
 

@@ -10,7 +10,6 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.cache.Model" scope="request" />
 <c:set var="report" value="${model.report}"/>
 
-
 <a:report title="Cache Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>" navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 <jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -71,7 +70,7 @@
 		</c:when>
 		<c:otherwise>
 			<tr><th class="left" colspan='6'><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
-		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+		    <input id="queryname" style="WIDTH: 60px"  onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 			</th></tr>
 			<script>

@@ -39,7 +39,11 @@ public enum ReportPage implements Page {
 
    DATABASE("database", "database", "Database", "Database", true),
 
-   STATE("state", "state", "State", "State", true);
+   STATE("state", "state", "State", "State", true),
+
+   QUERY("query", "query", "Query", "Query", true),
+
+   TOP("top", "top", "Top", "Top", true);
 
    private String m_name;
 

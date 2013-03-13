@@ -45,6 +45,7 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.sql.LocalSqlService;
 import com.dianping.cat.report.page.model.state.LocalStateService;
+import com.dianping.cat.report.page.model.top.LocalTopService;
 import com.dianping.cat.report.page.model.transaction.LocalTransactionService;
 import com.dianping.cat.report.view.StringSortHelper;
 
@@ -84,6 +85,9 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "state-local")
 	private LocalStateService m_stateService;
+
+	@Inject(type = ModelService.class, value = "top-local")
+	private LocalTopService m_topService;
 
 	private String doFilter(Payload payload, Object dataModel) {
 		String report = payload.getReport();
@@ -190,6 +194,8 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				response = m_sqlService.invoke(request);
 			} else if ("state".equals(report)) {
 				response = m_stateService.invoke(request);
+			} else if ("top".equals(report)) {
+				response = m_topService.invoke(request);
 			} else {
 				throw new RuntimeException("Unsupported report: " + report + "!");
 			}

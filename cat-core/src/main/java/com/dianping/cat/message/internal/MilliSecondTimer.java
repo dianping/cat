@@ -9,7 +9,7 @@ public class MilliSecondTimer {
 	private static long m_baseTime;
 
 	private static long m_startNanoTime;
-
+	
 	public static void initialize() {
 		String os = System.getProperty("os.name");
 

@@ -71,10 +71,10 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 		boolean indexFlag = Files.forDir().delete(fromIndex);
 
 		if (flag == false) {
-			m_logger.warn("delete data file error " + from);
+			m_logger.error("delete data file error " + from);
 		}
 		if (indexFlag == false) {
-			m_logger.warn("delete index file error " + fromIndex);
+			m_logger.error("delete index file error " + fromIndex);
 		}
 
 		File parentFile = from.getParentFile();
@@ -91,7 +91,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 			m_reader = null;
 			m_writer = null;
 		}
-		m_logger.info("close the local message bucket " + m_baseDir + m_dataFile);
 	}
 
 	@Override
@@ -167,7 +166,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 		m_block = new MessageBlock(m_dataFile);
 		m_buf = new ByteArrayOutputStream(16384);
 		m_out = new GZIPOutputStream(m_buf);
-		m_logger.info("create local message bucket " + m_baseDir + m_dataFile);
 	}
 
 	public void setBaseDir(File baseDir) {

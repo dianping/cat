@@ -12,9 +12,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.home.dal.report.Graph;
-import org.unidal.helper.Files;
 
 @RunWith(JUnit4.class)
 public class ProblemGraphDataTest {
@@ -37,7 +37,7 @@ public class ProblemGraphDataTest {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
-		Map<String, double[]> graphDatas = handler.buildGraphDatas(start, end, "heartbeat", "", graphs);
+		Map<String, double[]> graphDatas = handler.buildGraphDatasFromHour(start, end, "heartbeat", "", graphs);
 		double[] errors = graphDatas.get("errors");
 		double[] expectErrors = new double[errors.length];
 		for (int i = 0; i < expectErrors.length; i++) {
@@ -60,7 +60,7 @@ public class ProblemGraphDataTest {
 			Date addtime = new Date(time);
 			graphs.add(creatGraph(addtime));
 		}
-		Map<String, double[]> graphDatas = handler.buildGraphDatas(start, end, "long-url", "/addcheckin.bin", graphs);
+		Map<String, double[]> graphDatas = handler.buildGraphDatasFromHour(start, end, "long-url", "/addcheckin.bin", graphs);
 		double[] errors = graphDatas.get("errors");
 		double[] expectErrors = new double[errors.length];
 		for (int i = 2; i < expectErrors.length; i = i + 60) {

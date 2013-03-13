@@ -27,9 +27,11 @@ import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
+import com.dianping.cat.consumer.transaction.model.entity.Range2;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -49,6 +51,25 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	private TaskDao m_taskDao;
 
 	private Map<String, TransactionReport> m_reports = new HashMap<String, TransactionReport>();
+
+	private TransactionReport buildTotalTransactionReport() {
+		TransactionReport all = new TransactionReport(ALL);
+		all.setStartTime(new Date(m_startTime));
+		all.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+
+		TransactionReportVisitor visitor = new TransactionReportVisitor(all);
+
+		try {
+	      for (TransactionReport temp : m_reports.values()) {
+	      	all.getIps().add(temp.getDomain());
+	      	all.getDomainNames().add(temp.getDomain());
+	      	visitor.visitTransactionReport(temp);
+	      }
+      } catch (Exception e) {
+      	Cat.logError(e);
+      }
+		return all;
+	}
 
 	private void clearAllDuration(TransactionReport report) {
 		Collection<Machine> machines = report.getMachines().values();
@@ -95,7 +116,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Override
 	public Set<String> getDomains() {
-		return m_reports.keySet();
+		Set<String> keySet = m_reports.keySet();
+		return keySet;
 	}
 
 	@Override
@@ -167,12 +189,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		if (report == null) {
 			report = new TransactionReport(domain);
+			
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-
 			m_reports.put(domain, report);
 		}
-
 		Message message = tree.getMessage();
 		report.addIp(tree.getIpAddress());
 
@@ -238,6 +259,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		processTransactionGraph(name, t);
+		processTransactionRange(t, type);
 
 		List<Message> children = t.getChildren();
 
@@ -275,6 +297,22 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			range.setSum(range.getSum() + d);
 		}
+
+	}
+
+	private void processTransactionRange(Transaction t, TransactionType type) {
+		double d = t.getDurationInMicros() / 1000d;
+		Calendar cal = Calendar.getInstance();
+		cal.setTimeInMillis(t.getTimestamp());
+		int min = cal.get(Calendar.MINUTE);
+
+		Range2 range = type.findOrCreateRange2(min);
+
+		if (!t.isSuccess()) {
+			range.incFails();
+		}
+		range.incCount();
+		range.setSum(range.getSum() + d);
 	}
 
 	private void set95Line(TransactionReport report) {
@@ -308,7 +346,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
 		t.setStatus(Message.SUCCESS);
-
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "transaction");
 
@@ -333,6 +370,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			if (atEnd && !isLocalMode()) {
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				TransactionReport all = buildTotalTransactionReport();
+
+				m_reports.put(ALL, all);
 
 				for (TransactionReport report : m_reports.values()) {
 					try {
@@ -372,6 +412,70 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 			if (reportBucket != null) {
 				m_bucketManager.closeBucket(reportBucket);
+			}
+		}
+	}
+
+	static class TransactionReportVisitor extends BaseVisitor {
+
+		private TransactionReport m_report;
+
+		public String m_currentDomain;
+
+		public TransactionReportVisitor(TransactionReport report) {
+			m_report = report;
+		}
+
+		private void mergeType(TransactionType old, TransactionType other) {
+			old.setTotalCount(old.getTotalCount() + other.getTotalCount());
+			old.setFailCount(old.getFailCount() + other.getFailCount());
+
+			if (other.getMin() < old.getMin()) {
+				old.setMin(other.getMin());
+			}
+
+			if (other.getMax() > old.getMax()) {
+				old.setMax(other.getMax());
+			}
+			old.setSum(old.getSum() + other.getSum());
+			old.setSum2(old.getSum2() + other.getSum2());
+
+			old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
+			old.setLine95Count(old.getLine95Count() + other.getLine95Count());
+			if (old.getLine95Count() > 0) {
+				old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
+			}
+			if (old.getTotalCount() > 0) {
+				old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
+				old.setAvg(old.getSum() / old.getTotalCount());
+			}
+
+			if (old.getSuccessMessageUrl() == null) {
+				old.setSuccessMessageUrl(other.getSuccessMessageUrl());
+			}
+
+			if (old.getFailMessageUrl() == null) {
+				old.setFailMessageUrl(other.getFailMessageUrl());
+			}
+		}
+
+		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			m_currentDomain = transactionReport.getDomain();
+			super.visitTransactionReport(transactionReport);
+		}
+
+		@Override
+		public void visitType(TransactionType type) {
+			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
+
+			String typeName = type.getId();
+
+			if (typeName.equals("URL") || typeName.equals("Call") || typeName.equals("PigeonCall")
+			      || typeName.equals("PigeonService") || typeName.equals("Service") || typeName.equals("SQL")
+			      || typeName.startsWith("Cache.") || typeName.equals("MsgProduceTried") || typeName.equals("MsgProduced")) {
+				TransactionType result = machine.findOrCreateType(typeName);
+				mergeType(result, type);
 			}
 		}
 	}

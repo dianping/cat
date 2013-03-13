@@ -2,6 +2,10 @@ package com.dianping.cat.system.page.alarm;
 
 import java.util.List;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.alarm.AlarmRuleSubscription;
 import com.dianping.cat.home.dal.alarm.AlarmRuleSubscriptionDao;
@@ -12,9 +16,6 @@ import com.dianping.cat.home.dal.alarm.MailRecordEntity;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscription;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportSubscriptionEntity;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
 
 public class RecordManager {
 

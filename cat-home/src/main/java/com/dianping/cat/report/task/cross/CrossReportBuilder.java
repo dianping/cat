@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportEntity;
 import com.dianping.cat.Cat;
@@ -20,8 +23,6 @@ import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
 import com.dianping.cat.report.task.spi.ReportBuilder;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
 
 public class CrossReportBuilder extends AbstractReportBuilder implements ReportBuilder {
 

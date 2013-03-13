@@ -1,26 +1,24 @@
 package com.dianping.cat.report.page.model.matrix;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalMatrixService() {
 		super("matrix");
@@ -42,27 +40,7 @@ public class HistoricalMatrixService extends BaseHistoricalModelService<MatrixRe
 	}
 
 	private MatrixReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
-		      ReportEntity.READSET_FULL);
-		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			MatrixReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
-		MatrixReport matrixReport = merger.getMatrixReport();
-
-		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, "matrix", ReportEntity.READSET_DOMAIN_NAME);
-
-		if (matrixReport != null && historyReports != null) {
-			Set<String> domainNames = matrixReport.getDomainNames();
-			for (Report report : historyReports) {
-				domainNames.add(report.getDomain());
-			}
-		}
-		return merger == null ? null : matrixReport;
+		return m_reportSerivce.queryMatrixReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private MatrixReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

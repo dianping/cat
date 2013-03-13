@@ -5,7 +5,7 @@ function disksGraph(size, diskHistoryGraph) {
 		var memoryGraph = document.getElementById('memoryGraph');
 		var memroyIndex = memoryGraph.rowIndex;
 		var diskInfoHead = graphID.insertRow(memroyIndex + 1);
-		diskInfoHead.innerHTML = '<th colspan="3">Disk Info</th>';
+		diskInfoHead.innerHTML = '';
 		for (len = 0; len < size / 3; len++) {
 			var id = "diskGraph" + len;
 			var graphRow = graphID.insertRow(memroyIndex + 2 + len);
@@ -27,3 +27,13 @@ function disksGraph(size, diskHistoryGraph) {
 function graphOnMinute(div,graphData){
 	graphReal(div, graphData,60*1000);
 }
+
+$(document).delegate('.graph_link', 'click', function(e){
+	var anchor = this;
+	var el = $(anchor);
+	var div = el.attr('data-status');
+	var cell = document.getElementById(div);
+	cell.src=anchor.href;
+	cell.style.display="block";
+	return false;
+});

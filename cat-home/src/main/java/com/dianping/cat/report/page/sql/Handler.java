@@ -2,8 +2,16 @@ package com.dianping.cat.report.page.sql;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.Set;
 
 import javax.servlet.ServletException;
+
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
@@ -15,12 +23,6 @@ import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
 
 /**
  * @author youyong
@@ -49,6 +51,15 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<SqlReport> response = m_service.invoke(request);
 			SqlReport report = response.getModel();
+			
+			if (payload.getPeriod().isLast()) {
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "sql");
+				Set<String> domainNames = report.getDomainNames();
+
+				domainNames.addAll(domains);
+			}
+			
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable sql service registered for " + request + "!");

@@ -39,16 +39,16 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
 			EventReport eventReport = getDailyReportData(reportName, reportDomain, reportPeriod);
-			
+
 			try {
-	         buildDailyEventGraph(eventReport);
-         } catch (Exception e) {
-   			Cat.logError(e);
-         }
-			
+				buildDailyEventGraph(eventReport);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+
 			String content = eventReport.toString();
 			Dailyreport report = m_dailyReportDao.createLocal();
-			
+
 			report.setContent(content);
 			report.setCreationDate(new Date());
 			report.setDomain(reportDomain);
@@ -63,7 +63,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 			return false;
 		}
 	}
-	
+
 	private void buildDailyEventGraph(EventReport report) {
 		DailyEventGraphCreator creator = new DailyEventGraphCreator();
 		List<Dailygraph> graphs = creator.buildDailygraph(report);
@@ -76,6 +76,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 			}
 		}
 	}
+
 	@Override
 	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
@@ -98,7 +99,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
 		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
 		      ReportEntity.READSET_FULL);
-		
+
 		return m_eventMerger.mergeForDaily(reportDomain, reports, domainSet);
 
 	}
@@ -133,7 +134,7 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		}
 		return true;
 	}
-	
+
 	@Override
 	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date start = reportPeriod;
@@ -196,10 +197,10 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 
 		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
 			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "event", DailyreportEntity.READSET_FULL);
+				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "event",
+				      DailyreportEntity.READSET_FULL);
 				String xml = dailyreport.getContent();
-				
+
 				EventReport reportModel = DefaultSaxParser.parse(xml);
 				reportModel.accept(merger);
 			} catch (Exception e) {
