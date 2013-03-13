@@ -46,7 +46,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_manager;
-	
+
 	@Inject
 	private ReportService m_reportService;
 
@@ -121,7 +121,7 @@ public class Handler implements PageHandler<Context> {
 		int urlThreshold = payload.getLongTime();
 		int sqlThreshold = payload.getSqlLongTime();
 		int serviceThreshold = payload.getSeviceLongTime();
-		
+
 		switch (payload.getAction()) {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
@@ -131,17 +131,20 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				problemStatistics.setIp(ip);
 			}
-			problemStatistics.setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
+			problemStatistics.setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
+			      .setServiceThreshold(serviceThreshold);
 			problemStatistics.visitProblemReport(report);
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
 			if (ip.equals(CatString.ALL_IP)) {
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
+				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 			} else {
-				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
+				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
+				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 			}
 			model.setReport(report);
@@ -171,7 +174,8 @@ public class Handler implements PageHandler<Context> {
 			if (ip.equals(CatString.ALL_IP)) {
 				report = getHourlyReport(payload, VIEW);
 
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000).setServiceThreshold(serviceThreshold);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
+				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
 				String response = m_gson.toJson(problemStatistics);
@@ -179,12 +183,23 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				report = showHourlyReport(model, payload);
 
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000).setServiceThreshold(serviceThreshold);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
+				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 				ProblemStatistics statistics = model.getAllStatistics();
 				statistics.setIps(new ArrayList<String>(report.getIps()));
 				model.setMobileResponse(m_gson.toJson(statistics));
 			}
+			break;
+		case HOUR_GRAPH:
+			report = getHourlyReport(payload, DETAIL);
+			String type = payload.getType();
+			String state = payload.getStatus();
+			Date start = report.getStartTime();
+			ProblemReportVisitor vistor = new ProblemReportVisitor(ip, type, state, start);
+
+			vistor.visitProblemReport(report);
+			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -315,9 +330,9 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
-		
-		if(problemReport==null){
-			
+
+		if (problemReport == null) {
+
 		}
 		return problemReport;
 	}

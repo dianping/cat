@@ -50,10 +50,10 @@
       <c:forEach var="item" items="${model.metrix.error.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>个</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
+						<td><a href="/cat/r/p?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
 					</tr>
 				</c:forEach>
 		</table>
@@ -63,10 +63,10 @@
     	<c:forEach var="item" items="${model.metrix.url.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>ms</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
+						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
 					</tr>
 				</c:forEach>
 		</table>
@@ -76,10 +76,10 @@
     	<c:forEach var="item" items="${model.metrix.service.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>ms</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
+						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
 					</tr>
 				</c:forEach>
 		</table>
@@ -89,10 +89,10 @@
     	<c:forEach var="item" items="${model.metrix.sql.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>ms</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
+						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
 					</tr>
 				</c:forEach>
 		</table>
@@ -102,10 +102,10 @@
     	<c:forEach var="item" items="${model.metrix.call.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>ms</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
+						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
 					</tr>
 				</c:forEach>
 		</table>
@@ -115,10 +115,10 @@
     	<c:forEach var="item" items="${model.metrix.cache.result}" varStatus="status">
 		<table width="20%" style="float:left" border=1>  
 				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>值</th></tr>
+				<tr><th width="80%">系统</th>		<th>ms</th></tr>
 				<c:forEach var="detail" items="${item.value}" varStatus="status">
 					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td>${detail.domain}</td><td>${w:format(detail.value,'0.0')}</td>
+						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
 					</tr>
 				</c:forEach>
 		</table>
