@@ -1,9 +1,10 @@
 package com.dianping.cat.report.page.heartbeat;
 
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.AbstractReportPayload;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.AbstractReportPayload;
 
 public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
@@ -11,7 +12,10 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	@FieldMeta("ip")
 	private String m_ipAddress;
-
+	
+	@FieldMeta("type")
+	private String m_type;
+	
 	public Payload() {
 		super(ReportPage.HEARTBEAT);
 	}
@@ -31,6 +35,14 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setIpAddress(String ip) {
 		m_ipAddress = ip;
+	}
+
+	public String getType() {
+		return m_type;
+	}
+
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	@Override

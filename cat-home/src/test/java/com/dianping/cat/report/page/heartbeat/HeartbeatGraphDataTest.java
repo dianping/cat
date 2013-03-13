@@ -12,10 +12,10 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-
-import com.dianping.cat.home.dal.report.Graph;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
+
+import com.dianping.cat.home.dal.report.Graph;
 
 @RunWith(JUnit4.class)
 public class HeartbeatGraphDataTest extends ComponentTestCase {

@@ -7,14 +7,23 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletException;
+
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -22,12 +31,6 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.google.gson.Gson;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 
@@ -43,7 +46,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_manager;
-	
+
 	@Inject
 	private ReportService m_reportService;
 
@@ -74,6 +77,13 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<ProblemReport> response = m_service.invoke(request);
 			ProblemReport report = response.getModel();
 
+			if (payload.getPeriod().isLast()) {
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "problem");
+				Set<String> domainNames = report.getDomainNames();
+
+				domainNames.addAll(domains);
+			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");
@@ -111,7 +121,7 @@ public class Handler implements PageHandler<Context> {
 		int urlThreshold = payload.getLongTime();
 		int sqlThreshold = payload.getSqlLongTime();
 		int serviceThreshold = payload.getSeviceLongTime();
-		
+
 		switch (payload.getAction()) {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
@@ -121,17 +131,20 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				problemStatistics.setIp(ip);
 			}
-			problemStatistics.setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
+			problemStatistics.setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
+			      .setServiceThreshold(serviceThreshold);
 			problemStatistics.visitProblemReport(report);
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
 			if (ip.equals(CatString.ALL_IP)) {
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
+				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 			} else {
-				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold).setServiceThreshold(serviceThreshold);
+				problemStatistics.setIp(ip).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
+				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 			}
 			model.setReport(report);
@@ -161,7 +174,8 @@ public class Handler implements PageHandler<Context> {
 			if (ip.equals(CatString.ALL_IP)) {
 				report = getHourlyReport(payload, VIEW);
 
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000).setServiceThreshold(serviceThreshold);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
+				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
 				String response = m_gson.toJson(problemStatistics);
@@ -169,12 +183,23 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				report = showHourlyReport(model, payload);
 
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000).setServiceThreshold(serviceThreshold);
+				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
+				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
 				ProblemStatistics statistics = model.getAllStatistics();
 				statistics.setIps(new ArrayList<String>(report.getIps()));
 				model.setMobileResponse(m_gson.toJson(statistics));
 			}
+			break;
+		case HOUR_GRAPH:
+			report = getHourlyReport(payload, DETAIL);
+			String type = payload.getType();
+			String state = payload.getStatus();
+			Date start = report.getStartTime();
+			ProblemReportVisitor vistor = new ProblemReportVisitor(ip, type, state, start);
+
+			vistor.visitProblemReport(report);
+			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -305,9 +330,9 @@ public class Handler implements PageHandler<Context> {
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
-		
-		if(problemReport==null){
-			
+
+		if (problemReport == null) {
+
 		}
 		return problemReport;
 	}

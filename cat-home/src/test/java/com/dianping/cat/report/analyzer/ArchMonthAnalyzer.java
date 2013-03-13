@@ -63,7 +63,8 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void builderData() throws IOException {
-		Date start = TimeUtil.getCurrentMonth();
+		Date start = TimeUtil.getLastMonth();
+		start.setTime(start.getTime()+TimeUtil.ONE_DAY*16);
 		Date end = TimeUtil.getCurrentDay();
 
 		Set<String> domains = queryAllDomain(start, end);
@@ -120,6 +121,8 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 
 		private Item m_webCache = new Item();
 
+		private boolean m_isDebug = true;
+
 		public void accept(Machine machine, TransactionReport report) {
 			Collection<TransactionType> types = machine.getTypes().values();
 			for (TransactionType type : types) {
@@ -130,18 +133,27 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 				if (name.equalsIgnoreCase("url")) {
 					m_url.add(count, error, sum);
 					double avg = type.getAvg();
-					if (avg > 90) {
-						System.out.println(report.getDomain());
-						System.out.println(count + " " + avg);
+					if (m_isDebug) {
+						if (avg > 90) {
+							System.out.println(report.getDomain());
+							System.out.println(count + " " + avg);
+						}
 					}
 				} else if (name.equalsIgnoreCase("service") || name.equalsIgnoreCase("pigeonService")) {
 					double avg = type.getAvg();
-					if (avg > 10) {
-						System.out.println(report.getDomain());
-						System.out.println(count + " " + avg);
+					if (m_isDebug) {
+						if (avg > 10) {
+							System.out.println(report.getDomain());
+							System.out.println(count + " " + avg);
+						}
 					}
 					m_service.add(count, error, sum);
 				} else if (name.equalsIgnoreCase("call") || name.equalsIgnoreCase("pigeonCall")) {
+					if (m_isDebug) {
+						if (error > 1000) {
+							System.out.println(report.getDomain() + ":" + error);
+						}
+					}
 					m_call.add(count, error, sum);
 				} else if (name.equalsIgnoreCase("sql")) {
 					m_sql.add(count, error, sum);
@@ -149,9 +161,11 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 					m_kvdbCache.add(count, error, sum);
 				} else if (name.startsWith("Cache.memcached")) {
 					m_memCache.add(count, error, sum);
-					if (error > 1000) {
-						System.out.println(report.getDomain());
-						System.out.println(machine.getIp());
+					if (m_isDebug) {
+						if (error > 1000) {
+							System.out.println(report.getDomain());
+							System.out.println(machine.getIp());
+						}
 					}
 				} else if (name.equalsIgnoreCase("Cache.web")) {
 					m_webCache.add(count, error, sum);

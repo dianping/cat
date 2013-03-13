@@ -192,7 +192,7 @@ public class DisplayHeartbeat {
 	}
 
 	public String getCatThreadGraph() {
-		return m_builder.build(new HeartbeatPayload(4, "Cat Thread", "Minute", "Count", m_catThreads));
+		return m_builder.build(new HeartbeatPayload(1, "Cat Thread", "Minute", "Count", m_catThreads));
 	}
 
 	public double[] getCatThreads() {
@@ -293,7 +293,7 @@ public class DisplayHeartbeat {
 	}
 
 	public String getHttpTheadGraph() {
-		return m_builder.build(new HeartbeatPayload(3, "HTTP Thread", "Minute", "Count", m_httpThreads));
+		return m_builder.build(new HeartbeatPayload(0, "HTTP Thread", "Minute", "Count", m_httpThreads));
 	}
 
 	public double[] getHttpThreads() {
@@ -341,7 +341,7 @@ public class DisplayHeartbeat {
 	}
 
 	public String getPigeonTheadGraph() {
-		return m_builder.build(new HeartbeatPayload(5, "Pigeon Thread", "Minute", "Count", m_pigeonThreads));
+		return m_builder.build(new HeartbeatPayload(2, "Pigeon Thread", "Minute", "Count", m_pigeonThreads));
 	}
 
 	public double[] getPigeonThreads() {

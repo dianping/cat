@@ -1,26 +1,24 @@
 package com.dianping.cat.report.page.model.sql;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HistoricalSqlService extends BaseHistoricalModelService<SqlReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public HistoricalSqlService() {
 		super("sql");
@@ -42,28 +40,7 @@ public class HistoricalSqlService extends BaseHistoricalModelService<SqlReport> 
 	}
 
 	private SqlReport getReportFromDatabase(long timestamp, String domain) throws Exception {
-		List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(new Date(timestamp), domain, 1, getName(),
-		      ReportEntity.READSET_FULL);
-		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
-
-		for (Report report : reports) {
-			String xml = report.getContent();
-			SqlReport model = DefaultSaxParser.parse(xml);
-			model.accept(merger);
-		}
-		SqlReport sqlReport = merger.getSqlReport();
-
-		List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(timestamp), new Date(
-		      timestamp + 60 * 60 * 1000), null, "sql", ReportEntity.READSET_DOMAIN_NAME);
-
-		if (sqlReport == null) {
-			sqlReport = new SqlReport(domain);
-		}
-		Set<String> domainNames = sqlReport.getDomainNames();
-		for (Report report : historyReports) {
-			domainNames.add(report.getDomain());
-		}
-		return sqlReport;
+		return m_reportSerivce.querySqlReport(domain, new Date(timestamp), new Date(timestamp + TimeUtil.ONE_HOUR));
 	}
 
 	private SqlReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {

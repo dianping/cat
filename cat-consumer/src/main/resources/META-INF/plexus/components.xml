@@ -19,7 +19,7 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<configuration>
 				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state</analyzers>
+				<analyzers>problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state,top</analyzers>
 			</configuration>
 			<requirements>
 				<requirement>
@@ -234,6 +234,22 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.status.ServerStateManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.top.TopAnalyzer</role>
+			<implementation>com.dianping.cat.consumer.top.TopAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>

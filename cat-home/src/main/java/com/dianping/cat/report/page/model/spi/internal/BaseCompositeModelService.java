@@ -8,6 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -16,9 +19,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads;
-import org.unidal.lookup.annotation.Inject;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {

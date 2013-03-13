@@ -19,6 +19,12 @@ public class ThresholdAlarmMeta {
 
 	private String m_type;
 
+	public String getBaseShowUrl() {
+		// convert on line system ip to domain name
+		String showUrl = m_baseUrl.replace("http://10.1.6.128:8080/", "http://cat.dianpingoa.com/");
+		return showUrl;
+	}
+	
 	public String getBaseUrl() {
 		return m_baseUrl;
 	}

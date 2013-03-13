@@ -41,17 +41,26 @@
 <br>
 <table class="graph">
 <tr>
-	<th>Thread Info</th>
+	<th>Framework Thread Info</th>
 </tr>
 <tr>
 	<td>
-		<svg version="1.1" width="1400" height="380" xmlns="http://www.w3.org/2000/svg">
-		  ${model.activeThreadGraph}
-		  ${model.startedThreadGraph}
-		  ${model.totalThreadGraph}
+		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
 		  ${model.httpThreadGraph}
 		  ${model.catThreadGraph}
 		  ${model.pigeonThreadGraph}
+		</svg>
+	</td>
+</tr>
+<tr>
+	<th>JVM Thread Info</th>
+</tr>
+<tr>
+	<td>
+		<svg version="1.1" width="1400" height="190" xmlns="http://www.w3.org/2000/svg">
+		  ${model.activeThreadGraph}
+		  ${model.startedThreadGraph}
+		  ${model.totalThreadGraph}
 		</svg>
 	</td>
 </tr>

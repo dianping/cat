@@ -6,9 +6,10 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 
+import org.unidal.web.mvc.view.Viewer;
+
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.ReportPage;
-import org.unidal.web.mvc.view.Viewer;
 
 public class XmlViewer implements Viewer<ReportPage, Action, Context, Model> {
 	public void view(Context ctx, Model model) throws ServletException, IOException {

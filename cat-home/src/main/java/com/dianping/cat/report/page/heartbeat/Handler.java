@@ -7,9 +7,18 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
@@ -19,15 +28,9 @@ import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.StringSortHelper;
 import com.google.gson.Gson;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -44,6 +47,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ServerConfigManager m_manager;
+
+	@Inject
+	private ReportService m_reportService;
 
 	@Inject(type = ModelService.class, value = "heartbeat")
 	private ModelService<HeartbeatReport> m_service;
@@ -94,6 +100,13 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
 
+			if (payload.getPeriod().isLast()) {
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "heartbeat");
+				Set<String> domainNames = report.getDomainNames();
+
+				domainNames.addAll(domains);
+			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable ip service registered for " + request + "!");
@@ -132,6 +145,11 @@ public class Handler implements PageHandler<Context> {
 				m_historyGraphs.showHeartBeatGraph(model, payload);
 			}
 			break;
+		case PART_HISTORY:
+			if (model.getIpAddress() != null) {
+				m_historyGraphs.showHeartBeatGraph(model, payload);
+			}
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
@@ -143,7 +161,11 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HEARTBEAT);
 		model.setIpAddress(payload.getIpAddress());
+		String queryType = payload.getType();
 
+		if (queryType == null || queryType.trim().length() == 0) {
+			payload.setType("frameworkThread");
+		}
 		Action action = payload.getAction();
 		if (action == Action.HISTORY) {
 			String type = payload.getReportType();

@@ -1,12 +1,13 @@
 package com.dianping.cat.system.page.alarm;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.alarm.AlarmTemplate;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateDao;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateEntity;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
 
 public class TemplateManager {
 

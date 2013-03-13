@@ -14,7 +14,7 @@
 	<jsp:body>
 
 <res:useCss value="${res.css.local.cross_css}" target="head-css" />
-
+<%@ include file="crossQuery.jsp" %>
 </br>
 <table class="machines">
 	<tr style="text-align: left">

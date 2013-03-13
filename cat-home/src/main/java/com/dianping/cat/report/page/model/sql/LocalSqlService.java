@@ -1,27 +1,25 @@
 package com.dianping.cat.report.page.model.sql;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.sql.model.transform.DefaultSaxParser;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseLocalModelService;
+import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class LocalSqlService extends BaseLocalModelService<SqlReport> {
 	@Inject
 	private BucketManager m_bucketManager;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private ReportService m_reportSerivce;
 
 	public LocalSqlService() {
 		super("sql");
@@ -40,22 +38,16 @@ public class LocalSqlService extends BaseLocalModelService<SqlReport> {
 
 		if (report == null && period.isLast()) {
 			long current = System.currentTimeMillis();
-			long hour = 60 * 60 * 1000;
-			long date = current - current % (hour) - hour;
+			long date = current - current % (TimeUtil.ONE_HOUR) - TimeUtil.ONE_HOUR;
 			report = getLocalReport(date, domain);
 
 			if (report == null) {
 				report = new SqlReport(domain);
-
-				List<Report> historyReports = m_reportDao.findAllByDomainNameDuration(new Date(date), new Date(
-				      date + 60 * 60 * 1000), null, "sql", ReportEntity.READSET_DOMAIN_NAME);
-
-				Set<String> domainNames = report.getDomainNames();
-				for (Report temp : historyReports) {
-					domainNames.add(temp.getDomain());
-				}
+				report.setStartTime(new Date(date));
+				report.setEndTime(new Date(date + TimeUtil.ONE_HOUR - 1));
 			}
 		}
+
 		return report;
 	}
 }

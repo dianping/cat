@@ -7,6 +7,9 @@ import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -22,9 +25,6 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Transaction;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
 public class MonthReportCache implements Initializable {
 
@@ -45,8 +45,8 @@ public class MonthReportCache implements Initializable {
 	private Map<String, DatabaseReport> m_databaseRepors = new HashMap<String, DatabaseReport>();
 
 	private Map<String, HealthReport> m_healthReports = new HashMap<String, HealthReport>();
-	
-	private Map<String,StateReport> m_stateReports = new HashMap<String,StateReport>();
+
+	private Map<String, StateReport> m_stateReports = new HashMap<String, StateReport>();
 
 	@Inject
 	private DailyReportService m_dailyReportService;
@@ -60,8 +60,7 @@ public class MonthReportCache implements Initializable {
 	@Override
 	public void initialize() throws InitializationException {
 		if (m_serverConfigManager.isJobMachine()) {
-			Task reload = new Reload();
-			Threads.forGroup("Cat").start(reload);
+			Threads.forGroup("Cat").start(new Reload());
 		}
 	}
 
@@ -101,16 +100,16 @@ public class MonthReportCache implements Initializable {
 		return m_healthReports.get(domain);
 	}
 
-	public StateReport queryStateReport(String domain,Date start){
+	public StateReport queryStateReport(String domain, Date start) {
 		return m_stateReports.get(domain);
 	}
-	
+
 	public class Reload implements Task {
 		private void reload() {
 			Date start = TimeUtil.getCurrentMonth();
 			Date end = TimeUtil.getCurrentDay();
 			m_end = end.getTime();
-			
+
 			Set<String> domains = m_hourReportService.queryAllDomainNames(start, end, "transaction");
 
 			for (String domain : domains) {
@@ -128,8 +127,8 @@ public class MonthReportCache implements Initializable {
 			for (String database : databases) {
 				m_databaseRepors.put(database, m_dailyReportService.queryDatabaseReport(database, start, end));
 			}
-			
-			String domain="Cat";
+
+			String domain = "Cat";
 			m_stateReports.put(domain, m_dailyReportService.queryStateReport(domain, start, end));
 		}
 
@@ -143,7 +142,7 @@ public class MonthReportCache implements Initializable {
 
 				if (time > m_end) {
 					Transaction t = Cat.newTransaction("ReportReload", "Month");
-					
+
 					try {
 						reload();
 						t.setStatus(Transaction.SUCCESS);

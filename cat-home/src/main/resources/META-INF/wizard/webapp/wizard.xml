@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
    <webapp package="com.dianping.cat" webres="true" plugin-management="true">
       <module name="report" path="r">
@@ -54,6 +55,12 @@
          </page>
          <page name="state" title="State" path="state">
             <description>State</description>
+         </page>
+         <page name="query" title="Query" path="query">
+            <description>Query</description>
+         </page>
+         <page name="top" title="Top" path="top">
+            <description>Top</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

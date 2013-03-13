@@ -581,7 +581,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -598,7 +598,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -628,7 +628,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -645,7 +645,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -675,7 +675,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -692,7 +692,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -722,7 +722,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -739,7 +739,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -769,7 +769,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -786,7 +786,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -830,7 +830,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -860,7 +860,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -877,7 +877,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -907,7 +907,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -924,7 +924,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -954,7 +954,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -971,7 +971,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1015,7 +1015,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1073,6 +1073,53 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>html</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>top-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.top.LocalTopService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>top-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.top.HistoricalTopService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>top</role-hint>
+			<implementation>com.dianping.cat.report.page.model.top.CompositeTopService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>top-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -1483,11 +1530,23 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.GraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.GraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -1540,15 +1599,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
-			<implementation>com.dianping.cat.home.dal.report.DailygraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1620,6 +1670,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1745,6 +1798,11 @@
 					<role-hint>state-local</role-hint>
 					<field-name>m_stateService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>top-local</role-hint>
+					<field-name>m_topService</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1759,21 +1817,12 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
 					<role-hint>realtime</role-hint>
 					<field-name>m_consumer</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
-			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1785,7 +1834,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1835,7 +1884,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1852,7 +1901,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1869,7 +1918,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1886,7 +1935,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1903,7 +1952,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1920,7 +1969,7 @@
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -1935,6 +1984,23 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.top.LocalTopService</role>
+			<implementation>com.dianping.cat.report.page.model.top.LocalTopService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageConsumer</role>
@@ -2137,6 +2203,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
 			<implementation>com.dianping.cat.home.dal.report.MonthreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2648,6 +2723,46 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.query.Handler</role>
+			<implementation>com.dianping.cat.report.page.query.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.query.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.query.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.query.JspViewer</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.top.Handler</role>
+			<implementation>com.dianping.cat.report.page.top.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.top.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>top</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.top.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.top.JspViewer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>

@@ -2,6 +2,8 @@ package com.dianping.cat.system.alarm.threshold.listener;
 
 import java.util.List;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
@@ -16,7 +18,6 @@ import com.dianping.cat.system.event.Event;
 import com.dianping.cat.system.event.EventDispatcher;
 import com.dianping.cat.system.event.EventListener;
 import com.dianping.cat.system.event.EventType;
-import org.unidal.lookup.annotation.Inject;
 
 public class ServiceDataListener implements EventListener {
 

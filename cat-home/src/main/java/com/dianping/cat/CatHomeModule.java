@@ -2,13 +2,18 @@ package com.dianping.cat;
 
 import java.io.File;
 
+import org.unidal.helper.Threads;
+import org.unidal.initialization.AbstractModule;
+import org.unidal.initialization.Module;
+import org.unidal.initialization.ModuleContext;
+
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.job.CatJobModule;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
+import com.dianping.cat.report.task.thread.TaskProducer;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.alarm.AlarmRuleCreator;
 import com.dianping.cat.system.alarm.AlarmTask;
@@ -17,10 +22,6 @@ import com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener;
 import com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener;
 import com.dianping.cat.system.event.EventListenerRegistry;
 import com.dianping.cat.system.notify.ScheduledMailTask;
-import org.unidal.helper.Threads;
-import org.unidal.initialization.AbstractModule;
-import org.unidal.initialization.Module;
-import org.unidal.initialization.ModuleContext;
 
 public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
@@ -37,9 +38,9 @@ public class CatHomeModule extends AbstractModule {
 		DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 		TaskProducer dailyTaskProducer = ctx.lookup(TaskProducer.class);
 
+		Threads.forGroup("Cat").start(taskConsumer);
 		if (serverConfigManager.isJobMachine() && !serverConfigManager.isLocalMode()) {
 			Threads.forGroup("Cat").start(dailyTaskProducer);
-			Threads.forGroup("Cat").start(taskConsumer);
 		}
 
 		executeAlarmModule(ctx);

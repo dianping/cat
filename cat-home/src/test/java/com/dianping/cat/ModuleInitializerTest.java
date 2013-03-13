@@ -3,7 +3,6 @@ package com.dianping.cat;
 import java.io.File;
 
 import org.junit.Test;
-
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;

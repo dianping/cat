@@ -78,7 +78,6 @@ public class Handler implements PageHandler<Context> {
 				if (parent instanceof SystemContext) {
 					SystemContext<?> context = (SystemContext<?>) parent;
 					DpAdminLogin member = session.getMember();
-
 					context.setSigninMember(member);
 					logAccess(ctx, member);
 					return;

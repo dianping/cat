@@ -15,7 +15,6 @@
 	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseTools_js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['trendGraph_js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['heartbeatHistory_js']}" target="head-js"/>
 <br>
 <table class="machines">
 	<tr style="text-align: left">
@@ -38,13 +37,7 @@
 <br>
 <table class="graph" id="graph">
 <tr>
-	<th	colspan="3">Thread Info</th>
-</tr>
-<tr>
-	
-	<td><div id="ActiveThread" class="graph"></div></td>
-	<td><div id="StartedThread" class="graph"></div></td>
-	<td><div id="TotalStartedThread" class="graph"></div></td>
+	<th	colspan="3" style="text-align:left">Framework Thread Info</th>
 </tr>
 <tr>
 	
@@ -52,44 +45,41 @@
 	<td><div id="CatStartedThread" class="graph"></div></td>
 	<td><div id="PigeonStartedThread" class="graph"></div></td>
 </tr>
-
 <tr>
-	<th colspan="3">System Info</th>
+	<th colspan="3" style="text-align:left"><a  data-status="thread" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=thread">JVM Thread Info</a></th>
 </tr>
 <tr>
-	
-	<td><div id="NewGcCount" class="graph"></div></td>
-	<td><div id="OldGcCount" class="graph"></div></td>
-	<td><div id="SystemLoadAverage" class="graph"></div></td>
-</tr>
-<tr>
-	<th colspan="3">Memery Info</th>
-</tr>
-<tr id="memoryGraph">
-	<td><div id="MemoryFree" class="graph"></div></td>
-	<td><div id="HeapUsage" class="graph"></div></td>
-	<td><div id="NoneHeapUsage" class="graph"></div></td>
+	<td colspan="3"><iframe id="thread" style="display:none;" width="100%" height="260px"></iframe></td>
 </tr>
 
 <tr>
-	<th colspan="3">Cat Message Info</th>
+	<th colspan="3" style="text-align:left"><a  data-status="system" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=system">System Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(New Gc,Old Gc,System Load)</th>
 </tr>
 <tr>
-	<td><div id="CatMessageProduced" class="graph"></div></td>
-	<td><div id="CatMessageOverflow" class="graph"></div></td>
-	<td><div id="CatMessageSize" class="graph"></div></td>
+	<td colspan="3"><iframe id="system" style="display:none;" width="100%" height="260px"></iframe></td>
+</tr>
+<tr>
+	<th colspan="3" style="text-align:left"><a  data-status="memory" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=memory">Memory Info</a>&nbsp;&nbsp;&nbsp;&nbsp;(Memory Free,Heap Usage,None Heap Usage)</th>
+</tr>
+<tr>
+	<td colspan="3"><iframe id="memory" style="display:none;" width="100%" height="260px"></iframe></td>
+</tr>
+<tr>
+	<th colspan="3" style="text-align:left"><a  data-status="disk" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=disk">Disk Info</a></th>
+</tr>
+<tr>
+	<td colspan="3"><iframe id="disk" style="display:none;" width="100%" height="260px"></iframe></td>
+</tr>
+
+<tr>
+	<th colspan="3" style="text-align:left"><a  data-status="cat" class="graph_link" href="?op=historyPart&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=cat">Cat Info</a></th>
+</tr>
+<tr>
+	<td colspan="3"><iframe id="cat" style="display:none;" width="100%" height="260px"></iframe></td>
 </tr>
 </table>
-<script>
-	//01
-	var activeThreadGraphData = ${model.activeThreadGraph};
-	graphOnMinute(document.getElementById('ActiveThread'), activeThreadGraphData);
-	//02
-	var startedThreadGraphData = ${model.startedThreadGraph};
-	graphOnMinute(document.getElementById('StartedThread'), startedThreadGraphData);
-	//03
-	var totalThreadGraphData = ${model.totalThreadGraph};
-	graphOnMinute(document.getElementById('TotalStartedThread'), totalThreadGraphData);
+	<res:useJs value="${res.js.local['heartbeatHistory_js']}" target="head-buttom"/>
+	<script>
 	//04
 	var httpThreadGraphData = ${model.httpThreadGraph};
 	graphOnMinute(document.getElementById('HttpStartedThread'), httpThreadGraphData);
@@ -99,41 +89,6 @@
 	//06
 	var pigeonThreadGraphData = ${model.pigeonThreadGraph};
 	graphOnMinute(document.getElementById('PigeonStartedThread'), pigeonThreadGraphData);
-	//07
-	var newGcCountGraphData = ${model.newGcCountGraph};
-	graphOnMinute(document.getElementById('NewGcCount'), newGcCountGraphData);
-	//08
-	var oldGcCountGraphData = ${model.oldGcCountGraph};
-	graphOnMinute(document.getElementById('OldGcCount'), oldGcCountGraphData);
-	//09
-	var systemLoadAverageGraphData = ${model.systemLoadAverageGraph};
-	graphOnMinute(document.getElementById('SystemLoadAverage'), systemLoadAverageGraphData);
-	//10
-	var memoryFreeGraphData = ${model.memoryFreeGraph};
-	graphOnMinute(document.getElementById('MemoryFree'), memoryFreeGraphData);
-	//11
-	var heapUsageGraphData = ${model.heapUsageGraph};
-	graphOnMinute(document.getElementById('HeapUsage'), heapUsageGraphData);
-	//12
-	var noneHeapUsageGraphData = ${model.noneHeapUsageGraph};
-	graphOnMinute(document.getElementById('NoneHeapUsage'), noneHeapUsageGraphData);
-	//19
-	
-	//16
-	var catMessageProducedGraphData = ${model.catMessageProducedGraph};
-	graphOnMinute(document.getElementById('CatMessageProduced'), catMessageProducedGraphData);
-	//17
-	var catMessageOverflowGraphData = ${model.catMessageOverflowGraph};
-	graphOnMinute(document.getElementById('CatMessageOverflow'), catMessageOverflowGraphData);
-	//18
-	var catMessageSizeGraphData = ${model.catMessageSizeGraph};
-	graphOnMinute(document.getElementById('CatMessageSize'), catMessageSizeGraphData);
-
-	var diskHistoryGraph=${model.diskHistoryGraph};
-	var size=${model.disks};
-	disksGraph(size,diskHistoryGraph);
-	
-</script>
+	</script>
 </jsp:body>
-
 </a:historyReport>

@@ -1,7 +1,8 @@
 package com.dianping.cat.system.page.login;
 
-import com.dianping.cat.system.SystemPage;
 import org.unidal.web.mvc.view.BaseJspViewer;
+
+import com.dianping.cat.system.SystemPage;
 
 public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model> {
 	@Override

@@ -1,7 +1,8 @@
 package com.dianping.cat.report.page.heartbeat;
 
-import com.dianping.cat.report.ReportPage;
 import org.unidal.web.mvc.view.BaseJspViewer;
+
+import com.dianping.cat.report.ReportPage;
 
 public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model> {
 	@Override
@@ -15,6 +16,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.MOBILE.getPath();
 		case HISTORY:
 			return JspFile.HISTORY.getPath();
+		case PART_HISTORY:
+			return JspFile.PART_HISTORY.getPath();
 
 		}
 

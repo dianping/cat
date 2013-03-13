@@ -1,0 +1,8 @@
+<top-report domain="Cat" startTime="2012-06-18 14:00:00" endTime="2012-06-18 14:59:59">
+	<domain name="cat01">
+		<segment id="1" error="123" url="234" url-duration="12.34" service="1" service-duration="1.0"
+			sql="0" sql-duration="1" call="1" call-duration="1.0" cache="1" cache-duration="1.0"/>
+		<segment/>
+	</domain>
+	<domain/>
+</top-report>

@@ -19,6 +19,9 @@
 
 <res:useCss value="${res.css.local.problem_css}" target="head-css" />
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+<res:useJs value="${res.js.local['baseTools_js']}" target="head-js"/>
+<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
+<res:useJs value="${res.js.local.trendGraph_js}" target="head-js" />
 </br>
 <table class="machines">
 	<tr style="text-align:left">
@@ -93,43 +96,51 @@
 		</th>
 	</tr>
 </table>
-
 <br>
-<table class="problem">
+<table>
 	<tr>
 		<th>Type</th>
 		<th>Total</th>
 		<th>Status</th>
 		<th>Count</th>
+		<th>SampleLinks</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
 		<tr>
-			<td rowspan="${w:size(statistics.value.status)}"
-				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top"><a
-				href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
-				&nbsp;&nbsp;${statistics.value.type}</td>
-			<td rowspan="${w:size(statistics.value.status)}"
+			<td rowspan="${w:size(statistics.value.status)*2}"
+				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">
+				<a href="?op=hourlyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
+				&nbsp;<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
+				&nbsp;&nbsp;${statistics.value.type}
+			</td>
+			<td rowspan="${w:size(statistics.value.status)*2}"
 				class="${typeIndex.index mod 2 != 0 ? 'even' : 'odd'} top">${statistics.value.count}</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
 				<c:if test="${index.index != 0}">
 					<tr>
 				</c:if>
-				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.status}</td>
+				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">
+					<a href="?op=hourlyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${statistics.value.type}&status=${status.value.status}${model.customDate}" class="problem_status_graph_link" data-status="${statistics.value.type}${status.value.status}">[:: show ::]</a>
+					&nbsp;${status.value.status}
+				</td>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}">${status.value.count}</td>
 				<td class="${index.index mod 2 != 0 ? 'even' : 'odd'}"><c:forEach
 						var="links" items="${status.value.links}" varStatus="linkIndex">
-						<a href="${model.logViewBaseUri}/${links}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
+						<a href="${model.logViewBaseUri}/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
+						
 				<c:if test="${index.index != 0}">
-		</tr>
-		</c:if>
-	</c:forEach>
-	</tr>
+				</tr>
+				</c:if>
+				<tr><td colspan="3"> <div id="${statistics.value.type}${status.value.status}" style="display:none"></div></td></tr>
+			</c:forEach>
+			</tr>
+		<tr class="graphs"><td colspan="5"><div id="${typeIndex.index}" style="display:none"></div></td></tr>
 	</c:forEach>
 </table>
-<br>
+
 
 <c:if test="${model.ipAddress ne 'All'}">
 <a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&op=group" onclick="return requestGroupInfo(this)">Threads Details</a>
@@ -142,6 +153,7 @@
 </table>
 
 <res:useJs value="${res.js.local.problem_js}" target="buttom-js" />
+<res:useJs value="${res.js.local.problemHistory_js}" target="bottom-js" />
 </jsp:body>
 
 </a:report>

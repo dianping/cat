@@ -14,8 +14,8 @@ import org.unidal.webres.helper.Files;
 import com.dianping.cat.home.template.entity.ThresholdTemplate;
 import com.dianping.cat.home.template.transform.DefaultDomParser;
 import com.dianping.cat.system.alarm.alert.AlertInfo;
-import com.dianping.cat.system.alarm.threshold.ThresholdRule;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
+import com.dianping.cat.system.alarm.threshold.ThresholdRule;
 import com.dianping.cat.system.alarm.threshold.template.ThresholdAlarmMeta;
 
 public class ThresholdRuleTest {

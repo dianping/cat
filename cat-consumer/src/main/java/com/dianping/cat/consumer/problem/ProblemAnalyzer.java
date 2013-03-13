@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -16,8 +17,11 @@ import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.handler.Handler;
+import com.dianping.cat.consumer.problem.model.entity.Duration;
+import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Message;
@@ -26,7 +30,6 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled {
 	@Inject
@@ -42,6 +45,22 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	private List<Handler> m_handlers;
 
 	private Map<String, ProblemReport> m_reports = new HashMap<String, ProblemReport>();
+
+	private ProblemReport buildTotalProblemReport() {
+		ProblemReport report = new ProblemReport(ALL);
+		ProblemReportVisitor visitor = new ProblemReportVisitor(report);
+
+		try {
+	      for (ProblemReport temp : m_reports.values()) {
+	      	report.getIps().add(temp.getDomain());
+	      	report.getDomainNames().add(temp.getDomain());
+	      	visitor.visitProblemReport(temp);
+	      }
+      } catch (Exception e) {
+      	Cat.logError(e);
+      }
+		return report;
+	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -158,6 +177,9 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			if (atEnd && !isLocalMode()) {
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				ProblemReport all = buildTotalProblemReport();
+
+				m_reports.put(ALL, all);
 
 				for (ProblemReport report : m_reports.values()) {
 					try {
@@ -199,5 +221,60 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 				m_bucketManager.closeBucket(reportBucket);
 			}
 		}
+	}
+
+	static class ProblemReportVisitor extends BaseVisitor {
+
+		private ProblemReport m_report;
+
+		private String m_currentDomain;
+
+		private String m_currentType;
+
+		private String m_currentState;
+
+		public ProblemReportVisitor(ProblemReport report) {
+			m_report = report;
+		}
+
+		protected Entry findOrCreatEntry(Machine machine, String type, String status) {
+			List<Entry> entries = machine.getEntries();
+
+			for (Entry entry : entries) {
+				if (entry.getType().equals(type) && entry.getStatus().equals(status)) {
+					return entry;
+				}
+			}
+			Entry entry = new Entry();
+
+			entry.setStatus(status);
+			entry.setType(type);
+			entries.add(entry);
+			return entry;
+		}
+
+		@Override
+		public void visitDuration(Duration duration) {
+			int value = duration.getValue();
+			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
+			Entry entry = findOrCreatEntry(machine, m_currentType, m_currentState);
+			Duration temp = entry.findOrCreateDuration(value);
+
+			temp.setCount(temp.getCount() + duration.getCount());
+		}
+
+		@Override
+		public void visitEntry(Entry entry) {
+			m_currentType = entry.getType();
+			m_currentState = entry.getStatus();
+			super.visitEntry(entry);
+		}
+
+		@Override
+		public void visitProblemReport(ProblemReport problemReport) {
+			m_currentDomain = problemReport.getDomain();
+			super.visitProblemReport(problemReport);
+		}
+
 	}
 }

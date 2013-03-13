@@ -11,7 +11,9 @@ public enum JspFile {
 
 	HISTORY_METHOD("/jsp/report/crossHistoryMethod.jsp"),
 
-	HISTORY_PROJECT("/jsp/report/crossHistoryProject.jsp");
+	HISTORY_PROJECT("/jsp/report/crossHistoryProject.jsp"),
+	
+	METHOD_QUERY("/jsp/report/crossMethodQuery.jsp");
 
 	private String m_path;
 

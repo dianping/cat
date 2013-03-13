@@ -28,7 +28,7 @@ $(document).delegate('.history_graph_link', 'click', function(e){
 					cell.innerHTML = response;
 					
 					var data = $('#errorTrendMeta',cell).text();
-					graphReal($('#errorTrend',cell)[0],eval('('+data+')'),60*1000);
+					graph($('#errorTrend',cell)[0],eval('('+data+')'));
 				}
 			});
 		}
@@ -69,7 +69,7 @@ $(document).delegate('.problem_status_graph_link', 'click', function(e){
 					cell.innerHTML = response;
 					
 					var data = $('#errorTrendMeta',cell).text();
-					graphReal($('#errorTrend',cell)[0],eval('('+data+')'),60*1000);
+					graph($('#errorTrend',cell)[0],eval('('+data+')'));
 				}
 			});
 		}

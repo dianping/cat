@@ -2,6 +2,8 @@ package com.dianping.cat.report.page.heartbeat;
 
 public enum JspFile {
 	HISTORY("/jsp/report/heartbeatHistoryGraph.jsp"),
+	
+	PART_HISTORY("/jsp/report/heartbeatPartHistoryGraph.jsp"),
 
 	MOBILE("/jsp/report/heartbeat_mobile.jsp"),
 

@@ -6,14 +6,15 @@ package com.dianping.cat.report.task.thread;
 import java.util.Date;
 import java.util.concurrent.locks.LockSupport;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dainping.cat.consumer.dal.report.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.report.task.spi.ReportFacade;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
 
 public class DefaultTaskConsumer extends TaskConsumer {
 

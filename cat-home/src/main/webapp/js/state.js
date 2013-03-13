@@ -1,4 +1,3 @@
-
 $(document).delegate('.graph_link', 'click', function(e){
 	var anchor = this,
 		el = $(anchor),

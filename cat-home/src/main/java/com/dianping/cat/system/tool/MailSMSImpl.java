@@ -11,13 +11,13 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.mailremote.remote.MailService;
 import com.dianping.sms.biz.SMSService;
 import com.dianping.sms.biz.SMSType;
-import org.unidal.lookup.annotation.Inject;
 
 public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 
