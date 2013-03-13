@@ -29,7 +29,8 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 <br>
 <table class='version'  rules="all" >
 	<tr class="even"><td width="3%">序号</td><td width="87%">最新发布功能描述</td><td width="10%">发布时间</td></tr>	
-	<tr class="odd"><td>7</td><td style="color:red">Query报表支持按照天和小时查询Transaction,Event,Problem数据</td><td>2013-03-11</td></tr>
+	<tr class="even"><td>8</td><td style="color:red">Problem小时报表支持一个小时内的错误趋势图</td><td>2013-03-13</td></tr>
+	<tr class="odd"><td>7</td><td style="color:red">Query报表支持按照天或者小时查询Transaction,Event,Problem数据</td><td>2013-03-11</td></tr>
 	<tr class="even"><td>6</td><td style="color:red">Cross报表支持根据方法名称查询是哪些客户端调用此方法</td><td>2013-03-11</td></tr>
 	<tr class="odd"><td>5</td><td style="color:red">Top报表,根据分钟级别实时展现线上异常最多、访问最慢(URL\Service\SQL\Call\Cache)的应用</td><td>2013-03-11</td></tr>
 	<tr class="even"><td>4</td><td>Transaction\Event月报表支持每天的趋势图，以天为单位</td><td>2013-01-21</td></tr>
