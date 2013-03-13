@@ -138,12 +138,18 @@ public class Handler implements PageHandler<Context> {
 			calculateTps(payload, report);
 
 			if (payload.getPeriod().isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "transaction");
+				Date start = new Date(payload.getDate());
+				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
+
+				if (CatString.ALL_Domain.equals(domain)) {
+					report = m_reportService.queryTransactionReport(domain, start, end);
+				}
+				Set<String> domains = m_reportService.queryAllDomainNames(start, end, "transaction");
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
 			}
+
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");

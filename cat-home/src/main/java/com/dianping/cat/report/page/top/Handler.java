@@ -44,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<TopReport> response = m_service.invoke(request);
 			TopReport report = response.getModel();
 
-			if (report == null) {
+			if (report == null || report.getDomains().size() == 0) {
 				report = m_reportService.queryTopReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
 				      + TimeUtil.ONE_HOUR));
 			}
