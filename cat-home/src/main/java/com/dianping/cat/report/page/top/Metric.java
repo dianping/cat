@@ -15,7 +15,7 @@ import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 
-public class Metrix extends BaseVisitor {
+public class Metric extends BaseVisitor {
 
 	private String m_currentDomain;
 
@@ -25,61 +25,61 @@ public class Metrix extends BaseVisitor {
 
 	private int m_count;
 
-	private MetrixItem m_error;
+	private MetricItem m_error;
 
-	private MetrixItem m_url;
+	private MetricItem m_url;
 
-	private MetrixItem m_service;
+	private MetricItem m_service;
 
-	private MetrixItem m_call;
+	private MetricItem m_call;
 
-	private MetrixItem m_sql;
+	private MetricItem m_sql;
 
-	private MetrixItem m_cache;
+	private MetricItem m_cache;
 
 	private static final int DEFAULT = 10;
 
 	private long m_currentTime = System.currentTimeMillis();
 
-	public Metrix() {
+	public Metric() {
 		this(DEFAULT);
 	}
 
-	public Metrix(int count) {
+	public Metric(int count) {
 		m_count = count;
-		m_error = new MetrixItem(m_count);
-		m_url = new MetrixItem(m_count);
-		m_service = new MetrixItem(m_count);
-		m_call = new MetrixItem(m_count);
-		m_sql = new MetrixItem(m_count);
-		m_cache = new MetrixItem(m_count);
+		m_error = new MetricItem(m_count);
+		m_url = new MetricItem(m_count);
+		m_service = new MetricItem(m_count);
+		m_call = new MetricItem(m_count);
+		m_sql = new MetricItem(m_count);
+		m_cache = new MetricItem(m_count);
 	}
 
-	public MetrixItem getCache() {
+	public MetricItem getCache() {
 		return m_cache;
 	}
 
-	public MetrixItem getCall() {
+	public MetricItem getCall() {
 		return m_call;
 	}
 
-	public MetrixItem getError() {
+	public MetricItem getError() {
 		return m_error;
 	}
 
-	public MetrixItem getService() {
+	public MetricItem getService() {
 		return m_service;
 	}
 
-	public MetrixItem getSql() {
+	public MetricItem getSql() {
 		return m_sql;
 	}
 
-	public MetrixItem getUrl() {
+	public MetricItem getUrl() {
 		return m_url;
 	}
 
-	public void setError(MetrixItem error) {
+	public void setError(MetricItem error) {
 		m_error = error;
 	}
 
@@ -93,7 +93,6 @@ public class Metrix extends BaseVisitor {
 	public void visitSegment(Segment segment) {
 		int minute = segment.getId();
 		long time = m_start.getTime() + minute * TimeUtil.ONE_MINUTE;
-
 		if (time <= m_currentTime + TimeUtil.ONE_MINUTE) {
 
 			m_error.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
@@ -157,14 +156,14 @@ public class Metrix extends BaseVisitor {
 		}
 	}
 
-	public static class MetrixItem {
+	public static class MetricItem {
 		private int m_minuteCount;
 
 		private int m_itemSize = 10;
 
 		private Map<String, ArrayList<Item>> m_result = new LinkedHashMap<String, ArrayList<Item>>();
 
-		public MetrixItem(int minuteCount) {
+		public MetricItem(int minuteCount) {
 			m_minuteCount = minuteCount;
 		}
 

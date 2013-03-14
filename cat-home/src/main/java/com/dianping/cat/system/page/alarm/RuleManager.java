@@ -219,6 +219,10 @@ public class RuleManager {
 		try {
 			AlarmRule alarmRule = m_alarmRuleDao.findByPK(id, AlarmRuleEntity.READSET_FULL);
 			model.setAlarmRule(alarmRule);
+			
+			int templatedId = alarmRule.getTemplateId();
+			AlarmTemplate template = m_alarmTemplateDao.findByPK(templatedId, AlarmTemplateEntity.READSET_FULL);
+			model.setAlarmTemplate(template);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
