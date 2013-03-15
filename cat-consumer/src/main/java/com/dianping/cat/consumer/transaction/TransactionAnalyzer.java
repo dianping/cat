@@ -261,7 +261,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		type.findOrCreateAllDuration(allDuration).incCount();
 
 		double d = t.getDurationInMicros() / 1000d;
-		long current = System.currentTimeMillis() / 1000 / 60;
+		long current = t.getTimestamp() / 1000 / 60;
 		int min = (int) (current % (60));
 
 		processNameGraph(t, name, min, d);
