@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.transaction;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.Date;
 import java.util.Locale;
 
 import junit.framework.Assert;
@@ -53,5 +54,18 @@ public class FormatTest {
 		checkFranceFormat(12.346, "0.##", "12,35");
 
 		checkFranceFormat(0.3467, "0.#%", "34,7%");
+	}
+
+	@Test
+	public void computeMinute() {
+		System.out.println(new Date());
+		long current = System.currentTimeMillis() / 1000 / 60;
+		long minute = current % (60);
+		System.out.println(minute);
+		int i = 0;
+		for (; i < 60; i++) {
+			current = current + 1000 * 60;
+			System.out.println(current / 1000 / 60 % 60);
+		}
 	}
 }

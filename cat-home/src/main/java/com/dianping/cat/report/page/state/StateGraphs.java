@@ -18,7 +18,7 @@ public class StateGraphs {
 	@Inject
 	private ReportService m_reportService;
 
-	public HistoryGraphItem buildHistoryGraph(StateReport report, String domain, Date start, Date end,
+	public HistoryGraphItem buildGraph(StateReport report, String domain, Date start, Date end,
 	      String reportType, String key, String ip) {
 		if (reportType.equalsIgnoreCase("graph")) {
 			return getHourlyGraph(report, domain, start, end, key, ip);
@@ -47,8 +47,8 @@ public class StateGraphs {
 
 	private HistoryGraphItem getHourlyGraph(StateReport report, String domain, Date start, Date end, String key,
 	      String ip) {
-
 		HistoryGraphItem item = new HistoryGraphItem();
+		
 		item.setStart(start).setSize(60).setTitles(key).setStep(TimeUtil.ONE_MINUTE);
 		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));
 		return item;

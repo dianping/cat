@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -262,11 +261,10 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		type.findOrCreateAllDuration(allDuration).incCount();
 
 		double d = t.getDurationInMicros() / 1000d;
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(t.getTimestamp());
-		int min = cal.get(Calendar.MINUTE);
+		long current = System.currentTimeMillis() / 1000 / 60;
+		int min = (int) (current % (60));
 
-		processNameGraph(name, t, min, d);
+		processNameGraph(t, name, min, d);
 		processTypeRange(t, type, min, d);
 
 		List<Message> children = t.getChildren();
@@ -280,7 +278,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return count;
 	}
 
-	private void processNameGraph(TransactionName name, Transaction t, int min, double d) {
+	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
 		int dk = 1;
 		int tk = min - min % 5;
 
