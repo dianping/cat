@@ -1,11 +1,14 @@
 package com.dianping.cat.message.spi;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
-import org.unidal.lookup.ContainerHolder;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 
@@ -24,6 +27,18 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	private volatile boolean m_active = true;
 
 	protected static final String ALL = "All";
+
+	protected static Set<String> UNUSED_TYPES = new HashSet<String>();
+
+	protected static Set<String> UNUSED_NAMES = new HashSet<String>();
+
+	static {
+		UNUSED_TYPES.add("Service");
+		UNUSED_TYPES.add("PigeonService");
+		UNUSED_NAMES.add("piegonService:heartTaskService:heartBeat");
+		UNUSED_NAMES.add("piegonService:heartTaskService:heartBeat()");
+		UNUSED_NAMES.add("pigeon:HeartBeatService:null");
+	}
 
 	@Override
 	public void analyze(MessageQueue queue) {
@@ -89,10 +104,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		String type = t.getType();
 		String name = t.getName();
 
-		if ((("Service").equals(type) || ("PigeonService").equals(type))
-		      && (("piegonService:heartTaskService:heartBeat").equals(name)
-		            || ("piegonService:heartTaskService:heartBeat()").equals(name) || ("pigeon:HeartBeatService:null")
-		               .equals(name))) {
+		if (UNUSED_TYPES.contains(type) && UNUSED_NAMES.contains(name)) {
 			return true;
 		}
 		return false;

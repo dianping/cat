@@ -70,7 +70,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private Logger m_logger;
 
-	private int m_gzipThreads = 5;
+	private int m_gzipThreads = 10;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(10000);
 
@@ -136,7 +136,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		for (int i = 0; i < m_gzipThreads; i++) {
 			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(
-			      10000);
+			      50000);
 
 			m_messageQueues.put(i, messageQueue);
 			Threads.forGroup("Cat").start(new MessageGzip(messageQueue));
@@ -330,26 +330,19 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			abs = -abs;
 		}
 		int bucketIndex = abs % m_gzipThreads;
-		if (bucketIndex > m_gzipThreads || bucketIndex < 0) {
-			m_logger.error("Error when compute the message bucket index!" + bucketIndex);
-		} else {
-			m_processMessages[bucketIndex]++;
-		}
+		m_processMessages[bucketIndex]++;
 
 		LinkedBlockingQueue<MessageItem> items = m_messageQueues.get(bucketIndex);
-
 		boolean result = items.offer(new MessageItem(tree, id));
 
-		if (result == false) {
-			m_serverStateManager.addMessageDumpLoss(1);
-			m_error++;
-			if (m_error % CatConstants.ERROR_COUNT == 0) {
+		if (!result) {
+			if ((++m_error) % CatConstants.ERROR_COUNT == 0) {
 				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error);
 			}
+			m_serverStateManager.addMessageDumpLoss(1);
 		}
 
-		m_total++;
-		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
+		if ((++m_total) % (CatConstants.SUCCESS_COUNT) == 0) {
 			logState(tree);
 		}
 	}
@@ -400,12 +393,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 					if (item != null) {
 						try {
-							MessageTree tree = item.getTree();
 							MessageId id = item.getMessageId();
-
 							String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
 							String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
-
 							LocalMessageBucket bucket = m_buckets.get(dataFile);
 
 							if (bucket == null) {
@@ -415,12 +405,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 								m_buckets.put(dataFile, bucket);
 							}
 
-							DefaultMessageTree defaultTree = (DefaultMessageTree) tree;
-							ChannelBuffer buf = defaultTree.getBuf();
-
-							int size = buf.readableBytes();
-							m_totalSize += size;
-
+							DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
+							ChannelBuffer buf = tree.getBuf();
 							MessageBlock bolck = bucket.storeMessage(buf, id);
 
 							if (bolck != null) {
@@ -429,6 +415,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 									m_logger.error("Error when offer the block to the dump!");
 								}
 							}
+							m_totalSize += buf.readableBytes();
 						} catch (Exception e) {
 							Cat.logError(e);
 						}
