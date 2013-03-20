@@ -62,16 +62,18 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	public synchronized TopReport getReport(String domain) {
+		Set<String> domains = m_transactionAnalyzer.getDomains();
 		TopReport topReport = new TopReport("Cat");
+		
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 
-		Set<String> domains = m_transactionAnalyzer.getDomains();
 		for (String temp : domains) {
 			TransactionReport report = m_transactionAnalyzer.getReport(temp);
 
 			new TransactionReportVisitor(topReport).visitTransactionReport(report);
 		}
+		
 		for (String temp : domains) {
 			ProblemReport report = m_problemAnalyzer.getReport(temp);
 
@@ -156,7 +158,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		m_problemAnalyzer = problemAnalyzer;
 	}
 
-	class TransactionReportVisitor extends com.dianping.cat.consumer.transaction.model.transform.BaseVisitor {
+	static class TransactionReportVisitor extends com.dianping.cat.consumer.transaction.model.transform.BaseVisitor {
 
 		private String m_domain;
 
@@ -283,7 +285,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		public abstract void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail);
 	}
 
-	class ProblemReportVisitor extends com.dianping.cat.consumer.problem.model.transform.BaseVisitor {
+	static class ProblemReportVisitor extends com.dianping.cat.consumer.problem.model.transform.BaseVisitor {
 		private String m_domain;
 
 		private String m_type;

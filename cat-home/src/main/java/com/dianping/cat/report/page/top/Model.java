@@ -10,7 +10,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private TopReport m_topReport;
 	
-	private Metrix m_metrix;
+	private Metric m_metrix;
 	
 	private boolean m_refresh = false;
 	
@@ -33,7 +33,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new ArrayList<String>();
 	}
 
-	public Metrix getMetrix() {
+	public Metric getMetrix() {
 		return m_metrix;
 	}
 	
@@ -45,7 +45,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_refresh;
 	}
 
-	public void setMetrix(Metrix metrix) {
+	public void setMetrix(Metric metrix) {
 		m_metrix = metrix;
 	}
 
