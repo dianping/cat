@@ -70,15 +70,15 @@ public class Handler implements PageHandler<Context> {
 		TopReport report = getReport(payload);
 		ModelPeriod period = payload.getPeriod();
 		int count = payload.getCount();
-		Metrix metrix = new Metrix();
+		Metric metrix = new Metric();
 
 		if (!period.isCurrent()) {
-			metrix = new Metrix(60);
+			metrix = new Metric(60);
 		} else {
 			model.setRefresh(true);
 		}
 		if (count > 0) {
-			metrix = new Metrix(count);
+			metrix = new Metric(count);
 		}
 
 		metrix.visitTopReport(report);

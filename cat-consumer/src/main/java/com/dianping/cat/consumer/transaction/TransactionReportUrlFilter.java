@@ -71,7 +71,6 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 			}
 
 			for (String name : invalidates) {
-
 				transactionNames.remove(name);
 			}
 
@@ -112,7 +111,6 @@ public class TransactionReportUrlFilter extends com.dianping.cat.consumer.transa
 			}
 		}
 		super.visitType(type);
-
 	}
 
 	public static class TransactionNameCompator implements Comparator<TransactionName> {
