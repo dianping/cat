@@ -131,34 +131,31 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		int count = 0;
 
 		report.addIp(tree.getIpAddress());
+		type.incTotalCount();
+		name.incTotalCount();
 
-		synchronized (type) {
-			type.incTotalCount();
-			name.incTotalCount();
+		if (event.isSuccess()) {
+			if (type.getSuccessMessageUrl() == null) {
+				type.setSuccessMessageUrl(messageId);
+				count++;
+			}
 
-			if (event.isSuccess()) {
-				if (type.getSuccessMessageUrl() == null) {
-					type.setSuccessMessageUrl(messageId);
-					count++;
-				}
+			if (name.getSuccessMessageUrl() == null) {
+				name.setSuccessMessageUrl(messageId);
+				count++;
+			}
+		} else {
+			type.incFailCount();
+			name.incFailCount();
 
-				if (name.getSuccessMessageUrl() == null) {
-					name.setSuccessMessageUrl(messageId);
-					count++;
-				}
-			} else {
-				type.incFailCount();
-				name.incFailCount();
+			if (type.getFailMessageUrl() == null) {
+				type.setFailMessageUrl(messageId);
+				count++;
+			}
 
-				if (type.getFailMessageUrl() == null) {
-					type.setFailMessageUrl(messageId);
-					count++;
-				}
-
-				if (name.getFailMessageUrl() == null) {
-					name.setFailMessageUrl(messageId);
-					count++;
-				}
+			if (name.getFailMessageUrl() == null) {
+				name.setFailMessageUrl(messageId);
+				count++;
 			}
 		}
 
@@ -184,8 +181,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	private int processTransaction(EventReport report, MessageTree tree, Transaction t) {
-		List<Message> children = t.getChildren();
 		int count = 0;
+		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
 			if (child instanceof Transaction) {
@@ -210,7 +207,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		DefaultXmlBuilder builder = new DefaultXmlBuilder(true);
 		Bucket<String> reportBucket = null;
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
-		
+
 		t.setStatus(Message.SUCCESS);
 		try {
 			reportBucket = m_bucketManager.getReportBucket(m_startTime, "event");

@@ -169,8 +169,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	private CrossInfo parsePigeonServerTransaction(Transaction t, MessageTree tree) {
 		CrossInfo crossInfo = new CrossInfo();
 		String localIp = tree.getIpAddress();
-
 		List<Message> messages = t.getChildren();
+		
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				if (message.getType().equals("PigeonService.client")) {

@@ -90,11 +90,11 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case GRAPH:
 			report = getHourlyReport(payload);
-			item = m_stateGraphs.buildHistoryGraph(report,payload.getDomain(), payload.getHistoryStartDate(),
+			item = m_stateGraphs.buildGraph(report,payload.getDomain(), payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate(), "graph", key, payload.getIpAddress());
 			break;
 		case HISTORY_GRAPH:
-			item = m_stateGraphs.buildHistoryGraph(null,payload.getDomain(), payload.getHistoryStartDate(),
+			item = m_stateGraphs.buildGraph(null,payload.getDomain(), payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate(), "historyGraph", key, payload.getIpAddress());
 			break;
 		}
