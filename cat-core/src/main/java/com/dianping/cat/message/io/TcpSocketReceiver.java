@@ -64,9 +64,9 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private int m_queueSize = 100000;
 
-	private int m_error;
+	private int m_errorCount;
 
-	private int m_process;
+	private long m_processCount;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
@@ -232,23 +232,23 @@ public class TcpSocketReceiver implements LogEnabled {
 			boolean result = m_queue.offer(buf);
 
 			if (result == false) {
-				m_error++;
-				if (m_error % CatConstants.ERROR_COUNT == 0) {
+				m_errorCount++;
+				if (m_errorCount % CatConstants.ERROR_COUNT == 0) {
 					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
 
-					if (m_error % (CatConstants.ERROR_COUNT * 100) == 0) {
-						m_logger.warn("The server can't process the tree! overflow : " + m_error);
+					if (m_errorCount % (CatConstants.ERROR_COUNT * 100) == 0) {
+						m_logger.warn("The server can't process the tree! overflow : " + m_errorCount);
 					}
 				}
 			} else {
-				m_process++;
-				int flag = m_process % CatConstants.SUCCESS_COUNT;
+				m_processCount++;
+				long flag = m_processCount % CatConstants.SUCCESS_COUNT;
 
 				if (flag == 0) {
 					m_serverStateManager.addMessageTotal(CatConstants.SUCCESS_COUNT);
 
-					if (m_process % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
-						m_logger.info("The server processes message number " + m_process);
+					if (m_processCount % (CatConstants.SUCCESS_COUNT * 1000) == 0) {
+						m_logger.info("The server processes message number " + m_processCount);
 					}
 				}
 			}

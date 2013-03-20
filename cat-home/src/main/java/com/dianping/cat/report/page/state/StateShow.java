@@ -79,8 +79,8 @@ public class StateShow extends BaseVisitor {
 		}
 		if (m_ip.equals(CatString.ALL_IP) || m_ip.equalsIgnoreCase(ip)) {
 			m_total = mergerMachine(m_total, machine);
+			super.visitMachine(machine);
 		}
-		super.visitMachine(machine);
 	}
 
 	@Override

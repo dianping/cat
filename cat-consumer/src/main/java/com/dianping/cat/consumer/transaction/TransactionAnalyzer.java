@@ -1,12 +1,12 @@
 package com.dianping.cat.consumer.transaction;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,32 +54,55 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	private TransactionReport buildTotalTransactionReport() {
 		TransactionReport all = new TransactionReport(ALL);
-		all.setStartTime(new Date(m_startTime));
-		all.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-
 		TransactionReportVisitor visitor = new TransactionReportVisitor(all);
 
+		all.setStartTime(new Date(m_startTime));
+		all.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 		try {
-	      for (TransactionReport temp : m_reports.values()) {
-	      	all.getIps().add(temp.getDomain());
-	      	all.getDomainNames().add(temp.getDomain());
-	      	visitor.visitTransactionReport(temp);
-	      }
-      } catch (Exception e) {
-      	Cat.logError(e);
-      }
+			for (TransactionReport temp : m_reports.values()) {
+				all.getIps().add(temp.getDomain());
+				all.getDomainNames().add(temp.getDomain());
+				visitor.visitTransactionReport(temp);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 		return all;
 	}
 
-	private void clearAllDuration(TransactionReport report) {
-		Collection<Machine> machines = report.getMachines().values();
+	private double compute95LineDetail(Map<Integer, AllDuration> durations) {
+		int totalCount = 0;
 
+		for (AllDuration duration : durations.values()) {
+			totalCount += duration.getCount();
+		}
+		int index = totalCount * 5 / 100;
+		Map<Integer, AllDuration> result = getSortDuration(durations);
+
+		for (Entry<Integer, AllDuration> entry : result.entrySet()) {
+			index = index - entry.getValue().getCount();
+			if (index <= 0) {
+				return entry.getKey();
+			}
+		}
+		return 0;
+	}
+
+	private void compute95Line(TransactionReport report) {
+		Collection<Machine> machines = report.getMachines().values();
 		for (Machine machine : machines) {
 			for (TransactionType type : machine.getTypes().values()) {
-				type.getAllDurations().clear();
+				double typeValue = compute95LineDetail(type.getAllDurations());
 
+				type.setLine95Value(typeValue);
+				type.setLine95Count(1);
+				type.setLine95Sum(typeValue);
 				for (TransactionName name : type.getNames().values()) {
-					name.getAllDurations().clear();
+					double nameValue = compute95LineDetail(name.getAllDurations());
+
+					name.setLine95Value(nameValue);
+					name.setLine95Count(1);
+					name.setLine95Sum(nameValue);
 				}
 			}
 		}
@@ -93,25 +116,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	private double get95Line(Map<Integer, AllDuration> durations) {
-		int totalCount = 0;
-
-		for (AllDuration duration : durations.values()) {
-			totalCount += duration.getCount();
-		}
-
-		int index = totalCount * 5 / 100;
-		Map<Integer, AllDuration> result = getSortDuration(durations);
-
-		for (Entry<Integer, AllDuration> entry : result.entrySet()) {
-			index = index - entry.getValue().getCount();
-			if (index <= 0) {
-				return entry.getKey();
-			}
-		}
-		return 0;
 	}
 
 	@Override
@@ -132,7 +136,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 		report.getDomainNames().addAll(m_reports.keySet());
 		report.accept(new StatisticsComputer());
-		set95Line(report);
+		compute95Line(report);
 		return report;
 	}
 
@@ -189,7 +193,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		if (report == null) {
 			report = new TransactionReport(domain);
-			
+
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
 			m_reports.put(domain, report);
@@ -212,54 +216,56 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		String messageId = tree.getMessageId();
 		int count = 0;
 
-		synchronized (type) {
-			type.incTotalCount();
-			name.incTotalCount();
+		type.incTotalCount();
+		name.incTotalCount();
 
-			if (t.isSuccess()) {
-				if (type.getSuccessMessageUrl() == null) {
-					type.setSuccessMessageUrl(messageId);
-					count++;
-				}
-
-				if (name.getSuccessMessageUrl() == null) {
-					name.setSuccessMessageUrl(messageId);
-					count++;
-				}
-			} else {
-				type.incFailCount();
-				name.incFailCount();
-
-				if (type.getFailMessageUrl() == null) {
-					type.setFailMessageUrl(messageId);
-					count++;
-				}
-
-				if (name.getFailMessageUrl() == null) {
-					name.setFailMessageUrl(messageId);
-					count++;
-				}
+		if (t.isSuccess()) {
+			if (type.getSuccessMessageUrl() == null) {
+				type.setSuccessMessageUrl(messageId);
+				count++;
 			}
 
-			// update statistics
-			double duration = t.getDurationInMicros() / 1000d;
-			Integer allDuration = new Integer((int) duration);
+			if (name.getSuccessMessageUrl() == null) {
+				name.setSuccessMessageUrl(messageId);
+				count++;
+			}
+		} else {
+			type.incFailCount();
+			name.incFailCount();
 
-			name.setMax(Math.max(name.getMax(), duration));
-			name.setMin(Math.min(name.getMin(), duration));
-			name.setSum(name.getSum() + duration);
-			name.setSum2(name.getSum2() + duration * duration);
-			name.findOrCreateAllDuration(allDuration).incCount();
+			if (type.getFailMessageUrl() == null) {
+				type.setFailMessageUrl(messageId);
+				count++;
+			}
 
-			type.setMax(Math.max(type.getMax(), duration));
-			type.setMin(Math.min(type.getMin(), duration));
-			type.setSum(type.getSum() + duration);
-			type.setSum2(type.getSum2() + duration * duration);
-			type.findOrCreateAllDuration(allDuration).incCount();
+			if (name.getFailMessageUrl() == null) {
+				name.setFailMessageUrl(messageId);
+				count++;
+			}
 		}
 
-		processTransactionGraph(name, t);
-		processTransactionRange(t, type);
+		// update statistics
+		double duration = t.getDurationInMicros() / 1000d;
+		Integer allDuration = new Integer((int) duration);
+
+		name.setMax(Math.max(name.getMax(), duration));
+		name.setMin(Math.min(name.getMin(), duration));
+		name.setSum(name.getSum() + duration);
+		name.setSum2(name.getSum2() + duration * duration);
+		name.findOrCreateAllDuration(allDuration).incCount();
+
+		type.setMax(Math.max(type.getMax(), duration));
+		type.setMin(Math.min(type.getMin(), duration));
+		type.setSum(type.getSum() + duration);
+		type.setSum2(type.getSum2() + duration * duration);
+		type.findOrCreateAllDuration(allDuration).incCount();
+
+		double d = t.getDurationInMicros() / 1000d;
+		long current = t.getTimestamp() / 1000 / 60;
+		int min = (int) (current % (60));
+
+		processNameGraph(t, name, min, d);
+		processTypeRange(t, type, min, d);
 
 		List<Message> children = t.getChildren();
 
@@ -272,11 +278,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return count;
 	}
 
-	private void processTransactionGraph(TransactionName name, Transaction t) {
-		double d = t.getDurationInMicros() / 1000d;
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(t.getTimestamp());
-		int min = cal.get(Calendar.MINUTE);
+	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
 		int dk = 1;
 		int tk = min - min % 5;
 
@@ -287,25 +289,16 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		Duration duration = name.findOrCreateDuration(dk);
 		Range range = name.findOrCreateRange(tk);
 
-		synchronized (name) {
-			duration.incCount();
-			range.incCount();
+		duration.incCount();
+		range.incCount();
 
-			if (!t.isSuccess()) {
-				range.incFails();
-			}
-
-			range.setSum(range.getSum() + d);
+		if (!t.isSuccess()) {
+			range.incFails();
 		}
-
+		range.setSum(range.getSum() + d);
 	}
 
-	private void processTransactionRange(Transaction t, TransactionType type) {
-		double d = t.getDurationInMicros() / 1000d;
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(t.getTimestamp());
-		int min = cal.get(Calendar.MINUTE);
-
+	private void processTypeRange(Transaction t, TransactionType type, int min, double d) {
 		Range2 range = type.findOrCreateRange2(min);
 
 		if (!t.isSuccess()) {
@@ -313,24 +306,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 		range.incCount();
 		range.setSum(range.getSum() + d);
-	}
-
-	private void set95Line(TransactionReport report) {
-		Collection<Machine> machines = report.getMachines().values();
-		for (Machine machine : machines) {
-			for (TransactionType type : machine.getTypes().values()) {
-				double typeValuevalue = get95Line(type.getAllDurations());
-				type.setLine95Value(typeValuevalue);
-				type.setLine95Count(1);
-				type.setLine95Sum(typeValuevalue);
-				for (TransactionName name : type.getNames().values()) {
-					double nameValue = get95Line(name.getAllDurations());
-					name.setLine95Value(nameValue);
-					name.setLine95Count(1);
-					name.setLine95Sum(nameValue);
-				}
-			}
-		}
 	}
 
 	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
@@ -355,8 +330,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 					domainNames.clear();
 					domainNames.addAll(getDomains());
 
-					set95Line(report);
-					clearAllDuration(report);
+					compute95Line(report);
 					String xml = new TransactionReportUrlFilter().buildXml(report);
 					String domain = report.getDomain();
 
@@ -416,11 +390,24 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
-	static class TransactionReportVisitor extends BaseVisitor {
+	public static class TransactionReportVisitor extends BaseVisitor {
 
 		private TransactionReport m_report;
 
 		public String m_currentDomain;
+
+		public static Set<String> ALL_TYPES = new HashSet<String>();
+
+		static {
+			ALL_TYPES.add("URL");
+			ALL_TYPES.add("Call");
+			ALL_TYPES.add("PigeonCall");
+			ALL_TYPES.add("Service");
+			ALL_TYPES.add("PigeonService");
+			ALL_TYPES.add("SQL");
+			ALL_TYPES.add("MsgProduceTried");
+			ALL_TYPES.add("MsgProduced");
+		}
 
 		public TransactionReportVisitor(TransactionReport report) {
 			m_report = report;
@@ -468,13 +455,11 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		@Override
 		public void visitType(TransactionType type) {
 			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
-
 			String typeName = type.getId();
 
-			if (typeName.equals("URL") || typeName.equals("Call") || typeName.equals("PigeonCall")
-			      || typeName.equals("PigeonService") || typeName.equals("Service") || typeName.equals("SQL")
-			      || typeName.startsWith("Cache.") || typeName.equals("MsgProduceTried") || typeName.equals("MsgProduced")) {
+			if (typeName.startsWith("Cache.") || ALL_TYPES.contains(typeName)) {
 				TransactionType result = machine.findOrCreateType(typeName);
+
 				mergeType(result, type);
 			}
 		}
