@@ -134,12 +134,15 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("Cat").start(new BlockDumper());
 		Threads.forGroup("Cat").start(new OldMessageMover());
 
+		if (m_configManager.isLocalMode()) {
+			m_gzipThreads = 1;
+		}
 		for (int i = 0; i < m_gzipThreads; i++) {
 			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<LocalMessageBucketManager.MessageItem>(
 			      50000);
 
 			m_messageQueues.put(i, messageQueue);
-			Threads.forGroup("Cat").start(new MessageGzip(messageQueue));
+			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
 		}
 	}
 
@@ -326,6 +329,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
 		String domain = id.getDomain() + id.getIpAddress();
 		int abs = domain.hashCode();
+
 		if (abs < 0) {
 			abs = -abs;
 		}
@@ -337,12 +341,14 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		if (!result) {
 			if ((++m_error) % CatConstants.ERROR_COUNT == 0) {
-				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error);
+				m_logger.error("Error when offer message tree to gzip queue! overflow :" + m_error + ". Gzip thread :"
+				      + bucketIndex);
 			}
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
 
-		if ((++m_total) % (CatConstants.SUCCESS_COUNT) == 0) {
+		m_total++;
+		if (m_total % (CatConstants.SUCCESS_COUNT) == 0) {
 			logState(tree);
 		}
 	}
@@ -379,10 +385,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	class MessageGzip implements Task {
 
+		private int m_index;
+
 		public BlockingQueue<MessageItem> m_messageQueue;
 
-		public MessageGzip(BlockingQueue<MessageItem> messageQueue) {
+		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
 			m_messageQueue = messageQueue;
+			m_index = index;
 		}
 
 		@Override
@@ -426,9 +435,13 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 		}
 
+		public int getIndex() {
+			return m_index;
+		}
+
 		@Override
 		public String getName() {
-			return "Message-Gzip";
+			return "Message-Gzip-" + m_index;
 		}
 
 		@Override

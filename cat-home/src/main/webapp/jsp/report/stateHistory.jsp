@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.state.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.state.Model" scope="request"/>
 
-<a:historyReport title="CAT State Report" navUrlPrefix="domain=${model.domain}">
+<a:historyReport title="CAT State Report" navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}  &nbsp;&nbsp;&nbsp;&nbsp;CAT项目指标</jsp:attribute>
 	<jsp:body>	
 	<res:useCss value="${res.css.local.matrix_css}" target="head-css" />
