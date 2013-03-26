@@ -51,7 +51,8 @@ Welcome to <b>Central Application Tracking (CAT)</b>.
 </table>
 <br>
 <table class='version' rules="all">
-	<tr class="even"><td width="3%">版本</td><td width="87%">说明</td><td width="10%">发布时间</td></tr>
+	<tr class="odd"><td width="3%">版本</td><td width="87%">说明</td><td width="10%">发布时间</td></tr>
+	<tr class="even"><td>0.6.0</td><td>1、增加业务监控埋点API。2、修复时间戳调整bug。3、修复classpath获取bug。4、修复CatFilter支持Forward请求</td><td>2013-03-26</td></tr>
 	<tr class="odd"><td>0.4.1</td><td>1、默认禁止心跳线程获取线程锁信息，以降低对业务线程的影响。</td><td>2012-09-06</td></tr>
 	<tr class="even"><td>0.4.0</td><td>1、支持开关动态关闭。2、后端存储重构，支持分布式Logview的查看(关联pigeon的call)。</td><td>2012-08-20</td></tr>
 	<tr class="odd"><td>0.3.4</td><td>1、规范了CAT客户端的日志。2、规范了后台模块的加载顺序。3、统一服务端配置存取。4、新增心跳报表的Http线程 </td><td>2012-07-25</td></tr>

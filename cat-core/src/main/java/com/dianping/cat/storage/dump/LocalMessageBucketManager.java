@@ -328,7 +328,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
-		//the message tree of one ip in the same hour should be put in one gzip thread
+		// the message tree of one ip in the same hour should be put in one gzip thread
 		String key = id.getDomain() + id.getIpAddress() + id.getTimestamp();
 		int abs = key.hashCode();
 
@@ -390,6 +390,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		private int m_index;
 
+		private long m_count;
+
 		public BlockingQueue<MessageItem> m_messageQueue;
 
 		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
@@ -404,6 +406,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
+						long t = System.currentTimeMillis();
+
 						try {
 							MessageId id = item.getMessageId();
 							String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
@@ -430,6 +434,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 							m_totalSize += buf.readableBytes();
 						} catch (Exception e) {
 							Cat.logError(e);
+						}
+						m_count++;
+						if (m_count % (CatConstants.SUCCESS_COUNT) == 0) {
+							m_logger.info("Gzip time is " + (System.currentTimeMillis() - t));
 						}
 					}
 				}
