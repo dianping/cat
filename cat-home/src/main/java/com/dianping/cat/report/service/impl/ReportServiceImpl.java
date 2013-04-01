@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -342,4 +343,14 @@ public class ReportServiceImpl implements ReportService {
 			throw new RuntimeException("Top report don't have other report type but houly!");
 		}
 	}
+
+	@Override
+   public MetricReport queryMetricReport(String group, Date start, Date end) {
+		int type = getQueryType(start, end);
+		if (type == s_hourly) {
+			return m_hourlyReportService.queryMetricReport(group, start, end);
+		} else{
+			throw new RuntimeException("unexcepted query type");
+		}
+   }
 }

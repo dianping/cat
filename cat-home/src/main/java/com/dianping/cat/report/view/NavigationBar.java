@@ -12,6 +12,8 @@ public class NavigationBar {
 		ReportPage.HOME,
 
 		ReportPage.TOP,
+		
+		ReportPage.METRIC,
 
 		ReportPage.TRANSACTION,
 

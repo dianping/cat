@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.metric;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,8 +14,10 @@ import org.unidal.lookup.annotation.Inject;
 import com.dainping.cat.consumer.dal.report.BusinessReport;
 import com.dainping.cat.consumer.dal.report.BusinessReportDao;
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Message;
@@ -31,9 +34,33 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	@Inject
 	private BusinessReportDao m_businessReportDao;
-	
-	//key is project line,such as tuangou
+
+	// key is project line,such as tuangou
 	private Map<String, MetricReport> m_reports = new HashMap<String, MetricReport>();
+
+	private static final String TUANGOU = "TuanGou";
+
+	private static Map<String, Set<String>> s_urls = new HashMap<String, Set<String>>();
+
+	private static Map<String, Map<String, String>> s_metric = new HashMap<String, Map<String, String>>();
+
+	static {
+		Set<String> urls = new HashSet<String>();
+
+		urls.add("/index");
+		urls.add("/detail");
+		urls.add("/pay");
+		s_urls.put(TUANGOU, urls);
+	}
+
+	static {
+		Map<String, String> tuangou = new HashMap<String, String>();
+
+		tuangou.put("order", "quantity");
+		tuangou.put("payment.pending", "amount");
+		tuangou.put("payment.success", "amount");
+		s_metric.put(TUANGOU, tuangou);
+	}
 
 	@Override
 	public void doCheckpoint(boolean atEnd) {
@@ -49,9 +76,9 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	public Set<String> getDomains() {
 		return m_reports.keySet();
 	}
-	
-	public String getGroup(String domain){
-		return  "TuanGou";
+
+	public String getGroup(String domain) {
+		return "TuanGou";
 	}
 
 	public MetricReport getReport(String group) {
@@ -101,7 +128,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		String group = getGroup(domain);
-		
+
 		MetricReport report = m_reports.get(group);
 
 		if (report == null) {
@@ -115,25 +142,118 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+			processUrl(group, report, (Transaction) message);
+		}
+		if (message instanceof Transaction) {
+			processTransaction(group, report, tree, (Transaction) message);
 		} else if (message instanceof Metric) {
-			processMetric(report, tree, (Metric) message);
+			processMetric(group, report, tree, (Metric) message);
 		}
 	}
 
-	private int processMetric(MetricReport report, MessageTree tree, Metric metric) {
+	private void processUrl(String group, MetricReport report, Transaction transaction) {
+		Set<String> urls = s_urls.get(group);
+		String type = transaction.getType();
+		String name = transaction.getName();
+
+		if (type.equals(CatConstants.TYPE_URL) && urls.contains(name)) {
+			long current = transaction.getTimestamp() / 1000 / 60;
+			int min = (int) (current % (60));
+
+			com.dianping.cat.consumer.metric.model.entity.Metric metric = report.findOrCreateMetric(name);
+			Point point = metric.findOrCreatePoint(min);
+
+			point.setCount(point.getCount() + 1);
+			point.setSum(point.getSum() + transaction.getDurationInMillis());
+			point.setAvg(point.getSum() / point.getCount());
+		}
+	}
+
+	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
+		String name = metric.getName();
+		Map<String, String> metrics = s_metric.get(group);
+		String key = metrics.get(name);
+
+		if (key != null) {
+			String data = (String) metric.getData();
+			double value = parseValue(key, data);
+
+			long current = metric.getTimestamp() / 1000 / 60;
+			int min = (int) (current % (60));
+
+			com.dianping.cat.consumer.metric.model.entity.Metric temp = report.findOrCreateMetric(name);
+			Point point = temp.findOrCreatePoint(min);
+
+			point.setCount(point.getCount() + 1);
+			point.setSum(point.getSum() + value);
+			point.setAvg(point.getSum() / point.getCount());
+		}
 		return 0;
 	}
 
-	private int processTransaction(MetricReport report, MessageTree tree, Transaction t) {
+	public double parseValue(String key, String data) {
+		String startKey = key + "=";
+		String fixStartKey = "&" + key + "=";
+		
+		for (int i = 0; i < data.length(); i++) {
+			String temp = startKey;
+		
+			if (i > 0) {
+				temp = fixStartKey;
+			}
+			for (int j = 0; j < temp.length(); j++) {
+				if (data.charAt(i + j) != temp.charAt(j)) {
+					break;
+				}
+				if ((j + 1) == temp.length()) {
+					int index = i + j;
+					StringBuilder sb = new StringBuilder();
+
+					for (int k = index + 1; k < data.length(); k++) {
+						if (data.charAt(k) == '&' ) {
+							return Double.parseDouble(sb.toString());
+						}
+						if(k == (data.length() - 1)){
+							sb.append(data.charAt(k));
+							return Double.parseDouble(sb.toString());
+						}
+						sb.append(data.charAt(k));
+					}
+				}
+			}
+		}
+		return -1;
+		
+	}
+	
+	public double parseValue1(String key, String data){
+		String[] pairs = data.split("&");
+		if (pairs != null) {
+			for (String temp : pairs) {
+				if (temp.startsWith(key + "=")) {
+					String[] keyValue = temp.split("=");
+
+					if (keyValue != null) {
+						if (keyValue[0].equals(key)) {
+							return Double.parseDouble(keyValue[1]);
+						}
+					}
+				}
+			}
+		}
+		m_logger.error("Error metric:" + key + " " + data);
+		return 0;
+	}
+
+	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {
 		int count = 0;
 		List<Message> children = t.getChildren();
 
 		for (Message child : children) {
 			if (child instanceof Transaction) {
-				count += processTransaction(report, tree, (Transaction) child);
+				count += processTransaction(group, report, tree, (Transaction) child);
 			} else if (child instanceof Metric) {
-				count += processMetric(report, tree, (Metric) child);
+				count += processMetric(group, report, tree, (Metric) child);
 			}
 		}
 
@@ -160,7 +280,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			for (MetricReport report : m_reports.values()) {
 				try {
 					Set<String> groups = report.getGroupNames();
-					
+
 					groups.clear();
 					groups.addAll(getDomains());
 

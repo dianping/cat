@@ -8,6 +8,7 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dainping.cat.consumer.dal.report.BusinessReportDao;
 import com.dainping.cat.consumer.dal.report.HostinfoDao;
 import com.dainping.cat.consumer.dal.report.ProjectDao;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -26,6 +27,7 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.ip.TopIpAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.handler.DefaultProblemHandler;
 import com.dianping.cat.consumer.problem.handler.Handler;
@@ -53,9 +55,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(SqltableDao.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
-		      .req(AnalyzerFactory.class, ServerStateManager.class) //
+		      .req(AnalyzerFactory.class, ServerStateManager.class, ServerConfigManager.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
-		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state,top")));
+		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state,top,metric")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,PigeonCall,Cache";
@@ -106,6 +108,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TopAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
+		
+		all.add(C(MetricAnalyzer.class).is(PER_LOOKUP) //
+		      .req(BucketManager.class,  BusinessReportDao.class));
 
 		all.add(C(DumpUploader.class) //
 		      .req(ServerConfigManager.class, FileSystemManager.class));

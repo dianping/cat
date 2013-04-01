@@ -406,43 +406,49 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
-						long t = System.currentTimeMillis();
-
-						try {
-							MessageId id = item.getMessageId();
-							String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
-							String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
-							LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-							if (bucket == null) {
-								bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-								bucket.setBaseDir(m_baseDir);
-								bucket.initialize(dataFile);
-								m_buckets.put(dataFile, bucket);
-							}
-
-							DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
-							ChannelBuffer buf = tree.getBuf();
-							MessageBlock bolck = bucket.storeMessage(buf, id);
-
-							if (bolck != null) {
-								if (!m_messageBlocks.offer(bolck)) {
-									m_serverStateManager.addBlockLoss(1);
-									m_logger.error("Error when offer the block to the dump!");
-								}
-							}
-							m_totalSize += buf.readableBytes();
-						} catch (Exception e) {
-							Cat.logError(e);
-						}
 						m_count++;
-						if (m_count % (CatConstants.SUCCESS_COUNT) == 0) {
-							m_logger.info("Gzip time is " + (System.currentTimeMillis() - t));
+						if (m_count % CatConstants.SUCCESS_COUNT == 0) {
+							Transaction t = Cat.newTransaction("Gzip", "Thread-" + m_index);
+							t.setStatus(Transaction.SUCCESS);
+							gzipMessage(item);
+							t.complete();
+						} else {
+							gzipMessage(item);
 						}
 					}
 				}
 			} catch (InterruptedException e) {
 				// ignore it
+			}
+		}
+
+		private void gzipMessage(MessageItem item) {
+			try {
+				MessageId id = item.getMessageId();
+				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
+				String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+				LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+				if (bucket == null) {
+					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+					bucket.setBaseDir(m_baseDir);
+					bucket.initialize(dataFile);
+					m_buckets.put(dataFile, bucket);
+				}
+
+				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
+				ChannelBuffer buf = tree.getBuf();
+				MessageBlock bolck = bucket.storeMessage(buf, id);
+
+				if (bolck != null) {
+					if (!m_messageBlocks.offer(bolck)) {
+						m_serverStateManager.addBlockLoss(1);
+						m_logger.error("Error when offer the block to the dump!");
+					}
+				}
+				m_totalSize += buf.readableBytes();
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 

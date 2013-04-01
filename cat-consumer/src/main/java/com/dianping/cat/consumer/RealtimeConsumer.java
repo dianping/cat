@@ -16,9 +16,15 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -31,11 +37,6 @@ import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
-import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
 
 /**
  * This is the real time consumer process framework.
@@ -59,6 +60,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Inject
 	private long m_extraTime = FIVE_MINUTES;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
 
 	@Inject
 	private ServerStateManager m_serverStateManager;
@@ -476,8 +480,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		public void finish() {
 			try {
+				m_serverConfigManager.acquireIoWrite();
 				m_analyzer.doCheckpoint(true);
+			} catch (InterruptedException e) {
+				Cat.logError(e);
 			} finally {
+				m_serverConfigManager.releaseIoWrite();
 				m_factory.release(m_analyzer);
 				m_factory.release(m_queue);
 			}

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -28,11 +29,21 @@ public class ServerConfigManager implements LogEnabled {
 
 	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
 
+	private Semaphore m_ioWrite = new Semaphore(0);
+
 	private Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	public void acquireIoWrite() throws InterruptedException {
+		m_ioWrite.acquire();
+	}
+
+	public void releaseIoWrite() {
+		m_ioWrite.release();
 	}
 
 	public String getBindHost() {
