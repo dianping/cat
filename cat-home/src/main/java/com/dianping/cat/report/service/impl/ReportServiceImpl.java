@@ -127,6 +127,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new TransactionReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -155,6 +156,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new EventReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -183,6 +185,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new ProblemReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -211,6 +214,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new HeartbeatReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -239,6 +243,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new MatrixReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -267,6 +272,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new CrossReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -295,6 +301,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new SqlReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -323,6 +330,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new DatabaseReport(database);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -351,6 +359,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new HealthReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
@@ -379,6 +388,7 @@ public class ReportServiceImpl implements ReportService {
 		}
 		if (report == null) {
 			report = new StateReport(domain);
+			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
 	}
