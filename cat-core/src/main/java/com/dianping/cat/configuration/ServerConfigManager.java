@@ -6,10 +6,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Files;
+import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
@@ -19,8 +22,6 @@ import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultDomParser;
-import org.unidal.helper.Files;
-import org.unidal.helper.Threads.Task;
 
 public class ServerConfigManager implements LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
@@ -29,7 +30,7 @@ public class ServerConfigManager implements LogEnabled {
 
 	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
 
-	private Semaphore m_ioWrite = new Semaphore(0);
+	private Lock m_ioWrite = new ReentrantLock();
 
 	private Logger m_logger;
 
@@ -39,11 +40,11 @@ public class ServerConfigManager implements LogEnabled {
 	}
 
 	public void acquireIoWrite() throws InterruptedException {
-		m_ioWrite.acquire();
+		m_ioWrite.lock();
 	}
 
 	public void releaseIoWrite() {
-		m_ioWrite.release();
+		m_ioWrite.unlock();
 	}
 
 	public String getBindHost() {

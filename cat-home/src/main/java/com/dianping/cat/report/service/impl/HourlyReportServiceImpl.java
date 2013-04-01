@@ -53,7 +53,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 
 	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
 		if (end.getTime() == start.getTime()) {
-			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
 		}
 		Set<String> domains = new HashSet<String>();
 
@@ -72,7 +72,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
 		if (end.getTime() == start.getTime()) {
-			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
+			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
 		}
 		Set<String> domains = new HashSet<String>();
 
