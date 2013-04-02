@@ -77,7 +77,7 @@ public class Handler implements PageHandler<Context> {
 		MetricConfig config = new MetricConfig();
 		MetricFlag indexUrl = new MetricFlag("/index", 1, true, false, false);
 		MetricFlag detailUrl = new MetricFlag("/detail", 2, true, false, false);
-		MetricFlag payUrl = new MetricFlag("/pay", 3, true, false, false);
+		MetricFlag payUrl = new MetricFlag("/order/submitOrder", 3, true, false, false);
 		MetricFlag orderKey = new MetricFlag("order", 4, false, true, false);
 		MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
 		MetricFlag totalKey = new MetricFlag("payment.success", 5, false, true, false);

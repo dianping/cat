@@ -49,7 +49,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 		urls.add("/index");
 		urls.add("/detail");
-		urls.add("/pay");
+		urls.add("/order/submitOrder");
 		s_urls.put(TUANGOU, urls);
 	}
 

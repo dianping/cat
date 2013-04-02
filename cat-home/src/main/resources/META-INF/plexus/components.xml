@@ -1539,12 +1539,19 @@
 					<role>long</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.status.ServerStateManager</role>
 				</requirement>
 				<requirement>
 					<role>java.util.List</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.configuration.ServerConfigManager</role>
+			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.status.ServerStateManager</role>
@@ -1606,10 +1613,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.problem.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.configuration.ServerConfigManager</role>
-			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
