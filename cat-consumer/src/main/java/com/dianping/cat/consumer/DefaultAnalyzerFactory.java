@@ -9,6 +9,7 @@ import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.ip.TopIpAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
+import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
@@ -74,8 +75,13 @@ public class DefaultAnalyzerFactory extends ContainerHolder implements AnalyzerF
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;
-		} else if(name.equals("top")){
+		} else if (name.equals("top")) {
 			TopAnalyzer analyzer = lookup(TopAnalyzer.class);
+
+			analyzer.setAnalyzerInfo(start, duration, extraTime);
+			return analyzer;
+		} else if (name.equals("metric")) {
+			MetricAnalyzer analyzer = lookup(MetricAnalyzer.class);
 
 			analyzer.setAnalyzerInfo(start, duration, extraTime);
 			return analyzer;

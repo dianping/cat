@@ -43,7 +43,9 @@ public enum ReportPage implements Page {
 
    QUERY("query", "query", "Query", "Query", true),
 
-   TOP("top", "top", "Top", "Top", true);
+   TOP("top", "top", "Top", "Top", true),
+
+   METRIC("metric", "metric", "Metric", "Metric", true);
 
    private String m_name;
 

@@ -31,6 +31,9 @@ import com.dianping.cat.report.page.model.logview.LocalMessageService;
 import com.dianping.cat.report.page.model.matrix.CompositeMatrixService;
 import com.dianping.cat.report.page.model.matrix.HistoricalMatrixService;
 import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
+import com.dianping.cat.report.page.model.metric.CompositeMetricService;
+import com.dianping.cat.report.page.model.metric.HistoricalMetricService;
+import com.dianping.cat.report.page.model.metric.LocalMetricService;
 import com.dianping.cat.report.page.model.problem.CompositeProblemService;
 import com.dianping.cat.report.page.model.problem.HistoricalProblemService;
 import com.dianping.cat.report.page.model.problem.LocalProblemService;
@@ -164,6 +167,15 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "top", CompositeTopService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "top-historical" }, "m_services"));
+		
+		all.add(C(ModelService.class, "metric-local", LocalMetricService.class) //
+		      .req(BucketManager.class, ReportService.class) //
+		      .req(MessageConsumer.class, "realtime"));
+		all.add(C(ModelService.class, "metric-historical", HistoricalMetricService.class) //
+		      .req(BucketManager.class, ReportService.class));
+		all.add(C(ModelService.class, "metric", CompositeMetricService.class) //
+		      .req(ServerConfigManager.class) //
+		      .req(ModelService.class, new String[] { "metric-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat.consumer">
    <jdbc package="com.dainping.cat.consumer.dal" name="cat">
       <datasource>
@@ -13,6 +14,7 @@
          <table name="sqltable"/>
          <table name="task"/>
          <table name="project"/>
+         <table name="businessReport"/>
       </group>
    </jdbc>
 </wizard>
