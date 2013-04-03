@@ -17,6 +17,7 @@ import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.CatConsumerModule;
+import com.dianping.cat.consumer.Coordinator;
 import com.dianping.cat.consumer.DefaultAnalyzerFactory;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
@@ -49,13 +50,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		all.add(C(Coordinator.class).req(ServerConfigManager.class));
+		
 		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
 
 		all.add(C(SqlParseManager.class, SqlParseManager.class)//
 		      .req(SqltableDao.class));
 
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
-		      .req(AnalyzerFactory.class, ServerStateManager.class, ServerConfigManager.class) //
+		      .req(AnalyzerFactory.class, ServerStateManager.class, Coordinator.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
 		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state,top,metric")));
 

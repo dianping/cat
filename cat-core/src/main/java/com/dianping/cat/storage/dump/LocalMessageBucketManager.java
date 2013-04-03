@@ -407,13 +407,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 					if (item != null) {
 						m_count++;
-						if (m_count % CatConstants.SUCCESS_COUNT == 0) {
-							Transaction t = Cat.newTransaction("Gzip", "Thread-" + m_index);
-							t.setStatus(Transaction.SUCCESS);
-							gzipMessage(item);
-							t.complete();
+						if (m_count % (10 * CatConstants.SUCCESS_COUNT) == 0) {
+							gzipMessage(item, true);
 						} else {
-							gzipMessage(item);
+							gzipMessage(item, false);
 						}
 					}
 				}
@@ -422,7 +419,12 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 		}
 
-		private void gzipMessage(MessageItem item) {
+		private void gzipMessage(MessageItem item, boolean monitor) {
+			Transaction t = null;
+
+			if (monitor) {
+				t = Cat.newTransaction("Gzip", "Thread-" + m_index);
+			}
 			try {
 				MessageId id = item.getMessageId();
 				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
@@ -447,8 +449,19 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					}
 				}
 				m_totalSize += buf.readableBytes();
+				
+				if (t != null) {
+					t.setStatus(Message.SUCCESS);
+				}
 			} catch (Exception e) {
 				Cat.logError(e);
+				if (t != null) {
+					t.setStatus(e);
+				}
+			} finally {
+				if (t != null) {
+					t.complete();
+				}
 			}
 		}
 

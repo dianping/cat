@@ -333,29 +333,29 @@
 		<var name="start-date" value-type="Date" />
 		<var name="end-date" value-type="Date" />
 		<query-defs>
-			<query name="find-all-by-group-name-duration" type="SELECT" multiple="true">
+			<query name="find-all-by-productLine-name-duration" type="SELECT" multiple="true">
 				<param name="start-date" />
 				<param name="end-date" />
-				<param name="group" />
+				<param name="product-line" />
 				<param name="name" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}
-					AND <FIELD name='group'/> = ${group}
+					AND <FIELD name='product-line'/> = ${productLine}
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
-			<query name="find-all-by-period-group-name" type="SELECT" multiple="true">
+			<query name="find-all-by-period-productLine-name" type="SELECT" multiple="true">
 				<param name="period" />
-				<param name="group" />
+				<param name="product-line" />
 				<param name="name" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='group'/> = ${group}
+					AND <FIELD name='product-line'/> = ${productLine}
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
@@ -364,9 +364,6 @@
 					INSERT 
 					INTO <TABLE/>(<FIELDS/>) 
 					VALUES(<VALUES/>)
-					ON DUPLICATE KEY 
-						UPDATE <FIELD name='content'/> = ${content},
-							<FIELD name='creation-date'/> = NOW()
 				]]></statement>
 			</query>
 		</query-defs>

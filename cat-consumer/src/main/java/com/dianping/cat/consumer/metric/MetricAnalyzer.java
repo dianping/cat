@@ -18,6 +18,7 @@ import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
+import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Message;
@@ -194,26 +195,29 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	public double parseValue(String key, String data) {
 		String startKey = key + "=";
 		String fixStartKey = "&" + key + "=";
-		
-		for (int i = 0; i < data.length(); i++) {
+		int dataLength = data.length();
+
+		for (int i = 0; i < dataLength; i++) {
 			String temp = startKey;
-		
+
 			if (i > 0) {
 				temp = fixStartKey;
 			}
-			for (int j = 0; j < temp.length(); j++) {
+			int tempLength = temp.length();
+
+			for (int j = 0; j < tempLength; j++) {
 				if (data.charAt(i + j) != temp.charAt(j)) {
 					break;
 				}
-				if ((j + 1) == temp.length()) {
+				if ((j + 1) == tempLength) {
 					int index = i + j;
 					StringBuilder sb = new StringBuilder();
 
-					for (int k = index + 1; k < data.length(); k++) {
-						if (data.charAt(k) == '&' ) {
+					for (int k = index + 1; k < dataLength; k++) {
+						if (data.charAt(k) == '&') {
 							return Double.parseDouble(sb.toString());
 						}
-						if(k == (data.length() - 1)){
+						if (k == (dataLength - 1)) {
 							sb.append(data.charAt(k));
 							return Double.parseDouble(sb.toString());
 						}
@@ -223,10 +227,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			}
 		}
 		return -1;
-		
+
 	}
-	
-	public double parseValue1(String key, String data){
+
+	public double parseValue1(String key, String data) {
 		String[] pairs = data.split("&");
 		if (pairs != null) {
 			for (String temp : pairs) {
@@ -297,19 +301,21 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			if (atEnd && !isLocalMode()) {
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				int binary = 1;
 
 				for (MetricReport report : m_reports.values()) {
 					try {
 						BusinessReport r = m_businessReportDao.createLocal();
-						String xml = builder.buildXml(report);
 						String group = report.getGroup();
 
 						r.setName("metric");
-						r.setGroup(group);
+						r.setProductLine(group);
 						r.setPeriod(period);
 						r.setIp(ip);
-						r.setType(1);
-						r.setContent(xml);
+						r.setType(binary);
+						//r.setBinaryContent(DefaultNativeBuilder.build(report));
+						r.setContent(DefaultNativeBuilder.build(report));
+						r.setCreationDate(new Date());
 
 						m_businessReportDao.insert(r);
 					} catch (Throwable e) {

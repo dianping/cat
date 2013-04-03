@@ -5,13 +5,13 @@
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
     <member name="name" field="name" value-type="String" length="20" nullable="false" />
     <member name="ip" field="ip" value-type="String" length="20" nullable="false" />
-    <member name="group" field="group" value-type="String" length="50" nullable="false" />
+    <member name="product-line" field="productLine" value-type="String" length="50" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
-    <member name="content" field="content" value-type="String" length="2147483647" nullable="false" />
+    <member name="content" field="content" value-type="byte[]" length="2147483647" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="IX_Group_Name_Period" members="group ASC, name ASC, period ASC" />
+    <index name="IX_Group_Name_Period" members="productLine ASC, name ASC, period ASC" />
     <index name="IX_Name_Period" members="name ASC, period ASC" />
     <index name="IX_Period" members="period ASC" />
     <readsets>

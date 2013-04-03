@@ -24,7 +24,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -38,9 +37,7 @@ import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
 
-/**
- * This is the real time consumer process framework.
- * <p>
+/* <p>
  * 
  * @author yong.you
  * @since Jan 5, 2012
@@ -62,7 +59,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private long m_extraTime = FIVE_MINUTES;
 
 	@Inject
-	private ServerConfigManager m_serverConfigManager;
+	private Coordinator m_coordinator;
 
 	@Inject
 	private ServerStateManager m_serverStateManager;
@@ -480,12 +477,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		public void finish() {
 			try {
-				m_serverConfigManager.acquireIoWrite();
+				m_coordinator.acquireWrite();
 				m_analyzer.doCheckpoint(true);
 			} catch (InterruptedException e) {
 				Cat.logError(e);
 			} finally {
-				m_serverConfigManager.releaseIoWrite();
+				m_coordinator.releaseWrite();
 				m_factory.release(m_analyzer);
 				m_factory.release(m_queue);
 			}

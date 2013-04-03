@@ -6,8 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -30,21 +28,11 @@ public class ServerConfigManager implements LogEnabled {
 
 	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
 
-	private Lock m_ioWrite = new ReentrantLock();
-
 	private Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	public void acquireIoWrite() throws InterruptedException {
-		m_ioWrite.lock();
-	}
-
-	public void releaseIoWrite() {
-		m_ioWrite.unlock();
 	}
 
 	public String getBindHost() {
@@ -53,6 +41,10 @@ public class ServerConfigManager implements LogEnabled {
 
 	public int getBindPort() {
 		return 2280;
+	}
+
+	public boolean isSerialWrite() {
+		return false;
 	}
 
 	public String getConsoleDefaultDomain() {

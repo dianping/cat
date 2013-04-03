@@ -22,6 +22,7 @@ import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
+import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -448,19 +449,20 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		MetricReportMerger merger = new MetricReportMerger(new MetricReport(group));
 
 		try {
-			List<BusinessReport> reports = m_businessReportDao.findAllByGroupNameDuration(start, end, group, "metric",
+			List<BusinessReport> reports = m_businessReportDao.findAllByProductLineNameDuration(start, end, group, "metric",
 			      BusinessReportEntity.READSET_FULL);
 
 			for (BusinessReport report : reports) {
-				String xml = report.getContent();
+				byte[] content = report.getContent();
 
 				try {
-					MetricReport reportModel = com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser.parse(xml);
+					MetricReport reportModel = DefaultNativeParser.parse(content);
+					
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);
 					Cat.getProducer().logEvent("ErrorXML", "metric", Event.SUCCESS,
-					      report.getGroup() + " " + report.getPeriod() + " " + report.getId());
+					      report.getProductLine() + " " + report.getPeriod() + " " + report.getId());
 				}
 			}
 		} catch (Exception e) {
