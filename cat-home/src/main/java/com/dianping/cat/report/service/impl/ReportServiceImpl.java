@@ -421,7 +421,7 @@ public class ReportServiceImpl implements ReportService {
 		if (type == s_hourly) {
 			return m_hourlyReportService.queryMetricReport(group, start, end);
 		} else {
-			throw new RuntimeException("unexcepted query type");
+			throw new RuntimeException("unexcepted query type in metric report!");
 		}
 	}
 }

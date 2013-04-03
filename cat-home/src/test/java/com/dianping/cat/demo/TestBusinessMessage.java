@@ -14,6 +14,7 @@ public class TestBusinessMessage {
 			for (int i = 0; i < 1000; i++) {
 				Transaction t = Cat.newTransaction("URL", "/index");
 				Cat.logMetric("order", "quantity" , i);
+				
 				t.complete();
 			}
 			for (int i = 0; i < 1000; i++) {
@@ -23,7 +24,7 @@ public class TestBusinessMessage {
 				t.complete();
 			}
 			for (int i = 0; i < 1000; i++) {
-				Transaction t = Cat.newTransaction("URL", "/pay");
+				Transaction t = Cat.newTransaction("URL", "/order/submitOrder");
 				Cat.logMetric("payment.success", "amount" , i);
 				
 				t.complete();

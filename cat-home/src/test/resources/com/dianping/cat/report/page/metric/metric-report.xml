@@ -1,0 +1,61 @@
+<metric-report group="TuanGou" startTime="2013-04-03 16:00:00"
+	endTime="2013-04-03 16:59:59">
+	<group>TuanGou</group>
+	<metric id="/index">
+		<point id="0" count="4" sum="2800.00" avg="700.00" />
+		<point id="1" count="5" sum="12030.00" avg="2406.00" />
+		<point id="2" count="3" sum="992.00" avg="330.67" />
+		<point id="3" count="8" sum="2334.00" avg="291.75" />
+		<point id="4" count="5" sum="1346.00" avg="269.20" />
+		<point id="5" count="2" sum="1343.00" avg="671.50" />
+		<point id="6" count="6" sum="1674.00" avg="279.00" />
+		<point id="7" count="3" sum="540.00" avg="180.00" />
+		<point id="8" count="4" sum="887.00" avg="221.75" />
+		<point id="9" count="3" sum="1364.00" avg="454.67" />
+		<point id="10" count="1" sum="394.00" avg="394.00" />
+		<point id="11" count="3" sum="1298.00" avg="432.67" />
+		<point id="14" count="1" sum="620.00" avg="620.00" />
+		<point id="17" count="1" sum="12.00" avg="12.00" />
+		<point id="18" count="1" sum="13.00" avg="13.00" />
+		<point id="19" count="1" sum="6.00" avg="6.00" />
+		<point id="23" count="1" sum="270.00" avg="270.00" />
+		<point id="26" count="4" sum="771.00" avg="192.75" />
+		<point id="25" count="3" sum="808.00" avg="269.33" />
+		<point id="27" count="3" sum="1894.00" avg="631.33" />
+		<point id="28" count="4" sum="1081.00" avg="270.25" />
+		<point id="29" count="3" sum="707.00" avg="235.67" />
+		<point id="30" count="3" sum="566.00" avg="188.67" />
+		<point id="31" count="3" sum="609.00" avg="203.00" />
+		<point id="32" count="3" sum="642.00" avg="214.00" />
+		<point id="33" count="3" sum="543.00" avg="181.00" />
+		<point id="34" count="5" sum="1017.00" avg="203.40" />
+		<point id="35" count="4" sum="996.00" avg="249.00" />
+		<point id="36" count="2" sum="409.00" avg="204.50" />
+		<point id="39" count="1" sum="7426.00" avg="7426.00" />
+		<point id="41" count="4" sum="27.00" avg="6.75" />
+		<point id="42" count="6" sum="30.00" avg="5.00" />
+		<point id="44" count="1" sum="714.00" avg="714.00" />
+		<point id="46" count="2" sum="1406.00" avg="703.00" />
+		<point id="47" count="6" sum="11706.00" avg="1951.00" />
+		<point id="48" count="3" sum="1575.00" avg="525.00" />
+		<point id="49" count="6" sum="2269.00" avg="378.17" />
+		<point id="50" count="3" sum="1437.00" avg="479.00" />
+		<point id="51" count="4" sum="5566.00" avg="1391.50" />
+		<point id="52" count="3" sum="134.00" avg="44.67" />
+		<point id="53" count="3" sum="3080.00" avg="1026.67" />
+		<point id="54" count="3" sum="127.00" avg="42.33" />
+		<point id="55" count="3" sum="136.00" avg="45.33" />
+		<point id="56" count="6" sum="4433.00" avg="738.83" />
+		<point id="57" count="3" sum="880.00" avg="293.33" />
+		<point id="58" count="3" sum="688.00" avg="229.33" />
+		<point id="59" count="1" sum="65.00" avg="65.00" />
+	</metric>
+	<metric id="/detail">
+		<point id="14" count="1" sum="340.00" avg="340.00" />
+		<point id="28" count="1" sum="3509.00" avg="3509.00" />
+		<point id="52" count="1" sum="475.00" avg="475.00" />
+	</metric>
+	<metric id="/order/submitOrder">
+		<point id="14" count="2" sum="192.00" avg="96.00" />
+	</metric>
+</metric-report>

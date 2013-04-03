@@ -343,7 +343,7 @@
 					FROM <TABLE/> 
 					WHERE <FIELD name='period'/> >= ${start-date}
 					AND <FIELD name='period'/> < ${end-date}
-					AND <FIELD name='product-line'/> = ${productLine}
+					AND <FIELD name='product-line'/> = ${product-line}
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>
@@ -355,7 +355,7 @@
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
 					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='product-line'/> = ${productLine}
+					AND <FIELD name='product-line'/> = ${product-line}
 					AND <FIELD name='name'/> = ${name}
 					]]></statement>
 			</query>

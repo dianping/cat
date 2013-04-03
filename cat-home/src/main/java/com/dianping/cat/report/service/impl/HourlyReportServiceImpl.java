@@ -457,7 +457,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 
 				try {
 					MetricReport reportModel = DefaultNativeParser.parse(content);
-					
+					System.out.println(reportModel);
 					reportModel.accept(merger);
 				} catch (Exception e) {
 					Cat.logError(e);

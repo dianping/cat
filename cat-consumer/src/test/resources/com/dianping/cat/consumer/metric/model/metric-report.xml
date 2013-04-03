@@ -1,11 +1,101 @@
-<metric-report group="Cat" startTime="2012-02-16 23:00:00"
-	endTime="2012-02-16 23:59:00">
+<metric-report group="TuanGou" startTime="2013-04-03 15:00:00"
+	endTime="2013-04-03 15:59:59">
 	<group>TuanGou</group>
-	<group>Mobile</group>
-	<group>Mobile1</group>
-	<metric id="addCount">
-		<point id="1" count="1" sum="1.0" avg="123.0"/>
-		<point id="2" count="1" sum="1.0" avg="123.0"/>
+	<metric id="/index">
+		<point id="0" count="3" sum="708.00" avg="236.00" />
+		<point id="1" count="4" sum="1044.00" avg="261.00" />
+		<point id="2" count="3" sum="701.00" avg="233.67" />
+		<point id="5" count="1003" sum="994.00" avg="0.99" />
+		<point id="6" count="6003" sum="2861.00" avg="0.48" />
+		<point id="3" count="3" sum="552.00" avg="184.00" />
+		<point id="7" count="6008" sum="2903.00" avg="0.48" />
+		<point id="8" count="6004" sum="1129.00" avg="0.19" />
+		<point id="9" count="6006" sum="1778.00" avg="0.30" />
+		<point id="10" count="6005" sum="1145.00" avg="0.19" />
+		<point id="11" count="6003" sum="740.00" avg="0.12" />
+		<point id="12" count="4004" sum="1020.00" avg="0.25" />
+		<point id="13" count="3" sum="659.00" avg="219.67" />
+		<point id="14" count="3" sum="642.00" avg="214.00" />
+		<point id="15" count="4" sum="815.00" avg="203.75" />
+		<point id="16" count="3" sum="541.00" avg="180.33" />
+		<point id="17" count="3" sum="801.00" avg="267.00" />
+		<point id="18" count="3" sum="529.00" avg="176.33" />
+		<point id="19" count="3" sum="607.00" avg="202.33" />
+		<point id="20" count="4" sum="1007.00" avg="251.75" />
+		<point id="21" count="3" sum="906.00" avg="302.00" />
+		<point id="22" count="1" sum="388.00" avg="388.00" />
+		<point id="23" count="1" sum="727.00" avg="727.00" />
+		<point id="24" count="1" sum="364.00" avg="364.00" />
+		<point id="25" count="2" sum="748.00" avg="374.00" />
+		<point id="27" count="1" sum="447.00" avg="447.00" />
+		<point id="30" count="1" sum="901.00" avg="901.00" />
+		<point id="41" count="1" sum="455.00" avg="455.00" />
+		<point id="44" count="1" sum="585.00" avg="585.00" />
+		<point id="49" count="1" sum="201.00" avg="201.00" />
+		<point id="54" count="4" sum="1294.00" avg="323.50" />
+		<point id="55" count="1" sum="5.00" avg="5.00" />
+		<point id="56" count="5" sum="11877.00" avg="2375.40" />
+		<point id="57" count="1" sum="672.00" avg="672.00" />
+		<point id="58" count="8" sum="2327.00" avg="290.88" />
+		<point id="59" count="1" sum="2852.00" avg="2852.00" />
 	</metric>
-	<metric></metric>
+	<metric id="order">
+		<point id="5" count="1000" sum="499500.00" avg="499.50" />
+		<point id="6" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="7" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="8" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="9" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="10" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="11" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="12" count="4000" sum="1998000.00" avg="499.50" />
+	</metric>
+	<metric id="/detail">
+		<point id="5" count="1000" sum="0.00" avg="0.00" />
+		<point id="6" count="6000" sum="2.00" avg="0.00" />
+		<point id="7" count="6000" sum="9.00" avg="0.00" />
+		<point id="8" count="6000" sum="5.00" avg="0.00" />
+		<point id="9" count="6001" sum="77.00" avg="0.01" />
+		<point id="10" count="6000" sum="7.00" avg="0.00" />
+		<point id="11" count="6000" sum="6.00" avg="0.00" />
+		<point id="12" count="4000" sum="6.00" avg="0.00" />
+		<point id="27" count="1" sum="262.00" avg="262.00" />
+		<point id="28" count="1" sum="54.00" avg="54.00" />
+		<point id="30" count="1" sum="55.00" avg="55.00" />
+		<point id="31" count="1" sum="53.00" avg="53.00" />
+		<point id="36" count="4" sum="226.00" avg="56.50" />
+		<point id="37" count="2" sum="176.00" avg="88.00" />
+		<point id="45" count="1" sum="56.00" avg="56.00" />
+		<point id="47" count="1" sum="338.00" avg="338.00" />
+		<point id="49" count="1" sum="52.00" avg="52.00" />
+	</metric>
+	<metric id="payment.pending">
+		<point id="5" count="1000" sum="499500.00" avg="499.50" />
+		<point id="6" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="7" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="8" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="9" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="10" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="11" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="12" count="4000" sum="1998000.00" avg="499.50" />
+	</metric>
+	<metric id="/order/submitOrder">
+		<point id="5" count="1000" sum="0.00" avg="0.00" />
+		<point id="6" count="6000" sum="15.00" avg="0.00" />
+		<point id="7" count="6000" sum="10.00" avg="0.00" />
+		<point id="8" count="6000" sum="4.00" avg="0.00" />
+		<point id="9" count="6000" sum="8.00" avg="0.00" />
+		<point id="10" count="6000" sum="8.00" avg="0.00" />
+		<point id="11" count="6000" sum="10.00" avg="0.00" />
+		<point id="12" count="4000" sum="0.00" avg="0.00" />
+	</metric>
+	<metric id="payment.success">
+		<point id="5" count="1000" sum="499500.00" avg="499.50" />
+		<point id="6" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="7" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="8" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="9" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="10" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="11" count="6000" sum="2997000.00" avg="499.50" />
+		<point id="12" count="4000" sum="1998000.00" avg="499.50" />
+	</metric>
 </metric-report>

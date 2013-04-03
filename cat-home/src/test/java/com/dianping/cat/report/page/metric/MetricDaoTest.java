@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.metric;
+package com.dianping.cat.report.page.metric;
 
 import java.util.Date;
 
@@ -7,15 +7,16 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.webres.helper.Files;
 
 import com.dainping.cat.consumer.dal.report.BusinessReport;
 import com.dainping.cat.consumer.dal.report.BusinessReportDao;
 import com.dainping.cat.consumer.dal.report.BusinessReportEntity;
-import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
+import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 
 public class MetricDaoTest extends ComponentTestCase {
 
@@ -25,12 +26,19 @@ public class MetricDaoTest extends ComponentTestCase {
 	@Inject
 	private ReportDao m_reportDao;
 
+	private MetricReport getReport() throws Exception {
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("metric-report.xml"), "utf-8");
+		MetricReport report = DefaultSaxParser.parse(oldXml);
+
+		return report;
+	}
+
 	@Test
 	public void test() throws Exception {
 		m_businessReportDao = lookup(BusinessReportDao.class);
 
 		BusinessReport r = m_businessReportDao.createLocal();
-		MetricReport metricReport = new MetricReport();
+		MetricReport metricReport = getReport();
 		Date now = new Date();
 
 		metricReport.setEndTime(now);
@@ -65,20 +73,16 @@ public class MetricDaoTest extends ComponentTestCase {
 
 	@Test
 	public void test2() throws Exception {
-		m_reportDao = lookup(ReportDao.class);
-		Report report = m_reportDao.createLocal();
-		String domain = "group";
+		for (int id = 13; id < 16; id++) {
+			m_businessReportDao = lookup(BusinessReportDao.class);
 
-		report.setName("metric");
-		report.setDomain(domain);
-		report.setPeriod(new Date());
-		report.setIp("127.0.0.1");
-		report.setType(1);
-		// r.setBinaryContent("metric".getBytes());
-		report.setContent("metic");
-		report.setCreationDate(new Date());
+			BusinessReport query = m_businessReportDao.findByPK(id, BusinessReportEntity.READSET_FULL);
 
-		m_reportDao.insert(report);
+			byte[] bytes = query.getContent();
+
+			MetricReport queryReport = DefaultNativeParser.parse(bytes);
+			System.out.println(queryReport);
+		}
 	}
-	
+
 }

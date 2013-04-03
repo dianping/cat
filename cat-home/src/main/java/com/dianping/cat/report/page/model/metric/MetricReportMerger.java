@@ -25,5 +25,13 @@ public class MetricReportMerger extends DefaultMerger {
 			old.setAvg(old.getSum() / old.getCount());
 		}
 	}
+	
 
+	@Override
+   public void visitMetricReport(MetricReport metricReport) {
+		MetricReport report = getMetricReport();
+		report.getGroupNames().addAll(metricReport.getGroupNames());
+	   super.visitMetricReport(metricReport);
+   }
+	
 }
