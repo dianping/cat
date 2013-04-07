@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.abtest.ABTestManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -24,13 +25,13 @@ public class CatFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	      ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
 		String sessionToken = getSessionIdFromCookie(req);
 
 		// setup for thread local data
 		Cat.setup(sessionToken);
+		ABTestManager.onRequestBegin(req);
 
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction(CatConstants.TYPE_URL, getOriginalUrl(request));
@@ -66,6 +67,7 @@ public class CatFilter implements Filter {
 		} finally {
 			t.complete();
 			Cat.reset();
+			ABTestManager.onRequestEnd();
 		}
 	}
 
