@@ -9,15 +9,18 @@ public class MilliSecondTimer {
 	private static long m_baseTime;
 
 	private static long m_startNanoTime;
-	
+
+	private static boolean m_isWindows = false;
+
 	public static void initialize() {
 		String os = System.getProperty("os.name");
 
 		if (os.startsWith("Windows")) {
+			m_isWindows = true;
 			m_baseTime = System.currentTimeMillis();
 
 			while (true) {
-				LockSupport.parkNanos(1000000); // 1 ms
+				LockSupport.parkNanos(100000); // 0.1 ms
 
 				long millis = System.currentTimeMillis();
 
@@ -33,23 +36,17 @@ public class MilliSecondTimer {
 		}
 	}
 
-	public static long currentTimeMicros() {
-		if (m_baseTime == 0) {
-			initialize();
-		}
-
-		long elipsed = (long) ((System.nanoTime() - m_startNanoTime) / 1e3);
-
-		return m_baseTime * 1000L + elipsed;
-	}
-
 	public static long currentTimeMillis() {
-		if (m_baseTime == 0) {
-			initialize();
+		if (m_isWindows) {
+			if (m_baseTime == 0) {
+				initialize();
+			}
+
+			long elipsed = (long) ((System.nanoTime() - m_startNanoTime) / 1e6);
+
+			return m_baseTime + elipsed;
+		} else {
+			return System.currentTimeMillis();
 		}
-
-		long elipsed = (long) ((System.nanoTime() - m_startNanoTime) / 1e6);
-
-		return m_baseTime + elipsed;
 	}
 }

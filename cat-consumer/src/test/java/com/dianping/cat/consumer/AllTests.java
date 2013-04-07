@@ -8,6 +8,7 @@ import com.dianping.cat.consumer.cross.ParseCrossInfoTest;
 import com.dianping.cat.consumer.database.DatabaseAnalyzerTest;
 import com.dianping.cat.consumer.ip.IpReportTest;
 import com.dianping.cat.consumer.matrix.MatrixReportFilterTest;
+import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
 import com.dianping.cat.consumer.transaction.FormatTest;
 import com.dianping.cat.consumer.transaction.GsonTest;
 import com.dianping.cat.consumer.transaction.NumberFormatTest;
@@ -45,7 +46,9 @@ TransactionReportFilterTest.class,
 /* cross analyzer */
 ParseCrossInfoTest.class,
 
-DatabaseAnalyzerTest.class})
+DatabaseAnalyzerTest.class,
+
+MetricAnalyzerTest.class})
 public class AllTests {
 
 }

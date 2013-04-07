@@ -17,11 +17,14 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	private boolean m_standalone;
 
+	private long m_durationStart;
+
 	public DefaultTransaction(String type, String name, MessageManager manager) {
 		super(type, name);
 
 		m_manager = manager;
 		m_standalone = true;
+		m_durationStart = System.nanoTime();
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 			event.complete();
 			addChild(event);
 		} else {
-			m_durationInMicro = MilliSecondTimer.currentTimeMicros() - getTimestampInMicros();
+			m_durationInMicro = (System.nanoTime() - m_durationStart) / 1000L;
 
 			setCompleted(true);
 
@@ -77,9 +80,9 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 				if (lastChild instanceof Transaction) {
 					DefaultTransaction trx = (DefaultTransaction) lastChild;
 
-					duration = trx.getTimestampInMicros() + trx.getDurationInMicros() - getTimestampInMicros();
+					duration = (trx.getTimestamp() - getTimestamp()) * 1000L + trx.getDurationInMicros();
 				} else {
-					duration = lastChild.getTimestamp() * 1000L - getTimestampInMicros();
+					duration = (lastChild.getTimestamp() - getTimestamp()) * 1000L;
 				}
 			}
 

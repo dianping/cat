@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metric-report group="TuanGou" startTime="2013-04-03 16:00:00"
+	endTime="2013-04-03 16:59:59">
+	<group>TuanGou</group>
+	<group>TuanGou1</group>
+	<metric id="/index">
+		<point id="0" count="8" sum="8.00" avg="1.00" />
+		<point id="1" count="8" sum="8.00" avg="1.00" />
+		<point id="2" count="4" sum="4.00" avg="1.00" />
+		<point id="3" count="4" sum="4.00" avg="1.00" />
+	</metric>
+	<metric id="/index1">
+		<point id="0" count="4" sum="4.00" avg="1.00" />
+		<point id="1" count="4" sum="4.00" avg="1.00" />
+	</metric>
+	<metric id="/index2">
+		<point id="0" count="4" sum="4.00" avg="1.00" />
+		<point id="1" count="4" sum="4.00" avg="1.00" />
+	</metric>
+</metric-report>

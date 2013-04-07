@@ -108,8 +108,6 @@ public class WeeklyReportCache implements Initializable {
 		private void reload() {
 			Date start = TimeUtil.getCurrentWeek();
 			Date end = TimeUtil.getCurrentDay();
-			m_end = end.getTime();
-
 			Set<String> domains = m_hourReportService.queryAllDomainNames(start, end, "transaction");
 
 			for (String domain : domains) {
@@ -128,8 +126,10 @@ public class WeeklyReportCache implements Initializable {
 				m_databaseRepors.put(database, m_dailyReportService.queryDatabaseReport(database, start, end));
 			}
 
-			String domain = "Cat";
-			m_stateReports.put(domain, m_dailyReportService.queryStateReport(domain, start, end));
+			String cat = "Cat";
+
+			m_stateReports.put(cat, m_dailyReportService.queryStateReport(cat, start, end));
+			m_end = end.getTime();
 		}
 
 		@Override
