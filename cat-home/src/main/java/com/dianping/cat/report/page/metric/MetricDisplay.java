@@ -19,11 +19,15 @@ public class MetricDisplay extends BaseVisitor {
 
 	private Map<String, GraphItem> m_metrics = new LinkedHashMap<String, GraphItem>();
 
+	private Map<String, GraphItem> m_conversionRates = new LinkedHashMap<String, GraphItem>();
+
 	private String m_key;
 
 	private Date m_start;
 
 	private MetricConfig m_config;
+
+	private static final String COUNT = ":count";
 
 	public MetricDisplay(MetricConfig metricConfig, Date start) {
 		m_config = metricConfig;
@@ -35,7 +39,7 @@ public class MetricDisplay extends BaseVisitor {
 				m_metrics.put(title, new GraphItem(m_start, title, flag.getKey()));
 			}
 			if (flag.isShowCount()) {
-				String title = flag.getKey() + ":count";
+				String title = flag.getKey() + COUNT;
 				m_metrics.put(title, new GraphItem(m_start, title, flag.getKey()));
 			}
 			if (flag.isShowAvg()) {
@@ -43,6 +47,33 @@ public class MetricDisplay extends BaseVisitor {
 				m_metrics.put(title, new GraphItem(m_start, title, flag.getKey()));
 			}
 		}
+	}
+
+	public MetricDisplay buildConvertRate(String key1, String key2) {
+		GraphItem item1 = m_metrics.get(key1 + COUNT);
+		GraphItem item2 = m_metrics.get(key2 + COUNT);
+
+		if (item1 != null && item2 != null) {
+			String key = key1 + ":" + key2;
+			GraphItem item = new GraphItem(m_start, key1 + " to " + key2 + " Conversion Rate", key);
+			double[] value1 = item1.getValues();
+			double[] value2 = item2.getValues();
+			int size = item.getSize();
+			double[] value = new double[size];
+
+			for (int i = 0; i < size; i++) {
+				if (value1[i] > 0) {
+					value[i] = value2[i] / value1[i];
+				}
+			}
+			item.setValues(value);
+			m_conversionRates.put(key, item);
+		}
+		return this;
+	}
+
+	public List<GraphItem> getConversionRates() {
+		return new ArrayList<GraphItem>(m_conversionRates.values());
 	}
 
 	public List<GraphItem> getGroups() {
@@ -154,7 +185,15 @@ public class MetricDisplay extends BaseVisitor {
 		public String getKey() {
 			return key;
 		}
-		
+
+		public double[] getValues() {
+			return values;
+		}
+
+		public void setValues(double[] values) {
+			this.values = values;
+		}
+
 	}
 
 }

@@ -212,7 +212,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 	<distributionManagement>
       <repository>
          <id>dianping.repo</id>
-         <url>http://192.168.8.45:8080/artifactory/dianping-releases</url>
+         <url>http://192.168.8.45:8080/artifactory/dianping.repo.snapshots</url>
       </repository>
 	</distributionManagement>
 	<properties>
