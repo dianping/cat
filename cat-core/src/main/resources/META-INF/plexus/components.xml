@@ -302,5 +302,18 @@
 				</requirement>
 			</requirements>
 		</component>
+		<component>
+			<role>com.dianping.cat.abtest.spi.ABTestContextManager</role>
+			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.abtest.spi.ABTestEntityManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.abtest.spi.ABTestEntityManager</role>
+			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
+		</component>
 	</components>
 </plexus>
