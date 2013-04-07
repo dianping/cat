@@ -328,7 +328,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
-		//the message tree of one ip in the same hour should be put in one gzip thread
+		// the message tree of one ip in the same hour should be put in one gzip thread
 		String key = id.getDomain() + id.getIpAddress() + id.getTimestamp();
 		int abs = key.hashCode();
 
@@ -390,6 +390,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		private int m_index;
 
+		private long m_count;
+
 		public BlockingQueue<MessageItem> m_messageQueue;
 
 		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
@@ -404,37 +406,62 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
-						try {
-							MessageId id = item.getMessageId();
-							String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
-							String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
-							LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-							if (bucket == null) {
-								bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-								bucket.setBaseDir(m_baseDir);
-								bucket.initialize(dataFile);
-								m_buckets.put(dataFile, bucket);
-							}
-
-							DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
-							ChannelBuffer buf = tree.getBuf();
-							MessageBlock bolck = bucket.storeMessage(buf, id);
-
-							if (bolck != null) {
-								if (!m_messageBlocks.offer(bolck)) {
-									m_serverStateManager.addBlockLoss(1);
-									m_logger.error("Error when offer the block to the dump!");
-								}
-							}
-							m_totalSize += buf.readableBytes();
-						} catch (Exception e) {
-							Cat.logError(e);
+						m_count++;
+						if (m_count % (10 * CatConstants.SUCCESS_COUNT) == 0) {
+							gzipMessage(item, true);
+						} else {
+							gzipMessage(item, false);
 						}
 					}
 				}
 			} catch (InterruptedException e) {
 				// ignore it
+			}
+		}
+
+		private void gzipMessage(MessageItem item, boolean monitor) {
+			Transaction t = null;
+
+			if (monitor) {
+				t = Cat.newTransaction("Gzip", "Thread-" + m_index);
+			}
+			try {
+				MessageId id = item.getMessageId();
+				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
+				String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+				LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+				if (bucket == null) {
+					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+					bucket.setBaseDir(m_baseDir);
+					bucket.initialize(dataFile);
+					m_buckets.put(dataFile, bucket);
+				}
+
+				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
+				ChannelBuffer buf = tree.getBuf();
+				MessageBlock bolck = bucket.storeMessage(buf, id);
+
+				if (bolck != null) {
+					if (!m_messageBlocks.offer(bolck)) {
+						m_serverStateManager.addBlockLoss(1);
+						m_logger.error("Error when offer the block to the dump!");
+					}
+				}
+				m_totalSize += buf.readableBytes();
+				
+				if (t != null) {
+					t.setStatus(Message.SUCCESS);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+				if (t != null) {
+					t.setStatus(e);
+				}
+			} finally {
+				if (t != null) {
+					t.complete();
+				}
 			}
 		}
 

@@ -105,6 +105,10 @@ public class Cat {
 		Cat.getProducer().logError(cause);
 	}
 
+	public static void logError(String message, Throwable cause) {
+		Cat.getProducer().logError(new Throwable(message, cause));
+	}
+
 	public static void logEvent(String type, String name) {
 		Cat.getProducer().logEvent(type, name);
 	}

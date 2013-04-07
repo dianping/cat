@@ -28,16 +28,18 @@ import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 import org.jboss.netty.handler.codec.frame.FrameDecoder;
 import org.jboss.netty.util.ThreadNameDeterminer;
 import org.jboss.netty.util.ThreadRenamingRunnable;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.status.ServerStateManager;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
 public class TcpSocketReceiver implements LogEnabled {
 	private boolean m_active = true;
@@ -132,6 +134,8 @@ public class TcpSocketReceiver implements LogEnabled {
 
 		private int m_index;
 
+		private int m_count;
+
 		public DecodeMessageTask(int index) {
 			m_index = index;
 		}
@@ -150,19 +154,11 @@ public class TcpSocketReceiver implements LogEnabled {
 					ChannelBuffer buf = m_queue.poll(1, TimeUnit.MILLISECONDS);
 
 					if (buf != null) {
-						try {
-							buf.markReaderIndex();
-							// read the size of the message
-							buf.readInt();
-							DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
-							buf.resetReaderIndex();
-							tree.setBuf(buf);
-							m_handler.handle(tree);
-						} catch (Throwable e) {
-							buf.resetReaderIndex();
-
-							String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
-							m_logger.error("Error when handling message! Raw buffer: " + raw, e);
+						m_count++;
+						if (m_count % (CatConstants.SUCCESS_COUNT * 10) == 0) {
+							decodeMessage(buf, true);
+						} else {
+							decodeMessage(buf, false);
 						}
 					}
 				} catch (Exception e) {
@@ -179,6 +175,40 @@ public class TcpSocketReceiver implements LogEnabled {
 
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
+			}
+		}
+
+		private void decodeMessage(ChannelBuffer buf, boolean monitor) {
+			Transaction t = null;
+
+			if (monitor) {
+				t = Cat.newTransaction("Decode", "Thread-" + m_index);
+			}
+			try {
+				buf.markReaderIndex();
+				// read the size of the message
+				buf.readInt();
+				DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(buf);
+				buf.resetReaderIndex();
+				tree.setBuf(buf);
+				m_handler.handle(tree);
+
+				if (t != null) {
+					t.setStatus(Transaction.SUCCESS);
+				}
+			} catch (Throwable e) {
+				buf.resetReaderIndex();
+
+				String raw = buf.toString(0, buf.readableBytes(), Charset.forName("utf-8"));
+				m_logger.error("Error when handling message! Raw buffer: " + raw, e);
+
+				if (t != null) {
+					t.setStatus(e);
+				}
+			} finally {
+				if (t != null) {
+					t.complete();
+				}
 			}
 		}
 
