@@ -16,6 +16,12 @@
 			window.location.href="?count=10";
 		},10000);		
 	} */
+	$(document).ready(function() {
+		$('#topMetric a').mouseenter(function (e) {
+		  e.preventDefault();
+		  $(this).tab('show');
+		});	
+	});
 </script>
 <a:body>
 <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
@@ -27,7 +33,7 @@
 	<table class="header">
 		<tr>
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.topReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.topReport.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-		<td class="nav">
+		<td class="nav" >
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
@@ -36,14 +42,14 @@
 		</tr>
 	</table>
 	
-	<div class="tabbable"> <!-- Only required for left/right tabs -->
+	<div class="tabbable tabs-left alert-info" id="topMetric"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs">
-    <li class="active"><a href="#tab1" data-toggle="tab">异常最多Top10</a></li>
-    <li><a href="#tab2" data-toggle="tab">URL最慢Top10</a></li>
-    <li><a href="#tab3" data-toggle="tab">Service最慢Top10</a></li>
-    <li><a href="#tab4" data-toggle="tab">SQL最慢Top10</a></li>
-    <li><a href="#tab5" data-toggle="tab">Call最慢Top10</a></li>
-    <li><a href="#tab6" data-toggle="tab">Cache最慢Top10</a></li>
+    <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多Top10</a></li>
+    <li class='text-right'><a href="#tab2" data-toggle="tab">URL最慢Top10</a></li>
+    <li class='text-right'><a href="#tab3" data-toggle="tab">Service最慢Top10</a></li>
+    <li class='text-right'><a href="#tab4" data-toggle="tab">SQL最慢Top10</a></li>
+    <li class='text-right'><a href="#tab5" data-toggle="tab">Call最慢Top10</a></li>
+    <li class='text-right'><a href="#tab6" data-toggle="tab">Cache最慢Top10</a></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane active" id="tab1">

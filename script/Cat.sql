@@ -115,19 +115,23 @@ CREATE TABLE `report` (
   KEY `IX_Period` (`period`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放实时报表信息，处理之后的结果';
 
+
+
 CREATE TABLE `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型 报表数据格式, 1/Binary, 2/xml , 3/json',
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台机器',
-  `group` varchar(50) NOT NULL COMMENT '指标来源于哪个产品组',
-  `period` timestamp NOT NULL COMMENT '报表时间段',
-  `binaryContent` LONGBLOB COMMENT '用于存放报表的具体内容',
-  `textContent` longtext COMMENT '用于存放报表的具体内容',
-  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
+  `productLine` varchar(50) NOT NULL COMMENT '指标来源于哪个产品组',
+  `period` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '报表时间段',
+  `content` longblob COMMENT '用于存放报表的具体内容',
+  `creation_date` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00' COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
+  KEY `IX_Group_Name_Period` (`productLine`,`name`,`period`),
+  KEY `IX_Name_Period` (`name`,`period`),
   KEY `IX_Period` (`period`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果'
+
 
 CREATE TABLE `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

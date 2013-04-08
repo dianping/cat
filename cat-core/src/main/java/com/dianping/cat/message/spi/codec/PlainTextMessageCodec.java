@@ -6,9 +6,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -166,12 +168,12 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			DefaultMetric metric = new DefaultMetric(type, name);
 			String status = helper.read(buf, TAB);
 			String data = helper.readRaw(buf, TAB);
-			
+
 			helper.read(buf, LF); // get rid of line feed
 			metric.setTimestamp(m_dateHelper.parse(timestamp));
 			metric.setStatus(status);
 			metric.addData(data);
-			
+
 			if (parent != null) {
 				parent.addChild(metric);
 				return parent;
@@ -216,6 +218,11 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	@Override
@@ -406,7 +413,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				} catch (UnsupportedEncodingException e) {
 					str = new String(data, 0, length);
 				}
-
 				return str;
 			}
 		}
@@ -450,6 +456,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	protected static class DateHelper {
 		private BlockingQueue<SimpleDateFormat> m_queue = new ArrayBlockingQueue<SimpleDateFormat>(20);
 
+		private Map<String, Long> m_map = new ConcurrentHashMap<String, Long>();
+
 		public String format(long timestamp) {
 			SimpleDateFormat format = m_queue.poll();
 
@@ -467,21 +475,36 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		public long parse(String str) {
-			SimpleDateFormat format = m_queue.poll();
+			int len = str.length();
+			String date = str.substring(0, 10);
+			Long baseline = m_map.get(date);
 
-			if (format == null) {
-				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-			}
-
-			try {
-				return format.parse(str).getTime();
-			} catch (ParseException e) {
-				return -1;
-			} finally {
-				if (m_queue.remainingCapacity() > 0) {
-					m_queue.offer(format);
+			if (baseline == null) {
+				try {
+					baseline = new SimpleDateFormat("yyyy-MM-dd").parse(date).getTime();
+					m_map.put(date, baseline);
+				} catch (ParseException e) {
+					return -1;
 				}
 			}
+
+			long time = baseline.longValue();
+			long metric = 1;
+			boolean millisecond = true;
+
+			for (int i = len - 1; i > 10; i--) {
+				char ch = str.charAt(i);
+
+				if (ch >= '0' && ch <= '9') {
+					time += (ch - '0') * metric;
+					metric *= 10;
+				} else if (millisecond) {
+					millisecond = false;
+				} else {
+					metric = metric / 100 * 60;
+				}
+			}
+			return time;
 		}
 	}
 
@@ -508,8 +531,4 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
 }
