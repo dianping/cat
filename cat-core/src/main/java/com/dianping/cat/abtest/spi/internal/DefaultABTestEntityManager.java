@@ -19,7 +19,7 @@ public class DefaultABTestEntityManager implements ABTestEntityManager, Initiali
 
 		if (entity == null) {
 			entity = new ABTestEntity();
-			entity.setActive(false);
+			entity.setDisabled(true);
 			m_entities.put(id.getValue(), entity);
 		}
 

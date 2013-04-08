@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.abtest.ABTestId;
@@ -12,8 +13,9 @@ import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestContextManager;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestEntityManager;
+import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
-public class DefaultABTestContextManager implements ABTestContextManager {
+public class DefaultABTestContextManager extends ContainerHolder implements ABTestContextManager {
 	@Inject
 	private ABTestEntityManager m_entityManager;
 
@@ -35,7 +37,14 @@ public class DefaultABTestContextManager implements ABTestContextManager {
 			ABTestEntity entity = m_entityManager.getEntity(testId);
 
 			ctx = new DefaultABTestContext(entity);
-			ctx.setup(entry.getHttpServletRequest());
+
+			if (!entity.isDisabled()) {
+				ABTestGroupStrategy groupStrategy = lookup(ABTestGroupStrategy.class, entity.getGroupStrategy());
+
+				ctx.setup(entry.getHttpServletRequest());
+				ctx.setGroupStrategy(groupStrategy);
+			}
+
 			map.put(id, ctx);
 		}
 
