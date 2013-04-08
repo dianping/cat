@@ -8,8 +8,8 @@ import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.testdb.CatDatabase;
 import com.dianping.bee.testdb.EventIndexer;
 import com.dianping.bee.testdb.TransactionIndexer;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class TestEnvConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {

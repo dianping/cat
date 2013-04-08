@@ -8,10 +8,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.unidal.helper.Files;
+
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.transform.DefaultDomParser;
-import com.site.helper.Files;
 
 public class CommonUtil {
 
