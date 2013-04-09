@@ -159,7 +159,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {

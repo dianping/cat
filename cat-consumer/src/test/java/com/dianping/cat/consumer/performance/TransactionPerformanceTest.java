@@ -1,37 +1,29 @@
-package com.dianping.cat.message.internal;
+package com.dianping.cat.consumer.performance;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.DynamicChannelBuffer;
 import org.junit.Test;
 
-import com.dianping.cat.message.CatTestCase;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class MessageCodecTest extends CatTestCase {
-	public static final String ID = "plain-text";
+public class TransactionPerformanceTest {
 
 	@Test
-	public void testCodePerformance() throws Exception {
-		MessageCodec codec = lookup(MessageCodec.class, ID);
+	public void test() {
+		TransactionAnalyzer analyzer = new TransactionAnalyzer();
 		MessageTree tree = buildMessage();
-		ChannelBuffer buf = new DynamicChannelBuffer(10240);
-		codec.encode(tree, buf);
 
-		long time = System.currentTimeMillis();
-		int count = 5000000;
-		for (int i = 0; i < count; i++) {
+		long current = System.currentTimeMillis();
 
-			buf.markReaderIndex();
-			// read the size of the message
-			buf.readInt();
-			DefaultMessageTree result = (DefaultMessageTree) codec.decode(buf);
-			buf.resetReaderIndex();
-			result.setBuf(buf);
+		long size = 100000000;
+		for (int i = 0; i < size; i++) {
+			analyzer.process(tree);
 		}
-		System.out.println((System.currentTimeMillis() - time)/(double)(count));
+		System.out.println(analyzer.getReport("cat"));
+		System.out.println("Cost " + (System.currentTimeMillis() - current) / 1000);
+		// cost 62s
 	}
 
 	public MessageTree buildMessage() {
@@ -78,4 +70,5 @@ public class MessageCodecTest extends CatTestCase {
 		tree.setMessage(message);
 		return tree;
 	}
+
 }

@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.problem.handler;
 
-import java.util.Calendar;
 import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
@@ -61,8 +60,9 @@ public abstract class Handler {
 
 	protected int getSegmentByMessage(MessageTree tree) {
 		Message message = tree.getMessage();
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(message.getTimestamp());
-		return cal.get(Calendar.MINUTE);
+		long current = message.getTimestamp() / 1000 / 60;
+		int min = (int) (current % (60));
+
+		return min;
 	}
 }

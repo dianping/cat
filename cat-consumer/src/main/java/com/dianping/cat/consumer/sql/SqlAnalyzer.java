@@ -166,7 +166,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		Message message = tree.getMessage();
 		String domain = tree.getDomain();
 		SqlReport report = m_reports.get(domain);

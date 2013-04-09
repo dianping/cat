@@ -126,7 +126,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		String group = getGroup(domain);
 
@@ -192,60 +192,47 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		return 0;
 	}
 
-	public double parseValue(String key, String data) {
-		String startKey = key + "=";
-		String fixStartKey = "&" + key + "=";
-		int dataLength = data.length();
+	protected double parseValue(final String key, final String data) {
+		int len = data == null ? 0 : data.length();
+		int keyLen = key.length();
+		StringBuilder name = new StringBuilder();
+		StringBuilder value = new StringBuilder();
+		boolean inName = true;
 
-		for (int i = 0; i < dataLength; i++) {
-			String temp = startKey;
+		for (int i = 0; i < len; i++) {
+			char ch = data.charAt(i);
 
-			if (i > 0) {
-				temp = fixStartKey;
-			}
-			int tempLength = temp.length();
-
-			for (int j = 0; j < tempLength; j++) {
-				if (data.charAt(i + j) != temp.charAt(j)) {
-					break;
+			switch (ch) {
+			case '&':
+				if (name.length() == keyLen && name.toString().equals(key)) {
+					return Double.parseDouble(value.toString());
 				}
-				if ((j + 1) == tempLength) {
-					int index = i + j;
-					StringBuilder sb = new StringBuilder();
 
-					for (int k = index + 1; k < dataLength; k++) {
-						if (data.charAt(k) == '&') {
-							return Double.parseDouble(sb.toString());
-						}
-						if (k == (dataLength - 1)) {
-							sb.append(data.charAt(k));
-							return Double.parseDouble(sb.toString());
-						}
-						sb.append(data.charAt(k));
-					}
+				inName = true;
+				name.setLength(0);
+				value.setLength(0);
+				break;
+			case '=':
+				if (inName) {
+					inName = false;
+				} else {
+					value.append(ch);
 				}
-			}
-		}
-		return -1;
-
-	}
-
-	public double parseValue1(String key, String data) {
-		String[] pairs = data.split("&");
-		if (pairs != null) {
-			for (String temp : pairs) {
-				if (temp.startsWith(key + "=")) {
-					String[] keyValue = temp.split("=");
-
-					if (keyValue != null) {
-						if (keyValue[0].equals(key)) {
-							return Double.parseDouble(keyValue[1]);
-						}
-					}
+				break;
+			default:
+				if (inName) {
+					name.append(ch);
+				} else {
+					value.append(ch);
 				}
+				break;
 			}
 		}
-		m_logger.error("Error metric:" + key + " " + data);
+
+		if (name.length() == keyLen && name.toString().equals(key)) {
+			return Double.parseDouble(value.toString());
+		}
+
 		return 0;
 	}
 
@@ -313,7 +300,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 						r.setPeriod(period);
 						r.setIp(ip);
 						r.setType(binary);
-						//r.setBinaryContent(DefaultNativeBuilder.build(report));
+						// r.setBinaryContent(DefaultNativeBuilder.build(report));
 						r.setContent(DefaultNativeBuilder.build(report));
 						r.setCreationDate(new Date());
 

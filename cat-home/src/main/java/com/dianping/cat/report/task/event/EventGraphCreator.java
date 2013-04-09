@@ -91,7 +91,7 @@ public class EventGraphCreator implements GraphCreator<EventReport> {
 				Map<String, EventName> names = eventType.getNames();
 				for (Entry<String, EventName> nameEntry : names.entrySet()) {
 					EventName eventName = nameEntry.getValue();
-					List<Range> ranges = eventName.getRanges();
+					List<Range> ranges = new ArrayList<Range>(eventName.getRanges().values());
 					detailBuilder.append(eventType.getId());
 					detailBuilder.append('\t');
 					detailBuilder.append(eventName.getId());
