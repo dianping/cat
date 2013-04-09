@@ -1,15 +1,15 @@
 package com.dianping.cat.consumer.performance;
 
 import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.sql.SqlAnalyzer;
-import com.dianping.cat.message.CatTestCase;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class SqlPerformanceTest extends CatTestCase {
+public class SqlPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {

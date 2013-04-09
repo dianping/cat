@@ -1,15 +1,15 @@
 package com.dianping.cat.consumer.performance;
 
 import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.message.CatTestCase;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class MetricPerformanceTest extends CatTestCase {
+public class MetricPerformanceTest extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
