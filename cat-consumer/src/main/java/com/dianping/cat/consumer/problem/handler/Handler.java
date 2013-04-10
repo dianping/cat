@@ -15,7 +15,8 @@ public abstract class Handler {
 
 	public abstract int handle(Machine machine, MessageTree tree);
 
-	protected Entry findOrCreatEntry(Machine machine, String type, String status) {
+	// TODO fix performance issue
+	protected Entry findOrCreateEntry(Machine machine, String type, String status) {
 		List<Entry> entries = machine.getEntries();
 
 		for (Entry entry : entries) {
@@ -23,6 +24,7 @@ public abstract class Handler {
 				return entry;
 			}
 		}
+
 		Entry entry = new Entry();
 
 		entry.setStatus(status);

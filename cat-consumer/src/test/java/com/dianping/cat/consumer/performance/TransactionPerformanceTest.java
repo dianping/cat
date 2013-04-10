@@ -17,7 +17,7 @@ public class TransactionPerformanceTest {
 
 		long current = System.currentTimeMillis();
 
-		long size = 100000000;
+		long size = 10000000000l;
 		for (int i = 0; i < size; i++) {
 			analyzer.process(tree);
 		}

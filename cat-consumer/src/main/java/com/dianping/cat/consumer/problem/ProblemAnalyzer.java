@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.problem;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
@@ -31,7 +34,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
-public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled {
+public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled, Initializable {
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -51,14 +54,14 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		ProblemReportVisitor visitor = new ProblemReportVisitor(report);
 
 		try {
-	      for (ProblemReport temp : m_reports.values()) {
-	      	report.getIps().add(temp.getDomain());
-	      	report.getDomainNames().add(temp.getDomain());
-	      	visitor.visitProblemReport(temp);
-	      }
-      } catch (Exception e) {
-      	Cat.logError(e);
-      }
+			for (ProblemReport temp : m_reports.values()) {
+				report.getIps().add(temp.getDomain());
+				report.getDomainNames().add(temp.getDomain());
+				visitor.visitProblemReport(temp);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 		return report;
 	}
 
@@ -89,6 +92,12 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		report.getDomainNames().addAll(m_reports.keySet());
 
 		return report;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		// to work around a performance issue within plexus
+		m_handlers = new ArrayList<Handler>(m_handlers);
 	}
 
 	@Override

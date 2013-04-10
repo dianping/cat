@@ -164,7 +164,7 @@ public abstract class MockMessageBuilder {
 		}
 	}
 
-	protected static class EventHolder extends AbstractMessageHolder {
+	public static class EventHolder extends AbstractMessageHolder {
 		private DefaultEvent m_event;
 
 		public EventHolder(String type, String name) {

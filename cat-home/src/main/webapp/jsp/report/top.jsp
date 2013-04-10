@@ -23,6 +23,15 @@
 		});	
 	});
 </script>
+<style>
+.tab-content	table {
+  max-width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  border-spacing: 0; 
+}
+	
+</style>
 <a:body>
 <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 <res:useCss value='${res.css.local.report_css}' target="head-css" />
