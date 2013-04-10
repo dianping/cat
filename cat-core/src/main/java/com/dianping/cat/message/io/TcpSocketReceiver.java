@@ -64,7 +64,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private BlockingQueue<ChannelBuffer> m_queue;
 
-	private int m_queueSize = 100000;
+	private int m_queueSize = 500000;
 
 	private int m_errorCount;
 

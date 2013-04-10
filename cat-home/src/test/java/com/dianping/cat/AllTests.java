@@ -110,6 +110,6 @@ ReportServiceImplTest.class, StateReportMergerTest.class,
 DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class,
 
 /* Metric */
-MetricReportParseTest.class, MetricReportMergerTest.class, })
+MetricReportParseTest.class, MetricReportMergerTest.class})
 public class AllTests {
 }

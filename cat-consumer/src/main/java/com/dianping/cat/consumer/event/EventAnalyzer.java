@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.event;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +8,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -29,7 +29,6 @@ import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implements LogEnabled {
 	@Inject
@@ -102,7 +101,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		EventReport report = m_reports.get(domain);
 
@@ -165,9 +164,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	private void processEventGrpah(EventName name, Event t) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(t.getTimestamp());
-		int min = cal.get(Calendar.MINUTE);
+		long current = t.getTimestamp() / 1000 / 60;
+		int min = (int) (current % (60));
 		int tk = min - min % 5;
 
 		synchronized (name) {

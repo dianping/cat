@@ -257,47 +257,49 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	private void storeReport(boolean atEnd) {
-		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
+		if (atEnd) {
+			Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
-		t.setStatus(Message.SUCCESS);
-		try {
-			// insert the domain-ip info
-			for (StateReport report : m_reports.values()) {
-				new Visitor().visitStateReport(report);
-			}
-			// build cat state info
-			for (String domain : m_reports.keySet()) {
-				StateReport report = getReport(domain);
+			t.setStatus(Message.SUCCESS);
+			try {
+				// insert the domain-ip info
+				for (StateReport report : m_reports.values()) {
+					new Visitor().visitStateReport(report);
+				}
+				// build cat state info
+				for (String domain : m_reports.keySet()) {
+					StateReport report = getReport(domain);
 
-				Bucket<String> reportBucket = m_bucketManager.getReportBucket(m_startTime, "state");
-				reportBucket.storeById(domain, report.toString());
+					Bucket<String> reportBucket = m_bucketManager.getReportBucket(m_startTime, "state");
+					reportBucket.storeById(domain, report.toString());
 
-				if (atEnd) {
-					storeStateReport(report);
+					if (atEnd) {
+						storeStateReport(report);
 
-					long minute = 1000 * 60;
-					long start = m_startTime - minute * 60 * 2;
-					long end = m_startTime - minute * 60;
-					for (; start < end; start += minute) {
-						m_serverStateManager.RemoveState(start);
+						long minute = 1000 * 60;
+						long start = m_startTime - minute * 60 * 2;
+						long end = m_startTime - minute * 60;
+						for (; start < end; start += minute) {
+							m_serverStateManager.RemoveState(start);
+						}
 					}
 				}
-			}
 
-			if (atEnd) {
-				Date period = new Date(m_startTime);
-				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				// Create task for health report
-				for (String domain : m_reports.keySet()) {
-					StateReport report = m_reports.get(domain);
-					new HealthVisitor(ip, period).visitStateReport(report);
+				if (atEnd) {
+					Date period = new Date(m_startTime);
+					String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+					// Create task for health report
+					for (String domain : m_reports.keySet()) {
+						StateReport report = m_reports.get(domain);
+						new HealthVisitor(ip, period).visitStateReport(report);
+					}
 				}
+			} catch (Exception e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			} finally {
+				t.complete();
 			}
-		} catch (Exception e) {
-			t.setStatus(e);
-			Cat.logError(e);
-		} finally {
-			t.complete();
 		}
 	}
 
@@ -310,7 +312,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 			for (String ip : ips) {
 				try {
-					//Hack For PhoenixAgent
+					// Hack For PhoenixAgent
 					if (!domain.equals("PhoenixAgent")) {
 						Hostinfo info = m_hostInfoDao.createLocal();
 
