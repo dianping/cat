@@ -462,9 +462,13 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			if (!result) { // trace queue overflow
 				m_queueOverflow++;
-				if (m_queueOverflow % CatConstants.ERROR_COUNT == 0) {
+				int count = m_queueOverflow % CatConstants.ERROR_COUNT;
+
+				if (count == 0) {
 					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
-					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
+					if (count % 10 == 0) {
+						m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
+					}
 				}
 			}
 			return result;
