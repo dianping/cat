@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException;
 import org.apache.hadoop.security.AccessControlException;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -39,7 +40,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 
 	@Inject
 	private FileSystemManager m_fileSystemManager;
-	
+
 	private String m_baseDir;
 
 	private Logger m_logger;
@@ -173,6 +174,14 @@ public class DumpUploader implements Initializable, LogEnabled {
 						t.addData("size", size);
 						t.addData("speed", speed);
 						t.setStatus(Message.SUCCESS);
+
+						if (!file.delete()) {
+							m_logger.warn("Can't delete file: " + file);
+						}
+					} catch (AlreadyBeingCreatedException e) {
+						Cat.logError(e);
+						t.setStatus(e);
+						m_logger.error(String.format("Already being created (%s), delete the file!", path), e);
 
 						if (!file.delete()) {
 							m_logger.warn("Can't delete file: " + file);
