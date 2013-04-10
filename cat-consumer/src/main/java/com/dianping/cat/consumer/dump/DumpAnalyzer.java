@@ -54,7 +54,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		try {
 			m_bucketManager.archive(m_startTime);
 			// wait the block dump complete
-			Thread.sleep(10 * 10000);
+			Thread.sleep(10 * 1000);
 		} catch (Exception e) {
 			t.setStatus(e);
 			Cat.logError(e);
