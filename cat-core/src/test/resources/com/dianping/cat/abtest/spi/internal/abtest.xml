@@ -1,0 +1,11 @@
+<abtest>
+	<entity id="1001" name="Mock1" start-date="2013-04-10 17:00:00" end-date="2013-04-10 18:00:00" disabled="false">
+		<description>This is a mock ABTest</description>
+		<group-strategy name="mock">
+			<configuration><![CDATA[This is the configuration]]></configuration>
+		</group-strategy>
+		<domain>Cat</domain>
+		<domain>TuanGouWeb</domain>
+	</entity>
+	<entity/>
+</abtest>
