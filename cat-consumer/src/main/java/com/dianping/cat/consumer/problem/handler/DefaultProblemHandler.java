@@ -45,7 +45,7 @@ public class DefaultProblemHandler extends Handler {
 			String type = ProblemType.ERROR.getName();
 			String status = message.getName();
 
-			Entry entry = findOrCreatEntry(machine, type, status);
+			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, 0);
 
 			count++;
@@ -65,7 +65,7 @@ public class DefaultProblemHandler extends Handler {
 			if (m_failureTypes.contains(type)) {
 				type = transaction.getType().toLowerCase();
 				//make it march for alarm
-				if (type.equalsIgnoreCase("pigeonCall")) {
+				if (type.equals("PigeonCall")) {
 					type = "call";
 				}
 				status = transaction.getName();
@@ -74,7 +74,7 @@ public class DefaultProblemHandler extends Handler {
 				status = transaction.getType() + ":" + transaction.getName();
 			}
 
-			Entry entry = findOrCreatEntry(machine, type, status);
+			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, 0);
 
 			count++;
@@ -98,7 +98,7 @@ public class DefaultProblemHandler extends Handler {
 	private int processHeartbeat(Machine machine, Heartbeat heartbeat, MessageTree tree) {
 		String type = ProblemType.HEARTBEAT.getName();
 		String status = heartbeat.getName();
-		Entry entry = findOrCreatEntry(machine, type, status);
+		Entry entry = findOrCreateEntry(machine, type, status);
 
 		updateEntry(tree, entry, 0);
 		return 1;

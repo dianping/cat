@@ -60,7 +60,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
 		      .req(AnalyzerFactory.class, ServerStateManager.class, Coordinator.class) //
 		      .config(E("extraTime").value(property("extraTime", "180000"))//
-		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,dump,state,top,metric")));
+		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,state,top,metric,dump")));
 
 		String errorTypes = "Error,RuntimeException,Exception";
 		String failureTypes = "URL,SQL,Call,PigeonCall,Cache";

@@ -67,6 +67,8 @@ public class Handler implements PageHandler<Context> {
 
 			display.visitMetricReport(report);
 
+			display.buildConvertRate("/index", "/detail");
+			display.buildConvertRate("/detail", "/order/submitOrder");
 			model.setDisplay(display);
 			model.setReport(report);
 		}

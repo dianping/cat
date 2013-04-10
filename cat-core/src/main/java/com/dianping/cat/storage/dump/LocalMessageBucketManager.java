@@ -140,7 +140,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_processMessages = new long[m_gzipThreads];
 
 		for (int i = 0; i < m_gzipThreads; i++) {
-			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(100000);
+			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(500000);
 
 			m_messageQueues.put(i, messageQueue);
 			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
@@ -449,7 +449,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					}
 				}
 				m_totalSize += buf.readableBytes();
-				
+
 				if (t != null) {
 					t.setStatus(Message.SUCCESS);
 				}
@@ -541,7 +541,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						}
 						m_serverStateManager.addBlockTotal(1);
 						if ((++m_success) % 10000 == 0) {
-							m_logger.info("block queue size " + m_messageBlocks.size());
+							int size = m_messageBlocks.size();
+							
+							if (size > 0) {
+								m_logger.info("block queue size " + size);
+							}
 						}
 						long duration = System.currentTimeMillis() - time;
 						m_serverStateManager.addBlockTime(duration);

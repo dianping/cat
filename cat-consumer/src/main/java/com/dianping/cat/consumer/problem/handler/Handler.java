@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.problem.handler;
 
-import java.util.Calendar;
 import java.util.List;
 
 import com.dianping.cat.consumer.problem.model.entity.Duration;
@@ -16,7 +15,8 @@ public abstract class Handler {
 
 	public abstract int handle(Machine machine, MessageTree tree);
 
-	protected Entry findOrCreatEntry(Machine machine, String type, String status) {
+	// TODO fix performance issue
+	protected Entry findOrCreateEntry(Machine machine, String type, String status) {
 		List<Entry> entries = machine.getEntries();
 
 		for (Entry entry : entries) {
@@ -24,6 +24,7 @@ public abstract class Handler {
 				return entry;
 			}
 		}
+
 		Entry entry = new Entry();
 
 		entry.setStatus(status);
@@ -61,8 +62,9 @@ public abstract class Handler {
 
 	protected int getSegmentByMessage(MessageTree tree) {
 		Message message = tree.getMessage();
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(message.getTimestamp());
-		return cal.get(Calendar.MINUTE);
+		long current = message.getTimestamp() / 1000 / 60;
+		int min = (int) (current % (60));
+
+		return min;
 	}
 }
