@@ -30,7 +30,6 @@ public class DefaultABTestEntityManager implements ABTestEntityManager, Initiali
 
 	@Override
 	public void initialize() throws InitializationException {
-		// TODO for test purpose
 		try {
 			InputStream in = getClass().getResourceAsStream("abtest.xml");
 			Abtest abtest = DefaultSaxParser.parse(in);
