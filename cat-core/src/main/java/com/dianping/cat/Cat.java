@@ -180,6 +180,9 @@ public class Cat {
 	public static void setup(String sessionToken) {
 		MessageManager manager = s_instance.m_manager;
 
+		if (manager == null) {
+			Cat.getProducer();
+		}
 		manager.setup();
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
 	}

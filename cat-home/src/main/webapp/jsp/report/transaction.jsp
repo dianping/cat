@@ -127,7 +127,7 @@
 	</c:choose>
 </table>
 <font color="white">${lastIndex}</font>
-
+<res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
 <c:choose>
 	<c:when test="${not empty payload.type}">
 		<table>
@@ -138,12 +138,9 @@
 		</table>
 		<script type="text/javascript">
 			var data = ${model.pieChart};
+			graphPieChart(document.getElementById('transactionGraph'), data);
 		</script>
 	</c:when>
 </c:choose>
-
-
-<res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
 </jsp:body>
-
 </a:report>
