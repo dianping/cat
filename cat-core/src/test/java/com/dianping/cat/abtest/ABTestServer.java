@@ -26,7 +26,6 @@ public class ABTestServer extends JettyServer {
 		Context root = new Context(server, "/", Context.SESSIONS);
 		root.addFilter(CatFilter.class, "/*", Handler.REQUEST | Handler.FORWARD);
 		root.addServlet(new ServletHolder(SimpleRoundRobinWebPage.class), "/abtest");
-		// server.setHandler(root);
 		server.start();
 		// open the page in the default browser
 		display("/abtest");

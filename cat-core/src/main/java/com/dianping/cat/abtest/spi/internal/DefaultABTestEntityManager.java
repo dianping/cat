@@ -1,18 +1,19 @@
 package com.dianping.cat.abtest.spi.internal;
 
-import java.util.HashMap;
+import java.io.InputStream;
 import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.abtest.ABTestId;
-import com.dianping.cat.abtest.sample.SampleTest.MyABTestId;
+import com.dianping.cat.abtest.model.entity.Abtest;
+import com.dianping.cat.abtest.model.transform.DefaultSaxParser;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestEntityManager;
 
 public class DefaultABTestEntityManager implements ABTestEntityManager, Initializable {
-	private Map<Integer, ABTestEntity> m_entities = new HashMap<Integer, ABTestEntity>();
+	private Map<Integer, ABTestEntity> m_entities;
 
 	@Override
 	public ABTestEntity getEntity(ABTestId id) {
@@ -29,13 +30,16 @@ public class DefaultABTestEntityManager implements ABTestEntityManager, Initiali
 
 	@Override
 	public void initialize() throws InitializationException {
-		// for test purpose
-		ABTestEntity entity = new ABTestEntity();
-		entity.setDisabled(false);
-		entity.setId(MyABTestId.CASE1.getValue());
-		entity.setName("abtest");
-		entity.setGroupStrategy("roundrobin");
-		
-		m_entities.put(MyABTestId.CASE1.getValue(), entity);
+		try {
+			InputStream in = getClass().getResourceAsStream("abtest.xml");
+			Abtest abtest = DefaultSaxParser.parse(in);
+			ABTestVisitor visitor = new ABTestVisitor();
+			abtest.accept(visitor);
+			m_entities = visitor.getABTestEntitys();
+
+		} catch (Exception e) {
+			throw new InitializationException("Error when loading resource(abtest.xml)", e);
+		}
 	}
+
 }
