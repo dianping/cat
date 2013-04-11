@@ -8,6 +8,8 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.abtest.spi.ABTestContextManager;
 import com.dianping.cat.abtest.spi.ABTestEntityManager;
+import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.abtest.spi.RoundRobinGroupStrategy;
 import com.dianping.cat.abtest.spi.internal.DefaultABTestContextManager;
 import com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager;
 
@@ -20,6 +22,8 @@ class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ABTestEntityManager.class));
 
 		all.add(C(ABTestEntityManager.class, DefaultABTestEntityManager.class));
+		
+		all.add(C(ABTestGroupStrategy.class,"roundrobin",RoundRobinGroupStrategy.class));
 
 		return all;
 	}
