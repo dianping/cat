@@ -7,7 +7,6 @@ import java.util.Map;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.abtest.ABTestId;
 import com.dianping.cat.abtest.model.entity.Abtest;
 import com.dianping.cat.abtest.model.entity.Entity;
 import com.dianping.cat.abtest.model.transform.BaseVisitor;
@@ -17,20 +16,6 @@ import com.dianping.cat.abtest.spi.ABTestEntityManager;
 
 public class DefaultABTestEntityManager implements ABTestEntityManager, Initializable {
 	private Map<Integer, ABTestEntity> m_entities = new HashMap<Integer, ABTestEntity>();
-
-	@Override
-	public ABTestEntity getEntity(ABTestId id) {
-		ABTestEntity entity = m_entities.get(id.getValue());
-
-		if (entity == null) {
-			entity = new ABTestEntity();
-			entity.setDisabled(true);
-
-			m_entities.put(id.getValue(), entity);
-		}
-
-		return entity;
-	}
 
 	@Override
 	public void initialize() throws InitializationException {
@@ -58,5 +43,10 @@ public class DefaultABTestEntityManager implements ABTestEntityManager, Initiali
 
 			m_entities.put(abTestEntity.getId(), abTestEntity);
 		}
+	}
+
+	@Override
+	public Map<Integer, ABTestEntity> getEntities() {
+		return m_entities;
 	}
 }

@@ -16,11 +16,11 @@ public class ABTestEntity {
 	}
 
 	public String getGroupStrategy() {
-		return m_entity.getGroupStrategy().getName();
+		return m_entity.getGroupStrategy() != null ? m_entity.getGroupStrategy().getName() : null;
 	}
 
 	public String getGroupStrategyConfiguration() {
-		return m_entity.getGroupStrategy().getConfiguration();
+		return m_entity.getGroupStrategy() != null ? m_entity.getGroupStrategy().getConfiguration() : null;
 	}
 
 	public int getId() {
@@ -32,7 +32,7 @@ public class ABTestEntity {
 	}
 
 	public boolean isEligible(Date date) {
-		if (m_entity.getDisabled()) {
+		if (m_entity.getDisabled() != null && m_entity.getDisabled()) {
 			return false;
 		}
 
@@ -62,11 +62,15 @@ public class ABTestEntity {
 	}
 
 	public void setGroupStrategy(String groupStrategy) {
-		m_entity.getGroupStrategy().setName(groupStrategy);
+		if (m_entity.getGroupStrategy() != null) {
+			m_entity.getGroupStrategy().setName(groupStrategy);
+		}
 	}
 
 	public void setGroupStrategyConfiguration(String groupStrategyConfiguration) {
-		m_entity.getGroupStrategy().setConfiguration(groupStrategyConfiguration);
+		if (m_entity.getGroupStrategy() != null) {
+			m_entity.getGroupStrategy().setConfiguration(groupStrategyConfiguration);
+		}
 	}
 
 	public void setId(int id) {

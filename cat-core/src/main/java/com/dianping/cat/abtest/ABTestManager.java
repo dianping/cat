@@ -4,16 +4,15 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.unidal.lookup.ContainerLoader;
 
-import com.dianping.cat.abtest.internal.DefaultABTest;
+import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestContextManager;
 
 public final class ABTestManager {
 	private static ABTestContextManager s_contextManager;
 
 	public static ABTest getTest(ABTestId id) {
-		initialize();
-
-		return new DefaultABTest(id, s_contextManager);
+		ABTestContext ctx = s_contextManager.getContext(id);
+		return ctx.getABTest();
 	}
 
 	public static void initialize() {
@@ -29,12 +28,14 @@ public final class ABTestManager {
 				}
 			}
 		}
+
 	}
 
 	public static void onRequestBegin(HttpServletRequest req) {
 		initialize();
 
 		s_contextManager.onRequestBegin(req);
+
 	}
 
 	public static void onRequestEnd() {
