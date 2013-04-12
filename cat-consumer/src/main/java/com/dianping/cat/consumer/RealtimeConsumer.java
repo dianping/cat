@@ -30,6 +30,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -211,7 +212,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			for (String name : m_analyzerNames) {
 				MessageAnalyzer analyzer = m_factory.create(name, startTime, m_duration, m_extraTime);
-				MessageQueue queue = lookup(MessageQueue.class);
+				MessageQueue queue = new DefaultMessageQueue();
 				PeriodTask task = new PeriodTask(m_factory, analyzer, queue, startTime);
 
 				analyzers.put(name, analyzer);
@@ -360,17 +361,21 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			try {
 				while (m_active) {
-					long now = System.currentTimeMillis();
-					long value = m_strategy.next(now);
+					try {
+						long now = System.currentTimeMillis();
+						long value = m_strategy.next(now);
 
-					if (value == 0) {
-						// do nothing here
-					} else if (value > 0) {
-						// prepare next period in ahead of 3 minutes
-						startPeriod(value);
-					} else {
-						// last period is over
-						endPeriod(-value);
+						if (value == 0) {
+							// do nothing here
+						} else if (value > 0) {
+							// prepare next period in ahead of 3 minutes
+							startPeriod(value);
+						} else {
+							// last period is over
+							endPeriod(-value);
+						}
+					} catch (Throwable e) {
+						Cat.logError(e);
 					}
 
 					Thread.sleep(1000L);

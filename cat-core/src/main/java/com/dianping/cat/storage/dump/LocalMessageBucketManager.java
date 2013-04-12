@@ -182,7 +182,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 						bucket.setBaseDir(m_baseDir);
 						bucket.initialize(dataFile);
-						m_buckets.put(dataFile, bucket);
+						synchronized (m_buckets) {
+							m_buckets.put(dataFile, bucket);
+						}
 					}
 				}
 
@@ -258,7 +260,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
 					}
-					m_buckets.remove(path);
+					synchronized (m_buckets) {
+						m_buckets.remove(path);
+					}
 				} else {
 					try {
 						moveFile(path);
@@ -435,7 +439,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 					bucket.setBaseDir(m_baseDir);
 					bucket.initialize(dataFile);
-					m_buckets.put(dataFile, bucket);
+					synchronized (m_buckets) {
+						m_buckets.put(dataFile, bucket);
+               }
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
@@ -542,7 +548,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						m_serverStateManager.addBlockTotal(1);
 						if ((++m_success) % 10000 == 0) {
 							int size = m_messageBlocks.size();
-							
+
 							if (size > 0) {
 								m_logger.info("block queue size " + size);
 							}

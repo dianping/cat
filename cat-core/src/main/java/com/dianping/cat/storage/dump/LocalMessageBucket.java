@@ -121,7 +121,7 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 		boolean b = m_dirty.get();
 
 		if (b) {
-			synchronized (this) {
+			synchronized (m_out) {
 				m_out.close();
 				byte[] data = m_buf.toByteArray();
 
