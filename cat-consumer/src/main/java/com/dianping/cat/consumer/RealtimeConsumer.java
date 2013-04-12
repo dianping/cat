@@ -133,6 +133,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				analyzer.doCheckpoint(false);
 			}
 
+			try {
+				// wait dump analyzer store completed
+				Thread.sleep(10 * 1000);
+			} catch (InterruptedException e) {
+				// ignore
+			}
 			t.setStatus(Message.SUCCESS);
 		} catch (RuntimeException e) {
 			cat.logError(e);

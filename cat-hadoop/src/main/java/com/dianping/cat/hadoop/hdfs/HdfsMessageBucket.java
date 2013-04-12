@@ -11,14 +11,13 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.storage.dump.MessageBlock;
 import com.dianping.cat.storage.dump.MessageBucket;
-import org.unidal.lookup.annotation.Inject;
 
 public class HdfsMessageBucket implements MessageBucket {
 	public static final String ID = "hdfs";
@@ -74,11 +73,6 @@ public class HdfsMessageBucket implements MessageBucket {
 
 	public void setMessageCodec(MessageCodec codec) {
 		m_codec = codec;
-	}
-
-	@Override
-	public MessageBlock store(MessageTree tree,MessageId id) throws IOException {
-		throw new UnsupportedOperationException("Not supported by HDFS!");
 	}
 
 	static class MessageBlockReader {
