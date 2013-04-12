@@ -121,7 +121,7 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 		boolean b = m_dirty.get();
 
 		if (b) {
-			synchronized (m_out) {
+			synchronized (this) {
 				m_out.close();
 				byte[] data = m_buf.toByteArray();
 
@@ -174,15 +174,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 
 	public void setMessageCodec(MessageCodec codec) {
 		m_codec = codec;
-	}
-
-	@Override
-	public MessageBlock store(final MessageTree tree, final MessageId id) throws IOException {
-		final ChannelBuffer buf = m_bufferManager.allocate();
-
-		m_codec.encode(tree, buf);
-
-		return storeMessage(buf, id);
 	}
 
 	protected synchronized MessageBlock storeMessage(final ChannelBuffer buf, final MessageId id) throws IOException {

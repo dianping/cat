@@ -29,13 +29,13 @@ public class Cat {
 
 	private static Cat s_instance = new Cat();
 
-	private MessageProducer m_producer;
-
-	private MessageManager m_manager;
-
-	private PlexusContainer m_container;
-
-	private Cat() {
+	private static void checkAndInitialize() {
+		synchronized (s_instance) {
+			if (s_instance.m_container == null) {
+				initialize(new File(CAT_GLOBAL_XML));
+				log("WARN", "Cat is lazy initialized!");
+			}
+		}
 	}
 
 	public static String createMessageId() {
@@ -52,16 +52,13 @@ public class Cat {
 	}
 
 	public static MessageManager getManager() {
+		checkAndInitialize();
+
 		return s_instance.m_manager;
 	}
 
 	public static MessageProducer getProducer() {
-		synchronized (s_instance) {
-			if (s_instance.m_container == null) {
-				initialize(new File(CAT_GLOBAL_XML));
-				log("WARN", "Cat is lazy initialized!");
-			}
-		}
+		checkAndInitialize();
 
 		return s_instance.m_producer;
 	}
@@ -101,12 +98,12 @@ public class Cat {
 		System.out.println(format.format(new Object[] { new Date(), severity, "Cat", message }));
 	}
 
-	public static void logError(Throwable cause) {
-		Cat.getProducer().logError(cause);
-	}
-
 	public static void logError(String message, Throwable cause) {
 		Cat.getProducer().logError(new Throwable(message, cause));
+	}
+
+	public static void logError(Throwable cause) {
+		Cat.getProducer().logError(cause);
 	}
 
 	public static void logEvent(String type, String name) {
@@ -115,6 +112,10 @@ public class Cat {
 
 	public static void logEvent(String type, String name, String status, String nameValuePairs) {
 		Cat.getProducer().logEvent(type, name, status, nameValuePairs);
+	}
+
+	public static void logHeartbeat(String type, String name, String status, String nameValuePairs) {
+		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
 	}
 
 	public static void logMetric(String name, Object... keyValues) {
@@ -144,10 +145,6 @@ public class Cat {
 		}
 
 		Cat.getProducer().logMetric("default", name, Message.SUCCESS, sb.toString());
-	}
-
-	public static void logHeartbeat(String type, String name, String status, String nameValuePairs) {
-		Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
 	}
 
 	public static <T> T lookup(Class<T> role) throws ComponentLookupException {
@@ -180,8 +177,20 @@ public class Cat {
 	public static void setup(String sessionToken) {
 		MessageManager manager = s_instance.m_manager;
 
+		if (manager == null) {
+			checkAndInitialize();
+		}
 		manager.setup();
 		manager.getThreadLocalMessageTree().setSessionToken(sessionToken);
+	}
+
+	private MessageProducer m_producer;
+
+	private MessageManager m_manager;
+
+	private PlexusContainer m_container;
+
+	private Cat() {
 	}
 
 	void setContainer(PlexusContainer container) {
