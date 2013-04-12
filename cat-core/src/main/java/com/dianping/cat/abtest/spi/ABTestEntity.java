@@ -5,46 +5,45 @@ import java.util.Date;
 import com.dianping.cat.abtest.model.entity.Entity;
 
 public class ABTestEntity {
-
-	private Entity entity;
+	private Entity m_entity;
 
 	public ABTestEntity() {
-		this.entity = new Entity();
+		m_entity = new Entity();
 	}
 
 	public ABTestEntity(Entity entity) {
-		this.entity = entity;
+		m_entity = entity;
 	}
 
 	public String getGroupStrategy() {
-		return entity.getGroupStrategy().getName();
+		return m_entity.getGroupStrategy().getName();
 	}
 
 	public String getGroupStrategyConfiguration() {
-		return entity.getGroupStrategy().getConfiguration();
+		return m_entity.getGroupStrategy().getConfiguration();
 	}
 
 	public int getId() {
-		return entity.getId();
+		return m_entity.getId();
 	}
 
 	public String getName() {
-		return entity.getName();
+		return m_entity.getName();
 	}
 
 	public boolean isEligible(Date date) {
-		if (entity.getDisabled()) {
+		if (m_entity.getDisabled()) {
 			return false;
 		}
 
-		Date startDate = entity.getStartDate();
+		Date startDate = m_entity.getStartDate();
 		if (startDate != null) {
 			if (date.before(startDate)) {
 				return false;
 			}
 		}
 
-		Date endDate = entity.getEndDate();
+		Date endDate = m_entity.getEndDate();
 		if (endDate != null) {
 			if (date.after(endDate)) {
 				return false;
@@ -55,32 +54,55 @@ public class ABTestEntity {
 	}
 
 	public boolean isDisabled() {
-		return entity.isDisabled();
+		return m_entity.isDisabled();
 	}
 
 	public void setDisabled(boolean disabled) {
-		entity.setDisabled(disabled);
+		m_entity.setDisabled(disabled);
 	}
 
 	public void setGroupStrategy(String groupStrategy) {
-		entity.getGroupStrategy().setName(groupStrategy);
+		m_entity.getGroupStrategy().setName(groupStrategy);
 	}
 
 	public void setGroupStrategyConfiguration(String groupStrategyConfiguration) {
-		entity.getGroupStrategy().setConfiguration(groupStrategyConfiguration);
+		m_entity.getGroupStrategy().setConfiguration(groupStrategyConfiguration);
 	}
 
 	public void setId(int id) {
-		entity.setId(id);
+		m_entity.setId(id);
 	}
 
 	public void setName(String name) {
-		entity.setName(name);
+		m_entity.setName(name);
 	}
 
 	@Override
 	public String toString() {
-		return "ABTestEntity [entity=" + entity + "]";
+		return String.format("%s[id=%s, name=%s, groupStrategy=%s, configuation=%s]", getClass().getSimpleName(),
+		      getId(), getName(), getGroupStrategy(), getGroupStrategyConfiguration());
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + getId();
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ABTestEntity other = (ABTestEntity) obj;
+		if (getId() != other.getId())
+			return false;
+		return true;
 	}
 
 }
