@@ -3011,6 +3011,19 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.abtest.Handler</role>
+			<implementation>com.dianping.cat.system.page.abtest.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.abtest.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.abtest.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.abtest.JspViewer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.alarm.AlarmRuleCreator</role>
 			<implementation>com.dianping.cat.system.alarm.AlarmRuleCreator</implementation>
 			<requirements>
