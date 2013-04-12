@@ -1,5 +1,5 @@
 <abtest>
-	<entity id="1001" name="Mock1" start-date="2013-04-10 17:00:00" end-date="2013-04-30 18:00:00" disabled="false">
+	<entity id="1001" name="Mock1" start-date="2013-04-10 17:00:00" end-date="2013-12-30 18:00:00" disabled="false">
 		<description>This is a mock ABTest for test</description>
 		<group-strategy name="roundrobin">
 			<configuration><![CDATA[This is the configuration]]></configuration>
