@@ -1,57 +1,26 @@
 package com.dianping.cat.abtest.spi.internal;
 
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
-import com.dianping.cat.Cat;
+import com.dianping.cat.abtest.ABTest;
+import com.dianping.cat.abtest.internal.DefaultABTest;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
-import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
 
 public class DefaultABTestContext implements ABTestContext {
-	private String m_groupName = DEFAULT_GROUP;
 
-	private ABTestEntity m_entity;
+	private final ABTestEntity m_entity;
 
 	private HttpServletRequest m_req;
 
-	private ABTestGroupStrategy m_groupStrategy;
+	private ABTest m_abTest = ABTest.DEFAULT;
 
-	private boolean m_applied;
+	public DefaultABTestContext() {
+		m_entity = new ABTestEntity();
+	}
 
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
-	}
-
-	@Override
-	public String getGroupName() {
-		if (m_entity.isEligible(new Date())) {
-			if (!m_applied) {
-				Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategy());
-
-				try {
-					m_groupStrategy.apply(this);
-
-					t.setStatus(Message.SUCCESS);
-				} catch (Throwable e) {
-					t.setStatus(e);
-					Cat.logError(e);
-				} finally {
-					t.complete();
-					m_applied = true;
-				}
-			}
-		}
-
-		return m_groupName;
-	}
-
-	@Override
-	public void setGroupName(String groupName) {
-		m_groupName = groupName;
 	}
 
 	public void setup(HttpServletRequest req) {
@@ -68,7 +37,14 @@ public class DefaultABTestContext implements ABTestContext {
 		return m_entity;
 	}
 
-	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
-		m_groupStrategy = groupStrategy;
+	@Override
+	public ABTest getABTest() {
+		return m_abTest;
 	}
+
+	@Override
+	public void setGroupName(String groupName) {
+		m_abTest = new DefaultABTest(m_entity.getId(), groupName);
+	}
+
 }
