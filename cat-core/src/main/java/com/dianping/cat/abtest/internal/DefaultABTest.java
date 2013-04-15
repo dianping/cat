@@ -3,16 +3,16 @@ package com.dianping.cat.abtest.internal;
 import com.dianping.cat.abtest.ABTest;
 import com.dianping.cat.abtest.ABTestId;
 import com.dianping.cat.abtest.spi.ABTestContext;
-import com.dianping.cat.abtest.spi.ABTestContextManager;
 
 public class DefaultABTest implements ABTest {
-	private ABTestContextManager m_contextManager;
 
 	private ABTestId m_id;
 
-	public DefaultABTest(ABTestId id, ABTestContextManager contextManager) {
-		m_contextManager = contextManager;
+	private String m_groupName;
+
+	public DefaultABTest(ABTestId id, String groupName) {
 		m_id = id;
+		m_groupName = groupName;
 	}
 
 	@Override
@@ -21,9 +21,7 @@ public class DefaultABTest implements ABTest {
 	}
 
 	private String getGroupName() {
-		ABTestContext ctx = m_contextManager.getContext(m_id);
-
-		return ctx.getGroupName();
+		return m_groupName;
 	}
 
 	@Override
@@ -60,4 +58,10 @@ public class DefaultABTest implements ABTest {
 	public boolean isGroup(String name) {
 		return name.equals(getGroupName());
 	}
+
+	@Override
+	public String toString() {
+		return String.format("DefaultABTest [id=%s, groupName=%s]", m_id, m_groupName);
+	}
+
 }
