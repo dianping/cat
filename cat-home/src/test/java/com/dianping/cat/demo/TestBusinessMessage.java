@@ -14,16 +14,15 @@ public class TestBusinessMessage {
 			for (int i = 0; i < 1000; i++) {
 				Transaction t = Cat.newTransaction("URL", "/index");
 				Cat.logMetric("order", "quantity" , i);
-				
 				t.complete();
 			}
-			for (int i = 0; i < 1000; i++) {
+			for (int i = 0; i < 900; i++) {
 				Transaction t = Cat.newTransaction("URL", "/detail");
 				Cat.logMetric("payment.pending", "amount" , i);
 				
 				t.complete();
 			}
-			for (int i = 0; i < 1000; i++) {
+			for (int i = 0; i < 500; i++) {
 				Transaction t = Cat.newTransaction("URL", "/order/submitOrder");
 				Cat.logMetric("payment.success", "amount" , i);
 				

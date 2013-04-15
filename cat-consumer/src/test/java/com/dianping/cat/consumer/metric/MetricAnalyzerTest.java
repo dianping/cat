@@ -12,17 +12,12 @@ public class MetricAnalyzerTest {
 		String data = "aaa=1.1&a=1.1&abc=2.2&c=1.2&aaaa=11.1&abbbb=1.1&ssabc=2.2&sc=1.2";
 
 		long t = System.currentTimeMillis();
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 10000000; i++) {
 			analyzer.parseValue("abc", data);
 		}
 		System.out.println(System.currentTimeMillis() - t);
 
-		t = System.currentTimeMillis();
-		for (int i = 0; i < 100000; i++) {
-			analyzer.parseValue1("abc", data);
-		}
-		System.out.println(System.currentTimeMillis() - t);
-
+		Assert.assertEquals(analyzer.parseValue("aaa", "aaa=1.1"), 1.1);
 		Assert.assertEquals(analyzer.parseValue("aaa", data), 1.1);
 		Assert.assertEquals(analyzer.parseValue("a", data), 1.1);
 		Assert.assertEquals(analyzer.parseValue("abc", data), 2.2);

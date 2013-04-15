@@ -22,6 +22,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
+import com.site.helper.Threads;
 
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
 	@Inject
@@ -51,18 +52,29 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 		t.setStatus(Message.SUCCESS);
 
-		try {
-			m_bucketManager.archive(m_startTime);
-			// wait the block dump complete
-			Thread.sleep(10 * 10000);
-		} catch (Exception e) {
-			t.setStatus(e);
-			Cat.logError(e);
-		} finally {
-			t.complete();
-		}
+		Threads.forGroup("Cat").start(new Threads.Task() {
+			@Override
+			public void run() {
+				try {
+					m_bucketManager.archive(m_startTime);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+
+			@Override
+			public void shutdown() {
+			}
+
+			@Override
+			public String getName() {
+				return "DumpAnalyzer-Checkpoint";
+			}
+		});
+		// wait the block dump complete
 		m_logger.info("old version domains:" + m_oldVersionDomains);
 		m_logger.info("Error timestamp:" + m_errorTimestampDomains);
+		t.complete();
 	}
 
 	@Override
