@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.dianping.cat.abtest.ABTest;
 import com.dianping.cat.abtest.internal.DefaultABTest;
+import com.dianping.cat.abtest.internal.DefaultABTestId;
 import com.dianping.cat.abtest.spi.ABTestContext;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 
@@ -44,7 +45,7 @@ public class DefaultABTestContext implements ABTestContext {
 
 	@Override
 	public void setGroupName(String groupName) {
-		m_abTest = new DefaultABTest(m_entity.getId(), groupName);
+		m_abTest = new DefaultABTest(new DefaultABTestId(m_entity.getId()), groupName);
 	}
 
 }

@@ -1,8 +1,10 @@
 package com.dianping.cat.abtest;
 
+import com.dianping.cat.abtest.internal.DefaultABTestId;
+
 public interface ABTest {
 
-	public int getTestId();
+	public ABTestId getTestId();
 
 	public boolean isDefaultGroup();
 
@@ -20,6 +22,8 @@ public interface ABTest {
 
 	/** A default ABTest which id is 0 and group is default */
 	public static final ABTest DEFAULT = new ABTest() {
+
+		private ABTestId m_id = new DefaultABTestId(0);
 
 		@Override
 		public boolean isGroupE() {
@@ -57,8 +61,8 @@ public interface ABTest {
 		}
 
 		@Override
-		public int getTestId() {
-			return 0;
+		public ABTestId getTestId() {
+			return m_id;
 		}
 	};
 

@@ -2,6 +2,7 @@ package com.dianping.cat.abtest.spi.internal;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,10 +38,8 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		int id = testId.getValue();
 		DefaultABTestContext ctx = map.get(id);
 
-		// 如果ctx不存在，返回默认的DefaultABTestContext
 		if (ctx == null) {
 			ctx = new DefaultABTestContext();
-			// 把ctx保存起来, 如果在同一个请球内多次调用该方法，则都返回该DefaultABTestContext
 			map.put(id, ctx);
 		}
 
@@ -54,23 +53,21 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 	@Override
 	public void onRequestBegin(HttpServletRequest req) {
-		Entry entry = m_threadLocal.get();
-		Map<Integer, DefaultABTestContext> map = entry.getContextMap();
+		Map<Integer, DefaultABTestContext> map = m_threadLocal.get().getContextMap();
+		List<ABTestEntity> entities = m_entityManager.getEntityList();
 
-		// 获取所有的ABTestEntity
-		Map<Integer, ABTestEntity> entities = m_entityManager.getEntities();
-		// 遍历所有Entity，每个Entity都计算其分流结果，并设置到ctx中
-		for (ABTestEntity entity : entities.values()) {
+		for (ABTestEntity entity : entities) {
 			DefaultABTestContext ctx = new DefaultABTestContext(entity);
 
 			ctx.setup(req);
 
 			if (!entity.isDisabled()) {
 				if (entity.isEligible(new Date())) {
-					Transaction t = Cat.newTransaction("GroupStrategy", entity.getGroupStrategy());
-					ABTestGroupStrategy groupStrategy = lookup(ABTestGroupStrategy.class, entity.getGroupStrategy());
+					Transaction t = Cat.newTransaction("GroupStrategy", entity.getGroupStrategyName());
+
 					try {
-						// 计算分流结果
+						ABTestGroupStrategy groupStrategy = entity.getGroupStrategy();
+
 						groupStrategy.apply(ctx);
 
 						t.setStatus(Message.SUCCESS);
@@ -82,10 +79,9 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 					}
 				}
 			}
-			// 将ctx保存到当前的Threadlocal中
+
 			map.put(entity.getId(), ctx);
 		}
-
 	}
 
 	static class Entry {
@@ -94,6 +90,5 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		public Map<Integer, DefaultABTestContext> getContextMap() {
 			return m_map;
 		}
-
 	}
 }
