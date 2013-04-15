@@ -44,7 +44,7 @@ public class DefaultABTestEntityManagerTest extends ComponentTestCase {
 		Assert.assertEquals(id < 0 ? 0 : id, entity.getId());
 
 		if (expectedGroupStrategy != null) {
-			Assert.assertEquals(expectedGroupStrategy, entity.getGroupStrategy());
+			Assert.assertEquals(expectedGroupStrategy, entity.getGroupStrategyName());
 		}
 
 		if (expectedGroupStrategy != null) {
