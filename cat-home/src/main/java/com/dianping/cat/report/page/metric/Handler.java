@@ -67,8 +67,8 @@ public class Handler implements PageHandler<Context> {
 
 			display.visitMetricReport(report);
 
-			display.buildConvertRate("/index", "/detail");
-			display.buildConvertRate("/detail", "/order/submitOrder");
+			display.buildConvertRate("/index", "/detail",MetricTitle.INDEX_DETAIL);
+			display.buildConvertRate("/detail", "/order/submitOrder",MetricTitle.DETAIL_PAY);
 			model.setDisplay(display);
 			model.setReport(report);
 		}
@@ -77,18 +77,19 @@ public class Handler implements PageHandler<Context> {
 
 	private MetricConfig buildTuanGouMetricConfig() {
 		MetricConfig config = new MetricConfig();
-		MetricFlag indexUrl = new MetricFlag("/index", 1, true, false, false);
-		MetricFlag detailUrl = new MetricFlag("/detail", 2, true, false, false);
-		MetricFlag payUrl = new MetricFlag("/order/submitOrder", 3, true, false, false);
-		MetricFlag orderKey = new MetricFlag("order", 4, false, true, false);
-		MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
-		MetricFlag totalKey = new MetricFlag("payment.success", 5, false, true, false);
+
+		MetricFlag indexUrl = new MetricFlag("/index", 1, true, false, false, MetricTitle.INDEX);
+		MetricFlag detailUrl = new MetricFlag("/detail", 2, true, false, false, MetricTitle.DETAIL);
+		MetricFlag payUrl = new MetricFlag("/order/submitOrder", 3, true, false, false, MetricTitle.PAY);
+		MetricFlag orderKey = new MetricFlag("order", 4, false, true, false, MetricTitle.ORDER);
+		MetricFlag totalKey = new MetricFlag("payment.success", 5, false, true, false, MetricTitle.SUCCESS);
+		// MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
+		// config.put(sumKey);
 
 		config.put(indexUrl);
 		config.put(detailUrl);
 		config.put(payUrl);
 		config.put(orderKey);
-		config.put(sumKey);
 		config.put(totalKey);
 		return config;
 	}
@@ -100,6 +101,23 @@ public class Handler implements PageHandler<Context> {
 		model.setLongDate(payload.getDate());
 		model.setDisplayDomain(payload.getDomain());
 		model.setDomain(payload.getDomain());
+	}
+
+	public class MetricTitle {
+
+		public static final String INDEX = "团购首页";
+
+		public static final String DETAIL = "团购详情";
+
+		public static final String PAY = "支付页面";
+
+		public static final String ORDER = "订单创建数量";
+
+		public static final String SUCCESS = "支付金额";
+
+		public static final String INDEX_DETAIL = "首页到详情页转化率";
+
+		public static final String DETAIL_PAY = "详情页到支付页转化率";
 	}
 
 }

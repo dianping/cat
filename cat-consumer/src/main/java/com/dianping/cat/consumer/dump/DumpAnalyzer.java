@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.dump;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -56,7 +57,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			@Override
 			public void run() {
 				try {
+					m_logger.info("Dump analyer starting archive!" + new Date(m_startTime));
 					m_bucketManager.archive(m_startTime);
+					m_logger.info("Dump analyer end archive!");
 				} catch (Exception e) {
 					Cat.logError(e);
 				}

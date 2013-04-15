@@ -30,13 +30,16 @@ public class MetricConfig {
 		private boolean m_showSum;
 
 		private boolean m_showAvg;
+		
+		private String m_title;
 
-		public MetricFlag(String key, int index, boolean showCount, boolean showSum, boolean showAvg) {
+		public MetricFlag(String key, int index, boolean showCount, boolean showSum, boolean showAvg,String title) {
 			m_key = key;
 			m_index = index;
 			m_showCount = showCount;
 			m_showSum = showSum;
 			m_showAvg = showAvg;
+			m_title = title;
 		}
 
 		public int getIndex() {
@@ -59,6 +62,13 @@ public class MetricConfig {
 			return m_showSum;
 		}
 
+		public String getTitle() {
+			return m_title;
+		}
+
+		public void setTitle(String title) {
+			m_title = title;
+		}
 	}
 
 }
