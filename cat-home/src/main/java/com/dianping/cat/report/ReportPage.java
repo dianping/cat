@@ -45,7 +45,9 @@ public enum ReportPage implements Page {
 
    TOP("top", "top", "Top", "Top", true),
 
-   METRIC("metric", "metric", "Metric", "Metric", true);
+   METRIC("metric", "metric", "Metric", "Metric", true),
+
+   PUSHERROR("pushError", "pushError", "PushError", "PushError", true);
 
    private String m_name;
 

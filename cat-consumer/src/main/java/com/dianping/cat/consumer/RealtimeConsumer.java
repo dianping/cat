@@ -80,6 +80,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private long m_networkError;
 
+	private static int QUEUE_SIZE = 500000;
+
 	@Override
 	public void consume(MessageTree tree) {
 		try {
@@ -212,7 +214,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			for (String name : m_analyzerNames) {
 				MessageAnalyzer analyzer = m_factory.create(name, startTime, m_duration, m_extraTime);
-				MessageQueue queue = new DefaultMessageQueue();
+				MessageQueue queue = new DefaultMessageQueue(QUEUE_SIZE);
 				PeriodTask task = new PeriodTask(m_factory, analyzer, queue, startTime);
 
 				analyzers.put(name, analyzer);
@@ -359,29 +361,29 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			startPeriod(startTime);
 			m_latch.countDown();
 
-			try {
-				while (m_active) {
-					try {
-						long now = System.currentTimeMillis();
-						long value = m_strategy.next(now);
+			while (m_active) {
+				try {
+					long now = System.currentTimeMillis();
+					long value = m_strategy.next(now);
 
-						if (value == 0) {
-							// do nothing here
-						} else if (value > 0) {
-							// prepare next period in ahead of 3 minutes
-							startPeriod(value);
-						} else {
-							// last period is over
-							endPeriod(-value);
-						}
-					} catch (Throwable e) {
-						Cat.logError(e);
+					if (value == 0) {
+						// do nothing here
+					} else if (value > 0) {
+						// prepare next period in ahead of 3 minutes
+						startPeriod(value);
+					} else {
+						// last period is over
+						endPeriod(-value);
 					}
-
-					Thread.sleep(1000L);
+				} catch (Throwable e) {
+					Cat.logError(e);
 				}
-			} catch (InterruptedException e) {
-				// ignore it
+
+				try {
+					Thread.sleep(1000L);
+				} catch (InterruptedException e) {
+					break;
+				}
 			}
 		}
 

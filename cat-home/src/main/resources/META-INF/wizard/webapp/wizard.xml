@@ -65,6 +65,9 @@
          <page name="metric" title="Metric" path="metric">
             <description>Metric</description>
          </page>
+         <page name="pushError" title="PushError" path="pushError">
+            <description>PushError</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm">

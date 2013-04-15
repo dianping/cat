@@ -15,18 +15,8 @@ public class DefaultMessageQueue implements MessageQueue {
 	@Inject
 	private int m_size;
 
-	private static final int SIZE = 500000;
-
-	public DefaultMessageQueue() {
-		this(SIZE);
-	}
-
 	public DefaultMessageQueue(int size) {
-		if (size > 0) {
-			m_queue = new LinkedBlockingQueue<MessageTree>(size);
-		} else {
-			m_queue = new LinkedBlockingQueue<MessageTree>(SIZE);
-		}
+		m_queue = new LinkedBlockingQueue<MessageTree>(size);
 	}
 
 	@Override
