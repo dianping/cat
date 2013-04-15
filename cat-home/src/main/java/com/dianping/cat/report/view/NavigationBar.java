@@ -43,7 +43,7 @@ public class NavigationBar {
 
 		ReportPage.STATE,
 
-		ReportPage.LOGVIEW
+		ReportPage.LOGVIEW,
 
 		};
 	}
@@ -51,11 +51,13 @@ public class NavigationBar {
 	public Page[] getSystemPages() {
 		return new Page[] {
 
+		SystemPage.ABTEST,
+
 		SystemPage.ALARM,
 
 		SystemPage.PROJECT,
 
-		SystemPage.LOGIN
+		SystemPage.LOGIN,
 
 		};
 	}
