@@ -12,7 +12,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>foundation-service</artifactId>
-         <version>2.0.1</version>
+         <version>2.0.2</version>
       </dependency>
       <dependency>
          <groupId>org.jboss.netty</groupId>
@@ -32,7 +32,7 @@
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>test-framework</artifactId>
-         <version>2.0.0</version>
+         <version>2.0.2</version>
          <scope>test</scope>
       </dependency>
    </dependencies>

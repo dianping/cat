@@ -29,7 +29,7 @@ public class SimpleRoundRobinServlet extends HttpServlet {
 			response.getOutputStream().write(bByte);
 			// Cat.logMetric(...);
 		} else {
-			String b = "This is group dfault";
+			String b = "This is default group";
 			byte[] bByte = b.getBytes();
 			response.getOutputStream().write(bByte);
 			// Cat.logMetric(...);
