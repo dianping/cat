@@ -54,8 +54,8 @@ import com.dianping.bee.server.mysql.ColumnsIndexer;
 import com.dianping.bee.server.mysql.InformationSchemaDatabaseProvider;
 import com.dianping.bee.server.mysql.SchemataIndexer;
 import com.dianping.bee.server.mysql.TablesIndexer;
-import com.site.lookup.configuration.AbstractResourceConfigurator;
-import com.site.lookup.configuration.Component;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {

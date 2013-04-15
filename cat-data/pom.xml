@@ -19,10 +19,11 @@
 			<groupId>com.dianping.cat</groupId>
 			<artifactId>cat-consumer</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.site.common</groupId>
-			<artifactId>test-framework</artifactId>
-			<scope>test</scope>
-		</dependency>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>test-framework</artifactId>
+         <scope>test</scope>
+         <version>2.0.2</version>
+      </dependency>
 	</dependencies>
 </project>
