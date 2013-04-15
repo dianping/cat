@@ -34,28 +34,29 @@ public class MetricDisplay extends BaseVisitor {
 		m_start = start;
 
 		for (MetricFlag flag : m_config.getFlags()) {
+			String title = flag.getTitle();
 			if (flag.isShowSum()) {
-				String title = flag.getKey() + ":sum";
-				m_metrics.put(title, new GraphItem(m_start, title, flag.getKey()));
+				String key = flag.getKey() + ":sum";
+				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
 			}
 			if (flag.isShowCount()) {
-				String title = flag.getKey() + COUNT;
-				m_metrics.put(title, new GraphItem(m_start, title, flag.getKey()));
+				String key = flag.getKey() + COUNT;
+				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
 			}
 			if (flag.isShowAvg()) {
-				String title = flag.getKey() + ":avg";
-				m_metrics.put(title, new GraphItem(m_start, title, flag.getKey()));
+				String key = flag.getKey() + ":avg";
+				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
 			}
 		}
 	}
 
-	public MetricDisplay buildConvertRate(String key1, String key2) {
+	public MetricDisplay buildConvertRate(String key1, String key2,String title) {
 		GraphItem item1 = m_metrics.get(key1 + COUNT);
 		GraphItem item2 = m_metrics.get(key2 + COUNT);
 
 		if (item1 != null && item2 != null) {
 			String key = key1 + ":" + key2;
-			GraphItem item = new GraphItem(m_start, key1 + " to " + key2 + " Conversion Rate", key);
+			GraphItem item = new GraphItem(m_start, title, key);
 			double[] value1 = item1.getValues();
 			double[] value2 = item2.getValues();
 			int size = item.getSize();
@@ -193,7 +194,6 @@ public class MetricDisplay extends BaseVisitor {
 		public void setValues(double[] values) {
 			this.values = values;
 		}
-
 	}
 
 }

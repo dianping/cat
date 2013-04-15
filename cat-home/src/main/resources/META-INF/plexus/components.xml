@@ -2873,6 +2873,19 @@
 			<implementation>com.dianping.cat.report.page.metric.JspViewer</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.pushError.Handler</role>
+			<implementation>com.dianping.cat.report.page.pushError.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.pushError.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.pushError.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.pushError.JspViewer</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
 			<implementation>com.dianping.cat.system.SystemModule</implementation>
 		</component>

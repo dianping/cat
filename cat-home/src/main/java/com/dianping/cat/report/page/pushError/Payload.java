@@ -102,4 +102,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
          m_action = Action.VIEW;
       }
    }
+	
+	
 }
