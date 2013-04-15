@@ -29,11 +29,8 @@ public class DumpUploaderSample extends ComponentTestCase {
 	public void testUpload() throws Exception {
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		long now = System.currentTimeMillis();
-		DefaultMessageQueue queue = new DefaultMessageQueue();
 		int num = 10000;
-
-		queue.setSize(num);
-		queue.initialize();
+		DefaultMessageQueue queue = new DefaultMessageQueue(num);
 
 		for (int i = 0; i < num; i++) {
 			queue.offer(newMessageTree(i, now + i * 10L));

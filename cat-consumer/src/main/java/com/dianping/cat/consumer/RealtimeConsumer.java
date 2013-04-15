@@ -30,6 +30,7 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -78,6 +79,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private CountDownLatch m_latch;
 
 	private long m_networkError;
+
+	private static int QUEUE_SIZE = 500000;
 
 	@Override
 	public void consume(MessageTree tree) {
@@ -211,7 +214,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			for (String name : m_analyzerNames) {
 				MessageAnalyzer analyzer = m_factory.create(name, startTime, m_duration, m_extraTime);
-				MessageQueue queue = lookup(MessageQueue.class);
+				MessageQueue queue = new DefaultMessageQueue(QUEUE_SIZE);
 				PeriodTask task = new PeriodTask(m_factory, analyzer, queue, startTime);
 
 				analyzers.put(name, analyzer);
@@ -358,8 +361,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			startPeriod(startTime);
 			m_latch.countDown();
 
-			try {
-				while (m_active) {
+			while (m_active) {
+				try {
 					long now = System.currentTimeMillis();
 					long value = m_strategy.next(now);
 
@@ -372,11 +375,15 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 						// last period is over
 						endPeriod(-value);
 					}
-
-					Thread.sleep(1000L);
+				} catch (Throwable e) {
+					Cat.logError(e);
 				}
-			} catch (InterruptedException e) {
-				// ignore it
+
+				try {
+					Thread.sleep(1000L);
+				} catch (InterruptedException e) {
+					break;
+				}
 			}
 		}
 

@@ -21,7 +21,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.EscapingBufferWriter;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-
+      
 @RunWith(JUnit4.class)
 @Ignore
 public class LocalMessageBucketTest extends ComponentTestCase {
