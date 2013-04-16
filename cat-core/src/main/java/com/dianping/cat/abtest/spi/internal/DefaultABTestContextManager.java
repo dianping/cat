@@ -76,9 +76,11 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 				if (ctx == null) {
 					ctx = createContext(entity, entry.getHttpServletRequest());
 
-					ctxList.add(ctx);
 					ctxMap.put(id, ctx);
 				}
+
+				ctx.getGroupName();// Make sure GroupName is calculated (if GroupName is null, this will trigger GroupName to be calculated)
+				ctxList.add(ctx);
 			}
 
 			m_threadLocal.get().setContextList(ctxList);
