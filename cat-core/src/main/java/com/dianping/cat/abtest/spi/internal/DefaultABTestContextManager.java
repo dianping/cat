@@ -1,6 +1,8 @@
 package com.dianping.cat.abtest.spi.internal;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,19 +38,54 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 		if (ctx == null) {
 			ABTestEntity entity = m_entityManager.getEntity(testId);
 
-			ctx = new DefaultABTestContext(entity);
-
-			if (!entity.isDisabled()) {
-				ABTestGroupStrategy groupStrategy = lookup(ABTestGroupStrategy.class, entity.getGroupStrategy());
-
-				ctx.setup(entry.getHttpServletRequest());
-				ctx.setGroupStrategy(groupStrategy);
-			}
+			ctx = createContext(entity, entry.getHttpServletRequest());
 
 			map.put(id, ctx);
 		}
 
 		return ctx;
+	}
+
+	private DefaultABTestContext createContext(ABTestEntity entity, HttpServletRequest req) {
+		DefaultABTestContext ctx = new DefaultABTestContext(entity);
+
+		if (!entity.isDisabled()) {
+			ABTestGroupStrategy groupStrategy = entity.getGroupStrategy();
+
+			ctx.setup(req);
+			ctx.setGroupStrategy(groupStrategy);
+		}
+
+		return ctx;
+	}
+
+	public List<ABTestContext> getContexts() {
+		List<ABTestContext> ctxList = m_threadLocal.get().getContextList();
+
+		if (ctxList == null) {
+			ctxList = new ArrayList<ABTestContext>(4);
+
+			List<ABTestEntity> entities = m_entityManager.getEntityList();
+			Map<Integer, DefaultABTestContext> ctxMap = m_threadLocal.get().getContextMap();
+
+			for (ABTestEntity entity : entities) {
+				Entry entry = m_threadLocal.get();
+				int id = entity.getId();
+				DefaultABTestContext ctx = ctxMap.get(id);
+
+				if (ctx == null) {
+					ctx = createContext(entity, entry.getHttpServletRequest());
+
+					ctxList.add(ctx);
+					ctxMap.put(id, ctx);
+				}
+			}
+
+			m_threadLocal.get().setContextList(ctxList);
+
+		}
+
+		return ctxList;
 	}
 
 	@Override
@@ -71,10 +108,20 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	static class Entry {
 		private Map<Integer, DefaultABTestContext> m_map = new HashMap<Integer, DefaultABTestContext>(4);
 
+		private List<ABTestContext> m_list;
+
 		private HttpServletRequest m_req;
 
 		public Map<Integer, DefaultABTestContext> getContextMap() {
 			return m_map;
+		}
+
+		public void setContextList(List<ABTestContext> ctxList) {
+			m_list = ctxList;
+		}
+
+		public List<ABTestContext> getContextList() {
+			return m_list;
 		}
 
 		public HttpServletRequest getHttpServletRequest() {
@@ -85,4 +132,5 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			m_req = req;
 		}
 	}
+
 }

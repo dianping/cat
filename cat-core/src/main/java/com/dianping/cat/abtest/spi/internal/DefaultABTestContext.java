@@ -30,7 +30,7 @@ public class DefaultABTestContext implements ABTestContext {
 	public String getGroupName() {
 		if (m_entity.isEligible(new Date())) {
 			if (!m_applied) {
-				Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategy());
+				Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
 
 				try {
 					m_groupStrategy.apply(this);
