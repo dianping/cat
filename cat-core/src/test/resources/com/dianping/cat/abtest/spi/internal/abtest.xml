@@ -7,4 +7,9 @@
 		<domain>Cat</domain>
 		<domain>TuanGouWeb</domain>
 	</entity>
+    <entity id="1002" name="Mock2" start-date="2013-04-11 17:00:00" end-date="2013-04-03 18:00:00" disabled="false">
+        <group-strategy name="roundrobin">
+            <configuration><![CDATA[This is the configuration]]></configuration>
+        </group-strategy>
+    </entity>
 </abtest>
