@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.pushError;
+package com.dianping.cat.report.page.jsError;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -6,7 +6,7 @@ import java.net.URLConnection;
 
 import org.junit.Test;
 
-public class PushErrorTest {
+public class JsTest {
 
 	@Test
 	public void test() throws Exception {
@@ -25,7 +25,7 @@ public class PushErrorTest {
 
 	private String buildUrl() {
 		StringBuilder sb = new StringBuilder(128);
-		sb.append("http://127.0.0.1:2281/cat/r/pushError?");
+		sb.append("http://127.0.0.1:2281/cat/r/jsError?");
 		sb.append("error=testError1");
 		sb.append("&host=t.dianping.com");
 		sb.append("&file=testFile");

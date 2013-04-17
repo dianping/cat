@@ -47,7 +47,7 @@ public enum ReportPage implements Page {
 
    METRIC("metric", "metric", "Metric", "Metric", true),
 
-   PUSHERROR("pushError", "pushError", "PushError", "PushError", true);
+   JSERROR("jsError", "jsError", "JsError", "jsError", true);
 
    private String m_name;
 

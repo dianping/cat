@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.pushError;
+package com.dianping.cat.report.page.jsError;
 
 import com.dianping.cat.report.ReportPage;
 import org.unidal.web.mvc.view.BaseJspViewer;

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.pushError;
+package com.dianping.cat.report.page.jsError;
 
 import com.dianping.cat.report.ReportPage;
 import org.unidal.web.mvc.ActionContext;
@@ -45,7 +45,7 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
    @Override
    public void setPage(String page) {
-      m_page = ReportPage.getByName(page, ReportPage.PUSHERROR);
+      m_page = ReportPage.getByName(page, ReportPage.JSERROR);
    }
    
    public long getTimestamp() {

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.pushError;
+package com.dianping.cat.report.page.jsError;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -23,13 +23,13 @@ public class Handler implements PageHandler<Context> {
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "pushError")
+	@InboundActionMeta(name = "jsError")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "pushError")
+	@OutboundActionMeta(name = "jsError")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
@@ -52,7 +52,7 @@ public class Handler implements PageHandler<Context> {
 
 		model.setStatus("SUCCESS");
 		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.PUSHERROR);
+		model.setPage(ReportPage.JSERROR);
 		m_jspViewer.view(ctx, model);
 	}
 }
