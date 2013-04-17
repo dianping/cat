@@ -1,6 +1,7 @@
 package com.dianping.cat.abtest.spi.internal;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +68,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 			List<ABTestEntity> entities = m_entityManager.getEntityList();
 			Map<Integer, DefaultABTestContext> ctxMap = m_threadLocal.get().getContextMap();
+			Date now = new Date();
 
 			for (ABTestEntity entity : entities) {
 				Entry entry = m_threadLocal.get();
@@ -79,7 +81,7 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 					ctxMap.put(id, ctx);
 				}
 
-				ctx.getGroupName();// Make sure GroupName is calculated (if GroupName is null, this will trigger GroupName to be calculated)
+				ctx.initialize(now);
 				ctxList.add(ctx);
 			}
 

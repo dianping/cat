@@ -20,7 +20,7 @@ public class DefaultABTestContext implements ABTestContext {
 
 	private ABTestGroupStrategy m_groupStrategy;
 
-	private boolean m_applied;
+	private boolean m_initialized;
 
 	public DefaultABTestContext(ABTestEntity entity) {
 		m_entity = entity;
@@ -28,8 +28,16 @@ public class DefaultABTestContext implements ABTestContext {
 
 	@Override
 	public String getGroupName() {
-		if (m_entity.isEligible(new Date())) {
-			if (!m_applied) {
+		if (!m_initialized) {
+			initialize(new Date());
+		}
+
+		return m_groupName;
+	}
+
+	public void initialize(Date timestamp) {
+		if (!m_initialized) {
+			if (m_entity.isEligible(timestamp)) {
 				Transaction t = Cat.newTransaction("GroupStrategy", m_entity.getGroupStrategyName());
 
 				try {
@@ -41,12 +49,11 @@ public class DefaultABTestContext implements ABTestContext {
 					Cat.logError(e);
 				} finally {
 					t.complete();
-					m_applied = true;
 				}
 			}
-		}
 
-		return m_groupName;
+			m_initialized = true;
+		}
 	}
 
 	@Override
