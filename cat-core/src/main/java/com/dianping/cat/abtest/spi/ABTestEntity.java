@@ -3,6 +3,7 @@ package com.dianping.cat.abtest.spi;
 import java.util.Date;
 
 import com.dianping.cat.abtest.model.entity.Entity;
+import com.dianping.cat.abtest.model.entity.GroupStrategy;
 
 public class ABTestEntity {
 	private Entity m_entity;
@@ -65,15 +66,17 @@ public class ABTestEntity {
 	}
 
 	public void setGroupStrategyName(String groupStrategy) {
-		if (m_entity.getGroupStrategy() != null) {
-			m_entity.getGroupStrategy().setName(groupStrategy);
+		if (m_entity.getGroupStrategy() == null) {
+			m_entity.setGroupStrategy(new GroupStrategy());
 		}
+		m_entity.getGroupStrategy().setName(groupStrategy);
 	}
 
 	public void setGroupStrategyConfiguration(String groupStrategyConfiguration) {
-		if (m_entity.getGroupStrategy() != null) {
-			m_entity.getGroupStrategy().setConfiguration(groupStrategyConfiguration);
+		if (m_entity.getGroupStrategy() == null) {
+			m_entity.setGroupStrategy(new GroupStrategy());
 		}
+		m_entity.getGroupStrategy().setConfiguration(groupStrategyConfiguration);
 	}
 
 	public void setId(int id) {
@@ -89,7 +92,7 @@ public class ABTestEntity {
 	}
 
 	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
-		this.m_groupStrategy = groupStrategy;
+		m_groupStrategy = groupStrategy;
 	}
 
 	@Override
