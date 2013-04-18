@@ -11,6 +11,10 @@
    <packaging>war</packaging>
    <dependencies>
       <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>cat-consumer</artifactId>
+      </dependency>
+      <dependency>
          <groupId>com.dianping.dpsf</groupId>
          <artifactId>dpsf-net</artifactId>
          <version>1.7.3</version>
@@ -46,14 +50,6 @@
          <version>2.5.6</version>
       </dependency>
       <dependency>
-         <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-consumer</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-job</artifactId>
-      </dependency>
-      <dependency>
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
          <version>1.6</version>
@@ -61,6 +57,7 @@
       <dependency>
          <groupId>org.unidal.webres</groupId>
          <artifactId>WebResServer</artifactId>
+         <version>1.2.0</version>
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
