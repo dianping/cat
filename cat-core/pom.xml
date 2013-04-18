@@ -1,75 +1,73 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<groupId>com.dianping.cat</groupId>
-		<artifactId>parent</artifactId>
-		<version>0.5.2.10</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
-	<artifactId>cat-core</artifactId>
-	<name>CAT Core</name>
-	<dependencies>
-		<dependency>
-			<groupId>org.unidal.framework</groupId>
-			<artifactId>foundation-service</artifactId>
-			<version>2.0.2</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.netty</groupId>
-			<artifactId>netty</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>javax.servlet</groupId>
-			<artifactId>servlet-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<optional>true</optional>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.unidal.framework</groupId>
-			<artifactId>test-framework</artifactId>
-			<version>2.0.2</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.unidal.maven.plugins</groupId>
-				<artifactId>codegen-maven-plugin</artifactId>
-				<version>2.0.5</version>
-				<executions>
-					<execution>
-						<id>generate data model</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>dal-model</goal>
-						</goals>
-						<configuration>
-							<manifest>
-							${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>com.dianping.cat</groupId>
+      <artifactId>parent</artifactId>
+      <version>0.5.2.10</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>cat-core</artifactId>
+   <name>CAT Core</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
+         <version>2.0.2</version>
+      </dependency>
+      <dependency>
+         <groupId>org.jboss.netty</groupId>
+         <artifactId>netty</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+         <optional>true</optional>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>test-framework</artifactId>
+         <version>2.0.2</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>codegen-maven-plugin</artifactId>
+            <version>2.0.5</version>
+            <executions>
+               <execution>
+                  <id>generate dal model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
-							</manifest>
-						</configuration>
-					</execution>
-					<execution>
-						<id>generate plexus component descriptor</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>plexus</goal>
-						</goals>
-						<configuration>
-							<className>com.dianping.cat.build.ComponentsConfigurator</className>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,</manifest>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
 </project>
+

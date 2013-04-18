@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat">
+   <model package="com.dianping.cat.configuration.server" name="server">
+      <sample-model>src/test/resources/com/dianping/cat/message/configuration/server.xml</sample-model>
+   </model>
+</wizard>

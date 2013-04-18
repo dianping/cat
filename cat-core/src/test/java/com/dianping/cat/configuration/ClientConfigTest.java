@@ -1,4 +1,4 @@
-package com.dianping.cat.message.configuration;
+package com.dianping.cat.configuration;
 
 import java.io.IOException;
 import java.io.InputStream;
