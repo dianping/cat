@@ -23,7 +23,7 @@ import com.dianping.bee.engine.spi.Index;
 import com.dianping.bee.engine.spi.IndexMeta;
 import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.site.lookup.ContainerLoader;
+import org.unidal.lookup.ContainerLoader;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>

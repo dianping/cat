@@ -6,7 +6,7 @@ import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.IndexMeta;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class TableHelper {
 	@Inject
