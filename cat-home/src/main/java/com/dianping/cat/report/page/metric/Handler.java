@@ -34,11 +34,15 @@ public class Handler implements PageHandler<Context> {
 
 	private MetricReport getReport(Payload payload) {
 		String group = payload.getGroup();
+		String channel = payload.getChannel();
 		group = "TuanGou";
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(group, payload.getPeriod()) //
 		      .setProperty("date", date);
 
+		if (channel != null) {
+			request.setProperty("channel", channel);
+		}
 		if (m_service.isEligable(request)) {
 			ModelResponse<MetricReport> response = m_service.invoke(request);
 			MetricReport report = response.getModel();
@@ -62,13 +66,11 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
 		MetricReport report = getReport(payload);
+		System.out.println(report);
 		if (report != null) {
 			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(), report.getStartTime());
 
 			display.visitMetricReport(report);
-
-			display.buildConvertRate("/index", "/detail",MetricTitle.INDEX_DETAIL);
-			display.buildConvertRate("/detail", "/order/submitOrder",MetricTitle.DETAIL_PAY);
 			model.setDisplay(display);
 			model.setReport(report);
 		}

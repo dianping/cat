@@ -63,7 +63,7 @@ public class DefaultProblemHandler extends Handler {
 			String status = "";
 
 			if (m_failureTypes.contains(type)) {
-				type = transaction.getType().toLowerCase();
+				type = transaction.getType();
 				//make it march for alarm
 				if (type.equals("PigeonCall")) {
 					type = "call";

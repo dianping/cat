@@ -181,11 +181,7 @@ public class DumpUploader implements Initializable, LogEnabled {
 					} catch (AlreadyBeingCreatedException e) {
 						Cat.logError(e);
 						t.setStatus(e);
-						m_logger.error(String.format("Already being created (%s), delete the file!", path), e);
-
-						if (!file.delete()) {
-							m_logger.warn("Can't delete file: " + file);
-						}
+						m_logger.error(String.format("Already being created (%s)!", path), e);
 					} catch (AccessControlException e) {
 						cat.logError(e);
 						t.setStatus(e);

@@ -20,14 +20,11 @@ public class Payload implements ActionPayload<ReportPage, Action> {
    @FieldMeta("file")
    private String m_file;
 
-   @FieldMeta("url")
-   private String m_url;
-   
-   @FieldMeta("host")
-   private String m_host;
-   
    @FieldMeta("line")
    private String m_line;
+
+   @FieldMeta("data")
+   private String m_data;
    
    public void setAction(String action) {
       m_action = Action.getByName(action, Action.VIEW);
@@ -72,22 +69,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_file = file;
 	}
 
-	public String getUrl() {
-		return m_url;
-	}
-
-	public void setUrl(String url) {
-		m_url = url;
-	}
-
-	public String getHost() {
-		return m_host;
-	}
-
-	public void setHost(String host) {
-		m_host = host;
-	}
-
 	public String getLine() {
 		return m_line;
 	}
@@ -102,6 +83,13 @@ public class Payload implements ActionPayload<ReportPage, Action> {
          m_action = Action.VIEW;
       }
    }
-	
+
+	public String getData() {
+		return m_data;
+	}
+
+	public void setData(String data) {
+		m_data = data;
+	}
 	
 }

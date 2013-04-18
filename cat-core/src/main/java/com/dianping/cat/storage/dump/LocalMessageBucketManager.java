@@ -241,7 +241,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		if (paths.size() > 0) {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			Transaction t = Cat.newTransaction("System", "Dump" + "-" + ip);
+			Transaction t = Cat.newTransaction("System", "Move" + "-" + ip);
 			t.setStatus(Message.SUCCESS);
 
 			for (String path : paths) {
@@ -254,7 +254,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket.close();
 						bucket.archive();
 
-						Cat.getProducer().logEvent("Dump", "Outbox.Normal", Message.SUCCESS, loginfo);
+						Cat.getProducer().logEvent("Move", "Outbox.Normal", Message.SUCCESS, loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);
@@ -268,7 +268,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						moveFile(path);
 						moveFile(path + ".idx");
 
-						Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, loginfo);
+						Cat.getProducer().logEvent("Move", "Outbox.Abnormal", Message.SUCCESS, loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);

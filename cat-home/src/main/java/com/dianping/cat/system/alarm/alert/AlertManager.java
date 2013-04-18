@@ -5,6 +5,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Threads;
@@ -17,7 +19,7 @@ import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class AlertManager implements Initializable {
+public class AlertManager implements Initializable, LogEnabled {
 
 	private final BlockingQueue<AlertInfo> m_alarmInfos = new LinkedBlockingQueue<AlertInfo>(1000);
 
@@ -29,6 +31,8 @@ public class AlertManager implements Initializable {
 
 	@Inject
 	private MailSMS m_mailSms;
+
+	private Logger m_logger;
 
 	public void addAlarmInfo(AlertInfo info) {
 		m_alarmInfos.offer(info);
@@ -79,10 +83,7 @@ public class AlertManager implements Initializable {
 			while (active) {
 				try {
 					AlertInfo entity = m_alarmInfos.poll(5, TimeUnit.MILLISECONDS);
-
 					if (entity != null) {
-						String alarmType = entity.getRuleType();
-
 						int alertType = entity.getAlertType();
 						String title = entity.getTitle();
 						String content = entity.getContent();
@@ -92,15 +93,25 @@ public class AlertManager implements Initializable {
 							List<String> mails = entity.getMails();
 
 							sendResult = m_mailSms.sendEmail(title, content, mails);
+							if (!sendResult) {
+								m_logger.error(String.format("Error when send email %s to %s", title, mails));
+							}
+
 						} else if (alertType == AlertInfo.SMS_TYPE) {
 							List<String> phones = entity.getPhones();
 
-							sendResult = m_mailSms.sendSMS(title + " " + content, phones);
+							sendResult = m_mailSms.sendSMS(title, phones);
+							if (!sendResult) {
+								m_logger.error(String.format("Error when send sms %s to %s", title, phones));
+							}
+						} else {
+							Cat.logError(new RuntimeException("unexcepted alert type! type : " + alertType));
 						}
+						String ruleType = entity.getRuleType();
 
-						if (alarmType.equals(AlertInfo.EXCEPTION)) {
+						if (ruleType.equals(AlertInfo.EXCEPTION)) {
 							insert(entity, 2, sendResult);
-						} else if (alarmType.equals(AlertInfo.SERVICE)) {
+						} else if (ruleType.equals(AlertInfo.SERVICE)) {
 							insert(entity, 3, sendResult);
 						}
 					} else {
@@ -119,6 +130,11 @@ public class AlertManager implements Initializable {
 		@Override
 		public void shutdown() {
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }
