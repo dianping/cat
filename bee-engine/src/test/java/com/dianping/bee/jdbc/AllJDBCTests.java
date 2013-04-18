@@ -26,7 +26,7 @@ import org.junit.runners.Suite.SuiteClasses;
 import com.dianping.bee.engine.TestEnvConfigurator;
 import com.dianping.bee.mysql.InformationSchemaTest;
 import com.dianping.bee.server.SimpleServer;
-import com.site.lookup.ContainerLoader;
+import org.unidal.lookup.ContainerLoader;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
