@@ -3,24 +3,28 @@ package com.dianping.cat.abtest.spi;
 import java.util.Date;
 
 import com.dianping.cat.abtest.model.entity.Entity;
+import com.dianping.cat.abtest.model.entity.GroupStrategy;
 
 public class ABTestEntity {
 	private Entity m_entity;
 
+	private ABTestGroupStrategy m_groupStrategy;
+
 	public ABTestEntity() {
 		m_entity = new Entity();
+		m_entity.setDisabled(true);
 	}
 
 	public ABTestEntity(Entity entity) {
 		m_entity = entity;
 	}
 
-	public String getGroupStrategy() {
-		return m_entity.getGroupStrategy().getName();
+	public String getGroupStrategyName() {
+		return m_entity.getGroupStrategy() != null ? m_entity.getGroupStrategy().getName() : null;
 	}
 
 	public String getGroupStrategyConfiguration() {
-		return m_entity.getGroupStrategy().getConfiguration();
+		return m_entity.getGroupStrategy() != null ? m_entity.getGroupStrategy().getConfiguration() : null;
 	}
 
 	public int getId() {
@@ -32,7 +36,7 @@ public class ABTestEntity {
 	}
 
 	public boolean isEligible(Date date) {
-		if (m_entity.getDisabled()) {
+		if (m_entity.getDisabled() != null && m_entity.getDisabled()) {
 			return false;
 		}
 
@@ -61,11 +65,17 @@ public class ABTestEntity {
 		m_entity.setDisabled(disabled);
 	}
 
-	public void setGroupStrategy(String groupStrategy) {
+	public void setGroupStrategyName(String groupStrategy) {
+		if (m_entity.getGroupStrategy() == null) {
+			m_entity.setGroupStrategy(new GroupStrategy());
+		}
 		m_entity.getGroupStrategy().setName(groupStrategy);
 	}
 
 	public void setGroupStrategyConfiguration(String groupStrategyConfiguration) {
+		if (m_entity.getGroupStrategy() == null) {
+			m_entity.setGroupStrategy(new GroupStrategy());
+		}
 		m_entity.getGroupStrategy().setConfiguration(groupStrategyConfiguration);
 	}
 
@@ -77,10 +87,18 @@ public class ABTestEntity {
 		m_entity.setName(name);
 	}
 
+	public ABTestGroupStrategy getGroupStrategy() {
+		return m_groupStrategy;
+	}
+
+	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
+		m_groupStrategy = groupStrategy;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("%s[id=%s, name=%s, groupStrategy=%s, configuation=%s]", getClass().getSimpleName(),
-		      getId(), getName(), getGroupStrategy(), getGroupStrategyConfiguration());
+		      getId(), getName(), getGroupStrategyName(), getGroupStrategyConfiguration());
 	}
 
 	@Override
