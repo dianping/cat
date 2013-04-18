@@ -36,10 +36,9 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 	private MessageCodec m_codec;
 
 	@Inject
-	private MessageQueue m_queue;
-
-	@Inject
 	private MessageStatistics m_statistics;
+
+	private MessageQueue m_queue = new DefaultMessageQueue(10000);
 
 	private List<InetSocketAddress> m_serverAddresses;
 

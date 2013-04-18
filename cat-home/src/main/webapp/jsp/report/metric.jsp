@@ -69,16 +69,16 @@
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span10">
-	        	<c:forEach var="item" items="${model.display.groups}" varStatus="status">
-	        			<div style="float:left;" id="${item.title}" class="graph"></div>
-				</c:forEach>
-				<h3 class='text-center'>页面实时转化率</h3>
-				
-	        	<c:forEach var="item" items="${model.display.conversionRates}" varStatus="status">
-	        			<div style="float:left;" id="${item.title}" class="graph"></div>
-				</c:forEach>
+        	<c:forEach var="item" items="${model.display.groups}" varStatus="status">
+       			<div style="float:left;" id="${item.title}" class="graph"></div>
+			</c:forEach>
         </div>
-        </div></div>
+        <div class="span10 offset1">
+       		<h3 class='text-center'>页面实时转化率</h3>
+        	<c:forEach var="item" items="${model.display.conversionRates}" varStatus="status">
+        			<div style="float:left;" id="${item.title}" class="graph"></div>
+			</c:forEach>
+		</div>
 	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>

@@ -18,11 +18,9 @@ public class DumpAnalyzerTest extends ComponentTestCase {
 	public void test() throws Exception {
 		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
 		long now = 1334041324150L;
-		DefaultMessageQueue queue = new DefaultMessageQueue();
 		int num = 1000000;
+		DefaultMessageQueue queue = new DefaultMessageQueue(num);
 
-		queue.setSize(num);
-		queue.initialize();
 
 		for (int i = 0; i < num; i++) {
 			queue.offer(newMessageTree(i, now + i * 10L));

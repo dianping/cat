@@ -33,10 +33,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private MessageCodec m_codec;
 
 	@Inject
-	private MessageQueue m_queue;
-
-	@Inject
 	private MessageStatistics m_statistics;
+
+	private MessageQueue m_queue = new DefaultMessageQueue(10000);;
 
 	private InetSocketAddress m_serverAddress;
 
@@ -70,7 +69,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		if (m_serverAddress == null) {
 			throw new RuntimeException("No server address was configured for TcpSocketSender!");
 		}
-
 		ExecutorService bossExecutor = Threads.forPool().getFixedThreadPool(
 		      "Cat-TcpSocketSender-Boss-" + m_serverAddress, 10);
 		ExecutorService workerExecutor = Threads.forPool().getFixedThreadPool("Cat-TcpSocketSender-Worker", 10);

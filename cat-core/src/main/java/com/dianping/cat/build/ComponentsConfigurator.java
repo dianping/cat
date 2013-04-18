@@ -3,6 +3,10 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.initialization.Module;
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
+
 import com.dianping.cat.CatCoreModule;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ServerConfigManager;
@@ -10,7 +14,6 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.internal.DefaultMessageProducer;
 import com.dianping.cat.message.internal.MessageIdFactory;
-import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.io.DefaultTransportManager;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TcpSocketHierarchySender;
@@ -23,7 +26,6 @@ import com.dianping.cat.message.spi.MessageConsumerRegistry;
 import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
-import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageStorage;
 import com.dianping.cat.message.spi.codec.HtmlMessageCodec;
@@ -42,9 +44,6 @@ import com.dianping.cat.storage.dump.LocalMessageBucket;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucket;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import org.unidal.initialization.Module;
-import org.unidal.lookup.configuration.AbstractResourceConfigurator;
-import org.unidal.lookup.configuration.Component;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -73,20 +72,14 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
 		      .req(MessageConsumer.class, new String[] { DummyConsumer.ID }, "m_consumers"));
 
-		all.add(C(MessageQueue.class, DefaultMessageQueue.class) //
-		      .config(E("size").value("10000")) //
-		      .is(PER_LOOKUP));
-
 		all.add(C(MessageSender.class, "tcp-socket", TcpSocketSender.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageStatistics.class, "default", "m_statistics") //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec")//
-		      .req(MessageQueue.class, "default", "m_queue"));
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec"));
 		all.add(C(MessageSender.class, "tcp-socket-hierarchy", TcpSocketHierarchySender.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageStatistics.class, "default", "m_statistics") //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec")//
-		      .req(MessageQueue.class, "default", "m_queue"));
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec"));
 		all.add(C(TcpSocketReceiver.class) //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID)//
 		      .req(ServerConfigManager.class, MessageHandler.class)//
