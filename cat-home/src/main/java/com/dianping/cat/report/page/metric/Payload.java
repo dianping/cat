@@ -15,6 +15,9 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("op")
 	private String m_group;
 
+	@FieldMeta("channel")
+	private String m_channel;
+
 	public Payload() {
 		super(ReportPage.METRIC);
 	}
@@ -44,6 +47,14 @@ public class Payload extends AbstractReportPayload<Action> {
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.METRIC);
+	}
+
+	public String getChannel() {
+		return m_channel;
+	}
+
+	public void setChannel(String channel) {
+		m_channel = channel;
 	}
 
 	@Override

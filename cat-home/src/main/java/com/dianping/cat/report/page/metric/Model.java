@@ -14,6 +14,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private String m_domain;
 	
+	private String m_group;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -52,4 +54,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setReport(MetricReport report) {
 		m_report = report;
 	}
+
+	public String getGroup() {
+		return m_group;
+	}
+
+	public void setGroup(String group) {
+		m_group = group;
+	}
+	
 }

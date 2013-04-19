@@ -15,6 +15,8 @@
 		<attribute name="id" value-type="String" key="true" />
 		<entity-ref name="point" type="map" names="points"
 			method-find-or-create="true" />
+		<entity-ref name="metric" type="map" names="metrics"
+			method-find-or-create="true" />
 	</entity>
 	<entity name="point">
 		<attribute name="id" value-type="int" key="true" />
