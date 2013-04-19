@@ -2,10 +2,13 @@ package com.dianping.cat.report.page.metric;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.consumer.metric.model.entity.Metric;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
@@ -19,9 +22,9 @@ public class MetricDisplay extends BaseVisitor {
 
 	private Map<String, GraphItem> m_metrics = new LinkedHashMap<String, GraphItem>();
 
-	private Map<String, GraphItem> m_conversionRates = new LinkedHashMap<String, GraphItem>();
-
 	private String m_key;
+
+	private String m_channel;
 
 	private Date m_start;
 
@@ -29,9 +32,10 @@ public class MetricDisplay extends BaseVisitor {
 
 	private static final String COUNT = ":count";
 
-	public MetricDisplay(MetricConfig metricConfig, Date start) {
+	public MetricDisplay(MetricConfig metricConfig, String channel, Date start) {
 		m_config = metricConfig;
 		m_start = start;
+		m_channel = channel;
 
 		for (MetricFlag flag : m_config.getFlags()) {
 			String title = flag.getTitle();
@@ -50,33 +54,6 @@ public class MetricDisplay extends BaseVisitor {
 		}
 	}
 
-	public MetricDisplay buildConvertRate(String key1, String key2,String title) {
-		GraphItem item1 = m_metrics.get(key1 + COUNT);
-		GraphItem item2 = m_metrics.get(key2 + COUNT);
-
-		if (item1 != null && item2 != null) {
-			String key = key1 + ":" + key2;
-			GraphItem item = new GraphItem(m_start, title, key);
-			double[] value1 = item1.getValues();
-			double[] value2 = item2.getValues();
-			int size = item.getSize();
-			double[] value = new double[size];
-
-			for (int i = 0; i < size; i++) {
-				if (value1[i] > 0) {
-					value[i] = value2[i] / value1[i];
-				}
-			}
-			item.setValues(value);
-			m_conversionRates.put(key, item);
-		}
-		return this;
-	}
-
-	public List<GraphItem> getConversionRates() {
-		return new ArrayList<GraphItem>(m_conversionRates.values());
-	}
-
 	public List<GraphItem> getGroups() {
 		return new ArrayList<GraphItem>(m_metrics.values());
 	}
@@ -84,33 +61,45 @@ public class MetricDisplay extends BaseVisitor {
 	@Override
 	public void visitMetric(Metric metric) {
 		m_key = metric.getId();
-		super.visitMetric(metric);
+
+		if (StringUtils.isEmpty(m_channel)) {
+			buildGraphItem(metric.getPoints().values());
+		} else {
+			Map<String, Metric> metrics = metric.getMetrics();
+			Metric m = metrics.get("channel=" + m_channel);
+			
+			if (m != null) {
+				buildGraphItem(m.getPoints().values());
+			}
+		}
+	}
+
+	private void buildGraphItem(Collection<Point> points) {
+		for (Point point : points) {
+
+			int min = point.getId();
+			long count = point.getCount();
+			double sum = point.getSum();
+			double avg = point.getAvg();
+
+			GraphItem graphItem = m_metrics.get(m_key + ":sum");
+			if (graphItem != null) {
+				graphItem.setValue(min, sum);
+			}
+			graphItem = m_metrics.get(m_key + ":count");
+			if (graphItem != null) {
+				graphItem.setValue(min, count);
+			}
+			graphItem = m_metrics.get(m_key + ":avg");
+			if (graphItem != null) {
+				graphItem.setValue(min, avg);
+			}
+		}
 	}
 
 	@Override
 	public void visitMetricReport(MetricReport metricReport) {
 		super.visitMetricReport(metricReport);
-	}
-
-	@Override
-	public void visitPoint(Point point) {
-		int min = point.getId();
-		long count = point.getCount();
-		double sum = point.getSum();
-		double avg = point.getAvg();
-
-		GraphItem graphItem = m_metrics.get(m_key + ":sum");
-		if (graphItem != null) {
-			graphItem.setValue(min, sum);
-		}
-		graphItem = m_metrics.get(m_key + ":count");
-		if (graphItem != null) {
-			graphItem.setValue(min, count);
-		}
-		graphItem = m_metrics.get(m_key + ":avg");
-		if (graphItem != null) {
-			graphItem.setValue(min, avg);
-		}
 	}
 
 	public static class GraphItem {

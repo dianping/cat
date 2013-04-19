@@ -42,7 +42,8 @@ public abstract class Handler {
 			messages.add(tree.getMessageId());
 		}
 
-		JavaThread thread = entry.findOrCreateThread(tree.getThreadId());
+		//make problem thread id = thread group name, make report small
+		JavaThread thread = entry.findOrCreateThread(tree.getThreadGroupName());
 
 		if (thread.getGroupName() == null) {
 			thread.setGroupName(tree.getThreadGroupName());

@@ -24,10 +24,11 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "metric")
 	private ModelService<MetricReport> m_service;
 
+	private static final String TUAN = "TuanGou";
+
 	private MetricReport getReport(Payload payload) {
 		String group = payload.getGroup();
 		String channel = payload.getChannel();
-		group = "TuanGou";
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(group, payload.getPeriod()) //
 		      .setProperty("date", date);
@@ -57,10 +58,12 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
+
 		MetricReport report = getReport(payload);
-		System.out.println(report);
+		String channel = payload.getChannel();
+
 		if (report != null) {
-			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(), report.getStartTime());
+			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(channel),channel, report.getStartTime());
 
 			display.visitMetricReport(report);
 			model.setDisplay(display);
@@ -69,16 +72,15 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private MetricConfig buildTuanGouMetricConfig() {
+	private MetricConfig buildTuanGouMetricConfig(String channel) {
 		MetricConfig config = new MetricConfig();
 
-		MetricFlag indexUrl = new MetricFlag("/index", 1, true, false, false, MetricTitle.INDEX);
-		MetricFlag detailUrl = new MetricFlag("/detail", 2, true, false, false, MetricTitle.DETAIL);
-		MetricFlag payUrl = new MetricFlag("/order/submitOrder", 3, true, false, false, MetricTitle.PAY);
-		MetricFlag orderKey = new MetricFlag("order", 4, false, true, false, MetricTitle.ORDER);
-		MetricFlag totalKey = new MetricFlag("payment.success", 5, false, true, false, MetricTitle.SUCCESS);
+		MetricFlag indexUrl = new MetricFlag("/index", channel, 1, true, false, false, MetricTitle.INDEX);
+		MetricFlag detailUrl = new MetricFlag("/detail", channel, 2, true, false, false, MetricTitle.DETAIL);
+		MetricFlag payUrl = new MetricFlag("/order/submitOrder", channel, 3, true, false, false, MetricTitle.PAY);
+		MetricFlag orderKey = new MetricFlag("order", channel, 4, false, true, false, MetricTitle.ORDER);
+		MetricFlag totalKey = new MetricFlag("payment.success", channel, 5, false, true, false, MetricTitle.SUCCESS);
 		// MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
-		// config.put(sumKey);
 
 		config.put(indexUrl);
 		config.put(detailUrl);
@@ -89,6 +91,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
+		payload.setGroup(TUAN);
 		model.setIpAddress(payload.getIpAddress());
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.METRIC);
@@ -96,6 +99,7 @@ public class Handler implements PageHandler<Context> {
 		model.setDisplayDomain(payload.getDomain());
 		model.setDomain(payload.getDomain());
 		model.setGroup(payload.getGroup());
+		model.setChannel(payload.getChannel());
 	}
 
 	public class MetricTitle {
@@ -110,9 +114,6 @@ public class Handler implements PageHandler<Context> {
 
 		public static final String SUCCESS = "支付金额";
 
-		public static final String INDEX_DETAIL = "首页到详情页转化率";
-
-		public static final String DETAIL_PAY = "详情页到支付页转化率";
 	}
 
 }
