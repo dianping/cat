@@ -37,7 +37,7 @@ import com.alibaba.cobar.server.ServerConnection;
 import com.alibaba.cobar.server.parser.ServerParseSet;
 import com.alibaba.cobar.server.response.CharacterSet;
 import com.dianping.bee.engine.spi.SessionManager;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 /**
  * @author <a href="mailto:yiming.liu@dianping.com">Yiming Liu</a>
