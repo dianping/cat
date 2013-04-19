@@ -18,8 +18,8 @@ import com.dianping.bee.engine.spi.IndexMeta;
 import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.server.mysql.InformationSchemaDatabaseProvider;
-import com.site.lookup.LookupException;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.LookupException;
+import org.unidal.lookup.annotation.Inject;
 
 public class ShowHandler extends AbstractHandler {
 

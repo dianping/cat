@@ -10,7 +10,7 @@ import com.alibaba.cobar.parser.recognizer.SQLParserDelegate;
 import com.dianping.bee.engine.spi.PreparedStatement;
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
-import com.site.lookup.ContainerHolder;
+import org.unidal.lookup.ContainerHolder;
 
 public class DefaultStatementManager extends ContainerHolder implements StatementManager {
 	private Map<String, Statement> m_statements = new LRUCache<String, Statement>(1000);
