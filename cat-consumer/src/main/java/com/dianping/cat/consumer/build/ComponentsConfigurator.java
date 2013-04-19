@@ -100,12 +100,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 
 		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ServerConfigManager.class) //
-		      .req(DumpUploader.class)//
-		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID).req(ServerStateManager.class));
+		      .req(ServerConfigManager.class, DumpUploader.class, ServerStateManager.class) //
+		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
 
 		all.add(C(TopAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
+		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(DumpUploader.class) //
 		      .req(ServerConfigManager.class, FileSystemManager.class));
@@ -113,8 +112,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
 		// database
-		all.add(C(JdbcDataSourceConfigurationManager.class).config(
-		      E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		all.add(C(JdbcDataSourceConfigurationManager.class) //
+				.config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 

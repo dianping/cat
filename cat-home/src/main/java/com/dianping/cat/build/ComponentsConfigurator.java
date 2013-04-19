@@ -87,8 +87,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
 		      .req(ValueTranslater.class));
-		
-				all.add(C(DefaultTaskConsumer.class) //
+
+		all.add(C(DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
 
 		all.add(C(TransactionGraphCreator.class));
@@ -106,39 +106,40 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StateMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
-		      .req(GraphDao.class,DailygraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class)//
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class)//
 		      .req(TransactionMerger.class, WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(EventReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class,ReportDao.class, DailyreportDao.class, EventGraphCreator.class, EventMerger.class)//
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, EventGraphCreator.class,
+		            EventMerger.class)//
 		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(ProblemReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class,ReportDao.class, DailyreportDao.class, ProblemGraphCreator.class) //
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, ProblemGraphCreator.class) //
 		      .req(WeeklyreportDao.class, MonthreportDao.class, ProblemMerger.class));
 
 		all.add(C(HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class,ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class).req(
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class).req(
 		            HeartbeatMerger.class, WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(MatrixReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class,ReportDao.class, DailyreportDao.class, MatrixMerger.class)//
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class)//
 		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(DatabaseReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class,ReportDao.class, DailyreportDao.class, DatabaseMerger.class)//
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, DatabaseMerger.class)//
 		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(SqlReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class,ReportDao.class, DailyreportDao.class, SqlMerger.class)//
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, SqlMerger.class)//
 		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(CrossReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class,ReportDao.class, DailyreportDao.class, CrossMerger.class)//
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, CrossMerger.class)//
 		      .req(WeeklyreportDao.class, MonthreportDao.class));
-		
+
 		all.add(C(StateReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class,ReportDao.class, DailyreportDao.class, StateMerger.class)//
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, StateMerger.class)//
 		      .req(WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(TaskProducer.class, TaskProducer.class) //
@@ -152,7 +153,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,//
 		            DatabaseReportBuilder.class, SqlReportBuilder.class, HealthReportBuilder.class,//
-		            StateReportBuilder.class,TaskDao.class));
+		            StateReportBuilder.class, TaskDao.class));
 
 		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
@@ -160,7 +161,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(HistoryGraphs.class, HistoryGraphs.class).//
 		      req(ReportService.class));
-		
+
 		all.add(C(StateGraphs.class, StateGraphs.class).//
 		      req(ReportService.class));
 
@@ -189,15 +190,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(DailyReportService.class, HourlyReportService.class, ServerConfigManager.class));
 
 		all.add(C(ReportService.class, ReportServiceImpl.class)//
-		      .req(HourlyReportService.class, DailyReportService.class, WeeklyReportService.class,
-		            MonthReportService.class)//
+		      .req(HourlyReportService.class, DailyReportService.class, WeeklyReportService.class, MonthReportService.class)//
 		      .req(WeeklyReportCache.class, MonthReportCache.class));
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		// database
-		all.add(C(JdbcDataSourceConfigurationManager.class).config(
-		      E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		all.add(C(JdbcDataSourceConfigurationManager.class).config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
 
