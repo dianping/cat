@@ -103,6 +103,7 @@ public class Handler implements PageHandler<Context> {
 		model.setLongDate(payload.getDate());
 		model.setDisplayDomain(payload.getDomain());
 		model.setDomain(payload.getDomain());
+		model.setGroup(payload.getGroup());
 	}
 
 	public class MetricTitle {

@@ -1524,6 +1524,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.home.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.home.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.RealtimeConsumer</role>
@@ -1622,6 +1627,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.problem.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.problem.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
@@ -1667,6 +1677,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.transaction.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.XmlViewer</role>
@@ -1713,6 +1728,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.event.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.event.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.heartbeat.Handler</role>
@@ -1755,6 +1775,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.heartbeat.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.logview.Handler</role>
@@ -1776,6 +1801,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.logview.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.logview.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.ip.Handler</role>
@@ -1797,6 +1827,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.ip.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.ip.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.Handler</role>
@@ -1875,6 +1910,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.model.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.event.LocalEventService</role>
@@ -2116,6 +2156,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.sql.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.sql.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.heatmap.Handler</role>
@@ -2141,6 +2186,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.heatmap.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.heatmap.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dashboard.Handler</role>
@@ -2169,6 +2219,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.dashboard.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.task.Handler</role>
@@ -2188,6 +2243,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.task.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.task.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.task.spi.ReportFacade</role>
@@ -2663,6 +2723,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.matrix.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.health.Handler</role>
@@ -2685,6 +2750,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.health.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.health.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.health.HistoryGraphs</role>
@@ -2721,6 +2791,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.cross.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.cross.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.cache.Handler</role>
@@ -2750,6 +2825,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.cache.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.cache.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.database.Handler</role>
@@ -2771,6 +2851,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.database.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.database.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.state.Handler</role>
@@ -2798,6 +2883,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.state.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.state.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.state.StateGraphs</role>
@@ -2823,6 +2913,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.query.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.query.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.top.Handler</role>
@@ -2847,6 +2942,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.top.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.top.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.metric.Handler</role>
@@ -2871,6 +2971,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.metric.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.metric.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.jsError.Handler</role>
@@ -2884,6 +2989,11 @@
 		<component>
 			<role>com.dianping.cat.report.page.jsError.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.jsError.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.SystemModule</role>
@@ -2913,6 +3023,11 @@
 		<component>
 			<role>com.dianping.cat.system.page.alarm.JspViewer</role>
 			<implementation>com.dianping.cat.system.page.alarm.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.alarm.RecordManager</role>
@@ -3049,6 +3164,11 @@
 		<component>
 			<role>com.dianping.cat.system.page.login.JspViewer</role>
 			<implementation>com.dianping.cat.system.page.login.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.login.service.SigninService</role>
@@ -3109,6 +3229,11 @@
 		<component>
 			<role>com.dianping.cat.system.page.project.JspViewer</role>
 			<implementation>com.dianping.cat.system.page.project.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
