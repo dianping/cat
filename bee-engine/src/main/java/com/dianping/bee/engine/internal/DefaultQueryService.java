@@ -8,7 +8,7 @@ import com.dianping.bee.engine.spi.PreparedStatement;
 import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.Statement;
 import com.dianping.bee.engine.spi.StatementManager;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultQueryService implements QueryService {
 	@Inject

@@ -31,8 +31,6 @@ public class NavigationBar {
 
 		ReportPage.IP,
 
-		ReportPage.HEATMAP,
-
 		ReportPage.SQL,
 
 		ReportPage.TASK,

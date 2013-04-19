@@ -16,8 +16,8 @@ import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.RowFilter;
 import com.dianping.bee.engine.spi.RowListener;
 import com.dianping.bee.engine.spi.Statement;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class SingleTableStatement extends ContainerHolder implements Statement, LogEnabled {
 	@Inject

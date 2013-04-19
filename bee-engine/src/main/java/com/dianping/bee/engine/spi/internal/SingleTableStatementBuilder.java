@@ -24,7 +24,7 @@ import com.dianping.bee.engine.evaluator.Evaluator;
 import com.dianping.bee.engine.helper.SqlParsers;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.TableProvider;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Inject;
 
 public class SingleTableStatementBuilder extends EmptySQLASTVisitor implements Contextualizable {
 	@Inject

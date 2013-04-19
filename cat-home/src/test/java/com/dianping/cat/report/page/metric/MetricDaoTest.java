@@ -12,19 +12,14 @@ import org.unidal.webres.helper.Files;
 import com.dainping.cat.consumer.dal.report.BusinessReport;
 import com.dainping.cat.consumer.dal.report.BusinessReportDao;
 import com.dainping.cat.consumer.dal.report.BusinessReportEntity;
-import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.metric.model.transform.DefaultNativeParser;
 import com.dianping.cat.consumer.metric.model.transform.DefaultSaxParser;
 
 public class MetricDaoTest extends ComponentTestCase {
-
 	@Inject
 	private BusinessReportDao m_businessReportDao;
-
-	@Inject
-	private ReportDao m_reportDao;
 
 	private MetricReport getReport() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("metric-report.xml"), "utf-8");

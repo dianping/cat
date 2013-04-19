@@ -94,8 +94,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageBucket.class, LocalMessageBucket.ID, LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID) //
-		      .req(ChannelBufferManager.class));
+		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
 		      .req(ServerConfigManager.class, MessagePathBuilder.class, ServerStateManager.class));
 		all.add(C(ChannelBufferManager.class));

@@ -20,20 +20,14 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.DailyreportDao;
 
 public class UrlTransactionBugTest extends ComponentTestCase {
-
-	@Inject
-	private DailyreportDao m_dailyreportDao;
-
 	@Inject
 	private ReportDao m_reportDao;
 
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-		m_dailyreportDao = lookup(DailyreportDao.class);
 		m_reportDao = lookup(ReportDao.class);
 	}
 
@@ -42,8 +36,8 @@ public class UrlTransactionBugTest extends ComponentTestCase {
 		String dateStr = "2012-12-16 07:00:00";
 		Date date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(dateStr);
 
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(date,
-		      new Date(date.getTime() + TimeUtil.ONE_HOUR), "ShopWeb", "transaction", ReportEntity.READSET_FULL);
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(date, new Date(date.getTime() + TimeUtil.ONE_HOUR), "ShopWeb",
+		      "transaction", ReportEntity.READSET_FULL);
 		File file = new File("text.txt");
 		for (Report report : reports) {
 			try {
