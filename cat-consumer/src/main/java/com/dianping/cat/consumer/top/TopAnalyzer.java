@@ -12,7 +12,6 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -38,9 +37,6 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	@Inject
 	private ReportDao m_reportDao;
-
-	@Inject
-	private TaskDao m_taskDao;
 
 	private TransactionAnalyzer m_transactionAnalyzer;
 

@@ -9,7 +9,6 @@ import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.job.CatJobModule;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
@@ -71,7 +70,7 @@ public class CatHomeModule extends AbstractModule {
 
 	@Override
 	public Module[] getDependencies(ModuleContext ctx) {
-		return ctx.getModules(CatConsumerModule.ID, CatJobModule.ID);
+		return ctx.getModules(CatConsumerModule.ID, CatConsumerModule.ID);
 	}
 
 	@Override
