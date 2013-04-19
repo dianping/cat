@@ -11,7 +11,7 @@ public class TestSendMessage {
 
 	@Test
 	public void sendException() throws Exception {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			Cat.getProducer().logError(new OutOfMemoryError());
 			Cat.getProducer().logError(new NullPointerException());
 		}

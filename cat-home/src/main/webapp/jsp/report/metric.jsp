@@ -35,10 +35,10 @@
 		</c:forEach>
 		
 
-		<c:forEach var="item" items="${model.display.conversionRates}" varStatus="status">
+		/* <c:forEach var="item" items="${model.display.conversionRates}" varStatus="status">
 			var data = ${item.jsonString};
 			graph(document.getElementById('${item.title}'), data);
-		</c:forEach>
+		</c:forEach> */
 		
 	});
 	
@@ -61,10 +61,9 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li class="nav-header">业务监控</li>
-              <li class="active"><a href="#">团购</a></li>
-              <li><a href="#">ToDo</a></li>
-              <li><a href="#">ToDo</a></li>
+              <li class="nav-header active"><a href="#">团购</a></li>
+              <li><a href="?date=${model.date}&group=${model.group}&channel=1">团800</a></li>
+              <li><a href="#">搜索引擎</a></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
@@ -73,12 +72,12 @@
        			<div style="float:left;" id="${item.title}" class="graph"></div>
 			</c:forEach>
         </div>
-        <div class="span10 offset1">
+        <%-- <div class="span10 offset1">
        		<h3 class='text-center'>页面实时转化率</h3>
         	<c:forEach var="item" items="${model.display.conversionRates}" varStatus="status">
         			<div style="float:left;" id="${item.title}" class="graph"></div>
 			</c:forEach>
-		</div>
+		</div> --%>
 	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>

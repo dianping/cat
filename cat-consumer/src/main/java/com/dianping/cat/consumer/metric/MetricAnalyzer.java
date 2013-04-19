@@ -41,6 +41,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 	private static final String TUANGOU = "TuanGou";
 
+	private static final String CHANNEL = "channel";
+
 	private static Map<String, Set<String>> s_urls = new HashMap<String, Set<String>>();
 
 	private static Map<String, Map<String, String>> s_metric = new HashMap<String, Map<String, String>>();
@@ -167,7 +169,26 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			point.setCount(point.getCount() + 1);
 			point.setSum(point.getSum() + transaction.getDurationInMillis());
 			point.setAvg(point.getSum() / point.getCount());
+
+			Object data = transaction.getData();
+			if (data != null) {
+				double value = parseValue(CHANNEL, (String) data);
+				if (value > 0) {
+					updateChannel(min, metric, value);
+				}
+			}
 		}
+	}
+
+	private void updateChannel(int min, com.dianping.cat.consumer.metric.model.entity.Metric metric, double value) {
+		com.dianping.cat.consumer.metric.model.entity.Metric detail = metric.findOrCreateMetric(CHANNEL + "="
+		      +(int)(value));
+
+		Point channelPoint = detail.findOrCreatePoint(min);
+
+		channelPoint.setCount(channelPoint.getCount() + 1);
+		channelPoint.setSum(channelPoint.getSum() + value);
+		channelPoint.setAvg(channelPoint.getSum() / channelPoint.getCount());
 	}
 
 	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
@@ -188,6 +209,11 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			point.setCount(point.getCount() + 1);
 			point.setSum(point.getSum() + value);
 			point.setAvg(point.getSum() / point.getCount());
+
+			double channel = parseValue("channel", data);
+			if (channel > 0) {
+				updateChannel(min, temp, channel);
+			}
 		}
 		return 0;
 	}
