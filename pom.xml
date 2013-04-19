@@ -12,10 +12,7 @@
 		<module>cat-core</module>
 		<module>cat-hadoop</module>
 		<module>cat-consumer</module>
-		<module>cat-job</module>
 		<module>cat-home</module>
-		<module>bee-engine</module>
-		<module>cat-data</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>
@@ -35,54 +32,9 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.dianping.cat</groupId>
-				<artifactId>cat-job</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.dianping.cat</groupId>
-				<artifactId>cat-notify</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.dianping.cat</groupId>
-				<artifactId>dog-gateway</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.site.common</groupId>
-				<artifactId>lookup</artifactId>
-				<version>1.1.4</version>
-			</dependency>
-			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
 				<version>4.8.1</version>
-			</dependency>
-			<dependency>
-				<groupId>com.site.common</groupId>
-				<artifactId>test-framework</artifactId>
-				<version>1.0.3</version>
-			</dependency>
-			<dependency>
-				<groupId>com.site.common</groupId>
-				<artifactId>web-framework</artifactId>
-				<version>1.0.17</version>
-			</dependency>
-			<dependency>
-				<groupId>org.unidal.webres</groupId>
-				<artifactId>WebResServer</artifactId>
-				<version>1.2.0</version>
-			</dependency>
-			<dependency>
-				<groupId>com.site.dal</groupId>
-				<artifactId>dal-jdbc</artifactId>
-				<version>1.1.8</version>
-			</dependency>
-			<dependency>
-				<groupId>com.site.app</groupId>
-				<artifactId>app-core</artifactId>
-				<version>1.0.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mortbay.jetty</groupId>
@@ -93,6 +45,12 @@
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-util</artifactId>
 				<version>6.1.14</version>
+			</dependency>
+			<dependency>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jsp-api-2.1</artifactId>
+				<version>6.1.14</version>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.mortbay.jetty</groupId>
@@ -149,11 +107,7 @@
 						<includes>
 							<include>**/AllTests.java</include>
 						</includes>
-						<!--
-							<debugForkedProcess>-Xdebug
-							-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000
-							-Xnoagent -Djava.compiler=NONE</debugForkedProcess>
-						-->
+						<!-- <debugForkedProcess>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE</debugForkedProcess> -->
 					</configuration>
 					<dependencies>
 						<dependency>
@@ -168,7 +122,7 @@
 					<version>2.8</version>
 					<configuration>
 						<downloadSources>true</downloadSources>
-						<ajdtVersion>none</ajdtVersion>  
+						<ajdtVersion>none</ajdtVersion>
 						<additionalConfig>
 							<file>
 								<name>.settings/org.eclipse.jdt.core.prefs</name>
@@ -209,12 +163,6 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 			</plugin>
 		</plugins>
 	</build>
-	<distributionManagement>
-      <repository>
-         <id>dianping.repo</id>
-         <url>http://192.168.8.45:8080/artifactory/dianping.repo.snapshots</url>
-      </repository>
-	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 	</properties>

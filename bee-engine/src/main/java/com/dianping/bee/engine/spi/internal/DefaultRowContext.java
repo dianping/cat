@@ -7,7 +7,7 @@ import java.util.Map;
 import com.dianping.bee.engine.spi.ColumnMeta;
 import com.dianping.bee.engine.spi.RowContext;
 import com.dianping.bee.engine.spi.RowListener;
-import com.site.lookup.ContainerHolder;
+import org.unidal.lookup.ContainerHolder;
 
 public class DefaultRowContext extends ContainerHolder implements RowContext {
 	private ColumnMeta[] m_columns;

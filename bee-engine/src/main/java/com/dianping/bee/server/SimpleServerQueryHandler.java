@@ -19,8 +19,8 @@ import com.dianping.bee.engine.spi.handler.SelectHandler;
 import com.dianping.bee.engine.spi.handler.SetHandler;
 import com.dianping.bee.engine.spi.handler.ShowHandler;
 import com.dianping.bee.engine.spi.handler.UseHandler;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class SimpleServerQueryHandler extends ContainerHolder implements FrontendQueryHandler {
 

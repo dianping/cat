@@ -11,6 +11,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -23,7 +24,6 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.site.helper.Threads;
 
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
 	@Inject

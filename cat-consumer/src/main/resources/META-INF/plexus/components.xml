@@ -241,11 +241,11 @@
 					<role>com.dianping.cat.consumer.dump.DumpUploader</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
-					<role-hint>local</role-hint>
+					<role>com.dianping.cat.status.ServerStateManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.status.ServerStateManager</role>
+					<role>com.dianping.cat.storage.dump.MessageBucketManager</role>
+					<role-hint>local</role-hint>
 				</requirement>
 			</requirements>
 		</component>
@@ -259,9 +259,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
