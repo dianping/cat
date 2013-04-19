@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" webres="true" plugin-management="true">
+   <webapp package="com.dianping.cat" webres="true" plugin-management="false">
       <module name="report" path="r">
          <page name="home" title="Home" default="true">
             <description>Home Page</description>
