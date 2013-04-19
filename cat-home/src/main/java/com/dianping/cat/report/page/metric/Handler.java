@@ -10,27 +10,19 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.metric.MetricConfig.MetricFlag;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
-import com.dianping.cat.report.service.ReportService;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
 
-	@Inject
-	private ReportService m_reportService;
-
 	@Inject(type = ModelService.class, value = "metric")
 	private ModelService<MetricReport> m_service;
-
-	@Inject
-	private ServerConfigManager m_manager;
 
 	private MetricReport getReport(Payload payload) {
 		String group = payload.getGroup();

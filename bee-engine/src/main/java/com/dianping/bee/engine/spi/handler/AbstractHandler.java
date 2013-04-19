@@ -23,8 +23,8 @@ import com.dianping.bee.engine.Cell;
 import com.dianping.bee.engine.Row;
 import com.dianping.bee.engine.helper.TypeUtils;
 import com.dianping.bee.engine.spi.ColumnMeta;
-import com.site.helper.Splitters;
-import com.site.lookup.ContainerHolder;
+import org.unidal.helper.Splitters;
+import org.unidal.lookup.ContainerHolder;
 
 public abstract class AbstractHandler extends ContainerHolder implements Handler {
 

@@ -190,9 +190,6 @@
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.dump.ChannelBufferManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>

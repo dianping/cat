@@ -6,7 +6,7 @@ import org.junit.runners.JUnit4;
 
 import com.alibaba.cobar.CobarServer;
 import com.dianping.bee.server.SimpleServer;
-import com.site.lookup.ComponentTestCase;
+import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class BeeTestServer extends ComponentTestCase {

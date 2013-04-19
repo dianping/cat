@@ -28,9 +28,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 	private MessageCodec m_codec;
 
 	@Inject
-	private ChannelBufferManager m_bufferManager;
-
-	@Inject
 	private File m_baseDir = new File(".");
 
 	private MessageBlockReader m_reader;

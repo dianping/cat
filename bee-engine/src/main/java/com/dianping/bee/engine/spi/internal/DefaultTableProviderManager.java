@@ -11,8 +11,8 @@ import com.dianping.bee.engine.spi.DatabaseProvider;
 import com.dianping.bee.engine.spi.SessionManager;
 import com.dianping.bee.engine.spi.TableProvider;
 import com.dianping.bee.engine.spi.TableProviderManager;
-import com.site.lookup.ContainerHolder;
-import com.site.lookup.annotation.Inject;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 public class DefaultTableProviderManager extends ContainerHolder implements TableProviderManager, Initializable {
 	@Inject
