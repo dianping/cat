@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dainping.cat.consumer.dal.report.Sqltable;
 import com.dainping.cat.consumer.dal.report.SqltableDao;
 import com.dainping.cat.consumer.dal.report.SqltableEntity;
-import com.dianping.bee.engine.helper.SqlParsers;
 import com.dianping.cat.Cat;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
 
 public class SqlParseManager {
 	@Inject
