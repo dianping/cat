@@ -27,12 +27,9 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 
-		model.setAction(Action.VIEW);
+		model.setAction(ctx.getPayload().getAction());
 		model.setPage(SystemPage.ABTEST);
-		
-		
-		
-		
+
 		m_jspViewer.view(ctx, model);
 	}
 }
