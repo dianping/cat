@@ -1,6 +1,6 @@
 package com.dianping.cat.report.page.model.transaction;
 
-import com.dianping.cat.consumer.transaction.StatisticsComputer;
+import com.dianping.cat.consumer.core.TransactionStatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -26,7 +26,7 @@ public class TransactionReportMerger extends DefaultMerger {
 	public TransactionReportMerger(TransactionReport transactionReport) {
 		super(transactionReport);
 
-		transactionReport.accept(new StatisticsComputer());
+		transactionReport.accept(new TransactionStatisticsComputer());
 	}
 
 	@Override

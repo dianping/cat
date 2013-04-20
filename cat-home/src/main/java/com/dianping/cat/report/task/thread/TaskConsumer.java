@@ -1,6 +1,6 @@
 package com.dianping.cat.report.task.thread;
 
-import com.dainping.cat.consumer.dal.report.Task;
+import com.dainping.cat.consumer.core.dal.Task;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 

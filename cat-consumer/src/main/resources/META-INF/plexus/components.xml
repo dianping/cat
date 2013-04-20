@@ -18,18 +18,18 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+			<role>com.dianping.cat.consumer.core.problem.ProblemHandler</role>
 			<role-hint>default-problem</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.DefaultProblemHandler</implementation>
+			<implementation>com.dianping.cat.consumer.core.problem.DefaultProblemHandler</implementation>
 			<configuration>
 				<failureType>URL,SQL,Call,PigeonCall,Cache</failureType>
 				<errorType>Error,RuntimeException,Exception</errorType>
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+			<role>com.dianping.cat.consumer.core.problem.ProblemHandler</role>
 			<role-hint>long-execution</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.handler.LongExecutionHandler</implementation>
+			<implementation>com.dianping.cat.consumer.core.problem.LongExecutionProblemHandler</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -39,20 +39,20 @@
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>problem</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.ProblemAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.core.ProblemAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.problem.handler.Handler</role>
+					<role>com.dianping.cat.consumer.core.problem.ProblemHandler</role>
 					<role-hints>
 						<role-hint>default-problem</role-hint>
 						<role-hint>long-execution</role-hint>
@@ -64,54 +64,54 @@
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.core.TransactionAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>event</role-hint>
-			<implementation>com.dianping.cat.consumer.event.EventAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.core.EventAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>state</role-hint>
-			<implementation>com.dianping.cat.consumer.state.StateAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.core.StateAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.HostinfoDao</role>
+					<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
+					<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -124,24 +124,24 @@
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.core.HeartbeatAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
+					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>dump</role-hint>
-			<implementation>com.dianping.cat.consumer.dump.DumpAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.core.DumpAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
@@ -156,14 +156,14 @@
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>top</role-hint>
-			<implementation>com.dianping.cat.consumer.top.TopAnalyzer</implementation>
+			<implementation>com.dianping.cat.consumer.core.TopAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -251,8 +251,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dainping.cat.consumer.dal.report.ReportDao</role>
-			<implementation>com.dainping.cat.consumer.dal.report.ReportDao</implementation>
+			<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.ReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -260,8 +260,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dainping.cat.consumer.dal.report.HostinfoDao</role>
-			<implementation>com.dainping.cat.consumer.dal.report.HostinfoDao</implementation>
+			<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.HostinfoDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -269,8 +269,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dainping.cat.consumer.dal.report.TaskDao</role>
-			<implementation>com.dainping.cat.consumer.dal.report.TaskDao</implementation>
+			<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.TaskDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -278,8 +278,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dainping.cat.consumer.dal.report.ProjectDao</role>
-			<implementation>com.dainping.cat.consumer.dal.report.ProjectDao</implementation>
+			<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.ProjectDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

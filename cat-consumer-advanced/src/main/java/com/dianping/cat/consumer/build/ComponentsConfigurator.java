@@ -8,19 +8,16 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.SqltableDao;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dainping.cat.consumer.advanced.dal.SqltableDao;
+import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.MessageAnalyzer;
-import com.dianping.cat.consumer.cross.CrossAnalyzer;
-import com.dianping.cat.consumer.database.DatabaseAnalyzer;
-import com.dianping.cat.consumer.dump.DumpUploader;
-import com.dianping.cat.consumer.ip.TopIpAnalyzer;
-import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
-import com.dianping.cat.consumer.sql.SqlAnalyzer;
+import com.dianping.cat.consumer.advanced.CrossAnalyzer;
+import com.dianping.cat.consumer.advanced.DatabaseAnalyzer;
+import com.dianping.cat.consumer.advanced.MatrixAnalyzer;
+import com.dianping.cat.consumer.advanced.SqlAnalyzer;
+import com.dianping.cat.consumer.advanced.TopIpAnalyzer;
 import com.dianping.cat.consumer.sql.SqlParseManager;
-import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.storage.BucketManager;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
@@ -46,16 +43,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageAnalyzer.class, TopIpAnalyzer.ID, TopIpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
 
-		all.add(C(DumpUploader.class) //
-		      .req(ServerConfigManager.class, FileSystemManager.class));
-
 		all.add(C(Module.class, CatConsumerAdvancedModule.ID, CatConsumerAdvancedModule.class));
 
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
-		all.addAll(new CatDatabaseConfigurator().defineComponents());
+		all.addAll(new CatAdvancedDatabaseConfigurator().defineComponents());
 
 		return all;
 	}

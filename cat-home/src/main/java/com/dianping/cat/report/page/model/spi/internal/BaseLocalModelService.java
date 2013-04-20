@@ -6,8 +6,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.MessageAnalyzer;
+import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageConsumer;

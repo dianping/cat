@@ -3,7 +3,6 @@ package com.dianping.cat.consumer;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,9 +22,11 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.consumer.MessageAnalyzer;
+import com.dianping.cat.consumer.MessageAnalyzerManager;
+import com.dianping.cat.consumer.core.ProblemAnalyzer;
+import com.dianping.cat.consumer.core.TopAnalyzer;
+import com.dianping.cat.consumer.core.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -180,7 +181,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			for (String name : names) {
 				MessageAnalyzer analyzer = m_analyzerManager.getAnalyzer(name, startTime);
 				MessageQueue queue = lookup(MessageQueue.class);
-				PeriodTask task = new PeriodTask(analyzer, queue, startTime);
+				PeriodTask task = new PeriodTask(m_serverStateManager, analyzer, queue, startTime);
 
 				analyzers.put(name, analyzer);
 				task.enableLogging(m_logger);
@@ -287,7 +288,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		private CountDownLatch m_latch;
 
 		public PeriodManager() {
-			m_strategy = new PeriodStrategy(m_duration, m_extraTime, 3 * MINUTE);
+			m_strategy = new PeriodStrategy(m_duration, m_extraTime, m_extraTime);
 			m_active = true;
 			m_latch = new CountDownLatch(1);
 		}
@@ -363,129 +364,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		private void startPeriod(long startTime) {
-			long endTime = startTime + m_duration;
+			long endTime = startTime + m_strategy.getDuration();
 			Period period = new Period(startTime, endTime);
 
 			m_periods.add(period);
 			period.start();
-		}
-	}
-
-	public class PeriodStrategy {
-		private long m_duration;
-
-		private long m_extraTime;
-
-		private long m_aheadTime;
-
-		private long m_lastStartTime;
-
-		private long m_lastEndTime;
-
-		public PeriodStrategy(long duration, long extraTime, long aheadTime) {
-			m_duration = duration;
-			m_extraTime = extraTime;
-			m_aheadTime = aheadTime;
-			m_lastStartTime = -1;
-			m_lastEndTime = 0;
-		}
-
-		public long next(long now) {
-			long startTime = now - now % m_duration;
-
-			// for current period
-			if (startTime > m_lastStartTime) {
-				m_lastStartTime = startTime;
-				return startTime;
-			}
-
-			// prepare next period ahead
-			if (now - m_lastStartTime >= m_duration - m_aheadTime) {
-				m_lastStartTime = startTime + m_duration;
-				return startTime + m_duration;
-			}
-
-			// last period is over
-			if (now - m_lastEndTime >= m_duration + m_extraTime) {
-				long lastEndTime = m_lastEndTime;
-				m_lastEndTime = startTime;
-				return -lastEndTime;
-			}
-
-			return 0;
-		}
-	}
-
-	public class PeriodTask implements Task, LogEnabled {
-		private MessageAnalyzer m_analyzer;
-
-		private MessageQueue m_queue;
-
-		private long m_startTime;
-
-		private int m_queueOverflow;
-
-		private Logger m_logger;
-
-		public PeriodTask(MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
-			m_analyzer = analyzer;
-			m_queue = queue;
-			m_startTime = startTime;
-		}
-
-		@Override
-		public void enableLogging(Logger logger) {
-			m_logger = logger;
-		}
-
-		public boolean enqueue(MessageTree tree) {
-			boolean result = m_queue.offer(tree);
-
-			if (!result) { // trace queue overflow
-				m_queueOverflow++;
-				if (m_queueOverflow % CatConstants.ERROR_COUNT == 0) {
-					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
-					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
-				}
-			}
-			return result;
-		}
-
-		public void finish() {
-			try {
-				m_analyzer.doCheckpoint(true);
-			} finally {
-				m_analyzer.destroy();
-				m_queue.destroy();
-			}
-		}
-
-		public MessageAnalyzer getAnalyzer() {
-			return m_analyzer;
-		}
-
-		@Override
-		public String getName() {
-			Calendar cal = Calendar.getInstance();
-
-			cal.setTimeInMillis(m_startTime);
-			return m_analyzer.getClass().getSimpleName() + "-" + cal.get(Calendar.HOUR_OF_DAY);
-		}
-
-		@Override
-		public void run() {
-			try {
-				m_analyzer.analyze(m_queue);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
-		@Override
-		public void shutdown() {
-			if (m_analyzer instanceof AbstractMessageAnalyzer) {
-				((AbstractMessageAnalyzer<?>) m_analyzer).shutdown();
-			}
 		}
 	}
 }

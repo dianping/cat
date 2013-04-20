@@ -71,8 +71,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(MessageConsumer.class, new String[] { DummyConsumer.ID }, "m_consumers"));
 
 		all.add(C(MessageQueue.class, DefaultMessageQueue.class) //
-		      .config(E("size").value("10000")) //
-		      .is(PER_LOOKUP));
+				.is(PER_LOOKUP) //
+		      .config(E("size").value("10000")));
 
 		all.add(C(MessageSender.class, TcpSocketSender.ID, TcpSocketSender.class) //
 		      .is(PER_LOOKUP) //

@@ -11,11 +11,11 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import com.dainping.cat.consumer.core.dal.Report;
+import com.dainping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
+import com.dianping.cat.consumer.core.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;

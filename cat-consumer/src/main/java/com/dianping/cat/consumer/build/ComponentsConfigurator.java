@@ -8,26 +8,26 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dainping.cat.consumer.dal.report.HostinfoDao;
-import com.dainping.cat.consumer.dal.report.ProjectDao;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.TaskDao;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dainping.cat.consumer.core.dal.HostinfoDao;
+import com.dainping.cat.consumer.core.dal.ProjectDao;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.DefaultMessageAnalyzerManager;
 import com.dianping.cat.consumer.MessageAnalyzer;
 import com.dianping.cat.consumer.MessageAnalyzerManager;
+import com.dianping.cat.consumer.core.DumpAnalyzer;
+import com.dianping.cat.consumer.core.EventAnalyzer;
+import com.dianping.cat.consumer.core.HeartbeatAnalyzer;
+import com.dianping.cat.consumer.core.ProblemAnalyzer;
+import com.dianping.cat.consumer.core.StateAnalyzer;
+import com.dianping.cat.consumer.core.TopAnalyzer;
+import com.dianping.cat.consumer.core.TransactionAnalyzer;
+import com.dianping.cat.consumer.core.problem.DefaultProblemHandler;
+import com.dianping.cat.consumer.core.problem.LongExecutionProblemHandler;
+import com.dianping.cat.consumer.core.problem.ProblemHandler;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.dump.DumpAnalyzer;
-import com.dianping.cat.consumer.event.EventAnalyzer;
-import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.handler.DefaultProblemHandler;
-import com.dianping.cat.consumer.problem.handler.Handler;
-import com.dianping.cat.consumer.problem.handler.LongExecutionHandler;
-import com.dianping.cat.consumer.state.StateAnalyzer;
-import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.BucketManager;
@@ -44,16 +44,16 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageConsumer.class, RealtimeConsumer.ID, RealtimeConsumer.class) //
 		      .req(MessageAnalyzerManager.class, ServerStateManager.class));
 
-		all.add(C(Handler.class, DefaultProblemHandler.ID, DefaultProblemHandler.class)//
+		all.add(C(ProblemHandler.class, DefaultProblemHandler.ID, DefaultProblemHandler.class)//
 		      .config(E("failureType").value("URL,SQL,Call,PigeonCall,Cache"))//
 		      .config(E("errorType").value("Error,RuntimeException,Exception")));
 
-		all.add(C(Handler.class, LongExecutionHandler.ID, LongExecutionHandler.class) //
+		all.add(C(ProblemHandler.class, LongExecutionProblemHandler.ID, LongExecutionProblemHandler.class) //
 		      .req(ServerConfigManager.class));
 
 		all.add(C(MessageAnalyzer.class, ProblemAnalyzer.ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class) //
-		      .req(Handler.class, new String[] { DefaultProblemHandler.ID, LongExecutionHandler.ID }, "m_handlers"));
+		      .req(ProblemHandler.class, new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
 
 		all.add(C(MessageAnalyzer.class, TransactionAnalyzer.ID, TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
@@ -81,7 +81,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(JdbcDataSourceConfigurationManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
-		all.addAll(new CatDatabaseConfigurator().defineComponents());
+		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 
 		return all;
 	}

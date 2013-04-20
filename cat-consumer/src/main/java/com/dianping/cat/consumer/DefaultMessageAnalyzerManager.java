@@ -9,6 +9,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 
+
 public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable {
 	private static final long MINUTE = 60 * 1000L;
 
@@ -39,7 +40,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 			synchronized (map) {
 				if (analyzer == null) {
 					analyzer = lookup(MessageAnalyzer.class, name);
-					analyzer.setAnalyzerInfo(startTime, m_duration, m_extraTime);
+					analyzer.initialize(startTime, m_duration, m_extraTime);
 					map.put(name, analyzer);
 				}
 			}

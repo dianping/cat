@@ -9,9 +9,9 @@ import java.util.Set;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Sqltable;
-import com.dainping.cat.consumer.dal.report.SqltableDao;
-import com.dainping.cat.consumer.dal.report.SqltableEntity;
+import com.dainping.cat.consumer.advanced.dal.Sqltable;
+import com.dainping.cat.consumer.advanced.dal.SqltableDao;
+import com.dainping.cat.consumer.advanced.dal.SqltableEntity;
 import com.dianping.cat.Cat;
 
 public class SqlParseManager {

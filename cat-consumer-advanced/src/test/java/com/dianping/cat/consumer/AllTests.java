@@ -4,22 +4,22 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.consumer.cross.ParseCrossInfoTest;
-import com.dianping.cat.consumer.database.DatabaseAnalyzerTest;
-import com.dianping.cat.consumer.ip.IpReportTest;
-import com.dianping.cat.consumer.matrix.MatrixReportFilterTest;
-import com.dianping.cat.consumer.sql.SqlParsersTest;
+import com.dianping.cat.consumer.advanced.CrossInfoTest;
+import com.dianping.cat.consumer.advanced.DatabaseAnalyzerTest;
+import com.dianping.cat.consumer.advanced.IpReportTest;
+import com.dianping.cat.consumer.advanced.MatrixModelTest;
+import com.dianping.cat.consumer.advanced.SqlParsersTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
-ParseCrossInfoTest.class,
+CrossInfoTest.class,
 
 DatabaseAnalyzerTest.class,
 
 IpReportTest.class,
 
-MatrixReportFilterTest.class,
+MatrixModelTest.class,
 
 SqlParsersTest.class
 

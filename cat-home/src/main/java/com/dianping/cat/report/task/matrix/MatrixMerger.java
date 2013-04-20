@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.dainping.cat.consumer.dal.report.Report;
+import com.dainping.cat.consumer.core.dal.Report;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;

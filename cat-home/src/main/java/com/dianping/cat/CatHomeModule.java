@@ -8,9 +8,9 @@ import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
+import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;

@@ -94,6 +94,20 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 
 	public abstract R getReport(String domain);
 
+	@Override
+	public long getStartTime() {
+		return m_startTime;
+	}
+
+	@Override
+	public void initialize(long startTime, long duration, long extraTime) {
+		m_extraTime = extraTime;
+		m_startTime = startTime;
+		m_duration = duration;
+
+		loadReports();
+	}
+
 	protected boolean isActive() {
 		synchronized (this) {
 			return m_active;
@@ -118,15 +132,6 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	}
 
 	protected abstract void process(MessageTree tree);
-
-	@Override
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-
-		loadReports();
-	}
 
 	protected boolean shouldDiscard(Transaction t) {
 		// pigeon default heartbeat is no use

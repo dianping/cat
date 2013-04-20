@@ -10,10 +10,10 @@ import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dainping.cat.consumer.dal.report.HostinfoDao;
-import com.dainping.cat.consumer.dal.report.ProjectDao;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.TaskDao;
+import com.dainping.cat.consumer.core.dal.HostinfoDao;
+import com.dainping.cat.consumer.core.dal.ProjectDao;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
@@ -193,11 +193,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ReportService.class, ReportServiceImpl.class)//
 		      .req(HourlyReportService.class, DailyReportService.class, WeeklyReportService.class, MonthReportService.class)//
 		      .req(WeeklyReportCache.class, MonthReportCache.class));
+
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		// database
-		all.add(C(JdbcDataSourceConfigurationManager.class).config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		all.add(C(JdbcDataSourceConfigurationManager.class) //
+		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
 

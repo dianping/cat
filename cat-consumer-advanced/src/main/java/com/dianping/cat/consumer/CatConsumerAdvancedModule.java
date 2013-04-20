@@ -5,7 +5,7 @@ import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.dump.DumpUploader;
+import com.dianping.cat.hadoop.hdfs.DumpUploader;
 
 public class CatConsumerAdvancedModule extends AbstractModule {
 	public static final String ID = "cat-consumer-advanced";

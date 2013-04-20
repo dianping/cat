@@ -11,22 +11,17 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import com.dainping.cat.consumer.core.dal.Report;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.DailyreportDao;
 
 public class UrlTransactionBugTest extends ComponentTestCase {
-
-	@Inject
-	private DailyreportDao m_dailyreportDao;
-
 	@Inject
 	private ReportDao m_reportDao;
 
@@ -34,7 +29,6 @@ public class UrlTransactionBugTest extends ComponentTestCase {
 	@Override
 	public void setUp() throws Exception {
 		super.setUp();
-		m_dailyreportDao = lookup(DailyreportDao.class);
 		m_reportDao = lookup(ReportDao.class);
 	}
 

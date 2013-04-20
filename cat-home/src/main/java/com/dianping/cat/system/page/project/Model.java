@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.unidal.web.mvc.ViewModel;
 
-import com.dainping.cat.consumer.dal.report.Project;
+import com.dainping.cat.consumer.core.dal.Project;
 import com.dianping.cat.system.SystemPage;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {

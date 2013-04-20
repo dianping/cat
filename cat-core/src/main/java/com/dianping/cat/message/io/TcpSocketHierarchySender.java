@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -226,10 +227,10 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 			InetSocketAddress address = m_serverAddresses.get(index);
 			ChannelFuture future = m_bootstrap.connect(address);
 
-			future.awaitUninterruptibly();
+			future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
 
 			if (!future.isSuccess()) {
-				future.getChannel().getCloseFuture().awaitUninterruptibly();
+				future.getChannel().getCloseFuture().awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
 				int count = m_reconnects.incrementAndGet();
 
 				if (count % 1000 == 0) {
@@ -259,7 +260,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 		public void releaseAll() {
 			for (ChannelFuture future : m_futures) {
 				if (future != null) {
-					future.getChannel().getCloseFuture().awaitUninterruptibly();
+					future.getChannel().getCloseFuture().awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
 				}
 			}
 

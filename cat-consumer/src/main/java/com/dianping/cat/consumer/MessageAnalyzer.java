@@ -13,5 +13,7 @@ public interface MessageAnalyzer {
 
 	public Set<String> getDomains();
 
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime);
+	public long getStartTime();
+
+	public void initialize(long startTime, long duration, long extraTime);
 }

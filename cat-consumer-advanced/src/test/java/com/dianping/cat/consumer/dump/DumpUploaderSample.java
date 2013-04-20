@@ -8,9 +8,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.MessageAnalyzer;
 import com.dianping.cat.consumer.MessageAnalyzerManager;
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.hadoop.hdfs.DumpUploader;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
