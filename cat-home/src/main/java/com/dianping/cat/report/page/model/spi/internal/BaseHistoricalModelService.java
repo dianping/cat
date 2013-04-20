@@ -22,6 +22,7 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 
 	protected abstract T buildModel(ModelRequest request) throws Exception;
 
+	@Override
 	public String getName() {
 		return m_name;
 	}

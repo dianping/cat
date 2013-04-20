@@ -10,7 +10,6 @@
       <group name="report" package="com.dainping.cat.consumer.dal.report">
          <table name="report"/>
          <table name="hostinfo"/>
-         <table name="sqltable"/>
          <table name="task"/>
          <table name="project"/>
       </group>

@@ -3,7 +3,7 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>mock</role-hint>
-			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
+			<implementation>com.dianping.cat.consumer.BasicRealtimeConsumer</implementation>
 			<configuration>
 				<analyzers>mock</analyzers>
 			</configuration>

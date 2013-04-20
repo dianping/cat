@@ -198,6 +198,7 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 			ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 			bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+				@Override
 				public ChannelPipeline getPipeline() {
 					return Channels.pipeline(new MyHandler(m_logger));
 				}

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.consumer.OneAnalyzerTwoDurationTest.MockAnalyzer;
-import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
@@ -21,13 +20,13 @@ public class OneAnalyzerTwoDurationTestConfigurator extends AbstractResourceConf
 
 		all.add(C(MessageConsumer.class, "mock", RealtimeConsumer.class) //
 		      .config(E("analyzers").value("mock") //
-		      ).req(AnalyzerFactory.class)//
+		      ).req(MessageAnalyzerFactory.class)//
 		);
 
 		all.add(C(MessageAnalyzer.class, "mock", MockAnalyzer.class) //
 		      .is(PER_LOOKUP));
 
-		all.add(C(AnalyzerFactory.class, OneAnalyzerMockFactory.class));
+		all.add(C(MessageAnalyzerFactory.class, OneAnalyzerMockFactory.class));
 
 		return all;
 	}

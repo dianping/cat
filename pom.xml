@@ -10,8 +10,9 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>cat-core</module>
-		<module>cat-hadoop</module>
 		<module>cat-consumer</module>
+		<module>cat-hadoop</module>
+		<module>cat-consumer-advanced</module>
 		<module>cat-home</module>
 	</modules>
 	<dependencyManagement>
@@ -29,6 +30,11 @@
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-consumer</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>cat-consumer-advanced</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

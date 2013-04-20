@@ -134,6 +134,11 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		return m_domain;
 	}
 
+	public Date getHistoryDisplayEndDate() {
+		Date date = getHistoryEndDate();
+		return new Date(date.getTime() - 1000);
+	}
+
 	public Date getHistoryEndDate() {
 		if (m_customEnd != null) {
 			try {
@@ -155,11 +160,6 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		}
 		cal.setTimeInMillis(temp);
 		return cal.getTime();
-	}
-
-	public Date getHistoryDisplayEndDate() {
-		Date date = getHistoryEndDate();
-		return new Date(date.getTime() - 1000);
 	}
 
 	public Date getHistoryStartDate() {
@@ -195,6 +195,10 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	public int getStep() {
 		return m_step;
+	}
+
+	public boolean isToday() {
+		return m_today;
 	}
 
 	public void setCustomEnd(String customEnd) {
@@ -249,6 +253,10 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 		m_step = nav;
 	}
 
+	public void setToday(boolean today) {
+		m_today = today;
+	}
+
 	// yestoday is default
 	public void setYesterdayDefault() {
 		if ("day".equals(m_reportType)) {
@@ -261,14 +269,6 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 				m_date = m_date - 24 * TimeUtil.ONE_HOUR;
 			}
 		}
-	}
-
-	public boolean isToday() {
-		return m_today;
-	}
-
-	public void setToday(boolean today) {
-		m_today = today;
 	}
 
 }

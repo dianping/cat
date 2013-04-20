@@ -16,6 +16,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
@@ -25,43 +30,31 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
-import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
-import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
 
 /**
  * This is the real time consumer process framework.
  * <p>
- * 
- * @author yong.you
- * @since Jan 5, 2012
  */
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
+	public static final String ID = "realtime";
+
 	private static final long MINUTE = 60 * 1000L;
-
-	private static final long FIVE_MINUTES = 5 * MINUTE;
-
-	private static final long HOUR = 60 * MINUTE;
-
-	@Inject
-	private AnalyzerFactory m_factory;
-
-	@Inject
-	private long m_duration = 1 * HOUR;
-
-	@Inject
-	private long m_extraTime = FIVE_MINUTES;
-
+	
 	@Inject
 	private ServerStateManager m_serverStateManager;
+
+	@Inject
+	private MessageAnalyzerFactory m_factory;
+
+	@Inject
+	private long m_duration = 60 * MINUTE;
+
+	@Inject
+	private long m_extraTime = 3 * MINUTE;
 
 	@Inject
 	private List<String> m_analyzerNames;
@@ -114,8 +107,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			if (m_networkError % (CatConstants.ERROR_COUNT * 10) == 0) {
 				m_logger.error("Error network time:" + m_errorTimeDomains);
 				m_logger.error("The timestamp of message is out of range, IGNORED! "
-				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "
-				      + tree.getIpAddress());
+				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " " + tree.getIpAddress());
 			}
 		}
 	}
@@ -144,11 +136,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public String getConsumerId() {
-		return "realtime";
 	}
 
 	public MessageAnalyzer getCurrentAnalyzer(String name) {
@@ -205,7 +192,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			for (String name : m_analyzerNames) {
 				MessageAnalyzer analyzer = m_factory.create(name, startTime, m_duration, m_extraTime);
 				MessageQueue queue = lookup(MessageQueue.class);
-				PeriodTask task = new PeriodTask(m_factory, analyzer, queue, startTime);
+				PeriodTask task = new PeriodTask(analyzer, queue, startTime);
 
 				analyzers.put(name, analyzer);
 				task.enableLogging(m_logger);
@@ -213,9 +200,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			}
 
 			// hack for dependency
-			MessageAnalyzer top = analyzers.get("top");
-			MessageAnalyzer transaction = analyzers.get("transaction");
-			MessageAnalyzer problem = analyzers.get("problem");
+			MessageAnalyzer top = analyzers.get(TopAnalyzer.ID);
+			MessageAnalyzer transaction = analyzers.get(TransactionAnalyzer.ID);
+			MessageAnalyzer problem = analyzers.get(ProblemAnalyzer.ID);
 
 			((TopAnalyzer) top).setTransactionAnalyzer((TransactionAnalyzer) transaction);
 			((TopAnalyzer) top).setProblemAnalyzer((ProblemAnalyzer) problem);
@@ -290,8 +277,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void start() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
-			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(), df.format(new Date(m_startTime)),
+			      df.format(new Date(m_endTime - 1))));
 
 			for (PeriodTask task : m_tasks) {
 				Threads.forGroup("Cat-RealtimeConsumer").start(task);
@@ -433,8 +420,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	}
 
 	public class PeriodTask implements Task, LogEnabled {
-		private AnalyzerFactory m_factory;
-
 		private MessageAnalyzer m_analyzer;
 
 		private MessageQueue m_queue;
@@ -445,8 +430,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		private Logger m_logger;
 
-		public PeriodTask(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
-			m_factory = factory;
+		public PeriodTask(MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
 			m_analyzer = analyzer;
 			m_queue = queue;
 			m_startTime = startTime;
@@ -474,8 +458,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			try {
 				m_analyzer.doCheckpoint(true);
 			} finally {
-				m_factory.release(m_analyzer);
-				m_factory.release(m_queue);
+				m_analyzer.destroy();
+				m_queue.destroy();
 			}
 		}
 

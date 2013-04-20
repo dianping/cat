@@ -22,6 +22,7 @@ import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -29,7 +30,6 @@ import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.state.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerState.State;
 import com.dianping.cat.status.ServerStateManager;
@@ -37,8 +37,7 @@ import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implements LogEnabled {
-
-	private Map<String, StateReport> m_reports = new HashMap<String, StateReport>();
+	public static final String ID = "state";
 
 	@Inject
 	private ServerStateManager m_serverStateManager;
@@ -57,6 +56,8 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private ProjectDao m_projectDao;
+
+	private Map<String, StateReport> m_reports = new HashMap<String, StateReport>();
 
 	private void buildStateInfo(Machine machine) {
 		long minute = 1000 * 60;
@@ -223,14 +224,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
-	protected boolean isTimeout() {
-		long currentTime = System.currentTimeMillis();
-		long endTime = m_startTime + m_duration + m_extraTime;
-
-		return currentTime > endTime;
-	}
-
-	@Override
 	protected void process(MessageTree tree) {
 		StateReport report = m_reports.get("Cat");
 
@@ -248,12 +241,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		ProcessDomain processDomains = machine.findOrCreateProcessDomain(domain);
 
 		processDomains.addIp(ip);
-	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
 	}
 
 	private void storeReport(boolean atEnd) {
@@ -310,7 +297,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 			for (String ip : ips) {
 				try {
-					//Hack For PhoenixAgent
+					// Hack For PhoenixAgent
 					if (!domain.equals("PhoenixAgent")) {
 						Hostinfo info = m_hostInfoDao.createLocal();
 

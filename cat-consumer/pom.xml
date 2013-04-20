@@ -11,17 +11,12 @@
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-hadoop</artifactId>
+         <artifactId>cat-core</artifactId>
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>dal-jdbc</artifactId>
          <version>2.0.1</version>
-      </dependency>
-      <dependency>
-         <groupId>com.alibaba.cobar</groupId>
-         <artifactId>cobar-server</artifactId>
-         <version>1.3.0</version>
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
@@ -54,18 +49,14 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/database-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/sql-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/health-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
+                     <manifest>
 							${basedir}/src/main/resources/META-INF/dal/model/heartbeat-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/problem-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/transaction-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/event-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/ip-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/state-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,</manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,
+					 </manifest>
                   </configuration>
                </execution>
                <execution>
@@ -86,7 +77,9 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
+                     <manifest><![CDATA[
+                     	${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     ]]></manifest>
                   </configuration>
                </execution>
             </executions>

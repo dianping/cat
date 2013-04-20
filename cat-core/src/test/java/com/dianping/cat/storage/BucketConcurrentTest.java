@@ -37,6 +37,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 			final int num = p;
 
 			pool.submit(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						for (int i = 0; i < 100; i++) {
@@ -64,6 +65,7 @@ public class BucketConcurrentTest extends ComponentTestCase {
 			final int num = p;
 
 			pool.submit(new Runnable() {
+				@Override
 				public void run() {
 					try {
 						for (int i = 0; i < 100; i++) {

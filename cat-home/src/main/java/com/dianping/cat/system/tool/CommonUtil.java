@@ -12,7 +12,7 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
-import com.dianping.cat.configuration.client.transform.DefaultDomParser;
+import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 
 public class CommonUtil {
 
@@ -41,7 +41,7 @@ public class CommonUtil {
 			if (in != null) {
 				String xml = Files.forIO().readFrom(in, "utf-8");
 
-				clientConfig = new DefaultDomParser().parse(xml);
+				clientConfig = DefaultSaxParser.parse(xml);
 			}
 
 			if (clientConfig != null) {

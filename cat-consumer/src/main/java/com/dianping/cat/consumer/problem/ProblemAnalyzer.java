@@ -16,6 +16,7 @@ import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.problem.handler.Handler;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
@@ -26,12 +27,13 @@ import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled {
+	public static final String ID = "problem";
+
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -51,14 +53,14 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		ProblemReportVisitor visitor = new ProblemReportVisitor(report);
 
 		try {
-	      for (ProblemReport temp : m_reports.values()) {
-	      	report.getIps().add(temp.getDomain());
-	      	report.getDomainNames().add(temp.getDomain());
-	      	visitor.visitProblemReport(temp);
-	      }
-      } catch (Exception e) {
-      	Cat.logError(e);
-      }
+			for (ProblemReport temp : m_reports.values()) {
+				report.getIps().add(temp.getDomain());
+				report.getDomainNames().add(temp.getDomain());
+				visitor.visitProblemReport(temp);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 		return report;
 	}
 
@@ -77,6 +79,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		return m_reports.keySet();
 	}
 
+	@Override
 	public ProblemReport getReport(String domain) {
 		ProblemReport report = m_reports.get(domain);
 
@@ -92,14 +95,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	@Override
-	protected boolean isTimeout() {
-		long currentTime = System.currentTimeMillis();
-		long endTime = m_startTime + m_duration + m_extraTime;
-
-		return currentTime > endTime;
-	}
-
-	private void loadReports() {
+	protected void loadReports() {
 		Bucket<String> bucket = null;
 
 		try {
@@ -139,14 +135,6 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 		for (Handler handler : m_handlers) {
 			handler.handle(machine, tree);
 		}
-	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-
-		loadReports();
 	}
 
 	private void storeReports(boolean atEnd) {

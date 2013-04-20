@@ -4,11 +4,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import com.dianping.cat.consumer.AnalyzerFactory;
+import com.dianping.cat.consumer.MessageAnalyzerFactory;
+import com.dianping.cat.consumer.MessageAnalyzer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
-import com.dianping.cat.message.spi.MessageAnalyzer;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -16,7 +16,7 @@ import org.unidal.lookup.ComponentTestCase;
 public class DumpAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
-		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
+		MessageAnalyzerFactory factory = lookup(MessageAnalyzerFactory.class);
 		long now = 1334041324150L;
 		DefaultMessageQueue queue = new DefaultMessageQueue();
 		int num = 1000000;

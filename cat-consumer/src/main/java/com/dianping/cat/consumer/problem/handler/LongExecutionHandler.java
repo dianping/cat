@@ -18,6 +18,8 @@ import com.dianping.cat.message.spi.MessageTree;
 import org.unidal.lookup.annotation.Inject;
 
 public class LongExecutionHandler extends Handler implements Initializable {
+	public static final String ID = "long-execution";
+	
 	@Inject
 	private ServerConfigManager m_configManager;
 

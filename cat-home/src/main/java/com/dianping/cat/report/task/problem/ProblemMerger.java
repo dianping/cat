@@ -41,6 +41,7 @@ public class ProblemMerger implements ReportMerger<ProblemReport> {
 		return problemReport;
 	}
 
+	@Override
 	public ProblemReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domains) {
 		ProblemReport report = merge(reportDomain, reports, true);
 		Date date = report.getStartTime();

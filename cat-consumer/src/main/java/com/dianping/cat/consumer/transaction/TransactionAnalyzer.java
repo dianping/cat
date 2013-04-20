@@ -23,6 +23,7 @@ import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -35,12 +36,13 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
+	public static final String ID = "transaction";
+
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -158,14 +160,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	protected boolean isTimeout() {
-		long currentTime = System.currentTimeMillis();
-		long endTime = m_startTime + m_duration + m_extraTime;
-
-		return currentTime > endTime;
-	}
-
-	private void loadReports() {
+	protected void loadReports() {
 		Bucket<String> bucket = null;
 
 		try {
@@ -306,14 +301,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 		range.incCount();
 		range.setSum(range.getSum() + d);
-	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-
-		loadReports();
 	}
 
 	private void storeReports(boolean atEnd) {

@@ -43,6 +43,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 	@Inject
 	private ReportDao m_reportDao;
 	
+	@Override
 	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
 		if (end.getTime() == start.getTime()) {
 			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);
@@ -62,6 +63,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		return domains;
 	}
 
+	@Override
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
 		if (end.getTime() == start.getTime()) {
 			end = new Date(start.getTime() + TimeUtil.ONE_HOUR);

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dainping.cat.consumer.dal.report" gen="true">
+	<entity name="sqltable">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
+		<query-defs>
+			<query name="find-all-by-domain" type="SELECT" multiple="true">
+				<param name="domain" />
+				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='domain'/> = ${domain}]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+</entities>

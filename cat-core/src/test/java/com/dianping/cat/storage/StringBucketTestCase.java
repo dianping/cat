@@ -56,6 +56,7 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 	}
 
 	@Before
+	@Override
 	public void setUp() throws IOException {
 		try {
 			super.setUp();
@@ -73,6 +74,7 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 	protected abstract Bucket<String> createBucket() throws Exception;
 
 	@After
+	@Override
 	public void tearDown() throws Exception {
 		super.tearDown();
 		bucket.close();
@@ -87,6 +89,7 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 		resetSerial(serial);
 		long start = System.currentTimeMillis();
 		submit(new Runnable() {
+			@Override
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					String id = null;
@@ -116,6 +119,7 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 		final CountDownLatch latch = createLatch();
 		long start = System.currentTimeMillis();
 		submit(new Runnable() {
+			@Override
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					String id = null;
@@ -146,6 +150,7 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 		final CountDownLatch latch = createLatch();
 		long start = System.currentTimeMillis();
 		submit(new Runnable() {
+			@Override
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					try {

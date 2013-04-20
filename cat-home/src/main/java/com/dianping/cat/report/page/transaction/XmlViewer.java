@@ -12,6 +12,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.report.ReportPage;
 
 public class XmlViewer implements Viewer<ReportPage, Action, Context, Model> {
+	@Override
 	public void view(Context ctx, Model model) throws ServletException, IOException {
 		TransactionReport report = model.getReport();
 		HttpServletResponse res = ctx.getHttpServletResponse();

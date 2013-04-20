@@ -1,11 +1,12 @@
 package com.dianping.cat.message.spi;
 
 public interface MessageQueue {
+	public void destroy();
 
-	// the current size of the queue
-	public int size();
+	public boolean offer(MessageTree tree);
 
 	public MessageTree poll();
 
-	public boolean offer(MessageTree tree);
+	// the current size of the queue
+	public int size();
 }

@@ -40,6 +40,7 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
 	protected abstract boolean processTask(Task doing);
 
+	@Override
 	public void run() {
 		String localIp = getLoaclIp();
 		while (running) {

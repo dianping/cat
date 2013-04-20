@@ -69,21 +69,7 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>dummy</role-hint>
-			<implementation>com.dianping.cat.message.spi.consumer.DummyConsumer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageConsumer</role>
-			<role-hint>dump-to-html</role-hint>
-			<implementation>com.dianping.cat.message.spi.consumer.DumpToHtmlConsumer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStorage</role>
-					<role-hint>html</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-			</requirements>
+			<implementation>com.dianping.cat.message.spi.internal.DummyConsumer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>

@@ -13,16 +13,14 @@ import junit.framework.Assert;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.unidal.helper.Files;
 import org.xml.sax.SAXException;
 
-import com.dianping.cat.configuration.ClientConfigMerger;
-import com.dianping.cat.configuration.ClientConfigValidator;
 import com.dianping.cat.configuration.client.IEntity;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
-import com.dianping.cat.configuration.client.transform.DefaultDomParser;
+import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 import com.dianping.cat.configuration.client.transform.DefaultXmlBuilder;
-import org.unidal.helper.Files;
 
 public class ClientConfigTest {
 	@Test
@@ -51,16 +49,15 @@ public class ClientConfigTest {
 	private ClientConfig loadConfig(String configXml) throws IOException, SAXException {
 		InputStream in = getClass().getResourceAsStream(configXml);
 		String xml = Files.forIO().readFrom(in, "utf-8");
-		ClientConfig clientConfig = new DefaultDomParser().parse(xml);
+		ClientConfig clientConfig = DefaultSaxParser.parse(xml);
 
 		return clientConfig;
 	}
 
 	@Test
 	public void testConfig() throws Exception {
-		DefaultDomParser parser = new DefaultDomParser();
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("config.xml"), "utf-8");
-		ClientConfig root = parser.parse(source);
+		ClientConfig root = DefaultSaxParser.parse(source);
 		String xml = new DefaultXmlBuilder().buildXml(root);
 		String expected = source;
 
@@ -91,7 +88,7 @@ public class ClientConfigTest {
 	public void testServer() throws Exception {
 		InputStream in = getClass().getResourceAsStream("server.xml");
 		String xml = Files.forIO().readFrom(in, "utf-8");
-		ClientConfig config = new DefaultDomParser().parse(xml);
+		ClientConfig config = DefaultSaxParser.parse(xml);
 
 		Assert.assertEquals("server", config.getMode());
 		Assert.assertEquals("192.168.8.21", config.getBind().getIp());

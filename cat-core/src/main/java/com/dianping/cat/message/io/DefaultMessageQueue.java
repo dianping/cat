@@ -6,16 +6,22 @@ import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.lookup.annotation.Inject;
 
-public class DefaultMessageQueue implements MessageQueue, Initializable {
+public class DefaultMessageQueue extends ContainerHolder implements MessageQueue, Initializable {
 	private BlockingQueue<MessageTree> m_queue;
 
 	@Inject
 	private int m_size;
+
+	@Override
+	public void destroy() {
+		super.release(this);
+	}
 
 	@Override
 	public void initialize() throws InitializationException {
@@ -27,6 +33,11 @@ public class DefaultMessageQueue implements MessageQueue, Initializable {
 	}
 
 	@Override
+	public boolean offer(MessageTree tree) {
+		return m_queue.offer(tree);
+	}
+
+	@Override
 	public MessageTree poll() {
 		try {
 			return m_queue.poll(5, TimeUnit.MILLISECONDS);
@@ -35,17 +46,12 @@ public class DefaultMessageQueue implements MessageQueue, Initializable {
 		}
 	}
 
-	@Override
-	public boolean offer(MessageTree tree) {
-		return m_queue.offer(tree);
+	public void setSize(int size) {
+		m_size = size;
 	}
 
 	@Override
 	public int size() {
 		return m_queue.size();
-	}
-
-	public void setSize(int size) {
-		m_size = size;
 	}
 }

@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.AnalyzerFactory;
+import com.dianping.cat.consumer.MessageAnalyzerFactory;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
@@ -39,7 +39,7 @@ public class TransactionReportMessageAnalyzerTest extends ComponentTestCase {
 		long extraTime = 5 * 60 * 1000;
 		long start = current - current % (60 * 60 * 1000) - 1000L * 60 * 60;
 
-		AnalyzerFactory factory = lookup(AnalyzerFactory.class);
+		MessageAnalyzerFactory factory = lookup(MessageAnalyzerFactory.class);
 		TransactionAnalyzer analyzer = (TransactionAnalyzer) factory.create("transaction", start, duration, extraTime);
 
 		for (int i = 1; i <= 1000; i++) {

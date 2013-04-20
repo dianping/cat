@@ -16,6 +16,8 @@ import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 
 public class DefaultProblemHandler extends Handler {
+	public static final String ID = "default-problem";
+	
 	@Inject
 	private Set<String> m_errorTypes;
 

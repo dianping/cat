@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -16,6 +17,7 @@ import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
@@ -24,7 +26,6 @@ import com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
@@ -35,9 +36,10 @@ import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.entity.ThreadsInfo;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> implements LogEnabled {
+	public static final String ID = "heartbeat";
+
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -88,7 +90,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		StatusInfo info = null;
 
 		try {
-			info = new com.dianping.cat.status.model.transform.DefaultDomParser().parse(xml);
+			info = com.dianping.cat.status.model.transform.DefaultSaxParser.parse(xml);
 		} catch (Exception e) {
 			m_logger.error("Error when parse status info in heartbeat analyzer." + xml, e);
 			Cat.getProducer().logEvent("HearbeatAnalyzer", "ErrorXml", "Error", xml);
@@ -150,6 +152,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		return period;
 	}
 
+	@Override
 	public HeartbeatReport getReport(String domain) {
 		HeartbeatReport report = m_reports.get(domain);
 
@@ -165,14 +168,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 	}
 
 	@Override
-	protected boolean isTimeout() {
-		long currentTime = System.currentTimeMillis();
-		long endTime = m_startTime + m_duration + m_extraTime;
-
-		return currentTime > endTime;
-	}
-
-	private void loadReports() {
+	protected void loadReports() {
 		Bucket<String> reportBucket = null;
 
 		try {
@@ -231,14 +227,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		}
 
 		return count;
-	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-
-		loadReports();
 	}
 
 	private void storeReports(boolean atEnd) {

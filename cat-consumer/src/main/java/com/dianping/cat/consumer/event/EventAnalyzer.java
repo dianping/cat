@@ -9,6 +9,7 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
@@ -16,6 +17,7 @@ import com.dainping.cat.consumer.dal.report.Task;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -25,13 +27,13 @@ import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implements LogEnabled {
+	public static final String ID = "event";
+
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -58,6 +60,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		return m_reports.keySet();
 	}
 
+	@Override
 	public EventReport getReport(String domain) {
 		EventReport report = m_reports.get(domain);
 
@@ -73,14 +76,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-	protected boolean isTimeout() {
-		long currentTime = System.currentTimeMillis();
-		long endTime = m_startTime + m_duration + m_extraTime;
-
-		return currentTime > endTime;
-	}
-
-	private void loadReports() {
+	protected void loadReports() {
 		Bucket<String> reportBucket = null;
 
 		try {
@@ -193,14 +189,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		}
 
 		return count;
-	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-
-		loadReports();
 	}
 
 	private void storeReports(boolean atEnd) {

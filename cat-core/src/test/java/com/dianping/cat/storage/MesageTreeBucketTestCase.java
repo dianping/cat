@@ -58,6 +58,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 	}
 
 	@Before
+	@Override
 	public void setUp() throws IOException {
 		try {
 			super.setUp();
@@ -76,6 +77,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 	protected abstract Bucket<MessageTree> createBucket() throws Exception;
 
 	@After
+	@Override
 	public void tearDown() throws Exception {
 		super.tearDown();
 		bucket.close();
@@ -106,6 +108,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 		resetSerial(serial);
 		long start = System.currentTimeMillis();
 		submit(new Runnable() {
+			@Override
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					String id = null;
@@ -136,6 +139,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 		final CountDownLatch latch = createLatch();
 		long start = System.currentTimeMillis();
 		submit(new Runnable() {
+			@Override
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					String id = null;
@@ -168,6 +172,7 @@ public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 		final CountDownLatch latch = createLatch();
 		long start = System.currentTimeMillis();
 		submit(new Runnable() {
+			@Override
 			public void run() {
 				for (int i = 0; i < timesPerThread; i++) {
 					try {

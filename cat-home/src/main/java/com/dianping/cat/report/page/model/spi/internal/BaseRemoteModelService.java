@@ -49,6 +49,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 		return new URL(url);
 	}
 
+	@Override
 	public String getName() {
 		return m_name;
 	}

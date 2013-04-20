@@ -14,6 +14,7 @@ import com.dainping.cat.consumer.dal.report.Report;
 import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
@@ -26,12 +27,13 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements LogEnabled {
+	public static final String ID = "top";
+
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -57,10 +59,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		return new HashSet<String>();
 	}
 
+	@Override
 	public synchronized TopReport getReport(String domain) {
 		Set<String> domains = m_transactionAnalyzer.getDomains();
 		TopReport topReport = new TopReport("Cat");
-		
+
 		topReport.setStartTime(new Date(m_startTime));
 		topReport.setEndTime(new Date(m_startTime + 60 * MINUTE - 1));
 
@@ -69,7 +72,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 			new TransactionReportVisitor(topReport).visitTransactionReport(report);
 		}
-		
+
 		for (String temp : domains) {
 			ProblemReport report = m_problemAnalyzer.getReport(temp);
 
@@ -79,27 +82,8 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
-	protected boolean isTimeout() {
-		long currentTime = System.currentTimeMillis();
-		long endTime = m_startTime + m_duration + m_extraTime;
-
-		return currentTime > endTime;
-	}
-
-	private void loadReports() {
-	}
-
-	@Override
 	protected void process(MessageTree tree) {
 		// do nothing
-	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-
-		loadReports();
 	}
 
 	private void storeReports(boolean atEnd) {
@@ -183,8 +167,8 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			int minute = range2.getValue();
 			long count = range2.getCount();
 			double sum = range2.getSum();
-			com.dianping.cat.consumer.top.model.entity.Segment detail = m_report.findOrCreateDomain(m_domain)
-			      .findOrCreateSegment(minute);
+			com.dianping.cat.consumer.top.model.entity.Segment detail = m_report.findOrCreateDomain(m_domain).findOrCreateSegment(
+			      minute);
 			Range2Function function = Range2Function.getByName(m_type);
 
 			if (function != null) {
@@ -199,6 +183,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 	public static enum Range2Function {
 		URL {
+			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
 				double sum = range2.getSum();
@@ -310,12 +295,10 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			int count = segment.getCount();
 
 			if ("error".equals(m_type)) {
-				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
-				      .findOrCreateSegment(id);
+				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain).findOrCreateSegment(id);
 				temp.setError(temp.getError() + count);
 			} else if ("call".equals(m_type)) {
-				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
-				      .findOrCreateSegment(id);
+				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain).findOrCreateSegment(id);
 				temp.setCallError(temp.getCallError() + count);
 			}
 		}

@@ -3,10 +3,9 @@ package com.dianping.cat.consumer;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer1;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer2;
 import com.dianping.cat.consumer.ManyAnalyzerTest.MockAnalyzer3;
-import com.dianping.cat.message.spi.MessageAnalyzer;
 
-public class ManyAnalyerMockFactory implements AnalyzerFactory {
-
+public class ManyAnalyerMockFactory implements MessageAnalyzerFactory {
+	@Override
 	public MessageAnalyzer create(String name, long start, long duration, long extraTime) {
 		if (name.equals("mock1")) {
 			MockAnalyzer1 analyzer = new MockAnalyzer1();
@@ -19,10 +18,5 @@ public class ManyAnalyerMockFactory implements AnalyzerFactory {
 			return analyzer;
 		}
 		return null;
-	}
-
-	@Override
-	public void release(Object component) {
-
 	}
 }

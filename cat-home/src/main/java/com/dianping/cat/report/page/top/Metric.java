@@ -127,6 +127,7 @@ public class Metric extends BaseVisitor {
 			m_value = value;
 		}
 
+		@Override
 		public Item clone() {
 			return new Item(m_domain, m_value);
 		}

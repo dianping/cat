@@ -8,27 +8,20 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
 
-public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Initializable, LogEnabled {
-	@Inject
-	private ServerConfigManager m_configManager;
-
-	@Inject
-	private DumpUploader m_uploader;
+public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements LogEnabled {
+	public static final String ID = "dump";
 
 	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
 	private LocalMessageBucketManager m_bucketManager;
@@ -39,8 +32,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 	private Map<String, Integer> m_oldVersionDomains = new HashMap<String, Integer>();
 
 	private Map<String, Integer> m_errorTimestampDomains = new HashMap<String, Integer>();
-
-	private boolean m_localMode = true;
 
 	private static final long HOUR = 60 * 60 * 1000L;
 
@@ -75,30 +66,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 		return Collections.emptySet();
 	}
 
-	public DumpUploader getDumpUploader() {
-		return m_uploader;
-	}
-
 	@Override
 	public Object getReport(String domain) {
 		throw new UnsupportedOperationException("This should not be called!");
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_localMode = m_configManager.isLocalMode();
-
-		if (!m_localMode) {
-			m_uploader.start();
-		}
-	}
-
-	@Override
-	protected boolean isTimeout() {
-		long currentTime = System.currentTimeMillis();
-		long endTime = m_startTime + m_duration + m_extraTime;
-
-		return currentTime > endTime;
 	}
 
 	@Override
@@ -145,11 +115,4 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Ini
 			m_oldVersionDomains.put(domain, size);
 		}
 	}
-
-	public void setAnalyzerInfo(long startTime, long duration, long extraTime) {
-		m_extraTime = extraTime;
-		m_startTime = startTime;
-		m_duration = duration;
-	}
-
 }

@@ -16,12 +16,6 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 public abstract class CatTestCase extends ComponentTestCase {
-	@Before
-	public void before() throws Exception {
-		Cat.initialize(getContainer(), getConfigurationFile());
-		Cat.setup(null);
-	}
-
 	protected File getConfigurationFile() {
 		if (isCatServerAlive()) {
 			try {
@@ -57,8 +51,14 @@ public abstract class CatTestCase extends ComponentTestCase {
 		return false;
 	}
 
+	@Before
+	public void setup() throws Exception {
+		Cat.initialize(getContainer(), getConfigurationFile());
+		Cat.setup(null);
+	}
+
 	@After
-	public void after() throws Exception {
+	public void teardown() throws Exception {
 		Cat.reset();
 	}
 }

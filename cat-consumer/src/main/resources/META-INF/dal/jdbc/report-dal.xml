@@ -353,16 +353,6 @@
 			</query>
 		</query-defs>
 	</entity>
-	<entity name="sqltable">
-		<member name="creation-date" insert-expr="NOW()" />
-		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
-		<query-defs>
-			<query name="find-all-by-domain" type="SELECT" multiple="true">
-				<param name="domain" />
-				<statement><![CDATA[SELECT <FIELDS/> FROM <TABLE/> WHERE <FIELD name='domain'/> = ${domain}]]></statement>
-			</query>
-		</query-defs>
-	</entity>
 	<entity name="project" table="project" alias="p">
 		<member name="creation-date" insert-expr="NOW()" />
 		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />

@@ -1485,16 +1485,16 @@
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
-				</requirement>
-				<requirement>
-					<role>long</role>
-				</requirement>
-				<requirement>
-					<role>long</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.status.ServerStateManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.MessageAnalyzerFactory</role>
+				</requirement>
+				<requirement>
+					<role>long</role>
+				</requirement>
+				<requirement>
+					<role>long</role>
 				</requirement>
 				<requirement>
 					<role>java.util.List</role>

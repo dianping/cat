@@ -46,6 +46,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 		return transactionReport;
 	}
 
+	@Override
 	public TransactionReport mergeForDaily(String reportDomain, List<Report> reports, Set<String> domainSet) {
 		TransactionReport transactionReport = merge(reportDomain, reports, true);
 		HistoryTransactionReportMerger merger = new HistoryTransactionReportMerger(new TransactionReport(reportDomain));
@@ -65,6 +66,7 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 		return transactionReport;
 	}
 
+	@Override
 	public TransactionReport mergeForGraph(String reportDomain, List<Report> reports) {
 		TransactionReport transactionReport = merge(reportDomain, reports, false);
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(reportDomain));

@@ -137,6 +137,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return m_context.get() != null;
 	}
 
+	@Override
 	public void initialize() throws InitializationException {
 		m_domain = m_configManager.getFirstDomain();
 		m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();

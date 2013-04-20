@@ -31,6 +31,7 @@ public class UrlTransactionBugTest extends ComponentTestCase {
 	private ReportDao m_reportDao;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
