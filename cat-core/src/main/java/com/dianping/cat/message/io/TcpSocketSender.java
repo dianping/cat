@@ -29,6 +29,8 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
+	public static final String ID = "tcp-socket";
+	
 	@Inject
 	private MessageCodec m_codec;
 

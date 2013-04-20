@@ -74,12 +74,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .config(E("size").value("10000")) //
 		      .is(PER_LOOKUP));
 
-		all.add(C(MessageSender.class, "tcp-socket", TcpSocketSender.class) //
+		all.add(C(MessageSender.class, TcpSocketSender.ID, TcpSocketSender.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageStatistics.class, "default", "m_statistics") //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec")//
 		      .req(MessageQueue.class, "default", "m_queue"));
-		all.add(C(MessageSender.class, "tcp-socket-hierarchy", TcpSocketHierarchySender.class) //
+		all.add(C(MessageSender.class, TcpSocketHierarchySender.ID, TcpSocketHierarchySender.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageStatistics.class, "default", "m_statistics") //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID, "m_codec")//

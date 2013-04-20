@@ -354,7 +354,6 @@ public class TaskConsumerTest {
 			Thread.sleep(500);
 		}
 
-
 		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumerOne.replayer.toArray()));
 
 		String consumerTwoResult = Arrays.toString(consumerTwo.replayer.toArray());

@@ -31,7 +31,7 @@ import com.dianping.cat.storage.BucketManager;
 
 public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> implements LogEnabled {
 	public static final String ID = "database";
-	
+
 	@Inject
 	private BucketManager m_bucketManager;
 
@@ -64,7 +64,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
 			String tables = m_sqlParseManeger.getTableNames(sqlName, sqlStatement, domain);
-			String database = getDataBaseName(connection);
+			String database = getDatabaseName(connection);
 
 			if (database == null) {
 				database = "Unknown";
@@ -85,7 +85,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		m_logger = logger;
 	}
 
-	public String getDataBaseName(String url) {
+	String getDatabaseName(String url) {
 		if (url != null) {
 			if (url.indexOf("mysql") > -1) {
 				try {

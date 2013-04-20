@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.consumer.problem.DefaultHandlerTest;
 import com.dianping.cat.consumer.transaction.FormatTest;
 import com.dianping.cat.consumer.transaction.GsonTest;
 import com.dianping.cat.consumer.transaction.NumberFormatTest;
@@ -15,15 +16,21 @@ import com.dianping.cat.consumer.transaction.TransactionReportTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
+PeriodStrategyTest.class,
+
+DefaultHandlerTest.class,
+
+FormatTest.class,
+
+GsonTest.class,
+
+NumberFormatTest.class,
+
 TransactionAnalyzerTest.class,
 
 TransactionReportMessageAnalyzerTest.class,
 
 TransactionReportTest.class,
-
-FormatTest.class, GsonTest.class,
-
-NumberFormatTest.class,
 
 TransactionReportFilterTest.class
 

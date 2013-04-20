@@ -4,7 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.configuration.ClientConfigTest;
+import com.dianping.cat.configuration.ConfigTest;
 import com.dianping.cat.log4j.CatAppenderTest;
 import com.dianping.cat.message.EventTest;
 import com.dianping.cat.message.HeartbeatTest;
@@ -35,8 +35,8 @@ HeartbeatTest.class,
 
 TransactionTest.class,
 
-/* .configuration.model */
-ClientConfigTest.class,
+/* .configuration */
+ConfigTest.class,
 
 /* .internal */
 MessageIdFactoryTest.class,
@@ -59,7 +59,6 @@ LocalReportBucketTest.class,
 LocalMessageBucketTest.class,
 
 LocalMessageBucketManagerTest.class
-
 
 })
 public class AllTests {

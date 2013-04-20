@@ -32,6 +32,8 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled {
+	public static final String ID = "tcp-socket-hierarchy";
+
 	@Inject
 	private MessageCodec m_codec;
 

@@ -53,14 +53,14 @@ public class DefaultTransportManager extends ContainerHolder implements Transpor
 			if (addresses.isEmpty()) {
 				throw new RuntimeException("All servers in configuration are disabled!\r\n" + servers);
 			} else if (addresses.size() == 1) {
-				TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, "tcp-socket");
+				TcpSocketSender sender = (TcpSocketSender) lookup(MessageSender.class, TcpSocketSender.ID);
 
 				sender.setServerAddress(addresses.get(0));
 				sender.initialize();
 				m_sender = sender;
 			} else {
 				TcpSocketHierarchySender sender = (TcpSocketHierarchySender) lookup(MessageSender.class,
-				      "tcp-socket-hierarchy");
+						TcpSocketHierarchySender.ID);
 
 				sender.setServerAddresses(addresses);
 				sender.initialize();

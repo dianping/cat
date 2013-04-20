@@ -27,8 +27,6 @@ public class IpReportTest {
 		String json = new DefaultJsonBuilder().buildJson(report);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("IpReport.json"), "utf-8");
 
-		Assert.assertEquals("XML is not well parsed or JSON is not well built!", expected.replace("\r", ""),
-		      json.replace("\r", ""));
+		Assert.assertEquals("XML is not well parsed or JSON is not well built!", expected.replace("\r", ""), json.replace("\r", ""));
 	}
-
 }
