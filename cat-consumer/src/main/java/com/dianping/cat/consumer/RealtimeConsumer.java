@@ -16,7 +16,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
@@ -36,28 +35,24 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
 
 /**
- * This is the real time consumer process framework.
- * <p>
+ * This is the real time message consuming entry.
  */
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
 	public static final String ID = "realtime";
 
 	private static final long MINUTE = 60 * 1000L;
-	
-	@Inject
-	private ServerStateManager m_serverStateManager;
 
 	@Inject
-	private MessageAnalyzerFactory m_factory;
+	private MessageAnalyzerManager m_analyzerManager;
+
+	@Inject
+	private ServerStateManager m_serverStateManager;
 
 	@Inject
 	private long m_duration = 60 * MINUTE;
 
 	@Inject
 	private long m_extraTime = 3 * MINUTE;
-
-	@Inject
-	private List<String> m_analyzerNames;
 
 	private Set<String> m_domains = new HashSet<String>();
 
@@ -67,14 +62,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private PeriodManager m_periodManager;
 
-	private CountDownLatch m_latch;
-
 	private long m_networkError;
 
 	@Override
 	public void consume(MessageTree tree) {
 		try {
-			m_latch.await();
+			m_periodManager.waitUntilStarted();
 		} catch (InterruptedException e) {
 			// ignore it
 		}
@@ -92,6 +85,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			}
 		} else {
 			m_serverStateManager.addNetworkTimeError(1);
+
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 			String domain = tree.getDomain();
 			Integer size = m_errorTimeDomains.get(domain);
@@ -101,9 +95,10 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			} else {
 				size++;
 			}
-			m_errorTimeDomains.put(domain, size);
 
+			m_errorTimeDomains.put(domain, size);
 			m_networkError++;
+
 			if (m_networkError % (CatConstants.ERROR_COUNT * 10) == 0) {
 				m_logger.error("Error network time:" + m_errorTimeDomains);
 				m_logger.error("The timestamp of message is out of range, IGNORED! "
@@ -161,18 +156,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_latch = new CountDownLatch(1);
-		m_periodManager = new PeriodManager(m_latch);
+		m_periodManager = new PeriodManager();
 
 		Threads.forGroup("Cat").start(m_periodManager);
-	}
-
-	public void setAnalyzers(String analyzers) {
-		m_analyzerNames = Splitters.by(',').noEmptyItem().trim().split(analyzers);
-	}
-
-	public void setExtraTime(long time) {
-		m_extraTime = time;
 	}
 
 	class Period {
@@ -183,14 +169,16 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		private List<PeriodTask> m_tasks;
 
 		public Period(long startTime, long endTime) {
+			List<String> names = m_analyzerManager.getAnalyzerNames();
+
 			m_startTime = startTime;
 			m_endTime = endTime;
-			m_tasks = new ArrayList<PeriodTask>(m_analyzerNames.size());
+			m_tasks = new ArrayList<PeriodTask>(names.size());
 
 			Map<String, MessageAnalyzer> analyzers = new HashMap<String, MessageAnalyzer>();
 
-			for (String name : m_analyzerNames) {
-				MessageAnalyzer analyzer = m_factory.create(name, startTime, m_duration, m_extraTime);
+			for (String name : names) {
+				MessageAnalyzer analyzer = m_analyzerManager.getAnalyzer(name, startTime);
 				MessageQueue queue = lookup(MessageQueue.class);
 				PeriodTask task = new PeriodTask(analyzer, queue, startTime);
 
@@ -204,8 +192,10 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			MessageAnalyzer transaction = analyzers.get(TransactionAnalyzer.ID);
 			MessageAnalyzer problem = analyzers.get(ProblemAnalyzer.ID);
 
-			((TopAnalyzer) top).setTransactionAnalyzer((TransactionAnalyzer) transaction);
-			((TopAnalyzer) top).setProblemAnalyzer((ProblemAnalyzer) problem);
+			if (top != null) {
+				((TopAnalyzer) top).setTransactionAnalyzer((TransactionAnalyzer) transaction);
+				((TopAnalyzer) top).setProblemAnalyzer((ProblemAnalyzer) problem);
+			}
 		}
 
 		public void distribute(MessageTree tree) {
@@ -249,7 +239,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		public MessageAnalyzer getAnalyzer(String name) {
-			int index = m_analyzerNames.indexOf(name);
+			List<String> names = m_analyzerManager.getAnalyzerNames();
+			int index = names.indexOf(name);
 
 			if (index >= 0) {
 				PeriodTask task = m_tasks.get(index);
@@ -295,10 +286,14 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		private CountDownLatch m_latch;
 
-		public PeriodManager(CountDownLatch latch) {
+		public PeriodManager() {
 			m_strategy = new PeriodStrategy(m_duration, m_extraTime, 3 * MINUTE);
 			m_active = true;
-			m_latch = latch;
+			m_latch = new CountDownLatch(1);
+		}
+
+		public void waitUntilStarted() throws InterruptedException {
+			m_latch.await();
 		}
 
 		private void endPeriod(long startTime) {
@@ -335,10 +330,10 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			long startTime = m_strategy.next(System.currentTimeMillis());
 
 			// for current period
-			startPeriod(startTime);
-			m_latch.countDown();
-
 			try {
+				startPeriod(startTime);
+				m_latch.countDown();
+
 				while (m_active) {
 					long now = System.currentTimeMillis();
 					long value = m_strategy.next(now);
@@ -357,6 +352,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				}
 			} catch (InterruptedException e) {
 				// ignore it
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 

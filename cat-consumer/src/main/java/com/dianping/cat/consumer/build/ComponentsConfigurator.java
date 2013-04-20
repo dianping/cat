@@ -14,9 +14,9 @@ import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.consumer.DefaultMessageAnalyzerFactory;
+import com.dianping.cat.consumer.DefaultMessageAnalyzerManager;
 import com.dianping.cat.consumer.MessageAnalyzer;
-import com.dianping.cat.consumer.MessageAnalyzerFactory;
+import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.event.EventAnalyzer;
@@ -39,12 +39,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(MessageAnalyzerFactory.class, DefaultMessageAnalyzerFactory.class));
+		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.ID, RealtimeConsumer.class) //
-		      .req(MessageAnalyzerFactory.class, ServerStateManager.class) //
-		      .config(E("extraTime").value(property("extraTime", "180000")) //
-		            , E("analyzers").value("problem,transaction,event,heartbeat,dump,state,top,cross,database,ip,matrix,sql")));
+		      .req(MessageAnalyzerManager.class, ServerStateManager.class));
 
 		all.add(C(Handler.class, DefaultProblemHandler.ID, DefaultProblemHandler.class)//
 		      .config(E("failureType").value("URL,SQL,Call,PigeonCall,Cache"))//

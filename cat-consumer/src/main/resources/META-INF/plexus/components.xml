@@ -1,20 +1,16 @@
 <plexus>
 	<components>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzerFactory</role>
-			<implementation>com.dianping.cat.consumer.DefaultMessageAnalyzerFactory</implementation>
+			<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
+			<implementation>com.dianping.cat.consumer.DefaultMessageAnalyzerManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>realtime</role-hint>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
-			<configuration>
-				<extraTime>180000</extraTime>
-				<analyzers>problem,transaction,event,heartbeat,dump,state,top,cross,database,ip,matrix,sql</analyzers>
-			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.MessageAnalyzerFactory</role>
+					<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.status.ServerStateManager</role>

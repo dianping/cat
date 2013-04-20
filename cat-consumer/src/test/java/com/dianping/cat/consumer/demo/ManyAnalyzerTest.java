@@ -4,7 +4,6 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -23,10 +22,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 	private static int s_count2;
 
 	private static int s_count3;
-
-	@Before
-	public void before() {
-	}
 
 	@Test
 	public void test() throws Exception {
@@ -48,10 +43,10 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		Assert.assertEquals(300, s_count3);
 	}
 
-	public static class MockAnalyzer1 extends AbstractMessageAnalyzer<AnalyzerResult> {
+	public static class MockAnalyzer1 extends AbstractMessageAnalyzer<Void> {
 		@Override
 		protected void process(MessageTree tree) {
-			++s_count1;
+			s_count1++;
 		}
 
 		@Override
@@ -60,7 +55,7 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public AnalyzerResult getReport(String domain) {
+		public Void getReport(String domain) {
 			return null;
 		}
 
@@ -70,10 +65,10 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 	}
 
-	public static class MockAnalyzer2 extends AbstractMessageAnalyzer<AnalyzerResult> {
+	public static class MockAnalyzer2 extends AbstractMessageAnalyzer<Void> {
 		@Override
 		protected void process(MessageTree tree) {
-			s_count2 = s_count2 + 2;
+			s_count2 += 2;
 		}
 
 		@Override
@@ -82,7 +77,7 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public AnalyzerResult getReport(String domain) {
+		public Void getReport(String domain) {
 			return null;
 		}
 
@@ -92,10 +87,10 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 	}
 
-	public static class MockAnalyzer3 extends AbstractMessageAnalyzer<AnalyzerResult> {
+	public static class MockAnalyzer3 extends AbstractMessageAnalyzer<Void> {
 		@Override
 		protected void process(MessageTree tree) {
-			s_count3 = s_count3 + 3;
+			s_count3 += 3;
 		}
 
 		@Override
@@ -104,7 +99,7 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public AnalyzerResult getReport(String domain) {
+		public Void getReport(String domain) {
 			return null;
 		}
 
@@ -112,10 +107,6 @@ public class ManyAnalyzerTest extends ComponentTestCase {
 		public Set<String> getDomains() {
 			return null;
 		}
-	}
-
-	public static class AnalyzerResult {
-
 	}
 
 	static class MockMessage extends AbstractMessage {

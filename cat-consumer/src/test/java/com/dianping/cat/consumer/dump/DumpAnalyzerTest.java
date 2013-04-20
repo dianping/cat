@@ -3,20 +3,20 @@ package com.dianping.cat.consumer.dump;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.MessageAnalyzerFactory;
 import com.dianping.cat.consumer.MessageAnalyzer;
+import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class DumpAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
-		MessageAnalyzerFactory factory = lookup(MessageAnalyzerFactory.class);
+		MessageAnalyzerManager manager = lookup(MessageAnalyzerManager.class);
 		long now = 1334041324150L;
 		DefaultMessageQueue queue = new DefaultMessageQueue();
 		int num = 1000000;
@@ -28,10 +28,9 @@ public class DumpAnalyzerTest extends ComponentTestCase {
 			queue.offer(newMessageTree(i, now + i * 10L));
 		}
 
-		MessageAnalyzer analyzer = factory.create("dump", now, 10 * 1000L, 10 * 1000L);
+		MessageAnalyzer analyzer = manager.getAnalyzer("dump", now);
 
 		analyzer.analyze(queue);
-
 		analyzer.doCheckpoint(true);
 	}
 

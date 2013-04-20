@@ -7,7 +7,7 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.consumer.MessageAnalyzer;
-import com.dianping.cat.consumer.MessageAnalyzerFactory;
+import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.consumer.demo.OneAnalyzerTwoDurationTest.MockAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
@@ -22,14 +22,12 @@ public class OneAnalyzerTwoDurationTestConfigurator extends AbstractResourceConf
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(MessageConsumer.class, "mock", RealtimeConsumer.class) //
-		      .config(E("analyzers").value("mock") //
-		      ).req(MessageAnalyzerFactory.class)//
-		);
+		      .req(MessageAnalyzerManager.class));
 
 		all.add(C(MessageAnalyzer.class, "mock", MockAnalyzer.class) //
 		      .is(PER_LOOKUP));
 
-		all.add(C(MessageAnalyzerFactory.class, OneAnalyzerMockFactory.class));
+		all.add(C(MessageAnalyzerManager.class, OneAnalyzerMockManager.class));
 
 		return all;
 	}

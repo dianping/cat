@@ -9,8 +9,8 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.MessageAnalyzerFactory;
 import com.dianping.cat.consumer.MessageAnalyzer;
+import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.io.DefaultMessageQueue;
@@ -27,7 +27,7 @@ public class DumpUploaderSample extends ComponentTestCase {
 
 	@Test
 	public void testUpload() throws Exception {
-		MessageAnalyzerFactory factory = lookup(MessageAnalyzerFactory.class);
+		MessageAnalyzerManager manager = lookup(MessageAnalyzerManager.class);
 		long now = System.currentTimeMillis();
 		DefaultMessageQueue queue = new DefaultMessageQueue();
 		int num = 10000;
@@ -39,10 +39,9 @@ public class DumpUploaderSample extends ComponentTestCase {
 			queue.offer(newMessageTree(i, now + i * 10L));
 		}
 
-		MessageAnalyzer analyzer = factory.create("dump", now, 10 * 1000L, 10 * 1000L);
+		MessageAnalyzer analyzer = manager.getAnalyzer("dump", now);
 
 		analyzer.analyze(queue);
-
 		analyzer.doCheckpoint(true);
 
 		System.out.println("checkpoint");

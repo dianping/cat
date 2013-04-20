@@ -4,6 +4,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.dianping.cat.consumer.demo.ManyAnalyzerTest;
+import com.dianping.cat.consumer.demo.OneAnalyzerTwoDurationTest;
 import com.dianping.cat.consumer.problem.DefaultHandlerTest;
 import com.dianping.cat.consumer.transaction.FormatTest;
 import com.dianping.cat.consumer.transaction.GsonTest;
@@ -17,6 +19,10 @@ import com.dianping.cat.consumer.transaction.TransactionReportTest;
 @SuiteClasses({
 
 PeriodStrategyTest.class,
+
+ManyAnalyzerTest.class,
+
+OneAnalyzerTwoDurationTest.class,
 
 DefaultHandlerTest.class,
 

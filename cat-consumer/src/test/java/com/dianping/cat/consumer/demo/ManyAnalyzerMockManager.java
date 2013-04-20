@@ -1,14 +1,22 @@
 package com.dianping.cat.consumer.demo;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.dianping.cat.consumer.MessageAnalyzer;
-import com.dianping.cat.consumer.MessageAnalyzerFactory;
+import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.consumer.demo.ManyAnalyzerTest.MockAnalyzer1;
 import com.dianping.cat.consumer.demo.ManyAnalyzerTest.MockAnalyzer2;
 import com.dianping.cat.consumer.demo.ManyAnalyzerTest.MockAnalyzer3;
 
-public class ManyAnalyerMockFactory implements MessageAnalyzerFactory {
+public class ManyAnalyzerMockManager implements MessageAnalyzerManager {
 	@Override
-	public MessageAnalyzer create(String name, long start, long duration, long extraTime) {
+	public List<String> getAnalyzerNames() {
+		return Arrays.asList("mock1", "mock2", "mock3");
+	}
+
+	@Override
+	public MessageAnalyzer getAnalyzer(String name, long startTime) {
 		if (name.equals("mock1")) {
 			MockAnalyzer1 analyzer = new MockAnalyzer1();
 			return analyzer;
@@ -19,6 +27,7 @@ public class ManyAnalyerMockFactory implements MessageAnalyzerFactory {
 			MockAnalyzer3 analyzer = new MockAnalyzer3();
 			return analyzer;
 		}
+
 		return null;
 	}
 }
