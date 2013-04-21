@@ -66,9 +66,9 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private int m_queueSize = 500000;
 
-	private int m_errorCount;
+	private volatile int m_errorCount;
 
-	private long m_processCount;
+	private volatile long m_processCount;
 
 	@Inject
 	private ServerConfigManager m_serverConfigManager;

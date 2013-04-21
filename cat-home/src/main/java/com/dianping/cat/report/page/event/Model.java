@@ -110,6 +110,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_mobileResponse;
 	}
 
+	public String getPieChart() {
+		return m_pieChart;
+	}
+
 	public EventReport getReport() {
 		return m_report;
 	}
@@ -154,20 +158,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_mobileResponse = mobileResponse;
 	}
 
+	public void setPieChart(String pieChart) {
+		m_pieChart = pieChart;
+	}
+
 	public void setReport(EventReport report) {
 		m_report = report;
 	}
 
 	public void setType(String type) {
 		m_type = type;
-	}
-
-	public String getPieChart() {
-		return m_pieChart;
-	}
-
-	public void setPieChart(String pieChart) {
-		m_pieChart = pieChart;
 	}
 
 }

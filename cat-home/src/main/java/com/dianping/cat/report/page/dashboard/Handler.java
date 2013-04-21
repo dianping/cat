@@ -191,7 +191,7 @@ public class Handler implements PageHandler<Context> {
 
 		TransactionReport transactionReport = getTransactionHourlyReport(domain, ip, null);
 
-		if(transactionReport==null){
+		if (transactionReport == null) {
 			return data;
 		}
 		Machine transactionMachine = transactionReport.getMachines().get(ip);
@@ -205,6 +205,9 @@ public class Handler implements PageHandler<Context> {
 		}
 		EventReport eventReport = getEventHourlyReport(domain, ip, null);
 
+		if (eventReport == null) {
+			return data;
+		}
 		com.dianping.cat.consumer.event.model.entity.Machine eventMachine = eventReport.getMachines().get(ip);
 		if (eventMachine != null) {
 			long exceptionCount = 0;

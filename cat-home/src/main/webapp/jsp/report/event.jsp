@@ -57,23 +57,21 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
-			<th><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type"> Type</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
+			<th> Type</a></th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
 			<th class="right">Sample Link</th>
 						<th class="right">TPS</th>
 					</tr>
+			
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align: left"><a
+					<td style="text-align: left"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type"><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${item.type}&ip=${model.ipAddress}"
+							class="graph_link" data-status="${status.index}">[:: show ::]</a>&nbsp;&nbsp;<a
 								href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
@@ -82,26 +80,22 @@
 								href="${model.logViewBaseUri}/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
+				<tr class="graphs">
+						<td colspan="7"><div id="${status.index}" style="display: none"></div></td>
+					</tr>
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
 		<tr>
-			<th><a
-							href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.type}"
+			<th><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.type}&ip=${model.ipAddress}"
 							class="graph_link" data-status="-1">[:: show ::]</a>
-			<a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type"> Name</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
+			<a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type"> Name</a></th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
+			<th class="right"><a    href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
 			<th class="right">Sample Link</th>
-						<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">TPS</a></th>
-			<th class="right"><a
-							href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Percent%</a></th>
+						<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">TPS</a></th>
+			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Percent%</a></th>
 					</tr>
 			<tr class="graphs">
 						<td colspan="7"><div id="-1" style="display: none"></div></td>
@@ -111,9 +105,13 @@
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-					<td style="text-align: left"><a
+					<td style="text-align: left">
+					<c:choose>
+					<c:when test="${status.index > 0}">
+						<a
 								href="?op=graphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${e.id}"
-								class="graph_link" data-status="${status.index}">[:: show ::]</a> ${e.id}</td>
+								class="graph_link" data-status="${status.index}">[:: show ::]</a>
+					</c:when></c:choose> ${e.id}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.00%')}</td>

@@ -44,54 +44,40 @@ public class HistoryGraphs {
 		}
 	}
 
-	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name,
-	      List<Graph> graphs) {
-		Map<String, double[]> result = new HashMap<String, double[]>();
-		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
-		double[] total_count = new double[size];
-		double[] failure_count = new double[size];
-		double[] sum = new double[size];
+	private HistoryGraphItem buildAvg(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+		HistoryGraphItem item = new HistoryGraphItem();
 
-		for (int i = 0; i < size; i++) {
-			total_count[i] = NOTEXIST;
-			failure_count[i] = NOTEXIST;
-			sum[i] = NOTEXIST;
-		}
+		item.setStart(start);
+		item.setSize(size);
+		item.setStep(step);
+		item.setTitles(name + " Response Time (ms)");
 
-		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
-				String summaryContent = graph.getSummaryContent();
-				String[] allLines = summaryContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
-						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
-						appendArray(sum, indexOfperiod, records[SummaryOrder.SUM.ordinal()], 12);
-					}
+		for (Map<String, double[]> data : datas) {
+			double[] sum = data.get("sum");
+			double[] totalCount = data.get("total_count");
+			double[] avg = new double[sum.length];
+			for (int i = 0; i < sum.length; i++) {
+				if (totalCount[i] > 0) {
+					avg[i] = sum[i] / totalCount[i];
 				}
 			}
-		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
-			for (Graph graph : graphs) {
-				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
-				String detailContent = graph.getDetailContent();
-				String[] allLines = detailContent.split("\n");
-				for (int j = 0; j < allLines.length; j++) {
-					String[] records = allLines[j].split("\t");
-					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
-						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
-						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
-						appendArray(sum, indexOfperiod, records[DetailOrder.SUM.ordinal()], 12);
-					}
-				}
-			}
+			item.addValue(avg);
 		}
+		return item;
+	}
 
-		result.put("total_count", total_count);
-		result.put("failure_count", failure_count);
-		result.put("sum", sum);
-		return result;
+	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+		HistoryGraphItem item = new HistoryGraphItem();
+
+		item.setStart(start);
+		item.setSize(size);
+		item.setStep(step);
+		item.setTitles(name + " Error (count)");
+
+		for (Map<String, double[]> data : datas) {
+			item.addValue(data.get("failure_count"));
+		}
+		return item;
 	}
 
 	public Map<String, double[]> buildGraphDatasForDaily(Date start, Date end, String type, String name,
@@ -144,26 +130,54 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	private HistoryGraphItem buildAvg(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	public Map<String, double[]> buildGraphDatasForHour(Date start, Date end, String type, String name,
+	      List<Graph> graphs) {
+		Map<String, double[]> result = new HashMap<String, double[]>();
+		int size = (int) ((end.getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+		double[] total_count = new double[size];
+		double[] failure_count = new double[size];
+		double[] sum = new double[size];
 
-		item.setStart(start);
-		item.setSize(size);
-		item.setStep(step);
-		item.setTitles(name + " Response Time (ms)");
+		for (int i = 0; i < size; i++) {
+			total_count[i] = NOTEXIST;
+			failure_count[i] = NOTEXIST;
+			sum[i] = NOTEXIST;
+		}
 
-		for (Map<String, double[]> data : datas) {
-			double[] sum = data.get("sum");
-			double[] totalCount = data.get("total_count");
-			double[] avg = new double[sum.length];
-			for (int i = 0; i < sum.length; i++) {
-				if (totalCount[i] > 0) {
-					avg[i] = sum[i] / totalCount[i];
+		if (!StringUtils.isEmpty(type) && StringUtils.isEmpty(name)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+				String summaryContent = graph.getSummaryContent();
+				String[] allLines = summaryContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					if (records[SummaryOrder.TYPE.ordinal()].equals(type)) {
+						appendArray(total_count, indexOfperiod, records[SummaryOrder.TOTAL_COUNT.ordinal()], 12);
+						appendArray(failure_count, indexOfperiod, records[SummaryOrder.FAILURE_COUNT.ordinal()], 12);
+						appendArray(sum, indexOfperiod, records[SummaryOrder.SUM.ordinal()], 12);
+					}
 				}
 			}
-			item.addValue(avg);
+		} else if (!StringUtils.isEmpty(type) && !StringUtils.isEmpty(name)) {
+			for (Graph graph : graphs) {
+				int indexOfperiod = (int) ((graph.getPeriod().getTime() - start.getTime()) * 12 / TimeUtil.ONE_HOUR);
+				String detailContent = graph.getDetailContent();
+				String[] allLines = detailContent.split("\n");
+				for (int j = 0; j < allLines.length; j++) {
+					String[] records = allLines[j].split("\t");
+					if (records[DetailOrder.TYPE.ordinal()].equals(type) && records[DetailOrder.NAME.ordinal()].equals(name)) {
+						appendArray(total_count, indexOfperiod, records[DetailOrder.TOTAL_COUNT.ordinal()], 12);
+						appendArray(failure_count, indexOfperiod, records[DetailOrder.FAILURE_COUNT.ordinal()], 12);
+						appendArray(sum, indexOfperiod, records[DetailOrder.SUM.ordinal()], 12);
+					}
+				}
+			}
 		}
-		return item;
+
+		result.put("total_count", total_count);
+		result.put("failure_count", failure_count);
+		result.put("sum", sum);
+		return result;
 	}
 
 	private HistoryGraphItem buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
@@ -177,20 +191,6 @@ public class HistoryGraphs {
 		for (Map<String, double[]> data : datas) {
 			double[] totalCount = data.get("total_count");
 			item.addValue(totalCount);
-		}
-		return item;
-	}
-
-	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
-
-		item.setStart(start);
-		item.setSize(size);
-		item.setStep(step);
-		item.setTitles(name + " Error (count)");
-
-		for (Map<String, double[]> data : datas) {
-			item.addValue(data.get("failure_count"));
 		}
 		return item;
 	}
