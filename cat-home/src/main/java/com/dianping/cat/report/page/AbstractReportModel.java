@@ -10,7 +10,7 @@ import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ViewModel;
 
-import com.dainping.cat.consumer.dal.report.Project;
+import com.dainping.cat.consumer.core.dal.Project;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.report.view.DomainNavManager.Department;

@@ -3,7 +3,6 @@ package com.dianping.cat.consumer;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,57 +15,41 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.CatConstants;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
-import com.dianping.cat.message.spi.MessageAnalyzer;
-import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.message.spi.MessageQueue;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.status.ServerStateManager;
-import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
-/**
- * This is the real time consumer process framework.
- * <p>
- * 
- * @author yong.you
- * @since Jan 5, 2012
- */
+import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
+import com.dianping.cat.consumer.core.ProblemAnalyzer;
+import com.dianping.cat.consumer.core.TopAnalyzer;
+import com.dianping.cat.consumer.core.TransactionAnalyzer;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.io.DefaultMessageQueue;
+import com.dianping.cat.message.spi.MessageConsumer;
+import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.status.ServerStateManager;
+
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
-	private static final long MINUTE = 60 * 1000L;
-
-	private static final long FIVE_MINUTES = 5 * MINUTE;
-
-	private static final long HOUR = 60 * MINUTE;
+	public static final String ID = "realtime";
 
 	@Inject
-	private AnalyzerFactory m_factory;
-
-	@Inject
-	private long m_duration = 1 * HOUR;
-
-	@Inject
-	private long m_extraTime = FIVE_MINUTES;
+	private MessageAnalyzerManager m_analyzerManager;
 
 	@Inject
 	private ServerStateManager m_serverStateManager;
 
-	@Inject
-	private List<String> m_analyzerNames;
+	private static final long MINUTE = 60 * 1000L;
 
-	private Set<String> m_domains = new HashSet<String>();
+	@Inject
+	private long m_duration = 60 * MINUTE;
+
+	@Inject
+	private long m_extraTime = 3 * MINUTE;
 
 	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
 
@@ -74,14 +57,14 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private PeriodManager m_periodManager;
 
-	private CountDownLatch m_latch;
-
 	private long m_networkError;
+
+	private static int QUEUE_SIZE = 500000;
 
 	@Override
 	public void consume(MessageTree tree) {
 		try {
-			m_latch.await();
+			m_periodManager.waitUntilStarted();
 		} catch (InterruptedException e) {
 			// ignore it
 		}
@@ -91,14 +74,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		if (period != null) {
 			period.distribute(tree);
-
-			String domain = tree.getDomain();
-
-			if (!m_domains.contains(domain)) {
-				m_domains.add(domain);
-			}
 		} else {
 			m_serverStateManager.addNetworkTimeError(1);
+
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 			String domain = tree.getDomain();
 			Integer size = m_errorTimeDomains.get(domain);
@@ -108,14 +86,14 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			} else {
 				size++;
 			}
-			m_errorTimeDomains.put(domain, size);
 
+			m_errorTimeDomains.put(domain, size);
 			m_networkError++;
+
 			if (m_networkError % (CatConstants.ERROR_COUNT * 10) == 0) {
 				m_logger.error("Error network time:" + m_errorTimeDomains);
 				m_logger.error("The timestamp of message is out of range, IGNORED! "
-				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " "
-				      + tree.getIpAddress());
+				      + sdf.format(new Date(tree.getMessage().getTimestamp())) + " " + tree.getDomain() + " " + tree.getIpAddress());
 			}
 		}
 	}
@@ -132,6 +110,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				analyzer.doCheckpoint(false);
 			}
 
+			try {
+				// wait dump analyzer store completed
+				Thread.sleep(10 * 1000);
+			} catch (InterruptedException e) {
+				// ignore
+			}
 			t.setStatus(Message.SUCCESS);
 		} catch (RuntimeException e) {
 			cat.logError(e);
@@ -144,11 +128,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public String getConsumerId() {
-		return "realtime";
 	}
 
 	public MessageAnalyzer getCurrentAnalyzer(String name) {
@@ -174,18 +153,9 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_latch = new CountDownLatch(1);
-		m_periodManager = new PeriodManager(m_latch);
+		m_periodManager = new PeriodManager();
 
 		Threads.forGroup("Cat").start(m_periodManager);
-	}
-
-	public void setAnalyzers(String analyzers) {
-		m_analyzerNames = Splitters.by(',').noEmptyItem().trim().split(analyzers);
-	}
-
-	public void setExtraTime(long time) {
-		m_extraTime = time;
 	}
 
 	class Period {
@@ -196,16 +166,18 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		private List<PeriodTask> m_tasks;
 
 		public Period(long startTime, long endTime) {
+			List<String> names = m_analyzerManager.getAnalyzerNames();
+
 			m_startTime = startTime;
 			m_endTime = endTime;
-			m_tasks = new ArrayList<PeriodTask>(m_analyzerNames.size());
+			m_tasks = new ArrayList<PeriodTask>(names.size());
 
 			Map<String, MessageAnalyzer> analyzers = new HashMap<String, MessageAnalyzer>();
 
-			for (String name : m_analyzerNames) {
-				MessageAnalyzer analyzer = m_factory.create(name, startTime, m_duration, m_extraTime);
-				MessageQueue queue = lookup(MessageQueue.class);
-				PeriodTask task = new PeriodTask(m_factory, analyzer, queue, startTime);
+			for (String name : names) {
+				MessageAnalyzer analyzer = m_analyzerManager.getAnalyzer(name, startTime);
+				MessageQueue queue = new DefaultMessageQueue(QUEUE_SIZE);
+				PeriodTask task = new PeriodTask(m_serverStateManager, analyzer, queue, startTime);
 
 				analyzers.put(name, analyzer);
 				task.enableLogging(m_logger);
@@ -213,12 +185,14 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			}
 
 			// hack for dependency
-			MessageAnalyzer top = analyzers.get("top");
-			MessageAnalyzer transaction = analyzers.get("transaction");
-			MessageAnalyzer problem = analyzers.get("problem");
+			MessageAnalyzer top = analyzers.get(TopAnalyzer.ID);
+			MessageAnalyzer transaction = analyzers.get(TransactionAnalyzer.ID);
+			MessageAnalyzer problem = analyzers.get(ProblemAnalyzer.ID);
 
-			((TopAnalyzer) top).setTransactionAnalyzer((TransactionAnalyzer) transaction);
-			((TopAnalyzer) top).setProblemAnalyzer((ProblemAnalyzer) problem);
+			if (top != null) {
+				((TopAnalyzer) top).setTransactionAnalyzer((TransactionAnalyzer) transaction);
+				((TopAnalyzer) top).setProblemAnalyzer((ProblemAnalyzer) problem);
+			}
 		}
 
 		public void distribute(MessageTree tree) {
@@ -262,7 +236,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		public MessageAnalyzer getAnalyzer(String name) {
-			int index = m_analyzerNames.indexOf(name);
+			List<String> names = m_analyzerManager.getAnalyzerNames();
+			int index = names.indexOf(name);
 
 			if (index >= 0) {
 				PeriodTask task = m_tasks.get(index);
@@ -290,8 +265,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void start() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
-			      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+			m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(), df.format(new Date(m_startTime)),
+			      df.format(new Date(m_endTime - 1))));
 
 			for (PeriodTask task : m_tasks) {
 				Threads.forGroup("Cat-RealtimeConsumer").start(task);
@@ -308,10 +283,14 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		private CountDownLatch m_latch;
 
-		public PeriodManager(CountDownLatch latch) {
-			m_strategy = new PeriodStrategy(m_duration, m_extraTime, 3 * MINUTE);
+		public PeriodManager() {
+			m_strategy = new PeriodStrategy(m_duration, m_extraTime, m_extraTime);
 			m_active = true;
-			m_latch = latch;
+			m_latch = new CountDownLatch(1);
+		}
+
+		public void waitUntilStarted() throws InterruptedException {
+			m_latch.await();
 		}
 
 		private void endPeriod(long startTime) {
@@ -348,28 +327,36 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			long startTime = m_strategy.next(System.currentTimeMillis());
 
 			// for current period
-			startPeriod(startTime);
-			m_latch.countDown();
-
 			try {
-				while (m_active) {
-					long now = System.currentTimeMillis();
-					long value = m_strategy.next(now);
+				startPeriod(startTime);
+				m_latch.countDown();
 
-					if (value == 0) {
-						// do nothing here
-					} else if (value > 0) {
-						// prepare next period in ahead of 3 minutes
-						startPeriod(value);
-					} else {
-						// last period is over
-						endPeriod(-value);
+				while (m_active) {
+					try {
+						long now = System.currentTimeMillis();
+						long value = m_strategy.next(now);
+
+						if (value == 0) {
+							// do nothing here
+						} else if (value > 0) {
+							// prepare next period in ahead of 3 minutes
+							startPeriod(value);
+						} else {
+							// last period is over
+							endPeriod(-value);
+						}
+					} catch (Throwable e) {
+						Cat.logError(e);
 					}
 
-					Thread.sleep(1000L);
+					try {
+						Thread.sleep(1000L);
+					} catch (InterruptedException e) {
+						break;
+					}
 				}
-			} catch (InterruptedException e) {
-				// ignore it
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 
@@ -379,132 +366,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		}
 
 		private void startPeriod(long startTime) {
-			long endTime = startTime + m_duration;
+			long endTime = startTime + m_strategy.getDuration();
 			Period period = new Period(startTime, endTime);
 
 			m_periods.add(period);
 			period.start();
-		}
-	}
-
-	public class PeriodStrategy {
-		private long m_duration;
-
-		private long m_extraTime;
-
-		private long m_aheadTime;
-
-		private long m_lastStartTime;
-
-		private long m_lastEndTime;
-
-		public PeriodStrategy(long duration, long extraTime, long aheadTime) {
-			m_duration = duration;
-			m_extraTime = extraTime;
-			m_aheadTime = aheadTime;
-			m_lastStartTime = -1;
-			m_lastEndTime = 0;
-		}
-
-		public long next(long now) {
-			long startTime = now - now % m_duration;
-
-			// for current period
-			if (startTime > m_lastStartTime) {
-				m_lastStartTime = startTime;
-				return startTime;
-			}
-
-			// prepare next period ahead
-			if (now - m_lastStartTime >= m_duration - m_aheadTime) {
-				m_lastStartTime = startTime + m_duration;
-				return startTime + m_duration;
-			}
-
-			// last period is over
-			if (now - m_lastEndTime >= m_duration + m_extraTime) {
-				long lastEndTime = m_lastEndTime;
-				m_lastEndTime = startTime;
-				return -lastEndTime;
-			}
-
-			return 0;
-		}
-	}
-
-	public class PeriodTask implements Task, LogEnabled {
-		private AnalyzerFactory m_factory;
-
-		private MessageAnalyzer m_analyzer;
-
-		private MessageQueue m_queue;
-
-		private long m_startTime;
-
-		private int m_queueOverflow;
-
-		private Logger m_logger;
-
-		public PeriodTask(AnalyzerFactory factory, MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
-			m_factory = factory;
-			m_analyzer = analyzer;
-			m_queue = queue;
-			m_startTime = startTime;
-		}
-
-		@Override
-		public void enableLogging(Logger logger) {
-			m_logger = logger;
-		}
-
-		public boolean enqueue(MessageTree tree) {
-			boolean result = m_queue.offer(tree);
-
-			if (!result) { // trace queue overflow
-				m_queueOverflow++;
-				if (m_queueOverflow % CatConstants.ERROR_COUNT == 0) {
-					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
-					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
-				}
-			}
-			return result;
-		}
-
-		public void finish() {
-			try {
-				m_analyzer.doCheckpoint(true);
-			} finally {
-				m_factory.release(m_analyzer);
-				m_factory.release(m_queue);
-			}
-		}
-
-		public MessageAnalyzer getAnalyzer() {
-			return m_analyzer;
-		}
-
-		@Override
-		public String getName() {
-			Calendar cal = Calendar.getInstance();
-
-			cal.setTimeInMillis(m_startTime);
-			return m_analyzer.getClass().getSimpleName() + "-" + cal.get(Calendar.HOUR_OF_DAY);
-		}
-
-		@Override
-		public void run() {
-			try {
-				m_analyzer.analyze(m_queue);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-		}
-
-		@Override
-		public void shutdown() {
-			if (m_analyzer instanceof AbstractMessageAnalyzer) {
-				((AbstractMessageAnalyzer<?>) m_analyzer).shutdown();
-			}
 		}
 	}
 }

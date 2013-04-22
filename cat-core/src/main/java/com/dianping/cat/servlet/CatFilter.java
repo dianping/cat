@@ -27,13 +27,21 @@ public class CatFilter implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
 		HttpServletRequest req = (HttpServletRequest) request;
-		String sessionToken = getSessionIdFromCookie(req);
+		boolean isRoot = !Cat.getManager().hasContext();
 
-		// setup for thread local data
-		Cat.setup(sessionToken);
+		if (isRoot) {
+			String sessionToken = getSessionIdFromCookie(req);
+			Cat.setup(sessionToken);
+		}
 
 		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction(CatConstants.TYPE_URL, getOriginalUrl(request));
+		Transaction t = null;
+
+		if (isRoot) {
+			t = cat.newTransaction(CatConstants.TYPE_URL, getOriginalUrl(request));
+		} else {
+			t = cat.newTransaction(CatConstants.TYPE_URL + ".Forward", getOriginalUrl(request));
+		}
 
 		logRequestClientInfo(cat, req);
 		logRequestPayload(cat, req);
@@ -65,7 +73,9 @@ public class CatFilter implements Filter {
 			throw e;
 		} finally {
 			t.complete();
-			Cat.reset();
+			if (isRoot) {
+				Cat.reset();
+			}
 		}
 	}
 

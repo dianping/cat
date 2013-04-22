@@ -40,6 +40,7 @@ public class CatCoreModule extends AbstractModule {
 		Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
 		// bring up TransportManager
 		ctx.lookup(TransportManager.class);
+		
 		// start status update task
 		if (clientConfigManager.isCatEnabled()) {
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);

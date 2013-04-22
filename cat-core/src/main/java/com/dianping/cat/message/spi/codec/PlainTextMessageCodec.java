@@ -6,25 +6,29 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
+import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import org.unidal.lookup.annotation.Inject;
 
 public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	public static final String ID = "plain-text";
@@ -99,39 +103,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		String type = helper.read(buf, TAB);
 		String name = helper.readRaw(buf, TAB);
 
-		if (identifier == 'E') {
-			DefaultEvent event = new DefaultEvent(type, name);
-			String status = helper.read(buf, TAB);
-			String data = helper.readRaw(buf, TAB);
-
-			helper.read(buf, LF); // get rid of line feed
-			event.setTimestamp(m_dateHelper.parse(timestamp));
-			event.setStatus(status);
-			event.addData(data);
-
-			if (parent != null) {
-				parent.addChild(event);
-				return parent;
-			} else {
-				return event;
-			}
-		} else if (identifier == 'H') {
-			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
-			String status = helper.read(buf, TAB);
-			String data = helper.readRaw(buf, TAB);
-
-			helper.read(buf, LF); // get rid of line feed
-			heartbeat.setTimestamp(m_dateHelper.parse(timestamp));
-			heartbeat.setStatus(status);
-			heartbeat.addData(data);
-
-			if (parent != null) {
-				parent.addChild(heartbeat);
-				return parent;
-			} else {
-				return heartbeat;
-			}
-		} else if (identifier == 't') {
+		if (identifier == 't') {
 			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
 
 			helper.read(buf, LF); // get rid of line feed
@@ -176,6 +148,54 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			parent.setDurationInMicros(d);
 
 			return stack.pop();
+		} else if (identifier == 'E') {
+			DefaultEvent event = new DefaultEvent(type, name);
+			String status = helper.read(buf, TAB);
+			String data = helper.readRaw(buf, TAB);
+
+			helper.read(buf, LF); // get rid of line feed
+			event.setTimestamp(m_dateHelper.parse(timestamp));
+			event.setStatus(status);
+			event.addData(data);
+
+			if (parent != null) {
+				parent.addChild(event);
+				return parent;
+			} else {
+				return event;
+			}
+		} else if (identifier == 'M') {
+			DefaultMetric metric = new DefaultMetric(type, name);
+			String status = helper.read(buf, TAB);
+			String data = helper.readRaw(buf, TAB);
+
+			helper.read(buf, LF); // get rid of line feed
+			metric.setTimestamp(m_dateHelper.parse(timestamp));
+			metric.setStatus(status);
+			metric.addData(data);
+
+			if (parent != null) {
+				parent.addChild(metric);
+				return parent;
+			} else {
+				return metric;
+			}
+		} else if (identifier == 'H') {
+			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
+			String status = helper.read(buf, TAB);
+			String data = helper.readRaw(buf, TAB);
+
+			helper.read(buf, LF); // get rid of line feed
+			heartbeat.setTimestamp(m_dateHelper.parse(timestamp));
+			heartbeat.setStatus(status);
+			heartbeat.addData(data);
+
+			if (parent != null) {
+				parent.addChild(heartbeat);
+				return parent;
+			} else {
+				return heartbeat;
+			}
 		} else {
 			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: "
 			      + buf.toString(Charset.forName("utf-8")));
@@ -198,6 +218,11 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				break;
 			}
 		}
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 	@Override
@@ -289,9 +314,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	public int encodeMessage(Message message, ChannelBuffer buf) {
-		if (message instanceof Event) {
-			return encodeLine(message, buf, 'E', Policy.DEFAULT);
-		} else if (message instanceof Transaction) {
+		if (message instanceof Transaction) {
 			Transaction transaction = (Transaction) message;
 			List<Message> children = transaction.getChildren();
 
@@ -313,6 +336,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 				return count;
 			}
+		} else if (message instanceof Event) {
+			return encodeLine(message, buf, 'E', Policy.DEFAULT);
+		} else if (message instanceof Metric) {
+			return encodeLine(message, buf, 'M', Policy.DEFAULT);
 		} else if (message instanceof Heartbeat) {
 			return encodeLine(message, buf, 'H', Policy.DEFAULT);
 		} else {
@@ -386,7 +413,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				} catch (UnsupportedEncodingException e) {
 					str = new String(data, 0, length);
 				}
-
 				return str;
 			}
 		}
@@ -430,6 +456,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	protected static class DateHelper {
 		private BlockingQueue<SimpleDateFormat> m_queue = new ArrayBlockingQueue<SimpleDateFormat>(20);
 
+		private Map<String, Long> m_map = new ConcurrentHashMap<String, Long>();
+
 		public String format(long timestamp) {
 			SimpleDateFormat format = m_queue.poll();
 
@@ -447,21 +475,36 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		public long parse(String str) {
-			SimpleDateFormat format = m_queue.poll();
+			int len = str.length();
+			String date = str.substring(0, 10);
+			Long baseline = m_map.get(date);
 
-			if (format == null) {
-				format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-			}
-
-			try {
-				return format.parse(str).getTime();
-			} catch (ParseException e) {
-				return -1;
-			} finally {
-				if (m_queue.remainingCapacity() > 0) {
-					m_queue.offer(format);
+			if (baseline == null) {
+				try {
+					baseline = new SimpleDateFormat("yyyy-MM-dd").parse(date).getTime();
+					m_map.put(date, baseline);
+				} catch (ParseException e) {
+					return -1;
 				}
 			}
+
+			long time = baseline.longValue();
+			long metric = 1;
+			boolean millisecond = true;
+
+			for (int i = len - 1; i > 10; i--) {
+				char ch = str.charAt(i);
+
+				if (ch >= '0' && ch <= '9') {
+					time += (ch - '0') * metric;
+					metric *= 10;
+				} else if (millisecond) {
+					millisecond = false;
+				} else {
+					metric = metric / 100 * 60;
+				}
+			}
+			return time;
 		}
 	}
 
@@ -488,8 +531,4 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
 }

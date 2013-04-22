@@ -8,15 +8,15 @@ public class AlertInfo {
 
 	public static final String EMAIL = "email";
 
-	public static final int EMAIL_TYPE = 0;
+	public static final String SMS = "sms";
+
+	public static final int EMAIL_TYPE = 1;
+
+	public static final int SMS_TYPE = 2;
 
 	public static final String EXCEPTION = "exception";
 
 	public static final String SERVICE = "service";
-
-	public static final String SMS = "sms";
-
-	public static final int SMS_TYPE = 1;
 
 	private int m_alertType;
 
@@ -31,7 +31,7 @@ public class AlertInfo {
 	private int m_ruleId;
 
 	private String m_ruleType;
-	
+
 	private String m_title;
 
 	public int getAlertType() {
@@ -106,6 +106,12 @@ public class AlertInfo {
 	public AlertInfo setTitle(String title) {
 		m_title = title;
 		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "AlertInfo [m_alertType=" + m_alertType + ", m_date=" + m_date + ", m_mails=" + m_mails + ", m_phones="
+		      + m_phones + ", m_ruleId=" + m_ruleId + ", m_ruleType=" + m_ruleType + ", m_title=" + m_title + "]";
 	}
 
 }

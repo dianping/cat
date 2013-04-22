@@ -6,15 +6,14 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.Handler.EventReportFilter;
 
 public class EventReportFilterTest {
 	@Test
 	public void test() throws Exception {
-		DefaultDomParser parser = new DefaultDomParser();
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("event.xml"), "utf-8");
-		EventReport report = parser.parse(source);
+		EventReport report = DefaultSaxParser.parse(source);
 
 		EventReportFilter f1 = new EventReportFilter(null, null, null);
 		String expected1 = Files.forIO().readFrom(getClass().getResourceAsStream("event-type.xml"), "utf-8");

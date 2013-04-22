@@ -136,7 +136,7 @@ public class MobileGraphs {
 	private double[] loadAverageValues() {
 		double[] values = new double[12];
 
-		for (Range range : m_name.getRanges()) {
+		for (Range range : m_name.getRanges().values()) {
 			int value = range.getValue();
 			int k = value / 5;
 
@@ -149,7 +149,7 @@ public class MobileGraphs {
 	protected double[] loadDurationValues() {
 		double[] values = new double[14];
 
-		for (Duration duration : m_name.getDurations()) {
+		for (Duration duration : m_name.getDurations().values()) {
 			int d = duration.getValue();
 			Integer k = m_map.get(d);
 
@@ -166,7 +166,7 @@ public class MobileGraphs {
 	protected double[] loadFailureValues() {
 		double[] values = new double[12];
 
-		for (Range range : m_name.getRanges()) {
+		for (Range range : m_name.getRanges().values()) {
 			int value = range.getValue();
 			int k = value / 5;
 
@@ -179,7 +179,7 @@ public class MobileGraphs {
 	protected double[] loadHitValues() {
 		double[] values = new double[12];
 
-		for (Range range : m_name.getRanges()) {
+		for (Range range : m_name.getRanges().values()) {
 			int value = range.getValue();
 			int k = value / 5;
 

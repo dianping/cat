@@ -11,6 +11,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 public class DateDeserializer implements JsonDeserializer<Date> {
+	@Override
 	public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
 	      throws JsonParseException {
 		String JSONDateToMilliseconds = "\\/(Date\\((.*?)(\\+.*)?\\))\\/";

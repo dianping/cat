@@ -58,7 +58,7 @@
 			<th class="right">Sample Link</th><th class="right">Min(ms)</th><th class="right">Max(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=95line">95Line</a>(ms)</th>
-			<th class="right">Std(ms)</th><th class="right">TPS</th></tr>
+			<th class="right">Std(ms)</th><th class="right">QPS</th></tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -95,7 +95,7 @@
 			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
 			<th class="right">Std(ms)</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">TPS</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>
 			<tr class="graphs"><td colspan="12"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
@@ -127,7 +127,7 @@
 	</c:choose>
 </table>
 <font color="white">${lastIndex}</font>
-
+<res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
 <c:choose>
 	<c:when test="${not empty payload.type}">
 		<table>
@@ -138,12 +138,9 @@
 		</table>
 		<script type="text/javascript">
 			var data = ${model.pieChart};
+			graphPieChart(document.getElementById('transactionGraph'), data);
 		</script>
 	</c:when>
 </c:choose>
-
-
-<res:useJs value="${res.js.local.transaction_js}" target="bottom-js" />
 </jsp:body>
-
 </a:report>

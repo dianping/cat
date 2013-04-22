@@ -249,6 +249,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (d != null) {
 			int longUrlTime = d.getUrlThreshold();
+			
 			if (payload.getRealLongTime() == 0) {
 				payload.setLongTime(longUrlTime);
 			}

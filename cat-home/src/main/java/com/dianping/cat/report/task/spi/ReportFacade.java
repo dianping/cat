@@ -10,9 +10,9 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Task;
-import com.dainping.cat.consumer.dal.report.TaskDao;
-import com.dainping.cat.consumer.dal.report.TaskEntity;
+import com.dainping.cat.consumer.core.dal.Task;
+import com.dainping.cat.consumer.core.dal.TaskDao;
+import com.dainping.cat.consumer.core.dal.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseReportBuilder;
@@ -75,7 +75,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 	private Map<String, ReportBuilder> m_reportBuilders = new HashMap<String, ReportBuilder>();
 
 	public void addNewReportBuild(ReportBuilder newReportBuilder, String name) {
-		this.m_reportBuilders.put(name, newReportBuilder);
+		m_reportBuilders.put(name, newReportBuilder);
 	}
 
 	public boolean builderReport(Task task) {
