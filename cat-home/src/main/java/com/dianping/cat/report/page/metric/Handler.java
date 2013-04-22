@@ -104,15 +104,15 @@ public class Handler implements PageHandler<Context> {
 
 	public class MetricTitle {
 
-		public static final String INDEX = "团购首页";
+		public static final String INDEX = "团购首页(次)";
 
-		public static final String DETAIL = "团购详情";
+		public static final String DETAIL = "团购详情(次)";
 
-		public static final String PAY = "支付页面";
+		public static final String PAY = "支付页面(次)";
 
-		public static final String ORDER = "订单创建数量";
+		public static final String ORDER = "订单创建数量(个)";
 
-		public static final String SUCCESS = "支付金额";
+		public static final String SUCCESS = "支付金额(元)";
 
 	}
 
