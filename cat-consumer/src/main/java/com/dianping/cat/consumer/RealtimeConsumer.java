@@ -55,8 +55,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	@Inject
 	private long m_extraTime = 3 * MINUTE;
 
-	private Set<String> m_domains = new HashSet<String>();
-
 	private Map<String, Integer> m_errorTimeDomains = new HashMap<String, Integer>();
 
 	private Logger m_logger;
@@ -78,12 +76,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 		if (period != null) {
 			period.distribute(tree);
-
-			String domain = tree.getDomain();
-
-			if (!m_domains.contains(domain)) {
-				m_domains.add(domain);
-			}
 		} else {
 			m_serverStateManager.addNetworkTimeError(1);
 

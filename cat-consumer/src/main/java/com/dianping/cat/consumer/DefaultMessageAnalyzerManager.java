@@ -9,7 +9,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 
-
 public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable {
 	private static final long MINUTE = 60 * 1000L;
 
@@ -57,6 +56,10 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 	@Override
 	public void initialize() throws InitializationException {
 		Map<String, MessageAnalyzer> map = lookupMap(MessageAnalyzer.class);
+
+		for (MessageAnalyzer analyzer : map.values()) {
+			analyzer.destroy();
+		}
 
 		m_analyzerNames = new ArrayList<String>(map.keySet());
 	}

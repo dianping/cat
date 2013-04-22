@@ -75,7 +75,7 @@ public class ReportFacade implements LogEnabled, Initializable {
 	private Map<String, ReportBuilder> m_reportBuilders = new HashMap<String, ReportBuilder>();
 
 	public void addNewReportBuild(ReportBuilder newReportBuilder, String name) {
-		this.m_reportBuilders.put(name, newReportBuilder);
+		m_reportBuilders.put(name, newReportBuilder);
 	}
 
 	public boolean builderReport(Task task) {
