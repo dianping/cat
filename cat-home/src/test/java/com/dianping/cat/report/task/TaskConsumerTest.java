@@ -10,7 +10,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dainping.cat.consumer.dal.report.Task;
+import com.dainping.cat.consumer.core.dal.Task;
 import com.dianping.cat.report.task.thread.TaskConsumer;
 
 public class TaskConsumerTest {
@@ -353,7 +353,6 @@ public class TaskConsumerTest {
 		while (!consumerTwo.isStopped()) {
 			Thread.sleep(500);
 		}
-
 
 		Assert.assertEquals("[1, 8, 7, 10, 3, 1, 8, 4]", Arrays.toString(consumerOne.replayer.toArray()));
 

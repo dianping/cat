@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.home.dal.report.Dailygraph;
 
 public class DailyTransactionReportGraphTest {
@@ -17,7 +17,7 @@ public class DailyTransactionReportGraphTest {
 	public void test() throws Exception {
 		String oldXml = Files.forIO()
 		      .readFrom(getClass().getResourceAsStream("TransactionReportDailyGraph.xml"), "utf-8");
-		TransactionReport report1 = new DefaultDomParser().parse(oldXml);
+		TransactionReport report1 = DefaultSaxParser.parse(oldXml);
 
 		DailyTransactionGraphCreator creator = new DailyTransactionGraphCreator();
 

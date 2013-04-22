@@ -69,21 +69,7 @@
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>dummy</role-hint>
-			<implementation>com.dianping.cat.message.spi.consumer.DummyConsumer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.message.spi.MessageConsumer</role>
-			<role-hint>dump-to-html</role-hint>
-			<implementation>com.dianping.cat.message.spi.consumer.DumpToHtmlConsumer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageStorage</role>
-					<role-hint>html</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-			</requirements>
+			<implementation>com.dianping.cat.message.spi.internal.DummyConsumer</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumerRegistry</role>
@@ -99,14 +85,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageQueue</role>
-			<implementation>com.dianping.cat.message.io.DefaultMessageQueue</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<configuration>
-				<size>10000</size>
-			</configuration>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.io.MessageSender</role>
 			<role-hint>tcp-socket</role-hint>
 			<implementation>com.dianping.cat.message.io.TcpSocketSender</implementation>
@@ -120,10 +98,6 @@
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 					<field-name>m_codec</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageQueue</role>
-					<field-name>m_queue</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -141,10 +115,6 @@
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
 					<field-name>m_codec</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageQueue</role>
-					<field-name>m_queue</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -205,9 +175,6 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.storage.dump.ChannelBufferManager</role>
 				</requirement>
 			</requirements>
 		</component>

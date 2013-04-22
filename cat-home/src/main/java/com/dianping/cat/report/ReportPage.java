@@ -23,8 +23,6 @@ public enum ReportPage implements Page {
 
    SQL("sql", "sql", "SQL", "SQL Report", true),
 
-   HEATMAP("heatmap", "heatmap", "Heatmap", "Heatmap", false),
-
    DASHBOARD("dashboard", "dashboard", "Dashboard", "Dashboard", false),
 
    TASK("task", "task", "Task", "Task", false),
@@ -43,7 +41,11 @@ public enum ReportPage implements Page {
 
    QUERY("query", "query", "Query", "Query", true),
 
-   TOP("top", "top", "Top", "Top", true);
+   TOP("top", "top", "Top", "Top", true),
+
+   METRIC("metric", "metric", "Metric", "Metric", true),
+
+   JSERROR("jsError", "jsError", "JsError", "jsError", true);
 
    private String m_name;
 

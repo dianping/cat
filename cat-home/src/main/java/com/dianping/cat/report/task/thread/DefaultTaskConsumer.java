@@ -9,9 +9,9 @@ import java.util.concurrent.locks.LockSupport;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Task;
-import com.dainping.cat.consumer.dal.report.TaskDao;
-import com.dainping.cat.consumer.dal.report.TaskEntity;
+import com.dainping.cat.consumer.core.dal.Task;
+import com.dainping.cat.consumer.core.dal.TaskDao;
+import com.dainping.cat.consumer.core.dal.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.report.task.spi.ReportFacade;

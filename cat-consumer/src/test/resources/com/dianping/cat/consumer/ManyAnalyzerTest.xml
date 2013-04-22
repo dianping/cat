@@ -4,36 +4,33 @@
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>mockManyAnalyzers</role-hint>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
-			<configuration>
-				<analyzers>mock1,mock2,mock3</analyzers>
-			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
+					<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
+			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>mock1</role-hint>
 			<implementation>com.dianping.cat.consumer.ManyAnalyzerTest$MockAnalyzer1</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
+			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>mock2</role-hint>
 			<implementation>com.dianping.cat.consumer.ManyAnalyzerTest$MockAnalyzer2</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
+			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>mock3</role-hint>
 			<implementation>com.dianping.cat.consumer.ManyAnalyzerTest$MockAnalyzer3</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.AnalyzerFactory</role>
-			<implementation>com.dianping.cat.consumer.ManyAnalyerMockFactory</implementation>
+			<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
+			<implementation>com.dianping.cat.consumer.ManyAnalyzerMockManager</implementation>
 		</component>
 	</components>
 </plexus>

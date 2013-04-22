@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat">
-   <webapp package="com.dianping.cat" webres="true" plugin-management="true">
+   <webapp package="com.dianping.cat" webres="true" plugin-management="false">
       <module name="report" path="r">
          <page name="home" title="Home" default="true">
             <description>Home Page</description>
@@ -28,9 +28,6 @@
          </page>
          <page name="sql" title="SQL" path="sql">
             <description>SQL Report</description>
-         </page>
-         <page name="heatmap" title="Heatmap" path="heatmap" standalone="false">
-            <description>Heatmap</description>
          </page>
          <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
             <description>Dashboard</description>
@@ -61,6 +58,12 @@
          </page>
          <page name="top" title="Top" path="top">
             <description>Top</description>
+         </page>
+         <page name="metric" title="Metric" path="metric">
+            <description>Metric</description>
+         </page>
+         <page name="jsError" title="JsError" path="jsError">
+            <description>jsError</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

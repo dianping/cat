@@ -4,13 +4,11 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.consumer.RealtimeConsumer.PeriodStrategy;
 
 public class PeriodStrategyTest {
 	@Test
 	public void test1() {
-		RealtimeConsumer consumer = new RealtimeConsumer();
-		PeriodStrategy strategy = consumer.new PeriodStrategy(60, 5, 3);
+		PeriodStrategy strategy = new PeriodStrategy(60, 5, 3);
 
 		Assert.assertEquals(0, strategy.next(4));
 		Assert.assertEquals(0, strategy.next(5));
@@ -37,8 +35,7 @@ public class PeriodStrategyTest {
 
 	@Test
 	public void test2() {
-		RealtimeConsumer consumer = new RealtimeConsumer();
-		PeriodStrategy strategy = consumer.new PeriodStrategy(60, 5, 3);
+		PeriodStrategy strategy = new PeriodStrategy(60, 5, 3);
 
 		Assert.assertEquals(60, strategy.next(104));
 		Assert.assertEquals(0, strategy.next(105));
@@ -47,5 +44,5 @@ public class PeriodStrategyTest {
 		Assert.assertEquals(180, strategy.next(177));
 		Assert.assertEquals(-120, strategy.next(185));
 	}
-	
+
 }

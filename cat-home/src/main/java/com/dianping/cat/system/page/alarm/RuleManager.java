@@ -154,7 +154,8 @@ public class RuleManager {
 		List<String> domains = new ArrayList<String>();
 
 		model.setDomains(domains);
-
+		AlarmTemplate template = queryTemplateByName(payload.getType());
+		model.setAlarmTemplate(template);
 	}
 
 	public void ruleAddSubmit(Payload payload, Model model) {

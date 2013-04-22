@@ -13,12 +13,12 @@ import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
-import com.dainping.cat.consumer.dal.report.Task;
-import com.dainping.cat.consumer.dal.report.TaskDao;
-import com.dainping.cat.consumer.dal.report.TaskEntity;
+import com.dainping.cat.consumer.core.dal.Report;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.ReportEntity;
+import com.dainping.cat.consumer.core.dal.Task;
+import com.dainping.cat.consumer.core.dal.TaskDao;
+import com.dainping.cat.consumer.core.dal.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.helper.CatString;

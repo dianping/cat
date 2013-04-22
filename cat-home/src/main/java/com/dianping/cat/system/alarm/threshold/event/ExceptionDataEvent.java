@@ -25,6 +25,7 @@ public class ExceptionDataEvent implements Event {
 		return EventType.ExceptionDataEvent;
 	}
 
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 

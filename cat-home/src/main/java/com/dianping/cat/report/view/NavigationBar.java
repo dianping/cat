@@ -12,6 +12,8 @@ public class NavigationBar {
 		ReportPage.HOME,
 
 		ReportPage.TOP,
+		
+		ReportPage.METRIC,
 
 		ReportPage.TRANSACTION,
 
@@ -28,8 +30,6 @@ public class NavigationBar {
 		ReportPage.CACHE,
 
 		ReportPage.IP,
-
-		ReportPage.HEATMAP,
 
 		ReportPage.SQL,
 

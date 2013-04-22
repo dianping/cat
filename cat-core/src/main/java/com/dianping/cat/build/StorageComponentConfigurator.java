@@ -3,14 +3,15 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.unidal.lookup.configuration.AbstractResourceConfigurator;
+import org.unidal.lookup.configuration.Component;
+
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.DefaultBucketManager;
 import com.dianping.cat.storage.report.LocalReportBucket;
-import org.unidal.lookup.configuration.AbstractResourceConfigurator;
-import org.unidal.lookup.configuration.Component;
 
 class StorageComponentConfigurator extends AbstractResourceConfigurator {
 	@Override

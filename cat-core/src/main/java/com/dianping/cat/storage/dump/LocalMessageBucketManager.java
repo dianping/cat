@@ -140,7 +140,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		m_processMessages = new long[m_gzipThreads];
 
 		for (int i = 0; i < m_gzipThreads; i++) {
-			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(100000);
+			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(500000);
 
 			m_messageQueues.put(i, messageQueue);
 			Threads.forGroup("Cat").start(new MessageGzip(messageQueue, i));
@@ -182,7 +182,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
 						bucket.setBaseDir(m_baseDir);
 						bucket.initialize(dataFile);
-						m_buckets.put(dataFile, bucket);
+						synchronized (m_buckets) {
+							m_buckets.put(dataFile, bucket);
+						}
 					}
 				}
 
@@ -239,7 +241,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		if (paths.size() > 0) {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			Transaction t = Cat.newTransaction("System", "Dump" + "-" + ip);
+			Transaction t = Cat.newTransaction("System", "Move" + "-" + ip);
 			t.setStatus(Message.SUCCESS);
 
 			for (String path : paths) {
@@ -252,19 +254,21 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						bucket.close();
 						bucket.archive();
 
-						Cat.getProducer().logEvent("Dump", "Outbox.Normal", Message.SUCCESS, loginfo);
+						Cat.getProducer().logEvent("Move", "Outbox.Normal", Message.SUCCESS, loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);
 						m_logger.error(e.getMessage(), e);
 					}
-					m_buckets.remove(path);
+					synchronized (m_buckets) {
+						m_buckets.remove(path);
+					}
 				} else {
 					try {
 						moveFile(path);
 						moveFile(path + ".idx");
 
-						Cat.getProducer().logEvent("Dump", "Outbox.Abnormal", Message.SUCCESS, loginfo);
+						Cat.getProducer().logEvent("Move", "Outbox.Abnormal", Message.SUCCESS, loginfo);
 					} catch (Exception e) {
 						t.setStatus(e);
 						Cat.logError(e);
@@ -328,7 +332,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) throws IOException {
-		//the message tree of one ip in the same hour should be put in one gzip thread
+		// the message tree of one ip in the same hour should be put in one gzip thread
 		String key = id.getDomain() + id.getIpAddress() + id.getTimestamp();
 		int abs = key.hashCode();
 
@@ -390,6 +394,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 		private int m_index;
 
+		private long m_count;
+
 		public BlockingQueue<MessageItem> m_messageQueue;
 
 		public MessageGzip(BlockingQueue<MessageItem> messageQueue, int index) {
@@ -404,37 +410,64 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
-						try {
-							MessageId id = item.getMessageId();
-							String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
-							String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
-							LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-							if (bucket == null) {
-								bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
-								bucket.setBaseDir(m_baseDir);
-								bucket.initialize(dataFile);
-								m_buckets.put(dataFile, bucket);
-							}
-
-							DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
-							ChannelBuffer buf = tree.getBuf();
-							MessageBlock bolck = bucket.storeMessage(buf, id);
-
-							if (bolck != null) {
-								if (!m_messageBlocks.offer(bolck)) {
-									m_serverStateManager.addBlockLoss(1);
-									m_logger.error("Error when offer the block to the dump!");
-								}
-							}
-							m_totalSize += buf.readableBytes();
-						} catch (Exception e) {
-							Cat.logError(e);
+						m_count++;
+						if (m_count % (10 * CatConstants.SUCCESS_COUNT) == 0) {
+							gzipMessage(item, true);
+						} else {
+							gzipMessage(item, false);
 						}
 					}
 				}
 			} catch (InterruptedException e) {
 				// ignore it
+			}
+		}
+
+		private void gzipMessage(MessageItem item, boolean monitor) {
+			Transaction t = null;
+
+			if (monitor) {
+				t = Cat.newTransaction("Gzip", "Thread-" + m_index);
+			}
+			try {
+				MessageId id = item.getMessageId();
+				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
+				String dataFile = m_pathBuilder.getPath(new Date(id.getTimestamp()), name);
+				LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+				if (bucket == null) {
+					bucket = (LocalMessageBucket) lookup(MessageBucket.class, LocalMessageBucket.ID);
+					bucket.setBaseDir(m_baseDir);
+					bucket.initialize(dataFile);
+					synchronized (m_buckets) {
+						m_buckets.put(dataFile, bucket);
+               }
+				}
+
+				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
+				ChannelBuffer buf = tree.getBuf();
+				MessageBlock bolck = bucket.storeMessage(buf, id);
+
+				if (bolck != null) {
+					if (!m_messageBlocks.offer(bolck)) {
+						m_serverStateManager.addBlockLoss(1);
+						m_logger.error("Error when offer the block to the dump!");
+					}
+				}
+				m_totalSize += buf.readableBytes();
+
+				if (t != null) {
+					t.setStatus(Message.SUCCESS);
+				}
+			} catch (Exception e) {
+				Cat.logError(e);
+				if (t != null) {
+					t.setStatus(e);
+				}
+			} finally {
+				if (t != null) {
+					t.complete();
+				}
 			}
 		}
 
@@ -514,7 +547,11 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 						}
 						m_serverStateManager.addBlockTotal(1);
 						if ((++m_success) % 10000 == 0) {
-							m_logger.info("block queue size " + m_messageBlocks.size());
+							int size = m_messageBlocks.size();
+
+							if (size > 0) {
+								m_logger.info("block queue size " + size);
+							}
 						}
 						long duration = System.currentTimeMillis() - time;
 						m_serverStateManager.addBlockTime(duration);

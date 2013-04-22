@@ -10,6 +10,8 @@ import com.dianping.cat.report.page.database.DatabaseReportMergerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.ip.DisplayModelTest;
+import com.dianping.cat.report.page.metric.MetricReportMergerTest;
+import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.model.event.EventModelServiceTest;
@@ -47,22 +49,16 @@ import com.dianping.cat.system.notify.RenderTest;
  */
 
 /* .report.page.model.event */
-EventModelServiceTest.class, EventGraphDataTest.class,
+EventModelServiceTest.class,
 
 /* .report.page.model.transaction */
 TransactionModelServiceTest.class,
-
-/* .report.page.transaction */
-TransactionReportMergerTest.class,
 
 /* .report.graph */
 ValueTranslaterTest.class,
 
 /* .report.page.ip */
 DisplayModelTest.class,
-
-/* .report.page.heartbeart */
-HeartbeatGraphDataTest.class,
 
 /* .report.page.model */
 EventReportFilterTest.class, TransactionReportFilterTest.class,
@@ -105,6 +101,9 @@ RenderTest.class, ThresholdRuleTest.class, TemplateMergerTest.class,
 ReportServiceImplTest.class, StateReportMergerTest.class,
 
 /* Daily Graph Test */
-DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class })
+DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class,
+
+/* Metric */
+MetricReportParseTest.class, MetricReportMergerTest.class})
 public class AllTests {
 }

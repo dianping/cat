@@ -38,7 +38,8 @@ public class Handler implements PageHandler<Context> {
 				ModelPeriod period = ModelPeriod.getByTime(id.getTimestamp());
 				ModelRequest request = new ModelRequest(id.getDomain(), period) //
 				      .setProperty("messageId", messageId) //
-				      .setProperty("waterfall", String.valueOf(waterfall));
+				      .setProperty("waterfall", String.valueOf(waterfall))
+				      .setProperty("timestamp", String.valueOf(id.getTimestamp()));
 
 				if (m_service.isEligable(request)) {
 					ModelResponse<String> response = m_service.invoke(request);

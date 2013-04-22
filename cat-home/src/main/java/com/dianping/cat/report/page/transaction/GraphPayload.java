@@ -67,7 +67,7 @@ public class GraphPayload {
 		protected double[] loadValues() {
 			double[] values = new double[12];
 
-			for (Range range : getTransactionName().getRanges()) {
+			for (Range range : getTransactionName().getRanges().values()) {
 				int value = range.getValue();
 				int k = value / 5;
 
@@ -123,7 +123,7 @@ public class GraphPayload {
 		protected double[] loadValues() {
 			double[] values = new double[17];
 
-			for (Duration duration : getTransactionName().getDurations()) {
+			for (Duration duration : getTransactionName().getDurations().values()) {
 				int d = duration.getValue();
 				Integer k = m_map.get(d);
 
@@ -155,7 +155,7 @@ public class GraphPayload {
 		protected double[] loadValues() {
 			double[] values = new double[12];
 
-			for (Range range : getTransactionName().getRanges()) {
+			for (Range range : getTransactionName().getRanges().values()) {
 				int value = range.getValue();
 				int k = value / 5;
 
@@ -180,7 +180,7 @@ public class GraphPayload {
 		protected double[] loadValues() {
 			double[] values = new double[12];
 
-			for (Range range : getTransactionName().getRanges()) {
+			for (Range range : getTransactionName().getRanges().values()) {
 				int value = range.getValue();
 				int k = value / 5;
 

@@ -17,7 +17,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.transaction.StatisticsComputer;
+import com.dianping.cat.consumer.core.TransactionStatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -62,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_service;
 
-	private StatisticsComputer m_computer = new StatisticsComputer();
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	private Gson m_gson = new Gson();
 
@@ -135,7 +135,6 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
-			calculateTps(payload, report);
 
 			if (payload.getPeriod().isLast()) {
 				Date start = new Date(payload.getDate());
@@ -149,7 +148,13 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
+			if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+				MergeAllMachine all = new MergeAllMachine();
+				all.visitTransactionReport(report);
 
+				report = all.getReport();
+			}
+			calculateTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
@@ -171,12 +176,24 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = "ALL";
+			name = CatString.ALL_NAME;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
-		TransactionReport report = response.getModel();
-		TransactionType t = report.getMachines().get(ip).findType(type);
 
+		TransactionReport report = response.getModel();
+		if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+			MergeAllMachine all = new MergeAllMachine();
+			all.visitTransactionReport(report);
+
+			report = all.getReport();
+		}
+		if (CatString.ALL_NAME.equalsIgnoreCase(name)) {
+			MergeAllName all = new MergeAllName();
+			all.visitTransactionReport(report);
+
+			report = all.getReport();
+		}
+		TransactionType t = report.getMachines().get(ip).findType(type);
 		if (t != null) {
 			TransactionName n = t.findName(name);
 			if (n != null) {
