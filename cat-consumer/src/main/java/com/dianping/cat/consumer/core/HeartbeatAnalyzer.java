@@ -113,17 +113,20 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			period.setHttpThreadCount(thread.getHttpThreadCount());
 
 			MessageInfo catInfo = info.getMessage();
+
 			period.setCatMessageProduced(catInfo.getProduced());
 			period.setCatMessageOverflow(catInfo.getOverflowed());
 			period.setCatMessageSize(catInfo.getBytes());
 
 			MemoryInfo memeryInfo = info.getMemory();
-
 			List<GcInfo> gcs = info.getMemory().getGcs();
+
 			for (GcInfo gc : gcs) {
-				if ("ParNew".equals(gc.getName())) {
+				String name = gc.getName();
+
+				if ("ParNew".equals(name) || "PS Scavenge".equals(name)) {
 					period.setNewGcCount(gc.getCount());
-				} else if ("ConcurrentMarkSweep".equals(gc.getName())) {
+				} else if ("ConcurrentMarkSweep".equals(name) || "PS MarkSweep".equals(name)) {
 					period.setOldGcCount(gc.getCount());
 				}
 			}
