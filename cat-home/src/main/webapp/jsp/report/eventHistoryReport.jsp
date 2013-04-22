@@ -42,7 +42,7 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total${model.customDate}">Total Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
-			<th class="right">Sample Link</th><th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total${model.customDate}">TPS</a></th>
+			<th class="right">Sample Link</th><th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total${model.customDate}">QPS</a></th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
@@ -67,7 +67,7 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}">Total Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failure${model.customDate}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=failurePercent${model.customDate}">Failure%</a></th>
-			<th class="right">Sample Link</th><th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}">TPS</a></th>
+			<th class="right">Sample Link</th><th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}">QPS</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}">Percent%</a></th>
 					
 					</tr>

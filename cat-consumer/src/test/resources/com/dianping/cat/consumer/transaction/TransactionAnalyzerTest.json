@@ -38,57 +38,57 @@
                      "line95Value": "0.00",
                      "line95Sum": "0.00",
                      "line95Count": 0,
-                     "ranges": [
-                        {
+                     "ranges": {
+                        "0": {
                            "value": 0,
                            "count": 500,
                            "sum": 500000.0,
                            "avg": "1000.0",
                            "fails": 0
                         }
-                     ],
-                     "durations": [
-                        {
+                     },
+                     "durations": {
+                        "2": {
                            "value": 2,
                            "count": 1
                         },
-                        {
+                        "8": {
                            "value": 8,
                            "count": 1
                         },
-                        {
+                        "16": {
                            "value": 16,
                            "count": 2
                         },
-                        {
+                        "32": {
                            "value": 32,
                            "count": 4
                         },
-                        {
+                        "64": {
                            "value": 64,
                            "count": 8
                         },
-                        {
+                        "128": {
                            "value": 128,
                            "count": 16
                         },
-                        {
+                        "256": {
                            "value": 256,
                            "count": 32
                         },
-                        {
+                        "512": {
                            "value": 512,
                            "count": 64
                         },
-                        {
+                        "1024": {
                            "value": 1024,
                            "count": 128
                         },
-                        {
+                        "2048": {
                            "value": 2048,
                            "count": 244
                         }
-                     ]
+                     }
                   },
                   "n0": {
                      "id": "n0",
@@ -106,57 +106,57 @@
                      "line95Value": "0.00",
                      "line95Sum": "0.00",
                      "line95Count": 0,
-                     "ranges": [
-                        {
+                     "ranges": {
+                        "0": {
                            "value": 0,
                            "count": 500,
                            "sum": 501000.0,
                            "avg": "1002.0",
                            "fails": 500
                         }
-                     ],
-                     "durations": [
-                        {
+                     },
+                     "durations": {
+                        "4": {
                            "value": 4,
                            "count": 1
                         },
-                        {
+                        "8": {
                            "value": 8,
                            "count": 1
                         },
-                        {
+                        "16": {
                            "value": 16,
                            "count": 2
                         },
-                        {
+                        "32": {
                            "value": 32,
                            "count": 4
                         },
-                        {
+                        "64": {
                            "value": 64,
                            "count": 8
                         },
-                        {
+                        "128": {
                            "value": 128,
                            "count": 16
                         },
-                        {
+                        "256": {
                            "value": 256,
                            "count": 32
                         },
-                        {
+                        "512": {
                            "value": 512,
                            "count": 64
                         },
-                        {
+                        "1024": {
                            "value": 1024,
                            "count": 128
                         },
-                        {
+                        "2048": {
                            "value": 2048,
                            "count": 244
                         }
-                     ]
+                     }
                   }
                }
             },
@@ -195,57 +195,57 @@
                      "line95Value": "0.00",
                      "line95Sum": "0.00",
                      "line95Count": 0,
-                     "ranges": [
-                        {
+                     "ranges": {
+                        "0": {
                            "value": 0,
                            "count": 334,
                            "sum": 167167.0,
                            "avg": "500.5",
                            "fails": 167
                         }
-                     ],
-                     "durations": [
-                        {
+                     },
+                     "durations": {
+                        "1": {
                            "value": 1,
                            "count": 1
                         },
-                        {
+                        "4": {
                            "value": 4,
                            "count": 1
                         },
-                        {
+                        "8": {
                            "value": 8,
                            "count": 1
                         },
-                        {
+                        "16": {
                            "value": 16,
                            "count": 3
                         },
-                        {
+                        "32": {
                            "value": 32,
                            "count": 5
                         },
-                        {
+                        "64": {
                            "value": 64,
                            "count": 11
                         },
-                        {
+                        "128": {
                            "value": 128,
                            "count": 21
                         },
-                        {
+                        "256": {
                            "value": 256,
                            "count": 43
                         },
-                        {
+                        "512": {
                            "value": 512,
                            "count": 85
                         },
-                        {
+                        "1024": {
                            "value": 1024,
                            "count": 163
                         }
-                     ]
+                     }
                   },
                   "n2": {
                      "id": "n2",
@@ -264,53 +264,53 @@
                      "line95Value": "0.00",
                      "line95Sum": "0.00",
                      "line95Count": 0,
-                     "ranges": [
-                        {
+                     "ranges": {
+                        "0": {
                            "value": 0,
                            "count": 333,
                            "sum": 166500.0,
                            "avg": "500.0",
                            "fails": 167
                         }
-                     ],
-                     "durations": [
-                        {
+                     },
+                     "durations": {
+                        "2": {
                            "value": 2,
                            "count": 1
                         },
-                        {
+                        "8": {
                            "value": 8,
                            "count": 2
                         },
-                        {
+                        "16": {
                            "value": 16,
                            "count": 2
                         },
-                        {
+                        "32": {
                            "value": 32,
                            "count": 6
                         },
-                        {
+                        "64": {
                            "value": 64,
                            "count": 10
                         },
-                        {
+                        "128": {
                            "value": 128,
                            "count": 22
                         },
-                        {
+                        "256": {
                            "value": 256,
                            "count": 42
                         },
-                        {
+                        "512": {
                            "value": 512,
                            "count": 86
                         },
-                        {
+                        "1024": {
                            "value": 1024,
                            "count": 162
                         }
-                     ]
+                     }
                   },
                   "n0": {
                      "id": "n0",
@@ -329,53 +329,53 @@
                      "line95Value": "0.00",
                      "line95Sum": "0.00",
                      "line95Count": 0,
-                     "ranges": [
-                        {
+                     "ranges": {
+                        "0": {
                            "value": 0,
                            "count": 333,
                            "sum": 166833.0,
                            "avg": "501.0",
                            "fails": 166
                         }
-                     ],
-                     "durations": [
-                        {
+                     },
+                     "durations": {
+                        "4": {
                            "value": 4,
                            "count": 1
                         },
-                        {
+                        "8": {
                            "value": 8,
                            "count": 1
                         },
-                        {
+                        "16": {
                            "value": 16,
                            "count": 3
                         },
-                        {
+                        "32": {
                            "value": 32,
                            "count": 5
                         },
-                        {
+                        "64": {
                            "value": 64,
                            "count": 11
                         },
-                        {
+                        "128": {
                            "value": 128,
                            "count": 21
                         },
-                        {
+                        "256": {
                            "value": 256,
                            "count": 43
                         },
-                        {
+                        "512": {
                            "value": 512,
                            "count": 85
                         },
-                        {
+                        "1024": {
                            "value": 1024,
                            "count": 163
                         }
-                     ]
+                     }
                   }
                }
             }

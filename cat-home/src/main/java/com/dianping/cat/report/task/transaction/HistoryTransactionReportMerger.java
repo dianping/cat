@@ -11,7 +11,7 @@ public class HistoryTransactionReportMerger extends TransactionReportMerger {
 	}
 
 	@Override
-	protected void mergeName(TransactionName old, TransactionName other) {
+	public void mergeName(TransactionName old, TransactionName other) {
 		old.getDurations().clear();
 		old.getRanges().clear();
 
