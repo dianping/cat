@@ -8,37 +8,26 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dainping.cat.consumer.dal.report.BusinessReportDao;
-import com.dainping.cat.consumer.dal.report.HostinfoDao;
-import com.dainping.cat.consumer.dal.report.ProjectDao;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.SqltableDao;
-import com.dainping.cat.consumer.dal.report.TaskDao;
+import com.dainping.cat.consumer.core.dal.HostinfoDao;
+import com.dainping.cat.consumer.core.dal.ProjectDao;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.AnalyzerFactory;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.consumer.Coordinator;
-import com.dianping.cat.consumer.DefaultAnalyzerFactory;
+import com.dianping.cat.consumer.DefaultMessageAnalyzerManager;
+import com.dianping.cat.consumer.MessageAnalyzer;
+import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
-import com.dianping.cat.consumer.cross.CrossAnalyzer;
-import com.dianping.cat.consumer.database.DatabaseAnalyzer;
-import com.dianping.cat.consumer.dump.DumpAnalyzer;
-import com.dianping.cat.consumer.dump.DumpUploader;
-import com.dianping.cat.consumer.event.EventAnalyzer;
-import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
-import com.dianping.cat.consumer.ip.TopIpAnalyzer;
-import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.handler.DefaultProblemHandler;
-import com.dianping.cat.consumer.problem.handler.Handler;
-import com.dianping.cat.consumer.problem.handler.LongExecutionHandler;
-import com.dianping.cat.consumer.sql.SqlAnalyzer;
-import com.dianping.cat.consumer.sql.SqlParseManager;
-import com.dianping.cat.consumer.state.StateAnalyzer;
-import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.hadoop.hdfs.FileSystemManager;
+import com.dianping.cat.consumer.core.DumpAnalyzer;
+import com.dianping.cat.consumer.core.EventAnalyzer;
+import com.dianping.cat.consumer.core.HeartbeatAnalyzer;
+import com.dianping.cat.consumer.core.ProblemAnalyzer;
+import com.dianping.cat.consumer.core.StateAnalyzer;
+import com.dianping.cat.consumer.core.TopAnalyzer;
+import com.dianping.cat.consumer.core.TransactionAnalyzer;
+import com.dianping.cat.consumer.core.problem.DefaultProblemHandler;
+import com.dianping.cat.consumer.core.problem.LongExecutionProblemHandler;
+import com.dianping.cat.consumer.core.problem.ProblemHandler;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.BucketManager;
@@ -50,72 +39,41 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(Coordinator.class).req(ServerConfigManager.class));
+		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 
-		all.add(C(AnalyzerFactory.class, DefaultAnalyzerFactory.class));
+		all.add(C(MessageConsumer.class, RealtimeConsumer.ID, RealtimeConsumer.class) //
+		      .req(MessageAnalyzerManager.class, ServerStateManager.class));
 
-		all.add(C(SqlParseManager.class, SqlParseManager.class)//
-		      .req(SqltableDao.class));
+		all.add(C(ProblemHandler.class, DefaultProblemHandler.ID, DefaultProblemHandler.class)//
+		      .config(E("failureType").value("URL,SQL,Call,PigeonCall,Cache"))//
+		      .config(E("errorType").value("Error,RuntimeException,Exception")));
 
-		all.add(C(MessageConsumer.class, "realtime", RealtimeConsumer.class) //
-		      .req(AnalyzerFactory.class, ServerStateManager.class, Coordinator.class) //
-		      .config(E("extraTime").value(property("extraTime", "180000"))//
-		            , E("analyzers").value("problem,transaction,event,heartbeat,matrix,cross,database,sql,state,top,metric,dump")));
-
-		String errorTypes = "Error,RuntimeException,Exception";
-		String failureTypes = "URL,SQL,Call,PigeonCall,Cache";
-
-		all.add(C(Handler.class, "DefaultHandler", DefaultProblemHandler.class)//
-		      .config(E("failureType").value(failureTypes))//
-		      .config(E("errorType").value(errorTypes)));
-
-		all.add(C(Handler.class, "LongHandler", LongExecutionHandler.class) //
+		all.add(C(ProblemHandler.class, LongExecutionProblemHandler.ID, LongExecutionProblemHandler.class) //
 		      .req(ServerConfigManager.class));
 
-		all.add(C(ProblemAnalyzer.class).is(PER_LOOKUP) //
+		all.add(C(MessageAnalyzer.class, ProblemAnalyzer.ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class) //
-		      .req(Handler.class, new String[] { "DefaultHandler", "LongHandler" }, "m_handlers"));
+		      .req(ProblemHandler.class, new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
 
-		all.add(C(TransactionAnalyzer.class).is(PER_LOOKUP) //
+		all.add(C(MessageAnalyzer.class, TransactionAnalyzer.ID, TransactionAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 
-		all.add(C(EventAnalyzer.class).is(PER_LOOKUP) //
+		all.add(C(MessageAnalyzer.class, EventAnalyzer.ID, EventAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 
-		all.add(C(CrossAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
-
-		all.add(C(DatabaseAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class));
-
-		all.add(C(SqlAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class));
-
-		all.add(C(MatrixAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
-
-		all.add(C(StateAnalyzer.class).is(PER_LOOKUP)//
+		all.add(C(MessageAnalyzer.class, StateAnalyzer.ID, StateAnalyzer.class).is(PER_LOOKUP)//
 		      .req(HostinfoDao.class, TaskDao.class, ReportDao.class, ProjectDao.class)//
 		      .req(BucketManager.class, ServerStateManager.class));
 
-		all.add(C(TopIpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
-
-		all.add(C(HeartbeatAnalyzer.class).is(PER_LOOKUP) //
+		all.add(C(MessageAnalyzer.class, HeartbeatAnalyzer.ID, HeartbeatAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 
-		all.add(C(DumpAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ServerConfigManager.class, DumpUploader.class, ServerStateManager.class) //
+		all.add(C(MessageAnalyzer.class, DumpAnalyzer.ID, DumpAnalyzer.class).is(PER_LOOKUP) //
+		      .req(ServerStateManager.class) //
 		      .req(MessageBucketManager.class, LocalMessageBucketManager.ID));
 
-		all.add(C(TopAnalyzer.class).is(PER_LOOKUP) //
+		all.add(C(MessageAnalyzer.class, TopAnalyzer.ID, TopAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
-
-		all.add(C(MetricAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, BusinessReportDao.class));
-
-		all.add(C(DumpUploader.class) //
-		      .req(ServerConfigManager.class, FileSystemManager.class));
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
@@ -123,7 +81,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(JdbcDataSourceConfigurationManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
-		all.addAll(new CatDatabaseConfigurator().defineComponents());
+		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 
 		return all;
 	}

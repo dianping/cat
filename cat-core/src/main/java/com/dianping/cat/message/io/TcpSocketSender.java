@@ -2,6 +2,7 @@ package com.dianping.cat.message.io;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -19,16 +20,18 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
+	public static final String ID = "tcp-socket";
+	
 	@Inject
 	private MessageCodec m_codec;
 
@@ -76,6 +79,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		ClientBootstrap bootstrap = new ClientBootstrap(factory);
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+			@Override
 			public ChannelPipeline getPipeline() {
 				return Channels.pipeline(new MyHandler());
 			}
@@ -86,7 +90,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		ChannelFuture future = bootstrap.connect(m_serverAddress);
 
-		future.awaitUninterruptibly();
+		future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
 
 		if (!future.isSuccess()) {
 			m_logger.error("Error when connecting to " + m_serverAddress, future.getCause());
@@ -111,7 +115,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		ChannelFuture future = m_bootstrap.connect(m_serverAddress);
 
-		future.awaitUninterruptibly();
+		future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
 
 		if (!future.isSuccess()) {
 			int count = m_reconnects.incrementAndGet();
@@ -156,7 +160,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 
 		if (m_future != null) {
-			m_future.getChannel().getCloseFuture().awaitUninterruptibly();
+			m_future.getChannel().getCloseFuture().awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100ms
 		}
 
 		if (m_factory != null) {

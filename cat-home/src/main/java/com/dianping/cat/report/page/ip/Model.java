@@ -38,6 +38,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 		}
 	}
 
+	@Override
 	public List<String> getDomains() {
 		if (m_report == null) {
 			return new ArrayList<String>();

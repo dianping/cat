@@ -18,7 +18,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.event.StatisticsComputer;
+import com.dianping.cat.consumer.core.EventStatisticsComputer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -55,7 +55,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "event")
 	private ModelService<EventReport> m_service;
 
-	private StatisticsComputer m_computer = new StatisticsComputer();
+	private EventStatisticsComputer m_computer = new EventStatisticsComputer();
 
 	private void buildEventNameGraph(String ip, String type, EventReport report, Model model) {
 		PieChart chart = new PieChart();

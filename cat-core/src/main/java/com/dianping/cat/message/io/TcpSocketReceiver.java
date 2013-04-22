@@ -103,6 +103,7 @@ public class TcpSocketReceiver implements LogEnabled {
 		ServerBootstrap bootstrap = new ServerBootstrap(factory);
 
 		bootstrap.setPipelineFactory(new ChannelPipelineFactory() {
+			@Override
 			public ChannelPipeline getPipeline() {
 				return Channels.pipeline(new MessageDecoder(), new MyHandler());
 			}

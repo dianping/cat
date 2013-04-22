@@ -8,19 +8,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.internal.AbstractMessage;
-import com.dianping.cat.message.spi.AbstractMessageAnalyzer;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import org.unidal.lookup.ComponentTestCase;
 
 /**
  * The tree message is in the latest two hours
- * 
- * @author yong.you
- * 
  */
 @RunWith(JUnit4.class)
 public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
@@ -57,7 +53,7 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		Assert.assertEquals(1, s_period);
 	}
 
-	public static class MockAnalyzer extends AbstractMessageAnalyzer<AnalyzerResult> {
+	public static class MockAnalyzer extends AbstractMessageAnalyzer<Void> {
 		public MockAnalyzer() {
 			s_period++;
 		}
@@ -78,7 +74,7 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		}
 
 		@Override
-		public AnalyzerResult getReport(String domain) {
+		public Void getReport(String domain) {
 			return null;
 		}
 
@@ -86,10 +82,6 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 		public Set<String> getDomains() {
 			return null;
 		}
-	}
-
-	public static class AnalyzerResult {
-
 	}
 
 	static class MockMessage extends AbstractMessage {
@@ -112,7 +104,6 @@ public class OneAnalyzerTwoDurationTest extends ComponentTestCase {
 
 		@Override
 		public void complete() {
-
 		}
 	}
 }

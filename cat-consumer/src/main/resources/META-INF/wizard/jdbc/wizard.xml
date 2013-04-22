@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <wizard package="com.dianping.cat.consumer">
-   <jdbc package="com.dainping.cat.consumer.dal" name="cat">
+   <jdbc package="com.dainping.cat.consumer.dal" name="CatCore">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://192.168.7.43:3306/cat</url>
@@ -11,10 +11,8 @@
       <group name="report" package="com.dainping.cat.consumer.dal.report">
          <table name="report"/>
          <table name="hostinfo"/>
-         <table name="sqltable"/>
          <table name="task"/>
          <table name="project"/>
-         <table name="businessReport"/>
       </group>
    </jdbc>
 </wizard>

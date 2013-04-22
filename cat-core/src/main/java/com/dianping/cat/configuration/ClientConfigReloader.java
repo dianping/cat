@@ -12,15 +12,13 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
-import com.dianping.cat.configuration.client.transform.DefaultDomParser;
+import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 import com.dianping.cat.message.Message;
 
 public class ClientConfigReloader implements Task {
 	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
 
 	private ClientConfig m_config;
-
-	private DefaultDomParser m_parser;
 
 	private File m_file;
 
@@ -30,7 +28,6 @@ public class ClientConfigReloader implements Task {
 
 	public ClientConfigReloader(String fileName, ClientConfig config) {
 		m_config = config;
-		m_parser = new DefaultDomParser();
 		m_file = new File(fileName);
 		m_lastModifyTime = m_file.lastModified();
 	}
@@ -57,11 +54,11 @@ public class ClientConfigReloader implements Task {
 		if (in != null) {
 			String xml = Files.forIO().readFrom(in, "utf-8");
 
-			clientConfig = new DefaultDomParser().parse(xml);
+			clientConfig = DefaultSaxParser.parse(xml);
 		}
 
 		String content = Files.forIO().readFrom(m_file, "utf-8");
-		ClientConfig globalConfig = m_parser.parse(content);
+		ClientConfig globalConfig = DefaultSaxParser.parse(content);
 
 		if (globalConfig != null && clientConfig != null) {
 			globalConfig.accept(new ClientConfigMerger(clientConfig));

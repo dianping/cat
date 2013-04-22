@@ -49,22 +49,16 @@ import com.dianping.cat.system.notify.RenderTest;
  */
 
 /* .report.page.model.event */
-EventModelServiceTest.class, EventGraphDataTest.class,
+EventModelServiceTest.class,
 
 /* .report.page.model.transaction */
 TransactionModelServiceTest.class,
-
-/* .report.page.transaction */
-TransactionReportMergerTest.class,
 
 /* .report.graph */
 ValueTranslaterTest.class,
 
 /* .report.page.ip */
 DisplayModelTest.class,
-
-/* .report.page.heartbeart */
-HeartbeatGraphDataTest.class,
 
 /* .report.page.model */
 EventReportFilterTest.class, TransactionReportFilterTest.class,

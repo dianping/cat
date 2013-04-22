@@ -35,6 +35,7 @@ public class ThresholdDataEntity {
 		m_domain = domain;
 	}
 
+	@Override
 	public String toString() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		StringBuilder sb = new StringBuilder(100);

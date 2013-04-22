@@ -4,28 +4,31 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.consumer.cross.ParseCrossInfoTest;
-import com.dianping.cat.consumer.database.DatabaseAnalyzerTest;
-import com.dianping.cat.consumer.ip.IpReportTest;
-import com.dianping.cat.consumer.matrix.MatrixReportFilterTest;
-import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
-import com.dianping.cat.consumer.transaction.FormatTest;
-import com.dianping.cat.consumer.transaction.GsonTest;
-import com.dianping.cat.consumer.transaction.NumberFormatTest;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
-import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
-import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzerTest;
-import com.dianping.cat.consumer.transaction.TransactionReportTest;
+import com.dianping.cat.consumer.core.FormatTest;
+import com.dianping.cat.consumer.core.GsonTest;
+import com.dianping.cat.consumer.core.NumberFormatTest;
+import com.dianping.cat.consumer.core.ProblemHandlerTest;
+import com.dianping.cat.consumer.core.TransactionAnalyzerTest;
+import com.dianping.cat.consumer.core.TransactionReportFilterTest;
+import com.dianping.cat.consumer.core.TransactionReportMessageAnalyzerTest;
+import com.dianping.cat.consumer.core.TransactionReportTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
-//OneAnalyzerTwoDurationTest.class,
+PeriodStrategyTest.class,
 
-//ProblemReportTest.class,
+ManyAnalyzerTest.class,
 
-/* .ip */
-IpReportTest.class,
+OneAnalyzerTwoDurationTest.class,
+
+ProblemHandlerTest.class,
+
+FormatTest.class,
+
+GsonTest.class,
+
+NumberFormatTest.class,
 
 TransactionAnalyzerTest.class,
 
@@ -33,22 +36,9 @@ TransactionReportMessageAnalyzerTest.class,
 
 TransactionReportTest.class,
 
-//ManyAnalyzerTest.class,
+TransactionReportFilterTest.class
 
-FormatTest.class, GsonTest.class,
-
-NumberFormatTest.class,
-
-MatrixReportFilterTest.class,
-
-TransactionReportFilterTest.class,
-
-/* cross analyzer */
-ParseCrossInfoTest.class,
-
-DatabaseAnalyzerTest.class,
-
-MetricAnalyzerTest.class})
+})
 public class AllTests {
 
 }

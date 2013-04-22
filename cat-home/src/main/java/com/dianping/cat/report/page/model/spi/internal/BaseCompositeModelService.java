@@ -41,6 +41,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 	protected abstract BaseRemoteModelService<T> createRemoteService();
 
+	@Override
 	public String getName() {
 		return m_name;
 	}

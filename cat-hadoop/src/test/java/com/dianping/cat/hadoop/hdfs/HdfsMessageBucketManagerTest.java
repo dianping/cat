@@ -3,9 +3,11 @@ package com.dianping.cat.hadoop.hdfs;
 import java.io.File;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
@@ -15,7 +17,6 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class HdfsMessageBucketManagerTest extends ComponentTestCase {
@@ -49,6 +50,7 @@ public class HdfsMessageBucketManagerTest extends ComponentTestCase {
 	}
 
 	@Test
+	@Ignore
 	public void testReadWrite() throws Exception {
 		LocalMessageBucketManager localManager = (LocalMessageBucketManager) lookup(MessageBucketManager.class,
 		      LocalMessageBucketManager.ID);

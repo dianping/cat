@@ -40,6 +40,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 	private DailyreportDao m_dailyreportDao;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
@@ -229,6 +230,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 			m_webCache = webCache;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 
@@ -294,6 +296,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 			m_sum = sum;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 
