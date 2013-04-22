@@ -30,8 +30,6 @@ public class MetricDisplay extends BaseVisitor {
 
 	private MetricConfig m_config;
 
-	private static final String COUNT = ":count";
-
 	public MetricDisplay(MetricConfig metricConfig, String channel, Date start) {
 		m_config = metricConfig;
 		m_start = start;
@@ -44,7 +42,7 @@ public class MetricDisplay extends BaseVisitor {
 				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
 			}
 			if (flag.isShowCount()) {
-				String key = flag.getKey() + COUNT;
+				String key = flag.getKey() + ":count";
 				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
 			}
 			if (flag.isShowAvg()) {
@@ -67,7 +65,7 @@ public class MetricDisplay extends BaseVisitor {
 		} else {
 			Map<String, Metric> metrics = metric.getMetrics();
 			Metric m = metrics.get("channel=" + m_channel);
-			
+
 			if (m != null) {
 				buildGraphItem(m.getPoints().values());
 			}
