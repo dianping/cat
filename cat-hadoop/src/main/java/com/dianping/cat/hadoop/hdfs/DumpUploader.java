@@ -4,25 +4,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.hdfs.protocol.AlreadyBeingCreatedException;
 import org.apache.hadoop.security.AccessControlException;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.hadoop.hdfs.FileSystemManager;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.Transaction;
 import org.unidal.helper.Files;
 import org.unidal.helper.Files.AutoClose;
 import org.unidal.helper.Formats;
@@ -31,6 +25,13 @@ import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
 
 public class DumpUploader implements Initializable, LogEnabled {
 	@Inject
@@ -96,16 +97,19 @@ public class DumpUploader implements Initializable, LogEnabled {
 			while (isActive()) {
 				try {
 					if (Cat.isInitialized()) {
-						upload();
+						Calendar cal = Calendar.getInstance();
+
+						if (cal.get(Calendar.MINUTE) >= 10) {
+							upload();
+						}
 					}
 				} catch (Exception e) {
 					m_logger.warn("Error when dumping message to HDFS. " + e.getMessage());
 				}
-
 				try {
 					Thread.sleep(m_sleepPeriod);
 				} catch (InterruptedException e) {
-					// ignore it
+					m_active = false;
 				}
 			}
 		}
@@ -173,6 +177,10 @@ public class DumpUploader implements Initializable, LogEnabled {
 						if (!file.delete()) {
 							m_logger.warn("Can't delete file: " + file);
 						}
+					} catch (AlreadyBeingCreatedException e) {
+						Cat.logError(e);
+						t.setStatus(e);
+						m_logger.error(String.format("Already being created (%s)!", path), e);
 					} catch (AccessControlException e) {
 						cat.logError(e);
 						t.setStatus(e);
@@ -200,7 +208,6 @@ public class DumpUploader implements Initializable, LogEnabled {
 				}
 
 				root.complete();
-				Cat.reset();
 			}
 
 			// the path has two depth

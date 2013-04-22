@@ -1,7 +1,5 @@
 package com.dianping.cat.hadoop.sql;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
@@ -21,7 +19,7 @@ public class MockTransportManager implements TransportManager {
 	}
 
 	static class MockMessageSender implements MessageSender {
-		private DefaultMessageQueue m_queue = new DefaultMessageQueue();
+		private DefaultMessageQueue m_queue = new DefaultMessageQueue(10);
 
 		public MockMessageSender() {
 			initialize();
@@ -33,11 +31,6 @@ public class MockTransportManager implements TransportManager {
 
 		@Override
 		public void initialize() {
-			try {
-				m_queue.initialize();
-			} catch (InitializationException e) {
-				throw new RuntimeException(e);
-			}
 		}
 
 		@Override

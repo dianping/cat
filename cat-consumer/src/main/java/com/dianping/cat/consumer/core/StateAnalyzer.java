@@ -21,8 +21,8 @@ import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dainping.cat.consumer.core.dal.Task;
 import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -244,47 +244,49 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	private void storeReport(boolean atEnd) {
-		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
+		if (atEnd) {
+			Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 
-		t.setStatus(Message.SUCCESS);
-		try {
-			// insert the domain-ip info
-			for (StateReport report : m_reports.values()) {
-				new Visitor().visitStateReport(report);
-			}
-			// build cat state info
-			for (String domain : m_reports.keySet()) {
-				StateReport report = getReport(domain);
+			t.setStatus(Message.SUCCESS);
+			try {
+				// insert the domain-ip info
+				for (StateReport report : m_reports.values()) {
+					new Visitor().visitStateReport(report);
+				}
+				// build cat state info
+				for (String domain : m_reports.keySet()) {
+					StateReport report = getReport(domain);
 
-				Bucket<String> reportBucket = m_bucketManager.getReportBucket(m_startTime, "state");
-				reportBucket.storeById(domain, report.toString());
+					Bucket<String> reportBucket = m_bucketManager.getReportBucket(m_startTime, "state");
+					reportBucket.storeById(domain, report.toString());
 
-				if (atEnd) {
-					storeStateReport(report);
+					if (atEnd) {
+						storeStateReport(report);
 
-					long minute = 1000 * 60;
-					long start = m_startTime - minute * 60 * 2;
-					long end = m_startTime - minute * 60;
-					for (; start < end; start += minute) {
-						m_serverStateManager.RemoveState(start);
+						long minute = 1000 * 60;
+						long start = m_startTime - minute * 60 * 2;
+						long end = m_startTime - minute * 60;
+						for (; start < end; start += minute) {
+							m_serverStateManager.RemoveState(start);
+						}
 					}
 				}
-			}
 
-			if (atEnd) {
-				Date period = new Date(m_startTime);
-				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				// Create task for health report
-				for (String domain : m_reports.keySet()) {
-					StateReport report = m_reports.get(domain);
-					new HealthVisitor(ip, period).visitStateReport(report);
+				if (atEnd) {
+					Date period = new Date(m_startTime);
+					String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+					// Create task for health report
+					for (String domain : m_reports.keySet()) {
+						StateReport report = m_reports.get(domain);
+						new HealthVisitor(ip, period).visitStateReport(report);
+					}
 				}
+			} catch (Exception e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			} finally {
+				t.complete();
 			}
-		} catch (Exception e) {
-			t.setStatus(e);
-			Cat.logError(e);
-		} finally {
-			t.complete();
 		}
 	}
 

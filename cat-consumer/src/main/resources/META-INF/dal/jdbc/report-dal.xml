@@ -58,19 +58,6 @@
 					AND type =1
 					]]></statement>
 			</query>
-			<query name="find-all-by-period-type-name" type="SELECT" multiple="true">
-				<param name="period" />
-				<param name="type" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='type'/> = ${type}
-					AND <FIELD name='name'/> = ${name}
-					AND type =1
-					]]></statement>
-			</query>
 			<query name="insert" type="INSERT">
 				<statement><![CDATA[
 					INSERT 
@@ -98,47 +85,6 @@
 						AND <FIELD name='name'/> = ${name}
 					</IF>
 						AND type=2
-					]]></statement>
-			</query>
-			<query name="find-database-all-by-period-domain-name" type="SELECT" multiple="true">
-				<param name="period" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='domain'/> = ${domain}
-					AND <FIELD name='name'/> = ${name}
-					AND type=2
-					]]></statement>
-			</query>
-			<query name="find-database-all-by-period-domain-type-name" type="SELECT" multiple="true">
-				<param name="period" />
-				<param name="domain" />
-				<param name="type" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='domain'/> = ${domain}
-					AND <FIELD name='type'/> = ${type}
-					AND <FIELD name='name'/> = ${name}
-					AND type=2
-					]]></statement>
-			</query>
-			<query name="find-database-all-by-period-type-name" type="SELECT" multiple="true">
-				<param name="period" />
-				<param name="type" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					AND <FIELD name='type'/> = ${type}
-					AND <FIELD name='name'/> = ${name}
-					AND type=2
 					]]></statement>
 			</query>
 		</query-defs>

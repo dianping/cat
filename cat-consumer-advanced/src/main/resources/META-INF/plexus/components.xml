@@ -86,6 +86,20 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role-hint>metric</role-hint>
+			<implementation>com.dianping.cat.consumer.advanced.MetricAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.advanced.dal.BusinessReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-consumer-advanced</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerAdvancedModule</implementation>
@@ -130,43 +144,32 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>report</role-hint>
+			<role-hint>business-report</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>report</logical-table-name>
-				<physical-table-name>report</physical-table-name>
+				<logical-table-name>business-report</logical-table-name>
+				<physical-table-name>businessReport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>hostinfo</role-hint>
+			<role-hint>sqltable</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>hostinfo</logical-table-name>
-				<physical-table-name>hostinfo</physical-table-name>
+				<logical-table-name>sqltable</logical-table-name>
+				<physical-table-name>sqltable</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>task</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>task</logical-table-name>
-				<physical-table-name>task</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>project</role-hint>
-			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
-			<configuration>
-				<logical-table-name>project</logical-table-name>
-				<physical-table-name>project</physical-table-name>
-				<data-source-name>cat</data-source-name>
-			</configuration>
+			<role>com.dainping.cat.consumer.advanced.dal.BusinessReportDao</role>
+			<implementation>com.dainping.cat.consumer.advanced.dal.BusinessReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dainping.cat.consumer.advanced.dal.SqltableDao</role>

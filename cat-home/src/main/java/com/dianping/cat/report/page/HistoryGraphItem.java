@@ -28,7 +28,7 @@ public class HistoryGraphItem {
 
 	public HistoryGraphItem() {
 	}
-
+	
 	public HistoryGraphItem addSubTitle(String title) {
 		this.subTitles.add(title);
 		return this;

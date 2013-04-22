@@ -13,8 +13,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dainping.cat.consumer.core.dal.Report;
 import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.database.model.entity.Domain;
 import com.dianping.cat.consumer.database.model.entity.Method;
@@ -155,7 +155,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {

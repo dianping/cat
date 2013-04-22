@@ -1,5 +1,5 @@
 <wizard package="com.dianping.cat.consumer">
-   <jdbc package="com.dainping.cat.consumer.dal" name="cat">
+   <jdbc package="com.dainping.cat.consumer.dal" name="CatAdvanced">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://192.168.7.43:3306/cat</url>
@@ -9,6 +9,7 @@
       </datasource>
       <group name="report" package="com.dainping.cat.consumer.dal.report">
          <table name="sqltable"/>
+         <table name="businessReport"/>
       </group>
    </jdbc>
 </wizard>

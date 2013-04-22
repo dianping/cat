@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.unidal.helper.Splitters;
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Event;
@@ -11,8 +14,6 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.helper.Splitters;
-import org.unidal.lookup.annotation.Inject;
 
 public class DefaultProblemHandler extends ProblemHandler {
 	public static final String ID = "default-problem";
@@ -46,7 +47,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 			String type = ProblemType.ERROR.getName();
 			String status = message.getName();
 
-			Entry entry = findOrCreatEntry(machine, type, status);
+			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, 0);
 
 			count++;
@@ -64,9 +65,9 @@ public class DefaultProblemHandler extends ProblemHandler {
 			String status = "";
 
 			if (m_failureTypes.contains(type)) {
-				type = transaction.getType().toLowerCase();
+				type = transaction.getType();
 				//make it march for alarm
-				if (type.equalsIgnoreCase("pigeonCall")) {
+				if (type.equals("PigeonCall")) {
 					type = "call";
 				}
 				status = transaction.getName();
@@ -75,7 +76,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 				status = transaction.getType() + ":" + transaction.getName();
 			}
 
-			Entry entry = findOrCreatEntry(machine, type, status);
+			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, 0);
 
 			count++;
@@ -99,7 +100,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 	private int processHeartbeat(Machine machine, Heartbeat heartbeat, MessageTree tree) {
 		String type = ProblemType.HEARTBEAT.getName();
 		String status = heartbeat.getName();
-		Entry entry = findOrCreatEntry(machine, type, status);
+		Entry entry = findOrCreateEntry(machine, type, status);
 
 		updateEntry(tree, entry, 0);
 		return 1;

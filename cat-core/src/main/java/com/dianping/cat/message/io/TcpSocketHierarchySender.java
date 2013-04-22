@@ -23,14 +23,14 @@ import org.jboss.netty.channel.Channels;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.SimpleChannelHandler;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
 
 public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled {
 	public static final String ID = "tcp-socket-hierarchy";
@@ -39,10 +39,9 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 	private MessageCodec m_codec;
 
 	@Inject
-	private MessageQueue m_queue;
-
-	@Inject
 	private MessageStatistics m_statistics;
+
+	private MessageQueue m_queue = new DefaultMessageQueue(10000);
 
 	private List<InetSocketAddress> m_serverAddresses;
 

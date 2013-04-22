@@ -22,32 +22,28 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.consumer.MessageAnalyzer;
-import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.consumer.core.ProblemAnalyzer;
 import com.dianping.cat.consumer.core.TopAnalyzer;
 import com.dianping.cat.consumer.core.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
 
-/**
- * This is the real time message consuming entry.
- */
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
 	public static final String ID = "realtime";
-
-	private static final long MINUTE = 60 * 1000L;
 
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
 
 	@Inject
 	private ServerStateManager m_serverStateManager;
+
+	private static final long MINUTE = 60 * 1000L;
 
 	@Inject
 	private long m_duration = 60 * MINUTE;
@@ -62,6 +58,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private PeriodManager m_periodManager;
 
 	private long m_networkError;
+
+	private static int QUEUE_SIZE = 500000;
 
 	@Override
 	public void consume(MessageTree tree) {
@@ -112,6 +110,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				analyzer.doCheckpoint(false);
 			}
 
+			try {
+				// wait dump analyzer store completed
+				Thread.sleep(10 * 1000);
+			} catch (InterruptedException e) {
+				// ignore
+			}
 			t.setStatus(Message.SUCCESS);
 		} catch (RuntimeException e) {
 			cat.logError(e);
@@ -172,7 +176,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 			for (String name : names) {
 				MessageAnalyzer analyzer = m_analyzerManager.getAnalyzer(name, startTime);
-				MessageQueue queue = lookup(MessageQueue.class);
+				MessageQueue queue = new DefaultMessageQueue(QUEUE_SIZE);
 				PeriodTask task = new PeriodTask(m_serverStateManager, analyzer, queue, startTime);
 
 				analyzers.put(name, analyzer);
@@ -328,25 +332,31 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 				m_latch.countDown();
 
 				while (m_active) {
-					long now = System.currentTimeMillis();
-					long value = m_strategy.next(now);
+					try {
+						long now = System.currentTimeMillis();
+						long value = m_strategy.next(now);
 
-					if (value == 0) {
-						// do nothing here
-					} else if (value > 0) {
-						// prepare next period in ahead of 3 minutes
-						startPeriod(value);
-					} else {
-						// last period is over
-						endPeriod(-value);
+						if (value == 0) {
+							// do nothing here
+						} else if (value > 0) {
+							// prepare next period in ahead of 3 minutes
+							startPeriod(value);
+						} else {
+							// last period is over
+							endPeriod(-value);
+						}
+					} catch (Throwable e) {
+						Cat.logError(e);
 					}
 
-					Thread.sleep(1000L);
+					try {
+						Thread.sleep(1000L);
+					} catch (InterruptedException e) {
+						break;
+					}
 				}
-			} catch (InterruptedException e) {
-				// ignore it
 			} catch (Exception e) {
-				e.printStackTrace();
+				Cat.logError(e);
 			}
 		}
 

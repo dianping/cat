@@ -1,6 +1,5 @@
 package com.dianping.cat.consumer.core;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +15,8 @@ import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dainping.cat.consumer.core.dal.Task;
 import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -98,7 +97,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		EventReport report = m_reports.get(domain);
 
@@ -161,9 +160,8 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	private void processEventGrpah(EventName name, Event t) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTimeInMillis(t.getTimestamp());
-		int min = cal.get(Calendar.MINUTE);
+		long current = t.getTimestamp() / 1000 / 60;
+		int min = (int) (current % (60));
 		int tk = min - min % 5;
 
 		synchronized (name) {

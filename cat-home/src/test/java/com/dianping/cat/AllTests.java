@@ -10,6 +10,8 @@ import com.dianping.cat.report.page.database.DatabaseReportMergerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.ip.DisplayModelTest;
+import com.dianping.cat.report.page.metric.MetricReportMergerTest;
+import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
 import com.dianping.cat.report.page.model.TransactionReportFilterTest;
 import com.dianping.cat.report.page.model.event.EventModelServiceTest;
@@ -99,6 +101,9 @@ RenderTest.class, ThresholdRuleTest.class, TemplateMergerTest.class,
 ReportServiceImplTest.class, StateReportMergerTest.class,
 
 /* Daily Graph Test */
-DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class })
+DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class,
+
+/* Metric */
+MetricReportParseTest.class, MetricReportMergerTest.class})
 public class AllTests {
 }

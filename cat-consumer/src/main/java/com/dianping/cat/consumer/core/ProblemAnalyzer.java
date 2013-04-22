@@ -1,5 +1,6 @@
 package com.dianping.cat.consumer.core;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,8 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.core.dal.Report;
@@ -15,9 +18,9 @@ import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dainping.cat.consumer.core.dal.Task;
 import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
@@ -31,7 +34,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
-public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled {
+public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> implements LogEnabled, Initializable {
 	public static final String ID = "problem";
 
 	@Inject
@@ -95,6 +98,11 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	@Override
+	public void initialize() throws InitializationException {
+		// to work around a performance issue within plexus
+		m_handlers = new ArrayList<ProblemHandler>(m_handlers);
+	}
+
 	protected void loadReports() {
 		Bucket<String> bucket = null;
 
@@ -117,7 +125,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		ProblemReport report = m_reports.get(domain);
 

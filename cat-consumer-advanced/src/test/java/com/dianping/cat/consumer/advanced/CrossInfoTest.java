@@ -4,7 +4,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.dianping.cat.consumer.advanced.CrossAnalyzer;
 import com.dianping.cat.consumer.advanced.CrossAnalyzer.CrossInfo;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;

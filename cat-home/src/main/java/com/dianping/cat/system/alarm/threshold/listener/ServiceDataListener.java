@@ -55,6 +55,7 @@ public class ServiceDataListener implements EventListener {
 					Cat.getProducer().logEvent("ServiceAlarm", "Domain", Message.SUCCESS, alarmMeta.getRuleId() + "");
 					m_dispatcher.dispatch(alertEvent);
 					t.setStatus(Transaction.SUCCESS);
+					t.setStatus("Alarm");
 				} catch (Exception e) {
 					t.setStatus(e);
 				} finally {

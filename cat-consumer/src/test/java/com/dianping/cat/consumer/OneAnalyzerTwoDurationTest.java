@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.message.internal.AbstractMessage;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.message.spi.MessageTree;

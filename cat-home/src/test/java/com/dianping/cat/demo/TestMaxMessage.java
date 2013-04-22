@@ -14,14 +14,15 @@ public class TestMaxMessage {
 
 	@Test
 	public void testSend() throws Exception {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10000; i++) {
 			Transaction t = Cat.getProducer().newTransaction("CatTest", "CatTest" + i % 10);
 			t.setStatus(Message.SUCCESS);
 			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
+			Cat.logError(new NullPointerException());
 			t.addData("key and value");
 			t.complete();
 		}
-		Thread.sleep(10 * 100);
+		Thread.sleep(10 * 1000);
 	}
 
 	@Test

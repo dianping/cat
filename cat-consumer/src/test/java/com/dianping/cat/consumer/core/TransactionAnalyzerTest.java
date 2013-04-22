@@ -9,8 +9,6 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.MessageAnalyzer;
-import com.dianping.cat.consumer.core.TransactionAnalyzer;
-import com.dianping.cat.consumer.core.TransactionStatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultJsonBuilder;
 import com.dianping.cat.message.Message;

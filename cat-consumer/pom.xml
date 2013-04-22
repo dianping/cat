@@ -56,6 +56,7 @@
 							${basedir}/src/main/resources/META-INF/dal/model/event-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/state-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 					 </manifest>
                   </configuration>
                </execution>
@@ -86,5 +87,8 @@
          </plugin>
       </plugins>
    </build>
+   <properties>
+      <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+   </properties>
 </project>
 

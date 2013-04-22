@@ -8,9 +8,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.MessageAnalyzer;
 import com.dianping.cat.consumer.MessageAnalyzerManager;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.DumpUploader;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
@@ -30,11 +30,8 @@ public class DumpUploaderSample extends ComponentTestCase {
 	public void testUpload() throws Exception {
 		MessageAnalyzerManager manager = lookup(MessageAnalyzerManager.class);
 		long now = System.currentTimeMillis();
-		DefaultMessageQueue queue = new DefaultMessageQueue();
 		int num = 10000;
-
-		queue.setSize(num);
-		queue.initialize();
+		DefaultMessageQueue queue = new DefaultMessageQueue(num);
 
 		for (int i = 0; i < num; i++) {
 			queue.offer(newMessageTree(i, now + i * 10L));

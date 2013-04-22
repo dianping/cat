@@ -8,8 +8,6 @@ import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
-import com.dianping.cat.consumer.MessageAnalyzer;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.ServerStateManager;
@@ -58,7 +56,6 @@ public class PeriodTask implements Task, LogEnabled {
 			m_analyzer.doCheckpoint(true);
 		} finally {
 			m_analyzer.destroy();
-			m_queue.destroy();
 		}
 	}
 

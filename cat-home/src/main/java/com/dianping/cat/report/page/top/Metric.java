@@ -36,7 +36,7 @@ public class Metric extends BaseVisitor {
 	private MetricItem m_sql;
 
 	private MetricItem m_cache;
-
+	
 	private static final int DEFAULT = 10;
 
 	private long m_currentTime = System.currentTimeMillis();
@@ -94,7 +94,6 @@ public class Metric extends BaseVisitor {
 		int minute = segment.getId();
 		long time = m_start.getTime() + minute * TimeUtil.ONE_MINUTE;
 		if (time <= m_currentTime + TimeUtil.ONE_MINUTE) {
-
 			m_error.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,
 			      segment.getError());
 			m_url.add(m_sdf.format(new Date(m_start.getTime() + minute * TimeUtil.ONE_MINUTE)), m_currentDomain,

@@ -12,7 +12,6 @@ import com.dianping.cat.consumer.core.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.core.TransactionReportFilterTest;
 import com.dianping.cat.consumer.core.TransactionReportMessageAnalyzerTest;
 import com.dianping.cat.consumer.core.TransactionReportTest;
-import com.dianping.cat.consumer.PeriodStrategyTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({

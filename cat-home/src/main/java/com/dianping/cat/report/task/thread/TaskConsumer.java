@@ -57,7 +57,6 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 						if (task.getStatus() == TaskConsumer.STATUS_DOING || updateTodoToDoing(task)) {
 							int retryTimes = 0;
 							while (!processTask(task)) {
-								// TODO add failure count
 								retryTimes++;
 								if (retryTimes < MAX_TODO_RETRY_TIMES) {
 									taskRetryDuration();
@@ -72,7 +71,7 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 							}
 						}
 					} catch (Throwable e) {
-						Cat.logError(e);
+						Cat.logError(task.toString(),e);
 					} 
 				} else {
 					taskNotFoundDuration();

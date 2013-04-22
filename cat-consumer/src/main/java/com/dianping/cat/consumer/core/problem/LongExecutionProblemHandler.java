@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.configuration.server.entity.Domain;
@@ -14,7 +15,6 @@ import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.lookup.annotation.Inject;
 
 public class LongExecutionProblemHandler extends ProblemHandler implements Initializable {
 	public static final String ID = "long-execution";
@@ -36,9 +36,9 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 
 	private Map<String, Integer> m_longUrlThresholds = new HashMap<String, Integer>();
 
-	public int computeLongDuration(long duration, String domain, int[] m_defaultLongDuration,
+	public int computeLongDuration(long duration, String domain, int[] defaultLongDuration,
 	      Map<String, Integer> longThresholds) {
-		int[] messageDuration = m_defaultLongDuration;
+		int[] messageDuration = defaultLongDuration;
 
 		for (int i = messageDuration.length - 1; i >= 0; i--) {
 			if (duration >= messageDuration[i]) {
@@ -47,13 +47,12 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 		}
 
 		Integer value = longThresholds.get(domain);
-		if (value == null) {
+
+		if (value != null && duration >= value) {
+			return value;
+		} else {
 			return -1;
 		}
-		if (duration >= value) {
-			return value;
-		}
-		return -1;
 	}
 
 	@Override
@@ -101,7 +100,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			String type = ProblemType.LONG_CACHE.getName();
 			String status = transaction.getName();
 
-			Entry entry = findOrCreatEntry(machine, type, status);
+			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, 0);
 			count++;
 		}
@@ -109,24 +108,26 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	}
 
 	private int processLongService(Machine machine, MessageTree tree) {
-		Message message = tree.getMessage();
 		int count = 0;
+		Message message = tree.getMessage();
 
-		if (message instanceof Transaction
-		      && ("Service".equals(message.getType()) || "PigeonService".equals(message.getType()))) {
+		if (message instanceof Transaction) {
+			String messageType = message.getType();
 
-			long duration = ((Transaction) message).getDurationInMillis();
-			String domain = tree.getDomain();
+			if ("Service".equals(messageType) || "PigeonService".equals(messageType)) {
+				long duration = ((Transaction) message).getDurationInMillis();
+				String domain = tree.getDomain();
+				long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongServiceDuration,
+				      m_longServiceThresholds);
 
-			long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongServiceDuration,
-			      m_longServiceThresholds);
-			if (nomarizeDuration > 0) {
-				String type = ProblemType.LONG_SERVICE.getName();
-				String status = message.getName();
+				if (nomarizeDuration > 0) {
+					String type = ProblemType.LONG_SERVICE.getName();
+					String status = message.getName();
 
-				Entry entry = findOrCreatEntry(machine, type, status);
-				updateEntry(tree, entry, (int) nomarizeDuration);
-				count++;
+					Entry entry = findOrCreateEntry(machine, type, status);
+					updateEntry(tree, entry, (int) nomarizeDuration);
+					count++;
+				}
 			}
 		}
 
@@ -142,7 +143,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			String type = ProblemType.LONG_SQL.getName();
 			String status = transaction.getName();
 
-			Entry entry = findOrCreatEntry(machine, type, status);
+			Entry entry = findOrCreateEntry(machine, type, status);
 			updateEntry(tree, entry, (int) nomarizeDuration);
 			count++;
 		}
@@ -163,7 +164,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 				String type = ProblemType.LONG_URL.getName();
 				String status = message.getName();
 
-				Entry entry = findOrCreatEntry(machine, type, status);
+				Entry entry = findOrCreateEntry(machine, type, status);
 				updateEntry(tree, entry, (int) nomarizeDuration);
 				count++;
 			}

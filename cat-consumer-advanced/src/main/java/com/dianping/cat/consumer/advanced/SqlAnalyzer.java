@@ -14,8 +14,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dainping.cat.consumer.core.dal.Report;
 import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.consumer.sql.model.entity.Database;
 import com.dianping.cat.consumer.sql.model.entity.Method;
@@ -163,7 +163,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		Message message = tree.getMessage();
 		String domain = tree.getDomain();
 		SqlReport report = m_reports.get(domain);

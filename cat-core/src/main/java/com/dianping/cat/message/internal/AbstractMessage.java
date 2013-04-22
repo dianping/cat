@@ -15,16 +15,16 @@ public abstract class AbstractMessage implements Message {
 
 	private String m_status = "unset";
 
-	private long m_timestampInMicros;
+	private long m_timestampInMillis;
 
 	private CharSequence m_data;
 
 	private boolean m_completed;
-
+	
 	public AbstractMessage(String type, String name) {
 		m_type = String.valueOf(type);
 		m_name = String.valueOf(name);
-		m_timestampInMicros = MilliSecondTimer.currentTimeMicros();
+		m_timestampInMillis = MilliSecondTimer.currentTimeMillis();
 	}
 
 	@Override
@@ -81,11 +81,7 @@ public abstract class AbstractMessage implements Message {
 
 	@Override
 	public long getTimestamp() {
-		return m_timestampInMicros / 1000L;
-	}
-
-	protected long getTimestampInMicros() {
-		return m_timestampInMicros;
+		return m_timestampInMillis;
 	}
 
 	@Override
@@ -118,7 +114,7 @@ public abstract class AbstractMessage implements Message {
 	}
 
 	public void setTimestamp(long timestamp) {
-		m_timestampInMicros = timestamp * 1000L;
+		m_timestampInMillis = timestamp;
 	}
 
 	@Override

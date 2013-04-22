@@ -1,0 +1,23 @@
+<metric-report group="TuanGou" startTime="2013-04-03 15:00:00"
+	endTime="2013-04-03 15:59:59">
+	<group>TuanGou</group>
+	<metric id="/index">
+		<point id="0" count="3" sum="708.00" avg="236.00" />
+		<point id="1" count="4" sum="1044.00" avg="261.00" />
+		<point id="2" count="3" sum="701.00" avg="233.67" />
+		<metric id="800tuan">
+			<point id="0" count="3" sum="708.00" avg="236.00" />
+			<point id="1" count="4" sum="1044.00" avg="261.00" />
+			<point id="2" count="3" sum="701.00" avg="233.67" />
+		</metric>
+		<metric id="abc">
+			<point id="0" count="3" sum="708.00" avg="236.00" />
+			<point id="1" count="4" sum="1044.00" avg="261.00" />
+			<point id="2" count="3" sum="701.00" avg="233.67" />
+		</metric>
+	</metric>
+	<metric id="order">
+		<point id="5" count="1000" sum="499500.00" avg="499.50" />
+		<point id="6" count="6000" sum="2997000.00" avg="499.50" />
+	</metric>
+</metric-report>

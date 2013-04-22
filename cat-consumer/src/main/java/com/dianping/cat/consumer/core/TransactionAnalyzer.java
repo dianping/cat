@@ -22,8 +22,8 @@ import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dainping.cat.consumer.core.dal.Task;
 import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -182,7 +182,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		TransactionReport report = m_reports.get(domain);
 

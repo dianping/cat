@@ -6,10 +6,7 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.consumer.MessageAnalyzer;
-import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.consumer.OneAnalyzerTwoDurationTest.MockAnalyzer;
-import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.spi.MessageConsumer;
 
 public class OneAnalyzerTwoDurationTestConfigurator extends AbstractResourceConfigurator {

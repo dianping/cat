@@ -31,7 +31,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 	public BaseRemoteModelService(String name) {
 		m_name = name;
 	}
-
+	
 	protected abstract T buildModel(String xml) throws SAXException, IOException;
 
 	public URL buildUrl(ModelRequest request) throws MalformedURLException {

@@ -10,6 +10,7 @@ import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
 import com.dainping.cat.consumer.core.dal.HostinfoDao;
 import com.dainping.cat.consumer.core.dal.ProjectDao;
 import com.dainping.cat.consumer.core.dal.ReportDao;
@@ -120,7 +121,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(WeeklyreportDao.class, MonthreportDao.class, ProblemMerger.class));
 
 		all.add(C(HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, HeartbeatGraphCreator.class).req(
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class) //
+		      .req( HeartbeatGraphCreator.class,
 		            HeartbeatMerger.class, WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(MatrixReportBuilder.class) //
@@ -172,8 +174,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
 
-		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class)//
-		      .req(ReportDao.class));
+		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class) //
+		      .req(ReportDao.class, BusinessReportDao.class));
 
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
 		      .req(DailyreportDao.class));

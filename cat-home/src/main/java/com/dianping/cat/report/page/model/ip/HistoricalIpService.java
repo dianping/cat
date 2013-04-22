@@ -6,16 +6,12 @@ import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
-import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
 
 public class HistoricalIpService extends BaseHistoricalModelService<IpReport> {
 	@Inject
 	private BucketManager m_bucketManager;
-
-	@Inject
-	private ReportService m_reportSerivce;
 
 	public HistoricalIpService() {
 		super("ip");

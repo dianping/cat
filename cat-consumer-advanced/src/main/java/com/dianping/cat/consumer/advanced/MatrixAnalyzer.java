@@ -1,7 +1,5 @@
 package com.dianping.cat.consumer.advanced;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -16,8 +14,8 @@ import org.unidal.lookup.annotation.Inject;
 import com.dainping.cat.consumer.core.dal.Report;
 import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.Matrix;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.entity.Ratio;
@@ -93,7 +91,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		MatrixReport report = m_reports.get(domain);
 
@@ -250,59 +248,5 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		}
 	}
 
-	public static class MatrixReportFilter extends com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder {
-		private String m_domain;
-
-		private int m_maxItems;
-
-		public MatrixReportFilter(int maxItems) {
-			m_maxItems = maxItems;
-		}
-
-		@Override
-		public void visitMatrixReport(MatrixReport matrixReport) {
-			m_domain = matrixReport.getDomain();
-			Map<String, Matrix> matrixs = matrixReport.getMatrixs();
-
-			long total = 0;
-			for (Matrix matrix : matrixs.values()) {
-				total = total + matrix.getCount();
-			}
-
-			int value = (int) (total / 10000);
-			String urlSample = null;
-			value = Math.min(value, 5);
-
-			if (!m_domain.equals("Cat") && (value > 0)) {
-				int totalCount = 0;
-				Collection<Matrix> matrix = matrixs.values();
-				List<String> removeUrls = new ArrayList<String>();
-
-				if (matrix.size() > m_maxItems) {
-					for (Matrix temp : matrix) {
-						if (temp.getType().equals("URL") && temp.getCount() < 5) {
-							removeUrls.add(temp.getName());
-							totalCount += temp.getCount();
-							if (urlSample == null) {
-								urlSample = temp.getUrl();
-							}
-						}
-					}
-					for (String url : removeUrls) {
-						matrixs.remove(url);
-					}
-
-					if (totalCount > 0) {
-						Matrix other = new Matrix("OTHERS");
-
-						other.setUrl(urlSample);
-						other.setType("OTHERS");
-						other.setCount(totalCount);
-						matrixs.put("OTHERS", other);
-					}
-				}
-			}
-			super.visitMatrixReport(matrixReport);
-		}
-	}
+	
 }

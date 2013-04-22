@@ -8,12 +8,13 @@ import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.core.dal.Report;
 import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.consumer.AbstractMessageAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Name;
@@ -28,7 +29,6 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
@@ -198,7 +198,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 		CrossReport report = m_reports.get(domain);
 

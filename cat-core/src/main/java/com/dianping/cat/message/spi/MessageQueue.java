@@ -1,8 +1,6 @@
 package com.dianping.cat.message.spi;
 
 public interface MessageQueue {
-	public void destroy();
-
 	public boolean offer(MessageTree tree);
 
 	public MessageTree poll();

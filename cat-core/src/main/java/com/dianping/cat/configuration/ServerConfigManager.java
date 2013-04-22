@@ -12,7 +12,6 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
 
-import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
@@ -20,6 +19,7 @@ import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
+import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 
 public class ServerConfigManager implements LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
@@ -41,6 +41,10 @@ public class ServerConfigManager implements LogEnabled {
 
 	public int getBindPort() {
 		return 2280;
+	}
+
+	public boolean isSerialWrite() {
+		return false;
 	}
 
 	public String getConsoleDefaultDomain() {

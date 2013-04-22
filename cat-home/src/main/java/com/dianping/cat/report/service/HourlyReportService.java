@@ -9,6 +9,7 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
+import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.sql.model.entity.SqlReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
@@ -41,4 +42,6 @@ public interface HourlyReportService {
 	public StateReport queryStateReport(String domain,Date start,Date end);
 	
 	public TopReport queryTopReport(String domain,Date start,Date end);
+
+	public MetricReport queryMetricReport(String group, Date start, Date end);
 }

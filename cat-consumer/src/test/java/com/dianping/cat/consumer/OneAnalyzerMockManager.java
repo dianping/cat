@@ -3,8 +3,6 @@ package com.dianping.cat.consumer;
 import java.util.Arrays;
 import java.util.List;
 
-import com.dianping.cat.consumer.MessageAnalyzer;
-import com.dianping.cat.consumer.MessageAnalyzerManager;
 import com.dianping.cat.consumer.OneAnalyzerTwoDurationTest.MockAnalyzer;
 
 public class OneAnalyzerMockManager implements MessageAnalyzerManager {

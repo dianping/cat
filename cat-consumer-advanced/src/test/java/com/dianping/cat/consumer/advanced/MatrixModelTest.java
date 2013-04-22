@@ -5,7 +5,6 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
-import com.dianping.cat.consumer.advanced.MatrixAnalyzer.MatrixReportFilter;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 

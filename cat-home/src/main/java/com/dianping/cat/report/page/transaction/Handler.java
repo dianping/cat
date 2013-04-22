@@ -135,7 +135,6 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_service.invoke(request);
 			TransactionReport report = response.getModel();
-			calculateTps(payload, report);
 
 			if (payload.getPeriod().isLast()) {
 				Date start = new Date(payload.getDate());
@@ -149,7 +148,13 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
+			if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+				MergeAllMachine all = new MergeAllMachine();
+				all.visitTransactionReport(report);
 
+				report = all.getReport();
+			}
+			calculateTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
@@ -171,12 +176,24 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = "ALL";
+			name = CatString.ALL_NAME;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
-		TransactionReport report = response.getModel();
-		TransactionType t = report.getMachines().get(ip).findType(type);
 
+		TransactionReport report = response.getModel();
+		if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+			MergeAllMachine all = new MergeAllMachine();
+			all.visitTransactionReport(report);
+
+			report = all.getReport();
+		}
+		if (CatString.ALL_NAME.equalsIgnoreCase(name)) {
+			MergeAllName all = new MergeAllName();
+			all.visitTransactionReport(report);
+
+			report = all.getReport();
+		}
+		TransactionType t = report.getMachines().get(ip).findType(type);
 		if (t != null) {
 			TransactionName n = t.findName(name);
 			if (n != null) {

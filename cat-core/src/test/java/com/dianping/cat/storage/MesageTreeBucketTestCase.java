@@ -11,10 +11,10 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import org.unidal.lookup.ComponentTestCase;
 
 public abstract class MesageTreeBucketTestCase extends ComponentTestCase {
 
