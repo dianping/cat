@@ -15,6 +15,10 @@
          <artifactId>cat-consumer</artifactId>
       </dependency>
       <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>cat-consumer-advanced</artifactId>
+      </dependency>
+      <dependency>
          <groupId>com.dianping.dpsf</groupId>
          <artifactId>dpsf-net</artifactId>
          <version>1.7.3</version>

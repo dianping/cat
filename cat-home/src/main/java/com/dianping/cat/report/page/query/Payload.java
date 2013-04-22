@@ -12,8 +12,6 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.AbstractReportPayload;
 
 public class Payload extends AbstractReportPayload<Action> {
-	private ReportPage m_page;
-
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -69,11 +67,6 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_name;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
 	public String getQueryDomain() {
 		return m_queryDomain;
 	}
@@ -105,15 +98,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setName(String name) {
 		m_name = name;
-	}
-
-	public void setPage(ReportPage page) {
-		m_page = page;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.QUERY);
 	}
 
 	public void setQueryDomain(String queryDomain) {

@@ -8,7 +8,9 @@ import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.CatConsumerModule;
+import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.message.io.TcpSocketReceiver;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.task.thread.DefaultTaskConsumer;
@@ -31,7 +33,7 @@ public class CatHomeModule extends AbstractModule {
 		// IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
-		ctx.lookup(MessageConsumer.class, "realtime");
+		ctx.lookup(MessageConsumer.class, RealtimeConsumer.ID);
 		ctx.lookup(DomainNavManager.class);
 
 		DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
@@ -70,7 +72,7 @@ public class CatHomeModule extends AbstractModule {
 
 	@Override
 	public Module[] getDependencies(ModuleContext ctx) {
-		return ctx.getModules(CatConsumerModule.ID, CatConsumerModule.ID);
+		return ctx.getModules(CatConsumerModule.ID, CatConsumerAdvancedModule.ID);
 	}
 
 	@Override

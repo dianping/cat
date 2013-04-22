@@ -8,12 +8,12 @@ import java.util.Set;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.BusinessReport;
-import com.dainping.cat.consumer.dal.report.BusinessReportDao;
-import com.dainping.cat.consumer.dal.report.BusinessReportEntity;
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import com.dainping.cat.consumer.advanced.dal.BusinessReport;
+import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dainping.cat.consumer.advanced.dal.BusinessReportEntity;
+import com.dainping.cat.consumer.core.dal.Report;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
@@ -48,10 +48,11 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 
 	@Inject
 	private ReportDao m_reportDao;
-
+	
 	@Inject
 	private BusinessReportDao m_businessReportDao;
 
+	@Override
 	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
 		if (end.getTime() == start.getTime()) {
 			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);
@@ -71,6 +72,7 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		return domains;
 	}
 
+	@Override
 	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
 		if (end.getTime() == start.getTime()) {
 			start = new Date(start.getTime() - TimeUtil.ONE_HOUR);

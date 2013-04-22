@@ -17,7 +17,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.transaction.StatisticsComputer;
+import com.dianping.cat.consumer.core.TransactionStatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
@@ -62,7 +62,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_service;
 
-	private StatisticsComputer m_computer = new StatisticsComputer();
+	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	private Gson m_gson = new Gson();
 

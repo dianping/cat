@@ -15,17 +15,17 @@ public class DefaultMessageQueue implements MessageQueue {
 	}
 
 	@Override
+	public boolean offer(MessageTree tree) {
+		return m_queue.offer(tree);
+	}
+
+	@Override
 	public MessageTree poll() {
 		try {
 			return m_queue.poll(5, TimeUnit.MILLISECONDS);
 		} catch (InterruptedException e) {
 			return null;
 		}
-	}
-
-	@Override
-	public boolean offer(MessageTree tree) {
-		return m_queue.offer(tree);
 	}
 
 	@Override

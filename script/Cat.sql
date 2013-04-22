@@ -51,19 +51,6 @@ CREATE TABLE `monthreport` (
   UNIQUE KEY `period` (`period`,`domain`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='月报表';
 
-#CREATE TABLE `monthlyreport` (
-#  `id` int(11) NOT NULL AUTO_INCREMENT,
-#  `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
-#  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
-#  `domain` varchar(20) NOT NULL COMMENT '报表处理的Domain信息',
-#  `period` datetime NOT NULL  COMMENT '报表开始时间',
-#  `type` tinyint(4) NOT NULL COMMENT '报表数据格式, 1/xml, 2/json, 默认1',
-#  `content` mediumtext NOT NULL COMMENT '报表内容',
-#  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
-#  PRIMARY KEY (`id`),
-#  UNIQUE KEY `period` (`period`,`domain`,`name`)
-#) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='月报表';
-
 CREATE TABLE `graph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称',
@@ -116,7 +103,6 @@ CREATE TABLE `report` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放实时报表信息，处理之后的结果';
 
 
-
 CREATE TABLE `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型 报表数据格式, 1/Binary, 2/xml , 3/json',
@@ -130,23 +116,8 @@ CREATE TABLE `businessReport` (
   KEY `IX_Group_Name_Period` (`productLine`,`name`,`period`),
   KEY `IX_Name_Period` (`name`,`period`),
   KEY `IX_Period` (`period`)
-) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果'
+) ENGINE=InnoDB AUTO_INCREMENT=106 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
 
-
-CREATE TABLE `businessReport` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type` tinyint(4) NOT NULL COMMENT '报表类型 报表数据格式, 1/Binary, 2/xml , 3/json',
-  `name` varchar(20) NOT NULL COMMENT '报表名称',
-  `ip` varchar(20) NOT NULL COMMENT '报表来自于哪台机器',
-  `productLine` varchar(50) NOT NULL COMMENT '指标来源于哪个产品组',
-  `period` timestamp NOT NULL COMMENT '报表时间段',
-  `content` longtext COMMENT '用于存放报表的具体内容',
-  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
-  PRIMARY KEY (`id`),
-  KEY `IX_Group_Name_Period` (`productLine`,`name`,`period`),
-  KEY `IX_Name_Period` (`name`,`period`),
-  KEY `IX_Period` (`period`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
 
 CREATE TABLE `sqlreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,

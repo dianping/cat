@@ -89,6 +89,7 @@ public abstract class AbstractMessage implements Message {
 		return m_type;
 	}
 
+	@Override
 	public boolean isCompleted() {
 		return m_completed;
 	}

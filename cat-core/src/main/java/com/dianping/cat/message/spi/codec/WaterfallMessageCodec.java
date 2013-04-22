@@ -8,13 +8,13 @@ import java.util.Stack;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import org.unidal.lookup.annotation.Inject;
 
 /**
  * Local use only, do not use it over network since it only supports one-way encoding

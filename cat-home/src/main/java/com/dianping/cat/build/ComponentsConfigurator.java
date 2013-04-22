@@ -10,13 +10,14 @@ import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dainping.cat.consumer.dal.report.BusinessReportDao;
-import com.dainping.cat.consumer.dal.report.HostinfoDao;
-import com.dainping.cat.consumer.dal.report.ProjectDao;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.TaskDao;
+import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dainping.cat.consumer.core.dal.HostinfoDao;
+import com.dainping.cat.consumer.core.dal.ProjectDao;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.home.dal.report.DailygraphDao;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.GraphDao;
@@ -83,7 +84,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
-		      .req(MessageConsumer.class, new String[] { "realtime" }, "m_consumers"));
+		      .req(MessageConsumer.class, new String[] { RealtimeConsumer.ID }, "m_consumers"));
 
 		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
 		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
@@ -107,8 +108,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(StateMerger.class));
 
 		all.add(C(TransactionReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class,
-		            TransactionGraphCreator.class)//
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, TransactionGraphCreator.class)//
 		      .req(TransactionMerger.class, WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(EventReportBuilder.class) //
@@ -121,8 +121,9 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(WeeklyreportDao.class, MonthreportDao.class, ProblemMerger.class));
 
 		all.add(C(HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class,
-		            HeartbeatGraphCreator.class).req(HeartbeatMerger.class, WeeklyreportDao.class, MonthreportDao.class));
+		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class) //
+		      .req( HeartbeatGraphCreator.class,
+		            HeartbeatMerger.class, WeeklyreportDao.class, MonthreportDao.class));
 
 		all.add(C(MatrixReportBuilder.class) //
 		      .req(GraphDao.class, DailygraphDao.class, ReportDao.class, DailyreportDao.class, MatrixMerger.class)//
@@ -173,7 +174,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
 
-		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class)//
+		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class) //
 		      .req(ReportDao.class, BusinessReportDao.class));
 
 		all.add(C(DailyReportService.class, DailyReportServiceImpl.class)//
@@ -192,15 +193,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(DailyReportService.class, HourlyReportService.class, ServerConfigManager.class));
 
 		all.add(C(ReportService.class, ReportServiceImpl.class)//
-		      .req(HourlyReportService.class, DailyReportService.class, WeeklyReportService.class,
-		            MonthReportService.class)//
+		      .req(HourlyReportService.class, DailyReportService.class, WeeklyReportService.class, MonthReportService.class)//
 		      .req(WeeklyReportCache.class, MonthReportCache.class));
+
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
 		// database
-		all.add(C(JdbcDataSourceConfigurationManager.class).config(
-		      E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		all.add(C(JdbcDataSourceConfigurationManager.class) //
+		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
 

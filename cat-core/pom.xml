@@ -54,22 +54,22 @@
 							<manifest>
 							${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
-							</manifest>
-						</configuration>
-					</execution>
-					<execution>
-						<id>generate plexus component descriptor</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>plexus</goal>
-						</goals>
-						<configuration>
-							<className>com.dianping.cat.build.ComponentsConfigurator</className>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+							${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,</manifest>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>com.dianping.cat.build.ComponentsConfigurator</className>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
 </project>
+

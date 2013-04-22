@@ -4,24 +4,21 @@
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>mock</role-hint>
 			<implementation>com.dianping.cat.consumer.RealtimeConsumer</implementation>
-			<configuration>
-				<analyzers>mock</analyzers>
-			</configuration>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.AnalyzerFactory</role>
+					<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageAnalyzer</role>
+			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>mock</role-hint>
 			<implementation>com.dianping.cat.consumer.OneAnalyzerTwoDurationTest$MockAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.AnalyzerFactory</role>
-			<implementation>com.dianping.cat.consumer.OneAnalyzerMockFactory</implementation>
+			<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
+			<implementation>com.dianping.cat.consumer.OneAnalyzerMockManager</implementation>
 		</component>
 	</components>
 </plexus>

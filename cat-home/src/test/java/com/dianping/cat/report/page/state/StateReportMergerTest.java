@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.consumer.state.model.entity.StateReport;
-import com.dianping.cat.consumer.state.model.transform.DefaultDomParser;
+import com.dianping.cat.consumer.state.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.state.StateReportMerger;
 
 public class StateReportMergerTest {
@@ -13,8 +13,8 @@ public class StateReportMergerTest {
 	public void testStateReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("old.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("new.xml"), "utf-8");
-		StateReport reportOld = new DefaultDomParser().parse(oldXml);
-		StateReport reportNew = new DefaultDomParser().parse(newXml);
+		StateReport reportOld = DefaultSaxParser.parse(oldXml);
+		StateReport reportNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO()
 		      .readFrom(getClass().getResourceAsStream("result.xml"), "utf-8");
 		

@@ -1,9 +1,10 @@
 package com.dianping.cat.report.page.jsError;
 
-import com.dianping.cat.report.ReportPage;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.report.ReportPage;
 
 public class Payload implements ActionPayload<ReportPage, Action> {
    private ReportPage m_page;

@@ -7,8 +7,9 @@ import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
 
-import com.dianping.cat.configuration.NetworkInterfaceManager;
 import org.unidal.helper.Splitters;
+
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 
 public class MessageIdFactory {
 	private long m_lastTimestamp = getTimestamp();
