@@ -62,7 +62,7 @@
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
 			<th class="right">Sample Link</th>
-						<th class="right">TPS</th>
+						<th class="right">QPS</th>
 					</tr>
 			
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
@@ -94,7 +94,7 @@
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failure">Failure Count</a></th>
 			<th class="right"><a    href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=failurePercent">Failure%</a></th>
 			<th class="right">Sample Link</th>
-						<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">TPS</a></th>
+						<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">QPS</a></th>
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Percent%</a></th>
 					</tr>
 			<tr class="graphs">
