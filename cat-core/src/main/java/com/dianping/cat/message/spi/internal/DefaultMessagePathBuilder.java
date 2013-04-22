@@ -9,11 +9,11 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessagePathBuilder;
-import org.unidal.lookup.annotation.Inject;
 
 public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializable, LogEnabled {
 	@Inject
@@ -48,27 +48,6 @@ public class DefaultMessagePathBuilder implements MessagePathBuilder, Initializa
 	@Override
 	public File getLogViewBaseDir() {
 		return m_baseLogDir;
-	}
-
-	@Override
-	public String getLogViewPath(String domain, Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/logview-{1}");
-
-		return format.format(new Object[] { timestamp, domain });
-	}
-
-	@Override
-	public String getMessagePath(String domain, Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/message-{1}");
-
-		return format.format(new Object[] { timestamp, domain });
-	}
-
-	@Override
-	public String getMessageRemoteIdPath(String ip, Date timestamp) {
-		MessageFormat format = new MessageFormat("{0,date,yyyyMMdd}/{0,date,HH}/remoteid-{1}");
-		String path = format.format(new Object[] { timestamp, ip });
-		return path;
 	}
 
 	@Override

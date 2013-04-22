@@ -207,7 +207,7 @@ public class ThresholdRuleManager implements Initializable {
 				ThresholdTemplate template = merger.getThresholdTemplate();
 				return template;
 			} catch (Exception e) {
-				Cat.logError(e);
+				Cat.logError(newContent, e);
 			}
 		}
 		return baseTemplate;

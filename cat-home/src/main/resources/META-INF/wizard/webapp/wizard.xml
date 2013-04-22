@@ -59,6 +59,12 @@
          <page name="top" title="Top" path="top">
             <description>Top</description>
          </page>
+         <page name="metric" title="Metric" path="metric">
+            <description>Metric</description>
+         </page>
+         <page name="jsError" title="JsError" path="jsError">
+            <description>jsError</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm">

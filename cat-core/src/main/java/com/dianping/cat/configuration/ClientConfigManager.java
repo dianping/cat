@@ -8,13 +8,13 @@ import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
-import com.dianping.cat.configuration.client.transform.DefaultDomParser;
-import org.unidal.helper.Files;
+import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 
 public class ClientConfigManager implements LogEnabled {
 	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
@@ -71,7 +71,7 @@ public class ClientConfigManager implements LogEnabled {
 			if (configFile.exists()) {
 				String xml = Files.forIO().readFrom(configFile.getCanonicalFile(), "utf-8");
 
-				globalConfig = new DefaultDomParser().parse(xml);
+				globalConfig = DefaultSaxParser.parse(xml);
 				m_logger.info(String.format("Global config file(%s) found.", configFile));
 			} else {
 				m_logger.warn(String.format("Global config file(%s) not found, IGNORED.", configFile));
@@ -89,7 +89,7 @@ public class ClientConfigManager implements LogEnabled {
 			if (in != null) {
 				String xml = Files.forIO().readFrom(in, "utf-8");
 
-				clientConfig = new DefaultDomParser().parse(xml);
+				clientConfig = DefaultSaxParser.parse(xml);
 				m_logger.info(String.format("Resource file(%s) found.", CAT_CLIENT_XML));
 			} else {
 				m_logger.warn(String.format("Resource file(%s) not found.", CAT_CLIENT_XML));

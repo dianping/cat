@@ -11,9 +11,9 @@ import java.util.Set;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.dal.report.Report;
-import com.dainping.cat.consumer.dal.report.ReportDao;
-import com.dainping.cat.consumer.dal.report.ReportEntity;
+import com.dainping.cat.consumer.core.dal.Report;
+import com.dainping.cat.consumer.core.dal.ReportDao;
+import com.dainping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;

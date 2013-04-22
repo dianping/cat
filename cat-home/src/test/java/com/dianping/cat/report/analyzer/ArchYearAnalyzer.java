@@ -40,6 +40,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 	private DailyreportDao m_dailyreportDao;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_reportService = lookup(ReportService.class);
@@ -133,6 +134,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 			m_call = call;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 
@@ -192,6 +194,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 			m_sum = sum;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 

@@ -3,13 +3,15 @@ package com.dianping.cat.message.internal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import org.unidal.lookup.annotation.Inject;
+
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
-import org.unidal.lookup.annotation.Inject;
 
 public class DefaultMessageProducer implements MessageProducer {
 	@Inject
@@ -70,6 +72,18 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
+   public void logMetric(String type, String name, String status, String nameValuePairs) {
+		Metric event = newMetric(type, name);
+
+		if (nameValuePairs != null && nameValuePairs.length() > 0) {
+			event.addData(nameValuePairs);
+		}
+
+		event.setStatus(status);
+		event.complete();
+   }
+
+	@Override
 	public Event newEvent(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -84,7 +98,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			return NullMessage.EVENT;
 		}
 	}
-
+	
 	public Event newEvent(Transaction parent, String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -128,6 +142,22 @@ public class DefaultMessageProducer implements MessageProducer {
 			return heartbeat;
 		} else {
 			return NullMessage.HEARTBEAT;
+		}
+	}
+
+	@Override
+	public Metric newMetric(String type, String name) {
+		if (!m_manager.hasContext()) {
+			m_manager.setup();
+		}
+		
+		if (m_manager.isCatEnabled()) {
+			DefaultMetric metric = new DefaultMetric(type, name);
+			
+			m_manager.add(metric);
+			return metric;
+		} else {
+			return NullMessage.METRIC;
 		}
 	}
 

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat.consumer">
+   <model package="com.dianping.cat.consumer.metric-report" name="metric-report">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/metric/model/metric-report.xml</sample-model>
+   </model>
+</wizard>

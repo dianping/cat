@@ -8,6 +8,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
+import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
@@ -17,7 +18,6 @@ import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import org.unidal.lookup.ComponentTestCase;
 
 @RunWith(JUnit4.class)
 public class LocalMessageBucketManagerTest extends ComponentTestCase {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model model-package="com.dianping.cat.consumer.event.model" enable-merger="true" enable-json-builder="true"
-	enable-xml-parser="true"  enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true"
+	enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true"
 	enable-native-builder="true" enable-native-parser="true">
 	<entity name="event-report" root="true">
 		<attribute name="domain" key="true" />
@@ -27,10 +27,10 @@
 		<attribute name="failCount" value-type="long" primitive="true" method-inc="true" />
 		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
 		<attribute name="totalPercent" value-type="double" primitive="true" format="0.00" render="false"/>
-		<entity-ref name="range" type="list" names="ranges" method-find-or-create="true" />
+		<entity-ref name="range" type="map" names="ranges" method-find-or-create="true" />
 	</entity>
 	<entity name="range">
-		<attribute name="value" value-type="int" primitive="true" key="true" />
+		<attribute name="value" value-type="int" key="true" />
 		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
 		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
 	</entity>

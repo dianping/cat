@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.home.template.entity.ThresholdTemplate;
-import com.dianping.cat.home.template.transform.DefaultDomParser;
+import com.dianping.cat.home.template.transform.DefaultSaxParser;
 import com.dianping.cat.system.alarm.threshold.template.ThresholdTemplateMerger;
 
 
@@ -14,8 +14,8 @@ public class TemplateMergerTest {
 	public void testEventReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("threshold-template-new.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("threshold-template-old.xml"), "utf-8");
-		ThresholdTemplate templateOld = new DefaultDomParser().parse(oldXml);
-		ThresholdTemplate templateNew = new DefaultDomParser().parse(newXml);
+		ThresholdTemplate templateOld = DefaultSaxParser.parse(oldXml);
+		ThresholdTemplate templateNew = DefaultSaxParser.parse(newXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("threshold-template-mergeResult.xml"), "utf-8");
 		ThresholdTemplateMerger merger = new ThresholdTemplateMerger(new ThresholdTemplate());
 

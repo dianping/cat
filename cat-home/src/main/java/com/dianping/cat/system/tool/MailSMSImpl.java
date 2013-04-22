@@ -65,6 +65,7 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 					try {
 						m_mailService.send(DEFAULT_EMAIL_TYPE, mail, title, content);
 						sendResult = true;
+						m_logger.info("CAT send email to! " + mail + " title:" + title);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

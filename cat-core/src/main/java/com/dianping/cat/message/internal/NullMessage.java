@@ -6,12 +6,15 @@ import java.util.List;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 
-public enum NullMessage implements Transaction, Event, Heartbeat {
+public enum NullMessage implements Transaction, Event, Metric, Heartbeat {
 	TRANSACTION,
 
 	EVENT,
+	
+	METRIC,
 
 	HEARTBEAT;
 

@@ -2,6 +2,7 @@
 <model>
   <entity name="config" root="true">
     <attribute name="local-mode" value-type="boolean" />
+    <attribute name="job-machine" value-type="boolean" />
     <entity-ref name="storage" />
     <entity-ref name="consumer" />
     <entity-ref name="console" />
@@ -28,6 +29,7 @@
   <entity name="long-config">
     <attribute name="default-url-threshold" value-type="int" />
     <attribute name="default-sql-threshold" value-type="int" />
+    <attribute name="default-service-threshold" value-type="int" />
     <entity-ref name="domain" type="list" names="domains" />
   </entity>
   <entity name="domain">

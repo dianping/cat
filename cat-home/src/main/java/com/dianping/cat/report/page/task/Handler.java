@@ -14,9 +14,9 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dainping.cat.consumer.dal.report.Task;
-import com.dainping.cat.consumer.dal.report.TaskDao;
-import com.dainping.cat.consumer.dal.report.TaskEntity;
+import com.dainping.cat.consumer.core.dal.Task;
+import com.dainping.cat.consumer.core.dal.TaskDao;
+import com.dainping.cat.consumer.core.dal.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;

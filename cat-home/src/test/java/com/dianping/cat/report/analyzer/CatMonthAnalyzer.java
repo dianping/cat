@@ -32,6 +32,7 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 	private Indicator m_indicator= new Indicator();
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
@@ -140,6 +141,8 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 				old.setFailMessageUrl(other.getFailMessageUrl());
 			}
 		}
+		
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 			sb.append(m_people.getTotalCount()).append("\t");

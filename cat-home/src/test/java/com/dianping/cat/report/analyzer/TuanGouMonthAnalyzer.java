@@ -43,6 +43,7 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 	private DomainManager m_domainManager;
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_dailyreportDao = lookup(DailyreportDao.class);
@@ -421,6 +422,7 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 			m_totalCount = totalCount;
 		}
 
+		@Override
 		public String toString() {
 			return new StringBuilder().append(m_totalCount).append('\t').append(m_failureCount).append('\t').append(m_avg)
 			      .append('\t').append(m_95Line).append('\t').toString();

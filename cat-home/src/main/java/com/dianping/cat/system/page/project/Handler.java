@@ -15,9 +15,9 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dainping.cat.consumer.dal.report.Project;
-import com.dainping.cat.consumer.dal.report.ProjectDao;
-import com.dainping.cat.consumer.dal.report.ProjectEntity;
+import com.dainping.cat.consumer.core.dal.Project;
+import com.dainping.cat.consumer.core.dal.ProjectDao;
+import com.dainping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;

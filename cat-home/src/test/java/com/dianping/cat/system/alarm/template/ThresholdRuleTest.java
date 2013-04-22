@@ -12,7 +12,7 @@ import org.junit.Test;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.home.template.entity.ThresholdTemplate;
-import com.dianping.cat.home.template.transform.DefaultDomParser;
+import com.dianping.cat.home.template.transform.DefaultSaxParser;
 import com.dianping.cat.system.alarm.alert.AlertInfo;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
 import com.dianping.cat.system.alarm.threshold.ThresholdRule;
@@ -27,7 +27,7 @@ public class ThresholdRuleTest {
 	public void setUp() {
 		try {
 			String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("threshold-template.xml"), "utf-8");
-			ThresholdTemplate template = new DefaultDomParser().parse(oldXml);
+			ThresholdTemplate template = DefaultSaxParser.parse(oldXml);
 
 			m_rule = new ThresholdRule(1, "Cat", template);
 		} catch (Exception e) {

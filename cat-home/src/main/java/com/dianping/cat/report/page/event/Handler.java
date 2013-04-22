@@ -18,7 +18,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.consumer.event.StatisticsComputer;
+import com.dianping.cat.consumer.core.EventStatisticsComputer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -55,7 +55,22 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "event")
 	private ModelService<EventReport> m_service;
 
-	private StatisticsComputer m_computer = new StatisticsComputer();
+	private EventStatisticsComputer m_computer = new EventStatisticsComputer();
+
+	private void buildEventNameGraph(String ip, String type, EventReport report, Model model) {
+		PieChart chart = new PieChart();
+		Collection<EventName> values = report.findOrCreateMachine(ip).findOrCreateType(type).getNames().values();
+		List<Item> items = new ArrayList<Item>();
+		for (EventName name : values) {
+			Item item = new Item();
+			item.setNumber(name.getTotalCount()).setTitle(name.getId());
+			items.add(item);
+		}
+
+		chart.setItems(items);
+		Gson gson = new Gson();
+		model.setPieChart(gson.toJson(chart));
+	}
 
 	private void calculateTps(Payload payload, EventReport report) {
 		if (payload != null && report != null) {
@@ -108,10 +123,23 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = "ALL";
+			name = CatString.ALL_NAME;
 		}
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
+		if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+			MergeAllMachine all = new MergeAllMachine();
+			all.visitEventReport(report);
+
+			report = all.getReport();
+		}
+		if (CatString.ALL_NAME.equalsIgnoreCase(name)) {
+			MergeAllName all = new MergeAllName();
+			all.visitEventReport(report);
+
+			report = all.getReport();
+		}
+		
 		EventType t = report.getMachines().get(ip).findType(type);
 
 		if (t != null) {
@@ -137,7 +165,6 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
 			EventReport report = response.getModel();
-			calculateTps(payload, report);
 			
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
@@ -146,7 +173,13 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
-			
+			if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+				MergeAllMachine all = new MergeAllMachine();
+				all.visitEventReport(report);
+
+				report = all.getReport();
+			}
+			calculateTps(payload, report);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable event service registered for " + request + "!");
@@ -286,21 +319,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 			model.setException(e);
 		}
-	}
-
-	private void buildEventNameGraph(String ip, String type, EventReport report, Model model) {
-		PieChart chart = new PieChart();
-		Collection<EventName> values = report.findOrCreateMachine(ip).findOrCreateType(type).getNames().values();
-		List<Item> items = new ArrayList<Item>();
-		for (EventName name : values) {
-			Item item = new Item();
-			item.setNumber(name.getTotalCount()).setTitle(name.getId());
-			items.add(item);
-		}
-
-		chart.setItems(items);
-		Gson gson = new Gson();
-		model.setPieChart(gson.toJson(chart));
 	}
 
 	private MobileGraphs showMobileGraphs(Model model, Payload payload) {

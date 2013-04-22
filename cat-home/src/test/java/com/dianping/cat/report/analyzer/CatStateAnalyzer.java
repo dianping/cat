@@ -25,6 +25,7 @@ public class CatStateAnalyzer extends ComponentTestCase {
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy/MM/dd");
 
 	@Before
+	@Override
 	public void setUp() throws Exception {
 		super.setUp();
 		m_reportService = lookup(ReportService.class);
@@ -120,6 +121,7 @@ public class CatStateAnalyzer extends ComponentTestCase {
 			m_dumpSize = dumpSize;
 		}
 
+		@Override
 		public String toString() {
 			StringBuilder sb = new StringBuilder();
 

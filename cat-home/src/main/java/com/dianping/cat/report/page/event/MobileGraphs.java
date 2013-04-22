@@ -73,7 +73,7 @@ public class MobileGraphs {
 	protected double[] loadFailureValues() {
 		double[] values = new double[12];
 
-		for (Range range : m_name.getRanges()) {
+		for (Range range : m_name.getRanges().values()) {
 			int value = range.getValue();
 			int k = value / 5;
 
@@ -86,7 +86,7 @@ public class MobileGraphs {
 	protected double[] loadHitValues() {
 		double[] values = new double[12];
 
-		for (Range range : m_name.getRanges()) {
+		for (Range range : m_name.getRanges().values()) {
 			int value = range.getValue();
 			int k = value / 5;
 

@@ -28,9 +28,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 	private MessageCodec m_codec;
 
 	@Inject
-	private ChannelBufferManager m_bufferManager;
-
-	@Inject
 	private File m_baseDir = new File(".");
 
 	private MessageBlockReader m_reader;
@@ -174,15 +171,6 @@ public class LocalMessageBucket implements MessageBucket, LogEnabled {
 
 	public void setMessageCodec(MessageCodec codec) {
 		m_codec = codec;
-	}
-
-	@Override
-	public MessageBlock store(final MessageTree tree, final MessageId id) throws IOException {
-		final ChannelBuffer buf = m_bufferManager.allocate();
-
-		m_codec.encode(tree, buf);
-
-		return storeMessage(buf, id);
 	}
 
 	protected synchronized MessageBlock storeMessage(final ChannelBuffer buf, final MessageId id) throws IOException {

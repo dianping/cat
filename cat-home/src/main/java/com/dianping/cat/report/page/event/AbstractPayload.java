@@ -62,7 +62,7 @@ final class FailurePayload extends AbstractPayload {
 	protected double[] loadValues() {
 		double[] values = new double[12];
 
-		for (Range range : getEventName().getRanges()) {
+		for (Range range : getEventName().getRanges().values()) {
 			int value = range.getValue();
 			int k = value / 5;
 
@@ -82,7 +82,7 @@ final class HitPayload extends AbstractPayload {
 	protected double[] loadValues() {
 		double[] values = new double[12];
 
-		for (Range range : getEventName().getRanges()) {
+		for (Range range : getEventName().getRanges().values()) {
 			int value = range.getValue();
 			int k = value / 5;
 
