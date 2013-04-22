@@ -16,6 +16,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private String m_group;
 	
+	private String m_channel;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -57,6 +59,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String getGroup() {
 		return m_group;
+	}
+
+	public String getChannel() {
+		return m_channel;
+	}
+
+	public void setChannel(String channel) {
+		m_channel = channel;
 	}
 
 	public void setGroup(String group) {

@@ -24,7 +24,7 @@
 	margin: 4px auto;
 }
 .row-fluid .span2{
-	width:9%;
+	width:12%;
 }
 </style>
 <script type="text/javascript">
@@ -34,12 +34,8 @@
 			graph(document.getElementById('${item.title}'), data);
 		</c:forEach>
 		
-
-		/* <c:forEach var="item" items="${model.display.conversionRates}" varStatus="status">
-			var data = ${item.jsonString};
-			graph(document.getElementById('${item.title}'), data);
-		</c:forEach> */
-		
+		var id = "channel"+'${model.channel}';
+		$('#'+id).addClass("active");
 	});
 	
 </script>
@@ -61,9 +57,13 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li class="nav-header active"><a href="#">团购</a></li>
-              <li><a href="?date=${model.date}&group=${model.group}&channel=1">团800</a></li>
-              <li><a href="#">搜索引擎</a></li>
+              <li id="channel"><a href="?date=${model.date}&group=${model.group}"><strong>团购ALL</strong></a></li>
+              <li >&nbsp;</li>
+              <li id="channel1"><a href="?date=${model.date}&group=${model.group}&channel=1">渠道:搜索引擎</a></li>
+              <li id="channel2"><a href="?date=${model.date}&group=${model.group}&channel=2">渠道:微博推广</a></li>
+              <li id="channel3"><a href="?date=${model.date}&group=${model.group}&channel=3">渠道:腾讯推广</a></li>
+              <li id="channel4"><a href="?date=${model.date}&group=${model.group}&channel=4">渠道:内部引流</a></li>
+              <li id="channel5"><a href="?date=${model.date}&group=${model.group}&channel=5">渠道:团800</a></li>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
@@ -72,12 +72,6 @@
        			<div style="float:left;" id="${item.title}" class="graph"></div>
 			</c:forEach>
         </div>
-        <%-- <div class="span10 offset1">
-       		<h3 class='text-center'>页面实时转化率</h3>
-        	<c:forEach var="item" items="${model.display.conversionRates}" varStatus="status">
-        			<div style="float:left;" id="${item.title}" class="graph"></div>
-			</c:forEach>
-		</div> --%>
 	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>

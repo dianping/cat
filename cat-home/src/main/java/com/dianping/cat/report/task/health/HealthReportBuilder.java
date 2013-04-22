@@ -31,6 +31,7 @@ import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.page.model.problem.ProblemReportMerger;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
+import com.dianping.cat.report.page.transaction.MergeAllMachine;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.health.HealthServiceCollector.ServiceInfo;
 import com.dianping.cat.report.task.spi.AbstractReportBuilder;
@@ -136,7 +137,6 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		try {
 			List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "event",
 			      ReportEntity.READSET_FULL);
-			merger.setAllIp(true);
 
 			for (Report report : reports) {
 				String xml = report.getContent();
@@ -147,6 +147,10 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+		com.dianping.cat.report.page.event.MergeAllMachine all = new com.dianping.cat.report.page.event.MergeAllMachine();
+		all.visitEventReport(eventReport);
+		eventReport = all.getReport();
+
 
 		eventReport.setStartTime(reportPeriod);
 		eventReport.setEndTime(new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));
@@ -200,7 +204,6 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 	private TransactionReport queryTransactionReport(String domain, Date reportPeriod) {
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 		TransactionReport transactionReport = merger.getTransactionReport();
-		merger.setAllIp(true);
 		try {
 			List<Report> reports = m_reportDao.findAllByPeriodDomainTypeName(reportPeriod, domain, 1, "transaction",
 			      ReportEntity.READSET_FULL);
@@ -215,6 +218,9 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 			m_logger.error(domain + " " + reportPeriod, e);
 			Cat.logError(e);
 		}
+		MergeAllMachine all = new MergeAllMachine();
+		all.visitTransactionReport(transactionReport);
+		transactionReport = all.getReport();
 
 		transactionReport.setStartTime(reportPeriod);
 		transactionReport.setEndTime(new Date(reportPeriod.getTime() + TimeUtil.ONE_HOUR));

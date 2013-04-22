@@ -3,11 +3,10 @@ package com.dianping.cat.consumer.matrix;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.unidal.helper.Files;
 
-import com.dianping.cat.consumer.matrix.MatrixAnalyzer.MatrixReportFilter;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultDomParser;
-import org.unidal.helper.Files;
 
 public class MatrixReportFilterTest {
 
