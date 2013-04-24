@@ -53,7 +53,6 @@ public class ThresholdRuleManager implements Initializable {
 	private ThresholdRule addExceptionRule(AlarmRule rule, ThresholdTemplate template) {
 		String domain = rule.getDomain();
 		ThresholdRule thresholdRule = new ThresholdRule(rule.getId(), domain, template);
-
 		ArrayList<ThresholdRule> rules = m_exceptionRules.get(domain);
 
 		if (rules == null) {
@@ -70,7 +69,6 @@ public class ThresholdRuleManager implements Initializable {
 	private ThresholdRule addServiceRule(AlarmRule rule, ThresholdTemplate template) {
 		String domain = rule.getDomain();
 		ThresholdRule thresholdRule = new ThresholdRule(rule.getId(), domain, template);
-
 		ArrayList<ThresholdRule> rules = m_serviceRules.get(domain);
 
 		if (rules == null) {
