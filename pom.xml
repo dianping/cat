@@ -156,7 +156,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 		<plugins>
 			<plugin>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
+				<version>2.2</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -169,12 +169,6 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 			</plugin>
 		</plugins>
 	</build>
-	<distributionManagement>
-      <repository>
-         <id>dianping.repo</id>
-         <url>http://192.168.8.45:8080/artifactory/dianping-releases</url>
-      </repository>
-	</distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
 	</properties>
