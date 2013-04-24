@@ -13,6 +13,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.advanced.MatrixReportFilter;
+import com.dianping.cat.consumer.core.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -111,11 +113,17 @@ public class WeeklyReportCache implements Initializable {
 			Set<String> domains = m_hourReportService.queryAllDomainNames(start, end, "transaction");
 
 			for (String domain : domains) {
-				m_transactionReports.put(domain, m_dailyReportService.queryTransactionReport(domain, start, end));
+				TransactionReport transactionReport = m_dailyReportService.queryTransactionReport(domain, start, end);
+				new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+				
+				m_transactionReports.put(domain, transactionReport);
 				m_eventReports.put(domain, m_dailyReportService.queryEventReport(domain, start, end));
 				m_problemReports.put(domain, m_dailyReportService.queryProblemReport(domain, start, end));
-				m_matrixReports.put(domain, m_dailyReportService.queryMatrixReport(domain, start, end));
 				m_crossReports.put(domain, m_dailyReportService.queryCrossReport(domain, start, end));
+				MatrixReport matrixReport = m_dailyReportService.queryMatrixReport(domain, start, end);
+				
+				m_matrixReports.put(domain, matrixReport);
+				new MatrixReportFilter().visitMatrixReport(matrixReport);
 				m_sqlReports.put(domain, m_dailyReportService.querySqlReport(domain, start, end));
 				m_healthReports.put(domain, m_dailyReportService.queryHealthReport(domain, start, end));
 			}
