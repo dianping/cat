@@ -132,7 +132,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 
 				if (mailRecord == null || mailRecord.getCreationDate().getTime() < TimeUtil.getCurrentDay().getTime()) {
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
-					
+
 					m_logger.info("Send daily report starting! size :" + reports.size());
 					for (ScheduledReport report : reports) {
 						String domain = report.getDomain();
@@ -151,8 +151,9 @@ public class ScheduledMailTask implements Task, LogEnabled {
 						} catch (Exception e) {
 							Cat.logError(e);
 							t.setStatus(e);
+						} finally {
+							t.complete();
 						}
-						t.complete();
 					}
 					m_logger.info("Send daily report finnshed!");
 				} else {
@@ -163,6 +164,7 @@ public class ScheduledMailTask implements Task, LogEnabled {
 			}
 
 			try {
+				m_logger.info("Send daily report sleep!");
 				Thread.sleep(getSleepTime());
 			} catch (Exception e) {
 				active = false;

@@ -50,11 +50,10 @@ public class AlarmTask implements Task, LogEnabled {
 			long time = System.currentTimeMillis();
 
 			try {
-				m_logger.info("Exception-Service-Alarm Starting.");
 				processExceptionRule();
 				processServiceRule();
-				m_logger.info("Exception-Service-Alarm Finished.");
 			} catch (Throwable e) {
+				m_logger.error("Error in alarm task!", e);
 				Cat.logError(e);
 			}
 
@@ -78,45 +77,57 @@ public class AlarmTask implements Task, LogEnabled {
 	private void processServiceRule() {
 		List<ThresholdRule> rules = m_manager.getAllServiceRules();
 		Transaction t = Cat.newTransaction("Alarm", "ProcessServiceRule");
+		
+		try {
+			for (ThresholdRule rule : rules) {
+				try {
+					String connectUrl = rule.getConnectUrl();
+					ThresholdDataEntity entity = m_connector.fetchAlarmData(connectUrl);
 
-		for (ThresholdRule rule : rules) {
-			try {
-				String connectUrl = rule.getConnectUrl();
-				ThresholdDataEntity entity = m_connector.fetchAlarmData(connectUrl);
-
-				if (entity != null) {
-					entity.setDomain(rule.getDomain());
-					m_dispatcher.dispatch(new ServiceDataEvent(entity));
+					if (entity != null) {
+						entity.setDomain(rule.getDomain());
+						m_dispatcher.dispatch(new ServiceDataEvent(entity));
+					}
+				} catch (Exception e) {
+					t.setStatus(e);
+					Cat.logError(e);
 				}
-			} catch (Exception e) {
-				t.setStatus(e);
-				Cat.logError(e);
 			}
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			m_logger.error("Error in process service rule task!", e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
 		}
-		t.setStatus(Transaction.SUCCESS);
-		t.complete();
 	}
 
 	private void processExceptionRule() {
 		List<ThresholdRule> rules = m_manager.getAllExceptionRules();
 		Transaction t = Cat.newTransaction("Alarm", "ProcessExceptionRule");
+		
+		try {
+			for (ThresholdRule rule : rules) {
+				try {
+					String connectUrl = rule.getConnectUrl();
+					ThresholdDataEntity entity = m_connector.fetchAlarmData(connectUrl);
 
-		for (ThresholdRule rule : rules) {
-			try {
-				String connectUrl = rule.getConnectUrl();
-				ThresholdDataEntity entity = m_connector.fetchAlarmData(connectUrl);
-
-				if (entity != null) {
-					entity.setDomain(rule.getDomain());
-					m_dispatcher.dispatch(new ExceptionDataEvent(entity));
+					if (entity != null) {
+						entity.setDomain(rule.getDomain());
+						m_dispatcher.dispatch(new ExceptionDataEvent(entity));
+					}
+				} catch (Exception e) {
+					t.setStatus(e);
+					Cat.logError(e);
 				}
-			} catch (Exception e) {
-				t.setStatus(e);
-				Cat.logError(e);
 			}
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			m_logger.error("Error in process exception rule task!", e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
 		}
-		t.setStatus(Transaction.SUCCESS);
-		t.complete();
 	}
 
 	@Override

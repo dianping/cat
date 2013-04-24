@@ -117,6 +117,7 @@ public class RuleManager {
 					DpAdminLogin entity = m_dpAdminLoginDao.findByPK(userId, DpAdminLoginEntity.READSET_FULL);
 					mails.add(entity.getEmail());
 				} catch (Exception e) {
+					Cat.logError(e);
 				}
 			}
 		} catch (DalNotFoundException e) {
@@ -140,6 +141,7 @@ public class RuleManager {
 					DpAdminLogin entity = m_dpAdminLoginDao.findByPK(userId, DpAdminLoginEntity.READSET_FULL);
 					phones.add(entity.getMobileNo());
 				} catch (Exception e) {
+					Cat.logError(e);
 				}
 			}
 		} catch (DalNotFoundException e) {
@@ -220,7 +222,7 @@ public class RuleManager {
 		try {
 			AlarmRule alarmRule = m_alarmRuleDao.findByPK(id, AlarmRuleEntity.READSET_FULL);
 			model.setAlarmRule(alarmRule);
-			
+
 			int templatedId = alarmRule.getTemplateId();
 			AlarmTemplate template = m_alarmTemplateDao.findByPK(templatedId, AlarmTemplateEntity.READSET_FULL);
 			model.setAlarmTemplate(template);
