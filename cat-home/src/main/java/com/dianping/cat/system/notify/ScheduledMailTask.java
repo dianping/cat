@@ -153,7 +153,7 @@ public class ScheduledMailTask implements Task {
 				} else {
 					Cat.getProducer().logEvent("ScheduledReport", "SendNot", Event.SUCCESS, null);
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				Cat.logError(e);
 			}
 
