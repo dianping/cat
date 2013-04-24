@@ -46,12 +46,13 @@ public class ExceptionDataListener implements EventListener {
 
 			if (alarmMeta != null) {
 				Transaction t = Cat.newTransaction("SendAlarm", "Exception");
-			
+
 				t.addData(alarmMeta.toString());
 				try {
 					ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(alarmMeta);
-					Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS, alarmMeta.getRuleId() + "");
-				
+					Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS,
+					      String.valueOf(alarmMeta.getRuleId()));
+
 					m_dispatcher.dispatch(alertEvent);
 					t.setStatus("Alarm");
 				} catch (Exception e) {
