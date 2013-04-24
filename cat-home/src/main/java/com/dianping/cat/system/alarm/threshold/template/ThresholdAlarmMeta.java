@@ -24,7 +24,7 @@ public class ThresholdAlarmMeta {
 		String showUrl = m_baseUrl.replace("http://10.1.6.128:8080/", "http://cat.dianpingoa.com/");
 		return showUrl;
 	}
-	
+
 	public String getBaseUrl() {
 		return m_baseUrl;
 	}
@@ -89,13 +89,9 @@ public class ThresholdAlarmMeta {
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(400);
-
-		sb.append('[').append("RuleId:").append(m_ruleId).append(";");
-		sb.append("Type:").append(m_type).append(";");
-		sb.append("RealCount:").append(m_realCount).append(";");
-		sb.append("Duration:").append(m_duration).append(']');
-
-		return sb.toString();
+		return "ThresholdAlarmMeta [m_baseUrl=" + m_baseUrl + ", m_date=" + m_date + ", m_domain=" + m_domain
+		      + ", m_duration=" + m_duration + ", m_realCount=" + m_realCount + ", m_ruleId=" + m_ruleId + ", m_type="
+		      + m_type + "]";
 	}
+
 }

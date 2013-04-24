@@ -53,20 +53,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.message.spi.MessageStorage</role>
-			<role-hint>html</role-hint>
-			<implementation>com.dianping.cat.message.spi.internal.DefaultMessageStorage</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessagePathBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageCodec</role>
-					<role-hint>html</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.message.spi.MessageConsumer</role>
 			<role-hint>dummy</role-hint>
 			<implementation>com.dianping.cat.message.spi.internal.DummyConsumer</implementation>

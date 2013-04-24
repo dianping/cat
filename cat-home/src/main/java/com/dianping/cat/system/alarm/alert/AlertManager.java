@@ -121,7 +121,7 @@ public class AlertManager implements Initializable, LogEnabled {
 							active = false;
 						}
 					}
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					Cat.logError(e);
 				}
 			}

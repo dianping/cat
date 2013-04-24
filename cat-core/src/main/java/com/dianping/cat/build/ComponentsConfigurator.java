@@ -27,14 +27,11 @@ import com.dianping.cat.message.spi.MessageHandler;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessagePathBuilder;
 import com.dianping.cat.message.spi.MessageStatistics;
-import com.dianping.cat.message.spi.MessageStorage;
-import com.dianping.cat.message.spi.codec.HtmlMessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageConsumerRegistry;
 import com.dianping.cat.message.spi.internal.DefaultMessageHandler;
 import com.dianping.cat.message.spi.internal.DefaultMessagePathBuilder;
 import com.dianping.cat.message.spi.internal.DefaultMessageStatistics;
-import com.dianping.cat.message.spi.internal.DefaultMessageStorage;
 import com.dianping.cat.message.spi.internal.DummyConsumer;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.status.StatusUpdateTask;
@@ -61,9 +58,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessagePathBuilder.class, DefaultMessagePathBuilder.class) //
 		      .req(ClientConfigManager.class));
 
-		all.add(C(MessageStorage.class, "html", DefaultMessageStorage.class) //
-		      .req(MessagePathBuilder.class) //
-		      .req(MessageCodec.class, HtmlMessageCodec.ID));
 		all.add(C(MessageConsumer.class, DummyConsumer.ID, DummyConsumer.class));
 		all.add(C(MessageConsumerRegistry.class, DefaultMessageConsumerRegistry.class) //
 		      .req(MessageConsumer.class, new String[] { DummyConsumer.ID }, "m_consumers"));
