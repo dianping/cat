@@ -2,11 +2,12 @@ package com.dianping.cat.system.alarm;
 
 import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.system.alarm.connector.Connector;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
@@ -16,7 +17,7 @@ import com.dianping.cat.system.alarm.threshold.event.ExceptionDataEvent;
 import com.dianping.cat.system.alarm.threshold.event.ServiceDataEvent;
 import com.dianping.cat.system.event.EventDispatcher;
 
-public class AlarmTask implements Task {
+public class AlarmTask implements Task, LogEnabled {
 
 	@Inject
 	private Connector m_connector;
@@ -26,6 +27,10 @@ public class AlarmTask implements Task {
 
 	@Inject
 	private ThresholdRuleManager m_manager;
+
+	private Logger m_logger;
+
+	private static final int MAX_DURATION = 29 * 1000;
 
 	@Override
 	public String getName() {
@@ -45,17 +50,19 @@ public class AlarmTask implements Task {
 			long time = System.currentTimeMillis();
 
 			try {
+				m_logger.info("Exception-Service-Alarm Starting.");
 				processExceptionRule();
 				processServiceRule();
+				m_logger.info("Exception-Service-Alarm Finished.");
 			} catch (Throwable e) {
 				Cat.logError(e);
 			}
 
 			long duration = System.currentTimeMillis() - time;
 
-			if (duration < 29 * 1000) {
+			if (duration < MAX_DURATION) {
 				try {
-					Thread.sleep(29 * 1000 - duration);
+					Thread.sleep(MAX_DURATION - duration);
 				} catch (InterruptedException e) {
 					active = false;
 				}
@@ -78,14 +85,8 @@ public class AlarmTask implements Task {
 				ThresholdDataEntity entity = m_connector.fetchAlarmData(connectUrl);
 
 				if (entity != null) {
-					String domain = rule.getDomain();
-
-					entity.setDomain(domain);
-					Cat.getProducer().logEvent("AlarmRule", domain + "[" + rule.getRuleId() + "]", Event.SUCCESS,
-					      entity.toString());
-
-					ServiceDataEvent event = new ServiceDataEvent(entity);
-					m_dispatcher.dispatch(event);
+					entity.setDomain(rule.getDomain());
+					m_dispatcher.dispatch(new ServiceDataEvent(entity));
 				}
 			} catch (Exception e) {
 				t.setStatus(e);
@@ -107,11 +108,7 @@ public class AlarmTask implements Task {
 
 				if (entity != null) {
 					entity.setDomain(rule.getDomain());
-					Cat.getProducer().logEvent("AlarmUrl", connectUrl, Event.SUCCESS, entity.toString());
-
-					ExceptionDataEvent event = new ExceptionDataEvent(entity);
-
-					m_dispatcher.dispatch(event);
+					m_dispatcher.dispatch(new ExceptionDataEvent(entity));
 				}
 			} catch (Exception e) {
 				t.setStatus(e);
@@ -124,6 +121,11 @@ public class AlarmTask implements Task {
 
 	@Override
 	public void shutdown() {
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 
 }
