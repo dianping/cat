@@ -166,16 +166,17 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 			Object data = transaction.getData();
 			if (data != null) {
-				double value = parseValue(CHANNEL, (String) data);
-				if (value > 0) {
-					updateChannel(min, metric, value);
+				String channel = parseValue(CHANNEL, (String) data);
+				if (channel != null) {
+					updateChannel(min, metric, channel, transaction.getDurationInMillis());
 				}
 			}
 		}
 	}
 
-	private void updateChannel(int min, com.dianping.cat.consumer.metric.model.entity.Metric metric, double value) {
-		com.dianping.cat.consumer.metric.model.entity.Metric detail = metric.findOrCreateMetric(CHANNEL + "=" + (int) (value));
+	private void updateChannel(int min, com.dianping.cat.consumer.metric.model.entity.Metric metric, String channel,
+	      double value) {
+		com.dianping.cat.consumer.metric.model.entity.Metric detail = metric.findOrCreateMetric(CHANNEL + "=" + channel);
 
 		Point channelPoint = detail.findOrCreatePoint(min);
 
@@ -191,27 +192,30 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 		if (key != null) {
 			String data = (String) metric.getData();
-			double value = parseValue(key, data);
+			String valueStr = parseValue(key, data);
 
-			long current = metric.getTimestamp() / 1000 / 60;
-			int min = (int) (current % (60));
+			if (valueStr != null) {
+				double value = Double.parseDouble(valueStr);
+				long current = metric.getTimestamp() / 1000 / 60;
+				int min = (int) (current % (60));
 
-			com.dianping.cat.consumer.metric.model.entity.Metric temp = report.findOrCreateMetric(name);
-			Point point = temp.findOrCreatePoint(min);
+				com.dianping.cat.consumer.metric.model.entity.Metric temp = report.findOrCreateMetric(name);
+				Point point = temp.findOrCreatePoint(min);
 
-			point.setCount(point.getCount() + 1);
-			point.setSum(point.getSum() + value);
-			point.setAvg(point.getSum() / point.getCount());
+				point.setCount(point.getCount() + 1);
+				point.setSum(point.getSum() + value);
+				point.setAvg(point.getSum() / point.getCount());
 
-			double channel = parseValue("channel", data);
-			if (channel > 0) {
-				updateChannel(min, temp, channel);
+				String channel = parseValue("channel", data);
+				if (channel != null) {
+					updateChannel(min, temp, channel, value);
+				}
 			}
 		}
 		return 0;
 	}
 
-	public double parseValue(final String key, final String data) {
+	public String parseValue(final String key, final String data) {
 		int len = data == null ? 0 : data.length();
 		int keyLen = key.length();
 		StringBuilder name = new StringBuilder();
@@ -224,7 +228,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 			switch (ch) {
 			case '&':
 				if (name.length() == keyLen && name.toString().equals(key)) {
-					return Double.parseDouble(value.toString());
+					return value.toString();
 				}
 
 				inName = true;
@@ -249,10 +253,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		}
 
 		if (name.length() == keyLen && name.toString().equals(key)) {
-			return Double.parseDouble(value.toString());
+			return value.toString();
 		}
 
-		return 0;
+		return null;
 	}
 
 	private int processTransaction(String group, MetricReport report, MessageTree tree, Transaction t) {

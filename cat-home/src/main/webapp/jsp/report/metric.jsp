@@ -15,7 +15,7 @@
 <res:useCss value='${res.css.local.report_css}' target="head-css" />
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
+<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
 <res:useJs value="${res.js.local['metric.js']}" target="head-js"/>
 <style type="text/css">
 .graph {
@@ -34,10 +34,13 @@
 			graph(document.getElementById('${item.title}'), data);
 		</c:forEach>
 		
-		var id = "channel"+'${model.channel}';
-		$('#'+id).addClass("active");
+		var id = "${model.channel}";
+		if (id == '') {
+			$('#allChannel').addClass("active");
+		} else {
+			$('#' + id).addClass("active");
+		}
 	});
-	
 </script>
 <div class="report">
 	<table class="header">
@@ -57,13 +60,11 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li id="channel"><a href="?date=${model.date}&group=${model.group}"><strong>团购ALL</strong></a></li>
+              <li id="allChannel"><a href="?date=${model.date}&group=${model.group}"><strong>团购ALL</strong></a></li>
               <li >&nbsp;</li>
-              <li id="channel1"><a href="?date=${model.date}&group=${model.group}&channel=1">渠道:搜索引擎</a></li>
-              <li id="channel2"><a href="?date=${model.date}&group=${model.group}&channel=2">渠道:微博推广</a></li>
-              <li id="channel3"><a href="?date=${model.date}&group=${model.group}&channel=3">渠道:腾讯推广</a></li>
-              <li id="channel4"><a href="?date=${model.date}&group=${model.group}&channel=4">渠道:内部引流</a></li>
-              <li id="channel5"><a href="?date=${model.date}&group=${model.group}&channel=5">渠道:团800</a></li>
+              <c:forEach var="item" items="${model.channels}" varStatus="status">
+	              <li id="${item}"><a href="?date=${model.date}&group=${model.group}&channel=${item}">${item}</a></li>
+       		  </c:forEach>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->

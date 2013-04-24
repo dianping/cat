@@ -47,7 +47,7 @@ public class AlarmTask implements Task {
 			try {
 				processExceptionRule();
 				processServiceRule();
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				Cat.logError(e);
 			}
 

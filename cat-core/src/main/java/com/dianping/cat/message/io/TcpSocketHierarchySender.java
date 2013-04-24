@@ -27,6 +27,7 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageStatistics;
@@ -271,20 +272,24 @@ public class TcpSocketHierarchySender implements Task, MessageSender, LogEnabled
 		public void run() {
 			try {
 				while (m_active) {
-					if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
-						m_activeIndex = m_serverAddresses.size();
-					}
+					try {
+	               if (m_activeFuture != null && !m_activeFuture.getChannel().isOpen()) {
+	               	m_activeIndex = m_serverAddresses.size();
+	               }
 
-					for (int i = 0; i < m_activeIndex; i++) {
-						ChannelFuture future = createChannel(i);
+	               for (int i = 0; i < m_activeIndex; i++) {
+	               	ChannelFuture future = createChannel(i);
 
-						if (future != null) {
-							m_lastFuture = m_activeFuture;
-							m_activeFuture = future;
-							m_activeIndex = i;
-							break;
-						}
-					}
+	               	if (future != null) {
+	               		m_lastFuture = m_activeFuture;
+	               		m_activeFuture = future;
+	               		m_activeIndex = i;
+	               		break;
+	               	}
+	               }
+               } catch (Throwable e) {
+               	Cat.logError(e);
+               }
 
 					Thread.sleep(2 * 1000L); // check every 2 seconds
 				}
