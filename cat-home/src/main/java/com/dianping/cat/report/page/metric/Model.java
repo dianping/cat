@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.metric;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.page.AbstractReportModel;
@@ -9,15 +10,17 @@ import com.dianping.cat.report.page.AbstractReportModel;
 public class Model extends AbstractReportModel<Action, Context> {
 
 	private MetricReport m_report;
-	
+
 	private MetricDisplay m_display;
 
 	private String m_domain;
-	
+
 	private String m_group;
-	
+
 	private String m_channel;
-	
+
+	private Set<String> m_channels;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -72,5 +75,13 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setGroup(String group) {
 		m_group = group;
 	}
-	
+
+	public Set<String> getChannels() {
+		return m_channels;
+	}
+
+	public void setChannels(Set<String> channels) {
+		m_channels = channels;
+	}
+
 }

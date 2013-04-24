@@ -63,10 +63,11 @@ public class Handler implements PageHandler<Context> {
 		String channel = payload.getChannel();
 
 		if (report != null) {
-			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(channel),channel, report.getStartTime());
+			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(channel), channel, report.getStartTime());
 
 			display.visitMetricReport(report);
 			model.setDisplay(display);
+			model.setChannels(display.getAllChannel());
 			model.setReport(report);
 		}
 		m_jspViewer.view(ctx, model);
