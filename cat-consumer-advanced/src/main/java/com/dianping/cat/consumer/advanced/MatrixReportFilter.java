@@ -12,13 +12,9 @@ import com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder;
 public class MatrixReportFilter extends DefaultXmlBuilder {
 	private String m_domain;
 
-	private int m_maxItems;
+	private int m_maxItems = 200;
 
 	private static final String OTHERS = "OTHERS";
-
-	public MatrixReportFilter(int maxItems) {
-		m_maxItems = maxItems;
-	}
 
 	@Override
 	public void visitMatrixReport(MatrixReport matrixReport) {

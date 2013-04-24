@@ -65,14 +65,16 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 					try {
 						m_mailService.send(DEFAULT_EMAIL_TYPE, mail, title, content);
 						sendResult = true;
-						m_logger.info("CAT send email to! " + mail + " title:" + title);
+						m_logger.info("CAT send email to! " + mail + ",title:" + title);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
 				}
 			} else {
-				m_logger.info("CAT email has no recevers ! " + title);
+				m_logger.info("CAT email has no recevers ! Email title:" + title);
 			}
+		} else {
+			throw new RuntimeException("CAT server config is disable!");
 		}
 		return sendResult;
 	}
@@ -100,6 +102,8 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 			} else {
 				m_logger.info("CAT sms has no recevers ! " + content);
 			}
+		} else {
+			throw new RuntimeException("CAT server config is disable!");
 		}
 		return sendResult;
 	}

@@ -186,10 +186,10 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			for (MatrixReport report : m_reports.values()) {
 				try {
 					try {
-						report.accept(new MatrixReportFilter(50));
+						report.accept(new MatrixReportFilter());
 					} catch (Exception e) {
 						// ConcurrentModificationException
-						report.accept(new MatrixReportFilter(50));
+						report.accept(new MatrixReportFilter());
 					}
 					Set<String> domainNames = report.getDomainNames();
 					domainNames.clear();
@@ -216,7 +216,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 				for (MatrixReport report : m_reports.values()) {
 					try {
-						report.accept(new MatrixReportFilter(50));
+						report.accept(new MatrixReportFilter());
 						Report r = m_reportDao.createLocal();
 						String xml = builder.buildXml(report);
 						String domain = report.getDomain();
