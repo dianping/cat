@@ -79,6 +79,10 @@
 			<implementation>com.dianping.cat.report.task.database.DatabaseMerger</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
+			<implementation>com.dianping.cat.report.task.matrix.MatrixMerger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.task.sql.SqlMerger</role>
 			<implementation>com.dianping.cat.report.task.sql.SqlMerger</implementation>
 		</component>
@@ -207,33 +211,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
-			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.WeeklyreportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.database.DatabaseReportBuilder</role>
 			<implementation>com.dianping.cat.report.task.database.DatabaseReportBuilder</implementation>
 			<requirements>
@@ -251,6 +228,33 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.database.DatabaseMerger</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.WeeklyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.MonthreportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.task.matrix.MatrixReportBuilder</role>
+			<implementation>com.dianping.cat.report.task.matrix.MatrixReportBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.GraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.task.matrix.MatrixMerger</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.WeeklyreportDao</role>
