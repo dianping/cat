@@ -100,7 +100,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = buf.readByte();
 		String timestamp = helper.read(buf, TAB);
-		String type = helper.read(buf, TAB);
+		String type = helper.readRaw(buf, TAB);
 		String name = helper.readRaw(buf, TAB);
 
 		if (identifier == 't') {
@@ -285,7 +285,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		count += helper.write(buf, TAB);
-		count += helper.write(buf, message.getType());
+		count += helper.writeRaw(buf, message.getType());
 		count += helper.write(buf, TAB);
 		count += helper.writeRaw(buf, message.getName());
 		count += helper.write(buf, TAB);
