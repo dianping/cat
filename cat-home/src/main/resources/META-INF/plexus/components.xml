@@ -977,47 +977,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>ip-local</role-hint>
-			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>ip-historical</role-hint>
-			<implementation>com.dianping.cat.report.page.model.ip.HistoricalIpService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-			<role-hint>ip</role-hint>
-			<implementation>com.dianping.cat.report.page.model.ip.CompositeIpService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hints>
-						<role-hint>ip-historical</role-hint>
-					</role-hints>
-					<field-name>m_services</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>message-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.logview.LocalMessageService</implementation>
 			<requirements>
@@ -1778,32 +1737,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.ip.Handler</role>
-			<implementation>com.dianping.cat.report.page.ip.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.ip.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>ip</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.ip.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.ip.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.model.Handler</role>
 			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
 			<requirements>
@@ -1819,11 +1752,6 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>heartbeat-local</role-hint>
 					<field-name>m_heartbeatService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
-					<role-hint>ip-local</role-hint>
-					<field-name>m_ipService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1903,20 +1831,6 @@
 		<component>
 			<role>com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService</role>
 			<implementation>com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.message.spi.MessageConsumer</role>
-					<role-hint>realtime</role-hint>
-					<field-name>m_consumer</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.ip.LocalIpService</role>
-			<implementation>com.dianping.cat.report.page.model.ip.LocalIpService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
