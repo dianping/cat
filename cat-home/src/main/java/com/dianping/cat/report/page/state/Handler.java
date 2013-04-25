@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -38,9 +39,11 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "state")
 	private ModelService<StateReport> m_service;
 
+	private static final String CAT = "Cat";
+
 	private StateReport getHourlyReport(Payload payload) {
-		//only for cat
-		String domain = "Cat";
+		// only for cat
+		String domain = CAT;
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date)//
@@ -57,7 +60,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public StateReport getHistoryReport(Payload payload) {
-		String domain = "Cat";
+		String domain = CAT;
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
@@ -91,11 +94,11 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case GRAPH:
 			report = getHourlyReport(payload);
-			item = m_stateGraphs.buildGraph(report,payload.getDomain(), payload.getHistoryStartDate(),
+			item = m_stateGraphs.buildGraph(report, payload.getDomain(), payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate(), "graph", key, payload.getIpAddress());
 			break;
 		case HISTORY_GRAPH:
-			item = m_stateGraphs.buildGraph(null,payload.getDomain(), payload.getHistoryStartDate(),
+			item = m_stateGraphs.buildGraph(null, payload.getDomain(), payload.getHistoryStartDate(),
 			      payload.getHistoryEndDate(), "historyGraph", key, payload.getIpAddress());
 			break;
 		}
@@ -117,9 +120,9 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(action);
 		model.setPage(ReportPage.STATE);
 		model.setDisplayDomain(payload.getDomain());
-		String ip = payload.getIpAddress();
 
-		if (ip == null || ip.length() == 0) {
+		String ip = payload.getIpAddress();
+		if (!CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
 			payload.setIpAddress(CatString.ALL_IP);
 		}
 		if (payload.getPeriod().isFuture()) {
