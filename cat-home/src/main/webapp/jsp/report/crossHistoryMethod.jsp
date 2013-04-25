@@ -71,7 +71,7 @@
 			<th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
 			<th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
 			<th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
-			<th>TPS</th>
+			<th>QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.methodInfo.callProjectsInfo}" varStatus="status">
 			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
@@ -98,7 +98,7 @@
 		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
 		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
 		         <th><a href="?op=historyMethod&domain=${model.domain}&reportType=${model.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
-		         <th>TPS</th>
+		         <th>QPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.methodInfo.serviceProjectsInfo}" varStatus="status">
 		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
