@@ -59,6 +59,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ServerConfigManager m_manager;
 
+	@Inject
+	private TransactionMergeManager m_mergeManager;
+
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_service;
 
@@ -148,12 +151,7 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
-			if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
-				MergeAllMachine all = new MergeAllMachine();
-				all.visitTransactionReport(report);
-
-				report = all.getReport();
-			}
+			report = m_mergeManager.mergerAllIp(report, ipAddress);
 			calculateTps(payload, report);
 			return report;
 		} else {
@@ -179,20 +177,9 @@ public class Handler implements PageHandler<Context> {
 			name = CatString.ALL_NAME;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
-
 		TransactionReport report = response.getModel();
-		if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
-			MergeAllMachine all = new MergeAllMachine();
-			all.visitTransactionReport(report);
 
-			report = all.getReport();
-		}
-		if (CatString.ALL_NAME.equalsIgnoreCase(name)) {
-			MergeAllName all = new MergeAllName();
-			all.visitTransactionReport(report);
-
-			report = all.getReport();
-		}
+		report = m_mergeManager.mergerAll(report, ipAddress, name);
 		TransactionType t = report.getMachines().get(ip).findType(type);
 		if (t != null) {
 			TransactionName n = t.findName(name);

@@ -1608,6 +1608,9 @@
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>transaction</role-hint>
 					<field-name>m_service</field-name>
@@ -1640,6 +1643,10 @@
 			<implementation>com.dianping.cat.report.page.transaction.XmlViewer</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+			<implementation>com.dianping.cat.report.page.transaction.TransactionMergeManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>
 			<implementation>com.dianping.cat.report.page.event.Handler</implementation>
 			<requirements>
@@ -1657,6 +1664,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.EventMergeManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1685,6 +1695,10 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.event.EventMergeManager</role>
+			<implementation>com.dianping.cat.report.page.event.EventMergeManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.heartbeat.Handler</role>
@@ -2090,6 +2104,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.EventMergeManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2706,6 +2726,12 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.EventMergeManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>

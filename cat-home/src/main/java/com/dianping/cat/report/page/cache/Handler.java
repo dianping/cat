@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.cache;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -24,11 +26,15 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.event.EventMergeManager;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
+import com.dianping.cat.report.page.transaction.MergeAllMachine;
+import com.dianping.cat.report.page.transaction.MergeAllName;
+import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.dianping.cat.report.service.ReportService;
 
 public class Handler implements PageHandler<Context> {
@@ -45,8 +51,17 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
+	@Inject
+	private TransactionMergeManager m_transactionMergeManger;
+
+	@Inject
+	private EventMergeManager m_eventMergerMergeManager;
+
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_transactionService;
+
+	private Set<String> m_cacheType = new HashSet<String>(Arrays.asList("Cache.web", "Cache.memcached", "Cache.kvdb",
+	      "Cache.memcached-tuangou"));
 
 	private CacheReport buildCacheReport(TransactionReport transactionReport, EventReport eventReport, String type,
 	      String sortBy, String queryName, String ip) {
@@ -154,34 +169,27 @@ public class Handler implements PageHandler<Context> {
 		      .setProperty("ip", ipAddress);
 
 		if (StringUtils.isEmpty(type)) {
-			request.setProperty("type", "Cache.web");
-			ModelResponse<EventReport> response = m_eventService.invoke(request);
-			EventReport webCacheReport = response.getModel();
-
-			request.setProperty("type", "Cache.memcached");
-			ModelResponse<EventReport> memcachedResponse = m_eventService.invoke(request);
-			EventReport memcachedReport = memcachedResponse.getModel();
-
-			request.setProperty("type", "Cache.kvdb");
-			ModelResponse<EventReport> kvdbResponse = m_eventService.invoke(request);
-			EventReport kvdbReport = kvdbResponse.getModel();
-
-			request.setProperty("type", "Cache.memcached-tuangou");
-			ModelResponse<EventReport> tuangouResponse = m_eventService.invoke(request);
-			EventReport tuangouReport = tuangouResponse.getModel();
-
 			EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 
-			merger.visitEventReport(webCacheReport);
-			merger.visitEventReport(memcachedReport);
-			merger.visitEventReport(kvdbReport);
-			merger.visitEventReport(tuangouReport);
-			return merger.getEventReport();
+			for (String temp : m_cacheType) {
+				request.setProperty("type", temp);
+				ModelResponse<EventReport> response = m_eventService.invoke(request);
+				EventReport eventReport = response.getModel();
+
+				merger.visitEventReport(eventReport);
+			}
+			EventReport eventReport = merger.getEventReport();
+			
+			eventReport = m_eventMergerMergeManager.mergerAllIp(eventReport, ipAddress);
+			return eventReport;
 
 		} else {
 			request.setProperty("type", type);
 			ModelResponse<EventReport> response = m_eventService.invoke(request);
-			return response.getModel();
+			EventReport eventReport = response.getModel();
+			
+			eventReport = m_eventMergerMergeManager.mergerAllIp(eventReport, ipAddress);
+			return eventReport;
 		}
 	}
 
@@ -196,42 +204,26 @@ public class Handler implements PageHandler<Context> {
 		      .setProperty("ip", ipAddress);
 
 		if (StringUtils.isEmpty(type)) {
-			request.setProperty("type", "Cache.web");
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			TransactionReport webCacheReport = response.getModel();
-
-			request.setProperty("type", "Cache.memcached");
-			ModelResponse<TransactionReport> memcachedResponse = m_transactionService.invoke(request);
-			TransactionReport memcachedReport = memcachedResponse.getModel();
-
-			request.setProperty("type", "Cache.kvdb");
-			ModelResponse<TransactionReport> kvdbResponse = m_transactionService.invoke(request);
-			TransactionReport kvdbReport = kvdbResponse.getModel();
-
-			request.setProperty("type", "Cache.memcached-tuangou");
-			ModelResponse<TransactionReport> tuangouResponse = m_transactionService.invoke(request);
-			TransactionReport tuangouReport = tuangouResponse.getModel();
-
 			TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
-			merger.visitTransactionReport(webCacheReport);
-			merger.visitTransactionReport(memcachedReport);
-			merger.visitTransactionReport(kvdbReport);
-			merger.visitTransactionReport(tuangouReport);
+			for (String temp : m_cacheType) {
+				request.setProperty("type", temp);
+				ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
+				TransactionReport transactionReport = response.getModel();
 
-			TransactionReport report = merger.getTransactionReport();
-			if (payload.getPeriod().isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "transaction");
-				Set<String> domainNames = report.getDomainNames();
-
-				domainNames.addAll(domains);
+				merger.visitTransactionReport(transactionReport);
 			}
-			return report;
+
+			TransactionReport transactionReport = merger.getTransactionReport();
+			transactionReport = m_transactionMergeManger.mergerAllIp(transactionReport, ipAddress);
+			return transactionReport;
 		} else {
 			request.setProperty("type", type);
 			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			return response.getModel();
+			TransactionReport transactionReport = response.getModel();
+
+			transactionReport = m_transactionMergeManger.mergerAllIp(transactionReport, ipAddress);
+			return transactionReport;
 		}
 	}
 
@@ -247,12 +239,45 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+		String ipAddress = payload.getIpAddress();
+		String type = payload.getType();
 
 		normalize(model, payload);
 		switch (payload.getAction()) {
 		case HOURLY_REPORT:
 			TransactionReport transactionReport = getHourlyTransactionReport(payload);
 			EventReport eventReport = getHourlyEventReport(payload);
+
+			if (payload.getPeriod().isLast()) {
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
+				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "transaction");
+				Set<String> domainNames = transactionReport.getDomainNames();
+
+				domainNames.addAll(domains);
+			}
+			if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+				MergeAllMachine all = new MergeAllMachine();
+
+				all.visitTransactionReport(transactionReport);
+				transactionReport = all.getReport();
+
+				com.dianping.cat.report.page.event.MergeAllMachine allEvent = new com.dianping.cat.report.page.event.MergeAllMachine();
+
+				allEvent.visitEventReport(eventReport);
+				eventReport = allEvent.getReport();
+			}
+
+			if (CatString.ALL_NAME.equalsIgnoreCase(type)) {
+				MergeAllName all = new MergeAllName();
+
+				all.visitTransactionReport(transactionReport);
+				transactionReport = all.getReport();
+
+				com.dianping.cat.report.page.event.MergeAllName allEvent = new com.dianping.cat.report.page.event.MergeAllName();
+
+				allEvent.visitEventReport(eventReport);
+				eventReport = allEvent.getReport();
+			}
 
 			calculateEventTps(payload, eventReport);
 			calculateTransactionTps(payload, transactionReport);

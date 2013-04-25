@@ -52,6 +52,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ReportService m_reportService;
 
+	@Inject
+	private EventMergeManager m_mergeManager;
+
 	@Inject(type = ModelService.class, value = "event")
 	private ModelService<EventReport> m_service;
 
@@ -127,19 +130,8 @@ public class Handler implements PageHandler<Context> {
 		}
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
-		if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
-			MergeAllMachine all = new MergeAllMachine();
-			all.visitEventReport(report);
+		report = m_mergeManager.mergerAll(report, ipAddress, name);
 
-			report = all.getReport();
-		}
-		if (CatString.ALL_NAME.equalsIgnoreCase(name)) {
-			MergeAllName all = new MergeAllName();
-			all.visitEventReport(report);
-
-			report = all.getReport();
-		}
-		
 		EventType t = report.getMachines().get(ip).findType(type);
 
 		if (t != null) {
@@ -165,7 +157,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
 			EventReport report = response.getModel();
-			
+
 			if (payload.getPeriod().isLast()) {
 				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
 				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "event");
@@ -173,12 +165,7 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
-			if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
-				MergeAllMachine all = new MergeAllMachine();
-				all.visitEventReport(report);
-
-				report = all.getReport();
-			}
+			report = m_mergeManager.mergerAllIp(report, ipAddress);
 			calculateTps(payload, report);
 			return report;
 		} else {
@@ -339,9 +326,9 @@ public class Handler implements PageHandler<Context> {
 
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
-		
+
 		EventReport eventReport = m_reportService.queryEventReport(domain, start, end);
-		
+
 		calculateTps(payload, eventReport);
 		model.setReport(eventReport);
 		if (!StringUtils.isEmpty(type)) {

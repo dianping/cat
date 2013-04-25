@@ -63,7 +63,7 @@
 		<td><a href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=totalLoss" data-status="totalLoss" class="graph_link">[::show::]</a></td>
 		<td>丢失消息总量</td>
 		<c:choose>
-			<c:when test="model.state.total.totalLoss > 0 "><td style="color:red;">${w:format(model.state.total.totalLoss,'#,###,###,###,##0.#')}</td></c:when>
+			<c:when test="${model.state.total.totalLoss > 0}"><td style="color:red;">${w:format(model.state.total.totalLoss,'#,###,###,###,##0.#')}</td></c:when>
 			<c:otherwise><td>${w:format(model.state.total.totalLoss,'#,###,###,###,##0.#')}</td></c:otherwise>
 		</c:choose>
 		<td>服务器进行encode以及analyze处理来不及而丢失消息总量</td>
@@ -94,7 +94,7 @@
 		<td><a href="?op=historyGraph&ip=${model.ipAddress}&reportType=${model.reportType}&date=${model.date}&key=dumpLoss" data-status="dumpLoss" class="graph_link">[::show::]</a></td>
 		<td>gzip来不及压缩丢失消息数量</td>
 		<c:choose>
-			<c:when test="model.state.total.dumpLoss > 0 "><td style="color:red;">${w:format(model.state.total.dumpLoss,'#,###,###,###,##0.#')}</td></c:when>
+			<c:when test="${model.state.total.dumpLoss > 0}"><td style="color:red;">${w:format(model.state.total.dumpLoss,'#,###,###,###,##0.#')}</td></c:when>
 			<c:otherwise><td>${w:format(model.state.total.dumpLoss,'#,###,###,###,##0.#')}</td></c:otherwise>
 		</c:choose>
 		<td>将消息进行gzip压缩，gzip线程太忙而丢失消息丢失数目</td>
