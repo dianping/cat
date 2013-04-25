@@ -66,24 +66,6 @@ public class StateReportBuilder extends AbstractReportBuilder implements ReportB
 	}
 
 	@Override
-	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		try {
-			Dailyreport report = getDailyReport(reportName, reportDomain, reportPeriod);
-			clearDailyReport(report);
-			m_dailyReportDao.insert(report);
-			return true;
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
-	@Override
-	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
-		throw new RuntimeException("State report don't support redo HourReport!");
-	}
-	
-	@Override
 	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date start = reportPeriod;
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);

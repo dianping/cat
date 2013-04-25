@@ -18,6 +18,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
@@ -160,6 +161,9 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HEARTBEAT);
+		if (CatString.ALL_IP.equalsIgnoreCase(payload.getIpAddress())) {
+			payload.setIpAddress("");
+		}
 		model.setIpAddress(payload.getIpAddress());
 		String queryType = payload.getType();
 
@@ -202,9 +206,9 @@ public class Handler implements PageHandler<Context> {
 
 				String ip = payload.getIpAddress();
 				if (StringUtils.isEmpty(ip)) {
-					List<String> ips2 = model.getIps();
-					if (ips2.size() > 0) {
-						ip = ips2.get(0);
+					List<String> ipAdresses = model.getIps();
+					if (ipAdresses.size() > 0) {
+						ip = ipAdresses.get(0);
 					}
 				}
 				model.setIpAddress(ip);

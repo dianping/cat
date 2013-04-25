@@ -107,6 +107,7 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 		model.setAction(action);
 		model.setPage(ReportPage.DATABASE);
+		model.setIpAddress(payload.getIpAddress());
 
 		if (StringUtils.isEmpty(payload.getDomain())) {
 			payload.setDomain("All");

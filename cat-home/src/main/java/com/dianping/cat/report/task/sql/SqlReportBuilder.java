@@ -66,24 +66,6 @@ public class SqlReportBuilder extends AbstractReportBuilder implements ReportBui
 	}
 
 	@Override
-	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		try {
-			Dailyreport report = getdailyReport(reportName, reportDomain, reportPeriod);
-			clearDailyReport(report);
-			m_dailyReportDao.insert(report);
-			return true;
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
-	@Override
-	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
-		throw new RuntimeException("Sql report don't support redo HourReport!");
-	}
-	
-	@Override
 	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date start = reportPeriod;
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);

@@ -32,9 +32,6 @@
          <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
             <description>Dashboard</description>
          </page>
-         <page name="task" title="Task" path="task" standalone="false">
-            <description>Task</description>
-         </page>
          <page name="matrix" title="Matrix" path="matrix">
             <description>Matrix</description>
          </page>

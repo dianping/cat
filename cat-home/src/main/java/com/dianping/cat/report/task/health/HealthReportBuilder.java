@@ -228,16 +228,6 @@ public class HealthReportBuilder extends AbstractReportBuilder implements Report
 	}
 
 	@Override
-	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		return true;
-	}
-
-	@Override
-	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
-		return true;
-	}
-
-	@Override
 	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date start = reportPeriod;
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);

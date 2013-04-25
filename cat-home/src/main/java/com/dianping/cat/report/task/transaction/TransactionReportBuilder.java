@@ -123,28 +123,6 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 	}
 
 	@Override
-	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		return false;
-	}
-
-	@Override
-	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
-		try {
-			List<Graph> graphs = getHourReport(reportName, reportDomain, reportPeriod);
-			if (graphs != null) {
-				clearHourlyGraphs(graphs);
-				for (Graph graph : graphs) {
-					m_graphDao.insert(graph); // use mysql unique index and insert
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
-	}
-
-	@Override
 	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date start = reportPeriod;
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);

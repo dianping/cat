@@ -111,28 +111,6 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 	}
 
 	@Override
-	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod) {
-		return false;
-	}
-
-	@Override
-	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod) {
-		try {
-			List<Graph> graphs = getHourlyReport(reportName, reportDomain, reportPeriod);
-			if (graphs != null) {
-				clearHourlyGraphs(graphs);
-				for (Graph graph : graphs) {
-					this.m_graphDao.insert(graph); // use mysql unique index and
-				}
-			}
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
-	}
-
-	@Override
 	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
 		Date start = reportPeriod;
 		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);

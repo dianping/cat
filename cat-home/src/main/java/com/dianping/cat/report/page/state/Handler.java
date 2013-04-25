@@ -39,7 +39,8 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<StateReport> m_service;
 
 	private StateReport getHourlyReport(Payload payload) {
-		String domain = payload.getDomain();
+		//only for cat
+		String domain = "Cat";
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date)//
@@ -116,8 +117,6 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(action);
 		model.setPage(ReportPage.STATE);
 		model.setDisplayDomain(payload.getDomain());
-		// Only for cat
-		payload.setDomain(m_manager.getConsoleDefaultDomain());
 		String ip = payload.getIpAddress();
 
 		if (ip == null || ip.length() == 0) {

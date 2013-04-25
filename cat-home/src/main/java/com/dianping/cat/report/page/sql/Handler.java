@@ -113,6 +113,7 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 		model.setAction(action);
 		model.setPage(ReportPage.SQL);
+		model.setIpAddress(payload.getIpAddress());
 
 		if (StringUtils.isEmpty(payload.getDomain())) {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());

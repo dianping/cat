@@ -114,6 +114,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		model.setDisplayDomain(payload.getDomain());
+		model.setIpAddress(payload.getIpAddress());
 
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());

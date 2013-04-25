@@ -12,8 +12,4 @@ public interface ReportBuilder {
 
 	public boolean buildMonthReport(String reportName, String reportDomain, Date reportPeriod);
 
-	public boolean redoDailyReport(String reportName, String reportDomain, Date reportPeriod);
-
-	public boolean redoHourReport(String reportName, String reportDomain, Date reportPeriod);
-
 }
