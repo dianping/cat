@@ -19,8 +19,6 @@ com.dianping.cat.report.page.heartbeat.Handler.class,
 
 com.dianping.cat.report.page.logview.Handler.class,
 
-com.dianping.cat.report.page.ip.Handler.class,
-
 com.dianping.cat.report.page.model.Handler.class,
 
 com.dianping.cat.report.page.sql.Handler.class,

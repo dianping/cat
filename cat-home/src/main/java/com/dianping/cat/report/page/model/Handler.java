@@ -36,7 +36,6 @@ import com.dianping.cat.report.page.model.cross.LocalCrossService;
 import com.dianping.cat.report.page.model.database.LocalDatabaseService;
 import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
-import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.LocalMessageService;
 import com.dianping.cat.report.page.model.matrix.LocalMatrixService;
 import com.dianping.cat.report.page.model.metric.LocalMetricService;
@@ -59,9 +58,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "heartbeat-local")
 	private LocalHeartbeatService m_heartbeatService;
-
-	@Inject(type = ModelService.class, value = "ip-local")
-	private LocalIpService m_ipService;
 
 	@Inject(type = ModelService.class, value = "message-local")
 	private LocalMessageService m_messageService;
@@ -182,8 +178,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				} else {
 					response = m_messageService.invoke(request);
 				}
-			} else if ("ip".equals(report)) {
-				response = m_ipService.invoke(request);
 			} else if ("heartbeat".equals(report)) {
 				response = m_heartbeatService.invoke(request);
 			} else if ("matrix".equals(report)) {
