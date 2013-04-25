@@ -1,15 +1,19 @@
-package com.dianping.cat.report.page.model.spi;
+package com.dianping.cat.report.model;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class ModelRequest {
-	public static ModelRequest from(String domain, String period) {
-		ModelRequest request = new ModelRequest(domain, ModelPeriod.getByName(period, ModelPeriod.CURRENT));
+	private static final String PATTERN = "http://%s:%s%s/%s/%s/%s?op=xml%s";
 
-		return request;
-	}
+	private String m_host;
+
+	private int m_port;
+
+	private String m_prefixUri;
+
+	private String m_name;
 
 	private String m_domain;
 
@@ -17,9 +21,26 @@ public class ModelRequest {
 
 	private Map<String, String> m_properties;
 
+	public ModelRequest(String host, int port, String prefixUri, String name) {
+		m_host = host;
+		m_port = port;
+		m_prefixUri = prefixUri;
+		m_name = name;
+	}
+	
+	public String buildUri(String domain, ModelPeriod period) {
+		return null;
+	}
+
 	public ModelRequest(String domain, ModelPeriod period) {
 		m_domain = domain;
 		m_period = period;
+	}
+
+	public static ModelRequest from(String domain, String period) {
+		ModelRequest request = new ModelRequest(domain, ModelPeriod.getByName(period, ModelPeriod.CURRENT));
+
+		return request;
 	}
 
 	public String getDomain() {

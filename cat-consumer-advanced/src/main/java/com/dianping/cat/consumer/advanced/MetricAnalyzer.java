@@ -77,11 +77,6 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		m_logger = logger;
 	}
 
-	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
 	public String getGroup(String domain) {
 		return "TuanGou";
 	}
@@ -284,7 +279,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 					Set<String> groups = report.getGroupNames();
 
 					groups.clear();
-					groups.addAll(getDomains());
+					groups.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getGroup();

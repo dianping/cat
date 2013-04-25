@@ -26,6 +26,8 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 
 		if (map == null) {
 			synchronized (m_map) {
+				map = m_map.get(startTime);
+				
 				if (map == null) {
 					map = new HashMap<String, MessageAnalyzer>();
 					m_map.put(startTime, map);
@@ -37,6 +39,8 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 
 		if (analyzer == null) {
 			synchronized (map) {
+				analyzer = map.get(name);
+				
 				if (analyzer == null) {
 					analyzer = lookup(MessageAnalyzer.class, name);
 					analyzer.initialize(startTime, m_duration, m_extraTime);

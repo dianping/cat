@@ -4,7 +4,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.ip.model.entity.IpReport;
 import com.dianping.cat.consumer.ip.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
+import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.page.model.spi.internal.BaseHistoricalModelService;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;

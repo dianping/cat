@@ -1,4 +1,4 @@
-package com.dianping.cat.consumer.core;
+package com.dianping.cat.consumer.transaction;
 
 import org.junit.Assert;
 import org.junit.Test;

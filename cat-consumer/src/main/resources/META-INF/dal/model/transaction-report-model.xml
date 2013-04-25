@@ -2,7 +2,7 @@
 <model model-package="com.dianping.cat.consumer.transaction.model" enable-merger="true" enable-json-builder="true"
 	enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true"
 	enable-native-builder="true" enable-native-parser="true">
-	<entity name="transaction-report" root="true">
+	<entity name="transaction-report" root="true" implements="com.dianping.cat.report.IReport">
 		<attribute name="domain" key="true" />
 		<attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
 		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
@@ -24,8 +24,6 @@
 		<attribute name="max" value-type="double" primitive="true" default-value="-1"/>
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
-		<attribute name="line95Sum" value-type="double" primitive="true" format="0.00"/>
-		<attribute name="line95Count" value-type="int" primitive="true"/>
 		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
@@ -44,8 +42,6 @@
 		<attribute name="max" value-type="double" primitive="true" default-value="-1"/>
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
-		<attribute name="line95Sum" value-type="double" primitive="true" format="0.00"/>
-		<attribute name="line95Count" value-type="int" primitive="true"/>
 		<attribute name="sum" value-type="double" primitive="true" format="0.0" />
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />

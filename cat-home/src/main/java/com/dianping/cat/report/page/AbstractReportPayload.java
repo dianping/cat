@@ -11,7 +11,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
+import com.dianping.cat.report.model.ModelPeriod;
 
 public abstract class AbstractReportPayload<A extends Action> implements ActionPayload<ReportPage, A> {
 

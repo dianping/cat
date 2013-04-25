@@ -62,10 +62,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.consumer.core.TransactionAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<role>com.dianping.cat.consumer.transaction.TransactionReportManager</role>
+			<implementation>com.dianping.cat.consumer.transaction.DefaultTransactionReportManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.storage.BucketManager</role>
@@ -75,6 +73,17 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.transaction.TransactionReportManager</role>
 				</requirement>
 			</requirements>
 		</component>

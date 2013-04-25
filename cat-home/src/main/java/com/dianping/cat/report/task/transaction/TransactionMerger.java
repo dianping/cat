@@ -12,10 +12,10 @@ import org.codehaus.plexus.logging.Logger;
 
 import com.dainping.cat.consumer.core.dal.Report;
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.core.TransactionReportUrlFilter;
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
+import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 import com.dianping.cat.report.task.TaskHelper;
 import com.dianping.cat.report.task.spi.ReportMerger;
 
