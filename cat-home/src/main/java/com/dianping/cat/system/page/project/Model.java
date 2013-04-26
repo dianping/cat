@@ -9,16 +9,20 @@ import com.dainping.cat.consumer.core.dal.Project;
 import com.dianping.cat.system.SystemPage;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
-	
+
 	private Project m_project;
-	
+
 	private List<Project> m_projects;
-	
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
 
 	public String getDate() {
+		return "";
+	}
+
+	public String getIpAddress() {
 		return "";
 	}
 
@@ -46,7 +50,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setProject(Project project) {
 		m_project = project;
 	}
-	
+
 	public void setProjects(List<Project> projects) {
 		m_projects = projects;
 	}

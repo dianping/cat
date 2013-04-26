@@ -29,15 +29,9 @@ public class NavigationBar {
 
 		ReportPage.CACHE,
 
-		ReportPage.IP,
-
 		ReportPage.SQL,
 
-		ReportPage.TASK,
-
 		ReportPage.DATABASE,
-
-		ReportPage.QUERY,
 
 		ReportPage.HEALTH,
 
@@ -54,6 +48,8 @@ public class NavigationBar {
 		SystemPage.ALARM,
 
 		SystemPage.PROJECT,
+		
+		ReportPage.QUERY,
 
 		SystemPage.LOGIN
 

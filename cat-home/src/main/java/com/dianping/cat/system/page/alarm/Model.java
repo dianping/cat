@@ -48,6 +48,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public String getDate() {
 		return "";
 	}
+	
+	public String getIpAddress(){
+		return "";
+	}
 
 	@Override
 	public Action getDefaultAction() {

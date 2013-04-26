@@ -20,9 +20,6 @@
          <page name="logview" title="Logview" path="m" standalone="false">
             <description>Log View Details</description>
          </page>
-         <page name="ip" title="Top IP" standalone="false">
-            <description>Top Visited IP</description>
-         </page>
          <page name="model" title="Model" path="model" standalone="false">
             <description>Service Model</description>
          </page>
