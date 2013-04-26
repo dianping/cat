@@ -20,8 +20,8 @@ public class SqlMerger implements ReportMerger<SqlReport> {
 		SqlReport sqlReport = getDailyReport(reports, reportDomain, false);
 		SqlReport sqlReport2 = getDailyReport(reports, reportDomain, true);
 
-		sqlReport.addDatabase(sqlReport2.findOrCreateDatabase(CatString.ALL_Database));
-		sqlReport.getDomainNames().add(CatString.ALL_Database);
+		sqlReport.addDatabase(sqlReport2.findOrCreateDatabase(CatString.ALL));
+		sqlReport.getDomainNames().add(CatString.ALL);
 		sqlReport.getDomainNames().addAll(domains);
 
 		Date date = sqlReport.getStartTime();

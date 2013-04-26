@@ -113,7 +113,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.SQL);
 		m_normalizePayload.normalize(model, payload);
 		if (StringUtils.isEmpty(payload.getDatabase())) {
-			payload.setDatabase(CatString.ALL_Database);
+			payload.setDatabase(CatString.ALL);
 		}
 		model.setDatabase(payload.getDatabase());
 	}

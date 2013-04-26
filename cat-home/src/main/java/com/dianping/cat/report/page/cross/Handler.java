@@ -126,7 +126,7 @@ public class Handler implements PageHandler<Context> {
 			model.setProjectInfo(projectInfo);
 			model.setReport(projectReport);
 
-			if (payload.getIpAddress().equals(CatString.ALL_IP)) {
+			if (payload.getIpAddress().equals(CatString.ALL)) {
 				List<TypeDetailInfo> details = projectInfo.getServiceProjectsInfo();
 
 				for (TypeDetailInfo info : details) {
@@ -182,7 +182,7 @@ public class Handler implements PageHandler<Context> {
 			model.setProjectInfo(historyProjectInfo);
 			model.setReport(historyProjectReport);
 
-			if (payload.getIpAddress().equals(CatString.ALL_IP)) {
+			if (payload.getIpAddress().equals(CatString.ALL)) {
 				List<TypeDetailInfo> details = historyProjectInfo.getServiceProjectsInfo();
 
 				for (TypeDetailInfo info : details) {
@@ -250,11 +250,11 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private ProjectInfo buildCallProjectInfo(String domain, ModelPeriod period, String date, long duration) {
-		CrossReport projectReport = getHourlyReport(domain, period, date, CatString.ALL_IP);
+		CrossReport projectReport = getHourlyReport(domain, period, date, CatString.ALL);
 		ProjectInfo projectInfo = new ProjectInfo(duration);
 
 		projectInfo.setDomainManager(m_domainManager);
-		projectInfo.setClientIp(CatString.ALL_IP);
+		projectInfo.setClientIp(CatString.ALL);
 		projectInfo.visitCrossReport(projectReport);
 
 		return projectInfo;
@@ -265,7 +265,7 @@ public class Handler implements PageHandler<Context> {
 		ProjectInfo projectInfo = new ProjectInfo(end.getTime() - start.getTime());
 
 		projectInfo.setDomainManager(m_domainManager);
-		projectInfo.setClientIp(CatString.ALL_IP);
+		projectInfo.setClientIp(CatString.ALL);
 		projectInfo.visitCrossReport(projectReport);
 		return projectInfo;
 	}

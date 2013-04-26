@@ -103,7 +103,7 @@ public class EventRender extends BaseVisitor {
 
 	@Override
 	public void visitType(EventType type) {
-		if (m_currentIp.equals(CatString.ALL_IP)) {
+		if (m_currentIp.equals(CatString.ALL)) {
 			Set<String> types = DisplayTypes.s_unusedTypes;
 			String id = type.getId();
 			if (!types.contains(id)) {

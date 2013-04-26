@@ -114,7 +114,7 @@ public class Handler implements PageHandler<Context> {
 			payload.setDatabase("cat");
 		}
 		model.setDatabase(payload.getDatabase());
-		if (!CatString.ALL_Domain.equalsIgnoreCase(payload.getDomain())) {
+		if (!CatString.ALL.equalsIgnoreCase(payload.getDomain())) {
 			model.setDisplayDomain(payload.getDomain());
 			model.setDomain(payload.getDomain());
 		}

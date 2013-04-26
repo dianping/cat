@@ -130,10 +130,10 @@ public class TransactionReportMerger extends DefaultMerger {
 	}
 	
 	public Machine mergesForAllMachine(TransactionReport report) {
-		Machine machine = new Machine(CatString.ALL_IP);
+		Machine machine = new Machine(CatString.ALL);
 
 		for (Machine m : report.getMachines().values()) {
-			if (!m.getIp().equals(CatString.ALL_IP)) {
+			if (!m.getIp().equals(CatString.ALL)) {
 				visitMachineChildren(machine, m);
 			}
 		}

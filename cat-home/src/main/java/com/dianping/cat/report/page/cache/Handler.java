@@ -255,7 +255,7 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
-			if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+			if (CatString.ALL.equalsIgnoreCase(ipAddress)) {
 				MergeAllMachine all = new MergeAllMachine();
 
 				all.visitTransactionReport(transactionReport);
@@ -267,7 +267,7 @@ public class Handler implements PageHandler<Context> {
 				eventReport = allEvent.getReport();
 			}
 
-			if (CatString.ALL_NAME.equalsIgnoreCase(type)) {
+			if (CatString.ALL.equalsIgnoreCase(type)) {
 				MergeAllName all = new MergeAllName();
 
 				all.visitTransactionReport(transactionReport);

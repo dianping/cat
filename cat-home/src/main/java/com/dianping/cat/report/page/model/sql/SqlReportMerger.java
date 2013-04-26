@@ -18,10 +18,10 @@ public class SqlReportMerger extends DefaultMerger {
 	}
 
 	public Database mergesForAllMachine(SqlReport report) {
-		Database machine = new Database(CatString.ALL_IP);
+		Database machine = new Database(CatString.ALL);
 
 		for (Database m : report.getDatabases().values()) {
-			if (!m.getId().equals(CatString.ALL_IP)) {
+			if (!m.getId().equals(CatString.ALL)) {
 				visitDatabaseChildren(machine, m);
 			}
 		}
@@ -69,7 +69,7 @@ public class SqlReportMerger extends DefaultMerger {
 		SqlReport old = getSqlReport();
 
 		if (m_allDatabase) {
-			m_all = old.findOrCreateDatabase(CatString.ALL_Database);
+			m_all = old.findOrCreateDatabase(CatString.ALL);
 		}
 		super.visitSqlReport(sqlReport);
 		old.setStartTime(sqlReport.getStartTime());
@@ -77,7 +77,7 @@ public class SqlReportMerger extends DefaultMerger {
 		old.getDatabaseNames().addAll(sqlReport.getDatabaseNames());
 		old.getDomainNames().addAll(sqlReport.getDomainNames());
 		if (m_allDatabase) {
-			old.getDatabaseNames().remove(CatString.ALL_Database);
+			old.getDatabaseNames().remove(CatString.ALL);
 		}
 	}
 

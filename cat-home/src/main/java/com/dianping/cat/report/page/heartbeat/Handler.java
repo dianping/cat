@@ -155,7 +155,7 @@ public class Handler implements PageHandler<Context> {
 		if (queryType == null || queryType.trim().length() == 0) {
 			payload.setType("frameworkThread");
 		}
-		if (CatString.ALL_IP.equalsIgnoreCase(payload.getIpAddress())) {
+		if (CatString.ALL.equalsIgnoreCase(payload.getIpAddress())) {
 			payload.setIpAddress("");
 		}
 	}

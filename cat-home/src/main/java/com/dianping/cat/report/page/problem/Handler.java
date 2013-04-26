@@ -71,7 +71,7 @@ public class Handler implements PageHandler<Context> {
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date).setProperty("type", type);
-		if (!CatString.ALL_IP.equals(payload.getIpAddress())) {
+		if (!CatString.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
 		if (!StringUtils.isEmpty(payload.getThreadId())) {
@@ -130,7 +130,7 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
-			if (ip.equals(CatString.ALL_IP)) {
+			if (ip.equals(CatString.ALL)) {
 				problemStatistics.setAllIp(true);
 			} else {
 				problemStatistics.setIp(ip);
@@ -142,7 +142,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
-			if (ip.equals(CatString.ALL_IP)) {
+			if (ip.equals(CatString.ALL)) {
 				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
 				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
@@ -175,7 +175,7 @@ public class Handler implements PageHandler<Context> {
 			showDetail(model, payload);
 			break;
 		case MOBILE:
-			if (ip.equals(CatString.ALL_IP)) {
+			if (ip.equals(CatString.ALL)) {
 				report = getHourlyReport(payload, VIEW);
 
 				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)

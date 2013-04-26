@@ -126,7 +126,7 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = CatString.ALL_NAME;
+			name = CatString.ALL;
 		}
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();

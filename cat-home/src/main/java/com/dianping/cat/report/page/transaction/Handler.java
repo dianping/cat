@@ -143,7 +143,7 @@ public class Handler implements PageHandler<Context> {
 				Date start = new Date(payload.getDate());
 				Date end = new Date(payload.getDate() + TimeUtil.ONE_HOUR);
 
-				if (CatString.ALL_Domain.equals(domain)) {
+				if (CatString.ALL.equals(domain)) {
 					report = m_reportService.queryTransactionReport(domain, start, end);
 				}
 				Set<String> domains = m_reportService.queryAllDomainNames(start, end, "transaction");
@@ -174,7 +174,7 @@ public class Handler implements PageHandler<Context> {
 		if (name == null || name.length() == 0) {
 			request.setProperty("name", "*");
 			request.setProperty("all", "true");
-			name = CatString.ALL_NAME;
+			name = CatString.ALL;
 		}
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 		TransactionReport report = response.getModel();

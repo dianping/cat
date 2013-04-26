@@ -12,7 +12,7 @@ public class TransactionMergeManager {
 	}
 
 	public TransactionReport mergerAllIp(TransactionReport report, String ipAddress) {
-		if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+		if (CatString.ALL.equalsIgnoreCase(ipAddress)) {
 			MergeAllMachine all = new MergeAllMachine();
 			
 			all.visitTransactionReport(report);
@@ -22,7 +22,7 @@ public class TransactionMergeManager {
 	}
 
 	private TransactionReport mergerAllName(TransactionReport report, String allName) {
-		if (CatString.ALL_NAME.equalsIgnoreCase(allName)) {
+		if (CatString.ALL.equalsIgnoreCase(allName)) {
 			MergeAllName all = new MergeAllName();
 			
 			all.visitTransactionReport(report);

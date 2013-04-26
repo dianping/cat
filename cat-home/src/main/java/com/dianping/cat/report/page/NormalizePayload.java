@@ -15,7 +15,7 @@ public class NormalizePayload {
 			payload.setDomain(m_manager.getConsoleDefaultDomain());
 		}
 		if (StringUtils.isEmpty(payload.getIpAddress())) {
-			payload.setIpAddress(CatString.ALL_IP);
+			payload.setIpAddress(CatString.ALL);
 		}
 		if (payload.getPeriod().isFuture()) {
 			model.setLongDate(payload.getCurrentDate());

@@ -18,10 +18,10 @@ public class DatabaseReportMerger extends DefaultMerger {
 	}
 
 	public Domain mergesForAllMachine(DatabaseReport report) {
-		Domain machine = new Domain(CatString.ALL_IP);
+		Domain machine = new Domain(CatString.ALL);
 
 		for (Domain m : report.getDomains().values()) {
-			if (!m.getId().equals(CatString.ALL_IP)) {
+			if (!m.getId().equals(CatString.ALL)) {
 				visitDomainChildren(machine, m);
 			}
 		}
@@ -70,7 +70,7 @@ public class DatabaseReportMerger extends DefaultMerger {
 		DatabaseReport old = getDatabaseReport();
 
 		if (m_allDomain) {
-			m_all = old.findOrCreateDomain(CatString.ALL_Domain);
+			m_all = old.findOrCreateDomain(CatString.ALL);
 		}
 		super.visitDatabaseReport(databaseReport);
 		old.setConnectUrl(databaseReport.getConnectUrl());
@@ -80,7 +80,7 @@ public class DatabaseReportMerger extends DefaultMerger {
 		old.getDatabaseNames().addAll(databaseReport.getDatabaseNames());
 
 		if (m_allDomain) {
-			old.getDomainNames().remove(CatString.ALL_Domain);
+			old.getDomainNames().remove(CatString.ALL);
 		}
 
 	}

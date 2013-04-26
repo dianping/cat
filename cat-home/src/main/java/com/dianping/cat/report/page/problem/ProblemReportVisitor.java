@@ -76,7 +76,7 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitMachine(Machine machine) {
-		if (CatString.ALL_IP.equals(m_ip) || m_ip.equals(machine.getIp())) {
+		if (CatString.ALL.equals(m_ip) || m_ip.equals(machine.getIp())) {
 			super.visitMachine(machine);
 		}
 	}

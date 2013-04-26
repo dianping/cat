@@ -119,7 +119,7 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.STATE);
 		String ip = payload.getIpAddress();
 		if (!CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
-			payload.setIpAddress(CatString.ALL_IP);
+			payload.setIpAddress(CatString.ALL);
 		}
 		m_normalizePayload.normalize(model, payload);
 	}

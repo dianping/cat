@@ -12,7 +12,7 @@ public class EventMergeManager {
 	}
 
 	public EventReport mergerAllIp(EventReport report, String ipAddress) {
-		if (CatString.ALL_IP.equalsIgnoreCase(ipAddress)) {
+		if (CatString.ALL.equalsIgnoreCase(ipAddress)) {
 			MergeAllMachine all = new MergeAllMachine();
 
 			all.visitEventReport(report);
@@ -22,7 +22,7 @@ public class EventMergeManager {
 	}
 
 	private EventReport mergerAllName(EventReport report, String allName) {
-		if (CatString.ALL_NAME.equalsIgnoreCase(allName)) {
+		if (CatString.ALL.equalsIgnoreCase(allName)) {
 			MergeAllName all = new MergeAllName();
 
 			all.visitEventReport(report);

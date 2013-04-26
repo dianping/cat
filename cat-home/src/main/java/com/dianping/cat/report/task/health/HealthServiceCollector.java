@@ -74,7 +74,7 @@ public class HealthServiceCollector {
 				ProjectInfo projectInfo = new ProjectInfo(TimeUtil.ONE_HOUR);
 
 				projectInfo.setDomainManager(m_domainManager);
-				projectInfo.setClientIp(CatString.ALL_IP);
+				projectInfo.setClientIp(CatString.ALL);
 				projectInfo.visitCrossReport(report);
 
 				Collection<TypeDetailInfo> calls = projectInfo.getCallProjectsInfo();

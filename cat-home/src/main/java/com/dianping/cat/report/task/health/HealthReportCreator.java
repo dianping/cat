@@ -55,9 +55,9 @@ public class HealthReportCreator {
 	}
 
 	private BaseCacheInfo buildBaseCacheInfo(TransactionReport transactionReport, EventReport eventReport, String type) {
-		Map<String, TransactionType> transactionTypes = transactionReport.findOrCreateMachine(CatString.ALL_IP)
+		Map<String, TransactionType> transactionTypes = transactionReport.findOrCreateMachine(CatString.ALL)
 		      .getTypes();
-		Map<String, EventType> eventTypes = eventReport.findOrCreateMachine(CatString.ALL_IP).getTypes();
+		Map<String, EventType> eventTypes = eventReport.findOrCreateMachine(CatString.ALL).getTypes();
 
 		List<TransactionType> transactionTypeList = new ArrayList<TransactionType>();
 		List<EventType> eventTypeList = new ArrayList<EventType>();
@@ -350,7 +350,7 @@ public class HealthReportCreator {
 	}
 
 	private void buildTansactionInfo(TransactionReport transactionReport) {
-		Machine machine = transactionReport.findOrCreateMachine(CatString.ALL_IP);
+		Machine machine = transactionReport.findOrCreateMachine(CatString.ALL);
 		Map<String, TransactionType> types = machine.getTypes();
 
 		TransactionType url = types.get("URL");

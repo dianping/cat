@@ -77,7 +77,7 @@ public class StateShow extends BaseVisitor {
 			m_total = new Machine();
 			m_total.setIp(ip);
 		}
-		if (m_ip.equals(CatString.ALL_IP) || m_ip.equalsIgnoreCase(ip)) {
+		if (m_ip.equals(CatString.ALL) || m_ip.equalsIgnoreCase(ip)) {
 			m_total = mergerMachine(m_total, machine);
 			super.visitMachine(machine);
 		}
@@ -138,7 +138,7 @@ public class StateShow extends BaseVisitor {
 
 	@Override
 	public void visitProcessDomain(ProcessDomain processDomain) {
-		if (m_ip.equals(m_currentIp) || m_ip.equals(CatString.ALL_IP)) {
+		if (m_ip.equals(m_currentIp) || m_ip.equals(CatString.ALL)) {
 			ProcessDomain temp = m_processDomains.get(processDomain.getName());
 
 			if (temp == null) {
