@@ -16,6 +16,7 @@ import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -34,6 +35,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "state")
 	private ModelService<StateReport> m_service;
+	
+	@Inject
+	private NormalizePayload m_normalizePayload;
 
 	private static final String CAT = "Cat";
 
@@ -112,34 +116,12 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		Action action = payload.getAction();
-		model.setAction(action);
 		model.setPage(ReportPage.STATE);
-		model.setDisplayDomain(payload.getDomain());
-
 		String ip = payload.getIpAddress();
 		if (!CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
 			payload.setIpAddress(CatString.ALL_IP);
 		}
-		if (payload.getPeriod().isFuture()) {
-			model.setLongDate(payload.getCurrentDate());
-		} else {
-			model.setLongDate(payload.getDate());
-		}
-		model.setIpAddress(payload.getIpAddress());
-
-		if (action == Action.HISTORY) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
-			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			if (!payload.isToday()) {
-				payload.setYesterdayDefault();
-			}
-			model.setLongDate(payload.getDate());
-			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
-		}
+		m_normalizePayload.normalize(model, payload);
 	}
+	
 }

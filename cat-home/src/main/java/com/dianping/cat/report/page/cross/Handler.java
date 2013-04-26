@@ -14,11 +14,11 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.cross.display.HostInfo;
 import com.dianping.cat.report.page.cross.display.MethodInfo;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
@@ -37,8 +37,8 @@ public class Handler implements PageHandler<Context> {
 	private ReportService m_reportService;
 
 	@Inject
-	private ServerConfigManager m_manager;
-
+	private NormalizePayload m_normalizePayload;
+	
 	@Inject
 	private DomainManager m_domainManager;
 
@@ -269,18 +269,11 @@ public class Handler implements PageHandler<Context> {
 		projectInfo.visitCrossReport(projectReport);
 		return projectInfo;
 	}
-
-	public void normalize(Model model, Payload payload) {
-		Action action = payload.getAction();
-		model.setAction(action);
+	
+	private void normalize(Model model,Payload payload){
 		model.setPage(ReportPage.CROSS);
-
-		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getConsoleDefaultDomain());
-		}
-		if (StringUtils.isEmpty(payload.getIpAddress())) {
-			payload.setIpAddress("All");
-		}
+		m_normalizePayload.normalize(model, payload);
+		
 		if (StringUtils.isEmpty(payload.getCallSort())) {
 			payload.setCallSort("avg");
 		}
@@ -289,16 +282,8 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setCallSort(payload.getCallSort());
 		model.setServiceSort(payload.getServiceSort());
-		model.setIpAddress(payload.getIpAddress());
-		model.setDisplayDomain(payload.getDomain());
 		model.setQueryName(payload.getQueryName());
-
-		if (payload.getPeriod().isFuture()) {
-			model.setLongDate(payload.getCurrentDate());
-		} else {
-			model.setLongDate(payload.getDate());
-		}
-
+		
 		if (StringUtils.isEmpty(payload.getProjectName())) {
 			if (payload.getAction() == Action.HOURLY_HOST) {
 				payload.setAction("view");
@@ -316,27 +301,7 @@ public class Handler implements PageHandler<Context> {
 				payload.setAction("history");
 			}
 		}
-		action = payload.getAction();
-		model.setAction(action);
-
-		if (action == Action.HISTORY_PROJECT || action == Action.HISTORY_METHOD || action == Action.HISTORY_HOST) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
-			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			if (!payload.isToday()) {
-				payload.setYesterdayDefault();
-			}
-			model.setLongDate(payload.getDate());
-			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
-		}
-
-		if (action == Action.METHOD_QUERY && StringUtils.isEmpty(payload.getMethod())) {
-			payload.setAction(Action.HOURLY_PROJECT.getName());
-			model.setAction(Action.HOURLY_PROJECT);
-		}
+		
 	}
 
 }

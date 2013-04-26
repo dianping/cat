@@ -418,6 +418,15 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.NormalizePayload</role>
+			<implementation>com.dianping.cat.report.page.NormalizePayload</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.cross.DomainManager</role>
 			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
 			<requirements>
@@ -1500,6 +1509,9 @@
 					<role-hint>problem</role-hint>
 					<field-name>m_service</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1546,6 +1558,10 @@
 			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.NormalizePayload</role>
+			<implementation>com.dianping.cat.report.page.NormalizePayload</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
 			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
 			<requirements>
@@ -1565,10 +1581,10 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1620,9 +1636,6 @@
 					<role>com.dianping.cat.report.page.event.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
@@ -1632,6 +1645,9 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>event</role-hint>
 					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1668,16 +1684,10 @@
 					<role>com.dianping.cat.report.graph.GraphBuilder</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.home.dal.report.GraphDao</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.HistoryGraphs</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
@@ -1686,6 +1696,9 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>heartbeat</role-hint>
 					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1995,7 +2008,7 @@
 					<role>com.dianping.cat.report.page.sql.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2063,7 +2076,7 @@
 					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2089,7 +2102,7 @@
 					<role>com.dianping.cat.report.page.health.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
@@ -2128,7 +2141,7 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.cross.DomainManager</role>
@@ -2183,9 +2196,6 @@
 					<role>com.dianping.cat.report.page.cache.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
@@ -2193,6 +2203,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.EventMergeManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2225,6 +2238,9 @@
 					<role-hint>database</role-hint>
 					<field-name>m_service</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2253,6 +2269,9 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>state</role-hint>
 					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 			</requirements>
 		</component>

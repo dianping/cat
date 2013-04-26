@@ -17,7 +17,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.core.EventStatisticsComputer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -27,6 +26,7 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.PieChart;
 import com.dianping.cat.report.page.PieChart.Item;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -47,9 +47,6 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ServerConfigManager m_manager;
-
-	@Inject
 	private ReportService m_reportService;
 
 	@Inject
@@ -57,6 +54,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "event")
 	private ModelService<EventReport> m_service;
+
+	@Inject
+	private NormalizePayload m_normalizePayload;
 
 	private EventStatisticsComputer m_computer = new EventStatisticsComputer();
 
@@ -227,39 +227,12 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	public void normalize(Model model, Payload payload) {
-		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getConsoleDefaultDomain());
-		}
+	private void normalize(Model model, Payload payload) {
+		model.setPage(ReportPage.EVENT);
+		m_normalizePayload.normalize(model, payload);
 
-		String ip = payload.getIpAddress();
-		if (StringUtils.isEmpty(ip)) {
-			payload.setIpAddress(CatString.ALL_IP);
-		}
 		if (StringUtils.isEmpty(payload.getType())) {
 			payload.setType(null);
-		}
-		model.setIpAddress(payload.getIpAddress());
-		model.setAction(payload.getAction());
-		model.setPage(ReportPage.EVENT);
-		model.setDisplayDomain(payload.getDomain());
-		if (payload.getPeriod().isCurrent()) {
-			model.setCreatTime(new Date());
-		} else {
-			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
-		}
-		if (payload.getAction() == Action.HISTORY_REPORT || payload.getAction() == Action.HISTORY_GRAPH) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
-			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			if (!payload.isToday()) {
-				payload.setYesterdayDefault();
-			}
-			model.setLongDate(payload.getDate());
-			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
 	}
 

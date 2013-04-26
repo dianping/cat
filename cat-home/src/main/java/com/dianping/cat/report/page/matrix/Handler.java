@@ -7,16 +7,15 @@ import java.util.Set;
 import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -31,8 +30,8 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ServerConfigManager m_manager;
-
+	private NormalizePayload m_normalizePayload;
+	
 	@Inject(type = ModelService.class, value = "matrix")
 	private ModelService<MatrixReport> m_service;
 
@@ -103,36 +102,10 @@ public class Handler implements PageHandler<Context> {
 		model.setReport(matrixReport);
 		model.setMatrix(new DisplayMatrix(matrixReport).setSortBy(payload.getSortBy()));
 	}
-
-	public void normalize(Model model, Payload payload) {
-		Action action = payload.getAction();
-		model.setAction(action);
+	
+	private void normalize(Model model,Payload payload){
 		model.setPage(ReportPage.MATRIX);
-
-		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getConsoleDefaultDomain());
-		}
-
-		model.setDisplayDomain(payload.getDomain());
-		model.setIpAddress(payload.getIpAddress());
-
-		if (payload.getPeriod().isFuture()) {
-			model.setLongDate(payload.getCurrentDate());
-		} else {
-			model.setLongDate(payload.getDate());
-		}
-		if (action == Action.HISTORY_REPORT) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
-			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			if (!payload.isToday()) {
-				payload.setYesterdayDefault();
-			}
-			model.setLongDate(payload.getDate());
-			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
-		}
+		m_normalizePayload.normalize(model, payload);
 	}
+
 }

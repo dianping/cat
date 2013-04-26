@@ -15,7 +15,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
@@ -26,6 +25,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.event.EventMergeManager;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -46,9 +46,6 @@ public class Handler implements PageHandler<Context> {
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ServerConfigManager m_manager;
-
-	@Inject
 	private ReportService m_reportService;
 
 	@Inject
@@ -56,6 +53,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private EventMergeManager m_eventMergerMergeManager;
+
+	@Inject
+	private NormalizePayload m_normalizePayload;
 
 	@Inject(type = ModelService.class, value = "transaction")
 	private ModelService<TransactionReport> m_transactionService;
@@ -179,7 +179,7 @@ public class Handler implements PageHandler<Context> {
 				merger.visitEventReport(eventReport);
 			}
 			EventReport eventReport = merger.getEventReport();
-			
+
 			eventReport = m_eventMergerMergeManager.mergerAllIp(eventReport, ipAddress);
 			return eventReport;
 
@@ -187,7 +187,7 @@ public class Handler implements PageHandler<Context> {
 			request.setProperty("type", type);
 			ModelResponse<EventReport> response = m_eventService.invoke(request);
 			EventReport eventReport = response.getModel();
-			
+
 			eventReport = m_eventMergerMergeManager.mergerAllIp(eventReport, ipAddress);
 			return eventReport;
 		}
@@ -303,36 +303,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getConsoleDefaultDomain());
-		}
-
-		String ip = payload.getIpAddress();
-		if (StringUtils.isEmpty(ip)) {
-			payload.setIpAddress(CatString.ALL_IP);
-		}
-		model.setIpAddress(payload.getIpAddress());
-		model.setAction(payload.getAction());
+		m_normalizePayload.normalize(model, payload);
 		model.setPage(ReportPage.CACHE);
-		model.setDisplayDomain(payload.getDomain());
 		model.setQueryName(payload.getQueryName());
-		if (payload.getPeriod().isFuture()) {
-			model.setLongDate(payload.getCurrentDate());
-		} else {
-			model.setLongDate(payload.getDate());
-		}
-		if (payload.getAction() == Action.HISTORY_REPORT) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
-			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			if (!payload.isToday()) {
-				payload.setYesterdayDefault();
-			}
-			model.setLongDate(payload.getDate());
-			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
-		}
 	}
 }

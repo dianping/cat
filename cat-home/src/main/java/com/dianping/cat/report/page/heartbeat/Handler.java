@@ -2,29 +2,23 @@ package com.dianping.cat.report.page.heartbeat;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import javax.servlet.ServletException;
 
-import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dal.report.Graph;
-import com.dianping.cat.home.dal.report.GraphDao;
-import com.dianping.cat.home.dal.report.GraphEntity;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.GraphBuilder;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -38,22 +32,19 @@ public class Handler implements PageHandler<Context> {
 	private GraphBuilder m_builder;
 
 	@Inject
-	private GraphDao m_graphDao;
-
-	@Inject
 	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
 
 	@Inject
-	private ServerConfigManager m_manager;
-
-	@Inject
 	private ReportService m_reportService;
 
 	@Inject(type = ModelService.class, value = "heartbeat")
 	private ModelService<HeartbeatReport> m_service;
+
+	@Inject
+	private NormalizePayload m_normalizePayload;
 
 	private void buildHeartbeatGraphInfo(Model model, DisplayHeartbeat displayHeartbeat) {
 		if (displayHeartbeat == null) {
@@ -156,65 +147,16 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getConsoleDefaultDomain());
-		}
-		model.setAction(payload.getAction());
 		model.setPage(ReportPage.HEARTBEAT);
-		if (CatString.ALL_IP.equalsIgnoreCase(payload.getIpAddress())) {
-			payload.setIpAddress("");
-		}
-		model.setIpAddress(payload.getIpAddress());
+		m_normalizePayload.normalize(model, payload);
+
 		String queryType = payload.getType();
 
 		if (queryType == null || queryType.trim().length() == 0) {
 			payload.setType("frameworkThread");
 		}
-		Action action = payload.getAction();
-		if (action == Action.HISTORY) {
-			String type = payload.getReportType();
-
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
-			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			model.setLongDate(payload.getDate());
-
-			HeartbeatReport report = new HeartbeatReport();
-
-			model.setReport(report);
-			try {
-				Date historyStartDate = payload.getHistoryStartDate();
-				Date historyEndDate = payload.getHistoryEndDate();
-				List<Graph> domains = m_graphDao.findDomainByNameDuration(historyStartDate, historyEndDate, "heartbeat",
-				      GraphEntity.READSET_DOMAIN);
-				String domain = payload.getDomain();
-				List<Graph> ips = m_graphDao.findIpByDomainNameDuration(historyStartDate, historyEndDate, domain,
-				      "heartbeat", GraphEntity.READSET_IP);
-				Set<String> reportDomains = report.getDomainNames();
-				Set<String> reportIps = report.getIps();
-
-				for (Graph graph : domains) {
-					reportDomains.add(graph.getDomain());
-				}
-				for (Graph graph : ips) {
-					reportIps.add(graph.getIp());
-				}
-				report.setDomain(payload.getDomain());
-				model.setDisplayDomain(payload.getDomain());
-
-				String ip = payload.getIpAddress();
-				if (StringUtils.isEmpty(ip)) {
-					List<String> ipAdresses = model.getIps();
-					if (ipAdresses.size() > 0) {
-						ip = ipAdresses.get(0);
-					}
-				}
-				model.setIpAddress(ip);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
+		if (CatString.ALL_IP.equalsIgnoreCase(payload.getIpAddress())) {
+			payload.setIpAddress("");
 		}
 	}
 
