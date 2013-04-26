@@ -43,6 +43,8 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
+	private static final String UNKNOWN_IP = "UnknownIp";
+
 	private static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
@@ -70,7 +72,7 @@ public class DomainManager implements Initializable, LogEnabled {
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
 			try {
-				m_ipDomains.put("UnknownIp", "UnknownProject");
+				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
 
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 				for (Hostinfo info : infos) {

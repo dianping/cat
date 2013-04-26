@@ -27,6 +27,8 @@ public class Handler implements PageHandler<Context> {
 
 	private static final String ACCESS = "DirectAccess";
 
+	private String m_data;
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "jsError")
@@ -45,13 +47,13 @@ public class Handler implements PageHandler<Context> {
 			for (Message temp : messages) {
 				String type = temp.getType();
 				if (type.equals("URL.Server") || type.equals("ClientInfo")) {
-					String data = temp.getData().toString();
-					String url = parseValue("Referer", data);
+					m_data = temp.getData().toString();
+					String url = parseValue("Referer", m_data);
 
 					if (url != null) {
 						try {
 							URL u = new URL(url);
-							return u.getHost();
+							return u.getHost().toLowerCase();
 						} catch (MalformedURLException e) {
 							break;
 						}
@@ -110,32 +112,67 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
-
 		long timestamp = payload.getTimestamp();
 		String error = payload.getError();
 		String file = payload.getFile();
 		String host = parseHost();
 
-		if (file == null || file.length() == 0) {
+		if (file == null || file.length() == 0 || (!file.startsWith("http:"))) {
 			file = "unknown";
-		}
-		int index = file.indexOf('?');
+		} else {
+			int index = file.indexOf('?');
 
-		if (index > -1) {
-			file = file.substring(0, index);
+			if (index > -1) {
+				file = file.substring(0, index);
+			}
 		}
+		file = formateFile(file);
 		Cat.logEvent("Error", file, "Error", error);
-		Cat.logEvent("Error.Date", file, Message.SUCCESS,
+		Cat.logEvent("Agent", parseValue("Agent", m_data), Message.SUCCESS,
 		      new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(timestamp)));
 
 		DefaultMessageTree tree = (DefaultMessageTree) Cat.getManager().getThreadLocalMessageTree();
+		
 		tree.setDomain("FrontEnd");
 		tree.setHostName(host);
 		tree.setIpAddress(host);
-
 		model.setStatus("SUCCESS");
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.JSERROR);
 		m_jspViewer.view(ctx, model);
+	}
+
+	public String formateFile(String file) {
+		try {
+			String[] args = file.split("/");
+			int length = args.length;
+
+			if (length < 5) {
+				return file;
+			} else if (length >= 5) {
+				String last = args[4];
+				StringBuilder sb = new StringBuilder(64);
+
+				for (int i = 0; i < 4; i++) {
+					sb.append(args[i]).append('/');
+				}
+				if (!isNumeric(last)) {
+					sb.append(last);
+				}
+				return sb.toString();
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return file;
+	}
+
+	private boolean isNumeric(String str) {
+		for (int i = str.length(); --i >= 0;) {
+			if (!Character.isDigit(str.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
 	}
 }
