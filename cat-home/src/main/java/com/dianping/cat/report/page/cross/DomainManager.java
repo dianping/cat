@@ -1,17 +1,25 @@
 package com.dianping.cat.report.page.cross;
 
-import java.util.HashMap;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.webres.helper.Files;
+import org.unidal.webres.json.JsonArray;
+import org.unidal.webres.json.JsonObject;
 
 import com.dainping.cat.consumer.core.dal.Hostinfo;
 import com.dainping.cat.consumer.core.dal.HostinfoDao;
@@ -19,7 +27,7 @@ import com.dainping.cat.consumer.core.dal.HostinfoEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 
-public class DomainManager implements Initializable {
+public class DomainManager implements Initializable, LogEnabled {
 
 	@Inject
 	private HostinfoDao m_hostInfoDao;
@@ -27,18 +35,28 @@ public class DomainManager implements Initializable {
 	@Inject
 	private ServerConfigManager m_manager;
 
-	private Map<String, String> m_ipDomains = new HashMap<String, String>();
+	private Map<String, String> m_ipDomains = new ConcurrentHashMap<String, String>();
 
 	private Set<String> m_unknownIps = new HashSet<String>();
 
+	private Map<String, String> m_cmdbs = new ConcurrentHashMap<String, String>();
+
+	private Logger m_logger;
+
 	private static final String UNKNOWN_PROJECT = "UnknownProject";
+
+	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 
 	public String getDomainByIp(String ip) {
 		String project = m_ipDomains.get(ip);
 
 		if (project == null) {
-			m_unknownIps.add(ip);
-			return UNKNOWN_PROJECT;
+			project = m_cmdbs.get(ip);
+
+			if (project == null) {
+				m_unknownIps.add(ip);
+				return UNKNOWN_PROJECT;
+			}
 		}
 		return project;
 	}
@@ -59,7 +77,7 @@ public class DomainManager implements Initializable {
 		}
 	}
 
-	class ReloadDomainTask implements Task {
+	public class ReloadDomainTask implements Task {
 		@Override
 		public void run() {
 			boolean active = true;
@@ -81,17 +99,59 @@ public class DomainManager implements Initializable {
 						for (String ip : addIps) {
 							m_unknownIps.remove(ip);
 						}
+					}
 
+					// get from cmdb
+					addIps = new HashSet<String>();
+					synchronized (m_unknownIps) {
+						for (String ip : m_unknownIps) {
+							try {
+								String cmdb = String.format(CMDB_URL, ip);
+								URL url = new URL(cmdb);
+								HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+								int nRc = conn.getResponseCode();
+								
+								if (nRc == HttpURLConnection.HTTP_OK) {
+									InputStream input = conn.getInputStream();
+									String content = Files.forIO().readFrom(input, "utf-8");
+									String domain = parseIp(content.trim());
+
+									if (domain != null) {
+										m_cmdbs.put(ip, domain);
+										addIps.add(ip);
+										m_logger.info(String.format("get domain info from cmdb.%s to %s", ip, domain));
+									} else {
+										m_logger.error(String.format("can't get domain info from cmdb.%s", ip));
+									}
+								}
+							} catch (Exception e) {
+								Cat.logError(e);
+							}
+
+							for (String temp : addIps) {
+								m_unknownIps.remove(temp);
+							}
+						}
 					}
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
 				try {
-					Thread.sleep(60 * 60 * 1000);
+					Thread.sleep(10 * 1000);
 				} catch (InterruptedException e) {
 					active = false;
 				}
 			}
+		}
+
+		public String parseIp(String content) throws Exception {
+			JsonObject object = new JsonObject(content);
+			JsonArray array = object.getJSONArray("app");
+
+			if (array.length() > 0) {
+				return array.getString(0);
+			}
+			return null;
 		}
 
 		@Override
@@ -102,5 +162,11 @@ public class DomainManager implements Initializable {
 		@Override
 		public void shutdown() {
 		}
+
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
 	}
 }
