@@ -35,7 +35,7 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "state")
 	private ModelService<StateReport> m_service;
-	
+
 	@Inject
 	private NormalizePayload m_normalizePayload;
 
@@ -118,10 +118,14 @@ public class Handler implements PageHandler<Context> {
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.STATE);
 		String ip = payload.getIpAddress();
-		if (!CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
-			payload.setIpAddress(CatString.ALL);
+		Action action = payload.getAction();
+		
+		if (action == Action.HOURLY || action == Action.HISTORY) {
+			if (!CAT.equalsIgnoreCase(payload.getDomain()) || StringUtils.isEmpty(ip)) {
+				payload.setIpAddress(CatString.ALL);
+			}
 		}
 		m_normalizePayload.normalize(model, payload);
 	}
-	
+
 }
