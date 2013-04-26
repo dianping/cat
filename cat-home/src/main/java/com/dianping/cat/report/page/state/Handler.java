@@ -12,7 +12,6 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
@@ -29,9 +28,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ReportService m_reportService;
-
-	@Inject
-	private ServerConfigManager m_manager;
 
 	@Inject
 	private StateGraphs m_stateGraphs;

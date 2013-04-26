@@ -157,7 +157,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(TransactionReportBuilder.class, EventReportBuilder.class, ProblemReportBuilder.class,//
 		            HeartbeatReportBuilder.class, MatrixReportBuilder.class, CrossReportBuilder.class,//
 		            DatabaseReportBuilder.class, SqlReportBuilder.class, HealthReportBuilder.class,//
-		            StateReportBuilder.class, TaskDao.class));
+		            StateReportBuilder.class));
 
 		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 

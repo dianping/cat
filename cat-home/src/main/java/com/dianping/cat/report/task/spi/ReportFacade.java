@@ -11,7 +11,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.core.dal.Task;
-import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseReportBuilder;
@@ -65,9 +64,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private StateReportBuilder m_stateReportBuilder;
-
-	@Inject
-	private TaskDao m_taskDao;
 
 	private Logger m_logger;
 

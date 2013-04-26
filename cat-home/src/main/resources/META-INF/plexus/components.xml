@@ -415,9 +415,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.task.state.StateReportBuilder</role>
 				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2248,9 +2245,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.state.StateGraphs</role>
