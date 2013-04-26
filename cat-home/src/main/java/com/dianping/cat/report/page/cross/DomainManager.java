@@ -1,4 +1,4 @@
-	package com.dianping.cat.report.page.cross;
+package com.dianping.cat.report.page.cross;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -37,7 +37,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private Map<String, String> m_ipDomains = new ConcurrentHashMap<String, String>();
 
-	private Set<String> m_unknownIps = new HashSet<String>();
+	private Map<String, String> m_unknownIps = new ConcurrentHashMap<String, String>();
 
 	private Map<String, String> m_cmdbs = new ConcurrentHashMap<String, String>();
 
@@ -59,7 +59,7 @@ public class DomainManager implements Initializable, LogEnabled {
 			project = m_cmdbs.get(ip);
 
 			if (project == null) {
-				m_unknownIps.add(ip);
+				m_unknownIps.put(ip, ip);
 				return UNKNOWN_PROJECT;
 			}
 		}
@@ -70,6 +70,8 @@ public class DomainManager implements Initializable, LogEnabled {
 	public void initialize() throws InitializationException {
 		if (!m_manager.isLocalMode()) {
 			try {
+				m_ipDomains.put("UnknownIp", "UnknownProject");
+
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 				for (Hostinfo info : infos) {
 					m_ipDomains.put(info.getIp(), info.getDomain());
@@ -99,58 +101,53 @@ public class DomainManager implements Initializable, LogEnabled {
 		}
 
 		private void queryFromCMDB() {
-	      Set<String> addIps = new HashSet<String>();
-	      synchronized (m_unknownIps) {
-	      	for (String ip : m_unknownIps) {
-	      		try {
-	      			String cmdb = String.format(CMDB_URL, ip);
-	      			URL url = new URL(cmdb);
-	      			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-	      			int nRc = conn.getResponseCode();
+			Set<String> addIps = new HashSet<String>();
+			for (String ip : m_unknownIps.keySet()) {
+				try {
+					String cmdb = String.format(CMDB_URL, ip);
+					URL url = new URL(cmdb);
+					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+					int nRc = conn.getResponseCode();
 
-	      			if (nRc == HttpURLConnection.HTTP_OK) {
-	      				InputStream input = conn.getInputStream();
-	      				String content = Files.forIO().readFrom(input, "utf-8");
-	      				String domain = parseIp(content.trim());
+					if (nRc == HttpURLConnection.HTTP_OK) {
+						InputStream input = conn.getInputStream();
+						String content = Files.forIO().readFrom(input, "utf-8");
+						String domain = parseIp(content.trim());
 
-	      				if (domain != null) {
-	      					m_cmdbs.put(ip, domain);
-	      					addIps.add(ip);
-	      					m_logger.info(String.format("get domain info from cmdb. ip: %s,domain: %s", ip, domain));
-	      				} else {
-	      					m_logger.error(String.format("can't get domain info from cmdb, ip: %s", ip));
-	      				}
-	      			}
-	      		} catch (Exception e) {
-	      			Cat.logError(e);
-	      		}
+						if (domain != null) {
+							m_cmdbs.put(ip, domain);
+							addIps.add(ip);
+							m_logger.info(String.format("get domain info from cmdb. ip: %s,domain: %s", ip, domain));
+						} else {
+							m_logger.error(String.format("can't get domain info from cmdb, ip: %s", ip));
+						}
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
 
-	      		for (String temp : addIps) {
-	      			m_unknownIps.remove(temp);
-	      		}
-	      	}
-	      }
-      }
+				for (String temp : addIps) {
+					m_unknownIps.remove(temp);
+				}
+			}
+		}
 
 		private void queryFromDatabase() {
-	      Set<String> addIps = new HashSet<String>();
-	      synchronized (m_unknownIps) {
+			Set<String> addIps = new HashSet<String>();
+			for (String ip : m_unknownIps.keySet()) {
+				try {
+					Hostinfo hostinfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
 
-	      	for (String ip : m_unknownIps) {
-	      		try {
-	      			Hostinfo hostinfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
-	      			
-	      			addIps.add(hostinfo.getIp());
-	      			m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
-	      		} catch (Exception e) {
-	      			// ignore
-	      		}
-	      	}
-	      	for (String ip : addIps) {
-	      		m_unknownIps.remove(ip);
-	      	}
-	      }
-      }
+					addIps.add(hostinfo.getIp());
+					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+				} catch (Exception e) {
+					// ignore
+				}
+			}
+			for (String ip : addIps) {
+				m_unknownIps.remove(ip);
+			}
+		}
 
 		@Override
 		public void run() {
@@ -158,8 +155,8 @@ public class DomainManager implements Initializable, LogEnabled {
 
 			while (active) {
 				try {
-               queryFromDatabase();
-               queryFromCMDB();
+					queryFromDatabase();
+					queryFromCMDB();
 				} catch (Throwable e) {
 					Cat.logError(e);
 				}
