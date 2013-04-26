@@ -47,6 +47,11 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
 	public String getDomainByIp(String ip) {
 		String project = m_ipDomains.get(ip);
 
@@ -79,69 +84,8 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	public class ReloadDomainTask implements Task {
 		@Override
-		public void run() {
-			boolean active = true;
-
-			while (active) {
-				try {
-					Set<String> addIps = new HashSet<String>();
-					synchronized (m_unknownIps) {
-
-						for (String ip : m_unknownIps) {
-							try {
-								Hostinfo hostinfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
-								addIps.add(hostinfo.getIp());
-								m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
-							} catch (Exception e) {
-								// ignore
-							}
-						}
-						for (String ip : addIps) {
-							m_unknownIps.remove(ip);
-						}
-					}
-
-					// get from cmdb
-					addIps = new HashSet<String>();
-					synchronized (m_unknownIps) {
-						for (String ip : m_unknownIps) {
-							try {
-								String cmdb = String.format(CMDB_URL, ip);
-								URL url = new URL(cmdb);
-								HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-								int nRc = conn.getResponseCode();
-								
-								if (nRc == HttpURLConnection.HTTP_OK) {
-									InputStream input = conn.getInputStream();
-									String content = Files.forIO().readFrom(input, "utf-8");
-									String domain = parseIp(content.trim());
-
-									if (domain != null) {
-										m_cmdbs.put(ip, domain);
-										addIps.add(ip);
-										m_logger.info(String.format("get domain info from cmdb.%s to %s", ip, domain));
-									} else {
-										m_logger.error(String.format("can't get domain info from cmdb.%s", ip));
-									}
-								}
-							} catch (Exception e) {
-								Cat.logError(e);
-							}
-
-							for (String temp : addIps) {
-								m_unknownIps.remove(temp);
-							}
-						}
-					}
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(10 * 1000);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
+		public String getName() {
+			return "Reload-Ip-DomainInfo";
 		}
 
 		public String parseIp(String content) throws Exception {
@@ -154,19 +98,82 @@ public class DomainManager implements Initializable, LogEnabled {
 			return null;
 		}
 
+		private void queryFromCMDB() {
+	      Set<String> addIps = new HashSet<String>();
+	      synchronized (m_unknownIps) {
+	      	for (String ip : m_unknownIps) {
+	      		try {
+	      			String cmdb = String.format(CMDB_URL, ip);
+	      			URL url = new URL(cmdb);
+	      			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	      			int nRc = conn.getResponseCode();
+
+	      			if (nRc == HttpURLConnection.HTTP_OK) {
+	      				InputStream input = conn.getInputStream();
+	      				String content = Files.forIO().readFrom(input, "utf-8");
+	      				String domain = parseIp(content.trim());
+
+	      				if (domain != null) {
+	      					m_cmdbs.put(ip, domain);
+	      					addIps.add(ip);
+	      					m_logger.info(String.format("get domain info from cmdb. ip: %s,domain: %s", ip, domain));
+	      				} else {
+	      					m_logger.error(String.format("can't get domain info from cmdb, ip: %s", ip));
+	      				}
+	      			}
+	      		} catch (Exception e) {
+	      			Cat.logError(e);
+	      		}
+
+	      		for (String temp : addIps) {
+	      			m_unknownIps.remove(temp);
+	      		}
+	      	}
+	      }
+      }
+
+		private void queryFromDatabase() {
+	      Set<String> addIps = new HashSet<String>();
+	      synchronized (m_unknownIps) {
+
+	      	for (String ip : m_unknownIps) {
+	      		try {
+	      			Hostinfo hostinfo = m_hostInfoDao.findByIp(ip, HostinfoEntity.READSET_FULL);
+	      			
+	      			addIps.add(hostinfo.getIp());
+	      			m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+	      		} catch (Exception e) {
+	      			// ignore
+	      		}
+	      	}
+	      	for (String ip : addIps) {
+	      		m_unknownIps.remove(ip);
+	      	}
+	      }
+      }
+
 		@Override
-		public String getName() {
-			return "Reload-Ip-DomainInfo";
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				try {
+               queryFromDatabase();
+               queryFromCMDB();
+				} catch (Throwable e) {
+					Cat.logError(e);
+				}
+				try {
+					Thread.sleep(10 * 1000);
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
 		}
 
 		@Override
 		public void shutdown() {
 		}
-
 	}
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
 }
