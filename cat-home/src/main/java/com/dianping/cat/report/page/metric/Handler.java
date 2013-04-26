@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.metric;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 
@@ -63,7 +64,11 @@ public class Handler implements PageHandler<Context> {
 		String channel = payload.getChannel();
 
 		if (report != null) {
-			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(channel), channel, report.getStartTime());
+			Date startTime = report.getStartTime();
+			if (startTime == null) {
+				startTime = payload.getHistoryStartDate();
+			}
+			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(channel), channel, startTime);
 
 			display.visitMetricReport(report);
 			model.setDisplay(display);
