@@ -2330,7 +2330,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2354,6 +2354,9 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>metric</role-hint>
 					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.NormalizePayload</role>
 				</requirement>
 			</requirements>
 		</component>

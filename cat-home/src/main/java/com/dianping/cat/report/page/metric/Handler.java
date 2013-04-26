@@ -13,6 +13,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.metric.MetricConfig.MetricFlag;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -24,6 +25,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "metric")
 	private ModelService<MetricReport> m_service;
+
+	@Inject
+	private NormalizePayload m_normalizePayload;
 
 	private static final String TUAN = "TuanGou";
 
@@ -98,14 +102,10 @@ public class Handler implements PageHandler<Context> {
 
 	private void normalize(Model model, Payload payload) {
 		payload.setGroup(TUAN);
-		model.setIpAddress(payload.getIpAddress());
-		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.METRIC);
-		model.setLongDate(payload.getDate());
-		model.setDisplayDomain(payload.getDomain());
-		model.setDomain(payload.getDomain());
 		model.setGroup(payload.getGroup());
 		model.setChannel(payload.getChannel());
+		model.setPage(ReportPage.METRIC);
+		m_normalizePayload.normalize(model, payload);
 	}
 
 	public class MetricTitle {
