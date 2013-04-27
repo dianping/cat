@@ -11,8 +11,6 @@ public class NavigationBar {
 
 		ReportPage.HOME,
 
-		ReportPage.TOP,
-		
 		ReportPage.METRIC,
 
 		ReportPage.TRANSACTION,
@@ -23,8 +21,6 @@ public class NavigationBar {
 
 		ReportPage.HEARTBEAT,
 
-		ReportPage.MATRIX,
-
 		ReportPage.CROSS,
 
 		ReportPage.CACHE,
@@ -33,8 +29,12 @@ public class NavigationBar {
 
 		ReportPage.DATABASE,
 
+		ReportPage.MATRIX,
+		
 		ReportPage.HEALTH,
 
+		ReportPage.TOP,
+		
 		ReportPage.STATE,
 
 		ReportPage.LOGVIEW
