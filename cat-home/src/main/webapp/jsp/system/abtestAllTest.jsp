@@ -76,10 +76,6 @@
 	}
 	
 	</style>
-
-	<script>
-
-	</script>
 	<br>
 	<div class="row-fluid clearfix">
 		<div class="span2 column">
@@ -95,25 +91,25 @@
 					<li${payload.status eq 'running' ? ' class="selected"' : ''}>
 						<a href="?op=list&status=running">
 						<img height="12" width="12" src="${res.img.local['RUNNING_black_small.png']}"> running
-						<span class="badge statusSpan">12</span>
+						<span class="badge statusSpan">${model.runningCount}</span>
 						</a>
 					</li>
 					<li${payload.status eq 'disabled' ? ' class="selected"' : ''}>
 						<a href="?op=list&status=disabled">
 						<img height="12" width="12" src="${res.img.local['PAUSED_black_small.png']}"> disabled
-						<span class="badge statusSpan">1</span>
+						<span class="badge statusSpan">${model.disabledCount}</span>
 						</a>
 					</li>
 					<li${payload.status eq 'ready' ? ' class="selected"' : ''}>
 						<a href="?op=list&status=ready">
 						<img height="12" width="12" src="${res.img.local['READY_black_small.png']}"> ready to start
-						<span class="badge statusSpan">1 </span>
+						<span class="badge statusSpan">${model.readyCount}</span>
 						</a>
 					</li>
 					<li${payload.status eq 'stopped' ? ' class="selected"' : ''}>
 						<a href="?op=list&status=stopped">
 						<img height="12" width="12" src="${res.img.local['STOPPED_black_small.png']}"> stopped
-						<span class="badge statusSpan">1</span>
+						<span class="badge statusSpan">${model.stoppedCount}</span>
 						</a>
 					</li>
 				</ul>

@@ -1,5 +1,6 @@
 package com.dianping.cat.system.page.abtest;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
@@ -7,15 +8,23 @@ import com.dianping.cat.home.dal.abtest.Abtest;
 
 public class ABTestReport {
 
+	private static Date s_startTime;
+	
+	private static Date s_endTime;
+	
+	static{
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(2000, 1, 1);
+		s_startTime = calendar.getTime();
+		calendar.set(2100, 1, 1);
+		s_endTime = calendar.getTime();
+	}
+	
 	private Abtest m_entity;
 
 	private ABTestEntityStatus m_status;
 
 	private Map<String, String> m_items;
-
-	private static final Date s_startTime = new Date();
-
-	private static final Date s_endTime = new Date();
 
 	public ABTestReport(Abtest entity){
 		m_entity = entity;

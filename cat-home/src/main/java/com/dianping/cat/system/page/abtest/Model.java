@@ -2,7 +2,6 @@ package com.dianping.cat.system.page.abtest;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
@@ -18,9 +17,15 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	
 	private List<ABTestReport> m_reports;
 	
-	private Map<ABTestEntityStatus,Integer> m_statusMaps;
-	
 	private int m_totalPages;
+
+	private int m_runningCount;
+	
+	private int m_readyCount;
+	
+	private int m_stoppedCount;
+	
+	private int m_disabledCount;
 	
 	public Model(Context ctx) {
 		super(ctx);
@@ -63,14 +68,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
    	m_reports = reports;
    }
 	
-	public Map<ABTestEntityStatus, Integer> getStatusMaps() {
-   	return m_statusMaps;
-   }
-
-	public void setStatusMaps(Map<ABTestEntityStatus, Integer> statusMaps) {
-   	m_statusMaps = statusMaps;
-   }
-
 	public int getTotalPages() {
    	return m_totalPages;
    }
@@ -78,4 +75,37 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setTotalPages(int totalPages) {
    	m_totalPages = totalPages;
    }
+
+	public int getRunningCount() {
+   	return m_runningCount;
+   }
+
+	public void setRunningCount(int runningCount) {
+   	m_runningCount = runningCount;
+   }
+
+	public int getReadyCount() {
+   	return m_readyCount;
+   }
+
+	public void setReadyCount(int readyCount) {
+   	m_readyCount = readyCount;
+   }
+
+	public int getStoppedCount() {
+   	return m_stoppedCount;
+   }
+
+	public void setStoppedCount(int stoppedCount) {
+   	m_stoppedCount = stoppedCount;
+   }
+
+	public int getDisabledCount() {
+   	return m_disabledCount;
+   }
+
+	public void setDisabledCount(int disabledCount) {
+   	m_disabledCount = disabledCount;
+   }
+	
 }

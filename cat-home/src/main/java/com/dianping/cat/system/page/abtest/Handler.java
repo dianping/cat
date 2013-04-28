@@ -3,9 +3,7 @@ package com.dianping.cat.system.page.abtest;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 
@@ -63,7 +61,6 @@ public class Handler implements PageHandler<Context> {
 		List<ABTestReport> reports = new ArrayList<ABTestReport>();
 		List<Abtest> entities = new ArrayList<Abtest>();
 		ABTestEntityStatus status = ABTestEntityStatus.getByName(payload.getStatus(), ABTestEntityStatus.DEFALUT);
-		Map<ABTestEntityStatus, Integer> statusMap = new HashMap<ABTestEntityStatus, Integer>();
 		Date now = new Date();
 
 		try {
@@ -72,38 +69,36 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 
+		List<Abtest> filterTests = new ArrayList<Abtest>();
 		int runningCount = 0, stoppedCount = 0, readyCount = 0, disableCount = 0;
 
-		if (status != ABTestEntityStatus.DEFALUT) {
-			List<Abtest> filterTests = new ArrayList<Abtest>();
-			
-			for (Abtest abtest : entities) {
-				ABTestReport report = new ABTestReport(abtest, now);
-				
-				if (report.getStatus() == status) {
-					filterTests.add(abtest);
-				}
-				switch (report.getStatus()) {
-				case RUNNING:
-					runningCount++;
-					break;
-				case STOPPED:
-					stoppedCount++;
-					break;
-				case READY:
-					readyCount++;
-					break;
-				case DISABLED:
-					disableCount++;
-					break;
-				}
-			}
+		for (Abtest abtest : entities) {
+			ABTestReport report = new ABTestReport(abtest, now);
 
-			statusMap.put(ABTestEntityStatus.RUNNING, runningCount);
-			statusMap.put(ABTestEntityStatus.READY, readyCount);
-			statusMap.put(ABTestEntityStatus.STOPPED, stoppedCount);
-			statusMap.put(ABTestEntityStatus.DISABLED, disableCount);
-			model.setStatusMaps(statusMap);
+			if (report.getStatus() == status) {
+				filterTests.add(abtest);
+			}
+			switch (report.getStatus()) {
+			case RUNNING:
+				runningCount++;
+				break;
+			case STOPPED:
+				stoppedCount++;
+				break;
+			case READY:
+				readyCount++;
+				break;
+			case DISABLED:
+				disableCount++;
+				break;
+			}
+		}
+
+		model.setReadyCount(readyCount);
+		model.setRunningCount(runningCount);
+		model.setStoppedCount(stoppedCount);
+		model.setDisabledCount(disableCount);
+		if (status != ABTestEntityStatus.DEFALUT) {
 			entities = filterTests;
 		}
 
@@ -123,10 +118,10 @@ public class Handler implements PageHandler<Context> {
 
 		int fromIndex = (payload.getPageNum() - 1) * m_pageSize;
 		int toIndex = (fromIndex + m_pageSize) <= totalSize ? (fromIndex + m_pageSize) : totalSize;
-		for (Abtest entity : entities.subList(fromIndex, toIndex)) {
-			reports.add(new ABTestReport(entity, now));
+		for(int i = fromIndex ; i < toIndex ; i++){
+			reports.add(new ABTestReport(entities.get(i), now));
 		}
-
+			
 		model.setTotalPages(totalPages);
 		model.setDate(now);
 		model.setReports(reports);
