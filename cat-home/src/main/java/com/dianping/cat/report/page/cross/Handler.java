@@ -45,6 +45,27 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "cross")
 	private ModelService<CrossReport> m_service;
 
+	private ProjectInfo buildCallProjectInfo(String domain, ModelPeriod period, String date, long duration) {
+		CrossReport projectReport = getHourlyReport(domain, period, date, CatString.ALL);
+		ProjectInfo projectInfo = new ProjectInfo(duration);
+
+		projectInfo.setDomainManager(m_domainManager);
+		projectInfo.setClientIp(CatString.ALL);
+		projectInfo.visitCrossReport(projectReport);
+
+		return projectInfo;
+	}
+
+	private ProjectInfo buildHistoryCallProjectInfo(String domain, Date start, Date end) {
+		CrossReport projectReport = getSummarizeReport(domain, start, end);
+		ProjectInfo projectInfo = new ProjectInfo(end.getTime() - start.getTime());
+
+		projectInfo.setDomainManager(m_domainManager);
+		projectInfo.setClientIp(CatString.ALL);
+		projectInfo.visitCrossReport(projectReport);
+		return projectInfo;
+	}
+
 	private CrossReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String date = String.valueOf(payload.getDate());
@@ -247,27 +268,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private ProjectInfo buildCallProjectInfo(String domain, ModelPeriod period, String date, long duration) {
-		CrossReport projectReport = getHourlyReport(domain, period, date, CatString.ALL);
-		ProjectInfo projectInfo = new ProjectInfo(duration);
-
-		projectInfo.setDomainManager(m_domainManager);
-		projectInfo.setClientIp(CatString.ALL);
-		projectInfo.visitCrossReport(projectReport);
-
-		return projectInfo;
-	}
-
-	private ProjectInfo buildHistoryCallProjectInfo(String domain, Date start, Date end) {
-		CrossReport projectReport = getSummarizeReport(domain, start, end);
-		ProjectInfo projectInfo = new ProjectInfo(end.getTime() - start.getTime());
-
-		projectInfo.setDomainManager(m_domainManager);
-		projectInfo.setClientIp(CatString.ALL);
-		projectInfo.visitCrossReport(projectReport);
-		return projectInfo;
 	}
 	
 	private void normalize(Model model,Payload payload){

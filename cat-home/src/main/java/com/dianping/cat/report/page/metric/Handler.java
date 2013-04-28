@@ -31,6 +31,24 @@ public class Handler implements PageHandler<Context> {
 
 	private static final String TUAN = "TuanGou";
 
+	private MetricConfig buildTuanGouMetricConfig(String channel) {
+		MetricConfig config = new MetricConfig();
+
+		MetricFlag indexUrl = new MetricFlag("/index", channel, 1, true, false, false, MetricTitle.INDEX);
+		MetricFlag detailUrl = new MetricFlag("/detail", channel, 2, true, false, false, MetricTitle.DETAIL);
+		MetricFlag payUrl = new MetricFlag("/order/submitOrder", channel, 3, true, false, false, MetricTitle.PAY);
+		MetricFlag orderKey = new MetricFlag("order", channel, 4, false, true, false, MetricTitle.ORDER);
+		MetricFlag totalKey = new MetricFlag("payment.success", channel, 5, false, true, false, MetricTitle.SUCCESS);
+		// MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
+
+		config.put(indexUrl);
+		config.put(detailUrl);
+		config.put(payUrl);
+		config.put(orderKey);
+		config.put(totalKey);
+		return config;
+	}
+
 	private MetricReport getReport(Payload payload) {
 		String group = payload.getGroup();
 		String channel = payload.getChannel();
@@ -80,24 +98,6 @@ public class Handler implements PageHandler<Context> {
 			model.setReport(report);
 		}
 		m_jspViewer.view(ctx, model);
-	}
-
-	private MetricConfig buildTuanGouMetricConfig(String channel) {
-		MetricConfig config = new MetricConfig();
-
-		MetricFlag indexUrl = new MetricFlag("/index", channel, 1, true, false, false, MetricTitle.INDEX);
-		MetricFlag detailUrl = new MetricFlag("/detail", channel, 2, true, false, false, MetricTitle.DETAIL);
-		MetricFlag payUrl = new MetricFlag("/order/submitOrder", channel, 3, true, false, false, MetricTitle.PAY);
-		MetricFlag orderKey = new MetricFlag("order", channel, 4, false, true, false, MetricTitle.ORDER);
-		MetricFlag totalKey = new MetricFlag("payment.success", channel, 5, false, true, false, MetricTitle.SUCCESS);
-		// MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
-
-		config.put(indexUrl);
-		config.put(detailUrl);
-		config.put(payUrl);
-		config.put(orderKey);
-		config.put(totalKey);
-		return config;
 	}
 
 	private void normalize(Model model, Payload payload) {

@@ -17,6 +17,23 @@ public class SqlReportMerger extends DefaultMerger {
 		super(sqlReport);
 	}
 
+	@Override
+	protected void mergeDatabase(Database old, Database database) {
+		old.setConnectUrl(database.getConnectUrl());
+		super.mergeDatabase(old, database);
+	}
+
+	@Override
+	protected void mergeMethod(Method old, Method method) {
+		old.setTotalCount(old.getTotalCount() + method.getTotalCount());
+		old.setFailCount(old.getFailCount() + method.getFailCount());
+		old.setFailPercent(old.getFailCount() / (double) old.getTotalCount());
+		old.setSum(old.getSum() + method.getSum());
+		old.setAvg(old.getSum() / (double) old.getTotalCount());
+
+		old.getSqlNames().addAll(method.getSqlNames());
+	}
+
 	public Database mergesForAllMachine(SqlReport report) {
 		Database machine = new Database(CatString.ALL);
 
@@ -30,21 +47,6 @@ public class SqlReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	public void visitDatabase(Database domain) {
-		if (m_allDatabase) {
-			visitDatabaseChildren(m_all, domain);
-		} else {
-			super.visitDatabase(domain);
-		}
-	}
-
-	@Override
-	protected void mergeDatabase(Database old, Database database) {
-		old.setConnectUrl(database.getConnectUrl());
-		super.mergeDatabase(old, database);
-	}
-
-	@Override
 	protected void mergeTable(Table old, Table table) {
 		old.setTotalCount(old.getTotalCount() + table.getTotalCount());
 		old.setFailCount(old.getFailCount() + table.getFailCount());
@@ -53,15 +55,17 @@ public class SqlReportMerger extends DefaultMerger {
 		old.setAvg(old.getSum() / (double) old.getTotalCount());
 	}
 
-	@Override
-	protected void mergeMethod(Method old, Method method) {
-		old.setTotalCount(old.getTotalCount() + method.getTotalCount());
-		old.setFailCount(old.getFailCount() + method.getFailCount());
-		old.setFailPercent(old.getFailCount() / (double) old.getTotalCount());
-		old.setSum(old.getSum() + method.getSum());
-		old.setAvg(old.getSum() / (double) old.getTotalCount());
+	public void setAllDatabase(boolean allDatabase) {
+		m_allDatabase = true;
+	}
 
-		old.getSqlNames().addAll(method.getSqlNames());
+	@Override
+	public void visitDatabase(Database domain) {
+		if (m_allDatabase) {
+			visitDatabaseChildren(m_all, domain);
+		} else {
+			super.visitDatabase(domain);
+		}
 	}
 
 	@Override
@@ -79,9 +83,5 @@ public class SqlReportMerger extends DefaultMerger {
 		if (m_allDatabase) {
 			old.getDatabaseNames().remove(CatString.ALL);
 		}
-	}
-
-	public void setAllDatabase(boolean allDatabase) {
-		m_allDatabase = true;
 	}
 }

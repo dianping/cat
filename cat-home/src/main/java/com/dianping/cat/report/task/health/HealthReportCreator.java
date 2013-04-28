@@ -167,18 +167,6 @@ public class HealthReportCreator {
 		m_healthReport.setMachineInfo(info);
 	}
 
-	private double queryOldgcNumber(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine){
-		double oldgcTotal =0;
-		List<Period> periods = machine.getPeriods();
-		long l = periods.get(periods.size() - 1).getOldGcCount() - periods.get(0).getOldGcCount();
-		if (l >= 0) {
-			oldgcTotal = l;
-		} else {
-			oldgcTotal = periods.get(periods.size() - 1).getOldGcCount();
-		}
-		return oldgcTotal;
-	}
-	
 	private void buildMachinInfos(MachineInfo info, HeartbeatReport heartBeatReport) {
 		Map<String, Double> loads = new HashMap<String, Double>();
 		Map<String, Double> gcs = new HashMap<String, Double>();
@@ -254,7 +242,7 @@ public class HealthReportCreator {
 		info.setAvgMemoryUsedSum(entry.getAvg());
 
 	}
-
+	
 	private void buildProblemInfo(ProblemReport problemReport) {
 		// int days = m_healthReport.getDay();
 		ProblemInfo info = new ProblemInfo();
@@ -430,6 +418,18 @@ public class HealthReportCreator {
 		}
 		result.setIp(ip).setMax(max);
 		return result;
+	}
+
+	private double queryOldgcNumber(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine){
+		double oldgcTotal =0;
+		List<Period> periods = machine.getPeriods();
+		long l = periods.get(periods.size() - 1).getOldGcCount() - periods.get(0).getOldGcCount();
+		if (l >= 0) {
+			oldgcTotal = l;
+		} else {
+			oldgcTotal = periods.get(periods.size() - 1).getOldGcCount();
+		}
+		return oldgcTotal;
 	}
 
 	static class MapEntry {

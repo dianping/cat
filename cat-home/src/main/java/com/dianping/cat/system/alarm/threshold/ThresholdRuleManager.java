@@ -122,17 +122,6 @@ public class ThresholdRuleManager implements Initializable {
 		return new ArrayList<ThresholdRule>();
 	}
 
-	@Override
-	public void initialize() throws InitializationException {
-		if (m_configManager.isJobMachine() && !m_configManager.isLocalMode()) {
-			initalizeExceptionRule();
-			initalizeServiceRule();
-
-			ReloadThresholdRuleTask task = new ReloadThresholdRuleTask();
-			Threads.forGroup("Cat").start(task);
-		}
-	}
-
 	private void initalizeExceptionRule() {
 		try {
 			AlarmTemplate alarmTemplate = m_alarmTemplateDao.findAlarmTemplateByName(AlertInfo.EXCEPTION,
@@ -190,6 +179,17 @@ public class ThresholdRuleManager implements Initializable {
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		if (m_configManager.isJobMachine() && !m_configManager.isLocalMode()) {
+			initalizeExceptionRule();
+			initalizeServiceRule();
+
+			ReloadThresholdRuleTask task = new ReloadThresholdRuleTask();
+			Threads.forGroup("Cat").start(task);
 		}
 	}
 

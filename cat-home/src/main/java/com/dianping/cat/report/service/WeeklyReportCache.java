@@ -59,16 +59,27 @@ public class WeeklyReportCache implements Initializable {
 	@Inject
 	private ServerConfigManager m_serverConfigManager;
 
-	public TransactionReport queryTransactionReport(String domain, Date start) {
-		return m_transactionReports.get(domain);
+	@Override
+	public void initialize() throws InitializationException {
+		if (m_serverConfigManager.isJobMachine()) {
+			Threads.forGroup("Cat").start(new Reload());
+		}
+	}
+
+	public CrossReport queryCrossReport(String domain, Date start) {
+		return m_crossReports.get(domain);
+	}
+
+	public DatabaseReport queryDatabaseReport(String database, Date start) {
+		return m_databaseRepors.get(database);
 	}
 
 	public EventReport queryEventReport(String domain, Date start) {
 		return m_eventReports.get(domain);
 	}
 
-	public ProblemReport queryProblemReport(String domain, Date start) {
-		return m_problemReports.get(domain);
+	public HealthReport queryHealthReport(String domain, Date start) {
+		return m_healthReports.get(domain);
 	}
 
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start) {
@@ -79,34 +90,28 @@ public class WeeklyReportCache implements Initializable {
 		return m_matrixReports.get(domain);
 	}
 
-	public CrossReport queryCrossReport(String domain, Date start) {
-		return m_crossReports.get(domain);
+	public ProblemReport queryProblemReport(String domain, Date start) {
+		return m_problemReports.get(domain);
 	}
 
 	public SqlReport querySqlReport(String domain, Date start) {
 		return m_sqlReports.get(domain);
 	}
 
-	public DatabaseReport queryDatabaseReport(String database, Date start) {
-		return m_databaseRepors.get(database);
-	}
-
-	public HealthReport queryHealthReport(String domain, Date start) {
-		return m_healthReports.get(domain);
-	}
-
 	public StateReport queryStateReport(String domain, Date start) {
 		return m_stateReports.get(domain);
 	}
 
-	@Override
-	public void initialize() throws InitializationException {
-		if (m_serverConfigManager.isJobMachine()) {
-			Threads.forGroup("Cat").start(new Reload());
-		}
+	public TransactionReport queryTransactionReport(String domain, Date start) {
+		return m_transactionReports.get(domain);
 	}
 
 	public class Reload implements Task {
+		@Override
+		public String getName() {
+			return "Weekly-Report-Cache";
+		}
+
 		private void reload() {
 			Date start = TimeUtil.getCurrentWeek();
 			Date end = TimeUtil.getCurrentDay();
@@ -166,11 +171,6 @@ public class WeeklyReportCache implements Initializable {
 					active = false;
 				}
 			}
-		}
-
-		@Override
-		public String getName() {
-			return "Weekly-Report-Cache";
 		}
 
 		@Override

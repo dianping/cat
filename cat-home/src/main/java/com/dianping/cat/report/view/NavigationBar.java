@@ -6,6 +6,20 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.system.SystemPage;
 
 public class NavigationBar {
+	public Page[] getSystemPages() {
+		return new Page[] {
+
+		SystemPage.ALARM,
+
+		SystemPage.PROJECT,
+		
+		ReportPage.QUERY,
+
+		SystemPage.LOGIN
+
+		};
+	}
+
 	public Page[] getVisiblePages() {
 		return new Page[] {
 
@@ -38,20 +52,6 @@ public class NavigationBar {
 		ReportPage.STATE,
 
 		ReportPage.LOGVIEW
-
-		};
-	}
-
-	public Page[] getSystemPages() {
-		return new Page[] {
-
-		SystemPage.ALARM,
-
-		SystemPage.PROJECT,
-		
-		ReportPage.QUERY,
-
-		SystemPage.LOGIN
 
 		};
 	}

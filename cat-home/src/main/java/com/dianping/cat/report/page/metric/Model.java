@@ -25,6 +25,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 		super(ctx);
 	}
 
+	public String getChannel() {
+		return m_channel;
+	}
+
+	public Set<String> getChannels() {
+		return m_channels;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
@@ -44,8 +52,20 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return new HashSet<String>();
 	}
 
+	public String getGroup() {
+		return m_group;
+	}
+
 	public MetricReport getReport() {
 		return m_report;
+	}
+
+	public void setChannel(String channel) {
+		m_channel = channel;
+	}
+
+	public void setChannels(Set<String> channels) {
+		m_channels = channels;
 	}
 
 	public void setDisplay(MetricDisplay display) {
@@ -56,32 +76,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_domain = domain;
 	}
 
-	public void setReport(MetricReport report) {
-		m_report = report;
-	}
-
-	public String getGroup() {
-		return m_group;
-	}
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public void setChannel(String channel) {
-		m_channel = channel;
-	}
-
 	public void setGroup(String group) {
 		m_group = group;
 	}
 
-	public Set<String> getChannels() {
-		return m_channels;
-	}
-
-	public void setChannels(Set<String> channels) {
-		m_channels = channels;
+	public void setReport(MetricReport report) {
+		m_report = report;
 	}
 
 }

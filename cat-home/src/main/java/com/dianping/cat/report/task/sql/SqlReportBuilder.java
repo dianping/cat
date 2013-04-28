@@ -41,54 +41,32 @@ public class SqlReportBuilder extends AbstractReportBuilder implements ReportBui
 		}
 	}
 
-	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
-		
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		String content = m_sqlMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
-
-		Dailyreport report = m_dailyReportDao.createLocal();
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-		return report;
-	}
-
 	@Override
 	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		throw new RuntimeException("Sql report don't support HourReport!");
 	}
 
-	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
-		Date start = reportPeriod;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
+	private SqlReport buildMergedDailyReport(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
 
-		SqlReport sqlReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
-		String content = sqlReport.toString();
-
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-
-		try {
-			m_weeklyreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
+				      "sql", DailyreportEntity.READSET_FULL);
+				String xml = dailyreport.getContent();
+				
+				SqlReport reportModel = DefaultSaxParser.parse(xml);
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
-		return true;
+		SqlReport sqlReport = merger.getSqlReport();
+		sqlReport.setStartTime(start);
+		sqlReport.setEndTime(end);
+		return sqlReport;
 	}
 
 	@Override
@@ -120,27 +98,49 @@ public class SqlReportBuilder extends AbstractReportBuilder implements ReportBui
 		return true;
 	}
 
-	private SqlReport buildMergedDailyReport(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		SqlReportMerger merger = new SqlReportMerger(new SqlReport(domain));
+	@Override
+	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
+		Date start = reportPeriod;
+		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "sql", DailyreportEntity.READSET_FULL);
-				String xml = dailyreport.getContent();
-				
-				SqlReport reportModel = DefaultSaxParser.parse(xml);
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+		SqlReport sqlReport = buildMergedDailyReport(reportDomain, start, end);
+		Weeklyreport report = m_weeklyreportDao.createLocal();
+		String content = sqlReport.toString();
+
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(reportDomain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(reportName);
+		report.setPeriod(reportPeriod);
+		report.setType(1);
+
+		try {
+			m_weeklyreportDao.insert(report);
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
 		}
-		SqlReport sqlReport = merger.getSqlReport();
-		sqlReport.setStartTime(start);
-		sqlReport.setEndTime(end);
-		return sqlReport;
+		return true;
+	}
+
+	private Dailyreport getdailyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
+		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
+		
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		String content = m_sqlMerger.mergeForDaily(reportDomain, reports, domainSet).toString();
+
+		Dailyreport report = m_dailyReportDao.createLocal();
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(reportDomain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(reportName);
+		report.setPeriod(reportPeriod);
+		report.setType(1);
+		return report;
 	}
 
 }

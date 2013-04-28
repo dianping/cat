@@ -8,16 +8,16 @@ public class MetricConfig {
 
 	private Map<String, MetricFlag> m_flags = new LinkedHashMap<String, MetricFlag>();
 
-	public void put(MetricFlag flag) {
-		m_flags.put(flag.getKey(), flag);
-	}
-
 	public MetricFlag get(String key) {
 		return m_flags.get(key);
 	}
 
 	public Collection<MetricFlag> getFlags() {
 		return m_flags.values();
+	}
+
+	public void put(MetricFlag flag) {
+		m_flags.put(flag.getKey(), flag);
 	}
 
 	public static class MetricFlag {
@@ -46,20 +46,20 @@ public class MetricConfig {
 			m_title = title;
 		}
 
-		public String getKey2() {
-			return m_key2;
-		}
-
-		public void setKey2(String key2) {
-			m_key2 = key2;
-		}
-
 		public int getIndex() {
 			return m_index;
 		}
 
 		public String getKey() {
 			return m_key;
+		}
+
+		public String getKey2() {
+			return m_key2;
+		}
+
+		public String getTitle() {
+			return m_title;
 		}
 
 		public boolean isShowAvg() {
@@ -74,8 +74,8 @@ public class MetricConfig {
 			return m_showSum;
 		}
 
-		public String getTitle() {
-			return m_title;
+		public void setKey2(String key2) {
+			m_key2 = key2;
 		}
 
 		public void setTitle(String title) {

@@ -50,6 +50,11 @@ public class ScheduledMailTask implements Task, LogEnabled {
 	private Logger m_logger;
 
 	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
 	public String getName() {
 		return "ScheduledDailyReport";
 	}
@@ -174,11 +179,6 @@ public class ScheduledMailTask implements Task, LogEnabled {
 
 	@Override
 	public void shutdown() {
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }

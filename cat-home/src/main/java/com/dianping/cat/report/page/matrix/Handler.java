@@ -87,6 +87,11 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private void normalize(Model model,Payload payload){
+		model.setPage(ReportPage.MATRIX);
+		m_normalizePayload.normalize(model, payload);
+	}
+	
 	private void showSummarizeReport(Model model, Payload payload) {
 		String domain = payload.getDomain();
 
@@ -101,11 +106,6 @@ public class Handler implements PageHandler<Context> {
 		matrixReport.setEndTime(end);
 		model.setReport(matrixReport);
 		model.setMatrix(new DisplayMatrix(matrixReport).setSortBy(payload.getSortBy()));
-	}
-	
-	private void normalize(Model model,Payload payload){
-		model.setPage(ReportPage.MATRIX);
-		m_normalizePayload.normalize(model, payload);
 	}
 
 }

@@ -72,6 +72,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_longTime;
 	}
 
+	public int getSeviceLongTime() {
+		return m_seviceLongTime;
+	}
+
 	public int getSqlLongTime() {
 		return m_sqlLongTime;
 	}
@@ -108,6 +112,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_minute = minute;
 	}
 
+	public void setSeviceLongTime(int seviceLongTime) {
+		m_seviceLongTime = seviceLongTime;
+	}
+
 	public void setSqlLongTime(int sqlLongTime) {
 		m_sqlLongTime = sqlLongTime;
 	}
@@ -122,14 +130,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setType(String type) {
 		m_type = type;
-	}
-
-	public int getSeviceLongTime() {
-		return m_seviceLongTime;
-	}
-
-	public void setSeviceLongTime(int seviceLongTime) {
-		m_seviceLongTime = seviceLongTime;
 	}
 
 	@Override

@@ -49,10 +49,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return "";
 	}
 	
-	public String getIpAddress(){
-		return "";
-	}
-
 	@Override
 	public Action getDefaultAction() {
 		return Action.ALARM_TEMPLATE_LIST;
@@ -64,6 +60,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getDomains() {
 		return m_domains;
+	}
+
+	public String getIpAddress(){
+		return "";
 	}
 
 	public MailRecord getMailRecord() {

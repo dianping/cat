@@ -68,6 +68,16 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private String getPath(String messageId) {
+		MessageId id = MessageId.parse(messageId);
+		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
+		final StringBuilder sb = new StringBuilder();
+		sb.append('/').append(path);
+
+		final String key = id.getDomain() + '-' + id.getIpAddress();
+		return path + key;
+	}
+
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "m")
@@ -109,16 +119,6 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		m_jspViewer.view(ctx, model);
-	}
-
-	private String getPath(String messageId) {
-		MessageId id = MessageId.parse(messageId);
-		final String path = m_pathBuilder.getPath(new Date(id.getTimestamp()), "");
-		final StringBuilder sb = new StringBuilder();
-		sb.append('/').append(path);
-
-		final String key = id.getDomain() + '-' + id.getIpAddress();
-		return path + key;
 	}
 
 }

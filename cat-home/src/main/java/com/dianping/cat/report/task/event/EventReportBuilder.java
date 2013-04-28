@@ -35,6 +35,19 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 	@Inject
 	private EventMerger m_eventMerger;
 
+	private void buildDailyEventGraph(EventReport report) {
+		DailyEventGraphCreator creator = new DailyEventGraphCreator();
+		List<Dailygraph> graphs = creator.buildDailygraph(report);
+
+		for (Dailygraph graph : graphs) {
+			try {
+				m_dailygraphDao.insert(graph);
+			} catch (DalException e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
 	@Override
 	public boolean buildDailyReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
@@ -64,19 +77,6 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		}
 	}
 
-	private void buildDailyEventGraph(EventReport report) {
-		DailyEventGraphCreator creator = new DailyEventGraphCreator();
-		List<Dailygraph> graphs = creator.buildDailygraph(report);
-
-		for (Dailygraph graph : graphs) {
-			try {
-				m_dailygraphDao.insert(graph);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		}
-	}
-
 	@Override
 	public boolean buildHourReport(String reportName, String reportDomain, Date reportPeriod) {
 		try {
@@ -93,50 +93,27 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		return true;
 	}
 
-	private EventReport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
-	      throws DalException {
-		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
+	private EventReport buildMergedDailyReport(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
 
-		return m_eventMerger.mergeForDaily(reportDomain, reports, domainSet);
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "event",
+				      DailyreportEntity.READSET_FULL);
+				String xml = dailyreport.getContent();
 
-	}
-
-	private List<Graph> getHourReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		EventReport eventReport = m_eventMerger.mergeForGraph(reportDomain, reports);
-		graphs = m_eventGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
-		return graphs;
-	}
-
-	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
-		Date start = reportPeriod;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		EventReport eventReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
-		String content = eventReport.toString();
-
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-
-		try {
-			m_weeklyreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
+				EventReport reportModel = DefaultSaxParser.parse(xml);
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
-		return true;
+		EventReport eventReport = merger.getEventReport();
+		eventReport.setStartTime(start);
+		eventReport.setEndTime(end);
+		return eventReport;
 	}
 
 	@Override
@@ -168,26 +145,49 @@ public class EventReportBuilder extends AbstractReportBuilder implements ReportB
 		return true;
 	}
 
-	private EventReport buildMergedDailyReport(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		EventReportMerger merger = new EventReportMerger(new EventReport(domain));
+	@Override
+	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
+		Date start = reportPeriod;
+		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "event",
-				      DailyreportEntity.READSET_FULL);
-				String xml = dailyreport.getContent();
+		EventReport eventReport = buildMergedDailyReport(reportDomain, start, end);
+		Weeklyreport report = m_weeklyreportDao.createLocal();
+		String content = eventReport.toString();
 
-				EventReport reportModel = DefaultSaxParser.parse(xml);
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(reportDomain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(reportName);
+		report.setPeriod(reportPeriod);
+		report.setType(1);
+
+		try {
+			m_weeklyreportDao.insert(report);
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
 		}
-		EventReport eventReport = merger.getEventReport();
-		eventReport.setStartTime(start);
-		eventReport.setEndTime(end);
-		return eventReport;
+		return true;
+	}
+
+	private EventReport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
+	      throws DalException {
+		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
+		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+
+		return m_eventMerger.mergeForDaily(reportDomain, reports, domainSet);
+
+	}
+
+	private List<Graph> getHourReportData(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		EventReport eventReport = m_eventMerger.mergeForGraph(reportDomain, reports);
+		graphs = m_eventGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, eventReport);
+		return graphs;
 	}
 }

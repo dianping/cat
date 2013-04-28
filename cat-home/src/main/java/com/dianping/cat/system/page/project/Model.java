@@ -22,10 +22,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return "";
 	}
 
-	public String getIpAddress() {
-		return "";
-	}
-
 	@Override
 	public Action getDefaultAction() {
 		return Action.ALL;
@@ -37,6 +33,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getDomains() {
 		return Collections.emptyList();
+	}
+
+	public String getIpAddress() {
+		return "";
 	}
 
 	public Project getProject() {

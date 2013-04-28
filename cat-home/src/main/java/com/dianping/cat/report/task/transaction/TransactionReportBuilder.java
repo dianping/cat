@@ -102,50 +102,29 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 		return true;
 	}
 
-	private TransactionReport getDailyReport(String reportName, String reportDomain, Date reportPeriod)
-	      throws DalException {
-		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
+	private TransactionReport buildMergedDailyReport(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
 
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
+				      "transaction", DailyreportEntity.READSET_FULL);
+				String xml = dailyreport.getContent();
 
-		return m_transactionMerger.mergeForDaily(reportDomain, reports, domainSet);
-	}
-
-	private List<Graph> getHourReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(reportDomain, reports);
-		graphs = m_transactionGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
-		return graphs;
-	}
-
-	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
-		Date start = reportPeriod;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		TransactionReport transactionReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
-		String content = transactionReport.toString();
-
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-
-		try {
-			m_weeklyreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
+				TransactionReport reportModel = DefaultSaxParser.parse(xml);
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
-		return true;
+		TransactionReport transactionReport = merger.getTransactionReport();
+		transactionReport.setStartTime(start);
+		transactionReport.setEndTime(end);
+
+		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+		return transactionReport;
 	}
 
 	@Override
@@ -177,33 +156,54 @@ public class TransactionReportBuilder extends AbstractReportBuilder implements R
 		return true;
 	}
 
-	private TransactionReport buildMergedDailyReport(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));
+	@Override
+	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
+		Date start = reportPeriod;
+		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain,
-				      "transaction", DailyreportEntity.READSET_FULL);
-				String xml = dailyreport.getContent();
+		TransactionReport transactionReport = buildMergedDailyReport(reportDomain, start, end);
+		Weeklyreport report = m_weeklyreportDao.createLocal();
+		String content = transactionReport.toString();
 
-				TransactionReport reportModel = DefaultSaxParser.parse(xml);
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(reportDomain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(reportName);
+		report.setPeriod(reportPeriod);
+		report.setType(1);
+
+		try {
+			m_weeklyreportDao.insert(report);
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
 		}
-		TransactionReport transactionReport = merger.getTransactionReport();
-		transactionReport.setStartTime(start);
-		transactionReport.setEndTime(end);
-
-		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
-		return transactionReport;
+		return true;
 	}
 
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	private TransactionReport getDailyReport(String reportName, String reportDomain, Date reportPeriod)
+	      throws DalException {
+		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
+		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
+
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+
+		return m_transactionMerger.mergeForDaily(reportDomain, reports, domainSet);
+	}
+
+	private List<Graph> getHourReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		TransactionReport transactionReport = m_transactionMerger.mergeForGraph(reportDomain, reports);
+		graphs = m_transactionGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, transactionReport);
+		return graphs;
 	}
 }

@@ -214,6 +214,23 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	static class DatabaseReportFilter extends com.dianping.cat.consumer.database.model.transform.DefaultXmlBuilder {
+
+		private String m_domain;
+
+		public DatabaseReportFilter(String domain) {
+			m_domain = domain;
+		}
+
+		@Override
+		public void visitDomain(Domain domain) {
+			String id = domain.getId();
+			if (m_domain.equals("All") || m_domain.equals(id)) {
+				super.visitDomain(domain);
+			}
+		}
+	}
+
 	static class EventReportFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
@@ -338,6 +355,22 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 	}
 
+	static class SqlReportFilter extends com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder {
+
+		private String m_database;
+
+		public SqlReportFilter(String database) {
+			m_database = database;
+		}
+
+		@Override
+		public void visitDatabase(Database database) {
+			if ("All".equals(m_database) || database.getId().equals(m_database)) {
+				super.visitDatabase(database);
+			}
+		}
+	}
+
 	static class TransactionReportFilter extends com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
@@ -359,13 +392,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		public void visitDuration(Duration duration) {
 			if (m_type != null && m_name != null) {
 				super.visitDuration(duration);
-			}
-		}
-
-		@Override
-		public void visitTransactionReport(TransactionReport transactionReport) {
-			synchronized (transactionReport) {
-				super.visitTransactionReport(transactionReport);
 			}
 		}
 
@@ -407,6 +433,13 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		}
 
 		@Override
+		public void visitTransactionReport(TransactionReport transactionReport) {
+			synchronized (transactionReport) {
+				super.visitTransactionReport(transactionReport);
+			}
+		}
+
+		@Override
 		public void visitType(TransactionType type) {
 			if (m_type == null) {
 				super.visitType(type);
@@ -414,39 +447,6 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 				super.visitType(type);
 			} else {
 				// skip it
-			}
-		}
-	}
-
-	static class DatabaseReportFilter extends com.dianping.cat.consumer.database.model.transform.DefaultXmlBuilder {
-
-		private String m_domain;
-
-		public DatabaseReportFilter(String domain) {
-			m_domain = domain;
-		}
-
-		@Override
-		public void visitDomain(Domain domain) {
-			String id = domain.getId();
-			if (m_domain.equals("All") || m_domain.equals(id)) {
-				super.visitDomain(domain);
-			}
-		}
-	}
-
-	static class SqlReportFilter extends com.dianping.cat.consumer.sql.model.transform.DefaultXmlBuilder {
-
-		private String m_database;
-
-		public SqlReportFilter(String database) {
-			m_database = database;
-		}
-
-		@Override
-		public void visitDatabase(Database database) {
-			if ("All".equals(m_database) || database.getId().equals(m_database)) {
-				super.visitDatabase(database);
 			}
 		}
 	}

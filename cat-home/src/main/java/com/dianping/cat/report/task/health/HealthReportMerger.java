@@ -15,64 +15,6 @@ public class HealthReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void mergeProblemInfo(ProblemInfo old, ProblemInfo problemInfo) {
-		old.setExceptions(old.getExceptions() + problemInfo.getExceptions());
-
-		long longUrl = old.getLongUrls() + problemInfo.getLongUrls();
-		double sum = 0;
-		if (old.getLongUrlPercent() > 0) {
-			sum += old.getLongUrls() / old.getLongUrlPercent();
-		}
-		if (problemInfo.getLongUrlPercent() > 0) {
-			sum += problemInfo.getLongUrls() / problemInfo.getLongUrlPercent();
-		}
-		if (sum > 0) {
-			old.setLongUrlPercent(longUrl / sum);
-			old.setLongUrls(longUrl);
-		}
-
-		long longService = old.getLongServices() + problemInfo.getLongServices();
-		sum = 0;
-		if (old.getLongServicePercent() > 0) {
-			sum += old.getLongServices() / old.getLongServicePercent();
-		}
-		if (problemInfo.getLongServicePercent() > 0) {
-			sum += problemInfo.getLongServices() / problemInfo.getLongServicePercent();
-		}
-		if (sum > 0) {
-			old.setLongServicePercent(longService / sum);
-			old.setLongServices(longService);
-		}
-
-		long longCache = old.getLongCaches() + problemInfo.getLongCaches();
-		sum = 0;
-		if (old.getLongCachePercent() > 0) {
-			sum += old.getLongCaches() / old.getLongCachePercent();
-		}
-		if (problemInfo.getLongCachePercent() > 0) {
-			sum += problemInfo.getLongCaches() / problemInfo.getLongCachePercent();
-		}
-		if (sum > 0) {
-			old.setLongCachePercent(longCache / sum);
-			old.setLongCaches(longCache);
-		}
-
-		long longSql = old.getLongSqls() + problemInfo.getLongSqls();
-		sum = 0;
-		if (old.getLongSqlPercent() > 0) {
-			sum += old.getLongSqls() / old.getLongSqlPercent();
-		}
-		if (problemInfo.getLongSqlPercent() > 0) {
-			sum += problemInfo.getLongSqls() / problemInfo.getLongSqlPercent();
-		}
-		if (sum > 0) {
-			old.setLongSqlPercent(longSql / sum);
-			old.setLongSqls(longSql);
-		}
-
-	}
-
-	@Override
 	protected void mergeBaseCacheInfo(BaseCacheInfo old, BaseCacheInfo baseCacheInfo) {
 		double totalTime = old.getTotal() * old.getResponseTime() + baseCacheInfo.getTotal()
 		      * baseCacheInfo.getResponseTime();
@@ -169,6 +111,64 @@ public class HealthReportMerger extends DefaultMerger {
 			old.setAvgMaxMemoryUsed(machineInfo.getAvgMaxMemoryUsed());
 			old.setAvgMaxMemoryUsedMachine(machineInfo.getAvgMaxMemoryUsedMachine());
 		}
+	}
+
+	@Override
+	protected void mergeProblemInfo(ProblemInfo old, ProblemInfo problemInfo) {
+		old.setExceptions(old.getExceptions() + problemInfo.getExceptions());
+
+		long longUrl = old.getLongUrls() + problemInfo.getLongUrls();
+		double sum = 0;
+		if (old.getLongUrlPercent() > 0) {
+			sum += old.getLongUrls() / old.getLongUrlPercent();
+		}
+		if (problemInfo.getLongUrlPercent() > 0) {
+			sum += problemInfo.getLongUrls() / problemInfo.getLongUrlPercent();
+		}
+		if (sum > 0) {
+			old.setLongUrlPercent(longUrl / sum);
+			old.setLongUrls(longUrl);
+		}
+
+		long longService = old.getLongServices() + problemInfo.getLongServices();
+		sum = 0;
+		if (old.getLongServicePercent() > 0) {
+			sum += old.getLongServices() / old.getLongServicePercent();
+		}
+		if (problemInfo.getLongServicePercent() > 0) {
+			sum += problemInfo.getLongServices() / problemInfo.getLongServicePercent();
+		}
+		if (sum > 0) {
+			old.setLongServicePercent(longService / sum);
+			old.setLongServices(longService);
+		}
+
+		long longCache = old.getLongCaches() + problemInfo.getLongCaches();
+		sum = 0;
+		if (old.getLongCachePercent() > 0) {
+			sum += old.getLongCaches() / old.getLongCachePercent();
+		}
+		if (problemInfo.getLongCachePercent() > 0) {
+			sum += problemInfo.getLongCaches() / problemInfo.getLongCachePercent();
+		}
+		if (sum > 0) {
+			old.setLongCachePercent(longCache / sum);
+			old.setLongCaches(longCache);
+		}
+
+		long longSql = old.getLongSqls() + problemInfo.getLongSqls();
+		sum = 0;
+		if (old.getLongSqlPercent() > 0) {
+			sum += old.getLongSqls() / old.getLongSqlPercent();
+		}
+		if (problemInfo.getLongSqlPercent() > 0) {
+			sum += problemInfo.getLongSqls() / problemInfo.getLongSqlPercent();
+		}
+		if (sum > 0) {
+			old.setLongSqlPercent(longSql / sum);
+			old.setLongSqls(longSql);
+		}
+
 	}
 
 	public HealthReportMerger setDuration(long time) {

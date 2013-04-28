@@ -71,12 +71,6 @@ public class EventRender extends BaseVisitor {
 	}
 
 	@Override
-	public void visitMachine(Machine machine) {
-		m_currentIp = machine.getIp();
-		super.visitMachine(machine);
-	}
-
-	@Override
 	public void visitEventReport(EventReport eventReport) {
 		super.visitEventReport(eventReport);
 		Date lastDay = new Date(m_date.getTime() - TimeUtil.ONE_DAY);
@@ -89,6 +83,12 @@ public class EventRender extends BaseVisitor {
 		m_result.put("lastDay", lastDayUrl);
 		m_result.put("lastWeek", lastWeekUrl);
 		m_result.put("types", m_types);
+	}
+
+	@Override
+	public void visitMachine(Machine machine) {
+		m_currentIp = machine.getIp();
+		super.visitMachine(machine);
 	}
 
 	@Override

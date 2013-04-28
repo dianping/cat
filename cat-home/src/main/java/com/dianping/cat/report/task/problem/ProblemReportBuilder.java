@@ -90,50 +90,27 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		return true;
 	}
 
-	private ProblemReport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
-	      throws DalException {
-		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
-		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
-		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
+	private ProblemReport buildMergedDailyReport(String domain, Date start, Date end) {
+		long startTime = start.getTime();
+		long endTime = end.getTime();
+		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
 
-		return m_problemMerger.mergeForDaily(reportDomain, reports, domainSet);
-	}
+		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
+			try {
+				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "problem",
+				      DailyreportEntity.READSET_FULL);
+				String xml = dailyreport.getContent();
 
-	private List<Graph> getHourlyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
-		List<Graph> graphs = new ArrayList<Graph>();
-		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
-		      ReportEntity.READSET_FULL);
-		ProblemReport problemReport = m_problemMerger.mergeForGraph(reportDomain, reports);
-		
-		graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
-		return graphs;
-	}
-
-	@Override
-	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
-		Date start = reportPeriod;
-		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
-
-		ProblemReport problemReport = buildMergedDailyReport(reportDomain, start, end);
-		Weeklyreport report = m_weeklyreportDao.createLocal();
-		String content = problemReport.toString();
-
-		report.setContent(content);
-		report.setCreationDate(new Date());
-		report.setDomain(reportDomain);
-		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		report.setName(reportName);
-		report.setPeriod(reportPeriod);
-		report.setType(1);
-
-		try {
-			m_weeklyreportDao.insert(report);
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
+				ProblemReport reportModel = DefaultSaxParser.parse(xml);
+				reportModel.accept(merger);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 		}
-		return true;
+		ProblemReport problemReport = merger.getProblemReport();
+		problemReport.setStartTime(start);
+		problemReport.setEndTime(end);
+		return problemReport;
 	}
 
 	@Override
@@ -165,26 +142,49 @@ public class ProblemReportBuilder extends AbstractReportBuilder implements Repor
 		return true;
 	}
 
-	private ProblemReport buildMergedDailyReport(String domain, Date start, Date end) {
-		long startTime = start.getTime();
-		long endTime = end.getTime();
-		ProblemReportMerger merger = new ProblemReportMerger(new ProblemReport(domain));
+	@Override
+	public boolean buildWeeklyReport(String reportName, String reportDomain, Date reportPeriod) {
+		Date start = reportPeriod;
+		Date end = new Date(start.getTime() + TimeUtil.ONE_DAY * 7);
 
-		for (; startTime < endTime; startTime += TimeUtil.ONE_DAY) {
-			try {
-				Dailyreport dailyreport = m_dailyReportDao.findByNameDomainPeriod(new Date(startTime), domain, "problem",
-				      DailyreportEntity.READSET_FULL);
-				String xml = dailyreport.getContent();
+		ProblemReport problemReport = buildMergedDailyReport(reportDomain, start, end);
+		Weeklyreport report = m_weeklyreportDao.createLocal();
+		String content = problemReport.toString();
 
-				ProblemReport reportModel = DefaultSaxParser.parse(xml);
-				reportModel.accept(merger);
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
+		report.setContent(content);
+		report.setCreationDate(new Date());
+		report.setDomain(reportDomain);
+		report.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		report.setName(reportName);
+		report.setPeriod(reportPeriod);
+		report.setType(1);
+
+		try {
+			m_weeklyreportDao.insert(report);
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
 		}
-		ProblemReport problemReport = merger.getProblemReport();
-		problemReport.setStartTime(start);
-		problemReport.setEndTime(end);
-		return problemReport;
+		return true;
+	}
+
+	private ProblemReport getDailyReportData(String reportName, String reportDomain, Date reportPeriod)
+	      throws DalException {
+		Date endDate = TaskHelper.tomorrowZero(reportPeriod);
+		Set<String> domainSet = getDomainsFromHourlyReport(reportPeriod, endDate);
+		List<Report> reports = m_reportDao.findAllByDomainNameDuration(reportPeriod, endDate, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+
+		return m_problemMerger.mergeForDaily(reportDomain, reports, domainSet);
+	}
+
+	private List<Graph> getHourlyReport(String reportName, String reportDomain, Date reportPeriod) throws DalException {
+		List<Graph> graphs = new ArrayList<Graph>();
+		List<Report> reports = m_reportDao.findAllByPeriodDomainName(reportPeriod, reportDomain, reportName,
+		      ReportEntity.READSET_FULL);
+		ProblemReport problemReport = m_problemMerger.mergeForGraph(reportDomain, reports);
+		
+		graphs = m_problemGraphCreator.splitReportToGraphs(reportPeriod, reportDomain, reportName, problemReport);
+		return graphs;
 	}
 }

@@ -41,6 +41,14 @@ public class Handler implements PageHandler<Context> {
 
 	private static final String CAT = "Cat";
 
+	public StateReport getHistoryReport(Payload payload) {
+		String domain = CAT;
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
+
+		return m_reportService.queryStateReport(domain, start, end);
+	}
+
 	private StateReport getHourlyReport(Payload payload) {
 		// only for cat
 		String domain = CAT;
@@ -57,14 +65,6 @@ public class Handler implements PageHandler<Context> {
 			throw new RuntimeException("Internal error: no eligable sql service registered for " + request + "!");
 		}
 
-	}
-
-	public StateReport getHistoryReport(Payload payload) {
-		String domain = CAT;
-		Date start = payload.getHistoryStartDate();
-		Date end = payload.getHistoryEndDate();
-
-		return m_reportService.queryStateReport(domain, start, end);
 	}
 
 	@Override
