@@ -11,7 +11,7 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		switch (action) {
 		case VIEW:
 			return JspFile.VIEW.getPath();
-		case ALLTESTVIEW:
+		case LIST:
 			return JspFile.ALLTESTVIEW.getPath();
 		case REPORT:
 			return JspFile.REPORT.getPath();

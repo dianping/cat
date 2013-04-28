@@ -4,18 +4,14 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.abtest.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model"
-	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.abtest.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
 
 <a:body>
 	<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-
 
 	<div class="row-fluid">
 		<div class="span12 column">

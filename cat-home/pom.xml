@@ -115,6 +115,11 @@
          <scope>${test-framework.scope}</scope>
          <version>2.0.2</version>
       </dependency>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>dal-jdbc</artifactId>
+         <version>2.0.1</version>
+      </dependency>
    </dependencies>
    <build>
       <finalName>cat</finalName>
@@ -181,7 +186,7 @@
                   <configuration>
                      <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
-                     ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]></manifest>
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]> <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/abtest-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>
@@ -230,7 +235,7 @@ org.eclipse.jdt.core.compiler.source=1.6
 org.eclipse.jdt.core.compiler.compliance=1.6org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.source=1.6
-org.eclipse.jdt.core.compiler.compliance=1.6]]><![CDATA[org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+org.eclipse.jdt.core.compiler.compliance=1.6org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.source=1.6
 org.eclipse.jdt.core.compiler.compliance=1.6]]></content>
