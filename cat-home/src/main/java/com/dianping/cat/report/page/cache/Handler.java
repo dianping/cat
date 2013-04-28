@@ -77,6 +77,7 @@ public class Handler implements PageHandler<Context> {
 			boolean isCurrent = payload.getPeriod().isCurrent();
 			String ip = payload.getIpAddress();
 			com.dianping.cat.consumer.event.model.entity.Machine machine = report.getMachines().get(ip);
+			
 			if (machine == null) {
 				return;
 			}
@@ -94,6 +95,7 @@ public class Handler implements PageHandler<Context> {
 				for (EventName transName : eventType.getNames().values()) {
 					long totalNameCount = transName.getTotalCount();
 					double nameTps = 0;
+				
 					if (isCurrent) {
 						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 						nameTps = totalNameCount / seconds;
@@ -112,12 +114,14 @@ public class Handler implements PageHandler<Context> {
 			boolean isCurrent = payload.getPeriod().isCurrent();
 			String ip = payload.getIpAddress();
 			Machine machine = report.getMachines().get(ip);
+			
 			if (machine == null) {
 				return;
 			}
 			for (TransactionType transType : machine.getTypes().values()) {
 				long totalCount = transType.getTotalCount();
 				double tps = 0;
+			
 				if (isCurrent) {
 					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 					tps = totalCount / seconds;
@@ -125,6 +129,7 @@ public class Handler implements PageHandler<Context> {
 					double time = (report.getEndTime().getTime() - report.getStartTime().getTime()) / (double) 1000;
 					tps = totalCount / (double) time;
 				}
+				
 				transType.setTps(tps);
 				for (TransactionName transName : transType.getNames().values()) {
 					long totalNameCount = transName.getTotalCount();

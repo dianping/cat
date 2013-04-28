@@ -301,7 +301,6 @@ public class Handler implements PageHandler<Context> {
 				payload.setAction("history");
 			}
 		}
-		
 	}
 
 }

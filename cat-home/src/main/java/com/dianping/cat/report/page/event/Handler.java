@@ -64,6 +64,7 @@ public class Handler implements PageHandler<Context> {
 		PieChart chart = new PieChart();
 		Collection<EventName> values = report.findOrCreateMachine(ip).findOrCreateType(type).getNames().values();
 		List<Item> items = new ArrayList<Item>();
+		
 		for (EventName name : values) {
 			Item item = new Item();
 			item.setNumber(name.getTotalCount()).setTitle(name.getId());
@@ -71,8 +72,7 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		chart.setItems(items);
-		Gson gson = new Gson();
-		model.setPieChart(gson.toJson(chart));
+		model.setPieChart(new Gson().toJson(chart));
 	}
 
 	private void calculateTps(Payload payload, EventReport report) {
@@ -80,12 +80,14 @@ public class Handler implements PageHandler<Context> {
 			boolean isCurrent = payload.getPeriod().isCurrent();
 			String ip = payload.getIpAddress();
 			Machine machine = report.getMachines().get(ip);
+		
 			if (machine == null) {
 				return;
 			}
 			for (EventType eventType : machine.getTypes().values()) {
 				long totalCount = eventType.getTotalCount();
 				double tps = 0;
+			
 				if (isCurrent) {
 					double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 					tps = totalCount / seconds;
@@ -97,6 +99,7 @@ public class Handler implements PageHandler<Context> {
 				for (EventName transName : eventType.getNames().values()) {
 					long totalNameCount = transName.getTotalCount();
 					double nameTps = 0;
+					
 					if (isCurrent) {
 						double seconds = (System.currentTimeMillis() - payload.getCurrentDate()) / (double) 1000;
 						nameTps = totalNameCount / seconds;

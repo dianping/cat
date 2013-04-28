@@ -94,6 +94,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HOURLY_REPORT:
 			long hourlyDuration = TimeUtil.ONE_HOUR;
+			
 			if (ModelPeriod.CURRENT == payload.getPeriod()) {
 				hourlyDuration = System.currentTimeMillis() % TimeUtil.ONE_HOUR;
 			}
@@ -109,21 +110,20 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		model.setPage(ReportPage.DATABASE);
 		if (StringUtils.isEmpty(payload.getDatabase())) {
 			payload.setDatabase("cat");
 		}
-		model.setDatabase(payload.getDatabase());
 		if (!CatString.ALL.equalsIgnoreCase(payload.getDomain())) {
 			model.setDisplayDomain(payload.getDomain());
 			model.setDomain(payload.getDomain());
 		}
+		model.setDatabase(payload.getDatabase());
+		model.setPage(ReportPage.DATABASE);
 		m_normalizePayload.normalize(model, payload);
 	}
 
 	private DatabaseReport showSummarizeReport(Model model, Payload payload) {
 		String database = payload.getDatabase();
-
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
 
