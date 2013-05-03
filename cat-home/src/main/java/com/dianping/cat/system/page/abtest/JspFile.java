@@ -3,6 +3,9 @@ package com.dianping.cat.system.page.abtest;
 public enum JspFile {
 	VIEW("/jsp/system/abtest.jsp"),
 
+	ALLTESTVIEW("/jsp/system/abtestAllTest.jsp"),
+	
+	REPORT("/jsp/system/abtestReport.jsp")
 	;
 
 	private String m_path;

@@ -1,7 +1,11 @@
 package com.dianping.cat.system.page.abtest;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view");
+	VIEW("view"),
+	
+	LIST("list"),
+	
+	REPORT("report");
 
 	private String m_name;
 

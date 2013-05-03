@@ -34,6 +34,14 @@ public class ABTestEntity {
 	public String getName() {
 		return m_entity.getName();
 	}
+	
+	public Date getEndDate() {
+	   return m_entity.getEndDate();
+   }
+
+	public Date getStartDate() {
+	   return m_entity.getStartDate();
+   }
 
 	public boolean isEligible(Date date) {
 		if (m_entity.getDisabled() != null && m_entity.getDisabled()) {
