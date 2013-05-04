@@ -9,6 +9,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 
+import com.dianping.cat.Cat;
+
 public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable {
 	private static final long MINUTE = 60 * 1000L;
 
@@ -23,7 +25,17 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 	@Override
 	public MessageAnalyzer getAnalyzer(String name, long startTime) {
 		// remove last two hour analyzer
-		m_map.remove(startTime - m_duration * 2);
+		try {
+			Map<String, MessageAnalyzer> temp = m_map.remove(startTime - m_duration * 2);
+
+			if (temp != null) {
+				for (MessageAnalyzer anlyzer : temp.values()) {
+					anlyzer.destroy();
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 
 		Map<String, MessageAnalyzer> map = m_map.get(startTime);
 
