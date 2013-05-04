@@ -22,6 +22,9 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 
 	@Override
 	public MessageAnalyzer getAnalyzer(String name, long startTime) {
+		// remove last two hour analyzer
+		m_map.remove(startTime - m_duration * 2);
+
 		Map<String, MessageAnalyzer> map = m_map.get(startTime);
 
 		if (map == null) {
