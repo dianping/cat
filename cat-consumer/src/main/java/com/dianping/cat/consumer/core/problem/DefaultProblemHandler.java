@@ -17,7 +17,7 @@ import com.dianping.cat.message.spi.MessageTree;
 
 public class DefaultProblemHandler extends ProblemHandler {
 	public static final String ID = "default-problem";
-	
+
 	@Inject
 	private Set<String> m_errorTypes;
 
@@ -66,8 +66,8 @@ public class DefaultProblemHandler extends ProblemHandler {
 
 			if (m_failureTypes.contains(type)) {
 				type = transaction.getType();
-				//make it march for alarm
-				if (type.equals("PigeonCall")) {
+				// make it march for alarm
+				if (type.equals("PigeonCall") || type.equals("Call")) {
 					type = "call";
 				}
 				status = transaction.getName();

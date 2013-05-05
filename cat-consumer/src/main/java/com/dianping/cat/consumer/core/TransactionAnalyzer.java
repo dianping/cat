@@ -242,7 +242,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		// update statistics
 		double duration = t.getDurationInMicros() / 1000d;
 		// make all duration numbers less
-		Integer allDuration = new Integer((int) duration * 4 / 4);
+		Integer allDuration = new Integer(((int) duration) / 4 * 4);
 
 		name.setMax(Math.max(name.getMax(), duration));
 		name.setMin(Math.min(name.getMin(), duration));
