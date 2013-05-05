@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.servlet.ServletException;
 
+import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -71,6 +72,20 @@ public class Handler implements PageHandler<Context> {
 		model.setMemoryFreeGraph(displayHeartbeat.getMemoryFreeGraph());
 	}
 
+	private void buildHistoryGraph(Model model, Payload payload) {
+	   HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(),
+	   		new Date(payload.getDate()), new Date(payload.getDate() + TimeUtil.ONE_HOUR));
+	   model.setReport(report);
+
+	   if(StringUtil.isEmpty(payload.getIpAddress())){
+	   	String ipAddress = getIpAddress(report, payload);
+	   	
+	   	payload.setIpAddress(ipAddress);
+	   	model.setIpAddress(ipAddress);
+	   }
+	   m_historyGraphs.showHeartBeatGraph(model, payload);
+   }
+
 	private String getIpAddress(HeartbeatReport report, Payload payload) {
 		Set<String> ips = report.getIps();
 		String ip = payload.getIpAddress();
@@ -78,23 +93,21 @@ public class Handler implements PageHandler<Context> {
 		if ((ip == null || ip.length() == 0) && !ips.isEmpty()) {
 			ip = StringSortHelper.sort(ips).get(0);
 		}
-
 		return ip;
 	}
 
-	private HeartbeatReport getReport(Payload payload) {
-		String domain = payload.getDomain();
-		String date = String.valueOf(payload.getDate());
-		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date).setProperty("ip", payload.getIpAddress());
+	private HeartbeatReport getReport(String domain, String ipAddress, long dateLong, ModelPeriod period) {
+		String date = String.valueOf(dateLong);
+		ModelRequest request = new ModelRequest(domain, period) //
+		      .setProperty("date", date).setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_service.invoke(request);
 			HeartbeatReport report = response.getModel();
 
-			if (payload.getPeriod().isLast()) {
-				Set<String> domains = m_reportService.queryAllDomainNames(new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeUtil.ONE_HOUR), "heartbeat");
+			if (period.isLast()) {
+				Set<String> domains = m_reportService.queryAllDomainNames(new Date(dateLong), new Date(dateLong
+				      + TimeUtil.ONE_HOUR), "heartbeat");
 				Set<String> domainNames = report.getDomainNames();
 
 				domainNames.addAll(domains);
@@ -132,15 +145,11 @@ public class Handler implements PageHandler<Context> {
 
 			model.setMobileResponse(json);
 			break;
-		case HISTORY:
-			if (model.getIpAddress() != null) {
-				m_historyGraphs.showHeartBeatGraph(model, payload);
-			}
+		case HISTORY :
+			buildHistoryGraph(model, payload);
 			break;
 		case PART_HISTORY:
-			if (model.getIpAddress() != null) {
-				m_historyGraphs.showHeartBeatGraph(model, payload);
-			}
+			buildHistoryGraph(model, payload);
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -162,31 +171,22 @@ public class Handler implements PageHandler<Context> {
 
 	private MobileHeartbeat setMobileModel(Model model, DisplayHeartbeat heartbeat) {
 		MobileHeartbeat result = new MobileHeartbeat();
+
 		result.display(model, heartbeat);
 		return result;
 	}
 
 	private DisplayHeartbeat showReport(Model model, Payload payload) {
 		try {
-			ModelPeriod period = payload.getPeriod();
-
-			if (period.isFuture()) {
-				model.setLongDate(payload.getCurrentDate());
-			} else {
-				model.setLongDate(payload.getDate());
-			}
-			model.setDisplayDomain(payload.getDomain());
-
-			HeartbeatReport report = getReport(payload);
-			if (report == null) {
-				return null;
-			}
+			HeartbeatReport report = getReport(payload.getDomain(), payload.getIpAddress(), payload.getDate(),
+			      payload.getPeriod());
 			model.setReport(report);
-			String ip = getIpAddress(report, payload);
-			model.setIpAddress(ip);
+			if (report != null) {
+				String ip = getIpAddress(report, payload);
 
-			DisplayHeartbeat displayHeartbeat = new DisplayHeartbeat(m_builder).display(report, ip);
-			return displayHeartbeat;
+				model.setIpAddress(ip);
+				return new DisplayHeartbeat(m_builder).display(report, ip);
+			}
 		} catch (Throwable e) {
 			Cat.logError(e);
 			model.setException(e);
