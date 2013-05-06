@@ -30,7 +30,7 @@ import com.dianping.cat.report.graph.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
-import com.dianping.cat.report.page.NormalizePayload;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
 import com.dianping.cat.report.page.state.StateGraphs;
@@ -160,7 +160,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		            DatabaseReportBuilder.class, SqlReportBuilder.class, HealthReportBuilder.class,//
 		            StateReportBuilder.class));
 
-		all.add(C(NormalizePayload.class).req(ServerConfigManager.class));
+		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
 
 		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
