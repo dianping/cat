@@ -57,7 +57,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private long m_networkError;
 
-	private static int QUEUE_SIZE = 500000;
+	private static int QUEUE_SIZE = 300000;
 
 	@Override
 	public void consume(MessageTree tree) {

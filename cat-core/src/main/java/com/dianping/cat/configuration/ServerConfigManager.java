@@ -11,7 +11,6 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads.Task;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
@@ -27,8 +26,6 @@ public class ServerConfigManager implements LogEnabled {
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
 	private ServerConfig m_config;
-
-	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
 
 	private Logger m_logger;
 
@@ -262,12 +259,6 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public void onRefresh(ServiceConfigSupport listener) {
-		if (!m_listeners.contains(listener)) {
-			m_listeners.add(listener);
-		}
-	}
-
 	private long toLong(String str, long defaultValue) {
 		long value = 0;
 		int len = str == null ? 0 : str.length();
@@ -293,54 +284,5 @@ public class ServerConfigManager implements LogEnabled {
 
 	public static interface ServerConfigKey {
 		public void add(String section);
-	}
-
-	static class ServerConfigReloader implements Task {
-		private File m_file;
-
-		private volatile boolean m_active = true;
-
-		public ServerConfigReloader(File file) {
-			m_file = file;
-		}
-
-		@Override
-		public String getName() {
-			return "ServerConfigReloader";
-		}
-
-		private boolean isActive() {
-			synchronized (this) {
-				return m_active;
-			}
-		}
-
-		@Override
-		public void run() {
-			while (isActive()) {
-				try {
-					if (m_file.exists()) {
-						// TODO
-					}
-
-					Thread.sleep(2000L);
-				} catch (InterruptedException e) {
-					m_active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-			synchronized (this) {
-				m_active = false;
-			}
-		}
-	}
-
-	public static interface ServiceConfigSupport {
-		public void buildKey(ServerConfigManager manager, ServerConfigKey key);
-
-		public void configure(ServerConfigManager manager, boolean firstTime);
 	}
 }

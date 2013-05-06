@@ -26,7 +26,7 @@ public class CompositeSqlService extends BaseCompositeModelService<SqlReport> {
 		}
 		SqlReportMerger merger = new SqlReportMerger(new SqlReport(request.getDomain()));
 		String datebase = request.getProperty("database");
-		if (CatString.ALL_Database.equals(datebase)) {
+		if (CatString.ALL.equals(datebase)) {
 			merger.setAllDatabase(true);
 		}
 		for (ModelResponse<SqlReport> response : responses) {

@@ -73,20 +73,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
-			<role-hint>ip</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.TopIpAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.MetricAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>

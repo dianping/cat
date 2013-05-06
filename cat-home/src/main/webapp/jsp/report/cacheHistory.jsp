@@ -48,7 +48,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
 			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">Hit Rate(%)</a></th>
 			<th><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
-			<th>TPS</th></tr>
+			<th>QPS</th></tr>
 			<c:forEach var="item" items="${model.report.typeItems}" varStatus="status">
 				<c:set var="e" value="${item.type}"/>
 				<c:set var="lastIndex" value="${status.index}"/>
@@ -82,7 +82,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 			<th ><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
 			<th ><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
 			<th ><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
-			<th>TPS</th></tr>
+			<th>QPS</th></tr>
 			<c:forEach var="item" items="${model.report.nameItems}" varStatus="status">
 				<c:set var="e" value="${item.name}"/>
 				<c:set var="lastIndex" value="${status.index}"/>

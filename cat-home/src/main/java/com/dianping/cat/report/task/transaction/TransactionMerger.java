@@ -23,6 +23,11 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 
 	private Logger m_logger;
 
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
 	private TransactionReport merge(String reportDomain, List<Report> reports, boolean isDaily) {
 		TransactionReportMerger merger = null;
 		if (isDaily) {
@@ -78,10 +83,5 @@ public class TransactionMerger implements ReportMerger<TransactionReport>, LogEn
 
 		new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
 		return transactionReport;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

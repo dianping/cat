@@ -49,6 +49,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_action;
 	}
 
+	public String getChannel() {
+		return m_channel;
+	}
+
 	public String getDatabase() {
 		return m_database;
 	}
@@ -110,6 +114,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		m_action = Action.getByName(action, Action.XML);
 	}
 
+	public void setChannel(String channel) {
+		m_channel = channel;
+	}
+
 	public void setDatabase(String database) {
 		m_database = database;
 	}
@@ -149,14 +157,6 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 
 	public void setWaterfall(boolean waterfall) {
 		m_waterfall = waterfall;
-	}
-
-	public String getChannel() {
-		return m_channel;
-	}
-
-	public void setChannel(String channel) {
-		m_channel = channel;
 	}
 
 	@Override

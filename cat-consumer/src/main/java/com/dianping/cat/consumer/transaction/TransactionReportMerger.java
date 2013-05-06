@@ -74,6 +74,18 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
+	public Machine mergesForAllMachine(TransactionReport report) {
+		Machine all = new Machine(ReportConstants.ALL);
+
+		for (Machine m : report.getMachines().values()) {
+			if (!m.getIp().equals(ReportConstants.ALL)) {
+				visitMachineChildren(all, m);
+			}
+		}
+
+		return all;
+	}
+
 	@Override
 	public void mergeType(TransactionType old, TransactionType other) {
 		long totalCountSum = old.getTotalCount() + other.getTotalCount();
@@ -113,13 +125,6 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
-	@Override
-	public void visitTransactionReport(TransactionReport transactionReport) {
-		super.visitTransactionReport(transactionReport);
-		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
-		getTransactionReport().getIps().addAll(transactionReport.getIps());
-	}
-
 	double std(long count, double avg, double sum2, double max) {
 		double value = sum2 / count - avg * avg;
 
@@ -132,15 +137,10 @@ public class TransactionReportMerger extends DefaultMerger {
 		}
 	}
 
-	public Machine mergesForAllMachine(TransactionReport report) {
-		Machine all = new Machine(ReportConstants.ALL);
-
-		for (Machine m : report.getMachines().values()) {
-			if (!m.getIp().equals(ReportConstants.ALL)) {
-				visitMachineChildren(all, m);
-			}
-		}
-
-		return all;
+	@Override
+	public void visitTransactionReport(TransactionReport transactionReport) {
+		super.visitTransactionReport(transactionReport);
+		getTransactionReport().getDomainNames().addAll(transactionReport.getDomainNames());
+		getTransactionReport().getIps().addAll(transactionReport.getIps());
 	}
 }

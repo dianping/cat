@@ -240,6 +240,7 @@ public class HistoryGraphs {
 			      .getJsonString());
 		} else if (queryType.equalsIgnoreCase("disk")) {
 			List<HistoryGraphItem> diskInfo = getDiskInfo(graphData, start, size);
+		
 			model.setDisks(diskInfo.size());
 			model.setDiskHistoryGraph(new Gson().toJson(diskInfo));
 		} else if (queryType.equalsIgnoreCase("cat")) {

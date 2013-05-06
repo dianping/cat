@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model model-package="com.dianping.cat.home.template" enable-merger="true" enable-json-builder="true" enable-sax-parser="true"
-	enable-json-parser="true" enable-base-visitor="true">
+<model model-package="com.dianping.cat.home.template" enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true">
 	<entity name="threshold-template" root="true">
 		<entity-ref name="connection" />
 		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />

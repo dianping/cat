@@ -71,16 +71,14 @@ public class ThresholdRule {
 				}
 			}
 			cleanData(getMaxInterval(), date.getTime());
-		} else {
-
 		}
 		return null;
 	}
 
 	public void cleanData(int maxInterval, long time) {
 		long start = time - (maxInterval + 1) * TimeUtil.ONE_MINUTE;
-
 		List<ThresholdDataEntity> removes = new ArrayList<ThresholdDataEntity>();
+
 		for (ThresholdDataEntity entity : m_datas) {
 			if (entity.getDate().getTime() < start) {
 				removes.add(entity);
@@ -99,7 +97,6 @@ public class ThresholdRule {
 	public long getCount(int interval, Date date) {
 		long start = date.getTime() - interval * 60 * 1000;
 		long totalCount = 0;
-
 		ThresholdDataEntity last = null;
 		ThresholdDataEntity first = null;
 
@@ -197,6 +194,16 @@ public class ThresholdRule {
 		m_template = template;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(500);
+
+		sb.append("[Domain:").append(m_domain).append(";");
+		sb.append("[Template:").append(m_template.toString()).append(";").append("]");
+
+		return sb.toString();
+	}
+
 	private boolean validateData(ThresholdDataEntity entity) {
 		Date entityDate = entity.getDate();
 		long now = System.currentTimeMillis() + TimeUtil.ONE_MINUTE;
@@ -224,16 +231,6 @@ public class ThresholdRule {
 			}
 		}
 		return false;
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder(500);
-
-		sb.append("[Domain:").append(m_domain).append(";");
-		sb.append("[Template:").append(m_template.toString()).append(";").append("]");
-
-		return sb.toString();
 	}
 
 }

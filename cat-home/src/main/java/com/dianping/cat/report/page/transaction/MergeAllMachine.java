@@ -31,7 +31,7 @@ public class MergeAllMachine extends BaseVisitor {
 	@Override
 	public void visitDuration(Duration duration) {
 		m_currentDuration = duration.getValue();
-		Duration temp = m_report.findOrCreateMachine(CatString.ALL_IP).findOrCreateType(m_currentType)
+		Duration temp = m_report.findOrCreateMachine(CatString.ALL).findOrCreateType(m_currentType)
 		      .findOrCreateName(m_currentName).findOrCreateDuration(m_currentDuration);
 
 		m_merger.mergeDuration(temp, duration);
@@ -41,14 +41,14 @@ public class MergeAllMachine extends BaseVisitor {
 
 	@Override
 	public void visitMachine(Machine machine) {
-		m_report.findOrCreateMachine(CatString.ALL_IP);
+		m_report.findOrCreateMachine(CatString.ALL);
 		super.visitMachine(machine);
 	}
 
 	@Override
 	public void visitName(TransactionName name) {
 		m_currentName = name.getId();
-		TransactionName temp = m_report.findOrCreateMachine(CatString.ALL_IP).findOrCreateType(m_currentType)
+		TransactionName temp = m_report.findOrCreateMachine(CatString.ALL).findOrCreateType(m_currentType)
 		      .findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
@@ -58,7 +58,7 @@ public class MergeAllMachine extends BaseVisitor {
 	@Override
 	public void visitRange(Range range) {
 		m_currentRange = range.getValue();
-		Range temp = m_report.findOrCreateMachine(CatString.ALL_IP).findOrCreateType(m_currentType)
+		Range temp = m_report.findOrCreateMachine(CatString.ALL).findOrCreateType(m_currentType)
 		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
@@ -79,7 +79,7 @@ public class MergeAllMachine extends BaseVisitor {
 	@Override
 	public void visitType(TransactionType type) {
 		m_currentType = type.getId();
-		TransactionType temp = m_report.findOrCreateMachine(CatString.ALL_IP).findOrCreateType(m_currentType);
+		TransactionType temp = m_report.findOrCreateMachine(CatString.ALL).findOrCreateType(m_currentType);
 
 		m_merger.mergeType(temp, type);
 		super.visitType(type);

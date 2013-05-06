@@ -267,14 +267,12 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 					}
 				}
 
-				if (atEnd) {
-					Date period = new Date(m_startTime);
-					String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-					// Create task for health report
-					for (String domain : m_reports.keySet()) {
-						StateReport report = m_reports.get(domain);
-						new HealthVisitor(ip, period).visitStateReport(report);
-					}
+				Date period = new Date(m_startTime);
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				// Create task for health report
+				for (String domain : m_reports.keySet()) {
+					StateReport report = m_reports.get(domain);
+					new HealthVisitor(ip, period).visitStateReport(report);
 				}
 			} catch (Exception e) {
 				t.setStatus(e);

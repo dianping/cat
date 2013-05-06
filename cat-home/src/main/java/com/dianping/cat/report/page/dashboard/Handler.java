@@ -30,15 +30,23 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.model.ModelPeriod;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
+import com.dianping.cat.report.page.event.EventMergeManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.problem.ProblemStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.StatusStatistics;
 import com.dianping.cat.report.page.problem.ProblemStatistics.TypeStatistics;
+import com.dianping.cat.report.page.transaction.TransactionMergeManager;
 import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
+
+	@Inject
+	private TransactionMergeManager m_transactionMergeManger;
+
+	@Inject
+	private EventMergeManager m_eventMergerMergeManager;
 
 	@Inject(type = ModelService.class, value = "event")
 	private ModelService<EventReport> m_eventService;
@@ -191,6 +199,9 @@ public class Handler implements PageHandler<Context> {
 
 		TransactionReport transactionReport = getTransactionHourlyReport(domain, ip, null);
 
+		if (transactionReport == null) {
+			return data;
+		}
 		Machine transactionMachine = transactionReport.getMachines().get(ip);
 		if (transactionMachine != null) {
 			Collection<TransactionType> types = transactionMachine.getTypes().values();
@@ -201,7 +212,9 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		EventReport eventReport = getEventHourlyReport(domain, ip, null);
-
+		if (eventReport == null) {
+			return data;
+		}
 		com.dianping.cat.consumer.event.model.entity.Machine eventMachine = eventReport.getMachines().get(ip);
 		if (eventMachine != null) {
 			long exceptionCount = 0;
@@ -230,6 +243,8 @@ public class Handler implements PageHandler<Context> {
 		if (m_transactionService.isEligable(request)) {
 			ModelResponse<EventReport> response = m_eventService.invoke(request);
 			EventReport report = response.getModel();
+
+			report = m_eventMergerMergeManager.mergerAllIp(report, ip);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
@@ -246,6 +261,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_transactionService.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_problemService.invoke(request);
 			ProblemReport report = response.getModel();
+
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
@@ -262,6 +278,8 @@ public class Handler implements PageHandler<Context> {
 		if (m_transactionService.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
 			TransactionReport report = response.getModel();
+
+			report = m_transactionMergeManger.mergerAllIp(report, ip);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
