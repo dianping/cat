@@ -12,21 +12,23 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_domain;
 
 	private Date m_date;
-	
+
 	private ABTestEntity m_entity;
-	
+
 	private List<ABTestReport> m_reports;
-	
+
 	private int m_totalPages;
 
-	private int m_runningCount;
-	
+	private int m_createdCount;
+
 	private int m_readyCount;
-	
-	private int m_stoppedCount;
-	
-	private int m_disabledCount;
-	
+
+	private int m_runningCount;
+
+	private int m_terminatedCount;
+
+	private int m_suspendedCount;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -53,59 +55,66 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public ABTestEntity getEntity() {
-   	return m_entity;
-   }
+		return m_entity;
+	}
 
 	public void setEntity(ABTestEntity entity) {
-   	m_entity = entity;
-   }
+		m_entity = entity;
+	}
 
 	public List<ABTestReport> getReports() {
-   	return m_reports;
-   }
+		return m_reports;
+	}
 
 	public void setReports(List<ABTestReport> reports) {
-   	m_reports = reports;
-   }
-	
+		m_reports = reports;
+	}
+
 	public int getTotalPages() {
-   	return m_totalPages;
-   }
+		return m_totalPages;
+	}
 
 	public void setTotalPages(int totalPages) {
-   	m_totalPages = totalPages;
-   }
+		m_totalPages = totalPages;
+	}
 
-	public int getRunningCount() {
-   	return m_runningCount;
-   }
+	public int getCreatedCount() {
+		return m_createdCount;
+	}
 
-	public void setRunningCount(int runningCount) {
-   	m_runningCount = runningCount;
-   }
+	public void setCreatedCount(int createdCount) {
+		m_createdCount = createdCount;
+	}
 
 	public int getReadyCount() {
-   	return m_readyCount;
-   }
+		return m_readyCount;
+	}
 
 	public void setReadyCount(int readyCount) {
-   	m_readyCount = readyCount;
-   }
+		m_readyCount = readyCount;
+	}
 
-	public int getStoppedCount() {
-   	return m_stoppedCount;
-   }
+	public int getRunningCount() {
+		return m_runningCount;
+	}
 
-	public void setStoppedCount(int stoppedCount) {
-   	m_stoppedCount = stoppedCount;
-   }
+	public void setRunningCount(int runningCount) {
+		m_runningCount = runningCount;
+	}
 
-	public int getDisabledCount() {
-   	return m_disabledCount;
-   }
+	public int getTerminatedCount() {
+		return m_terminatedCount;
+	}
 
-	public void setDisabledCount(int disabledCount) {
-   	m_disabledCount = disabledCount;
-   }
-	
+	public void setTerminatedCount(int terminatedCount) {
+		m_terminatedCount = terminatedCount;
+	}
+
+	public int getSuspendedCount() {
+		return m_suspendedCount;
+	}
+
+	public void setSuspendedCount(int suspendedCount) {
+		m_suspendedCount = suspendedCount;
+	}
 }
