@@ -5,8 +5,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Threads;
@@ -19,7 +17,7 @@ import com.dianping.cat.home.dal.alarm.MailRecord;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class AlertManager implements Initializable, LogEnabled {
+public class AlertManager implements Initializable {
 
 	private final BlockingQueue<AlertInfo> m_alarmInfos = new LinkedBlockingQueue<AlertInfo>(1000);
 
@@ -31,8 +29,6 @@ public class AlertManager implements Initializable, LogEnabled {
 
 	@Inject
 	private MailSMS m_mailSms;
-
-	private Logger m_logger;
 
 	public void addAlarmInfo(AlertInfo info) {
 		m_alarmInfos.offer(info);
@@ -58,9 +54,9 @@ public class AlertManager implements Initializable, LogEnabled {
 		if (sendResult) {
 			record.setStatus(1);
 		} else {
-			record.setStatus(0);
+			record.setStatus(2);
 		}
-		record.setType(type);// for alarm type
+		record.setType(type);
 
 		try {
 			m_mailRecordDao.insert(record);
@@ -89,23 +85,20 @@ public class AlertManager implements Initializable, LogEnabled {
 						String content = entity.getContent();
 						boolean sendResult = false;
 
-						if (alertType == AlertInfo.EMAIL_TYPE) {
-							List<String> mails = entity.getMails();
+						try {
+							if (alertType == AlertInfo.EMAIL_TYPE) {
+								List<String> mails = entity.getMails();
 
-							sendResult = m_mailSms.sendEmail(title, content, mails);
-							if (!sendResult) {
-								m_logger.error(String.format("Error when send email %s to %s", title, mails));
+								sendResult = m_mailSms.sendEmail(title, content, mails);
+							} else if (alertType == AlertInfo.SMS_TYPE) {
+								List<String> phones = entity.getPhones();
+
+								sendResult = m_mailSms.sendSMS(title, phones);
+							} else {
+								Cat.logError(new RuntimeException("unexcepted alert type! type : " + alertType));
 							}
-
-						} else if (alertType == AlertInfo.SMS_TYPE) {
-							List<String> phones = entity.getPhones();
-
-							sendResult = m_mailSms.sendSMS(title, phones);
-							if (!sendResult) {
-								m_logger.error(String.format("Error when send sms %s to %s", title, phones));
-							}
-						} else {
-							Cat.logError(new RuntimeException("unexcepted alert type! type : " + alertType));
+						} catch (Exception e) {
+							Cat.logError(e);
 						}
 						String ruleType = entity.getRuleType();
 
@@ -121,7 +114,7 @@ public class AlertManager implements Initializable, LogEnabled {
 							active = false;
 						}
 					}
-				} catch (Exception e) {
+				} catch (Throwable e) {
 					Cat.logError(e);
 				}
 			}
@@ -130,11 +123,6 @@ public class AlertManager implements Initializable, LogEnabled {
 		@Override
 		public void shutdown() {
 		}
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }

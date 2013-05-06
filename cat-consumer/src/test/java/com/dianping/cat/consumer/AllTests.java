@@ -8,10 +8,10 @@ import com.dianping.cat.consumer.core.FormatTest;
 import com.dianping.cat.consumer.core.GsonTest;
 import com.dianping.cat.consumer.core.NumberFormatTest;
 import com.dianping.cat.consumer.core.ProblemHandlerTest;
-import com.dianping.cat.consumer.core.TransactionAnalyzerTest;
-import com.dianping.cat.consumer.core.TransactionReportFilterTest;
-import com.dianping.cat.consumer.core.TransactionReportMessageAnalyzerTest;
-import com.dianping.cat.consumer.core.TransactionReportTest;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
+import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
+import com.dianping.cat.consumer.transaction.TransactionReportMessageAnalyzerTest;
+import com.dianping.cat.consumer.transaction.TransactionReportTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({

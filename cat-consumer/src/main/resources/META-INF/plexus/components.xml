@@ -18,6 +18,74 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.RemoteModelService</role>
+			<implementation>com.dianping.cat.report.RemoteModelService</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportService</role>
+			<implementation>com.dianping.cat.report.DefaultReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.RemoteModelService</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.MonthlyReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportManager</role>
+					<role-hint>transaction</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportManager</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<configuration>
+				<name>transaction</name>
+			</configuration>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>transaction</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>transaction</role-hint>
+			<implementation>com.dianping.cat.consumer.transaction.TransactionDelegate</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.core.problem.ProblemHandler</role>
 			<role-hint>default-problem</role-hint>
 			<implementation>com.dianping.cat.consumer.core.problem.DefaultProblemHandler</implementation>
@@ -58,23 +126,6 @@
 						<role-hint>long-execution</role-hint>
 					</role-hints>
 					<field-name>m_handlers</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.consumer.core.TransactionAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -173,13 +224,6 @@
 			<implementation>com.dianping.cat.consumer.CatConsumerModule</implementation>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
-			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
-			</configuration>
-		</component>
-		<component>
 			<role>org.unidal.dal.jdbc.datasource.DataSource</role>
 			<role-hint>cat</role-hint>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSource</implementation>
@@ -244,6 +288,56 @@
 			</configuration>
 		</component>
 		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>dailygraph</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>dailygraph</logical-table-name>
+				<physical-table-name>dailygraph</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>dailyreport</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>dailyreport</logical-table-name>
+				<physical-table-name>dailyreport</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>graph</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>graph</logical-table-name>
+				<physical-table-name>graph</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>monthreport</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>monthreport</logical-table-name>
+				<physical-table-name>monthreport</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>weeklyreport</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>weeklyreport</logical-table-name>
+				<physical-table-name>weeklyreport</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
 			<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
 			<implementation>com.dainping.cat.consumer.core.dal.HostinfoDao</implementation>
 			<requirements>
@@ -273,6 +367,51 @@
 		<component>
 			<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
 			<implementation>com.dainping.cat.consumer.core.dal.TaskDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.core.dal.DailygraphDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.DailygraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.core.dal.DailyReportDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.DailyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.core.dal.GraphDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.GraphDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.core.dal.MonthlyReportDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.MonthlyReportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.core.dal.WeeklyReportDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.WeeklyReportDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

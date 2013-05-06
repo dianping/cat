@@ -51,16 +51,12 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_action;
 	}
 
-	public String getReportLevel() {
-		return m_reportLevel;
-	}
-
-	public void setReportLevel(String reportLevel) {
-		m_reportLevel = reportLevel;
-	}
-
 	public Date getEnd() {
 		return m_end;
+	}
+
+	public String getEndStr() {
+		return m_endStr;
 	}
 
 	public String getName() {
@@ -75,8 +71,16 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_queryType;
 	}
 
+	public String getReportLevel() {
+		return m_reportLevel;
+	}
+
 	public Date getStart() {
 		return m_start;
+	}
+
+	public String getStartStr() {
+		return m_startStr;
 	}
 
 	public String getType() {
@@ -108,6 +112,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_queryType = queryType;
 	}
 
+	public void setReportLevel(String reportLevel) {
+		m_reportLevel = reportLevel;
+	}
+
 	public void setStart(String start) {
 		try {
 			m_startStr = start;
@@ -119,14 +127,6 @@ public class Payload extends AbstractReportPayload<Action> {
 
 	public void setType(String type) {
 		m_type = type;
-	}
-
-	public String getStartStr() {
-		return m_startStr;
-	}
-
-	public String getEndStr() {
-		return m_endStr;
 	}
 
 	@Override

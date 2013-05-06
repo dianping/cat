@@ -15,29 +15,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public String m_graph;
 
-	public List<String> getIps() {
-		if (m_report == null) {
-			return new ArrayList<String>();
-		}
-		return StringSortHelper.sortDomain(m_report.getMachines().keySet());
-	}
-
-	public StateShow getState() {
-		return m_state;
-	}
-
-	public void setState(StateShow state) {
-		m_state = state;
-	}
-
-	public StateReport getReport() {
-		return m_report;
-	}
-
-	public void setReport(StateReport reports) {
-		m_report = reports;
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -52,16 +29,39 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return "Cat";
 	}
 
+	@Override
+	public Collection<String> getDomains() {
+		return new ArrayList<String>();
+	}
+
 	public String getGraph() {
 		return m_graph;
+	}
+
+	public List<String> getIps() {
+		if (m_report == null) {
+			return new ArrayList<String>();
+		}
+		return StringSortHelper.sortDomain(m_report.getMachines().keySet());
+	}
+
+	public StateReport getReport() {
+		return m_report;
+	}
+
+	public StateShow getState() {
+		return m_state;
 	}
 
 	public void setGraph(String graph) {
 		m_graph = graph;
 	}
 
-	@Override
-	public Collection<String> getDomains() {
-		return new ArrayList<String>();
+	public void setReport(StateReport reports) {
+		m_report = reports;
+	}
+
+	public void setState(StateShow state) {
+		m_state = state;
 	}
 }

@@ -41,6 +41,7 @@ public class ScheduledManager {
 				DpAdminLogin login = m_loginDao.findByPK(subscription.getUserId(), DpAdminLoginEntity.READSET_FULL);
 				emails.add(login.getEmail());
 			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 		return emails;

@@ -91,7 +91,7 @@ public class TransactionRender extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
-		if (m_currentIp.equals(CatString.ALL_IP)) {
+		if (m_currentIp.equals(CatString.ALL)) {
 			Type temp = new Type();
 
 			type.setTps(type.getTotalCount() * 1000d / TimeUtil.ONE_DAY / m_totalDays);

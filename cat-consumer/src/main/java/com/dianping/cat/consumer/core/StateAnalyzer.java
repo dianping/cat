@@ -180,11 +180,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
-	@Override
 	public StateReport getReport(String domain) {
 		StateReport report = new StateReport(domain);
 		report = new StateReport("Cat");
@@ -272,14 +267,12 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 					}
 				}
 
-				if (atEnd) {
-					Date period = new Date(m_startTime);
-					String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-					// Create task for health report
-					for (String domain : m_reports.keySet()) {
-						StateReport report = m_reports.get(domain);
-						new HealthVisitor(ip, period).visitStateReport(report);
-					}
+				Date period = new Date(m_startTime);
+				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				// Create task for health report
+				for (String domain : m_reports.keySet()) {
+					StateReport report = m_reports.get(domain);
+					new HealthVisitor(ip, period).visitStateReport(report);
 				}
 			} catch (Exception e) {
 				t.setStatus(e);

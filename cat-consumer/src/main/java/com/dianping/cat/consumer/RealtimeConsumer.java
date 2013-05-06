@@ -5,10 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -24,7 +22,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.consumer.core.ProblemAnalyzer;
 import com.dianping.cat.consumer.core.TopAnalyzer;
-import com.dianping.cat.consumer.core.TransactionAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -59,7 +57,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private long m_networkError;
 
-	private static int QUEUE_SIZE = 500000;
+	private static int QUEUE_SIZE = 300000;
 
 	@Override
 	public void consume(MessageTree tree) {
@@ -204,7 +202,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		public void finish() {
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date startDate = new Date(m_startTime);
-			Set<String> domains = new HashSet<String>();
 			Date endDate = new Date(m_endTime - 1);
 
 			m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
@@ -218,7 +215,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			try {
 				for (PeriodTask task : m_tasks) {
 					task.finish();
-					domains.addAll(task.getAnalyzer().getDomains());
 				}
 
 				t.setStatus(Message.SUCCESS);

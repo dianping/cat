@@ -26,17 +26,31 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 	private WeeklyreportDao m_weeklyreportDao;
 
 	@Override
-	public TransactionReport queryTransactionReport(String domain, Date start) {
+	public CrossReport queryCrossReport(String domain, Date start) {
 		try {
-			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "transaction",
+			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "cross",
 			      WeeklyreportEntity.READSET_FULL);
 			String content = entity.getContent();
 
-			return com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
+			return com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser.parse(content);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new TransactionReport(domain);
+		return new CrossReport(domain);
+	}
+
+	@Override
+	public DatabaseReport queryDatabaseReport(String database, Date start) {
+		try {
+			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, database, "database",
+			      WeeklyreportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.consumer.database.model.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new DatabaseReport(database);
 	}
 
 	@Override
@@ -54,17 +68,17 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 	}
 
 	@Override
-	public ProblemReport queryProblemReport(String domain, Date start) {
+	public HealthReport queryHealthReport(String domain, Date start) {
 		try {
-			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "problem",
+			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "health",
 			      WeeklyreportEntity.READSET_FULL);
 			String content = entity.getContent();
 
-			return com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
+			return com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(content);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new ProblemReport(domain);
+		return new HealthReport(domain);
 	}
 
 	@Override
@@ -96,17 +110,17 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 	}
 
 	@Override
-	public CrossReport queryCrossReport(String domain, Date start) {
+	public ProblemReport queryProblemReport(String domain, Date start) {
 		try {
-			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "cross",
+			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "problem",
 			      WeeklyreportEntity.READSET_FULL);
 			String content = entity.getContent();
 
-			return com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser.parse(content);
+			return com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(content);
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new CrossReport(domain);
+		return new ProblemReport(domain);
 	}
 
 	@Override
@@ -124,34 +138,6 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 	}
 
 	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start) {
-		try {
-			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, database, "database",
-			      WeeklyreportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			return com.dianping.cat.consumer.database.model.transform.DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new DatabaseReport(database);
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start) {
-		try {
-			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "health",
-			      WeeklyreportEntity.READSET_FULL);
-			String content = entity.getContent();
-
-			return com.dianping.cat.consumer.health.model.transform.DefaultSaxParser.parse(content);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return new HealthReport(domain);
-	}
-
-	@Override
    public StateReport queryStateReport(String domain, Date start) {
 		try {
 			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "state",
@@ -164,5 +150,19 @@ public class WeeklyReportServiceImpl implements WeeklyReportService {
 		}
 		return new StateReport(domain);
    }
+
+	@Override
+	public TransactionReport queryTransactionReport(String domain, Date start) {
+		try {
+			Weeklyreport entity = m_weeklyreportDao.findReportByDomainNamePeriod(start, domain, "transaction",
+			      WeeklyreportEntity.READSET_FULL);
+			String content = entity.getContent();
+
+			return com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(content);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return new TransactionReport(domain);
+	}
 
 }

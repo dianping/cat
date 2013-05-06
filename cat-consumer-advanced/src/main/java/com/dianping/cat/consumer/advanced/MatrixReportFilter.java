@@ -2,6 +2,8 @@ package com.dianping.cat.consumer.advanced;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -10,58 +12,43 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder;
 
 public class MatrixReportFilter extends DefaultXmlBuilder {
-	private String m_domain;
 
-	private int m_maxItems;
+	private int m_maxItems = 200;
 
 	private static final String OTHERS = "OTHERS";
 
-	public MatrixReportFilter(int maxItems) {
-		m_maxItems = maxItems;
-	}
-
 	@Override
 	public void visitMatrixReport(MatrixReport matrixReport) {
-		m_domain = matrixReport.getDomain();
 		Map<String, Matrix> matrixs = matrixReport.getMatrixs();
+		Collection<Matrix> matrix = matrixs.values();
+		int size = matrix.size();
 
-		long total = 0;
-		for (Matrix matrix : matrixs.values()) {
-			total = total + matrix.getCount();
-		}
+		if (size > m_maxItems) {
+			List<Matrix> matrixList = new ArrayList<Matrix>(matrix);
+			Collections.sort(matrixList, new MeatricCompartor());
 
-		int value = (int) (total / 10000);
-		String urlSample = null;
-		value = Math.min(value, 5);
-
-		if (!m_domain.equals("Cat") && (value > 0)) {
-			int totalCount = 0;
-			Collection<Matrix> matrix = matrixs.values();
-			List<String> removeUrls = new ArrayList<String>();
-
-			if (matrix.size() > m_maxItems) {
-				for (Matrix temp : matrix) {
-					if (temp.getType().equals("URL") && temp.getCount() < 5) {
-						removeUrls.add(temp.getName());
-						totalCount += temp.getCount();
-						if (urlSample == null) {
-							urlSample = temp.getUrl();
-						}
-					}
-				}
-				for (String url : removeUrls) {
-					matrixs.remove(url);
-				}
-
-				if (totalCount > 0) {
-					Matrix other = matrixReport.findOrCreateMatrix(OTHERS);
-
-					other.setUrl(urlSample);
-					other.setType(OTHERS);
-					other.setCount(totalCount + other.getCount());
-				}
+			matrixs.clear();
+			for (int i = 0; i < m_maxItems; i++) {
+				Matrix temp = matrixList.get(i);
+				matrixs.put(temp.getName(), temp);
 			}
+
+			Matrix value = new Matrix(OTHERS);
+			for (int i = m_maxItems; i < size; i++) {
+				value.setCount(matrixList.get(i).getCount() + value.getCount());
+			}
+			matrixs.put(OTHERS, value);
 		}
+
 		super.visitMatrixReport(matrixReport);
 	}
+
+	public static class MeatricCompartor implements Comparator<Matrix> {
+
+		@Override
+		public int compare(Matrix o1, Matrix o2) {
+			return o2.getCount() - o1.getCount();
+		}
+	}
+
 }

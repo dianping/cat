@@ -38,16 +38,16 @@ public class CatFilter implements Filter {
 		Transaction t = null;
 
 		if (isRoot) {
-			t = cat.newTransaction(CatConstants.TYPE_URL, getOriginalUrl(request));
+			t = Cat.newTransaction(getTypeName(), getOriginalUrl(request));
+			logRequestClientInfo(cat, req);
 		} else {
-			t = cat.newTransaction(CatConstants.TYPE_URL + ".Forward", getOriginalUrl(request));
+			t = Cat.newTransaction(getTypeName() + ".Forward", getOriginalUrl(request));
 		}
 
-		logRequestClientInfo(cat, req);
 		logRequestPayload(cat, req);
 
 		try {
-			chain.doFilter(request, response);
+			doNextFilter(request, response, chain);
 
 			Object catStatus = request.getAttribute("cat-state");
 			if (catStatus != null) {
@@ -79,6 +79,11 @@ public class CatFilter implements Filter {
 		}
 	}
 
+	protected void doNextFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+	      ServletException {
+		chain.doFilter(request, response);
+	}
+
 	protected String getOriginalUrl(ServletRequest request) {
 		return ((HttpServletRequest) request).getRequestURI();
 	}
@@ -95,6 +100,10 @@ public class CatFilter implements Filter {
 		}
 
 		return null;
+	}
+
+	protected String getTypeName() {
+		return CatConstants.TYPE_URL;
 	}
 
 	@Override
@@ -120,7 +129,7 @@ public class CatFilter implements Filter {
 		sb.append("&Referer=").append(req.getHeader("referer"));
 		sb.append("&Agent=").append(req.getHeader("user-agent"));
 
-		cat.logEvent("URL", "ClientInfo", Message.SUCCESS, sb.toString());
+		cat.logEvent(getTypeName(), "ClientInfo", Message.SUCCESS, sb.toString());
 	}
 
 	protected void logRequestPayload(MessageProducer cat, HttpServletRequest req) {
@@ -135,6 +144,6 @@ public class CatFilter implements Filter {
 			sb.append('?').append(qs);
 		}
 
-		cat.logEvent(CatConstants.TYPE_URL, CatConstants.NAME_PAYLOAD, Event.SUCCESS, sb.toString());
+		cat.logEvent(getTypeName(), CatConstants.NAME_PAYLOAD, Event.SUCCESS, sb.toString());
 	}
 }

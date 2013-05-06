@@ -13,6 +13,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
 
 public class FileSystemManager implements Initializable {
@@ -111,12 +112,13 @@ public class FileSystemManager implements Initializable {
 	public void initialize() throws InitializationException {
 		m_defaultBaseDir = m_configManager.getHdfsLocalBaseDir("hdfs");
 
-		if (!m_configManager.isLocalMode()) {
+		if (m_configManager.isHdfsOn() && !m_configManager.isLocalMode()) {
 			try {
 				m_config = getHdfsConfiguration();
 				SecurityUtil.login(m_config, "dfs.cat.keytab.file", "dfs.cat.kerberos.principal");
 			} catch (IOException e) {
-				throw new InitializationException("init FileSystemManager fail", e);
+				Cat.logError(e);
+				//throw new InitializationException("init FileSystemManager fail", e);
 			}
 		} else {
 			m_config = new Configuration();

@@ -64,7 +64,7 @@ public class TcpSocketReceiver implements LogEnabled {
 
 	private BlockingQueue<ChannelBuffer> m_queue;
 
-	private int m_queueSize = 500000;
+	private int m_queueSize = 300000;
 
 	private volatile int m_errorCount;
 
@@ -268,8 +268,8 @@ public class TcpSocketReceiver implements LogEnabled {
 					m_serverStateManager.addMessageTotalLoss(CatConstants.ERROR_COUNT);
 
 					if (m_errorCount % (CatConstants.ERROR_COUNT * 100) == 0) {
-						m_logger.warn("The server can't process the tree! overflow : " + m_errorCount + ",current queue size:"
-						      + m_queue.size());
+						m_logger.warn("The server can't process the tree! overflow : " + m_errorCount
+						      + ",current queue size:" + m_queue.size());
 					}
 				}
 			} else {

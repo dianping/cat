@@ -6,7 +6,6 @@ import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.advanced.CrossInfoTest;
 import com.dianping.cat.consumer.advanced.DatabaseAnalyzerTest;
-import com.dianping.cat.consumer.advanced.IpReportTest;
 import com.dianping.cat.consumer.advanced.MatrixModelTest;
 import com.dianping.cat.consumer.advanced.MetricAnalyzerTest;
 import com.dianping.cat.consumer.advanced.SqlParsersTest;
@@ -17,8 +16,6 @@ import com.dianping.cat.consumer.advanced.SqlParsersTest;
 CrossInfoTest.class,
 
 DatabaseAnalyzerTest.class,
-
-IpReportTest.class,
 
 MatrixModelTest.class,
 

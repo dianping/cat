@@ -55,7 +55,7 @@ public class CatMonthAnalyzer extends ComponentTestCase {
 					TransactionReport report = com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser
 					      .parse(dailyreport.getContent());
 
-					Machine machine = report.findOrCreateMachine(CatString.ALL_IP);
+					Machine machine = report.findOrCreateMachine(CatString.ALL);
 					
 					TransactionType type =machine.findOrCreateType("URL");
 					

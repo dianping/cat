@@ -37,28 +37,6 @@ public class Handler implements PageHandler<Context> {
 
 	private static final String DAY = "day";
 
-	private List<TransactionQueryItem> buildTransactionItems(Date start, Date end, String domain, String type,
-	      String name, String reportLevel) {
-		List<TransactionQueryItem> items = new ArrayList<TransactionQueryItem>();
-
-		if (HOUR.equalsIgnoreCase(reportLevel)) {
-			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_HOUR) {
-				TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(i), new Date(i
-				      + TimeUtil.ONE_HOUR));
-
-				items.add(convert(report, type, name));
-			}
-		} else if (DAY.equalsIgnoreCase(reportLevel)) {
-			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_DAY) {
-				TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(i), new Date(i
-				      + TimeUtil.ONE_DAY));
-
-				items.add(convert(report, type, name));
-			}
-		}
-		return items;
-	}
-
 	private List<EventQueryItem> buildEventItems(Date start, Date end, String domain, String type, String name,
 	      String reportLevel) {
 		List<EventQueryItem> items = new ArrayList<EventQueryItem>();
@@ -101,6 +79,35 @@ public class Handler implements PageHandler<Context> {
 		return items;
 	}
 
+	private List<TransactionQueryItem> buildTransactionItems(Date start, Date end, String domain, String type,
+	      String name, String reportLevel) {
+		List<TransactionQueryItem> items = new ArrayList<TransactionQueryItem>();
+
+		if (HOUR.equalsIgnoreCase(reportLevel)) {
+			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_HOUR) {
+				TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(i), new Date(i
+				      + TimeUtil.ONE_HOUR));
+
+				items.add(convert(report, type, name));
+			}
+		} else if (DAY.equalsIgnoreCase(reportLevel)) {
+			for (long i = start.getTime(); i <= end.getTime(); i = i + TimeUtil.ONE_DAY) {
+				TransactionReport report = m_reportService.queryTransactionReport(domain, new Date(i), new Date(i
+				      + TimeUtil.ONE_DAY));
+
+				items.add(convert(report, type, name));
+			}
+		}
+		return items;
+	}
+
+	private EventQueryItem convert(EventReport report, String type, String name) {
+		EventReportVisitor vistitor = new EventReportVisitor(type, name);
+		vistitor.visitEventReport(report);
+
+		return vistitor.getItem();
+	}
+
 	private ProblemQueryItem convert(ProblemReport report, String type, String name) {
 		ProblemReportVisitor vistitor = new ProblemReportVisitor(type, name);
 		vistitor.visitProblemReport(report);
@@ -111,13 +118,6 @@ public class Handler implements PageHandler<Context> {
 	private TransactionQueryItem convert(TransactionReport report, String type, String name) {
 		TransactionReportVisitor vistitor = new TransactionReportVisitor(type, name);
 		vistitor.visitTransactionReport(report);
-
-		return vistitor.getItem();
-	}
-
-	private EventQueryItem convert(EventReport report, String type, String name) {
-		EventReportVisitor vistitor = new EventReportVisitor(type, name);
-		vistitor.visitEventReport(report);
 
 		return vistitor.getItem();
 	}
@@ -136,6 +136,7 @@ public class Handler implements PageHandler<Context> {
 
 		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.QUERY);
+		model.setIpAddress(payload.getIpAddress());
 
 		Date start = payload.getStart();
 		Date end = payload.getEnd();

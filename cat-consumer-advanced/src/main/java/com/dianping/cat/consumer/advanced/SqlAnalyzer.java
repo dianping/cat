@@ -121,11 +121,6 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	}
 
 	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
-	@Override
 	public SqlReport getReport(String domain) {
 		SqlReport report = m_reports.get(domain);
 
@@ -228,7 +223,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 				try {
 					Set<String> domainNames = report.getDomainNames();
 					domainNames.clear();
-					domainNames.addAll(getDomains());
+					domainNames.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();

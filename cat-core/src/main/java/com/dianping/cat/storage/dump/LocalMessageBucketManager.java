@@ -406,7 +406,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		@Override
 		public void run() {
 			try {
-				while (true) {
+				while (true) { 
 					MessageItem item = m_messageQueue.poll(5, TimeUnit.MILLISECONDS);
 
 					if (item != null) {
@@ -459,7 +459,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				if (t != null) {
 					t.setStatus(Message.SUCCESS);
 				}
-			} catch (Exception e) {
+			} catch (Throwable e) {
 				Cat.logError(e);
 				if (t != null) {
 					t.setStatus(e);

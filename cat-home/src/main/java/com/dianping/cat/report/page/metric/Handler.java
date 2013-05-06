@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.metric;
 
 import java.io.IOException;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 
@@ -12,9 +13,10 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.model.ModelRequest;
+import com.dianping.cat.report.model.ModelResponse;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.metric.MetricConfig.MetricFlag;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 
 public class Handler implements PageHandler<Context> {
@@ -24,7 +26,28 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "metric")
 	private ModelService<MetricReport> m_service;
 
+	@Inject
+	private NormalizePayload m_normalizePayload;
+
 	private static final String TUAN = "TuanGou";
+
+	private MetricConfig buildTuanGouMetricConfig(String channel) {
+		MetricConfig config = new MetricConfig();
+
+		MetricFlag indexUrl = new MetricFlag("/index", channel, 1, true, false, false, MetricTitle.INDEX);
+		MetricFlag detailUrl = new MetricFlag("/detail", channel, 2, true, false, false, MetricTitle.DETAIL);
+		MetricFlag payUrl = new MetricFlag("/order/submitOrder", channel, 3, true, false, false, MetricTitle.PAY);
+		MetricFlag orderKey = new MetricFlag("order", channel, 4, false, true, false, MetricTitle.ORDER);
+		MetricFlag totalKey = new MetricFlag("payment.success", channel, 5, false, true, false, MetricTitle.SUCCESS);
+		// MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
+
+		config.put(indexUrl);
+		config.put(detailUrl);
+		config.put(payUrl);
+		config.put(orderKey);
+		config.put(totalKey);
+		return config;
+	}
 
 	private MetricReport getReport(Payload payload) {
 		String group = payload.getGroup();
@@ -63,43 +86,26 @@ public class Handler implements PageHandler<Context> {
 		String channel = payload.getChannel();
 
 		if (report != null) {
-			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(channel),channel, report.getStartTime());
+			Date startTime = report.getStartTime();
+			if (startTime == null) {
+				startTime = payload.getHistoryStartDate();
+			}
+			MetricDisplay display = new MetricDisplay(buildTuanGouMetricConfig(channel), channel, startTime);
 
 			display.visitMetricReport(report);
 			model.setDisplay(display);
+			model.setChannels(display.getAllChannel());
 			model.setReport(report);
 		}
 		m_jspViewer.view(ctx, model);
 	}
 
-	private MetricConfig buildTuanGouMetricConfig(String channel) {
-		MetricConfig config = new MetricConfig();
-
-		MetricFlag indexUrl = new MetricFlag("/index", channel, 1, true, false, false, MetricTitle.INDEX);
-		MetricFlag detailUrl = new MetricFlag("/detail", channel, 2, true, false, false, MetricTitle.DETAIL);
-		MetricFlag payUrl = new MetricFlag("/order/submitOrder", channel, 3, true, false, false, MetricTitle.PAY);
-		MetricFlag orderKey = new MetricFlag("order", channel, 4, false, true, false, MetricTitle.ORDER);
-		MetricFlag totalKey = new MetricFlag("payment.success", channel, 5, false, true, false, MetricTitle.SUCCESS);
-		// MetricFlag sumKey = new MetricFlag("payment.pending", 5, false, true, false);
-
-		config.put(indexUrl);
-		config.put(detailUrl);
-		config.put(payUrl);
-		config.put(orderKey);
-		config.put(totalKey);
-		return config;
-	}
-
 	private void normalize(Model model, Payload payload) {
 		payload.setGroup(TUAN);
-		model.setIpAddress(payload.getIpAddress());
-		model.setAction(Action.VIEW);
-		model.setPage(ReportPage.METRIC);
-		model.setLongDate(payload.getDate());
-		model.setDisplayDomain(payload.getDomain());
-		model.setDomain(payload.getDomain());
 		model.setGroup(payload.getGroup());
 		model.setChannel(payload.getChannel());
+		model.setPage(ReportPage.METRIC);
+		m_normalizePayload.normalize(model, payload);
 	}
 
 	public class MetricTitle {

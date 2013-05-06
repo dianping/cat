@@ -11,13 +11,13 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
-import com.dianping.cat.report.page.model.spi.ModelRequest;
-import com.dianping.cat.report.page.model.spi.ModelResponse;
+import com.dianping.cat.report.model.ModelPeriod;
+import com.dianping.cat.report.model.ModelRequest;
+import com.dianping.cat.report.model.ModelResponse;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 
@@ -32,7 +32,7 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<TopReport> m_service;
 
 	@Inject
-	private ServerConfigManager m_manager;
+	private NormalizePayload m_normalizePayload;
 
 	private TopReport getReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -88,12 +88,9 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		payload.setDomain(m_manager.getConsoleDefaultDomain());
-		model.setIpAddress(payload.getIpAddress());
-		model.setAction(Action.VIEW);
 		model.setPage(ReportPage.TOP);
-		model.setLongDate(payload.getDate());
-		model.setDisplayDomain(payload.getDomain());
+		model.setAction(Action.VIEW);
+		m_normalizePayload.normalize(model, payload);
 	}
 
 }

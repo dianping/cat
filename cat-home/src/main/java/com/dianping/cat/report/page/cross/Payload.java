@@ -54,6 +54,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		return duration;
 	}
 
+	public String getMethod() {
+		return m_method;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -83,6 +87,10 @@ public class Payload extends AbstractReportPayload<Action> {
 		m_callSort = callSort;
 	}
 
+	public void setMethod(String method) {
+		m_method = method;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.CROSS);
@@ -95,21 +103,13 @@ public class Payload extends AbstractReportPayload<Action> {
 	public void setQueryName(String queryName) {
 		m_queryName = queryName;
 	}
-
+	
 	public void setRemoteIp(String remoteIp) {
 		m_remoteIp = remoteIp;
 	}
 
 	public void setServiceSort(String serviceSort) {
 		m_serviceSort = serviceSort;
-	}
-	
-	public String getMethod() {
-		return m_method;
-	}
-
-	public void setMethod(String method) {
-		m_method = method;
 	}
 
 	@Override

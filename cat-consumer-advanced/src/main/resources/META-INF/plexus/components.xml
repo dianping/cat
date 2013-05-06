@@ -73,20 +73,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
-			<role-hint>ip</role-hint>
-			<implementation>com.dianping.cat.consumer.advanced.TopIpAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.storage.BucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
 			<role-hint>metric</role-hint>
 			<implementation>com.dianping.cat.consumer.advanced.MetricAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -103,13 +89,6 @@
 			<role>org.unidal.initialization.Module</role>
 			<role-hint>cat-consumer-advanced</role-hint>
 			<implementation>com.dianping.cat.consumer.CatConsumerAdvancedModule</implementation>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
-			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
-			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>

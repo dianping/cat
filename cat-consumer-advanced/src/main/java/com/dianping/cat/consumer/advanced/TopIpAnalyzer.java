@@ -56,11 +56,6 @@ public class TopIpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements 
 	}
 
 	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
-	@Override
 	public IpReport getReport(String domain) {
 		IpReport report = m_reports.get(domain);
 
@@ -209,7 +204,7 @@ public class TopIpAnalyzer extends AbstractMessageAnalyzer<IpReport> implements 
 			for (IpReport report : m_reports.values()) {
 				Set<String> domainNames = report.getDomainNames();
 				domainNames.clear();
-				domainNames.addAll(getDomains());
+				domainNames.addAll(m_reports.keySet());
 
 				String xml = builder.buildXml(report);
 				String domain = report.getDomain();

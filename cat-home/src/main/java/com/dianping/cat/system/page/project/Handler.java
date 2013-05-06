@@ -64,6 +64,28 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	private List<Project> queryAllProjects() {
+		List<Project> projects = new ArrayList<Project>();
+
+		try {
+			projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		Collections.sort(projects, new ProjectCompartor());
+		return projects;
+	}
+
+	private Project queryProjectById(int projectId) {
+		Project project = null;
+		try {
+			project = m_projectDao.findByPK(projectId, ProjectEntity.READSET_FULL);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return project;
+	}
+
 	@SuppressWarnings("static-access")
    private void updateProject(Payload payload) {
 		int projectId = payload.getProjectId();
@@ -88,28 +110,6 @@ public class Handler implements PageHandler<Context> {
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
-	}
-
-	private List<Project> queryAllProjects() {
-		List<Project> projects = new ArrayList<Project>();
-
-		try {
-			projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		Collections.sort(projects, new ProjectCompartor());
-		return projects;
-	}
-
-	private Project queryProjectById(int projectId) {
-		Project project = null;
-		try {
-			project = m_projectDao.findByPK(projectId, ProjectEntity.READSET_FULL);
-		} catch (Exception e) {
-			Cat.logError(e);
-		}
-		return project;
 	}
 
 	class ProjectCompartor implements Comparator<Project> {

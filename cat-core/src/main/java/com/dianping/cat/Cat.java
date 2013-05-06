@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
+import org.unidal.helper.Properties;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
@@ -21,18 +22,14 @@ import com.dianping.cat.message.spi.MessageManager;
 
 /**
  * This is the main entry point to the system.
- * 
- * @author Frankie Wu
  */
 public class Cat {
-	public static final String CAT_GLOBAL_XML = "/data/appdatas/cat/client.xml";
-
 	private static Cat s_instance = new Cat();
 
 	private static void checkAndInitialize() {
 		synchronized (s_instance) {
 			if (s_instance.m_container == null) {
-				initialize(new File(CAT_GLOBAL_XML));
+				initialize(new File(getCatHome(), "client.xml"));
 				log("WARN", "Cat is lazy initialized!");
 			}
 		}
@@ -45,6 +42,12 @@ public class Cat {
 	public static void destroy() {
 		s_instance.m_container.dispose();
 		s_instance = new Cat();
+	}
+
+	public static String getCatHome() {
+		String catHome = Properties.forString().fromEnv().fromSystem().getProperty("CAT_HOME", "/data/appdatas/cat");
+
+		return catHome;
 	}
 
 	public static Cat getInstance() {

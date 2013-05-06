@@ -23,9 +23,6 @@ import com.dianping.cat.report.page.model.event.LocalEventService;
 import com.dianping.cat.report.page.model.heartbeat.CompositeHeartbeatService;
 import com.dianping.cat.report.page.model.heartbeat.HistoricalHeartbeatService;
 import com.dianping.cat.report.page.model.heartbeat.LocalHeartbeatService;
-import com.dianping.cat.report.page.model.ip.CompositeIpService;
-import com.dianping.cat.report.page.model.ip.HistoricalIpService;
-import com.dianping.cat.report.page.model.ip.LocalIpService;
 import com.dianping.cat.report.page.model.logview.CompositeLogViewService;
 import com.dianping.cat.report.page.model.logview.HistoricalMessageService;
 import com.dianping.cat.report.page.model.logview.LocalMessageService;
@@ -141,15 +138,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "sql", CompositeSqlService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "sql-historical" }, "m_services"));
-
-		all.add(C(ModelService.class, "ip-local", LocalIpService.class) //
-		      .req(BucketManager.class) //
-		      .req(MessageConsumer.class, RealtimeConsumer.ID));
-		all.add(C(ModelService.class, "ip-historical", HistoricalIpService.class) //
-		      .req(BucketManager.class));
-		all.add(C(ModelService.class, "ip", CompositeIpService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "ip-historical" }, "m_services"));
 
 		all.add(C(ModelService.class, "message-local", LocalMessageService.class) //
 		      .req(MessageConsumer.class, RealtimeConsumer.ID) //

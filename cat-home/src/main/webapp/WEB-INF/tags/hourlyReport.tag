@@ -17,11 +17,11 @@
 	<table class="header">
 		<tr>
 			<td class="title">&nbsp;&nbsp;<jsp:invoke fragment="subtitle"/></td>
-			<td class="switch"><a href="${model.baseUri}?op=history&domain=${model.domain}">Switch To History Mode</a>
+			<td class="switch"><a href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}">Switch To History Mode</a>
 			</td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>

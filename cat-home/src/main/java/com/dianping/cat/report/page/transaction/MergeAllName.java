@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.transaction;
 
+import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -8,7 +9,6 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.report.page.model.transaction.TransactionReportMerger;
 
 public class MergeAllName extends BaseVisitor {
 
@@ -39,7 +39,7 @@ public class MergeAllName extends BaseVisitor {
 		m_merger.mergeDuration(temp, duration);
 		
 		Duration all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(CatString.ALL_NAME).findOrCreateDuration(m_currentDuration);
+		      .findOrCreateName(CatString.ALL).findOrCreateDuration(m_currentDuration);
 
 		m_merger.mergeDuration(all, duration);
 
@@ -62,7 +62,7 @@ public class MergeAllName extends BaseVisitor {
 		m_merger.mergeName(temp, name);
 		
 		TransactionName all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(CatString.ALL_NAME);
+		      .findOrCreateName(CatString.ALL);
 		m_merger.mergeName(all, name);
 
 		m_merger.mergeName(temp, name);
@@ -78,7 +78,7 @@ public class MergeAllName extends BaseVisitor {
 		m_merger.mergeRange(temp, range);
 		
 		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(CatString.ALL_NAME).findOrCreateRange(m_currentRange);
+		      .findOrCreateName(CatString.ALL).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(all, range);
 		super.visitRange(range);
