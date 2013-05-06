@@ -9,7 +9,6 @@ import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.database.DatabaseReportMergerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
-import com.dianping.cat.report.page.ip.DisplayModelTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.model.EventReportFilterTest;
@@ -56,9 +55,6 @@ TransactionModelServiceTest.class,
 
 /* .report.graph */
 ValueTranslaterTest.class,
-
-/* .report.page.ip */
-DisplayModelTest.class,
 
 /* .report.page.model */
 EventReportFilterTest.class, TransactionReportFilterTest.class,

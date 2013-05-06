@@ -6,13 +6,25 @@ import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.system.SystemPage;
 
 public class NavigationBar {
+	public Page[] getSystemPages() {
+		return new Page[] {
+
+		SystemPage.ALARM,
+
+		SystemPage.PROJECT,
+		
+		ReportPage.QUERY,
+
+		SystemPage.LOGIN
+
+		};
+	}
+
 	public Page[] getVisiblePages() {
 		return new Page[] {
 
 		ReportPage.HOME,
 
-		ReportPage.TOP,
-		
 		ReportPage.METRIC,
 
 		ReportPage.TRANSACTION,
@@ -23,39 +35,23 @@ public class NavigationBar {
 
 		ReportPage.HEARTBEAT,
 
-		ReportPage.MATRIX,
-
 		ReportPage.CROSS,
 
 		ReportPage.CACHE,
 
-		ReportPage.IP,
-
 		ReportPage.SQL,
-
-		ReportPage.TASK,
 
 		ReportPage.DATABASE,
 
-		ReportPage.QUERY,
-
+		ReportPage.MATRIX,
+		
 		ReportPage.HEALTH,
 
+		ReportPage.TOP,
+		
 		ReportPage.STATE,
 
 		ReportPage.LOGVIEW
-
-		};
-	}
-
-	public Page[] getSystemPages() {
-		return new Page[] {
-
-		SystemPage.ALARM,
-
-		SystemPage.PROJECT,
-
-		SystemPage.LOGIN
 
 		};
 	}

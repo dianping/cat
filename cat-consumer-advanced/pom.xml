@@ -59,12 +59,12 @@
                   </goals>
                   <configuration>
                      <manifest>
-                     		${basedir}/src/main/resources/META-INF/dal/model/database-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/sql-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/health-report-manifest.xml,
+                     		${basedir}/src/main/resources/META-INF/dal/model/database-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
-							${basedir}/src/main/resources/META-INF/dal/model/ip-report-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
+							${basedir}/src/main/resources/META-INF/dal/model/health-report-manifest.xml,
 					 </manifest>
                   </configuration>
                </execution>

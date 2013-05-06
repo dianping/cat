@@ -24,6 +24,8 @@ import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.transaction.TransactionReportUrlFilter;
+import com.dianping.cat.consumer.transaction.TransactionStatisticsComputer;
 import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -72,6 +74,22 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return all;
 	}
 
+	private void compute95Line(TransactionReport report) {
+		Collection<Machine> machines = report.getMachines().values();
+		for (Machine machine : machines) {
+			for (TransactionType type : machine.getTypes().values()) {
+				double typeValue = compute95LineDetail(type.getAllDurations());
+
+				type.setLine95Value(typeValue);
+				for (TransactionName name : type.getNames().values()) {
+					double nameValue = compute95LineDetail(name.getAllDurations());
+
+					name.setLine95Value(nameValue);
+				}
+			}
+		}
+	}
+
 	private double compute95LineDetail(Map<Integer, AllDuration> durations) {
 		int totalCount = 0;
 
@@ -90,26 +108,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return 0;
 	}
 
-	private void compute95Line(TransactionReport report) {
-		Collection<Machine> machines = report.getMachines().values();
-		for (Machine machine : machines) {
-			for (TransactionType type : machine.getTypes().values()) {
-				double typeValue = compute95LineDetail(type.getAllDurations());
-
-				type.setLine95Value(typeValue);
-				type.setLine95Count(1);
-				type.setLine95Sum(typeValue);
-				for (TransactionName name : type.getNames().values()) {
-					double nameValue = compute95LineDetail(name.getAllDurations());
-
-					name.setLine95Value(nameValue);
-					name.setLine95Count(1);
-					name.setLine95Sum(nameValue);
-				}
-			}
-		}
-	}
-
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		storeReports(atEnd);
@@ -120,7 +118,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		m_logger = logger;
 	}
 
-	@Override
 	public Set<String> getDomains() {
 		Set<String> keySet = m_reports.keySet();
 		return keySet;
@@ -201,6 +198,26 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 	}
 
+	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
+		int dk = 1;
+		int tk = min - min % 5;
+
+		while (dk < d) {
+			dk <<= 1;
+		}
+
+		Duration duration = name.findOrCreateDuration(dk);
+		Range range = name.findOrCreateRange(tk);
+
+		duration.incCount();
+		range.incCount();
+
+		if (!t.isSuccess()) {
+			range.incFails();
+		}
+		range.setSum(range.getSum() + d);
+	}
+
 	int processTransaction(TransactionReport report, MessageTree tree, Transaction t) {
 		if (shouldDiscard(t)) {
 			return 0;
@@ -241,7 +258,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		// update statistics
 		double duration = t.getDurationInMicros() / 1000d;
-		Integer allDuration = new Integer((int) duration);
+		// make all duration numbers less
+		Integer allDuration = new Integer(((int) duration) / 4 * 4);
 
 		name.setMax(Math.max(name.getMax(), duration));
 		name.setMin(Math.min(name.getMin(), duration));
@@ -271,26 +289,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		return count;
-	}
-
-	private void processNameGraph(Transaction t, TransactionName name, int min, double d) {
-		int dk = 1;
-		int tk = min - min % 5;
-
-		while (dk < d) {
-			dk <<= 1;
-		}
-
-		Duration duration = name.findOrCreateDuration(dk);
-		Range range = name.findOrCreateRange(tk);
-
-		duration.incCount();
-		range.incCount();
-
-		if (!t.isSuccess()) {
-			range.incFails();
-		}
-		range.setSum(range.getSum() + d);
 	}
 
 	private void processTypeRange(Transaction t, TransactionType type, int min, double d) {
@@ -414,11 +412,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			old.setSum(old.getSum() + other.getSum());
 			old.setSum2(old.getSum2() + other.getSum2());
 
-			old.setLine95Sum(old.getLine95Sum() + other.getLine95Sum());
-			old.setLine95Count(old.getLine95Count() + other.getLine95Count());
-			if (old.getLine95Count() > 0) {
-				old.setLine95Value(old.getLine95Sum() / old.getLine95Count());
-			}
+			old.setLine95Value((old.getLine95Value() * old.getTotalCount() + other.getLine95Value() * other.getTotalCount())
+			      / (old.getTotalCount() + other.getTotalCount())); // TODO refine it
+
 			if (old.getTotalCount() > 0) {
 				old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
 				old.setAvg(old.getSum() / old.getTotalCount());

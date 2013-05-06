@@ -11,7 +11,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
+import com.dianping.cat.report.model.ModelPeriod;
 
 public abstract class AbstractReportPayload<A extends Action> implements ActionPayload<ReportPage, A> {
 
@@ -23,12 +23,6 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	@FieldMeta("date")
 	private long m_date;
-
-	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
-
-	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
-
-	private ReportPage m_defaultPage;
 
 	@FieldMeta("domain")
 	private String m_domain;
@@ -46,6 +40,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	@FieldMeta("today")
 	private boolean m_today;
+
+	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+
+	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
+
+	private ReportPage m_defaultPage;
 
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;

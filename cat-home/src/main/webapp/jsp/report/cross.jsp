@@ -53,7 +53,7 @@
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failure">Failure</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failurePercent">Failure%</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=avg">Avg(ms)</a></th>
-			<th>TPS</th>
+			<th>QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.projectInfo.callProjectsInfo}" varStatus="status">
 			<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
@@ -77,7 +77,7 @@
 		         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
 		         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
 		         <th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
-		         <th>TPS</th>
+		         <th>QPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.projectInfo.serviceProjectsInfo}" varStatus="status">
 		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
@@ -100,7 +100,7 @@
 		         <th>Failure</th>
 		         <th>Failure%</th>
 		         <th>Avg(ms)</th>
-		         <th>TPS</th>
+		         <th>QPS</th>
 		      </tr>
 		      <c:forEach var="serviceInfo" items="${model.projectInfo.callServiceProjectsInfo}" varStatus="status">
 		         <tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">

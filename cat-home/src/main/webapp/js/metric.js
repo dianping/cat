@@ -16,6 +16,9 @@ function graph(container, data) {
 		selection : {
 			mode : 'x'
 		},
+		yaxis : {
+			min : 0
+		},
 		HtmlText : false,
 		title : data.title
 	};

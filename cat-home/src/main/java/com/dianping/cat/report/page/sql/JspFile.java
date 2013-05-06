@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.sql;
 
 public enum JspFile {
-	HOURLY_REPORT("/jsp/report/sql.jsp"), HISTORY_REPORT("/jsp/report/sqlHistory.jsp");
+	HOURLY_REPORT("/jsp/report/sql.jsp"), 
+	
+	HISTORY_REPORT("/jsp/report/sqlHistory.jsp");
 
 	private String m_path;
 

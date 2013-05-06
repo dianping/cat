@@ -14,9 +14,7 @@ import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dainping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.DailygraphDao;
-import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
-import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.MonthreportDao;
 import com.dianping.cat.home.dal.report.WeeklyreportDao;
@@ -41,14 +39,22 @@ public abstract class AbstractReportBuilder {
 	@Inject
 	protected DailygraphDao m_dailygraphDao;
 	
-	protected void clearDailyReport(Dailyreport report) throws DalException {
-		m_dailyReportDao.deleteByDomainNamePeriod(report);
-	}
+	protected Set<String> getDatabasesFromHoulyReport(Date start, Date end) {
+		List<Report> databaseNames = new ArrayList<Report>();
+		Set<String> result = new HashSet<String>();
 
-	protected void clearHourlyGraphs(List<Graph> graphs) throws DalException {
-		for (Graph graph : graphs) {
-			m_graphDao.deleteByDomainNamePeriodIp(graph);
+		try {
+			databaseNames = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, "database",
+			      ReportEntity.READSET_DOMAIN_NAME);
+		} catch (DalException e) {
+			Cat.logError(e);
 		}
+		if (databaseNames != null) {
+			for (Report domainName : databaseNames) {
+				result.add(domainName.getDomain());
+			}
+		}
+		return result;
 	}
 
 	protected Set<String> getDomainsFromHourlyReport(Date start, Date end) {
@@ -63,24 +69,6 @@ public abstract class AbstractReportBuilder {
 		}
 		if (domainNames != null) {
 			for (Report domainName : domainNames) {
-				result.add(domainName.getDomain());
-			}
-		}
-		return result;
-	}
-
-	protected Set<String> getDatabasesFromHoulyReport(Date start, Date end) {
-		List<Report> databaseNames = new ArrayList<Report>();
-		Set<String> result = new HashSet<String>();
-
-		try {
-			databaseNames = m_reportDao.findDatabaseAllByDomainNameDuration(start, end, null, "database",
-			      ReportEntity.READSET_DOMAIN_NAME);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
-		if (databaseNames != null) {
-			for (Report domainName : databaseNames) {
 				result.add(domainName.getDomain());
 			}
 		}
