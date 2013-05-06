@@ -152,7 +152,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		databaseReport.setStartTime(start);
 		databaseReport.setEndTime(end);
 
-		Set<String> domains = queryAllDomainNames(start, end, "database");
+		Set<String> domains = queryAllDatabaseNames(start, end, "database");
+		
+		System.out.println(domains);
 		databaseReport.getDomainNames().addAll(domains);
 		return databaseReport;
 	}
