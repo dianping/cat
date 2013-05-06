@@ -113,11 +113,11 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isEmpty(payload.getDatabase())) {
 			payload.setDatabase("cat");
 		}
-		if (!CatString.ALL.equalsIgnoreCase(payload.getDomain())) {
-			model.setDisplayDomain(payload.getDomain());
-			model.setDomain(payload.getDomain());
+		if(StringUtils.isEmpty(payload.getDomain())){
+			payload.setDomain(CatString.ALL);
 		}
 		model.setDatabase(payload.getDatabase());
+		model.setDomain(payload.getDomain());
 		model.setPage(ReportPage.DATABASE);
 		m_normalizePayload.normalize(model, payload);
 	}
