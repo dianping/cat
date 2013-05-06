@@ -89,8 +89,8 @@ public class ThresholdAlarmMeta {
 
 	@Override
 	public String toString() {
-		return "ThresholdAlarmMeta [m_baseUrl=" + m_baseUrl + ", m_date=" + m_date + ", m_domain=" + m_domain
-		      + ", m_duration=" + m_duration + ", m_realCount=" + m_realCount + ", m_ruleId=" + m_ruleId + ", m_type="
+		return "ThresholdAlarmMeta [baseUrl=" + m_baseUrl + ", date=" + m_date + ", domain=" + m_domain
+		      + ", duration=" + m_duration + ", realCount=" + m_realCount + ", ruleId=" + m_ruleId + ", type="
 		      + m_type + "]";
 	}
 

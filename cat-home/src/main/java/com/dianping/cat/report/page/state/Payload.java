@@ -20,13 +20,13 @@ public class Payload extends AbstractReportPayload<Action> {
 		super(ReportPage.STATE);
 	}
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY);
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public String getKey() {
+		return m_key;
 	}
 
 	@Override
@@ -34,17 +34,17 @@ public class Payload extends AbstractReportPayload<Action> {
 		return m_page;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY);
+	}
+	
+	public void setKey(String key) {
+		m_key = key;
+	}
+
 	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.STATE);
-	}
-	
-	public String getKey() {
-		return m_key;
-	}
-
-	public void setKey(String key) {
-		m_key = key;
 	}
 
 	@Override

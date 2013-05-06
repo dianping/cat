@@ -104,29 +104,68 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
+	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
+		return m_hourlyReportService.queryAllDatabaseNames(start, end, reportName);
+	}
+
+	@Override
+	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
+		return m_hourlyReportService.queryAllDomainNames(start, end, reportName);
+	}
+
+	@Override
+	public CrossReport queryCrossReport(String domain, Date start, Date end) {
 		int type = getQueryType(start, end);
-		TransactionReport report = null;
+		CrossReport report = null;
 
 		if (type == s_hourly) {
-			report = m_hourlyReportService.queryTransactionReport(domain, start, end);
+			report = m_hourlyReportService.queryCrossReport(domain, start, end);
 		} else if (type == s_daily) {
-			report = m_dailyReportService.queryTransactionReport(domain, start, end);
+			report = m_dailyReportService.queryCrossReport(domain, start, end);
 		} else if (type == s_historyDaily) {
-			report = m_dailyReportService.queryTransactionReport(domain, start, end);
+			report = m_dailyReportService.queryCrossReport(domain, start, end);
 		} else if (type == s_historyWeekly) {
-			report = m_weeklyReportService.queryTransactionReport(domain, start);
+			report = m_weeklyReportService.queryCrossReport(domain, start);
 		} else if (type == s_currentWeekly) {
-			report = m_weeklyReportCache.queryTransactionReport(domain, start);
+			report = m_weeklyReportCache.queryCrossReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryTransactionReport(domain, start);
+			report = m_monthReportService.queryCrossReport(domain, start);
 		} else if (type == s_currentMonth) {
-			report = m_monthReportCache.queryTransactionReport(domain, start);
+			report = m_monthReportCache.queryCrossReport(domain, start);
 		} else {
-			report = m_dailyReportService.queryTransactionReport(domain, start, end);
+			report = m_dailyReportService.queryCrossReport(domain, start, end);
 		}
 		if (report == null) {
-			report = new TransactionReport(domain);
+			report = new CrossReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
+	}
+
+	@Override
+	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
+		int type = getQueryType(start, end);
+		DatabaseReport report = null;
+
+		if (type == s_hourly) {
+			report = m_hourlyReportService.queryDatabaseReport(database, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryDatabaseReport(database, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryDatabaseReport(database, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryDatabaseReport(database, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryDatabaseReport(database, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryDatabaseReport(database, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryDatabaseReport(database, start);
+		} else {
+			report = m_dailyReportService.queryDatabaseReport(database, start, end);
+		}
+		if (report == null) {
+			report = new DatabaseReport(database);
 			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
@@ -162,29 +201,29 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
+	public HealthReport queryHealthReport(String domain, Date start, Date end) {
 		int type = getQueryType(start, end);
-		ProblemReport report = null;
+		HealthReport report = null;
 
 		if (type == s_hourly) {
-			report = m_hourlyReportService.queryProblemReport(domain, start, end);
+			report = m_hourlyReportService.queryHealthReport(domain, start, end);
 		} else if (type == s_daily) {
-			report = m_dailyReportService.queryProblemReport(domain, start, end);
+			report = m_dailyReportService.queryHealthReport(domain, start, end);
 		} else if (type == s_historyDaily) {
-			report = m_dailyReportService.queryProblemReport(domain, start, end);
+			report = m_dailyReportService.queryHealthReport(domain, start, end);
 		} else if (type == s_historyWeekly) {
-			report = m_weeklyReportService.queryProblemReport(domain, start);
+			report = m_weeklyReportService.queryHealthReport(domain, start);
 		} else if (type == s_currentWeekly) {
-			report = m_weeklyReportCache.queryProblemReport(domain, start);
+			report = m_weeklyReportCache.queryHealthReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryProblemReport(domain, start);
+			report = m_monthReportService.queryHealthReport(domain, start);
 		} else if (type == s_currentMonth) {
-			report = m_monthReportCache.queryProblemReport(domain, start);
+			report = m_monthReportCache.queryHealthReport(domain, start);
 		} else {
-			report = m_dailyReportService.queryProblemReport(domain, start, end);
+			report = m_dailyReportService.queryHealthReport(domain, start, end);
 		}
 		if (report == null) {
-			report = new ProblemReport(domain);
+			report = new HealthReport(domain);
 			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
@@ -249,29 +288,40 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public CrossReport queryCrossReport(String domain, Date start, Date end) {
+	public MetricReport queryMetricReport(String group, Date start, Date end) {
 		int type = getQueryType(start, end);
-		CrossReport report = null;
+		
+		if (type == s_hourly) {
+			return m_hourlyReportService.queryMetricReport(group, start, end);
+		} else {
+			throw new RuntimeException("unexcepted query type in metric report!");
+		}
+	}
+
+	@Override
+	public ProblemReport queryProblemReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		ProblemReport report = null;
 
 		if (type == s_hourly) {
-			report = m_hourlyReportService.queryCrossReport(domain, start, end);
+			report = m_hourlyReportService.queryProblemReport(domain, start, end);
 		} else if (type == s_daily) {
-			report = m_dailyReportService.queryCrossReport(domain, start, end);
+			report = m_dailyReportService.queryProblemReport(domain, start, end);
 		} else if (type == s_historyDaily) {
-			report = m_dailyReportService.queryCrossReport(domain, start, end);
+			report = m_dailyReportService.queryProblemReport(domain, start, end);
 		} else if (type == s_historyWeekly) {
-			report = m_weeklyReportService.queryCrossReport(domain, start);
+			report = m_weeklyReportService.queryProblemReport(domain, start);
 		} else if (type == s_currentWeekly) {
-			report = m_weeklyReportCache.queryCrossReport(domain, start);
+			report = m_weeklyReportCache.queryProblemReport(domain, start);
 		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryCrossReport(domain, start);
+			report = m_monthReportService.queryProblemReport(domain, start);
 		} else if (type == s_currentMonth) {
-			report = m_monthReportCache.queryCrossReport(domain, start);
+			report = m_monthReportCache.queryProblemReport(domain, start);
 		} else {
-			report = m_dailyReportService.queryCrossReport(domain, start, end);
+			report = m_dailyReportService.queryProblemReport(domain, start, end);
 		}
 		if (report == null) {
-			report = new CrossReport(domain);
+			report = new ProblemReport(domain);
 			report.setStartTime(start).setEndTime(end);
 		}
 		return report;
@@ -307,64 +357,6 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public DatabaseReport queryDatabaseReport(String database, Date start, Date end) {
-		int type = getQueryType(start, end);
-		DatabaseReport report = null;
-
-		if (type == s_hourly) {
-			report = m_hourlyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_daily) {
-			report = m_dailyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_historyDaily) {
-			report = m_dailyReportService.queryDatabaseReport(database, start, end);
-		} else if (type == s_historyWeekly) {
-			report = m_weeklyReportService.queryDatabaseReport(database, start);
-		} else if (type == s_currentWeekly) {
-			report = m_weeklyReportCache.queryDatabaseReport(database, start);
-		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryDatabaseReport(database, start);
-		} else if (type == s_currentMonth) {
-			report = m_monthReportCache.queryDatabaseReport(database, start);
-		} else {
-			report = m_dailyReportService.queryDatabaseReport(database, start, end);
-		}
-		if (report == null) {
-			report = new DatabaseReport(database);
-			report.setStartTime(start).setEndTime(end);
-		}
-		return report;
-	}
-
-	@Override
-	public HealthReport queryHealthReport(String domain, Date start, Date end) {
-		int type = getQueryType(start, end);
-		HealthReport report = null;
-
-		if (type == s_hourly) {
-			report = m_hourlyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_daily) {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_historyDaily) {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		} else if (type == s_historyWeekly) {
-			report = m_weeklyReportService.queryHealthReport(domain, start);
-		} else if (type == s_currentWeekly) {
-			report = m_weeklyReportCache.queryHealthReport(domain, start);
-		} else if (type == s_historyMonth) {
-			report = m_monthReportService.queryHealthReport(domain, start);
-		} else if (type == s_currentMonth) {
-			report = m_monthReportCache.queryHealthReport(domain, start);
-		} else {
-			report = m_dailyReportService.queryHealthReport(domain, start, end);
-		}
-		if (report == null) {
-			report = new HealthReport(domain);
-			report.setStartTime(start).setEndTime(end);
-		}
-		return report;
-	}
-
-	@Override
 	public StateReport queryStateReport(String domain, Date start, Date end) {
 		int type = getQueryType(start, end);
 		StateReport report = null;
@@ -394,16 +386,6 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public Set<String> queryAllDatabaseNames(Date start, Date end, String reportName) {
-		return m_hourlyReportService.queryAllDatabaseNames(start, end, reportName);
-	}
-
-	@Override
-	public Set<String> queryAllDomainNames(Date start, Date end, String reportName) {
-		return m_hourlyReportService.queryAllDomainNames(start, end, reportName);
-	}
-
-	@Override
 	public TopReport queryTopReport(String domain, Date start, Date end) {
 		int type = getQueryType(start, end);
 		
@@ -415,13 +397,31 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public MetricReport queryMetricReport(String group, Date start, Date end) {
+	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
 		int type = getQueryType(start, end);
-		
+		TransactionReport report = null;
+
 		if (type == s_hourly) {
-			return m_hourlyReportService.queryMetricReport(group, start, end);
+			report = m_hourlyReportService.queryTransactionReport(domain, start, end);
+		} else if (type == s_daily) {
+			report = m_dailyReportService.queryTransactionReport(domain, start, end);
+		} else if (type == s_historyDaily) {
+			report = m_dailyReportService.queryTransactionReport(domain, start, end);
+		} else if (type == s_historyWeekly) {
+			report = m_weeklyReportService.queryTransactionReport(domain, start);
+		} else if (type == s_currentWeekly) {
+			report = m_weeklyReportCache.queryTransactionReport(domain, start);
+		} else if (type == s_historyMonth) {
+			report = m_monthReportService.queryTransactionReport(domain, start);
+		} else if (type == s_currentMonth) {
+			report = m_monthReportCache.queryTransactionReport(domain, start);
 		} else {
-			throw new RuntimeException("unexcepted query type in metric report!");
+			report = m_dailyReportService.queryTransactionReport(domain, start, end);
 		}
+		if (report == null) {
+			report = new TransactionReport(domain);
+			report.setStartTime(start).setEndTime(end);
+		}
+		return report;
 	}
 }

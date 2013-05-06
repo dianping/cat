@@ -18,7 +18,6 @@ import com.dianping.cat.consumer.advanced.DatabaseAnalyzer;
 import com.dianping.cat.consumer.advanced.MatrixAnalyzer;
 import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.advanced.SqlAnalyzer;
-import com.dianping.cat.consumer.advanced.TopIpAnalyzer;
 import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.storage.BucketManager;
 
@@ -40,9 +39,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class));
 
 		all.add(C(MessageAnalyzer.class, MatrixAnalyzer.ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class));
-
-		all.add(C(MessageAnalyzer.class, TopIpAnalyzer.ID, TopIpAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //

@@ -25,6 +25,7 @@ import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.NormalizePayload;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -53,6 +54,9 @@ public class Handler implements PageHandler<Context> {
 	@Inject(type = ModelService.class, value = "problem")
 	private ModelService<ProblemReport> m_service;
 
+	@Inject
+	private NormalizePayload m_normalizePayload;
+
 	private Gson m_gson = new Gson();
 
 	private int getHour(long date) {
@@ -67,7 +71,7 @@ public class Handler implements PageHandler<Context> {
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date).setProperty("type", type);
-		if (!CatString.ALL_IP.equals(payload.getIpAddress())) {
+		if (!CatString.ALL.equals(payload.getIpAddress())) {
 			request.setProperty("ip", payload.getIpAddress());
 		}
 		if (!StringUtils.isEmpty(payload.getThreadId())) {
@@ -84,6 +88,7 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
+
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");
@@ -126,7 +131,7 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			report = getHourlyReport(payload, VIEW);
 			model.setReport(report);
-			if (ip.equals(CatString.ALL_IP)) {
+			if (ip.equals(CatString.ALL)) {
 				problemStatistics.setAllIp(true);
 			} else {
 				problemStatistics.setIp(ip);
@@ -138,7 +143,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY:
 			report = showSummarizeReport(model, payload);
-			if (ip.equals(CatString.ALL_IP)) {
+			if (ip.equals(CatString.ALL)) {
 				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(urlThreshold)
 				      .setServiceThreshold(serviceThreshold);
 				problemStatistics.visitProblemReport(report);
@@ -171,7 +176,7 @@ public class Handler implements PageHandler<Context> {
 			showDetail(model, payload);
 			break;
 		case MOBILE:
-			if (ip.equals(CatString.ALL_IP)) {
+			if (ip.equals(CatString.ALL)) {
 				report = getHourlyReport(payload, VIEW);
 
 				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
@@ -205,42 +210,14 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	public void normalize(Model model, Payload payload) {
-		if (StringUtils.isEmpty(payload.getDomain())) {
-			payload.setDomain(m_manager.getConsoleDefaultDomain());
-		}
+	private void normalize(Model model, Payload payload) {
 		setDefaultThreshold(model, payload);
-
-		String ip = payload.getIpAddress();
-		if (StringUtils.isEmpty(ip)) {
-			ip = CatString.ALL_IP;
-		}
-		model.setIpAddress(ip);
-		model.setLongDate(payload.getDate());
-		model.setAction(payload.getAction());
 		model.setPage(ReportPage.PROBLEM);
-		model.setDisplayDomain(payload.getDomain());
 		model.setThreshold(payload.getLongTime());
 		model.setSqlThreshold(payload.getSqlLongTime());
 		model.setServiceThreshold(payload.getSeviceLongTime());
-		if (payload.getPeriod().isCurrent()) {
-			model.setCreatTime(new Date());
-		} else {
-			model.setCreatTime(new Date(payload.getDate() + 60 * 60 * 1000 - 1000));
-		}
-		if (payload.getAction() == Action.HISTORY) {
-			String type = payload.getReportType();
-			if (type == null || type.length() == 0) {
-				payload.setReportType("day");
-			}
-			model.setReportType(payload.getReportType());
-			payload.computeStartDate();
-			if (!payload.isToday()) {
-				payload.setYesterdayDefault();
-			}
-			model.setLongDate(payload.getDate());
-			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
-		}
+
+		m_normalizePayload.normalize(model, payload);
 	}
 
 	private void setDefaultThreshold(Model model, Payload payload) {
@@ -249,7 +226,7 @@ public class Handler implements PageHandler<Context> {
 
 		if (d != null) {
 			int longUrlTime = d.getUrlThreshold();
-			
+
 			if (payload.getRealLongTime() == 0) {
 				payload.setLongTime(longUrlTime);
 			}
@@ -332,9 +309,6 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
 
-		if (problemReport == null) {
-
-		}
 		return problemReport;
 	}
 

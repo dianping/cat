@@ -23,6 +23,20 @@ public  class EventReportVisitor extends BaseVisitor {
 		m_item.setName(name);
 	}
 
+	public EventQueryItem getItem() {
+		return m_item;
+	}
+
+	public void setItem(EventQueryItem item) {
+		m_item = item;
+	}
+
+	@Override
+	public void visitEventReport(EventReport eventReport) {
+		super.visitEventReport(eventReport);
+		m_item.setDate(eventReport.getStartTime());
+	}
+
 	@Override
 	public void visitName(EventName name) {
 		m_currentName = name.getId();
@@ -45,20 +59,6 @@ public  class EventReportVisitor extends BaseVisitor {
 		} else {
 			super.visitType(type);
 		}
-	}
-
-	@Override
-	public void visitEventReport(EventReport eventReport) {
-		super.visitEventReport(eventReport);
-		m_item.setDate(eventReport.getStartTime());
-	}
-
-	public EventQueryItem getItem() {
-		return m_item;
-	}
-
-	public void setItem(EventQueryItem item) {
-		m_item = item;
 	}
 
 }

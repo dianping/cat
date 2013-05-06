@@ -332,7 +332,7 @@ public class TuanGouMonthAnalyzer extends ComponentTestCase {
 		TransactionReport transactionReport = meger.getTransactionReport();
 		System.out.println(transactionReport);
 		
-		Machine machine = transactionReport.findMachine(CatString.ALL_IP);
+		Machine machine = transactionReport.findMachine(CatString.ALL);
 		TransactionType type = machine.getTypes().get("URL");
 		
 		for(TransactionName name :type.getNames().values()){

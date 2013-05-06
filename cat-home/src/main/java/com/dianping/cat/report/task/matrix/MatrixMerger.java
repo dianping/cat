@@ -36,7 +36,7 @@ public class MatrixMerger implements ReportMerger<MatrixReport> {
 		matrixReport.setStartTime(TaskHelper.todayZero(date));
 		matrixReport.setEndTime(end);
 
-		new MatrixReportFilter(500).visitMatrixReport(matrixReport);
+		new MatrixReportFilter().visitMatrixReport(matrixReport);
 		return matrixReport;
 	}
 

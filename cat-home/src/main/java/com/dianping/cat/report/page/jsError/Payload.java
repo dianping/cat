@@ -27,55 +27,63 @@ public class Payload implements ActionPayload<ReportPage, Action> {
    @FieldMeta("data")
    private String m_data;
    
-   public void setAction(String action) {
-      m_action = Action.getByName(action, Action.VIEW);
-   }
-
    @Override
    public Action getAction() {
       return m_action;
    }
 
-   @Override
+   public String getData() {
+		return m_data;
+	}
+
+   public String getError() {
+		return m_error;
+	}
+
+   public String getFile() {
+		return m_file;
+	}
+   
+   public String getLine() {
+		return m_line;
+	}
+
+	@Override
    public ReportPage getPage() {
       return m_page;
    }
 
-   @Override
-   public void setPage(String page) {
-      m_page = ReportPage.getByName(page, ReportPage.JSERROR);
-   }
-   
-   public long getTimestamp() {
+	public long getTimestamp() {
 		return m_timestamp;
 	}
 
-	public void setTimestamp(long timestamp) {
-		m_timestamp = timestamp;
-	}
+	public void setAction(String action) {
+      m_action = Action.getByName(action, Action.VIEW);
+   }
 
-	public String getError() {
-		return m_error;
+	public void setData(String data) {
+		m_data = data;
 	}
 
 	public void setError(String error) {
 		m_error = error;
 	}
 
-	public String getFile() {
-		return m_file;
-	}
-
 	public void setFile(String file) {
 		m_file = file;
 	}
 
-	public String getLine() {
-		return m_line;
-	}
-
 	public void setLine(String line) {
 		m_line = line;
+	}
+
+	@Override
+   public void setPage(String page) {
+      m_page = ReportPage.getByName(page, ReportPage.JSERROR);
+   }
+
+	public void setTimestamp(long timestamp) {
+		m_timestamp = timestamp;
 	}
 
 	@Override
@@ -84,13 +92,5 @@ public class Payload implements ActionPayload<ReportPage, Action> {
          m_action = Action.VIEW;
       }
    }
-
-	public String getData() {
-		return m_data;
-	}
-
-	public void setData(String data) {
-		m_data = data;
-	}
 	
 }

@@ -98,7 +98,7 @@ public class ArchTransactionAnalyzer extends ComponentTestCase {
 				      DailyreportEntity.READSET_FULL);
 				TransactionReport report = DefaultSaxParser.parse(dailyreport.getContent());
 
-				info.reset(report.findMachine(CatString.ALL_IP));
+				info.reset(report.findMachine(CatString.ALL));
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				e.printStackTrace();

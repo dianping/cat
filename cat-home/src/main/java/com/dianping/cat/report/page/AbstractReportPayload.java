@@ -24,12 +24,6 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 	@FieldMeta("date")
 	private long m_date;
 
-	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
-
-	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
-
-	private ReportPage m_defaultPage;
-
 	@FieldMeta("domain")
 	private String m_domain;
 
@@ -46,6 +40,12 @@ public abstract class AbstractReportPayload<A extends Action> implements ActionP
 
 	@FieldMeta("today")
 	private boolean m_today;
+
+	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+
+	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
+
+	private ReportPage m_defaultPage;
 
 	public AbstractReportPayload(ReportPage defaultPage) {
 		m_defaultPage = defaultPage;

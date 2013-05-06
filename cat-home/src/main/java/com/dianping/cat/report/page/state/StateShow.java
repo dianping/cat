@@ -28,21 +28,8 @@ public class StateShow extends BaseVisitor {
 
 	private String m_ip;
 
-	public Machine getTotal() {
-		return m_total;
-	}
-
-	public int getTotalSize() {
-		Set<String> ips = new HashSet<String>();
-
-		for (ProcessDomain domain : m_processDomains.values()) {
-			ips.addAll(domain.getIps());
-		}
-		return ips.size();
-	}
-
-	public Map<Long, Message> getMessagesMap() {
-		return m_messages;
+	public StateShow(String ip) {
+		m_ip = ip;
 	}
 
 	public List<Message> getMessages() {
@@ -58,39 +45,27 @@ public class StateShow extends BaseVisitor {
 		return result;
 	}
 
+	public Map<Long, Message> getMessagesMap() {
+		return m_messages;
+	}
+
 	public List<ProcessDomain> getProcessDomains() {
 		List<ProcessDomain> temp = new ArrayList<ProcessDomain>(m_processDomains.values());
 		Collections.sort(temp, new DomainCompartor());
 		return temp;
 	}
 
-	public StateShow(String ip) {
-		m_ip = ip;
+	public Machine getTotal() {
+		return m_total;
 	}
 
-	@Override
-	public void visitMachine(Machine machine) {
-		String ip = machine.getIp();
-		m_currentIp = ip;
+	public int getTotalSize() {
+		Set<String> ips = new HashSet<String>();
 
-		if (m_total == null) {
-			m_total = new Machine();
-			m_total.setIp(ip);
+		for (ProcessDomain domain : m_processDomains.values()) {
+			ips.addAll(domain.getIps());
 		}
-		if (m_ip.equals(CatString.ALL_IP) || m_ip.equalsIgnoreCase(ip)) {
-			m_total = mergerMachine(m_total, machine);
-			super.visitMachine(machine);
-		}
-	}
-
-	@Override
-	public void visitMessage(Message message) {
-		Message temp = m_messages.get(message.getId());
-		if (temp == null) {
-			m_messages.put(message.getId(), message);
-		} else {
-			mergerMessage(temp, message);
-		}
+		return ips.size();
 	}
 
 	private Machine mergerMachine(Machine total, Machine machine) {
@@ -137,8 +112,33 @@ public class StateShow extends BaseVisitor {
 	}
 
 	@Override
+	public void visitMachine(Machine machine) {
+		String ip = machine.getIp();
+		m_currentIp = ip;
+
+		if (m_total == null) {
+			m_total = new Machine();
+			m_total.setIp(ip);
+		}
+		if (m_ip.equals(CatString.ALL) || m_ip.equalsIgnoreCase(ip)) {
+			m_total = mergerMachine(m_total, machine);
+			super.visitMachine(machine);
+		}
+	}
+
+	@Override
+	public void visitMessage(Message message) {
+		Message temp = m_messages.get(message.getId());
+		if (temp == null) {
+			m_messages.put(message.getId(), message);
+		} else {
+			mergerMessage(temp, message);
+		}
+	}
+
+	@Override
 	public void visitProcessDomain(ProcessDomain processDomain) {
-		if (m_ip.equals(m_currentIp) || m_ip.equals(CatString.ALL_IP)) {
+		if (m_ip.equals(m_currentIp) || m_ip.equals(CatString.ALL)) {
 			ProcessDomain temp = m_processDomains.get(processDomain.getName());
 
 			if (temp == null) {

@@ -42,6 +42,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_department;
 	}
 
+	public String getDomain() {
+		return m_domain;
+	}
+
 	public String getEmail() {
 		return m_email;
 	}
@@ -75,6 +79,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_department = department;
 	}
 
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
 	public void setEmail(String email) {
 		m_email = email;
 	}
@@ -90,14 +98,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setProjectId(int projectId) {
 		m_projectId = projectId;
-	}
-
-	public String getDomain() {
-		return m_domain;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
 	}
 
 	public void setProjectLine(String projectLine) {
