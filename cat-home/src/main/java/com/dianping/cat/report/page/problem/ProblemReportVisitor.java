@@ -29,6 +29,16 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 	private static final int SIZE = 60;
 
+	public ProblemReportVisitor(String ip, String type, String state, Date start) {
+		m_ip = ip;
+		m_type = type;
+		m_state = state;
+
+		m_graphItem.setSize(SIZE);
+		m_graphItem.setStep(TimeUtil.ONE_MINUTE);
+		m_graphItem.setStart(start);
+	}
+
 	public HistoryGraphItem getGraphItem() {
 		double[] value = new double[SIZE];
 
@@ -41,16 +51,6 @@ public class ProblemReportVisitor extends BaseVisitor {
 		}
 		m_graphItem.addValue(value);
 		return m_graphItem;
-	}
-
-	public ProblemReportVisitor(String ip, String type, String state, Date start) {
-		m_ip = ip;
-		m_type = type;
-		m_state = state;
-
-		m_graphItem.setSize(SIZE);
-		m_graphItem.setStep(TimeUtil.ONE_MINUTE);
-		m_graphItem.setStart(start);
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 	@Override
 	public void visitMachine(Machine machine) {
-		if (CatString.ALL_IP.equals(m_ip) || m_ip.equals(machine.getIp())) {
+		if (CatString.ALL.equals(m_ip) || m_ip.equals(machine.getIp())) {
 			super.visitMachine(machine);
 		}
 	}

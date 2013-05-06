@@ -39,6 +39,54 @@
       <ratio type="Call" min="2" max="72" totalCount="593415" totalTime="8634283002"/>
       <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
    </matrix>
-   <matrix type="OTHERS" name="OTHERS" count="10" totalTime="0"  url="GroupWeb-0a010262-1342762011305-0">
+   <matrix type="URL" name="/kuailexingqiwu/topic/4219656/lz" count="1" totalTime="1195" url="GroupWeb-0a010262-1342762011305-0">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/topic/3851661/" count="1" totalTime="1284" url="GroupWeb-0a010262-1342762015597-2">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/topic/361223/turbine/template/shop,albumshow.html" count="1" totalTime="619" url="GroupWeb-0a010251-1342762020967-1">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/topic/4772442GVsbGU4ODA2MjRAc29odS5jb20=" count="1" totalTime="1147" url="GroupWeb-0a010251-1342762026036-0">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/cold/topic/3635630/lz" count="1" totalTime="1181" url="GroupWeb-0a01025d-1342762028928-0">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/xaxa/topic/89183/lz" count="1" totalTime="1007" url="GroupWeb-0a01025d-1342762029026-0">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/wuhan/group/" count="1" totalTime="1325" url="GroupWeb-0a010262-1342762036716-0">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/topic/808784%3Fpageno%3D4" count="1" totalTime="1243" url="GroupWeb-0a010262-1342762050874-0">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/topic/866290/" count="1" totalTime="1302" url="GroupWeb-0a010262-1342762062583-0">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
+   </matrix>
+   <matrix type="URL" name="/beauty/%E8%B7%B3%E6%A7%BD/" count="1" totalTime="1285" url="GroupWeb-0a010240-1342762074636-0">
+      <ratio type="SQL" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Call" min="0" max="0" totalCount="0" totalTime="0"/>
+      <ratio type="Cache" min="0" max="0" totalCount="0" totalTime="0"/>
    </matrix>
 </matrix-report>

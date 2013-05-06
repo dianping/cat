@@ -151,6 +151,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_report;
 	}
 
+	public int getServiceThreshold() {
+		return m_serviceThreshold;
+	}
+
 	public int getSqlThreshold() {
 		return m_sqlThreshold;
 	}
@@ -237,10 +241,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setThreshold(int threshold) {
 		m_threshold = threshold;
-	}
-
-	public int getServiceThreshold() {
-		return m_serviceThreshold;
 	}
 
 }

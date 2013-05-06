@@ -14,26 +14,37 @@ import org.unidal.initialization.ModuleContext;
 import org.unidal.initialization.ModuleInitializer;
 import org.unidal.web.AbstractContainerServlet;
 
+import com.dianping.cat.Cat;
+
 public class CatServlet extends AbstractContainerServlet {
 	private static final long serialVersionUID = 1L;
 
 	private Exception m_exception;
+
+	private File getConfigFile(ServletConfig config, String name, String defaultConfigValue) {
+		String configValue = config.getInitParameter(name);
+
+		if (configValue != null) {
+			if (configValue.startsWith("/")) {
+				return new File(configValue);
+			} else {
+				return new File(Cat.getCatHome(), configValue);
+			}
+		} else {
+			return new File(Cat.getCatHome(), defaultConfigValue);
+		}
+	}
 
 	@Override
 	protected void initComponents(ServletConfig servletConfig) throws ServletException {
 		try {
 			ModuleContext ctx = new DefaultModuleContext(getContainer());
 			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
-			String catServerXml = servletConfig.getInitParameter("cat-server-xml");
+			File clientXmlFile = getConfigFile(servletConfig, "cat-client-xml", "config/client.xml");
+			File serverXmlFile = getConfigFile(servletConfig, "cat-server-xml", "config/server.xml");
 
-			ctx.setAttribute("cat-client-config-file", new File("/data/appdatas/cat/client.xml"));
-
-			if (catServerXml != null) {
-				ctx.setAttribute("cat-server-config-file", new File(catServerXml));
-			} else {
-				ctx.setAttribute("cat-server-config-file", new File("/data/appdatas/cat/server.xml"));
-			}
-
+			ctx.setAttribute("cat-client-config-file", clientXmlFile);
+			ctx.setAttribute("cat-server-config-file", serverXmlFile);
 			initializer.execute(ctx);
 		} catch (Exception e) {
 			m_exception = e;
@@ -49,7 +60,7 @@ public class CatServlet extends AbstractContainerServlet {
 		PrintWriter writer = res.getWriter();
 
 		if (m_exception != null) {
-			writer.write("Server has NOT been initialized successfully! \r\n\r\n");
+			writer.write("Server has NOT been initialized successfully!\r\n\r\n");
 			m_exception.printStackTrace(writer);
 		} else {
 			writer.write("Not implemented yet!");

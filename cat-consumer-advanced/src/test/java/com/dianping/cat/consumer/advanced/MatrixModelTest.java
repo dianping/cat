@@ -13,7 +13,7 @@ public class MatrixModelTest {
 	public void testModel() throws Exception {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("matrix.xml"), "utf-8");
 		MatrixReport report = DefaultSaxParser.parse(source);
-		MatrixReportFilter f1 = new MatrixReportFilter(1);
+		MatrixReportFilter f1 = new MatrixReportFilter();
 
 		report.accept(f1);
 		String expected1 = Files.forIO().readFrom(getClass().getResourceAsStream("matrix-result.xml"), "utf-8");

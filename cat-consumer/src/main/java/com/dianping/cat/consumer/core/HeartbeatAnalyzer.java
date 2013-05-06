@@ -80,11 +80,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		return report;
 	}
 
-	@Override
-	public Set<String> getDomains() {
-		return m_reports.keySet();
-	}
-
 	private Period getHeartBeatInfo(Heartbeat heartbeat, long timestamp) {
 		String xml = (String) heartbeat.getData();
 		StatusInfo info = null;
@@ -245,7 +240,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 				try {
 					Set<String> domainNames = report.getDomainNames();
 					domainNames.clear();
-					domainNames.addAll(getDomains());
+					domainNames.addAll(m_reports.keySet());
 
 					String xml = builder.buildXml(report);
 					String domain = report.getDomain();

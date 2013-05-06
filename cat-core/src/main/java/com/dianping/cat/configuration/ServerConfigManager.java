@@ -10,7 +10,8 @@ import java.util.Map;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
-import org.unidal.helper.Threads.Task;
+import org.unidal.helper.Splitters;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
@@ -26,8 +27,6 @@ public class ServerConfigManager implements LogEnabled {
 
 	private ServerConfig m_config;
 
-	private List<ServiceConfigSupport> m_listeners = new ArrayList<ServerConfigManager.ServiceConfigSupport>();
-
 	private Logger m_logger;
 
 	@Override
@@ -41,6 +40,10 @@ public class ServerConfigManager implements LogEnabled {
 
 	public int getBindPort() {
 		return 2280;
+	}
+
+	public boolean isHdfsOn() {
+		return !m_config.getStorage().isHdfsDisabled();
 	}
 
 	public boolean isSerialWrite() {
@@ -66,6 +69,27 @@ public class ServerConfigManager implements LogEnabled {
 		}
 
 		return "";
+	}
+
+	public List<Pair<String, Integer>> getConsoleEndpoints() {
+		if (m_config != null) {
+			ConsoleConfig console = m_config.getConsole();
+			String remoteServers = console.getRemoteServers();
+			List<String> endpoints = Splitters.by(',').noEmptyItem().trim().split(remoteServers);
+			List<Pair<String, Integer>> pairs = new ArrayList<Pair<String, Integer>>(endpoints.size());
+
+			for (String endpoint : endpoints) {
+				int pos = endpoint.indexOf(':');
+				String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+				int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
+
+				pairs.add(new Pair<String, Integer>(host, port));
+			}
+
+			return pairs;
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	public String getHdfsBaseDir(String id) {
@@ -235,12 +259,6 @@ public class ServerConfigManager implements LogEnabled {
 		}
 	}
 
-	public void onRefresh(ServiceConfigSupport listener) {
-		if (!m_listeners.contains(listener)) {
-			m_listeners.add(listener);
-		}
-	}
-
 	private long toLong(String str, long defaultValue) {
 		long value = 0;
 		int len = str == null ? 0 : str.length();
@@ -266,54 +284,5 @@ public class ServerConfigManager implements LogEnabled {
 
 	public static interface ServerConfigKey {
 		public void add(String section);
-	}
-
-	static class ServerConfigReloader implements Task {
-		private File m_file;
-
-		private volatile boolean m_active = true;
-
-		public ServerConfigReloader(File file) {
-			m_file = file;
-		}
-
-		@Override
-		public String getName() {
-			return "ServerConfigReloader";
-		}
-
-		private boolean isActive() {
-			synchronized (this) {
-				return m_active;
-			}
-		}
-
-		@Override
-		public void run() {
-			while (isActive()) {
-				try {
-					if (m_file.exists()) {
-						// TODO
-					}
-
-					Thread.sleep(2000L);
-				} catch (InterruptedException e) {
-					m_active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-			synchronized (this) {
-				m_active = false;
-			}
-		}
-	}
-
-	public static interface ServiceConfigSupport {
-		public void buildKey(ServerConfigManager manager, ServerConfigKey key);
-
-		public void configure(ServerConfigManager manager, boolean firstTime);
 	}
 }

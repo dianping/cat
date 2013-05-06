@@ -108,7 +108,7 @@ public class ArchYearAnalyzer extends ComponentTestCase {
 		}
 
 		public void accept(TransactionReport report) {
-			Machine machine = report.findOrCreateMachine(CatString.ALL_IP);
+			Machine machine = report.findOrCreateMachine(CatString.ALL);
 			Collection<TransactionType> types = machine.getTypes().values();
 			for (TransactionType type : types) {
 				String name = type.getId();

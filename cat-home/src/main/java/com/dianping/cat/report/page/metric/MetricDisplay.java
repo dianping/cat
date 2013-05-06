@@ -7,6 +7,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -30,6 +32,10 @@ public class MetricDisplay extends BaseVisitor {
 
 	private MetricConfig m_config;
 
+	private String prefix = "channel=";
+
+	private Set<String> m_allChannel = new TreeSet<String>();
+
 	public MetricDisplay(MetricConfig metricConfig, String channel, Date start) {
 		m_config = metricConfig;
 		m_start = start;
@@ -48,26 +54,6 @@ public class MetricDisplay extends BaseVisitor {
 			if (flag.isShowAvg()) {
 				String key = flag.getKey() + ":avg";
 				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
-			}
-		}
-	}
-
-	public List<GraphItem> getGroups() {
-		return new ArrayList<GraphItem>(m_metrics.values());
-	}
-
-	@Override
-	public void visitMetric(Metric metric) {
-		m_key = metric.getId();
-
-		if (StringUtils.isEmpty(m_channel)) {
-			buildGraphItem(metric.getPoints().values());
-		} else {
-			Map<String, Metric> metrics = metric.getMetrics();
-			Metric m = metrics.get("channel=" + m_channel);
-
-			if (m != null) {
-				buildGraphItem(m.getPoints().values());
 			}
 		}
 	}
@@ -95,6 +81,38 @@ public class MetricDisplay extends BaseVisitor {
 		}
 	}
 
+	public Set<String> getAllChannel() {
+		return m_allChannel;
+	}
+
+	public List<GraphItem> getGroups() {
+		return new ArrayList<GraphItem>(m_metrics.values());
+	}
+
+	@Override
+	public void visitMetric(Metric metric) {
+		m_key = metric.getId();
+
+		Map<String, Metric> metrics = metric.getMetrics();
+		if (metrics != null) {
+			Set<String> keySet = metrics.keySet();
+			for (String temp : keySet) {
+				if (temp.startsWith(prefix)) {
+					m_allChannel.add(temp.substring(prefix.length()));
+				}
+			}
+		}
+		if (StringUtils.isEmpty(m_channel)) {
+			buildGraphItem(metric.getPoints().values());
+		} else {
+			Metric m = metrics.get(prefix + m_channel);
+
+			if (m != null) {
+				buildGraphItem(m.getPoints().values());
+			}
+		}
+	}
+
 	@Override
 	public void visitMetricReport(MetricReport metricReport) {
 		super.visitMetricReport(metricReport);
@@ -113,12 +131,18 @@ public class MetricDisplay extends BaseVisitor {
 
 		private String key;
 
-		private double[] values = new double[60];
+		private static final int SIZE = 60;
+
+		private double[] values = new double[SIZE];
 
 		public GraphItem(Date start, String title, String key) {
 			this.start = sdf.format(start);
 			this.title = title;
 			this.key = key;
+
+			for (int i = 0; i < SIZE; i++) {
+				values[i] = -1;
+			}
 		}
 
 		public GraphItem addSubTitle(String title) {
@@ -128,6 +152,10 @@ public class MetricDisplay extends BaseVisitor {
 		public String getJsonString() {
 			Gson gson = new Gson();
 			return gson.toJson(this);
+		}
+
+		public String getKey() {
+			return key;
 		}
 
 		public int getSize() {
@@ -144,6 +172,10 @@ public class MetricDisplay extends BaseVisitor {
 
 		public String getTitle() {
 			return this.title;
+		}
+
+		public double[] getValues() {
+			return values;
 		}
 
 		public GraphItem setSize(int size) {
@@ -168,14 +200,6 @@ public class MetricDisplay extends BaseVisitor {
 		public GraphItem setValue(int minute, double value) {
 			values[minute] = value;
 			return this;
-		}
-
-		public String getKey() {
-			return key;
-		}
-
-		public double[] getValues() {
-			return values;
 		}
 
 		public void setValues(double[] values) {

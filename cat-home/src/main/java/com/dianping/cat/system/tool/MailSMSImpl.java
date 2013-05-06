@@ -7,8 +7,6 @@ import java.util.Map;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.unidal.lookup.annotation.Inject;
@@ -36,27 +34,33 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 
 	private SMSService m_smsService;
 
+	private boolean m_initialize = false;;
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
+	public void initialize() {
 		if (m_serverConfig.isJobMachine() && !m_serverConfig.isLocalMode()) {
 			try {
 				ApplicationContext ctx = new ClassPathXmlApplicationContext("spring/remoteService.xml");
 
 				m_mailService = (MailService) ctx.getBean("mailService");
 				m_smsService = (SMSService) ctx.getBean("smsService");
-			} catch (BeansException e) {
-				throw new RuntimeException(e);
+				m_initialize = true;
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
 		}
 	}
 
 	@Override
 	public boolean sendEmail(String title, String content, List<String> emails) {
+		if (!m_initialize) {
+			initialize();
+		}
 		boolean sendResult = false;
 
 		if (m_serverConfig.isJobMachine()) {
@@ -65,20 +69,25 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 					try {
 						m_mailService.send(DEFAULT_EMAIL_TYPE, mail, title, content);
 						sendResult = true;
-						m_logger.info("CAT send email to! " + mail + " title:" + title);
+						m_logger.info("CAT send email to! " + mail + ",title:" + title);
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
 				}
 			} else {
-				m_logger.info("CAT email has no recevers ! " + title);
+				m_logger.info("CAT email has no recevers ! Email title:" + title);
 			}
+		} else {
+			throw new RuntimeException("CAT server config is disable!");
 		}
 		return sendResult;
 	}
 
 	@Override
 	public boolean sendSMS(String content, List<String> phones) {
+		if (!m_initialize) {
+			initialize();
+		}
 		boolean sendResult = false;
 
 		if (m_serverConfig.isJobMachine()) {
@@ -100,6 +109,8 @@ public class MailSMSImpl implements MailSMS, Initializable, LogEnabled {
 			} else {
 				m_logger.info("CAT sms has no recevers ! " + content);
 			}
+		} else {
+			throw new RuntimeException("CAT server config is disable!");
 		}
 		return sendResult;
 	}

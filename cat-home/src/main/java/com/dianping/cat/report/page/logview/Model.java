@@ -17,14 +17,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private MessageTree m_tree;
 	
-	public MessageTree getTree() {
-		return m_tree;
-	}
-
-	public void setTree(MessageTree tree) {
-		m_tree = tree;
-	}
-
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -44,6 +36,10 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return Collections.emptySet();
 	}
 
+	public String getLogviewPath() {
+		return m_logviewPath;
+	}
+
 	public String getMobileResponse() {
 		return m_mobileResponse;
 	}
@@ -52,8 +48,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 		return m_table;
 	}
 
+	public MessageTree getTree() {
+		return m_tree;
+	}
+
 	public void setDomain(String domain) {
 		m_domain = domain;
+	}
+
+	public void setLogviewPath(String logviewPath) {
+		m_logviewPath = logviewPath;
 	}
 
 	public void setMobileResponse(String mobileResponse) {
@@ -64,12 +68,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_table = table;
 	}
 
-	public String getLogviewPath() {
-		return m_logviewPath;
-	}
-
-	public void setLogviewPath(String logviewPath) {
-		m_logviewPath = logviewPath;
+	public void setTree(MessageTree tree) {
+		m_tree = tree;
 	}
 	
 }

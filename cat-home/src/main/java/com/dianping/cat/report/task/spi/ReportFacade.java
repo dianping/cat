@@ -11,8 +11,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.annotation.Inject;
 
 import com.dainping.cat.consumer.core.dal.Task;
-import com.dainping.cat.consumer.core.dal.TaskDao;
-import com.dainping.cat.consumer.core.dal.TaskEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.report.task.cross.CrossReportBuilder;
 import com.dianping.cat.report.task.database.DatabaseReportBuilder;
@@ -66,9 +64,6 @@ public class ReportFacade implements LogEnabled, Initializable {
 
 	@Inject
 	private StateReportBuilder m_stateReportBuilder;
-
-	@Inject
-	private TaskDao m_taskDao;
 
 	private Logger m_logger;
 
@@ -136,35 +131,4 @@ public class ReportFacade implements LogEnabled, Initializable {
 		m_reportBuilders.put("state", m_stateReportBuilder);
 	}
 
-	public boolean redoTask(int taskID) {
-		boolean update = false;
-		try {
-			Task task = m_taskDao.findByPK(taskID, TaskEntity.READSET_FULL);
-			int task_type = task.getTaskType();
-			String reportName = task.getReportName();
-			String reportDomain = task.getReportDomain();
-			Date reportPeriod = task.getReportPeriod();
-			ReportBuilder reportBuilder = getReportBuilder(reportName);
-			if (reportBuilder == null) {
-				m_logger.info("no report builder for type:" + " " + reportName);
-				return false;
-			} else {
-				if (task_type == TYPE_DAILY) {
-					update = reportBuilder.redoDailyReport(reportName, reportDomain, reportPeriod);
-				} else if (task_type == TYPE_HOUR) {
-					update = reportBuilder.redoHourReport(reportName, reportDomain, reportPeriod);
-				}
-			}
-			if (update) {
-				m_taskDao.updateFailureToDone(task, TaskEntity.UPDATESET_FULL);
-			}
-			return update;
-		} catch (Exception e) {
-			System.err.println("Flowing is error stack trace in redo:");
-			e.printStackTrace();
-			m_logger.error("Error when redo task " + taskID + " " + e.getMessage(), e);
-			Cat.logError(e);
-			return false;
-		}
-	}
 }

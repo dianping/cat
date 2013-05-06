@@ -1,11 +1,9 @@
 package com.dianping.cat.consumer.core;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -43,14 +41,15 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	public void doCheckpoint(boolean atEnd) {
 		Transaction t = Cat.getProducer().newTransaction("Checkpoint", getClass().getSimpleName());
 		t.setStatus(Message.SUCCESS);
+		final long startTime = getStartTime();
 
 		Threads.forGroup("Cat").start(new Threads.Task() {
 			@Override
 			public void run() {
 				try {
-					m_logger.info("Dump analyer starting archive!" + new Date(m_startTime));
-					m_bucketManager.archive(m_startTime);
-					m_logger.info("Dump analyer end archive!");
+					m_logger.info("Dump analyzer starting archive! " + new Date(startTime));
+					m_bucketManager.archive(startTime);
+					m_logger.info("Dump analyzer end archive!");
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
@@ -65,8 +64,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 				return "DumpAnalyzer-Checkpoint";
 			}
 		});
+		
 		// wait the block dump complete
-		m_logger.info("old version domains:" + m_oldVersionDomains);
+		m_logger.info("Old version domains:" + m_oldVersionDomains);
 		m_logger.info("Error timestamp:" + m_errorTimestampDomains);
 		t.complete();
 	}
@@ -74,11 +74,6 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	@Override
-	public Set<String> getDomains() {
-		return Collections.emptySet();
 	}
 
 	@Override

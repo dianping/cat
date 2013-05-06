@@ -4,6 +4,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import junit.framework.Assert;
+
 import org.junit.Test;
 
 public class JsTest {
@@ -39,5 +41,32 @@ public class JsTest {
 		sb.append("&line=line98");
 
 		return sb.toString();
+	}
+
+	@Test
+	public void testFormatePerformance() {
+		long current = System.currentTimeMillis();
+		Handler handler = new Handler();
+		int size = 10000000;
+		for (int i = 0; i < size; i++) {
+			String url = "http://www.dianping.com/search/category/345/10/g251r6656p1";
+			handler.formateFile(url);
+		}
+		System.out.println("time:" + (System.currentTimeMillis() - current) * 1.0 / size);
+	}
+
+	@Test
+	public void formateUrl() {
+		String url1 = "http://www.dianping.com/search/category/345/10/g251r6656p1";
+		String url2 = "http://www.dianping.com/search/1";
+		String url3 = "http://www.dianping.com/help";
+		String url4 = "http://www.dianping.com/";
+
+		Handler handler = new Handler();
+
+		Assert.assertEquals("http://www.dianping.com/search/category", handler.formateFile(url1));
+		Assert.assertEquals("http://www.dianping.com/search/", handler.formateFile(url2));
+		Assert.assertEquals(url3, handler.formateFile(url3));
+		Assert.assertEquals(url4, handler.formateFile(url4));
 	}
 }

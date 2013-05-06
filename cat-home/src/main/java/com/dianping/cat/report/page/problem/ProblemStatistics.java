@@ -81,6 +81,11 @@ public class ProblemStatistics extends BaseVisitor {
 		m_ips = ips;
 	}
 
+	public ProblemStatistics setServiceThreshold(int serviceThreshold) {
+		m_serviceThreshold = serviceThreshold;
+		return this;
+	}
+
 	public ProblemStatistics setSqlThreshold(int sqlThreshold) {
 		m_sqlThreshold = sqlThreshold;
 		return this;
@@ -88,11 +93,6 @@ public class ProblemStatistics extends BaseVisitor {
 
 	public ProblemStatistics setUrlThreshold(int urlThreshold) {
 		m_urlThreshold = urlThreshold;
-		return this;
-	}
-
-	public ProblemStatistics setServiceThreshold(int serviceThreshold) {
-		m_serviceThreshold = serviceThreshold;
 		return this;
 	}
 
