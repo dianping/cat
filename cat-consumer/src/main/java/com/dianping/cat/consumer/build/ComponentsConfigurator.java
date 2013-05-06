@@ -4,15 +4,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
 import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dainping.cat.consumer.core.dal.DailyReportDao;
 import com.dainping.cat.consumer.core.dal.HostinfoDao;
+import com.dainping.cat.consumer.core.dal.MonthlyReportDao;
 import com.dainping.cat.consumer.core.dal.ProjectDao;
 import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dainping.cat.consumer.core.dal.TaskDao;
+import com.dainping.cat.consumer.core.dal.WeeklyReportDao;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
 import com.dianping.cat.consumer.DefaultMessageAnalyzerManager;
@@ -31,11 +33,12 @@ import com.dianping.cat.consumer.core.problem.ProblemHandler;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.message.spi.MessageConsumer;
-import com.dianping.cat.report.DefaultReportManager;
 import com.dianping.cat.report.DefaultReportService;
-import com.dianping.cat.report.ReportDelegate;
-import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.DefaultReportManager;
 import com.dianping.cat.report.ReportService;
+import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.report.RemoteModelService;
+import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
@@ -50,6 +53,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.ID, RealtimeConsumer.class) //
 		      .req(MessageAnalyzerManager.class, ServerStateManager.class));
+
+		all.add(C(RemoteModelService.class));
+		all.add(C(ReportService.class, DefaultReportService.class) //
+		      .req(ServerConfigManager.class, RemoteModelService.class) //
+		      .req(ReportDao.class, DailyReportDao.class, WeeklyReportDao.class, MonthlyReportDao.class));
 
 		all.addAll(defineTransactionComponents());
 
@@ -83,10 +91,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
-		// database
-		all.add(C(JdbcDataSourceConfigurationManager.class) //
-		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
-
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 
 		return all;
@@ -97,13 +101,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		final String ID = TransactionAnalyzer.ID;
 
 		all.add(C(MessageAnalyzer.class, ID, TransactionAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class));
-		all.add(C(ReportManager.class, DefaultReportManager.class) //
-		      .req(ReportService.class, ID) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
-		all.add(C(ReportService.class, ID, DefaultReportService.class) //
+		      .req(ReportManager.class, ID));
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
 		      .req(ReportDelegate.class, ID) //
-		      .req(ReportDao.class));
+		      .req(BucketManager.class, ReportDao.class, TaskDao.class));
 		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class));
 
 		return all;

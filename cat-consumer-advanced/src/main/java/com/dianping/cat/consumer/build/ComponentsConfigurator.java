@@ -3,7 +3,6 @@ package com.dianping.cat.consumer.build;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager;
 import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
@@ -49,10 +48,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(BucketManager.class, BusinessReportDao.class));
 
 		all.add(C(Module.class, CatConsumerAdvancedModule.ID, CatConsumerAdvancedModule.class));
-
-		// database
-		all.add(C(JdbcDataSourceConfigurationManager.class) //
-		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
 
 		all.addAll(new CatAdvancedDatabaseConfigurator().defineComponents());
 

@@ -19,8 +19,8 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
-import com.dianping.cat.report.DefaultReportManager.FlushPolicy;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 	public static final String ID = "transaction";
@@ -33,9 +33,9 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Override
 	public void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeReports(getStartTime(), FlushPolicy.FILE);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE);
 		} else {
-			m_reportManager.storeReports(getStartTime(), FlushPolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB);
 		}
 	}
 
@@ -56,7 +56,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Override
 	protected void loadReports() {
-//		m_reports = m_reportManager.loadReports(getStartTime());
+		// m_reports = m_reportManager.loadReports(getStartTime());
 	}
 
 	@Override
@@ -180,5 +180,4 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		range.incCount();
 		range.setSum(range.getSum() + d);
 	}
-
 }

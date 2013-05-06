@@ -45,6 +45,10 @@ public class ServerConfigManager implements LogEnabled {
 		return 2280;
 	}
 
+	public boolean isHdfsOn() {
+		return !m_config.getStorage().isHdfsDisabled();
+	}
+
 	public boolean isSerialWrite() {
 		return false;
 	}

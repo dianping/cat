@@ -108,13 +108,6 @@
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
-			</configuration>
-		</component>
-		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
-			<configuration>
 				<datasourceFile>datasources.xml</datasourceFile>
 			</configuration>
 		</component>

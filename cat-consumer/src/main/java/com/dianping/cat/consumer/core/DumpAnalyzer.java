@@ -47,9 +47,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 			@Override
 			public void run() {
 				try {
-					m_logger.info("Dump analyer starting archive!" + new Date(startTime));
+					m_logger.info("Dump analyzer starting archive! " + new Date(startTime));
 					m_bucketManager.archive(startTime);
-					m_logger.info("Dump analyer end archive!");
+					m_logger.info("Dump analyzer end archive!");
 				} catch (Exception e) {
 					Cat.logError(e);
 				}
@@ -64,8 +64,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 				return "DumpAnalyzer-Checkpoint";
 			}
 		});
+		
 		// wait the block dump complete
-		m_logger.info("old version domains:" + m_oldVersionDomains);
+		m_logger.info("Old version domains:" + m_oldVersionDomains);
 		m_logger.info("Error timestamp:" + m_errorTimestampDomains);
 		t.complete();
 	}

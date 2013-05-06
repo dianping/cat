@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.report.model.ModelPeriod;
 import com.dianping.cat.report.model.ModelRequest;
 import com.dianping.cat.report.model.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -25,7 +26,7 @@ public class EventModelServiceTest extends ComponentTestCase {
 	@Test
 	public void testLocal() throws Exception {
 		LocalEventService local = (LocalEventService) lookup(ModelService.class, "event-local");
-		ModelResponse<?> response = local.invoke(ModelRequest.from("Cat", "CURRENT"));
+		ModelResponse<?> response = local.invoke(new ModelRequest("Cat", ModelPeriod.CURRENT));
 
 		Assert.assertEquals(true, response != null);
 	}

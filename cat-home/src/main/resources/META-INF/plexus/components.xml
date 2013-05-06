@@ -1162,7 +1162,9 @@
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+				<datasourceFile>config/datasources.xml</datasourceFile>
+				<baseDirRef>CAT_HOME</baseDirRef>
+				<defaultBaseDir>/data/appdatas/cat</defaultBaseDir>
 			</configuration>
 		</component>
 		<component>

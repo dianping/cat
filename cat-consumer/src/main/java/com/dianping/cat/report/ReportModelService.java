@@ -2,7 +2,7 @@ package com.dianping.cat.report;
 
 import com.dianping.cat.report.model.ModelRequest;
 
-public interface ReportService<T> {
+public interface ReportModelService<T> {
 	public T getHouylyReport(ModelRequest request);
 
 	public T getDailyReport(ModelRequest request);

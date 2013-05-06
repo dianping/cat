@@ -1,9 +1,19 @@
 package com.dianping.cat.report;
 
+import java.util.Map;
+
 public interface ReportDelegate<T> {
-	public T parse(String xml) throws Exception;
+	public void afterLoad(Map<String, T> reports);
 
-	public T make(String domain, long startTime, long duration);
+	public void beforeSave(Map<String, T> reports);
 
-	public T merge(T old, T other);
+	public String buildXml(T report);
+
+	public String getDomain(T report);
+
+	public T makeReport(String domain, long startTime, long duration);
+
+	public T mergeReport(T old, T other);
+
+	public T parseXml(String xml) throws Exception;
 }

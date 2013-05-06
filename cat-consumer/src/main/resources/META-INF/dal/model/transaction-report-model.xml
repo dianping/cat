@@ -2,7 +2,7 @@
 <model model-package="com.dianping.cat.consumer.transaction.model" enable-merger="true" enable-json-builder="true"
 	enable-sax-parser="true" enable-json-parser="true" enable-base-visitor="true"
 	enable-native-builder="true" enable-native-parser="true">
-	<entity name="transaction-report" root="true" implements="com.dianping.cat.report.IReport">
+	<entity name="transaction-report" root="true">
 		<attribute name="domain" key="true" />
 		<attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
 		<attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />

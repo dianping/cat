@@ -201,7 +201,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //
-		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		      .config(E("datasourceFile").value("config/datasources.xml"), //
+		            E("baseDirRef").value("CAT_HOME"),
+		            E("defaultBaseDir").value("/data/appdatas/cat"),
+		            null));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new UserDatabaseConfigurator().defineComponents());
 

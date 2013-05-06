@@ -1,230 +1,255 @@
 package com.dianping.cat.report;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Files;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dainping.cat.consumer.core.dal.DailyReport;
+import com.dainping.cat.consumer.core.dal.DailyReportDao;
+import com.dainping.cat.consumer.core.dal.DailyReportEntity;
+import com.dainping.cat.consumer.core.dal.MonthlyReport;
+import com.dainping.cat.consumer.core.dal.MonthlyReportDao;
+import com.dainping.cat.consumer.core.dal.MonthlyReportEntity;
 import com.dainping.cat.consumer.core.dal.Report;
 import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dainping.cat.consumer.core.dal.ReportEntity;
+import com.dainping.cat.consumer.core.dal.WeeklyReport;
+import com.dainping.cat.consumer.core.dal.WeeklyReportDao;
+import com.dainping.cat.consumer.core.dal.WeeklyReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultMessageProducer;
+import com.dianping.cat.report.RemoteModelService.HttpServiceCallback;
 import com.dianping.cat.report.model.ModelRequest;
-import com.dianping.cat.report.model.ModelResponse;
-import com.dianping.cat.storage.Bucket;
-import com.dianping.cat.storage.BucketManager;
 
-public class DefaultReportService<T> extends ContainerHolder implements ReportService<T>, Initializable, LogEnabled {
+/**
+ * Report service to get timed (hourly, daily, weekly, monthly etc.) reports from various medias (memory, database etc.).
+ */
+public class DefaultReportService<T> extends ContainerHolder implements ReportService<T>, Initializable {
 	@Inject
 	private ServerConfigManager m_configManager;
 
 	@Inject
-	private BucketManager m_bucketManager;
+	private ReportDao m_hourlyReportDao;
 
 	@Inject
-	private ReportDao m_reportDao;
+	private DailyReportDao m_dailyReportDao;
 
-	private Logger m_logger;
+	@Inject
+	private WeeklyReportDao m_weeklyReportDao;
+
+	@Inject
+	private MonthlyReportDao m_monthlyReportDao;
+	
+	@Inject
+	private RemoteModelService m_hourlyService;
 
 	private List<Pair<String, Integer>> m_endpoints;
 
 	@Override
+	public T getDailyReport(ModelRequest request) {
+		return getHouylyReportFromDatabase(request);
+	}
+
 	@SuppressWarnings("unchecked")
-	public T createReport(String name, String domain, long startTime, long duration) {
-		ReportDelegate<T> maker = lookup(ReportDelegate.class, name);
-
-		return maker.make(domain, startTime, duration);
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public T getDailyReport(String name, String domain, Date start) {
-		return null;
-	}
-
-	@Override
-	public T getDailyReportByPeriod(String name, String domain, Date start, Date end) {
-		return null;
-	}
-
-	public T getHourlyReportFromRemote(String name, String domain, long startTime) {
-
-		// TODO
-		return null;
-	}
-
-	public URL buildUrl(Pair<String, Integer> endpoint, ModelRequest request, String name) throws MalformedURLException {
-		StringBuilder sb = new StringBuilder(64);
-
-		for (Entry<String, String> e : request.getProperties().entrySet()) {
-			if (e.getValue() != null) {
-				sb.append('&');
-				sb.append(e.getKey()).append('=').append(e.getValue());
-			}
-		}
-
-		String url = String.format("http://%s:%s%s/%s/%s/%s?op=xml%s", endpoint.getKey(), endpoint.getValue(), m_serviceUri, name, request.getDomain(),
-		      request.getPeriod(), sb.toString());
-
-		return new URL(url);
-	}
-
-	public ModelResponse<T> invoke(Transaction parent, ModelRequest request) {
-		ModelResponse<T> response = new ModelResponse<T>();
-		DefaultMessageProducer cat = (DefaultMessageProducer) Cat.getProducer();
-		Transaction t = cat.newTransaction(parent, "ModelService", getClass().getSimpleName());
+	protected T getDailyReportFromDatabase(ModelRequest request) {
+		String domain = request.getDomain();
+		long startTime = request.getStartTime();
+		String name = request.getReportName();
+		ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
+		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
 		try {
-			URL url = buildUrl(request);
+			List<DailyReport> reports = m_dailyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
+			      DailyReportEntity.READSET_FULL);
 
-			t.addData(url.toString());
+			for (DailyReport report : reports) {
+				try {
+					String xml = report.getContent();
+					T model = delegate.parseXml(xml);
 
-			String xml = Files.forIO().readFrom(url.openStream(), "utf-8");
-			int len = xml == null ? 0 : xml.length();
+					result = delegate.mergeReport(result, model);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
 
-			t.addData("length", len);
+		return result;
+	}
 
-			if (len > 0) {
-				T report = buildModel(xml);
+	@SuppressWarnings("unchecked")
+	protected T getHourlyReportFromRemote(final ModelRequest request) {
+		String domain = request.getDomain();
+		long startTime = request.getStartTime();
+		String name = request.getReportName();
+		final ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
+		final T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
+		final Semaphore semaphore = new Semaphore(0);
+		final Transaction t = Cat.getProducer().newTransaction("ModelService", name);
+		int count = 0;
 
-				response.setModel(report);
-				t.setStatus(Message.SUCCESS);
-			} else {
-				t.setStatus("NoReport");
+		t.setStatus(Message.SUCCESS);
+		t.addData("domain", domain);
+
+		try {
+			for (Pair<String, Integer> endpoint : m_endpoints) {
+				m_hourlyService.invoke(endpoint, t, name, request, new HttpServiceCallback() {
+					@Override
+					public void onComplete(String content) {
+						semaphore.release();
+
+						try {
+							T model = delegate.parseXml(content);
+
+							delegate.mergeReport(result, model);
+						} catch (Exception e) {
+							Cat.logError(e);
+						}
+					}
+
+					@Override
+					public void onException(Exception e, boolean timeout) {
+						semaphore.release();
+						Cat.logError(e);
+					}
+				});
+				count++;
 			}
 
-		} catch (Exception e) {
-			logError(e);
+			semaphore.tryAcquire(count, 5000, TimeUnit.MILLISECONDS); // 5 seconds timeout
+		} catch (Throwable e) {
 			t.setStatus(e);
-			response.setException(e);
+			Cat.logError(e);
 		} finally {
 			t.complete();
 		}
 
-		return response;
+		return result;
 	}
 
-	public Map<String, T> getHourlyReportsFromBucket(String name, long startTime) {
-		Map<String, T> reports = new HashMap<String, T>();
-		Bucket<String> bucket = null;
-
-		try {
-			bucket = m_bucketManager.getReportBucket(startTime, name);
-
-			for (String id : bucket.getIds()) {
-				String xml = bucket.findById(id);
-				T report = parseReport(name, xml);
-
-				reports.put(id, report);
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-			m_logger.error(String.format("Error when loading transacion reports of %s!", new Date(startTime)), e);
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+	@Override
+	public T getHouylyReport(ModelRequest request) {
+		switch (request.getPeriod()) {
+		case CURRENT:
+		case LAST:
+			return getHourlyReportFromRemote(request);
+		case HISTORICAL:
+			if (m_configManager.isLocalMode()) {
+				return getHourlyReportFromRemote(request);
+			} else {
+				return getHouylyReportFromDatabase(request);
 			}
 		}
 
-		return reports;
+		throw new UnsupportedOperationException(String.format("Not future report available for %s!", request.getPeriod()));
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public T getHouylyReport(String name, String domain, long startTime) {
+	protected T getHouylyReportFromDatabase(ModelRequest request) {
+		String domain = request.getDomain();
+		long startTime = request.getStartTime();
+		String name = request.getReportName();
 		ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
-		T old = delegate.make(domain, startTime, ReportConstants.HOUR);
+		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
 		try {
-			List<Report> reports = m_reportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
+			List<Report> reports = m_hourlyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
 			      ReportEntity.READSET_CONTENT);
 
 			for (Report report : reports) {
-				String xml = report.getContent();
-
 				try {
-					T model = delegate.parse(xml);
+					String xml = report.getContent();
+					T model = delegate.parseXml(xml);
 
-					old = delegate.merge(old, model);
+					result = delegate.mergeReport(result, model);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.logEvent("HourlyReport.Error", name, Event.SUCCESS,
-					      "domain=" + report.getDomain() + "&period=" + report.getPeriod() + "&id=" + report.getId());
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
-		return old;
+		return result;
+	}
+
+	@Override
+	public T getMonthlyReport(ModelRequest request) {
+		return getMonthlyReportFromDatabase(request);
 	}
 
 	@SuppressWarnings("unchecked")
-	public T getHouylyReportFromDatabase(String name, String domain, long startTime) {
+	protected T getMonthlyReportFromDatabase(ModelRequest request) {
+		String domain = request.getDomain();
+		long startTime = request.getStartTime();
+		String name = request.getReportName();
 		ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
-		T old = delegate.make(domain, startTime, ReportConstants.HOUR);
+		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
 		try {
-			List<Report> reports = m_reportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
-			      ReportEntity.READSET_CONTENT);
+			List<MonthlyReport> reports = m_monthlyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
+			      MonthlyReportEntity.READSET_FULL);
 
-			for (Report report : reports) {
-				String xml = report.getContent();
-
+			for (MonthlyReport report : reports) {
 				try {
-					T model = delegate.parse(xml);
+					String xml = report.getContent();
+					T model = delegate.parseXml(xml);
 
-					old = delegate.merge(old, model);
+					result = delegate.mergeReport(result, model);
 				} catch (Exception e) {
 					Cat.logError(e);
-					Cat.logEvent("HourlyReport.Error", name, Event.SUCCESS,
-					      "domain=" + report.getDomain() + "&period=" + report.getPeriod() + "&id=" + report.getId());
 				}
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
 
-		return old;
+		return result;
 	}
 
 	@Override
-	public T getMonthlyReport(String name, String domain, Date start) {
-		return null;
+	public T getWeeklyReport(ModelRequest request) {
+		return getWeeklyReportFromDatabase(request);
 	}
 
-	@Override
-	public T getWeeklyReport(String name, String domain, Date start) {
-		return null;
-	}
-
-	@Override
 	@SuppressWarnings("unchecked")
-	public T parseReport(String name, String xml) throws Exception {
+	protected T getWeeklyReportFromDatabase(ModelRequest request) {
+		String domain = request.getDomain();
+		long startTime = request.getStartTime();
+		String name = request.getReportName();
 		ReportDelegate<T> delegate = lookup(ReportDelegate.class, name);
+		T result = delegate.makeReport(domain, startTime, ReportConstants.HOUR);
 
-		return delegate.parse(xml);
+		try {
+			List<WeeklyReport> reports = m_weeklyReportDao.findAllByPeriodDomainName(new Date(startTime), domain, name,
+			      WeeklyReportEntity.READSET_FULL);
+
+			for (WeeklyReport report : reports) {
+				try {
+					String xml = report.getContent();
+					T model = delegate.parseXml(xml);
+
+					result = delegate.mergeReport(result, model);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+
+		return result;
 	}
 
 	@Override
