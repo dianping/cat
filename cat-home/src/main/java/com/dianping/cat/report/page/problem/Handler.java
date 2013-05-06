@@ -88,6 +88,7 @@ public class Handler implements PageHandler<Context> {
 
 				domainNames.addAll(domains);
 			}
+
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligible problem service registered for " + request + "!");
@@ -219,7 +220,6 @@ public class Handler implements PageHandler<Context> {
 		m_normalizePayload.normalize(model, payload);
 	}
 
-
 	private void setDefaultThreshold(Model model, Payload payload) {
 		Map<String, Domain> domains = m_manager.getLongConfigDomains();
 		Domain d = domains.get(payload.getDomain());
@@ -309,9 +309,6 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		ProblemReport problemReport = m_reportService.queryProblemReport(domain, start, end);
 
-		if (problemReport == null) {
-
-		}
 		return problemReport;
 	}
 

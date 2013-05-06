@@ -4,7 +4,6 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.helper.CatString;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
 
 public class NormalizePayload {
 
@@ -40,15 +39,6 @@ public class NormalizePayload {
 			model.setLongDate(payload.getDate());
 			model.setCustomDate(payload.getHistoryStartDate(), payload.getHistoryEndDate());
 		}
-
-		ModelPeriod period = payload.getPeriod();
-		
-		if (period.isFuture()) {
-			model.setLongDate(payload.getCurrentDate());
-		} else {
-			model.setLongDate(payload.getDate());
-		}
-
 	}
 
 }

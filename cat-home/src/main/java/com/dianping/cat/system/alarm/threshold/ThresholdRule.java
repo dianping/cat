@@ -71,16 +71,14 @@ public class ThresholdRule {
 				}
 			}
 			cleanData(getMaxInterval(), date.getTime());
-		} else {
-
 		}
 		return null;
 	}
 
 	public void cleanData(int maxInterval, long time) {
 		long start = time - (maxInterval + 1) * TimeUtil.ONE_MINUTE;
-
 		List<ThresholdDataEntity> removes = new ArrayList<ThresholdDataEntity>();
+
 		for (ThresholdDataEntity entity : m_datas) {
 			if (entity.getDate().getTime() < start) {
 				removes.add(entity);
@@ -99,7 +97,6 @@ public class ThresholdRule {
 	public long getCount(int interval, Date date) {
 		long start = date.getTime() - interval * 60 * 1000;
 		long totalCount = 0;
-
 		ThresholdDataEntity last = null;
 		ThresholdDataEntity first = null;
 
