@@ -5,6 +5,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads.Task;
@@ -26,7 +28,7 @@ import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.system.page.alarm.ScheduledManager;
 import com.dianping.cat.system.tool.MailSMS;
 
-public class ScheduledMailTask implements Task {
+public class ScheduledMailTask implements Task, LogEnabled {
 
 	@Inject
 	private DailyReportService m_dailyReportService;
@@ -44,6 +46,13 @@ public class ScheduledMailTask implements Task {
 	private ScheduledManager m_scheduledManager;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	private Logger m_logger;
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
 
 	@Override
 	public String getName() {
@@ -129,6 +138,7 @@ public class ScheduledMailTask implements Task {
 				if (mailRecord == null || mailRecord.getCreationDate().getTime() < TimeUtil.getCurrentDay().getTime()) {
 					List<ScheduledReport> reports = m_scheduledManager.queryScheduledReports();
 
+					m_logger.info("Send daily report starting! size :" + reports.size());
 					for (ScheduledReport report : reports) {
 						String domain = report.getDomain();
 						Transaction t = Cat.newTransaction("ScheduledReport", domain);
@@ -138,18 +148,19 @@ public class ScheduledMailTask implements Task {
 							String content = renderContent(names, domain);
 							String title = renderTitle(names, domain);
 							List<String> emails = m_scheduledManager.queryEmailsBySchReportId(report.getId());
-
 							boolean result = m_mailSms.sendEmail(title, content, emails);
 
 							insertMailLog(report.getId(), content, title, result, emails);
+							t.addData(emails.toString());
 							t.setStatus(Transaction.SUCCESS);
-							Cat.getProducer().logEvent("ScheduledReport", "Email", Event.SUCCESS, emails.toString());
-						} catch (DalException e) {
+						} catch (Exception e) {
 							Cat.logError(e);
 							t.setStatus(e);
+						} finally {
+							t.complete();
 						}
-						t.complete();
 					}
+					m_logger.info("Send daily report finnshed!");
 				} else {
 					Cat.getProducer().logEvent("ScheduledReport", "SendNot", Event.SUCCESS, null);
 				}
@@ -158,6 +169,7 @@ public class ScheduledMailTask implements Task {
 			}
 
 			try {
+				m_logger.info("Send daily report sleep!");
 				Thread.sleep(getSleepTime());
 			} catch (Exception e) {
 				active = false;

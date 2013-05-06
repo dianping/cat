@@ -71,12 +71,6 @@ public class EventRender extends BaseVisitor {
 	}
 
 	@Override
-	public void visitMachine(Machine machine) {
-		m_currentIp = machine.getIp();
-		super.visitMachine(machine);
-	}
-
-	@Override
 	public void visitEventReport(EventReport eventReport) {
 		super.visitEventReport(eventReport);
 		Date lastDay = new Date(m_date.getTime() - TimeUtil.ONE_DAY);
@@ -92,6 +86,12 @@ public class EventRender extends BaseVisitor {
 	}
 
 	@Override
+	public void visitMachine(Machine machine) {
+		m_currentIp = machine.getIp();
+		super.visitMachine(machine);
+	}
+
+	@Override
 	public void visitName(EventName name) {
 		super.visitName(name);
 	}
@@ -103,7 +103,7 @@ public class EventRender extends BaseVisitor {
 
 	@Override
 	public void visitType(EventType type) {
-		if (m_currentIp.equals(CatString.ALL_IP)) {
+		if (m_currentIp.equals(CatString.ALL)) {
 			Set<String> types = DisplayTypes.s_unusedTypes;
 			String id = type.getId();
 			if (!types.contains(id)) {

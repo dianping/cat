@@ -13,6 +13,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.advanced.MatrixReportFilter;
+import com.dianping.cat.consumer.core.TransactionReportUrlFilter;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -64,16 +66,20 @@ public class MonthReportCache implements Initializable {
 		}
 	}
 
-	public TransactionReport queryTransactionReport(String domain, Date start) {
-		return m_transactionReports.get(domain);
+	public CrossReport queryCrossReport(String domain, Date start) {
+		return m_crossReports.get(domain);
+	}
+
+	public DatabaseReport queryDatabaseReport(String database, Date start) {
+		return m_databaseRepors.get(database);
 	}
 
 	public EventReport queryEventReport(String domain, Date start) {
 		return m_eventReports.get(domain);
 	}
 
-	public ProblemReport queryProblemReport(String domain, Date start) {
-		return m_problemReports.get(domain);
+	public HealthReport queryHealthReport(String domain, Date start) {
+		return m_healthReports.get(domain);
 	}
 
 	public HeartbeatReport queryHeartbeatReport(String domain, Date start) {
@@ -84,38 +90,45 @@ public class MonthReportCache implements Initializable {
 		return m_matrixReports.get(domain);
 	}
 
-	public CrossReport queryCrossReport(String domain, Date start) {
-		return m_crossReports.get(domain);
+	public ProblemReport queryProblemReport(String domain, Date start) {
+		return m_problemReports.get(domain);
 	}
 
 	public SqlReport querySqlReport(String domain, Date start) {
 		return m_sqlReports.get(domain);
 	}
 
-	public DatabaseReport queryDatabaseReport(String database, Date start) {
-		return m_databaseRepors.get(database);
-	}
-
-	public HealthReport queryHealthReport(String domain, Date start) {
-		return m_healthReports.get(domain);
-	}
-
 	public StateReport queryStateReport(String domain, Date start) {
 		return m_stateReports.get(domain);
 	}
 
+	public TransactionReport queryTransactionReport(String domain, Date start) {
+		return m_transactionReports.get(domain);
+	}
+
 	public class Reload implements Task {
+		@Override
+		public String getName() {
+			return "Month-Report-Cache";
+		}
+
 		private void reload() {
 			Date start = TimeUtil.getCurrentMonth();
 			Date end = TimeUtil.getCurrentDay();
 			Set<String> domains = m_hourReportService.queryAllDomainNames(start, end, "transaction");
 
 			for (String domain : domains) {
-				m_transactionReports.put(domain, m_dailyReportService.queryTransactionReport(domain, start, end));
+				TransactionReport transactionReport = m_dailyReportService.queryTransactionReport(domain, start, end);
+				new TransactionReportUrlFilter().visitTransactionReport(transactionReport);
+				
+				m_transactionReports.put(domain, transactionReport);
 				m_eventReports.put(domain, m_dailyReportService.queryEventReport(domain, start, end));
 				m_problemReports.put(domain, m_dailyReportService.queryProblemReport(domain, start, end));
 				m_crossReports.put(domain, m_dailyReportService.queryCrossReport(domain, start, end));
-				m_matrixReports.put(domain, m_dailyReportService.queryMatrixReport(domain, start, end));
+				MatrixReport matrixReport = m_dailyReportService.queryMatrixReport(domain, start, end);
+				
+				m_matrixReports.put(domain, matrixReport);
+				new MatrixReportFilter().visitMatrixReport(matrixReport);
 				m_sqlReports.put(domain, m_dailyReportService.querySqlReport(domain, start, end));
 				m_healthReports.put(domain, m_dailyReportService.queryHealthReport(domain, start, end));
 			}
@@ -159,11 +172,6 @@ public class MonthReportCache implements Initializable {
 					active = false;
 				}
 			}
-		}
-
-		@Override
-		public String getName() {
-			return "Month-Report-Cache";
 		}
 
 		@Override

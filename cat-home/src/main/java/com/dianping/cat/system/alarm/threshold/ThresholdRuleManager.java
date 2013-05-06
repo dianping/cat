@@ -53,7 +53,6 @@ public class ThresholdRuleManager implements Initializable {
 	private ThresholdRule addExceptionRule(AlarmRule rule, ThresholdTemplate template) {
 		String domain = rule.getDomain();
 		ThresholdRule thresholdRule = new ThresholdRule(rule.getId(), domain, template);
-
 		ArrayList<ThresholdRule> rules = m_exceptionRules.get(domain);
 
 		if (rules == null) {
@@ -70,7 +69,6 @@ public class ThresholdRuleManager implements Initializable {
 	private ThresholdRule addServiceRule(AlarmRule rule, ThresholdTemplate template) {
 		String domain = rule.getDomain();
 		ThresholdRule thresholdRule = new ThresholdRule(rule.getId(), domain, template);
-
 		ArrayList<ThresholdRule> rules = m_serviceRules.get(domain);
 
 		if (rules == null) {
@@ -122,17 +120,6 @@ public class ThresholdRuleManager implements Initializable {
 			}
 		}
 		return new ArrayList<ThresholdRule>();
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		if (m_configManager.isJobMachine() && !m_configManager.isLocalMode()) {
-			initalizeExceptionRule();
-			initalizeServiceRule();
-
-			ReloadThresholdRuleTask task = new ReloadThresholdRuleTask();
-			Threads.forGroup("Cat").start(task);
-		}
 	}
 
 	private void initalizeExceptionRule() {
@@ -192,6 +179,17 @@ public class ThresholdRuleManager implements Initializable {
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		if (m_configManager.isJobMachine() && !m_configManager.isLocalMode()) {
+			initalizeExceptionRule();
+			initalizeServiceRule();
+
+			ReloadThresholdRuleTask task = new ReloadThresholdRuleTask();
+			Threads.forGroup("Cat").start(task);
 		}
 	}
 

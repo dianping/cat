@@ -37,7 +37,6 @@ public class CacheReport {
 
 	public void addNewNameItem(TransactionName transactionName, EventName eventName) {
 		String key = transactionName.getId();
-
 		CacheNameItem item = m_nameItems.get(key);
 		CacheNameItem all = m_nameItems.get(ALL);
 
@@ -62,6 +61,7 @@ public class CacheReport {
 	public void addNewTypeItem(TransactionType transactionType, EventType eventType) {
 		String key = transactionType.getId();
 		CacheTypeItem item = m_typeItems.get(key);
+		
 		if (item == null) {
 			item = new CacheTypeItem();
 			item.setType(transactionType);

@@ -36,10 +36,6 @@ public class MetricDisplay extends BaseVisitor {
 
 	private Set<String> m_allChannel = new TreeSet<String>();
 
-	public Set<String> getAllChannel() {
-		return m_allChannel;
-	}
-
 	public MetricDisplay(MetricConfig metricConfig, String channel, Date start) {
 		m_config = metricConfig;
 		m_start = start;
@@ -60,6 +56,33 @@ public class MetricDisplay extends BaseVisitor {
 				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
 			}
 		}
+	}
+
+	private void buildGraphItem(Collection<Point> points) {
+		for (Point point : points) {
+
+			int min = point.getId();
+			long count = point.getCount();
+			double sum = point.getSum();
+			double avg = point.getAvg();
+
+			GraphItem graphItem = m_metrics.get(m_key + ":sum");
+			if (graphItem != null) {
+				graphItem.setValue(min, sum);
+			}
+			graphItem = m_metrics.get(m_key + ":count");
+			if (graphItem != null) {
+				graphItem.setValue(min, count);
+			}
+			graphItem = m_metrics.get(m_key + ":avg");
+			if (graphItem != null) {
+				graphItem.setValue(min, avg);
+			}
+		}
+	}
+
+	public Set<String> getAllChannel() {
+		return m_allChannel;
 	}
 
 	public List<GraphItem> getGroups() {
@@ -86,29 +109,6 @@ public class MetricDisplay extends BaseVisitor {
 
 			if (m != null) {
 				buildGraphItem(m.getPoints().values());
-			}
-		}
-	}
-
-	private void buildGraphItem(Collection<Point> points) {
-		for (Point point : points) {
-
-			int min = point.getId();
-			long count = point.getCount();
-			double sum = point.getSum();
-			double avg = point.getAvg();
-
-			GraphItem graphItem = m_metrics.get(m_key + ":sum");
-			if (graphItem != null) {
-				graphItem.setValue(min, sum);
-			}
-			graphItem = m_metrics.get(m_key + ":count");
-			if (graphItem != null) {
-				graphItem.setValue(min, count);
-			}
-			graphItem = m_metrics.get(m_key + ":avg");
-			if (graphItem != null) {
-				graphItem.setValue(min, avg);
 			}
 		}
 	}
@@ -154,6 +154,10 @@ public class MetricDisplay extends BaseVisitor {
 			return gson.toJson(this);
 		}
 
+		public String getKey() {
+			return key;
+		}
+
 		public int getSize() {
 			return this.size;
 		}
@@ -168,6 +172,10 @@ public class MetricDisplay extends BaseVisitor {
 
 		public String getTitle() {
 			return this.title;
+		}
+
+		public double[] getValues() {
+			return values;
 		}
 
 		public GraphItem setSize(int size) {
@@ -192,14 +200,6 @@ public class MetricDisplay extends BaseVisitor {
 		public GraphItem setValue(int minute, double value) {
 			values[minute] = value;
 			return this;
-		}
-
-		public String getKey() {
-			return key;
-		}
-
-		public double[] getValues() {
-			return values;
 		}
 
 		public void setValues(double[] values) {

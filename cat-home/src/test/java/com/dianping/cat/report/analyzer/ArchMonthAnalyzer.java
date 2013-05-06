@@ -92,7 +92,7 @@ public class ArchMonthAnalyzer extends ComponentTestCase {
 				      DailyreportEntity.READSET_FULL);
 
 				TransactionReport transactionReport = DefaultSaxParser.parse(report.getContent());
-				Machine machine = transactionReport.findOrCreateMachine(CatString.ALL_IP);
+				Machine machine = transactionReport.findOrCreateMachine(CatString.ALL);
 
 				Indicator indicator = indicators.get(date.getTime());
 				if (indicator == null) {

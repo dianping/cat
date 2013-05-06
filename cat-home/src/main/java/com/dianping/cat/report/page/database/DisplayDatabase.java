@@ -31,6 +31,16 @@ public class DisplayDatabase extends BaseVisitor {
 		return m_results;
 	}
 
+	public DisplayDatabase setDomain(String database) {
+		m_domain = database;
+		return this;
+	}
+
+	public DisplayDatabase setDuration(long duration) {
+		m_duration = duration;
+		return this;
+	}
+
 	public DisplayDatabase setSortBy(String sortBy) {
 		if (!StringUtils.isEmpty(sortBy)) {
 			m_sortBy = sortBy;
@@ -111,15 +121,5 @@ public class DisplayDatabase extends BaseVisitor {
 			return 0;
 		}
 
-	}
-
-	public DisplayDatabase setDomain(String database) {
-		m_domain = database;
-		return this;
-	}
-
-	public DisplayDatabase setDuration(long duration) {
-		m_duration = duration;
-		return this;
 	}
 }
