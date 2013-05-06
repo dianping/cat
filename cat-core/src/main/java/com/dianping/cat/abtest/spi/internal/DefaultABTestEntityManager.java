@@ -10,6 +10,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.ABTestId;
 import com.dianping.cat.abtest.model.entity.Abtest;
 import com.dianping.cat.abtest.model.entity.Entity;
@@ -53,12 +54,18 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 			abtest.accept(visitor);
 
 			for (ABTestEntity entity : m_entityList) {
-				ABTestGroupStrategy groupStrategy = this.lookup(ABTestGroupStrategy.class, entity.getGroupStrategyName());
-				entity.setGroupStrategy(groupStrategy);
-			}
+				try {
+					ABTestGroupStrategy groupStrategy = lookup(ABTestGroupStrategy.class, entity.getGroupStrategyName());
 
+					entity.setGroupStrategy(groupStrategy);
+				} catch (Exception e) {
+					Cat.logError(e);
+					//TODO un-comment the following line later!
+					//entity.setDisabled(true);
+				}
+			}
 		} catch (Exception e) {
-			throw new InitializationException("Error when loading resource(abtest.xml)", e);
+			throw new InitializationException("Error when loading resource(abtest.xml)!", e);
 		}
 	}
 
