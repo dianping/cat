@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.cat.home.dal.abtest" gen="true">
+	<entity name="abtest" table="abtest" alias="a">
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
+		<member name="disabled" field="isDisabled" value-type="boolean" length="3" nullable="false" />
+		<query-defs>
+			<query name="find-all-abtest" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> ORDER BY <FIELD name='creation-date'/> DESC
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+</entities>
+
