@@ -88,16 +88,10 @@
 				<ul class="nav nav-list well liHover">
 					<li class="nav-header">ABTest Status</li>
 					<li class="divider" />
-					<li${payload.status eq 'running' ? ' class="selected"' : ''}>
-						<a href="?op=list&status=running">
-						<img height="12" width="12" src="${res.img.local['RUNNING_black_small.png']}"> running
-						<span class="badge statusSpan">${model.runningCount}</span>
-						</a>
-					</li>
-					<li${payload.status eq 'disabled' ? ' class="selected"' : ''}>
-						<a href="?op=list&status=disabled">
-						<img height="12" width="12" src="${res.img.local['PAUSED_black_small.png']}"> disabled
-						<span class="badge statusSpan">${model.disabledCount}</span>
+					<li${payload.status eq 'created' ? ' class="selected"' : ''}>
+						<a href="?op=list&status=created">
+						<img height="12" width="12" src="${res.img.local['CREATED_black_small.png']}"> created
+						<span class="badge statusSpan">${model.createdCount}</span>
 						</a>
 					</li>
 					<li${payload.status eq 'ready' ? ' class="selected"' : ''}>
@@ -106,10 +100,22 @@
 						<span class="badge statusSpan">${model.readyCount}</span>
 						</a>
 					</li>
-					<li${payload.status eq 'stopped' ? ' class="selected"' : ''}>
-						<a href="?op=list&status=stopped">
-						<img height="12" width="12" src="${res.img.local['STOPPED_black_small.png']}"> stopped
-						<span class="badge statusSpan">${model.stoppedCount}</span>
+					<li${payload.status eq 'running' ? ' class="selected"' : ''}>
+						<a href="?op=list&status=running">
+						<img height="12" width="12" src="${res.img.local['RUNNING_black_small.png']}"> running
+						<span class="badge statusSpan">${model.runningCount}</span>
+						</a>
+					</li>
+					<li${payload.status eq 'terminated' ? ' class="selected"' : ''}>
+						<a href="?op=list&status=terminated">
+						<img height="12" width="12" src="${res.img.local['STOPPED_black_small.png']}"> terminated
+						<span class="badge statusSpan">${model.terminatedCount}</span>
+						</a>
+					</li>
+					<li${payload.status eq 'suspended' ? ' class="selected"' : ''}>
+						<a href="?op=list&status=suspended">
+						<img height="12" width="12" src="${res.img.local['PAUSED_black_small.png']}"> suspended
+						<span class="badge statusSpan">${model.suspendedCount}</span>
 						</a>
 					</li>
 				</ul>
@@ -120,9 +126,8 @@
 				<button class="btn" type="button">
 					<label class="checkbox"> <input id="ckall" type="checkbox"></input></label>
 				</button>
-				<button id="btnStart" class="btn" type="button">Start</button>
-				<button id="btnDisable" class="btn" type="button">Disable</button>
-				<button id="btnStop" class="btn" type="button">Stop</button>
+				<button id="btnSuspend" class="btn" type="button">Suspend</button>
+				<button id="btnResume" class="btn" type="button">Resume</button>
 			</div>
 
 			<table class="table table-striped table-format table-hover" data-provides="rowlink">
@@ -147,25 +152,30 @@
 							<td>10%</td>
 							<td>
 								<c:choose>
-									<c:when test="${item.status.status == 0}">
+									<c:when test="${item.status.status eq 'created'}">
+										<div>
+											<img src="${res.img.local['CREATED_colored_big.png']}" />
+										</div> <small>Created</small>
+									</c:when>
+									<c:when test="${item.status.status eq 'running'}">
 										<div>
 											<img src="${res.img.local['RUNNING_colored_big.png']}" />
 										</div> <small>Running</small>
 									</c:when>
-									<c:when test="${item.status.status == 1}">
+									<c:when test="${item.status.status eq 'terminated'}">
 										<div>
 											<img src="${res.img.local['STOPPED_colored_big.png']}">
-										</div> <small>Stopped</small>
+										</div> <small>Terminated</small>
 									</c:when>
-									<c:when test="${item.status.status == 2}">
+									<c:when test="${item.status.status eq 'ready'}">
 										<div>
 											<img src="${res.img.local['READY_colored_big.png']}">
 										</div> <small>Ready to start</small>
 									</c:when>
-									<c:when test="${item.status.status == 3}">
+									<c:when test="${item.status.status eq 'suspended'}">
 										<div>
 											<img src="${res.img.local['PAUSED_colored_big.png']}">
-										</div> <small>Disabled</small>
+										</div> <small>Suspended</small>
 									</c:when>
 								</c:choose> 
 							</td>

@@ -60,7 +60,7 @@ public class Handler implements PageHandler<Context> {
 	private void renderListView(Model model, Payload payload) {
 		List<ABTestReport> reports = new ArrayList<ABTestReport>();
 		List<Abtest> entities = new ArrayList<Abtest>();
-		ABTestEntityStatus status = ABTestEntityStatus.getByName(payload.getStatus(), ABTestEntityStatus.DEFALUT);
+		AbtestStatus status = AbtestStatus.getByName(payload.getStatus(), null);
 		Date now = new Date();
 
 		try {
@@ -70,35 +70,39 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		List<Abtest> filterTests = new ArrayList<Abtest>();
-		int runningCount = 0, stoppedCount = 0, readyCount = 0, disableCount = 0;
+		int createdCount = 0, readyCount = 0, runningCount = 0, terminatedCount = 0, suspendedCount = 0;
 
 		for (Abtest abtest : entities) {
 			ABTestReport report = new ABTestReport(abtest, now);
 
-			if (report.getStatus() == status) {
+			if (status != null && report.getStatus() == status) {
 				filterTests.add(abtest);
 			}
 			switch (report.getStatus()) {
-			case RUNNING:
-				runningCount++;
-				break;
-			case STOPPED:
-				stoppedCount++;
+			case CREATED:
+				createdCount++;
 				break;
 			case READY:
 				readyCount++;
 				break;
-			case DISABLED:
-				disableCount++;
+			case RUNNING:
+				runningCount++;
+				break;
+			case TERMINATED:
+				terminatedCount++;
+				break;
+			case SUSPENDED:
+				suspendedCount++;
 				break;
 			}
 		}
 
+		model.setCreatedCount(createdCount);
 		model.setReadyCount(readyCount);
 		model.setRunningCount(runningCount);
-		model.setStoppedCount(stoppedCount);
-		model.setDisabledCount(disableCount);
-		if (status != ABTestEntityStatus.DEFALUT) {
+		model.setTerminatedCount(terminatedCount);
+		model.setSuspendedCount(suspendedCount);
+		if (status != null) {
 			entities = filterTests;
 		}
 

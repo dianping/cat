@@ -1,11 +1,10 @@
 package com.dianping.cat.system.page.abtest;
 
-import com.dianping.cat.system.SystemPage;
-
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
 	private SystemPage m_page;
@@ -39,10 +38,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
    }
 
 	public void setStatus(String status) {
-		if(StringUtils.isBlank(status)){
-			m_status = ABTestEntityStatus.DEFALUT.name();
+		AbtestStatus abstatus = AbtestStatus.getByName(status, null);
+
+		if(abstatus != null){
+			m_status = abstatus.name().toLowerCase();
 		}else{
-			m_status = status;
+			m_status = "all";
 		}
    }
 
