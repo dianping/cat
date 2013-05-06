@@ -262,11 +262,14 @@ CREATE TABLE `abtest` (
   `isDisabled` tinyint(4) NOT NULL COMMENT '是否有效',
   `domains` varchar(100) NOT NULL COMMENT '属于的domain，用分号分割',
   `strategy_id` int(11) NOT NULL COMMENT '分组策略ID',
+  `strategy_config` blob COMMENT '策略配置',
   `description` varchar(100) DEFAULT NULL COMMENT '实验描述',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8$$
+
+
 
 
 
