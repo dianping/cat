@@ -302,7 +302,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String remoteIp = info.getRemoteAddress();
 		String role = info.getRemoteRole();
 		String transactionName = t.getName();
-
 		Local client = report.findOrCreateLocal(localIp);
 		Remote server = client.findOrCreateRemote(remoteIp);
 
@@ -315,6 +314,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			type.setId(info.getDetailType());
 			server.setType(type);
 		}
+		
 		Name name = type.findOrCreateName(transactionName);
 
 		type.incTotalCount();

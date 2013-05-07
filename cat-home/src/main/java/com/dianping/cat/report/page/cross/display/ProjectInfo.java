@@ -144,7 +144,7 @@ public class ProjectInfo extends BaseVisitor {
 			addCallProject(remoteIp, remote.getType());
 		}
 	}
-
+	
 	public void setDomainManager(DomainManager domainManager) {
 		m_domainManager = domainManager;
 	}
