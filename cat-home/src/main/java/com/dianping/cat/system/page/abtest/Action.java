@@ -3,6 +3,8 @@ package com.dianping.cat.system.page.abtest;
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view"),
 	
+	DOCREATE("doCreate"),
+	
 	LIST("list"),
 	
 	REPORT("report");

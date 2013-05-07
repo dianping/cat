@@ -2,6 +2,8 @@ package com.dianping.cat.system.page.abtest;
 
 public enum JspFile {
 	VIEW("/jsp/system/abtest.jsp"),
+	
+	DOCREATE("/jsp/system/abtestDoCreate.jsp"),
 
 	LIST("/jsp/system/abtestAllTest.jsp"),
 	

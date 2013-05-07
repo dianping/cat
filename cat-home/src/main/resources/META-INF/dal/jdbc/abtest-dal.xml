@@ -13,5 +13,15 @@
 			</query>
 		</query-defs>
 	</entity>
+    <entity name="group-strategy" table="groupStrategy" alias="g">
+        <query-defs>
+            <query name="find-all-groupStrategy" type="SELECT" multiple="true">
+                <statement><![CDATA[
+                    SELECT <FIELDS/> 
+                    FROM <TABLE/> ORDER BY <FIELD name='id'/>
+                ]]></statement>
+            </query>
+        </query-defs>
+    </entity>
 </entities>
 

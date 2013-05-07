@@ -2,10 +2,13 @@ package com.dianping.cat.system.page.abtest;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
 
+import com.dainping.cat.consumer.dal.report.Project;
 import com.dianping.cat.abtest.spi.ABTestEntity;
+import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.system.SystemPage;
 
 public class Model extends ViewModel<SystemPage, Action, Context> {
@@ -28,6 +31,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private int m_terminatedCount;
 
 	private int m_suspendedCount;
+
+	private Map<String, List<Project>> m_projectMap;
+
+	private List<GroupStrategy> m_groupStrategyList;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -117,4 +124,21 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setSuspendedCount(int suspendedCount) {
 		m_suspendedCount = suspendedCount;
 	}
+
+	public Map<String, List<Project>> getProjectMap() {
+		return m_projectMap;
+	}
+
+	public void setProjectMap(Map<String, List<Project>> projectMap) {
+		this.m_projectMap = projectMap;
+	}
+
+	public List<GroupStrategy> getGroupStrategyList() {
+		return m_groupStrategyList;
+	}
+
+	public void setGroupStrategyList(List<GroupStrategy> groupStrategyList) {
+		this.m_groupStrategyList = groupStrategyList;
+	}
+
 }

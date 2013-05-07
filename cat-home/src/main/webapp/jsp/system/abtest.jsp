@@ -19,33 +19,39 @@ div.controls input {
    <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-   <div style="width: 900px; margin: 0 auto; margin-bottom: 250px;">
+   <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
+   <div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
       <h4 style="margin: 0 auto;">Create ABTest</h4>
+      <div id="successMsg" style="margin: 0 auto; padding: 0; width: 200px;"></div>
+      <div id="errorMsg" style="margin: 0 auto; padding: 0; width: 200px;"></div>
       <div style="width: 90%;">
-         <!-- <span style="float: right" class="label label-info"> Edit </span>  -->
-         <h5>Basic Information</h5>
-         <hr style="margin-top: 5px;">
-         <form class="form-horizontal">
+         <form method="post" action="abtest" class="form-horizontal" onsubmit="return submit0(this);">
+            <!-- <span style="float: right" class="label label-info"> Edit </span>  -->
+            <button type="button" onclick="" style="float: right; margin-left: 20px" class="btn">cancel</button>
+            <button id="submit" style="float: right;" type="submit" class="btn btn-success">submit</button>
+            <h5>Basic Information</h5>
+            <hr style="margin-top: 20px;">
+            <input type="hidden" name="op" value="doCreate">
             <div class="control-group">
                <label class="control-label">AB Test Name <i tips="" data-trigger="hover" class="icon-question-sign"
                   data-toggle="popover" data-placement="top" data-original-title="tips"
                   data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
                </label>
                <div class="controls">
-                  <input type="text" placeholder="give it a name ...">&nbsp;&nbsp; <span class="help-inline"></span>
+                  <input type="text" name="name" placeholder="give it a name ...">&nbsp;&nbsp; <span class="help-inline"></span>
                </div>
             </div>
             <div class="control-group">
                <label class="control-label">Description</label>
                <div class="controls">
-                  <textarea placeholder="say something about the abtest ... " class="span6" rows="3" cols="60"></textarea>
+                  <textarea name="description" placeholder="say something about the abtest ... " class="span6" rows="3" cols="60"></textarea>
                </div>
             </div>
             <div class="control-group">
                <label class="control-label">Starting Time</label>
                <div class="controls">
                   <div id="datetimepicker1" class="input-append date">
-                     <input placeholder="when to run ab test" data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
+                     <input name="startDate" placeholder="when to run ab test" data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
                         class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
                      </span>
                   </div>
@@ -55,7 +61,7 @@ div.controls input {
                <label class="control-label">End Time</label>
                <div class="controls">
                   <div id="datetimepicker2" class="input-append date">
-                     <input placeholder="when to stop ab test" data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
+                     <input name="endDate" placeholder="when to stop ab test" data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
                         class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
                      </span>
                   </div>
@@ -67,30 +73,15 @@ div.controls input {
                   data-content="you can choose one or more than one domain"></i>
                </label>
                <div class="controls">
-                  <select multiple="" name="e9" id="e9" style="width: 350px;" class="populate select2-offscreen" tabindex="-1">
-                     <optgroup label="团购">
-                        <option value="AK">Tuangou web</option>
-                        <option value="HI">Tuangou mobile api</option>
-                     </optgroup>
-                     <optgroup label="主站">
-                        <option value="CA">shop-web</option>
-                     </optgroup>
-                     <optgroup label="架构">
-                        <option value="456">shop-web</option>
-                     </optgroup>
-                     <optgroup label="移动">
-                        <option value="CA">shop-web</option>
-                        <option value="HI">Tuangou mobile api</option>
-                        <option value="321">Tuangou mobile api</option>
-                        <option value="54">Tuangou mobile api</option>
-                        <option value="g">Tuangou mobile api</option>
-                        <option value="fsd">Tuangou mobile api</option>
-                        <option value="s">Tuangou mobile api</option>
-                        <option value="t">Tuangou mobile api</option>
-                        <option value="yy">Tuangou mobile api</option>
-                        <option value="ui">Tuangou mobile api</option>
-                        <option value="kk">Tuangou mobile api</option>
-                     </optgroup>
+                  <select multiple="" name="domain" id="domain" style="width: 350px;" class="populate select2-offscreen"
+                     tabindex="-1">
+                     <c:forEach var="item" items="${model.projectMap}">
+                        <optgroup label="${item.key}">
+                           <c:forEach var="listItem" items="${item.value}">
+                              <option value="${listItem.domain}">${listItem.domain}</option>
+                           </c:forEach>
+                        </optgroup>
+                     </c:forEach>
                   </select>
                </div>
             </div>
@@ -99,38 +90,86 @@ div.controls input {
             <div class="control-group">
                <label class="control-label">Strategy Name</label>
                <div class="controls">
-                  <select>
-                     <option>percent</option>
-                     <option>other name</option>
+                  <select name="strategyId">
+                     <c:forEach var="item" items="${model.groupStrategyList}">
+                        <option value="${item.id }">${item.name }</option>
+                     </c:forEach>
                   </select>
                </div>
             </div>
             <div class="control-group">
                <label class="control-label">Strategy Configuration</label>
                <div class="controls">
-                  <textarea class="span6" rows="3" cols="60"></textarea>
-               </div>
-            </div>
-            <div class="control-group" style="margin-top: 40px">
-               <div class="controls">
-                  <button type="submit" class="btn btn-success">submit</button>
-                  <button type="button" onclick="advance()" style="margin-left: 20px" class="btn">cancel</button>
+                  <textarea name="strategyConfiguretion" class="span6" rows="3" cols="60"></textarea>
                </div>
             </div>
          </form>
       </div>
    </div>
+   <!-- 错误消息弹出框 -->
+   <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" class="modal hide fade" id="errorMsgModal"
+      style="display: none;">
+      <div class="modal-header">
+         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+         <h3></h3>
+      </div>
+      <div class="modal-body">
+         <p style="text-align: center"></p>
+      </div>
+      <div class="modal-footer">
+         <button data-dismiss="modal" class="btn btn-info">关闭</button>
+      </div>
+   </div>
+   <script type="text/template" id="alert_success">
+         <div style="position: absolute; width: 200px;" class="alert alert-success">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <span style="text-align: center;"></span>
+         </div>
+</script>
+   <script type="text/template" id="alert_error">
+         <div style="position: absolute; width: 200px;" class="alert alert-error">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <span style="text-align: center;"></span>
+         </div>
+</script>
+
    <script>
+				function submit0(form) {
+					$("#successMsg").html('');
+					$("#errorMsg").html('');
+					$.ajax({
+						type : $(form).attr('method'),
+						url : $(form).attr('action'),
+						data : $(form).serialize(),
+						dataType : "json",
+						success : submitDone,
+						error : abtest.httpError
+					});
+					return false;
+				}
+
+				function submitDone(data) {
+					if (data.success == false) {
+						console.log($("#alert_error").html());
+						$("#errorMsg").html($("#alert_error").html());
+						$("#errorMsg > div > span").text(data.errorMsg);
+					} else {
+						//成功了，显示成功，
+						$("#successMsg").html($("#alert_success").html());
+					}
+				}
+
 				$(function() {
 					$('#datetimepicker1').datetimepicker();
 					$('#datetimepicker2').datetimepicker();
-					$("#e9")
+					$("#domain")
 							.select2(
 									{
 										placeholder : "select which domains to run this ab test",
 										allowClear : true
 									});
 					$('i[tips]').popover();
+					$("#submit").removeAttr("disabled");
 				});
 			</script>
 </a:body>
