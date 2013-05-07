@@ -52,6 +52,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
 
+	@FieldMeta("enable")
+	private boolean m_enableAbtest;
+
+	@FieldMeta("ids")
+	private String m_ids;
+
 	public void setAction(String action) {
 		if (action.equalsIgnoreCase(Action.REPORT.getName())) {
 			m_action = Action.getByName(action, Action.REPORT);
@@ -179,6 +185,22 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		this.m_strategyConfiguretion = strategyConfiguretion;
 	}
 
+	public boolean isEnableAbtest() {
+		return m_enableAbtest;
+	}
+
+	public void setEnableAbtest(boolean enableAbtest) {
+		m_enableAbtest = enableAbtest;
+	}
+
+	public String getIds() {
+		return m_ids;
+	}
+
+	public void setIds(String ids) {
+		m_ids = ids;
+	}
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
@@ -198,6 +220,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			} catch (IllegalArgumentException e) {
 				ctx.setException(e);
 			}
+		}
+		if (m_status == null) {
+			m_status = "all";
 		}
 	}
 }
