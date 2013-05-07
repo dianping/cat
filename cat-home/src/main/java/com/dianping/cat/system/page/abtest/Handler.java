@@ -96,6 +96,10 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			model.setProjectMap(projectMap);
 			model.setGroupStrategyList(groupStrategyList);
 		} else if (action == Action.DOCREATE) {
+			Map<String, List<Project>> projectMap = getAllProjects();
+			List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
+			model.setProjectMap(projectMap);
+			model.setGroupStrategyList(groupStrategyList);
 		} else if (action == Action.REPORT) {
 
 		}

@@ -20,12 +20,36 @@ div.controls input {
    <res:useJs value="${res.js.local['bootstrap-datetimepicker.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
+   <res:useJs value="${res.js.local['bootstrap-validation.min.js']}" target="head-js" />
    <div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
       <h4 style="margin: 0 auto;">Create ABTest</h4>
-      <div id="successMsg" style="margin: 0 auto; padding: 0; width: 200px;"></div>
-      <div id="errorMsg" style="margin: 0 auto; padding: 0; width: 200px;"></div>
+      <c:choose>
+         <c:when test="${ctx.exception != null}">
+            <div id="errorMsg" style="margin: 0 auto; padding: 0; width: 300px;">
+               <div style="position: absolute; width: 300px;" class="alert alert-error">
+                  <button type="button" class="close" data-dismiss="alert">×</button>
+                  <span style="text-align: center;">${ctx.exception.message}</span>
+               </div>
+            </div>
+         </c:when>
+         <c:when test="${payload.action.name == 'doCreate'}">
+            <div id="successMsg" style="margin: 0 auto; padding: 0; width: 330px;">
+               <div style="position: absolute; width: 330px;" class="alert alert-success">
+                  <span style="text-align: center;">Created! Going to the list page after <span id="countDown"></span>
+                     seconds ...
+                  </span>
+                  <script>
+																			$(function() {
+																				countDown();
+																				$('#submit').attr("disabled","disabled");
+																			});
+																		</script>
+               </div>
+            </div>
+         </c:when>
+      </c:choose>
       <div style="width: 90%;">
-         <form method="post" action="abtest" class="form-horizontal" onsubmit="return submit0(this);">
+         <form id="form" method="post" action="" class="form-horizontal">
             <!-- <span style="float: right" class="label label-info"> Edit </span>  -->
             <button type="button" onclick="" style="float: right; margin-left: 20px" class="btn">cancel</button>
             <button id="submit" style="float: right;" type="submit" class="btn btn-success">submit</button>
@@ -38,21 +62,23 @@ div.controls input {
                   data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
                </label>
                <div class="controls">
-                  <input type="text" name="name" placeholder="give it a name ...">&nbsp;&nbsp; <span class="help-inline"></span>
+                  <input type="text" name="name" placeholder="give it a name ..." check-type="required"
+                     required-message="Name is required!" value="${payload.name}">
                </div>
             </div>
             <div class="control-group">
                <label class="control-label">Description</label>
                <div class="controls">
-                  <textarea name="description" placeholder="say something about the abtest ... " class="span6" rows="3" cols="60"></textarea>
+                  <textarea name="description" placeholder="say something about the abtest ... " class="span6" rows="3" cols="60">${payload.description}</textarea>
                </div>
             </div>
             <div class="control-group">
-               <label class="control-label">Starting Time</label>
+               <label class="control-label">Start Time</label>
                <div class="controls">
                   <div id="datetimepicker1" class="input-append date">
-                     <input name="startDate" placeholder="when to run ab test" data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-                        class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+                     <input name="startDate" value="${payload.startDateStr}" placeholder="when to run ab test"
+                        data-format="yyyy-MM-dd hh:mm" type="text" check-type="required" required-message="Start Time is required!"></input>
+                     <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
                      </span>
                   </div>
                </div>
@@ -61,8 +87,9 @@ div.controls input {
                <label class="control-label">End Time</label>
                <div class="controls">
                   <div id="datetimepicker2" class="input-append date">
-                     <input name="endDate" placeholder="when to stop ab test" data-format="yyyy-MM-dd hh:mm" type="text"></input> <span
-                        class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+                     <input name="endDate" value="${payload.endDateStr}" placeholder="when to stop ab test"
+                        data-format="yyyy-MM-dd hh:mm" type="text" check-type="required" required-message="End Time is required!"></input>
+                     <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
                      </span>
                   </div>
                </div>
@@ -74,7 +101,7 @@ div.controls input {
                </label>
                <div class="controls">
                   <select multiple="" name="domain" id="domain" style="width: 350px;" class="populate select2-offscreen"
-                     tabindex="-1">
+                     tabindex="-1" check-type="required" required-message="End Time is required!">
                      <c:forEach var="item" items="${model.projectMap}">
                         <optgroup label="${item.key}">
                            <c:forEach var="listItem" items="${item.value}">
@@ -90,9 +117,10 @@ div.controls input {
             <div class="control-group">
                <label class="control-label">Strategy Name</label>
                <div class="controls">
-                  <select name="strategyId">
+                  <select name="strategyId" check-type="required" required-message="Strategy is required!">
                      <c:forEach var="item" items="${model.groupStrategyList}">
-                        <option value="${item.id }">${item.name }</option>
+                        <option value="${item.id }" <c:if test="${item.id == payload.strategyId}">selected="selected"</c:if>>
+                           ${item.name }</option>
                      </c:forEach>
                   </select>
                </div>
@@ -100,7 +128,7 @@ div.controls input {
             <div class="control-group">
                <label class="control-label">Strategy Configuration</label>
                <div class="controls">
-                  <textarea name="strategyConfiguretion" class="span6" rows="3" cols="60"></textarea>
+                  <textarea name="strategyConfiguretion" class="span6" rows="3" cols="60">${payload.strategyConfiguretion}</textarea>
                </div>
             </div>
          </form>
@@ -134,6 +162,11 @@ div.controls input {
 </script>
 
    <script>
+				var initDomains = [];
+				<c:forEach var="domain" items="${payload.domain}">
+				initDomains.push("${domain}");
+				</c:forEach>
+
 				function submit0(form) {
 					$("#successMsg").html('');
 					$("#errorMsg").html('');
@@ -158,18 +191,32 @@ div.controls input {
 						$("#successMsg").html($("#alert_success").html());
 					}
 				}
+				var timeout = 5;
+				function countDown() {
+					$('#countDown').text(timeout);
+					timeout--;
+					if (timeout == 0) {
+						window.location.href = "abtest?op=list";
+					} else {
+						setTimeout("countDown()", 1000);
+					}
+				}
 
 				$(function() {
 					$('#datetimepicker1').datetimepicker();
 					$('#datetimepicker2').datetimepicker();
+					//domain selector
 					$("#domain")
 							.select2(
 									{
 										placeholder : "select which domains to run this ab test",
 										allowClear : true
 									});
+					$("#domain").val(initDomains).trigger("change");
+					//tips
 					$('i[tips]').popover();
-					$("#submit").removeAttr("disabled");
+					//validate
+					$('#form').validation();
 				});
 			</script>
 </a:body>

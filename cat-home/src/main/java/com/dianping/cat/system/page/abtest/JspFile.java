@@ -3,7 +3,7 @@ package com.dianping.cat.system.page.abtest;
 public enum JspFile {
 	VIEW("/jsp/system/abtest.jsp"),
 	
-	DOCREATE("/jsp/system/abtestDoCreate.jsp"),
+	DOCREATE("/jsp/system/abtest.jsp"),
 
 	LIST("/jsp/system/abtestAllTest.jsp"),
 	
