@@ -92,12 +92,12 @@ public class TestSendMessage {
 	public void sendMetric() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("Type", "Name");
-			
+
 			Cat.logMetric("name", "key1", "value1", "key2", "value2");
 
 			t.complete();
 		}
-		
+
 		Thread.sleep(1000);
 	}
 
@@ -332,20 +332,23 @@ public class TestSendMessage {
 			for (int i = 0; i < 100; i++) {
 				Transaction t = Cat.getProducer().newTransaction("SQL", "User.select" + i % 10);
 				Cat.getProducer().newEvent("SQL.Method", "Select").setStatus(Message.SUCCESS);
-				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k).setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
 				t.addData("select * from hostinfo");
 				t.setStatus(Message.SUCCESS);
 				t.complete();
 
 				Transaction t2 = Cat.getProducer().newTransaction("SQL", "User.insert" + i % 10);
 				Cat.getProducer().newEvent("SQL.Method", "Update").setStatus(Message.SUCCESS);
-				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k).setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
 				t2.addData("update * from hostinfo");
 				t2.complete();
 
 				Transaction t3 = Cat.getProducer().newTransaction("SQL", "User.delete" + i % 10);
 				Cat.getProducer().newEvent("SQL.Method", "Delete").setStatus(Message.SUCCESS);
-				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k).setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
 				t3.addData("delete * from hostinfo");
 				t3.setStatus(Message.SUCCESS);
 				t3.complete();
@@ -360,7 +363,8 @@ public class TestSendMessage {
 			for (int i = 0; i < 100; i++) {
 				Transaction t = Cat.getProducer().newTransaction("SQL", "User.select" + i % 10);
 				Cat.getProducer().newEvent("SQL.Method", "Select").setStatus(Message.SUCCESS);
-				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k).setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
 				t.addData("select * from hostinfo");
 				t.setStatus(Message.SUCCESS);
 				Cat.getManager().getThreadLocalMessageTree().setDomain("CatDemo");
@@ -368,14 +372,16 @@ public class TestSendMessage {
 
 				Transaction t2 = Cat.getProducer().newTransaction("SQL", "User.insert" + i % 10);
 				Cat.getProducer().newEvent("SQL.Method", "Update").setStatus(Message.SUCCESS);
-				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k).setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
 				t2.addData("update * from hostinfo");
 				Cat.getManager().getThreadLocalMessageTree().setDomain("CatDemo");
 				t2.complete();
 
 				Transaction t3 = Cat.getProducer().newTransaction("SQL", "User.delete" + i % 10);
 				Cat.getProducer().newEvent("SQL.Method", "Delete").setStatus(Message.SUCCESS);
-				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k).setStatus(Message.SUCCESS);
+				Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k)
+				      .setStatus(Message.SUCCESS);
 				t3.addData("delete * from hostinfo");
 				t3.setStatus(Message.SUCCESS);
 				Cat.getManager().getThreadLocalMessageTree().setDomain("CatDemo");
@@ -383,5 +389,37 @@ public class TestSendMessage {
 			}
 		}
 		Thread.sleep(1000);
+	}
+
+	@Test
+	public void sendDependencyTransaction() throws Exception {
+		int size = 10;
+		for (int i = 0; i < size; i++) {
+			Transaction t = Cat.getProducer().newTransaction("SQL", "User.select" + i % 10);
+			Cat.getProducer().newEvent("SQL.Method", "Select").setStatus(Message.SUCCESS);
+			Cat.getProducer().newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + i % 4)
+			      .setStatus(Message.SUCCESS);
+			t.addData("select * from hostinfo");
+			t.setStatus(Message.SUCCESS);
+			t.complete();
+		}
+
+		for (int i = 0; i < size; i++) {
+			Transaction t = Cat.getProducer().newTransaction("PigeonCall", "Method3");
+			Cat.getProducer().newEvent("PigeonCall.server", "192.168.64.11:2280");
+			t.addData("key and value");
+
+			Thread.sleep(1);
+			t.complete();
+		}
+
+		for (int i = 0; i < size; i++) {
+			Transaction t = Cat.getProducer().newTransaction("PigeonService", "Method6");
+			Cat.getProducer().newEvent("PigeonService.client", "192.168.7.77");
+			t.addData("key and value");
+
+			Thread.sleep(51);
+			t.complete();
+		}
 	}
 }

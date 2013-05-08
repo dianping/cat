@@ -11,12 +11,12 @@ import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dainping.cat.consumer.core.dal.HostinfoDao;
 import com.dainping.cat.consumer.core.dal.ProjectDao;
 import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
 import com.dianping.cat.home.dal.report.DailygraphDao;
 import com.dianping.cat.home.dal.report.DailyreportDao;
@@ -31,7 +31,6 @@ import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.DailyReportService;
@@ -161,8 +160,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		            StateReportBuilder.class));
 
 		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
-
-		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
 		all.add(C(HealthServiceCollector.class).req(DomainManager.class, ReportDao.class));
 

@@ -427,23 +427,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.cross.DomainManager</role>
-			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.task.health.HealthServiceCollector</role>
 			<implementation>com.dianping.cat.report.task.health.HealthServiceCollector</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.cross.DomainManager</role>
+					<role>com.dianping.cat.consumer.DomainManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
@@ -1060,6 +1048,50 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hints>
 						<role-hint>top-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>dependency-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.dependency.LocalDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>dependency-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.dependency.HistoricalDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>dependency</role-hint>
+			<implementation>com.dianping.cat.report.page.model.dependency.CompositeDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>dependency-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -1818,6 +1850,11 @@
 					<role-hint>metric-local</role-hint>
 					<field-name>m_metricService</field-name>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>dependency-local</role-hint>
+					<field-name>m_dependencyService</field-name>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2003,6 +2040,20 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.dependency.LocalDependencyService</role>
+			<implementation>com.dianping.cat.report.page.model.dependency.LocalDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.sql.Handler</role>
 			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
@@ -2149,7 +2200,7 @@
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.cross.DomainManager</role>
+					<role>com.dianping.cat.consumer.DomainManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2168,8 +2219,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.cross.DomainManager</role>
-			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
+			<role>com.dianping.cat.consumer.DomainManager</role>
+			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
@@ -2386,6 +2437,32 @@
 		<component>
 			<role>com.dianping.cat.report.page.jsError.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.jsError.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.Handler</role>
+			<implementation>com.dianping.cat.report.page.dependency.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>dependency</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.dependency.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
