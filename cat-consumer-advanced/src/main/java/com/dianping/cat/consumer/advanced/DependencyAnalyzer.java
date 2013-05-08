@@ -141,7 +141,13 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				if (message.getType().equals("PigeonCall.server")) {
-					return message.getName();
+					String name =message.getName();
+					int index = name.indexOf(":");
+					
+					if (index > 0) {
+						name = name.substring(0, index);
+					}
+					return name;
 				}
 			}
 		}
