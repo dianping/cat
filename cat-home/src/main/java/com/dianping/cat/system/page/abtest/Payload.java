@@ -37,14 +37,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("endDate")
 	private Date m_endDate;
 
-	@FieldMeta("domain")
-	private String[] m_domain;
+	@FieldMeta("domains")
+	private String[] m_domains;
 
 	@FieldMeta("strategyId")
 	private int m_strategyId;
 
-	@FieldMeta("strategyConfiguretion")
-	private String m_strategyConfiguretion;
+	@FieldMeta("strategyConfig")
+	private String m_strategyConfig;
 
 	private String m_startDateStr;
 
@@ -57,6 +57,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("ids")
 	private String m_ids;
+
+	@FieldMeta("abtestId")
+	private int abtestId;
 
 	public void setAction(String action) {
 		if (action.equalsIgnoreCase(Action.REPORT.getName())) {
@@ -161,12 +164,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_endDateStr;
 	}
 
-	public String[] getDomain() {
-		return m_domain;
+	public String[] getDomains() {
+		return m_domains;
 	}
 
-	public void setDomain(String[] domain) {
-		this.m_domain = domain;
+	public void setDomains(String[] domains) {
+		this.m_domains = domains;
 	}
 
 	public int getStrategyId() {
@@ -177,12 +180,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		this.m_strategyId = strategyId;
 	}
 
-	public String getStrategyConfiguretion() {
-		return m_strategyConfiguretion;
+	public String getStrategyConfig() {
+		return m_strategyConfig;
 	}
 
-	public void setStrategyConfiguretion(String strategyConfiguretion) {
-		this.m_strategyConfiguretion = strategyConfiguretion;
+	public void setStrategyConfig(String strategyConfig) {
+		this.m_strategyConfig = strategyConfig;
 	}
 
 	public boolean isEnableAbtest() {
@@ -201,6 +204,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_ids = ids;
 	}
 
+	public int getAbtestId() {
+		return abtestId;
+	}
+
+	public void setAbtestId(int abtestId) {
+		this.abtestId = abtestId;
+	}
+
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
@@ -212,9 +223,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 				Validate.isTrue(StringUtils.isNotBlank(m_name), "'ABTest Name' is required");
 				Validate.isTrue(m_startDate != null, "'Start Time' is required, and formated 'yyyy-MM-dd hh:mm'");
 				Validate.isTrue(m_endDate != null, "'End Time' is required, and formated 'yyyy-MM-dd hh:mm'");
-				Validate.isTrue(m_domain != null && m_domain.length > 0, "'Domain' is required, choose one at least");
-				for (String domain : m_domain) {
-					Validate.isTrue(StringUtils.isNotBlank(domain), "'Domain' should not be blank");
+				Validate.isTrue(m_domains != null && m_domains.length > 0, "'Domains' is required, choose one at least");
+				for (String domain : m_domains) {
+					Validate.isTrue(StringUtils.isNotBlank(domain), "'Domains' should not be blank");
 				}
 				Validate.isTrue(m_strategyId > 0, "'Strategy' is required, choose one at least");
 			} catch (IllegalArgumentException e) {

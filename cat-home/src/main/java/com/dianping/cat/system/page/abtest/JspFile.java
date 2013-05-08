@@ -4,7 +4,9 @@ public enum JspFile {
 	VIEW("/jsp/system/abtest.jsp"),
 	
 	DOCREATE("/jsp/system/abtest.jsp"),
-
+	
+	DETAIL("/jsp/system/abtestDetail.jsp"),
+	
 	LIST("/jsp/system/abtestAllTest.jsp"),
 	
 	REPORT("/jsp/system/abtestReport.jsp")

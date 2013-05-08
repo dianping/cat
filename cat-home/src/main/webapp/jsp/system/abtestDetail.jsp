@@ -10,6 +10,12 @@
 div.controls input {
 	height: 30px;
 }
+
+#form input[disabled],#form  select[disabled],#form  textarea[disabled],#form  input[readonly],#form  select[readonly],#form  textarea[readonly]
+	{
+	background-color: #F7F7F9;
+	cursor: text;
+}
 </style>
 <a:body>
    <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
@@ -22,7 +28,7 @@ div.controls input {
    <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-validation.min.js']}" target="head-js" />
    <div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
-      <h4 style="margin: 0 auto;">Create ABTest</h4>
+      <h4 style="margin: 0 auto;">ABTest Detail</h4>
       <c:choose>
          <c:when test="${ctx.exception != null}">
             <div id="errorMsg" style="margin: 0 auto; padding: 0; width: 300px;">
@@ -32,34 +38,23 @@ div.controls input {
                </div>
             </div>
          </c:when>
-         <c:when test="${payload.action.name == 'doCreate'}">
+         <c:when test="${ctx.httpServletRequest.method == 'POST'}">
             <div id="successMsg" style="margin: 0 auto; padding: 0; width: 330px;">
                <div style="position: absolute; width: 330px;" class="alert alert-success">
-                  <span style="text-align: center;">Created! Going to the list page after <span id="countDown"></span>
-                     seconds ...
-                  </span>
-                  <script>
-																			$(function() {
-																				countDown();
-																				$(
-																						'#submit')
-																						.attr(
-																								"disabled",
-																								"disabled");
-																			});
-																		</script>
+                  <button type="button" class="close" data-dismiss="alert">×</button>
+                  <span style="text-align: center;">Modify successful! </span>
                </div>
             </div>
          </c:when>
       </c:choose>
       <div style="width: 90%;">
          <form id="form" method="post" action="" class="form-horizontal">
-            <!-- <span style="float: right" class="label label-info"> Edit </span>  -->
-            <button type="button" onclick="" style="float: right; margin-left: 20px" class="btn">cancel</button>
-            <button id="submit" style="float: right;" type="submit" class="btn btn-success">submit</button>
+            <button id="cancel" type="button" onclick="disableEdit()" style="float: right; margin-left: 20px" class="btn hide">cancel</button>
+            <button id="submit" style="float: right;" type="submit" class="btn btn-success hide">submit</button>
+            <button id="edit" style="float: right;" type="button" onclick="enableEdit()" class="btn btn-info">Edit</button>
             <h5>Basic Information</h5>
             <hr style="margin-top: 20px;">
-            <input type="hidden" name="op" value="doCreate">
+            <input type="hidden" name="abtestId" value="${model.abtest.id}"> <input type="hidden" name="op" value="detail">
             <div class="control-group">
                <label class="control-label">AB Test Name <i tips="" data-trigger="hover" class="icon-question-sign"
                   data-toggle="popover" data-placement="top" data-original-title="tips"
@@ -67,22 +62,24 @@ div.controls input {
                </label>
                <div class="controls">
                   <input type="text" name="name" placeholder="give it a name ..." check-type="required"
-                     required-message="Name is required!" value="${payload.name}">
+                     required-message="Name is required!" value="${model.abtest.name}" readonly="readonly">
                </div>
             </div>
             <div class="control-group">
                <label class="control-label">Description</label>
                <div class="controls">
-                  <textarea name="description" placeholder="say something about the abtest ... " class="span6" rows="3" cols="60">${payload.description}</textarea>
+                  <textarea readonly="readonly" name="description" placeholder="say something about the abtest ... " class="span6"
+                     rows="3" cols="60">${model.abtest.description}</textarea>
                </div>
             </div>
             <div class="control-group">
                <label class="control-label">Start Time</label>
                <div class="controls">
                   <div id="datetimepicker1" class="input-append date">
-                     <input name="startDate" value="${payload.startDateStr}" placeholder="when to run ab test"
-                        data-format="yyyy-MM-dd hh:mm" type="text" check-type="required" required-message="Start Time is required!"></input>
-                     <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+                     <input name="startDate" readonly="readonly" value="${w:format(model.abtest.startDate,'yyyy-MM-dd HH:mm')}"
+                        placeholder="when to run ab test" data-format="yyyy-MM-dd hh:mm" type="text" check-type="required"
+                        required-message="Start Time is required!"></input> <span class="add-on hide"> <i
+                        data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
                      </span>
                   </div>
                </div>
@@ -91,9 +88,10 @@ div.controls input {
                <label class="control-label">End Time</label>
                <div class="controls">
                   <div id="datetimepicker2" class="input-append date">
-                     <input name="endDate" value="${payload.endDateStr}" placeholder="when to stop ab test"
-                        data-format="yyyy-MM-dd hh:mm" type="text" check-type="required" required-message="End Time is required!"></input>
-                     <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+                     <input name="endDate" readonly="readonly" value="${w:format(model.abtest.endDate,'yyyy-MM-dd HH:mm')}"
+                        placeholder="when to stop ab test" data-format="yyyy-MM-dd hh:mm" type="text" check-type="required"
+                        required-message="End Time is required!"></input> <span class="add-on hide"> <i
+                        data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
                      </span>
                   </div>
                </div>
@@ -121,10 +119,10 @@ div.controls input {
             <div class="control-group">
                <label class="control-label">Strategy Name</label>
                <div class="controls">
-                  <select name="strategyId" check-type="required" required-message="Strategy is required!">
+                  <select name="strategyId" check-type="required" required-message="Strategy is required!" disabled="disabled">
                      <c:forEach var="item" items="${model.groupStrategyList}">
-                        <option value="${item.id }" <c:if test="${item.id == payload.strategyId}">selected="selected"</c:if>>
-                           ${item.name }</option>
+                        <option value="${item.id }" <c:if test="${item.id == model.abtest.strategyId}">selected="selected"</c:if>>${item.name
+                           }</option>
                      </c:forEach>
                   </select>
                </div>
@@ -132,7 +130,7 @@ div.controls input {
             <div class="control-group">
                <label class="control-label">Strategy Configuration</label>
                <div class="controls">
-                  <textarea name="strategyConfig" class="span6" rows="3" cols="60">${payload.strategyConfig}</textarea>
+                  <textarea name="strategyConfig" class="span6" rows="3" cols="60" readonly="readonly">${model.abtest.strategyConfig}</textarea>
                </div>
             </div>
          </form>
@@ -167,9 +165,35 @@ div.controls input {
 
    <script>
 				var initDomains = [];
-				<c:forEach var="domain" items="${payload.domains}">
+				<c:forEach var="domain" items="${model.abtest.domains}">
 				initDomains.push("${domain}");
 				</c:forEach>
+
+				function enableEdit() {
+					//input
+					$('#form input,#form textarea').removeAttr("readonly");
+					$('#form select').removeAttr("disabled");
+					$("#domains").select2("enable");
+					$("#datetimepicker1>span").removeClass('hide');
+					$("#datetimepicker2>span").removeClass('hide');
+					//button
+					$("#submit").show();
+					$("#cancel").show();
+					$("#edit").hide();
+				}
+
+				function disableEdit() {
+					$('#form input,#form textarea')
+							.attr("readonly", "readonly");
+					$('#form select').attr("disabled", "disabled");
+					$("#domains").select2("disable");
+					$("#datetimepicker1>span").addClass('hide');
+					$("#datetimepicker2>span").addClass('hide');
+					//button
+					$("#submit").hide();
+					$("#cancel").hide();
+					$("#edit").show();
+				}
 
 				function submit0(form) {
 					$("#successMsg").html('');
@@ -207,8 +231,8 @@ div.controls input {
 				}
 
 				$(function() {
-					$('#datetimepicker1').datetimepicker();
-					$('#datetimepicker2').datetimepicker();
+					$('#datetimepicker1').datetimepicker({});
+					$('#datetimepicker2').datetimepicker({});
 					//domain selector
 					$("#domains")
 							.select2(
@@ -217,6 +241,7 @@ div.controls input {
 										allowClear : true
 									});
 					$("#domains").val(initDomains).trigger("change");
+					$("#domains").select2("disable");
 					//tips
 					$('i[tips]').popover();
 					//validate

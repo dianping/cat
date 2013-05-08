@@ -13,6 +13,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.VIEW.getPath();
 		case DOCREATE:
 			return JspFile.DOCREATE.getPath();
+		case DETAIL:
+			return JspFile.DETAIL.getPath();
 		case LIST:
 			return JspFile.LIST.getPath();
 		case REPORT:

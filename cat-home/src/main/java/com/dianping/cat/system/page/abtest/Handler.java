@@ -63,17 +63,33 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Action action = payload.getAction();
 
 		if (action == Action.DOCREATE) {
-			// 保存到数据库
 			Abtest abtest = new Abtest();
 			abtest.setName(payload.getName());
 			abtest.setDescription(payload.getDescription());
 			abtest.setStartDate(payload.getStartDate());
 			abtest.setEndDate(payload.getEndDate());
-			abtest.setDomains(StringUtils.join(payload.getDomain(), ','));
+			abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
 			abtest.setStrategyId(payload.getStrategyId());
-			abtest.setStrategyConfig(payload.getStrategyConfiguretion().getBytes(CHARSET));
+			abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
 			try {
 				m_abtestDao.insert(abtest);
+			} catch (DalException e) {
+				m_logger.error("Error when saving abtest", e);
+				ctx.setException(e);
+			}
+		} else if (action == Action.DETAIL && ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
+			Abtest abtest = new Abtest();
+			abtest.setKeyId(payload.getAbtestId());
+			abtest.setName(payload.getName());
+			abtest.setDescription(payload.getDescription());
+			abtest.setStartDate(payload.getStartDate());
+			abtest.setEndDate(payload.getEndDate());
+			abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
+			abtest.setStrategyId(payload.getStrategyId());
+			abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
+			try {
+				System.out.println(m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_FULL));
+				System.out.println(abtest);
 			} catch (DalException e) {
 				m_logger.error("Error when saving abtest", e);
 				ctx.setException(e);
@@ -100,6 +116,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
 			model.setProjectMap(projectMap);
 			model.setGroupStrategyList(groupStrategyList);
+		} else if (action == Action.DETAIL) {
+			Map<String, List<Project>> projectMap = getAllProjects();
+			List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
+			model.setProjectMap(projectMap);
+			model.setGroupStrategyList(groupStrategyList);
+			int abtestId = payload.getAbtestId();
+			try {
+				Abtest abtest = m_abtestDao.findByPK(abtestId, AbtestEntity.READSET_FULL);
+				model.setAbtest(abtest);
+			} catch (DalException e) {
+				m_logger.error("Error when fetching abtest", e);
+				ctx.setException(e);
+			}
 		} else if (action == Action.REPORT) {
 
 		}

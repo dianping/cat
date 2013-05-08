@@ -5,6 +5,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	DOCREATE("doCreate"),
 	
+	DETAIL("detail"),
+	
 	LIST("list"),
 	
 	REPORT("report");

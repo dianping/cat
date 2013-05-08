@@ -8,6 +8,7 @@ import org.unidal.web.mvc.ViewModel;
 
 import com.dainping.cat.consumer.dal.report.Project;
 import com.dianping.cat.abtest.spi.ABTestEntity;
+import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.system.SystemPage;
 
@@ -35,6 +36,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Map<String, List<Project>> m_projectMap;
 
 	private List<GroupStrategy> m_groupStrategyList;
+
+	private Abtest m_abtest;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -130,7 +133,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setProjectMap(Map<String, List<Project>> projectMap) {
-		this.m_projectMap = projectMap;
+		m_projectMap = projectMap;
 	}
 
 	public List<GroupStrategy> getGroupStrategyList() {
@@ -138,7 +141,15 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public void setGroupStrategyList(List<GroupStrategy> groupStrategyList) {
-		this.m_groupStrategyList = groupStrategyList;
+		m_groupStrategyList = groupStrategyList;
+	}
+
+	public Abtest getAbtest() {
+		return m_abtest;
+	}
+
+	public void setAbtest(Abtest abtest) {
+		m_abtest = abtest;
 	}
 
 }
