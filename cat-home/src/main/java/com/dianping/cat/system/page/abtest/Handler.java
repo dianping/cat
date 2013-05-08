@@ -9,6 +9,7 @@ import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.ErrorObject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -34,7 +35,55 @@ public class Handler implements PageHandler<Context> {
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "abtest")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
-		// TODO
+		Payload payload = ctx.getPayload();
+		Action action = payload.getAction();
+
+		if (action == Action.LIST) {
+			handleStatusChangeActions(ctx);
+		}
+	}
+
+	private void handleStatusChangeActions(Context ctx) {
+		Payload payload = ctx.getPayload();
+		ErrorObject error = new ErrorObject("disable");
+		String[] ids = payload.getIds();
+
+		if (ids != null && ids.length != 0) {
+			for (String id : ids) {
+				System.out.println("change status for " + id);
+				try {
+					int intID = Integer.parseInt(id);
+					Abtest abtest = m_abtestDao.findByPK(intID, AbtestEntity.READSET_FULL);
+
+					if (payload.getDisableAbtest() == -1) { // suspend
+						if (!abtest.isDisabled()) {
+							abtest.setDisabled(true);
+							m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_DISABLE);
+						} else {
+							error.addArgument(id, "Abtest " + id + " has been already suspended!");
+						}
+					} else if (payload.getDisableAbtest() == 1) { // resume
+						if (abtest.isDisabled()) {
+							abtest.setDisabled(false);
+							m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_DISABLE);
+						} else {
+							error.addArgument(id, "Abtest " + id + " has been already active!");
+						}
+					}
+				} catch (NumberFormatException e) {
+					// do nothing
+				} catch (DalException e) {
+				}
+			}
+			
+			if (error.getArguments().isEmpty()) {
+				ErrorObject success = new ErrorObject("success");
+				ctx.addError(success);
+			} else {
+				ctx.addError(error);
+			}
+		}
+
 	}
 
 	@Override
@@ -122,10 +171,10 @@ public class Handler implements PageHandler<Context> {
 
 		int fromIndex = (payload.getPageNum() - 1) * m_pageSize;
 		int toIndex = (fromIndex + m_pageSize) <= totalSize ? (fromIndex + m_pageSize) : totalSize;
-		for(int i = fromIndex ; i < toIndex ; i++){
+		for (int i = fromIndex; i < toIndex; i++) {
 			reports.add(new ABTestReport(entities.get(i), now));
 		}
-			
+
 		model.setTotalPages(totalPages);
 		model.setDate(now);
 		model.setReports(reports);

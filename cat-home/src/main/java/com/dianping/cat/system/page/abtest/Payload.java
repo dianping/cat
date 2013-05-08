@@ -18,8 +18,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("pageNum")
 	private int m_pageNum;
 
-	@FieldMeta("enable")
-	private boolean m_enableAbtest;
+	@FieldMeta("suspend")
+	private int m_disableAbtest;
 
 	@FieldMeta("ids")
 	private String m_ids;
@@ -75,16 +75,21 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_page = SystemPage.getByName(page, SystemPage.ABTEST);
 	}
 
-	public boolean isEnableAbtest() {
-		return m_enableAbtest;
-	}
+	public int getDisableAbtest() {
+   	return m_disableAbtest;
+   }
 
-	public void setEnableAbtest(boolean enableAbtest) {
-		m_enableAbtest = enableAbtest;
-	}
+	public void setDisableAbtest(int disableAbtest) {
+   	m_disableAbtest = disableAbtest;
+   }
 
-	public String getIds() {
-		return m_ids;
+	public String[] getIds() {
+		if (m_ids != null) {
+			String[] ids = m_ids.split("-");
+			return ids;
+		} else {
+			return null;
+		}
 	}
 
 	public void setIds(String ids) {
@@ -99,5 +104,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		if (m_status == null) {
 			m_status = "all";
 		}
+		if (m_disableAbtest != -1 && m_disableAbtest != 1) {
+			m_disableAbtest = 0;
+		}
+
 	}
 }
