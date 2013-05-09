@@ -43,7 +43,9 @@ public enum ReportPage implements Page {
 
    JSERROR("jsError", "jsError", "JsError", "jsError", true),
 
-   DEPENDENCY("dependency", "dependency", "Dependency", "Dependency", true);
+   DEPENDENCY("dependency", "dependency", "Dependency", "Dependency", true),
+
+   ZABBIXERROR("zabbixError", "zabbixError", "ZabbixError", "ZabbixError", true);
 
    private String m_name;
 

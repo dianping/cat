@@ -45,7 +45,9 @@ com.dianping.cat.report.page.metric.Handler.class,
 
 com.dianping.cat.report.page.jsError.Handler.class,
 
-com.dianping.cat.report.page.dependency.Handler.class
+com.dianping.cat.report.page.dependency.Handler.class,
+
+com.dianping.cat.report.page.zabbixError.Handler.class
 })
 public class ReportModule extends AbstractModule {
 

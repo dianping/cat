@@ -62,6 +62,9 @@
          <page name="dependency" title="Dependency" path="dependency" template="default">
             <description>Dependency</description>
          </page>
+         <page name="zabbixError" title="ZabbixError" path="zabbixError" template="default">
+            <description>ZabbixError</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm">
