@@ -14,6 +14,7 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.ErrorObject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
@@ -79,7 +80,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		} else if (action == Action.DETAIL && ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
 			Abtest abtest = new Abtest();
-			abtest.setKeyId(payload.getAbtestId());
+			abtest.setKeyId(payload.getId());
 			abtest.setName(payload.getName());
 			abtest.setDescription(payload.getDescription());
 			abtest.setStartDate(payload.getStartDate());
@@ -95,6 +96,53 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				ctx.setException(e);
 			}
 		}
+
+		if (action == Action.LIST) {
+			handleStatusChangeActions(ctx);
+		}
+	}
+
+	private void handleStatusChangeActions(Context ctx) {
+		Payload payload = ctx.getPayload();
+		ErrorObject error = new ErrorObject("disable");
+		String[] ids = payload.getIds();
+
+		if (ids != null && ids.length != 0) {
+			for (String id : ids) {
+				System.out.println("change status for " + id);
+				try {
+					int intID = Integer.parseInt(id);
+					Abtest abtest = m_abtestDao.findByPK(intID, AbtestEntity.READSET_FULL);
+
+					if (payload.getDisableAbtest() == -1) { // suspend
+						if (!abtest.isDisabled()) {
+							abtest.setDisabled(true);
+							m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_DISABLE);
+						} else {
+							error.addArgument(id, "Abtest " + id + " has been already suspended!");
+						}
+					} else if (payload.getDisableAbtest() == 1) { // resume
+						if (abtest.isDisabled()) {
+							abtest.setDisabled(false);
+							m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_DISABLE);
+						} else {
+							error.addArgument(id, "Abtest " + id + " has been already active!");
+						}
+					}
+				} catch (NumberFormatException e) {
+					// do nothing
+				} catch (DalException e) {
+				}
+			}
+
+			if (error.getArguments().isEmpty()) {
+				ErrorObject success = new ErrorObject("success");
+				ctx.addError(success);
+			} else {
+				ctx.addError(error);
+			}
+		}
+
 	}
 
 	@Override
@@ -121,7 +169,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
 			model.setProjectMap(projectMap);
 			model.setGroupStrategyList(groupStrategyList);
-			int abtestId = payload.getAbtestId();
+			int abtestId = payload.getId();
 			try {
 				Abtest abtest = m_abtestDao.findByPK(abtestId, AbtestEntity.READSET_FULL);
 				model.setAbtest(abtest);

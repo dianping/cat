@@ -55,11 +55,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("enable")
 	private boolean m_enableAbtest;
 
+	@FieldMeta("suspend")
+	private int m_disableAbtest;
+
 	@FieldMeta("ids")
 	private String m_ids;
 
-	@FieldMeta("abtestId")
-	private int abtestId;
+	@FieldMeta("id")
+	private int id;
 
 	public void setAction(String action) {
 		if (action.equalsIgnoreCase(Action.REPORT.getName())) {
@@ -192,24 +195,33 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_enableAbtest;
 	}
 
-	public void setEnableAbtest(boolean enableAbtest) {
-		m_enableAbtest = enableAbtest;
+	public int getDisableAbtest() {
+		return m_disableAbtest;
 	}
 
-	public String getIds() {
-		return m_ids;
+	public void setDisableAbtest(int disableAbtest) {
+		m_disableAbtest = disableAbtest;
+	}
+
+	public String[] getIds() {
+		if (m_ids != null) {
+			String[] ids = m_ids.split("-");
+			return ids;
+		} else {
+			return null;
+		}
 	}
 
 	public void setIds(String ids) {
 		m_ids = ids;
 	}
 
-	public int getAbtestId() {
-		return abtestId;
+	public int getId() {
+		return id;
 	}
 
-	public void setAbtestId(int abtestId) {
-		this.abtestId = abtestId;
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	@Override
@@ -235,5 +247,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		if (m_status == null) {
 			m_status = "all";
 		}
+		if (m_disableAbtest != -1 && m_disableAbtest != 1) {
+			m_disableAbtest = 0;
+		}
+
 	}
 }

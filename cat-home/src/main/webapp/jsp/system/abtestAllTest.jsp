@@ -122,6 +122,24 @@
 			</div>
 		</div>
 		<div class="span10 column">
+			<c:if test="${not empty ctx.errors}">
+				<c:forEach var="item" items="${ctx.errors}">
+					<c:if test="${item.code eq 'disable' }">
+						<div id="alertDiv" class="alert alert-error" style=" margin-bottom: 10px">
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+							<c:forEach var="argument" items="${item.arguments}">
+								<strong>Error!</strong> <c:out value="${argument.value}"/><br>
+							</c:forEach>
+						</div>
+					</c:if>
+					<c:if test="${item.code eq 'success' }">
+						<div id="alertDiv" class="alert" style=" margin-bottom: 10px">
+							<button type="button" class="close" data-dismiss="alert alert-success">&times;</button>
+							<strong>Success!</strong>
+						</div>
+					</c:if>
+				</c:forEach>
+			</c:if>
 			<div style="margin-bottom: 10px;">
 				<button class="btn" type="button">
 					<label class="checkbox"> <input id="ckall" type="checkbox"></input></label>

@@ -3,7 +3,13 @@
 	<entity name="abtest" table="abtest" alias="a">
 		<member name="creation-date" insert-expr="NOW()" />
 		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
-		<member name="disabled" field="isDisabled" value-type="boolean" length="3" nullable="false" />
+		<member name="disabled" field="disabled" value-type="boolean" length="3" nullable="false" />
+		<updatesets>
+			<updateset name="DISABLE">
+				<member name="disabled" />
+				<member name="modify-date" />
+			</updateset>
+		</updatesets>
 		<query-defs>
 			<query name="find-all-abtest" type="SELECT" multiple="true">
 				<statement><![CDATA[

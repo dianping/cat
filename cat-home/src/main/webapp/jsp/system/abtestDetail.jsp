@@ -54,7 +54,7 @@ div.controls input {
             <button id="edit" style="float: right;" type="button" onclick="enableEdit()" class="btn btn-info">Edit</button>
             <h5>Basic Information</h5>
             <hr style="margin-top: 20px;">
-            <input type="hidden" name="abtestId" value="${model.abtest.id}"> <input type="hidden" name="op" value="detail">
+            <input type="hidden" name="id" value="${model.abtest.id}"> <input type="hidden" name="op" value="detail">
             <div class="control-group">
                <label class="control-label">AB Test Name <i tips="" data-trigger="hover" class="icon-question-sign"
                   data-toggle="popover" data-placement="top" data-original-title="tips"

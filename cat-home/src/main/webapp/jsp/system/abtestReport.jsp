@@ -34,7 +34,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#ve">
+					<a href="?op=detail&id=${payload.id }">
 						<img style="vertical-align: text-bottom;" height="15" width="15" src="${res.img.local['settings_black_small.png']}">
 						View/ Edit ABTest Details
 					</a>
