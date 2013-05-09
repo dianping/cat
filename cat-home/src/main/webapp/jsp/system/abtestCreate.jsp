@@ -32,7 +32,7 @@ div.controls input {
                </div>
             </div>
          </c:when>
-         <c:when test="${payload.action.name == 'doCreate'}">
+         <c:when test="${ctx.httpServletRequest.method == 'POST'}">
             <div id="successMsg" style="margin: 0 auto; padding: 0; width: 330px;">
                <div style="position: absolute; width: 330px;" class="alert alert-success">
                   <span style="text-align: center;">Created! Going to the list page after <span id="countDown"></span>
@@ -54,12 +54,10 @@ div.controls input {
       </c:choose>
       <div style="width: 90%;">
          <form id="form" method="post" action="" class="form-horizontal">
-            <!-- <span style="float: right" class="label label-info"> Edit </span>  -->
-            <button type="button" onclick="" style="float: right; margin-left: 20px" class="btn">cancel</button>
-            <button id="submit" style="float: right;" type="submit" class="btn btn-success">submit</button>
+            <a href="abtest" style="float: right; margin-left: 20px" class="btn">Cancel</a>
+            <button id="submit" style="float: right;" type="submit" class="btn btn-success">Submit</button>
             <h5>Basic Information</h5>
             <hr style="margin-top: 20px;">
-            <input type="hidden" name="op" value="doCreate">
             <div class="control-group">
                <label class="control-label">AB Test Name <i tips="" data-trigger="hover" class="icon-question-sign"
                   data-toggle="popover" data-placement="top" data-original-title="tips"
@@ -200,7 +198,7 @@ div.controls input {
 					$('#countDown').text(timeout);
 					timeout--;
 					if (timeout == 0) {
-						window.location.href = "abtest?op=list";
+						window.location.href = "abtest";
 					} else {
 						setTimeout("countDown()", 1000);
 					}

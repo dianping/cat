@@ -67,10 +67,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setAction(String action) {
 		if (action.equalsIgnoreCase(Action.REPORT.getName())) {
 			m_action = Action.getByName(action, Action.REPORT);
-		} else if (action.equalsIgnoreCase(Action.LIST.getName())) {
-			m_action = Action.getByName(action, Action.LIST);
-		} else if (action.equalsIgnoreCase(Action.DOCREATE.getName())) {
-			m_action = Action.getByName(action, Action.DOCREATE);
+		} else if (action.equalsIgnoreCase(Action.CREATE.getName())) {
+			m_action = Action.getByName(action, Action.CREATE);
 		} else {
 			m_action = Action.getByName(action, Action.VIEW);
 		}
@@ -230,7 +228,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			m_action = Action.VIEW;
 		}
 		// 验证doCreate的参数
-		if (m_action == Action.DOCREATE) {
+		if (m_action == Action.CREATE && ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
 			try {
 				Validate.isTrue(StringUtils.isNotBlank(m_name), "'ABTest Name' is required");
 				Validate.isTrue(m_startDate != null, "'Start Time' is required, and formated 'yyyy-MM-dd hh:mm'");

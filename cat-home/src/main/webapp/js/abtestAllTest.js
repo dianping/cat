@@ -3,6 +3,7 @@ $(document)
 				function() {
 					$('#ckall').click(
 							function() {
+								console.log("ddd");
 								if ($('#ckall').is(':checked')) {
 									$(".table input[type='checkbox']").prop(
 											'checked', true);
@@ -32,6 +33,9 @@ $(document)
 													.substring(0, index)
 													+ "&suspend=-1&ids=" + id;
 										} else {
+											if(url.indexOf("?") == -1){
+												url = url + '?';
+											}
 											window.location.href = url
 													+ "&suspend=-1&ids=" + id;
 										}

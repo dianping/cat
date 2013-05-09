@@ -63,41 +63,42 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 
-		if (action == Action.DOCREATE) {
-			Abtest abtest = new Abtest();
-			abtest.setName(payload.getName());
-			abtest.setDescription(payload.getDescription());
-			abtest.setStartDate(payload.getStartDate());
-			abtest.setEndDate(payload.getEndDate());
-			abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-			abtest.setStrategyId(payload.getStrategyId());
-			abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
-			try {
-				m_abtestDao.insert(abtest);
-			} catch (DalException e) {
-				m_logger.error("Error when saving abtest", e);
-				ctx.setException(e);
-			}
-		} else if (action == Action.DETAIL && ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
-			Abtest abtest = new Abtest();
-			abtest.setKeyId(payload.getId());
-			abtest.setName(payload.getName());
-			abtest.setDescription(payload.getDescription());
-			abtest.setStartDate(payload.getStartDate());
-			abtest.setEndDate(payload.getEndDate());
-			abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-			abtest.setStrategyId(payload.getStrategyId());
-			abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
-			try {
-				System.out.println(m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_FULL));
-				System.out.println(abtest);
-			} catch (DalException e) {
-				m_logger.error("Error when saving abtest", e);
-				ctx.setException(e);
+		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
+			if (action == Action.CREATE) {
+				Abtest abtest = new Abtest();
+				abtest.setName(payload.getName());
+				abtest.setDescription(payload.getDescription());
+				abtest.setStartDate(payload.getStartDate());
+				abtest.setEndDate(payload.getEndDate());
+				abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
+				abtest.setStrategyId(payload.getStrategyId());
+				abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
+				try {
+					m_abtestDao.insert(abtest);
+				} catch (DalException e) {
+					m_logger.error("Error when saving abtest", e);
+					ctx.setException(e);
+				}
+			} else if (action == Action.DETAIL) {
+				Abtest abtest = new Abtest();
+				abtest.setKeyId(payload.getId());
+				abtest.setName(payload.getName());
+				abtest.setDescription(payload.getDescription());
+				abtest.setStartDate(payload.getStartDate());
+				abtest.setEndDate(payload.getEndDate());
+				abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
+				abtest.setStrategyId(payload.getStrategyId());
+				abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
+				try {
+					m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_FULL);
+				} catch (DalException e) {
+					m_logger.error("Error when saving abtest", e);
+					ctx.setException(e);
+				}
 			}
 		}
 
-		if (action == Action.LIST) {
+		if (action == Action.VIEW) {
 			handleStatusChangeActions(ctx);
 		}
 	}
@@ -152,14 +153,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 
-		if (action == Action.LIST) {
+		if (action == Action.VIEW) {
 			renderListView(model, payload);
-		} else if (action == Action.VIEW) {
-			Map<String, List<Project>> projectMap = getAllProjects();
-			List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
-			model.setProjectMap(projectMap);
-			model.setGroupStrategyList(groupStrategyList);
-		} else if (action == Action.DOCREATE) {
+		} else if (action == Action.CREATE) {
 			Map<String, List<Project>> projectMap = getAllProjects();
 			List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
 			model.setProjectMap(projectMap);

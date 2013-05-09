@@ -1,13 +1,12 @@
 package com.dianping.cat.system.page.abtest;
 
 public enum JspFile {
-	VIEW("/jsp/system/abtest.jsp"),
 	
-	DOCREATE("/jsp/system/abtest.jsp"),
+	CREATE("/jsp/system/abtestCreate.jsp"),
 	
 	DETAIL("/jsp/system/abtestDetail.jsp"),
 	
-	LIST("/jsp/system/abtestAllTest.jsp"),
+	VIEW("/jsp/system/abtestAllTest.jsp"),
 	
 	REPORT("/jsp/system/abtestReport.jsp")
 	;

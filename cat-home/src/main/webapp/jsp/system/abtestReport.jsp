@@ -8,21 +8,28 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
 
+<style>
+<!--
+#content{
+    width:1200px;
+    margin:0 auto;
+}
+-->
+</style>
+
 <a:body>
 	<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
 
-	<div class="row-fluid">
+	<div id="content" lass="row-fluid">
 		<div class="span12 column">
-			<div class="page-header">
-				<h1>
-					Report <small>#1001</small>
-				</h1>
-			</div>
+				<h3>
+            Report <small>${model.abtest.name} #${model.abtest.id}</small>
+         </h3>
 			<ul class="nav nav-tabs">
 				<li class="active">
-					<a href="#">
+					<a href="?op=report&id=${payload.id }">
 						<img style="vertical-align: text-bottom;" height="15" width="15" src="${res.img.local['star_black_small.png']}">
 						Summary
 					</a>

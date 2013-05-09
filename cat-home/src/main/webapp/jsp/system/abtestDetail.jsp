@@ -7,6 +7,10 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
 <style>
+#content{
+    width:1200px;
+    margin:0 auto;
+}
 div.controls input {
 	height: 30px;
 }
@@ -27,8 +31,26 @@ div.controls input {
    <res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-validation.min.js']}" target="head-js" />
+   <div id="content" class="row-fluid">
+      <div class="span12 column">
+         <h3>
+            Detail <small>${model.abtest.name} #${model.abtest.id}</small>
+         </h3>
+         <ul class="nav nav-tabs">
+            <li><a href="?op=report&id=${payload.id }"> <img style="vertical-align: text-bottom;" height="15" width="15"
+                  src="${res.img.local['star_black_small.png']}"> Summary
+            </a></li>
+            <li><a href="#detail"> <img style="vertical-align: text-bottom;" height="15" width="15"
+                  src="${res.img.local['details_black_small.png']}"> Detail Report
+            </a></li>
+            <li class="active"><a href="?op=detail&id=${payload.id }"> <img style="vertical-align: text-bottom;"
+                  height="15" width="15" src="${res.img.local['settings_black_small.png']}"> View/ Edit ABTest Details
+            </a></li>
+         </ul>
+      </div>
+   </div>
+
    <div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
-      <h4 style="margin: 0 auto;">ABTest Detail</h4>
       <c:choose>
          <c:when test="${ctx.exception != null}">
             <div id="errorMsg" style="margin: 0 auto; padding: 0; width: 300px;">
@@ -150,6 +172,23 @@ div.controls input {
          <button data-dismiss="modal" class="btn btn-info">关闭</button>
       </div>
    </div>
+   <!-- 取消或离开的确认框 -->
+   <div aria-hidden="true" data-backdrop="true" role="dialog" tabindex="-1" class="modal hide" id="cancleAffirmModal"
+      style="display: none;">
+      <div class="modal-header">
+         <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+         <h3>请确认</h3>
+      </div>
+      <div class="modal-body">
+         <p style="text-align: center;">
+            <i class="icon-warning-sign"></i> 您已经做了修改操作，是否确定不保存？
+         </p>
+      </div>
+      <div class="modal-footer">
+         <button onclick="window.location = window.location.href;" class="btn btn-primary">确定</button>
+         <button data-dismiss="modal" class="btn">取消</button>
+      </div>
+   </div>
    <script type="text/template" id="alert_success">
          <div style="position: absolute; width: 200px;" class="alert alert-success">
             <button type="button" class="close" data-dismiss="alert">×</button>
@@ -169,6 +208,8 @@ div.controls input {
 				initDomains.push("${domain}");
 				</c:forEach>
 
+				var changed = false;
+
 				function enableEdit() {
 					//input
 					$('#form input,#form textarea').removeAttr("readonly");
@@ -183,16 +224,20 @@ div.controls input {
 				}
 
 				function disableEdit() {
-					$('#form input,#form textarea')
-							.attr("readonly", "readonly");
-					$('#form select').attr("disabled", "disabled");
-					$("#domains").select2("disable");
-					$("#datetimepicker1>span").addClass('hide');
-					$("#datetimepicker2>span").addClass('hide');
-					//button
-					$("#submit").hide();
-					$("#cancel").hide();
-					$("#edit").show();
+					if (changed) {
+						$("#cancleAffirmModal").modal('show');
+					} else {
+						$('#form input,#form textarea').attr("readonly",
+								"readonly");
+						$('#form select').attr("disabled", "disabled");
+						$("#domains").select2("disable");
+						$("#datetimepicker1>span").addClass('hide');
+						$("#datetimepicker2>span").addClass('hide');
+						//button
+						$("#submit").hide();
+						$("#cancel").hide();
+						$("#edit").show();
+					}
 				}
 
 				function submit0(form) {
@@ -233,6 +278,12 @@ div.controls input {
 				$(function() {
 					$('#datetimepicker1').datetimepicker({});
 					$('#datetimepicker2').datetimepicker({});
+					$('#datetimepicker1').on('changeDate', function(e) {
+						changed = true;
+					});
+					$('#datetimepicker2').on('changeDate', function(e) {
+						changed = true;
+					});
 					//domain selector
 					$("#domains")
 							.select2(
@@ -246,6 +297,11 @@ div.controls input {
 					$('i[tips]').popover();
 					//validate
 					$('#form').validation();
+					//onchange
+					$("#form input, #form textarea,#form select").change(
+							function() {
+								changed = true;
+							});
 				});
 			</script>
 </a:body>
