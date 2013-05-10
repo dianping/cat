@@ -45,7 +45,7 @@ public enum ReportPage implements Page {
 
    DEPENDENCY("dependency", "dependency", "Dependency", "Dependency", true),
 
-   ZABBIXERROR("zabbixError", "zabbixError", "ZabbixError", "ZabbixError", true);
+   EXTERNALERROR("externalError", "externalError", "externalError", "ExternalError", true);
 
    private String m_name;
 

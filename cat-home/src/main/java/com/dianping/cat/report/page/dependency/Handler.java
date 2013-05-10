@@ -3,8 +3,13 @@ package com.dianping.cat.report.page.dependency;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 
@@ -15,9 +20,14 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
+import com.dianping.cat.consumer.dependency.model.entity.Segment;
+import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -25,6 +35,9 @@ import com.dianping.cat.report.page.model.spi.ModelService;
 public class Handler implements PageHandler<Context> {
 	@Inject
 	private JspViewer m_jspViewer;
+
+	@Inject
+	private EventCollectManager m_manager;
 
 	@Inject(type = ModelService.class, value = "dependency")
 	private ModelService<DependencyReport> m_service;
@@ -75,14 +88,63 @@ public class Handler implements PageHandler<Context> {
 				min = String.valueOf(minutes.get(minutes.size() - 1));
 				minute = Integer.parseInt(min);
 			}
-		}else{
+		} else {
 			minute = Integer.parseInt(min);
 		}
+
+		Date time = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
+		Segment segment = report.findSegment(minute);
+
 		model.setMinute(minute);
 		model.setMinutes(minutes);
 		model.setReport(report);
-		model.setSegment(report.findSegment(minute));
+		model.setSegment(segment);
+		model.setEvents(queryDependencyEvent(segment,payload.getDomain(),time));
+		
 		m_jspViewer.view(ctx, model);
+	}
+
+	private Map<String, List<Event>> queryDependencyEvent(Segment segment, String domain,Date date) {
+		Map<String, List<Event>> result = new LinkedHashMap<String, List<Event>>();
+		Map<String, List<String>> dependencies = parseDependencies(segment);
+
+		result.put(domain, m_manager.queryEvents(domain, date));
+		for (Entry<String, List<String>> entry : dependencies.entrySet()) {
+			String key = entry.getKey();
+			List<String> targets = entry.getValue();
+			List<Event> events = result.get(key);
+
+			if (events == null) {
+				events = new ArrayList<Event>();
+				result.put(key, events);
+			}
+			for (String temp : targets) {
+				events.addAll(m_manager.queryEvents(temp, date));
+			}
+		}
+		return result;
+	}
+
+	private Map<String, List<String>> parseDependencies(Segment segment) {
+		Map<String, List<String>> results = new TreeMap<String, List<String>>();
+
+		if (segment != null) {
+			Map<String, Dependency> dependencies = segment.getDependencies();
+
+			for (Dependency temp : dependencies.values()) {
+				String type = temp.getType();
+				String target = temp.getTarget();
+				List<String> targets = results.get(type);
+
+				if (targets == null) {
+					targets = new ArrayList<String>();
+					results.put(type, targets);
+				}
+				targets.add(target);
+			}
+		}
+
+		return results;
 	}
 
 	private void normalize(Model model, Payload payload) {

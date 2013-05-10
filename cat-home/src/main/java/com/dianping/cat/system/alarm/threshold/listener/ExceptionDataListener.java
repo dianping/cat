@@ -1,12 +1,16 @@
 package com.dianping.cat.system.alarm.threshold.listener;
 
+import java.util.Date;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.system.alarm.alert.AlertInfo;
 import com.dianping.cat.system.alarm.threshold.ThresholdDataEntity;
 import com.dianping.cat.system.alarm.threshold.ThresholdRule;
@@ -27,6 +31,9 @@ public class ExceptionDataListener implements EventListener {
 	@Inject
 	private ThresholdRuleManager m_manager;
 
+	@Inject
+	private EventCollectManager m_eventCollectManager;
+
 	@Override
 	public boolean isEligible(Event event) {
 		if (event.getEventType() == EventType.ExceptionDataEvent) {
@@ -42,25 +49,39 @@ public class ExceptionDataListener implements EventListener {
 		List<ThresholdRule> rules = m_manager.getExceptionRuleByDomain(data.getDomain());
 
 		for (ThresholdRule rule : rules) {
-			ThresholdAlarmMeta alarmMeta = rule.addData(data, AlertInfo.EXCEPTION);
+			Pair<Boolean, ThresholdAlarmMeta> alarmMeta = rule.addData(data, AlertInfo.EXCEPTION);
 
 			if (alarmMeta != null) {
-				Transaction t = Cat.newTransaction("SendAlarm", "Exception");
+				ThresholdAlarmMeta value = alarmMeta.getValue();
+				// need send email or sms
+				if (alarmMeta.getKey().booleanValue()) {
+					Transaction t = Cat.newTransaction("SendAlarm", "Exception");
 
-				t.addData(alarmMeta.toString());
-				try {
-					ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(alarmMeta);
-					Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS,
-					      String.valueOf(alarmMeta.getRuleId()));
+					t.addData(alarmMeta.toString());
+					try {
+						ThresholdAlertEvent alertEvent = new ThresholdAlertEvent(value);
+						Cat.getProducer().logEvent("ExceptionAlarm", "Domain", Message.SUCCESS,
+						      String.valueOf(value.getRuleId()));
 
-					m_dispatcher.dispatch(alertEvent);
-					t.setStatus("Alarm");
-				} catch (Exception e) {
-					t.setStatus(e);
-					Cat.logError(e);
-				} finally {
-					t.complete();
+						m_dispatcher.dispatch(alertEvent);
+						t.setStatus("Alarm");
+					} catch (Exception e) {
+						t.setStatus(e);
+						Cat.logError(e);
+					} finally {
+						t.complete();
+					}
 				}
+
+				com.dianping.cat.home.dal.report.Event alertEvent = new com.dianping.cat.home.dal.report.Event();
+
+				alertEvent.setType(EventCollectManager.CAT_ERROR);
+				alertEvent.setDate(new Date());
+				alertEvent.setDomain(value.getDomain());
+				alertEvent.setIp(CatString.ALL);
+				alertEvent.setSubject(CatString.EXCEPTION + "[" + value.getDomain() + "]");
+				alertEvent.setLink("/cat/p?domain="+value.getDomain());
+				m_eventCollectManager.addEvent(alertEvent);
 			}
 		}
 	}

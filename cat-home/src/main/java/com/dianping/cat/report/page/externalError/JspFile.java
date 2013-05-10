@@ -1,7 +1,7 @@
-package com.dianping.cat.report.page.zabbixError;
+package com.dianping.cat.report.page.externalError;
 
 public enum JspFile {
-	VIEW("/jsp/report/zabbixError.jsp"),
+	VIEW("/jsp/report/externalError.jsp"),
 
 	;
 

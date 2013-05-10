@@ -62,8 +62,8 @@
          <page name="dependency" title="Dependency" path="dependency" template="default">
             <description>Dependency</description>
          </page>
-         <page name="zabbixError" title="ZabbixError" path="zabbixError" template="default">
-            <description>ZabbixError</description>
+         <page name="externalError" title="externalError" path="externalError" template="default">
+            <description>ExternalError</description>
          </page>
       </module>
       <module name="system" path="s" default="false">

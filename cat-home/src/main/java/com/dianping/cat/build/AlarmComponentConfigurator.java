@@ -11,6 +11,7 @@ import com.dianping.cat.home.dal.alarm.AlarmRuleDao;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateDao;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
+import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.system.alarm.AlarmRuleCreator;
@@ -66,10 +67,10 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      req(AlarmTemplateDao.class, AlarmRuleDao.class, ServerConfigManager.class));
 
 		all.add(C(ExceptionDataListener.class).//
-		      req(EventDispatcher.class, ThresholdRuleManager.class));
+		      req(EventDispatcher.class, ThresholdRuleManager.class, EventCollectManager.class));
 
 		all.add(C(ServiceDataListener.class).//
-		      req(EventDispatcher.class, ThresholdRuleManager.class));
+		      req(EventDispatcher.class, ThresholdRuleManager.class, EventCollectManager.class));
 
 		all.add(C(ThresholdAlertListener.class).//
 		      req(AlertManager.class, RuleManager.class));

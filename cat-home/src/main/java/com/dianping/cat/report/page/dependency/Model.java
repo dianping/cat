@@ -3,10 +3,12 @@ package com.dianping.cat.report.page.dependency;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
+import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
@@ -19,6 +21,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private int m_minute;
 
 	private List<Integer> m_minutes;
+
+	private Map<String, List<Event>> m_events;
+
+	public Map<String, List<Event>> getEvents() {
+		return m_events;
+	}
+
+	public void setEvents(Map<String, List<Event>> events) {
+   	m_events = events;
+   }
 
 	public List<Integer> getMinutes() {
 		return m_minutes;

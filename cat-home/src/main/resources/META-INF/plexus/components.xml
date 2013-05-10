@@ -574,6 +574,18 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+			<implementation>com.dianping.cat.report.page.externalError.EventCollectManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.EventDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
@@ -1212,6 +1224,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>event</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>event</logical-table-name>
+				<physical-table-name>event</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>graph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1262,6 +1284,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 			<implementation>com.dianping.cat.home.dal.report.DailyreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.EventDao</role>
+			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2451,6 +2482,9 @@
 					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>dependency</role-hint>
 					<field-name>m_service</field-name>
@@ -2470,17 +2504,44 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.zabbixError.Handler</role>
-			<implementation>com.dianping.cat.report.page.zabbixError.Handler</implementation>
+			<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+			<implementation>com.dianping.cat.report.page.externalError.EventCollectManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.zabbixError.JspViewer</role>
+					<role>com.dianping.cat.home.dal.report.EventDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.zabbixError.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.zabbixError.JspViewer</implementation>
+			<role>com.dianping.cat.home.dal.report.EventDao</role>
+			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.externalError.Handler</role>
+			<implementation>com.dianping.cat.report.page.externalError.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.DomainManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.externalError.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.externalError.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -2858,6 +2919,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2869,6 +2933,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
 				</requirement>
 			</requirements>
 		</component>
