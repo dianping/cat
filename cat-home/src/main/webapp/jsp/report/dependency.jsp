@@ -53,7 +53,7 @@
 				<td>${itemValue.name}</td>
 				<td>${w:format(itemValue.totalCount,'#,###,###,###,##0')}</td>
 				<td>${w:format(itemValue.errorCount,'#,###,###,###,##0')}</td>
-				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0')}</td>
+				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
 				<td>${w:format(itemValue.avg,'0.0')}</td>
 			</tr>		
 		</c:forEach></tbody>
@@ -142,8 +142,6 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
-		$('.switch').css('display','none');
-		
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",
 			'iDisplayLength': 50,
@@ -158,6 +156,7 @@
 		$('#tab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		$('.switch').css('display','none');
+		$('.dataTables_info').css('display','none');
 	});
 </script>
 <style>
