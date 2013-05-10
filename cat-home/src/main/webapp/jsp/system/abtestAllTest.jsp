@@ -9,7 +9,12 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
 <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-	
+<style>
+#content{
+    width:1300px;
+    margin:0 auto;
+}
+</style>	
 <a:body>
 	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
@@ -77,7 +82,7 @@
 	
 	</style>
 	<br>
-	<div class="row-fluid clearfix">
+	<div id="content" class="row-fluid clearfix">
 		<div class="span2 column">
 			<form class="navbar-search" action="">
 				<input name="q" id="search" class="search-query"
@@ -89,31 +94,31 @@
 					<li class="nav-header">ABTest Status</li>
 					<li class="divider" />
 					<li${payload.status eq 'created' ? ' class="selected"' : ''}>
-						<a href="?op=list&status=created">
+						<a href="?status=created">
 						<img height="12" width="12" src="${res.img.local['CREATED_black_small.png']}"> created
 						<span class="badge statusSpan">${model.createdCount}</span>
 						</a>
 					</li>
 					<li${payload.status eq 'ready' ? ' class="selected"' : ''}>
-						<a href="?op=list&status=ready">
+						<a href="?status=ready">
 						<img height="12" width="12" src="${res.img.local['READY_black_small.png']}"> ready to start
 						<span class="badge statusSpan">${model.readyCount}</span>
 						</a>
 					</li>
 					<li${payload.status eq 'running' ? ' class="selected"' : ''}>
-						<a href="?op=list&status=running">
+						<a href="?status=running">
 						<img height="12" width="12" src="${res.img.local['RUNNING_black_small.png']}"> running
 						<span class="badge statusSpan">${model.runningCount}</span>
 						</a>
 					</li>
 					<li${payload.status eq 'terminated' ? ' class="selected"' : ''}>
-						<a href="?op=list&status=terminated">
+						<a href="?status=terminated">
 						<img height="12" width="12" src="${res.img.local['STOPPED_black_small.png']}"> terminated
 						<span class="badge statusSpan">${model.terminatedCount}</span>
 						</a>
 					</li>
 					<li${payload.status eq 'suspended' ? ' class="selected"' : ''}>
-						<a href="?op=list&status=suspended">
+						<a href="?status=suspended">
 						<img height="12" width="12" src="${res.img.local['PAUSED_black_small.png']}"> suspended
 						<span class="badge statusSpan">${model.suspendedCount}</span>
 						</a>
@@ -122,12 +127,31 @@
 			</div>
 		</div>
 		<div class="span10 column">
+			<c:if test="${not empty ctx.errors}">
+				<c:forEach var="item" items="${ctx.errors}">
+					<c:if test="${item.code eq 'disable' }">
+						<div id="alertDiv" class="alert alert-error" style=" margin-bottom: 10px">
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+							<c:forEach var="argument" items="${item.arguments}">
+								<strong>Error!</strong> <c:out value="${argument.value}"/><br>
+							</c:forEach>
+						</div>
+					</c:if>
+					<c:if test="${item.code eq 'success' }">
+						<div id="alertDiv" class="alert alert-success" style=" margin-bottom: 10px">
+							<button type="button" class="close" data-dismiss="alert">&times;</button>
+							<strong>Success!</strong>
+						</div>
+					</c:if>
+				</c:forEach>
+			</c:if>
 			<div style="margin-bottom: 10px;">
-				<button class="btn" type="button">
-					<label class="checkbox"> <input id="ckall" type="checkbox"></input></label>
-				</button>
-				<button id="btnSuspend" class="btn" type="button">Suspend</button>
-				<button id="btnResume" class="btn" type="button">Resume</button>
+                <a class="btn btn-info" style="float:right;" href="?op=create">Create</a>
+				<a class="btn btn-info" style="margin-bottom:0px; padding-right:6px">
+					<label class="checkbox" style="margin:0px;"> <input id="ckall" type="checkbox"></input></label>
+				</a>
+				<button id="btnSuspend" class="btn btn-info" type="button">Suspend</button>
+				<button id="btnResume" class="btn btn-info" type="button">Resume</button>
 			</div>
 
 			<table class="table table-striped table-format table-hover" data-provides="rowlink">
@@ -188,10 +212,10 @@
 			<div style="margin-top: 0px">  
 			  <ul class="pager">  
 			  	<li ${payload.pageNum <= 1 ? ' class="disabled"' : ''}>
-			  		<a href="?op=list&status=${payload.status}&pageNum=1">First</a>
+			  		<a href="?status=${payload.status}&pageNum=1">First</a>
 			  	</li>
 			    <li id="prev" ${payload.pageNum <= 1 ? ' class="disabled"' : ''}>
-			    	<a href="?op=list&status=${payload.status}&pageNum=${payload.pageNum > 1 ? (payload.pageNum - 1) : 1}">&larr; Prev</a>
+			    	<a href="?status=${payload.status}&pageNum=${payload.pageNum > 1 ? (payload.pageNum - 1) : 1}">&larr; Prev</a>
 			    </li>
 					<fmt:parseNumber var="beginPage" integerOnly="true" value="${payload.pageNum / 5}" />
 					<fmt:parseNumber var="pageRemainder" integerOnly="true" value="${payload.pageNum % 5}" />
@@ -202,14 +226,14 @@
 						begin="${(beginPage * 5 + 1)<= model.totalPages ? (beginPage * 5 + 1) : model.totalPages }"
 						end="${(beginPage + 1) * 5 <= model.totalPages ? (beginPage + 1) * 5 : model.totalPages}">
 						<li ${payload.pageNum == pageNum ? ' class="disabled"' : ''}>
-							<a href="?op=list&status=${payload.status}&pageNum=${pageNum}">${pageNum}</a>
+							<a href="?status=${payload.status}&pageNum=${pageNum}">${pageNum}</a>
 						</li>
 					</c:forEach>
 					<li id="next" ${payload.pageNum >= model.totalPages ? ' class="disabled"' : ''}>
-			    	<a href="?op=list&status=${payload.status}&pageNum=${payload.pageNum < model.totalPages ? (payload.pageNum + 1) : model.totalPages}">Next &rarr;</a>
+			    	<a href="?status=${payload.status}&pageNum=${payload.pageNum < model.totalPages ? (payload.pageNum + 1) : model.totalPages}">Next &rarr;</a>
 			    </li>  
 			    <li ${payload.pageNum >= model.totalPages ? ' class="disabled"' : ''}>
-			    	<a href="?op=list&status=${payload.status}&pageNum=${model.totalPages}">Last</a>
+			    	<a href="?status=${payload.status}&pageNum=${model.totalPages}">Last</a>
 			    </li>
 			  </ul>  
 			</div>

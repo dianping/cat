@@ -259,7 +259,7 @@ CREATE TABLE `abtest` (
   `name` varchar(45) NOT NULL COMMENT 'abtest的名字',
   `start_date` datetime DEFAULT NULL COMMENT '开始时间',
   `end_date` datetime DEFAULT NULL COMMENT '结束时间',
-  `isDisabled` tinyint(4) NOT NULL COMMENT '是否有效',
+  `disabled` tinyint(4) NOT NULL COMMENT '是否有效',
   `domains` varchar(100) NOT NULL COMMENT '属于的domain，用分号分割',
   `strategy_id` int(11) NOT NULL COMMENT '分组策略ID',
   `strategy_config` blob COMMENT '策略配置',
@@ -268,6 +268,8 @@ CREATE TABLE `abtest` (
   `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8$$
+
+
 
 
 

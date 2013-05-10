@@ -5,7 +5,7 @@
     <member name="name" field="name" value-type="String" length="45" nullable="false" />
     <member name="start-date" field="start_date" value-type="Date" />
     <member name="end-date" field="end_date" value-type="Date" />
-    <member name="is-disabled" field="isDisabled" value-type="int" length="3" nullable="false" />
+    <member name="disabled" field="disabled" value-type="int" length="3" nullable="false" />
     <member name="domains" field="domains" value-type="String" length="100" nullable="false" />
     <member name="strategy-id" field="strategy_id" value-type="int" length="10" nullable="false" />
     <member name="strategy-config" field="strategy_config" value-type="byte[]" length="65535" />
