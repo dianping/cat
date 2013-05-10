@@ -231,8 +231,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		if (m_action == Action.CREATE && ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
 			try {
 				Validate.isTrue(StringUtils.isNotBlank(m_name), "'ABTest Name' is required");
-				Validate.isTrue(m_startDate != null, "'Start Time' is required, and formated 'yyyy-MM-dd hh:mm'");
-				Validate.isTrue(m_endDate != null, "'End Time' is required, and formated 'yyyy-MM-dd hh:mm'");
+//				Validate.isTrue(m_startDate != null, "'Start Time' is required, and formated 'yyyy-MM-dd hh:mm'");
+//				Validate.isTrue(m_endDate != null, "'End Time' is required, and formated 'yyyy-MM-dd hh:mm'");
 				Validate.isTrue(m_domains != null && m_domains.length > 0, "'Domains' is required, choose one at least");
 				for (String domain : m_domains) {
 					Validate.isTrue(StringUtils.isNotBlank(domain), "'Domains' should not be blank");

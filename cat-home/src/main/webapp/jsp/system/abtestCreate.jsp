@@ -78,9 +78,9 @@ div.controls input {
                <label class="control-label">Start Time</label>
                <div class="controls">
                   <div id="datetimepicker1" class="input-append date">
-                     <input name="startDate" value="${payload.startDateStr}" placeholder="when to run ab test"
-                        data-format="yyyy-MM-dd hh:mm" type="text" check-type="required" required-message="Start Time is required!"></input>
-                     <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+                     <input name="startDate" value="${payload.startDateStr}" placeholder="default is current time."
+                        data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on"> <i
+                        data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
                      </span>
                   </div>
                </div>
@@ -89,9 +89,9 @@ div.controls input {
                <label class="control-label">End Time</label>
                <div class="controls">
                   <div id="datetimepicker2" class="input-append date">
-                     <input name="endDate" value="${payload.endDateStr}" placeholder="when to stop ab test"
-                        data-format="yyyy-MM-dd hh:mm" type="text" check-type="required" required-message="End Time is required!"></input>
-                     <span class="add-on"> <i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+                     <input name="endDate" value="${payload.endDateStr}" placeholder="default is forever"
+                        data-format="yyyy-MM-dd hh:mm" type="text"></input> <span class="add-on"> <i
+                        data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
                      </span>
                   </div>
                </div>
