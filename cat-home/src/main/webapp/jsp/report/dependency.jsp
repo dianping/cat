@@ -36,7 +36,7 @@
 	</c:forEach>
 			
 	<div class="row-fluid">
-  <div class="span7">
+  <div class="span6">
 	<table	class="contents table table-striped table-bordered table-condensed">
 		<thead>	<tr>
 			<th>Name</th>
@@ -84,8 +84,8 @@
 		</c:forEach></tbody>
 	</table>
 	</div>
-  <div class="span5">
-  			<div class="tabbable tabs-left"  id="otherDependency">
+  <div class="span6">
+  			<div class="tabbable"  id="otherDependency">
 				  <ul class="nav nav-tabs">
 				  	<c:forEach  var="item" items="${model.events}"  varStatus="status" >
 						 <li id="leftTab${status.index}" class="text-right"><a href="#tab${status.index}" data-toggle="tab">
