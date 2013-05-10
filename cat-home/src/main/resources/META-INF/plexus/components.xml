@@ -2810,6 +2810,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
+			<implementation>com.dianping.cat.system.alarm.AlarmContentBuilder</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.alarm.AlarmRuleCreator</role>
 			<implementation>com.dianping.cat.system.alarm.AlarmRuleCreator</implementation>
 			<requirements>
@@ -2922,6 +2926,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2937,6 +2944,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2948,6 +2958,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.alarm.RuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
 				</requirement>
 			</requirements>
 		</component>
