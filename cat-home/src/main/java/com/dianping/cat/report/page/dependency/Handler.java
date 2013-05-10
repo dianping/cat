@@ -99,27 +99,35 @@ public class Handler implements PageHandler<Context> {
 		model.setMinutes(minutes);
 		model.setReport(report);
 		model.setSegment(segment);
-		model.setEvents(queryDependencyEvent(segment,payload.getDomain(),time));
-		
+		model.setEvents(queryDependencyEvent(segment, payload.getDomain(), time));
+
 		m_jspViewer.view(ctx, model);
 	}
 
-	private Map<String, List<Event>> queryDependencyEvent(Segment segment, String domain,Date date) {
+	private Map<String, List<Event>> queryDependencyEvent(Segment segment, String domain, Date date) {
 		Map<String, List<Event>> result = new LinkedHashMap<String, List<Event>>();
 		Map<String, List<String>> dependencies = parseDependencies(segment);
+		List<Event> domainEvents = m_manager.queryEvents(domain, date);
 
-		result.put(domain, m_manager.queryEvents(domain, date));
+		if (domainEvents != null && domainEvents.size() > 0) {
+			result.put(domain, domainEvents);
+		}
 		for (Entry<String, List<String>> entry : dependencies.entrySet()) {
 			String key = entry.getKey();
 			List<String> targets = entry.getValue();
-			List<Event> events = result.get(key);
 
-			if (events == null) {
-				events = new ArrayList<Event>();
-				result.put(key, events);
-			}
 			for (String temp : targets) {
-				events.addAll(m_manager.queryEvents(temp, date));
+				List<Event> queryEvents = m_manager.queryEvents(temp, date);
+				
+				if (queryEvents != null && queryEvents.size() > 0) {
+					List<Event> events = result.get(key);
+
+					if (events == null) {
+						events = new ArrayList<Event>();
+						result.put(key, events);
+					}
+					events.addAll(queryEvents);
+				}
 			}
 		}
 		return result;

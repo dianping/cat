@@ -29,7 +29,7 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private DomainManager m_domainManager;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 
 	@Override
 	@PayloadMeta(Payload.class)

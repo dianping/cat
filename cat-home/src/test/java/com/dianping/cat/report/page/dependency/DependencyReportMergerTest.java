@@ -60,7 +60,7 @@ public class DependencyReportMergerTest {
 	}
 
 	private String buildUrl(int i) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String ip = "192.168.7.70";
 		String title = "ZabbixError";
 		String database = "cat";

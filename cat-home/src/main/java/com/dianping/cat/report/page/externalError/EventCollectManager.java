@@ -43,7 +43,7 @@ public class EventCollectManager implements Initializable, LogEnabled {
 
 	public List<Event> queryEvents(String domain, Date date) {
 		Date start = new Date(date.getTime() - TimeUtil.ONE_MINUTE * 3);
-		Date end = date;
+		Date end = new Date(date.getTime() + TimeUtil.ONE_MINUTE);
 
 		try {
 			return m_eventDao.findByDomainTime(domain, start, end, EventEntity.READSET_FULL);

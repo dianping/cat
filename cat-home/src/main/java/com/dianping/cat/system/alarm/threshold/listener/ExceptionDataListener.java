@@ -1,5 +1,6 @@
 package com.dianping.cat.system.alarm.threshold.listener;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.CatString;
+import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
@@ -33,6 +35,8 @@ public class ExceptionDataListener implements EventListener {
 
 	@Inject
 	private EventCollectManager m_eventCollectManager;
+
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public boolean isEligible(Event event) {
@@ -80,10 +84,18 @@ public class ExceptionDataListener implements EventListener {
 				alertEvent.setDomain(value.getDomain());
 				alertEvent.setIp(CatString.ALL);
 				alertEvent.setSubject(CatString.EXCEPTION + "[" + value.getDomain() + "]");
-				alertEvent.setLink("/cat/p?domain="+value.getDomain());
+				alertEvent.setLink("/cat/r/p?domain=" + value.getDomain() + "&date="
+				      + m_sdf.format(getCurrentHour(value.getDate())));
 				m_eventCollectManager.addEvent(alertEvent);
 			}
 		}
+	}
+
+	private Date getCurrentHour(Date date) {
+		long time = date.getTime();
+		time = time - time % TimeUtil.ONE_HOUR;
+
+		return new Date(time);
 	}
 
 }

@@ -113,7 +113,7 @@
 				  				<tr><td>${w:format(item.date,'HH:mm')}</td>
 				  					<td>
 				  						<c:choose>
-				  							<c:when test="${empty item.link}"><a href="${item.link}" target="_blank">${item.subject}</a></c:when>
+				  							<c:when test="${not empty item.link}"><a href="${item.link}" target="_blank">${item.subject}</a></c:when>
 				  							<c:otherwise>${item.subject}</c:otherwise>
 				  						</c:choose>
 				  						<i data-content="${item.content}" data-original-title="详情" data-placement="top" data-toggle="popover" class="icon-tags" data-trigger="hover" tips=""></i>
