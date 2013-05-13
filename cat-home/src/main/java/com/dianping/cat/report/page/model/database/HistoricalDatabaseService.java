@@ -27,7 +27,6 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 	@Override
 	protected DatabaseReport buildModel(ModelRequest request) throws Exception {
 		String database = request.getProperty("database");
-
 		long date = Long.parseLong(request.getProperty("date"));
 		DatabaseReport report;
 
@@ -36,7 +35,6 @@ public class HistoricalDatabaseService extends BaseHistoricalModelService<Databa
 		} else {
 			report = getReportFromDatabase(date, database);
 		}
-
 		return report;
 	}
 

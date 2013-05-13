@@ -1,6 +1,18 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.consumer.DomainManager</role>
+			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.sql.SqlParseManager</role>
 			<implementation>com.dianping.cat.consumer.sql.SqlParseManager</implementation>
 			<requirements>
@@ -68,6 +80,23 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.MessageAnalyzer</role>
+			<role-hint>dependency</role-hint>
+			<implementation>com.dianping.cat.consumer.advanced.DependencyAnalyzer</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.DomainManager</role>
 				</requirement>
 			</requirements>
 		</component>

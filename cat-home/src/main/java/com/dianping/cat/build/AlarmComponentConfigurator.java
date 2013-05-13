@@ -11,8 +11,10 @@ import com.dianping.cat.home.dal.alarm.AlarmRuleDao;
 import com.dianping.cat.home.dal.alarm.AlarmTemplateDao;
 import com.dianping.cat.home.dal.alarm.MailRecordDao;
 import com.dianping.cat.home.dal.alarm.ScheduledReportDao;
+import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.DailyReportService;
+import com.dianping.cat.system.alarm.AlarmContentBuilder;
 import com.dianping.cat.system.alarm.AlarmRuleCreator;
 import com.dianping.cat.system.alarm.AlarmTask;
 import com.dianping.cat.system.alarm.alert.AlertManager;
@@ -38,6 +40,8 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
+
+		all.add(C(AlarmContentBuilder.class));
 
 		all.add(C(AlarmRuleCreator.class)//
 		      .req(AlarmRuleDao.class, AlarmTemplateDao.class, ScheduledReportDao.class)//
@@ -66,13 +70,13 @@ class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		      req(AlarmTemplateDao.class, AlarmRuleDao.class, ServerConfigManager.class));
 
 		all.add(C(ExceptionDataListener.class).//
-		      req(EventDispatcher.class, ThresholdRuleManager.class));
+		      req(EventDispatcher.class, ThresholdRuleManager.class, EventCollectManager.class, AlarmContentBuilder.class));
 
 		all.add(C(ServiceDataListener.class).//
-		      req(EventDispatcher.class, ThresholdRuleManager.class));
+		      req(EventDispatcher.class, ThresholdRuleManager.class, EventCollectManager.class, AlarmContentBuilder.class));
 
 		all.add(C(ThresholdAlertListener.class).//
-		      req(AlertManager.class, RuleManager.class));
+		      req(AlertManager.class, RuleManager.class, AlarmContentBuilder.class));
 
 		all.add(C(AlarmTask.class).//
 		      req(EventDispatcher.class, Connector.class, ThresholdRuleManager.class));

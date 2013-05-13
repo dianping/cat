@@ -7,22 +7,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.top.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.top.Model" scope="request"/>
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
-<script type="text/javascript">
-	/* if(${model.refresh}){
-		setTimeout(function refresh(){
-			window.location.href="?count=10";
-		},10000);		
-	} */
-	$(document).ready(function() {
-		$('#topMetric a').mouseenter(function (e) {
-		  e.preventDefault();
-		  $(this).tab('show');
-		});	
-	});
-</script>
 <style>
 .tab-content	table {
   max-width: 100%;
@@ -36,6 +20,7 @@
 <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 <res:useCss value='${res.css.local.report_css}' target="head-css" />
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
 <div class="report">
@@ -51,7 +36,7 @@
 		</tr>
 	</table>
 	
-	<div class="tabbable tabs-left alert-info" id="topMetric"> <!-- Only required for left/right tabs -->
+<div class="tabbable tabs-left alert-info" id="topMetric"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs">
     <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多Top10</a></li>
     <li class='text-right'><a href="#tab2" data-toggle="tab">URL最慢Top10</a></li>
@@ -147,3 +132,16 @@
 	</table>
 </div>
 </a:body>
+<script type="text/javascript">
+	/* if(${model.refresh}){
+		setTimeout(function refresh(){
+			window.location.href="?count=10";
+		},10000);		
+	} */
+	$(document).ready(function() {
+		$('#topMetric .nav-tabs a').mouseenter(function (e) {
+		  e.preventDefault();
+		  $(this).tab('show');
+		});	
+	});
+</script>

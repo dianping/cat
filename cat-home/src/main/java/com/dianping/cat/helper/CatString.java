@@ -12,5 +12,9 @@ public class CatString {
 
 	public static final String EXCEPTION = " CAT异常过多告警";
 
+	public static final String EXCEPTION_MANY = " 异常过多";
+
+	public static final String SERVICE_MANY = " 服务调用失败过多";
+
 	public static final String SERVICE = " CAT服务调用告警";
 }

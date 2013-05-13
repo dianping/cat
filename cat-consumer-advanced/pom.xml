@@ -34,6 +34,11 @@
          <scope>test</scope>
       </dependency>
       <dependency>
+         <groupId>org.unidal.webres</groupId>
+         <artifactId>WebResServer</artifactId>
+         <version>1.2.0</version>
+      </dependency>
+      <dependency>
          <groupId>com.google.code.gson</groupId>
          <artifactId>gson</artifactId>
          <scope>test</scope>
@@ -58,14 +63,13 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>
-							${basedir}/src/main/resources/META-INF/dal/model/sql-report-manifest.xml,
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/sql-report-manifest.xml,
                      		${basedir}/src/main/resources/META-INF/dal/model/database-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 							${basedir}/src/main/resources/META-INF/dal/model/health-report-manifest.xml,
-					 </manifest>
+							${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -86,9 +90,17 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest><![CDATA[
-                     	${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
-                     ]]></manifest>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate dal model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>

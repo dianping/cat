@@ -67,7 +67,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
 			String tables = m_sqlParseManager.getTableNames(sqlName, sqlStatement, domain);
-			String database = getDataBaseName(connection);
+			String database =  DatabaseParseUtil.parseDatabaseName(connection);
 
 			if (database == null) {
 				m_errorConnectionUrls.add(domain + ":" + connection);
@@ -91,33 +91,6 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	private String getDataBaseName(String url) {
-		if (url != null) {
-			if (url.indexOf("mysql") > -1) {
-				try {
-					int index = url.indexOf("://");
-					String temp = url.substring(index + 3);
-					index = temp.indexOf("/");
-					int index2 = temp.indexOf("?");
-					String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
-					return schema;
-				} catch (Exception e) {
-				}
-			} else if (url.indexOf("sqlserver") > -1) {
-				String temp = url.substring(url.indexOf("databaseName"));
-
-				int first = temp.indexOf("=");
-				int end = temp.indexOf(";");
-
-				if (first > -1 && end > -1) {
-					return temp.substring(first + 1, end);
-				}
-			}
-		}
-
-		return null;
 	}
 
 	@Override

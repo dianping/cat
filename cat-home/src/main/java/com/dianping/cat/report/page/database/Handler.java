@@ -17,7 +17,7 @@ import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.NormalizePayload;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -39,7 +39,7 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<DatabaseReport> m_service;
 
 	@Inject
-	private NormalizePayload m_normalizePayload;
+	private PayloadNormalizer m_normalizePayload;
 
 	private DatabaseReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -113,11 +113,11 @@ public class Handler implements PageHandler<Context> {
 		if (StringUtils.isEmpty(payload.getDatabase())) {
 			payload.setDatabase("cat");
 		}
-		if (!CatString.ALL.equalsIgnoreCase(payload.getDomain())) {
-			model.setDisplayDomain(payload.getDomain());
-			model.setDomain(payload.getDomain());
+		if(StringUtils.isEmpty(payload.getDomain())){
+			payload.setDomain(CatString.ALL);
 		}
 		model.setDatabase(payload.getDatabase());
+		model.setDomain(payload.getDomain());
 		model.setPage(ReportPage.DATABASE);
 		m_normalizePayload.normalize(model, payload);
 	}

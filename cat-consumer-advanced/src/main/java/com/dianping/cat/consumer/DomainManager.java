@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.cross;
+package com.dianping.cat.consumer;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;

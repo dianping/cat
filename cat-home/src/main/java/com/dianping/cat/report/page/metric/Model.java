@@ -13,8 +13,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private MetricDisplay m_display;
 
-	private String m_domain;
-
 	private String m_group;
 
 	private String m_channel;
@@ -44,7 +42,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public String getDomain() {
-		return m_domain;
+		return getDisplayDomain();
 	}
 
 	@Override
@@ -70,10 +68,6 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	public void setDisplay(MetricDisplay display) {
 		m_display = display;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
 	}
 
 	public void setGroup(String group) {

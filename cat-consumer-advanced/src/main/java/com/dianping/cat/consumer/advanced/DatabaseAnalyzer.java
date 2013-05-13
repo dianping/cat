@@ -64,7 +64,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
 			String tables = m_sqlParseManeger.getTableNames(sqlName, sqlStatement, domain);
-			String database = getDatabaseName(connection);
+			String database = DatabaseParseUtil.parseDatabaseName(connection);
 
 			if (database == null) {
 				database = "Unknown";
@@ -83,33 +83,6 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	String getDatabaseName(String url) {
-		if (url != null) {
-			if (url.indexOf("mysql") > -1) {
-				try {
-					int index = url.indexOf("://");
-					String temp = url.substring(index + 3);
-					index = temp.indexOf("/");
-					int index2 = temp.indexOf("?");
-					String schema = temp.substring(index + 1, index2 != -1 ? index2 : temp.length());
-					return schema;
-				} catch (Exception e) {
-				}
-			} else if (url.indexOf("sqlserver") > -1) {
-				String temp = url.substring(url.indexOf("databaseName"));
-
-				int first = temp.indexOf("=");
-				int end = temp.indexOf(";");
-
-				if (first > -1 && end > -1) {
-					return temp.substring(first + 1, end);
-				}
-			}
-		}
-
-		return null;
 	}
 
 	@Override
