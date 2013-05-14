@@ -184,10 +184,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
 
 				detail.setUrl(count + detail.getUrl());
 				detail.setUrlSum(sum + detail.getUrlSum());
+				detail.setUrlError(errorCount+detail.getUrlError());
 				detail.setUrlDuration(detail.getUrlSum() / detail.getUrl());
 			}
 		},
@@ -196,9 +198,12 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+				
 				detail.setService(count + detail.getService());
 				detail.setServiceSum(sum + detail.getServiceSum());
+				detail.setServiceError(errorCount+detail.getServiceError());
 				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
 			}
 		},
@@ -207,8 +212,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+				
 				detail.setService(count + detail.getService());
+				detail.setServiceError(errorCount+detail.getServiceError());
 				detail.setServiceSum(sum + detail.getServiceSum());
 				detail.setServiceDuration(detail.getServiceSum() / detail.getService());
 			}
@@ -218,8 +226,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+				
 				detail.setCall(count + detail.getCall());
+				detail.setCallError(errorCount+detail.getCallError());
 				detail.setCallSum(sum + detail.getCallSum());
 				detail.setCallDuration(detail.getCallSum() / detail.getCall());
 
@@ -230,8 +241,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+				
 				detail.setCall(count + detail.getCall());
+				detail.setCallError(errorCount+detail.getCallError());
 				detail.setCallSum(sum + detail.getCallSum());
 				detail.setCallDuration(detail.getCallSum() / detail.getCall());
 			}
@@ -241,8 +255,11 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 			@Override
 			public void apply(Range2 range2, com.dianping.cat.consumer.top.model.entity.Segment detail) {
 				long count = range2.getCount();
+				long errorCount = range2.getFails();
 				double sum = range2.getSum();
+				
 				detail.setSql(count + detail.getSql());
+				detail.setSqlError(errorCount+detail.getSqlError());
 				detail.setSqlSum(sum + detail.getSqlSum());
 				detail.setSqlDuration(detail.getSqlSum() / detail.getSql());
 			}

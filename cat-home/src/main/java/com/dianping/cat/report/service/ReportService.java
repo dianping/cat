@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
+import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -43,6 +44,8 @@ public interface ReportService {
 	public StateReport queryStateReport(String domain,Date start,Date end);
 
 	public TopReport queryTopReport(String domain,Date start,Date end);
+	
+	public DependencyReport queryDependencyReport(String domain,Date start,Date end);
 
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end);
 }

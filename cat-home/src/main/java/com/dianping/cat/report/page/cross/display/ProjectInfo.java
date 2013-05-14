@@ -9,12 +9,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
 import com.dianping.cat.consumer.cross.model.entity.Remote;
 import com.dianping.cat.consumer.cross.model.entity.Type;
 import com.dianping.cat.consumer.cross.model.transform.BaseVisitor;
-import com.dianping.cat.report.page.cross.DomainManager;
 
 public class ProjectInfo extends BaseVisitor {
 
@@ -144,7 +144,7 @@ public class ProjectInfo extends BaseVisitor {
 			addCallProject(remoteIp, remote.getType());
 		}
 	}
-
+	
 	public void setDomainManager(DomainManager domainManager) {
 		m_domainManager = domainManager;
 	}

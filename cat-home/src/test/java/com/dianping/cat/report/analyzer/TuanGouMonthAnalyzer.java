@@ -14,6 +14,7 @@ import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.health.model.transform.DefaultSaxParser;
@@ -26,7 +27,6 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Dailyreport;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.DailyreportEntity;
-import com.dianping.cat.report.page.cross.DomainManager;
 import com.dianping.cat.report.page.cross.display.ProjectInfo;
 import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;

@@ -7,13 +7,11 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.metric.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
-<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.0/themes/base/jquery-ui.css" />
-<script src="http://code.jquery.com/jquery-1.8.3.js"></script>
-<script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 <a:body>
 <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 <res:useCss value='${res.css.local.report_css}' target="head-css" />
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
 <res:useJs value="${res.js.local['metric.js']}" target="head-js"/>

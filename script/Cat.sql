@@ -249,6 +249,19 @@ CREATE TABLE `project` (
   PRIMARY KEY (`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目基本信息';
 
+CREATE TABLE `event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` int(11) NOT NULL COMMENT '1、运维系统告警，2、DB告警，3、CAT内容告警',
+  `link` varchar(500)  COMMENT '详细信息link',
+  `domain` varchar(50) Binary COMMENT '错误机器上项目或者数据库名',
+  `ip` varchar(32)  COMMENT '错误机器IP',
+  `subject` varchar(200)  COMMENT '事件标题',
+  `content` text  COMMENT '事件内容',
+  `date` datetime NOT NULL COMMENT '事件发生时间',
+  `creation_date` datetime NOT NULL COMMENT '记录创建时间',
+  PRIMARY KEY (`id`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='事件记录表';
+
 
 
 

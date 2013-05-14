@@ -1,12 +1,14 @@
 package com.dianping.cat.report.page;
 
+import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.helper.CatString;
 
-public class NormalizePayload {
+public class PayloadNormalizer {
 
+	@Inject
 	private ServerConfigManager m_manager;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

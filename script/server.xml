@@ -1,10 +1,11 @@
-<config local-mode="true" job-machine="false">
-	<storage>
-		<hdfs id="logview" max-size="128M" server-uri="hdfs://192.168.7.80/user/cat" base-dir="logview"/>
-		<hdfs id="dump" max-size="128M" server-uri="hdfs://192.168.7.80/user/cat" base-dir="dump"/>
-		<properties>
+<config local-mode="false" job-machine="false">
+	<storage  local-base-dir="/data/appdatas/cat/bucket/">
+		<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
+		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
+		<hdfs id="remote" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="remote"/>
+	<properties>
 			<property name="hadoop.security.authentication" value="kerberos"/>
-			<property name="dfs.namenode.kerberos.principal" value="hadoop/dev80.hadoop@DIANPING.COM"/>
+			<property name="dfs.namenode.kerberos.principal" value="hadoop/test86.hadoop@DIANPING.COM"/>
 			<property name="dfs.cat.kerberos.principal" value="cat@DIANPING.COM"/>
 			<property name="dfs.cat.keytab.file" value="/data/appdatas/cat/cat.keytab"/>
 			<property name="java.security.krb5.realm" value="DIANPING.COM"/>
@@ -12,14 +13,8 @@
 		</properties>
 	</storage>
 
-	<consumer>
-		<long-url default-threshold="1000">
-			<domain name="Cat" threshold="50"/>
-		</long-url>
-	</consumer>
 	
 	<console default-domain="Cat" show-cat-domain="true">
-		<remote-servers>127.0.0.1:2281</remote-servers>
+		<remote-servers>127.0.0.1:2281,192.168.7.70:8080</remote-servers>		
 	</console>
 </config>
-

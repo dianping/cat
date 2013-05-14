@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat.advanced">
+   <model package="com.dianping.cat.advanced.dependency-report" name="dependency-report">
+      <sample-model>/Users/youyong/Documents/workspace/cat/cat-consumer-advanced/src/test/resources/com/dianping/cat/consumer/advanced/dependency-report.xml</sample-model>
+   </model>
+</wizard>

@@ -2,6 +2,7 @@ package com.dianping.cat.consumer.core;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -56,6 +57,8 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private ProjectDao m_projectDao;
+
+	private Set<String> m_domains = new HashSet<String>();
 
 	private Map<String, StateReport> m_reports = new HashMap<String, StateReport>();
 
@@ -240,6 +243,10 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		ProcessDomain processDomains = machine.findOrCreateProcessDomain(domain);
 
+		if (!m_domains.contains(domain)) {
+			insertDomainInfo(domain);
+			m_domains.add(domain);
+		}
 		processDomains.addIp(ip);
 	}
 
