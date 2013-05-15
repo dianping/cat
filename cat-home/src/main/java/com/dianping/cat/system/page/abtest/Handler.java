@@ -27,6 +27,9 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
+import com.dianping.cat.home.dal.abtest.AbtestRun;
+import com.dianping.cat.home.dal.abtest.AbtestRunDao;
+import com.dianping.cat.home.dal.abtest.AbtestRunEntity;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
@@ -45,6 +48,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
 	private AbtestDao m_abtestDao;
+
+	@Inject
+	private AbtestRunDao m_abtestRunDao;
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -66,13 +72,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
 			if (action == Action.CREATE) {
 				Abtest abtest = new Abtest();
+
+				// TODO need more parameters for abtest
 				abtest.setName(payload.getName());
 				abtest.setDescription(payload.getDescription());
-				abtest.setStartDate(payload.getStartDate());
-				abtest.setEndDate(payload.getEndDate());
+				abtest.setGroupStrategy(payload.getStrategyId());
 				abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-				abtest.setStrategyId(payload.getStrategyId());
-				abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
+
+				AbtestRun run = new AbtestRun();
+
+				run.setStartDate(payload.getStartDate());
+				run.setEndDate(payload.getEndDate());
+				run.setDomains(StringUtils.join(payload.getDomains(), ','));
+				run.setStrategyConfiguration(payload.getStrategyConfig());
 				try {
 					m_abtestDao.insert(abtest);
 				} catch (DalException e) {
@@ -81,14 +93,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				}
 			} else if (action == Action.DETAIL) {
 				Abtest abtest = new Abtest();
+				
 				abtest.setKeyId(payload.getId());
 				abtest.setName(payload.getName());
 				abtest.setDescription(payload.getDescription());
-				abtest.setStartDate(payload.getStartDate());
-				abtest.setEndDate(payload.getEndDate());
 				abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-				abtest.setStrategyId(payload.getStrategyId());
-				abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
+				
+				AbtestRun run = new AbtestRun();
+
+				run.setStartDate(payload.getStartDate());
+				run.setEndDate(payload.getEndDate());
+				run.setDomains(StringUtils.join(payload.getDomains(), ','));
+				run.setStrategyConfiguration(payload.getStrategyConfig());
+				
 				try {
 					m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_FULL);
 				} catch (DalException e) {
@@ -112,20 +129,20 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			for (String id : ids) {
 				System.out.println("change status for " + id);
 				try {
-					int intID = Integer.parseInt(id);
-					Abtest abtest = m_abtestDao.findByPK(intID, AbtestEntity.READSET_FULL);
+					int runID = Integer.parseInt(id);
+					AbtestRun run = m_abtestRunDao.findByPK(runID, AbtestRunEntity.READSET_FULL);
 
 					if (payload.getDisableAbtest() == -1) { // suspend
-						if (!abtest.isDisabled()) {
-							abtest.setDisabled(true);
-							m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_DISABLE);
+						if (!run.isDisabled()) {
+							run.setDisabled(true);
+							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
 						} else {
 							error.addArgument(id, "Abtest " + id + " has been already suspended!");
 						}
 					} else if (payload.getDisableAbtest() == 1) { // resume
-						if (abtest.isDisabled()) {
-							abtest.setDisabled(false);
-							m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_DISABLE);
+						if (run.isDisabled()) {
+							run.setDisabled(false);
+							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
 						} else {
 							error.addArgument(id, "Abtest " + id + " has been already active!");
 						}
@@ -189,36 +206,48 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Date now = new Date();
 
 		try {
-			entities = m_abtestDao.findAllAbtest(AbtestEntity.READSET_FULL);
+			entities = m_abtestDao.findAll(AbtestEntity.READSET_FULL);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
 
-		List<Abtest> filterTests = new ArrayList<Abtest>();
+		List<ABTestReport> filterReports = new ArrayList<ABTestReport>();
+		List<ABTestReport> totalReports = new ArrayList<ABTestReport>();
 		int createdCount = 0, readyCount = 0, runningCount = 0, terminatedCount = 0, suspendedCount = 0;
 
 		for (Abtest abtest : entities) {
-			ABTestReport report = new ABTestReport(abtest, now);
-
-			if (status != null && report.getStatus() == status) {
-				filterTests.add(abtest);
+			List<AbtestRun> runs = new ArrayList<AbtestRun>();
+			try {
+				runs = m_abtestRunDao.findByCaseId(abtest.getId(), AbtestRunEntity.READSET_FULL);
+			} catch (DalException e) {
+				Cat.logError(e);
 			}
-			switch (report.getStatus()) {
-			case CREATED:
-				createdCount++;
-				break;
-			case READY:
-				readyCount++;
-				break;
-			case RUNNING:
-				runningCount++;
-				break;
-			case TERMINATED:
-				terminatedCount++;
-				break;
-			case SUSPENDED:
-				suspendedCount++;
-				break;
+			
+			for(AbtestRun run : runs){
+				ABTestReport report = new ABTestReport(abtest,run, now);
+				
+				totalReports.add(report);
+				if (status != null && report.getStatus() == status) {
+					filterReports.add(report);
+				}
+				
+				switch (report.getStatus()) {
+				case CREATED:
+					createdCount++;
+					break;
+				case READY:
+					readyCount++;
+					break;
+				case RUNNING:
+					runningCount++;
+					break;
+				case TERMINATED:
+					terminatedCount++;
+					break;
+				case SUSPENDED:
+					suspendedCount++;
+					break;
+				}
 			}
 		}
 
@@ -227,11 +256,12 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		model.setRunningCount(runningCount);
 		model.setTerminatedCount(terminatedCount);
 		model.setSuspendedCount(suspendedCount);
+		
 		if (status != null) {
-			entities = filterTests;
+			totalReports = filterReports;
 		}
 
-		int totalSize = entities.size();
+		int totalSize = totalReports.size();
 		int totalPages = totalSize % m_pageSize == 0 ? (totalSize / m_pageSize) : (totalSize / m_pageSize + 1);
 
 		// safe guarder for pageNum
@@ -248,7 +278,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		int fromIndex = (payload.getPageNum() - 1) * m_pageSize;
 		int toIndex = (fromIndex + m_pageSize) <= totalSize ? (fromIndex + m_pageSize) : totalSize;
 		for (int i = fromIndex; i < toIndex; i++) {
-			reports.add(new ABTestReport(entities.get(i), now));
+			reports.add(totalReports.get(i));
 		}
 
 		model.setTotalPages(totalPages);
@@ -258,7 +288,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private List<GroupStrategy> getAllGroupStrategys() {
 		try {
-			return m_groupStrategyDao.findAllGroupStrategy(GroupStrategyEntity.READSET_FULL);
+			return m_groupStrategyDao.findAllByStatus(1, GroupStrategyEntity.READSET_FULL);
 		} catch (DalException e) {
 			m_logger.error(e.getMessage(), e);
 			Cat.logError(e);

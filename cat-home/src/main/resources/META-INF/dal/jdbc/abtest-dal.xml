@@ -2,16 +2,9 @@
 <entities do-package="com.dianping.cat.home.dal.abtest" gen="true">
 	<entity name="abtest" table="abtest" alias="a">
 		<member name="creation-date" insert-expr="NOW()" />
-		<member name="modify-date" insert-expr="NOW()" update-expr="NOW()" />
-		<member name="disabled" field="disabled" value-type="boolean" length="3" nullable="false" />
-		<updatesets>
-			<updateset name="DISABLE">
-				<member name="disabled" />
-				<member name="modify-date" />
-			</updateset>
-		</updatesets>
+		<member name="modified-date" insert-expr="NOW()" update-expr="NOW()" />
 		<query-defs>
-			<query name="find-all-abtest" type="SELECT" multiple="true">
+			<query name="find-all" type="SELECT" multiple="true">
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> ORDER BY <FIELD name='creation-date'/> DESC
@@ -19,15 +12,40 @@
 			</query>
 		</query-defs>
 	</entity>
-    <entity name="group-strategy" table="groupStrategy" alias="g">
-        <query-defs>
-            <query name="find-all-groupStrategy" type="SELECT" multiple="true">
-                <statement><![CDATA[
+
+	<entity name="abtest-run" table="abtest_run" alias="ar">
+		<member name="disabled" field="disabled" value-type="boolean" length="3" nullable="false" />
+		<member name="creation-date" insert-expr="NOW()" />
+		<member name="modified-date" insert-expr="NOW()" update-expr="NOW()" />
+		<updatesets>
+      		<updateset name="STATUS">
+      			<member name="disabled" field="disabled" value-type="boolean" length="3" nullable="false" />
+      			<member name="modified-date" insert-expr="NOW()" update-expr="NOW()" />
+      		</updateset>
+  		</updatesets>
+		<query-defs>
+			<query name="find-by-case-id" type="SELECT" multiple="true">
+				<param name="case-id" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/>
+					WHERE <FIELD name='case-id'/> = ${case-id}
+				]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+
+	<entity name="group-strategy" table="group_strategy" alias="gs">
+		<query-defs>
+			<query name="find-all-by-status" type="SELECT" multiple="true">
+				<param name="status" />
+				<statement><![CDATA[
                     SELECT <FIELDS/> 
-                    FROM <TABLE/> ORDER BY <FIELD name='id'/>
+                    FROM <TABLE/>
+                    WHERE <FIELD name='status'/> = ${status}
                 ]]></statement>
-            </query>
-        </query-defs>
-    </entity>
+			</query>
+		</query-defs>
+	</entity>
 </entities>
 

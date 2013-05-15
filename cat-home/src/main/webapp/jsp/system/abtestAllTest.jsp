@@ -170,7 +170,7 @@
 					<c:forEach var="item" items="${model.reports}">
 						<tr class="middle center rowlink">
 							<td class="nolink" style="padding-bottom: 8px"><input type="checkbox"/></td>
-							<td><a href="abtest?op=report&id=${item.entity.id}">${item.entity.id}</a></td>
+							<td><a href="abtest?op=report&id=${item.run.id}">${item.run.id}</a></td>
 							<td>${item.entity.name}</td>
 							<td>1000</td>
 							<td>10%</td>
