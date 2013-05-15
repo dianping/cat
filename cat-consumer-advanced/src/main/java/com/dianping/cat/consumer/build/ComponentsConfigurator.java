@@ -18,6 +18,7 @@ import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.MessageAnalyzer;
 import com.dianping.cat.consumer.advanced.CrossAnalyzer;
 import com.dianping.cat.consumer.advanced.DatabaseAnalyzer;
+import com.dianping.cat.consumer.advanced.DatabaseParser;
 import com.dianping.cat.consumer.advanced.DependencyAnalyzer;
 import com.dianping.cat.consumer.advanced.MatrixAnalyzer;
 import com.dianping.cat.consumer.advanced.MetricAnalyzer;
@@ -33,21 +34,23 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DomainManager.class, DomainManager.class).req(ServerConfigManager.class, HostinfoDao.class));
 
 		all.add(C(SqlParseManager.class).req(SqltableDao.class));
+		
+		all.add(C(DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, CrossAnalyzer.ID, CrossAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(MessageAnalyzer.class, DatabaseAnalyzer.ID, DatabaseAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class));
+		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class,DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, SqlAnalyzer.ID, SqlAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class));
+		      .req(BucketManager.class, ReportDao.class, SqlParseManager.class,DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, MatrixAnalyzer.ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, ReportDao.class));
 
 		all.add(C(MessageAnalyzer.class, DependencyAnalyzer.ID, DependencyAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, DomainManager.class));
+		      .req(BucketManager.class, ReportDao.class, DomainManager.class,DatabaseParser.class));
 
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(BucketManager.class, BusinessReportDao.class));

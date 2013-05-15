@@ -19,24 +19,42 @@
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}"
 			target="head-js" />
 <div class="report">
-	<c:forEach var="item" items="${model.minutes}" varStatus="status">
+	<div class="row-fluid">
+	<div class="span1 text-center">
+		<a style="margin-top:18px;" class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">ALL</a>
+	</div>
+	<div class="span11">
+		<c:forEach var="item" items="${model.minutes}" varStatus="status">
 		<c:if test="${status.index % 30 ==0}">
-			<div class="pagination text-center">
+			<div class="pagination">
 			<ul>
 		</c:if>
-		<li id="minute${item}"><a
-					href="?domain=${model.domain}&date=${model.date}&minute=${item}">
-					<c:if test="${item < 10}">0${item}</c:if>
-					<c:if test="${item >= 10}">${item}</c:if>
-				</a></li>
+			<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
+			href="?domain=${model.domain}&date=${model.date}&minute=${item}">
+				<c:if test="${item < 10}">0${item}</c:if>
+				<c:if test="${item >= 10}">${item}</c:if></a></li>
+			</c:if>
+			<c:if test="${item <= model.maxMinute }"><li id="minute${item}"><a
+			href="?domain=${model.domain}&date=${model.date}&minute=${item}">
+				<c:if test="${item < 10}">0${item}</c:if>
+				<c:if test="${item >= 10}">${item}</c:if></a></li>
+			</c:if>
 		<c:if test="${status.index % 30 ==29 || status.last}">
 			</ul>
 			</div>
 		</c:if>
-	</c:forEach>
-			
-	<div class="row-fluid">
+	</c:forEach></div>
+	</div>
+	</br>
+  <div class="row-fluid">
   <div class="span6">
+	<table	class="table table-striped table-bordered table-condensed">
+		<tr>
+			<td>Exception</td>
+			<td>${model.segment.exceptionCount}</td>
+		</tr>
+	</table>
+	
 	<table	class="contents table table-striped table-bordered table-condensed">
 		<thead>	<tr>
 			<th>Name</th>
@@ -51,8 +69,8 @@
 			 <c:set var="itemValue" value="${item.value}" />
 			<tr>
 				<td>${itemValue.name}</td>
-				<td>${w:format(itemValue.totalCount,'#,###,###,###,##0')}</td>
-				<td>${w:format(itemValue.errorCount,'#,###,###,###,##0')}</td>
+				<td>${itemValue.totalCount}</td>
+				<td>${itemValue.errorCount}</td>
 				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
 				<td>${w:format(itemValue.avg,'0.0')}</td>
 			</tr>		
@@ -60,7 +78,7 @@
 	</table>
 	
 	</br>
-	<table	class="contents table table-striped table-bordered table-condensed">
+	<table	class="contentsDependency table table-striped table-bordered table-condensed">
 		<thead>	<tr>
 			<th>Type</th>
 			<th>Target</th>
@@ -76,8 +94,8 @@
 			<tr>
 				<td>${itemValue.type}</td>
 				<td>${itemValue.target}</td>
-				<td>${w:format(itemValue.totalCount,'#,###,###,###,##0')}</td>
-				<td>${w:format(itemValue.errorCount,'#,###,###,###,##0')}</td>
+				<td>${itemValue.totalCount}</td>
+				<td>${itemValue.errorCount}</td>
 				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
 				<td>${w:format(itemValue.avg,'0.0')}</td>
 			</tr>		
@@ -147,6 +165,11 @@
 			'iDisplayLength': 50,
 			"bPaginate": false,
 			"bFilter": false,
+		});
+		$('.contentsDependency').dataTable({
+			"sPaginationType": "full_numbers",
+			'iDisplayLength': 50,
+			"bPaginate": false,
 		});
 		$('#otherDependency .nav-tabs a').mouseenter(function (e) {
 		  e.preventDefault();

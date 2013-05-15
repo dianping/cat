@@ -174,7 +174,8 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml,</manifest>
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/threshold-template-manifest.xml,
+                     ${basedir}/src/main/resources/META-INF/dal/model/front-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -186,8 +187,18 @@
                   <configuration>
                      <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
                      ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,
-                     ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]> <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
+                     ${basedir}/src/main/resources/META-INF/dal/jdbc/user-manifest.xml,]]>  <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
 ${basedir}/src/main/resources/META-INF/dal/jdbc/alarm-manifest.xml,]]></manifest>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate dal model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/front-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>

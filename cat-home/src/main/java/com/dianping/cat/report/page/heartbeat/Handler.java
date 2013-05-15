@@ -73,22 +73,22 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildHistoryGraph(Model model, Payload payload) {
-	   HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(),
-	   		new Date(payload.getDate()), new Date(payload.getDate() + TimeUtil.ONE_HOUR));
-	   model.setReport(report);
+		HeartbeatReport report = m_reportService.queryHeartbeatReport(payload.getDomain(), new Date(payload.getDate()),
+		      new Date(payload.getDate() + TimeUtil.ONE_HOUR));
+		model.setReport(report);
 
-	   if(StringUtil.isEmpty(payload.getIpAddress())){
-	   	String ipAddress = getIpAddress(report, payload);
-	   	
-	   	payload.setIpAddress(ipAddress);
-	   	model.setIpAddress(ipAddress);
-	   }
-	   m_historyGraphs.showHeartBeatGraph(model, payload);
-   }
+		if (StringUtil.isEmpty(payload.getIpAddress())) {
+			String ipAddress = getIpAddress(report, payload);
+
+			payload.setIpAddress(ipAddress);
+			model.setIpAddress(ipAddress);
+		}
+		m_historyGraphs.showHeartBeatGraph(model, payload);
+	}
 
 	private String getIpAddress(HeartbeatReport report, Payload payload) {
 		Set<String> ips = report.getIps();
-		String ip = payload.getIpAddress();
+		String ip = payload.getRealIp();
 
 		if ((ip == null || ip.length() == 0) && !ips.isEmpty()) {
 			ip = StringSortHelper.sort(ips).get(0);
@@ -145,7 +145,7 @@ public class Handler implements PageHandler<Context> {
 
 			model.setMobileResponse(json);
 			break;
-		case HISTORY :
+		case HISTORY:
 			buildHistoryGraph(model, payload);
 			break;
 		case PART_HISTORY:
@@ -156,16 +156,22 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
+		String ipAddress = payload.getIpAddress();
+
 		model.setPage(ReportPage.HEARTBEAT);
+		if (StringUtil.isEmpty(ipAddress)||ipAddress.equals(CatString.ALL)) {
+			payload.setRealIp("");
+			model.setIpAddress(payload.getRealIp());
+		} else {
+			payload.setRealIp(payload.getIpAddress());
+			model.setIpAddress(payload.getRealIp());
+		}
 		m_normalizePayload.normalize(model, payload);
 
 		String queryType = payload.getType();
 
 		if (queryType == null || queryType.trim().length() == 0) {
 			payload.setType("frameworkThread");
-		}
-		if (CatString.ALL.equalsIgnoreCase(payload.getIpAddress())) {
-			payload.setIpAddress("");
 		}
 	}
 

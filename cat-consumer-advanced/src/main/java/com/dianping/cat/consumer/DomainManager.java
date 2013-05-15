@@ -62,6 +62,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 			if (project == null) {
 				m_unknownIps.put(ip, ip);
+				m_logger.info("add ip to unknown list,ip:" + ip);
 				return UNKNOWN_PROJECT;
 			}
 		}
@@ -103,7 +104,7 @@ public class DomainManager implements Initializable, LogEnabled {
 		}
 
 		private void queryFromCMDB() {
-			Set<String> addIps = new HashSet<String>();
+			Set<String> addedIps = new HashSet<String>();
 			for (String ip : m_unknownIps.keySet()) {
 				try {
 					String cmdb = String.format(CMDB_URL, ip);
@@ -118,7 +119,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 						if (domain != null) {
 							m_cmdbs.put(ip, domain);
-							addIps.add(ip);
+							addedIps.add(ip);
 							m_logger.info(String.format("get domain info from cmdb. ip: %s,domain: %s", ip, domain));
 						} else {
 							m_logger.error(String.format("can't get domain info from cmdb, ip: %s", ip));
@@ -128,7 +129,7 @@ public class DomainManager implements Initializable, LogEnabled {
 					Cat.logError(e);
 				}
 
-				for (String temp : addIps) {
+				for (String temp : addedIps) {
 					m_unknownIps.remove(temp);
 				}
 			}

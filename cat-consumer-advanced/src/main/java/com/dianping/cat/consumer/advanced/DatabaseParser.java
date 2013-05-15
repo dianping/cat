@@ -3,11 +3,11 @@ package com.dianping.cat.consumer.advanced;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DatabaseParseUtil {
+public class DatabaseParser {
 
-	public static Map<String, String> m_connections = new ConcurrentHashMap<String, String>();
+	public Map<String, String> m_connections = new ConcurrentHashMap<String, String>();
 
-	public static String parseDatabaseName(String connectionUrl) {
+	public String parseDatabaseName(String connectionUrl) {
 		String database = m_connections.get(connectionUrl);
 		if (database != null) {
 			return database;

@@ -42,6 +42,9 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 	@Inject
 	private SqlParseManager m_sqlParseManager;
 
+	@Inject
+	private DatabaseParser m_parser;
+
 	private Map<String, SqlReport> m_reports = new HashMap<String, SqlReport>();
 
 	private Set<String> m_errorConnectionUrls = new HashSet<String>();
@@ -67,7 +70,7 @@ public class SqlAnalyzer extends AbstractMessageAnalyzer<SqlReport> implements L
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
 			String tables = m_sqlParseManager.getTableNames(sqlName, sqlStatement, domain);
-			String database =  DatabaseParseUtil.parseDatabaseName(connection);
+			String database =  m_parser.parseDatabaseName(connection);
 
 			if (database == null) {
 				m_errorConnectionUrls.add(domain + ":" + connection);

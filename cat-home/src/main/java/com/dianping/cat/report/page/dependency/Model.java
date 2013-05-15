@@ -21,6 +21,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private int m_minute;
 
 	private List<Integer> m_minutes;
+	
+	private int m_maxMinute;
 
 	private Map<String, List<Event>> m_events;
 
@@ -53,6 +55,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public String getDomain() {
 		return getDisplayDomain();
 	}
+
+	public int getMaxMinute() {
+   	return m_maxMinute;
+   }
+
+	public void setMaxMinute(int maxMinute) {
+   	m_maxMinute = maxMinute;
+   }
 
 	@Override
 	public Collection<String> getDomains() {

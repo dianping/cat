@@ -13,7 +13,7 @@ public class DependencyReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void mergeDependency(Dependency old, Dependency dependency) {
+	public void mergeDependency(Dependency old, Dependency dependency) {
 		old.setType(dependency.getType());
 		old.setTarget(dependency.getTarget());
 		old.setTotalCount(old.getTotalCount() + dependency.getTotalCount());
@@ -25,7 +25,7 @@ public class DependencyReportMerger extends DefaultMerger {
 	}
 
 	@Override
-	protected void mergeIndex(Index old, Index index) {
+	public void mergeIndex(Index old, Index index) {
 		old.setTotalCount(old.getTotalCount() + index.getTotalCount());
 		old.setErrorCount(old.getErrorCount() + index.getErrorCount());
 		old.setSum(old.getSum() + index.getSum());

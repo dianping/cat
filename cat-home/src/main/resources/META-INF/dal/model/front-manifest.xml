@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="front-codegen.xml" />
+  <file path="front-model.xml" />
+</manifest>
+

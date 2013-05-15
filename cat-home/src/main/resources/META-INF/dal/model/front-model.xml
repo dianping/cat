@@ -1,0 +1,30 @@
+<?xml version="1.0"  ?>
+<model model-package="com.dianping.cat.home.front"  enable-merger="true"  enable-sax-parser="true"
+	enable-base-visitor="true"  enable-json-parser="true" enable-json-builder="true">
+  <entity name="front" root="true">
+    <attribute name="id" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="status" value-type="int" />
+    <attribute name="des" value-type="int" />
+    <entity-ref name="point" type="list" names="points" />
+    <entity-ref name="side" type="list" names="sides" />
+  </entity>
+  <entity name="point">
+    <attribute name="id" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="status" value-type="int" />
+    <attribute name="des" value-type="String" />
+    <attribute name="link" value-type="String" />
+  </entity>
+  <entity name="side">
+    <attribute name="id" value-type="String" />
+    <attribute name="target" value-type="String" />
+    <attribute name="opposite" value-type="boolean" />
+    <attribute name="status" value-type="int" />
+    <attribute name="des" value-type="String" />
+    <attribute name="link" value-type="String" />
+  </entity>
+</model>
+
+
+

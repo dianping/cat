@@ -43,6 +43,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Inject
 	private DomainManager m_domainManager;
+	
+	@Inject
+	private DatabaseParser m_parser;
 
 	private Map<String, DependencyReport> m_reports = new HashMap<String, DependencyReport>();
 
@@ -83,21 +86,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return report;
 	}
 
-	public boolean isIp(String ip) {
-		boolean result = false;
-		try {
-			char first = ip.charAt(0);
-			char next = ip.charAt(1);
-			if (first >= '0' && first <= '9') {
-				if (next >= '0' && next <= '9') {
-					return true;
-				}
-			}
-		} catch (Exception e) {
-		}
-		return result;
-	}
-
 	@Override
 	protected void loadReports() {
 		Bucket<String> reportBucket = null;
@@ -128,7 +116,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				String type = message.getType();
 
 				if (type.equals("SQL.Database")) {
-					return DatabaseParseUtil.parseDatabaseName(message.getName());
+					return m_parser.parseDatabaseName(message.getName());
 				}
 			}
 		}
@@ -141,9 +129,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		for (Message message : messages) {
 			if (message instanceof Event) {
 				if (message.getType().equals("PigeonCall.server")) {
-					String name =message.getName();
+					String name = message.getName();
 					int index = name.indexOf(":");
-					
+
 					if (index > 0) {
 						name = name.substring(0, index);
 					}
@@ -155,7 +143,6 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
-		String clientIp = UNKNOWN;
 		List<Message> messages = t.getChildren();
 
 		for (Message message : messages) {
@@ -167,22 +154,13 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 					if (index > 0) {
 						name = name.substring(0, index);
 					}
-					if (isIp(name)) {
-						clientIp = name;
-					}
-					break;
+					return name;
 				}
 			}
 		}
+		MessageId id = MessageId.parse(tree.getMessageId());
 
-		if (clientIp.equals(UNKNOWN)) {
-			MessageId id = MessageId.parse(tree.getMessageId());
-			String remoteIp = id.getIpAddress();
-
-			clientIp = remoteIp;
-		}
-
-		return clientIp;
+		return id.getIpAddress();
 	}
 
 	@Override

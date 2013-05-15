@@ -40,6 +40,9 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 
 	@Inject
 	private SqlParseManager m_sqlParseManeger;
+	
+	@Inject
+	private DatabaseParser m_parser;
 
 	private Map<String, DatabaseReport> m_reports = new HashMap<String, DatabaseReport>();
 
@@ -64,7 +67,7 @@ public class DatabaseAnalyzer extends AbstractMessageAnalyzer<DatabaseReport> im
 		if (connection != null && method != null) {
 			DatabaseItem item = new DatabaseItem();
 			String tables = m_sqlParseManeger.getTableNames(sqlName, sqlStatement, domain);
-			String database = DatabaseParseUtil.parseDatabaseName(connection);
+			String database = m_parser.parseDatabaseName(connection);
 
 			if (database == null) {
 				database = "Unknown";
