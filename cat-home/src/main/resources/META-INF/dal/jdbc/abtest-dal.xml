@@ -32,10 +32,16 @@
 					WHERE <FIELD name='case-id'/> = ${case-id}
 				]]></statement>
 			</query>
+			<query name="find-all" type="SELECT" multiple="true">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> ORDER BY <FIELD name='creation-date'/> DESC
+				]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 
-	<entity name="group-strategy" table="group_strategy" alias="gs">
+  <entity name="group-strategy" table="group_strategy" alias="gs">
 		<query-defs>
 			<query name="find-all-by-status" type="SELECT" multiple="true">
 				<param name="status" />
