@@ -35,9 +35,9 @@
 			</br>
 			</br>
 			<table class="alarm table table-striped table-bordered  table-condensed">
-				<tr><td><a class="btn btn-primary btn-small" href="?op=alarmTemplateUpdate&alarmTemplateId=${model.alarmTemplate.id}" target="_blank">修改</a></td></tr>
-				<tr><td>模板名称</td><td>${model.alarmTemplate.name}</td></tr>
-				<tr><td>模板内容</td>
+				<tr><td colspan='2'><a class="btn btn-primary btn-small" href="?op=alarmTemplateUpdate&alarmTemplateId=${model.alarmTemplate.id}" target="_blank">修改</a></td></tr>
+				<tr><th>模板名称</th><td>${model.alarmTemplate.name}</td></tr>
+				<tr><th>模板内容</th>
 					<td>
 						<textarea style="height:500px;width:500px" id="content" name="content">${model.alarmTemplate.content}</textarea>
 					</td>
