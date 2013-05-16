@@ -36,22 +36,22 @@
 		</div>
 		<div class="span10">
 			</br>
-			<table border="1" rules="all">
+			<table  class="alarm table table-striped table-bordered  table-condensed"  border="1" rules="all">
 				<tr>
-					<td>&nbsp;&nbsp;收件人</td>
+					<th>&nbsp;&nbsp;收件人</th>
 					<td>${model.mailRecord.receivers}</td>
 				</tr>
 				<tr>
-					<td>发送时间</td>
+					<th>发送时间</th>
 					<td>${w:format(model.mailRecord.creationDate,'yyyy-MM-dd
 						HH:mm:ss')}</td>
 				</tr>
 				<tr>
-					<td>邮件标题</td>
+					<th>邮件标题</th>
 					<td>${model.mailRecord.title}</td>
 				</tr>
 				<tr>
-					<td>邮件内容</td>
+					<th>邮件内容</th>
 					<td><div>${model.mailRecord.content}</div></td>
 				</tr>
 			</table>

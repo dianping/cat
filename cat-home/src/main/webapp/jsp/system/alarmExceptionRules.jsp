@@ -36,7 +36,7 @@
 			<thead>
 				<tr class="odd">
 					<th>项目名</th>
-					<th>操作&nbsp;&nbsp;<a class="btn btn-primary btn-small" href="?op=alarmRuleAdd&type=exception" target="_blank">新增</a></th>
+					<th>操作&nbsp;&nbsp;<a class="btn btn-primary btn-small" href="?op=alarmRuleAdd&type=exception">新增</a></th>
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.userSubStates}"
 					varStatus="status">
@@ -50,7 +50,7 @@
 									<a class="btn btn-danger btn-small" href="?op=exceptionAlarmRuleSub&alarmRuleId=${item.alarmRule.id}&subState=1" onclick="return sub(this)">取消</a>
 								</c:otherwise>
 							</c:choose> 
-							<a class="btn btn-primary btn-small" href="?op=alarmRuleUpdate&alarmRuleId=${item.alarmRule.id}"  target="_blank">编辑</a> 
+							<a class="btn btn-primary btn-small" href="?op=alarmRuleUpdate&alarmRuleId=${item.alarmRule.id}&type=exception">编辑</a> 
 							<a class="btn btn-danger btn-small" href="?op=exceptionAlarmRuleDelete&alarmRuleId=${item.alarmRule.id}">删除</a> 
 						</td>
 					</tr>

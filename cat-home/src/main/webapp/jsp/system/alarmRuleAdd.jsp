@@ -13,7 +13,20 @@
 <res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var id = '${payload.type}';
+			if(id=='exception'){
+				$('#exceptionAlarmRules').addClass("active");
+			}else{
+				$('#serviceAlarmRules').addClass("active");
+			}
+		});
+	</script>
 	<div class="row-fluid">
+		<div class="span2">
+		<%@include file="./alarm.jsp"%>
+		</div>
 		<div class="span6">
 			<form name="alarmModify" id="form" method="post"
 				action="${model.pageUri}?op=alarmRuleUpdateSubmit">
@@ -40,7 +53,7 @@
 				</table>
 			</form>
 		</div>
-		<div class="span6">
+		<div class="span4">
 			<h3 class='text-error text-error'>样本内容(可以copy右侧内容修改简单参数即可)</h3>
 			<xmp>${model.alarmTemplate.content}</xmp>
 			<h3 class='text-error'>说明事项</h3>
