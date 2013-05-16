@@ -27,10 +27,14 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
+import com.dianping.cat.home.dal.abtest.AbtestRun;
+import com.dianping.cat.home.dal.abtest.AbtestRunDao;
+import com.dianping.cat.home.dal.abtest.AbtestRunEntity;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.abtest.Model.AbtestDaoModel;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -45,6 +49,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
 	private AbtestDao m_abtestDao;
+
+	@Inject
+	private AbtestRunDao m_abtestRunDao;
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -65,74 +72,95 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
 			if (action == Action.CREATE) {
-				Abtest abtest = new Abtest();
-				abtest.setName(payload.getName());
-				abtest.setDescription(payload.getDescription());
-				abtest.setStartDate(payload.getStartDate());
-				abtest.setEndDate(payload.getEndDate());
-				abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-				abtest.setStrategyId(payload.getStrategyId());
-				abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
-				try {
-					m_abtestDao.insert(abtest);
-				} catch (DalException e) {
-					m_logger.error("Error when saving abtest", e);
-					ctx.setException(e);
-				}
+				handleCreateAction(ctx, payload);
 			} else if (action == Action.DETAIL) {
-				Abtest abtest = new Abtest();
-				abtest.setKeyId(payload.getId());
-				abtest.setName(payload.getName());
-				abtest.setDescription(payload.getDescription());
-				abtest.setStartDate(payload.getStartDate());
-				abtest.setEndDate(payload.getEndDate());
-				abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-				abtest.setStrategyId(payload.getStrategyId());
-				abtest.setStrategyConfig(payload.getStrategyConfig().getBytes(CHARSET));
-				try {
-					m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_FULL);
-				} catch (DalException e) {
-					m_logger.error("Error when saving abtest", e);
-					ctx.setException(e);
-				}
+				handleUpdateAction(ctx, payload);
 			}
 		}
 
 		if (action == Action.VIEW) {
-			handleStatusChangeActions(ctx);
+			handleStatusChangeAction(ctx);
 		}
 	}
 
-	private void handleStatusChangeActions(Context ctx) {
+	private void handleCreateAction(Context ctx, Payload payload) {
+		Abtest abtest = new Abtest();
+
+		abtest.setName(payload.getName());
+		abtest.setOwner(payload.getOwner());
+		abtest.setDescription(payload.getDescription());
+		abtest.setGroupStrategy(payload.getStrategyId());
+		abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
+
+		AbtestRun run = new AbtestRun();
+
+		run.setStartDate(payload.getStartDate());
+		run.setEndDate(payload.getEndDate());
+		run.setDomains(StringUtils.join(payload.getDomains(), ','));
+		run.setStrategyConfiguration(payload.getStrategyConfig());
+		run.setDisabled(false);
+		try {
+			m_abtestDao.insert(abtest);
+
+			run.setCaseId(abtest.getId());
+			m_abtestRunDao.insert(run);
+		} catch (DalException e) {
+			m_logger.error("Error when saving abtest", e);
+			Cat.logError(e);
+			ctx.setException(e);
+		}
+	}
+
+	private void handleUpdateAction(Context ctx, Payload payload) {
+		try {
+			AbtestRun run = new AbtestRun();
+
+			run.setId(payload.getId());
+			run.setKeyId(payload.getId());
+			run.setStartDate(payload.getStartDate());
+			run.setEndDate(payload.getEndDate());
+			run.setDomains(StringUtils.join(payload.getDomains(), ','));
+			run.setStrategyConfiguration(payload.getStrategyConfig());
+			// only update run info, do not update abtest meta-info
+			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
+		} catch (DalException e) {
+			m_logger.error("Error when updating abtest", e);
+			Cat.logError(e);
+			ctx.setException(e);
+		}
+	}
+
+	private void handleStatusChangeAction(Context ctx) {
 		Payload payload = ctx.getPayload();
 		ErrorObject error = new ErrorObject("disable");
 		String[] ids = payload.getIds();
 
 		if (ids != null && ids.length != 0) {
 			for (String id : ids) {
-				System.out.println("change status for " + id);
 				try {
-					int intID = Integer.parseInt(id);
-					Abtest abtest = m_abtestDao.findByPK(intID, AbtestEntity.READSET_FULL);
+					int runID = Integer.parseInt(id);
+					AbtestRun run = m_abtestRunDao.findByPK(runID, AbtestRunEntity.READSET_FULL);
 
 					if (payload.getDisableAbtest() == -1) { // suspend
-						if (!abtest.isDisabled()) {
-							abtest.setDisabled(true);
-							m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_DISABLE);
+						if (!run.isDisabled()) {
+							run.setDisabled(true);
+							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
 						} else {
 							error.addArgument(id, "Abtest " + id + " has been already suspended!");
 						}
 					} else if (payload.getDisableAbtest() == 1) { // resume
-						if (abtest.isDisabled()) {
-							abtest.setDisabled(false);
-							m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_DISABLE);
+						if (run.isDisabled()) {
+							run.setDisabled(false);
+							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
 						} else {
 							error.addArgument(id, "Abtest " + id + " has been already active!");
 						}
 					}
 				} catch (NumberFormatException e) {
 					// do nothing
+					Cat.logError(e);
 				} catch (DalException e) {
+					Cat.logError(e);
 				}
 			}
 
@@ -143,7 +171,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				ctx.addError(error);
 			}
 		}
-
 	}
 
 	@Override
@@ -153,28 +180,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 
-		if (action == Action.VIEW) {
-			renderListView(model, payload);
-		} else if (action == Action.CREATE) {
-			Map<String, List<Project>> projectMap = getAllProjects();
-			List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
-			model.setProjectMap(projectMap);
-			model.setGroupStrategyList(groupStrategyList);
-		} else if (action == Action.DETAIL) {
-			Map<String, List<Project>> projectMap = getAllProjects();
-			List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
-			model.setProjectMap(projectMap);
-			model.setGroupStrategyList(groupStrategyList);
-			int abtestId = payload.getId();
-			try {
-				Abtest abtest = m_abtestDao.findByPK(abtestId, AbtestEntity.READSET_FULL);
-				model.setAbtest(abtest);
-			} catch (DalException e) {
-				m_logger.error("Error when fetching abtest", e);
-				ctx.setException(e);
-			}
-		} else if (action == Action.REPORT) {
-
+		switch (action) {
+		case VIEW:
+			renderListModel(model, payload);
+			break;
+		case CREATE:
+			renderCreateModel(model);
+			break;
+		case DETAIL:
+			renderDetailModel(ctx, model, payload);
+			break;
+		case REPORT:
+			renderReportModel(ctx, model, payload);
+			break;
 		}
 
 		model.setAction(action);
@@ -182,43 +200,79 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void renderListView(Model model, Payload payload) {
+	private void renderCreateModel(Model model) {
+		Map<String, List<Project>> projectMap = getAllProjects();
+		List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
+
+		model.setProjectMap(projectMap);
+		model.setGroupStrategyList(groupStrategyList);
+	}
+
+	private void renderDetailModel(Context ctx, Model model, Payload payload) {
+		renderCreateModel(model);
+		renderReportModel(ctx, model, payload);
+	}
+
+	private void renderReportModel(Context ctx, Model model, Payload payload) {
+		try {
+			int runId = payload.getId();
+			AbtestRun run = m_abtestRunDao.findByPK(runId, AbtestRunEntity.READSET_FULL);
+			Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
+			AbtestDaoModel abtestModel = new AbtestDaoModel(abtest, run);
+
+			model.setAbtest(abtestModel);
+		} catch (DalException e) {
+			Cat.logError(e);
+			m_logger.error("Error when fetching abtest", e);
+			ctx.setException(e);
+		}
+	}
+
+	private void renderListModel(Model model, Payload payload) {
 		List<ABTestReport> reports = new ArrayList<ABTestReport>();
-		List<Abtest> entities = new ArrayList<Abtest>();
 		AbtestStatus status = AbtestStatus.getByName(payload.getStatus(), null);
 		Date now = new Date();
 
+		List<ABTestReport> filterReports = new ArrayList<ABTestReport>();
+		List<ABTestReport> totalReports = new ArrayList<ABTestReport>();
+		int createdCount = 0, readyCount = 0, runningCount = 0, terminatedCount = 0, suspendedCount = 0;
+
+		List<AbtestRun> runs = new ArrayList<AbtestRun>();
 		try {
-			entities = m_abtestDao.findAllAbtest(AbtestEntity.READSET_FULL);
+			runs = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}
 
-		List<Abtest> filterTests = new ArrayList<Abtest>();
-		int createdCount = 0, readyCount = 0, runningCount = 0, terminatedCount = 0, suspendedCount = 0;
+		for (AbtestRun run : runs) {
+			try {
+				Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
+				ABTestReport report = new ABTestReport(abtest, run, now);
 
-		for (Abtest abtest : entities) {
-			ABTestReport report = new ABTestReport(abtest, now);
+				totalReports.add(report);
+				if (status != null && report.getStatus() == status) {
+					filterReports.add(report);
+				}
 
-			if (status != null && report.getStatus() == status) {
-				filterTests.add(abtest);
-			}
-			switch (report.getStatus()) {
-			case CREATED:
-				createdCount++;
-				break;
-			case READY:
-				readyCount++;
-				break;
-			case RUNNING:
-				runningCount++;
-				break;
-			case TERMINATED:
-				terminatedCount++;
-				break;
-			case SUSPENDED:
-				suspendedCount++;
-				break;
+				switch (report.getStatus()) {
+				case CREATED:
+					createdCount++;
+					break;
+				case READY:
+					readyCount++;
+					break;
+				case RUNNING:
+					runningCount++;
+					break;
+				case TERMINATED:
+					terminatedCount++;
+					break;
+				case SUSPENDED:
+					suspendedCount++;
+					break;
+				}
+			} catch (DalException e) {
+				Cat.logError(e);
 			}
 		}
 
@@ -227,11 +281,13 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		model.setRunningCount(runningCount);
 		model.setTerminatedCount(terminatedCount);
 		model.setSuspendedCount(suspendedCount);
+
 		if (status != null) {
-			entities = filterTests;
+			totalReports = null;
+			totalReports = filterReports;
 		}
 
-		int totalSize = entities.size();
+		int totalSize = totalReports.size();
 		int totalPages = totalSize % m_pageSize == 0 ? (totalSize / m_pageSize) : (totalSize / m_pageSize + 1);
 
 		// safe guarder for pageNum
@@ -248,7 +304,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		int fromIndex = (payload.getPageNum() - 1) * m_pageSize;
 		int toIndex = (fromIndex + m_pageSize) <= totalSize ? (fromIndex + m_pageSize) : totalSize;
 		for (int i = fromIndex; i < toIndex; i++) {
-			reports.add(new ABTestReport(entities.get(i), now));
+			reports.add(totalReports.get(i));
 		}
 
 		model.setTotalPages(totalPages);
@@ -258,7 +314,7 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	private List<GroupStrategy> getAllGroupStrategys() {
 		try {
-			return m_groupStrategyDao.findAllGroupStrategy(GroupStrategyEntity.READSET_FULL);
+			return m_groupStrategyDao.findAllByStatus(1, GroupStrategyEntity.READSET_FULL);
 		} catch (DalException e) {
 			m_logger.error(e.getMessage(), e);
 			Cat.logError(e);

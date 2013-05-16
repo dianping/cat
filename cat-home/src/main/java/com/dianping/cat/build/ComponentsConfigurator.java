@@ -16,7 +16,6 @@ import com.dainping.cat.consumer.dal.report.ReportDao;
 import com.dainping.cat.consumer.dal.report.TaskDao;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
-import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.report.DailygraphDao;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.GraphDao;
@@ -208,7 +207,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		// for alarm module
 		all.addAll(new AlarmComponentConfigurator().defineComponents());
 		
-		// for abtest module
 		return all;
 	}
 }

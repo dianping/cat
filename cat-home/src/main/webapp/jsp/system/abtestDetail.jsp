@@ -83,7 +83,7 @@ div.controls input {
                   data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
                </label>
                <div class="controls">
-                  <input type="text" name="name" placeholder="give it a name ..." check-type="required"
+                  <input id="inputName" type="text" name="name" placeholder="give it a name ..." check-type="required"
                      required-message="Name is required!" value="${model.abtest.name}" readonly="readonly">
                </div>
             </div>
@@ -143,7 +143,7 @@ div.controls input {
                <div class="controls">
                   <select name="strategyId" check-type="required" required-message="Strategy is required!" disabled="disabled">
                      <c:forEach var="item" items="${model.groupStrategyList}">
-                        <option value="${item.id }" <c:if test="${item.id == model.abtest.strategyId}">selected="selected"</c:if>>${item.name
+                        <option value="${item.id }" <c:if test="${item.id == model.abtest.groupStrategy}">selected="selected"</c:if>>${item.name
                            }</option>
                      </c:forEach>
                   </select>
@@ -152,7 +152,7 @@ div.controls input {
             <div class="control-group">
                <label class="control-label">Strategy Configuration</label>
                <div class="controls">
-                  <textarea name="strategyConfig" class="span6" rows="3" cols="60" readonly="readonly">${model.abtest.strategyConfig}</textarea>
+                  <textarea id="txtStrategyConfig" name="strategyConfig" class="span6" rows="3" cols="60" readonly="readonly">${model.abtest.strategyConfiguration}</textarea>
                </div>
             </div>
          </form>
@@ -212,8 +212,10 @@ div.controls input {
 
 				function enableEdit() {
 					//input
-					$('#form input,#form textarea').removeAttr("readonly");
-					$('#form select').removeAttr("disabled");
+					$('#form input').removeAttr("readonly");
+					$('#txtStrategyConfig').removeAttr("readonly");
+					$('#inputName').attr("readonly","readonly");
+					//$('#form select').removeAttr("disabled");
 					$("#domains").select2("enable");
 					$("#datetimepicker1>span").removeClass('hide');
 					$("#datetimepicker2>span").removeClass('hide');
@@ -227,8 +229,7 @@ div.controls input {
 					if (changed) {
 						$("#cancleAffirmModal").modal('show');
 					} else {
-						$('#form input,#form textarea').attr("readonly",
-								"readonly");
+						$('#form input').attr("readonly","readonly");
 						$('#form select').attr("disabled", "disabled");
 						$("#domains").select2("disable");
 						$("#datetimepicker1>span").addClass('hide');
@@ -264,7 +265,7 @@ div.controls input {
 						$("#successMsg").html($("#alert_success").html());
 					}
 				}
-				var timeout = 5;
+				var timeout = 1;
 				function countDown() {
 					$('#countDown').text(timeout);
 					timeout--;

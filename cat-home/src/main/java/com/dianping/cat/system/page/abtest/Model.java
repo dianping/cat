@@ -9,6 +9,7 @@ import org.unidal.web.mvc.ViewModel;
 import com.dainping.cat.consumer.dal.report.Project;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.home.dal.abtest.Abtest;
+import com.dianping.cat.home.dal.abtest.AbtestRun;
 import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.system.SystemPage;
 
@@ -37,7 +38,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<GroupStrategy> m_groupStrategyList;
 
-	private Abtest m_abtest;
+	private AbtestDaoModel m_abtest;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -144,12 +145,82 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_groupStrategyList = groupStrategyList;
 	}
 
-	public Abtest getAbtest() {
+	public AbtestDaoModel getAbtest() {
 		return m_abtest;
 	}
 
-	public void setAbtest(Abtest abtest) {
+	public void setAbtest(AbtestDaoModel abtest) {
 		m_abtest = abtest;
 	}
 
+	public static class AbtestDaoModel {
+
+		private Abtest m_abtest;
+
+		private AbtestRun m_run;
+
+		public AbtestDaoModel(Abtest abtest, AbtestRun abtestRun) {
+			super();
+			m_abtest = abtest;
+			m_run = abtestRun;
+		}
+
+		public Abtest getAbtest() {
+			return m_abtest;
+		}
+
+		public void setAbtest(Abtest abtest) {
+			m_abtest = abtest;
+		}
+
+		public AbtestRun getRun() {
+			return m_run;
+		}
+
+		public void setRun(AbtestRun run) {
+			m_run = run;
+		}
+
+		public String getDescription() {
+	      return m_abtest.getDescription();
+      }
+
+		public int getGroupStrategy() {
+	      return m_abtest.getGroupStrategy();
+      }
+
+		public String getName() {
+	      return m_abtest.getName();
+      }
+
+		public String getOwner() {
+	      return m_abtest.getOwner();
+      }
+
+		public int getCaseId() {
+	      return m_run.getCaseId();
+      }
+
+		public String getDomains() {
+	      return m_run.getDomains();
+      }
+
+		public Date getEndDate() {
+	      return m_run.getEndDate();
+      }
+
+		public int getId() {
+	      return m_run.getId();
+      }
+
+		public Date getStartDate() {
+	      return m_run.getStartDate();
+      }
+
+		public String getStrategyConfiguration() {
+	      return m_run.getStrategyConfiguration();
+      }
+		
+		
+	}
 }

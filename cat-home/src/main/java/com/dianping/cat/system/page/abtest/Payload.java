@@ -28,6 +28,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("name")
 	private String m_name;
 
+	@FieldMeta("owner")
+	private String m_owner;
+	
 	@FieldMeta("description")
 	private String m_description;
 
@@ -122,6 +125,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setName(String name) {
 		this.m_name = name;
 	}
+	
+	public String getOwner() {
+   	return m_owner;
+   }
+
+	public void setOwner(String owner) {
+   	m_owner = owner;
+   }
 
 	public String getDescription() {
 		return m_description;
