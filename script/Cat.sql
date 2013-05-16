@@ -259,6 +259,7 @@ CREATE TABLE `abtest` (
 
 CREATE TABLE `abtest_run` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `creator` varchar(45) DEFAULT NULL,
   `case_id` int(11) NOT NULL,
   `start_date` datetime DEFAULT NULL COMMENT '开始时间',
   `end_date` datetime DEFAULT NULL COMMENT '结束时间',

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities>
   <entity name="abtest" table="abtest" alias="a">
-    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="name" field="name" value-type="String" length="45" nullable="false" />
     <member name="owner" field="owner" value-type="String" length="45" nullable="false" />
     <member name="group-strategy" field="group_strategy" value-type="int" length="10" />
@@ -43,6 +43,7 @@
   </entity>
   <entity name="abtest-run" table="abtest_run" alias="ar">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="creator" field="creator" value-type="String" length="45" />
     <member name="case-id" field="case_id" value-type="int" length="10" nullable="false" />
     <member name="start-date" field="start_date" value-type="Date" />
     <member name="end-date" field="end_date" value-type="Date" />

@@ -22,6 +22,13 @@
       			<member name="disabled" field="disabled" value-type="boolean" length="3" nullable="false" />
       			<member name="modified-date" insert-expr="NOW()" update-expr="NOW()" />
       		</updateset>
+      		<updateset name="ALLOWED_MODIFYPART">
+    			<member name="start-date" field="start_date" value-type="Date" />
+    			<member name="end-date" field="end_date" value-type="Date" />
+    			<member name="domains" field="domains" value-type="String" length="100" nullable="false" />
+    			<member name="strategy-configuration" field="strategy_configuration" value-type="String" length="1024" />
+      			<member name="modified-date" insert-expr="NOW()" update-expr="NOW()" />
+      		</updateset>
   		</updatesets>
 		<query-defs>
 			<query name="find-by-case-id" type="SELECT" multiple="true">

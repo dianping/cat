@@ -34,6 +34,7 @@ import com.dianping.cat.home.dal.abtest.GroupStrategy;
 import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.abtest.Model.AbtestDaoModel;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -85,12 +86,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private void handleCreateAction(Context ctx, Payload payload) {
 		Abtest abtest = new Abtest();
 
-		// TODO need more parameters for abtest
 		abtest.setName(payload.getName());
+		abtest.setOwner(payload.getOwner());
 		abtest.setDescription(payload.getDescription());
 		abtest.setGroupStrategy(payload.getStrategyId());
 		abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-		abtest.setOwner("damon.zhu");  //TODO mock onwer
 
 		AbtestRun run = new AbtestRun();
 
@@ -98,36 +98,34 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		run.setEndDate(payload.getEndDate());
 		run.setDomains(StringUtils.join(payload.getDomains(), ','));
 		run.setStrategyConfiguration(payload.getStrategyConfig());
+		run.setDisabled(false);
 		try {
 			m_abtestDao.insert(abtest);
-			//TODO insert an run
+
+			run.setCaseId(abtest.getId());
+			m_abtestRunDao.insert(run);
 		} catch (DalException e) {
 			m_logger.error("Error when saving abtest", e);
+			Cat.logError(e);
 			ctx.setException(e);
 		}
 	}
 
 	private void handleUpdateAction(Context ctx, Payload payload) {
-		Abtest abtest = new Abtest();
-
-		abtest.setKeyId(payload.getId());
-		abtest.setName(payload.getName());
-		abtest.setDescription(payload.getDescription());
-		abtest.setDomains(StringUtils.join(payload.getDomains(), ','));
-
-		// TODO 只能修改Run的信息
-
-		AbtestRun run = new AbtestRun();
-
-		run.setStartDate(payload.getStartDate());
-		run.setEndDate(payload.getEndDate());
-		run.setDomains(StringUtils.join(payload.getDomains(), ','));
-		run.setStrategyConfiguration(payload.getStrategyConfig());
-
 		try {
-			m_abtestDao.updateByPK(abtest, AbtestEntity.UPDATESET_FULL);
+			AbtestRun run = new AbtestRun();
+
+			run.setId(payload.getId());
+			run.setKeyId(payload.getId());
+			run.setStartDate(payload.getStartDate());
+			run.setEndDate(payload.getEndDate());
+			run.setDomains(StringUtils.join(payload.getDomains(), ','));
+			run.setStrategyConfiguration(payload.getStrategyConfig());
+			// only update run info, do not update abtest meta-info
+			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
 		} catch (DalException e) {
-			m_logger.error("Error when saving abtest", e);
+			m_logger.error("Error when updating abtest", e);
+			Cat.logError(e);
 			ctx.setException(e);
 		}
 	}
@@ -160,7 +158,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					}
 				} catch (NumberFormatException e) {
 					// do nothing
+					Cat.logError(e);
 				} catch (DalException e) {
+					Cat.logError(e);
 				}
 			}
 
@@ -171,7 +171,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				ctx.addError(error);
 			}
 		}
-
 	}
 
 	@Override
@@ -181,14 +180,19 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
 
-		if (action == Action.VIEW) {
-			renderListView(model, payload);
-		} else if (action == Action.CREATE) {
-			renderCreateView(model);
-		} else if (action == Action.DETAIL) {
-			renderDetailView(ctx, model, payload);
-		} else if (action == Action.REPORT) {
-
+		switch (action) {
+		case VIEW:
+			renderListModel(model, payload);
+			break;
+		case CREATE:
+			renderCreateModel(model);
+			break;
+		case DETAIL:
+			renderDetailModel(ctx, model, payload);
+			break;
+		case REPORT:
+			renderReportModel(ctx, model, payload);
+			break;
 		}
 
 		model.setAction(action);
@@ -196,26 +200,35 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void renderCreateView(Model model) {
+	private void renderCreateModel(Model model) {
 		Map<String, List<Project>> projectMap = getAllProjects();
 		List<GroupStrategy> groupStrategyList = getAllGroupStrategys();
+
 		model.setProjectMap(projectMap);
 		model.setGroupStrategyList(groupStrategyList);
 	}
 
-	private void renderDetailView(Context ctx, Model model, Payload payload) {
-		renderCreateView(model);
-		int abtestId = payload.getId();
+	private void renderDetailModel(Context ctx, Model model, Payload payload) {
+		renderCreateModel(model);
+		renderReportModel(ctx, model, payload);
+	}
+
+	private void renderReportModel(Context ctx, Model model, Payload payload) {
 		try {
-			Abtest abtest = m_abtestDao.findByPK(abtestId, AbtestEntity.READSET_FULL);
-			model.setAbtest(abtest);
+			int runId = payload.getId();
+			AbtestRun run = m_abtestRunDao.findByPK(runId, AbtestRunEntity.READSET_FULL);
+			Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
+			AbtestDaoModel abtestModel = new AbtestDaoModel(abtest, run);
+
+			model.setAbtest(abtestModel);
 		} catch (DalException e) {
+			Cat.logError(e);
 			m_logger.error("Error when fetching abtest", e);
 			ctx.setException(e);
 		}
 	}
 
-	private void renderListView(Model model, Payload payload) {
+	private void renderListModel(Model model, Payload payload) {
 		List<ABTestReport> reports = new ArrayList<ABTestReport>();
 		AbtestStatus status = AbtestStatus.getByName(payload.getStatus(), null);
 		Date now = new Date();
@@ -233,9 +246,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 		for (AbtestRun run : runs) {
 			try {
-				Abtest abtest = m_abtestDao.findByPK(run.getCaseId(),AbtestEntity.READSET_FULL);
+				Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
 				ABTestReport report = new ABTestReport(abtest, run, now);
-				
+
 				totalReports.add(report);
 				if (status != null && report.getStatus() == status) {
 					filterReports.add(report);
