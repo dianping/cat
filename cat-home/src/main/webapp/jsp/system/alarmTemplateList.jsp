@@ -11,22 +11,31 @@
 
 <a:body>
 
-	<res:useJs value="${res.js.local['dtree.js']}" target="head-js"/>
-	<res:useCss value='${res.css.local.dtree_css}' target="head-css" />
-	<res:useCss value='${res.css.local.alarm_css}' target="head-css" />
-	<res:useJs value="${res.js.local['alarm_js']}" target="head-js"/>
+	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
+	<res:useCss value='${res.css.local.table_css}' target="head-css" />
+	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 	
-	<div class="body-content">
-		<%@include file="./alarm.jsp" %>	
-	    <script type="text/javascript">
-			d.openAll();
-			d.s(${model.templateIndex});
-		</script>
-		<div class="content-right">
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var id = '${payload.action.name}'+'${model.alarmTemplate.name}';
+			$('#'+id).addClass("active");
+		});
+	</script>
+	
+	<div class="container-fluid">
+      	<div class="row-fluid">
+        <div class="span2">
+		<%@include file="./alarm.jsp"%>
+		</div>
+		<div class="span10">
 			</br>
 			</br>
-			<table>
-				<tr><td><a href="?op=alarmTemplateUpdate&alarmTemplateId=${model.alarmTemplate.id}" target="_blank">修改</a></td></tr>
+			<table class="alarm table table-striped table-bordered  table-condensed">
+				<tr><td><a class="btn btn-primary btn-small" href="?op=alarmTemplateUpdate&alarmTemplateId=${model.alarmTemplate.id}" target="_blank">修改</a></td></tr>
 				<tr><td>模板名称</td><td>${model.alarmTemplate.name}</td></tr>
 				<tr><td>模板内容</td>
 					<td>
@@ -34,6 +43,6 @@
 					</td>
 					</tr>
 			</table>
-		</div>
+		</div></div>
 	</div>
 </a:body>

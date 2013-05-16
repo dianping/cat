@@ -126,15 +126,10 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 		if (CatConstants.TYPE_URL.equals(type)) {
 			String name = transaction.getName();
 			String domain = tree.getDomain();
-			List<BusinessConfig> configs = m_configManager.getUrlConfigs(domain);
+			Map<String, BusinessConfig> configs = m_configManager.getUrlConfigs(domain);
 			BusinessConfig config = null;
 
-			for (BusinessConfig c : configs) {
-				if (c.getMainKey().equals(name)) {
-					config = c;
-					break;
-				}
-			}
+			config = configs.get(name);
 			if (config != null) {
 				long current = transaction.getTimestamp() / 1000 / 60;
 				int min = (int) (current % (60));
@@ -175,15 +170,8 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 	private int processMetric(String group, MetricReport report, MessageTree tree, Metric metric) {
 		String name = metric.getName();
 		String domain = tree.getDomain();
-		List<BusinessConfig> configs = m_configManager.getMetricConfigs(domain);
-
-		BusinessConfig config = null;
-		for (BusinessConfig c : configs) {
-			if (c.getMainKey().equals(name)) {
-				config = c;
-				break;
-			}
-		}
+		Map<String, BusinessConfig> configs = m_configManager.getMetricConfigs(domain);
+		BusinessConfig config = configs.get(name);
 
 		if (config != null) {
 			String data = (String) metric.getData();

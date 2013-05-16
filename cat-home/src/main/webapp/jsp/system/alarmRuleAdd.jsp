@@ -10,6 +10,7 @@
 
 <a:body>
 <res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
 	<div class="row-fluid">

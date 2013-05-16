@@ -10,35 +10,35 @@
 
 <a:body>
 
-	<res:useJs value="${res.js.local['dtree.js']}" target="head-js" />
-	<res:useCss value='${res.css.local.dtree_css}' target="head-css" />
-	<res:useCss value='${res.css.local.alarm_css}' target="head-css" />
+	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
+	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			init();
+			var id = '${payload.action.name}';
+			$('#'+id).addClass("active");
+		});
+	</script>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		init();
-	});
-</script>
-
-	<div class="body-content">
+	<div class="container-fluid">
+      	<div class="row-fluid">
+        <div class="span2">
 		<%@include file="./alarm.jsp"%>
-		<script type="text/javascript">
-			d.openAll();
-			d.s(7);
-		</script>
-		<div class="content-right">
+		</div>
+		<div class="span10">
 			</br>
-			<table class="alarm" id="contents" width="100%">
+			<table class="alarm table table-striped table-bordered  table-condensed" id="contents" width="100%">
 				<thead>
 				<tr class="odd">
-					<td>项目名</td>
-					<td>报表内容</td>
-					<td>操作&nbsp;&nbsp;  <a href="?op=scheduledReportAdd&type=exception" target="_blank">新增</a></td>
+					<th>项目名</th>
+					<th>报表内容</th>
+					<th>操作&nbsp;&nbsp;  <a class="btn btn-primary btn-small" href="?op=scheduledReportAdd&type=exception" target="_blank">新增</a></th>
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.userReportSubStates}"
 					varStatus="status">
@@ -47,18 +47,18 @@
 						<td>${item.scheduledReport.names}</td>
 						<td><c:choose>
 								<c:when test="${item.subscriberState == 0}">
-									<a href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=0" onclick="return sub(this)">订阅</a>
+									<a class="btn btn-primary btn-small" href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=0" onclick="return sub(this)">订阅</a>
 								</c:when>
 								<c:otherwise>
-									<a href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=1" onclick="return sub(this)">取消</a>
+									<a class="btn btn-danger btn-small" href="?op=scheduledReportSub&scheduledReportId=${item.scheduledReport.id}&subState=1" onclick="return sub(this)">取消</a>
 								</c:otherwise>
 							</c:choose> 
-							<a href="?op=scheduledReportUpdate&scheduledReportId=${item.scheduledReport.id}"  target="_blank">编辑</a> 
-							<a href="?op=scheduledReportDelete&scheduledReportId=${item.scheduledReport.id}">删除</a> 
+							<a class="btn btn-primary btn-small" href="?op=scheduledReportUpdate&scheduledReportId=${item.scheduledReport.id}"  target="_blank">编辑</a> 
+							<a class="btn btn-danger btn-small" href="?op=scheduledReportDelete&scheduledReportId=${item.scheduledReport.id}">删除</a> 
 						</td>
 					</tr>
 				</c:forEach></tbody>
 			</table>
-		</div>
+		</div></div>
 	</div>
 </a:body>

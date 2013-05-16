@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.advanced;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,7 +16,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 public class BussinessConfigManager implements Initializable {
 
 	// key is domain
-	private Map<String, Map<Integer, List<BusinessConfig>>> m_configs = new ConcurrentHashMap<String, Map<Integer, List<BusinessConfig>>>();
+	private Map<String, Map<Integer, Map<String, BusinessConfig>>> m_configs = new ConcurrentHashMap<String, Map<Integer, Map<String, BusinessConfig>>>();
 
 	// key is group
 	private Map<String, List<BusinessConfig>> m_groupConfigs = new ConcurrentHashMap<String, List<BusinessConfig>>();
@@ -28,11 +29,11 @@ public class BussinessConfigManager implements Initializable {
 		return m_groups;
 	}
 
-	public List<BusinessConfig> getUrlConfigs(String domain) {
+	public Map<String,BusinessConfig> getUrlConfigs(String domain) {
 		return getMetricConfigsByType(domain, BusinessConfig.URL);
 	}
 
-	public List<BusinessConfig> getMetricConfigs(String domain) {
+	public Map<String,BusinessConfig> getMetricConfigs(String domain) {
 		return getMetricConfigsByType(domain, BusinessConfig.METRIC);
 	}
 
@@ -47,36 +48,36 @@ public class BussinessConfigManager implements Initializable {
 		}
 	}
 
-	private List<BusinessConfig> getMetricConfigsByType(String domain, int type) {
-		Map<Integer, List<BusinessConfig>> configMap = m_configs.get(domain);
+	private Map<String,BusinessConfig> getMetricConfigsByType(String domain, int type) {
+		Map<Integer, Map<String, BusinessConfig>> configMap = m_configs.get(domain);
 
 		if (configMap != null) {
-			List<BusinessConfig> config = configMap.get(type);
+			Map<String,BusinessConfig> config = configMap.get(type);
 
 			if (config != null) {
 				return config;
 			}
 		}
-		return new ArrayList<BusinessConfig>();
+		return new HashMap<String, BusinessConfig>();
 	}
 
 	private BussinessConfigManager addConfig(BusinessConfig config) {
 		String domain = config.getDomain();
-		Map<Integer, List<BusinessConfig>> configsMap = m_configs.get(domain);
+		Map<Integer, Map<String, BusinessConfig>> configsMap = m_configs.get(domain);
 
 		if (configsMap == null) {
-			configsMap = new ConcurrentHashMap<Integer, List<BusinessConfig>>();
+			configsMap = new ConcurrentHashMap<Integer, Map<String, BusinessConfig>>();
 			m_configs.put(config.getDomain(), configsMap);
 		}
 
 		int type = config.getType();
-		List<BusinessConfig> configs = configsMap.get(type);
+		Map<String, BusinessConfig> configs = configsMap.get(type);
 
 		if (configs == null) {
-			configs = new ArrayList<BusinessConfig>();
+			configs = new ConcurrentHashMap<String, BusinessConfig>();
 			configsMap.put(config.getType(), configs);
 		}
-		configs.add(config);
+		configs.put(config.getMainKey(), config);
 
 		String group = config.getGroup();
 		List<BusinessConfig> groupConfigs = m_groupConfigs.get(group);
