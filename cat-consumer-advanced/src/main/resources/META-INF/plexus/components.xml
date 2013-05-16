@@ -1,6 +1,10 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.BussinessConfigManager</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.DomainManager</role>
 			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
 			<requirements>
@@ -124,6 +128,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.advanced.dal.BusinessReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

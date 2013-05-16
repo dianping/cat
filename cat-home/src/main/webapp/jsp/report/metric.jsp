@@ -15,16 +15,7 @@
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
 <res:useJs value="${res.js.local['metric.js']}" target="head-js"/>
-<style type="text/css">
-.graph {
-	width: 380px;
-	height: 200px;
-	margin: 4px auto;
-}
-.row-fluid .span2{
-	width:12%;
-}
-</style>
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.display.groups}" varStatus="status">
@@ -32,12 +23,16 @@
 			graph(document.getElementById('${item.title}'), data);
 		</c:forEach>
 		
-		var id = "${model.channel}";
+/* 		var id = "${model.channel}";
 		if (id == '') {
 			$('#allChannel').addClass("active");
 		} else {
 			$('#' + id).addClass("active");
-		}
+		} */
+		var group = '${model.group}';
+		$('#' + group).addClass("active");
+		var childKey = '${model.channel}';
+		$('#' + childKey).addClass("active");
 	});
 </script>
 <div class="report">
@@ -58,11 +53,16 @@
         <div class="span2">
           <div class="well sidebar-nav">
             <ul class="nav nav-list">
-              <li id="allChannel"><a href="?date=${model.date}&group=${model.group}"><strong>团购ALL</strong></a></li>
+	            <c:forEach var="item" items="${model.groups}" varStatus="status">
+	              <li class='nav-header' id="${item}"><a href="?date=${model.date}&group=${item}"><strong>${item}</strong></a></li>
+	              <c:if test="${model.group eq item }">
+		               <c:forEach var="item" items="${model.childKeyValues}" varStatus="status">
+			              <li id="${item}"><a href="?date=${model.date}&group=${model.group}&${model.childKey}=${item}">${item}</a></li>
+		       		  </c:forEach>
+	              </c:if>
+	            </c:forEach>
               <li >&nbsp;</li>
-              <c:forEach var="item" items="${model.channels}" varStatus="status">
-	              <li id="${item}"><a href="?date=${model.date}&group=${model.group}&channel=${item}">${item}</a></li>
-       		  </c:forEach>
+             
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
@@ -78,3 +78,26 @@
 	</table>
 </div>
 </a:body>
+<style type="text/css">
+.graph {
+	width: 380px;
+	height: 200px;
+	margin: 4px auto;
+}
+.row-fluid .span2{
+	width:12%;
+}
+.well {
+padding: 10px 10px 10px 19p;
+}
+.nav-list  li  a{
+	padding:2px 15px;
+}
+
+.nav li  +.nav-header{
+	margin-top:2px;
+}
+.nav-header{
+	padding:5px 3px;
+}
+</style>

@@ -2445,6 +2445,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2455,6 +2458,10 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.advanced.BussinessConfigManager</role>
+			<implementation>com.dianping.cat.consumer.advanced.BussinessConfigManager</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.jsError.Handler</role>

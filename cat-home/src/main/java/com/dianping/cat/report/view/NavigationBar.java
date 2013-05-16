@@ -41,13 +41,13 @@ public class NavigationBar {
 
 		ReportPage.SQL,
 
-		ReportPage.DATABASE,
-
-		ReportPage.MATRIX,
+//		ReportPage.DATABASE,
+//
+//		ReportPage.MATRIX,
 		
 		ReportPage.DEPENDENCY,
 		
-		ReportPage.HEALTH,
+//		ReportPage.HEALTH,
 
 		ReportPage.TOP,
 		
