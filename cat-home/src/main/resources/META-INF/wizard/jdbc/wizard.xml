@@ -15,6 +15,7 @@
          <table name="weeklyreport"/>
          <table name="monthreport"/>
          <table name="location"/>
+         <table name="aggregationRule"/>
       </group>
       <group name="alarm" package="com.dianping.cat.home.dal.alarm">
          <table name="alarmTemplate"/>
