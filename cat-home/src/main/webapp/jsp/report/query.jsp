@@ -10,7 +10,7 @@
 <script src="http://code.jquery.com/jquery-1.8.3.js"></script>
 <script src="http://code.jquery.com/ui/1.10.0/jquery-ui.js"></script>
 <a:body>
-<res:useCss value='${res.css.local.report_css}' target="head-css" />
+
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['query.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>

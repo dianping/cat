@@ -8,11 +8,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.metric.Model" scope="request"/>
 
 <a:body>
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-<res:useCss value='${res.css.local.report_css}' target="head-css" />
+
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
 <res:useJs value="${res.js.local['metric.js']}" target="head-js"/>
 

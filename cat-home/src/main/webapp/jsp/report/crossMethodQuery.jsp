@@ -15,7 +15,7 @@
 
 <res:useCss value="${res.css.local.cross_css}" target="head-css" />
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
+
 <res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 <script type="text/javascript">
 	$(document).ready(function() {

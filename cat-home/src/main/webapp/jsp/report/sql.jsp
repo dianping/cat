@@ -19,7 +19,7 @@
 	<jsp:body>
 
 	<res:useCss value="${res.css.local.sql_css}" target="head-css" />
-	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
+	
 
 </br>
 <table class="databases">

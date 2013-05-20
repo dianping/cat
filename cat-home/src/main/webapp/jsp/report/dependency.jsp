@@ -11,13 +11,10 @@
 	navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-	<res:useCss value='${res.css.local.report_css}' target="head-css" />
+	
+	
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
-	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}"
-			target="head-js" />
+	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
 <div class="report">
 	<div class="row-fluid">
 	<div class="span1 text-center">
