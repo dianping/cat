@@ -35,10 +35,10 @@
 			<table class="alarm table table-striped table-bordered  table-condensed" id="contents" width="100%">
 				<thead>
 				<tr class="odd">
-					<td>邮件类型</td>
-					<td>邮件标题</td>
-					<td>发送时间</td>
-					<td>详细信息</td>
+					<th><span class="text-success">邮件类型</span></th>
+					<th><span class="text-success">邮件标题</span></th>
+					<th><span class="text-success">发送时间</span></th>
+					<th><span class="text-success">详细信息</span></th>
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.mailRecords}"
 					varStatus="status">

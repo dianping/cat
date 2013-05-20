@@ -73,7 +73,7 @@
          <page name="login" title="Login" default="true" path="login" standalone="false">
             <description>Login</description>
          </page>
-         <page name="project" title="Project" path="project">
+         <page name="project" title="Config" path="project">
             <description>Project</description>
          </page>
       </module>

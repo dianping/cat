@@ -10,10 +10,7 @@
 
 
 <a:body>
-
-	
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
@@ -35,13 +32,13 @@
 			</br>
 			</br>
 			<table class="alarm table table-striped table-bordered  table-condensed">
-				<tr><td colspan='2'><a class="btn btn-primary btn-small" href="?op=alarmTemplateUpdate&alarmTemplateId=${model.alarmTemplate.id}" target="_blank">修改</a></td></tr>
-				<tr><th>模板名称</th><td>${model.alarmTemplate.name}</td></tr>
-				<tr><th>模板内容</th>
+				<tr><th><span class="text-success"><strong>模板名称</strong></span></th><td>${model.alarmTemplate.name}</td></tr>
+				<tr><th><span class="text-success"><strong>模板内容</strong></span></th>
 					<td>
-						<textarea style="height:500px;width:500px" id="content" name="content">${model.alarmTemplate.content}</textarea>
+						<textarea style="height:300px;width:500px" id="content" name="content">${model.alarmTemplate.content}</textarea>
 					</td>
 					</tr>
+				<tr><td colspan='2' align="center"><a class="btn btn-primary" href="?op=alarmTemplateUpdate&alarmTemplateId=${model.alarmTemplate.id}" target="_blank">修改</a></td></tr>
 			</table>
 		</div></div>
 	</div>

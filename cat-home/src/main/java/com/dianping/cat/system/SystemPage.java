@@ -9,7 +9,7 @@ public enum SystemPage implements Page {
 
    LOGIN("login", "login", "Login", "Login", false),
 
-   PROJECT("project", "project", "Project", "Project", true);
+   PROJECT("project", "project", "Config", "Project", true);
 
    private String m_name;
 

@@ -9,10 +9,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model"scope="request" />
 
 <a:body>
-
-	
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
@@ -36,9 +33,9 @@
 			<table class="alarm table table-striped table-bordered  table-condensed" id="contents" width="100%">
 				<thead>
 				<tr class="odd">
-					<th>项目名</th>
-					<th>报表内容</th>
-					<th>操作&nbsp;&nbsp;  <a class="btn btn-primary btn-small" href="?op=scheduledReportAdd&type=exception" target="_blank">新增</a></th>
+					<th><span class="text-success">项目名</span></th>
+					<th><span class="text-success">报表内容</span></th>
+					<th><span class="text-success">操作</span>&nbsp;&nbsp;  <a class="btn btn-primary btn-small" href="?op=scheduledReportAdd&type=exception" target="_blank">新增</a></th>
 				</tr></thead><tbody>
 				<c:forEach var="item" items="${model.userReportSubStates}"
 					varStatus="status">

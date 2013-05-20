@@ -9,10 +9,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.project.Model" scope="request"/>
 
 <a:body>
-
-	
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	
 	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
@@ -20,13 +17,19 @@
 	
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$('#projectList').addClass('active');
 			init();
 		});
 	</script>
 	
 	<div>
-			</br>
-			<table class="project" id="contents" width="100%">
+		<div class="row-fluid">
+        <div class="span2">
+		<%@include file="./configTree.jsp"%>
+		</div>
+		<div class="span10">
+		</br>
+			<table class="project table table-striped table-bordered table-condensed" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
 					<th width="15%">项目名称</th>
@@ -48,6 +51,5 @@
 					</tr>
 				</c:forEach></tbody>
 			</table>
-		</div>
-		
+		</div></div></div>
 </a:body>
