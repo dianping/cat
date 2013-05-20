@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.problem;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
@@ -174,27 +173,6 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case DETAIL:
 			showDetail(model, payload);
-			break;
-		case MOBILE:
-			if (ip.equals(CatString.ALL)) {
-				report = getHourlyReport(payload, VIEW);
-
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
-				      .setServiceThreshold(serviceThreshold);
-				problemStatistics.visitProblemReport(report);
-				problemStatistics.setIps(new ArrayList<String>(report.getIps()));
-				String response = m_gson.toJson(problemStatistics);
-				model.setMobileResponse(response);
-			} else {
-				report = showHourlyReport(model, payload);
-
-				problemStatistics.setAllIp(true).setSqlThreshold(sqlThreshold).setUrlThreshold(1000)
-				      .setServiceThreshold(serviceThreshold);
-				problemStatistics.visitProblemReport(report);
-				ProblemStatistics statistics = model.getAllStatistics();
-				statistics.setIps(new ArrayList<String>(report.getIps()));
-				model.setMobileResponse(m_gson.toJson(statistics));
-			}
 			break;
 		case HOUR_GRAPH:
 			report = getHourlyReport(payload, DETAIL);

@@ -26,7 +26,6 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.report.view.StringSortHelper;
-import com.google.gson.Gson;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -77,11 +76,11 @@ public class Handler implements PageHandler<Context> {
 		      new Date(payload.getDate() + TimeUtil.ONE_HOUR));
 		model.setReport(report);
 
-		if (StringUtil.isEmpty(payload.getIpAddress())) {
+		if (StringUtil.isEmpty(payload.getIpAddress()) || CatString.ALL.equals(payload.getIpAddress())) {
 			String ipAddress = getIpAddress(report, payload);
 
 			payload.setIpAddress(ipAddress);
-			model.setIpAddress(ipAddress);
+			payload.setRealIp(ipAddress);
 		}
 		m_historyGraphs.showHeartBeatGraph(model, payload);
 	}
@@ -138,13 +137,6 @@ public class Handler implements PageHandler<Context> {
 			heartbeat = showReport(model, payload);
 			buildHeartbeatGraphInfo(model, heartbeat);
 			break;
-		case MOBILE:
-			heartbeat = showReport(model, payload);
-			MobileHeartbeat mobileModel = setMobileModel(model, heartbeat);
-			String json = new Gson().toJson(mobileModel);
-
-			model.setMobileResponse(json);
-			break;
 		case HISTORY:
 			buildHistoryGraph(model, payload);
 			break;
@@ -159,9 +151,8 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 
 		model.setPage(ReportPage.HEARTBEAT);
-		if (StringUtil.isEmpty(ipAddress)||ipAddress.equals(CatString.ALL)) {
-			payload.setRealIp("");
-			model.setIpAddress(payload.getRealIp());
+		if (StringUtil.isEmpty(ipAddress) || ipAddress.equals(CatString.ALL)) {
+			model.setIpAddress(CatString.ALL);
 		} else {
 			payload.setRealIp(payload.getIpAddress());
 			model.setIpAddress(payload.getRealIp());
@@ -175,13 +166,6 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private MobileHeartbeat setMobileModel(Model model, DisplayHeartbeat heartbeat) {
-		MobileHeartbeat result = new MobileHeartbeat();
-
-		result.display(model, heartbeat);
-		return result;
-	}
-
 	private DisplayHeartbeat showReport(Model model, Payload payload) {
 		try {
 			HeartbeatReport report = getReport(payload.getDomain(), payload.getIpAddress(), payload.getDate(),
@@ -190,7 +174,8 @@ public class Handler implements PageHandler<Context> {
 			if (report != null) {
 				String ip = getIpAddress(report, payload);
 
-				model.setIpAddress(ip);
+				payload.setRealIp(ip);
+				// model.setIpAddress(ip);
 				return new DisplayHeartbeat(m_builder).display(report, ip);
 			}
 		} catch (Throwable e) {

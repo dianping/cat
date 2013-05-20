@@ -11,7 +11,6 @@
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.transaction_css}" target="head-css" />
-	
 	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseTools_js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['trendGraph_js']}" target="head-js"/>
@@ -21,7 +20,7 @@
 		<th>Machines:
    	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		<c:choose>
-					<c:when test="${model.ipAddress eq ip}">
+					<c:when test="${payload.realIp eq ip}">
 						<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&reportType=${model.reportType}"
 									class="current">${ip}</a>
 					</c:when>
