@@ -418,23 +418,11 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.NormalizePayload</role>
-			<implementation>com.dianping.cat.report.page.NormalizePayload</implementation>
+			<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+			<implementation>com.dianping.cat.report.page.PayloadNormalizer</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cross.DomainManager</role>
-			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -443,7 +431,7 @@
 			<implementation>com.dianping.cat.report.task.health.HealthServiceCollector</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.cross.DomainManager</role>
+					<role>com.dianping.cat.consumer.DomainManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
@@ -582,6 +570,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.MonthReportCache</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+			<implementation>com.dianping.cat.report.page.externalError.EventCollectManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.EventDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1067,6 +1067,50 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>dependency-local</role-hint>
+			<implementation>com.dianping.cat.report.page.model.dependency.LocalDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>dependency-historical</role-hint>
+			<implementation>com.dianping.cat.report.page.model.dependency.HistoricalDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+			<role-hint>dependency</role-hint>
+			<implementation>com.dianping.cat.report.page.model.dependency.CompositeDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hints>
+						<role-hint>dependency-historical</role-hint>
+					</role-hints>
+					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>metric-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.metric.LocalMetricService</implementation>
 			<requirements>
@@ -1190,6 +1234,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>event</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>event</logical-table-name>
+				<physical-table-name>event</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>graph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1249,6 +1303,15 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
 			<implementation>com.dianping.cat.home.dal.report.DailyreportDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.EventDao</role>
+			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -1529,7 +1592,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1577,8 +1640,13 @@
 			<implementation>com.dianping.cat.configuration.ServerConfigManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.NormalizePayload</role>
-			<implementation>com.dianping.cat.report.page.NormalizePayload</implementation>
+			<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+			<implementation>com.dianping.cat.report.page.PayloadNormalizer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.transaction.Handler</role>
@@ -1603,7 +1671,7 @@
 					<role>com.dianping.cat.report.page.transaction.TransactionMergeManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -1666,7 +1734,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1717,7 +1785,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1831,6 +1899,11 @@
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>metric-local</role-hint>
 					<field-name>m_metricService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>dependency-local</role-hint>
+					<field-name>m_dependencyService</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2017,6 +2090,20 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.model.dependency.LocalDependencyService</role>
+			<implementation>com.dianping.cat.report.page.model.dependency.LocalDependencyService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.storage.BucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.message.spi.MessageConsumer</role>
+					<role-hint>realtime</role-hint>
+					<field-name>m_consumer</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.sql.Handler</role>
 			<implementation>com.dianping.cat.report.page.sql.Handler</implementation>
 			<requirements>
@@ -2027,7 +2114,7 @@
 					<role>com.dianping.cat.report.page.sql.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2095,7 +2182,7 @@
 					<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2121,7 +2208,7 @@
 					<role>com.dianping.cat.report.page.health.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ReportService</role>
@@ -2160,10 +2247,10 @@
 					<role>com.dianping.cat.report.service.ReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.cross.DomainManager</role>
+					<role>com.dianping.cat.consumer.DomainManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2182,8 +2269,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.cross.DomainManager</role>
-			<implementation>com.dianping.cat.report.page.cross.DomainManager</implementation>
+			<role>com.dianping.cat.consumer.DomainManager</role>
+			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
@@ -2224,7 +2311,7 @@
 					<role>com.dianping.cat.report.page.event.EventMergeManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2258,7 +2345,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2290,7 +2377,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2349,7 +2436,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2375,7 +2462,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.NormalizePayload</role>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2400,6 +2487,80 @@
 		<component>
 			<role>com.dianping.cat.report.page.jsError.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.jsError.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.Handler</role>
+			<implementation>com.dianping.cat.report.page.dependency.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>dependency</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.dependency.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+			<implementation>com.dianping.cat.report.page.externalError.EventCollectManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.EventDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.EventDao</role>
+			<implementation>com.dianping.cat.home.dal.report.EventDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.externalError.Handler</role>
+			<implementation>com.dianping.cat.report.page.externalError.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.DomainManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.externalError.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.externalError.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -2668,6 +2829,7 @@
 			</requirements>
 		</component>
 		<component>
+<<<<<<< HEAD
 			<role>com.dianping.cat.system.page.aggregation.Handler</role>
 			<implementation>com.dianping.cat.system.page.aggregation.Handler</implementation>
 			<requirements>
@@ -2696,6 +2858,10 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+=======
+			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
+			<implementation>com.dianping.cat.system.alarm.AlarmContentBuilder</implementation>
+>>>>>>> f04844ca7620423738ae9ff7f60787875551d6e8
 		</component>
 		<component>
 			<role>com.dianping.cat.system.alarm.AlarmRuleCreator</role>
@@ -2807,6 +2973,12 @@
 				<requirement>
 					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2819,6 +2991,12 @@
 				<requirement>
 					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2830,6 +3008,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.alarm.RuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

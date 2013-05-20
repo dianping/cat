@@ -26,7 +26,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public String getDomain() {
-		return "Cat";
+		return getDisplayDomain();
 	}
 
 	@Override

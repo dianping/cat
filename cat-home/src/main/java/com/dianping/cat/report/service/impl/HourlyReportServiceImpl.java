@@ -17,6 +17,7 @@ import com.dainping.cat.consumer.core.dal.ReportEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
+import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -32,6 +33,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.page.model.cross.CrossReportMerger;
 import com.dianping.cat.report.page.model.database.DatabaseReportMerger;
+import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.event.EventReportMerger;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;
 import com.dianping.cat.report.page.model.matrix.MatrixReportMerger;
@@ -152,7 +154,9 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		databaseReport.setStartTime(start);
 		databaseReport.setEndTime(end);
 
-		Set<String> domains = queryAllDomainNames(start, end, "database");
+		Set<String> domains = queryAllDatabaseNames(start, end, "database");
+		
+		System.out.println(domains);
 		databaseReport.getDomainNames().addAll(domains);
 		return databaseReport;
 	}
@@ -442,6 +446,35 @@ public class HourlyReportServiceImpl implements HourlyReportService {
 		return topReport;
 	}
 
+	@Override
+	public DependencyReport queryDependencyReport(String domain, Date start, Date end) {
+		DependencyReportMerger merger = new DependencyReportMerger(new DependencyReport(domain));
+
+		try {
+			List<Report> reports = m_reportDao.findAllByDomainNameDuration(start, end, domain, "dependency",
+			      ReportEntity.READSET_FULL);
+
+			for (Report report : reports) {
+				String xml = report.getContent();
+
+				try {
+					DependencyReport reportModel = com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser.parse(xml);
+					reportModel.accept(merger);
+				} catch (Exception e) {
+					Cat.logError(e);
+					Cat.getProducer().logEvent("ErrorXML", "dependency", Event.SUCCESS,
+					      report.getDomain() + " " + report.getPeriod() + " " + report.getId());
+				}
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		DependencyReport dependencyReport = merger.getDependencyReport();
+
+		dependencyReport.setStartTime(start);
+		dependencyReport.setEndTime(end);
+		return dependencyReport;
+	}
 	@Override
 	public TransactionReport queryTransactionReport(String domain, Date start, Date end) {
 		TransactionReportMerger merger = new TransactionReportMerger(new TransactionReport(domain));

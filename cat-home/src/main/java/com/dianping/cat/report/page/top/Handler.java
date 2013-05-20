@@ -12,9 +12,10 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.consumer.top.model.entity.TopReport;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.NormalizePayload;
+import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -32,10 +33,10 @@ public class Handler implements PageHandler<Context> {
 	private ModelService<TopReport> m_service;
 
 	@Inject
-	private NormalizePayload m_normalizePayload;
+	private PayloadNormalizer m_normalizePayload;
 
 	private TopReport getReport(Payload payload) {
-		String domain = payload.getDomain();
+		String domain = CatString.CAT;
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date);
@@ -65,12 +66,13 @@ public class Handler implements PageHandler<Context> {
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
+		
 		normalize(model, payload);
 
 		TopReport report = getReport(payload);
 		ModelPeriod period = payload.getPeriod();
-		int count = payload.getCount();
 		Metric metrix = new Metric();
+		int count = payload.getCount();
 
 		if (!period.isCurrent()) {
 			metrix = new Metric(60);

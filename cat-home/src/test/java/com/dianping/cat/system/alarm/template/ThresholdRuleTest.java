@@ -9,6 +9,7 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.unidal.tuple.Pair;
 import org.unidal.webres.helper.Files;
 
 import com.dianping.cat.home.template.entity.ThresholdTemplate;
@@ -44,16 +45,16 @@ public class ThresholdRuleTest {
 		entity.setCount(420);
 		entity.setDate(new Date(m_lastDate.getTime() + 10));
 
-		ThresholdAlarmMeta meta = m_rule.addData(entity, AlertInfo.EXCEPTION);
+		 Pair<Boolean, ThresholdAlarmMeta> meta = m_rule.addData(entity, AlertInfo.EXCEPTION);
 
-		Assert.assertEquals(240, meta.getRealCount());
+		Assert.assertEquals(240, meta.getValue().getRealCount());
 
 		Map<String, Long> lastAlarmTimes = m_rule.getLastAlarmTime();
 		int size = lastAlarmTimes.size();
 		Assert.assertEquals(1, size);
 
 		meta = m_rule.addData(entity, AlertInfo.EXCEPTION);
-		Assert.assertEquals(null, meta);
+		Assert.assertEquals(false, meta.getKey().booleanValue());
 	}
 
 	@Test

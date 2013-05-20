@@ -11,6 +11,7 @@ import org.junit.runners.JUnit4;
 import org.unidal.lookup.ComponentTestCase;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.state.StateShow;
@@ -32,6 +33,20 @@ public class CatStateAnalyzer extends ComponentTestCase {
 	}
 
 	@Test
+	public void testDatabase() throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date start = sdf.parse("2013-05-06 12:00:00");
+		Date end = sdf.parse("2013-05-06 13:00:00");
+		DatabaseReport report = m_reportService.queryDatabaseReport("DianPingCOMM", start, end);
+
+		System.out.println(report.getDatabaseNames());
+
+		report = m_reportService.queryDatabaseReport("cat", start, end);
+
+		System.out.println(report.getDatabaseNames());
+	}
+
+	@Test
 	public void test() throws ParseException {
 		StringBuilder sb = new StringBuilder();
 
@@ -42,9 +57,9 @@ public class CatStateAnalyzer extends ComponentTestCase {
 		String startDate = "2012/11/01";
 
 		Date start = m_sdf.parse(startDate);
-		for(long i=start.getTime();i<System.currentTimeMillis();i=i+TimeUtil.ONE_DAY){
+		for (long i = start.getTime(); i < System.currentTimeMillis(); i = i + TimeUtil.ONE_DAY) {
 			State state = buildState(new Date(i));
-			
+
 			System.out.println(state);
 		}
 	}
@@ -61,7 +76,7 @@ public class CatStateAnalyzer extends ComponentTestCase {
 			state.setLoss(show.getTotal().getTotalLoss());
 			double avgNumber = ((double) show.getTotal().getTotal() / 1440.0);
 			state.setAvgNumber((long) avgNumber);
-			state.setDumpSize((long)(show.getTotal().getSize() / 1024.0/ 1024 / 1024));
+			state.setDumpSize((long) (show.getTotal().getSize() / 1024.0 / 1024 / 1024));
 		}
 		return state;
 	}

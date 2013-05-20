@@ -3,6 +3,7 @@ package com.dianping.cat.demo;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
 public class TestBusinessMessage {
@@ -14,6 +15,7 @@ public class TestBusinessMessage {
 			for (int i = 0; i < 1000; i++) {
 				Transaction t = Cat.newTransaction("URL", "/index");
 				Cat.logMetric("order", "quantity", i, "channel", "channel"+i % 5);
+				Cat.logEvent("RemoteLink", "sina", Event.SUCCESS, "http://sina.com.cn/");
 				t.addData("channel=channel" + i % 5);
 				t.complete();
 			}

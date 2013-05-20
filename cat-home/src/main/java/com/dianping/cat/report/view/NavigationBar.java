@@ -47,6 +47,8 @@ public class NavigationBar {
 
 		ReportPage.MATRIX,
 		
+		ReportPage.DEPENDENCY,
+		
 		ReportPage.HEALTH,
 
 		ReportPage.TOP,

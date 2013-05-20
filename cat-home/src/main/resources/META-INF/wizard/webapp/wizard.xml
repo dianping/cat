@@ -59,6 +59,12 @@
          <page name="jsError" title="JsError" path="jsError">
             <description>jsError</description>
          </page>
+         <page name="dependency" title="Dependency" path="dependency" template="default">
+            <description>Dependency</description>
+         </page>
+         <page name="externalError" title="externalError" path="externalError" template="default">
+            <description>ExternalError</description>
+         </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="alarm" title="Alarm" default="true" path="alarm">

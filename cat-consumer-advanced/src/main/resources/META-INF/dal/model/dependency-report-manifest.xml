@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="dependency-report-codegen.xml" />
+  <file path="dependency-report-model.xml" />
+</manifest>
+

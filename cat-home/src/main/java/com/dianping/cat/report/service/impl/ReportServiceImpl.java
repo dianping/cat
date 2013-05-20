@@ -8,6 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.database.model.entity.DatabaseReport;
+import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -391,6 +392,17 @@ public class ReportServiceImpl implements ReportService {
 		
 		if (type == s_hourly) {
 			return m_hourlyReportService.queryTopReport(domain, start, end);
+		} else {
+			throw new RuntimeException("Top report don't have other report type but houly!");
+		}
+	}
+	
+	@Override
+	public DependencyReport queryDependencyReport(String domain, Date start, Date end) {
+		int type = getQueryType(start, end);
+		
+		if (type == s_hourly) {
+			return m_hourlyReportService.queryDependencyReport(domain, start, end);
 		} else {
 			throw new RuntimeException("Top report don't have other report type but houly!");
 		}
