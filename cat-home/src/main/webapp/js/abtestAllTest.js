@@ -18,13 +18,7 @@ $(document)
 										var checkbox = $(".table input[type='checkbox']:checked");
 										var id = "";
 										for ( var i = 0; i < checkbox.length; i++) {
-											id = id
-													+ $(
-															":nth-child(2)",
-															$(checkbox[i])
-																	.closest(
-																			'tr'))
-															.html() + "-";
+											id = id + $(":nth-child(2)",$(checkbox[i]).closest('tr')).html() + "-";
 										}
 										url = window.location.href;
 										index = url.indexOf("&suspend");
@@ -33,7 +27,7 @@ $(document)
 													.substring(0, index)
 													+ "&suspend=-1&ids=" + id;
 										} else {
-											if(url.indexOf("?") == -1){
+											if (url.indexOf("?") == -1) {
 												url = url + '?';
 											}
 											window.location.href = url
@@ -48,13 +42,7 @@ $(document)
 										var checkbox = $(".table input[type='checkbox']:checked");
 										var id = "";
 										for ( var i = 0; i < checkbox.length; i++) {
-											id = id
-													+ $(
-															":nth-child(2)",
-															$(checkbox[i])
-																	.closest(
-																			'tr'))
-															.html() + "-";
+											id = id + $(":nth-child(2)",$(checkbox[i]).closest('tr')).html() + "-";
 										}
 										url = window.location.href;
 										index = url.indexOf("&suspend");

@@ -24,9 +24,7 @@
 
 	<div id="content" lass="row-fluid">
 		<div class="span12 column">
-				<h3>
-            Report <small>${model.abtest.name} #${model.abtest.id}</small>
-         </h3>
+			<h3>Report <small>${model.abtest.name} #${model.abtest.id}</small></h3>
 			<ul class="nav nav-tabs">
 				<li class="active">
 					<a href="?op=report&id=${payload.id }">

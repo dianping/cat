@@ -26,7 +26,8 @@
       </group>
       <group name="abtest" package="com.dianping.cat.home.dal.abtest">
          <table name="abtest"/>
-         <table name="groupStrategy"/>
+         <table name="abtest_run"/>
+         <table name="group_strategy"/>
       </group>
    </jdbc>
    <jdbc package="com.dainping.cat.home.dal" name="user">

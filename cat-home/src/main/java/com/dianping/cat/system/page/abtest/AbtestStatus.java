@@ -3,7 +3,7 @@ package com.dianping.cat.system.page.abtest;
 import java.util.Calendar;
 import java.util.Date;
 
-import com.dianping.cat.home.dal.abtest.Abtest;
+import com.dianping.cat.home.dal.abtest.AbtestRun;
 
 public enum AbtestStatus {
 
@@ -23,12 +23,12 @@ public enum AbtestStatus {
 		return defaultStatus;
 	}
 
-	public static AbtestStatus calculateStatus(Abtest abtest, Date now) {
-		if (abtest.isDisabled()) {
+	public static AbtestStatus calculateStatus(AbtestRun run, Date now) {
+		if (run.isDisabled()) {
 			return AbtestStatus.SUSPENDED;
 		} else {
-			Date startDate = abtest.getStartDate();
-			Date endDate = abtest.getEndDate();
+			Date startDate = run.getStartDate();
+			Date endDate = run.getEndDate();
 
 			if (startDate != null) {
 				calendar.setTime(startDate);

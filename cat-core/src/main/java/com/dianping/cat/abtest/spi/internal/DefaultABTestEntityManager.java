@@ -12,8 +12,9 @@ import org.unidal.lookup.ContainerHolder;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.ABTestId;
-import com.dianping.cat.abtest.model.entity.Abtest;
-import com.dianping.cat.abtest.model.entity.Entity;
+import com.dianping.cat.abtest.model.entity.AbtestModel;
+import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.abtest.model.transform.BaseVisitor;
 import com.dianping.cat.abtest.model.transform.DefaultSaxParser;
 import com.dianping.cat.abtest.spi.ABTestEntity;
@@ -48,7 +49,7 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 	public void initialize() throws InitializationException {
 		try {
 			InputStream in = getClass().getResourceAsStream("abtest.xml");
-			Abtest abtest = DefaultSaxParser.parse(in);
+			AbtestModel abtest = DefaultSaxParser.parse(in);
 			ABTestVisitor visitor = new ABTestVisitor(m_entities, m_entityList);
 
 			abtest.accept(visitor);
@@ -60,8 +61,7 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 					entity.setGroupStrategy(groupStrategy);
 				} catch (Exception e) {
 					Cat.logError(e);
-					//TODO un-comment the following line later!
-					//entity.setDisabled(true);
+					entity.setDisabled(true);
 				}
 			}
 		} catch (Exception e) {
@@ -80,11 +80,13 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 		}
 
 		@Override
-		public void visitEntity(Entity entity) {
-			ABTestEntity abTestEntity = new ABTestEntity(entity);
+		public void visitCase(Case _case) {
+			for (Run run : _case.getRuns()) {
+				ABTestEntity abTestEntity = new ABTestEntity(_case, run);
 
-			m_entities.put(abTestEntity.getId(), abTestEntity);
-			m_entityList.add(abTestEntity);
+				m_entities.put(abTestEntity.getId(), abTestEntity);
+				m_entityList.add(abTestEntity);
+			}
 		}
 	}
 

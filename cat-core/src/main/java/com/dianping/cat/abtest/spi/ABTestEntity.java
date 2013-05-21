@@ -2,60 +2,64 @@ package com.dianping.cat.abtest.spi;
 
 import java.util.Date;
 
-import com.dianping.cat.abtest.model.entity.Entity;
-import com.dianping.cat.abtest.model.entity.GroupStrategy;
+import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.Run;
 
 public class ABTestEntity {
-	private Entity m_entity;
+	private Case m_case;
+
+	private Run m_run;
 
 	private ABTestGroupStrategy m_groupStrategy;
-
+	
 	public ABTestEntity() {
-		m_entity = new Entity();
-		m_entity.setDisabled(true);
+		m_case = new Case();
+		m_run = new Run();
+		m_run.setDisabled(true);
 	}
 
-	public ABTestEntity(Entity entity) {
-		m_entity = entity;
+	public ABTestEntity(Case _case, Run run) {
+		m_case = _case;
+		m_run = run;
 	}
 
 	public String getGroupStrategyName() {
-		return m_entity.getGroupStrategy() != null ? m_entity.getGroupStrategy().getName() : null;
+		return m_case.getGroupStrategy() != null ? m_case.getGroupStrategy() : null;
 	}
 
 	public String getGroupStrategyConfiguration() {
-		return m_entity.getGroupStrategy() != null ? m_entity.getGroupStrategy().getConfiguration() : null;
+		return m_run.getGroupStrategyConfiguration() != null ? m_run.getGroupStrategyConfiguration() : null;
 	}
 
 	public int getId() {
-		return m_entity.getId();
+		return m_case.getId();
 	}
 
 	public String getName() {
-		return m_entity.getName();
+		return m_case.getName();
 	}
-	
+
 	public Date getEndDate() {
-	   return m_entity.getEndDate();
-   }
+		return m_run.getEndDate();
+	}
 
 	public Date getStartDate() {
-	   return m_entity.getStartDate();
-   }
+		return m_run.getStartDate();
+	}
 
 	public boolean isEligible(Date date) {
-		if (m_entity.getDisabled() != null && m_entity.getDisabled()) {
+		if (m_run.getDisabled() != null && m_run.getDisabled()) {
 			return false;
 		}
 
-		Date startDate = m_entity.getStartDate();
+		Date startDate = m_run.getStartDate();
 		if (startDate != null) {
 			if (date.before(startDate)) {
 				return false;
 			}
 		}
 
-		Date endDate = m_entity.getEndDate();
+		Date endDate = m_run.getEndDate();
 		if (endDate != null) {
 			if (date.after(endDate)) {
 				return false;
@@ -66,33 +70,27 @@ public class ABTestEntity {
 	}
 
 	public boolean isDisabled() {
-		return m_entity.isDisabled();
+		return m_run.isDisabled();
 	}
 
 	public void setDisabled(boolean disabled) {
-		m_entity.setDisabled(disabled);
+		m_run.setDisabled(disabled);
 	}
 
 	public void setGroupStrategyName(String groupStrategy) {
-		if (m_entity.getGroupStrategy() == null) {
-			m_entity.setGroupStrategy(new GroupStrategy());
-		}
-		m_entity.getGroupStrategy().setName(groupStrategy);
+		m_case.setGroupStrategy(groupStrategy);
 	}
 
 	public void setGroupStrategyConfiguration(String groupStrategyConfiguration) {
-		if (m_entity.getGroupStrategy() == null) {
-			m_entity.setGroupStrategy(new GroupStrategy());
-		}
-		m_entity.getGroupStrategy().setConfiguration(groupStrategyConfiguration);
+		m_run.setGroupStrategyConfiguration(groupStrategyConfiguration);
 	}
 
 	public void setId(int id) {
-		m_entity.setId(id);
+		m_case.setId(id);
 	}
 
 	public void setName(String name) {
-		m_entity.setName(name);
+		m_case.setName(name);
 	}
 
 	public ABTestGroupStrategy getGroupStrategy() {

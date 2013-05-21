@@ -1,42 +1,20 @@
-<abtest>
-	<entity id="1001" name="Mock1" start-date="2013-04-10 17:00:00" end-date="2013-12-30 18:00:00" disabled="false">
+<abtest-model>
+	<case id="1001" name="mock" created-date="2013-04-10 17:00:00" last-modified-date="2013-04-10 17:00:00">
 		<description>This is a mock ABTest for test</description>
-		<group-strategy name="roundrobin">
-			<configuration><![CDATA[This is the configuration]]></configuration>
-		</group-strategy>
-		<domain>Cat</domain>
+		<owner>hao.zhu@dianping.com,kezhu.wu@dianping.com</owner>
+		<group-strategy>roundrobin</group-strategy>
+		<domain>TuanGouApi</domain>
 		<domain>TuanGouWeb</domain>
-	</entity>
-    <entity id="1002" name="Mock2" start-date="2013-04-11 17:00:00" disabled="true">
-    </entity>
-    <entity id="1003" name="Mock3" start-date="2013-12-30 17:00:00" disabled="false">
-    </entity>
-    <entity id="1004" name="Mock4" end-date="2013-04-03 18:00:00" disabled="false">
-    </entity>
-    <entity id="1005" name="Mock5" start-date="2013-04-11 17:00:00" disabled="true">
-    </entity>
-    <entity id="1006" name="Mock6" start-date="2013-12-30 17:00:00" disabled="false">
-    </entity>
-    <entity id="1007" name="Mock7" end-date="2013-04-03 18:00:00" disabled="false">
-    </entity>
-    <entity id="1008" name="Mock8" start-date="2013-04-11 17:00:00" disabled="true">
-    </entity>
-    <entity id="1009" name="Mock9" start-date="2013-12-30 17:00:00" disabled="false">
-    </entity>
-    <entity id="1010" name="Mock10" end-date="2013-04-03 18:00:00" disabled="false">
-    </entity>
-    <entity id="1011" name="Mock11" start-date="2013-04-11 17:00:00" disabled="true">
-    </entity>
-    <entity id="1012" name="Mock12" start-date="2013-12-30 17:00:00" disabled="false">
-    </entity>
-    <entity id="1013" name="Mock13" end-date="2013-04-03 18:00:00" disabled="false">
-    </entity>
-    <entity id="1014" name="Mock14" start-date="2013-12-30 17:00:00" disabled="false">
-    </entity>
-    <entity id="1015" name="Mock15" end-date="2013-04-03 18:00:00" disabled="false">
-    </entity>
-    <entity id="1016" name="Mock16" start-date="2013-04-11 17:00:00" disabled="true">
-    </entity>
-    <entity id="1017" name="Mock17" start-date="2013-12-30 17:00:00" disabled="false">
-    </entity>
-</abtest>
+		<domain>TuanGouRemote</domain>
+		<runs>
+			<run id="1" start-date="2013-04-10 17:00:00" end-date="2013-12-30 18:00:00" disabled="false">
+				<creator>hao.zhu@dianping.com</creator>
+				<domain>TuanGouWeb</domain>
+				<domain>TuanGouRemote</domain>
+				<group-strategy-configuration><![CDATA[This is the configuration]]></group-strategy-configuration>
+			</run>
+			<run />
+		</runs>
+	</case>
+	<case/>
+</abtest-model>

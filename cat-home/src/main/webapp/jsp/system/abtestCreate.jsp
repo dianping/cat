@@ -21,6 +21,7 @@ div.controls input {
    <res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
    <res:useJs value="${res.js.local['abtestAllTest.js']}" target="head-js" />
    <res:useJs value="${res.js.local['bootstrap-validation.min.js']}" target="head-js" />
+   
    <div style="width: 950px; margin: 0 auto; margin-bottom: 250px;">
       <h4 style="margin: 0 auto;">Create ABTest</h4>
       <c:choose>
@@ -39,15 +40,11 @@ div.controls input {
                      seconds ...
                   </span>
                   <script>
-																			$(function() {
-																				countDown();
-																				$(
-																						'#submit')
-																						.attr(
-																								"disabled",
-																								"disabled");
-																			});
-																		</script>
+					 $(function() { 
+						 countDown();
+						 $('#submit').attr("disabled","disabled");
+					});
+				 </script>
                </div>
             </div>
          </c:when>
@@ -66,6 +63,16 @@ div.controls input {
                <div class="controls">
                   <input type="text" name="name" placeholder="give it a name ..." check-type="required"
                      required-message="Name is required!" value="${payload.name}">
+               </div>
+            </div>
+            <div class="control-group">
+               <label class="control-label">Owner <i tips="" data-trigger="hover" class="icon-question-sign"
+                  data-toggle="popover" data-placement="top" data-original-title="tips"
+                  data-content="Only charactor, number and underline are allowed. e.g. CatWeb_1"></i>
+               </label>
+               <div class="controls">
+                  <input type="text" name="owner" placeholder="give it a owner ..." check-type="required"
+                     required-message="Owner is required!" value="${payload.owner}">
                </div>
             </div>
             <div class="control-group">
@@ -193,7 +200,7 @@ div.controls input {
 						$("#successMsg").html($("#alert_success").html());
 					}
 				}
-				var timeout = 5;
+				var timeout = 1;
 				function countDown() {
 					$('#countDown').text(timeout);
 					timeout--;
