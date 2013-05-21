@@ -1,11 +1,19 @@
-package com.dianping.cat.system.page.project;
+package com.dianping.cat.system.page.config;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	ALL("view"),
+	PROJECT_ALL("projects"),
 
 	PROJECT_UPDATE("update"),
 
-	PROJECT_UPDATE_SUBMIT("updateSubmit");
+	PROJECT_UPDATE_SUBMIT("updateSubmit"),
+	
+	AGGREGATION_ALL("aggregations"),
+	
+	AGGREGATION_UPDATE("aggregationUpdate"),
+
+	AGGREGATION_UPDATE_SUBMIT("aggregationUpdateSubmit"),	
+	
+	AGGREGATION_DELETE("aggregationDelete");;
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {

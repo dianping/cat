@@ -1,4 +1,4 @@
-package com.dianping.cat.system.page.project;
+package com.dianping.cat.system.page.config;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +19,9 @@ import com.dainping.cat.consumer.core.dal.Project;
 import com.dainping.cat.consumer.core.dal.ProjectDao;
 import com.dainping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.home.dal.report.AggregationRule;
+import com.dianping.cat.home.dal.report.AggregationRuleDao;
+import com.dianping.cat.home.dal.report.AggregationRuleEntity;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 
@@ -30,27 +33,30 @@ public class Handler implements PageHandler<Context> {
 	private ProjectDao m_projectDao;
 
 	@Inject
+	private AggregationRuleDao m_aggregationRuleDao;
+
+	@Inject
 	private DomainNavManager m_domainNavManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "project")
+	@InboundActionMeta(name = "config")
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
 
 	@Override
-	@OutboundActionMeta(name = "project")
+	@OutboundActionMeta(name = "config")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
-		model.setPage(SystemPage.PROJECT);
+		model.setPage(SystemPage.CONFIG);
 		Action action = payload.getAction();
 
 		model.setAction(action);
 		switch (action) {
-		case ALL:
+		case PROJECT_ALL:
 			model.setProjects(queryAllProjects());
 			break;
 		case PROJECT_UPDATE:
@@ -59,6 +65,20 @@ public class Handler implements PageHandler<Context> {
 		case PROJECT_UPDATE_SUBMIT:
 			updateProject(payload);
 			model.setProjects(queryAllProjects());
+			break;
+		case AGGREGATION_ALL:
+			model.setAggregationRules(queryAllAggregationRules());
+			break;
+		case AGGREGATION_UPDATE:
+			model.setAggregationRule(queryAggregationRuleById(payload.getId()));
+			break;
+		case AGGREGATION_UPDATE_SUBMIT:
+			updateAggregationRule(payload);
+			model.setAggregationRules(queryAllAggregationRules());
+			break;
+		case AGGREGATION_DELETE:
+			deleteAggregationRule(payload);
+			model.setAggregationRules(queryAllAggregationRules());
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -87,7 +107,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	@SuppressWarnings("static-access")
-   private void updateProject(Payload payload) {
+	private void updateProject(Payload payload) {
 		int projectId = payload.getProjectId();
 		String department = payload.getDepartment();
 		String email = payload.getEmail();
@@ -112,6 +132,55 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	private void updateAggregationRule(Payload payload) {
+		AggregationRule proto = new AggregationRule();
+		proto.setId(payload.getId());
+		proto.setDisplayName(payload.getDisplayName());
+		proto.setDomain(payload.getDomain());
+		proto.setPattern(payload.getPattern());
+		proto.setSample(payload.getSample());
+		proto.setType(payload.getType());
+		proto.setKeyId(payload.getId());
+		try {
+			if (proto.getKeyId() == 0) {
+				m_aggregationRuleDao.insert(proto);
+			} else {
+				m_aggregationRuleDao.updateByPK(proto, AggregationRuleEntity.UPDATESET_FULL);
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+	}
+
+	private List<AggregationRule> queryAllAggregationRules() {
+		List<AggregationRule> aggregationRules = new ArrayList<AggregationRule>();
+		try {
+			aggregationRules = m_aggregationRuleDao.findAll(AggregationRuleEntity.READSET_FULL);
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return aggregationRules;
+	}
+
+	private AggregationRule queryAggregationRuleById(int id) {
+		try {
+			return m_aggregationRuleDao.findByPK(id, AggregationRuleEntity.READSET_FULL);
+		} catch (DalException e) {
+			Cat.logError(e);
+			return null;
+		}
+	}
+
+	private void deleteAggregationRule(Payload payload) {
+		AggregationRule proto = new AggregationRule();
+		proto.setKeyId(payload.getId());
+		try {
+			m_aggregationRuleDao.deleteByPK(proto);
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+	}
+
 	class ProjectCompartor implements Comparator<Project> {
 
 		@Override
@@ -131,6 +200,6 @@ public class Handler implements PageHandler<Context> {
 				return department1.compareTo(department2);
 			}
 		}
-
 	}
+	
 }

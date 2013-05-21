@@ -55,7 +55,7 @@
 	</script>
 	<table width="100%" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="80%"><ul class="tabs">
+			<td width="75%"><ul class="tabs">
 					<c:forEach var="page" items="${navBar.visiblePages}">
 						<c:if test="${page.standalone}">
 							<li ${model.page.name == page.name ? 'class="selected"' : ''}><a
@@ -67,7 +67,7 @@
 						</c:if>
 					</c:forEach>
 				</ul></td>
-			<td width="20%"><ul class="tabs">
+			<td width="25%"><ul class="tabs">
 					<c:forEach var="page" items="${navBar.systemPages}">
 						<c:if test="${page.standalone}">
 							<li ${model.page.name == page.name ? 'class="selected"' : ''}><a

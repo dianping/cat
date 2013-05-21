@@ -1204,6 +1204,16 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>aggregation-rule</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>aggregation-rule</logical-table-name>
+				<physical-table-name>aggregationRule</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
 			<role-hint>dailygraph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
@@ -1271,6 +1281,15 @@
 				<physical-table-name>weeklyreport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AggregationRuleDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
@@ -2772,14 +2791,17 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.project.Handler</role>
-			<implementation>com.dianping.cat.system.page.project.Handler</implementation>
+			<role>com.dianping.cat.system.page.config.Handler</role>
+			<implementation>com.dianping.cat.system.page.config.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.page.project.JspViewer</role>
+					<role>com.dianping.cat.system.page.config.JspViewer</role>
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.view.DomainNavManager</role>
@@ -2787,8 +2809,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.project.JspViewer</role>
-			<implementation>com.dianping.cat.system.page.project.JspViewer</implementation>
+			<role>com.dianping.cat.system.page.config.JspViewer</role>
+			<implementation>com.dianping.cat.system.page.config.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -2798,6 +2820,15 @@
 		<component>
 			<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
 			<implementation>com.dainping.cat.consumer.core.dal.ProjectDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
+			<implementation>com.dianping.cat.home.dal.report.AggregationRuleDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

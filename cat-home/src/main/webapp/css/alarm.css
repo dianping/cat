@@ -1,0 +1,22 @@
+.body-content {
+	height: 1200px;
+	text-align: left;
+	width: 100%;
+}
+
+.content-left {
+	float: left;
+	width: 15%;
+	text-indent: 1em;
+	height: 1200px;
+	text-align: left;
+}
+
+.content-right {
+	float: left;
+	width: 85%;
+}
+
+.alarm  th .left{
+	text-align:left;
+}

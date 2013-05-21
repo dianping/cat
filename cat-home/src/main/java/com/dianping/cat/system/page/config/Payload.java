@@ -1,9 +1,11 @@
-package com.dianping.cat.system.page.project;
+package com.dianping.cat.system.page.config;
 
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
+import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
@@ -29,11 +31,29 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("domain")
 	private String m_domain;
+	
+	@ObjectMeta("aggregation")
+	private AggregationRule m_rule = new AggregationRule();
+	
+	@FieldMeta("id")
+	private int m_id;
+   
+	@FieldMeta("type")
+	private int m_type;
+
+	@FieldMeta("pattern")
+	private String m_pattern;
+
+	@FieldMeta("display_name")
+	private String m_displayName;
+
+	@FieldMeta("sample")
+	private String m_sample;
 
 	@Override
 	public Action getAction() {
 		if (m_action == null) {
-			m_action = Action.ALL;
+			m_action = Action.PROJECT_ALL;
 		}
 		return m_action;
 	}
@@ -72,7 +92,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public void setAction(String action) {
-		m_action =Action.getByName(action, Action.ALL);
+		m_action =Action.getByName(action, Action.PROJECT_ALL);
 	}
 
 	public void setDepartment(String department) {
@@ -93,7 +113,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@Override
 	public void setPage(String page) {
-		m_page = SystemPage.getByName(page, SystemPage.PROJECT);
+		m_page = SystemPage.getByName(page, SystemPage.CONFIG);
 	}
 
 	public void setProjectId(int projectId) {
@@ -107,4 +127,53 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 	}
+
+	public int getId() {
+   	return m_id;
+   }
+
+	public void setId(int id) {
+   	m_id = id;
+   }
+
+	public int getType() {
+   	return m_type;
+   }
+
+	public void setType(int type) {
+   	m_type = type;
+   }
+
+	public String getPattern() {
+   	return m_pattern;
+   }
+
+	public void setPattern(String pattern) {
+   	m_pattern = pattern;
+   }
+
+	public String getDisplayName() {
+   	return m_displayName;
+   }
+
+	public void setDisplayName(String displayName) {
+   	m_displayName = displayName;
+   }
+
+	public String getSample() {
+   	return m_sample;
+   }
+
+	public void setSample(String sample) {
+   	m_sample = sample;
+   }
+
+	public AggregationRule getRule() {
+   	return m_rule;
+   }
+
+	public void setRule(AggregationRule rule) {
+   	m_rule = rule;
+   }
+	
 }

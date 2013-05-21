@@ -4,13 +4,12 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.project.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.project.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.project.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
 <a:body>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>

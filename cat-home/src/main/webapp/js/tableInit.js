@@ -19,5 +19,5 @@ function init(){
         }
 	});
 	var value=$("select[name='contents_length']")[0];
-    value.value=25;
+    value.value=50;
 }

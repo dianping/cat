@@ -8,10 +8,10 @@ import com.dianping.cat.system.SystemPage;
 public class NavigationBar {
 	public Page[] getSystemPages() {
 		return new Page[] {
-
+				
 		SystemPage.ALARM,
 
-		SystemPage.PROJECT,
+		SystemPage.CONFIG,
 		
 		ReportPage.QUERY,
 

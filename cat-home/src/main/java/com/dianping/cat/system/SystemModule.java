@@ -11,7 +11,7 @@ com.dianping.cat.system.page.alarm.Handler.class,
 
 com.dianping.cat.system.page.login.Handler.class,
 
-com.dianping.cat.system.page.project.Handler.class
+com.dianping.cat.system.page.config.Handler.class
 })
 public class SystemModule extends AbstractModule {
 
