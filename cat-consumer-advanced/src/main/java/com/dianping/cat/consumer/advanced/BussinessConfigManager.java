@@ -21,6 +21,7 @@ public class BussinessConfigManager implements Initializable {
 	// key is group
 	private Map<String, List<BusinessConfig>> m_groupConfigs = new ConcurrentHashMap<String, List<BusinessConfig>>();
 
+	// key is domain,value is group
 	private Map<String, String> m_domainGroup = new ConcurrentHashMap<String, String>();
 
 	private Set<String> m_groups = new TreeSet<String>();
