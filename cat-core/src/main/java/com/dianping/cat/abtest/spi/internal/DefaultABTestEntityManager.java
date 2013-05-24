@@ -18,7 +18,6 @@ import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.abtest.model.transform.BaseVisitor;
 import com.dianping.cat.abtest.model.transform.DefaultSaxParser;
 import com.dianping.cat.abtest.spi.ABTestEntity;
-import com.dianping.cat.abtest.spi.ABTestEntityManager;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
 public class DefaultABTestEntityManager extends ContainerHolder implements ABTestEntityManager, Initializable {

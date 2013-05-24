@@ -41,13 +41,18 @@ public class ClientConfigManager implements LogEnabled {
 	}
 
 	public Domain getFirstDomain() {
-		if (m_config == null) {
-			return new Domain("UNKNOWN").setEnabled(false);
-		} else {
-			Map<String, Domain> domains = m_config.getDomains();
-			Domain firstDomain = domains.isEmpty() ? null : domains.values().iterator().next();
+		Domain domain = null;
 
-			return firstDomain;
+		if (m_config != null) {
+			Map<String, Domain> domains = m_config.getDomains();
+
+			domain = domains.isEmpty() ? null : domains.values().iterator().next();
+		}
+
+		if (domain != null) {
+			return domain;
+		} else {
+			return new Domain("UNKNOWN").setEnabled(false);
 		}
 	}
 

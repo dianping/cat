@@ -6,8 +6,8 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.abtest.spi.ABTestEntityManager;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
+import com.dianping.cat.abtest.spi.internal.ABTestEntityManager;
 import com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager;
 
 public class ABTestServerConfigurator extends AbstractResourceConfigurator {
