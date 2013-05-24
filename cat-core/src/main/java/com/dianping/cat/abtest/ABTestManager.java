@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.unidal.lookup.ContainerLoader;
 
 import com.dianping.cat.abtest.internal.DefaultABTest;
-import com.dianping.cat.abtest.spi.ABTestContextManager;
+import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 
 public final class ABTestManager {
 	private static ABTestContextManager s_contextManager;
