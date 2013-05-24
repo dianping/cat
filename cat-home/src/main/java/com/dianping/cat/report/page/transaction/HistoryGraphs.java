@@ -10,6 +10,7 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Dailygraph;
 import com.dianping.cat.home.dal.report.DailygraphDao;
@@ -17,7 +18,7 @@ import com.dianping.cat.home.dal.report.DailygraphEntity;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
-import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.LineChartItem;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
 
@@ -44,8 +45,8 @@ public class HistoryGraphs {
 		}
 	}
 
-	private HistoryGraphItem buildAvg(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	private LineChartItem buildAvg(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+		LineChartItem item = new LineChartItem();
 
 		item.setStart(start);
 		item.setSize(size);
@@ -66,8 +67,8 @@ public class HistoryGraphs {
 		return item;
 	}
 
-	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	private LineChartItem buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+		LineChartItem item = new LineChartItem();
 
 		item.setStart(start);
 		item.setSize(size);
@@ -180,8 +181,8 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	private HistoryGraphItem buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	private LineChartItem buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+		LineChartItem item = new LineChartItem();
 
 		item.setStart(start);
 		item.setSize(size);
@@ -232,7 +233,7 @@ public class HistoryGraphs {
 		} else {
 			throw new RuntimeException("Error graph query type");
 		}
-		HistoryGraphItem item = buildAvg(allDatas, start, size, step, display);
+		LineChartItem item = buildAvg(allDatas, start, size, step, display);
 		model.setResponseTrend(item.getJsonString());
 
 		item = buildTotal(allDatas, start, size, step, display);
@@ -280,8 +281,7 @@ public class HistoryGraphs {
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
-				e.printStackTrace();
-				//Cat.logError(e);
+				Cat.logError(e);
 			}
 		}
 		Map<String, double[]> result = buildGraphDatasForHour(start, end, type, name, graphs);

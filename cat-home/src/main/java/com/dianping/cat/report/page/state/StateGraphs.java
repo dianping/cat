@@ -10,7 +10,7 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.LineChartItem;
 import com.dianping.cat.report.service.ReportService;
 
 public class StateGraphs {
@@ -18,7 +18,7 @@ public class StateGraphs {
 	@Inject
 	private ReportService m_reportService;
 
-	public HistoryGraphItem buildGraph(StateReport report, String domain, Date start, Date end,
+	public LineChartItem buildGraph(StateReport report, String domain, Date start, Date end,
 	      String reportType, String key, String ip) {
 		if (reportType.equalsIgnoreCase("graph")) {
 			return getHourlyGraph(report, domain, start, end, key, ip);
@@ -27,7 +27,7 @@ public class StateGraphs {
 		}
 	}
 
-	private HistoryGraphItem getDailyGraph(String domain, Date start, Date end, String key, String ip) {
+	private LineChartItem getDailyGraph(String domain, Date start, Date end, String key, String ip) {
 		List<StateReport> reports = new ArrayList<StateReport>();
 
 		for (long date = start.getTime(); date < end.getTime(); date = date + TimeUtil.ONE_HOUR) {
@@ -38,7 +38,7 @@ public class StateGraphs {
 			}
 		}
 		int day = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_HOUR);
-		HistoryGraphItem item = new HistoryGraphItem();
+		LineChartItem item = new LineChartItem();
 
 		item.setStart(start).setSize(day).setTitles(key).setStep(TimeUtil.ONE_HOUR);
 		item.addValue(getDataFromHourlySummary(reports, start.getTime(), day, key, ip));
@@ -132,9 +132,9 @@ public class StateGraphs {
 		return result;
 	}
 
-	private HistoryGraphItem getHourlyGraph(StateReport report, String domain, Date start, Date end, String key,
+	private LineChartItem getHourlyGraph(StateReport report, String domain, Date start, Date end, String key,
 	      String ip) {
-		HistoryGraphItem item = new HistoryGraphItem();
+		LineChartItem item = new LineChartItem();
 		
 		item.setStart(start).setSize(60).setTitles(key).setStep(TimeUtil.ONE_MINUTE);
 		item.addValue(getDataFromHourlyDetail(report, start.getTime(), 60, key, ip));

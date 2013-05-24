@@ -220,7 +220,7 @@ public class Handler implements PageHandler<Context> {
 
 		return results;
 	}
-
+	
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.DEPENDENCY);
 		model.setAction(Action.VIEW);

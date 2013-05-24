@@ -18,7 +18,7 @@ import com.dianping.cat.home.dal.report.DailygraphEntity;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
-import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.LineChartItem;
 import com.dianping.cat.report.page.event.Handler.DetailOrder;
 import com.dianping.cat.report.page.event.Handler.SummaryOrder;
 
@@ -43,8 +43,8 @@ public class HistoryGraphs {
 		}
 	}
 
-	private HistoryGraphItem buildFail(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	private LineChartItem buildFail(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
+		LineChartItem item = new LineChartItem();
 
 		item.setStart(start);
 		item.setSize(size);
@@ -137,8 +137,8 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	private HistoryGraphItem buildTotal(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
-		HistoryGraphItem item = new HistoryGraphItem();
+	private LineChartItem buildTotal(List<Map<String, double[]>> datas, Date start, int size,long step, String name) {
+		LineChartItem item = new LineChartItem();
 
 		item.setStart(start);
 		item.setSize(size);
@@ -190,7 +190,7 @@ public class HistoryGraphs {
 			throw new RuntimeException("Error graph query type");
 		}
 
-		HistoryGraphItem item = buildTotal(allDatas, start, size,step, display);
+		LineChartItem item = buildTotal(allDatas, start, size,step, display);
 		model.setHitTrend(item.getJsonString());
 
 		item = buildFail(allDatas, start, size, step,display);

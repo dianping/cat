@@ -13,7 +13,7 @@ import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.LineChartItem;
 
 public class ProblemReportVisitor extends BaseVisitor {
 
@@ -23,7 +23,7 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 	private String m_state;
 
-	private HistoryGraphItem m_graphItem = new HistoryGraphItem();
+	private LineChartItem m_graphItem = new LineChartItem();
 
 	private Map<Integer, Integer> m_value = new LinkedHashMap<Integer, Integer>();
 
@@ -39,7 +39,7 @@ public class ProblemReportVisitor extends BaseVisitor {
 		m_graphItem.setStart(start);
 	}
 
-	public HistoryGraphItem getGraphItem() {
+	public LineChartItem getGraphItem() {
 		double[] value = new double[SIZE];
 
 		for (int i = 0; i < SIZE; i++) {

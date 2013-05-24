@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-public class HistoryGraphItem {
+public class LineChartItem {
 
 	private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
@@ -26,15 +26,15 @@ public class HistoryGraphItem {
 
 	private double[] ylable;
 
-	public HistoryGraphItem() {
+	public LineChartItem() {
 	}
 	
-	public HistoryGraphItem addSubTitle(String title) {
+	public LineChartItem addSubTitle(String title) {
 		this.subTitles.add(title);
 		return this;
 	}
 
-	public HistoryGraphItem addValue(double[] value) {
+	public LineChartItem addValue(double[] value) {
 		this.values.add(value);
 		return this;
 	}
@@ -68,32 +68,32 @@ public class HistoryGraphItem {
 		return this.ylable;
 	}
 
-	public HistoryGraphItem setSize(int size) {
+	public LineChartItem setSize(int size) {
 		this.size = size;
 		return this;
 	}
 
-	public HistoryGraphItem setStart(Date start) {
+	public LineChartItem setStart(Date start) {
 		this.start = sdf.format(start);
 		return this;
 	}
 
-	public HistoryGraphItem setSubTitles(List<String> subTitles) {
+	public LineChartItem setSubTitles(List<String> subTitles) {
 		this.subTitles = subTitles;
 		return this;
 	}
 
-	public HistoryGraphItem setTitles(String titles) {
+	public LineChartItem setTitles(String titles) {
 		this.titles = titles;
 		return this;
 	}
 
-	public HistoryGraphItem setValues(List<double[]> values) {
+	public LineChartItem setValues(List<double[]> values) {
 		this.values = values;
 		return this;
 	}
 
-	public HistoryGraphItem setYlable(double[] ylable) {
+	public LineChartItem setYlable(double[] ylable) {
 		if (ylable == null) {
 			this.ylable = new double[0];
 		} else {

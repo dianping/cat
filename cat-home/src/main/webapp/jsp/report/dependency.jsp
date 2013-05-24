@@ -45,10 +45,13 @@
 	</br>
   <div class="row-fluid">
   <div class="span6">
-	<table	class="table table-striped table-bordered table-condensed">
+	<table class="table table-striped table-bordered table-condensed">
 		<tr>
 			<td>Exception</td>
 			<td>${model.segment.exceptionCount}</td>
+		</tr>
+		<tr>
+			<td colspan='2'></td>
 		</tr>
 	</table>
 	
