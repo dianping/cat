@@ -89,7 +89,7 @@
 			}
 		</script>
 		
-		<input style="WIDTH: 60px" value="Refresh"
+		<input class='btn btn-primary btn-small' value="Refresh"
 			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
 			type="submit">
 		</th>

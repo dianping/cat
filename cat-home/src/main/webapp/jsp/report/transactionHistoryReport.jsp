@@ -75,7 +75,7 @@
 		<c:otherwise>
 		<tr><th colspan='11'>
 			<input type="text" id="queryname" size="40"  value="${model.queryName}">
-		    <input style="WIDTH: 60px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+		    <input  class="btn btn-primary btn-small"  value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 		    支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
 		</th></tr><script>
 			function filterByName(date,domain,ip,type){

@@ -17,7 +17,7 @@
 <div class="report">
 	<div class="row-fluid">
 	<div class="span2 text-center">
-		<a style="margin-top:18px;" class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">ALL</a>
+		<a style="margin-top:18px;" class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">All</a>
 		<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=graph&minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">Graph</a>
 	</div>
 	<div class="span10">

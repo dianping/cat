@@ -85,7 +85,7 @@
 				var longServiceTime=$("#p_longService").val();
 				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime+'&reportType='+reportType+customDate+"&serviceThreshold="+longServiceTime;
 			}
-		</script><input style="WIDTH: 60px" value="Refresh"
+		</script><input class="btn btn-primary  btn-small"  value="Refresh"
 			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
 			type="submit">
 		</th>
