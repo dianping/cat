@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.abtest.spi.ABTestEntity;
-import com.dianping.cat.abtest.spi.ABTestEntityManager;
 
 public class DefaultABTestEntityManagerTest extends ComponentTestCase {
 

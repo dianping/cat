@@ -3,7 +3,7 @@ package com.dianping.cat.abtest.internal;
 import com.dianping.cat.abtest.ABTest;
 import com.dianping.cat.abtest.ABTestId;
 import com.dianping.cat.abtest.spi.ABTestContext;
-import com.dianping.cat.abtest.spi.ABTestContextManager;
+import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 
 public class DefaultABTest implements ABTest {
 	private ABTestContextManager m_contextManager;

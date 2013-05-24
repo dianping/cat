@@ -13,9 +13,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.abtest.ABTestId;
 import com.dianping.cat.abtest.spi.ABTestContext;
-import com.dianping.cat.abtest.spi.ABTestContextManager;
 import com.dianping.cat.abtest.spi.ABTestEntity;
-import com.dianping.cat.abtest.spi.ABTestEntityManager;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 
 public class DefaultABTestContextManager extends ContainerHolder implements ABTestContextManager {
