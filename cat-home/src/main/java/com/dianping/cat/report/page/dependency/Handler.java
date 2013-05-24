@@ -2,18 +2,16 @@ package com.dianping.cat.report.page.dependency;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.servlet.ServletException;
 
-import org.codehaus.plexus.util.StringUtils;
+import org.hsqldb.lib.StringUtil;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -26,6 +24,8 @@ import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
+import com.dianping.cat.home.dependency.entity.DependencyGraph;
+import com.dianping.cat.home.dependency.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
@@ -46,6 +46,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+
+	@Inject
+	private GraphManager m_graphManager;
 
 	private DependencyReport getReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -77,31 +80,58 @@ public class Handler implements PageHandler<Context> {
 
 		normalize(model, payload);
 
-		DependencyReport report = getReport(payload);
-		String min = payload.getMinute();
-		Set<Integer> keys = report.getSegments().keySet();
-		int minute = 0;
-		
-		List<Integer> minutes = new ArrayList<Integer>(keys);
-		int maxMinute=0;
-		if (minutes.size() > 0) {
-			maxMinute =minutes.get(minutes.size() - 1);
+		Action action = payload.getAction();
+
+		switch (action) {
+		case GRAPH:
+			buildHourlyReport(model, payload);
+			buildHourlyGraph(model, payload);
+			break;
+		case VIEW:
+			buildHourlyReport(model, payload);
+			break;
+
 		}
-		Collections.sort(minutes);
-		if (StringUtils.isEmpty(min)) {
-			if (minutes.size() > 0) {
-				min = String.valueOf(minutes.get(minutes.size() - 1));
-				minute = Integer.parseInt(min);
-				maxMinute = minute;
-			}
+		m_jspViewer.view(ctx, model);
+	}
+
+	private void buildHourlyGraph(Model model, Payload payload) {
+		String domain = payload.getDomain();
+		long time = payload.getDate() + TimeUtil.ONE_MINUTE * computeMinute(payload);
+		DependencyGraph graph = m_graphManager.queryGraph(domain, time);
+		String json = new DefaultJsonBuilder().buildJson(graph);
+
+		model.setGraph(json);
+	}
+
+	private int computeMinute(Payload payload) {
+		int minute = 0;
+		String min = payload.getMinute();
+
+		if (StringUtil.isEmpty(min)) {
+			long current = System.currentTimeMillis() / 1000 / 60;
+			minute = (int) (current % (60));
 		} else {
 			minute = Integer.parseInt(min);
 		}
 
-		Date time = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
+		return minute;
+	}
+
+	private void buildHourlyReport(Model model, Payload payload) {
+		DependencyReport report = getReport(payload);
+		Integer minute = computeMinute(payload);
+
+		int maxMinute = 60;
+		if (payload.getPeriod().isCurrent()) {
+			long current = System.currentTimeMillis() / 1000 / 60;
+			maxMinute = (int) (current % (60));
+		}
+
+		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
 		Segment segment = report.findSegment(minute);
-		
-		minutes = new ArrayList<Integer>();
+
+		List<Integer> minutes = new ArrayList<Integer>();
 		for (int i = 0; i < 60; i++) {
 			minutes.add(i);
 		}
@@ -115,9 +145,7 @@ public class Handler implements PageHandler<Context> {
 		if (payload.isAll()) {
 			model.setSegment(buildAllSegment(report));
 		}
-		model.setEvents(queryDependencyEvent(segment, payload.getDomain(), time));
-
-		m_jspViewer.view(ctx, model);
+		model.setEvents(queryDependencyEvent(segment, payload.getDomain(), reportTime));
 	}
 
 	private Segment buildAllSegment(DependencyReport report) {

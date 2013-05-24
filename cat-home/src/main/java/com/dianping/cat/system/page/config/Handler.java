@@ -35,9 +35,6 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private AggregationRuleDao m_aggregationRuleDao;
 
-	@Inject
-	private DomainNavManager m_domainNavManager;
-
 	@Override
 	@PayloadMeta(Payload.class)
 	@InboundActionMeta(name = "config")
@@ -106,7 +103,6 @@ public class Handler implements PageHandler<Context> {
 		return project;
 	}
 
-	@SuppressWarnings("static-access")
 	private void updateProject(Payload payload) {
 		int projectId = payload.getProjectId();
 		String department = payload.getDepartment();
@@ -126,7 +122,7 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			m_projectDao.updateByPK(project, ProjectEntity.UPDATESET_FULL);
-			m_domainNavManager.getProjects().put(project.getDomain(), project);
+			DomainNavManager.getProjects().put(project.getDomain(), project);
 		} catch (DalException e) {
 			Cat.logError(e);
 		}

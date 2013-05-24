@@ -25,6 +25,8 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private int m_maxMinute;
 
 	private Map<String, List<Event>> m_events;
+	
+	private String m_graph;
 
 	public Map<String, List<Event>> getEvents() {
 		return m_events;
@@ -102,4 +104,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_minute = minute;
 	}
 
+	public String getGraph() {
+   	return m_graph;
+   }
+
+	public void setGraph(String graph) {
+   	m_graph = graph;
+   }
+	
 }

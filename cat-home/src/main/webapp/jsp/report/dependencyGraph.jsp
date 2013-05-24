@@ -15,24 +15,23 @@
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
 <div class="report">
-	<div class="row-fluid">
-	<div class="span2 text-center">
-		<a style="margin-top:18px;" class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">ALL</a>
-		<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=graph&minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">Graph</a>
+  <div class="row-fluid">
+  	<div class="span2  text-center">
+		<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">Data</a>
 	</div>
-	<div class="span10">
+  	<div class="span10">
 		<c:forEach var="item" items="${model.minutes}" varStatus="status">
 		<c:if test="${status.index % 30 ==0}">
 			<div class="pagination">
 			<ul>
 		</c:if>
 			<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
-			href="?domain=${model.domain}&date=${model.date}&minute=${item}">
+			href="?op=graph&domain=${model.domain}&date=${model.date}&minute=${item}">
 				<c:if test="${item < 10}">0${item}</c:if>
 				<c:if test="${item >= 10}">${item}</c:if></a></li>
 			</c:if>
 			<c:if test="${item <= model.maxMinute }"><li id="minute${item}"><a
-			href="?domain=${model.domain}&date=${model.date}&minute=${item}">
+			href="?op=graph&domain=${model.domain}&date=${model.date}&minute=${item}">
 				<c:if test="${item < 10}">0${item}</c:if>
 				<c:if test="${item >= 10}">${item}</c:if></a></li>
 			</c:if>
@@ -41,65 +40,14 @@
 			</div>
 		</c:if>
 	</c:forEach></div>
-	</div>
-	</br>
+  </div>
   <div class="row-fluid">
-  <div class="span6">
-	<table	class="table table-striped table-bordered table-condensed">
-		<tr>
-			<td>Exception</td>
-			<td>${model.segment.exceptionCount}</td>
-		</tr>
-	</table>
-	
-	<table	class="contents table table-striped table-bordered table-condensed">
-		<thead>	<tr>
-			<th>Name</th>
-			<th>Total Count</th>
-			<th>Failure Count</th>
-			<th>Failure%</th>
-			<th>Avg(ms)</th>
-		</tr></thead><tbody>
-		<c:forEach var="item" items="${model.segment.indexs}"
-								varStatus="status">
-			 <c:set var="itemKey" value="${item.key}" />
-			 <c:set var="itemValue" value="${item.value}" />
-			<tr>
-				<td>${itemValue.name}</td>
-				<td>${itemValue.totalCount}</td>
-				<td>${itemValue.errorCount}</td>
-				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
-				<td>${w:format(itemValue.avg,'0.0')}</td>
-			</tr>		
-		</c:forEach></tbody>
-	</table>
-	
-	</br>
-	<table	class="contentsDependency table table-striped table-bordered table-condensed">
-		<thead>	<tr>
-			<th>Type</th>
-			<th>Target</th>
-			<th>Total Count</th>
-			<th>Failure Count</th>
-			<th>Failure%</th>
-			<th>Avg(ms)</th>
-		</tr></thead><tbody>
-		<c:forEach var="item" items="${model.segment.dependencies}"
-								varStatus="status">
-			 <c:set var="itemKey" value="${item.key}" />
-			 <c:set var="itemValue" value="${item.value}" />
-			<tr>
-				<td>${itemValue.type}</td>
-				<td>${itemValue.target}</td>
-				<td>${itemValue.totalCount}</td>
-				<td>${itemValue.errorCount}</td>
-				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
-				<td>${w:format(itemValue.avg,'0.0')}</td>
-			</tr>		
-		</c:forEach></tbody>
-	</table>
-	</div>
-  <div class="span6">
+  	<div class="span12">
+  		${model.graph}
+  	</div>
+  </div>
+  <div class="row-fluid">
+  	<div class="span12">
   			<div class="tabbable"  id="otherDependency">
 				  <ul class="nav nav-tabs">
 				  	<c:forEach  var="item" items="${model.events}"  varStatus="status" >
@@ -150,33 +98,15 @@
 		    </div>
   		</tbody>
   </div>
-</div>
+  </div>
 </div>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
-		$('.contents').dataTable({
-			"sPaginationType": "full_numbers",
-			'iDisplayLength': 50,
-			"bPaginate": false,
-			"bFilter": false,
-		});
-		$('.contentsDependency').dataTable({
-			"sPaginationType": "full_numbers",
-			'iDisplayLength': 50,
-			"bPaginate": false,
-		});
-		$('#otherDependency .nav-tabs a').mouseenter(function (e) {
-		  e.preventDefault();
-		  $(this).tab('show');
-		});	
-		$('i[tips]').popover();
 		$('#tab0').addClass('active');
 		$('#leftTab0').addClass('active');
-		$('.switch').css('display','none');
-		$('.dataTables_info').css('display','none');
 	});
 </script>
 <style>

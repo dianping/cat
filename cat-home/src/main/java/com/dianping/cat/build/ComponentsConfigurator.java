@@ -32,8 +32,13 @@ import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.dependency.DefaultDependencyGraphItemBuilder;
+import com.dianping.cat.report.page.dependency.DependencyGraphBuilder;
+import com.dianping.cat.report.page.dependency.DependendencyGraphItemBuilder;
+import com.dianping.cat.report.page.dependency.GraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.health.HistoryGraphs;
+import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.page.state.StateGraphs;
 import com.dianping.cat.report.service.DailyReportService;
 import com.dianping.cat.report.service.HourlyReportService;
@@ -201,8 +206,15 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(WeeklyReportCache.class, MonthReportCache.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
+		
+		all.add(C(DependendencyGraphItemBuilder.class,DefaultDependencyGraphItemBuilder.class));
+		
+		all.add(C(DependencyGraphBuilder.class).req(DependendencyGraphItemBuilder.class));
+		
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
+
+		all.add(C(GraphManager.class).req(DependencyGraphBuilder.class).req(ModelService.class, "dependency"));
 
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //

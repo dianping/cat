@@ -586,6 +586,19 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.dependency.DependendencyGraphItemBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.DefaultDependencyGraphItemBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.DependencyGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.DependencyGraphBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.DependendencyGraphItemBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
@@ -1168,6 +1181,19 @@
 						<role-hint>logview-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.GraphManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.GraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.DependencyGraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>dependency</role-hint>
 				</requirement>
 			</requirements>
 		</component>
@@ -2518,6 +2544,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.GraphManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2549,6 +2578,24 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.GraphManager</role>
+			<implementation>com.dianping.cat.report.page.dependency.GraphManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>dependency</role-hint>
+					<field-name>m_service</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.DependencyGraphBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.DependencyGraphBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.DependencyGraphBuilder</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.externalError.Handler</role>
@@ -2803,9 +2850,6 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.view.DomainNavManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2832,18 +2876,6 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.view.DomainNavManager</role>
-			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

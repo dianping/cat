@@ -1,7 +1,9 @@
 package com.dianping.cat.report.page.dependency;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view");
+	VIEW("view"),
+	
+	GRAPH("graph");
 
 	private String m_name;
 

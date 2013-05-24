@@ -3,6 +3,8 @@ package com.dianping.cat.report.page.dependency;
 public enum JspFile {
 	VIEW("/jsp/report/dependency.jsp"),
 
+	GRAPH("/jsp/report/dependencyGraph.jsp"),
+
 	;
 
 	private String m_path;
