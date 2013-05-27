@@ -16,7 +16,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.LineChartItem;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.service.ReportService;
 import com.google.gson.Gson;
@@ -138,7 +138,7 @@ public class Handler implements PageHandler<Context> {
 			Date graphEndDate = payload.getHistoryEndDate();
 			String key = payload.getKey();
 
-			LineChartItem item = m_graphs.buildHistoryGraph(model.getDomain(), graphStartDate, graphEndDate,
+			LineChart item = m_graphs.buildHistoryGraph(model.getDomain(), graphStartDate, graphEndDate,
 			      payload.getReportType(), key);
 			Gson gson = new Gson();
 			model.setHistoryGraph(gson.toJson(item));

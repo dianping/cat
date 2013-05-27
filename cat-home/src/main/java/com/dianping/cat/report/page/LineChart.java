@@ -8,7 +8,7 @@ import java.util.List;
 
 import com.google.gson.Gson;
 
-public class LineChartItem {
+public class LineChart {
 
 	private transient SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 
@@ -26,15 +26,15 @@ public class LineChartItem {
 
 	private double[] ylable;
 
-	public LineChartItem() {
+	public LineChart() {
 	}
 	
-	public LineChartItem addSubTitle(String title) {
+	public LineChart addSubTitle(String title) {
 		this.subTitles.add(title);
 		return this;
 	}
 
-	public LineChartItem addValue(double[] value) {
+	public LineChart addValue(double[] value) {
 		this.values.add(value);
 		return this;
 	}
@@ -68,32 +68,32 @@ public class LineChartItem {
 		return this.ylable;
 	}
 
-	public LineChartItem setSize(int size) {
+	public LineChart setSize(int size) {
 		this.size = size;
 		return this;
 	}
 
-	public LineChartItem setStart(Date start) {
+	public LineChart setStart(Date start) {
 		this.start = sdf.format(start);
 		return this;
 	}
 
-	public LineChartItem setSubTitles(List<String> subTitles) {
+	public LineChart setSubTitles(List<String> subTitles) {
 		this.subTitles = subTitles;
 		return this;
 	}
 
-	public LineChartItem setTitles(String titles) {
+	public LineChart setTitles(String titles) {
 		this.titles = titles;
 		return this;
 	}
 
-	public LineChartItem setValues(List<double[]> values) {
+	public LineChart setValues(List<double[]> values) {
 		this.values = values;
 		return this;
 	}
 
-	public LineChartItem setYlable(double[] ylable) {
+	public LineChart setYlable(double[] ylable) {
 		if (ylable == null) {
 			this.ylable = new double[0];
 		} else {

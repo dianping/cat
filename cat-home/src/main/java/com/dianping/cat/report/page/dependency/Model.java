@@ -21,20 +21,40 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private int m_minute;
 
 	private List<Integer> m_minutes;
-	
+
 	private int m_maxMinute;
 
 	private Map<String, List<Event>> m_events;
-	
+
 	private String m_graph;
+
+	private List<String> m_indexGraph;
+
+	private Map<String, List<String>> m_dependencyGraph;
+
+	public List<String> getIndexGraph() {
+		return m_indexGraph;
+	}
+
+	public void setIndexGraph(List<String> indexGraph) {
+		m_indexGraph = indexGraph;
+	}
+
+	public Map<String, List<String>> getDependencyGraph() {
+		return m_dependencyGraph;
+	}
+
+	public void setDependencyGraph(Map<String, List<String>> dependencyGraph) {
+		m_dependencyGraph = dependencyGraph;
+	}
 
 	public Map<String, List<Event>> getEvents() {
 		return m_events;
 	}
 
 	public void setEvents(Map<String, List<Event>> events) {
-   	m_events = events;
-   }
+		m_events = events;
+	}
 
 	public List<Integer> getMinutes() {
 		return m_minutes;
@@ -59,12 +79,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public int getMaxMinute() {
-   	return m_maxMinute;
-   }
+		return m_maxMinute;
+	}
 
 	public void setMaxMinute(int maxMinute) {
-   	m_maxMinute = maxMinute;
-   }
+		m_maxMinute = maxMinute;
+	}
 
 	@Override
 	public Collection<String> getDomains() {
@@ -105,11 +125,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	}
 
 	public String getGraph() {
-   	return m_graph;
-   }
+		return m_graph;
+	}
 
 	public void setGraph(String graph) {
-   	m_graph = graph;
-   }
-	
+		m_graph = graph;
+	}
+
 }

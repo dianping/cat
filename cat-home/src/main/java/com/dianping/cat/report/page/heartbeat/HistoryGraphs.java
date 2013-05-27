@@ -16,7 +16,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
-import com.dianping.cat.report.page.LineChartItem;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
 import com.google.gson.Gson;
 
@@ -71,8 +71,8 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	private ArrayList<LineChartItem> getDiskInfo(Map<String, double[]> graphData, Date start, int size) {
-		ArrayList<LineChartItem> diskInfo = new ArrayList<LineChartItem>();
+	private ArrayList<LineChart> getDiskInfo(Map<String, double[]> graphData, Date start, int size) {
+		ArrayList<LineChart> diskInfo = new ArrayList<LineChart>();
 
 		Iterator<Entry<String, double[]>> iterator = graphData.entrySet().iterator();
 		while (iterator.hasNext()) {
@@ -84,15 +84,15 @@ public class HistoryGraphs {
 					data[i] = data[i] / (K * K * K);
 				}
 				String title = name + "[GB]";
-				LineChartItem disk = getGraphItem(title, name, start, size, graphData);
+				LineChart disk = getGraphItem(title, name, start, size, graphData);
 				diskInfo.add(disk);
 			}
 		}
 		return diskInfo;
 	}
 
-	private LineChartItem getGraphItem(String title, String key, Date start, int size, Map<String, double[]> graphData) {
-		LineChartItem item = new LineChartItem();
+	private LineChart getGraphItem(String title, String key, Date start, int size, Map<String, double[]> graphData) {
+		LineChart item = new LineChart();
 		item.setStart(start);
 		item.setSize(size);
 		item.setTitles(title);
@@ -239,7 +239,7 @@ public class HistoryGraphs {
 			model.setNoneHeapUsageGraph(getGraphItem("None Heap Usage (MB) ", "NoneHeapUsage", start, size, graphData)
 			      .getJsonString());
 		} else if (queryType.equalsIgnoreCase("disk")) {
-			List<LineChartItem> diskInfo = getDiskInfo(graphData, start, size);
+			List<LineChart> diskInfo = getDiskInfo(graphData, start, size);
 		
 			model.setDisks(diskInfo.size());
 			model.setDiskHistoryGraph(new Gson().toJson(diskInfo));

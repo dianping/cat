@@ -18,7 +18,7 @@ import com.dianping.cat.home.dal.report.DailygraphEntity;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
-import com.dianping.cat.report.page.LineChartItem;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
 
@@ -45,8 +45,8 @@ public class HistoryGraphs {
 		}
 	}
 
-	private LineChartItem buildAvg(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
-		LineChartItem item = new LineChartItem();
+	private LineChart buildAvg(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+		LineChart item = new LineChart();
 
 		item.setStart(start);
 		item.setSize(size);
@@ -67,8 +67,8 @@ public class HistoryGraphs {
 		return item;
 	}
 
-	private LineChartItem buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
-		LineChartItem item = new LineChartItem();
+	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+		LineChart item = new LineChart();
 
 		item.setStart(start);
 		item.setSize(size);
@@ -181,8 +181,8 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	private LineChartItem buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
-		LineChartItem item = new LineChartItem();
+	private LineChart buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+		LineChart item = new LineChart();
 
 		item.setStart(start);
 		item.setSize(size);
@@ -233,7 +233,7 @@ public class HistoryGraphs {
 		} else {
 			throw new RuntimeException("Error graph query type");
 		}
-		LineChartItem item = buildAvg(allDatas, start, size, step, display);
+		LineChart item = buildAvg(allDatas, start, size, step, display);
 		model.setResponseTrend(item.getJsonString());
 
 		item = buildTotal(allDatas, start, size, step, display);

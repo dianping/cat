@@ -3,6 +3,7 @@ package com.dianping.cat.report.page.dependency;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.home.dependency.entity.DependencyGraph;
 import com.dianping.cat.home.dependency.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
@@ -82,20 +84,54 @@ public class Handler implements PageHandler<Context> {
 
 		Action action = payload.getAction();
 
+		DependencyReport report = getReport(payload);
 		switch (action) {
 		case GRAPH:
-			buildHourlyReport(model, payload);
-			buildHourlyGraph(model, payload);
+			buildHourlyReport(report, model, payload);
+			buildHourlyTopologyGraph(model, payload);
 			break;
 		case VIEW:
-			buildHourlyReport(model, payload);
+			buildHourlyReport(report, model, payload);
+			buildHourlyLineGraph(report, model);
 			break;
 
 		}
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void buildHourlyGraph(Model model, Payload payload) {
+	private void buildHourlyLineGraph(DependencyReport report, Model model) {
+		LineGraphBuilder builder = new LineGraphBuilder();
+
+		builder.visitDependencyReport(report);
+
+		List<LineChart> index = builder.queryIndex();
+		Map<String, List<LineChart>> dependencys = builder.queryDependencyGraph();
+
+		model.setIndexGraph(buildGraphList(index));
+		model.setDependencyGraph(buildGraphMap(dependencys));
+	}
+
+	private Map<String, List<String>> buildGraphMap(Map<String, List<LineChart>> charts) {
+		Map<String, List<String>> result = new HashMap<String, List<String>>();
+
+		for (Entry<String, List<LineChart>> temp : charts.entrySet()) {
+			result.put(temp.getKey(), buildGraphList(temp.getValue()));
+		}
+		return result;
+	}
+
+	private List<String> buildGraphList(List<LineChart> charts) {
+		List<String> result = new ArrayList<String>();
+
+		for (LineChart temp : charts) {
+			result.add(temp.getJsonString());
+			
+			System.out.println(temp.getJsonString());
+		}
+		return result;
+	}
+
+	private void buildHourlyTopologyGraph(Model model, Payload payload) {
 		String domain = payload.getDomain();
 		long time = payload.getDate() + TimeUtil.ONE_MINUTE * computeMinute(payload);
 		DependencyGraph graph = m_graphManager.queryGraph(domain, time);
@@ -118,27 +154,10 @@ public class Handler implements PageHandler<Context> {
 		return minute;
 	}
 
-	private void buildHourlyReport(Model model, Payload payload) {
-		DependencyReport report = getReport(payload);
-		Integer minute = computeMinute(payload);
+	private void buildHourlyReport(DependencyReport report, Model model, Payload payload) {
+		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * model.getMinute());
+		Segment segment = report.findSegment(model.getMinute());
 
-		int maxMinute = 60;
-		if (payload.getPeriod().isCurrent()) {
-			long current = System.currentTimeMillis() / 1000 / 60;
-			maxMinute = (int) (current % (60));
-		}
-
-		Date reportTime = new Date(payload.getDate() + TimeUtil.ONE_MINUTE * minute);
-		Segment segment = report.findSegment(minute);
-
-		List<Integer> minutes = new ArrayList<Integer>();
-		for (int i = 0; i < 60; i++) {
-			minutes.add(i);
-		}
-
-		model.setMinute(minute);
-		model.setMaxMinute(maxMinute);
-		model.setMinutes(minutes);
 		model.setReport(report);
 		model.setSegment(segment);
 
@@ -220,12 +239,29 @@ public class Handler implements PageHandler<Context> {
 
 		return results;
 	}
-	
+
 	private void normalize(Model model, Payload payload) {
 		model.setPage(ReportPage.DEPENDENCY);
 		model.setAction(Action.VIEW);
 
 		m_normalizePayload.normalize(model, payload);
+
+		Integer minute = computeMinute(payload);
+		int maxMinute = 60;
+		List<Integer> minutes = new ArrayList<Integer>();
+
+		if (payload.getPeriod().isCurrent()) {
+			long current = System.currentTimeMillis() / 1000 / 60;
+			maxMinute = (int) (current % (60));
+		}
+
+		for (int i = 0; i < 60; i++) {
+			minutes.add(i);
+		}
+
+		model.setMinute(minute);
+		model.setMaxMinute(maxMinute);
+		model.setMinutes(minutes);
 	}
 
 }
