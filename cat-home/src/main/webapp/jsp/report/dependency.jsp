@@ -44,20 +44,11 @@
 			</div>
 		</c:if>
 	</c:forEach></div>
+	<%@ include file="dependencyLineGraph.jsp"%>
 	</div>
 	</br>
   <div class="row-fluid">
   <div class="span6">
-	<table class="table table-striped table-bordered table-condensed">
-		<tr>
-			<td>Exception</td>
-			<td>${model.segment.exceptionCount}</td>
-		</tr>
-		<tr>
-			<td colspan='2'></td>
-		</tr>
-	</table>
-	
 	<table	class="contents table table-striped table-bordered table-condensed">
 		<thead>	<tr>
 			<th>Name</th>
@@ -66,6 +57,8 @@
 			<th>Failure%</th>
 			<th>Avg(ms)</th>
 		</tr></thead><tbody>
+		<tr><td>Exception</td><td>${model.segment.exceptionCount}</td>
+		<td>${model.segment.exceptionCount}</td><td>100%</td><td>0</td></tr>
 		<c:forEach var="item" items="${model.segment.indexs}"
 								varStatus="status">
 			 <c:set var="itemKey" value="${item.key}" />
@@ -158,7 +151,6 @@
   </div>
 </div>
 </div>
-<%@ include file="dependencyLineGraph.jsp"%>
 </jsp:body>
 </a:report>
 <script type="text/javascript">

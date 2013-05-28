@@ -41,14 +41,9 @@
 			</ul>
 			</div>
 		</c:if>
-	</c:forEach></div>
-  </div>
-  <div class="row-fluid">
-  	<div class="span12">
-  		<div id="container" style="width:1000px;height:800px;border:solid 1px #ccc;">
-  	</div>
-  </div>
-  <div class="row-fluid">
+	</c:forEach></div></div>
+  	<div id="container" style="width:1000px;height:800px;border:solid 1px #ccc;">
+  	<div class="row-fluid">
   	<div class="span12">
   			<div class="tabbable"  id="otherDependency">
 				  <ul class="nav nav-tabs">
