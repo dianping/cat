@@ -38,7 +38,7 @@
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
 			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&group=${model.group}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
 			</td>

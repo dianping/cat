@@ -107,7 +107,7 @@ public class LineGraphBuilder extends BaseVisitor {
 		m_types.add(type);
 		findOrCreateItem(type + ':' + TOTAL_COUNT, target).setValue(m_currentMinute, count);
 		findOrCreateItem(type + ':' + ERROR_COUNT, target).setValue(m_currentMinute, error);
-		findOrCreateItem(type + ':' + AVG, target).setValue(m_currentMinute, avg / 1000);
+		findOrCreateItem(type + ':' + AVG, target).setValue(m_currentMinute, avg);
 		super.visitDependency(dependency);
 	}
 
@@ -126,7 +126,7 @@ public class LineGraphBuilder extends BaseVisitor {
 
 		findOrCreateItem(TOTAL_COUNT, id).setValue(m_currentMinute, count);
 		findOrCreateItem(ERROR_COUNT, id).setValue(m_currentMinute, error);
-		findOrCreateItem(AVG, id).setValue(m_currentMinute, avg / 1000);
+		findOrCreateItem(AVG, id).setValue(m_currentMinute, avg);
 		super.visitIndex(index);
 	}
 
