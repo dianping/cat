@@ -135,7 +135,7 @@ public class LineGraphBuilder extends BaseVisitor {
 		long count = segment.getExceptionCount();
 
 		m_currentMinute = segment.getId();
-		Item item = findOrCreateItem("count", "exception");
+		Item item = findOrCreateItem(ERROR_COUNT, "exception");
 
 		item.setValue(m_currentMinute, count);
 		super.visitSegment(segment);

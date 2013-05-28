@@ -25,12 +25,13 @@ public class BaseHistoryGraphs {
 		return result;
 	}
 
-	protected String buildSingalTitle(Date date, int size, long step) {
-		SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private String buildSingalTitle(Date date, int size, long step) {
+		SimpleDateFormat from = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat to = new SimpleDateFormat("MM-dd");
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("From ").append(m_sdf.format(date)).append(" To ")
-		      .append(m_sdf.format(new Date(date.getTime() + step * size)));
+		sb.append(from.format(date)).append("~")
+		      .append(to.format(new Date(date.getTime() + step * size)));
 		return sb.toString();
 	}
 }

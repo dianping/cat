@@ -8,10 +8,6 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dainping.cat.consumer.advanced.dal.BusinessReportDao;
-import com.dainping.cat.consumer.advanced.dal.SqltableDao;
-import com.dainping.cat.consumer.core.dal.HostinfoDao;
-import com.dainping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.CatConsumerAdvancedModule;
 import com.dianping.cat.consumer.DomainManager;
@@ -24,6 +20,10 @@ import com.dianping.cat.consumer.advanced.DependencyAnalyzer;
 import com.dianping.cat.consumer.advanced.MatrixAnalyzer;
 import com.dianping.cat.consumer.advanced.MetricAnalyzer;
 import com.dianping.cat.consumer.advanced.SqlAnalyzer;
+import com.dianping.cat.consumer.advanced.dal.BusinessReportDao;
+import com.dianping.cat.consumer.advanced.dal.SqltableDao;
+import com.dianping.cat.consumer.core.dal.HostinfoDao;
+import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.sql.SqlParseManager;
 import com.dianping.cat.storage.BucketManager;
 

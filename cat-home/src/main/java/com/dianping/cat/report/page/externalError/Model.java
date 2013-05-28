@@ -1,7 +1,8 @@
 package com.dianping.cat.report.page.externalError;
 
-import com.dianping.cat.report.ReportPage;
 import org.unidal.web.mvc.ViewModel;
+
+import com.dianping.cat.report.ReportPage;
 
 public class Model extends ViewModel<ReportPage, Action, Context> {
 	public Model(Context ctx) {

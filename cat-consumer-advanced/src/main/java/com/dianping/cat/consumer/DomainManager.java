@@ -21,11 +21,11 @@ import org.unidal.webres.helper.Files;
 import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
-import com.dainping.cat.consumer.core.dal.Hostinfo;
-import com.dainping.cat.consumer.core.dal.HostinfoDao;
-import com.dainping.cat.consumer.core.dal.HostinfoEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.core.dal.Hostinfo;
+import com.dianping.cat.consumer.core.dal.HostinfoDao;
+import com.dianping.cat.consumer.core.dal.HostinfoEntity;
 
 public class DomainManager implements Initializable, LogEnabled {
 

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.unidal.web.mvc.ViewModel;
 
-import com.dainping.cat.consumer.core.dal.Project;
+import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.system.SystemPage;
 

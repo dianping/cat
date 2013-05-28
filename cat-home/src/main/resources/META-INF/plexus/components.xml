@@ -31,7 +31,7 @@
 			<implementation>com.dianping.cat.report.task.thread.DefaultTaskConsumer</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
+					<role>com.dianping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.task.spi.ReportFacade</role>
@@ -101,7 +101,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -131,7 +131,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -161,7 +161,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -191,7 +191,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -221,7 +221,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -248,7 +248,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -275,7 +275,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -302,7 +302,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -329,7 +329,7 @@
 					<role>com.dianping.cat.home.dal.report.DailygraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -350,10 +350,10 @@
 			<implementation>com.dianping.cat.report.task.thread.TaskProducer</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
+					<role>com.dianping.cat.consumer.core.dal.TaskDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -365,7 +365,7 @@
 					<role>com.dianping.cat.home.dal.report.GraphDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.DailyreportDao</role>
@@ -434,7 +434,7 @@
 					<role>com.dianping.cat.consumer.DomainManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -473,7 +473,10 @@
 			<implementation>com.dianping.cat.report.view.DomainNavManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ProjectDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -482,10 +485,10 @@
 			<implementation>com.dianping.cat.report.service.impl.HourlyReportServiceImpl</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ReportDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ReportDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.advanced.dal.BusinessReportDao</role>
+					<role>com.dianping.cat.consumer.advanced.dal.BusinessReportDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2296,7 +2299,7 @@
 			<implementation>com.dianping.cat.consumer.DomainManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
+					<role>com.dianping.cat.consumer.core.dal.HostinfoDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
@@ -2304,8 +2307,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>
-			<implementation>com.dainping.cat.consumer.core.dal.HostinfoDao</implementation>
+			<role>com.dianping.cat.consumer.core.dal.HostinfoDao</role>
+			<implementation>com.dianping.cat.consumer.core.dal.HostinfoDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -2842,7 +2845,7 @@
 					<role>com.dianping.cat.system.page.config.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
+					<role>com.dianping.cat.consumer.core.dal.ProjectDao</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
@@ -2859,8 +2862,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
-			<implementation>com.dainping.cat.consumer.core.dal.ProjectDao</implementation>
+			<role>com.dianping.cat.consumer.core.dal.ProjectDao</role>
+			<implementation>com.dianping.cat.consumer.core.dal.ProjectDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>

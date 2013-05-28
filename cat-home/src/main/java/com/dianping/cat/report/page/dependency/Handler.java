@@ -62,6 +62,10 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<DependencyReport> response = m_service.invoke(request);
 			DependencyReport report = response.getModel();
 
+			Date start = report.getStartTime();
+			if (start == null) {
+				report.setStartTime(new Date(payload.getDate()));
+			}
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable dependency service registered for " + request + "!");
@@ -125,8 +129,6 @@ public class Handler implements PageHandler<Context> {
 
 		for (LineChart temp : charts) {
 			result.add(temp.getJsonString());
-			
-			System.out.println(temp.getJsonString());
 		}
 		return result;
 	}

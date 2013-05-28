@@ -15,10 +15,10 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dainping.cat.consumer.core.dal.Project;
-import com.dainping.cat.consumer.core.dal.ProjectDao;
-import com.dainping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.Project;
+import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dal.report.AggregationRuleDao;
 import com.dianping.cat.home.dal.report.AggregationRuleEntity;

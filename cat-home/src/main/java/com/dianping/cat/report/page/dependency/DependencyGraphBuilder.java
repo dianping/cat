@@ -28,7 +28,7 @@ public class DependencyGraphBuilder extends BaseVisitor {
 			if (old.getStatus() > old.getStatus()) {
 				old.setStatus(old.getStatus());
 			}
-			old.setWeight(old.getWeight() + node.getWeight());
+			old.setWeight(old.getWeight());
 			old.setDes(old.getDes() + node.getDes());
 			if (!StringUtil.isEmpty(node.getLink())) {
 				old.setLink(node.getLink());
