@@ -64,14 +64,13 @@
 			<th class="right">Sample Link</th>
 						<th class="right">QPS</th>
 					</tr>
-			
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td style="text-align: left"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type"><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${item.type}&ip=${model.ipAddress}"
-							class="graph_link" data-status="${status.index}">[:: show ::]</a>&nbsp;&nbsp;<a
+							class="graph_link" data-status="${status.index}">[:: show ::]</a>&nbsp;&nbsp;&nbsp;<a
 								href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
@@ -108,10 +107,9 @@
 					<td style="text-align: left">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-						<a
-								href="?op=graphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${e.id}"
+						<a	href="?op=graphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${e.id}"
 								class="graph_link" data-status="${status.index}">[:: show ::]</a>
-					</c:when></c:choose> ${e.id}</td>
+					</c:when></c:choose>&nbsp;&nbsp;&nbsp;${e.id}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.00%')}</td>
