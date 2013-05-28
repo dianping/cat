@@ -1,17 +1,24 @@
 package com.dianping.cat.abtest.repository;
 
 import java.net.InetSocketAddress;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.socket.MessageInboundHandler;
 import org.unidal.socket.udp.UdpSocket;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.abtest.model.entity.AbtestModel;
+import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.Run;
+import com.dianping.cat.abtest.model.transform.BaseVisitor;
+import com.dianping.cat.abtest.model.transform.DefaultSaxParser;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.configuration.ClientConfigManager;
 
@@ -26,11 +33,11 @@ public class DefaultABTestEntityRepository implements ABTestEntityRepository, In
 
 	private String m_domain;
 
-	private List<ABTestEntity> m_entities = new ArrayList<ABTestEntity>();
+	private Map<Integer, ABTestEntity> m_entities = new HashMap<Integer, ABTestEntity>();
 
 	@Override
-	public List<ABTestEntity> getEntities(Date from, Date to) {
-		return null;
+	public Map<Integer, ABTestEntity> getAllEntities() {
+		return m_entities;
 	}
 
 	@Override
@@ -42,6 +49,11 @@ public class DefaultABTestEntityRepository implements ABTestEntityRepository, In
 		m_socket.setCodec(new ProtocolMessageCodec());
 		m_socket.onMessage(new ProtocolHandler());
 		m_socket.listenOn(m_address);
+
+		ProtocolMessage hi = new ProtocolMessage();
+		hi.setName(ProtocolNames.HI);
+		hi.addHeader(ProtocolNames.HEARTBEAT, m_domain);
+		m_socket.send(hi);
 	}
 
 	public void setAddress(String address) {
@@ -59,12 +71,45 @@ public class DefaultABTestEntityRepository implements ABTestEntityRepository, In
 		public void handle(ProtocolMessage message) {
 			String name = message.getName();
 
-			if ("hi".equals(name)) {
-			} else if ("heartbeat".equals(name)) {
-				List<ABTestEntity> entities = new ArrayList<ABTestEntity>();
+			if (ProtocolNames.HEARTBEAT.equalsIgnoreCase(name)) {
+				String content = message.getContent();
+				if (StringUtils.isNotBlank(content)) {
+					try {
+						AbtestModel abtest = DefaultSaxParser.parse(content);
+						ABTestVisitor visitor = new ABTestVisitor();
 
-				m_entities = entities;
+						abtest.accept(visitor);
+
+						m_entities = visitor.getEntities();
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
 			}
+		}
+	}
+
+	class ABTestVisitor extends BaseVisitor {
+		private Map<Integer, ABTestEntity> m_entities;
+
+		public ABTestVisitor() {
+			m_entities = new HashMap<Integer, ABTestEntity>();
+		}
+
+		@Override
+		public void visitCase(Case _case) {
+			for (Run run : _case.getRuns()) {
+				// filter abtest-entities by domain
+				if (run.getDomains() != null && run.getDomains().contains(m_domain)) {
+					ABTestEntity abTestEntity = new ABTestEntity(_case, run);
+
+					m_entities.put(abTestEntity.getId(), abTestEntity);
+				}
+			}
+		}
+
+		public Map<Integer, ABTestEntity> getEntities() {
+			return m_entities;
 		}
 	}
 }

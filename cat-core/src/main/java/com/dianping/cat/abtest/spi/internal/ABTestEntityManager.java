@@ -6,6 +6,7 @@ import com.dianping.cat.abtest.ABTestId;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 
 public interface ABTestEntityManager {
+	
 	public ABTestEntity getEntity(ABTestId id);
 
 	public List<ABTestEntity> getEntityList();
