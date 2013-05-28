@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.codehaus.plexus.util.StringUtils;
+
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
@@ -37,6 +39,12 @@ public class ProblemReportVisitor extends BaseVisitor {
 		m_graphItem.setSize(SIZE);
 		m_graphItem.setStep(TimeUtil.ONE_MINUTE);
 		m_graphItem.setStart(start);
+		
+		String subTitle = type;
+		if(StringUtils.isEmpty(state)){
+			subTitle= type+":"+state;
+		}
+		m_graphItem.addSubTitle(subTitle);
 	}
 
 	public LineChart getGraphItem() {

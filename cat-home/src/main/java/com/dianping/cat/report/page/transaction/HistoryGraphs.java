@@ -18,11 +18,12 @@ import com.dianping.cat.home.dal.report.DailygraphEntity;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
+import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.transaction.Handler.DetailOrder;
 import com.dianping.cat.report.page.transaction.Handler.SummaryOrder;
 
-public class HistoryGraphs {
+public class HistoryGraphs extends BaseHistoryGraphs{
 
 	public static final double NOTEXIST = -1;
 
@@ -45,7 +46,8 @@ public class HistoryGraphs {
 		}
 	}
 
-	private LineChart buildAvg(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+	private LineChart buildAvg(List<Map<String, double[]>> datas, Date start, int size, long step, String name,
+	      String queryType) {
 		LineChart item = new LineChart();
 
 		item.setStart(start);
@@ -64,10 +66,13 @@ public class HistoryGraphs {
 			}
 			item.addValue(avg);
 		}
+
+		item.setSubTitles(buildSubTitle(start, size, step, queryType));
 		return item;
 	}
 
-	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, int size, long step, String name,
+	      String queryType) {
 		LineChart item = new LineChart();
 
 		item.setStart(start);
@@ -78,6 +83,7 @@ public class HistoryGraphs {
 		for (Map<String, double[]> data : datas) {
 			item.addValue(data.get("failure_count"));
 		}
+		item.setSubTitles(buildSubTitle(start, size, step, queryType));
 		return item;
 	}
 
@@ -181,7 +187,8 @@ public class HistoryGraphs {
 		return result;
 	}
 
-	private LineChart buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name) {
+	private LineChart buildTotal(List<Map<String, double[]>> datas, Date start, int size, long step, String name,
+	      String queryType) {
 		LineChart item = new LineChart();
 
 		item.setStart(start);
@@ -191,8 +198,11 @@ public class HistoryGraphs {
 
 		for (Map<String, double[]> data : datas) {
 			double[] totalCount = data.get("total_count");
+
 			item.addValue(totalCount);
 		}
+
+		item.setSubTitles(buildSubTitle(start, size, step, queryType));
 		return item;
 	}
 
@@ -233,13 +243,13 @@ public class HistoryGraphs {
 		} else {
 			throw new RuntimeException("Error graph query type");
 		}
-		LineChart item = buildAvg(allDatas, start, size, step, display);
+		LineChart item = buildAvg(allDatas, start, size, step, display, queryType);
 		model.setResponseTrend(item.getJsonString());
 
-		item = buildTotal(allDatas, start, size, step, display);
+		item = buildTotal(allDatas, start, size, step, display, queryType);
 		model.setHitTrend(item.getJsonString());
 
-		item = buildFail(allDatas, start, size, step, display);
+		item = buildFail(allDatas, start, size, step, display, queryType);
 		model.setErrorTrend(item.getJsonString());
 	}
 
@@ -254,12 +264,12 @@ public class HistoryGraphs {
 		for (long startLong = start.getTime(); startLong < end.getTime(); startLong = startLong + TimeUtil.ONE_DAY) {
 			try {
 				Dailygraph graph = m_dailyGraphDao.findSingalByDomainNameIpDuration(new Date(startLong), queryIp, domain,
-						"transaction", DailygraphEntity.READSET_FULL);
+				      "transaction", DailygraphEntity.READSET_FULL);
 				graphs.add(graph);
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
 				e.printStackTrace();
-				//Cat.logError(e);
+				// Cat.logError(e);
 			}
 		}
 		Map<String, double[]> result = buildGraphDatasForDaily(start, end, type, name, graphs);

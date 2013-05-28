@@ -79,16 +79,19 @@ public class LineGraphBuilder extends BaseVisitor {
 
 	private LineChart buildLineChart(String title, Map<String, Item> items) {
 		LineChart result = new LineChart();
+
 		result.setSize(60);
 		result.setStep(TimeUtil.ONE_MINUTE);
 		result.setTitles(title);
 		result.setStart(m_start);
-		for (Entry<String, Item> entry : items.entrySet()) {
-			String subTitle = entry.getKey();
-			Item item = entry.getValue();
+		if (items != null) {
+			for (Entry<String, Item> entry : items.entrySet()) {
+				String subTitle = entry.getKey();
+				Item item = entry.getValue();
 
-			result.addSubTitle(subTitle);
-			result.addValue(item.getValue());
+				result.addSubTitle(subTitle);
+				result.addValue(item.getValue());
+			}
 		}
 		return result;
 	}

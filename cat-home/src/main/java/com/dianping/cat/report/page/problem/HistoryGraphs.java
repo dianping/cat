@@ -18,11 +18,12 @@ import com.dianping.cat.home.dal.report.DailygraphEntity;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
+import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.problem.Handler.DetailOrder;
 import com.dianping.cat.report.page.problem.Handler.SummaryOrder;
 
-public class HistoryGraphs {
+public class HistoryGraphs extends BaseHistoryGraphs{
 
 	private static final String ERROR = "errors";
 
@@ -32,7 +33,7 @@ public class HistoryGraphs {
 	@Inject
 	private DailygraphDao m_dailyGraphDao;
 
-	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, long step, int size) {
+	private LineChart buildFail(List<Map<String, double[]>> datas, Date start, long step, int size,String queryType) {
 		LineChart item = new LineChart();
 
 		item.setStart(start);
@@ -42,6 +43,7 @@ public class HistoryGraphs {
 		for (Map<String, double[]> data : datas) {
 			item.addValue(data.get(ERROR));
 		}
+		item.setSubTitles(buildSubTitle(start, size, step, queryType));
 		return item;
 	}
 
@@ -173,7 +175,7 @@ public class HistoryGraphs {
 		} else {
 			throw new RuntimeException("Error graph query type");
 		}
-		LineChart item = buildFail(allDatas, start, step, size);
+		LineChart item = buildFail(allDatas, start, step, size,queryType);
 		model.setErrorsTrend(item.getJsonString());
 	}
 

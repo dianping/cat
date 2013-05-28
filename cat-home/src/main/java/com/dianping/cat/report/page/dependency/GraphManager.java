@@ -44,11 +44,12 @@ public class GraphManager implements Initializable, LogEnabled {
 		if (graph != null) {
 			Node node = graph.findNode(domain);
 
-			result.setDes(node.getDes());
-			result.setId(node.getId());
-			result.setStatus(node.getStatus());
-			result.setType(node.getType());
-
+			if (node != null) {
+				result.setDes(node.getDes());
+				result.setId(node.getId());
+				result.setStatus(node.getStatus());
+				result.setType(node.getType());
+			}
 			Collection<Edge> edges = graph.getEdges().values();
 
 			for (Edge edge : edges) {
@@ -60,16 +61,20 @@ public class GraphManager implements Initializable, LogEnabled {
 
 					if (other != null) {
 						result.addNode(other);
+					} else {
+						result.addNode(creatNode(target));
 					}
-					edge.setOpposite(true);
+					edge.setOpposite(false);
 					result.addEdge(edge);
 				} else if (target.equals(domain)) {
 					Node other = graph.findNode(self);
 
 					if (other != null) {
 						result.addNode(other);
+					} else {
+						result.addNode(creatNode(target));
 					}
-					edge.setOpposite(false);
+					edge.setOpposite(true);
 					result.addEdge(edge);
 				}
 			}
@@ -77,12 +82,24 @@ public class GraphManager implements Initializable, LogEnabled {
 		return result;
 	}
 
+	private Node creatNode(String domain) {
+		Node node = new Node(domain);
+
+		node.setStatus(DefaultDependencyGraphItemBuilder.OK);
+		node.setType(DefaultDependencyGraphItemBuilder.PROJECT);
+		node.setWeight(1);
+		node.setDes("");
+		node.setLink("");
+
+		return node;
+	}
+
 	private class Reload implements Task {
 
 		@Override
 		public void run() {
 			boolean active = true;
-			
+
 			while (active) {
 				long current = System.currentTimeMillis();
 				Transaction t = Cat.newTransaction("Dependency", "Reload");
@@ -108,7 +125,6 @@ public class GraphManager implements Initializable, LogEnabled {
 								}
 								m_builder.setGraph(graph).setMinute(minute);
 								m_builder.visitDependencyReport(report);
-
 							} else {
 								m_logger.warn(String.format("Can't get dependency report of %s", temp));
 							}
@@ -161,5 +177,5 @@ public class GraphManager implements Initializable, LogEnabled {
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
 	}
-	
+
 }

@@ -27,7 +27,7 @@ $(document).delegate('.graph_link', 'click', function(e){
 					cell.innerHTML = response;
 					
 					var data = $('#trendMeta',cell).text();
-					graph($('#trendGraph',cell)[0],eval('('+data+')'));
+					graphLineChart($('#trendGraph',cell)[0],eval('('+data+')'));
 				}
 			});
 		}

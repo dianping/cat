@@ -4,14 +4,14 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.state.Payload" scope="request" />
 <style type="text/css">
 .graph {
-	width: 450px;
-	height: 200px;
+	width: 800px;
+	height: 300px;
 	margin: 4px auto;
 }
 </style>
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
-<script type="text/javascript" src="/cat/js/flotr2.js"></script>
-<script type="text/javascript" src="/cat/js/trendStateGraph.js"></script>
+<script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
+<script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 
 <table>
 	<tr>
@@ -25,5 +25,5 @@
 </table>
 <script type="text/javascript">
 	var data = ${model.graph};
-	graph(document.getElementById('trendGraph'), data);	
+	graphLineChart(document.getElementById('trendGraph'), data);	
 </script>

@@ -78,13 +78,15 @@ function graphReal(container, data, step) {
 
 // default is five minutes
 function graph(container, data) {
-	var step = data.step;
-	if (step == 0) {
-		//deafult is five minute
-		graphReal(container, data, 5 * 60 * 1000);
-	} else {
-		graphReal(container, data, step);
-	}
+//	var step = data.step;
+//	if (step == 0) {
+//		//deafult is five minute
+//		graphReal(container, data, 5 * 60 * 1000);
+//	} else {
+//		graphReal(container, data, step);
+//	}
+	var _data = lineChartParse(data);
+	new Venus.SvgChart(container, _data, lineChartOptions);
 }
 
 function graphPieChart(container, data) {

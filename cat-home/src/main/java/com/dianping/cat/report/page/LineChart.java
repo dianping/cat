@@ -110,4 +110,14 @@ public class LineChart {
 		this.step = step;
 	}
 	
+	public double[] getValues(int index){
+		int size = values.size();
+		
+		if(index>size){
+			return null;
+		}else{
+			return values.get(index);
+		}
+	}
+	
 }

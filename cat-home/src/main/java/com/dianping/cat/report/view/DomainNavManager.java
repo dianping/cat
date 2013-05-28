@@ -71,6 +71,7 @@ public class DomainNavManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
+		reloadDomainInfo();
 		if (!m_serverConfigManager.isLocalMode()) {
 			try {
 				DomainReload reload = new DomainReload();

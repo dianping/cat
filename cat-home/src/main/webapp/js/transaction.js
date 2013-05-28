@@ -68,15 +68,15 @@ $(document).delegate(
 							cell.innerHTML = response;
 
 							var data = $('#responseTrendMeta', cell).text();
-							graph($('#responseTrend', cell)[0], eval('(' + data
+							graphLineChart($('#responseTrend', cell)[0], eval('(' + data
 									+ ')'));
 
 							data = $('#hitTrendMeta', cell).text();
-							graph($('#hitTrend', cell)[0], eval('(' + data
+							graphLineChart($('#hitTrend', cell)[0], eval('(' + data
 									+ ')'));
 
 							data = $('#errorTrendMeta', cell).text();
-							graph($('#errorTrend', cell)[0], eval('(' + data
+							graphLineChart($('#errorTrend', cell)[0], eval('(' + data
 									+ ')'));
 						}
 					});
@@ -92,45 +92,5 @@ function selectByName(date, domain, ip, type) {
 	var queryname = $("#queryname").val();
 	window.location.href = "?domain=" + domain + "&type=" + type + "&date="
 			+ date + "&queryname=" + queryname + "&ip=" + ip;
-}
-
-function graphPieChart(container, data) {
-	var showData = [];
-
-	for (i = 0; i < data.items.length; i++) {
-		var dataItem = [];
-		var graphItem = {};
-
-		dataItem.push([ i + 1, data.items[i].number ]);
-		graphItem.data = dataItem;
-		graphItem.label = data.items[i].title;
-		showData.push(graphItem);
-	}
-
-	var graph = Flotr.draw(container, showData, {
-		HtmlText : true,
-		grid : {
-			verticalLines : false,
-			horizontalLines : false
-		},
-		xaxis : {
-			showLabels : false
-		},
-		yaxis : {
-			showLabels : false
-		},
-		pie : {
-			show : true,
-			position : 'ne',
-			explode : 6
-		},
-		mouse : {
-			track : true
-		},
-		legend : {
-			position : 'ne',
-			backgroundColor : '#D2E8FF'
-		}
-	});
 }
 

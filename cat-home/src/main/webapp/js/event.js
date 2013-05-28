@@ -64,9 +64,9 @@ $(document).delegate('.history_graph_link', 'click', function(e){
 					cell.innerHTML = response;
 
 					var hitData = $('#hitTrendMeta',cell).text();
-					graph($('#hitTrend',cell)[0],eval('('+hitData+')'));
+					graphLineChart($('#hitTrend',cell)[0],eval('('+hitData+')'));
 					var failureData = $('#failureTrendMeta',cell).text();
-					graph($('#failureTrend',cell)[0],eval('('+failureData+')'));
+					graphLineChart($('#failureTrend',cell)[0],eval('('+failureData+')'));
 				}
 			});
 		}
@@ -76,41 +76,6 @@ $(document).delegate('.history_graph_link', 'click', function(e){
 		cell.parentNode.style.display = 'none';
 	}	
 });
-
-
-function graphPieChart(container,data){
-	 var showData=[];
-	 
-	 for(i = 0; i < data.items.length; i++){
-		 var dataItem = [];
-		 var graphItem ={};
-		
-		 dataItem.push([i+1,data.items[i].number]);
-		 graphItem.data=dataItem;
-		 graphItem.label=data.items[i].title;
-		 showData.push(graphItem);
-	 }
-
-	 var graph = Flotr.draw(container,showData, {
-	    HtmlText : true,
-	    grid : {
-	      verticalLines : false,
-	      horizontalLines : false
-	    },
-	    xaxis : { showLabels : false },
-	    yaxis : { showLabels : false },
-	    pie : {
-	      show : true, 
-	      position : 'ne',
-	      explode : 6
-	    },
-	    mouse : { track : true },
-	    legend : {
-	      position : 'ne',
-	      backgroundColor : '#D2E8FF'
-	    }
-	  });
-}
 
 
 

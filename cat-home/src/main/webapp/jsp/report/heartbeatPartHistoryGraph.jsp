@@ -9,9 +9,8 @@
 
 <link rel="stylesheet" type="text/css" href="/cat/css/graph.css">
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
-<script type="text/javascript" src="/cat/js/flotr2.js"></script>
-<script type="text/javascript" src="/cat/js/baseTools.js"></script>
-<script type="text/javascript" src="/cat/js/trendGraph.js"></script>
+<script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
+<script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <script type="text/javascript" src="/cat/js/heartbeatHistory.js"></script>
 <style type="text/css">
 .graph{
@@ -32,13 +31,13 @@ margin: 4px auto;
 		<script>
 		//01
 		var activeThreadGraphData = ${model.activeThreadGraph};
-		graphOnMinute(document.getElementById('ActiveThread'), activeThreadGraphData);
+		graphLineChart(document.getElementById('ActiveThread'), activeThreadGraphData);
 		//02
 		var startedThreadGraphData = ${model.startedThreadGraph};
-		graphOnMinute(document.getElementById('StartedThread'), startedThreadGraphData);
+		graphLineChart(document.getElementById('StartedThread'), startedThreadGraphData);
 		//03
 		var totalThreadGraphData =${model.totalThreadGraph};
-		graphOnMinute(document.getElementById('TotalStartedThread'), totalThreadGraphData);
+		graphLineChart(document.getElementById('TotalStartedThread'), totalThreadGraphData);
 		
 	</script>
 	</c:when>
@@ -50,13 +49,13 @@ margin: 4px auto;
 			<script>
 			//07
 			var newGcCountGraphData = ${model.newGcCountGraph};
-			graphOnMinute(document.getElementById('NewGcCount'), newGcCountGraphData);
+			graphLineChart(document.getElementById('NewGcCount'), newGcCountGraphData);
 			//08
 			var oldGcCountGraphData = ${model.oldGcCountGraph};
-			graphOnMinute(document.getElementById('OldGcCount'), oldGcCountGraphData);
+			graphLineChart(document.getElementById('OldGcCount'), oldGcCountGraphData);
 			//09
 			var systemLoadAverageGraphData = ${model.systemLoadAverageGraph};
-			graphOnMinute(document.getElementById('SystemLoadAverage'), systemLoadAverageGraphData);
+			graphLineChart(document.getElementById('SystemLoadAverage'), systemLoadAverageGraphData);
 			</script>
 		</tr>
 	</c:when>
@@ -68,13 +67,13 @@ margin: 4px auto;
 			<script>
 			//10
 			var memoryFreeGraphData = ${model.memoryFreeGraph};
-			graphOnMinute(document.getElementById('MemoryFree'), memoryFreeGraphData);
+			graphLineChart(document.getElementById('MemoryFree'), memoryFreeGraphData);
 			//11
 			var heapUsageGraphData = ${model.heapUsageGraph};
-			graphOnMinute(document.getElementById('HeapUsage'), heapUsageGraphData);
+			graphLineChart(document.getElementById('HeapUsage'), heapUsageGraphData);
 			//12
 			var noneHeapUsageGraphData = ${model.noneHeapUsageGraph};
-			graphOnMinute(document.getElementById('NoneHeapUsage'), noneHeapUsageGraphData);
+			graphLineChart(document.getElementById('NoneHeapUsage'), noneHeapUsageGraphData);
 			</script>
 		</tr>
 	</c:when>
@@ -94,13 +93,13 @@ margin: 4px auto;
 			<script>
 			//16
 			var catMessageProducedGraphData = ${model.catMessageProducedGraph};
-			graphOnMinute(document.getElementById('CatMessageProduced'), catMessageProducedGraphData);
+			graphLineChart(document.getElementById('CatMessageProduced'), catMessageProducedGraphData);
 			//17
 			var catMessageOverflowGraphData = ${model.catMessageOverflowGraph};
-			graphOnMinute(document.getElementById('CatMessageOverflow'), catMessageOverflowGraphData);
+			graphLineChart(document.getElementById('CatMessageOverflow'), catMessageOverflowGraphData);
 			//18
 			var catMessageSizeGraphData = ${model.catMessageSizeGraph};
-			graphOnMinute(document.getElementById('CatMessageSize'), catMessageSizeGraphData);
+			graphLineChart(document.getElementById('CatMessageSize'), catMessageSizeGraphData);
 			</script>
 		</tr>
 	</c:when>

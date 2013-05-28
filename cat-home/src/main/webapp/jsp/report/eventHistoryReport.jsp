@@ -11,10 +11,8 @@
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	<res:useCss value="${res.css.local.event_css}" target="head-css" />
-	
-	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['baseTools_js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['trendGraph_js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 </br>
 <table class="machines">
 	<tr style="text-align: left">

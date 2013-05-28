@@ -13,7 +13,7 @@ public class NavigationBar {
 
 		SystemPage.CONFIG,
 		
-		ReportPage.QUERY,
+//		ReportPage.QUERY,
 
 		SystemPage.LOGIN
 

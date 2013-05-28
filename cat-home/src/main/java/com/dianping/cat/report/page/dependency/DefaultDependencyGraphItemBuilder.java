@@ -7,8 +7,8 @@ import com.dianping.cat.home.dependency.entity.Node;
 
 public class DefaultDependencyGraphItemBuilder implements DependendencyGraphItemBuilder {
 
-	private static final String PROJECT = "project";
-	private static final String DATABASE = "database";
+	public static final String PROJECT = "project";
+	public static final String DATABASE = "database";
 
 	public static int OK = 1;
 
@@ -36,7 +36,7 @@ public class DefaultDependencyGraphItemBuilder implements DependendencyGraphItem
 		edge.setKey(dependency.getType() + ':' + domain + ':' + dependency.getTarget());
 		edge.setSelf(domain);
 		edge.setTarget(dependency.getTarget());
-		edge.setOpposite(true);
+		edge.setOpposite(false);
 		edge.setWeight(1);
 		edge.setStatus(OK);
 		edge.setDes("");

@@ -10,14 +10,14 @@
 <a:body>
 
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
-<res:useJs value="${res.js.local['metric.js']}" target="head-js"/>
+<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 <script type="text/javascript">
 	$(document).ready(function() {
 		<c:forEach var="item" items="${model.display.groups}" varStatus="status">
 			var data = ${item.jsonString};
-			graph(document.getElementById('${item.title}'), data);
+			graphLineChart(document.getElementById('${item.title}'), data);
 		</c:forEach>
 		
 /* 		var id = "${model.channel}";
@@ -36,7 +36,7 @@
 	<table class="header">
 		<tr>
 			<td class="title">&nbsp;&nbsp;From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</td>
-		<td class="nav">
+			<td class="nav">
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 				</c:forEach>
@@ -78,7 +78,7 @@
 <style type="text/css">
 .graph {
 	width: 380px;
-	height: 200px;
+	height: 250px;
 	margin: 4px auto;
 }
 .row-fluid .span2{

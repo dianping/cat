@@ -14,9 +14,8 @@
 	
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['baseTools_js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['dependencyTrendGraph_js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 <div class="report">
 	<div class="row-fluid">

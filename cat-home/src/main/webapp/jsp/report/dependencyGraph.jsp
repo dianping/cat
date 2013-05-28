@@ -14,6 +14,8 @@
 	
 	<res:useCss value='${res.css.local.table_css}' target="head-css" />
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 <div class="report">
   <div class="row-fluid">
   	<div class="span2  text-center">
@@ -43,7 +45,7 @@
   </div>
   <div class="row-fluid">
   	<div class="span12">
-  		${model.graph}
+  		<div id="container" style="width:1000px;height:800px;border:solid 1px #ccc;">
   	</div>
   </div>
   <div class="row-fluid">
@@ -107,6 +109,50 @@
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('#tab0').addClass('active');
 		$('#leftTab0').addClass('active');
+		
+		var data = ${model.graph};
+		function parse(data){
+
+			var nodes = data.nodes;
+			var points = [];
+			var sides = [];
+
+			for(var o in nodes){
+				if(nodes.hasOwnProperty(o)){
+					points.push(nodes[o]);
+				}
+			}
+			for(var o in data.edges){
+				if(data.edges.hasOwnProperty(o)){
+					sides.push(data.edges[o]);
+				}
+			}
+			data.points = points;
+			data.sides = sides;
+			delete data.nodes;
+			delete data.edges;
+			return data;
+		}
+
+		new  StarTopo('container',parse(data)
+					,{
+							typeMap:{
+								database:'rect',
+								project:'circle',
+								service:'lozenge'
+							},
+							colorMap:{
+										 "1":'#7cfc00',
+										 "2":'#FFD700',
+										 "3":'#f08080'
+							},
+			radius:300,
+			sideWeight:function(weight){
+				return weight+1
+			},
+			nodeWeight:function(weight){
+				return weight/5+1;
+			}});
 	});
 </script>
 <style>

@@ -16,11 +16,12 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Graph;
 import com.dianping.cat.home.dal.report.GraphDao;
 import com.dianping.cat.home.dal.report.GraphEntity;
+import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.heartbeat.Handler.DetailOrder;
 import com.google.gson.Gson;
 
-public class HistoryGraphs {
+public class HistoryGraphs extends BaseHistoryGraphs{
 
 	public static final int K = 1024;
 
@@ -96,6 +97,8 @@ public class HistoryGraphs {
 		item.setStart(start);
 		item.setSize(size);
 		item.setTitles(title);
+		item.addSubTitle(title);
+		item.setStep(TimeUtil.ONE_MINUTE);
 		double[] activeThread = graphData.get(key);
 		item.addValue(activeThread);
 		return item;

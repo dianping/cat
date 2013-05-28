@@ -166,7 +166,7 @@ public class BussinessConfigManager implements Initializable {
 		config = new BusinessConfig();
 		config.setGroup(TuanGou).setDomain(PayOrder).setType(BusinessConfig.METRIC);
 		config.setViewOrder(6).setMainKey("payment.success").setClassifications("channel").setTarget("amount");
-		config.setTitle(MetricTitle.SUCCESS).setShowCount(true).setShowAvg(false).setShowSum(true);
+		config.setTitle(MetricTitle.SUCCESS).setShowCount(false).setShowAvg(false).setShowSum(true);
 
 		addConfig(config);
 	}

@@ -475,9 +475,6 @@
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.ProjectDao</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.configuration.ServerConfigManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>

@@ -131,13 +131,17 @@ public class MetricDisplay extends BaseVisitor {
 
 		private String start;
 
-		private String title;
+		private transient String title;
+		
+		private List<String> subTitles = new ArrayList<String>();
 
 		private String key;
 
 		private static final int SIZE = 60;
 
-		private double[] values = new double[SIZE];
+		private transient double[] value = new double[SIZE];
+		
+		private List<double[]> values = new ArrayList<double[]>();
 
 		public GraphItem(Date start, String title, String key) {
 			this.start = sdf.format(start);
@@ -145,8 +149,10 @@ public class MetricDisplay extends BaseVisitor {
 			this.key = key;
 
 			for (int i = 0; i < SIZE; i++) {
-				values[i] = -1;
+				value[i] = -1;
 			}
+			values.add(value);
+			subTitles.add(title);
 		}
 
 		public GraphItem addSubTitle(String title) {
@@ -179,7 +185,7 @@ public class MetricDisplay extends BaseVisitor {
 		}
 
 		public double[] getValues() {
-			return values;
+			return value;
 		}
 
 		public GraphItem setSize(int size) {
@@ -201,13 +207,13 @@ public class MetricDisplay extends BaseVisitor {
 			return this;
 		}
 
-		public GraphItem setValue(int minute, double value) {
-			values[minute] = value;
+		public GraphItem setValue(int minute, double temp) {
+			value[minute] = temp;
 			return this;
 		}
 
 		public void setValues(double[] values) {
-			this.values = values;
+			this.value = values;
 		}
 	}
 
