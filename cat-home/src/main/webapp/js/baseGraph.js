@@ -44,7 +44,7 @@ var lineChartOptions = {
             axis:{
                 x:{
                     type:"datetime",
-                    	percent:0.85
+                    	percent:0.8
                 },
                 y:{
                 }
