@@ -36,7 +36,7 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 		<tr>
-			<th><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=type${model.customDate}">Type</a></th>
+			<th  style="text-align: left;"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=type${model.customDate}">Type</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=total${model.customDate}">Total Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failure${model.customDate}">Failure Count</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
@@ -71,7 +71,7 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-		<tr><th colspan='11'>
+		<tr><th  class='left' colspan='12'>
 			<input type="text" id="queryname" size="40"  value="${model.queryName}">
 		    <input  class="btn btn-primary btn-small"  value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
 		    支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
@@ -85,7 +85,7 @@
 			}
 		</script>
 			<tr>
-			<th>
+			<th  style="text-align: left;">
 			<a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=type${model.customDate}&queryname=${model.queryName}">Name</a>
 						</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${model.reportType}&type=${payload.type}&sort=total${model.customDate}&queryname=${model.queryName}">Total Count</a></th>

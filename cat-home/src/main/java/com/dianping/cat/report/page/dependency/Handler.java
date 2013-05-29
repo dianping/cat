@@ -65,6 +65,7 @@ public class Handler implements PageHandler<Context> {
 			Date start = report.getStartTime();
 			if (start == null) {
 				report.setStartTime(new Date(payload.getDate()));
+				report.setStartTime(new Date(payload.getDate()+TimeUtil.ONE_HOUR));
 			}
 			return report;
 		} else {

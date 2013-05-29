@@ -51,7 +51,7 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
+			<th  style="text-align: left;"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
@@ -80,7 +80,7 @@
 		</c:when>
 		<c:otherwise>
 		<tr>
-			<th><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.type}&ip=${model.ipAddress}"
+			<th  style="text-align: left;"><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.type}&ip=${model.ipAddress}"
 							class="graph_link" data-status="-1">[:: show ::]</a>
 			<a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type"> Name</a></th>
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
@@ -127,7 +127,7 @@
 	<c:when test="${not empty payload.type}">
 		<table>
 			<tr>
-				<td><div id="eventGraph" class="graph"></div>
+				<td><div id="eventGraph" class="pieChart"></div>
 				</td>
 			</tr>
 		</table>

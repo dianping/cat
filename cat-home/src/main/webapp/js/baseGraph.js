@@ -41,28 +41,26 @@ function graphPieChart(container, data){
 }
 
 var lineChartOptions = {
-            axis:{
-                x:{
-                    type:"datetime",
-                    	percent:0.8
-                },
-                y:{
-                }
-
-            },
-            line:{
-                smooth:true,
-                dotRadius:4,
-                dotSelect:true,
-                area:false
-            },
-            grid:{
-                enableRow:true,
-                enableColumn:true
-            },
-            legend:{
-            }
-
+    axis:{
+        x:{
+            type:"datetime",
+            	percent:0.8
+        },
+        y:{
+        }
+    },
+    line:{
+        smooth:true,
+        dotRadius:4,
+        dotSelect:true,
+        area:false
+    },
+    grid:{
+        enableRow:true,
+        enableColumn:true
+    },
+    legend:{
+    }
  }
 function graphLineChart(container, data) {
 	var _data = lineChartParse(data);

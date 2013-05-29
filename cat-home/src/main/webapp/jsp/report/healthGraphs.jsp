@@ -4,11 +4,12 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.health.Payload" scope="request" />
 <style type="text/css">
 .graph {
-	width: 450px;
-	height: 200px;
+	width: 700px;
+	height: 300px;
 	margin: 4px auto;
 }
 </style>
+<script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 
@@ -25,11 +26,10 @@
 </table>
 <script type="text/javascript">
 	var data = ${model.historyGraph};
-	var type =${payload.reportType};
-	type = type.trim();
-	if(type=='day'){
+	var type ='${payload.reportType}';
+	if(type.trim()=='day'){
 		graphLineChart(document.getElementById('trendGraph'), data);	
-	}else if{
+	}else{
 		graphLineChart(document.getElementById('trendGraph'), data);	
 	}
 </script>

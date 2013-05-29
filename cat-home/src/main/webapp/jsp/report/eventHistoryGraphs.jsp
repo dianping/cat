@@ -7,6 +7,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.event.Model" scope="request" />
 <script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
+<script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <style type="text/css">
 .graph {
 	width: 550px;
