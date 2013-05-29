@@ -172,11 +172,11 @@ public class Handler implements PageHandler<Context> {
 			      payload.getPeriod());
 			model.setReport(report);
 			if (report != null) {
-				String ip = getIpAddress(report, payload);
+				String displayIp = getIpAddress(report, payload);
 
-				payload.setRealIp(ip);
+				payload.setRealIp(displayIp);
 				// model.setIpAddress(ip);
-				return new DisplayHeartbeat(m_builder).display(report, ip);
+				return new DisplayHeartbeat(m_builder).display(report, displayIp);
 			}
 		} catch (Throwable e) {
 			Cat.logError(e);

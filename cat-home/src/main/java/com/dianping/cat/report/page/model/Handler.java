@@ -300,6 +300,7 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		private String m_ip;
 
 		public HeartBeatReportFilter(String ip) {
+			System.out.println(m_ip);
 			m_ip = ip;
 		}
 
