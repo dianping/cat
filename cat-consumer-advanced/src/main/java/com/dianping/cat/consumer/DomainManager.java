@@ -41,6 +41,8 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private Map<String, String> m_cmdbs = new ConcurrentHashMap<String, String>();
 
+	private Set<String> m_domainsInCat = new HashSet<String>();
+
 	private Logger m_logger;
 
 	private static final String UNKNOWN_IP = "UnknownIp";
@@ -52,6 +54,10 @@ public class DomainManager implements Initializable, LogEnabled {
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
+	}
+
+	public boolean containsDomainInCat(String domain) {
+		return m_domainsInCat.contains(domain);
 	}
 
 	public String getDomainByIp(String ip) {
@@ -74,10 +80,10 @@ public class DomainManager implements Initializable, LogEnabled {
 		if (!m_manager.isLocalMode()) {
 			try {
 				m_ipDomains.put(UNKNOWN_IP, UNKNOWN_PROJECT);
-
 				List<Hostinfo> infos = m_hostInfoDao.findAllIp(HostinfoEntity.READSET_FULL);
 				for (Hostinfo info : infos) {
 					m_ipDomains.put(info.getIp(), info.getDomain());
+					m_domainsInCat.add(info.getDomain());
 				}
 			} catch (DalException e) {
 				Cat.logError(e);
@@ -143,6 +149,7 @@ public class DomainManager implements Initializable, LogEnabled {
 
 					addIps.add(hostinfo.getIp());
 					m_ipDomains.put(hostinfo.getIp(), hostinfo.getDomain());
+					m_domainsInCat.add(hostinfo.getDomain());
 				} catch (Exception e) {
 					// ignore
 				}

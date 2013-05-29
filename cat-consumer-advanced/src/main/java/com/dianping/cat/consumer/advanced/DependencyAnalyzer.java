@@ -27,7 +27,6 @@ import com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.storage.Bucket;
 import com.dianping.cat.storage.BucketManager;
@@ -73,18 +72,25 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	public DependencyReport getReport(String domain) {
-		DependencyReport report = m_reports.get(domain);
+		DependencyReport report = findOrCreateReport(domain);
+
+		report.getDomainNames().addAll(m_reports.keySet());
+		return report;
+	}
+
+	private DependencyReport findOrCreateReport(String domain) {
+	   DependencyReport report = m_reports.get(domain);
 
 		if (report == null) {
 			report = new DependencyReport(domain);
 
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+			
+			m_reports.put(domain, report);
 		}
-
-		report.getDomainNames().addAll(m_reports.keySet());
-		return report;
-	}
+	   return report;
+   }
 
 	@Override
 	protected void loadReports() {
@@ -142,40 +148,31 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return UNKNOWN;
 	}
 
-	private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
-		List<Message> messages = t.getChildren();
-
-		for (Message message : messages) {
-			if (message instanceof Event) {
-				if (message.getType().equals("PigeonService.client")) {
-					String name = message.getName();
-					int index = name.indexOf(":");
-
-					if (index > 0) {
-						name = name.substring(0, index);
-					}
-					return name;
-				}
-			}
-		}
-		MessageId id = MessageId.parse(tree.getMessageId());
-
-		return id.getIpAddress();
-	}
+//	private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
+//		List<Message> messages = t.getChildren();
+//
+//		for (Message message : messages) {
+//			if (message instanceof Event) {
+//				if (message.getType().equals("PigeonService.client")) {
+//					String name = message.getName();
+//					int index = name.indexOf(":");
+//
+//					if (index > 0) {
+//						name = name.substring(0, index);
+//					}
+//					return name;
+//				}
+//			}
+//		}
+//		MessageId id = MessageId.parse(tree.getMessageId());
+//
+//		return id.getIpAddress();
+//	}
 
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
-		DependencyReport report = m_reports.get(domain);
-
-		if (report == null) {
-			report = new DependencyReport(domain);
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-
-			m_reports.put(domain, report);
-		}
-
+		DependencyReport report = findOrCreateReport(domain);
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
@@ -202,17 +199,24 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 		if ("PigeonCall".equals(type) || "Call".equals(type)) {
 			String ip = parseIpFromPigeonClientTransaction(t, tree);
-			String domain = m_domainManager.getDomainByIp(ip);
+			String target = m_domainManager.getDomainByIp(ip);
 			String callType = "PigeonClient";
 
-			updateDependencyInfo(report, t, domain, callType);
-		} else if ("PigeonService".equals(type) || "Service".equals(type)) {
-			String ip = parseIpFromPigeonServerTransaction(t, tree);
-			String domain = m_domainManager.getDomainByIp(ip);
-
-			String callType = "PigeonServer";
-			updateDependencyInfo(report, t, domain, callType);
-		}
+			updateDependencyInfo(report, t, target, callType);
+			
+			if(m_domainManager.containsDomainInCat(target)){
+				DependencyReport serverReport = findOrCreateReport(target);
+				
+				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
+			}
+		} 
+//		else if ("PigeonService".equals(type) || "Service".equals(type)) {
+//			String ip = parseIpFromPigeonServerTransaction(t, tree);
+//			String domain = m_domainManager.getDomainByIp(ip);
+//
+//			String callType = "PigeonServer";
+//			updateDependencyInfo(report, t, domain, callType);
+//		}
 	}
 
 	private void processSqlTransaction(DependencyReport report, Transaction t) {
