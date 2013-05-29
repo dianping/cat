@@ -47,9 +47,6 @@
          <page name="state" title="State" path="state">
             <description>State</description>
          </page>
-         <page name="query" title="Query" path="query">
-            <description>Query</description>
-         </page>
          <page name="top" title="Top" path="top">
             <description>Top</description>
          </page>
