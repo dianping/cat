@@ -11,7 +11,7 @@
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
 <br>
-<table class="matrix">
+<table class='data'>
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>

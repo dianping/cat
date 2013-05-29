@@ -17,7 +17,7 @@
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 </br>
-<table class="databases">
+<table>
 	<tr style="text-align: left">
 		<th>Databases: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.database eq 'All'}">
@@ -44,7 +44,7 @@
 	</tr>
 </table>
 <br>
-<table class="sql">
+<table class='data'>
 			<tr>
 			    <th></th>
 				<th class="left"><a

@@ -43,7 +43,7 @@
 	</tr>
 </table>
 <br>
-<table class="cache">
+<table class="data">
     <c:choose>
 		<c:when test="${empty payload.type}">
 		<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>

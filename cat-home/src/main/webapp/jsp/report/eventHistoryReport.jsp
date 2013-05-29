@@ -31,7 +31,7 @@
 	</tr>
 </table>
 <br>
-<table class="event">
+<table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>

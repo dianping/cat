@@ -11,7 +11,7 @@
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 </br>
-<table class="matrix">
+<table class='data'>
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>

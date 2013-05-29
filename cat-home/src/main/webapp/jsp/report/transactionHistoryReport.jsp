@@ -32,7 +32,7 @@
 	</tr>
 </table>
 <br>
-<table class="transaction">
+<table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
 		<tr>

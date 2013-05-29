@@ -52,7 +52,7 @@
 			</c:forEach></tbody>
 		</table>
 		</br>
-		<table	class="contentsDependency table table-striped table-bordered table-condensed">
+		<table class="contentsDependency table table-striped table-bordered table-condensed">
 			<thead>	<tr>
 				<th>Type</th>
 				<th>Target</th>

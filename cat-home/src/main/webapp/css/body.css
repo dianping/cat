@@ -110,6 +110,36 @@ tr.even th {
 	text-align: left;
 }
 
+.data {
+	font-size: small;
+	min-width:50%;	
+}
+.data tr th{
+	text-align:right;
+}
+.data .odd td {
+	background-color: #eee;
+	font-size: small;
+	text-align:right;
+}
+
+.data .even td {
+	background-color: white;
+	font-size: small;
+	text-align:right;
+}
+.data th .left{
+	text-align:left;
+}
+
+.data tr .left{
+	text-align:left;
+}
+
+.data tr .left{
+	text-align:left;
+}
+
 a.error {
 	background-color: red;
 }

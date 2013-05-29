@@ -37,7 +37,7 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 	</tr>
 </table>
 <br>
-<table class="cache">
+<table class="data">
 	<c:choose>
 		<c:when test="${empty payload.type}">
 		<tr><th  class="left"><a href="?op=history&domain=${model.domain}&reportType=${model.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>

@@ -16,7 +16,7 @@
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 </br>
-<table class="databases">
+<table class='databases'>
 	<tr style="text-align: left">
 		<th>Databases: &nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.database eq 'All'}">
@@ -43,7 +43,7 @@
 	</tr>
 </table>
 <br>
-<table class="sql">
+<table class='data'>
 			<tr>
 			    <th></th>
 				<th class="left"><a

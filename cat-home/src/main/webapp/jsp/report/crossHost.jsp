@@ -41,7 +41,7 @@
 	</tr>
 </table>
 <br>
-<table class='cross'>
+<table class='data'>
 		<c:if test="${!empty model.hostInfo.callProjectsInfo}">
 		<tr>
 			<th class="left">Type</th>

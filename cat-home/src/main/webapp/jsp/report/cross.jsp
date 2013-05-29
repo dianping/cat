@@ -41,7 +41,7 @@
 	</tr>
 </table>
 <br>
-<table class='cross'>
+<table class='data'>
 		<c:if test="${!empty model.projectInfo.callProjectsInfo}">
 		<tr>
 			<th class="left">Type(本项目调用其他Pigeon服务)</th>
