@@ -202,3 +202,16 @@ a.heartbeat {
 .required{
 	color:red;
 }
+
+.graph {
+	width: 450px;
+	height: 200px;
+	margin: 4px auto;
+}
+
+.pieChart {
+	text-align:left;
+	width: 700px;
+	height: 450px;
+	margin: 4px auto;
+}

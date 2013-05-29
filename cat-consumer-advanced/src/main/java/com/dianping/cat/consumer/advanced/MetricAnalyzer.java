@@ -308,6 +308,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 
 						m_businessReportDao.insert(r);
 					} catch (Throwable e) {
+						m_logger.error(report.toString());
 						t.setStatus(e);
 						Cat.getProducer().logError(e);
 					}

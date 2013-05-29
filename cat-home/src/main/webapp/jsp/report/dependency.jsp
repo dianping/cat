@@ -16,143 +16,118 @@
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-
-<div class="report">
+<div class='report'>
 	<div class="row-fluid">
-	<div class="span2 text-center">
-		<a style="margin-top:18px;" class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">All</a>
-		<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=graph&minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">Graph</a>
+		<div class="span2 text-center">
+			<a style="margin-top:18px;" class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">All</a>
+			<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=graph&minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">Graph</a>
+		</div>
+		<%@ include file="dependencyHeader.jsp"%>
 	</div>
-	<div class="span10">
-		<c:forEach var="item" items="${model.minutes}" varStatus="status">
-		<c:if test="${status.index % 30 ==0}">
-			<div class="pagination">
-			<ul>
-		</c:if>
-			<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
-			href="?domain=${model.domain}&date=${model.date}&minute=${item}">
-				<c:if test="${item < 10}">0${item}</c:if>
-				<c:if test="${item >= 10}">${item}</c:if></a></li>
-			</c:if>
-			<c:if test="${item <= model.maxMinute }"><li id="minute${item}"><a
-			href="?domain=${model.domain}&date=${model.date}&minute=${item}">
-				<c:if test="${item < 10}">0${item}</c:if>
-				<c:if test="${item >= 10}">${item}</c:if></a></li>
-			</c:if>
-		<c:if test="${status.index % 30 ==29 || status.last}">
-			</ul>
-			</div>
-		</c:if>
-	</c:forEach></div>
 	<%@ include file="dependencyLineGraph.jsp"%>
-	</div>
 	</br>
   <div class="row-fluid">
-  <div class="span6">
-	<table	class="contents table table-striped table-bordered table-condensed">
-		<thead>	<tr>
-			<th>Name</th>
-			<th>Total Count</th>
-			<th>Failure Count</th>
-			<th>Failure%</th>
-			<th>Avg(ms)</th>
-		</tr></thead><tbody>
-		<tr><td>Exception</td><td>${model.segment.exceptionCount}</td>
-		<td>${model.segment.exceptionCount}</td><td>100%</td><td>0</td></tr>
-		<c:forEach var="item" items="${model.segment.indexs}"
-								varStatus="status">
-			 <c:set var="itemKey" value="${item.key}" />
-			 <c:set var="itemValue" value="${item.value}" />
-			<tr>
-				<td>${itemValue.name}</td>
-				<td>${itemValue.totalCount}</td>
-				<td>${itemValue.errorCount}</td>
-				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
-				<td>${w:format(itemValue.avg,'0.0')}</td>
-			</tr>		
-		</c:forEach></tbody>
-	</table>
-	
-	</br>
-	<table	class="contentsDependency table table-striped table-bordered table-condensed">
-		<thead>	<tr>
-			<th>Type</th>
-			<th>Target</th>
-			<th>Total Count</th>
-			<th>Failure Count</th>
-			<th>Failure%</th>
-			<th>Avg(ms)</th>
-		</tr></thead><tbody>
-		<c:forEach var="item" items="${model.segment.dependencies}"
-								varStatus="status">
-			 <c:set var="itemKey" value="${item.key}" />
-			 <c:set var="itemValue" value="${item.value}" />
-			<tr>
-				<td>${itemValue.type}</td>
-				<td>${itemValue.target}</td>
-				<td>${itemValue.totalCount}</td>
-				<td>${itemValue.errorCount}</td>
-				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
-				<td>${w:format(itemValue.avg,'0.0')}</td>
-			</tr>		
-		</c:forEach></tbody>
-	</table>
-	</div>
-  <div class="span6">
-  			<div class="tabbable"  id="otherDependency">
-				  <ul class="nav nav-tabs">
-				  	<c:forEach  var="item" items="${model.events}"  varStatus="status" >
-						 <li id="leftTab${status.index}" class="text-right"><a href="#tab${status.index}" data-toggle="tab">
-						 ${item.key}
-						 <c:set var="size" value="${w:size(item.value)}"/>
-						 <c:if test="${size > 0 }"><span class='text-error'>(${size})</span></c:if>
-					</a></li>
-				  	</c:forEach>
-				  </ul>
-		  	<div class="tab-content">
-	    		<c:forEach  var="entry" items="${model.events}"  varStatus="status" >
-	    		<c:set var="items" value="${entry.value}"/>
-				    <div class="tab-pane" id="tab${status.index}">	
-						<table	class="table table-striped table-bordered table-condensed">
-				  		<thead>
-				  			<tr><th>时间</th>
-				  				<th>详情</th>
-				  				<th>来源</th>
-				  				<th>项目名</th>
-				  				<th>IP</th>
-				  			</tr>
-				  		</thead>
-				  		<tbody>
-				  			<c:forEach var="item" items="${items}">
-				  				<tr><td>${w:format(item.date,'HH:mm')}</td>
-				  					<td>
-				  						<c:choose>
-				  							<c:when test="${not empty item.link}"><a href="${item.link}" target="_blank">${item.subject}</a></c:when>
-				  							<c:otherwise>${item.subject}</c:otherwise>
-				  						</c:choose>
-				  						<i data-content="${item.content}" data-original-title="详情" data-placement="top" data-toggle="popover" class="icon-tags" data-trigger="hover" tips=""></i>
-				  					</td>
-				  					<td>
-				  					<c:choose>
-				  						<c:when test="${item.type==1}">运维</c:when>
-				  						<c:when test="${item.type==2}">数据库</c:when>
-				  						<c:when test="${item.type==3}">CAT</c:when>
-				  					</c:choose>
-				  					</td>
-				  					<td>${item.domain}</td>
-				  					<td>${item.ip}</td>
-				  				</tr>
-				  			</c:forEach>	
-					</table></div>
-					</c:forEach>
+	  <div class="span6">
+		<table	class="contents table table-striped table-bordered table-condensed">
+			<thead>	<tr>
+				<th>Name</th>
+				<th>Total Count</th>
+				<th>Failure Count</th>
+				<th>Failure%</th>
+				<th>Avg(ms)</th>
+			</tr></thead><tbody>
+			<tr><td>Exception</td><td>${model.segment.exceptionCount}</td>
+			<td>${model.segment.exceptionCount}</td><td>100%</td><td>0</td></tr>
+			<c:forEach var="item" items="${model.segment.indexs}"
+									varStatus="status">
+				 <c:set var="itemKey" value="${item.key}" />
+				 <c:set var="itemValue" value="${item.value}" />
+				<tr>
+					<td>${itemValue.name}</td>
+					<td>${itemValue.totalCount}</td>
+					<td>${itemValue.errorCount}</td>
+					<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
+					<td>${w:format(itemValue.avg,'0.0')}</td>
+				</tr>		
+			</c:forEach></tbody>
+		</table>
+		</br>
+		<table	class="contentsDependency table table-striped table-bordered table-condensed">
+			<thead>	<tr>
+				<th>Type</th>
+				<th>Target</th>
+				<th>Total Count</th>
+				<th>Failure Count</th>
+				<th>Failure%</th>
+				<th>Avg(ms)</th>
+			</tr></thead><tbody>
+			<c:forEach var="item" items="${model.segment.dependencies}"
+									varStatus="status">
+				 <c:set var="itemKey" value="${item.key}" />
+				 <c:set var="itemValue" value="${item.value}" />
+				<tr>
+					<td>${itemValue.type}</td>
+					<td>${itemValue.target}</td>
+					<td>${itemValue.totalCount}</td>
+					<td>${itemValue.errorCount}</td>
+					<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
+					<td>${w:format(itemValue.avg,'0.0')}</td>
+				</tr>		
+			</c:forEach></tbody>
+		</table>
+		</div>
+	  <div class="span6">
+	  			<div class="tabbable"  id="otherDependency">
+					  <ul class="nav nav-tabs">
+					  	<c:forEach  var="item" items="${model.events}"  varStatus="status" >
+							 <li id="leftTab${status.index}" class="text-right"><a href="#tab${status.index}" data-toggle="tab">
+							 ${item.key}
+							 <c:set var="size" value="${w:size(item.value)}"/>
+							 <c:if test="${size > 0 }"><span class='text-error'>(${size})</span></c:if>
+						</a></li>
+					  	</c:forEach>
+					  </ul></div>
+			  	<div class="tab-content">
+		    		<c:forEach  var="entry" items="${model.events}"  varStatus="status" >
+		    		<c:set var="items" value="${entry.value}"/>
+					    <div class="tab-pane" id="tab${status.index}">	
+							<table	class="table table-striped table-bordered table-condensed">
+					  		<thead>
+					  			<tr><th>时间</th>
+					  				<th>详情</th>
+					  				<th>来源</th>
+					  				<th>项目名</th>
+					  				<th>IP</th>
+					  			</tr>
+					  		</thead>
+					  		<tbody>
+					  			<c:forEach var="item" items="${items}">
+					  				<tr><td>${w:format(item.date,'HH:mm')}</td>
+					  					<td>
+					  						<c:choose>
+					  							<c:when test="${not empty item.link}"><a href="${item.link}" target="_blank">${item.subject}</a></c:when>
+					  							<c:otherwise>${item.subject}</c:otherwise>
+					  						</c:choose>
+					  					</td>
+					  					<td>
+					  					<c:choose>
+					  						<c:when test="${item.type==1}">运维</c:when>
+					  						<c:when test="${item.type==2}">数据库</c:when>
+					  						<c:when test="${item.type==3}">CAT</c:when>
+					  					</c:choose>
+					  					</td>
+					  					<td>${item.domain}</td>
+					  					<td>${item.ip}</td>
+					  				</tr>
+					  			</c:forEach>	
+						</table></div>
+						</c:forEach>
+				    </div>
 			    </div>
-		    </div>
-  		</tbody>
-  </div>
-</div>
+	  </div>
 </div>
 </jsp:body>
-</a:report>
+</a:report></div>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
@@ -171,7 +146,6 @@
 		  e.preventDefault();
 		  $(this).tab('show');
 		});	
-		$('i[tips]').popover();
 		$('#tab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		$('.switch').css('display','none');

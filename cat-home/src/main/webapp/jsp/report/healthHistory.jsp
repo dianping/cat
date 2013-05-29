@@ -10,8 +10,6 @@
 <a:historyReport title="Health Report" navUrlPrefix="">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
-	<res:useCss value="${res.css.local.health_css}" target="head-css" />
-	
 	<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
 	<res:useJs value="${res.js.local.trendGraph_js}" target="head-js" />
 <br>

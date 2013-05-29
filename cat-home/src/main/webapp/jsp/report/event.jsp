@@ -4,12 +4,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.event.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.event.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.event.Model"
-	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.event.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.event.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.event.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
 <a:report
@@ -20,8 +17,6 @@
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 	<jsp:body>
-
-<res:useCss value="${res.css.local.event_css}" target="head-css" />
 <res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 

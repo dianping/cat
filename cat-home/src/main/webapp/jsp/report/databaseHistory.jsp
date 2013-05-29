@@ -13,8 +13,6 @@
 <a:body>
 	<res:bean id="res" />
 	<res:useCss value='${res.css.local.body_css}' target="head-css" />
-	<res:useCss value="${res.css.local.database_css}" target="head-css" />
-
 	<div class="report">
 		<table class="header">
 		<tr>

@@ -10,7 +10,6 @@
 <a:historyReport title="History Report" navUrlPrefix="type=${payload.type}&queryname=${model.queryName}">
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useCss value="${res.css.local.transaction_css}" target="head-css" />
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 </br>

@@ -14,12 +14,7 @@
 	navUrlPrefix="database=${model.database}&domain=${model.domain}">
 
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
-	
 	<jsp:body>
-
-	<res:useCss value="${res.css.local.sql_css}" target="head-css" />
-	
-
 </br>
 <table class="databases">
 	<tr style="text-align: left">

@@ -30,11 +30,11 @@ public class BussinessConfigManager implements Initializable {
 		return m_groups;
 	}
 
-	public Map<String,BusinessConfig> getUrlConfigs(String domain) {
+	public Map<String, BusinessConfig> getUrlConfigs(String domain) {
 		return getMetricConfigsByType(domain, BusinessConfig.URL);
 	}
 
-	public Map<String,BusinessConfig> getMetricConfigs(String domain) {
+	public Map<String, BusinessConfig> getMetricConfigs(String domain) {
 		return getMetricConfigsByType(domain, BusinessConfig.METRIC);
 	}
 
@@ -49,11 +49,11 @@ public class BussinessConfigManager implements Initializable {
 		}
 	}
 
-	private Map<String,BusinessConfig> getMetricConfigsByType(String domain, int type) {
+	private Map<String, BusinessConfig> getMetricConfigsByType(String domain, int type) {
 		Map<Integer, Map<String, BusinessConfig>> configMap = m_configs.get(domain);
 
 		if (configMap != null) {
-			Map<String,BusinessConfig> config = configMap.get(type);
+			Map<String, BusinessConfig> config = configMap.get(type);
 
 			if (config != null) {
 				return config;
@@ -327,7 +327,11 @@ public class BussinessConfigManager implements Initializable {
 	}
 
 	public String getGroup(String domain) {
-		return m_domainGroup.get(domain);
-	}
+		String group = m_domainGroup.get(domain);
 
+		if (group == null) {
+			group = "default";
+		}
+		return group;
+	}
 }

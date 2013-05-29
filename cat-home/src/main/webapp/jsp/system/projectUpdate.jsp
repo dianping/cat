@@ -10,7 +10,6 @@
 
 <a:body>
 
-	<res:useCss value='${res.css.local.alarm_css}' target="head-css" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {

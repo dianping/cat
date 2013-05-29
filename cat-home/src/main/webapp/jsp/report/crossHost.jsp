@@ -12,8 +12,6 @@
 
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-
-<res:useCss value="${res.css.local.cross_css}" target="head-css" />
 <%@ include file="crossQuery.jsp" %>
 </br>
 <table class="machines">

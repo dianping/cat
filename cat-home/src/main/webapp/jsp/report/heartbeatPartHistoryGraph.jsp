@@ -7,7 +7,6 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.heartbeat.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
 
-<link rel="stylesheet" type="text/css" href="/cat/css/graph.css">
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>

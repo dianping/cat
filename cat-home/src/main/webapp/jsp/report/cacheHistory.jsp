@@ -17,8 +17,6 @@ navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.
 <jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 <jsp:body>
-
-<res:useCss value="${res.css.local.cache_css}" target="head-css" />
 </br>
 <table class="machines">
 	<tr style="text-align:left">
