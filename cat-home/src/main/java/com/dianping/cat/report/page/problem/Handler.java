@@ -179,7 +179,7 @@ public class Handler implements PageHandler<Context> {
 			String type = payload.getType();
 			String state = payload.getStatus();
 			Date start = report.getStartTime();
-			ProblemReportVisitor vistor = new ProblemReportVisitor(ip, type, state, start);
+			HourlyLineChartVisitor vistor = new HourlyLineChartVisitor(ip, type, state, start);
 
 			vistor.visitProblemReport(report);
 			model.setErrorsTrend(m_gson.toJson(vistor.getGraphItem()));

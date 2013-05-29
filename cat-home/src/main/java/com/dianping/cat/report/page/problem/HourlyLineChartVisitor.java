@@ -17,7 +17,7 @@ import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
 
-public class ProblemReportVisitor extends BaseVisitor {
+public class HourlyLineChartVisitor extends BaseVisitor {
 
 	private String m_ip;
 
@@ -31,7 +31,7 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 	private static final int SIZE = 60;
 
-	public ProblemReportVisitor(String ip, String type, String state, Date start) {
+	public HourlyLineChartVisitor(String ip, String type, String state, Date start) {
 		m_ip = ip;
 		m_type = type;
 		m_state = state;
@@ -39,10 +39,10 @@ public class ProblemReportVisitor extends BaseVisitor {
 		m_graphItem.setSize(SIZE);
 		m_graphItem.setStep(TimeUtil.ONE_MINUTE);
 		m_graphItem.setStart(start);
-		
+
 		String subTitle = type;
-		if(StringUtils.isEmpty(state)){
-			subTitle= type+":"+state;
+		if (!StringUtils.isEmpty(state)) {
+			subTitle = type + ":" + state;
 		}
 		m_graphItem.addSubTitle(subTitle);
 	}
