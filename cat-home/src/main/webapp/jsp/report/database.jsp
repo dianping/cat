@@ -12,7 +12,6 @@
 	type="com.dianping.cat.report.page.database.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-
 <a:body>
 	<res:bean id="res" />
 	<res:useCss value='${res.css.local.body_css}' target="head-css" />

@@ -9,7 +9,6 @@
 
 <a:report title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
-
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <%@ include file="crossQuery.jsp" %>

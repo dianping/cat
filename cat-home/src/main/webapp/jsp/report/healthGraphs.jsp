@@ -9,10 +9,8 @@
 	margin: 4px auto;
 }
 </style>
-<script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
-<script type="text/javascript" src="/cat/js/flotr2.js"></script>
-<script type="text/javascript" src="/cat/js/baseTools.js"></script>
-<script type="text/javascript" src="/cat/js/trendGraph.js"></script>
+<script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
+<script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 
 <table>
 	<tr>
@@ -30,8 +28,8 @@
 	var type =${payload.reportType};
 	type = type.trim();
 	if(type=='day'){
-		graphReal(document.getElementById('trendGraph'), data,60*60*1000);	
+		graphLineChart(document.getElementById('trendGraph'), data);	
 	}else if{
-		graphReal(document.getElementById('trendGraph'), data,60*60*1000*24);	
+		graphLineChart(document.getElementById('trendGraph'), data);	
 	}
 </script>

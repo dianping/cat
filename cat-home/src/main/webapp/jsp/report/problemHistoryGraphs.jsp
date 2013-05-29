@@ -6,7 +6,6 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.problem.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.problem.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.problem.Model" scope="request" />
-<link rel="stylesheet" type="text/css" href="/cat/css/graph.css">
 <script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <style type="text/css">
