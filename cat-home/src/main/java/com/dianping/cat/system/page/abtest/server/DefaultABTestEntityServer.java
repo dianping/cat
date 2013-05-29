@@ -72,13 +72,24 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 
 	private AbtestModel m_abtestModel;
 
+	public DefaultABTestEntityServer() {
+		super();
+		System.out.println("ABTest Server initing.");
+	}
+
 	@Override
 	public void initialize() throws InitializationException {
+		m_logger.info("ABTest Server initing.");
 
 		m_socket = new UdpSocket();
 		m_socket.setName("ABTest");
 		m_socket.setCodec(new ProtocolMessageCodec());
 		m_socket.onMessage(new ProtocolHandler());
+
+		m_logger.info("ABTest Server inited");
+	}
+
+	public void start() {
 		m_socket.listenOn(m_address);
 
 		// 启动RefreshEntityTask任务

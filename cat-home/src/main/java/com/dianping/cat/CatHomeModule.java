@@ -21,14 +21,13 @@ import com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener;
 import com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener;
 import com.dianping.cat.system.event.EventListenerRegistry;
 import com.dianping.cat.system.notify.ScheduledMailTask;
+import com.dianping.cat.system.page.abtest.server.ABTestEntityServer;
 
 public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
 
 	@Override
 	protected void execute(ModuleContext ctx) throws Exception {
-		// warm up IP seeker
-		// IPSeekerManager.initailize(new File(serverConfigManager.getStorageLocalBaseDir()));
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		ctx.lookup(MessageConsumer.class, "realtime");
@@ -42,10 +41,18 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}
 
-		executeAlarmModule(ctx);
+        executeAbtestModule(ctx);
+        executeAlarmModule(ctx);
 	}
 
-	private void executeAlarmModule(ModuleContext ctx) throws Exception {
+	private void executeAbtestModule(ModuleContext ctx) {
+        ABTestEntityServer server = ctx.lookup(ABTestEntityServer.class);
+        
+        server.start();
+        
+    }
+
+    private void executeAlarmModule(ModuleContext ctx) throws Exception {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		EventListenerRegistry registry = ctx.lookup(EventListenerRegistry.class);

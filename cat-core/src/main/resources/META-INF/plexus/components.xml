@@ -316,18 +316,14 @@
 			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestEntityRepository</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityRepository</implementation>
+			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
+			<implementation>com.dianping.cat.abtest.repository.DefaultABTestEntityRepository</implementation>
 			<configuration>
 				<address>228.0.0.3:2283</address>
 			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>org.unidal.socket.udp.UdpSocket</role>
-					<role-hint>abtest</role-hint>
 				</requirement>
 			</requirements>
 		</component>
