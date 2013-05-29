@@ -148,9 +148,6 @@ public class MetricDisplay extends BaseVisitor {
 			this.title = title;
 			this.key = key;
 
-			for (int i = 0; i < SIZE; i++) {
-				value[i] = -1;
-			}
 			values.add(value);
 			subTitles.add(title);
 		}
