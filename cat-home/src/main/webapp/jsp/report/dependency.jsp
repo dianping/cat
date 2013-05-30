@@ -30,7 +30,7 @@
 	  </div></div>
 	  <div class="row-fluid">
 	  	    <div class="span2">
-	  	    	<a style="margin-top:18px;" class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
+	  	    	<a class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
 	  	   		<h4 class="text-success">当前数据:<c:if test="${payload.all}">0~60</c:if>
 	  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
 	  	    </div>
