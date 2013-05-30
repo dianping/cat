@@ -1,0 +1,30 @@
+<web-app>
+	<display-name>Archetype Created Web Application</display-name>
+
+	<listener>
+		<listener-class>com.dianping.cat.servlet.CatListener</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>cat-filter</filter-name>
+		<filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>cat-filter</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>REQUEST</dispatcher>
+		<dispatcher>FORWARD</dispatcher>
+	</filter-mapping>
+
+	<servlet>
+		<servlet-name>ABTestSampleServlet</servlet-name>
+		<servlet-class>com.dianping.abtest.sample.ABTestSampleServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>ABTestSampleServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+
+</web-app>

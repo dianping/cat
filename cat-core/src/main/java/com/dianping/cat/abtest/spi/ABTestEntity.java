@@ -100,33 +100,50 @@ public class ABTestEntity {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((m_groupStrategy == null) ? 0 : m_groupStrategy.hashCode());
-		result = prime * result + ((m_groupStrategyName == null) ? 0 : m_groupStrategyName.hashCode());
-		result = prime * result + m_id;
-		result = prime * result + ((m_run == null) ? 0 : m_run.hashCode());
-		return result;
-	}
+   public int hashCode() {
+	   final int prime = 31;
+	   int result = 1;
+	   result = prime * result + ((m_groupStrategyName == null) ? 0 : m_groupStrategyName.hashCode());
+	   result = prime * result + m_id;
+	   result = prime * result + ((m_name == null) ? 0 : m_name.hashCode());
+	   result = prime * result + ((m_run == null) ? 0 : m_run.hashCode());
+	   return result;
+   }
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ABTestEntity other = (ABTestEntity) obj;
-		if (getId() != other.getId())
-			return false;
-		return true;
-	}
+   public boolean equals(Object obj) {
+	   if (this == obj)
+		   return true;
+	   if (obj == null)
+		   return false;
+	   if (getClass() != obj.getClass())
+		   return false;
+	   ABTestEntity other = (ABTestEntity) obj;
+	   if (m_groupStrategyName == null) {
+		   if (other.m_groupStrategyName != null)
+			   return false;
+	   } else if (!m_groupStrategyName.equals(other.m_groupStrategyName))
+		   return false;
+	   if (m_id != other.m_id)
+		   return false;
+	   if (m_name == null) {
+		   if (other.m_name != null)
+			   return false;
+	   } else if (!m_name.equals(other.m_name))
+		   return false;
+	   if (m_run == null) {
+		   if (other.m_run != null)
+			   return false;
+	   } else if (!m_run.equals(other.m_run))
+		   return false;
+	   return true;
+   }
 
 	@Override
-	public String toString() {
-		return "ABTestEntity [m_id=" + m_id + ", m_groupStrategyName=" + m_groupStrategyName + ", m_run=" + m_run
-		      + ", m_groupStrategy=" + m_groupStrategy + "]";
-	}
+   public String toString() {
+	   return "ABTestEntity [m_id=" + m_id + ", m_name=" + m_name + ", m_groupStrategyName=" + m_groupStrategyName
+	         + ", m_run=" + m_run +"]";
+   }
+
+	
 }
