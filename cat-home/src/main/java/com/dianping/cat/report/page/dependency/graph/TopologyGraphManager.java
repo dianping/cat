@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.dependency;
+package com.dianping.cat.report.page.dependency.graph;
 
 import java.util.Collection;
 import java.util.Map;
@@ -25,13 +25,13 @@ import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
 import com.dianping.cat.report.view.DomainNavManager;
 
-public class GraphManager implements Initializable, LogEnabled {
+public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Inject(type = ModelService.class, value = "dependency")
 	private ModelService<DependencyReport> m_service;
 
 	@Inject
-	private DependencyGraphBuilder m_builder;
+	private TopologyGraphBuilder m_builder;
 
 	private Map<Long, DependencyGraph> m_graphs = new ConcurrentHashMap<Long, DependencyGraph>(1000);
 
@@ -85,8 +85,8 @@ public class GraphManager implements Initializable, LogEnabled {
 	private Node creatNode(String domain) {
 		Node node = new Node(domain);
 
-		node.setStatus(DefaultDependencyGraphItemBuilder.OK);
-		node.setType(DefaultDependencyGraphItemBuilder.PROJECT);
+		node.setStatus(TopologyGraphItemBuilder.OK);
+		node.setType(TopologyGraphItemBuilder.PROJECT);
 		node.setWeight(1);
 		node.setDes("");
 		node.setLink("");

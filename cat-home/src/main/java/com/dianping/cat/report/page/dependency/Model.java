@@ -6,14 +6,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.web.mvc.view.annotation.EntityMeta;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.view.StringSortHelper;
 
+@ModelMeta("dependecy")
 public class Model extends AbstractReportModel<Action, Context> {
-
+	@EntityMeta
 	private DependencyReport m_report;
 
 	private Segment m_segment;
@@ -26,7 +30,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	private Map<String, List<Event>> m_events;
 
-	private String m_graph;
+	private String m_topologyGraph;
 
 	private List<String> m_indexGraph;
 
@@ -124,12 +128,12 @@ public class Model extends AbstractReportModel<Action, Context> {
 		m_minute = minute;
 	}
 
-	public String getGraph() {
-		return m_graph;
-	}
+	public String getTopologyGraph() {
+   	return m_topologyGraph;
+   }
 
-	public void setGraph(String graph) {
-		m_graph = graph;
-	}
+	public void setTopologyGraph(String topologyGraph) {
+   	m_topologyGraph = topologyGraph;
+   }
 
 }

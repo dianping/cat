@@ -1,13 +1,14 @@
-package com.dianping.cat.report.page.dependency;
+package com.dianping.cat.report.page.dependency.graph;
 
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.home.dependency.entity.Edge;
 import com.dianping.cat.home.dependency.entity.Node;
 
-public class DefaultDependencyGraphItemBuilder implements DependendencyGraphItemBuilder {
+public class TopologyGraphItemBuilder {
 
 	public static final String PROJECT = "project";
+
 	public static final String DATABASE = "database";
 
 	public static int OK = 1;
@@ -16,7 +17,6 @@ public class DefaultDependencyGraphItemBuilder implements DependendencyGraphItem
 
 	public static int ERROR = 3;
 
-	@Override
 	public Node buildNode(String domain, Index index) {
 		Node node = new Node(domain);
 
@@ -28,7 +28,6 @@ public class DefaultDependencyGraphItemBuilder implements DependendencyGraphItem
 		return node;
 	}
 
-	@Override
 	public Edge buildEdge(String domain, Dependency dependency) {
 		Edge edge = new Edge();
 
@@ -44,8 +43,7 @@ public class DefaultDependencyGraphItemBuilder implements DependendencyGraphItem
 		return edge;
 	}
 
-	@Override
-   public Node buildDatabaseNode(String database) {
+	public Node buildDatabaseNode(String database) {
 		Node node = new Node(database);
 
 		node.setStatus(OK);
@@ -54,6 +52,6 @@ public class DefaultDependencyGraphItemBuilder implements DependendencyGraphItem
 		node.setDes("");
 		node.setLink("");
 		return node;
-   }
+	}
 
 }

@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.dependency;
+package com.dianping.cat.report.page.dependency.graph;
 
 import java.util.ArrayList;
 import java.util.Date;

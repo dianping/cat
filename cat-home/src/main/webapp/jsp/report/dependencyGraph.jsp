@@ -105,7 +105,7 @@
 		$('#tab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		
-		var data = ${model.graph};
+		var data = ${model.topologyGraph};
 		function parse(data){
 
 			var nodes = data.nodes;

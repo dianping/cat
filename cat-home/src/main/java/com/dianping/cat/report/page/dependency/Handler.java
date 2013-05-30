@@ -30,6 +30,8 @@ import com.dianping.cat.home.dependency.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
+import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -50,7 +52,7 @@ public class Handler implements PageHandler<Context> {
 	private PayloadNormalizer m_normalizePayload;
 
 	@Inject
-	private GraphManager m_graphManager;
+	private TopologyGraphManager m_graphManager;
 
 	private DependencyReport getReport(Payload payload) {
 		String domain = payload.getDomain();
@@ -140,7 +142,7 @@ public class Handler implements PageHandler<Context> {
 		DependencyGraph graph = m_graphManager.queryGraph(domain, time);
 		String json = new DefaultJsonBuilder().buildJson(graph);
 
-		model.setGraph(json);
+		model.setTopologyGraph(json);
 	}
 
 	private int computeMinute(Payload payload) {

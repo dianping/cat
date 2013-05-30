@@ -1,4 +1,4 @@
-package com.dianping.cat.report.page.dependency;
+package com.dianping.cat.report.page.dependency.graph;
 
 import org.hsqldb.lib.StringUtil;
 
@@ -11,7 +11,7 @@ import com.dianping.cat.home.dependency.entity.DependencyGraph;
 import com.dianping.cat.home.dependency.entity.Edge;
 import com.dianping.cat.home.dependency.entity.Node;
 
-public class DependencyGraphBuilder extends BaseVisitor {
+public class TopologyGraphBuilder extends BaseVisitor {
 
 	private String m_domain;
 
@@ -19,7 +19,7 @@ public class DependencyGraphBuilder extends BaseVisitor {
 
 	private int m_minute;
 
-	private DependendencyGraphItemBuilder m_itemBuilder;
+	private TopologyGraphItemBuilder m_itemBuilder;
 
 	private Node mergeNode(Node old, Node node) {
 		if (old == null) {
@@ -53,12 +53,12 @@ public class DependencyGraphBuilder extends BaseVisitor {
 		}
 	}
 
-	public DependencyGraphBuilder setGraph(DependencyGraph graph) {
+	public TopologyGraphBuilder setGraph(DependencyGraph graph) {
 		m_graph = graph;
 		return this;
 	}
 
-	public DependencyGraphBuilder setMinute(int minute) {
+	public TopologyGraphBuilder setMinute(int minute) {
 		m_minute = minute;
 		return this;
 	}
