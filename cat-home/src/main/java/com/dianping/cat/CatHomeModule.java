@@ -41,18 +41,18 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}
 
-        executeAbtestModule(ctx);
-        executeAlarmModule(ctx);
+		executeAbtestModule(ctx);
+		executeAlarmModule(ctx);
 	}
 
 	private void executeAbtestModule(ModuleContext ctx) {
-        ABTestEntityServer server = ctx.lookup(ABTestEntityServer.class);
-        
-        server.start();
-        
-    }
+		ABTestEntityServer server = ctx.lookup(ABTestEntityServer.class);
 
-    private void executeAlarmModule(ModuleContext ctx) throws Exception {
+		server.start();
+
+	}
+
+	private void executeAlarmModule(ModuleContext ctx) throws Exception {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 
 		EventListenerRegistry registry = ctx.lookup(EventListenerRegistry.class);

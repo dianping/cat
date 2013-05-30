@@ -20,6 +20,10 @@ public class ProtocolMessage implements Message {
 	public String getContent() {
 		return m_content;
 	}
+	
+	public void addHeader(String header, String value){
+		m_headers.put(header,value);
+	}
 
 	public Map<String, String> getHeaders() {
 		return m_headers;

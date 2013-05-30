@@ -312,10 +312,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
-			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
 			<implementation>com.dianping.cat.abtest.repository.DefaultABTestEntityRepository</implementation>
 			<configuration>
@@ -324,6 +320,15 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.abtest.spi.internal.ABTestEntityManager</role>
+			<implementation>com.dianping.cat.abtest.spi.internal.DefaultABTestEntityManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
 				</requirement>
 			</requirements>
 		</component>

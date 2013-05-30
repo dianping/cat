@@ -24,6 +24,7 @@ import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.abtest.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.abtest.repository.ProtocolMessage;
 import com.dianping.cat.abtest.repository.ProtocolMessageCodec;
+import com.dianping.cat.abtest.repository.ProtocolNames;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
@@ -50,8 +51,6 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 
 	private static final int MINUTE_PERIOD = 60 * 1000;
 
-	private static final int HALF_MINUTE_PERIOD = 30 * 1000;
-
 	private Logger m_logger;
 
 	@Inject
@@ -70,11 +69,8 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 
 	private Timer m_timer = new Timer();
 
-	private AbtestModel m_abtestModel;
-
 	public DefaultABTestEntityServer() {
 		super();
-		System.out.println("ABTest Server initing.");
 	}
 
 	@Override
@@ -89,13 +85,11 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 		m_logger.info("ABTest Server inited");
 	}
 
+	@Override
 	public void start() {
 		m_socket.listenOn(m_address);
 
-		// 启动RefreshEntityTask任务
-		RefreshEntityTask refreshEntityTask = new RefreshEntityTask();
-		m_timer.schedule(refreshEntityTask, 0, HALF_MINUTE_PERIOD);
-
+		// TODO 参考 com.dianping.cat.status.StatusUpdateTask 使用Thread代替TimerTask
 		// 启动heartbeatTask任务
 		HeartbeatTask heartbeatTask = new HeartbeatTask();
 		m_timer.schedule(heartbeatTask, 0, MINUTE_PERIOD);
@@ -111,40 +105,36 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 		m_address = new InetSocketAddress(host, port);
 	}
 
-	class RefreshEntityTask extends TimerTask {
+	private AbtestModel fetchAbtestModel() {
+		try {
+			AbtestModel abtestModel = new AbtestModel();
 
-		@Override
-		public void run() {
-			try {
-				AbtestModel abtestModel = new AbtestModel();
+			List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
 
-				List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
+			if (abtestRuns != null) {
+				Date now = new Date();
+				for (AbtestRun abtestRun : abtestRuns) {
+					AbtestStatus status = AbtestStatus.calculateStatus(abtestRun, now);
+					if (status == AbtestStatus.READY || status == AbtestStatus.RUNNING) {
+						// fetch Case and GroupStrategy
+						int caseId = abtestRun.getCaseId();
+						Abtest entity = abtestDao.findByPK(caseId, AbtestEntity.READSET_FULL);
+						int gid = entity.getGroupStrategy();
+						GroupStrategy groupStrategy = groupStrategyDao.findByPK(gid, GroupStrategyEntity.READSET_FULL);
 
-				if (abtestRuns != null) {
-					Date now = new Date();
-					for (AbtestRun abtestRun : abtestRuns) {
-						AbtestStatus status = AbtestStatus.calculateStatus(abtestRun, now);
-						if (status == AbtestStatus.READY || status == AbtestStatus.RUNNING) {
-							// fetch Case and GroupStrategy
-							int caseId = abtestRun.getCaseId();
-							Abtest entity = abtestDao.findByPK(caseId, AbtestEntity.READSET_FULL);
-							int gid = entity.getGroupStrategy();
-							GroupStrategy groupStrategy = groupStrategyDao.findByPK(gid, GroupStrategyEntity.READSET_FULL);
+						Case _case = transform(abtestRun, entity, groupStrategy);
+						abtestModel.addCase(_case);
 
-							Case _case = transform(abtestRun, entity, groupStrategy);
-							abtestModel.addCase(_case);
-
-						}
 					}
 				}
-
-				m_abtestModel = abtestModel;
-
-			} catch (DalException e) {
-				m_logger.error("Error when find all AbtestRun", e);
-				Cat.logError(e);
 			}
+
+			return abtestModel;
+		} catch (DalException e) {
+			m_logger.error("Error when find all AbtestRun", e);
+			Cat.logError(e);
 		}
+		return null;
 	}
 
 	private Case transform(AbtestRun abtestRun, Abtest entity, GroupStrategy groupStrategy) throws DalException {
@@ -160,6 +150,9 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 		}
 
 		Run run = new Run(abtestRun.getId());
+		for (String domain : StringUtils.split(abtestRun.getDomains(), ',')) {
+			run.addDomain(domain);
+		}
 		run.setCreator(abtestRun.getCreator());
 		run.setDisabled(false);
 		run.setEndDate(abtestRun.getEndDate());
@@ -174,7 +167,7 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 	class HeartbeatTask extends TimerTask {
 		@Override
 		public void run() {
-			sendHeartbeatMessage();
+			sendHeartbeat();
 		}
 	}
 
@@ -183,8 +176,12 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 		public void handle(ProtocolMessage message) {
 			String name = message.getName();
 
-			if (ProtocolMessage.HELLO_NAME.equals(name)) {
-				sendHeartbeatMessage();
+			if (m_logger.isDebugEnabled()) {
+				m_logger.debug("Receive Message:" + message);
+			}
+
+			if (ProtocolNames.HI.equals(name)) {
+				sendHeartbeat();
 			}
 		}
 	}
@@ -194,12 +191,20 @@ public class DefaultABTestEntityServer implements ABTestEntityServer, Initializa
 		m_logger = logger;
 	}
 
-	public void sendHeartbeatMessage() {
-		ProtocolMessage message = new ProtocolMessage();
-		message.setName(ProtocolMessage.HEARTBEAT_NAME);
-		String content = new DefaultXmlBuilder().buildXml(m_abtestModel);
-		message.setContent(content);
+	@Override
+	public void sendHeartbeat() {
+		AbtestModel abtestModel = fetchAbtestModel();
 
-		m_socket.send(message);
+		if (abtestModel != null) {
+			ProtocolMessage message = new ProtocolMessage();
+			message.setName(ProtocolNames.HEARTBEAT);
+			String content = new DefaultXmlBuilder().buildXml(abtestModel);
+			message.setContent(content);
+			m_socket.send(message);
+			m_logger.info("send heartbeat:" + message);
+		} else {
+			m_logger.info("send heartbeat: no abtest, so nothing to send.");
+		}
+
 	}
 }
