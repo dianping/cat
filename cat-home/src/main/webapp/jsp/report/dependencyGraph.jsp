@@ -17,86 +17,22 @@
 	<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 <div class="report">
+  <div class='text-center'>
+	  <a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">切换到实时趋势图</a>
+  </div>
   <div class="row-fluid">
-  	<div class="span2  text-center">
-		<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">Data</a>
-	</div>
-  	<div class="span10">
-		<c:forEach var="item" items="${model.minutes}" varStatus="status">
-		<c:if test="${status.index % 30 ==0}">
-			<div class="pagination">
-			<ul>
-		</c:if>
-			<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
-			href="?op=graph&domain=${model.domain}&date=${model.date}&minute=${item}">
-				<c:if test="${item < 10}">0${item}</c:if>
-				<c:if test="${item >= 10}">${item}</c:if></a></li>
-			</c:if>
-			<c:if test="${item <= model.maxMinute }"><li id="minute${item}"><a
-			href="?op=graph&domain=${model.domain}&date=${model.date}&minute=${item}">
-				<c:if test="${item < 10}">0${item}</c:if>
-				<c:if test="${item >= 10}">${item}</c:if></a></li>
-			</c:if>
-		<c:if test="${status.index % 30 ==29 || status.last}">
-			</ul>
-			</div>
-		</c:if>
-	</c:forEach></div></div>
-  	<div id="container" style="width:1000px;height:800px;border:solid 1px #ccc;">
-  	<div class="row-fluid">
+  	<div class="span12  text-center">
+  		<%@ include file="dependencyHeader.jsp"%>
+  	</div>
+  </div>
+  <div class="text-center">
+	<div class="text-center" id="container" style="margin-left:200px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
+  </div>
+  <div class="row-fluid">
   	<div class="span12">
-  			<div class="tabbable"  id="otherDependency">
-				  <ul class="nav nav-tabs">
-				  	<c:forEach  var="item" items="${model.events}"  varStatus="status" >
-						 <li id="leftTab${status.index}" class="text-right"><a href="#tab${status.index}" data-toggle="tab">
-						 ${item.key}
-						 <c:set var="size" value="${w:size(item.value)}"/>
-						 <c:if test="${size > 0 }"><span class='text-error'>(${size})</span></c:if>
-					</a></li>
-				  	</c:forEach>
-				  </ul>
-		  	<div class="tab-content">
-	    		<c:forEach  var="entry" items="${model.events}"  varStatus="status" >
-	    		<c:set var="items" value="${entry.value}"/>
-				    <div class="tab-pane" id="tab${status.index}">	
-						<table	class="table table-striped table-bordered table-condensed">
-				  		<thead>
-				  			<tr><th>时间</th>
-				  				<th>详情</th>
-				  				<th>来源</th>
-				  				<th>项目名</th>
-				  				<th>IP</th>
-				  			</tr>
-				  		</thead>
-				  		<tbody>
-				  			<c:forEach var="item" items="${items}">
-				  				<tr><td>${w:format(item.date,'HH:mm')}</td>
-				  					<td>
-				  						<c:choose>
-				  							<c:when test="${not empty item.link}"><a href="${item.link}" target="_blank">${item.subject}</a></c:when>
-				  							<c:otherwise>${item.subject}</c:otherwise>
-				  						</c:choose>
-				  						<i data-content="${item.content}" data-original-title="详情" data-placement="top" data-toggle="popover" class="icon-tags" data-trigger="hover" tips=""></i>
-				  					</td>
-				  					<td>
-				  					<c:choose>
-				  						<c:when test="${item.type==1}">运维</c:when>
-				  						<c:when test="${item.type==2}">数据库</c:when>
-				  						<c:when test="${item.type==3}">CAT</c:when>
-				  					</c:choose>
-				  					</td>
-				  					<td>${item.domain}</td>
-				  					<td>${item.ip}</td>
-				  				</tr>
-				  			</c:forEach>	
-					</table></div>
-					</c:forEach>
-			    </div>
-		    </div>
-  		</tbody>
+  		<%@ include file="dependencyEvent.jsp"%>
+  	</div>
   </div>
-  </div>
-</div>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
