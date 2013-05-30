@@ -42,7 +42,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Inject
 	private DomainManager m_domainManager;
-	
+
 	@Inject
 	private DatabaseParser m_parser;
 
@@ -79,18 +79,18 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private DependencyReport findOrCreateReport(String domain) {
-	   DependencyReport report = m_reports.get(domain);
+		DependencyReport report = m_reports.get(domain);
 
 		if (report == null) {
 			report = new DependencyReport(domain);
 
 			report.setStartTime(new Date(m_startTime));
 			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
-			
+
 			m_reports.put(domain, report);
 		}
-	   return report;
-   }
+		return report;
+	}
 
 	@Override
 	protected void loadReports() {
@@ -148,26 +148,26 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		return UNKNOWN;
 	}
 
-//	private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
-//		List<Message> messages = t.getChildren();
-//
-//		for (Message message : messages) {
-//			if (message instanceof Event) {
-//				if (message.getType().equals("PigeonService.client")) {
-//					String name = message.getName();
-//					int index = name.indexOf(":");
-//
-//					if (index > 0) {
-//						name = name.substring(0, index);
-//					}
-//					return name;
-//				}
-//			}
-//		}
-//		MessageId id = MessageId.parse(tree.getMessageId());
-//
-//		return id.getIpAddress();
-//	}
+	// private String parseIpFromPigeonServerTransaction(Transaction t, MessageTree tree) {
+	// List<Message> messages = t.getChildren();
+	//
+	// for (Message message : messages) {
+	// if (message instanceof Event) {
+	// if (message.getType().equals("PigeonService.client")) {
+	// String name = message.getName();
+	// int index = name.indexOf(":");
+	//
+	// if (index > 0) {
+	// name = name.substring(0, index);
+	// }
+	// return name;
+	// }
+	// }
+	// }
+	// MessageId id = MessageId.parse(tree.getMessageId());
+	//
+	// return id.getIpAddress();
+	// }
 
 	@Override
 	public void process(MessageTree tree) {
@@ -203,20 +203,20 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			String callType = "PigeonClient";
 
 			updateDependencyInfo(report, t, target, callType);
-			
-			if(m_domainManager.containsDomainInCat(target)){
+
+			if (m_domainManager.containsDomainInCat(target)) {
 				DependencyReport serverReport = findOrCreateReport(target);
-				
+
 				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
 			}
-		} 
-//		else if ("PigeonService".equals(type) || "Service".equals(type)) {
-//			String ip = parseIpFromPigeonServerTransaction(t, tree);
-//			String domain = m_domainManager.getDomainByIp(ip);
-//
-//			String callType = "PigeonServer";
-//			updateDependencyInfo(report, t, domain, callType);
-//		}
+		}
+		// else if ("PigeonService".equals(type) || "Service".equals(type)) {
+		// String ip = parseIpFromPigeonServerTransaction(t, tree);
+		// String domain = m_domainManager.getDomainByIp(ip);
+		//
+		// String callType = "PigeonServer";
+		// updateDependencyInfo(report, t, domain, callType);
+		// }
 	}
 
 	private void processSqlTransaction(DependencyReport report, Transaction t) {
@@ -253,7 +253,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private void processTransactionType(DependencyReport report, Transaction t) {
 		String type = t.getType();
 
-		if (m_types.contains(type) || type.startsWith("Cache.")) {
+		if (m_types.contains(type) || isCache(type)) {
 			long current = t.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			Segment segment = report.findOrCreateSegment(min);
@@ -266,6 +266,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			index.setSum(index.getSum() + t.getDurationInMillis());
 			index.setAvg(index.getSum() / index.getTotalCount());
 		}
+	}
+
+	private boolean isCache(String type) {
+		return (!type.equals("Cache.Web")) && type.startsWith("Cache.");
 	}
 
 	private void storeReports(boolean atEnd) {

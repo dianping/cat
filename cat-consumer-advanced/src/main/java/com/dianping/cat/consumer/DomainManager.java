@@ -51,13 +51,13 @@ public class DomainManager implements Initializable, LogEnabled {
 
 	private static final String CMDB_URL = "http://cmdb.dp/cmdb/device/s?q=%s&fl=app&tidy=true";
 
+	public boolean containsDomainInCat(String domain) {
+		return m_domainsInCat.contains(domain);
+	}
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
-	}
-
-	public boolean containsDomainInCat(String domain) {
-		return m_domainsInCat.contains(domain);
 	}
 
 	public String getDomainByIp(String ip) {
