@@ -22,12 +22,13 @@ class ABTestComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ABTestContextManager.class, DefaultABTestContextManager.class) //
 		      .req(ABTestEntityManager.class));
 
-		all.add(C(ABTestEntityManager.class, DefaultABTestEntityManager.class));
-
 		all.add(C(ABTestEntityRepository.class, DefaultABTestEntityRepository.class) //
 		      .req(ClientConfigManager.class) //
 		      .config(E("address").value("228.0.0.3:2283")));
 
+		all.add(C(ABTestEntityManager.class, DefaultABTestEntityManager.class) //
+				.req(ABTestEntityRepository.class));
+		
 		return all;
 	}
 }

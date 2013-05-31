@@ -1,0 +1,10 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.abtest.spi.ABTestGroupStrategy</role>
+			<role-hint>ip-distribution</role-hint>
+			<implementation>com.dianping.abtest.sample.IPDistributionStrategy</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
+		</component>
+	</components>
+</plexus>

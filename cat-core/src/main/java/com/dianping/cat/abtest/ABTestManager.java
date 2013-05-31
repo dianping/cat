@@ -2,9 +2,11 @@ package com.dianping.cat.abtest;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.plexus.PlexusContainer;
 import org.unidal.lookup.ContainerLoader;
 
 import com.dianping.cat.abtest.internal.DefaultABTest;
+import com.dianping.cat.abtest.repository.ABTestEntityRepository;
 import com.dianping.cat.abtest.spi.internal.ABTestContextManager;
 
 public final class ABTestManager {
@@ -22,7 +24,13 @@ public final class ABTestManager {
 				if (s_contextManager == null) {
 					try {
 						// it could be time-consuming due to load entities from the repository, i.e. database.
-						s_contextManager = ContainerLoader.getDefaultContainer().lookup(ABTestContextManager.class);
+						PlexusContainer container = ContainerLoader.getDefaultContainer();
+						
+						s_contextManager = container.lookup(ABTestContextManager.class);
+						
+						ABTestEntityRepository repository = container.lookup(ABTestEntityRepository.class);
+						
+						repository.start();
 					} catch (Exception e) {
 						throw new RuntimeException("Error when initializing ABTestContextManager!", e);
 					}

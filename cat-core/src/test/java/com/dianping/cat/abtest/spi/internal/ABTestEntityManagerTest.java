@@ -10,7 +10,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.abtest.spi.ABTestEntity;
 
-public class DefaultABTestEntityManagerTest extends ComponentTestCase {
+public class ABTestEntityManagerTest extends ComponentTestCase {
 
 	private static final String PATTERN = "yyyy-MM-dd hh:mm:ss";
 

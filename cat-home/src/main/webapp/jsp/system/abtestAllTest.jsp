@@ -158,11 +158,14 @@
 				<thead>
 					<tr class="centerth">
 						<th width="1%"></th>
-						<th width="6%">ID</th>
-						<th>Name</th>
-						<th>PV</th>
-						<th>ConversionRate</th>
+						<th style="display: none;" width="8%">Case's ID</th>
+						<th width="8%">Case's ID</th>
+                        <th>Name</th>
+                        <th>Domain</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
 						<th>Status</th>
+                        <th>Creator</th>
 						<th>Created On</th>
 					</tr>
 				</thead>
@@ -170,10 +173,12 @@
 					<c:forEach var="item" items="${model.reports}">
 						<tr class="middle center rowlink">
 							<td class="nolink" style="padding-bottom: 8px"><input type="checkbox"/></td>
-							<td><a href="abtest?op=report&id=${item.run.id}">${item.run.id}</a></td>
+					        <td style="display: none;"><a href="abtest?op=report&id=${item.run.id}">${item.run.id}</a></td>		
+                            <td><span class="badge badge-success"><a href="abtest?op=report&id=${item.run.id}">${item.run.caseId}</a></span></td>
 							<td>${item.entity.name}</td>
-							<td>1000</td>
-							<td>10%</td>
+                            <td>${item.run.domains}</td>
+                            <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.startDate}" /></td>
+                            <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.endDate}" /></td>
 							<td>
 								<c:choose>
 									<c:when test="${item.status.status eq 'created'}">
@@ -203,7 +208,8 @@
 									</c:when>
 								</c:choose> 
 							</td>
-							<td>Apr 1, 2013</td>
+                            <td>${item.run.creator}</td>
+                            <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.startDate}" /></td>
 						</tr>
 					</c:forEach>
 				</tbody>

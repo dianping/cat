@@ -35,6 +35,7 @@ import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.abtest.Model.AbtestDaoModel;
+import com.dianping.cat.system.page.abtest.server.ABTestEntityServer;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -58,6 +59,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
 	private GroupStrategyDao m_groupStrategyDao;
+
+	@Inject
+	private ABTestEntityServer abTestEntityServer;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -94,16 +98,22 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 		AbtestRun run = new AbtestRun();
 
+		run.setCreator(payload.getOwner());
 		run.setStartDate(payload.getStartDate());
 		run.setEndDate(payload.getEndDate());
 		run.setDomains(StringUtils.join(payload.getDomains(), ','));
 		run.setStrategyConfiguration(payload.getStrategyConfig());
 		run.setDisabled(false);
+		Date now = new Date();
+		run.setCreationDate(now);
+		run.setModifiedDate(now);
 		try {
 			m_abtestDao.insert(abtest);
 
 			run.setCaseId(abtest.getId());
 			m_abtestRunDao.insert(run);
+
+			abTestEntityServer.sendHeartbeat();
 		} catch (DalException e) {
 			m_logger.error("Error when saving abtest", e);
 			Cat.logError(e);
@@ -117,12 +127,18 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			run.setId(payload.getId());
 			run.setKeyId(payload.getId());
+			run.setCreator(payload.getOwner());
 			run.setStartDate(payload.getStartDate());
 			run.setEndDate(payload.getEndDate());
 			run.setDomains(StringUtils.join(payload.getDomains(), ','));
 			run.setStrategyConfiguration(payload.getStrategyConfig());
+			Date now = new Date();
+			run.setModifiedDate(now);
+
 			// only update run info, do not update abtest meta-info
 			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
+
+			abTestEntityServer.sendHeartbeat();
 		} catch (DalException e) {
 			m_logger.error("Error when updating abtest", e);
 			Cat.logError(e);
@@ -156,6 +172,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 							error.addArgument(id, "Abtest " + id + " has been already active!");
 						}
 					}
+
+					abTestEntityServer.sendHeartbeat();
 				} catch (NumberFormatException e) {
 					// do nothing
 					Cat.logError(e);
