@@ -246,7 +246,7 @@ CREATE TABLE `project` (
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目基本信息';
 
 CREATE TABLE `abtest` (
-  `id` int(11) NOT NULL COMMENT 'ID',
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `name` varchar(45) NOT NULL COMMENT '名字',
   `owner` varchar(45) NOT NULL COMMENT 'case的Owner',
   `group_strategy` int(11) DEFAULT NULL COMMENT '分组策略ID',
@@ -255,7 +255,7 @@ CREATE TABLE `abtest` (
   `modified_date` datetime DEFAULT NULL COMMENT '上次修改时间',
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `abtest_run` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID',
@@ -269,7 +269,7 @@ CREATE TABLE `abtest_run` (
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   `modified_date` datetime NOT NULL COMMENT '上次修改时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `group_strategy` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -280,7 +280,7 @@ CREATE TABLE `group_strategy` (
   `status` tinyint(4) NOT NULL COMMENT '是否开/关',
   `description` varchar(45) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 
 
 

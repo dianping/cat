@@ -36,7 +36,7 @@ public class ABTestServer extends JettyServer {
 	@Test
 	public void startWebApp() throws Exception {
 		// open the page in the default browser
-		display("/abtest-sample");
+		display("/abtest-sample/index");
 		waitForAnyKey();
 	}
 }
