@@ -38,7 +38,6 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			ABTestEntity entity = m_entityManager.getEntity(testId);
 
 			ctx = createContext(entity, entry.getHttpServletRequest());
-
 			map.put(id, ctx);
 		}
 

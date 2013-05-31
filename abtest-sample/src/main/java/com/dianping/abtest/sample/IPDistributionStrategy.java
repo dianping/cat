@@ -52,7 +52,7 @@ public class IPDistributionStrategy implements ABTestGroupStrategy {
 		}
 		if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip)) {
 			ip = req.getRemoteAddr();
-			if(ip.equals("127.0.0.1") && ip.startsWith("0:0:0:0:0:0:0:1")){
+			if(ip.equals("127.0.0.1") || ip.startsWith("0:0:0:0:0:0:0:1")){
 				ip = IPUtils.getFirstNoLoopbackIP4Address();
 			}
 		}
