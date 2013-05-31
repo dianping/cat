@@ -43,7 +43,7 @@
 
 	<div class="container" style="margin-top: 50px">
 		<h1 style="font-size: 36px; margin-left: 30px;">
-			Dianping's <em>easy</em> A/B testing tool
+			Dianping's <em style="color:red">easy</em> A/B testing tool
 		</h1>
 		<div
 			style="margin-top: 10px; margin-left: 10px; padding: 0pt; width: 660px; float: left">
@@ -64,7 +64,7 @@
 				</div>
 			</div>
 			<div style="padding-top: 10px;padding-left: 30px; ">
-				<a href="#" class="btn btn-large btn-primary" style="width:300px;height:50px;"><h2 style="font-family: georgia, times;
+				<a href="#" class="btn btn-large btn-success" style="width:300px;height:50px;"><h2 style="font-family: georgia, times;
 	font-size: 24px;
 	font-weight: normal;
 	line-height: 1.2em;">Start  ABTest Now!</h2></a></div>
