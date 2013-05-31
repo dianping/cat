@@ -1,0 +1,12 @@
+<threshold-config>
+	<node-config id="url" default-warning-failure=1 default-error-failure=2 default-warning-response-time='50.0' default-error-response-time='50.0'>
+		<domain id='Cat' warning-failure=1 error-failure=2 warning-response-time='50.0' error-response-time='50.0'></domain>
+		<domain id='Cat' warning-failure=1 error-failure=2 warning-response-time='50.0' error-response-time='50.0'></domain>
+	</node-config>
+	<node-config id="call"></node-config>
+	<node-config id="sql"></node-config>
+	<edge-config key="PigeonCall:UserWeb:UserService" type="PigeonCall" from="UserWeb" to="UserService" warning-failure=1 error-failure=2 warning-response-time='50.0' error-response-time='50.0'></edge-config>
+	<edge-config key="PigeonCall:UserWeb:UserService" type="PigeonCall" from="UserWeb" to="UserService" warning-failure=1 error-failure=2 warning-response-time='50.0' error-response-time='50.0'></edge-config>
+	<edge-config key="sql:UserWeb:Dianping" type="sql" from="UserWeb" to="Dianping" warning-failure=1 error-failure=2 warning-response-time='50.0' error-response-time='50.0'></edge-config>
+</threshold-config>
+

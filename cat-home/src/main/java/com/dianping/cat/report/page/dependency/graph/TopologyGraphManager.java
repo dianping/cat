@@ -33,9 +33,31 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	@Inject
 	private TopologyGraphBuilder m_builder;
 
-	private Map<Long, DependencyGraph> m_graphs = new ConcurrentHashMap<Long, DependencyGraph>(1000);
+	private Map<Long, DependencyGraph> m_graphs = new ConcurrentHashMap<Long, DependencyGraph>(360);
 
 	private Logger m_logger;
+
+	private Node creatNode(String domain) {
+		Node node = new Node(domain);
+
+		node.setStatus(TopologyGraphItemBuilder.OK);
+		node.setType(TopologyGraphItemBuilder.PROJECT);
+		node.setWeight(1);
+		node.setDes("");
+		node.setLink("");
+
+		return node;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		Threads.forGroup("Cat").start(new Reload());
+	}
 
 	public DependencyGraph queryGraph(String domain, long time) {
 		DependencyGraph graph = m_graphs.get(time);
@@ -82,77 +104,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		return result;
 	}
 
-	private Node creatNode(String domain) {
-		Node node = new Node(domain);
-
-		node.setStatus(TopologyGraphItemBuilder.OK);
-		node.setType(TopologyGraphItemBuilder.PROJECT);
-		node.setWeight(1);
-		node.setDes("");
-		node.setLink("");
-
-		return node;
-	}
-
 	private class Reload implements Task {
-
-		@Override
-		public void run() {
-			boolean active = true;
-
-			while (active) {
-				long current = System.currentTimeMillis();
-				Transaction t = Cat.newTransaction("Dependency", "Reload");
-				try {
-					long currentHour = current - current % TimeUtil.ONE_HOUR;
-					long currentMinute = current - current % TimeUtil.ONE_MINUTE;
-					long time = current / 1000 / 60;
-					int minute = (int) (time % (60));
-					String value = String.valueOf(currentHour);
-					Collection<String> domains = getAllDomains();
-
-					for (String temp : domains) {
-						try {
-							ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT).setProperty("date", value);
-							if (m_service.isEligable(request)) {
-								ModelResponse<DependencyReport> response = m_service.invoke(request);
-								DependencyReport report = response.getModel();
-								DependencyGraph graph = m_graphs.get(currentMinute);
-
-								if (graph == null) {
-									graph = new DependencyGraph();
-									m_graphs.put(currentMinute, graph);
-								}
-								m_builder.setGraph(graph).setMinute(minute);
-								m_builder.visitDependencyReport(report);
-							} else {
-								m_logger.warn(String.format("Can't get dependency report of %s", temp));
-							}
-						} catch (Exception e) {
-							Cat.logError(e);
-							t.setStatus(e);
-						}
-					}
-					t.setStatus(Transaction.SUCCESS);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-					t.setStatus(ex);
-				} finally {
-					t.complete();
-				}
-				long duration = System.currentTimeMillis() - current;
-
-				try {
-					int maxDuration = 20 * 1000;
-					if (duration < maxDuration) {
-						Thread.sleep(maxDuration - duration);
-					}
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-
-		}
 
 		private Collection<String> getAllDomains() {
 			return DomainNavManager.getDomains();
@@ -164,18 +116,66 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 
 		@Override
+		public void run() {
+			boolean active = true;
+
+			while (active) {
+				long current = System.currentTimeMillis();
+				Transaction t = Cat.newTransaction("Dependency", "Reload");
+				try {
+					long currentHour = current - current % TimeUtil.ONE_HOUR;
+					long currentMinute = current - current % TimeUtil.ONE_MINUTE;
+					long lastMinute = currentMinute - TimeUtil.ONE_MINUTE;
+					long time = current / 1000 / 60;
+					int minute = (int) (time % (60));
+					String value = String.valueOf(currentHour);
+					Collection<String> domains = getAllDomains();
+					DependencyGraph currentGraph = new DependencyGraph();
+					DependencyGraph lastGraph = new DependencyGraph();
+
+					for (String temp : domains) {
+						try {
+							ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT).setProperty("date", value);
+							if (m_service.isEligable(request)) {
+								ModelResponse<DependencyReport> response = m_service.invoke(request);
+								DependencyReport report = response.getModel();
+
+								m_builder.setCurrentGraph(currentGraph).setLastGraph(lastGraph).setMinute(minute);
+								m_builder.visitDependencyReport(report);
+
+								m_graphs.put(currentMinute, currentGraph);
+								m_graphs.put(lastMinute, lastGraph);
+							} else {
+								m_logger.warn(String.format("Can't get dependency report of %s", temp));
+							}
+						} catch (Exception e) {
+							Cat.logError(e);
+							t.setStatus(e);
+						}
+					}
+					t.setStatus(Transaction.SUCCESS);
+				} catch (Exception ex) {
+					m_logger.error(ex.getMessage(), ex);
+					t.setStatus(ex);
+				} finally {
+					t.complete();
+				}
+				long duration = System.currentTimeMillis() - current;
+
+				try {
+					int maxDuration = 15 * 1000;
+					if (duration < maxDuration) {
+						Thread.sleep(maxDuration - duration);
+					}
+				} catch (InterruptedException e) {
+					active = false;
+				}
+			}
+		}
+
+		@Override
 		public void shutdown() {
 		}
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(new Reload());
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 
 }

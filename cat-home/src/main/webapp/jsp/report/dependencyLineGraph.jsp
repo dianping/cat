@@ -2,7 +2,7 @@
 	
 <div class="row-fluid">
 	<div class='span12'>
-		<h3 class='text-error'>当前小时内项目本身指标趋势图</h3>
+		<h4 class='text-error'>当前小时内项目本身指标趋势图</h4>
 		<table>
 			<tr>
 				<c:forEach var="item" items="${model.indexGraph}" varStatus="status">
@@ -21,7 +21,7 @@
 </div>
 <div class="row-fluid">
 	<div class='span12'>
-		<h3 class='text-error'>当前小时内项目依赖指标趋势图</h3>
+		<h4 class='text-error'>当前小时内项目依赖指标趋势图</h4>
 		<table>
 		<c:forEach var="charts" items="${model.dependencyGraph}" varStatus="type">
 			<th colspan="3"><h4 class='text-center text-warning'>${charts.key}</h4></th>

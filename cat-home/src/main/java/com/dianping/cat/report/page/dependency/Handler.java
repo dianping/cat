@@ -137,8 +137,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildHourlyTopologyGraph(Model model, Payload payload) {
-		String domain = payload.getDomain();
 		long time = payload.getDate() + TimeUtil.ONE_MINUTE * computeMinute(payload);
+		String domain = payload.getDomain();
 		DependencyGraph graph = m_graphManager.queryGraph(domain, time);
 		String json = new DefaultJsonBuilder().buildJson(graph);
 
@@ -259,11 +259,9 @@ public class Handler implements PageHandler<Context> {
 			long current = System.currentTimeMillis() / 1000 / 60;
 			maxMinute = (int) (current % (60));
 		}
-
 		for (int i = 0; i < 60; i++) {
 			minutes.add(i);
 		}
-
 		model.setMinute(minute);
 		model.setMaxMinute(maxMinute);
 		model.setMinutes(minutes);

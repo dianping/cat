@@ -1,11 +1,17 @@
 package com.dianping.cat.report.page.dependency.graph;
 
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.home.dependency.entity.Edge;
 import com.dianping.cat.home.dependency.entity.Node;
 
 public class TopologyGraphItemBuilder {
+
+	private Date m_start;
 
 	public static final String PROJECT = "project";
 
@@ -17,13 +23,17 @@ public class TopologyGraphItemBuilder {
 
 	public static int ERROR = 3;
 
-	public Node buildNode(String domain, Index index) {
-		Node node = new Node(domain);
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
+
+	private DecimalFormat m_df = new DecimalFormat("0.0");
+
+	public Node buildDatabaseNode(String database) {
+		Node node = new Node(database);
 
 		node.setStatus(OK);
-		node.setType(PROJECT);
+		node.setType(DATABASE);
 		node.setWeight(1);
-		node.setDes("");
+		node.setDes(database);
 		node.setLink("");
 		return node;
 	}
@@ -38,20 +48,39 @@ public class TopologyGraphItemBuilder {
 		edge.setOpposite(false);
 		edge.setWeight(1);
 		edge.setStatus(OK);
-		edge.setDes("");
-		edge.setLink("");
+		StringBuilder sb = new StringBuilder(dependency.getType());
+
+		if (dependency.getErrorCount() > 0) {
+			sb.append(" Error:" + dependency.getErrorCount());
+			sb.append(" Avg:" + m_df.format(dependency.getAvg()));
+		}
+		edge.setDes(sb.toString());
+		edge.setLink(buildProblemLink(domain, m_start));
 		return edge;
 	}
 
-	public Node buildDatabaseNode(String database) {
-		Node node = new Node(database);
+	public Node buildNode(String domain, Index index) {
+		Node node = new Node(domain);
 
 		node.setStatus(OK);
-		node.setType(DATABASE);
+		node.setType(PROJECT);
 		node.setWeight(1);
-		node.setDes("");
-		node.setLink("");
+		StringBuilder sb = new StringBuilder();
+
+		if (index.getErrorCount() > 0) {
+			sb.append(" Error:" + index.getErrorCount());
+		}
+		node.setDes(sb.toString());
+		node.setLink(buildProblemLink(domain, m_start));
 		return node;
+	}
+
+	private String buildProblemLink(String domain, Date date) {
+		return "p?domain=" + domain + "&date=" + m_sdf.format(date);
+	}
+
+	public void setDate(Date start) {
+		m_start = start;
 	}
 
 }

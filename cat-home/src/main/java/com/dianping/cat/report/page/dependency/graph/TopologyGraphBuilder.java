@@ -13,27 +13,23 @@ import com.dianping.cat.home.dependency.entity.Node;
 
 public class TopologyGraphBuilder extends BaseVisitor {
 
+	private DependencyGraph m_currentGraph;
+
 	private String m_domain;
 
-	private DependencyGraph m_graph;
-
-	private int m_minute;
+	private boolean m_isCurrent;
 
 	private TopologyGraphItemBuilder m_itemBuilder;
 
-	private Node mergeNode(Node old, Node node) {
-		if (old == null) {
-			return node;
+	private DependencyGraph m_lastGraph;
+
+	private int m_minute;
+
+	private DependencyGraph getGraph() {
+		if (m_isCurrent) {
+			return m_currentGraph;
 		} else {
-			if (old.getStatus() > old.getStatus()) {
-				old.setStatus(old.getStatus());
-			}
-			old.setWeight(old.getWeight());
-			old.setDes(old.getDes() + node.getDes());
-			if (!StringUtil.isEmpty(node.getLink())) {
-				old.setLink(node.getLink());
-			}
-			return old;
+			return m_lastGraph;
 		}
 	}
 
@@ -44,7 +40,9 @@ public class TopologyGraphBuilder extends BaseVisitor {
 			if (old.getStatus() > old.getStatus()) {
 				old.setStatus(old.getStatus());
 			}
-			old.setWeight(old.getWeight() + edge.getWeight());
+			if (edge.getWeight() > old.getWeight()) {
+				old.setWeight(edge.getWeight());
+			}
 			old.setDes(old.getDes() + edge.getDes());
 			if (!StringUtil.isEmpty(edge.getLink())) {
 				old.setLink(edge.getLink());
@@ -53,8 +51,31 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		}
 	}
 
-	public TopologyGraphBuilder setGraph(DependencyGraph graph) {
-		m_graph = graph;
+	private Node mergeNode(Node old, Node node) {
+		if (old == null) {
+			return node;
+		} else {
+			if (old.getStatus() > old.getStatus()) {
+				old.setStatus(old.getStatus());
+			}
+			if (node.getWeight() < old.getWeight()) {
+				old.setWeight(node.getWeight());
+			}
+			old.setDes(old.getDes() + node.getDes());
+			if (!StringUtil.isEmpty(node.getLink())) {
+				old.setLink(node.getLink());
+			}
+			return old;
+		}
+	}
+
+	public TopologyGraphBuilder setCurrentGraph(DependencyGraph graph) {
+		m_currentGraph = graph;
+		return this;
+	}
+
+	public TopologyGraphBuilder setLastGraph(DependencyGraph graph) {
+		m_lastGraph = graph;
 		return this;
 	}
 
@@ -66,18 +87,18 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	@Override
 	public void visitDependency(Dependency dependency) {
 		String type = dependency.getType();
-
-		//pigeonServer is no use
+		// pigeonServer is no use
 		if (!"PigeonServer".equals(type)) {
 			Edge edge = m_itemBuilder.buildEdge(m_domain, dependency);
-			Edge old = m_graph.findEdge(edge.getKey());
+			DependencyGraph graph = getGraph();
+			Edge old = graph.findEdge(edge.getKey());
 
-			m_graph.getEdges().put(edge.getKey(), mergeEdge(old, edge));
+			graph.getEdges().put(edge.getKey(), mergeEdge(old, edge));
 			if ("Database".equals(type)) {
 				String target = dependency.getTarget();
-				Node nodeOld = m_graph.findNode(target);
+				Node nodeOld = graph.findNode(target);
 
-				m_graph.getNodes().put(target, mergeNode(nodeOld, m_itemBuilder.buildDatabaseNode(target)));
+				graph.getNodes().put(target, mergeNode(nodeOld, m_itemBuilder.buildDatabaseNode(target)));
 			}
 		}
 		super.visitDependency(dependency);
@@ -86,15 +107,17 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	@Override
 	public void visitDependencyReport(DependencyReport dependencyReport) {
 		m_domain = dependencyReport.getDomain();
+		m_itemBuilder.setDate(dependencyReport.getStartTime());
 		super.visitDependencyReport(dependencyReport);
 	}
 
 	@Override
 	public void visitIndex(Index index) {
+		DependencyGraph graph = getGraph();
 		Node node = m_itemBuilder.buildNode(m_domain, index);
-		Node old = m_graph.findNode(node.getId());
+		Node old = graph.findNode(node.getId());
 
-		m_graph.getNodes().put(node.getId(), mergeNode(old, node));
+		graph.getNodes().put(node.getId(), mergeNode(old, node));
 		super.visitIndex(index);
 	}
 
@@ -104,6 +127,11 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 		if (id == m_minute) {
 			super.visitSegment(segment);
+			m_isCurrent = true;
+		} else if (id + 1 == m_minute) {
+			super.visitSegment(segment);
+			m_isCurrent = false;
 		}
+
 	}
 }
