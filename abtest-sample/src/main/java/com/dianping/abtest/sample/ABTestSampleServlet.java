@@ -20,18 +20,18 @@ public class ABTestSampleServlet extends HttpServlet {
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if (m_abtest.isGroupA()) {
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index2.jsp");
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index1.jsp");
 			rd.forward(request, response);
 			// Cat.logMetric(...);
 		} else {
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index1.jsp");
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index2.jsp");
 			rd.forward(request, response);
 			// Cat.logMetric(...);
 		}
 	}
 
 	public static enum MyABTestId implements ABTestId {
-		CASE1(2);
+		CASE1(11);
 
 		private int m_id;
 
