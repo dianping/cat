@@ -15,9 +15,9 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.home.dependency.entity.DependencyGraph;
-import com.dianping.cat.home.dependency.entity.Edge;
-import com.dianping.cat.home.dependency.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.Edge;
+import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -31,15 +31,15 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private ModelService<DependencyReport> m_service;
 
 	@Inject
-	private TopologyGraphBuilder m_builder;
+	private TopologyGraphBuilder m_graphBuilder;
 
-	private Map<Long, DependencyGraph> m_graphs = new ConcurrentHashMap<Long, DependencyGraph>(360);
+	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
 
 	private Logger m_logger;
 
-	public DependencyGraph buildGraphByDomainTime(String domain, long time) {
-		DependencyGraph graph = m_graphs.get(time);
-		DependencyGraph result = new DependencyGraph();
+	public TopologyGraph buildGraphByDomainTime(String domain, long time) {
+		TopologyGraph graph = m_topologyGraphs.get(time);
+		TopologyGraph result = new TopologyGraph();
 
 		if (graph != null) {
 			Node node = graph.findNode(domain);
@@ -62,7 +62,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					if (other != null) {
 						result.addNode(other);
 					} else {
-						result.addNode(m_builder.createNode(target));
+						result.addNode(m_graphBuilder.createNode(target));
 					}
 					edge.setOpposite(false);
 					result.addEdge(edge);
@@ -72,7 +72,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					if (other != null) {
 						result.addNode(other);
 					} else {
-						result.addNode(m_builder.createNode(target));
+						result.addNode(m_graphBuilder.createNode(target));
 					}
 					edge.setOpposite(true);
 					result.addEdge(edge);
@@ -96,7 +96,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 		@Override
 		public String getName() {
-			return "DependencyManagerReload";
+			return "TopologyGraphReload";
 		}
 
 		private Collection<String> queryAllDomains() {
@@ -118,8 +118,8 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					int minute = (int) (time % (60));
 					String value = String.valueOf(currentHour);
 					Collection<String> domains = queryAllDomains();
-					DependencyGraph currentGraph = new DependencyGraph();
-					DependencyGraph lastGraph = new DependencyGraph();
+					TopologyGraph currentGraph = new TopologyGraph();
+					TopologyGraph lastGraph = new TopologyGraph();
 
 					for (String temp : domains) {
 						try {
@@ -128,11 +128,11 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 								ModelResponse<DependencyReport> response = m_service.invoke(request);
 								DependencyReport report = response.getModel();
 
-								m_builder.setCurrentGraph(currentGraph).setLastGraph(lastGraph).setMinute(minute);
-								m_builder.visitDependencyReport(report);
+								m_graphBuilder.setCurrentGraph(currentGraph).setLastGraph(lastGraph).setMinute(minute);
+								m_graphBuilder.visitDependencyReport(report);
 
-								m_graphs.put(currentMinute, currentGraph);
-								m_graphs.put(lastMinute, lastGraph);
+								m_topologyGraphs.put(currentMinute, currentGraph);
+								m_topologyGraphs.put(lastMinute, lastGraph);
 							} else {
 								m_logger.warn(String.format("Can't get dependency report of %s", temp));
 							}

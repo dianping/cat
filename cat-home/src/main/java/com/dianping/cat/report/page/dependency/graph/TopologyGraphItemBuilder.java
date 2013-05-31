@@ -6,8 +6,8 @@ import java.util.Date;
 
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
-import com.dianping.cat.home.dependency.entity.Edge;
-import com.dianping.cat.home.dependency.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.Edge;
+import com.dianping.cat.home.dependency.graph.entity.Node;
 
 public class TopologyGraphItemBuilder {
 

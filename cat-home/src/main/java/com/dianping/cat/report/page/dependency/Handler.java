@@ -25,13 +25,13 @@ import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
-import com.dianping.cat.home.dependency.entity.DependencyGraph;
-import com.dianping.cat.home.dependency.transform.DefaultJsonBuilder;
+import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -139,7 +139,7 @@ public class Handler implements PageHandler<Context> {
 	private void buildHourlyTopologyGraph(Model model, Payload payload) {
 		long time = payload.getDate() + TimeUtil.ONE_MINUTE * computeMinute(payload);
 		String domain = payload.getDomain();
-		DependencyGraph graph = m_graphManager.buildGraphByDomainTime(domain, time);
+		TopologyGraph graph = m_graphManager.buildGraphByDomainTime(domain, time);
 		String json = new DefaultJsonBuilder().buildJson(graph);
 
 		model.setTopologyGraph(json);

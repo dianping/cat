@@ -7,13 +7,13 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.dependency.model.transform.BaseVisitor;
-import com.dianping.cat.home.dependency.entity.DependencyGraph;
-import com.dianping.cat.home.dependency.entity.Edge;
-import com.dianping.cat.home.dependency.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.Edge;
+import com.dianping.cat.home.dependency.graph.entity.Node;
+import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 
 public class TopologyGraphBuilder extends BaseVisitor {
 
-	private DependencyGraph m_currentGraph;
+	private TopologyGraph m_currentGraph;
 
 	private String m_domain;
 
@@ -21,7 +21,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	private TopologyGraphItemBuilder m_itemBuilder;
 
-	private DependencyGraph m_lastGraph;
+	private TopologyGraph m_lastGraph;
 
 	private int m_minute;
 	
@@ -29,7 +29,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	   return m_itemBuilder.createNode(domain);
    }
 
-	private DependencyGraph getGraph() {
+	private TopologyGraph getGraph() {
 		if (m_isCurrent) {
 			return m_currentGraph;
 		} else {
@@ -73,12 +73,12 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		}
 	}
 
-	public TopologyGraphBuilder setCurrentGraph(DependencyGraph graph) {
+	public TopologyGraphBuilder setCurrentGraph(TopologyGraph graph) {
 		m_currentGraph = graph;
 		return this;
 	}
 
-	public TopologyGraphBuilder setLastGraph(DependencyGraph graph) {
+	public TopologyGraphBuilder setLastGraph(TopologyGraph graph) {
 		m_lastGraph = graph;
 		return this;
 	}
@@ -94,7 +94,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		// pigeonServer is no use
 		if (!"PigeonServer".equals(type)) {
 			Edge edge = m_itemBuilder.buildEdge(m_domain, dependency);
-			DependencyGraph graph = getGraph();
+			TopologyGraph graph = getGraph();
 			Edge old = graph.findEdge(edge.getKey());
 
 			graph.getEdges().put(edge.getKey(), mergeEdge(old, edge));
@@ -117,7 +117,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	@Override
 	public void visitIndex(Index index) {
-		DependencyGraph graph = getGraph();
+		TopologyGraph graph = getGraph();
 		Node node = m_itemBuilder.buildNode(m_domain, index);
 		Node old = graph.findNode(node.getId());
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <model>
-  <entity name="graph" root="true">
+  <entity name="topology-graph" root="true">
     <attribute name="id" value-type="String" />
     <attribute name="type" value-type="String" />
     <attribute name="status" value-type="int" />
@@ -14,11 +14,14 @@
     <attribute name="status" value-type="int" />
     <attribute name="des" value-type="String" />
     <attribute name="link" value-type="String" />
+    <attribute name="weight" value-type="int" />
   </entity>
   <entity name="edge">
+    <attribute name="key" value-type="int" />
     <attribute name="type" value-type="String" />
     <attribute name="target" value-type="String" />
     <attribute name="opposite" value-type="boolean" />
+    <attribute name="weight" value-type="int" />
     <attribute name="status" value-type="int" />
     <attribute name="des" value-type="String" />
     <attribute name="link" value-type="String" />

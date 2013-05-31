@@ -1,4 +1,4 @@
-<graph id="TuanGouWeb" type="project" status="1" des="11231">
+<topology-graph id="TuanGouWeb" type="project" status="1" des="11231">
 	<node id="TuanGouService" type="Service" status="2" des="OK" link=""  weight="1"></node>
 	<node id="UserBaseService" type="Service" status="2" des="OK" link=""></node>
 	<node id="Dianping" type="Database" status="2" des="OK" link=""></node>
@@ -6,5 +6,5 @@
 	<edge key="1" type="PigeonCall" target="TuanGouService" opposite="true" weight="1" status="2" des="OK" link=""></edge>
 	<edge key="2" type="PigeonCall" target="UserBaseService" opposite="true" status="2" des="OK" link=""></edge>
 	<edge key="3" type="PigeonCall" target="TuanGouWeb" opposite="true" status="2" des="OK" link=""></edge>
-</graph>
+</topology-graph>
 
