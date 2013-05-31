@@ -47,4 +47,11 @@
 			</ul>
 		</div>
 	</div>
+   
+    <div style="width:600px;margin: 0 auto;">
+        <h3 style="color:#1D8BE0;"> Report function is under construction...</h3>
+       <img style="margin: 0 auto;" src="${res.img.local['wangzhanjianshezhong.jpg']}">
+    </div>
+   
+   
 </a:body>
