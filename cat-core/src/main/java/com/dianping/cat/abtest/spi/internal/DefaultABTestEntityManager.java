@@ -29,6 +29,10 @@ public class DefaultABTestEntityManager extends ContainerHolder implements ABTes
 			entity.setDisabled(true);
 
 			m_repository.getEntities().put(id.getValue(), entity);
+
+			StringBuilder sb = new StringBuilder();
+			sb.append("id ").append(id.getValue()).append(" doesn't exsit");
+			Cat.getProducer().logEvent("ABTest.IDMiss", "id-miss", sb.toString(), "");
 		}
 
 		return entity;

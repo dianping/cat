@@ -23,7 +23,7 @@
 
 	<servlet-mapping>
 		<servlet-name>ABTestSampleServlet</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>/index</url-pattern>
 	</servlet-mapping>
 
 
