@@ -12,7 +12,7 @@
     <attribute name="default-error-response-time" value-type="double" />
     <entity-ref name="domain" type="list" names="domains" />
   </entity>
-  <entity name="domain">
+  <entity name="domain-config">
     <attribute name="id" value-type="String" />
     <attribute name="warning-failure" value-type="int" />
     <attribute name="error-failure" value-type="int" />
