@@ -6,6 +6,11 @@ import java.util.Map;
 import org.unidal.socket.Message;
 
 public class ProtocolMessage implements Message {
+
+	public static final String HELLO_NAME = "hello";
+
+	public static final String HEARTBEAT_NAME = "heartbeat";
+
 	private String m_name;
 
 	private String m_content;
@@ -14,6 +19,10 @@ public class ProtocolMessage implements Message {
 
 	public String getContent() {
 		return m_content;
+	}
+	
+	public void addHeader(String header, String value){
+		m_headers.put(header,value);
 	}
 
 	public Map<String, String> getHeaders() {

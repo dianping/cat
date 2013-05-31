@@ -6,37 +6,35 @@ import com.dianping.cat.abtest.model.entity.Case;
 import com.dianping.cat.abtest.model.entity.Run;
 
 public class ABTestEntity {
-	private Case m_case;
+
+	private int m_id;
+	
+	private String m_name;
+
+	private String m_groupStrategyName;
 
 	private Run m_run;
 
 	private ABTestGroupStrategy m_groupStrategy;
-	
+
 	public ABTestEntity() {
-		m_case = new Case();
 		m_run = new Run();
 		m_run.setDisabled(true);
 	}
 
 	public ABTestEntity(Case _case, Run run) {
-		m_case = _case;
+		m_id = _case.getId();
+		m_name = _case.getName();
+		m_groupStrategyName = _case.getGroupStrategy();
 		m_run = run;
 	}
 
 	public String getGroupStrategyName() {
-		return m_case.getGroupStrategy() != null ? m_case.getGroupStrategy() : null;
+		return m_groupStrategyName != null ? m_groupStrategyName : null;
 	}
 
 	public String getGroupStrategyConfiguration() {
 		return m_run.getGroupStrategyConfiguration() != null ? m_run.getGroupStrategyConfiguration() : null;
-	}
-
-	public int getId() {
-		return m_case.getId();
-	}
-
-	public String getName() {
-		return m_case.getName();
 	}
 
 	public Date getEndDate() {
@@ -77,22 +75,6 @@ public class ABTestEntity {
 		m_run.setDisabled(disabled);
 	}
 
-	public void setGroupStrategyName(String groupStrategy) {
-		m_case.setGroupStrategy(groupStrategy);
-	}
-
-	public void setGroupStrategyConfiguration(String groupStrategyConfiguration) {
-		m_run.setGroupStrategyConfiguration(groupStrategyConfiguration);
-	}
-
-	public void setId(int id) {
-		m_case.setId(id);
-	}
-
-	public void setName(String name) {
-		m_case.setName(name);
-	}
-
 	public ABTestGroupStrategy getGroupStrategy() {
 		return m_groupStrategy;
 	}
@@ -100,33 +82,68 @@ public class ABTestEntity {
 	public void setGroupStrategy(ABTestGroupStrategy groupStrategy) {
 		m_groupStrategy = groupStrategy;
 	}
+	
+	public void setId(int id){
+		m_id = id;
+	}
 
-	@Override
-	public String toString() {
-		return String.format("%s[id=%s, name=%s, groupStrategy=%s, configuation=%s]", getClass().getSimpleName(),
-		      getId(), getName(), getGroupStrategyName(), getGroupStrategyConfiguration());
+	public int getId() {
+		return m_id;
+	}
+
+	public String getName() {
+   	return m_name;
+   }
+
+	public Run getRun() {
+		return m_run;
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getId();
-		return result;
-	}
+   public int hashCode() {
+	   final int prime = 31;
+	   int result = 1;
+	   result = prime * result + ((m_groupStrategyName == null) ? 0 : m_groupStrategyName.hashCode());
+	   result = prime * result + m_id;
+	   result = prime * result + ((m_name == null) ? 0 : m_name.hashCode());
+	   result = prime * result + ((m_run == null) ? 0 : m_run.hashCode());
+	   return result;
+   }
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ABTestEntity other = (ABTestEntity) obj;
-		if (getId() != other.getId())
-			return false;
-		return true;
-	}
+   public boolean equals(Object obj) {
+	   if (this == obj)
+		   return true;
+	   if (obj == null)
+		   return false;
+	   if (getClass() != obj.getClass())
+		   return false;
+	   ABTestEntity other = (ABTestEntity) obj;
+	   if (m_groupStrategyName == null) {
+		   if (other.m_groupStrategyName != null)
+			   return false;
+	   } else if (!m_groupStrategyName.equals(other.m_groupStrategyName))
+		   return false;
+	   if (m_id != other.m_id)
+		   return false;
+	   if (m_name == null) {
+		   if (other.m_name != null)
+			   return false;
+	   } else if (!m_name.equals(other.m_name))
+		   return false;
+	   if (m_run == null) {
+		   if (other.m_run != null)
+			   return false;
+	   } else if (!m_run.equals(other.m_run))
+		   return false;
+	   return true;
+   }
 
+	@Override
+   public String toString() {
+	   return "ABTestEntity [m_id=" + m_id + ", m_name=" + m_name + ", m_groupStrategyName=" + m_groupStrategyName
+	         + ", m_run=" + m_run +"]";
+   }
+
+	
 }
