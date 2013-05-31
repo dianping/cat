@@ -24,6 +24,10 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	private DependencyGraph m_lastGraph;
 
 	private int m_minute;
+	
+	public Node createNode(String domain) {
+	   return m_itemBuilder.createNode(domain);
+   }
 
 	private DependencyGraph getGraph() {
 		if (m_isCurrent) {

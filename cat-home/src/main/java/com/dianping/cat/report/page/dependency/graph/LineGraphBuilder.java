@@ -60,9 +60,9 @@ public class LineGraphBuilder extends BaseVisitor {
 			Map<String, Item> errorItems = m_dependencies.get(type + ':' + ERROR_COUNT);
 			Map<String, Item> avgItems = m_dependencies.get(type + ':' + AVG);
 
-			charts.add(buildLineChart("Total", totalItems));
-			charts.add(buildLineChart("Error", errorItems));
-			charts.add(buildLineChart("Avg", avgItems));
+			charts.add(buildLineChart(TOTAL_COUNT, totalItems));
+			charts.add(buildLineChart(ERROR_COUNT, errorItems));
+			charts.add(buildLineChart(AVG, avgItems));
 			allCharts.put(type, charts);
 		}
 		return allCharts;
@@ -71,9 +71,9 @@ public class LineGraphBuilder extends BaseVisitor {
 	public List<LineChart> queryIndex() {
 		List<LineChart> charts = new ArrayList<LineChart>();
 
-		charts.add(buildLineChart("Total", m_dependencies.get(TOTAL_COUNT)));
-		charts.add(buildLineChart("Error", m_dependencies.get(ERROR_COUNT)));
-		charts.add(buildLineChart("Avg", m_dependencies.get(AVG)));
+		charts.add(buildLineChart(TOTAL_COUNT, m_dependencies.get(TOTAL_COUNT)));
+		charts.add(buildLineChart(ERROR_COUNT, m_dependencies.get(ERROR_COUNT)));
+		charts.add(buildLineChart(AVG, m_dependencies.get(AVG)));
 		return charts;
 	}
 

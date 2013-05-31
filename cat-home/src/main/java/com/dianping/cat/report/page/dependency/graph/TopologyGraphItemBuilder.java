@@ -59,6 +59,17 @@ public class TopologyGraphItemBuilder {
 		return edge;
 	}
 
+	public Node createNode(String domain) {
+		Node node = new Node(domain);
+
+		node.setStatus(OK);
+		node.setType(PROJECT);
+		node.setWeight(1);
+		node.setDes("");
+		node.setLink(buildProblemLink(domain, m_start));
+		return node;
+	}
+	
 	public Node buildNode(String domain, Index index) {
 		Node node = new Node(domain);
 
@@ -79,8 +90,9 @@ public class TopologyGraphItemBuilder {
 		return "p?domain=" + domain + "&date=" + m_sdf.format(date);
 	}
 
-	public void setDate(Date start) {
+	public TopologyGraphItemBuilder setDate(Date start) {
 		m_start = start;
+		return this;
 	}
 
 }

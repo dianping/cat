@@ -37,29 +37,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	private Node creatNode(String domain) {
-		Node node = new Node(domain);
-
-		node.setStatus(TopologyGraphItemBuilder.OK);
-		node.setType(TopologyGraphItemBuilder.PROJECT);
-		node.setWeight(1);
-		node.setDes("");
-		node.setLink("");
-
-		return node;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		Threads.forGroup("Cat").start(new Reload());
-	}
-
-	public DependencyGraph queryGraph(String domain, long time) {
+	public DependencyGraph buildGraphByDomainTime(String domain, long time) {
 		DependencyGraph graph = m_graphs.get(time);
 		DependencyGraph result = new DependencyGraph();
 
@@ -84,7 +62,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					if (other != null) {
 						result.addNode(other);
 					} else {
-						result.addNode(creatNode(target));
+						result.addNode(m_builder.createNode(target));
 					}
 					edge.setOpposite(false);
 					result.addEdge(edge);
@@ -94,7 +72,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					if (other != null) {
 						result.addNode(other);
 					} else {
-						result.addNode(creatNode(target));
+						result.addNode(m_builder.createNode(target));
 					}
 					edge.setOpposite(true);
 					result.addEdge(edge);
@@ -104,15 +82,25 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		return result;
 	}
 
-	private class Reload implements Task {
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
 
-		private Collection<String> getAllDomains() {
-			return DomainNavManager.getDomains();
-		}
+	@Override
+	public void initialize() throws InitializationException {
+		Threads.forGroup("Cat").start(new Reload());
+	}
+
+	private class Reload implements Task {
 
 		@Override
 		public String getName() {
 			return "DependencyManagerReload";
+		}
+
+		private Collection<String> queryAllDomains() {
+			return DomainNavManager.getDomains();
 		}
 
 		@Override
@@ -129,7 +117,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					long time = current / 1000 / 60;
 					int minute = (int) (time % (60));
 					String value = String.valueOf(currentHour);
-					Collection<String> domains = getAllDomains();
+					Collection<String> domains = queryAllDomains();
 					DependencyGraph currentGraph = new DependencyGraph();
 					DependencyGraph lastGraph = new DependencyGraph();
 
