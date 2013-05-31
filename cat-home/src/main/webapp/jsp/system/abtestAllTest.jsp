@@ -177,8 +177,8 @@
                             <td><span class="badge badge-success"><a href="abtest?op=report&id=${item.run.id}">${item.run.caseId}</a></span></td>
 							<td>${item.entity.name}</td>
                             <td>${item.run.domains}</td>
-                            <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.startDate}" /></td>
-                            <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.endDate}" /></td>
+                            <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${item.run.startDate}" /></td>
+                            <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${item.run.endDate}" /></td>
 							<td>
 								<c:choose>
 									<c:when test="${item.status.status eq 'created'}">
@@ -209,7 +209,7 @@
 								</c:choose> 
 							</td>
                             <td>${item.run.creator}</td>
-                            <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.startDate}" /></td>
+                            <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${item.entity.creationDate}" /></td>
 						</tr>
 					</c:forEach>
 				</tbody>
