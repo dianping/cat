@@ -172,8 +172,8 @@ tr.centerth>th {
                           <td>${item.run.domains}</td>
                         </c:otherwise>
                      </c:choose>
-                     <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.startDate}" /></td>
-                     <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.endDate}" /></td>
+                     <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${item.run.startDate}" /></td>
+                     <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${item.run.endDate}" /></td>
                      <td><c:choose>
                            <c:when test="${item.status.status eq 'created'}">
                               <div>
@@ -207,7 +207,7 @@ tr.centerth>th {
                            </c:when>
                         </c:choose></td>
                      <td>${item.run.creator}</td>
-                     <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm" value="${item.run.startDate}" /></td>
+                     <td><fmt:formatDate pattern="yyyy-MM-dd HH:mm" value="${item.run.startDate}" /></td>
                   </tr>
                </c:forEach>
             </tbody>
