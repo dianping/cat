@@ -64,7 +64,7 @@
 				</div>
 			</div>
 			<div style="padding-top: 10px;padding-left: 30px; ">
-				<a href="#" class="btn btn-large btn-primary" style="width:300px;height:50px;"><h2 style="font-family: georgia, times;
+				<a href="http://localhost:2281/cat/s/abtest"  target="_blank" class="btn btn-large btn-primary" style="width:300px;height:50px;"><h2 style="font-family: georgia, times;
 	font-size: 24px;
 	font-weight: normal;
 	line-height: 1.2em;">Start  ABTest Now!</h2></a></div>
