@@ -173,7 +173,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 						}
 					}
 
-					abTestEntityServer.sendHeartbeat();
 				} catch (NumberFormatException e) {
 					// do nothing
 					Cat.logError(e);
@@ -181,6 +180,8 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					Cat.logError(e);
 				}
 			}
+			
+			abTestEntityServer.sendHeartbeat();
 
 			if (error.getArguments().isEmpty()) {
 				ErrorObject success = new ErrorObject("success");

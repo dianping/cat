@@ -7,10 +7,11 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.abtest.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.abtest.Model" scope="request" />
 <style>
-#content{
-    width:1200px;
-    margin:0 auto;
+#content {
+	width: 1200px;
+	margin: 0 auto;
 }
+
 div.controls input {
 	height: 30px;
 }
@@ -77,6 +78,17 @@ div.controls input {
             <h5>Basic Information</h5>
             <hr style="margin-top: 20px;">
             <input type="hidden" name="id" value="${model.abtest.id}"> <input type="hidden" name="op" value="detail">
+            <c:if test="${model.abtest.caseId != null}">
+               <div class="control-group">
+                  <label class="control-label">Case Id <i tips="" data-trigger="hover" class="icon-question-sign"
+                     data-toggle="popover" data-placement="top" data-original-title="tips"
+                     data-content="It's important, because your client's code should use this 'Case Id' to specify a ABTest Case"></i>
+                  </label>
+                  <div class="controls" style="margin-top:4px;">
+                     <strong style="font-size:16px">${model.abtest.caseId}</strong>
+                  </div>
+               </div>
+            </c:if>
             <div class="control-group">
                <label class="control-label">AB Test Name <i tips="" data-trigger="hover" class="icon-question-sign"
                   data-toggle="popover" data-placement="top" data-original-title="tips"
@@ -214,7 +226,7 @@ div.controls input {
 					//input
 					$('#form input').removeAttr("readonly");
 					$('#txtStrategyConfig').removeAttr("readonly");
-					$('#inputName').attr("readonly","readonly");
+					$('#inputName').attr("readonly", "readonly");
 					//$('#form select').removeAttr("disabled");
 					$("#domains").select2("enable");
 					$("#datetimepicker1>span").removeClass('hide');
@@ -229,7 +241,7 @@ div.controls input {
 					if (changed) {
 						$("#cancleAffirmModal").modal('show');
 					} else {
-						$('#form input').attr("readonly","readonly");
+						$('#form input').attr("readonly", "readonly");
 						$('#form select').attr("disabled", "disabled");
 						$("#domains").select2("disable");
 						$("#datetimepicker1>span").addClass('hide');
