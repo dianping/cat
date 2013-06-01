@@ -46,6 +46,18 @@ public class ProjectInfo extends BaseVisitor {
 		m_reportDuration = reportDuration;
 	}
 
+	public void addAllCallProjectInfo(String domain, TypeDetailInfo info) {
+		TypeDetailInfo all = m_callServiceProjectsInfo.get(ALL_CLIENT);
+
+		if (all == null) {
+			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
+			all.setType(info.getType());
+			m_callServiceProjectsInfo.put(ALL_CLIENT, all);
+		}
+		all.mergeTypeDetailInfo(info);
+		m_callServiceProjectsInfo.put(domain, info);
+	}
+
 	private void addCallProject(String ip, Type type) {
 		String projectName = getProjectName(ip);
 
@@ -80,9 +92,19 @@ public class ProjectInfo extends BaseVisitor {
 		all.mergeType(type);
 	}
 
+	public Map<String, TypeDetailInfo> getAllCallProjectInfo() {
+		return m_callProjectsInfo;
+	}
+
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
 		Collections.sort(values, new TypeCompartor(m_callSortBy));
+		return values;
+	}
+
+	public List<TypeDetailInfo> getCallServiceProjectsInfo() {
+		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callServiceProjectsInfo.values());
+		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
 		return values;
 	}
 
@@ -116,6 +138,10 @@ public class ProjectInfo extends BaseVisitor {
 		return this;
 	}
 
+	public void setDomainManager(DomainManager domainManager) {
+		m_domainManager = domainManager;
+	}
+
 	public ProjectInfo setServiceSortBy(String serviceSortBy) {
 		m_serviceSortBy = serviceSortBy;
 		return this;
@@ -143,30 +169,6 @@ public class ProjectInfo extends BaseVisitor {
 		} else if (role != null && role.endsWith("Server")) {
 			addCallProject(remoteIp, remote.getType());
 		}
-	}
-
-	public void setDomainManager(DomainManager domainManager) {
-		m_domainManager = domainManager;
-	}
-
-	public Map<String, TypeDetailInfo> getAllCallProjectInfo() {
-		return m_callProjectsInfo;
-	}
-
-	public void addAllCallProjectInfo(String domain, TypeDetailInfo info) {
-		TypeDetailInfo all = m_callServiceProjectsInfo.get(ALL_CLIENT);
-		if (all == null) {
-			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
-			m_callServiceProjectsInfo.put(ALL_CLIENT, all);
-		}
-		all.mergeTypeDetailInfo(info);
-		m_callServiceProjectsInfo.put(domain, info);
-	}
-
-	public List<TypeDetailInfo> getCallServiceProjectsInfo() {
-		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callServiceProjectsInfo.values());
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
-		return values;
 	}
 
 }

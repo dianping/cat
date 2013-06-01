@@ -101,7 +101,6 @@ public class Handler implements PageHandler<Context> {
 			buildHourlyReport(report, model, payload);
 			buildHourlyLineGraph(report, model);
 			break;
-
 		}
 		m_jspViewer.view(ctx, model);
 	}

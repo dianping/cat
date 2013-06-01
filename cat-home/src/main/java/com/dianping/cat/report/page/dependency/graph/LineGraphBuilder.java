@@ -28,11 +28,42 @@ public class LineGraphBuilder extends BaseVisitor {
 
 	private static final String AVG = "Avg";
 
+	private static final String SPLIT = ":";
+
 	private Set<String> m_types = new TreeSet<String>();
 
 	private int m_currentMinute;
 
 	private Date m_start;
+
+	private String appendStr(String... arg) {
+		int length = arg.length;
+		StringBuilder sb = new StringBuilder();
+
+		for (int i = 0; i < length; i++) {
+			sb.append(arg[i]).append(SPLIT);
+		}
+		return sb.toString().substring(0, sb.length() - 1);
+	}
+
+	private LineChart buildLineChart(String title, Map<String, Item> items) {
+		LineChart result = new LineChart();
+
+		result.setSize(60);
+		result.setStep(TimeUtil.ONE_MINUTE);
+		result.setTitles(title);
+		result.setStart(m_start);
+		if (items != null) {
+			for (Entry<String, Item> entry : items.entrySet()) {
+				String subTitle = entry.getKey();
+				Item item = entry.getValue();
+
+				result.addSubTitle(subTitle);
+				result.addValue(item.getValue());
+			}
+		}
+		return result;
+	}
 
 	public Item findOrCreateItem(String type, String id) {
 		Map<String, Item> items = m_dependencies.get(type);
@@ -56,9 +87,9 @@ public class LineGraphBuilder extends BaseVisitor {
 		Map<String, List<LineChart>> allCharts = new HashMap<String, List<LineChart>>();
 		for (String type : m_types) {
 			List<LineChart> charts = new ArrayList<LineChart>();
-			Map<String, Item> totalItems = m_dependencies.get(type + ':' + TOTAL_COUNT);
-			Map<String, Item> errorItems = m_dependencies.get(type + ':' + ERROR_COUNT);
-			Map<String, Item> avgItems = m_dependencies.get(type + ':' + AVG);
+			Map<String, Item> totalItems = m_dependencies.get(appendStr(type, TOTAL_COUNT));
+			Map<String, Item> errorItems = m_dependencies.get(appendStr(type, ERROR_COUNT));
+			Map<String, Item> avgItems = m_dependencies.get(appendStr(type, AVG));
 
 			charts.add(buildLineChart(TOTAL_COUNT, totalItems));
 			charts.add(buildLineChart(ERROR_COUNT, errorItems));
@@ -77,25 +108,6 @@ public class LineGraphBuilder extends BaseVisitor {
 		return charts;
 	}
 
-	private LineChart buildLineChart(String title, Map<String, Item> items) {
-		LineChart result = new LineChart();
-
-		result.setSize(60);
-		result.setStep(TimeUtil.ONE_MINUTE);
-		result.setTitles(title);
-		result.setStart(m_start);
-		if (items != null) {
-			for (Entry<String, Item> entry : items.entrySet()) {
-				String subTitle = entry.getKey();
-				Item item = entry.getValue();
-
-				result.addSubTitle(subTitle);
-				result.addValue(item.getValue());
-			}
-		}
-		return result;
-	}
-
 	@Override
 	public void visitDependency(Dependency dependency) {
 		String type = dependency.getType();
@@ -105,9 +117,9 @@ public class LineGraphBuilder extends BaseVisitor {
 		double avg = dependency.getAvg();
 
 		m_types.add(type);
-		findOrCreateItem(type + ':' + TOTAL_COUNT, target).setValue(m_currentMinute, count);
-		findOrCreateItem(type + ':' + ERROR_COUNT, target).setValue(m_currentMinute, error);
-		findOrCreateItem(type + ':' + AVG, target).setValue(m_currentMinute, avg);
+		findOrCreateItem(appendStr(type, TOTAL_COUNT), target).setValue(m_currentMinute, count);
+		findOrCreateItem(appendStr(type, ERROR_COUNT), target).setValue(m_currentMinute, error);
+		findOrCreateItem(appendStr(type, AVG), target).setValue(m_currentMinute, avg);
 		super.visitDependency(dependency);
 	}
 
@@ -144,13 +156,13 @@ public class LineGraphBuilder extends BaseVisitor {
 	public class Item {
 		private double[] m_values = new double[60];
 
+		public double[] getValue() {
+			return m_values;
+		}
+
 		private Item setValue(int minute, double value) {
 			m_values[minute] = value;
 			return this;
-		}
-
-		public double[] getValue() {
-			return m_values;
 		}
 	}
 

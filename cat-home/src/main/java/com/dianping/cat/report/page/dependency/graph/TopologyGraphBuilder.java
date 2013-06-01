@@ -24,10 +24,10 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	private TopologyGraph m_lastGraph;
 
 	private int m_minute;
-	
+
 	public Node createNode(String domain) {
-	   return m_itemBuilder.createNode(domain);
-   }
+		return m_itemBuilder.createNode(domain);
+	}
 
 	private TopologyGraph getGraph() {
 		if (m_isCurrent) {
@@ -41,8 +41,8 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		if (old == null) {
 			return edge;
 		} else {
-			if (old.getStatus() > old.getStatus()) {
-				old.setStatus(old.getStatus());
+			if (edge.getStatus() > old.getStatus()) {
+				old.setStatus(edge.getStatus());
 			}
 			if (edge.getWeight() > old.getWeight()) {
 				old.setWeight(edge.getWeight());
@@ -59,8 +59,8 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		if (old == null) {
 			return node;
 		} else {
-			if (old.getStatus() > old.getStatus()) {
-				old.setStatus(old.getStatus());
+			if (node.getStatus() > old.getStatus()) {
+				old.setStatus(node.getStatus());
 			}
 			if (node.getWeight() < old.getWeight()) {
 				old.setWeight(node.getWeight());
