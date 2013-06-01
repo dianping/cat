@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
+import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.dependency.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.report.page.LineChart;
@@ -139,6 +140,12 @@ public class LineGraphBuilder extends BaseVisitor {
 		findOrCreateItem(ERROR_COUNT, id).setValue(m_currentMinute, error);
 		findOrCreateItem(AVG, id).setValue(m_currentMinute, avg);
 		super.visitIndex(index);
+	}
+
+	@Override
+	public void visitSegment(Segment segment) {
+		m_currentMinute = segment.getId();
+		super.visitSegment(segment);
 	}
 
 	public class Item {

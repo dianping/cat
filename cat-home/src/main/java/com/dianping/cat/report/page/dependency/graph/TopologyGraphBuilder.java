@@ -47,12 +47,27 @@ public class TopologyGraphBuilder extends BaseVisitor {
 			if (edge.getWeight() > old.getWeight()) {
 				old.setWeight(edge.getWeight());
 			}
-			old.setDes(old.getDes() + edge.getDes());
+			old.setDes(mergeDes(old.getDes(), edge.getDes()));
 			if (!StringUtil.isEmpty(edge.getLink())) {
 				old.setLink(edge.getLink());
 			}
 			return old;
 		}
+	}
+
+	public String mergeDes(String old, String des) {
+		String split = "\\|";
+		if (StringUtil.isEmpty(old)) {
+			return des;
+		} else {
+			String[] temps = old.split(split);
+			for (String temp : temps) {
+				if (des.equals(temp.trim())) {
+					return old;
+				}
+			}
+		}
+		return old + split + des;
 	}
 
 	private Node mergeNode(Node old, Node node) {
@@ -65,7 +80,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 			if (node.getWeight() < old.getWeight()) {
 				old.setWeight(node.getWeight());
 			}
-			old.setDes(old.getDes() + node.getDes());
+			old.setDes(mergeDes(old.getDes(), node.getDes()));
 			if (!StringUtil.isEmpty(node.getLink())) {
 				old.setLink(node.getLink());
 			}

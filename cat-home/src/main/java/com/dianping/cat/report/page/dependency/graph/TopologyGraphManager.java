@@ -74,11 +74,30 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					} else {
 						result.addNode(m_graphBuilder.createNode(target));
 					}
-					edge.setOpposite(true);
-					result.addEdge(edge);
+					Edge temp = cloneEdge(edge);
+
+					temp.setTarget(edge.getSelf());
+					temp.setSelf(edge.getTarget());
+					temp.setOpposite(true);
+					result.addEdge(temp);
 				}
 			}
 		}
+		return result;
+	}
+
+	public Edge cloneEdge(Edge edge) {
+		Edge result = new Edge();
+
+		result.setDes(edge.getDes());
+		result.setKey(edge.getKey());
+		result.setLink(edge.getLink());
+		result.setOpposite(edge.getOpposite());
+		result.setSelf(edge.getSelf());
+		result.setStatus(edge.getStatus());
+		result.setTarget(edge.getTarget());
+		result.setType(edge.getType());
+		result.setWeight(edge.getWeight());
 		return result;
 	}
 

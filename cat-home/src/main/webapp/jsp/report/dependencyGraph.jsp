@@ -62,7 +62,6 @@
 		
 		var data = ${model.topologyGraph};
 		function parse(data){
-
 			var nodes = data.nodes;
 			var points = [];
 			var sides = [];
@@ -92,16 +91,16 @@
 								service:'lozenge'
 							},
 							colorMap:{
-										 "1":'#7cfc00',
-										 "2":'#FFD700',
-										 "3":'#f08080'
+										 "1":'#2fbf2f',
+										 "2":'#bfa22f',
+										 "3":'#b94a48'
 							},
 			radius:300,
 			sideWeight:function(weight){
 				return weight+1
 			},
 			nodeWeight:function(weight){
-				return weight/5+1;
+				return weight/5+0.8;
 			}});
 	});
 </script>
