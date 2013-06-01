@@ -207,11 +207,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
 		
+		all.add(C(TopologyGraphConfigManger.class));
+		
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManger.class));
 		
 		all.add(C(TopologyGraphBuilder.class).req(TopologyGraphItemBuilder.class));
 		
-		all.add(C(TopologyGraphConfigManger.class));
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 

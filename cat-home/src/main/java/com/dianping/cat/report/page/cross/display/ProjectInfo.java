@@ -40,8 +40,6 @@ public class ProjectInfo extends BaseVisitor {
 
 	private DomainManager m_domainManager;
 
-	// private HostinfoDao m_hostInfoDao;
-
 	public ProjectInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
 	}

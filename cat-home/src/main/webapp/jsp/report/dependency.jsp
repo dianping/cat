@@ -50,10 +50,6 @@
 						<th>Failure%</th>
 						<th>Avg(ms)</th>
 					</tr></thead><tbody>
-					<tr><td>Exception</td><td style="text-align:right;">${model.segment.exceptionCount}</td>
-					<td style="text-align:right;">${model.segment.exceptionCount}</td>
-					<td style="text-align:right;">100%</td>
-					<td style="text-align:right;">0</td></tr>
 					<c:forEach var="item" items="${model.segment.indexs}"
 											varStatus="status">
 						 <c:set var="itemKey" value="${item.key}" />

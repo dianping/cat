@@ -586,8 +586,17 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
@@ -597,6 +606,10 @@
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>

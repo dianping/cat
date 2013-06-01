@@ -11,7 +11,6 @@
 	</entity>
 	<entity name="segment">
 		<attribute name="id" value-type="int" key="true"/>
-		<attribute name="exception-count" value-type="long" method-inc="true" primitive="true"/>
 		<entity-ref name="index" type="map" names="indexs" method-find-or-create="true"/>
 		<entity-ref name="dependency" type="map" names="dependencies" method-find-or-create="true"/>
 	</entity>

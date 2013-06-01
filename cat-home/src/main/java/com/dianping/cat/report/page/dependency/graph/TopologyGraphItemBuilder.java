@@ -14,7 +14,7 @@ import com.dianping.cat.home.dependency.graph.entity.Node;
 public class TopologyGraphItemBuilder {
 
 	@Inject
-	private TopologyGraphConfigManger m_configManager;
+	private TopologyGraphConfigManger m_graphConfigManager;
 
 	private Date m_start;
 
@@ -51,7 +51,7 @@ public class TopologyGraphItemBuilder {
 		edge.setOpposite(false);
 		edge.setWeight(1);
 
-		Pair<Integer, String> state = m_configManager.buildEdgeState(domain, dependency);
+		Pair<Integer, String> state = m_graphConfigManager.buildEdgeState(domain, dependency);
 		if (state != null) {
 			edge.setStatus(state.getKey());
 			edge.setDes(state.getValue());
@@ -81,7 +81,7 @@ public class TopologyGraphItemBuilder {
 		node.setWeight(1);
 		node.setLink(buildProblemLink(domain, m_start));
 
-		Pair<Integer, String> state = m_configManager.buildNodeState(domain, index);
+		Pair<Integer, String> state = m_graphConfigManager.buildNodeState(domain, index);
 		if (state != null) {
 			node.setStatus(state.getKey());
 			node.setDes(state.getValue());

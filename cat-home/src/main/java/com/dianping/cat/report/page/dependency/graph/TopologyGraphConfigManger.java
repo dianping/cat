@@ -145,10 +145,10 @@ public class TopologyGraphConfigManger implements Initializable {
 			DomainConfig domainConfig = null;
 			if ("PigeonCall".equalsIgnoreCase(type)) {
 				domainConfig = queryNodeConfig("PigeonService", to);
-			} else if ("Database".equalsIgnoreCase(type)) {
-				domainConfig = queryNodeConfig("SQL", to);
 			} else if ("PigeonServer".equalsIgnoreCase(type)) {
 				domainConfig = queryNodeConfig("PigeonService", from);
+			} else {
+				domainConfig = queryNodeConfig(type, to);
 			}
 			if (domainConfig != null) {
 				edgeConfig = convertNodeConfig(domainConfig);

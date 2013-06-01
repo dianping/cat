@@ -189,8 +189,10 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			long current = event.getTimestamp() / 1000 / 60;
 			int min = (int) (current % (60));
 			Segment segment = report.findOrCreateSegment(min);
+			Index index = segment.findOrCreateIndex("Exception");
 
-			segment.incExceptionCount();
+			index.incTotalCount();
+			index.incErrorCount();
 		}
 	}
 

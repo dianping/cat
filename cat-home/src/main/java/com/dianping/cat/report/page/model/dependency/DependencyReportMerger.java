@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.model.dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
-import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultMerger;
 
 public class DependencyReportMerger extends DefaultMerger {
@@ -32,11 +31,6 @@ public class DependencyReportMerger extends DefaultMerger {
 		if (old.getTotalCount() > 0) {
 			old.setAvg(old.getSum() / old.getTotalCount());
 		}
-	}
-
-	@Override
-	protected void mergeSegment(Segment old, Segment segment) {
-		old.setExceptionCount(old.getExceptionCount() + segment.getExceptionCount());
 	}
 
 	@Override
