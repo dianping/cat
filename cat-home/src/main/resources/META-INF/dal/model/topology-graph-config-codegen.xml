@@ -5,17 +5,17 @@
     <entity-ref name="edge-config" type="list" names="edge-configs" />
   </entity>
   <entity name="node-config">
-    <attribute name="id" value-type="String" />
-    <attribute name="default-warning-failure" value-type="int" />
-    <attribute name="default-error-failure" value-type="int" />
+    <attribute name="type" value-type="String" />
+    <attribute name="default-warning-threshold" value-type="int" />
+    <attribute name="default-error-threshold" value-type="int" />
     <attribute name="default-warning-response-time" value-type="double" />
     <attribute name="default-error-response-time" value-type="double" />
-    <entity-ref name="domain" type="list" names="domains" />
+    <entity-ref name="domain-config" type="list" names="domains" />
   </entity>
   <entity name="domain-config">
     <attribute name="id" value-type="String" />
-    <attribute name="warning-failure" value-type="int" />
-    <attribute name="error-failure" value-type="int" />
+    <attribute name="warning-threshold" value-type="int" />
+    <attribute name="error-threshold" value-type="int" />
     <attribute name="warning-response-time" value-type="double" />
     <attribute name="error-response-time" value-type="double" />
   </entity>
@@ -24,8 +24,8 @@
     <attribute name="type" value-type="String" />
     <attribute name="from" value-type="String" />
     <attribute name="to" value-type="String" />
-    <attribute name="warning-failure" value-type="int" />
-    <attribute name="error-failure" value-type="int" />
+    <attribute name="warning-threshold" value-type="int" />
+    <attribute name="error-threshold" value-type="int" />
     <attribute name="warning-response-time" value-type="double" />
     <attribute name="error-response-time" value-type="double" />
   </entity>

@@ -28,8 +28,8 @@ public class ProjectInfo extends BaseVisitor {
 
 	private Map<String, TypeDetailInfo> m_serviceProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
-	private Map<String,TypeDetailInfo> m_callServiceProjectsInfo = new LinkedHashMap<String,TypeDetailInfo>();
-	
+	private Map<String, TypeDetailInfo> m_callServiceProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
+
 	private String m_clientIp;
 
 	private long m_reportDuration;
@@ -144,23 +144,29 @@ public class ProjectInfo extends BaseVisitor {
 			addCallProject(remoteIp, remote.getType());
 		}
 	}
-	
+
 	public void setDomainManager(DomainManager domainManager) {
 		m_domainManager = domainManager;
 	}
 
-	public Map<String, TypeDetailInfo> getAllCallServiceProjectsInfo() {
-		return m_callServiceProjectsInfo;
-	}
-
-	public Map<String,TypeDetailInfo> getAllCallProjectInfo(){
+	public Map<String, TypeDetailInfo> getAllCallProjectInfo() {
 		return m_callProjectsInfo;
 	}
-	
-	public List<TypeDetailInfo> getCallServiceProjectsInfo(){
+
+	public void addAllCallProjectInfo(String domain, TypeDetailInfo info) {
+		TypeDetailInfo all = m_callServiceProjectsInfo.get(ALL_CLIENT);
+		if (all == null) {
+			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
+			m_callServiceProjectsInfo.put(ALL_CLIENT, all);
+		}
+		all.mergeTypeDetailInfo(info);
+		m_callServiceProjectsInfo.put(domain, info);
+	}
+
+	public List<TypeDetailInfo> getCallServiceProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callServiceProjectsInfo.values());
 		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
 		return values;
 	}
-	
+
 }

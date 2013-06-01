@@ -1,8 +1,10 @@
 package com.dianping.cat.report.page.dependency.graph;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -10,6 +12,9 @@ import com.dianping.cat.home.dependency.graph.entity.Edge;
 import com.dianping.cat.home.dependency.graph.entity.Node;
 
 public class TopologyGraphItemBuilder {
+
+	@Inject
+	private TopologyGraphConfigManger m_configManager;
 
 	private Date m_start;
 
@@ -24,8 +29,6 @@ public class TopologyGraphItemBuilder {
 	public static int ERROR = 3;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
-
-	private DecimalFormat m_df = new DecimalFormat("0.0");
 
 	public Node buildDatabaseNode(String database) {
 		Node node = new Node(database);
@@ -47,14 +50,15 @@ public class TopologyGraphItemBuilder {
 		edge.setTarget(dependency.getTarget());
 		edge.setOpposite(false);
 		edge.setWeight(1);
-		edge.setStatus(OK);
-		StringBuilder sb = new StringBuilder(dependency.getType());
 
-		if (dependency.getErrorCount() > 0) {
-			sb.append(" Error:" + dependency.getErrorCount());
-			sb.append(" Avg:" + m_df.format(dependency.getAvg()));
+		Pair<Integer, String> state = m_configManager.buildEdgeState(domain, dependency);
+		if (state != null) {
+			edge.setStatus(state.getKey());
+			edge.setDes(state.getValue());
+		} else {
+			edge.setStatus(OK);
+			edge.setDes("");
 		}
-		edge.setDes(sb.toString());
 		edge.setLink(buildProblemLink(domain, m_start));
 		return edge;
 	}
@@ -69,20 +73,22 @@ public class TopologyGraphItemBuilder {
 		node.setLink(buildProblemLink(domain, m_start));
 		return node;
 	}
-	
+
 	public Node buildNode(String domain, Index index) {
 		Node node = new Node(domain);
 
-		node.setStatus(OK);
 		node.setType(PROJECT);
 		node.setWeight(1);
-		StringBuilder sb = new StringBuilder();
-
-		if (index.getErrorCount() > 0) {
-			sb.append(" Error:" + index.getErrorCount());
-		}
-		node.setDes(sb.toString());
 		node.setLink(buildProblemLink(domain, m_start));
+
+		Pair<Integer, String> state = m_configManager.buildNodeState(domain, index);
+		if (state != null) {
+			node.setStatus(state.getKey());
+			node.setDes(state.getValue());
+		} else {
+			node.setStatus(OK);
+			node.setDes("");
+		}
 		return node;
 	}
 

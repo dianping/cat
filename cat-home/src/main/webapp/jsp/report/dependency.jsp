@@ -24,10 +24,11 @@
 		</div>
 	<%@ include file="dependencyLineGraph.jsp"%>
 	</br>
-  <div class="row-fluid">
+  	<div class="row-fluid">
 	  <div class="span12">
 	  		<%@ include file="dependencyEvent.jsp"%>
-	  </div></div>
+	  </div>
+	</div>
 	  <div class="row-fluid">
 	  	    <div class="span2">
 	  	    	<a class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
@@ -49,18 +50,20 @@
 						<th>Failure%</th>
 						<th>Avg(ms)</th>
 					</tr></thead><tbody>
-					<tr><td>Exception</td><td>${model.segment.exceptionCount}</td>
-					<td>${model.segment.exceptionCount}</td><td>100%</td><td>0</td></tr>
+					<tr><td>Exception</td><td style="text-align:right;">${model.segment.exceptionCount}</td>
+					<td style="text-align:right;">${model.segment.exceptionCount}</td>
+					<td style="text-align:right;">100%</td>
+					<td style="text-align:right;">0</td></tr>
 					<c:forEach var="item" items="${model.segment.indexs}"
 											varStatus="status">
 						 <c:set var="itemKey" value="${item.key}" />
 						 <c:set var="itemValue" value="${item.value}" />
 						<tr>
 							<td>${itemValue.name}</td>
-							<td>${itemValue.totalCount}</td>
-							<td>${itemValue.errorCount}</td>
-							<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
-							<td>${w:format(itemValue.avg,'0.0')}</td>
+							<td style="text-align:right;">${itemValue.totalCount}</td>
+							<td style="text-align:right;">${itemValue.errorCount}</td>
+							<td style="text-align:right;">${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
+							<td style="text-align:right;">${w:format(itemValue.avg,'0.0')}</td>
 						</tr>		
 					</c:forEach></tbody>
 				</table>
@@ -83,19 +86,18 @@
 						<tr>
 							<td>${itemValue.type}</td>
 							<td>${itemValue.target}</td>
-							<td>${itemValue.totalCount}</td>
-							<td>${itemValue.errorCount}</td>
-							<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
-							<td>${w:format(itemValue.avg,'0.0')}</td>
+							<td style="text-align:right;">${itemValue.totalCount}</td>
+							<td style="text-align:right;">${itemValue.errorCount}</td>
+							<td style="text-align:right;">${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
+							<td style="text-align:right;">${w:format(itemValue.avg,'0.0')}</td>
 						</tr>		
 					</c:forEach></tbody>
 				</table>	  			
 	  		</div>
 	  </div>
 	  </div>
-</div>
 </jsp:body>
-</a:report></div>
+</a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');

@@ -30,8 +30,8 @@ public class OpDataCollectTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		m_hourlyReportService = (HourlyReportService) lookup(HourlyReportService.class);
-		String dateStr1 = "2012-12-24 16:00";
-		String dateStr2 = "2013-02-14 16:00";
+		String dateStr1 = "2013-03-24 16:00";
+		String dateStr2 = "2013-04-14 16:00";
 		String dateStr3 = "2013-05-24 16:00";
 
 		String[] domains = getDomains();
