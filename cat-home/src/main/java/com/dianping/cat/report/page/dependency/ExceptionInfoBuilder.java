@@ -51,7 +51,7 @@ public class ExceptionInfoBuilder extends BaseVisitor {
 		};
 
 		if (m_errors.size() > 0) {
-			sb.append("---").append(CatString.EXCEPTION_INFO).append("---").append(GraphConstrant.ENTER);
+			sb.append("------").append(CatString.EXCEPTION_INFO).append("------").append(GraphConstrant.ENTER);
 		}
 		m_errors = MapUtils.sortMap(m_errors, compator);
 		for (java.util.Map.Entry<String, Integer> error : m_errors.entrySet()) {

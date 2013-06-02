@@ -27,7 +27,7 @@ public class TopologyGraphConfigManger implements Initializable {
 
 	private static final String AVG_STR = CatString.RESPONSE_TIME;
 
-	private static final String ERROR_STR = CatString.ERROR_COUNT;
+	private static final String ERROR_STR = CatString.EXCEPTION_COUNT;
 
 	private static final String MILLISECOND = "(ms)";
 
