@@ -46,7 +46,7 @@ public class TopologyGraphConfigManger implements Initializable {
 		int len = args.length;
 
 		for (int i = 0; i < len - 1; i++) {
-			sb.append(args[i]).append(GraphConstrant.SPIT);
+			sb.append(args[i]).append(GraphConstrant.DELIMITER);
 		}
 		sb.append(args[len - 1]).append(GraphConstrant.ENTER);
 

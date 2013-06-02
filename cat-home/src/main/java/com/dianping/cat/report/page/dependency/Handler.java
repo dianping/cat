@@ -105,6 +105,11 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildGraphExtraInfo(Payload payload, TopologyGraph graph) {
+		if (graph.getStatus() != GraphConstrant.OK) {
+			String problemInfo = buildProblemInfo(graph.getId(), payload);
+
+			graph.setDes(graph.getDes() + problemInfo);
+		}
 		for (Node node : graph.getNodes().values()) {
 			if (node.getType().equals(GraphConstrant.PROJECT)) {
 				node.setLink(buildLink(payload, node.getId()));
@@ -174,7 +179,7 @@ public class Handler implements PageHandler<Context> {
 
 	private String buildProblemInfo(String domain, Payload payload) {
 		ProblemReport report = queryProblemReport(payload, domain);
-		ProblemReportVistor visitor = new ProblemReportVistor();
+		ExceptionInfoBuilder visitor = new ExceptionInfoBuilder();
 
 		visitor.visitProblemReport(report);
 		String result = visitor.buildResult();

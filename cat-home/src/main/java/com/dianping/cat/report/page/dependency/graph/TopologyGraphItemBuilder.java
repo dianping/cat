@@ -26,13 +26,13 @@ public class TopologyGraphItemBuilder {
 
 	private static final String PROJECT = GraphConstrant.PROJECT;
 
-	public Node buildDatabaseNode(String database) {
+	public Node createDatabaseNode(String database) {
 		Node node = new Node(database);
 
 		node.setStatus(OK);
 		node.setType(DATABASE);
 		node.setWeight(1);
-		node.setDes(database);
+		node.setDes("");
 		node.setLink("");
 		return node;
 	}

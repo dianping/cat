@@ -120,12 +120,12 @@ public class GraphConfigManagerTest {
 		
 		index.setErrorCount(100);
 		state = m_manager.buildNodeState("Cat", index);
-		Assert.assertEquals(TopologyGraphItemBuilder.WARN, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
 		Assert.assertEquals("ERROR:100\n", state.getValue());
 
 		index.setErrorCount(200);
 		state = m_manager.buildNodeState("Cat", index);
-		Assert.assertEquals(TopologyGraphItemBuilder.ERROR, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
 		Assert.assertEquals("ERROR:200\n", state.getValue());
 	}
 	@Test
@@ -142,12 +142,12 @@ public class GraphConfigManagerTest {
 		
 		index.setAvg(10.0);
 		state = m_manager.buildNodeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.WARN, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
 		Assert.assertEquals("AVG:10.0\n", state.getValue());
 
 		index.setAvg(100.0);
 		state = m_manager.buildNodeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.ERROR, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
 		Assert.assertEquals("AVG:100.0\n", state.getValue());
 	}
 	
@@ -168,12 +168,12 @@ public class GraphConfigManagerTest {
 		
 		index.setErrorCount(100);
 		state = m_manager.buildEdgeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.WARN, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
 		Assert.assertEquals("ERROR:100\n", state.getValue());
 
 		index.setErrorCount(200);
 		state = m_manager.buildEdgeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.ERROR, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
 		Assert.assertEquals("ERROR:200\n", state.getValue());
 	}
 	
@@ -195,12 +195,12 @@ public class GraphConfigManagerTest {
 		
 		index.setAvg(10.0);
 		state = m_manager.buildEdgeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.WARN, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
 		Assert.assertEquals("AVG:10.0\n", state.getValue());
 
 		index.setAvg(100.0);
 		state = m_manager.buildEdgeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.ERROR, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
 		Assert.assertEquals("AVG:100.0\n", state.getValue());
 	}
 	
@@ -221,12 +221,12 @@ public class GraphConfigManagerTest {
 		
 		index.setAvg(10.0);
 		state = m_manager.buildEdgeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.WARN, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
 		Assert.assertEquals("AVG:10.0\n", state.getValue());
 
 		index.setAvg(20.0);
 		state = m_manager.buildEdgeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.ERROR, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
 		Assert.assertEquals("AVG:20.0\n", state.getValue());
 		
 		index.setAvg(9.0);
@@ -234,12 +234,12 @@ public class GraphConfigManagerTest {
 		
 		index.setErrorCount(10);
 		state = m_manager.buildEdgeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.WARN, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.WARN, (int)state.getKey());
 		Assert.assertEquals("ERROR:10\n", state.getValue());
 
 		index.setErrorCount(20);
 		state = m_manager.buildEdgeState(domain, index);
-		Assert.assertEquals(TopologyGraphItemBuilder.ERROR, (int)state.getKey());
+		Assert.assertEquals(GraphConstrant.ERROR, (int)state.getKey());
 		Assert.assertEquals("ERROR:20\n", state.getValue());
 	}
 

@@ -28,8 +28,6 @@ public class LineGraphBuilder extends BaseVisitor {
 
 	private static final String AVG = "Avg";
 
-	private static final String SPLIT = ":";
-
 	private Set<String> m_types = new TreeSet<String>();
 
 	private int m_currentMinute;
@@ -41,7 +39,7 @@ public class LineGraphBuilder extends BaseVisitor {
 		StringBuilder sb = new StringBuilder();
 
 		for (int i = 0; i < length; i++) {
-			sb.append(arg[i]).append(SPLIT);
+			sb.append(arg[i]).append(GraphConstrant.DELIMITER);
 		}
 		return sb.toString().substring(0, sb.length() - 1);
 	}

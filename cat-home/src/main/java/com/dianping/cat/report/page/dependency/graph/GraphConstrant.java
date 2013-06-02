@@ -10,10 +10,9 @@ public class GraphConstrant {
 	public static int WARN = 2;
 
 	public static int ERROR = 3;
-	
-	public static final String SPIT = " ";
+
+	public static final String DELIMITER = " ";
 
 	public static final String ENTER = "<br/>";
-
 
 }

@@ -119,7 +119,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 				String target = dependency.getTarget();
 				Node nodeOld = graph.findNode(target);
 
-				graph.getNodes().put(target, mergeNode(nodeOld, m_itemBuilder.buildDatabaseNode(target)));
+				graph.getNodes().put(target, mergeNode(nodeOld, m_itemBuilder.createDatabaseNode(target)));
 			}
 		}
 		super.visitDependency(dependency);
