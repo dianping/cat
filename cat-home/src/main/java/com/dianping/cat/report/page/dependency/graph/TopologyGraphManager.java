@@ -49,6 +49,11 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				result.setId(node.getId());
 				result.setStatus(node.getStatus());
 				result.setType(node.getType());
+			} else {
+				result.setDes("");
+				result.setId(domain);
+				result.setType(GraphConstrant.PROJECT);
+				result.setStatus(GraphConstrant.OK);
 			}
 			Collection<Edge> edges = graph.getEdges().values();
 
@@ -56,7 +61,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				String self = edge.getSelf();
 				String target = edge.getTarget();
 				Edge cloneEdge = cloneEdge(edge);
-				
+
 				if (self.equals(domain)) {
 					Node other = graph.findNode(target);
 

@@ -169,6 +169,7 @@ public class Handler implements PageHandler<Context> {
 	private TopologyGraph buildHourlyTopologyGraph(Model model, Payload payload) {
 		long time = payload.getDate() + TimeUtil.ONE_MINUTE * computeMinute(payload);
 		String domain = payload.getDomain();
+		
 		return m_graphManager.buildGraphByDomainTime(domain, time);
 	}
 
@@ -183,7 +184,6 @@ public class Handler implements PageHandler<Context> {
 
 		visitor.visitProblemReport(report);
 		String result = visitor.buildResult();
-		System.out.println(result);
 		return result;
 	}
 
@@ -216,7 +216,6 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 
 		Action action = payload.getAction();
-
 		DependencyReport report = queryDependencyReport(payload);
 		switch (action) {
 		case GRAPH:
@@ -333,6 +332,7 @@ public class Handler implements PageHandler<Context> {
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date);
+		System.out.println(request);
 		if (m_problemservice.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_problemservice.invoke(request);
 

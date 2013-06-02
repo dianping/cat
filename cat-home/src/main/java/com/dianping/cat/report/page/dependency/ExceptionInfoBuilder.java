@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
@@ -18,14 +19,18 @@ public class ExceptionInfoBuilder extends BaseVisitor {
 	public void visitEntry(Entry entry) {
 		String type = entry.getType();
 		String state = entry.getStatus();
+		int count = 0;
+		for (Duration duration : entry.getDurations().values()) {
+			count += duration.getCount();
+		}
 
 		if ("error".equals(type)) {
 			Integer temp = m_errors.get(state);
 
 			if (temp == null) {
-				m_errors.put(state, 1);
+				m_errors.put(state, count);
 			} else {
-				m_errors.put(state, temp + 1);
+				m_errors.put(state, new Integer(temp + count));
 			}
 		}
 	}
@@ -43,7 +48,7 @@ public class ExceptionInfoBuilder extends BaseVisitor {
 				return arg1.getValue() - arg0.getValue();
 			}
 		};
-		
+
 		m_errors = MapUtils.sortMap(m_errors, compator);
 		for (java.util.Map.Entry<String, Integer> error : m_errors.entrySet()) {
 			sb.append(error.getKey()).append(GraphConstrant.DELIMITER).append(error.getValue())

@@ -4,7 +4,7 @@
   <entity name="topology-graph"  root="true">
     <attribute name="id" value-type="String" />
     <attribute name="type" value-type="String" />
-    <attribute name="status" value-type="int" />
+    <attribute name="status" value-type="int"  primitive="true"/>
     <attribute name="des" value-type="String" />
     <entity-ref name="node" type="map" names="nodes" method-find-or-create='true'/>
     <entity-ref name="edge" type="map" names="edges" method-find-or-create='true'/>
