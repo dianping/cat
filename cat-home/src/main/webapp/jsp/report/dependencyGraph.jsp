@@ -8,7 +8,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
 <a:report title="Dependency Report"
-	navUrlPrefix="domain=${model.domain}">
+	navUrlPrefix="domain=${model.domain}&op=graph">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	
@@ -18,7 +18,7 @@
 	<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 <div class="report">
   <div class='text-center'>
-	  <a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">切换到实时趋势图</a>
+	  <a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">切换到实时趋势图（当前分钟:${model.minute}）</a>
   </div>
   <div class="row-fluid">
   	<div class="span12  text-center">

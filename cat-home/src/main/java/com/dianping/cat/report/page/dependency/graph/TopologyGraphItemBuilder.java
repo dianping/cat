@@ -1,8 +1,5 @@
 package com.dianping.cat.report.page.dependency.graph;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
@@ -15,10 +12,6 @@ public class TopologyGraphItemBuilder {
 
 	@Inject
 	private TopologyGraphConfigManger m_graphConfigManager;
-
-	private Date m_start;
-
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
 
 	private static final int OK = GraphConstrant.OK;
 
@@ -33,7 +26,6 @@ public class TopologyGraphItemBuilder {
 		node.setType(DATABASE);
 		node.setWeight(1);
 		node.setDes("");
-		node.setLink("");
 		return node;
 	}
 
@@ -55,7 +47,6 @@ public class TopologyGraphItemBuilder {
 			edge.setStatus(OK);
 			edge.setDes("");
 		}
-		edge.setLink(buildProblemLink(domain, m_start));
 		return edge;
 	}
 
@@ -66,7 +57,6 @@ public class TopologyGraphItemBuilder {
 		node.setType(PROJECT);
 		node.setWeight(1);
 		node.setDes("");
-		node.setLink(buildProblemLink(domain, m_start));
 		return node;
 	}
 
@@ -75,7 +65,6 @@ public class TopologyGraphItemBuilder {
 
 		node.setType(PROJECT);
 		node.setWeight(1);
-		node.setLink(buildProblemLink(domain, m_start));
 
 		Pair<Integer, String> state = m_graphConfigManager.buildNodeState(domain, index);
 		if (state != null) {
@@ -86,15 +75,6 @@ public class TopologyGraphItemBuilder {
 			node.setDes("");
 		}
 		return node;
-	}
-
-	private String buildProblemLink(String domain, Date date) {
-		return "p?domain=" + domain + "&date=" + m_sdf.format(date);
-	}
-
-	public TopologyGraphItemBuilder setDate(Date start) {
-		m_start = start;
-		return this;
 	}
 
 }

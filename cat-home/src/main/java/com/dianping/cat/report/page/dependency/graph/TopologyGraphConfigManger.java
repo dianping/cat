@@ -95,16 +95,17 @@ public class TopologyGraphConfigManger implements Initializable {
 		String type = index.getName();
 		String realType = formatType(type);
 		DomainConfig config = queryNodeConfig(realType, domain);
+
 		if (config != null) {
 			double avg = index.getAvg();
 			long error = index.getErrorCount();
 			int errorCode = OK;
 			StringBuilder sb = new StringBuilder();
 
-			if (avg >= config.getErrorResponseTime()) {
+			if (avg > config.getErrorResponseTime()) {
 				errorCode = ERROR;
 				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
-			} else if (avg >= config.getWarningResponseTime()) {
+			} else if (avg > config.getWarningResponseTime()) {
 				errorCode = WARN;
 				sb.append(buildDes(type, AVG_STR, m_df.format(avg), MILLISECOND));
 			}

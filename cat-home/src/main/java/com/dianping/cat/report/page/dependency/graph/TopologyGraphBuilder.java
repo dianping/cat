@@ -56,20 +56,13 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	}
 
 	public String mergeDes(String old, String des) {
-		String split = "\\|";
 		if (StringUtil.isEmpty(old)) {
 			return des;
-		} else if(StringUtil.isEmpty(des)){
+		} else if (StringUtil.isEmpty(des)) {
 			return old;
-		}else {
-			String[] temps = old.split(split);
-			for (String temp : temps) {
-				if (des.equals(temp.trim())) {
-					return old;
-				}
-			}
+		} else {
+			return old + des;
 		}
-		return old + split + des;
 	}
 
 	private Node mergeNode(Node old, Node node) {
@@ -128,7 +121,6 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	@Override
 	public void visitDependencyReport(DependencyReport dependencyReport) {
 		m_domain = dependencyReport.getDomain();
-		m_itemBuilder.setDate(dependencyReport.getStartTime());
 		super.visitDependencyReport(dependencyReport);
 	}
 

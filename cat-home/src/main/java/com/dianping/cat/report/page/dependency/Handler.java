@@ -104,7 +104,7 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private void buildGraphExtraInfo(Payload payload, TopologyGraph graph) {
+	private void buildGraphExtraInfo(Payload payload, Model model, TopologyGraph graph) {
 		if (graph.getStatus() != GraphConstrant.OK) {
 			String problemInfo = buildProblemInfo(graph.getId(), payload);
 
@@ -112,7 +112,7 @@ public class Handler implements PageHandler<Context> {
 		}
 		for (Node node : graph.getNodes().values()) {
 			if (node.getType().equals(GraphConstrant.PROJECT)) {
-				node.setLink(buildLink(payload, node.getId()));
+				node.setLink(buildLink(payload, model, node.getId()));
 
 				if (node.getStatus() != GraphConstrant.OK) {
 					String problemInfo = buildProblemInfo(node.getId(), payload);
@@ -169,12 +169,12 @@ public class Handler implements PageHandler<Context> {
 	private TopologyGraph buildHourlyTopologyGraph(Model model, Payload payload) {
 		long time = payload.getDate() + TimeUtil.ONE_MINUTE * computeMinute(payload);
 		String domain = payload.getDomain();
-		
+
 		return m_graphManager.buildGraphByDomainTime(domain, time);
 	}
 
-	private String buildLink(Payload payload, String domain) {
-		return String.format("?op=graph&minute=%s&domain=%s&date=%s", payload.getMinute(), domain,
+	private String buildLink(Payload payload, Model model, String domain) {
+		return String.format("?op=graph&minute=%s&domain=%s&date=%s", model.getMinute(), domain,
 		      m_dateFormat.format(new Date(payload.getDate())));
 	}
 
@@ -223,7 +223,7 @@ public class Handler implements PageHandler<Context> {
 			TopologyGraph graph = buildHourlyTopologyGraph(model, payload);
 
 			buildGraphByEvent(graph, model.getEvents());
-			buildGraphExtraInfo(payload, graph);
+			buildGraphExtraInfo(payload, model, graph);
 			model.setTopologyGraph(new DefaultJsonBuilder().buildJson(graph));
 			break;
 		case VIEW:
@@ -332,7 +332,6 @@ public class Handler implements PageHandler<Context> {
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
 		      .setProperty("date", date);
-		System.out.println(request);
 		if (m_problemservice.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_problemservice.invoke(request);
 

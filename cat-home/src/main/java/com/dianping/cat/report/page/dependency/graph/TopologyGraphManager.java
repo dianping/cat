@@ -40,20 +40,23 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	public TopologyGraph buildGraphByDomainTime(String domain, long time) {
 		TopologyGraph graph = m_topologyGraphs.get(time);
 		TopologyGraph result = new TopologyGraph();
+		long current = System.currentTimeMillis();
+		long minute = current - current % TimeUtil.ONE_MINUTE;
+
+		if (minute == time && graph == null) {
+			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
+		}
+		result.setId(domain);
+		result.setType(GraphConstrant.PROJECT);
+		result.setStatus(GraphConstrant.OK);
 
 		if (graph != null) {
 			Node node = graph.findNode(domain);
 
 			if (node != null) {
 				result.setDes(node.getDes());
-				result.setId(node.getId());
 				result.setStatus(node.getStatus());
 				result.setType(node.getType());
-			} else {
-				result.setDes("");
-				result.setId(domain);
-				result.setType(GraphConstrant.PROJECT);
-				result.setStatus(GraphConstrant.OK);
 			}
 			Collection<Edge> edges = graph.getEdges().values();
 
@@ -165,9 +168,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 								m_graphBuilder.setCurrentGraph(currentGraph).setLastGraph(lastGraph).setMinute(minute);
 								m_graphBuilder.visitDependencyReport(report);
-
-								m_topologyGraphs.put(currentMinute, currentGraph);
-								m_topologyGraphs.put(lastMinute, lastGraph);
 							} else {
 								m_logger.warn(String.format("Can't get dependency report of %s", temp));
 							}
@@ -176,6 +176,8 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 							t.setStatus(e);
 						}
 					}
+					m_topologyGraphs.put(currentMinute, currentGraph);
+					m_topologyGraphs.put(lastMinute, lastGraph);
 					t.setStatus(Transaction.SUCCESS);
 				} catch (Exception ex) {
 					m_logger.error(ex.getMessage(), ex);
