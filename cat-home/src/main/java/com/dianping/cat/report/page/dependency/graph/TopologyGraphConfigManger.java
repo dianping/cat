@@ -31,17 +31,13 @@ public class TopologyGraphConfigManger implements Initializable {
 
 	private static final String MILLISECOND = "(ms)";
 
-	private static final String SPIT = " ";
-
-	private static final String ENTER = "<br/>";
-
 	private static final String DEFAULT_FILE = "/data/appdatas/cat/topology-config.xml";
 
-	private static final int OK = TopologyGraphItemBuilder.OK;
+	private static final int OK = GraphConstrant.OK;
 
-	private static final int WARN = TopologyGraphItemBuilder.WARN;
+	private static final int WARN = GraphConstrant.WARN;
 
-	private static final int ERROR = TopologyGraphItemBuilder.ERROR;
+	private static final int ERROR = GraphConstrant.ERROR;
 
 	private String m_fileName = DEFAULT_FILE;
 
@@ -50,9 +46,9 @@ public class TopologyGraphConfigManger implements Initializable {
 		int len = args.length;
 
 		for (int i = 0; i < len - 1; i++) {
-			sb.append(args[i]).append(SPIT);
+			sb.append(args[i]).append(GraphConstrant.SPIT);
 		}
-		sb.append(args[len - 1]).append(ENTER);
+		sb.append(args[len - 1]).append(GraphConstrant.ENTER);
 
 		return sb.toString();
 	}

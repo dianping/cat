@@ -18,17 +18,13 @@ public class TopologyGraphItemBuilder {
 
 	private Date m_start;
 
-	public static final String PROJECT = "project";
-
-	public static final String DATABASE = "database";
-
-	public static int OK = 1;
-
-	public static int WARN = 2;
-
-	public static int ERROR = 3;
-
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyyMMddHH");
+
+	private static final int OK = GraphConstrant.OK;
+
+	private static final String DATABASE = GraphConstrant.DATABASE;
+
+	private static final String PROJECT = GraphConstrant.PROJECT;
 
 	public Node buildDatabaseNode(String database) {
 		Node node = new Node(database);

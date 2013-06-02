@@ -33,8 +33,8 @@ import com.dianping.cat.home.dependency.graph.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 import com.dianping.cat.report.page.dependency.graph.LineGraphBuilder;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.page.externalError.EventCollectManager;
 import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
@@ -106,10 +106,10 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildGraphExtraInfo(Payload payload, TopologyGraph graph) {
 		for (Node node : graph.getNodes().values()) {
-			if (node.getType().equals(TopologyGraphItemBuilder.PROJECT)) {
+			if (node.getType().equals(GraphConstrant.PROJECT)) {
 				node.setLink(buildLink(payload, node.getId()));
 
-				if (node.getStatus() != TopologyGraphItemBuilder.OK) {
+				if (node.getStatus() != GraphConstrant.OK) {
 					String problemInfo = buildProblemInfo(node.getId(), payload);
 
 					node.setDes(node.getDes() + problemInfo);
