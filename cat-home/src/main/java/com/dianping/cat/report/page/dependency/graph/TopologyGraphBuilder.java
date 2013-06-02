@@ -59,7 +59,9 @@ public class TopologyGraphBuilder extends BaseVisitor {
 		String split = "\\|";
 		if (StringUtil.isEmpty(old)) {
 			return des;
-		} else {
+		} else if(StringUtil.isEmpty(des)){
+			return old;
+		}else {
 			String[] temps = old.split(split);
 			for (String temp : temps) {
 				if (des.equals(temp.trim())) {

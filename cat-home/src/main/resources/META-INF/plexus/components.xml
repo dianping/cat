@@ -608,10 +608,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
-			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 			<role-hint>transaction-local</role-hint>
 			<implementation>com.dianping.cat.report.page.model.transaction.LocalTransactionService</implementation>
@@ -2531,13 +2527,18 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>dependency</role-hint>
-					<field-name>m_service</field-name>
+					<field-name>m_dependencyService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemservice</field-name>
 				</requirement>
 			</requirements>
 		</component>

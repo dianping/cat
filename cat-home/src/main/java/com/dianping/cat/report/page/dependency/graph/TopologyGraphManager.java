@@ -55,34 +55,45 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			for (Edge edge : edges) {
 				String self = edge.getSelf();
 				String target = edge.getTarget();
-
+				Edge cloneEdge = cloneEdge(edge);
+				
 				if (self.equals(domain)) {
 					Node other = graph.findNode(target);
 
 					if (other != null) {
-						result.addNode(other);
+						result.addNode(cloneNode(other));
 					} else {
 						result.addNode(m_graphBuilder.createNode(target));
 					}
 					edge.setOpposite(false);
-					result.addEdge(edge);
+					result.addEdge(cloneEdge);
 				} else if (target.equals(domain)) {
 					Node other = graph.findNode(self);
 
 					if (other != null) {
-						result.addNode(other);
+						result.addNode(cloneNode(other));
 					} else {
 						result.addNode(m_graphBuilder.createNode(target));
 					}
-					Edge temp = cloneEdge(edge);
-
-					temp.setTarget(edge.getSelf());
-					temp.setSelf(edge.getTarget());
-					temp.setOpposite(true);
-					result.addEdge(temp);
+					cloneEdge.setTarget(edge.getSelf());
+					cloneEdge.setSelf(edge.getTarget());
+					cloneEdge.setOpposite(true);
+					result.addEdge(cloneEdge);
 				}
 			}
 		}
+		return result;
+	}
+
+	public Node cloneNode(Node node) {
+		Node result = new Node();
+
+		result.setDes(node.getDes());
+		result.setId(node.getId());
+		result.setLink(node.getLink());
+		result.setStatus(node.getStatus());
+		result.setType(node.getType());
+		result.setWeight(node.getWeight());
 		return result;
 	}
 
