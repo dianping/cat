@@ -19,24 +19,18 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private List<AggregationRule> m_aggregationRules;
 
-	public AggregationRule getAggregationRule() {
-   	return m_aggregationRule;
-   }
-
-	public void setAggregationRule(AggregationRule aggregationRule) {
-   	m_aggregationRule = aggregationRule;
-   }
-
-	public List<AggregationRule> getAggregationRules() {
-   	return m_aggregationRules;
-   }
-
-	public void setAggregationRules(List<AggregationRule> aggregationRules) {
-   	m_aggregationRules = aggregationRules;
-   }
+	private String m_opState;
 
 	public Model(Context ctx) {
 		super(ctx);
+	}
+
+	public AggregationRule getAggregationRule() {
+		return m_aggregationRule;
+	}
+
+	public List<AggregationRule> getAggregationRules() {
+		return m_aggregationRules;
 	}
 
 	public String getDate() {
@@ -60,6 +54,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return "";
 	}
 
+	public String getOpState() {
+   	return m_opState;
+   }
+
 	public Project getProject() {
 		return m_project;
 	}
@@ -67,6 +65,26 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public List<Project> getProjects() {
 		return m_projects;
 	}
+
+	public void setAggregationRule(AggregationRule aggregationRule) {
+		m_aggregationRule = aggregationRule;
+	}
+
+	public void setAggregationRules(List<AggregationRule> aggregationRules) {
+		m_aggregationRules = aggregationRules;
+	}
+
+	public void setOpResult(boolean result) {
+		if (result) {
+			m_opState = "SUCCESS";
+		} else {
+			m_opState = "FAIL";
+		}
+	}
+
+	public void setOpState(String opState) {
+   	m_opState = opState;
+   }
 
 	public void setProject(Project project) {
 		m_project = project;

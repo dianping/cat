@@ -12,6 +12,9 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#aggregationList').addClass('active');
+			$(".delete").bind("click", function() {
+				return confirm("确定要删除此项目吗(不可恢复)？");
+			});
 		});
 	</script>
 	<div>
@@ -22,7 +25,7 @@
 		<div class="span10">
 			<div>
 			</br>
-			<table class="project" id="contents" width="100%">
+			<table class="table table-striped table-bordered table-condensed" id="contents" width="100%">
 			<thead>
 				<tr class="odd">
 					<th width="15%">报表类型</th>
@@ -51,8 +54,8 @@
 						<td>${item.pattern}</td>
 						<td>${item.displayName}</td>
 						<td>${item.sample}</td>
-						<td><a  class='btn  btn-small btn-primary'href="?op=aggregationUpdate&id=${item.id}">编辑</a>
-						<a  class='btn  btn-small btn-danger' href="?op=aggregationDelete&id=${item.id}">删除</a></td>
+						<td><a class='btn  btn-small btn-primary'href="?op=aggregationUpdate&id=${item.id}">编辑</a>
+						<a class='delete btn  btn-small btn-danger' href="?op=aggregationDelete&id=${item.id}">删除</a></td>
 					</tr>
 				</c:forEach></tbody>
 				</tbody>

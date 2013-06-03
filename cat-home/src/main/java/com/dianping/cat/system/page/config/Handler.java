@@ -22,6 +22,8 @@ import com.dianping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dal.report.AggregationRuleDao;
 import com.dianping.cat.home.dal.report.AggregationRuleEntity;
+import com.dianping.cat.home.dependency.config.entity.DomainConfig;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
 
@@ -34,6 +36,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private AggregationRuleDao m_aggregationRuleDao;
+
+	@Inject
+	private TopologyGraphConfigManger m_topologyConfigManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -77,8 +82,38 @@ public class Handler implements PageHandler<Context> {
 			deleteAggregationRule(payload);
 			model.setAggregationRules(queryAllAggregationRules());
 			break;
+		case TOPOLOGY_GRAPH_CONFIG_NODE_ADD:
+			model.setOpResult(addGraphNodeConfig(payload));
+			break;
+		case TOPOLOGY_GRAPH_CONFIG_NODE_DELETE:
+			model.setOpResult(graphNodeConfigUpdate(payload));
+			break;
+		case TOPOLOGY_GRAPH_CONFIG_EDGE_ADD:
+			model.setOpResult(graphEdgeConfigAdd(payload));
+			break;
+		case TOPOLOGY_GRAPH_CONFIG_EDGE_DELETE:
+			model.setOpResult(graphEdgeConfigDelete(payload));
+			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private boolean addGraphNodeConfig(Payload payload) {
+		DomainConfig config = payload.getDomainConfig();
+		return true;
+		// return m_topologyConfigManager.insertDomainConfig(, config);
+	}
+
+	private boolean graphNodeConfigUpdate(Payload payload) {
+		return true;
+	}
+
+	private boolean graphEdgeConfigAdd(Payload payload) {
+		return true;
+	}
+
+	private boolean graphEdgeConfigDelete(Payload payload) {
+		return true;
 	}
 
 	private List<Project> queryAllProjects() {
@@ -104,21 +139,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void updateProject(Payload payload) {
-		int projectId = payload.getProjectId();
-		String department = payload.getDepartment();
-		String email = payload.getEmail();
-		String owner = payload.getOwner();
-		String projectLine = payload.getProjectLine();
-		String domain = payload.getDomain();
-
-		Project project = m_projectDao.createLocal();
-		project.setId(projectId);
-		project.setKeyId(projectId);
-		project.setDepartment(department);
-		project.setEmail(email);
-		project.setDomain(domain);
-		project.setOwner(owner);
-		project.setProjectLine(projectLine);
+		Project project = payload.getProject();
+		project.setKeyId(project.getId());
 
 		try {
 			m_projectDao.updateByPK(project, ProjectEntity.UPDATESET_FULL);
@@ -129,13 +151,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void updateAggregationRule(Payload payload) {
-		AggregationRule proto = new AggregationRule();
-		proto.setId(payload.getId());
-		proto.setDisplayName(payload.getDisplayName());
-		proto.setDomain(payload.getDomain());
-		proto.setPattern(payload.getPattern());
-		proto.setSample(payload.getSample());
-		proto.setType(payload.getType());
+		AggregationRule proto = payload.getRule();
 		proto.setKeyId(payload.getId());
 		try {
 			if (proto.getKeyId() == 0) {
@@ -197,5 +213,5 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 	}
-	
+
 }

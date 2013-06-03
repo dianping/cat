@@ -24,6 +24,14 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.AGGREGATION_UPATE.getPath();
 		case AGGREGATION_UPDATE_SUBMIT:
 			return JspFile.AGGREGATION_ALL.getPath();
+		case TOPOLOGY_GRAPH_CONFIG_NODE_ADD:
+			return JspFile.TOPOLOGY_GRAPH_CONFIG_ADD.getPath();
+		case TOPOLOGY_GRAPH_CONFIG_NODE_DELETE:
+			return JspFile.TOPOLOGY_GRAPH_CONFIG_DELETE.getPath();
+		case TOPOLOGY_GRAPH_CONFIG_EDGE_ADD:
+			return JspFile.TOPOLOGY_GRAPH_CONFIG_EDGE_ADD.getPath();
+		case TOPOLOGY_GRAPH_CONFIG_EDGE_DELETE:
+			return JspFile.TOPOLOGY_GRAPH_CONFIG_EDGE_DELETE.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);
