@@ -18,7 +18,7 @@
 	<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 <div class="report">
   <div class='text-center'>
-	  <a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}&all=true">切换到实时趋势图（当前分钟:${model.minute}）</a>
+	  <a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时趋势图（当前分钟:${model.minute}）</a>
   </div>
   <div class="row-fluid">
   	<div class="span12  text-center">
@@ -52,6 +52,7 @@
   		<%@ include file="dependencyEvent.jsp"%>
   	</div>
   </div>
+   <%@ include file="dependencyDetailData.jsp"%>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
