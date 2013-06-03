@@ -24,6 +24,9 @@ import com.dainping.cat.consumer.dal.report.Project;
 import com.dainping.cat.consumer.dal.report.ProjectDao;
 import com.dainping.cat.consumer.dal.report.ProjectEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.abtest.model.entity.AbtestModel;
+import com.dianping.cat.abtest.model.entity.Case;
+import com.dianping.cat.abtest.model.entity.Run;
 import com.dianping.cat.home.dal.abtest.Abtest;
 import com.dianping.cat.home.dal.abtest.AbtestDao;
 import com.dianping.cat.home.dal.abtest.AbtestEntity;
@@ -212,11 +215,77 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		case REPORT:
 			renderReportModel(ctx, model, payload);
 			break;
+		case MODEL:
+			renderModel(model);
+			break;
 		}
 
 		model.setAction(action);
 		model.setPage(SystemPage.ABTEST);
 		m_jspViewer.view(ctx, model);
+	}
+
+	private void renderModel(Model model) {
+		model.setAbtestModel(fetchAbtestModel().toString());
+   }
+	
+	private AbtestModel fetchAbtestModel() {
+		try {
+			AbtestModel abtestModel = new AbtestModel();
+
+			List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
+
+			if (abtestRuns != null) {
+				Date now = new Date();
+				for (AbtestRun abtestRun : abtestRuns) {
+					AbtestStatus status = AbtestStatus.calculateStatus(abtestRun, now);
+					if (status == AbtestStatus.READY || status == AbtestStatus.RUNNING) {
+						// fetch Case and GroupStrategy
+						int caseId = abtestRun.getCaseId();
+						Abtest entity = m_abtestDao.findByPK(caseId, AbtestEntity.READSET_FULL);
+						int gid = entity.getGroupStrategy();
+						GroupStrategy groupStrategy = m_groupStrategyDao.findByPK(gid, GroupStrategyEntity.READSET_FULL);
+
+						Case _case = transform(abtestRun, entity, groupStrategy);
+						abtestModel.addCase(_case);
+
+					}
+				}
+			}
+
+			return abtestModel;
+		} catch (DalException e) {
+			m_logger.error("Error when find all AbtestRun", e);
+			Cat.logError(e);
+		}
+		return null;
+	}
+
+	private Case transform(AbtestRun abtestRun, Abtest entity, GroupStrategy groupStrategy) throws DalException {
+		Case _case = new Case(entity.getId());
+		_case.setCreatedDate(entity.getCreationDate());
+		_case.setDescription(entity.getDescription());
+		_case.setGroupStrategy(groupStrategy.getName());
+		_case.setName(entity.getName());
+		_case.setOwner(entity.getOwner());
+		_case.setLastModifiedDate(entity.getModifiedDate());
+		for (String domain : StringUtils.split(entity.getDomains(), ',')) {
+			_case.addDomain(domain);
+		}
+
+		Run run = new Run(abtestRun.getId());
+		for (String domain : StringUtils.split(abtestRun.getDomains(), ',')) {
+			run.addDomain(domain);
+		}
+		run.setCreator(abtestRun.getCreator());
+		run.setDisabled(false);
+		run.setEndDate(abtestRun.getEndDate());
+		run.setGroupStrategyConfiguration(abtestRun.getStrategyConfiguration());
+		run.setStartDate(abtestRun.getStartDate());
+
+		_case.addRun(run);
+
+		return _case;
 	}
 
 	private void renderCreateModel(Model model) {

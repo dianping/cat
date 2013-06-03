@@ -7,6 +7,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	DETAIL("detail"),
 	
+	MODEL("model"),
+	
 	REPORT("report");
 
 	private String m_name;

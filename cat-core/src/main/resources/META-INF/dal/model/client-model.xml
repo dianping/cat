@@ -11,6 +11,8 @@
 	</entity>
 	<entity name="server">
 		<attribute name="ip" value-type="String" key="true" />
+	    <attribute name="port" value-type="int" default-value="2280" />
+	    <attribute name="http-port" value-type="int" default-value="2281" />
     	<attribute name="enabled" value-type="boolean" default-value="true"/>
 	</entity>
 	<entity name="domain">
