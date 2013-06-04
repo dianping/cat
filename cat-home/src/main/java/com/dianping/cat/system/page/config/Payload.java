@@ -32,8 +32,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("projectId")
 	private int m_projectId;
 
+	@FieldMeta("domain")
+	private String m_domain;
+
 	@FieldMeta("id")
 	private int m_id;
+	
+	@FieldMeta("type")
+	private String m_type;
 
 	@Override
 	public Action getAction() {
@@ -43,17 +49,57 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_action;
 	}
 
+	public DomainConfig getDomainConfig() {
+		return m_domainConfig;
+	}
+
+	public EdgeConfig getEdgeConfig() {
+		return m_edgeConfig;
+	}
+
+	public int getId() {
+		return m_id;
+	}
+
 	@Override
 	public SystemPage getPage() {
 		return m_page;
+	}
+
+	public Project getProject() {
+		return m_project;
+	}
+
+	public int getProjectId() {
+		return m_projectId;
 	}
 
 	public String getReportType() {
 		return "";
 	}
 
+	public AggregationRule getRule() {
+		return m_rule;
+	}
+
+	public String getType() {
+		return m_type;
+   }
+
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.PROJECT_ALL);
+	}
+
+	public void setDomainConfig(DomainConfig domainConfig) {
+		m_domainConfig = domainConfig;
+	}
+
+	public void setEdgeConfig(EdgeConfig edgeConfig) {
+		m_edgeConfig = edgeConfig;
+	}
+
+	public void setId(int id) {
+		m_id = id;
 	}
 
 	@Override
@@ -61,56 +107,32 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_page = SystemPage.getByName(page, SystemPage.CONFIG);
 	}
 
-	@Override
-	public void validate(ActionContext<?> ctx) {
+	public void setProject(Project project) {
+		m_project = project;
 	}
 
 	public void setProjectId(int id) {
 		m_projectId = id;
 	}
 
-	public AggregationRule getRule() {
-		return m_rule;
-	}
-
 	public void setRule(AggregationRule rule) {
 		m_rule = rule;
 	}
 
-	public DomainConfig getDomainConfig() {
-		return m_domainConfig;
-	}
+	public void setType(String type) {
+   	m_type = type;
+   }
 
-	public void setDomainConfig(DomainConfig domainConfig) {
-		m_domainConfig = domainConfig;
-	}
+	public String getDomain() {
+   	return m_domain;
+   }
 
-	public EdgeConfig getEdgeConfig() {
-		return m_edgeConfig;
-	}
+	public void setDomain(String domain) {
+   	m_domain = domain;
+   }
 
-	public void setEdgeConfig(EdgeConfig edgeConfig) {
-		m_edgeConfig = edgeConfig;
+	@Override
+	public void validate(ActionContext<?> ctx) {
 	}
-
-	public Project getProject() {
-		return m_project;
-	}
-
-	public void setProject(Project project) {
-		m_project = project;
-	}
-
-	public int getProjectId() {
-		return m_projectId;
-	}
-
-	public int getId() {
-		return m_id;
-	}
-
-	public void setId(int id) {
-		m_id = id;
-	}
-
+	
 }

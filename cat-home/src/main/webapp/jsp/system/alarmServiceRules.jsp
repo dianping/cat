@@ -21,6 +21,9 @@
 		init();
 		var id = '${payload.action.name}';
 		$('#'+id).addClass("active");
+		$(".delete").bind("click", function() {
+		 	return confirm("确定要删除此项目吗(不可恢复)？");
+		});
 	});
 </script>
 
@@ -50,7 +53,7 @@
 								</c:otherwise>
 							</c:choose> 
 							<a  class="btn btn-primary btn-small" href="?op=alarmRuleUpdate&alarmRuleId=${item.alarmRule.id}&type=service">编辑</a> 
-							<a  class="btn btn-danger btn-small" href="?op=serviceAlarmRuleDelete&alarmRuleId=${item.alarmRule.id}">删除</a> 
+							<a  class="delete btn btn-danger btn-small" href="?op=serviceAlarmRuleDelete&alarmRuleId=${item.alarmRule.id}">删除</a> 
 						</td>
 					</tr>
 				</c:forEach></tbody>

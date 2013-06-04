@@ -2843,6 +2843,9 @@
 				<requirement>
 					<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -2871,6 +2874,10 @@
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</role>
+			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>

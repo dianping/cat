@@ -317,8 +317,7 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<DependencyReport> response = m_dependencyService.invoke(request);
 			DependencyReport report = response.getModel();
 
-			Date start = report.getStartTime();
-			if (start == null) {
+			if (report != null && report.getStartTime() == null) {
 				report.setStartTime(new Date(payload.getDate()));
 				report.setStartTime(new Date(payload.getDate() + TimeUtil.ONE_HOUR));
 			}

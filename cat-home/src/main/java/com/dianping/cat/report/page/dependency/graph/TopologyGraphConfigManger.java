@@ -190,6 +190,15 @@ public class TopologyGraphConfigManger implements Initializable {
 			m_config = new TopologyGraphConfig();
 		}
 	}
+	public boolean insertDomainDefaultConfig(String type, DomainConfig config) {
+		NodeConfig node = m_config.findOrCreateNodeConfig(type);
+		
+		node.setDefaultErrorResponseTime(config.getErrorResponseTime());
+		node.setDefaultErrorThreshold(config.getErrorThreshold());
+		node.setDefaultWarningResponseTime(config.getWarningResponseTime());
+		node.setDefaultWarningThreshold(config.getWarningThreshold());
+	   return flushConfig();
+   }
 
 	public boolean insertDomainConfig(String type, DomainConfig config) {
 		m_config.findOrCreateNodeConfig(type).addDomainConfig(config);
@@ -202,7 +211,7 @@ public class TopologyGraphConfigManger implements Initializable {
 		return flushConfig();
 	}
 
-	private EdgeConfig queryEdgeConfig(String type, String from, String to) {
+	public EdgeConfig queryEdgeConfig(String type, String from, String to) {
 		EdgeConfig edgeConfig = m_config.findEdgeConfig(type + ":" + from + ":" + to);
 
 		if (edgeConfig == null) {
@@ -221,7 +230,7 @@ public class TopologyGraphConfigManger implements Initializable {
 		return edgeConfig;
 	}
 
-	private DomainConfig queryNodeConfig(String type, String domain) {
+	public DomainConfig queryNodeConfig(String type, String domain) {
 		NodeConfig typesConfig = m_config.findNodeConfig(type);
 
 		if (typesConfig != null) {
@@ -247,5 +256,6 @@ public class TopologyGraphConfigManger implements Initializable {
 	public void setFileName(String file) {
 		m_fileName = file;
 	}
+
 
 }

@@ -24,4 +24,3 @@ function sub(anchor) {
 	return false;
 }
 
-

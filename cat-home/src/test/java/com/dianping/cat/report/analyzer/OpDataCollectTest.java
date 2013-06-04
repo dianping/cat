@@ -30,30 +30,22 @@ public class OpDataCollectTest extends ComponentTestCase {
 	@Test
 	public void test() throws Exception {
 		m_hourlyReportService = (HourlyReportService) lookup(HourlyReportService.class);
-		String dateStr1 = "2013-03-24 16:00";
-		String dateStr2 = "2013-04-14 16:00";
+		String dateStr1 = "2013-03-22 16:00";
+		String dateStr2 = "2013-04-26 16:00";
 		String dateStr3 = "2013-05-24 16:00";
 
 		String[] domains = getDomains();
 		System.out.println("Domain\tDate\tType\tTotal\tAvg\tLine95\tStd\tQPS");
 		for (String domain : domains) {
 			buildTransactionData(domain, dateStr1);
-		}
-		for (String domain : domains) {
 			buildTransactionData(domain, dateStr2);
-		}
-		for (String domain : domains) {
 			buildTransactionData(domain, dateStr3);
 		}
 
 		System.out.println("Domain\tDate\tLoad\tHttp");
 		for (String domain : domains) {
 			buildHeartbeatData(domain, dateStr1);
-		}
-		for (String domain : domains) {
 			buildHeartbeatData(domain, dateStr2);
-		}
-		for (String domain : domains) {
 			buildHeartbeatData(domain, dateStr3);
 		}
 	}
@@ -90,7 +82,10 @@ public class OpDataCollectTest extends ComponentTestCase {
 	}
 
 	private String[] getDomains() {
-		String domains = "MobileMembercardMainApiWeb,MobileMembercardMainServer,MobileMembercardRecomServer,PayEngine,tuangou-paygate,DealService,TuanGouApiMobile,TuanGouRank,TuanGouRemote,TuanGouWap,TuanGouWeb,MobileApi,MLocationService,MConfigAPI,MobileRecomStore,UserBaseService,GroupService,GroupWeb,PiccenterDisplay,PiccenterStorage,PiccenterUpload,ShopServer,ShopWeb,ShoppicService,ShopSearchWeb,ReviewServer,UserService";
+		String domains = "MobileMembercardMainApiWeb,MobileMembercardMainServer,MobileMembercardRecomServer,PayEngine,"
+		      + "tuangou-paygate,DealService,TuanGouApiMobile,TuanGouRank,TuanGouRemote,TuanGouWap,TuanGouWeb,MobileApi,"
+		      + "MLocationService,MConfigAPI,MobileRecomStore,UserBaseService,GroupService,GroupWeb,PiccenterDisplay,"
+		      + "PiccenterStorage,PiccenterUpload,ShopServer,ShopWeb,ShoppicService,ShopSearchWeb,ReviewServer,UserService";
 
 		return domains.split(",");
 	}

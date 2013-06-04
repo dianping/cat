@@ -20,6 +20,9 @@
 			var id = '${payload.action.name}';
 			$('#'+id).addClass("active");
 			init();
+			 $(".delete").bind("click", function() {
+			    	return confirm("确定要删除此项目吗(不可恢复)？");
+			 });
 		});
 	</script>
 	<div class="body-content">
@@ -49,7 +52,7 @@
 								</c:otherwise>
 							</c:choose> 
 							<a class="btn btn-primary btn-small" href="?op=alarmRuleUpdate&alarmRuleId=${item.alarmRule.id}&type=exception">编辑</a> 
-							<a class="btn btn-danger btn-small" href="?op=exceptionAlarmRuleDelete&alarmRuleId=${item.alarmRule.id}">删除</a> 
+							<a class="delete btn btn-danger btn-small" href="?op=exceptionAlarmRuleDelete&alarmRuleId=${item.alarmRule.id}">删除</a> 
 						</td>
 						</tr>
 				</c:forEach></tbody>

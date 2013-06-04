@@ -14,12 +14,16 @@ public enum Action implements org.unidal.web.mvc.Action {
 	AGGREGATION_UPDATE_SUBMIT("aggregationUpdateSubmit"),	
 	
 	AGGREGATION_DELETE("aggregationDelete"),
+
+	TOPOLOGY_GRAPH_CONFIG_LIST("topologyGraphConfigList"),
 	
-	TOPOLOGY_GRAPH_CONFIG_NODE_ADD("topologyGraphConfigNodeAdd"),
+	TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE("topologyGraphConfigNodeAdd"),
+	
+	TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE_SUBMIT("topologyGraphConfigNodeAddSumbit"),
 	
 	TOPOLOGY_GRAPH_CONFIG_NODE_DELETE("topologyGraphConfigNodeDelete"),
 	
-	TOPOLOGY_GRAPH_CONFIG_EDGE_ADD("topologyGraphConfigEdgeAdd"),
+	TOPOLOGY_GRAPH_CONFIG_EDGE_ADD_OR_UPDATE("topologyGraphConfigEdgeAdd"),
 	
 	TOPOLOGY_GRAPH_CONFIG_EDGE_DELETE("topologyGraphConfigEdgeDelete");
 

@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -19,6 +20,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.core.dal.Project;
 import com.dianping.cat.consumer.core.dal.ProjectDao;
 import com.dianping.cat.consumer.core.dal.ProjectEntity;
+import com.dianping.cat.helper.CatString;
 import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dal.report.AggregationRuleDao;
 import com.dianping.cat.home.dal.report.AggregationRuleEntity;
@@ -68,6 +70,7 @@ public class Handler implements PageHandler<Context> {
 			updateProject(payload);
 			model.setProjects(queryAllProjects());
 			break;
+
 		case AGGREGATION_ALL:
 			model.setAggregationRules(queryAllAggregationRules());
 			break;
@@ -82,30 +85,54 @@ public class Handler implements PageHandler<Context> {
 			deleteAggregationRule(payload);
 			model.setAggregationRules(queryAllAggregationRules());
 			break;
-		case TOPOLOGY_GRAPH_CONFIG_NODE_ADD:
-			model.setOpResult(addGraphNodeConfig(payload));
+
+		case TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE:
+			graphNodeConfigAddOrUpdate(payload, model);
+			break;
+		case TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE_SUBMIT:
+			model.setOpResult(graphNodeConfigAddOrUpdateSubmit(payload, model));
 			break;
 		case TOPOLOGY_GRAPH_CONFIG_NODE_DELETE:
-			model.setOpResult(graphNodeConfigUpdate(payload));
+			model.setOpResult(graphNodeConfigDelete(payload));
+			model.setConfig(m_topologyConfigManager.getConfig());
 			break;
-		case TOPOLOGY_GRAPH_CONFIG_EDGE_ADD:
+		case TOPOLOGY_GRAPH_CONFIG_EDGE_ADD_OR_UPDATE:
 			model.setOpResult(graphEdgeConfigAdd(payload));
 			break;
 		case TOPOLOGY_GRAPH_CONFIG_EDGE_DELETE:
 			model.setOpResult(graphEdgeConfigDelete(payload));
 			break;
+		case TOPOLOGY_GRAPH_CONFIG_LIST:
+			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			break;
 		}
 		m_jspViewer.view(ctx, model);
 	}
 
-	private boolean addGraphNodeConfig(Payload payload) {
-		DomainConfig config = payload.getDomainConfig();
-		return true;
-		// return m_topologyConfigManager.insertDomainConfig(, config);
+	private void graphNodeConfigAddOrUpdate(Payload payload, Model model) {
+		String domain = payload.getDomain();
+		String type = payload.getType();
+
+		if (!StringUtils.isEmpty(domain)) {
+			model.setDomainConfig(m_topologyConfigManager.queryNodeConfig(type, domain));
+		}
 	}
 
-	private boolean graphNodeConfigUpdate(Payload payload) {
-		return true;
+	private boolean graphNodeConfigAddOrUpdateSubmit(Payload payload, Model model) {
+		String type = payload.getType();
+		DomainConfig config = payload.getDomainConfig();
+		String domain = config.getId();
+		model.setDomainConfig(config);
+
+		if (domain.equalsIgnoreCase(CatString.ALL)) {
+			return m_topologyConfigManager.insertDomainDefaultConfig(type, config);
+		} else {
+			return m_topologyConfigManager.insertDomainConfig(type, config);
+		}
+	}
+
+	private boolean graphNodeConfigDelete(Payload payload) {
+		return m_topologyConfigManager.deleteDomainConfig(payload.getType(), payload.getDomain());
 	}
 
 	private boolean graphEdgeConfigAdd(Payload payload) {
@@ -113,7 +140,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private boolean graphEdgeConfigDelete(Payload payload) {
-		return true;
+		return m_topologyConfigManager.deleteDomainConfig(payload.getType(), payload.getDomain());
 	}
 
 	private List<Project> queryAllProjects() {
