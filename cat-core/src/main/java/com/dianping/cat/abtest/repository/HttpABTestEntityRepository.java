@@ -1,20 +1,17 @@
 package com.dianping.cat.abtest.repository;
 
-import java.net.InetSocketAddress;
+import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.locks.LockSupport;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.StringUtils;
-import org.unidal.helper.Splitters;
+import org.unidal.helper.Files;
+import org.unidal.helper.Threads.Task;
+import org.unidal.helper.Urls;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.socket.MessageInboundHandler;
-import org.unidal.socket.udp.UdpSocket;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.abtest.model.entity.AbtestModel;
@@ -25,21 +22,16 @@ import com.dianping.cat.abtest.model.transform.DefaultSaxParser;
 import com.dianping.cat.abtest.spi.ABTestEntity;
 import com.dianping.cat.abtest.spi.ABTestGroupStrategy;
 import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 
-public class DefaultABTestEntityRepository extends ContainerHolder implements ABTestEntityRepository, Initializable,
-      LogEnabled, MessageInboundHandler<ProtocolMessage> {
+public class HttpABTestEntityRepository extends ContainerHolder implements ABTestEntityRepository, Initializable, Task {
+
 	@Inject
 	private ClientConfigManager m_configManager;
-
-	@Inject
-	private InetSocketAddress m_address = new InetSocketAddress("228.0.0.3", 2283);
-
-	@Inject
-	private Logger m_logger;
-
-	private UdpSocket m_socket;
 
 	private String m_domain;
 
@@ -53,72 +45,70 @@ public class DefaultABTestEntityRepository extends ContainerHolder implements AB
 	}
 
 	@Override
+	public String getName() {
+		return getClass().getSimpleName();
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		m_domain = m_configManager.getFirstDomain().getId();
+
 	}
 
-	// for test purpose
-	void setDomain(String domain) {
-		m_domain = domain;
-	}
+	private void refresh() {
+		String clientIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
-	@Override
-	public void start() {
-		m_socket = new UdpSocket();
-		m_socket.setName("ABTest");
-		m_socket.setCodec(new ProtocolMessageCodec());
-		m_socket.onMessage(this);
-		m_socket.listenOn(m_address);
+		for (Server server : m_configManager.getServers()) {
+			String ip = server.getIp();
+			int port = server.getHttpPort();
+			String url = String.format("http://%s:%s/cat/s/abtest?op=model", ip, port);
+			Transaction t = Cat.newTransaction("ABTest", url);
 
-		System.out.println("ABTestRepository init...");
+			try {
+				InputStream inputStream = Urls.forIO().connectTimeout(100).readTimeout(100).openStream(url);
+				String content = Files.forIO().readFrom(inputStream, "utf-8");
+				AbtestModel abtest = DefaultSaxParser.parse(content);
+				ABTestVisitor visitor = new ABTestVisitor(m_domain);
 
-		ProtocolMessage hi = new ProtocolMessage();
+				abtest.accept(visitor);
 
-		hi.setName(ProtocolNames.HI);
-		hi.addHeader(ProtocolNames.HEARTBEAT, m_domain);
-		m_socket.send(hi);
-	}
+				// switch the entities
+				m_entities = visitor.getEntities();
 
-	public void setAddress(String address) {
-		List<String> parts = Splitters.by(':').trim().split(address);
-		int len = parts.size();
-		int index = 0;
-		String host = len > index ? parts.get(index++) : "228.0.0.3";
-		String port = len > index ? parts.get(index++) : "2283";
+				Heartbeat h = Cat.newHeartbeat("abtest-heartbeat", clientIp);
 
-		m_address = new InetSocketAddress(host, Integer.parseInt(port));
-	}
+				h.addData(abtest.toString());
+				h.setStatus(Message.SUCCESS);
+				h.complete();
 
-	@Override
-	public void handle(ProtocolMessage message) {
-		String name = message.getName();
-
-		if (ProtocolNames.HEARTBEAT.equalsIgnoreCase(name)) {
-			Heartbeat h = Cat.newHeartbeat("abtest-heartbeat", message.getName()); // TODO .getFrom()
-
-			h.addData(message.toString());
-			h.setStatus(Message.SUCCESS);
-			h.complete();
-
-			String content = message.getContent();
-
-			if (StringUtils.isNotBlank(content)) {
-				try {
-					AbtestModel abtest = DefaultSaxParser.parse(content);
-					ABTestVisitor visitor = new ABTestVisitor(m_domain);
-
-					abtest.accept(visitor);
-					
-					//switch the entities
-					m_entities = visitor.getEntities();
-					
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
+				t.setStatus(Message.SUCCESS);
+				break;
+			} catch (Throwable e) {
+				t.setStatus(e);
+				Cat.logError(e);
+			} finally {
+				t.complete();
 			}
-		} else {
-			m_logger.warn(String.format("Unknown command(%s) found in %s!", name, message));
 		}
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			long start = System.currentTimeMillis();
+
+			try {
+				refresh();
+			} catch (Throwable e) {
+				Cat.logError(e);
+			}
+
+			LockSupport.parkUntil(start + 6 * 1000L); // every minute
+		}
+	}
+
+	@Override
+	public void shutdown() {
 	}
 
 	class ABTestVisitor extends BaseVisitor {
@@ -131,6 +121,10 @@ public class DefaultABTestEntityRepository extends ContainerHolder implements AB
 			m_entities = new HashMap<Integer, ABTestEntity>();
 		}
 
+		public Map<Integer, ABTestEntity> getEntities() {
+			return m_entities;
+		}
+
 		@Override
 		public void visitCase(Case _case) {
 			for (Run run : _case.getRuns()) {
@@ -138,7 +132,7 @@ public class DefaultABTestEntityRepository extends ContainerHolder implements AB
 				if (run.getDomains() != null && run.getDomains().contains(m_domain)) {
 
 					ABTestEntity entity = new ABTestEntity(_case, run);
-					
+
 					String strategyKey = String.format("%s+%s+%s", _case.getId(), entity.getGroupStrategyName(),
 					      entity.getGroupStrategyConfiguration());
 					ABTestGroupStrategy strategy = m_strategies.get(strategyKey);
@@ -153,9 +147,9 @@ public class DefaultABTestEntityRepository extends ContainerHolder implements AB
 							m_strategies.put(strategyKey, strategy);
 						} catch (Exception e) {
 							Cat.logError(e);
-							
-							ABTestEntity origin = DefaultABTestEntityRepository.this.m_entities.get(_case.getId());
-							
+
+							ABTestEntity origin = HttpABTestEntityRepository.this.m_entities.get(_case.getId());
+
 							if (origin != null) {
 								entity = origin;
 							} else {
@@ -168,15 +162,6 @@ public class DefaultABTestEntityRepository extends ContainerHolder implements AB
 				}
 			}
 		}
-
-		
-		public Map<Integer, ABTestEntity> getEntities() {
-      	return m_entities;
-      }
 	}
 
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
 }

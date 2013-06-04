@@ -226,7 +226,9 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 				count += processTransaction(report, tree, temp);
 			} else if (message instanceof Heartbeat) {
-				count += processHeartbeat(report, (Heartbeat) message, tree);
+				if (message.getType().equals("heartbeat")) {
+					count += processHeartbeat(report, (Heartbeat) message, tree);
+				}
 			}
 		}
 
