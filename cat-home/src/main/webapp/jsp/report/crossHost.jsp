@@ -9,11 +9,8 @@
 
 <a:report title="Cross Report"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}">
-
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-
-<res:useCss value="${res.css.local.cross_css}" target="head-css" />
 <%@ include file="crossQuery.jsp" %>
 </br>
 <table class="machines">
@@ -43,7 +40,7 @@
 	</tr>
 </table>
 <br>
-<table class='cross'>
+<table class='data'>
 		<c:if test="${!empty model.hostInfo.callProjectsInfo}">
 		<tr>
 			<th class="left">Type</th>

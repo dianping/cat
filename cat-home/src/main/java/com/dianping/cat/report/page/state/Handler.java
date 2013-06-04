@@ -15,7 +15,7 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.page.PayloadNormalizer;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -84,7 +84,7 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 		String key = payload.getKey();
 		StateReport report = null;
-		HistoryGraphItem item = null;
+		LineChart item = null;
 		switch (action) {
 		case HOURLY:
 			report = getHourlyReport(payload);

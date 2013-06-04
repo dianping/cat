@@ -9,13 +9,11 @@ public class NavigationBar {
 	public Page[] getSystemPages() {
 		return new Page[] {
 				
-		SystemPage.AGGREGATION,
-
 		SystemPage.ALARM,
 
-		SystemPage.PROJECT,
+		SystemPage.CONFIG,
 		
-		ReportPage.QUERY,
+//		ReportPage.QUERY,
 
 		SystemPage.LOGIN
 
@@ -43,13 +41,13 @@ public class NavigationBar {
 
 		ReportPage.SQL,
 
-		ReportPage.DATABASE,
-
-		ReportPage.MATRIX,
+//		ReportPage.DATABASE,
+//
+//		ReportPage.MATRIX,
 		
 		ReportPage.DEPENDENCY,
 		
-		ReportPage.HEALTH,
+//		ReportPage.HEALTH,
 
 		ReportPage.TOP,
 		

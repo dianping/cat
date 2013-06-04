@@ -19,13 +19,9 @@ function disksGraph(size, diskHistoryGraph) {
 			var div = document.createElement("div");
 			graphCell.appendChild(div);
 			div.setAttribute("class", "graph");
-			graphReal(div, graphData,60*1000);
+			graphLineChart(div, graphData);
 		}
 	}
-}
-
-function graphOnMinute(div,graphData){
-	graphReal(div, graphData,60*1000);
 }
 
 $(document).delegate('.graph_link', 'click', function(e){

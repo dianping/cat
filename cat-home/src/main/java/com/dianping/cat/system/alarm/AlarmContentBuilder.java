@@ -40,9 +40,9 @@ public class AlarmContentBuilder implements  Initializable {
 		String type = meta.getType();
 
 		if (type.equalsIgnoreCase(AlertInfo.EXCEPTION)) {
-			return CatString.EXCEPTION + "[ " + String.valueOf(meta.getDomain()) + " ]";
+			return CatString.EXCEPTION_ALERT_TITLE + "[ " + String.valueOf(meta.getDomain()) + " ]";
 		} else if (type.equalsIgnoreCase(AlertInfo.SERVICE)) {
-			return CatString.SERVICE + "[ " + String.valueOf(meta.getDomain()) + " ]";
+			return CatString.SERVICE_ALERT_TITLE + "[ " + String.valueOf(meta.getDomain()) + " ]";
 		}
 
 		return "Default";

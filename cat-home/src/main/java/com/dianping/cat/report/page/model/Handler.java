@@ -86,10 +86,10 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "top-local")
 	private LocalTopService m_topService;
-	
+
 	@Inject(type = ModelService.class, value = "metric-local")
 	private LocalMetricService m_metricService;
-	
+
 	@Inject(type = ModelService.class, value = "dependency-local")
 	private LocalDependencyService m_dependencyService;
 
@@ -300,12 +300,13 @@ public class Handler extends ContainerHolder implements PageHandler<Context> {
 		private String m_ip;
 
 		public HeartBeatReportFilter(String ip) {
+			System.out.println(m_ip);
 			m_ip = ip;
 		}
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.heartbeat.model.entity.Machine machine) {
-			if (machine.getIp().equals(m_ip)) {
+			if (machine.getIp().equals(m_ip) || StringUtils.isEmpty(m_ip) || CatString.ALL.equals(m_ip)) {
 				super.visitMachine(machine);
 			}
 		}

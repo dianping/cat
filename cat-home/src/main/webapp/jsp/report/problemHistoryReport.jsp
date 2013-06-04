@@ -11,11 +11,8 @@
 
 	<jsp:attribute name="subtitle">From ${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useCss value="${res.css.local.problem_css}" target="head-css"/>
-	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['baseTools_js']}" target="head-js"/>
-	<res:useJs value="${res.js.local.flotr2_js}" target="head-js" />
-	<res:useJs value="${res.js.local.trendGraph_js}" target="head-js" />
+	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 </br>
 <table class="machines">
 	<tr style="text-align:left">
@@ -42,7 +39,7 @@
 			 </c:forEach>
 		</th>
 		<th>long-url <input id="thresholdInput" style="display: none"
-			value="${model.threshold}"> <select size="1" id="p_longUrl">
+			value="${model.threshold}"> <select class="input-small" size="1" id="p_longUrl">
 				${model.defaultThreshold}
 				<option value="500">0.5 Sec</option>
 				<option value="1000">1.0 Sec</option>
@@ -51,14 +48,14 @@
 				<option value="3000">3.0 Sec</option>
 				<option value="5000">5.0 Sec</option>
 		</select> long-sql
-		<select size="1" id="p_longSql">
+		<select size="1" id="p_longSql" class="input-small">
 				${model.defaultSqlThreshold}
 				<option value="100">100 ms</option>
 				<option value="500">500 ms</option>
 				<option value="1000">1000 ms</option>
 				<option value="2000">3000 ms</option>
 		</select> long-service
-		<select size="1" id="p_longService">
+		<select size="1" id="p_longService" class="input-small">
 				${model.defaultSqlThreshold}
 				<option value="100">50 ms</option>
 				<option value="200">100 ms</option>
@@ -85,7 +82,7 @@
 				var longServiceTime=$("#p_longService").val();
 				window.location.href="?op=history&domain="+domain+"&ip="+ip+"&date="+date+"&threshold="+longtime+"&sqlThreshold="+longSqlTime+'&reportType='+reportType+customDate+"&serviceThreshold="+longServiceTime;
 			}
-		</script><input style="WIDTH: 60px" value="Refresh"
+		</script><input class="btn btn-primary  btn-small"  value="Refresh"
 			onclick="longTimeChange('${model.date}','${model.domain}','${model.ipAddress}')"
 			type="submit">
 		</th>
@@ -93,7 +90,7 @@
 </table>
 
 <br>
-<table>
+<table class='problem'>
 	<tr>
 		<th>Type</th>
 		<th>Total</th>

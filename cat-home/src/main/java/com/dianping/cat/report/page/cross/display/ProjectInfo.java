@@ -28,8 +28,8 @@ public class ProjectInfo extends BaseVisitor {
 
 	private Map<String, TypeDetailInfo> m_serviceProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
 
-	private Map<String,TypeDetailInfo> m_callServiceProjectsInfo = new LinkedHashMap<String,TypeDetailInfo>();
-	
+	private Map<String, TypeDetailInfo> m_callServiceProjectsInfo = new LinkedHashMap<String, TypeDetailInfo>();
+
 	private String m_clientIp;
 
 	private long m_reportDuration;
@@ -40,10 +40,20 @@ public class ProjectInfo extends BaseVisitor {
 
 	private DomainManager m_domainManager;
 
-	// private HostinfoDao m_hostInfoDao;
-
 	public ProjectInfo(long reportDuration) {
 		m_reportDuration = reportDuration;
+	}
+
+	public void addAllCallProjectInfo(String domain, TypeDetailInfo info) {
+		TypeDetailInfo all = m_callServiceProjectsInfo.get(ALL_CLIENT);
+
+		if (all == null) {
+			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
+			all.setType(info.getType());
+			m_callServiceProjectsInfo.put(ALL_CLIENT, all);
+		}
+		all.mergeTypeDetailInfo(info);
+		m_callServiceProjectsInfo.put(domain, info);
 	}
 
 	private void addCallProject(String ip, Type type) {
@@ -80,9 +90,19 @@ public class ProjectInfo extends BaseVisitor {
 		all.mergeType(type);
 	}
 
+	public Map<String, TypeDetailInfo> getAllCallProjectInfo() {
+		return m_callProjectsInfo;
+	}
+
 	public Collection<TypeDetailInfo> getCallProjectsInfo() {
 		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callProjectsInfo.values());
 		Collections.sort(values, new TypeCompartor(m_callSortBy));
+		return values;
+	}
+
+	public List<TypeDetailInfo> getCallServiceProjectsInfo() {
+		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callServiceProjectsInfo.values());
+		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
 		return values;
 	}
 
@@ -116,6 +136,10 @@ public class ProjectInfo extends BaseVisitor {
 		return this;
 	}
 
+	public void setDomainManager(DomainManager domainManager) {
+		m_domainManager = domainManager;
+	}
+
 	public ProjectInfo setServiceSortBy(String serviceSortBy) {
 		m_serviceSortBy = serviceSortBy;
 		return this;
@@ -144,23 +168,5 @@ public class ProjectInfo extends BaseVisitor {
 			addCallProject(remoteIp, remote.getType());
 		}
 	}
-	
-	public void setDomainManager(DomainManager domainManager) {
-		m_domainManager = domainManager;
-	}
 
-	public Map<String, TypeDetailInfo> getAllCallServiceProjectsInfo() {
-		return m_callServiceProjectsInfo;
-	}
-
-	public Map<String,TypeDetailInfo> getAllCallProjectInfo(){
-		return m_callProjectsInfo;
-	}
-	
-	public List<TypeDetailInfo> getCallServiceProjectsInfo(){
-		List<TypeDetailInfo> values = new ArrayList<TypeDetailInfo>(m_callServiceProjectsInfo.values());
-		Collections.sort(values, new TypeCompartor(m_serviceSortBy));
-		return values;
-	}
-	
 }

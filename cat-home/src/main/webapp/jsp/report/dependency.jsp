@@ -11,132 +11,36 @@
 	navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
-	<res:useCss value='${res.css.local.report_css}' target="head-css" />
-	<res:useCss value='${res.css.local.table_css}' target="head-css" />
-	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}"
-			target="head-js" />
-<div class="report">
-	<c:forEach var="item" items="${model.minutes}" varStatus="status">
-		<c:if test="${status.index % 30 ==0}">
-			<div class="pagination text-center">
-			<ul>
-		</c:if>
-		<li id="minute${item}"><a
-					href="?domain=${model.domain}&date=${model.date}&minute=${item}">
-					<c:if test="${item < 10}">0${item}</c:if>
-					<c:if test="${item >= 10}">${item}</c:if>
-				</a></li>
-		<c:if test="${status.index % 30 ==29 || status.last}">
-			</ul>
-			</div>
-		</c:if>
-	</c:forEach>
-			
-	<div class="row-fluid">
-  <div class="span6">
-	<table	class="contents table table-striped table-bordered table-condensed">
-		<thead>	<tr>
-			<th>Name</th>
-			<th>Total Count</th>
-			<th>Failure Count</th>
-			<th>Failure%</th>
-			<th>Avg(ms)</th>
-		</tr></thead><tbody>
-		<c:forEach var="item" items="${model.segment.indexs}"
-								varStatus="status">
-			 <c:set var="itemKey" value="${item.key}" />
-			 <c:set var="itemValue" value="${item.value}" />
-			<tr>
-				<td>${itemValue.name}</td>
-				<td>${w:format(itemValue.totalCount,'#,###,###,###,##0')}</td>
-				<td>${w:format(itemValue.errorCount,'#,###,###,###,##0')}</td>
-				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
-				<td>${w:format(itemValue.avg,'0.0')}</td>
-			</tr>		
-		</c:forEach></tbody>
-	</table>
 	
+	<res:useCss value='${res.css.local.table_css}' target="head-css" />
+	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+	<div class='report'>
+		<div class="row-fluid">
+			<div class="span12 text-center">
+				<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=graph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时拓扑图</a>
+			</div>
+		</div>
+	<%@ include file="dependencyLineGraph.jsp"%>
 	</br>
-	<table	class="contents table table-striped table-bordered table-condensed">
-		<thead>	<tr>
-			<th>Type</th>
-			<th>Target</th>
-			<th>Total Count</th>
-			<th>Failure Count</th>
-			<th>Failure%</th>
-			<th>Avg(ms)</th>
-		</tr></thead><tbody>
-		<c:forEach var="item" items="${model.segment.dependencies}"
-								varStatus="status">
-			 <c:set var="itemKey" value="${item.key}" />
-			 <c:set var="itemValue" value="${item.value}" />
-			<tr>
-				<td>${itemValue.type}</td>
-				<td>${itemValue.target}</td>
-				<td>${w:format(itemValue.totalCount,'#,###,###,###,##0')}</td>
-				<td>${w:format(itemValue.errorCount,'#,###,###,###,##0')}</td>
-				<td>${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
-				<td>${w:format(itemValue.avg,'0.0')}</td>
-			</tr>		
-		</c:forEach></tbody>
-	</table>
+  	<div class="row-fluid">
+	  <div class="span12">
+	  		<%@ include file="dependencyEvent.jsp"%>
+	  </div>
 	</div>
-  <div class="span6">
-  			<div class="tabbable"  id="otherDependency">
-				  <ul class="nav nav-tabs">
-				  	<c:forEach  var="item" items="${model.events}"  varStatus="status" >
-						 <li id="leftTab${status.index}" class="text-right"><a href="#tab${status.index}" data-toggle="tab">
-						 ${item.key}
-						 <c:set var="size" value="${w:size(item.value)}"/>
-						 <c:if test="${size > 0 }"><span class='text-error'>(${size})</span></c:if>
-					</a></li>
-				  	</c:forEach>
-				  </ul>
-		  	<div class="tab-content">
-	    		<c:forEach  var="entry" items="${model.events}"  varStatus="status" >
-	    		<c:set var="items" value="${entry.value}"/>
-				    <div class="tab-pane" id="tab${status.index}">	
-						<table	class="table table-striped table-bordered table-condensed">
-				  		<thead>
-				  			<tr><th>时间</th>
-				  				<th>详情</th>
-				  				<th>来源</th>
-				  				<th>项目名</th>
-				  				<th>IP</th>
-				  			</tr>
-				  		</thead>
-				  		<tbody>
-				  			<c:forEach var="item" items="${items}">
-				  				<tr><td>${w:format(item.date,'HH:mm')}</td>
-				  					<td>
-				  						<c:choose>
-				  							<c:when test="${not empty item.link}"><a href="${item.link}" target="_blank">${item.subject}</a></c:when>
-				  							<c:otherwise>${item.subject}</c:otherwise>
-				  						</c:choose>
-				  						<i data-content="${item.content}" data-original-title="详情" data-placement="top" data-toggle="popover" class="icon-tags" data-trigger="hover" tips=""></i>
-				  					</td>
-				  					<td>
-				  					<c:choose>
-				  						<c:when test="${item.type==1}">运维</c:when>
-				  						<c:when test="${item.type==2}">数据库</c:when>
-				  						<c:when test="${item.type==3}">CAT</c:when>
-				  					</c:choose>
-				  					</td>
-				  					<td>${item.domain}</td>
-				  					<td>${item.ip}</td>
-				  				</tr>
-				  			</c:forEach>	
-					</table></div>
-					</c:forEach>
-			    </div>
-		    </div>
-  		</tbody>
-  </div>
-</div>
-</div>
+	  <div class="row-fluid">
+	  	    <div class="span2">
+	  	    	<a class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
+	  	   		<h4 class="text-success">当前数据:<c:if test="${payload.all}">0~60</c:if>
+	  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
+	  	    </div>
+	  	    <div class="span10">
+	  	    	<%@ include file="dependencyHeader.jsp" %>
+	  	    </div>
+	  </div>
+	  <%@ include file="dependencyDetailData.jsp"%>
+	  </div>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
@@ -146,13 +50,17 @@
 			"sPaginationType": "full_numbers",
 			'iDisplayLength': 50,
 			"bPaginate": false,
-			"bFilter": false,
+			//"bFilter": false,
+		});
+		$('.contentsDependency').dataTable({
+			"sPaginationType": "full_numbers",
+			'iDisplayLength': 50,
+			"bPaginate": false,
 		});
 		$('#otherDependency .nav-tabs a').mouseenter(function (e) {
 		  e.preventDefault();
 		  $(this).tab('show');
 		});	
-		$('i[tips]').popover();
 		$('#tab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		$('.switch').css('display','none');
@@ -165,5 +73,13 @@
 	}
 	.pagination ul{
 		margin-top:0px;
+	}
+	.pagination ul > li > a, .pagination ul > li > span{
+		padding:3px 10px;
+	}
+	.graph {
+		width: 450px;
+		height: 200px;
+		margin: 4px auto;
 	}
 </style>

@@ -6,8 +6,8 @@ package com.dianping.cat.report.task.heartbeat;
 import java.util.List;
 import java.util.Set;
 
-import com.dainping.cat.consumer.core.dal.Report;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.core.dal.Report;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.page.model.heartbeat.HeartbeatReportMerger;

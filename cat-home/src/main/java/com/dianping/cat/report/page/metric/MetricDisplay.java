@@ -12,12 +12,12 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.dianping.cat.consumer.advanced.BussinessConfigManager.BusinessConfig;
 import com.dianping.cat.consumer.metric.model.entity.Metric;
 import com.dianping.cat.consumer.metric.model.entity.MetricReport;
 import com.dianping.cat.consumer.metric.model.entity.Point;
 import com.dianping.cat.consumer.metric.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.page.metric.MetricConfig.MetricFlag;
 import com.google.gson.Gson;
 
 public class MetricDisplay extends BaseVisitor {
@@ -26,34 +26,36 @@ public class MetricDisplay extends BaseVisitor {
 
 	private String m_key;
 
-	private String m_channel;
+	private String m_classificationValue;
 
 	private Date m_start;
 
-	private MetricConfig m_config;
+	private String m_classificationKey;
 
-	private String prefix = "channel=";
+	private Set<String> m_allChildKeyValues = new TreeSet<String>();
 
-	private Set<String> m_allChannel = new TreeSet<String>();
-
-	public MetricDisplay(MetricConfig metricConfig, String channel, Date start) {
-		m_config = metricConfig;
+	public MetricDisplay(List<BusinessConfig> configs, String classificationValue, Date start) {
 		m_start = start;
-		m_channel = channel;
+		m_classificationValue = classificationValue;
 
-		for (MetricFlag flag : m_config.getFlags()) {
+		for (BusinessConfig flag : configs) {
 			String title = flag.getTitle();
+			String classifications = flag.getClassifications();
+
+			if (classifications != null && classifications.length() > 0) {
+				m_classificationKey = classifications;
+			}
 			if (flag.isShowSum()) {
-				String key = flag.getKey() + ":sum";
-				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
+				String key = flag.getMainKey() + ":sum";
+				m_metrics.put(key, new GraphItem(m_start, title + BusinessConfig.Suffix_SUM, flag.getMainKey()));
 			}
 			if (flag.isShowCount()) {
-				String key = flag.getKey() + ":count";
-				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
+				String key = flag.getMainKey() + ":count";
+				m_metrics.put(key, new GraphItem(m_start, title + BusinessConfig.Suffix_COUNT, flag.getMainKey()));
 			}
 			if (flag.isShowAvg()) {
-				String key = flag.getKey() + ":avg";
-				m_metrics.put(key, new GraphItem(m_start, title, flag.getKey()));
+				String key = flag.getMainKey() + ":avg";
+				m_metrics.put(key, new GraphItem(m_start, title + BusinessConfig.Suffix_AVG, flag.getMainKey()));
 			}
 		}
 	}
@@ -81,8 +83,12 @@ public class MetricDisplay extends BaseVisitor {
 		}
 	}
 
-	public Set<String> getAllChannel() {
-		return m_allChannel;
+	public Set<String> getAllChildKeyValues() {
+		return m_allChildKeyValues;
+	}
+
+	public String getChildKey() {
+		return m_classificationKey;
 	}
 
 	public List<GraphItem> getGroups() {
@@ -97,15 +103,13 @@ public class MetricDisplay extends BaseVisitor {
 		if (metrics != null) {
 			Set<String> keySet = metrics.keySet();
 			for (String temp : keySet) {
-				if (temp.startsWith(prefix)) {
-					m_allChannel.add(temp.substring(prefix.length()));
-				}
+				m_allChildKeyValues.add(temp.substring(temp.indexOf('=') + 1));
 			}
 		}
-		if (StringUtils.isEmpty(m_channel)) {
+		if (StringUtils.isEmpty(m_classificationValue)) {
 			buildGraphItem(metric.getPoints().values());
 		} else {
-			Metric m = metrics.get(prefix + m_channel);
+			Metric m = metrics.get(m_classificationKey + '=' + m_classificationValue);
 
 			if (m != null) {
 				buildGraphItem(m.getPoints().values());
@@ -127,22 +131,25 @@ public class MetricDisplay extends BaseVisitor {
 
 		private String start;
 
-		private String title;
+		private transient String title;
+		
+		private List<String> subTitles = new ArrayList<String>();
 
 		private String key;
 
 		private static final int SIZE = 60;
 
-		private double[] values = new double[SIZE];
+		private transient double[] value = new double[SIZE];
+		
+		private List<double[]> values = new ArrayList<double[]>();
 
 		public GraphItem(Date start, String title, String key) {
 			this.start = sdf.format(start);
 			this.title = title;
 			this.key = key;
 
-			for (int i = 0; i < SIZE; i++) {
-				values[i] = -1;
-			}
+			values.add(value);
+			subTitles.add(title);
 		}
 
 		public GraphItem addSubTitle(String title) {
@@ -175,7 +182,7 @@ public class MetricDisplay extends BaseVisitor {
 		}
 
 		public double[] getValues() {
-			return values;
+			return value;
 		}
 
 		public GraphItem setSize(int size) {
@@ -197,13 +204,13 @@ public class MetricDisplay extends BaseVisitor {
 			return this;
 		}
 
-		public GraphItem setValue(int minute, double value) {
-			values[minute] = value;
+		public GraphItem setValue(int minute, double temp) {
+			value[minute] = temp;
 			return this;
 		}
 
 		public void setValues(double[] values) {
-			this.values = values;
+			this.value = values;
 		}
 	}
 

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -14,14 +15,26 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Project;
-import com.dainping.cat.consumer.core.dal.ProjectDao;
-import com.dainping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ServerConfigManager;
+import com.dianping.cat.consumer.core.dal.Project;
+import com.dianping.cat.consumer.core.dal.ProjectDao;
+import com.dianping.cat.consumer.core.dal.ProjectEntity;
 import com.dianping.cat.helper.TimeUtil;
 
 public class DomainNavManager implements Initializable {
+
+	@Inject
+	private ProjectDao m_projectDao;
+
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
+
+	private static Map<String, Project> m_projects = new ConcurrentHashMap<String, Project>();
+
+	public static Collection<String> getDomains() {
+		return m_projects.keySet();
+	}
 
 	public static Map<String, Department> getDepartment(Collection<String> domains) {
 		Map<String, Department> result = new TreeMap<String, Department>();
@@ -36,25 +49,17 @@ public class DomainNavManager implements Initializable {
 					department = project.getDepartment();
 					projectLine = project.getProjectLine();
 				}
-				Department temp1 = result.get(department);
-				if (temp1 == null) {
-					temp1 = new Department();
-					result.put(department, temp1);
+				Department temp = result.get(department);
+				if (temp == null) {
+					temp = new Department();
+					result.put(department, temp);
 				}
-				temp1.findOrCreatProjectLine(projectLine).addDomain(domain);
+				temp.findOrCreatProjectLine(projectLine).addDomain(domain);
 			}
 		}
 
 		return result;
 	}
-
-	@Inject
-	private ProjectDao m_projectDao;
-
-	@Inject
-	private ServerConfigManager m_serverConfigManager;
-
-	private static Map<String, Project> m_projects = new HashMap<String, Project>();
 
 	public static Project getProjectByName(String domain) {
 		return m_projects.get(domain);
@@ -66,6 +71,7 @@ public class DomainNavManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
+		reloadDomainInfo();
 		if (!m_serverConfigManager.isLocalMode()) {
 			try {
 				DomainReload reload = new DomainReload();
@@ -83,8 +89,6 @@ public class DomainNavManager implements Initializable {
 				List<Project> projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
 
 				if (projects.size() > 0) {
-					m_projects.clear();
-
 					for (Project project : projects) {
 						m_projects.put(project.getDomain(), project);
 					}

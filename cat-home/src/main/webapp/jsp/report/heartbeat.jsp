@@ -12,21 +12,15 @@
 <c:set var="report" value="${model.report}" />
 
 <a:report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
-
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
-
 	<jsp:body>
-
-<res:useCss value="${res.css.local.heartbeat_css}" target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-
 </br>
 <table class="machines">
 <th style="text-align:left">Machines: 
 		<c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
    	  		<c:choose>
-					<c:when test="${model.ipAddress eq ip}">
+					<c:when test="${payload.realIp eq ip}">
 						<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}"
 								class="current">${ip}</a>
 					</c:when>

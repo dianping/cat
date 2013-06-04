@@ -4,12 +4,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.event.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.event.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.event.Model"
-	scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.event.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.event.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.event.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
 <a:report
@@ -18,12 +15,9 @@
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">From ${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
-
 	<jsp:body>
-
-<res:useCss value="${res.css.local.event_css}" target="head-css" />
-<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js" />
-<res:useJs value="${res.js.local['flotr2_js']}" target="head-js" />
+<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
+<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 </br>
 <table class="machines">
@@ -53,25 +47,24 @@
 	</tr>
 </table>
 <br>
-<table class="event">
+<table class='data'>
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
-			<th><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
+			<th  style="text-align: left;"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total Count</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure Count</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
 			<th class="right">Sample Link</th>
 						<th class="right">QPS</th>
 					</tr>
-			
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
 				<c:set var="e" value="${item.detail}" />
 				<c:set var="lastIndex" value="${status.index}" />
 				<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
 					<td style="text-align: left"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type"><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${item.type}&ip=${model.ipAddress}"
-							class="graph_link" data-status="${status.index}">[:: show ::]</a>&nbsp;&nbsp;<a
+							class="graph_link" data-status="${status.index}">[:: show ::]</a>&nbsp;&nbsp;&nbsp;<a
 								href="?domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${item.type}">${item.type}</a></td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
@@ -87,7 +80,7 @@
 		</c:when>
 		<c:otherwise>
 		<tr>
-			<th><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.type}&ip=${model.ipAddress}"
+			<th  style="text-align: left;"><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.type}&ip=${model.ipAddress}"
 							class="graph_link" data-status="-1">[:: show ::]</a>
 			<a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type"> Name</a></th>
 			<th class="right"><a	href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total">Total Count</a></th>
@@ -108,10 +101,9 @@
 					<td style="text-align: left">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-						<a
-								href="?op=graphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${e.id}"
+						<a	href="?op=graphs&domain=${report.domain}&ip=${model.ipAddress}&date=${model.date}&type=${payload.type}&name=${e.id}"
 								class="graph_link" data-status="${status.index}">[:: show ::]</a>
-					</c:when></c:choose> ${e.id}</td>
+					</c:when></c:choose>&nbsp;&nbsp;&nbsp;${e.id}</td>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.00%')}</td>
@@ -135,7 +127,7 @@
 	<c:when test="${not empty payload.type}">
 		<table>
 			<tr>
-				<td><div id="eventGraph" class="graph"></div>
+				<td><div id="eventGraph" class="pieChart"></div>
 				</td>
 			</tr>
 		</table>
