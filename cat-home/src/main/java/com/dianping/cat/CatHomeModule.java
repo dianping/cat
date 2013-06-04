@@ -41,7 +41,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}
 
-		//executeAbtestModule(ctx);
+		executeAbtestModule(ctx);
 		executeAlarmModule(ctx);
 	}
 
