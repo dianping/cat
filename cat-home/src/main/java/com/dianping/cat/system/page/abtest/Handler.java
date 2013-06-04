@@ -38,7 +38,6 @@ import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.home.dal.abtest.GroupStrategyEntity;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.abtest.Model.AbtestDaoModel;
-import com.dianping.cat.system.page.abtest.server.ABTestEntityServer;
 
 public class Handler implements PageHandler<Context>, LogEnabled {
 
@@ -62,9 +61,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	@Inject
 	private GroupStrategyDao m_groupStrategyDao;
-
-	@Inject
-	private ABTestEntityServer abTestEntityServer;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -116,7 +112,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			run.setCaseId(abtest.getId());
 			m_abtestRunDao.insert(run);
 
-			abTestEntityServer.sendHeartbeat();
 		} catch (DalException e) {
 			m_logger.error("Error when saving abtest", e);
 			Cat.logError(e);
@@ -141,7 +136,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			// only update run info, do not update abtest meta-info
 			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
 
-			abTestEntityServer.sendHeartbeat();
 		} catch (DalException e) {
 			m_logger.error("Error when updating abtest", e);
 			Cat.logError(e);
@@ -184,8 +178,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				}
 			}
 			
-			abTestEntityServer.sendHeartbeat();
-
 			if (error.getArguments().isEmpty()) {
 				ErrorObject success = new ErrorObject("success");
 				ctx.addError(success);
