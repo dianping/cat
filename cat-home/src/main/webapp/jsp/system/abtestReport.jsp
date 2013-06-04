@@ -39,7 +39,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="?op=detail&id=${payload.id }">
+					<a href="?op=detail&id=${payload.id}">
 						<img style="vertical-align: text-bottom;" height="15" width="15" src="${res.img.local['settings_black_small.png']}">
 						View/ Edit ABTest Details
 					</a>
@@ -52,6 +52,5 @@
         <h3 style="color:#1D8BE0;"> Report function is under construction...</h3>
        <img style="margin: 0 auto;" src="${res.img.local['wangzhanjianshezhong.jpg']}">
     </div>
-   
    
 </a:body>

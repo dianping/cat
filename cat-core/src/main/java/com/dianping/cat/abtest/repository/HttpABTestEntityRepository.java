@@ -55,25 +55,6 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 
 	}
 
-	@Override
-	public void run() {
-		while (true) {
-			long start = System.currentTimeMillis();
-
-			try {
-				refresh();
-			} catch (Throwable e) {
-				Cat.logError(e);
-			}
-
-			LockSupport.parkUntil(start + 6 * 1000L); // every minute
-		}
-	}
-
-	@Override
-	public void shutdown() {
-	}
-
 	private void refresh() {
 		String clientIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -109,6 +90,25 @@ public class HttpABTestEntityRepository extends ContainerHolder implements ABTes
 				t.complete();
 			}
 		}
+	}
+
+	@Override
+	public void run() {
+		while (true) {
+			long start = System.currentTimeMillis();
+
+			try {
+				refresh();
+			} catch (Throwable e) {
+				Cat.logError(e);
+			}
+
+			LockSupport.parkUntil(start + 6 * 1000L); // every minute
+		}
+	}
+
+	@Override
+	public void shutdown() {
 	}
 
 	class ABTestVisitor extends BaseVisitor {
