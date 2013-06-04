@@ -16,7 +16,7 @@ ${model.content}
 Welcome to <b>Central Application Tracking (CAT)</b>.
 <br>
 <br>
-<res:useCss value="${res.css.local['bootstrap.css']}" target="head-css" />
+
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 <table class='table table-striped table-bordered table-condensed'>
 	<tr><td>CAT系统文档</td><td>CAT系统链接</td></tr>

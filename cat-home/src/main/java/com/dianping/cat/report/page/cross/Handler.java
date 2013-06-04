@@ -164,7 +164,7 @@ public class Handler implements PageHandler<Context> {
 
 					if (detail != null) {
 						detail.setProjectName(projectName);
-						projectInfo.getAllCallServiceProjectsInfo().put(projectName, detail);
+						projectInfo.addAllCallProjectInfo(projectName, detail);
 					}
 				}
 			}
@@ -221,7 +221,7 @@ public class Handler implements PageHandler<Context> {
 
 					if (detail != null) {
 						detail.setProjectName(projectName);
-						historyProjectInfo.getAllCallServiceProjectsInfo().put(projectName, detail);
+						historyProjectInfo.addAllCallProjectInfo(projectName, detail);
 					}
 				}
 			}

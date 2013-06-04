@@ -10,41 +10,49 @@
 	type="com.dianping.cat.system.page.alarm.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model"
 	scope="request" />
+	
+<script type="text/javascript">
+	$(document).ready(function() {
+		var id = '${payload.action.name}';
+		$('#'+id).addClass("active");
+	});
+</script>
 
 <a:body>
 
-	<res:useJs value="${res.js.local['dtree.js']}" target="head-js" />
-	<res:useCss value='${res.css.local.dtree_css}' target="head-css" />
-	<res:useCss value='${res.css.local.alarm_css}' target="head-css" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
+	<res:useCss value='${res.css.local.table_css}' target="head-css" />
+	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
+	
 
-	<div class="body-content">
+	<div class="container-fluid">
+      	<div class="row-fluid">
+        <div class="span2">
 		<%@include file="./alarm.jsp"%>
-		<script type="text/javascript">
-			d.openAll();
-			d.s(${model.templateIndex});
-		</script>
-		<div class="content-right">
+		</div>
+		<div class="span10">
 			</br>
-			<table border="1" rules="all">
+			<table  class="alarm table table-striped table-bordered  table-condensed"  border="1" rules="all">
 				<tr>
-					<td>&nbsp;&nbsp;收件人</td>
+					<th>&nbsp;&nbsp;收件人</th>
 					<td>${model.mailRecord.receivers}</td>
 				</tr>
 				<tr>
-					<td>发送时间</td>
+					<th>发送时间</th>
 					<td>${w:format(model.mailRecord.creationDate,'yyyy-MM-dd
 						HH:mm:ss')}</td>
 				</tr>
 				<tr>
-					<td>邮件标题</td>
+					<th>邮件标题</th>
 					<td>${model.mailRecord.title}</td>
 				</tr>
 				<tr>
-					<td>邮件内容</td>
+					<th>邮件内容</th>
 					<td><div>${model.mailRecord.content}</div></td>
 				</tr>
 			</table>
-		</div>
+		</div></div>
 	</div>
 </a:body>

@@ -7,11 +7,7 @@ public enum JspFile {
 
 	HISTORY_REPORT("/jsp/report/eventHistoryReport.jsp"),
 
-	HOURLY_REPORT("/jsp/report/event.jsp"),
-
-	MOBILE("/jsp/report/event_mobile.jsp"),
-
-	MOBILE_GRAPHS("/jsp/report/event_mobile.jsp");
+	HOURLY_REPORT("/jsp/report/event.jsp");
 
 	private String m_path;
 

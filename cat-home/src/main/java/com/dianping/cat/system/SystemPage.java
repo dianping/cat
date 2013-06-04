@@ -9,9 +9,7 @@ public enum SystemPage implements Page {
 
    LOGIN("login", "login", "Login", "Login", false),
 
-   PROJECT("project", "project", "Project", "Project", true),
-
-   AGGREGATION("aggregation", "aggregation", "Aggregation", "Aggregation", true);
+   CONFIG("config", "config", "Config", "Config", true);
 
    private String m_name;
 

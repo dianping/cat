@@ -8,7 +8,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.health.model.entity.HealthReport;
 import com.dianping.cat.helper.TimeUtil;
-import com.dianping.cat.report.page.HistoryGraphItem;
+import com.dianping.cat.report.page.LineChart;
 import com.dianping.cat.report.service.ReportService;
 
 public class HistoryGraphs {
@@ -16,7 +16,7 @@ public class HistoryGraphs {
 	@Inject
 	private ReportService m_reportService;
 
-	public HistoryGraphItem buildHistoryGraph(String domain, Date start, Date end, String reportType, String key) {
+	public LineChart buildHistoryGraph(String domain, Date start, Date end, String reportType, String key) {
 		if (reportType.equalsIgnoreCase("day")) {
 			return getDateFromHourlyReport(domain, start, end, key);
 		} else {
@@ -24,27 +24,27 @@ public class HistoryGraphs {
 		}
 	}
 
-	private HistoryGraphItem getDateFromDailyReport(String domain, Date start, Date end, String key) {
+	private LineChart getDateFromDailyReport(String domain, Date start, Date end, String key) {
 		List<HealthReport> reports = new ArrayList<HealthReport>();
 		for (long date = start.getTime(); date < end.getTime(); date = date + TimeUtil.ONE_DAY) {
 			HealthReport report = getHistoryReport(new Date(date), new Date(date + TimeUtil.ONE_DAY), domain);
 			reports.add(report);
 		}
 		int day = (int) ((end.getTime() - start.getTime()) / TimeUtil.ONE_DAY);
-		HistoryGraphItem item = new HistoryGraphItem();
-		item.setStart(start).setSize(day).setTitles(key);
+		LineChart item = new LineChart();
+		item.setStart(start).setSize(day).setTitles(key).addSubTitle(key).setStep(TimeUtil.ONE_DAY);
 		item.addValue(getDateFromReports(reports, day, key));
 		return item;
 	}
 
-	private HistoryGraphItem getDateFromHourlyReport(String domain, Date start, Date end, String key) {
+	private LineChart getDateFromHourlyReport(String domain, Date start, Date end, String key) {
 		List<HealthReport> reports = new ArrayList<HealthReport>();
 		for (long date = start.getTime(); date < end.getTime(); date = date + TimeUtil.ONE_HOUR) {
 			HealthReport report = getHourlyReport(date, domain);
 			reports.add(report);
 		}
-		HistoryGraphItem item = new HistoryGraphItem();
-		item.setStart(start).setSize(24).setTitles(key);
+		LineChart item = new LineChart();
+		item.setStart(start).setSize(24).setTitles(key).addSubTitle(key).setStep(TimeUtil.ONE_HOUR);
 		item.addValue(getDateFromReports(reports, 24, key));
 		return item;
 	}

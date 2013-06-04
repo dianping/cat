@@ -9,10 +9,10 @@ import java.util.Set;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.advanced.dal.Sqltable;
-import com.dainping.cat.consumer.advanced.dal.SqltableDao;
-import com.dainping.cat.consumer.advanced.dal.SqltableEntity;
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.advanced.dal.Sqltable;
+import com.dianping.cat.consumer.advanced.dal.SqltableDao;
+import com.dianping.cat.consumer.advanced.dal.SqltableEntity;
 
 public class SqlParseManager {
 	@Inject

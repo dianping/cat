@@ -10,8 +10,6 @@
 <c:set var="report" value="${model.report}" />
 
 <res:bean id="res"/>
-<res:useCss value="${res.css.local.problem_css}" target="head-css"/>
-	
 <table class="problem">
 	<tr>
 		<td title="time\group">T\G</td>

@@ -11,13 +11,13 @@ import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dainping.cat.consumer.core.dal.Report;
-import com.dainping.cat.consumer.core.dal.ReportDao;
-import com.dainping.cat.consumer.core.dal.Task;
-import com.dainping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.AbstractMessageAnalyzer;
+import com.dianping.cat.consumer.core.dal.Report;
+import com.dianping.cat.consumer.core.dal.ReportDao;
+import com.dianping.cat.consumer.core.dal.Task;
+import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.heartbeat.model.entity.Disk;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;

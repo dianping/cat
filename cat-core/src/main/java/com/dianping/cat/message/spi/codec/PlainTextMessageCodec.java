@@ -343,7 +343,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		} else if (message instanceof Heartbeat) {
 			return encodeLine(message, buf, 'H', Policy.DEFAULT);
 		} else {
-			throw new RuntimeException(String.format("Unsupported message type: %s.", message.getClass()));
+			throw new RuntimeException(String.format("Unsupported message type: %s.", message));
 		}
 	}
 

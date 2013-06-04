@@ -11,9 +11,6 @@
 <a:report title="CAT State Report" navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}  &nbsp;&nbsp;&nbsp;&nbsp;CAT项目指标</jsp:attribute>
 	<jsp:body>	
-	<res:useCss value="${res.css.local.matrix_css}" target="head-css" />
-	<res:useJs value="${res.js.local['jquery-1.7.1.js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['flotr2_js']}" target="head-js"/>
 <br>
 
 <table class="machines">

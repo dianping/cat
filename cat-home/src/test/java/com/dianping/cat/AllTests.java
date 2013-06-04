@@ -5,9 +5,11 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.report.graph.ValueTranslaterTest;
+import com.dianping.cat.report.page.cross.CMDBTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.database.DatabaseReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
+import com.dianping.cat.report.page.dependency.graph.GraphConfigManagerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.heartbeat.HeartbeatGraphDataTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
@@ -104,6 +106,9 @@ DailyTransactionReportGraphTest.class, ProblemDailyGraphTest.class,
 MetricReportParseTest.class, MetricReportMergerTest.class,
 
 /* Dependency */
-DependencyReportMergerTest.class})
+DependencyReportMergerTest.class, GraphConfigManagerTest.class,
+
+/* CMDB */
+CMDBTest.class })
 public class AllTests {
 }

@@ -13,9 +13,19 @@ public class Payload extends AbstractReportPayload<Action> {
 	@FieldMeta("type")
 	private String m_type;
 	
+	private String m_realIp;
+	
 	public Payload() {
 		super(ReportPage.HEARTBEAT);
 	}
+
+	public String getRealIp() {
+   	return m_realIp;
+   }
+
+	public void setRealIp(String realIp) {
+   	m_realIp = realIp;
+   }
 
 	@Override
 	public Action getAction() {

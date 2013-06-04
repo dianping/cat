@@ -204,27 +204,6 @@ public class Handler implements PageHandler<Context> {
 		case GRAPHS:
 			showGraphs(model, payload);
 			break;
-		case MOBILE:
-			showHourlyReport(model, payload);
-			if (!StringUtils.isEmpty(payload.getType())) {
-				DisplayNames report = model.getDisplayNameReport();
-				Gson gson = new Gson();
-				String json = gson.toJson(report);
-				model.setMobileResponse(json);
-			} else {
-				DisplayTypes report = model.getDisplayTypeReport();
-				Gson gson = new Gson();
-				String json = gson.toJson(report);
-				model.setMobileResponse(json);
-			}
-			break;
-		case MOBILE_GRAPHS:
-			MobileGraphs graphs = showMobileGraphs(model, payload);
-			if (graphs != null) {
-				Gson gson = new Gson();
-				model.setMobileResponse(gson.toJson(graphs));
-			}
-			break;
 		}
 
 		m_jspViewer.view(ctx, model);
@@ -282,16 +261,6 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 			model.setException(e);
 		}
-	}
-
-	private MobileGraphs showMobileGraphs(Model model, Payload payload) {
-		EventName name = getEventName(payload);
-
-		if (name == null) {
-			return null;
-		}
-		MobileGraphs graphs = new MobileGraphs().display(name);
-		return graphs;
 	}
 
 	private void showSummarizeReport(Model model, Payload payload) {

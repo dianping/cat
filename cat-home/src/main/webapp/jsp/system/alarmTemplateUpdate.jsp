@@ -8,20 +8,45 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.alarm.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model" scope="request" />
 
-<form name="exceptionAlarmModify" id="form" method="post" action="${model.pageUri}?op=alarmTemplateUpdateSubmit">
-	<table border="0">
-		<input type="hidden" name="alarmTemplateId" value="${model.alarmTemplate.id}" />
-		<tr>
-			<td>模板名称</td>
-			<td><input type="name" name="templateName" value="${model.alarmTemplate.name}" readonly/></td>
-		</tr>
-		<tr>
-			<td>模板内容</td>
-			<td><textarea style="height:500px;width:500px" id="content" name="content">${model.alarmTemplate.content}</textarea></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-			<td><input type="submit" name="submit" value="submit" /></td>
-		</tr>
-	</table>
-</form>
+
+<a:body>
+	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
+	<res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
+	<res:useCss value='${res.css.local.table_css}' target="head-css" />
+	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
+	
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var id = 'alarmTemplateList'+'${model.alarmTemplate.name}';
+			$('#'+id).addClass("active");
+		});
+	</script>
+	
+	<div class="container-fluid">
+      	<div class="row-fluid">
+        <div class="span2">
+		<%@include file="./alarm.jsp"%>
+		</div>
+		<div class="span10">
+			</br>
+			</br>
+			<form name="exceptionAlarmModify" method="post" action="${model.pageUri}?op=alarmTemplateUpdateSubmit">
+				<table>
+					<input type="hidden" name="alarmTemplateId" value="${model.alarmTemplate.id}" />
+					<tr>
+						<th><span class="text-success">模板名称</span></th>
+						<td><input type="name" name="templateName" value="${model.alarmTemplate.name}" readonly/></td>
+					</tr>
+					<tr>
+						<th><span class="text-success">模板内容</span></th>
+						<td><textarea style="height:300px;width:500px" id="content" name="content">${model.alarmTemplate.content}</textarea></td>
+					</tr>
+					<tr>
+						<td colspan="2" align="center"><input class="btn btn-primary" type="submit" name="submit" value="submit"></td>
+					</tr>
+				</table>
+			</form>
+		</div></div>
+	</div>
+</a:body>

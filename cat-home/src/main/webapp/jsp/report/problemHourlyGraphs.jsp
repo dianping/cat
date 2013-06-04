@@ -6,16 +6,13 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.problem.Context" scope="request" />
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.problem.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.problem.Model" scope="request" />
-<link rel="stylesheet" type="text/css" href="/cat/css/graph.css">
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
-<script type="text/javascript" src="/cat/js/flotr2.js"></script>
-<script type="text/javascript" src="/cat/js/baseTools.js"></script>
-<script type="text/javascript" src="/cat/js/problemHistory.js"></script>
-<script type="text/javascript" src="/cat/js/trendGraph.js"></script>
+<script type="text/javascript" src="/cat/js/svgchart.latest.min.js"></script>
+<script type="text/javascript" src="/cat/js/baseGraph.js"></script>
 <style type="text/css">
 .graph {
-	width: 550px;
-	height: 250px;
+	width: 600px;
+	height: 300px;
 	margin: 4px auto;
 }
 </style>
@@ -30,5 +27,5 @@
 </table>
 <script type="text/javascript">
 	var errorData = ${model.errorsTrend};
-	graph(document.getElementById('errorTrend'), errorData);
+	graphLineChart(document.getElementById('errorTrend'), errorData);
 </script>
