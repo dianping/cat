@@ -25,6 +25,7 @@ import com.dianping.cat.home.dal.report.AggregationRule;
 import com.dianping.cat.home.dal.report.AggregationRuleDao;
 import com.dianping.cat.home.dal.report.AggregationRuleEntity;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
+import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger;
 import com.dianping.cat.report.view.DomainNavManager;
 import com.dianping.cat.system.SystemPage;
@@ -86,27 +87,43 @@ public class Handler implements PageHandler<Context> {
 			model.setAggregationRules(queryAllAggregationRules());
 			break;
 
-		case TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE:
+		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
+			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			break;
+		case TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE:
 			graphNodeConfigAddOrUpdate(payload, model);
 			break;
-		case TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE_SUBMIT:
-			model.setOpResult(graphNodeConfigAddOrUpdateSubmit(payload, model));
+		case TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(graphNodeConfigAddOrUpdateSubmit(payload, model));
 			break;
-		case TOPOLOGY_GRAPH_CONFIG_NODE_DELETE:
-			model.setOpResult(graphNodeConfigDelete(payload));
+		case TOPOLOGY_GRAPH_NODE_CONFIG_DELETE:
+			model.setOpState(graphNodeConfigDelete(payload));
 			model.setConfig(m_topologyConfigManager.getConfig());
 			break;
-		case TOPOLOGY_GRAPH_CONFIG_EDGE_ADD_OR_UPDATE:
-			model.setOpResult(graphEdgeConfigAdd(payload));
-			break;
-		case TOPOLOGY_GRAPH_CONFIG_EDGE_DELETE:
-			model.setOpResult(graphEdgeConfigDelete(payload));
-			break;
-		case TOPOLOGY_GRAPH_CONFIG_LIST:
+		case TOPOLOGY_GRAPH_EDGE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			model.buildEdgeInfo();
+			break;
+		case TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE:
+			graphEdgeConfigAdd(payload, model);
+			break;
+		case TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE_SUBMIT:
+			model.setOpState(graphEdgeConfigAddOrUpdateSubmit(payload, model));
+			break;
+		case TOPOLOGY_GRAPH_EDGE_CONFIG_DELETE:
+			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			model.setOpState(graphEdgeConfigDelete(payload));
+			model.buildEdgeInfo();
 			break;
 		}
 		m_jspViewer.view(ctx, model);
+	}
+
+	private boolean graphEdgeConfigAddOrUpdateSubmit(Payload payload, Model model) {
+		EdgeConfig config = payload.getEdgeConfig();
+
+		model.setEdgeConfig(config);
+		return m_topologyConfigManager.insertEdgeConfig(config);
 	}
 
 	private void graphNodeConfigAddOrUpdate(Payload payload, Model model) {
@@ -135,12 +152,17 @@ public class Handler implements PageHandler<Context> {
 		return m_topologyConfigManager.deleteDomainConfig(payload.getType(), payload.getDomain());
 	}
 
-	private boolean graphEdgeConfigAdd(Payload payload) {
-		return true;
+	private void graphEdgeConfigAdd(Payload payload, Model model) {
+		String type = payload.getType();
+		String from = payload.getFrom();
+		String to = payload.getTo();
+		EdgeConfig config = m_topologyConfigManager.queryEdgeConfig(type, from, to);
+
+		model.setEdgeConfig(config);
 	}
 
 	private boolean graphEdgeConfigDelete(Payload payload) {
-		return m_topologyConfigManager.deleteDomainConfig(payload.getType(), payload.getDomain());
+		return m_topologyConfigManager.deleteEdgeConfig(payload.getType(), payload.getFrom(), payload.getTo());
 	}
 
 	private List<Project> queryAllProjects() {

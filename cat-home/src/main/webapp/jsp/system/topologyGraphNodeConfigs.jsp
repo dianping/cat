@@ -12,7 +12,7 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#topylogyConfigList').addClass('active');
+			$('#topylogyNodeConfigList').addClass('active');
 			$('#tab0').addClass('active');
 			$('#tabContent0').addClass('active');
 			$(".delete").bind("click", function() {
@@ -42,26 +42,26 @@
 			  <ul class="nav nav-tabs">
 			  	<c:forEach var="item" items="${model.config.nodeConfigs}" varStatus="status">
 				    <c:set var="key" value="${item.key}"/>
-				    <li id="tab${status.index}" class="text-right"><a href="#tabContent${status.index}" data-toggle="tab"> <h4 class="text-error">${key}</h4></a></li>
+				    <li id="tab${status.index}" class="text-right"><a href="#tabContent${status.index}" data-toggle="tab"> <h5 class="text-error">${key}</h5></a></li>
 				</c:forEach>
 			  </ul>
 			  <div class="tab-content">
 			  	<c:forEach var="item" items="${model.config.nodeConfigs}" varStatus="status">
 				     <c:set var="value" value="${item.value}"/>
 				     <div class="tab-pane" id="tabContent${status.index}">
-					     <h2 class="text-center text-error">${item.key}</h2>
+					    <h4 class="text-center text-error">拓扑图节点配置信息：${item.key}</h4>
 				     	<table class="table table-striped table-bordered table-condensed">
 				     		<tr class="text-success">
-				     			<th><h4 class='text-center'>项目</h4></th><th><h4 class='text-center'>异常Warning阀值</h4></th>
-				     			<th><h4 class='text-center'>异常Error阀值</h4></th><th><h4 class='text-center'>响应时间Warning阀值</h4></th>
-				     			<th><h4 class='text-center'>响应时间Error阀值</h4></th>
-				     			<th><h4 class='text-center'>操作<a class="btn btn-primary btn-small" href="?op=topologyGraphConfigNodeAdd&type=${item.key}">新增</a></h4></th>
+				     			<th><h5 class='text-center'>项目</h5></th><th><h5 class='text-center'>异常Warning阀值</h5></th>
+				     			<th><h5 class='text-center'>异常Error阀值</h5></th><th><h5 class='text-center'>响应时间Warning阀值</h5></th>
+				     			<th><h5 class='text-center'>响应时间Error阀值</h5></th>
+				     			<th><h5 class='text-center'>操作&nbsp;&nbsp;<a class="btn btn-primary btn-small" href="?op=topologyGraphNodeConfigAdd&type=${item.key}">新增</a></h5></th>
 				     		</tr>
 				     		<tr class="text-error"><td><h5>默认值</h5></td><td><h5 class="text-right">${value.defaultWarningThreshold}</h5></td>
 					     		<td><h5 class="text-right">${value.defaultErrorThreshold}</h5></td>
 						     	<td><h5 class="text-right">${value.defaultWarningResponseTime}</h5></td>
 						     	<td><h5 class="text-right">${value.defaultErrorResponseTime}</h5></td>
-						     	<td><a href="?op=topologyGraphConfigNodeAdd&type=${item.key}&domain=ALL" class="btn btn-primary btn-small">修改</a></td>
+						     	<td style="text-align:center;vertical-align:middle;"><a href="?op=topologyGraphNodeConfigAdd&type=${item.key}&domain=ALL" class="btn btn-primary btn-small">修改</a></td>
 					     		</tr>
 					     	<c:forEach var="domainConfig" items="${value.domains}">
 					     		<c:set var="temp" value="${domainConfig.value}"/>
@@ -70,8 +70,8 @@
 				     			<td style="text-align:right">${temp.errorThreshold}</td>
 					     		<td style="text-align:right">${temp.warningResponseTime}</td>
 					     		<td style="text-align:right">${temp.errorResponseTime}</td>
-						     	<td><a href="?op=topologyGraphConfigNodeAdd&type=${item.key}&domain=${temp.id}" class="btn btn-primary btn-small">修改</a>
-						     	<a href="?op=topologyGraphConfigNodeDelete&type=${item.key}&domain=${temp.id}" class="btn btn-primary btn-small btn-danger delete">删除</a></td>
+						     	<td style="text-align:center"><a href="?op=topologyGraphNodeConfigAdd&type=${item.key}&domain=${temp.id}" class="btn btn-primary btn-small">修改</a>
+						     	<a href="?op=topologyGraphNodeConfigDelete&type=${item.key}&domain=${temp.id}" class="btn btn-primary btn-small btn-danger delete">删除</a></td>
 					     		</tr>
 					     	</c:forEach>
 				     	</table>

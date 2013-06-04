@@ -33,7 +33,7 @@
 		</div>
 		<div class="span10">
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
-			<form name="topologyGraphConfigNodeAddSumbit" id="form" method="post" action="${model.pageUri}?op=topologyGraphConfigNodeAddSumbit">
+			<form name="topologyGraphNodeConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=topologyGraphNodeConfigAddSumbit">
 				<table class="table table-striped table-bordered table-condensed">
 					<tr>
 						<td>规则类型</td>

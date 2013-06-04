@@ -34,12 +34,18 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("domain")
 	private String m_domain;
+	
+	@FieldMeta("from")
+	private String m_from;
 
 	@FieldMeta("id")
 	private int m_id;
 	
 	@FieldMeta("type")
 	private String m_type;
+
+	@FieldMeta("to")
+	private String m_to;
 
 	@Override
 	public Action getAction() {
@@ -134,5 +140,21 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 	}
-	
+
+	public String getTo() {
+		return m_to;
+   }
+
+	public void setTo(String to) {
+   	m_to = to;
+   }
+
+	public String getFrom() {
+   	return m_from;
+   }
+
+	public void setFrom(String from) {
+   	m_from = from;
+   }
+
 }
