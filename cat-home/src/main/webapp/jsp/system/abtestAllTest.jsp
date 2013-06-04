@@ -163,7 +163,7 @@ tr.centerth>th {
                      <td class="nolink" style="padding-bottom: 8px"><input type="checkbox" /></td>
                      <td style="display: none;">${item.run.id}</td>
                      <td style="font-size: 15px; font-weight: bold;">${item.run.caseId}</td>
-                     <td><a href="abtest?op=report&id=${item.run.id}">${item.entity.name}</a></td>
+                     <td><a href="abtest?op=detail&id=${item.run.id}">${item.entity.name}</a></td>
                      <c:choose>
                         <c:when test="${fn:length(item.run.domains) > 20}">
                           <td title="${item.run.domains }">${fn:substring(item.run.domains,0,20)}...</td>

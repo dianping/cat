@@ -21,7 +21,6 @@ import com.dianping.cat.system.alarm.threshold.listener.ServiceDataListener;
 import com.dianping.cat.system.alarm.threshold.listener.ThresholdAlertListener;
 import com.dianping.cat.system.event.EventListenerRegistry;
 import com.dianping.cat.system.notify.ScheduledMailTask;
-import com.dianping.cat.system.page.abtest.server.ABTestEntityServer;
 
 public class CatHomeModule extends AbstractModule {
 	public static final String ID = "cat-home";
@@ -41,15 +40,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("Cat").start(dailyTaskProducer);
 		}
 
-		executeAbtestModule(ctx);
 		executeAlarmModule(ctx);
-	}
-
-	private void executeAbtestModule(ModuleContext ctx) {
-		ABTestEntityServer server = ctx.lookup(ABTestEntityServer.class);
-
-		server.start();
-
 	}
 
 	private void executeAlarmModule(ModuleContext ctx) throws Exception {

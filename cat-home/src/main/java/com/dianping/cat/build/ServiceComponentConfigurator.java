@@ -8,9 +8,6 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
-import com.dianping.cat.home.dal.abtest.AbtestDao;
-import com.dianping.cat.home.dal.abtest.AbtestRunDao;
-import com.dianping.cat.home.dal.abtest.GroupStrategyDao;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.report.page.model.cross.CompositeCrossService;
@@ -54,8 +51,6 @@ import com.dianping.cat.report.service.ReportService;
 import com.dianping.cat.storage.BucketManager;
 import com.dianping.cat.storage.dump.LocalMessageBucketManager;
 import com.dianping.cat.storage.dump.MessageBucketManager;
-import com.dianping.cat.system.page.abtest.server.ABTestEntityServer;
-import com.dianping.cat.system.page.abtest.server.DefaultABTestEntityServer;
 
 class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -173,11 +168,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, "logview", CompositeLogViewService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "message-historical", "logview-historical" }, "m_services"));
-
-		all.add(C(ABTestEntityServer.class, DefaultABTestEntityServer.class) //
-		      .req(AbtestRunDao.class) //
-		      .req(AbtestDao.class) //
-		      .req(GroupStrategyDao.class));
 
 		return all;
 	}

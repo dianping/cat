@@ -8,7 +8,9 @@ public enum JspFile {
 	
 	VIEW("/jsp/system/abtestAllTest.jsp"),
 	
-	REPORT("/jsp/system/abtestReport.jsp")
+	REPORT("/jsp/system/abtestReport.jsp"),
+	
+	MODEL("/jsp/system/abtestModel.jsp")
 	;
 
 	private String m_path;

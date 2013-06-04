@@ -313,10 +313,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
-			<implementation>com.dianping.cat.abtest.repository.DefaultABTestEntityRepository</implementation>
-			<configuration>
-				<address>228.0.0.3:2283</address>
-			</configuration>
+			<implementation>com.dianping.cat.abtest.repository.HttpABTestEntityRepository</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>

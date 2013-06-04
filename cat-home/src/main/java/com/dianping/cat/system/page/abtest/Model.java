@@ -40,6 +40,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private AbtestDaoModel m_abtest;
 
+	private String m_abtestModel;
+	
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -152,6 +154,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	public void setAbtest(AbtestDaoModel abtest) {
 		m_abtest = abtest;
 	}
+
+	public String getAbtestModel() {
+   	return m_abtestModel;
+   }
+
+	public void setAbtestModel(String abtestModel) {
+   	m_abtestModel = abtestModel;
+   }
 
 	public static class AbtestDaoModel {
 

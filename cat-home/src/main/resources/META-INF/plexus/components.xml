@@ -1142,21 +1142,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.abtest.server.ABTestEntityServer</role>
-			<implementation>com.dianping.cat.system.page.abtest.server.DefaultABTestEntityServer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestRunDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.AbtestDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.abtest.GroupStrategyDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</implementation>
 			<configuration>
@@ -3185,9 +3170,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.home.dal.abtest.GroupStrategyDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.page.abtest.server.ABTestEntityServer</role>
 				</requirement>
 			</requirements>
 		</component>
