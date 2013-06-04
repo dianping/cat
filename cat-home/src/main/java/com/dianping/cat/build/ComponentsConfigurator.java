@@ -18,6 +18,7 @@ import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.DomainManager;
 import com.dianping.cat.consumer.RealtimeConsumer;
+
 import com.dianping.cat.home.dal.report.DailygraphDao;
 import com.dianping.cat.home.dal.report.DailyreportDao;
 import com.dianping.cat.home.dal.report.EventDao;
@@ -174,9 +175,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
-
 		all.add(C(DomainNavManager.class).req(ProjectDao.class, ServerConfigManager.class));
-
 		all.add(C(HourlyReportService.class, HourlyReportServiceImpl.class) //
 		      .req(ReportDao.class, BusinessReportDao.class));
 

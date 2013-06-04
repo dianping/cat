@@ -3,7 +3,7 @@ package com.dianping.cat.system.page.aggregation;
 import java.util.Collections;
 import java.util.List;
 
-import com.dianping.cat.home.dal.report.AggregationRule;
+import com.dainping.cat.consumer.core.dal.AggregationRule;
 import com.dianping.cat.system.SystemPage;
 
 import org.unidal.web.mvc.ViewModel;

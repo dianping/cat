@@ -1283,8 +1283,8 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
-			<implementation>com.dianping.cat.home.dal.report.AggregationRuleDao</implementation>
+			<role>com.dainping.cat.consumer.core.dal.AggregationRuleDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.AggregationRuleDao</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.dal.jdbc.QueryEngine</role>
@@ -1594,6 +1594,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1645,6 +1648,39 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
+			<implementation>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.aggregation.AggregationManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.aggregation.AggregationManager</role>
+			<implementation>com.dianping.cat.consumer.core.aggregation.AggregationManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.AggregationRuleDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.aggregation.AggregationHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.core.dal.AggregationRuleDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.AggregationRuleDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2829,39 +2865,8 @@
 			</requirements>
 		</component>
 		<component>
-<<<<<<< HEAD
-			<role>com.dianping.cat.system.page.aggregation.Handler</role>
-			<implementation>com.dianping.cat.system.page.aggregation.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.system.page.aggregation.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.aggregation.JspViewer</role>
-			<implementation>com.dianping.cat.system.page.aggregation.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.home.dal.report.AggregationRuleDao</role>
-			<implementation>com.dianping.cat.home.dal.report.AggregationRuleDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-=======
 			<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
 			<implementation>com.dianping.cat.system.alarm.AlarmContentBuilder</implementation>
->>>>>>> f04844ca7620423738ae9ff7f60787875551d6e8
 		</component>
 		<component>
 			<role>com.dianping.cat.system.alarm.AlarmRuleCreator</role>

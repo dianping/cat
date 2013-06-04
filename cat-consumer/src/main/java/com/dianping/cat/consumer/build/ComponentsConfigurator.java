@@ -8,6 +8,7 @@ import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
+import com.dainping.cat.consumer.core.dal.AggregationRuleDao;
 import com.dainping.cat.consumer.core.dal.HostinfoDao;
 import com.dainping.cat.consumer.core.dal.ProjectDao;
 import com.dainping.cat.consumer.core.dal.ReportDao;
@@ -25,9 +26,13 @@ import com.dianping.cat.consumer.core.ProblemAnalyzer;
 import com.dianping.cat.consumer.core.StateAnalyzer;
 import com.dianping.cat.consumer.core.TopAnalyzer;
 import com.dianping.cat.consumer.core.TransactionAnalyzer;
+import com.dianping.cat.consumer.core.aggregation.AggregationHandler;
+import com.dianping.cat.consumer.core.aggregation.AggregationManager;
+import com.dianping.cat.consumer.core.aggregation.DefaultAggregationHandler;
 import com.dianping.cat.consumer.core.problem.DefaultProblemHandler;
 import com.dianping.cat.consumer.core.problem.LongExecutionProblemHandler;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
+import com.dianping.cat.consumer.core.problem.ProblemReportAggregation;
 import com.dianping.cat.message.spi.MessageConsumer;
 import com.dianping.cat.status.ServerStateManager;
 import com.dianping.cat.storage.BucketManager;
@@ -39,6 +44,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
+		
+		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
+
+		all.add(C(AggregationManager.class).req(AggregationRuleDao.class, ServerConfigManager.class, AggregationHandler.class));
+		
+		all.add(C(ProblemReportAggregation.class).req(AggregationManager.class));
+		
 		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
 
 		all.add(C(MessageConsumer.class, RealtimeConsumer.ID, RealtimeConsumer.class) //
@@ -52,7 +64,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class));
 
 		all.add(C(MessageAnalyzer.class, ProblemAnalyzer.ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(BucketManager.class, ReportDao.class, TaskDao.class) //
+		      .req(BucketManager.class, ReportDao.class, TaskDao.class, ProblemReportAggregation.class) //
 		      .req(ProblemHandler.class, new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
 
 		all.add(C(MessageAnalyzer.class, TransactionAnalyzer.ID, TransactionAnalyzer.class).is(PER_LOOKUP) //
@@ -77,6 +89,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 
+
+		
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //
 		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));

@@ -6,10 +6,11 @@ import java.util.List;
 
 import javax.servlet.ServletException;
 
+import com.dainping.cat.consumer.core.dal.AggregationRule;
+import com.dainping.cat.consumer.core.dal.AggregationRuleDao;
+import com.dainping.cat.consumer.core.dal.AggregationRuleEntity;
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.dal.report.AggregationRule;
-import com.dianping.cat.home.dal.report.AggregationRuleDao;
-import com.dianping.cat.home.dal.report.AggregationRuleEntity;
+
 import com.dianping.cat.system.SystemPage;
 
 import org.unidal.dal.jdbc.DalException;

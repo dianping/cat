@@ -1,6 +1,34 @@
 <plexus>
 	<components>
 		<component>
+			<role>com.dianping.cat.consumer.core.aggregation.AggregationHandler</role>
+			<implementation>com.dianping.cat.consumer.core.aggregation.DefaultAggregationHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.aggregation.AggregationManager</role>
+			<implementation>com.dianping.cat.consumer.core.aggregation.AggregationManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dainping.cat.consumer.core.dal.AggregationRuleDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.aggregation.AggregationHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
+			<implementation>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.aggregation.AggregationManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.consumer.MessageAnalyzerManager</role>
 			<implementation>com.dianping.cat.consumer.DefaultMessageAnalyzerManager</implementation>
 		</component>
@@ -50,6 +78,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dainping.cat.consumer.core.dal.TaskDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.core.problem.ProblemReportAggregation</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.core.problem.ProblemHandler</role>
@@ -191,8 +222,8 @@
 				<statement-cache-size>1000</statement-cache-size>
 				<properties>
 					<driver>com.mysql.jdbc.Driver</driver>
-					<URL>jdbc:mysql://192.168.7.43:3306/cat</URL>
-					<user>dpcom_cat</user>
+					<URL>jdbc:mysql://127.0.0.1:3306/cat</URL>
+					<user>root</user>
 					<password>password</password>
 					<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 				</properties>
@@ -202,6 +233,16 @@
 					<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceConfigurationManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>aggregation-rule</role-hint>
+			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
+			<configuration>
+				<logical-table-name>aggregation-rule</logical-table-name>
+				<physical-table-name>aggregationRule</physical-table-name>
+				<data-source-name>cat</data-source-name>
+			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
@@ -242,6 +283,15 @@
 				<physical-table-name>task</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
+		</component>
+		<component>
+			<role>com.dainping.cat.consumer.core.dal.AggregationRuleDao</role>
+			<implementation>com.dainping.cat.consumer.core.dal.AggregationRuleDao</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.dal.jdbc.QueryEngine</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dainping.cat.consumer.core.dal.HostinfoDao</role>

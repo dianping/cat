@@ -70,6 +70,7 @@ public class Handler implements PageHandler<Context> {
 		String error = payload.getError();
 		String file = payload.getFile();
 		String host = parseHost();
+		
 
 		if (file == null || file.length() == 0 || (!file.startsWith("http:"))) {
 			file = "unknown";
