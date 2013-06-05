@@ -92,6 +92,7 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE:
 			graphNodeConfigAddOrUpdate(payload, model);
+			model.setProjects(queryAllProjects());
 			break;
 		case TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(graphNodeConfigAddOrUpdateSubmit(payload, model));
@@ -100,12 +101,14 @@ public class Handler implements PageHandler<Context> {
 			model.setOpState(graphNodeConfigDelete(payload));
 			model.setConfig(m_topologyConfigManager.getConfig());
 			break;
+			
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			model.buildEdgeInfo();
 			break;
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE:
 			graphEdgeConfigAdd(payload, model);
+			model.setProjects(queryAllProjects());
 			break;
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(graphEdgeConfigAddOrUpdateSubmit(payload, model));

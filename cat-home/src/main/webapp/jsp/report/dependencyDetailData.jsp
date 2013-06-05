@@ -11,8 +11,7 @@
 				<th>Avg(ms)</th>
 				<th>Config</th>
 			</tr></thead><tbody>
-			<c:forEach var="item" items="${model.segment.indexs}"
-									varStatus="status">
+			<c:forEach var="item" items="${model.segment.indexs}" varStatus="status">
 				 <c:set var="itemKey" value="${item.key}" />
 				 <c:set var="itemValue" value="${item.value}" />
 				<tr>
@@ -21,7 +20,7 @@
 					<td style="text-align:right;">${itemValue.errorCount}</td>
 					<td style="text-align:right;">${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
 					<td style="text-align:right;">${w:format(itemValue.avg,'0.0')}</td>
-					<td>告警阀值配置</td>
+					<td><a class="btn btn-primary btn-small" target="_blank" href="/cat/s/config?op=topologyGraphNodeConfigAdd&type=${itemValue.name}&domain=${model.domain}">配置阀值</a></td>
 				</tr>		
 			</c:forEach></tbody>
 		</table>
@@ -38,8 +37,7 @@
 				<th>Avg(ms)</th>
 				<th>Config</th>
 			</tr></thead><tbody>
-			<c:forEach var="item" items="${model.segment.dependencies}"
-									varStatus="status">
+			<c:forEach var="item" items="${model.segment.dependencies}" varStatus="status">
 				 <c:set var="itemKey" value="${item.key}" />
 				 <c:set var="itemValue" value="${item.value}" />
 				<tr>
@@ -49,7 +47,7 @@
 					<td style="text-align:right;">${itemValue.errorCount}</td>
 					<td style="text-align:right;">${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
 					<td style="text-align:right;">${w:format(itemValue.avg,'0.0')}</td>
-					<td>告警阀值配置</td>
+					<td><a class="btn btn-primary btn-small" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=${itemValue.type}&from=${model.domain}&to=${itemValue.target}">配置阀值</a></td>
 				</tr>		
 			</c:forEach></tbody>
 		</table>	  			

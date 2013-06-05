@@ -1,7 +1,10 @@
 package com.dianping.cat.report.page.dependency.graph;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -18,6 +21,7 @@ import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dependency.graph.entity.Edge;
 import com.dianping.cat.home.dependency.graph.entity.Node;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
+import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
@@ -36,6 +40,8 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
 
 	private Logger m_logger;
+
+	private static final String DEPENDENCY = "Dependency";
 
 	public TopologyGraph buildGraphByDomainTime(String domain, long time) {
 		TopologyGraph graph = m_topologyGraphs.get(time);
@@ -141,47 +147,54 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			return DomainNavManager.getDomains();
 		}
 
+		private List<DependencyReport> fetchReport(Collection<String> domains) {
+			List<DependencyReport> reports = new ArrayList<DependencyReport>();
+			long current = System.currentTimeMillis();
+			long currentHour = current - current % TimeUtil.ONE_HOUR;
+			Transaction t = Cat.newTransaction(DEPENDENCY, "FetchReport");
+
+			try {
+				for (String temp : domains) {
+					try {
+						ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT).setProperty("date",
+						      String.valueOf(currentHour));
+						if (m_service.isEligable(request)) {
+							ModelResponse<DependencyReport> response = m_service.invoke(request);
+							DependencyReport report = response.getModel();
+
+							if (report != null) {
+								reports.add(report);
+							}
+						} else {
+							m_logger.warn(String.format("Can't get dependency report of %s", temp));
+						}
+					} catch (Exception e) {
+						Cat.logError(e);
+					}
+				}
+				t.setStatus(Message.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+			} finally {
+				t.complete();
+			}
+			return reports;
+		}
+
 		@Override
 		public void run() {
 			boolean active = true;
 
 			while (active) {
+				Transaction t = Cat.newTransaction(DEPENDENCY, "Reload");
 				long current = System.currentTimeMillis();
-				Transaction t = Cat.newTransaction("Dependency", "Reload");
 				try {
-					long currentHour = current - current % TimeUtil.ONE_HOUR;
-					long currentMinute = current - current % TimeUtil.ONE_MINUTE;
-					long lastMinute = currentMinute - TimeUtil.ONE_MINUTE;
-					long time = current / 1000 / 60;
-					int minute = (int) (time % (60));
-					String value = String.valueOf(currentHour);
 					Collection<String> domains = queryAllDomains();
-					TopologyGraph currentGraph = new TopologyGraph();
-					TopologyGraph lastGraph = new TopologyGraph();
-
-					for (String temp : domains) {
-						try {
-							ModelRequest request = new ModelRequest(temp, ModelPeriod.CURRENT).setProperty("date", value);
-							if (m_service.isEligable(request)) {
-								ModelResponse<DependencyReport> response = m_service.invoke(request);
-								DependencyReport report = response.getModel();
-
-								m_graphBuilder.setCurrentGraph(currentGraph).setLastGraph(lastGraph).setMinute(minute);
-								m_graphBuilder.visitDependencyReport(report);
-							} else {
-								m_logger.warn(String.format("Can't get dependency report of %s", temp));
-							}
-						} catch (Exception e) {
-							Cat.logError(e);
-							t.setStatus(e);
-						}
-					}
-					m_topologyGraphs.put(currentMinute, currentGraph);
-					m_topologyGraphs.put(lastMinute, lastGraph);
+					buildGraph(fetchReport(domains));
 					t.setStatus(Transaction.SUCCESS);
-				} catch (Exception ex) {
-					m_logger.error(ex.getMessage(), ex);
-					t.setStatus(ex);
+				} catch (Exception e) {
+					m_logger.error(e.getMessage(), e);
+					t.setStatus(e);
 				} finally {
 					t.complete();
 				}
@@ -195,6 +208,26 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				} catch (InterruptedException e) {
 					active = false;
 				}
+			}
+		}
+
+		private void buildGraph(List<DependencyReport> reports) {
+			Transaction t = Cat.newTransaction(DEPENDENCY, "BuildGraph");
+			try {
+				m_graphBuilder.getGraphs().clear();
+				for (DependencyReport report : reports) {
+					m_graphBuilder.visitDependencyReport(report);
+				}
+				Map<Long, TopologyGraph> graphs = m_graphBuilder.getGraphs();
+
+				for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
+					m_topologyGraphs.put(entry.getKey(), entry.getValue());
+				}
+				t.setStatus(Message.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+			} finally {
+				t.complete();
 			}
 		}
 

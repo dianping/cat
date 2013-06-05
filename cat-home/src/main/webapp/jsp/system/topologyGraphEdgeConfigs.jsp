@@ -68,8 +68,8 @@
 				     		</tr>
 				     		<tr class="text-error">
 				     			<td><h5>默认值</h5></td>
-				     			<th><h5 class='text-center'>ALL</h5></th>
-				     			<th><h5 class='text-center'>ALL</h5></th>
+				     			<th><h5>ALL</h5></th>
+				     			<th><h5>ALL</h5></th>
 				     			<td style="text-align:right"><h5>${value.nodeConfig.defaultWarningThreshold}</h5></td>
 				     			<td style="text-align:right"><h5>${value.nodeConfig.defaultErrorThreshold}</h5></td>
 					     		<td style="text-align:right"><h5>${value.nodeConfig.defaultWarningResponseTime}</h5></td>

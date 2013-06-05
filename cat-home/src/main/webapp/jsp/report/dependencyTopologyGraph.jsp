@@ -47,6 +47,8 @@
   <div class="text-center">
 	<div class="text-center" id="container" style="margin-left:200px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
   </div>
+  <h4 class="text-success text-center">当前数据:<c:if test="${payload.all}">0~60</c:if><c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
+  
   <div class="row-fluid">
   	<div class="span12">
   		<%@ include file="dependencyEvent.jsp"%>
@@ -60,7 +62,17 @@
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('#tab0').addClass('active');
 		$('#leftTab0').addClass('active');
-		
+		$('.contents').dataTable({
+			"sPaginationType": "full_numbers",
+			'iDisplayLength': 50,
+			"bPaginate": false,
+			//"bFilter": false,
+		});
+		$('.contentsDependency').dataTable({
+			"sPaginationType": "full_numbers",
+			'iDisplayLength': 50,
+			"bPaginate": false,
+		});
 		var data = ${model.topologyGraph};
 		function parse(data){
 			var nodes = data.nodes;

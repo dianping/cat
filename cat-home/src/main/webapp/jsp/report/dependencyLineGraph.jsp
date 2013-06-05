@@ -10,7 +10,7 @@
 						<h5 class='text-center text-info'>
 							<c:if test="${status.index == 0 }">访问量</c:if>
 							<c:if test="${status.index == 1 }">错误量</c:if>
-							<c:if test="${status.index == 2 }">相应时间</c:if>
+							<c:if test="${status.index == 2 }">响应时间</c:if>
 						</h5>
 						<div id="item${status.index}" style="width:450px;height:300px;"></div>
 					</td>

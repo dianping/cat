@@ -2993,12 +2993,6 @@
 				<requirement>
 					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3010,12 +3004,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -59,8 +59,14 @@
 				     		</tr>
 				     		<tr class="text-error"><td><h5>默认值</h5></td><td><h5 class="text-right">${value.defaultWarningThreshold}</h5></td>
 					     		<td><h5 class="text-right">${value.defaultErrorThreshold}</h5></td>
-						     	<td><h5 class="text-right">${value.defaultWarningResponseTime}</h5></td>
-						     	<td><h5 class="text-right">${value.defaultErrorResponseTime}</h5></td>
+						     	<c:if test="${item.key eq 'Exception'}">
+						     		<td><h5 class="text-right">——</h5></td>
+						     		<td><h5 class="text-right">——</h5></td>
+						     	</c:if>
+						     	<c:if test="${item.key ne 'Exception'}">
+						     		<td><h5 class="text-right">${value.defaultWarningResponseTime}</h5></td>
+						     		<td><h5 class="text-right">${value.defaultErrorResponseTime}</h5></td>
+						     	</c:if>
 						     	<td style="text-align:center;vertical-align:middle;"><a href="?op=topologyGraphNodeConfigAdd&type=${item.key}&domain=ALL" class="btn btn-primary btn-small">修改</a></td>
 					     		</tr>
 					     	<c:forEach var="domainConfig" items="${value.domains}">
@@ -68,9 +74,15 @@
 				     			<tr><td>${temp.id}</td>
 				     			<td style="text-align:right">${temp.warningThreshold}</td>
 				     			<td style="text-align:right">${temp.errorThreshold}</td>
-					     		<td style="text-align:right">${temp.warningResponseTime}</td>
-					     		<td style="text-align:right">${temp.errorResponseTime}</td>
-						     	<td style="text-align:center"><a href="?op=topologyGraphNodeConfigAdd&type=${item.key}&domain=${temp.id}" class="btn btn-primary btn-small">修改</a>
+				     			<c:if test="${item.key eq 'Exception'}">
+				     				<td style="text-align:right">——</td>
+					     			<td style="text-align:right">——</td>
+				     			</c:if>
+				     			<c:if test="${item.key ne 'Exception'}">
+				     				<td style="text-align:right">${temp.warningResponseTime}</td>
+					     			<td style="text-align:right">${temp.errorResponseTime}</td>
+				     			</c:if>
+					     		<td style="text-align:center"><a href="?op=topologyGraphNodeConfigAdd&type=${item.key}&domain=${temp.id}" class="btn btn-primary btn-small">修改</a>
 						     	<a href="?op=topologyGraphNodeConfigDelete&type=${item.key}&domain=${temp.id}" class="btn btn-primary btn-small btn-danger delete">删除</a></td>
 					     		</tr>
 					     	</c:forEach>

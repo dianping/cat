@@ -12,9 +12,9 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#topylogyConfigList').addClass('active');
+			$('#topylogyNodeConfigList').addClass('active');
 			var action = '${payload.action}';
-			if(action=='TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE_SUBMIT'){
+			if(action=='TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE_SUBMIT'){
 				var state = '${model.opState}';
 				if(state=='Success'){
 					$('#state').html('操作成功');
@@ -34,44 +34,41 @@
 		<div class="span10">
 			<h4 id="state" class="text-center text-error">&nbsp;</h4>
 			<form name="topologyGraphNodeConfigAddSumbit" id="form" method="post" action="${model.pageUri}?op=topologyGraphNodeConfigAddSumbit">
+				<h4 class="text-center text-error">修改拓扑节点配置信息</h4>
 				<table class="table table-striped table-bordered table-condensed">
 					<tr>
-						<td>规则类型</td>
+						<td width="40%"  style="text-align:right" class="text-success">规则类型</td>
 						<td><input type="name" name="type" value="${payload.type}" readonly/></td>
-						<td></td>
 					</tr>
 					<tr>
-						<td>项目名称</td>
+						<td style="text-align:right" class="text-success">项目名称</td>
 						<td>
 							<c:if test="${not empty payload.domain}">
-								<input type="name" name="domainConfig.id" value="${payload.domain}" required/>
+								<input type="name" name="domainConfig.id" value="${payload.domain}" readonly required/>
 							</c:if>
 							<c:if test="${empty payload.domain}">
 								<input type="name" name="domainConfig.id" value="${model.domainConfig.id}" required/>
 							</c:if>
 						</td>
-						<td>ALL表示所有项目的默认值</td>
 					</tr>
 					<tr>
-						<td>异常数warning阈值</td>
+						<td style="text-align:right" class="text-success">一分钟异常数warning阈值</td>
 						<td><input type="name" name="domainConfig.warningThreshold" value="${model.domainConfig.warningThreshold}" required/></td>
-						<td style='color:red'>异常warning阈值（1一分钟内异常数目）</td>
 					</tr>
 					<tr>
-						<td>异常数error阈值</td>
+						<td style="text-align:right" class="text-success">一分钟异常数error阈值</td>
 						<td><input type="name" name="domainConfig.errorThreshold" value="${model.domainConfig.errorThreshold}" required/></td>
-						<td style='color:red'>异常error阈值（1一分钟内异常数目）</td>
 					</tr>
+					<c:if test="${payload.type ne 'Exception' }">
 					<tr>
-						<td>响应时间warning阈值</td>
+						<td style="text-align:right" class="text-success">响应时间warning阈值</td>
 						<td><input type="name" name="domainConfig.warningResponseTime" value="${model.domainConfig.warningResponseTime}" required/></td>
-						<td style='color:red'>响应时间warning阈值</td>
 					</tr>
 					<tr>
-						<td>响应时间error阈值</td>
+						<td style="text-align:right" class="text-success">响应时间error阈值</td>
 						<td><input type="name" name="domainConfig.errorResponseTime" value="${model.domainConfig.errorResponseTime}" required/></td>
-						<td style='color:red'>响应时间error阈值</td>
 					</tr>
+					</c:if>
 					<tr>
 						<td>&nbsp;</td>
 						<td><input class='btn btn-primary' type="submit" name="submit" value="submit" /></td>
