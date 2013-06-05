@@ -8,7 +8,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
 <a:report title="Dependency Report"
-	navUrlPrefix="domain=${model.domain}&op=graph">
+	navUrlPrefix="domain=${model.domain}&op=dependencyGraph">
 	<jsp:attribute name="subtitle">From ${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 	
@@ -21,47 +21,59 @@
 	
 <div class="report">
   <div class='text-center'>
-	  <a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时趋势图（当前分钟:${model.minute}）</a>
-  </div>
-  <div class="row-fluid">
-  	<div class="span12  text-center">
-		<c:forEach var="item" items="${model.minutes}" varStatus="status">
-		<c:if test="${status.index % 30 ==0}">
-			<div class="pagination">
-			<ul>
-		</c:if>
-			<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
-			href="?op=dependencyGraph&domain=${model.domain}&date=${model.date}&minute=${item}">
-				<c:if test="${item < 10}">0${item}</c:if>
-				<c:if test="${item >= 10}">${item}</c:if></a></li>
-			</c:if>
-			<c:if test="${item <= model.maxMinute }"><li id="minute${item}"><a
-			href="?op=dependencyGraph&domain=${model.domain}&date=${model.date}&minute=${item}">
-				<c:if test="${item < 10}">0${item}</c:if>
-				<c:if test="${item >= 10}">${item}</c:if></a></li>
-			</c:if>
-		<c:if test="${status.index % 30 ==29 || status.last}">
-			</ul>
-			</div>
-		</c:if>
-	</c:forEach>
+	  <a class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时趋势图（当前分钟:${model.minute}）</a>
+  	  <c:forEach var="item" items="${model.minutes}" varStatus="status">
+					<c:if test="${status.index % 30 ==0}">
+						<div class="pagination">
+						<ul>
+					</c:if>
+						<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
+						href="?op=dependencyGraph&domain=${model.domain}&date=${model.date}&minute=${item}">
+							<c:if test="${item < 10}">0${item}</c:if>
+							<c:if test="${item >= 10}">${item}</c:if></a></li>
+						</c:if>
+						<c:if test="${item <= model.maxMinute }"><li id="minute${item}"><a
+						href="?op=dependencyGraph&domain=${model.domain}&date=${model.date}&minute=${item}">
+							<c:if test="${item < 10}">0${item}</c:if>
+							<c:if test="${item >= 10}">${item}</c:if></a></li>
+						</c:if>
+					<c:if test="${status.index % 30 ==29 || status.last}">
+						</ul>
+						</div>
+					</c:if>
+				</c:forEach>
   	</div>
-  </div>
-  <div class="text-center">
-	<div class="text-center" id="container" style="margin-left:200px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
-  </div>
-  <h4 class="text-success text-center">当前数据:<c:if test="${payload.all}">0~60</c:if><c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
-  
-  <div class="row-fluid">
-  	<div class="span12">
-  		<%@ include file="dependencyEvent.jsp"%>
+  		<div class="tabbable tabs-left " id="content"> <!-- Only required for left/right tabs -->
+  			<ul class="nav nav-tabs alert-info">
+   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab">依赖拓扑</a></li>
+   			 	<li class="text-right"><a href="#tab2" data-toggle="tab">运维告警</a></li>
+   			 	<li class="text-right"><a href="#tab3" data-toggle="tab">数据配置</a></li>
+  			</ul>
+  			<div class="tab-content">
+	    		<div class="tab-pane active" id="tab1">
+	    			<div class="text-center">
+						<div class="text-center" id="container" style="margin-left:75px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
+					  </div>
+	    		</div>
+	    		<div class="tab-pane" id="tab2">
+	  				<%@ include file="dependencyEvent.jsp"%>
+	    		</div>
+	    		<div class="tab-pane" id="tab3">
+	  				<%@ include file="dependencyDetailData.jsp"%>
+	    		</div>
+  			</div>
   	</div>
+  		
   </div>
-   <%@ include file="dependencyDetailData.jsp"%>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#content .nav-tabs a').mouseenter(function (e) {
+			  e.preventDefault();
+			  $(this).tab('show');
+			});
+	
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('#tab0').addClass('active');
 		$('#leftTab0').addClass('active');
@@ -98,19 +110,17 @@
 			delete data.edges;
 			return data;
 		}
-
-		new  StarTopo('container',parse(data)
-					,{
-							typeMap:{
-								database:'rect',
-								project:'circle',
-								service:'lozenge'
-							},
-							colorMap:{
-										 "1":'#2fbf2f',
-										 "2":'#bfa22f',
-										 "3":'#b94a48'
-							},
+		new  StarTopo('container',parse(data),{
+				typeMap:{
+					database:'rect',
+					project:'circle',
+					service:'lozenge'
+				},
+				colorMap:{
+					 "1":'#2fbf2f',
+					 "2":'#bfa22f',
+					 "3":'#b94a48'
+				},
 			radius:300,
 			sideWeight:function(weight){
 				return weight+1

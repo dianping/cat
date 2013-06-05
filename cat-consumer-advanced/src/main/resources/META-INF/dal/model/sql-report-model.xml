@@ -16,7 +16,7 @@
 	</entity>
 	<entity name="table">
 		<attribute name="id" value-type="String" key="true" />
-		<attribute name="totalCount" value-type="int" method-inc="true" primitive="true" />
+		<attribute name="totalCount" value-type="long" method-inc="true" primitive="true" />
 		<attribute name="failCount" value-type="int" method-inc="true" primitive="true" />
 		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
 		<attribute name="totalPercent" value-type="double" primitive="true" format="0.00" />
@@ -28,7 +28,7 @@
 	<entity name="method">
 		<attribute name="id" value-type="String" key="true" />
 		<element name="sql" value-type="String" type="set" names="sqlNames" />
-		<attribute name="totalCount" value-type="int" method-inc="true" primitive="true" />
+		<attribute name="totalCount" value-type="long" method-inc="true" primitive="true" />
 		<attribute name="failCount" value-type="int" method-inc="true" primitive="true" />
 		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
 		<attribute name="totalPercent" value-type="double" primitive="true" format="0.00" />

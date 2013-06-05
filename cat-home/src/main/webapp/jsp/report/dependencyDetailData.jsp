@@ -120,6 +120,7 @@
 				$('#myModal').modal();
 				edgeValidate();
 				 $('#addOrUpdateEdgeSubmit').bind("click",function(event){
+					event.preventDefault();
 					var data =  "edgeConfig.type="+$('#type').val()+"&edgeConfig.from="+$('#from').val()+"&edgeConfig.to="+$('#to').val()
 					+"&edgeConfig.warningThreshold="+$('#warningThreshold').val()+"&edgeConfig.errorThreshold="+$('#errorThreshold').val()
 					+"&edgeConfig.warningResponseTime="+$('#warningResponseTime').val()+"&edgeConfig.errorResponseTime="+$('#errorResponseTime').val();

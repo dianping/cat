@@ -222,8 +222,8 @@ public class Handler implements PageHandler<Context> {
 			buildHourlyReport(report, model, payload);
 			TopologyGraph graph = buildHourlyTopologyGraph(model, payload);
 
-			buildGraphByEvent(graph, model.getEvents());
-			buildGraphExtraInfo(payload, model, graph);
+			//buildGraphByEvent(graph, model.getEvents());
+			//buildGraphExtraInfo(payload, model, graph);
 			model.setTopologyGraph(new DefaultJsonBuilder().buildJson(graph));
 			break;
 		case VIEW:
@@ -330,7 +330,7 @@ public class Handler implements PageHandler<Context> {
 	private ProblemReport queryProblemReport(Payload payload, String domain) {
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
-		      .setProperty("date", date);
+		      .setProperty("date", date).setProperty("type", "view");
 		if (m_problemservice.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_problemservice.invoke(request);
 

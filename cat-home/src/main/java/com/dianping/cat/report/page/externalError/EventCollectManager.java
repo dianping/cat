@@ -2,7 +2,10 @@ package com.dianping.cat.report.page.externalError;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -31,6 +34,8 @@ public class EventCollectManager implements Initializable, LogEnabled {
 
 	public static int CAT_ERROR = 3;
 
+	public static final int TEN = 10;
+
 	@Inject
 	private EventDao m_eventDao;
 
@@ -39,10 +44,41 @@ public class EventCollectManager implements Initializable, LogEnabled {
 
 	private BlockingQueue<Event> m_errors = new LinkedBlockingQueue<Event>(1000);
 
+	private Map<Long, Map<String, List<Event>>> m_events = new LinkedHashMap<Long, Map<String, List<Event>>>(360);
+
 	private Logger m_logger;
 
-	public List<Event> queryEvents(String domain, Date date) {
-		Date start = new Date(date.getTime() - TimeUtil.ONE_MINUTE * 3);
+	public List<Event> findOrCreateEvents(long date, String domain) {
+		Map<String, List<Event>> domainEvent = m_events.get(date);
+
+		if (domainEvent == null) {
+			domainEvent = new HashMap<String, List<Event>>();
+			m_events.put(date, domainEvent);
+		}
+
+		List<Event> result = domainEvent.get(domain);
+
+		if (result == null) {
+			result = new ArrayList<Event>();
+			domainEvent.put(domain, result);
+		}
+
+		return result;
+	}
+
+	private List<Event> queryEventsByMemory(String domain, Date date, int minute) {
+		List<Event> result = new ArrayList<Event>();
+		long time = date.getTime();
+
+		for (int i = 0; i < minute; i++) {
+			List<Event> events = findOrCreateEvents(time - minute * TimeUtil.ONE_MINUTE, domain);
+			result.addAll(events);
+		}
+		return result;
+	}
+
+	private List<Event> queryEventsByDB(String domain, Date date, int minute) {
+		Date start = new Date(date.getTime() - TimeUtil.ONE_MINUTE * minute);
 		Date end = new Date(date.getTime() + TimeUtil.ONE_MINUTE);
 
 		try {
@@ -51,6 +87,16 @@ public class EventCollectManager implements Initializable, LogEnabled {
 			Cat.logError(e);
 		}
 		return new ArrayList<Event>();
+	}
+
+	public List<Event> queryEvents(String domain, Date date) {
+		long current = System.currentTimeMillis();
+
+		if (current - date.getTime() < TimeUtil.ONE_HOUR * 2) {
+			return queryEventsByMemory(domain, date, 10);
+		} else {
+			return queryEventsByDB(domain, date, 10);
+		}
 	}
 
 	public boolean addEvent(Event error) {
@@ -90,6 +136,12 @@ public class EventCollectManager implements Initializable, LogEnabled {
 
 					if (error != null) {
 						m_eventDao.insert(error);
+
+						long date = error.getDate().getTime();
+						String domain = error.getDomain();
+						long time = date - date % TimeUtil.ONE_MINUTE;
+
+						findOrCreateEvents(time, domain).add(error);
 					}
 				} catch (InterruptedException e) {
 					active = false;

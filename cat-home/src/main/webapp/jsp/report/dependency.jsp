@@ -22,27 +22,37 @@
 	<div class='report'>
 		<div class="row-fluid">
 			<div class="span12 text-center">
-				<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=dependencyGraph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时拓扑图</a>
+				<a class="btn btn-danger  btn-primary" href="?op=dependencyGraph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时拓扑图</a>
 			</div>
 		</div>
-	<%@ include file="dependencyLineGraph.jsp"%>
-	</br>
-  	<div class="row-fluid">
-	  <div class="span12">
-	  		<%@ include file="dependencyEvent.jsp"%>
-	  </div>
-	</div>
-	  <div class="row-fluid">
-	  	    <div class="span2">
-	  	    	<a class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
-	  	   		<h4 class="text-success">当前数据:<c:if test="${payload.all}">0~60</c:if>
-	  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
-	  	    </div>
-	  	    <div class="span10">
-	  	    	<%@ include file="dependencyHeader.jsp" %>
-	  	    </div>
-	  </div>
-	  <%@ include file="dependencyDetailData.jsp"%>
+		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
+  			<ul class="nav nav-tabs">
+   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab">数据趋势</a></li>
+   			 	<li class="text-right"><a href="#tab2" data-toggle="tab">运维告警</a></li>
+   			 	<li class="text-right"><a href="#tab3" data-toggle="tab">详细数据</a></li>
+  			</ul>
+  			<div class="tab-content">
+	    		<div class="tab-pane active" id="tab1">
+	    			<%@ include file="dependencyLineGraph.jsp"%>
+	    		</div>
+	    		<div class="tab-pane" id="tab2">
+	  				<%@ include file="dependencyEvent.jsp"%>
+	    		</div>
+	    		<div class="tab-pane" id="tab3">
+	    			 <div class="row-fluid">
+				  	    <div class="span2">
+				  	    	<a class="btn btn-primary" href="?domain=${model.domain}&date=${model.date}&all=true">当前小时数据汇总</a>
+				  	   		<h4 class="text-success">当前数据:<c:if test="${payload.all}">0~60</c:if>
+				  			<c:if test="${payload.all == false}">${model.minute}</c:if>分钟</h4>
+				  	    </div>
+				  	    <div class="span10">
+				  	    	<%@ include file="dependencyHeader.jsp" %>
+				  	    </div>
+				  </div>
+				  <%@ include file="dependencyDetailData.jsp"%>
+	    		</div>
+	    	</div></div>
+	 
 	  </div>
 </jsp:body>
 </a:report>
