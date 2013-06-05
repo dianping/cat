@@ -80,6 +80,7 @@
 			success : function(response, textStatus) {
 				$('#myModal').html(response);
 				$('#myModal').modal();
+				nodeValidate();
 				 $('#addOrUpdateNodeSubmit').bind("click",function(event){
 						event.preventDefault();
 						var data =  "type="+$('#type').val()+"&domainConfig.id="+$('#id').val()
@@ -90,8 +91,11 @@
 							url: "/cat/s/config?op=topologyGraphNodeConfigAddSumbit",
 							data: data,
 							success : function(response, textStatus) {
-								$('#myModal').modal('hide')
-							}
+								$('#myModal').modal('hide');
+							},
+							error : function(ajaxContext) {
+								$('#state').html('操作失败，请检查参数正确性！');
+						    }
 						});
 					});
 			}
@@ -114,23 +118,25 @@
 			success : function(response, textStatus) {
 				$('#myModal').html(response);
 				$('#myModal').modal();
+				edgeValidate();
 				 $('#addOrUpdateEdgeSubmit').bind("click",function(event){
-						event.preventDefault();
-						var data =  "edgeConfig.type="+$('#type').val()+"&edgeConfig.from="+$('#from').val()+"&edgeConfig.to="+$('#to').val()
-						+"&edgeConfig.warningThreshold="+$('#warningThreshold').val()+"&edgeConfig.errorThreshold="+$('#errorThreshold').val()
-						+"&edgeConfig.warningResponseTime="+$('#warningResponseTime').val()+"&edgeConfig.errorResponseTime="+$('#errorResponseTime').val();
-						console.log(data);
-						$.ajax({
-							type: "get",
-							url: "/cat/s/config?op=topologyGraphEdgeConfigAddSumbit",
-							data: data,
-							success : function(response, textStatus) {
-								$('#myModal').modal('hide')
-							}
-						});
+					var data =  "edgeConfig.type="+$('#type').val()+"&edgeConfig.from="+$('#from').val()+"&edgeConfig.to="+$('#to').val()
+					+"&edgeConfig.warningThreshold="+$('#warningThreshold').val()+"&edgeConfig.errorThreshold="+$('#errorThreshold').val()
+					+"&edgeConfig.warningResponseTime="+$('#warningResponseTime').val()+"&edgeConfig.errorResponseTime="+$('#errorResponseTime').val();
+					console.log(data);
+					$.ajax({
+						type: "get",
+						url: "/cat/s/config?op=topologyGraphEdgeConfigAddSumbit",
+						data: data,
+						success : function(response, textStatus) {
+							$('#myModal').modal('hide')
+						},
+						error : function(ajaxContext) {
+							$('#state').html('操作失败，请检查参数正确性！');
+					    }
+					});
 				});
 			}
 		});
 	});
-	
  </script>

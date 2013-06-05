@@ -9,6 +9,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
 <a:body>
+	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -42,6 +44,7 @@
 					success : function(response, textStatus) {
 						$('#myModal').html(response);
 						$('#myModal').modal();
+						nodeValidate();
 					}
 				});
 			});

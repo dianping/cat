@@ -2,13 +2,13 @@
 <%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
-<h4 id="state" class="text-center text-error">&nbsp;</h4>
 <form name="topologyGraphEdgeConfigAddSumbit" id="form" method="post"
 	action="${model.pageUri}?op=topologyGraphEdgeConfigAddSumbit">
+	<h4 class="text-center text-error" id="state">&nbsp;</h4>
 	<h4 class="text-center text-error">修改依赖关系配置信息</h4>
 	<table class="table table-striped table-bordered table-condensed">
 		<tr>
-			<td width="40%" style="text-align: right" class="text-success">依赖类型（支持PigeonCall和Database）</td>
+			<td width="40%" style="text-align: right" class="text-success">类型（支持PigeonCall和Database）</td>
 			<td><select id="type" name="edgeConfig.type">
 				<c:choose>
 					<c:when test="${edgeConfig.type eq 'PigeonCall' || payload.type eq 'PigeonCall'}">
@@ -40,7 +40,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">被调用项目名称（Service或者数据库）</td>
+			<td style="text-align:right" class="text-success">被调用项目名称(Service或DB）</td>
 			<td>
 				<c:if test="${empty model.edgeConfig.to}">
 					<input id="to" name="edgeConfig.to" value="${payload.to}" required/>

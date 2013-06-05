@@ -16,6 +16,9 @@
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+	
 <div class="report">
   <div class='text-center'>
 	  <a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时趋势图（当前分钟:${model.minute}）</a>

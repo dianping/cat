@@ -383,3 +383,6 @@ a.heartbeat{
 	height: 450px;
 	margin: 4px auto;
 }
+.error{
+	color:red;
+}

@@ -16,6 +16,9 @@
 	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['svgchart.latest.min.js']}" target="head-js"/>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
+	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
+	
 	<div class='report'>
 		<div class="row-fluid">
 			<div class="span12 text-center">
