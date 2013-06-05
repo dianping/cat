@@ -3,7 +3,7 @@ package com.dianping.cat.report.page.dependency;
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view"),
 	
-	GRAPH("graph");
+	GRAPH("dependencyGraph");
 
 	private String m_name;
 

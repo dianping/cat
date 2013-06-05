@@ -31,6 +31,33 @@ public class TopologyGraphBuilder extends BaseVisitor {
 	public Node createNode(String domain) {
 		return m_itemBuilder.createNode(domain);
 	}
+	
+	public Node cloneNode(Node node) {
+		Node result = new Node();
+
+		result.setDes(node.getDes());
+		result.setId(node.getId());
+		result.setLink(node.getLink());
+		result.setStatus(node.getStatus());
+		result.setType(node.getType());
+		result.setWeight(node.getWeight());
+		return result;
+	}
+
+	public Edge cloneEdge(Edge edge) {
+		Edge result = new Edge();
+
+		result.setDes(edge.getDes());
+		result.setKey(edge.getKey());
+		result.setLink(edge.getLink());
+		result.setOpposite(edge.getOpposite());
+		result.setSelf(edge.getSelf());
+		result.setStatus(edge.getStatus());
+		result.setTarget(edge.getTarget());
+		result.setType(edge.getType());
+		result.setWeight(edge.getWeight());
+		return result;
+	}
 
 	private TopologyGraph findOrCreateGraph() {
 		long time = m_date.getTime() + m_minute * TimeUtil.ONE_MINUTE;

@@ -69,13 +69,13 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			for (Edge edge : edges) {
 				String self = edge.getSelf();
 				String target = edge.getTarget();
-				Edge cloneEdge = cloneEdge(edge);
+				Edge cloneEdge = m_graphBuilder.cloneEdge(edge);
 
 				if (self.equals(domain)) {
 					Node other = graph.findNode(target);
 
 					if (other != null) {
-						result.addNode(cloneNode(other));
+						result.addNode(m_graphBuilder.cloneNode(other));
 					} else {
 						result.addNode(m_graphBuilder.createNode(target));
 					}
@@ -85,7 +85,7 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					Node other = graph.findNode(self);
 
 					if (other != null) {
-						result.addNode(cloneNode(other));
+						result.addNode(m_graphBuilder.cloneNode(other));
 					} else {
 						result.addNode(m_graphBuilder.createNode(target));
 					}
@@ -96,33 +96,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				}
 			}
 		}
-		return result;
-	}
-
-	public Node cloneNode(Node node) {
-		Node result = new Node();
-
-		result.setDes(node.getDes());
-		result.setId(node.getId());
-		result.setLink(node.getLink());
-		result.setStatus(node.getStatus());
-		result.setType(node.getType());
-		result.setWeight(node.getWeight());
-		return result;
-	}
-
-	public Edge cloneEdge(Edge edge) {
-		Edge result = new Edge();
-
-		result.setDes(edge.getDes());
-		result.setKey(edge.getKey());
-		result.setLink(edge.getLink());
-		result.setOpposite(edge.getOpposite());
-		result.setSelf(edge.getSelf());
-		result.setStatus(edge.getStatus());
-		result.setTarget(edge.getTarget());
-		result.setType(edge.getType());
-		result.setWeight(edge.getWeight());
 		return result;
 	}
 
@@ -138,13 +111,24 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	private class Reload implements Task {
 
-		@Override
-		public String getName() {
-			return "TopologyGraphReload";
-		}
+		private void buildGraph(List<DependencyReport> reports) {
+			Transaction t = Cat.newTransaction(DEPENDENCY, "BuildGraph");
+			try {
+				m_graphBuilder.getGraphs().clear();
+				for (DependencyReport report : reports) {
+					m_graphBuilder.visitDependencyReport(report);
+				}
+				Map<Long, TopologyGraph> graphs = m_graphBuilder.getGraphs();
 
-		private Collection<String> queryAllDomains() {
-			return DomainNavManager.getDomains();
+				for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
+					m_topologyGraphs.put(entry.getKey(), entry.getValue());
+				}
+				t.setStatus(Message.SUCCESS);
+			} catch (Exception e) {
+				t.setStatus(e);
+			} finally {
+				t.complete();
+			}
 		}
 
 		private List<DependencyReport> fetchReport(Collection<String> domains) {
@@ -182,6 +166,15 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 
 		@Override
+		public String getName() {
+			return "TopologyGraphReload";
+		}
+
+		private Collection<String> queryAllDomains() {
+			return DomainNavManager.getDomains();
+		}
+
+		@Override
 		public void run() {
 			boolean active = true;
 
@@ -208,26 +201,6 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				} catch (InterruptedException e) {
 					active = false;
 				}
-			}
-		}
-
-		private void buildGraph(List<DependencyReport> reports) {
-			Transaction t = Cat.newTransaction(DEPENDENCY, "BuildGraph");
-			try {
-				m_graphBuilder.getGraphs().clear();
-				for (DependencyReport report : reports) {
-					m_graphBuilder.visitDependencyReport(report);
-				}
-				Map<Long, TopologyGraph> graphs = m_graphBuilder.getGraphs();
-
-				for (Entry<Long, TopologyGraph> entry : graphs.entrySet()) {
-					m_topologyGraphs.put(entry.getKey(), entry.getValue());
-				}
-				t.setStatus(Message.SUCCESS);
-			} catch (Exception e) {
-				t.setStatus(e);
-			} finally {
-				t.complete();
 			}
 		}
 

@@ -174,7 +174,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private String buildLink(Payload payload, Model model, String domain) {
-		return String.format("?op=graph&minute=%s&domain=%s&date=%s", model.getMinute(), domain,
+		return String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", model.getMinute(), domain,
 		      m_dateFormat.format(new Date(payload.getDate())));
 	}
 

@@ -19,7 +19,7 @@
 	<div class='report'>
 		<div class="row-fluid">
 			<div class="span12 text-center">
-				<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=graph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时拓扑图</a>
+				<a style="margin-top:18px;" class="btn btn-danger  btn-primary" href="?op=dependencyGraph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时拓扑图</a>
 			</div>
 		</div>
 	<%@ include file="dependencyLineGraph.jsp"%>

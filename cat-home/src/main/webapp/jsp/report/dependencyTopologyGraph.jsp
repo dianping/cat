@@ -28,12 +28,12 @@
 			<ul>
 		</c:if>
 			<c:if test="${item > model.maxMinute }"><li class="disabled" id="minute${item}"><a
-			href="?op=graph&domain=${model.domain}&date=${model.date}&minute=${item}">
+			href="?op=dependencyGraph&domain=${model.domain}&date=${model.date}&minute=${item}">
 				<c:if test="${item < 10}">0${item}</c:if>
 				<c:if test="${item >= 10}">${item}</c:if></a></li>
 			</c:if>
 			<c:if test="${item <= model.maxMinute }"><li id="minute${item}"><a
-			href="?op=graph&domain=${model.domain}&date=${model.date}&minute=${item}">
+			href="?op=dependencyGraph&domain=${model.domain}&date=${model.date}&minute=${item}">
 				<c:if test="${item < 10}">0${item}</c:if>
 				<c:if test="${item >= 10}">${item}</c:if></a></li>
 			</c:if>

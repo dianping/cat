@@ -9,6 +9,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 
 import org.codehaus.plexus.util.StringUtils;
+import org.hsqldb.lib.StringUtil;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -96,12 +97,13 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(graphNodeConfigAddOrUpdateSubmit(payload, model));
+			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			break;
 		case TOPOLOGY_GRAPH_NODE_CONFIG_DELETE:
 			model.setOpState(graphNodeConfigDelete(payload));
 			model.setConfig(m_topologyConfigManager.getConfig());
 			break;
-			
+
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_LIST:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
 			model.buildEdgeInfo();
@@ -112,6 +114,8 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE_SUBMIT:
 			model.setOpState(graphEdgeConfigAddOrUpdateSubmit(payload, model));
+			model.setGraphConfig(m_topologyConfigManager.getConfig());
+			model.buildEdgeInfo();
 			break;
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_DELETE:
 			model.setGraphConfig(m_topologyConfigManager.getConfig());
@@ -125,8 +129,13 @@ public class Handler implements PageHandler<Context> {
 	private boolean graphEdgeConfigAddOrUpdateSubmit(Payload payload, Model model) {
 		EdgeConfig config = payload.getEdgeConfig();
 
-		model.setEdgeConfig(config);
-		return m_topologyConfigManager.insertEdgeConfig(config);
+		if (!StringUtil.isEmpty(config.getType())) {
+			model.setEdgeConfig(config);
+			payload.setType(config.getType());
+			return m_topologyConfigManager.insertEdgeConfig(config);
+		} else {
+			return false;
+		}
 	}
 
 	private void graphNodeConfigAddOrUpdate(Payload payload, Model model) {
