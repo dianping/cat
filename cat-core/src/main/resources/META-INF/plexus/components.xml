@@ -314,6 +314,9 @@
 		<component>
 			<role>com.dianping.cat.abtest.repository.ABTestEntityRepository</role>
 			<implementation>com.dianping.cat.abtest.repository.HttpABTestEntityRepository</implementation>
+			<configuration>
+				<refreshTime>6</refreshTime>
+			</configuration>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.configuration.ClientConfigManager</role>

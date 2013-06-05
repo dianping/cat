@@ -1,5 +1,8 @@
 package com.dianping.cat.abtest;
 
 public interface ABTestId {
-	public int getValue();
+	/**
+	 * @return unique abtest name
+	 */
+	public String getValue();
 }

@@ -43,13 +43,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 	public static final String CHARSET = "UTF-8";
 
-	private final int m_pageSize = 5;
-
-	private Logger m_logger;
-
-	@Inject
-	private JspViewer m_jspViewer;
-
 	@Inject
 	private AbtestDao m_abtestDao;
 
@@ -57,33 +50,74 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 	private AbtestRunDao m_abtestRunDao;
 
 	@Inject
-	private ProjectDao m_projectDao;
-
-	@Inject
 	private GroupStrategyDao m_groupStrategyDao;
 
+	@Inject
+	private ProjectDao m_projectDao;
+	
+	@Inject
+	private JspViewer m_jspViewer;
+	
+	private Logger m_logger;
+
+	private final int m_pageSize = 10;
+
 	@Override
-	@PayloadMeta(Payload.class)
-	@InboundActionMeta(name = "abtest")
-	public void handleInbound(Context ctx) throws ServletException, IOException {
-		if (ctx.getException() != null) {
-			return;
-		}
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
 
-		Payload payload = ctx.getPayload();
-		Action action = payload.getAction();
+	private AbtestModel fetchAbtestModel() {
+		try {
+			AbtestModel abtestModel = new AbtestModel();
 
-		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
-			if (action == Action.CREATE) {
-				handleCreateAction(ctx, payload);
-			} else if (action == Action.DETAIL) {
-				handleUpdateAction(ctx, payload);
+			List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
+
+			if (abtestRuns != null) {
+				Date now = new Date();
+				for (AbtestRun abtestRun : abtestRuns) {
+					AbtestStatus status = AbtestStatus.calculateStatus(abtestRun, now);
+					if (status == AbtestStatus.READY || status == AbtestStatus.RUNNING) {
+						// fetch Case and GroupStrategy
+						int caseId = abtestRun.getCaseId();
+						Abtest entity = m_abtestDao.findByPK(caseId, AbtestEntity.READSET_FULL);
+						int gid = entity.getGroupStrategy();
+						GroupStrategy groupStrategy = m_groupStrategyDao.findByPK(gid, GroupStrategyEntity.READSET_FULL);
+
+						Case _case = transform(abtestRun, entity, groupStrategy);
+						abtestModel.addCase(_case);
+					}
+				}
 			}
+			return abtestModel;
+		} catch (DalException e) {
+			m_logger.error("Error when find all AbtestRun", e);
+			Cat.logError(e);
 		}
+		return null;
+	}
 
-		if (action == Action.VIEW) {
-			handleStatusChangeAction(ctx);
+	private List<GroupStrategy> getAllGroupStrategys() {
+		try {
+			return m_groupStrategyDao.findAllByStatus(1, GroupStrategyEntity.READSET_FULL);
+		} catch (DalException e) {
+			m_logger.error(e.getMessage(), e);
+			Cat.logError(e);
 		}
+		return null;
+	}
+
+	private Map<String, List<Project>> getAllProjects() {
+		List<Project> projects = new ArrayList<Project>();
+
+		try {
+			projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
+			Cat.logError(e);
+		}
+		// Collections.sort(projects, new ProjectCompartor());
+		return transform(projects);
 	}
 
 	private void handleCreateAction(Context ctx, Payload payload) {
@@ -111,7 +145,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 
 			run.setCaseId(abtest.getId());
 			m_abtestRunDao.insert(run);
-
 		} catch (DalException e) {
 			m_logger.error("Error when saving abtest", e);
 			Cat.logError(e);
@@ -119,74 +152,30 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		}
 	}
 
-	private void handleUpdateAction(Context ctx, Payload payload) {
-		try {
-			AbtestRun run = new AbtestRun();
-
-			run.setId(payload.getId());
-			run.setKeyId(payload.getId());
-			run.setCreator(payload.getOwner());
-			run.setStartDate(payload.getStartDate());
-			run.setEndDate(payload.getEndDate());
-			run.setDomains(StringUtils.join(payload.getDomains(), ','));
-			run.setStrategyConfiguration(payload.getStrategyConfig());
-			Date now = new Date();
-			run.setModifiedDate(now);
-
-			// only update run info, do not update abtest meta-info
-			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
-
-		} catch (DalException e) {
-			m_logger.error("Error when updating abtest", e);
-			Cat.logError(e);
-			ctx.setException(e);
+	@Override
+	@PayloadMeta(Payload.class)
+	@InboundActionMeta(name = "abtest")
+	public void handleInbound(Context ctx) throws ServletException, IOException {
+		if (ctx.getException() != null) {
+			return;
 		}
-	}
 
-	private void handleStatusChangeAction(Context ctx) {
 		Payload payload = ctx.getPayload();
-		ErrorObject error = new ErrorObject("disable");
-		String[] ids = payload.getIds();
+		Action action = payload.getAction();
 
-		if (ids != null && ids.length != 0) {
-			for (String id : ids) {
-				try {
-					int runID = Integer.parseInt(id);
-					AbtestRun run = m_abtestRunDao.findByPK(runID, AbtestRunEntity.READSET_FULL);
-
-					if (payload.getDisableAbtest() == -1) { // suspend
-						if (!run.isDisabled()) {
-							run.setDisabled(true);
-							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
-						} else {
-							error.addArgument(id, "Abtest " + id + " has been already suspended!");
-						}
-					} else if (payload.getDisableAbtest() == 1) { // resume
-						if (run.isDisabled()) {
-							run.setDisabled(false);
-							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
-						} else {
-							error.addArgument(id, "Abtest " + id + " has been already active!");
-						}
-					}
-
-				} catch (NumberFormatException e) {
-					// do nothing
-					Cat.logError(e);
-				} catch (DalException e) {
-					Cat.logError(e);
-				}
-			}
-			
-			if (error.getArguments().isEmpty()) {
-				ErrorObject success = new ErrorObject("success");
-				ctx.addError(success);
-			} else {
-				ctx.addError(error);
+		if (ctx.getHttpServletRequest().getMethod().equalsIgnoreCase("post")) {
+			if (action == Action.CREATE) {
+				handleCreateAction(ctx, payload);
+			} else if (action == Action.DETAIL) {
+				handleUpdateAction(ctx, payload);
 			}
 		}
-	}
 
+		if (action == Action.VIEW) {
+			handleStatusChangeAction(ctx);
+		}
+	}
+	
 	@Override
 	@OutboundActionMeta(name = "abtest")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
@@ -217,67 +206,70 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		m_jspViewer.view(ctx, model);
 	}
 
-	private void renderModel(Model model) {
-		model.setAbtestModel(fetchAbtestModel().toString());
-   }
-	
-	private AbtestModel fetchAbtestModel() {
-		try {
-			AbtestModel abtestModel = new AbtestModel();
+	private void handleStatusChangeAction(Context ctx) {
+		Payload payload = ctx.getPayload();
+		ErrorObject error = new ErrorObject("disable");
+		String[] ids = payload.getIds();
 
-			List<AbtestRun> abtestRuns = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
+		if (ids != null && ids.length != 0) {
+			for (String id : ids) {
+				try {
+					int runID = Integer.parseInt(id);
+					AbtestRun run = m_abtestRunDao.findByPK(runID, AbtestRunEntity.READSET_FULL);
 
-			if (abtestRuns != null) {
-				Date now = new Date();
-				for (AbtestRun abtestRun : abtestRuns) {
-					AbtestStatus status = AbtestStatus.calculateStatus(abtestRun, now);
-					if (status == AbtestStatus.READY || status == AbtestStatus.RUNNING) {
-						// fetch Case and GroupStrategy
-						int caseId = abtestRun.getCaseId();
-						Abtest entity = m_abtestDao.findByPK(caseId, AbtestEntity.READSET_FULL);
-						int gid = entity.getGroupStrategy();
-						GroupStrategy groupStrategy = m_groupStrategyDao.findByPK(gid, GroupStrategyEntity.READSET_FULL);
-
-						Case _case = transform(abtestRun, entity, groupStrategy);
-						abtestModel.addCase(_case);
-
+					if (payload.getDisableAbtest() == -1) {
+						// suspend abtest
+						if (!run.isDisabled()) {
+							run.setDisabled(true);
+							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
+						} else {
+							error.addArgument(id, String.format("Abtest %d has been already suspended!", id));
+						}
+					} else if (payload.getDisableAbtest() == 1) { 
+						// resume abtest
+						if (run.isDisabled()) {
+							run.setDisabled(false);
+							m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_STATUS);
+						} else {
+							error.addArgument(id, String.format("Abtest %d has been already active!", id));
+						}
 					}
+				} catch (Throwable e) {
+					// do nothing
+					Cat.logError(e);
 				}
 			}
-
-			return abtestModel;
-		} catch (DalException e) {
-			m_logger.error("Error when find all AbtestRun", e);
-			Cat.logError(e);
+			
+			if (error.getArguments().isEmpty()) {
+				ErrorObject success = new ErrorObject("success");
+				ctx.addError(success);
+			} else {
+				ctx.addError(error);
+			}
 		}
-		return null;
 	}
 
-	private Case transform(AbtestRun abtestRun, Abtest entity, GroupStrategy groupStrategy) throws DalException {
-		Case _case = new Case(entity.getId());
-		_case.setCreatedDate(entity.getCreationDate());
-		_case.setDescription(entity.getDescription());
-		_case.setGroupStrategy(groupStrategy.getName());
-		_case.setName(entity.getName());
-		_case.setOwner(entity.getOwner());
-		_case.setLastModifiedDate(entity.getModifiedDate());
-		for (String domain : StringUtils.split(entity.getDomains(), ',')) {
-			_case.addDomain(domain);
+	private void handleUpdateAction(Context ctx, Payload payload) {
+		try {
+			AbtestRun run = new AbtestRun();
+
+			run.setId(payload.getId());
+			run.setKeyId(payload.getId());
+			run.setCreator(payload.getOwner());
+			run.setStartDate(payload.getStartDate());
+			run.setEndDate(payload.getEndDate());
+			run.setDomains(StringUtils.join(payload.getDomains(), ','));
+			run.setStrategyConfiguration(payload.getStrategyConfig());
+			Date now = new Date();
+			run.setModifiedDate(now);
+
+			// only update run info, do not update abtest meta-info
+			m_abtestRunDao.updateByPK(run, AbtestRunEntity.UPDATESET_ALLOWED_MODIFYPART);
+		} catch (DalException e) {
+			m_logger.error("Error when updating abtest", e);
+			Cat.logError(e);
+			ctx.setException(e);
 		}
-
-		Run run = new Run(abtestRun.getId());
-		for (String domain : StringUtils.split(abtestRun.getDomains(), ',')) {
-			run.addDomain(domain);
-		}
-		run.setCreator(abtestRun.getCreator());
-		run.setDisabled(false);
-		run.setEndDate(abtestRun.getEndDate());
-		run.setGroupStrategyConfiguration(abtestRun.getStrategyConfiguration());
-		run.setStartDate(abtestRun.getStartDate());
-
-		_case.addRun(run);
-
-		return _case;
 	}
 
 	private void renderCreateModel(Model model) {
@@ -293,21 +285,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		renderReportModel(ctx, model, payload);
 	}
 
-	private void renderReportModel(Context ctx, Model model, Payload payload) {
-		try {
-			int runId = payload.getId();
-			AbtestRun run = m_abtestRunDao.findByPK(runId, AbtestRunEntity.READSET_FULL);
-			Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
-			AbtestDaoModel abtestModel = new AbtestDaoModel(abtest, run);
-
-			model.setAbtest(abtestModel);
-		} catch (DalException e) {
-			Cat.logError(e);
-			m_logger.error("Error when fetching abtest", e);
-			ctx.setException(e);
-		}
-	}
-
 	private void renderListModel(Model model, Payload payload) {
 		List<ABTestReport> reports = new ArrayList<ABTestReport>();
 		AbtestStatus status = AbtestStatus.getByName(payload.getStatus(), null);
@@ -318,14 +295,11 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		int createdCount = 0, readyCount = 0, runningCount = 0, terminatedCount = 0, suspendedCount = 0;
 
 		List<AbtestRun> runs = new ArrayList<AbtestRun>();
+		
 		try {
 			runs = m_abtestRunDao.findAll(AbtestRunEntity.READSET_FULL);
-		} catch (DalException e) {
-			Cat.logError(e);
-		}
 
-		for (AbtestRun run : runs) {
-			try {
+			for (AbtestRun run : runs) {
 				Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
 				ABTestReport report = new ABTestReport(abtest, run, now);
 
@@ -333,7 +307,6 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 				if (status != null && report.getStatus() == status) {
 					filterReports.add(report);
 				}
-
 				switch (report.getStatus()) {
 				case CREATED:
 					createdCount++;
@@ -351,9 +324,9 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 					suspendedCount++;
 					break;
 				}
-			} catch (DalException e) {
-				Cat.logError(e);
 			}
+		} catch (Throwable e) {
+			Cat.logError(e);
 		}
 
 		model.setCreatedCount(createdCount);
@@ -392,27 +365,50 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 		model.setReports(reports);
 	}
 
-	private List<GroupStrategy> getAllGroupStrategys() {
+	private void renderModel(Model model) {
+		model.setAbtestModel(fetchAbtestModel().toString());
+   }
+
+	private void renderReportModel(Context ctx, Model model, Payload payload) {
 		try {
-			return m_groupStrategyDao.findAllByStatus(1, GroupStrategyEntity.READSET_FULL);
+			int runId = payload.getId();
+			AbtestRun run = m_abtestRunDao.findByPK(runId, AbtestRunEntity.READSET_FULL);
+			Abtest abtest = m_abtestDao.findByPK(run.getCaseId(), AbtestEntity.READSET_FULL);
+			AbtestDaoModel abtestModel = new AbtestDaoModel(abtest, run);
+
+			model.setAbtest(abtestModel);
 		} catch (DalException e) {
-			m_logger.error(e.getMessage(), e);
 			Cat.logError(e);
+			m_logger.error("Error when fetching abtest", e);
+			ctx.setException(e);
 		}
-		return null;
 	}
 
-	private Map<String, List<Project>> getAllProjects() {
-		List<Project> projects = new ArrayList<Project>();
-
-		try {
-			projects = m_projectDao.findAll(ProjectEntity.READSET_FULL);
-		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
-			Cat.logError(e);
+	private Case transform(AbtestRun abtestRun, Abtest entity, GroupStrategy groupStrategy) throws DalException {
+		Case _case = new Case(entity.getId());
+		_case.setCreatedDate(entity.getCreationDate());
+		_case.setDescription(entity.getDescription());
+		_case.setGroupStrategy(groupStrategy.getName());
+		_case.setName(entity.getName());
+		_case.setOwner(entity.getOwner());
+		_case.setLastModifiedDate(entity.getModifiedDate());
+		for (String domain : StringUtils.split(entity.getDomains(), ',')) {
+			_case.addDomain(domain);
 		}
-		// Collections.sort(projects, new ProjectCompartor());
-		return transform(projects);
+
+		Run run = new Run(abtestRun.getId());
+		for (String domain : StringUtils.split(abtestRun.getDomains(), ',')) {
+			run.addDomain(domain);
+		}
+		run.setCreator(abtestRun.getCreator());
+		run.setDisabled(false);
+		run.setEndDate(abtestRun.getEndDate());
+		run.setGroupStrategyConfiguration(abtestRun.getStrategyConfiguration());
+		run.setStartDate(abtestRun.getStartDate());
+
+		_case.addRun(run);
+
+		return _case;
 	}
 
 	private Map<String, List<Project>> transform(List<Project> projects) {
@@ -429,10 +425,5 @@ public class Handler implements PageHandler<Context>, LogEnabled {
 			}
 		}
 		return re;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
 	}
 }

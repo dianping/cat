@@ -30,8 +30,8 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 	@Override
 	public ABTestContext getContext(ABTestId testId) {
 		Entry entry = m_threadLocal.get();
-		Map<Integer, DefaultABTestContext> map = entry.getContextMap();
-		int id = testId.getValue();
+		Map<String, DefaultABTestContext> map = entry.getContextMap();
+		String id = testId.getValue();
 		DefaultABTestContext ctx = map.get(id);
 
 		if (ctx == null) {
@@ -64,18 +64,18 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 			ctxList = new ArrayList<ABTestContext>(4);
 
 			List<ABTestEntity> entities = m_entityManager.getEntityList();
-			Map<Integer, DefaultABTestContext> ctxMap = m_threadLocal.get().getContextMap();
+			Map<String, DefaultABTestContext> ctxMap = m_threadLocal.get().getContextMap();
 			Date now = new Date();
 
 			for (ABTestEntity entity : entities) {
 				Entry entry = m_threadLocal.get();
-				int id = entity.getId();
-				DefaultABTestContext ctx = ctxMap.get(id);
+				String name = entity.getName();
+				DefaultABTestContext ctx = ctxMap.get(name);
 
 				if (ctx == null) {
 					ctx = createContext(entity, entry.getHttpServletRequest());
 
-					ctxMap.put(id, ctx);
+					ctxMap.put(name, ctx);
 				}
 
 				ctx.initialize(now);
@@ -100,20 +100,20 @@ public class DefaultABTestContextManager extends ContainerHolder implements ABTe
 
 		entry.setHttpServletRequest(req);
 
-		Map<Integer, DefaultABTestContext> map = entry.getContextMap();
+		Map<String, DefaultABTestContext> map = entry.getContextMap();
 		for (DefaultABTestContext ctx : map.values()) {
 			ctx.setup(req);
 		}
 	}
 
 	static class Entry {
-		private Map<Integer, DefaultABTestContext> m_map = new HashMap<Integer, DefaultABTestContext>(4);
+		private Map<String, DefaultABTestContext> m_map = new HashMap<String, DefaultABTestContext>(4);
 
 		private List<ABTestContext> m_list;
 
 		private HttpServletRequest m_req;
 
-		public Map<Integer, DefaultABTestContext> getContextMap() {
+		public Map<String, DefaultABTestContext> getContextMap() {
 			return m_map;
 		}
 

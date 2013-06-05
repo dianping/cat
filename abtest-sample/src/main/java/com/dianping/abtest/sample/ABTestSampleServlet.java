@@ -31,16 +31,16 @@ public class ABTestSampleServlet extends HttpServlet {
 	}
 
 	public static enum MyABTestId implements ABTestId {
-		CASE1(11);
+		CASE1("demo1");
 
-		private int m_id;
+		private String m_id;
 
-		private MyABTestId(int id) {
+		private MyABTestId(String id) {
 			m_id = id;
 		}
 
 		@Override
-		public int getValue() {
+		public String getValue() {
 			return m_id;
 		}
 	}
