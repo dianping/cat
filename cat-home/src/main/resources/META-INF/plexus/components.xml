@@ -1194,11 +1194,21 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.dependency.dashboard.DashboardConfig</role>
+			<implementation>com.dianping.cat.report.page.dependency.dashboard.DashboardConfig</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.dashboard.DashboardConfig</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2584,11 +2594,21 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.dashboard.DashboardConfig</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.dashboard.DashboardConfig</role>
+			<implementation>com.dianping.cat.report.page.dependency.dashboard.DashboardConfig</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.externalError.Handler</role>

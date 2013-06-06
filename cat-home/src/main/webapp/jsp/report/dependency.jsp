@@ -23,13 +23,14 @@
 		<div class="row-fluid">
 			<div class="span12 text-center">
 				<a class="btn btn-danger  btn-primary" href="?op=dependencyGraph&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到实时拓扑图</a>
+				<a class="btn btn-danger  btn-primary" href="?op=dashboard&minute=${model.minute}&domain=${model.domain}&date=${model.date}">切换到产品线监控大盘</a>
 			</div>
 		</div>
 		<div class="tabbable text-error" id="content"> <!-- Only required for left/right tabs -->
   			<ul class="nav nav-tabs">
-   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab">数据趋势</a></li>
-   			 	<li class="text-right"><a href="#tab2" data-toggle="tab">运维告警</a></li>
-   			 	<li class="text-right"><a href="#tab3" data-toggle="tab">详细数据</a></li>
+   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab">数据趋势(项目以及依赖项目)</a></li>
+   			 	<li class="text-right"><a href="#tab2" data-toggle="tab">运维告警(Zabbix告警信息)</a></li>
+   			 	<li class="text-right"><a href="#tab3" data-toggle="tab">详细数据(Detail以及配置)</a></li>
   			</ul>
   			<div class="tab-content">
 	    		<div class="tab-pane active" id="tab1">
@@ -58,6 +59,11 @@
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#content .nav-tabs a').mouseenter(function (e) {
+			  e.preventDefault();
+			  $(this).tab('show');
+		});
+
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('.contents').dataTable({
 			"sPaginationType": "full_numbers",
@@ -74,7 +80,7 @@
 		  e.preventDefault();
 		  $(this).tab('show');
 		});	
-		$('#tab0').addClass('active');
+		$('#zabbixTab0').addClass('active');
 		$('#leftTab0').addClass('active');
 		$('.switch').css('display','none');
 		$('.dataTables_info').css('display','none');

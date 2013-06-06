@@ -35,6 +35,16 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<String> m_indexGraph;
 
 	private Map<String, List<String>> m_dependencyGraph;
+	
+	private String m_dashboardGraph;
+	
+	public String getDashboardGraph() {
+   	return m_dashboardGraph;
+   }
+
+	public void setDashboardGraph(String dashboardGraph) {
+   	m_dashboardGraph = dashboardGraph;
+   }
 
 	public List<String> getIndexGraph() {
 		return m_indexGraph;

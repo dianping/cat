@@ -5,6 +5,8 @@ public enum JspFile {
 
 	GRAPH("/jsp/report/dependencyTopologyGraph.jsp"),
 
+	DASHBOARD("/jsp/report/dependencyDashboard.jsp"),
+
 	;
 
 	private String m_path;

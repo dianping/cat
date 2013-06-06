@@ -23,6 +23,8 @@ public class CatString {
 	public static final String EXCEPTION_COUNT = "错误数";
 
 	public static final String EXCEPTION_INFO = "异常信息";
+	
+	public static final String ZABBIX_ERROR = "Zabbix告警";
 
 	public static final String SUCCESS = "Success";
 

@@ -2,7 +2,7 @@
 <div class="tabbable"  id="otherDependency">
 	  <ul class="nav nav-tabs">
 	  	<c:forEach  var="item" items="${model.events}"  varStatus="status" >
-			 <li id="leftTab${status.index}" class="text-right"><a href="#tab${status.index}" data-toggle="tab">
+			 <li id="leftTab${status.index}" class="text-right"><a href="#zabbixTab${status.index}" data-toggle="tab">
 			 ${item.key}
 			 <c:set var="size" value="${w:size(item.value)}"/>
 			 <c:if test="${size > 0 }"><span class='text-error'>(${size})</span></c:if>
@@ -12,7 +12,7 @@
   	<div class="tab-content">
    		<c:forEach  var="entry" items="${model.events}"  varStatus="status" >
    		<c:set var="items" value="${entry.value}"/>
-		    <div class="tab-pane" id="tab${status.index}">	
+		    <div class="tab-pane" id="zabbixTab${status.index}">	
 				<table	class="table table-striped table-bordered table-condensed">
 		  		<thead>
 		  			<tr><th>时间</th>

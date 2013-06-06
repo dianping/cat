@@ -32,6 +32,7 @@ import com.dianping.cat.report.graph.DefaultValueTranslater;
 import com.dianping.cat.report.graph.GraphBuilder;
 import com.dianping.cat.report.graph.ValueTranslater;
 import com.dianping.cat.report.page.PayloadNormalizer;
+import com.dianping.cat.report.page.dependency.dashboard.DashboardConfig;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManger;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphItemBuilder;
@@ -206,17 +207,20 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(WeeklyReportCache.class, MonthReportCache.class));
 
 		all.add(C(EventCollectManager.class).req(EventDao.class, ServerConfigManager.class));
-		
+
 		all.add(C(TopologyGraphConfigManger.class));
-		
+
 		all.add(C(TopologyGraphItemBuilder.class).req(TopologyGraphConfigManger.class));
-		
+
 		all.add(C(TopologyGraphBuilder.class).req(TopologyGraphItemBuilder.class));
-		
+
 		// model service
 		all.addAll(new ServiceComponentConfigurator().defineComponents());
 
-		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class).req(ModelService.class, "dependency"));
+		all.add(C(DashboardConfig.class));
+
+		all.add(C(TopologyGraphManager.class).req(TopologyGraphBuilder.class, ServerConfigManager.class)//
+		      .req(DashboardConfig.class).req(ModelService.class, "dependency"));
 
 		// database
 		all.add(C(JdbcDataSourceConfigurationManager.class) //

@@ -16,13 +16,18 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.ServerConfigManager;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
+import com.dianping.cat.home.dependency.graph.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dependency.graph.entity.Edge;
 import com.dianping.cat.home.dependency.graph.entity.Node;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.page.dependency.dashboard.DashboardConfig;
+import com.dianping.cat.report.page.dependency.dashboard.DashboardConfig.Group;
+import com.dianping.cat.report.page.dependency.dashboard.DashboardGraph;
 import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
@@ -37,34 +42,68 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 	@Inject
 	private TopologyGraphBuilder m_graphBuilder;
 
+	@Inject
+	private ServerConfigManager m_manager;
+
+	@Inject
+	private DashboardConfig m_dashboardConfig;
+
 	private Map<Long, TopologyGraph> m_topologyGraphs = new ConcurrentHashMap<Long, TopologyGraph>(360);
 
 	private Logger m_logger;
 
 	private static final String DEPENDENCY = "Dependency";
 
-	public TopologyGraph buildGraphByDomainTime(String domain, long time) {
-		TopologyGraph graph = m_topologyGraphs.get(time);
-		TopologyGraph result = new TopologyGraph();
-		long current = System.currentTimeMillis();
-		long minute = current - current % TimeUtil.ONE_MINUTE;
+	public DashboardGraph buildDashboardGraph(long time) {
+		TopologyGraph topologyGraph = queryGraph(time);
+		DashboardGraph dashboardGraph = new DashboardGraph();
 
-		if (minute == time && graph == null) {
-			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
+		if (topologyGraph != null) {
+			Map<String, Group> groups = m_dashboardConfig.getGroups();
+
+			for (Entry<String, Group> entry : groups.entrySet()) {
+				String groupName = entry.getKey();
+				Group groupDetail = entry.getValue();
+
+				for (String nodeName : groupDetail.getDomains()) {
+					Node node = topologyGraph.findNode(nodeName);
+
+					if (node != null) {
+						dashboardGraph.addNode(groupName, m_graphBuilder.cloneNode(node));
+					}
+				}
+			}
+			Map<String, Edge> edges = topologyGraph.getEdges();
+
+			for (Edge edge : edges.values()) {
+				String self = edge.getSelf();
+				String to = edge.getTarget();
+
+				if (m_dashboardConfig.contains(self) && m_dashboardConfig.contains(to)) {
+					dashboardGraph.addEdge(m_graphBuilder.cloneEdge(edge));
+				}
+			}
 		}
-		result.setId(domain);
-		result.setType(GraphConstrant.PROJECT);
-		result.setStatus(GraphConstrant.OK);
+		return dashboardGraph;
+	}
 
-		if (graph != null) {
-			Node node = graph.findNode(domain);
+	public TopologyGraph buildGraphByDomainTime(String domain, long time) {
+		TopologyGraph all = queryGraph(time);
+		TopologyGraph topylogyGraph = new TopologyGraph();
+
+		topylogyGraph.setId(domain);
+		topylogyGraph.setType(GraphConstrant.PROJECT);
+		topylogyGraph.setStatus(GraphConstrant.OK);
+
+		if (all != null) {
+			Node node = all.findNode(domain);
 
 			if (node != null) {
-				result.setDes(node.getDes());
-				result.setStatus(node.getStatus());
-				result.setType(node.getType());
+				topylogyGraph.setDes(node.getDes());
+				topylogyGraph.setStatus(node.getStatus());
+				topylogyGraph.setType(node.getType());
 			}
-			Collection<Edge> edges = graph.getEdges().values();
+			Collection<Edge> edges = all.getEdges().values();
 
 			for (Edge edge : edges) {
 				String self = edge.getSelf();
@@ -72,31 +111,41 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 				Edge cloneEdge = m_graphBuilder.cloneEdge(edge);
 
 				if (self.equals(domain)) {
-					Node other = graph.findNode(target);
+					Node other = all.findNode(target);
 
 					if (other != null) {
-						result.addNode(m_graphBuilder.cloneNode(other));
+						topylogyGraph.addNode(m_graphBuilder.cloneNode(other));
 					} else {
-						result.addNode(m_graphBuilder.createNode(target));
+						topylogyGraph.addNode(m_graphBuilder.createNode(target));
 					}
 					edge.setOpposite(false);
-					result.addEdge(cloneEdge);
+					topylogyGraph.addEdge(cloneEdge);
 				} else if (target.equals(domain)) {
-					Node other = graph.findNode(self);
+					Node other = all.findNode(self);
 
 					if (other != null) {
-						result.addNode(m_graphBuilder.cloneNode(other));
+						topylogyGraph.addNode(m_graphBuilder.cloneNode(other));
 					} else {
-						result.addNode(m_graphBuilder.createNode(target));
+						topylogyGraph.addNode(m_graphBuilder.createNode(target));
 					}
 					cloneEdge.setTarget(edge.getSelf());
 					cloneEdge.setSelf(edge.getTarget());
 					cloneEdge.setOpposite(true);
-					result.addEdge(cloneEdge);
+					topylogyGraph.addEdge(cloneEdge);
 				}
 			}
 		}
-		return result;
+		return topylogyGraph;
+	}
+
+	private TopologyGraph queryGraph(long time) {
+		TopologyGraph graph = m_topologyGraphs.get(time);
+		long current = System.currentTimeMillis();
+		long minute = current - current % TimeUtil.ONE_MINUTE;
+		if (minute == time && graph == null) {
+			graph = m_topologyGraphs.get(time - TimeUtil.ONE_MINUTE);
+		}
+		return graph;
 	}
 
 	@Override
@@ -106,7 +155,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
+		// if(!m_manager.isLocalMode()&&m_manager.isJobMachine()){
 		Threads.forGroup("Cat").start(new Reload());
+		// }
 	}
 
 	private class Reload implements Task {
@@ -132,9 +183,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		}
 
 		private List<DependencyReport> fetchReport(Collection<String> domains) {
-			List<DependencyReport> reports = new ArrayList<DependencyReport>();
 			long current = System.currentTimeMillis();
 			long currentHour = current - current % TimeUtil.ONE_HOUR;
+			List<DependencyReport> reports = new ArrayList<DependencyReport>();
 			Transaction t = Cat.newTransaction(DEPENDENCY, "FetchReport");
 
 			try {

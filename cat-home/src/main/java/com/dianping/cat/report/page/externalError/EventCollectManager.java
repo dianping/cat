@@ -66,13 +66,31 @@ public class EventCollectManager implements Initializable, LogEnabled {
 		return result;
 	}
 
+	public List<Event> findEvents(long date, String domain) {
+		Map<String, List<Event>> domainEvent = m_events.get(date);
+
+		if (domainEvent == null) {
+			return null;
+		} else {
+			List<Event> result = domainEvent.get(domain);
+
+			if (result == null) {
+				return null;
+			} else {
+				return result;
+			}
+		}
+	}
+
 	private List<Event> queryEventsByMemory(String domain, Date date, int minute) {
 		List<Event> result = new ArrayList<Event>();
-		long time = date.getTime();
+		long time = date.getTime() + TimeUtil.ONE_MINUTE - date.getTime() % TimeUtil.ONE_MINUTE;
 
 		for (int i = 0; i < minute; i++) {
-			List<Event> events = findOrCreateEvents(time - minute * TimeUtil.ONE_MINUTE, domain);
-			result.addAll(events);
+			List<Event> events = findEvents(time - i * TimeUtil.ONE_MINUTE, domain);
+			if (events != null) {
+				result.addAll(events);
+			}
 		}
 		return result;
 	}
@@ -93,6 +111,7 @@ public class EventCollectManager implements Initializable, LogEnabled {
 		long current = System.currentTimeMillis();
 
 		if (current - date.getTime() < TimeUtil.ONE_HOUR * 2) {
+			// return queryEventsByDB(domain, date, 10);
 			return queryEventsByMemory(domain, date, 10);
 		} else {
 			return queryEventsByDB(domain, date, 10);
@@ -138,10 +157,10 @@ public class EventCollectManager implements Initializable, LogEnabled {
 						m_eventDao.insert(error);
 
 						long date = error.getDate().getTime();
+						long minute = date - date % TimeUtil.ONE_MINUTE;
 						String domain = error.getDomain();
-						long time = date - date % TimeUtil.ONE_MINUTE;
 
-						findOrCreateEvents(time, domain).add(error);
+						findOrCreateEvents(minute, domain).add(error);
 					}
 				} catch (InterruptedException e) {
 					active = false;

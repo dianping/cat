@@ -245,8 +245,13 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				manager.flush(tree);
 			} else {
 				Transaction entry = m_stack.peek();
-
-				entry.addChild(message);
+				List<Message> childrens = entry.getChildren();
+				if (childrens != null && childrens.size() < 1000) {
+					entry.addChild(message);
+				}else{
+					System.out.println("Child is to many");
+				}
+//				entry.addChild(message);
 			}
 		}
 

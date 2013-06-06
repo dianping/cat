@@ -3,7 +3,9 @@ package com.dianping.cat.report.page.dependency;
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view"),
 	
-	GRAPH("dependencyGraph");
+	GRAPH("dependencyGraph"),
+	
+	DASHBOARD("dashboard"),;
 
 	private String m_name;
 
