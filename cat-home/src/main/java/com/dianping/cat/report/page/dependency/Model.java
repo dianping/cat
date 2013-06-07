@@ -12,9 +12,11 @@ import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
+import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
 import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
+import com.dianping.cat.report.page.top.TopMetric;
 import com.dianping.cat.report.view.StringSortHelper;
 
 @ModelMeta("dependecy")
@@ -50,6 +52,11 @@ public class Model extends AbstractReportModel<Action, Context> {
 	
 	private Date m_reportEnd;
 	
+	private TopMetric m_topMetric;
+
+	private TopReport m_topReport;
+
+
 	public List<String> getProductLines() {
    	return m_productLines;
    }
@@ -197,6 +204,21 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setDashboardGraphData(ProductLinesDashboard dashboardGraphData) {
    	m_dashboardGraphData = dashboardGraphData;
    }
-	
 
+	public TopMetric getTopMetric() {
+   	return m_topMetric;
+   }
+
+	public void setTopMetric(TopMetric topMetric) {
+   	m_topMetric = topMetric;
+   }
+
+	public TopReport getTopReport() {
+   	return m_topReport;
+   }
+
+	public void setTopReport(TopReport topReport) {
+   	m_topReport = topReport;
+   }
+	
 }

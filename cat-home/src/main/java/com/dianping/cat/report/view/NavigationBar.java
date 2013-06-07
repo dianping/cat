@@ -13,8 +13,6 @@ public class NavigationBar {
 
 		SystemPage.CONFIG,
 		
-//		ReportPage.QUERY,
-
 		SystemPage.LOGIN
 
 		};
@@ -43,7 +41,7 @@ public class NavigationBar {
 
 //		ReportPage.DATABASE,
 //
-//		ReportPage.MATRIX,
+		ReportPage.MATRIX,
 		
 		ReportPage.DEPENDENCY,
 		

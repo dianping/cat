@@ -11,12 +11,13 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.PayloadNormalizer;
-import com.dianping.cat.report.page.model.spi.ModelPeriod;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
@@ -70,17 +71,24 @@ public class Handler implements PageHandler<Context> {
 		normalize(model, payload);
 
 		TopReport report = getReport(payload);
-		DisplayTop displayTop = new DisplayTop(60, payload.getTops());
 		int count = payload.getCount();
+		
+		if (!payload.getPeriod().isCurrent()) {
+			count = 60;
+		}
+		TopMetric displayTop = new TopMetric(count, payload.getTops());
 
 		if (count > 0) {
-			displayTop = new DisplayTop(count, payload.getTops());
+			displayTop = new TopMetric(count, payload.getTops());
 		}
-
+		Transaction t = Cat.newTransaction("Top", "Parser");
 		displayTop.visitTopReport(report);
 		model.setTopReport(report);
-		model.setMetrix(displayTop);
+		model.setTopMetric(displayTop);
+		t.complete();
+		Transaction t1 = Cat.newTransaction("Top", "BuildJsp");
 		m_jspViewer.view(ctx, model);
+		t1.complete();
 	}
 
 	private void normalize(Model model, Payload payload) {

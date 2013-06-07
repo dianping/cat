@@ -2551,6 +2551,11 @@
 					<field-name>m_problemservice</field-name>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
+					<role-hint>top</role-hint>
+					<field-name>m_topService</field-name>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
 				</requirement>
 			</requirements>

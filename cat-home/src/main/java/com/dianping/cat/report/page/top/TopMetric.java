@@ -11,14 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.top.model.entity.Domain;
 import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeUtil;
+import com.dianping.cat.message.Transaction;
 
-public class DisplayTop extends BaseVisitor {
+public class TopMetric extends BaseVisitor {
 
 	private String m_currentDomain;
 
@@ -42,7 +44,7 @@ public class DisplayTop extends BaseVisitor {
 
 	private Integer m_currentMinute;
 
-	public DisplayTop(int count,int tops) {
+	public TopMetric(int count,int tops) {
 		m_error = new MetricItem(count,tops);
 		m_url = new MetricItem(count,tops);
 		m_service = new MetricItem(count,tops);
@@ -141,7 +143,7 @@ public class DisplayTop extends BaseVisitor {
 			StringBuilder sb = new StringBuilder();
 
 			for (Entry<String, Double> entry : m_exceptions.entrySet()) {
-				sb.append(entry.getKey()).append(" ").append(entry.getValue().doubleValue()).append("<br/>");
+				sb.append(entry.getKey()).append(" ").append(entry.getValue().doubleValue()).append("\\n");
 			}
 			return sb.toString();
 		}
@@ -218,6 +220,7 @@ public class DisplayTop extends BaseVisitor {
 		}
 
 		public Map<String, List<Item>> getResult() {
+			Transaction t = Cat.newTransaction("Top", "Query");
 			Map<String, List<Item>> temp = new LinkedHashMap<String, List<Item>>();
 			List<String> keyList = new ArrayList<String>(m_result.keySet());
 			Collections.sort(keyList, new StringCompartor());
@@ -239,6 +242,7 @@ public class DisplayTop extends BaseVisitor {
 					temp.put(key, valule);
 				}
 			}
+			t.complete();
 
 			return temp;
 		}

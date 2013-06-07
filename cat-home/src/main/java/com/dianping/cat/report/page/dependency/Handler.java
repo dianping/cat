@@ -27,6 +27,7 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.CatString;
 import com.dianping.cat.helper.TimeUtil;
 import com.dianping.cat.home.dal.report.Event;
@@ -48,6 +49,7 @@ import com.dianping.cat.report.page.model.dependency.DependencyReportMerger;
 import com.dianping.cat.report.page.model.spi.ModelRequest;
 import com.dianping.cat.report.page.model.spi.ModelResponse;
 import com.dianping.cat.report.page.model.spi.ModelService;
+import com.dianping.cat.report.page.top.TopMetric;
 
 public class Handler implements PageHandler<Context> {
 
@@ -70,6 +72,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject(type = ModelService.class, value = "problem")
 	private ModelService<ProblemReport> m_problemservice;
+
+	@Inject(type = ModelService.class, value = "top")
+	private ModelService<TopReport> m_topService;
 
 	@Inject
 	private ProductLineConfig m_productLineConfig;
@@ -251,6 +256,37 @@ public class Handler implements PageHandler<Context> {
 		return sb.toString();
 	}
 
+	private TopReport queryTopReport(Payload payload) {
+		String domain = CatString.CAT;
+		String date = String.valueOf(payload.getDate());
+		ModelRequest request = new ModelRequest(domain, payload.getPeriod()) //
+		      .setProperty("date", date);
+
+		if (m_topService.isEligable(request)) {
+			ModelResponse<TopReport> response = m_topService.invoke(request);
+			return response.getModel();
+		} else {
+			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
+		}
+	}
+
+	private void buildTopErrorInfo(Payload payload, Model model) {
+		int count = payload.getCount();
+
+		if (!payload.getPeriod().isCurrent()) {
+			count = 60;
+		}
+		TopMetric topMetric = new TopMetric(count, payload.getTops());
+
+		if (count > 0) {
+			topMetric = new TopMetric(count, payload.getTops());
+		}
+		TopReport report = queryTopReport(payload);
+		topMetric.visitTopReport(report);
+		model.setTopReport(report);
+		model.setTopMetric(topMetric);
+	}
+
 	private int computeMinute(Payload payload) {
 		int minute = 0;
 		String min = payload.getMinute();
@@ -315,6 +351,7 @@ public class Handler implements PageHandler<Context> {
 					buildNodeErrorInfo(node, model, payload);
 				}
 			}
+			buildTopErrorInfo(payload, model);
 			model.setReportStart(new Date(payload.getDate()));
 			model.setReportEnd(new Date(payload.getDate() + TimeUtil.ONE_MINUTE - 1));
 			model.setDashboardGraph(dashboardGraph.toJson());
@@ -322,12 +359,12 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case PRODUCT_LINE:
 			String productLine = payload.getProductLine();
-			if(StringUtil.isEmpty(productLine)){
+			if (StringUtil.isEmpty(productLine)) {
 				payload.setProductLine(CatString.TUAN_TOU);
-				productLine=CatString.TUAN_TOU;
+				productLine = CatString.TUAN_TOU;
 			}
-			ProductLineDashboard productLineGraph = m_graphManager.buildProductLineGraph(productLine,
-			      reportTime.getTime());
+			ProductLineDashboard productLineGraph = m_graphManager
+			      .buildProductLineGraph(productLine, reportTime.getTime());
 			List<Node> productLineNodes = productLineGraph.getNodes();
 
 			for (Node node : productLineNodes) {

@@ -6,7 +6,14 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.dependency.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.dependency.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
-
+<style>
+.tab-content	table {
+  max-width: 100%;
+  background-color: transparent;
+  border-collapse: collapse;
+  border-spacing: 0; 
+}
+</style>
 <a:report title="Dependency Report"
 	navUrlPrefix="domain=${model.domain}&op=dependencyGraph">
 	<jsp:attribute name="subtitle">From ${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -25,23 +32,19 @@
 				<%@ include file="dependencyOpNav.jsp"%>
 		 		<%@ include file="dependencyTimeNav.jsp"%>
 		</div></div>
- 		<div class="tabbable tabs-left " id="content">
-  			<ul class="nav nav-tabs alert-info">
-   			 	<li style="margin-left:20px;" class="text-right active"><a href="#tab1" data-toggle="tab"><strong>产品线监控</strong></a></li>
-   			 	<li class="text-right"><a href="#tab2" data-toggle="tab"><strong>TOP异常</strong></a></li>
-  			</ul>
-  			<div class="tab-content">
-	    		<div class="tab-pane active" id="tab1">
-	    		</div>
-	    		<div class="tab-pane" id="tab2">
-	    		</div>
-			</div>	    			
+			<h1>监控大盘信息</h1>
+			<%@ include file="../topMetric.jsp"%>
     </div>
 </jsp:body>
 </a:report>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
+		$('i[tips]').popover();
+		$('#topMetric .nav-tabs a').mouseenter(function (e) {
+		  e.preventDefault();
+		  $(this).tab('show');
+		});	
 		var data = ${model.dashboardGraph};
 		console.log(data);
 		function parse(data){

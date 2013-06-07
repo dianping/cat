@@ -38,99 +38,7 @@
 		<a class='btn btn-small btn-primary' href="?refresh=true&second=20">20秒定时刷新</a>
 		<a class='btn btn-small btn-primary' href="?refresh=true&second=30">30秒定时刷新</a>
 	</div>
-<div class="tabbable  " id="topMetric"> <!-- Only required for left/right tabs -->
-  <ul class="nav nav-tabs alert-info">
-    <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多Top10</a></li>
-    <li class='text-right'><a href="#tab2" data-toggle="tab">URL最慢Top10</a></li>
-    <li class='text-right'><a href="#tab3" data-toggle="tab">Service最慢Top10</a></li>
-    <li class='text-right'><a href="#tab4" data-toggle="tab">SQL最慢Top10</a></li>
-    <li class='text-right'><a href="#tab5" data-toggle="tab">Call最慢Top10</a></li>
-    <li class='text-right'><a href="#tab6" data-toggle="tab">Cache最慢Top10</a></li>
-  </ul>
-  <div class="tab-content">
-    <div class="tab-pane active" id="tab1">
-      <c:forEach var="item" items="${model.metrix.error.result}" varStatus="status">
-		<table width="20%" style="float:left" border=1>  
-				<tr><th colspan="3">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>个</th></tr>
-				<c:forEach var="detail" items="${item.value}" varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td>
-						<a href="/cat/r/p?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td>
-						<td><i tips="" data-trigger="hover" class="icon-question-sign"
-		                  data-toggle="popover" data-placement="top" data-original-title="tips"
-		                  data-content=""></i>&nbsp;&nbsp;${w:format(detail.value,'0.0')}</td>
-					</tr>
-				</c:forEach>
-		</table>
-		</c:forEach>
-    </div>
-    <div class="tab-pane" id="tab2">
-    	<c:forEach var="item" items="${model.metrix.url.result}" varStatus="status">
-		<table width="20%" style="float:left" border=1>  
-				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>ms</th></tr>
-				<c:forEach var="detail" items="${item.value}" varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
-					</tr>
-				</c:forEach>
-		</table>
-	</c:forEach>
-    </div>
-    <div class="tab-pane" id="tab3">
-    	<c:forEach var="item" items="${model.metrix.service.result}" varStatus="status">
-		<table width="20%" style="float:left" border=1>  
-				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>ms</th></tr>
-				<c:forEach var="detail" items="${item.value}" varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
-					</tr>
-				</c:forEach>
-		</table>
-	</c:forEach>
-    </div>
-    <div class="tab-pane" id="tab4">
-    	<c:forEach var="item" items="${model.metrix.sql.result}" varStatus="status">
-		<table width="20%" style="float:left" border=1>  
-				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>ms</th></tr>
-				<c:forEach var="detail" items="${item.value}" varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
-					</tr>
-				</c:forEach>
-		</table>
-	</c:forEach>
-    </div>
-    <div class="tab-pane" id="tab5">
-    	<c:forEach var="item" items="${model.metrix.call.result}" varStatus="status">
-		<table width="20%" style="float:left" border=1>  
-				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>ms</th></tr>
-				<c:forEach var="detail" items="${item.value}" varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
-					</tr>
-				</c:forEach>
-		</table>
-	</c:forEach>
-    </div>
-    <div class="tab-pane" id="tab6">
-    	<c:forEach var="item" items="${model.metrix.cache.result}" varStatus="status">
-		<table width="20%" style="float:left" border=1>  
-				<tr><th colspan="2">${item.key}</th></tr>
-				<tr><th width="80%">系统</th>		<th>ms</th></tr>
-				<c:forEach var="detail" items="${item.value}" varStatus="status">
-					<tr class="${status.index mod 2 != 0 ? 'odd' : 'even'}">
-						<td><a href="/cat/r/t?domain=${detail.domain}&date=${w:format(model.topReport.startTime,'yyyyMMddHH')}" target="_blank">${detail.domain}</a></td><td>${w:format(detail.value,'0.0')}</td>
-					</tr>
-				</c:forEach>
-		</table>
-	</c:forEach>
-    </div>
-  </div>
+    <%@ include file="topMetric.jsp"%>
 	<table  class="footer">
 		<tr>
 			<td>[ end ]</td>
@@ -153,10 +61,5 @@
 				window.location.href="?refresh=true&second="+second;
 			},second*1000);
 		}
-	});
-</script>
-<script type="text/javascript">
-	$(document).ready(function() {
-		
 	});
 </script>
