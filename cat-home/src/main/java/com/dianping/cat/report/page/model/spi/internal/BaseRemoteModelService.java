@@ -1,11 +1,13 @@
 package com.dianping.cat.report.page.model.spi.internal;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map.Entry;
 
 import org.unidal.helper.Files;
+import org.unidal.helper.Urls;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
@@ -31,7 +33,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 	public BaseRemoteModelService(String name) {
 		m_name = name;
 	}
-	
+
 	protected abstract T buildModel(String xml) throws SAXException, IOException;
 
 	public URL buildUrl(ModelRequest request) throws MalformedURLException {
@@ -64,7 +66,9 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 			t.addData(url.toString());
 
-			String xml = Files.forIO().readFrom(url.openStream(), "utf-8");
+			InputStream in = Urls.forIO().connectTimeout(100).readTimeout(2000).openStream(url.toExternalForm());
+
+			String xml = Files.forIO().readFrom(in, "utf-8");
 			int len = xml == null ? 0 : xml.length();
 
 			t.addData("length", len);

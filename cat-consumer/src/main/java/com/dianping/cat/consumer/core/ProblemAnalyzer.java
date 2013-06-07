@@ -23,8 +23,10 @@ import com.dianping.cat.consumer.core.dal.TaskDao;
 import com.dianping.cat.consumer.core.problem.ProblemHandler;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.problem.model.transform.DefaultXmlBuilder;
@@ -84,17 +86,20 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 	@Override
 	public ProblemReport getReport(String domain) {
-		ProblemReport report = m_reports.get(domain);
+		if (!ALL.equals(domain)) {
+			ProblemReport report = m_reports.get(domain);
 
-		if (report == null) {
-			report = new ProblemReport(domain);
+			if (report == null) {
+				report = new ProblemReport(domain);
 
-			report.setStartTime(new Date(m_startTime));
-			report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+				report.setStartTime(new Date(m_startTime));
+				report.setEndTime(new Date(m_startTime + MINUTE * 60 - 1));
+			}
+			report.getDomainNames().addAll(m_reports.keySet());
+			return report;
+		} else {
+			return buildTotalProblemReport();
 		}
-		report.getDomainNames().addAll(m_reports.keySet());
-
-		return report;
 	}
 
 	@Override
@@ -229,6 +234,8 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 
 		private String m_currentState;
 
+		private String m_currentThread;
+
 		public ProblemReportVisitor(ProblemReport report) {
 			m_report = report;
 		}
@@ -272,5 +279,28 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 			super.visitProblemReport(problemReport);
 		}
 
+		@Override
+		public void visitMachine(Machine machine) {
+			super.visitMachine(machine);
+		}
+
+		@Override
+		public void visitSegment(Segment segment) {
+			int minute = segment.getId();
+			int count = segment.getCount();
+			Machine machine = m_report.findOrCreateMachine(m_currentDomain);
+			Entry entry = findOrCreatEntry(machine, m_currentType, m_currentState);
+			JavaThread thread = entry.findOrCreateThread(m_currentThread);
+			Segment temp = thread.findOrCreateSegment(minute);
+			
+			temp.setCount(temp.getCount() + count);
+		}
+
+		@Override
+		public void visitThread(JavaThread thread) {
+			m_currentThread = thread.getId();
+			super.visitThread(thread);
+		}
 	}
+	
 }

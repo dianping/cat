@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.dependency;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -13,6 +14,7 @@ import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
 import com.dianping.cat.home.dal.report.Event;
 import com.dianping.cat.report.page.AbstractReportModel;
+import com.dianping.cat.report.page.dependency.dashboard.ProductLinesDashboard;
 import com.dianping.cat.report.view.StringSortHelper;
 
 @ModelMeta("dependecy")
@@ -35,6 +37,58 @@ public class Model extends AbstractReportModel<Action, Context> {
 	private List<String> m_indexGraph;
 
 	private Map<String, List<String>> m_dependencyGraph;
+	
+	private String m_dashboardGraph;
+
+	private ProductLinesDashboard m_dashboardGraphData;
+	
+	private List<String> m_productLines;
+	
+	private String m_productLineGraph;
+	
+	private Date m_reportStart;
+	
+	private Date m_reportEnd;
+	
+	public List<String> getProductLines() {
+   	return m_productLines;
+   }
+
+	public void setProductLines(List<String> productLines) {
+   	m_productLines = productLines;
+   }
+
+	public String getProductLineGraph() {
+   	return m_productLineGraph;
+   }
+
+	public void setProductLineGraph(String productLineGraph) {
+   	m_productLineGraph = productLineGraph;
+   }
+
+	public Date getReportStart() {
+   	return m_reportStart;
+   }
+
+	public void setReportStart(Date reportStart) {
+   	m_reportStart = reportStart;
+   }
+
+	public Date getReportEnd() {
+   	return m_reportEnd;
+   }
+
+	public void setReportEnd(Date reportEnd) {
+   	m_reportEnd = reportEnd;
+   }
+
+	public String getDashboardGraph() {
+   	return m_dashboardGraph;
+   }
+
+	public void setDashboardGraph(String dashboardGraph) {
+   	m_dashboardGraph = dashboardGraph;
+   }
 
 	public List<String> getIndexGraph() {
 		return m_indexGraph;
@@ -74,7 +128,7 @@ public class Model extends AbstractReportModel<Action, Context> {
 
 	@Override
 	public Action getDefaultAction() {
-		return Action.VIEW;
+		return Action.LINE_CHART;
 	}
 
 	@Override
@@ -135,5 +189,14 @@ public class Model extends AbstractReportModel<Action, Context> {
 	public void setTopologyGraph(String topologyGraph) {
    	m_topologyGraph = topologyGraph;
    }
+
+	public ProductLinesDashboard getDashboardGraphData() {
+   	return m_dashboardGraphData;
+   }
+
+	public void setDashboardGraphData(ProductLinesDashboard dashboardGraphData) {
+   	m_dashboardGraphData = dashboardGraphData;
+   }
+	
 
 }

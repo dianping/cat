@@ -14,15 +14,22 @@
   border-collapse: collapse;
   border-spacing: 0; 
 }
-	
 </style>
 <a:body>
-
-
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
-
 <res:useJs value="${res.js.local['bootstrap.min.js']}" target="head-js"/>
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		var refresh = ${payload.refresh};
+		var second = ${payload.second};
+		if(refresh){
+			setInterval(function(){
+				window.location.href="?refresh=true&second="+second;
+			},second*1000);
+		}
+	});
+</script>
 <div class="report">
 	<table class="header">
 		<tr>
@@ -36,6 +43,11 @@
 		</tr>
 	</table>
 	
+	<div class='text-center' style="margin:3px;">
+		<a class='btn btn-small btn-primary' href="?refresh=true&second=10">10秒定时刷新</a>
+		<a class='btn btn-small btn-primary' href="?refresh=true&second=20">20秒定时刷新</a>
+		<a class='btn btn-small btn-primary' href="?refresh=true&second=30">30秒定时刷新</a>
+	</div>
 <div class="tabbable tabs-left alert-info" id="topMetric"> <!-- Only required for left/right tabs -->
   <ul class="nav nav-tabs">
     <li class="text-right active"><a href="#tab1" data-toggle="tab">异常最多Top10</a></li>

@@ -25,7 +25,6 @@ public class TopologyGraphItemBuilder {
 		node.setStatus(OK);
 		node.setType(DATABASE);
 		node.setWeight(1);
-		node.setDes("");
 		return node;
 	}
 
@@ -45,7 +44,6 @@ public class TopologyGraphItemBuilder {
 			edge.setDes(state.getValue());
 		} else {
 			edge.setStatus(OK);
-			edge.setDes("");
 		}
 		return edge;
 	}
@@ -56,7 +54,6 @@ public class TopologyGraphItemBuilder {
 		node.setStatus(OK);
 		node.setType(PROJECT);
 		node.setWeight(1);
-		node.setDes("");
 		return node;
 	}
 
@@ -72,7 +69,6 @@ public class TopologyGraphItemBuilder {
 			node.setDes(state.getValue());
 		} else {
 			node.setStatus(OK);
-			node.setDes("");
 		}
 		return node;
 	}

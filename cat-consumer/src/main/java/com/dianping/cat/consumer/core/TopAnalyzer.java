@@ -18,6 +18,7 @@ import com.dianping.cat.consumer.core.dal.ReportDao;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
+import com.dianping.cat.consumer.top.model.entity.Error;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.consumer.transaction.model.entity.Range2;
@@ -288,6 +289,8 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 
 		private String m_type;
 
+		private String m_state;
+
 		private TopReport m_report;
 
 		public ProblemReportVisitor(TopReport report) {
@@ -303,6 +306,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 		@Override
 		public void visitEntry(Entry entry) {
 			m_type = entry.getType();
+			m_state = entry.getStatus();
 			super.visitEntry(entry);
 		}
 
@@ -315,11 +319,10 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
 				      .findOrCreateSegment(id);
 				temp.setError(temp.getError() + count);
-			} else if ("call".equals(m_type)) {
-				com.dianping.cat.consumer.top.model.entity.Segment temp = m_report.findOrCreateDomain(m_domain)
-				      .findOrCreateSegment(id);
-				temp.setCallError(temp.getCallError() + count);
-			}
+				
+				Error error = temp.findOrCreateError(m_state);
+				error.setCount(error.getCount() + count);
+			} 
 		}
 	}
 

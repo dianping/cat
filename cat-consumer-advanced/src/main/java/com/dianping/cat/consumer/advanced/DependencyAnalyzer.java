@@ -202,14 +202,14 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 		if ("PigeonCall".equals(type) || "Call".equals(type)) {
 			String ip = parseIpFromPigeonClientTransaction(t, tree);
 			String target = m_domainManager.getDomainByIp(ip);
-			String callType = "PigeonClient";
+			String callType = "PigeonCall";
 
 			updateDependencyInfo(report, t, target, callType);
 
 			if (m_domainManager.containsDomainInCat(target)) {
 				DependencyReport serverReport = findOrCreateReport(target);
 
-				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonService");
+				updateDependencyInfo(serverReport, t, tree.getDomain(), "PigeonServer");
 			}
 		}
 		// else if ("PigeonService".equals(type) || "Service".equals(type)) {

@@ -55,6 +55,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private boolean m_firstMessage = true;
 
+	private static final int MAX_ITEM = 500;
+
 	@Override
 	public void add(Message message) {
 		Context ctx = getContext();
@@ -195,13 +197,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		return false;
-
-		// if (tree.getMessage() != null &&
-		// "Heartbeat".equals(tree.getMessage().getName())) {
-		// return false;
-		// }
-		// int threadCount = ManagementFactory.getThreadMXBean().getThreadCount();
-		// return threadCount > m_domain.getMaxThreads();
 	}
 
 	@Override
@@ -246,7 +241,31 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else {
 				Transaction entry = m_stack.peek();
 
-				entry.addChild(message);
+				addTransactionChild(message, entry);
+			}
+		}
+
+		private void addTransactionChild(Message message, Transaction transaction) {
+			List<Message> children = transaction.getChildren();
+
+			if (children != null && children.size() < MAX_ITEM) {
+				transaction.addChild(message);
+			} else {
+				try {
+					if (children.size() == MAX_ITEM) {
+						DefaultEvent event = new DefaultEvent("CAT", "TooManyChildren");
+
+						event.setStatus(String.valueOf(MAX_ITEM + 1));
+						transaction.addChild(event);
+					} else {
+						Message event = children.get(MAX_ITEM);
+						String count = event.getStatus();
+
+						event.setStatus(String.valueOf((Integer.parseInt(count) + 1)));
+					}
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		}
 
@@ -296,7 +315,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			if (!m_stack.isEmpty()) {
 				Transaction entry = m_stack.peek();
 
-				entry.addChild(transaction);
+				addTransactionChild(transaction, entry);
 			} else {
 				m_tree.setMessageId(manager.nextMessageId());
 				m_tree.setMessage(transaction);

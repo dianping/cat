@@ -1194,11 +1194,21 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
+			<implementation>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
@@ -2519,35 +2529,29 @@
 			<implementation>com.dianping.cat.report.page.dependency.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>dependency</role-hint>
 					<field-name>m_dependencyService</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
+					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.model.spi.ModelService</role>
 					<role-hint>problem</role-hint>
 					<field-name>m_problemservice</field-name>
 				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dependency.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.dependency.JspViewer</implementation>
-			<requirements>
 				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+					<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2584,11 +2588,30 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.configuration.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</role>
 			<implementation>com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</role>
+			<implementation>com.dianping.cat.report.page.dependency.dashboard.ProductLineConfig</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.dependency.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.externalError.Handler</role>
@@ -2993,12 +3016,6 @@
 				<requirement>
 					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -3010,12 +3027,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.alarm.threshold.ThresholdRuleManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.externalError.EventCollectManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.system.alarm.AlarmContentBuilder</role>
 				</requirement>
 			</requirements>
 		</component>

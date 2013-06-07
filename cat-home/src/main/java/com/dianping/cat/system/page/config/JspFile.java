@@ -8,18 +8,14 @@ public enum JspFile {
 	AGGREGATION_ALL("/jsp/system/aggregation.jsp"),
 
 	AGGREGATION_UPATE("/jsp/system/aggregationUpdate.jsp"),
-	
-	TOPOLOGY_GRAPH_CONFIG_ADD_OR_SUBMIT("/jsp/system/topologyGraphConfigNodeAdd.jsp"),
 
-	TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE_SUBMIT("/jsp/system/topologyGraphConfigNodeAdd.jsp"),
+	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("/jsp/system/topologyGraphNodeConfigAdd.jsp"),
 
-	TOPOLOGY_GRAPH_CONFIG_DELETE("/jsp/system/topologyGraphConfigs.jsp"),
+	TOPOLOGY_GRAPH_NODE_CONFIG_LIST("/jsp/system/topologyGraphNodeConfigs.jsp"), 
 
-	TOPOLOGY_GRAPH_CONFIG_EDGE_ADD_OR_UPDATE("/jsp/system/topologyGraphConfigEdgeAdd.jsp"),
+	TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE("/jsp/system/topologyGraphEdgeConfigAdd.jsp"),
 
-	TOPOLOGY_GRAPH_CONFIG_EDGE_DELETE("/jsp/system/topologyGraphConfigs.jsp"),
-	
-	TOPOLOGY_GRAPH_CONFIG_LIST("/jsp/system/topologyGraphConfigs.jsp"), 
+	TOPOLOGY_GRAPH_EDGE_CONFIG_LIST("/jsp/system/topologyGraphEdgeConfigs.jsp"), 
 	
 
 	;

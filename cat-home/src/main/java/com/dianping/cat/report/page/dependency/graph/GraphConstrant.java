@@ -11,8 +11,12 @@ public class GraphConstrant {
 
 	public static int ERROR = 3;
 
+	public static int OP_ERROR = 4;
+
 	public static final String DELIMITER = " ";
 
 	public static final String ENTER = "<br/>";
+
+	public static final String LINE = "###############################################";
 
 }

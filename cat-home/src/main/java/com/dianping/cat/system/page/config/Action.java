@@ -15,17 +15,21 @@ public enum Action implements org.unidal.web.mvc.Action {
 	
 	AGGREGATION_DELETE("aggregationDelete"),
 
-	TOPOLOGY_GRAPH_CONFIG_LIST("topologyGraphConfigList"),
+	TOPOLOGY_GRAPH_NODE_CONFIG_LIST("topologyGraphNodeConfigList"),
 	
-	TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE("topologyGraphConfigNodeAdd"),
+	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("topologyGraphNodeConfigAdd"),
 	
-	TOPOLOGY_GRAPH_CONFIG_NODE_ADD_OR_UPDATE_SUBMIT("topologyGraphConfigNodeAddSumbit"),
+	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE_SUBMIT("topologyGraphNodeConfigAddSumbit"),
 	
-	TOPOLOGY_GRAPH_CONFIG_NODE_DELETE("topologyGraphConfigNodeDelete"),
+	TOPOLOGY_GRAPH_NODE_CONFIG_DELETE("topologyGraphNodeConfigDelete"),
 	
-	TOPOLOGY_GRAPH_CONFIG_EDGE_ADD_OR_UPDATE("topologyGraphConfigEdgeAdd"),
+	TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE("topologyGraphEdgeConfigAdd"),
+
+	TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE_SUBMIT("topologyGraphEdgeConfigAddSumbit"),
 	
-	TOPOLOGY_GRAPH_CONFIG_EDGE_DELETE("topologyGraphConfigEdgeDelete");
+	TOPOLOGY_GRAPH_EDGE_CONFIG_DELETE("topologyGraphEdgeConfigDelete"), 
+	
+	TOPOLOGY_GRAPH_EDGE_CONFIG_LIST("topologyGraphEdgeConfigList");
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {

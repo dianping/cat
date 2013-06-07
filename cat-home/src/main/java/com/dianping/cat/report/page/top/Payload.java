@@ -14,10 +14,32 @@ public class Payload extends AbstractReportPayload<Action> {
 	
 	@FieldMeta("count")
 	private int m_count;
+	
+	@FieldMeta("second")
+	private int m_second;
+	
+	@FieldMeta("refresh")
+	private boolean m_refresh;
+
+	public int getSecond() {
+   	return m_second;
+   }
+
+	public void setSecond(int second) {
+   	m_second = second;
+   }
 
 	public Payload() {
 		super(ReportPage.TOP);
 	}
+	
+	public boolean getRefresh() {
+   	return m_refresh;
+   }
+
+	public void setRefresh(boolean refresh) {
+   	m_refresh = refresh;
+   }
 
 	@Override
 	public Action getAction() {

@@ -109,9 +109,6 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			model.setTable(logView);
 			break;
-		case MOBILE:
-			model.setMobileResponse(logView);
-			break;
 		case DETAIL:
 			String path = getPath(messageId);
 			model.setLogviewPath(path);
