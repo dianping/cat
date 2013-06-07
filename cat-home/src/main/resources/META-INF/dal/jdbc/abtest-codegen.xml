@@ -11,7 +11,7 @@
     <member name="description" field="description" value-type="String" length="512" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
-    <index name="name_UNIQUE" unique="true" members="name ASC" />
+    <index name="idx_name" unique="true" members="name ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>

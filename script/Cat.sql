@@ -255,7 +255,7 @@ CREATE TABLE `abtest` (
   `modified_date` datetime DEFAULT NULL COMMENT '上次修改时间',
   `description` varchar(512) DEFAULT NULL COMMENT '描述',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name_UNIQUE` (`name`)
+  UNIQUE KEY `idx_name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `abtest_run` (
